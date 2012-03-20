@@ -70,7 +70,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="xunit">
-      <HintPath>..\..\packages\xunit.1.9.0.1566\lib\xunit.dll</HintPath>
+      <HintPath>..\..\..\packages\xunit.1.9.0.1566\lib\xunit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -93,7 +93,7 @@
     <Folder Include="My Project\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\EntityFramework\EntityFramework.csproj">
+    <ProjectReference Include="..\..\..\src\EntityFramework\EntityFramework.csproj">
       <Project>{E06D1C12-EFE8-4413-A15C-AE01FC158F2F}</Project>
       <Name>EntityFramework</Name>
     </ProjectReference>

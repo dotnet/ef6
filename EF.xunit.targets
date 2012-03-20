@@ -11,9 +11,9 @@
     <UsingTask TaskName="Xunit.Runner.MSBuild.xunit" AssemblyFile="@(XunitMsBuildRunner)"/>
 
     <Target Name="Xunit">
-        <xunit Assembly="test\UnitTests\bin\$(Configuration)\EntityFramework.UnitTests.dll" />
-        <xunit Assembly="test\FunctionalTests\bin\$(Configuration)\EntityFramework.FunctionalTests.dll" />
-        <xunit Assembly="test\VBTests\bin\$(Configuration)\EntityFramework.VBTests.dll" />
+        <xunit Assembly="test\EntityFramework\UnitTests\bin\$(Configuration)\EntityFramework.UnitTests.dll" />
+        <xunit Assembly="test\EntityFramework\FunctionalTests\bin\$(Configuration)\EntityFramework.FunctionalTests.dll" />
+        <xunit Assembly="test\EntityFramework\VBTests\bin\$(Configuration)\EntityFramework.VBTests.dll" />
     </Target>
     
 </Project>
