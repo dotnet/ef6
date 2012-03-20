@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Package" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    
+    <PropertyGroup>
+        <Configuration>Release</Configuration>
+        <Platform>Any CPU</Platform>
+        <SolutionFile>EntityFramework.sln</SolutionFile>
+        <BuildProperties>Configuration=$(Configuration);Platform=$(Platform)</BuildProperties>
+    </PropertyGroup>
+
+    <Target Name="Clean">
+        <MSBuild Targets="Clean" 
+				 Projects="$(SolutionFile)" 
+				 Properties="$(BuildProperties)"/>
+    </Target>
+
+    <Target Name="Build">
+        <MSBuild Targets="Build" 
+				 Projects="$(SolutionFile)" 
+				 Properties="$(BuildProperties)" />
+    </Target>
+
+    <Target Name="Rebuild">
+        <MSBuild Targets="Rebuild" 
+                 Projects="$(SolutionFile)" 
+                 Properties="$(BuildProperties)" />
+    </Target>
+   
+    <Target Name="Test" DependsOnTargets="Rebuild">
+        <MSBuild Projects="EF.xunit.targets" 
+				 Properties="$(BuildProperties)" /> 
+    </Target>
+
+    <Target Name="Package" DependsOnTargets="Test">
+        <MSBuild Targets="Rebuild" 
+                 Projects="src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj"
+                 Properties="$(BuildProperties);Platform=AnyCPU;DefineConstants=INTERNALS_INVISIBLE" />
+    </Target>
+
+</Project>

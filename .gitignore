@@ -1,0 +1,15 @@
+_ReSharper*
+bin
+Bin
+obj
+App_Data
+*.user
+*.patch
+*.sln.cache
+*.orig
+*.suo
+*.log
+*.exe
+*.dll
+packages
+EntityFramework.xml

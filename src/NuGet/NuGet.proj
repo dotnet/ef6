@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <OutputPath>bin\$(Configuration)\</OutputPath>
+        <NuGetExePath>$(MSBuildProjectDirectory)\..\..\.nuget\nuget.exe</NuGetExePath>
+    </PropertyGroup>
+    
+    <Target Name="Build">
+        <Copy DestinationFolder="EntityFramework\lib\net45" SourceFiles="..\EntityFramework\bin\$(Configuration)\EntityFramework.dll" />
+        <Copy DestinationFolder="EntityFramework\lib\net45" SourceFiles="..\EntityFramework\bin\$(Configuration)\EntityFramework.xml" />
+        <Copy DestinationFolder="EntityFramework\tools" SourceFiles="..\EntityFramework.PowerShell\bin\$(Configuration)\EntityFramework.PowerShell.dll" />
+        <Copy DestinationFolder="EntityFramework\tools" SourceFiles="..\Migrate\bin\$(Configuration)\migrate.exe" />
+        <Copy DestinationFolder="EntityFramework\tools" SourceFiles="..\EntityFramework.PowerShell.Utility\bin\$(Configuration)\EntityFramework.PowerShell.Utility.dll" />
+        <MakeDir Directories="$(OutputPath)" />
+        <Exec Command="&quot;$(NuGetExePath)&quot; pack EntityFramework\EntityFramework.nuspec -OutputDirectory &quot;$(OutputPath).&quot; -BasePath EntityFramework" />
+        <Copy DestinationFolder="EntityFramework.SqlServerCompact\tools" SourceFiles="..\EntityFramework.PowerShell\bin\$(Configuration)\EntityFramework.PowerShell.dll" />
+        <Exec Command="&quot;$(NuGetExePath)&quot; pack EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.nuspec -OutputDirectory &quot;$(OutputPath).&quot; -BasePath EntityFramework.SqlServerCompact" />
+    </Target>
+    
+</Project>

@@ -1,0 +1,73 @@
+﻿namespace System.Data.Entity.Migrations.Model
+{
+    using System.Collections.Generic;
+    using System.Data.Entity.Migrations.Extensions;
+    using System.Diagnostics.Contracts;
+
+    /// <summary>
+    ///     Common base class for operations affecting indexes.
+    /// </summary>
+    public abstract class IndexOperation : MigrationOperation
+    {
+        private string _table;
+        private readonly List<string> _columns = new List<string>();
+        private string _name;
+
+        /// <summary>
+        ///     Initializes a new instance of the IndexOperation class.
+        /// </summary>
+        /// <param name = "anonymousArguments">
+        ///     Additional arguments that may be processed by providers. 
+        ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
+        /// </param>
+        protected IndexOperation(object anonymousArguments = null)
+            : base(anonymousArguments)
+        {
+        }
+
+        /// <summary>
+        ///     Gets or sets the table the index belongs to.
+        /// </summary>
+        public string Table
+        {
+            get { return _table; }
+            set
+            {
+                Contract.Requires(!string.IsNullOrWhiteSpace(value));
+
+                _table = value;
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets the columns that are indexed.
+        /// </summary>
+        public IList<string> Columns
+        {
+            get { return _columns; }
+        }
+
+        /// <summary>
+        ///     Gets a value indicating if a specific name has been supplied for this index.
+        /// </summary>
+        public bool HasDefaultName
+        {
+            get { return string.Equals(Name, DefaultName, StringComparison.Ordinal); }
+        }
+
+        /// <summary>
+        ///     Gets or sets the name of this index.
+        ///     If no name is supplied, a default name will be calculated.
+        /// </summary>
+        public string Name
+        {
+            get { return _name ?? DefaultName; }
+            set { _name = value; }
+        }
+
+        internal string DefaultName
+        {
+            get { return string.Format("IX_{0}", Columns.Join(separator: "_")).RestrictTo(128); }
+        }
+    }
+}

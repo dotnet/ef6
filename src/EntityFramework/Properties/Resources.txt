@@ -1,0 +1,655 @@
+; NOTE: don't use \", use ' instead
+; NOTE: don't use #, use ; instead for comments
+; NOTE: leave the [strings] alone
+; 
+
+; MIGRATIONS RESOURCES ------------------------------------------------------------------------------------------------------------------------------
+
+AutomaticMigration=AutomaticMigration
+BootstrapMigration=BootstrapMigration
+InitialCreate=InitialCreate
+
+## ExceptionType=Migrations.Infrastructure.AutomaticDataLossException
+AutomaticDataLoss=Automatic migration was not applied because it would result in data loss.
+
+LoggingAutoMigrate=Applying automatic migration: {0}.
+LoggingRevertAutoMigrate=Reverting automatic migration: {0}.
+LoggingApplyMigration=Applying explicit migration: {0}.
+LoggingRevertMigration=Reverting explicit migration: {0}.
+LoggingHistoryInsert=[Inserting migration history record]
+LoggingHistoryDelete=[Deleting migration history record]
+LoggingMetadataUpdate=[Updating EdmMetadata model hash]
+LoggingSeedingDatabase=Running Seed method.
+LoggingPendingMigrations=Applying explicit migrations: [{1}].
+LoggingPendingMigrationsDown=Reverting migrations: [{1}].
+LoggingNoExplicitMigrations=No pending explicit migrations.
+LoggingAlreadyAtTarget=Target database is already at version {0}.
+LoggingTargetDatabase=Target database is: {0}.
+LoggingTargetDatabaseFormat='{1}' (DataSource: {0}, Provider: {2}, Origin: {3})
+LoggingExplicit=Explicit
+
+UpgradingHistoryTable=Upgrading history table.
+
+## ExceptionType=Migrations.Infrastructure.MigrationsException
+MetadataOutOfDate=Cannot scaffold the next migration because the target database was created with a version of Code First earlier than EF 4.3 and does not contain the migrations history table. To start using migrations against this database, ensure the current model is compatible with the target database and execute the migrations Update process. (In Visual Studio you can use the Update-Database command from Package Manager Console to execute the migrations Update process).
+
+## ExceptionType=Migrations.Infrastructure.MigrationsException
+MigrationNotFound=The specified target migration '{0}' does not exist. Ensure that target migration refers to an existing migration id.
+
+## ExceptionType=Migrations.Infrastructure.MigrationsException
+PartialFkOperation=The Foreign Key on table '{0}' with columns '{1}' could not be created because the principal key columns could not be determined. Use the AddForeignKey fluent API to fully specify the Foreign Key.
+
+## ExceptionType=Migrations.Infrastructure.MigrationsException
+AutoNotValidTarget='{0}' is not a valid target migration. When targeting a previously applied automatic migration, use the full migration id including timestamp.
+
+## ExceptionType=Migrations.Infrastructure.MigrationsException
+AutoNotValidForScriptWindows='{0}' is not a valid migration. Explicit migrations must be used for both source and target when scripting the upgrade between them.
+
+## ExceptionType=Migrations.Infrastructure.MigrationsException
+ContextNotConstructible=The target context '{0}' is not constructible. Add a default constructor or provide an implementation of IDbContextFactory.
+
+## ExceptionType=Migrations.Infrastructure.MigrationsException
+AmbiguousMigrationName=The specified migration name '{0}' is ambiguous. Specify the full migration id including timestamp instead.
+
+## ExceptionType=Migrations.Infrastructure.AutomaticMigrationsDisabledException
+AutomaticDisabledException=Unable to update database to match the current model because there are pending changes and automatic migration is disabled. Either write the pending model changes to a code-based migration or enable automatic migration. Set DbMigrationsConfiguration.AutomaticMigrationsEnabled to true to enable automatic migration.
+
+## ExceptionType=Migrations.Infrastructure.MigrationsException
+DownScriptWindowsNotSupported=Scripting the downgrade between two specified migrations is not supported.
+
+## ExceptionType=Migrations.Infrastructure.MigrationsException
+AssemblyMigrator_NoConfigurationWithName=The migrations configuration type '{0}' was not be found in the assembly '{1}'.
+
+## ExceptionType=Migrations.Infrastructure.MigrationsException
+AssemblyMigrator_MultipleConfigurationsWithName=More than one migrations configuration type '{0}' was found in the assembly '{1}'. Specify the fully qualified name of the one to use.
+
+## ExceptionType=Migrations.Infrastructure.MigrationsException
+AssemblyMigrator_NoConfiguration=No migrations configuration type was found in the assembly '{0}'. (In Visual Studio you can use the Enable-Migrations command from Package Manager Console to add a migrations configuration).
+
+## ExceptionType=Migrations.Infrastructure.MigrationsException
+AssemblyMigrator_MultipleConfigurations=More than one migrations configuration type was found in the assembly '{0}'. Specify the name of the one to use.
+
+## ExceptionType=Migrations.Infrastructure.MigrationsException
+AssemblyMigrator_NonConfigurationType=The type '{0}' is not a migrations configuration type.
+
+## ExceptionType=Migrations.Infrastructure.MigrationsException
+AssemblyMigrator_NoDefaultConstructor=The migrations configuration type '{0}' must have a public default constructor.
+
+## ExceptionType=Migrations.Infrastructure.MigrationsException
+AssemblyMigrator_AbstractConfigurationType=The migrations configuration type '{0}' must not be abstract.
+
+## ExceptionType=Migrations.Infrastructure.MigrationsException
+AssemblyMigrator_GenericConfigurationType=The migrations configuration type '{0}' must not be generic.
+
+## ExceptionType=Migrations.Infrastructure.MigrationsException
+SqlCeColumnRenameNotSupported=Direct column renaming is not supported by SQL Server Compact. To rename a column in SQL Server Compact, you will need to recreate it.
+
+## ExceptionType=Migrations.Infrastructure.MigrationsException
+MigrationsNamespaceNotUnderRootNamespace=In VB.NET projects, the migrations namespace '{0}' must be under the root namespace '{1}'. Update the migrations project's root namespace to allow classes under the migrations namespace to be added.
+
+## ExceptionType=InvalidOperationException
+UnableToDispatchAddOrUpdate=Unable to call public, instance method AddOrUpdate on derived IDbSet<T> type '{0}'. Method not found.
+ 
+## ExceptionType=Migrations.Infrastructure.MigrationsException
+NoSqlGeneratorForProvider=No MigrationSqlGenerator found for provider '{0}'. Use the SetSqlGenerator method in the target migrations configuration class to register additional SQL generators.
+
+; CODE FIRST RESOURCES ------------------------------------------------------------------------------------------------------------------------------
+
+## ExceptionType=ArgumentException
+ArgumentIsNullOrWhitespace=The argument '{0}' cannot be null, empty or contain only white space.
+
+## ExceptionType=ArgumentException
+ArgumentPropertyIsNull=The argument property '{0}' cannot be null.
+
+## ExceptionType=ArgumentException
+PreconditionFailed=The precondition '{0}' failed. {1}
+
+## ExceptionType=InvalidOperationException
+EntityTypeConfigurationMismatch=The type '{0}' has already been configured as a complex type. It cannot be reconfigured as an entity type.
+
+## ExceptionType=InvalidOperationException
+ComplexTypeConfigurationMismatch=The type '{0}' has already been configured as an entity type. It cannot be reconfigured as a complex type.
+
+## ExceptionType=InvalidOperationException
+KeyPropertyNotFound=The key component '{0}' is not a declared property on type '{1}'. Verify that it has not been explicitly excluded from the model and that it is a valid primitive property.
+
+## ExceptionType=InvalidOperationException
+ForeignKeyPropertyNotFound=The foreign key component '{0}' is not a declared property on type '{1}'. Verify that it has not been explicitly excluded from the model and that it is a valid primitive property.
+
+## ExceptionType=InvalidOperationException
+PropertyNotFound=The property '{0}' is not a declared property on type '{1}'. Verify that the property has not been explicitly excluded from the model by using the Ignore method or NotMappedAttribute data annotation. Make sure that it is a valid primitive property.
+
+## ExceptionType=InvalidOperationException
+NavigationPropertyNotFound=The navigation property '{0}' is not a declared property on type '{1}'. Verify that it has not been explicitly excluded from the model and that it is a valid navigation property.
+
+## ExceptionType=InvalidOperationException
+InvalidPropertyExpression=The expression '{0}' is not a valid property expression. The expression should represent a property: C#: 't => t.MyProperty'  VB.Net: 'Function(t) t.MyProperty'.
+
+## ExceptionType=InvalidOperationException
+InvalidComplexPropertyExpression=The expression '{0}' is not a valid property expression. The expression should represent a property: C#: 't => t.MyProperty'  VB.Net: 'Function(t) t.MyProperty'. Use dotted paths for nested properties: C#: 't => t.MyProperty.MyProperty'  VB.Net: 'Function(t) t.MyProperty.MyProperty'.
+
+## ExceptionType=InvalidOperationException
+InvalidPropertiesExpression=The properties expression '{0}' is not valid. The expression should represent a property: C#: 't => t.MyProperty'  VB.Net: 'Function(t) t.MyProperty'. When specifying multiple properties use an anonymous type: C#: 't => new {{ t.MyProperty1, t.MyProperty2 }}'  VB.Net: 'Function(t) New With {{ t.MyProperty1, t.MyProperty2 }}'.
+
+## ExceptionType=InvalidOperationException
+InvalidComplexPropertiesExpression=The properties expression '{0}' is not valid. The expression should represent a property: C#: 't => t.MyProperty'  VB.Net: 'Function(t) t.MyProperty'. When specifying multiple properties use an anonymous type: C#: 't => new {{ t.MyProperty1, t.MyProperty2 }}'  VB.Net: 'Function(t) New With {{ t.MyProperty1, t.MyProperty2 }}'.
+
+## ExceptionType=InvalidOperationException
+DuplicateStructuralTypeConfiguration=A configuration for type '{0}' has already been added. To reference the existing configuration use the Entity<T>() or ComplexType<T>() methods.
+
+## ExceptionType=InvalidOperationException
+ConflictingPropertyConfiguration=Conflicting configuration settings were specified for property '{0}' on type '{1}': {2}
+
+## ExceptionType=InvalidOperationException
+ConflictingColumnConfiguration=Conflicting configuration settings were specified for column '{0}' on table '{1}': {2}
+
+ConflictingConfigurationValue={0} = {1} conflicts with {2} = {3}
+
+## ExceptionType=InvalidOperationException
+InvalidComplexType=The type '{0}' was not mapped. Check that the type has not been explicitly excluded by using the Ignore method or NotMappedAttribute data annotation. Verify that the type was defined as a class, is not primitive, nested or generic, and does not inherit from ComplexObject.
+
+## ExceptionType=InvalidOperationException
+InvalidEntityType=The type '{0}' was not mapped. Check that the type has not been explicitly excluded by using the Ignore method or NotMappedAttribute data annotation. Verify that the type was defined as a class, is not primitive, nested or generic, and does not inherit from EntityObject.
+
+## ExceptionType=InvalidOperationException
+NavigationInverseItself=The navigation property '{0}' declared on type '{1}' cannot be the inverse of itself.
+
+## ExceptionType=InvalidOperationException
+ConflictingConstraint=The navigation property '{0}' declared on type '{1}' has been configured with conflicting foreign keys.
+
+## ExceptionType=MappingException
+ConflictingInferredColumnType=Values of incompatible types ('{1}' and '{2}') were assigned to the '{0}' discriminator column. Values of the same type must be specified. To explicitly specify the type of the discriminator column use the HasColumnType method.
+
+## ExceptionType=InvalidOperationException
+ConflictingMapping=The navigation property '{0}' declared on type '{1}' has been configured with conflicting mapping information.
+
+## ExceptionType=InvalidOperationException
+ConflictingCascadeDeleteOperation=The navigation property '{0}' declared on type '{1}' has been configured with conflicting cascade delete operations using 'WillCascadeOnDelete'.
+
+## ExceptionType=InvalidOperationException
+ConflictingMultiplicities=The navigation property '{0}' declared on type '{1}' has been configured with conflicting multiplicities.
+
+## ExceptionType=InvalidOperationException
+MaxLengthAttributeConvention_InvalidMaxLength=The MaxLengthAttribute on property '{0}' on type '{1} is not valid. The Length value must be greater than zero. Use MaxLength() without parameters to indicate that the string or array can have the maximum allowable length.
+
+## ExceptionType=InvalidOperationException
+StringLengthAttributeConvention_InvalidMaximumLength=The StringLengthAttribute on property '{0}' on type '{1}' is not valid. The maximum length must be greater than zero. Use MaxLength() without parameters to indicate that the string or array can have the maximum allowable length.
+
+## ExceptionType=InvalidOperationException
+ModelGeneration_UnableToDetermineKeyOrder=Unable to determine composite primary key ordering for type '{0}'. Use the ColumnAttribute or the HasKey method to specify an order for composite primary keys.
+
+## ExceptionType=InvalidOperationException
+ForeignKeyAttributeConvention_EmptyKey=The ForeignKeyAttribute on property '{0}' on type '{1}' is not valid. Name must not be empty.
+
+## ExceptionType=InvalidOperationException
+ForeignKeyAttributeConvention_InvalidKey=The ForeignKeyAttribute on property '{0}' on type '{1}' is not valid. The foreign key name '{2}' was not found on the dependent type '{3}'. The Name value should be a comma separated list of foreign key property names.
+
+## ExceptionType=InvalidOperationException
+ForeignKeyAttributeConvention_InvalidNavigationProperty=The ForeignKeyAttribute on property '{0}' on type '{1}' is not valid. The navigation property '{2}' was not found on the dependent type '{1}'. The Name value should be a valid navigation property name.
+
+## ExceptionType=InvalidOperationException
+ForeignKeyAttributeConvention_OrderRequired=Unable to determine a composite foreign key ordering for foreign key on type {0}. When using the ForeignKey data annotation on composite foreign key properties ensure order is specified by using the Column data annotation or the fluent API.
+
+## ExceptionType=InvalidOperationException
+InversePropertyAttributeConvention_PropertyNotFound=The InversePropertyAttribute on property '{2}' on type '{3}' is not valid. The property '{0}' is not a valid navigation property on the related type '{1}'. Ensure that the property exists and is a valid reference or collection navigation property.
+
+## ExceptionType=InvalidOperationException
+InversePropertyAttributeConvention_SelfInverseDetected=A relationship cannot be established from property '{0}' on type '{1}' to property '{0}' on type '{1}'. Check the values in the InversePropertyAttribute to ensure relationship definitions are unique and reference from one navigation property to its corresponding inverse navigation property.
+
+ValidationHeader=One or more validation errors were detected during model generation:
+ValidationItemFormat=\t{0}: {1}: {2}
+
+## ExceptionType=InvalidOperationException
+KeyRegisteredOnDerivedType=A key is registered for the derived type '{0}'. Keys can only be registered for the root type '{1}'.
+
+; Copied from System.Data.Entity.Design
+DuplicateEntryInUserDictionary=The {0} value '{1}' already exists in the user-defined dictionary.
+
+## ExceptionType=InvalidOperationException
+InvalidTableMapping=The type '{0}' has already been mapped to table '{1}'. Specify all mapping aspects of a table in a single Map call.
+
+## ExceptionType=InvalidOperationException
+InvalidTableMapping_NoTableName=Map was called more than once for type '{0}' and at least one of the calls didn't specify the target table name.
+
+## ExceptionType=InvalidOperationException
+InvalidChainedMappingSyntax=The derived type '{0}' has already been mapped using the chaining syntax. A derived type can only be mapped once using the chaining syntax.
+
+## ExceptionType=InvalidOperationException
+InvalidNotNullCondition=An "is not null" condition cannot be specified on property '{0}' on type '{1}' because this property is not included in the model. Check that the property has not been explicitly excluded from the model by using the Ignore method or NotMappedAttribute data annotation.
+
+## ExceptionType=ArgumentException
+InvalidDiscriminatorType=Values of type '{0}' cannot be used as type discriminator values. Supported types include byte, signed byte, bool, int16, int32, int64, and string.
+
+## ExceptionType=InvalidOperationException
+ConventionNotFound=Unable to add the convention '{0}'. Could not find an existing convention of type '{1}' in the current convention set.
+
+## ExceptionType=InvalidOperationException
+InvalidEntitySplittingProperties=Not all properties for type '{0}' have been mapped. Either map those properties or explicitly excluded them from the model.
+
+## ExceptionType=NotSupportedException
+ModelBuilder_ProviderNameNotFound=Unable to determine the provider name for connection of type '{0}'.
+
+## ExceptionType=ArgumentException
+ToTable_InvalidSchemaName=The qualified table name '{0}' contains an invalid schema name. Schema names must have a non-zero length.
+
+## ExceptionType=ArgumentException
+ToTable_InvalidTableName=The qualified table name '{0}' contains an invalid table name. Table names must have a non-zero length.
+
+## ExceptionType=InvalidOperationException
+EntityMappingConfiguration_DuplicateMapInheritedProperties=Properties for type '{0}' can only be mapped once. Ensure the MapInheritedProperties method is only used during one call to the Map method.
+
+## ExceptionType=InvalidOperationException
+EntityMappingConfiguration_DuplicateMappedProperties=Properties for type '{0}' can only be mapped once. Ensure the Properties method is used and that repeated calls specify each non-key property only once.
+
+## ExceptionType=InvalidOperationException
+EntityMappingConfiguration_DuplicateMappedProperty=Properties for type '{0}' can only be mapped once. The non-key property '{1}' is mapped more than once. Ensure the Properties method specifies each non-key property only once.
+
+## ExceptionType=InvalidOperationException
+EntityMappingConfiguration_CannotMapIgnoredProperty=The property '{1}' on type '{0}' cannot be mapped because it has been explicitly excluded from the model or it is of a type not supported by the DbModelBuilderVersion being used.
+
+## ExceptionType=InvalidOperationException
+EntityMappingConfiguration_InvalidTableSharing=The entity types '{0}' and '{1}' cannot share table '{2}' because they are not in the same type hierarchy or do not have a valid one to one foreign key relationship with matching primary keys between them.
+
+## ExceptionType=InvalidOperationException
+CannotIgnoreMappedBaseProperty=You cannot use Ignore method on the property '{0}' on type '{1}' because this type inherits from the type '{2}' where this property is mapped. To exclude this property from your model, use NotMappedAttribute or Ignore method on the base type.
+
+## ExceptionType=InvalidOperationException
+ModelBuilder_KeyPropertiesMustBePrimitive=The property '{0}' cannot be used as a key property on the entity '{1}' because the property type is not a valid key type. Only scalar types, string and byte[] are supported key types.
+
+## ExceptionType=InvalidOperationException
+TableNotFound=The specified table '{0}' was not found in the model. Ensure that the table name has been correctly specified.
+
+## ExceptionType=InvalidOperationException
+IncorrectColumnCount=The specified association foreign key columns '{0}' are invalid. The number of columns specified must match the number of primary key columns.
+
+## ExceptionType=InvalidOperationException
+CircularComplexTypeHierarchy=A circular ComplexType hierarchy was detected. Self-referencing ComplexTypes are not supported.
+
+## ExceptionType=InvalidOperationException
+UnableToDeterminePrincipal=Unable to determine the principal end of an association between the types '{0}' and '{1}'. The principal end of this association must be explicitly configured using either the relationship fluent API or data annotations.
+
+## ExceptionType=InvalidOperationException
+UnmappedAbstractType=The abstract type '{0}' has no mapped descendents and so cannot be mapped. Either remove '{0}' from the model or add one or more types deriving from '{0}' to the model. 
+
+## ExceptionType=NotSupportedException
+UnsupportedHybridInheritanceMapping=The type '{0}' cannot be mapped as defined because it maps inherited properties from types that use entity splitting or another form of inheritance. Either choose a different inheritance mapping strategy so as to not map inherited properties, or change all types in the hierarchy to map inherited properties and to not use splitting. 
+
+## ExceptionType=InvalidOperationException
+OrphanedConfiguredTableDetected=The table '{0}' was configured but is not used in any mappings. Verify the mapping configuration for '{0}' is correct.
+
+## ExceptionType=InvalidOperationException
+DuplicateConfiguredColumnOrder=The configured column orders for the table '{0}' contains duplicates. Ensure the specified column order values are distinct.
+
+## ExceptionType=NotSupportedException
+UnsupportedUseOfV3Type=The enum or spatial property '{1}' on type '{0}' cannot be mapped. Use DbModelBuilderVersion 'V5_0' or later to map enum or spatial properties.
+
+## ExceptionType=InvalidOperationException
+MultiplePropertiesMatchedAsKeys=Multiple potential primary key properties named '{0}' but differing only by case were found on entity type '{1}'. Configure the primary key explicitly using the HasKey fluent API or the KeyAttribute data annotation.
+
+; DBCONTEXT RESOURCES ----------------------------------------------------------------------------------------------------------------
+
+BadLocalDBDatabaseName=Connection to the database failed. The connection string is configured with an invalid LocalDB server name. This may have been set in 'global.asax' by a pre-release version of MVC4. The default connection factory is now set in web.config so the line in 'global.asax' starting with 'Database.DefaultConnectionFactory = ' should be removed. See http://go.microsoft.com/fwlink/?LinkId=243166 for details.
+
+FailedToGetProviderInformation=An error occurred while getting provider information from the database. This can be caused by Entity Framework using an incorrect connection string. Check the inner exceptions for details and ensure that the connection string is correct.
+
+## ExceptionType=InvalidOperationException
+DbPropertyEntry_CannotGetCurrentValue=Cannot get value for property '{0}' from entity of type '{1}' because the property has no get accessor.
+
+## ExceptionType=InvalidOperationException
+DbPropertyEntry_CannotSetCurrentValue=Cannot set value for property '{0}' on entity of type '{1}' because the property has no set accessor.
+
+## ExceptionType=InvalidOperationException
+DbPropertyEntry_NotSupportedForDetached=Member '{0}' cannot be called for property '{1}' because the entity of type '{2}' does not exist in the context. To add an entity to the context call the Add or Attach method of DbSet<{2}>.
+
+## ExceptionType=NotSupportedException
+DbPropertyEntry_SettingEntityRefNotSupported=Cannot set value for property '{0}' on entity of type '{1}' because the property has no set accessor and is in the '{2}' state.
+
+## ExceptionType=InvalidOperationException
+DbPropertyEntry_NotSupportedForPropertiesNotInTheModel=Member '{0}' cannot be called for property '{1}' on entity of type '{2}' because the property is not part of the Entity Data Model.
+
+## ExceptionType=InvalidOperationException
+DbEntityEntry_NotSupportedForDetached=Member '{0}' cannot be called for the entity of type '{1}' because the entity does not exist in the context. To add an entity to the context call the Add or Attach method of DbSet<{1}>.
+
+## ExceptionType=ArgumentException
+DbSet_BadTypeForAddAttachRemove=Cannot call the {0} method for an entity of type '{1}' on a DbSet for entities of type '{2}'. Only entities of type '{2}' or derived from type '{2}' can be added, attached, or removed.
+
+## ExceptionType=ArgumentException
+DbSet_BadTypeForCreate=Cannot call the Create method for the type '{0}' on a DbSet for entities of type '{1}'. Only entities of type '{1}' or derived from type '{1}' can be created.
+
+## ExceptionType=InvalidCastException
+DbEntity_BadTypeForCast=Cannot create a {0}<{1}> from a non-generic {0} for objects of type '{2}'.
+
+## ExceptionType=InvalidCastException
+DbMember_BadTypeForCast=Cannot create a {0}<{1}, {2}> from a non-generic {0} for entities of type '{3}' with property of type '{4}'.
+
+## ExceptionType=ArgumentException
+DbEntityEntry_UsedReferenceForCollectionProp=The property '{0}' on type '{1}' is a collection navigation property. The Collection method should be used instead of the Reference method.
+
+## ExceptionType=ArgumentException
+DbEntityEntry_UsedCollectionForReferenceProp=The property '{0}' on type '{1}' is a reference navigation property. The Reference method should be used instead of the Collection method.
+
+## ExceptionType=ArgumentException
+DbEntityEntry_NotANavigationProperty=The property '{0}' on type '{1}' is not a navigation property. The Reference and Collection methods can only be used with navigation properties. Use the Property or ComplexProperty method.
+
+## ExceptionType=ArgumentException
+DbEntityEntry_NotAScalarProperty=The property '{0}' on type '{1}' is not a primitive or complex property. The Property method can only be used with primitive or complex properties. Use the Reference or Collection method.
+
+## ExceptionType=ArgumentException
+DbEntityEntry_NotAComplexProperty=The property '{0}' on type '{1}' is not a complex property. The ComplexProperty method can only be used with complex properties. Use the Property, Reference or Collection method.
+
+## ExceptionType=ArgumentException
+DbEntityEntry_NotAProperty=The property '{0}' on type '{1}' is not a primitive property, complex property, collection navigation property, or reference navigation property.
+
+## ExceptionType=ArgumentException
+DbEntityEntry_DottedPartNotComplex="The property '{0}' from the property path '{1}' is not a complex property on type '{2}'. Property paths must be composed of complex properties for all except the final property."
+
+## ExceptionType=NotSupportedException
+DbPropertyEntry_CannotMarkPropertyUnmodified=Setting IsModified to false for a modified property is not supported.
+
+## ExceptionType=ArgumentException
+DbEntityEntry_DottedPathMustBeProperty="The property path '{0}' cannot be used for navigation properties. Property paths can only be used to access primitive or complex properties."
+
+## ExceptionType=ArgumentException
+DbEntityEntry_WrongGenericForNavProp=The navigation property '{0}' on entity type '{1}' cannot be used for entities of type '{2}' because it refers to entities of type '{3}'.
+
+## ExceptionType=ArgumentException
+DbEntityEntry_WrongGenericForCollectionNavProp=The generic type argument '{0}' cannot be used with the Member method when accessing the collection navigation property '{1}' on entity type '{2}'. The generic type argument '{3}' must be used instead.
+
+## ExceptionType=ArgumentException
+DbEntityEntry_WrongGenericForProp=The property '{0}' on entity type '{1}' cannot be used for objects of type '{2}' because it is a property for objects of type '{3}'.
+
+## ExceptionType=ArgumentException
+DbEntityEntry_BadPropertyExpression=The expression passed to method {0} must represent a property defined on the type '{1}'.
+
+DbContext_IndependentAssociationUpdateException=An error occurred while saving entities that do not expose foreign key properties for their relationships. The EntityEntries property will return null because a single entity cannot be identified as the source of the exception. Handling of exceptions while saving can be made easier by exposing foreign key properties in your entity types. See the InnerException for details.
+
+## ExceptionType=InvalidOperationException
+DbPropertyValues_CannotGetValuesForState={0} cannot be used for entities in the {1} state.
+
+## ExceptionType=InvalidOperationException
+DbPropertyValues_CannotSetNullValue=Cannot set non-nullable property '{0}' of type '{1}' to null on object of type '{2}'.
+
+## ExceptionType=InvalidOperationException
+DbPropertyValues_CannotGetStoreValuesWhenComplexPropertyIsNull=The property '{0}' in the entity of type '{1}' is null. Store values cannot be obtained for an entity with a null complex property.
+
+## ExceptionType=InvalidOperationException
+DbPropertyValues_WrongTypeForAssignment=Cannot assign value of type '{0}' to property '{1}' of type '{2}' in property values for type '{3}'.
+
+## ExceptionType=NotSupportedException
+DbPropertyValues_PropertyValueNamesAreReadonly=The set of property value names is read-only.
+
+## ExceptionType=ArgumentException
+DbPropertyValues_PropertyDoesNotExist=The '{0}' property does not exist or is not mapped for the type '{1}'.
+
+## ExceptionType=ArgumentException
+DbPropertyValues_AttemptToSetValuesFromWrongObject=Cannot copy values from DbPropertyValues for type '{0}' into DbPropertyValues for type '{1}'.
+
+## ExceptionType=ArgumentException
+DbPropertyValues_AttemptToSetValuesFromWrongType=Cannot copy from property values for object of type '{0}' into property values for object of type '{1}'.
+
+## ExceptionType=ArgumentException
+DbPropertyValues_AttemptToSetNonValuesOnComplexProperty=A property of a complex type must be set to an instance of the generic or non-generic DbPropertyValues class for that type.
+
+## ExceptionType=InvalidOperationException
+DbPropertyValues_ComplexObjectCannotBeNull=The value of the complex property '{0}' on entity of type '{1}' is null. Complex properties cannot be set to null and values cannot be set for null complex properties.
+
+## ExceptionType=InvalidOperationException
+DbPropertyValues_NestedPropertyValuesNull=The value of the nested property values property '{0}' on the values for entity of type '{1}' is null. Nested property values cannot be set to null and values cannot be set for null complex properties.
+
+## ExceptionType=InvalidOperationException
+DbPropertyValues_CannotSetPropertyOnNullCurrentValue=Cannot set the value of the nested property '{0}' because value of the complex property '{1}' to which it belongs is null.
+
+## ExceptionType=InvalidOperationException
+DbPropertyValues_CannotSetPropertyOnNullOriginalValue=Cannot set the original value of the nested property '{0}' because the original value of the complex property '{1}' to which it belongs is null.
+
+## ExceptionType=InvalidOperationException
+DatabaseInitializationStrategy_ModelMismatch=The model backing the '{0}' context has changed since the database was created. Consider using Code First Migrations to update the database (http://go.microsoft.com/fwlink/?LinkId=238269).
+  
+## ExceptionType=InvalidOperationException
+Database_DatabaseAlreadyExists=Database '{0}' cannot be created because it already exists.
+
+## ExceptionType=NotSupportedException
+Database_NonCodeFirstCompatibilityCheck=Model compatibility cannot be checked because the DbContext instance was not created using Code First patterns. DbContext instances created from an ObjectContext or using an EDMX file cannot be checked for compatibility.
+
+## ExceptionType=NotSupportedException
+Database_MetadataNotMapped=Model compatibility cannot be checked because the EdmMetadata type was not included in the model. Ensure that IncludeMetadataConvention has been added to the DbModelBuilder conventions.
+
+## ExceptionType=NotSupportedException
+Database_NoDatabaseMetadata=Model compatibility cannot be checked because the database does not contain model metadata. Model compatibility can only be checked for databases created using Code First or Code First Migrations.
+
+## ExceptionType=InvalidOperationException
+Database_BadLegacyInitializerEntry=The DbContextDatabaseInitializer entry 'key="{0}" value="{1}"' in the application configuration is not valid. Entries should be of the form 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="MyNamespace.MyInitializerClass, MyAssembly"' or 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="Disabled"'. Consider using the <entityFramework> configuration section to set the database initializer (http://go.microsoft.com/fwlink/?LinkID=237468).
+
+## ExceptionType=InvalidOperationException
+Database_InitializeFromLegacyConfigFailed=Failed to set database initializer of type '{0}' for DbContext type '{1}' specified in the application configuration. Entries should be of the form 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="MyNamespace.MyInitializerClass, MyAssembly"' or 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="Disabled"'. Also verify that 'DatabaseInitializerArgumentForType' entries are present for every parameter of the database initializer constructor. See inner exception for details. Consider using the <entityFramework> configuration section to set the database initializer (http://go.microsoft.com/fwlink/?LinkID=237468).
+
+## ExceptionType=InvalidOperationException
+Database_InitializeFromConfigFailed=Failed to set database initializer of type '{0}' for DbContext type '{1}' specified in the application configuration. See inner exception for details.
+
+## ExceptionType=InvalidOperationException
+ContextConfiguredMultipleTimes=Configuration for DbContext type '{0}' is specified multiple times in the application configuration. Each context can only be configured once.
+
+## ExceptionType=InvalidOperationException
+SetConnectionFactoryFromConfigFailed=Failed to set Database.DefaultConnectionFactory to an instance of the '{0}' type as specified in the application configuration. See inner exception for details.
+
+## ExceptionType=InvalidOperationException
+Database_FailedToResolveType=The type '{0}' could not be found. The type name must be an assembly-qualified name.
+
+## ExceptionType=InvalidOperationException
+DbContext_ContextUsedInModelCreating=The context cannot be used while the model is being created.
+
+## ExceptionType=InvalidOperationException
+DbContext_MESTNotSupported=The DbContext class cannot be used with models that have multiple entity sets per type (MEST).
+
+## ExceptionType=InvalidOperationException
+DbContext_Disposed=The operation cannot be completed because the DbContext has been disposed.
+
+## ExceptionType=InvalidOperationException
+DbContext_ProviderReturnedNullConnection=The provider factory returned a null connection.
+
+## ExceptionType=InvalidOperationException
+DbContext_ProviderNameMissing=The connection string '{0}' in the application's configuration file does not contain the required providerName attribute."
+
+## ExceptionType=InvalidOperationException
+DbContext_ConnectionFactoryReturnedNullConnection=The DbConnectionFactory instance returned a null connection.
+
+## ExceptionType=ArgumentException
+DbSet_WrongNumberOfKeyValuesPassed=The number of primary key values passed must match number of primary key values defined on the entity.
+
+## ExceptionType=ArgumentException
+DbSet_WrongKeyValueType=The type of one of the primary key values did not match the type defined in the entity. See inner exception for details.
+
+## ExceptionType=InvalidOperationException
+DbSet_WrongEntityTypeFound=The entity found was of type {0} when an entity of type {1} was requested.
+
+## ExceptionType=InvalidOperationException
+DbSet_MultipleAddedEntitiesFound=Multiple entities were found in the Added state that match the given primary key values.
+
+## ExceptionType=InvalidOperationException
+DbSet_DbSetUsedWithComplexType=The type '{0}' is mapped as a complex type. The Set method, DbSet objects, and DbEntityEntry objects can only be used with entity types, not complex types.
+
+## ExceptionType=InvalidOperationException
+DbSet_PocoAndNonPocoMixedInSameAssembly=The type '{0}' is not attributed with EdmEntityTypeAttribute but is contained in an assembly attributed with EdmSchemaAttribute. POCO entities that do not use EdmEntityTypeAttribute cannot be contained in the same assembly as non-POCO entities that use EdmEntityTypeAttribute.
+
+## ExceptionType=InvalidOperationException
+DbSet_EntityTypeNotInModel=The entity type {0} is not part of the model for the current context.
+
+## ExceptionType=NotSupportedException
+DbQuery_BindingToDbQueryNotSupported=Data binding directly to a store query (DbSet, DbQuery, DbSqlQuery) is not supported. Instead populate a DbSet with data, for example by calling Load on the DbSet, and then bind to local data. For WPF bind to DbSet.Local. For WinForms bind to DbSet.Local.ToBindingList().
+
+## ExceptionType=ArgumentException
+DbExtensions_InvalidIncludePathExpression=The Include path expression must refer to a navigation property defined on the type. Use dotted paths for reference navigation properties and the Select operator for collection navigation properties.
+
+## ExceptionType=InvalidOperationException
+DbContext_ConnectionStringNotFound=No connection string named '{0}' could be found in the application config file.
+
+## ExceptionType=InvalidOperationException
+DbContext_ConnectionHasModel=Cannot initialize a DbContext from an entity connection string or an EntityConnection instance together with a DbCompiledModel. If an entity connection string or EntityConnection instance is used, then the model will be created from the metadata in the connection. If a DbCompiledModel is used, then the connection supplied should be a standard database connection (for example, a SqlConnection instance) rather than an entity connection.
+
+## ExceptionType=NotSupportedException
+DbCollectionEntry_CannotSetCollectionProp=The collection navigation property '{0}' on the entity of type '{1}' cannot be set because the entity type does not define a navigation property with a set accessor.
+
+## ExceptionType=NotSupportedException
+CodeFirstCachedMetadataWorkspace_SameModelDifferentProvidersNotSupported=Using the same DbCompiledModel to create contexts against different types of database servers is not supported. Instead, create a separate DbCompiledModel for each type of server being used.
+
+## ExceptionType=InvalidOperationException
+Mapping_MESTNotSupported=Multiple object sets per type are not supported. The object sets '{0}' and '{1}' can both contain instances of type '{2}'.
+
+## ExceptionType=InvalidOperationException
+DbModelBuilder_MissingRequiredCtor=The context type '{0}' must have a public constructor taking an EntityConnection.
+
+DbEntityValidationException_ValidationFailed=Validation failed for one or more entities. See 'EntityValidationErrors' property for more details.
+
+DbUnexpectedValidationException_ValidationAttribute=An unexpected exception was thrown during validation of '{0}' when invoking {1}.IsValid. See the inner exception for details.
+
+DbUnexpectedValidationException_IValidatableObject=An unexpected exception was thrown during validation of '{0}' when invoking {1}.Validate. See the inner exception for details.
+
+## ExceptionType=NotSupportedException
+SqlConnectionFactory_MdfNotSupported=The database name '{0}' is not supported because it is an MDF file name. A full connection string must be provided to attach an MDF file.
+
+## ExceptionType=DataException
+Database_InitializationException=An exception occurred while initializing the database. See the InnerException for details.
+
+## ExceptionType=NotSupportedException
+EdmxWriter_EdmxFromObjectContextNotSupported=Creating a DbModelBuilder or writing the EDMX from a DbContext created using an existing ObjectContext is not supported. EDMX can only be obtained from a Code First DbContext created without using an existing DbCompiledModel.
+
+## ExceptionType=NotSupportedException
+EdmxWriter_EdmxFromDbCompiledModelNotSupported=Creating a DbModelBuilder or writing the EDMX from a DbContext created using an existing DbCompiledModel is not supported. EDMX can only be obtained from a Code First DbContext created without using an existing DbCompiledModel.
+
+## ExceptionType=NotSupportedException
+EdmxWriter_EdmxFromModelFirstNotSupported=Creating a DbModelBuilder or writing the EDMX from a DbContext created using Database First or Model First is not supported. EDMX can only be obtained from a Code First DbContext created without using an existing DbCompiledModel.
+
+UnintentionalCodeFirstException_Message=Code generated using the T4 templates for Database First and Model First development may not work correctly if used in Code First mode. To continue using Database First or Model First ensure that the Entity Framework connection string is specified in the config file of executing application. To use these classes, that were generated from Database First or Model First, with Code First add any additional configuration using attributes or the DbModelBuilder API and then remove the code that throws this exception.
+
+## ExceptionType=InvalidOperationException
+DbContextServices_MissingDefaultCtor=The context factory type '{0}' must have a public default constructor.
+
+## ExceptionType=InvalidOperationException
+CannotCallGenericSetWithProxyType=The generic 'Set' method cannot be called with a proxy type. Either use the actual entity type or call the non-generic 'Set' method.
+
+; EDMLIB RESOURCES -----------------------------------------------------------------------------------------------------------------------------
+
+; EDM model messages
+EdmPrimitiveType_SetPropertyNotSupported=The '{0}' property of EdmPrimitiveType is fixed and cannot be set.
+
+;Only used by code ifdefed by IncludeUnusedEdmCode
+;EdmRowType_SetPropertyNotSupported=The '{0}' property of EdmRowType is fixed and cannot be set.
+
+;Error messages for semantic validation rules
+EdmModel_Validator_Semantic_SystemNamespaceEncountered=The namespace '{0}' is a system namespace and cannot be used by other schemas. Choose another namespace name.
+EdmModel_Validator_Semantic_SimilarRelationshipEnd=Role '{0}' in AssociationSets '{1}' and '{2}' refers to the same EntitySet '{3}' in EntityContainer '{4}'. Make sure that if two or more AssociationSets refer to the same AssociationType, the ends do not refer to the same EntitySet.
+EdmModel_Validator_Semantic_InvalidEntitySetNameReference=The referenced EntitySet '{0}' for End '{1}' could not be found in the containing EntityContainer.
+EdmModel_Validator_Semantic_ConcurrencyRedefinedOnSubTypeOfEntitySetType=Type '{0}' is derived from type '{1}' that is the type for EntitySet '{2}'. Type '{0}' defines new concurrency requirements that are not allowed for subtypes of base EntitySet types.
+EdmModel_Validator_Semantic_EntitySetTypeHasNoKeys=EntitySet '{0}' is based on type '{1}' that has no keys defined.
+EdmModel_Validator_Semantic_DuplicateEndName=The end name  '{0}' is already defined.
+EdmModel_Validator_Semantic_DuplicatePropertyNameSpecifiedInEntityKey=The key specified in EntityType '{0}' is not valid. Property '{1}' is referenced more than once in the Key element.
+EdmModel_Validator_Semantic_InvalidCollectionKindNotCollection=Property '{0}' has a CollectionKind specified but is not a collection property.
+EdmModel_Validator_Semantic_InvalidCollectionKindNotV1_1=Property '{0}' has a CollectionKind specified. CollectionKind is only supported in version 1.1 EDM models.
+EdmModel_Validator_Semantic_InvalidComplexTypeAbstract=ComplexType '{0}' is marked as abstract. Abstract ComplexTypes are only supported in version 1.1 EDM models.
+EdmModel_Validator_Semantic_InvalidComplexTypePolymorphic=ComplexType '{0}' has a BaseType specified. ComplexType inheritance is only supported in version 1.1 EDM models.
+EdmModel_Validator_Semantic_InvalidKeyNullablePart=Key part '{0}' for type '{1}' is not valid. All parts of the key must be non-nullable.
+EdmModel_Validator_Semantic_EntityKeyMustBeScalar=The property '{0}' in EntityType '{1}' is not valid. All properties that are part of the EntityKey must be of PrimitiveType.
+EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass=Key usage is not valid. The {0} class  cannot define keys because one of its base classes ('{1}') defines keys.
+EdmModel_Validator_Semantic_KeyMissingOnEntityType=EntityType '{0}' has no key defined. Define the key for this EntityType.
+EdmModel_Validator_Semantic_BadNavigationPropertyUndefinedRole=NavigationProperty is not valid. Role '{0}' or Role '{1}' is not defined in Relationship '{2}'.
+EdmModel_Validator_Semantic_BadNavigationPropertyRolesCannotBeTheSame=NavigationProperty is not valid. The FromRole and ToRole are the same.
+EdmModel_Validator_Semantic_InvalidOperationMultipleEndsInAssociation=OnDelete can be specified on only one End of an EdmAssociation.
+EdmModel_Validator_Semantic_EndWithManyMultiplicityCannotHaveOperationsSpecified=End '{0}' on relationship '{1}' cannot have an operation specified because its multiplicity is '*'. Operations cannot be specified on ends with multiplicity '*'.
+EdmModel_Validator_Semantic_EndNameAlreadyDefinedDuplicate=Each Name and PluralName in a relationship must be unique. '{0}' is already defined.
+EdmModel_Validator_Semantic_SameRoleReferredInReferentialConstraint=In relationship '{0}', the Principal and Dependent Role of the referential constraint refer to the same Role in the relationship type.
+EdmModel_Validator_Semantic_InvalidMultiplicityFromRoleUpperBoundMustBeOne=Multiplicity is not valid in Role '{0}' in relationship '{1}'. Valid values for multiplicity for the Principal Role are '0..1' or '1'.
+EdmModel_Validator_Semantic_InvalidMultiplicityFromRoleToPropertyNullableV1=Multiplicity is not valid in Role '{0}' in relationship '{1}'. Because all the properties in the Dependent Role are nullable, multiplicity of the Principal Role must be '0..1'.
+EdmModel_Validator_Semantic_InvalidMultiplicityFromRoleToPropertyNonNullableV1=Multiplicity conflicts with the referential constraint in Role '{0}' in relationship '{1}'. Because at least one  of the properties in the Dependent Role is non-nullable, multiplicity of the Principal Role must be '1'.
+EdmModel_Validator_Semantic_InvalidMultiplicityFromRoleToPropertyNonNullableV2=Multiplicity conflicts with the referential constraint in Role '{0}' in relationship '{1}'. Because all of the properties in the Dependent Role are non-nullable, multiplicity of the Principal Role must be '1'.
+EdmModel_Validator_Semantic_InvalidToPropertyInRelationshipConstraint=Properties referred by the Dependent Role '{0}' must be a subset of the key of the EntityType '{1}' referred to by the Dependent Role in the referential constraint for relationship '{2}'.
+EdmModel_Validator_Semantic_InvalidMultiplicityToRoleUpperBoundMustBeOne=Multiplicity is not valid in Role '{0}' in relationship '{1}'. Because the Dependent Role refers to the key properties, the upper bound of the multiplicity of the Dependent Role must be '1'.
+EdmModel_Validator_Semantic_InvalidMultiplicityToRoleUpperBoundMustBeMany=Multiplicity is not valid in Role '{0}' in relationship '{1}'. Because the Dependent Role properties are not the key properties, the upper bound of the multiplicity of the Dependent Role must be '*'.
+EdmModel_Validator_Semantic_MismatchNumberOfPropertiesinRelationshipConstraint=The number of properties in the Dependent and Principal Roles in a relationship constraint must be identical.
+EdmModel_Validator_Semantic_TypeMismatchRelationshipConstraint=The types of all properties in the Dependent Role of a referential constraint must be the same as the corresponding property types in the Principal Role. The type of property '{0}' on entity '{1}' does not match the type of property '{2}' on entity '{3}' in the referential constraint '{4}'.
+EdmModel_Validator_Semantic_InvalidPropertyInRelationshipConstraint=There is no property with name '{0}' defined in the type referred to by Role '{1}'.
+EdmModel_Validator_Semantic_NullableComplexType=A nullable ComplexType is not supported. Property '{0}' must not allow nulls.
+EdmModel_Validator_Semantic_InvalidPropertyType=A property cannot be of type '{0}'. The property type must be a ComplexType or a PrimitiveType.
+;Only used by code ifdefed by IncludeUnusedEdmCode
+;EdmModel_Validator_Semantic_FunctionImportUnknownEntitySet=EntitySet '{0}' is not valid in FunctionImport '{1}'. No EntitySet with that name was found.
+;Only used by code ifdefed by IncludeUnusedEdmCode
+;EdmModel_Validator_Semantic_FunctionImportWithUnsupportedReturnTypeV1=The return type is not valid in FunctionImport '{0}'. The FunctionImport must return a collection of scalar values or a collection of entities.
+;Only used by code ifdefed by IncludeUnusedEdmCode
+;EdmModel_Validator_Semantic_FunctionImportWithUnsupportedReturnTypeV1_1=The return type is not valid in FunctionImport '{0}'. The FunctionImport must return a Scalar, Entity, or ComplexType.
+;Only used by code ifdefed by IncludeUnusedEdmCode
+;EdmModel_Validator_Semantic_FunctionImportWithUnsupportedReturnTypeV2=The return type is not valid in FunctionImport '{0}'. The FunctionImport can have no return type or can return a collection of scalar values, a collection of complex types, or a collection of entities.
+;Only used by code ifdefed by IncludeUnusedEdmCode
+;EdmModel_Validator_Semantic_ComposableFunctionMustDeclareReturnType=Functions that can be composed must declare a return type.
+;Only used by code ifdefed by IncludeUnusedEdmCode
+;EdmModel_Validator_Semantic_NonComposableFunctionMustNotDeclareReturnType=Functions that cannot be composed must not declare a return type.
+;Only used by code ifdefed by IncludeUnusedEdmCode
+;EdmModel_Validator_Semantic_FunctionImportReturnEntitiesButDoesNotSpecifyEntitySet=FunctionImport '{0}' returns entities but does not specify an EntitySet.
+;Only used by code ifdefed by IncludeUnusedEdmCode
+;EdmModel_Validator_Semantic_FunctionImportEntityTypeDoesNotMatchEntitySet=In EntityContainer '{3}', FunctionImport '{0}' returns entities of type '{1}' that cannot exist in the declared EntitySet '{2}'.
+;Only used by code ifdefed by IncludeUnusedEdmCode
+;EdmModel_Validator_Semantic_ComplexTypeAsReturnTypeAndDefinedEntitySet=The function '{0}' cannot have ComplexType ReturnType '{1}' and EntitySet '{2}' attribute at the same time.
+;Only used by code ifdefed by IncludeUnusedEdmCode
+;EdmModel_Validator_Semantic_FunctionImportSpecifiesEntitySetButNotEntityType=In EntityContainer '{1}', FunctionImport '{0}' specifies an EntitySet but does not return entities.
+;Only used by code ifdefed by IncludeUnusedEdmCode
+;EdmModel_Validator_Semantic_ParameterNameAlreadyDefinedDuplicate=Each parameter name in a function must be unique. The parameter name '{0}' is already defined.
+EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName=Each member name in an EntityContainer must be unique. A member with name '{0}' is already defined.
+EdmModel_Validator_Semantic_TypeNameAlreadyDefinedDuplicate=Each type name in a schema must be unique. Type name '{0}' is already defined.
+EdmModel_Validator_Semantic_InvalidMemberNameMatchesTypeName=Name '{0}' cannot be used in type '{1}'. Member names cannot be the same as their enclosing type.
+EdmModel_Validator_Semantic_PropertyNameAlreadyDefinedDuplicate=Each property name in a type must be unique. Property name '{0}' is already defined.
+EdmModel_Validator_Semantic_CycleInTypeHierarchy=A cycle was detected in the type hierarchy of '{0}'.
+EdmModel_Validator_Semantic_InvalidPropertyType_V1_1=A property cannot be of type '{0}'. The property type must be a ComplexType, a PrimitiveType, or a CollectionType.
+EdmModel_Validator_Semantic_InvalidPropertyType_V3=A property cannot be of type {0}. The property type must be a ComplexType, a PrimitiveType or an EnumType.
+
+;Error message for syntactic validation rules
+EdmModel_Validator_Syntactic_MissingName=The name is missing or not valid.
+EdmModel_Validator_Syntactic_EdmModel_NameIsTooLong=The specified name must not be longer than 480 characters: '{0}'.
+EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed=The specified name is not allowed: '{0}'.
+EdmModel_Validator_Syntactic_EdmAssociationType_AssocationEndMustNotBeNull=AssociationEnd must not be null.
+EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentEndMustNotBeNull=DependentEnd must not be null.
+EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentPropertiesMustNotBeEmpty=DependentProperties must not be empty.
+EdmModel_Validator_Syntactic_EdmNavigationProperty_AssocationMustNotBeNull=Association must not be null.
+EdmModel_Validator_Syntactic_EdmNavigationProperty_ResultEndMustNotBeNull=ResultEnd must not be null.
+EdmModel_Validator_Syntactic_EdmAssociationEnd_EntityTypeMustNotBeNull=EntityType must not be null.
+EdmModel_Validator_Syntactic_EdmEntitySet_ElementTypeMustNotBeNull=ElementType must not be null.
+EdmModel_Validator_Syntactic_EdmAssociationSet_ElementTypeMustNotBeNull=ElementType must not be null.
+EdmModel_Validator_Syntactic_EdmAssociationSet_SourceSetMustNotBeNull=SourceSet must not be null.
+EdmModel_Validator_Syntactic_EdmAssociationSet_TargetSetMustNotBeNull=TargetSet must not be null.
+;Only used by code ifdefed by IncludeUnusedEdmCode
+;EdmModel_Validator_Syntactic_EdmFunctionImport_ReturnTypeMustBeCollectionType=The ReturnType of the EdmFunctionImport must be a Collection type.
+EdmModel_Validator_Syntactic_EdmTypeReferenceNotValid=The type is not a valid EdmTypeReference.
+;Only used by code ifdefed by IncludeUnusedEdmCode
+;EdmModel_Validator_Syntactic_EdmFunctionCanOnlyExist20OrHigher=EdmFunction can only be defined in an EdmModel with a version of 2.0 or higher.
+
+;Error message for Validator
+;Only used by code ifdefed by IncludeUnusedEdmCode
+;EdmModel_Validator_TypeNameAlreadyDefinedDuplicate=Each type name in a schema must be unique. Type name '{0}' is already defined.
+;Only used by code ifdefed by IncludeUnusedEdmCode
+;EdmModel_Validator_DuplicateEntityContainerMemberName=Each member name in an EntityContainer must be unique. A member with name '{0}' is already defined.
+
+;Error message for Serializer
+Serializer_OneNamespaceAndOneContainer=Serializer can only serialize an EdmModel that has one EdmNamespace and one EdmEntityContainer.
+;Serializer_OneSchema=Serializer can only serialize DbDatabaseMetadata that has one Schema.
+;Serializer_OneSchemaAndOneNamespaceAndOneContainer=Serializer can only serialize DbDatabaseMetadata that has one Schema in its Database, and has one EdmNamespace and one EdmEntityContainer in its Model.
+
+; DATA ANNOTATION RESOURCES ---------------------------------------------------------------------------------------------------------------
+
+MaxLengthAttribute_ValidationError=The field {0} must be a string or array type with a maximum length of '{1}'.
+
+## ExceptionType=InvalidOperationException
+MaxLengthAttribute_InvalidMaxLength=MaxLengthAttribute must have a Length value that is greater than zero. Use MaxLength() without parameters to  indicate that the string or array can have the maximum allowable length.
+
+MinLengthAttribute_ValidationError=The field {0} must be a string or array type with a minimum length of '{1}'.
+
+## ExceptionType=InvalidOperationException
+MinLengthAttribute_InvalidMinLength=MinLengthAttribute must have a Length value that is zero or greater.
+
+## ExceptionType=InvalidOperationException
+DbConnectionInfo_ConnectionStringNotFound=No connection string named '{0}' could be found in the application config file.
+
+## ExceptionType=InvalidOperationException
+EagerInternalContext_CannotSetConnectionInfo=The connection can not be overridden because this context was created from an existing ObjectContext.
+
+## ExceptionType=InvalidOperationException
+LazyInternalContext_CannotReplaceEfConnectionWithDbConnection=Can not override the connection for this context with a standard DbConnection because the original connection was an EntityConnection.
+
+## ExceptionType=InvalidOperationException
+LazyInternalContext_CannotReplaceDbConnectionWithEfConnection=Can not override the connection for this context with an EntityConnection because the original connection was a standard DbConnection.
