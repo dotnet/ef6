@@ -10,14 +10,14 @@
 
     <Target Name="Clean">
         <MSBuild Targets="Clean" 
-				 Projects="$(SolutionFile)" 
-				 Properties="$(BuildProperties)"/>
+                 Projects="$(SolutionFile)" 
+                 Properties="$(BuildProperties)"/>
     </Target>
 
     <Target Name="Build">
         <MSBuild Targets="Build" 
-				 Projects="$(SolutionFile)" 
-				 Properties="$(BuildProperties)" />
+                 Projects="$(SolutionFile)" 
+                 Properties="$(BuildProperties)" />
     </Target>
 
     <Target Name="Rebuild">
@@ -28,7 +28,7 @@
    
     <Target Name="Test" DependsOnTargets="Rebuild">
         <MSBuild Projects="EF.xunit.targets" 
-				 Properties="$(BuildProperties)" /> 
+                 Properties="$(BuildProperties)" />
     </Target>
 
     <Target Name="Package" DependsOnTargets="Test">
