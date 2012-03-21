@@ -14,7 +14,26 @@
                  Properties="$(BuildProperties)"/>
     </Target>
     
-    <Import Project=".nuget\nuget.targets" />
+    <Target Name="RestorePackages">
+        <!--
+        This can't build in parallel because of NuGet package restore race conditions.
+        When this is fixed in NuGet, we can remove the CSPROJ part of this target.
+
+        NOTE: These projects are hand selected to be the minimum # of CSPROJ files that
+              ensure we've restored every remote package. If another collision is found,
+              please review the project list as appropriate.
+        -->
+        <ItemGroup>
+            <RestoreCsProjFiles Include="test\EntityFramework\FunctionalTests\*.csproj" />
+        </ItemGroup>
+        
+        <Message Text="Restoring NuGet packages..." Importance="High" />
+        
+        <MSBuild
+            Projects="@(RestoreCsProjFiles)"
+            BuildInParallel="false"
+            Targets="RestorePackages" />
+    </Target>
     
     <Target Name="Build" DependsOnTargets="RestorePackages">
         <MSBuild Targets="Build" 
