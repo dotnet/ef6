@@ -14,37 +14,18 @@
                  Properties="$(BuildProperties)"/>
     </Target>
     
-    <Target Name="RestorePackages">
-        <!--
-        This can't build in parallel because of NuGet package restore race conditions.
-        When this is fixed in NuGet, we can remove the CSPROJ part of this target.
-
-        NOTE: These projects are hand selected to be the minimum # of CSPROJ files that
-              ensure we've restored every remote package. If another collision is found,
-              please review the project list as appropriate.
-        -->
-        <ItemGroup>
-            <RestoreCsProjFiles Include="test\EntityFramework\FunctionalTests\*.csproj" />
-        </ItemGroup>
-        
-        <Message Text="Restoring NuGet packages..." Importance="High" />
-        
-        <MSBuild
-            Projects="@(RestoreCsProjFiles)"
-            BuildInParallel="false"
-            Targets="RestorePackages" />
-    </Target>
-    
-    <Target Name="Build" DependsOnTargets="RestorePackages">
+    <Target Name="Build">
         <MSBuild Targets="Build" 
                  Projects="$(SolutionFile)" 
-                 Properties="$(BuildProperties)" />
+                 Properties="$(BuildProperties)"
+                 BuildInParallel="false" />
     </Target>
 
-    <Target Name="Rebuild" DependsOnTargets="RestorePackages">
+    <Target Name="Rebuild">
         <MSBuild Targets="Rebuild" 
                  Projects="$(SolutionFile)" 
-                 Properties="$(BuildProperties)" />
+                 Properties="$(BuildProperties)"
+                 BuildInParallel="false" />
     </Target>
    
     <Target Name="Test" DependsOnTargets="Rebuild">
@@ -55,7 +36,8 @@
     <Target Name="Package" DependsOnTargets="Test">
         <MSBuild Targets="Rebuild" 
                  Projects="src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj"
-                 Properties="$(BuildProperties);Platform=AnyCPU;DefineConstants=INTERNALS_INVISIBLE" />
+                 Properties="$(BuildProperties);Platform=AnyCPU;DefineConstants=INTERNALS_INVISIBLE"
+                 BuildInParallel="false" />
     </Target>
 
 </Project>
