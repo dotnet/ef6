@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Package" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Package" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     
     <PropertyGroup>
         <Configuration>Release</Configuration>
@@ -13,14 +13,16 @@
                  Projects="$(SolutionFile)" 
                  Properties="$(BuildProperties)"/>
     </Target>
-
-    <Target Name="Build">
+    
+    <Import Project=".nuget\nuget.targets" />
+    
+    <Target Name="Build" DependsOnTargets="RestorePackages">
         <MSBuild Targets="Build" 
                  Projects="$(SolutionFile)" 
                  Properties="$(BuildProperties)" />
     </Target>
 
-    <Target Name="Rebuild">
+    <Target Name="Rebuild" DependsOnTargets="RestorePackages">
         <MSBuild Targets="Rebuild" 
                  Projects="$(SolutionFile)" 
                  Properties="$(BuildProperties)" />
