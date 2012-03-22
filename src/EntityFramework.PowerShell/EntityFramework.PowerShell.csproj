@@ -144,7 +144,7 @@
     <Compile Include="Migrations\Extensions\ProjectExtensions.cs" />
     <Compile Include="Migrations\Extensions\ProjectItemExtensions.cs" />
     <Compile Include="Migrations\Extensions\XContainerExtensions.cs" />
-    <Compile Include="Migrations\GenericDomainCommand.cs" />
+    <Compile Include="Migrations\MigrationsDomainCommand.cs" />
     <Compile Include="Migrations\GetMigrationsCommand.cs" />
     <Compile Include="Migrations\MigrationsPendingException.cs" />
     <Compile Include="Migrations\ProjectTypeNotSupportedException.cs" />
