@@ -100,7 +100,7 @@
             var workingDirectory = startupProject.GetTargetDir();
 
             string configurationFile;
-            string dataDirectory;
+            string dataDirectory = null;
 
             if (startupProject.IsWebProject())
             {
@@ -112,7 +112,6 @@
             else
             {
                 configurationFile = startupProject.GetFileName("App.config");
-                dataDirectory = workingDirectory;
             }
 
             return new ToolingFacade(
