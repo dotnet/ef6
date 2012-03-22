@@ -192,6 +192,9 @@
       <Project>{73636C32-5633-4D12-AA7B-88DCC26ACDB7}</Project>
       <Name>EntityFramework.PowerShell.Utility</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Migrate\Migrate.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

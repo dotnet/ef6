@@ -62,7 +62,6 @@
       <HintPath>..\..\..\packages\SqlServerCompact.4.0.8482.1\lib\System.Data.SqlServerCe.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -91,10 +90,6 @@
     <ProjectReference Include="..\..\..\src\EntityFramework\EntityFramework.csproj">
       <Project>{E06D1C12-EFE8-4413-A15C-AE01FC158F2F}</Project>
       <Name>EntityFramework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\src\Migrate\Migrate.csproj">
-      <Project>{0D77532F-7478-4BBB-9790-95F52A3DADDA}</Project>
-      <Name>Migrate</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
