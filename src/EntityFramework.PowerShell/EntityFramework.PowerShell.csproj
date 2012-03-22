@@ -17,6 +17,7 @@
     <AssemblyOriginatorKeyFile>..\EcmaPublicKey.snk</AssemblyOriginatorKeyFile>
     <DelaySign>true</DelaySign>
     <TargetFrameworkProfile />
+    <BuildPackages>true</BuildPackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -202,7 +203,7 @@
   <Target Name="BeforeBuild">
   </Target>
   -->
-  <Target Name="AfterBuild">
+  <Target Name="AfterBuild" Condition="$(BuildPackages) == 'true'">
     <MSBuild Projects="..\NuGet\NuGet.proj" />
   </Target>
 </Project>

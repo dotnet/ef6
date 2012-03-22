@@ -5,7 +5,7 @@
         <Configuration>Release</Configuration>
         <Platform>Any CPU</Platform>
         <SolutionFile>EntityFramework.sln</SolutionFile>
-        <BuildProperties>Configuration=$(Configuration);Platform=$(Platform)</BuildProperties>
+        <BuildProperties>Configuration=$(Configuration);Platform=$(Platform);RestorePackages=false</BuildProperties>
     </PropertyGroup>
 
     <Target Name="Clean">
@@ -38,13 +38,13 @@
     <Target Name="Build" DependsOnTargets="RestorePackages">
         <MSBuild Targets="Build" 
                  Projects="$(SolutionFile)"
-                 Properties="$(BuildProperties)" />
+                 Properties="$(BuildProperties);BuildPackages=false" />
     </Target>
 
     <Target Name="Rebuild" DependsOnTargets="RestorePackages">
         <MSBuild Targets="Rebuild" 
                  Projects="$(SolutionFile)"
-                 Properties="$(BuildProperties)" />
+                 Properties="$(BuildProperties);BuildPackages=false" />
     </Target>
    
     <Target Name="Test" DependsOnTargets="Rebuild">
