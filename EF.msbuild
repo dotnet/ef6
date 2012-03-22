@@ -37,23 +37,26 @@
     
     <Target Name="Build" DependsOnTargets="RestorePackages">
         <MSBuild Targets="Build" 
-                 Projects="$(SolutionFile)" 
+                 Projects="$(SolutionFile)"
+                 BuildInParallel="false"
                  Properties="$(BuildProperties)" />
     </Target>
 
     <Target Name="Rebuild" DependsOnTargets="RestorePackages">
         <MSBuild Targets="Rebuild" 
-                 Projects="$(SolutionFile)" 
+                 Projects="$(SolutionFile)"
+                 BuildInParallel="false"
                  Properties="$(BuildProperties)" />
     </Target>
    
     <Target Name="Test" DependsOnTargets="Rebuild">
-        <MSBuild Projects="EF.xunit.targets" 
+        <MSBuild Projects="EF.xunit.targets"
                  Properties="$(BuildProperties)" />
     </Target>
 
     <Target Name="Package" DependsOnTargets="Test">
-        <MSBuild Targets="Rebuild" 
+        <MSBuild Targets="Rebuild"
+                 BuildInParallel="false"
                  Projects="src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj"
                  Properties="$(BuildProperties);Platform=AnyCPU;DefineConstants=INTERNALS_INVISIBLE" />
     </Target>
