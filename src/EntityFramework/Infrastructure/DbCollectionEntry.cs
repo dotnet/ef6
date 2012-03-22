@@ -142,7 +142,8 @@
         public new DbCollectionEntry<TEntity, TElement> Cast<TEntity, TElement>() where TEntity : class
         {
             var metadata = _internalCollectionEntry.EntryMetadata;
-            if (!typeof(TEntity).IsAssignableFrom(metadata.DeclaringType) || !typeof(TElement).IsAssignableFrom(metadata.ElementType))
+            if (!typeof(TEntity).IsAssignableFrom(metadata.DeclaringType)
+                || !typeof(TElement).IsAssignableFrom(metadata.ElementType))
             {
                 throw Error.DbMember_BadTypeForCast(
                     typeof(DbCollectionEntry).Name,

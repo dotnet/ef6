@@ -13,10 +13,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     ///     This configuration functionality is available via the Code First Fluent API, see <see cref = "DbModelBuilder" />.
     /// </summary>
     /// <typeparam name = "TDependentEntityType">The dependent entity type.</typeparam>
-    public class DependentNavigationPropertyConfiguration<TDependentEntityType> : ForeignKeyNavigationPropertyConfiguration
+    public class DependentNavigationPropertyConfiguration<TDependentEntityType> :
+        ForeignKeyNavigationPropertyConfiguration
         where TDependentEntityType : class
     {
-        internal DependentNavigationPropertyConfiguration(NavigationPropertyConfiguration navigationPropertyConfiguration)
+        internal DependentNavigationPropertyConfiguration(
+            NavigationPropertyConfiguration navigationPropertyConfiguration)
             : base(navigationPropertyConfiguration)
         {
         }

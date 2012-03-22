@@ -46,7 +46,8 @@
                     }
                 }
 
-                _propertyValues[propertyName] = new ClonedPropertyValuesItem(propertyName, value, item.Type, item.IsComplex);
+                _propertyValues[propertyName] = new ClonedPropertyValuesItem(
+                    propertyName, value, item.Type, item.IsComplex);
             }
         }
 

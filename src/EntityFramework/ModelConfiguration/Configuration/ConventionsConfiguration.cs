@@ -50,7 +50,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return new ConventionsConfiguration(this);
         }
 
-
         internal void Add(params IConvention[] conventions)
         {
             Contract.Requires(conventions != null);
@@ -65,7 +64,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Add(new TConvention());
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         internal void AddAfter<TExistingConvention>(IConvention newConvention)
             where TExistingConvention : IConvention
         {
@@ -75,13 +75,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             _conventions.Each(
                 c =>
-                {
-                    if (c.GetType() == typeof(TExistingConvention))
                     {
-                        return;
-                    }
-                    index++;
-                });
+                        if (c.GetType()
+                            == typeof(TExistingConvention))
+                        {
+                            return;
+                        }
+                        index++;
+                    });
 
             if (index < _conventions.Count)
             {
@@ -104,7 +105,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             _conventions.RemoveAll(c => c.GetType() == typeof(TConvention));
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         internal IEnumerable<IConvention> Conventions
         {
             get { return _conventions; }
@@ -198,13 +200,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Contract.Requires(propertyInfo != null);
             Contract.Requires(modelConfiguration != null);
 
-            foreach (var convention in _conventions.OfType<IConfigurationConvention<PropertyInfo, ModelConfiguration>>())
+            foreach (var convention in _conventions.OfType<IConfigurationConvention<PropertyInfo, ModelConfiguration>>()
+                )
             {
                 convention.Apply(propertyInfo, () => modelConfiguration);
             }
         }
 
-        internal void ApplyPropertyConfiguration(PropertyInfo propertyInfo, Func<PropertyConfiguration> propertyConfiguration)
+        internal void ApplyPropertyConfiguration(
+            PropertyInfo propertyInfo, Func<PropertyConfiguration> propertyConfiguration)
         {
             Contract.Requires(propertyInfo != null);
             Contract.Requires(propertyConfiguration != null);
@@ -249,7 +253,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal void ApplyPluralizingTableNameConvention(DbDatabaseMetadata database)
         {
-            if (database == null) throw new ArgumentNullException("database");
+            if (database == null)
+            {
+                throw new ArgumentNullException("database");
+            }
 
             foreach (var convention in _conventions.Where(c => c.GetType() == typeof(PluralizingTableNameConvention)))
             {

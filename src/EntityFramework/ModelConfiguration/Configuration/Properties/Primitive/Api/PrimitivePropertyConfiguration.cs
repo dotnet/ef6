@@ -1,7 +1,6 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Edm;
     using System.Diagnostics.Contracts;
@@ -54,7 +53,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     Setting 'null' will cause the same runtime behavior as specifying 'None'.
         /// </param>
         /// <returns>The same PrimitivePropertyConfiguration instance so that multiple calls can be chained.</returns>
-        public PrimitivePropertyConfiguration HasDatabaseGeneratedOption(DatabaseGeneratedOption? databaseGeneratedOption)
+        public PrimitivePropertyConfiguration HasDatabaseGeneratedOption(
+            DatabaseGeneratedOption? databaseGeneratedOption)
         {
             if (!((databaseGeneratedOption == null)
                   || Enum.IsDefined(typeof(DatabaseGeneratedOption), databaseGeneratedOption)))

@@ -194,7 +194,9 @@ namespace System.Data.Entity.Edm
 
         internal bool IsValidNonPrimitive(EdmItemKind kind)
         {
-            Contract.Assert(kind != EdmItemKind.PrimitiveType, "Calling IsNonPrimitiveTypeKind with EdmItemKind.Primitive as TypeKind?");
+            Contract.Assert(
+                kind != EdmItemKind.PrimitiveType,
+                "Calling IsNonPrimitiveTypeKind with EdmItemKind.Primitive as TypeKind?");
 
             return (IsValid() && EdmType.ItemKind == kind && CollectionRank == 0);
         }

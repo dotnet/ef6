@@ -14,7 +14,8 @@
     ///     same assembly as the derived <see cref = "DbContext" /> type.
     /// </summary>
     /// <typeparam name = "TContext"></typeparam>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "Casing is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
+        Justification = "Casing is intentional")]
     public interface IDbContextFactory<out TContext>
         where TContext : DbContext
     {

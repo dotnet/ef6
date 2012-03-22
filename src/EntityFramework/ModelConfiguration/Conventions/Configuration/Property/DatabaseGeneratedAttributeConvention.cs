@@ -1,9 +1,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
-    using System.Diagnostics.Contracts;
     using System.Reflection;
 
     /// <summary>
@@ -35,7 +33,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             {
                 if (primitivePropertyConfiguration.DatabaseGeneratedOption == null)
                 {
-                    primitivePropertyConfiguration.DatabaseGeneratedOption = databaseGeneratedAttribute.DatabaseGeneratedOption;
+                    primitivePropertyConfiguration.DatabaseGeneratedOption =
+                        databaseGeneratedAttribute.DatabaseGeneratedOption;
                 }
             }
         }

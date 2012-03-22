@@ -2,7 +2,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Edm.Db;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Convention to convert any data types that were explicitly specified, via data annotations or <see cref = "DbModelBuilder" /> API, 

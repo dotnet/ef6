@@ -43,7 +43,8 @@ namespace System.Data.Entity.Migrations.Extensions
                         .Select(a => propertyMatcher(a, parameterExpression))
                         .Where(p => p != null);
 
-                if (propertyInfos.Count() == newExpression.Arguments.Count())
+                if (propertyInfos.Count()
+                    == newExpression.Arguments.Count())
                 {
                     return newExpression.HasDefaultMembersOnly(propertyInfos) ? propertyInfos : null;
                 }
@@ -54,13 +55,15 @@ namespace System.Data.Entity.Migrations.Extensions
             return (propertyInfo != null) ? new[] { propertyInfo } : null;
         }
 
-        private static bool HasDefaultMembersOnly(this NewExpression newExpression, IEnumerable<PropertyInfo> propertyInfos)
+        private static bool HasDefaultMembersOnly(
+            this NewExpression newExpression, IEnumerable<PropertyInfo> propertyInfos)
         {
             Contract.Requires(newExpression != null);
             Contract.Requires(propertyInfos != null);
 
             return !newExpression.Members
-                        .Where((t, i) => !string.Equals(t.Name, propertyInfos.ElementAt(i).Name, StringComparison.Ordinal))
+                        .Where(
+                            (t, i) => !string.Equals(t.Name, propertyInfos.ElementAt(i).Name, StringComparison.Ordinal))
                         .Any();
         }
 

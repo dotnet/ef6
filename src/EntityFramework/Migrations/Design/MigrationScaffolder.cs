@@ -34,8 +34,8 @@ namespace System.Data.Entity.Migrations.Design
             get
             {
                 return _namespaceSpecified
-                    ? _namespace
-                    : _migrator.Configuration.MigrationsNamespace;
+                           ? _namespace
+                           : _migrator.Configuration.MigrationsNamespace;
             }
             set
             {

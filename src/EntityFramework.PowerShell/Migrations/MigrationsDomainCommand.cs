@@ -91,7 +91,8 @@
             return GetFacade(Project, StartUpProject, configurationTypeName, connectionStringInfo);
         }
 
-        protected ToolingFacade GetFacade(Project project, Project startupProject, string configurationTypeName, DbConnectionInfo connectionStringInfo)
+        protected ToolingFacade GetFacade(
+            Project project, Project startupProject, string configurationTypeName, DbConnectionInfo connectionStringInfo)
         {
             Contract.Requires(project != null);
             Contract.Requires(startupProject != null);
@@ -121,11 +122,11 @@
                 configurationFile,
                 dataDirectory,
                 connectionStringInfo)
-                    {
-                        LogInfoDelegate = WriteLine,
-                        LogWarningDelegate = WriteWarning,
-                        LogVerboseDelegate = WriteVerbose
-                    };
+                       {
+                           LogInfoDelegate = WriteLine,
+                           LogWarningDelegate = WriteWarning,
+                           LogVerboseDelegate = WriteVerbose
+                       };
         }
 
         private void Init()

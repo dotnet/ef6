@@ -3,7 +3,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
-    using System.Diagnostics.Contracts;
     using System.Reflection;
 
     /// <summary>
@@ -29,7 +28,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             : AttributeConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration, ConcurrencyCheckAttribute>
         {
             internal override void Apply(
-                PropertyInfo propertyInfo, PrimitivePropertyConfiguration primitivePropertyConfiguration, ConcurrencyCheckAttribute _)
+                PropertyInfo propertyInfo, PrimitivePropertyConfiguration primitivePropertyConfiguration,
+                ConcurrencyCheckAttribute _)
             {
                 if (primitivePropertyConfiguration.ConcurrencyMode == null)
                 {

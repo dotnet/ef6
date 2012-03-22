@@ -16,7 +16,8 @@
             {
                 try
                 {
-                    var edmMetadata = metadataContext.Metadata.AsNoTracking().OrderByDescending(m => m.Id).FirstOrDefault();
+                    var edmMetadata =
+                        metadataContext.Metadata.AsNoTracking().OrderByDescending(m => m.Id).FirstOrDefault();
                     return edmMetadata != null ? edmMetadata.ModelHash : null;
                 }
                 catch (EntityCommandExecutionException)

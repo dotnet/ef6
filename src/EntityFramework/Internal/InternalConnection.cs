@@ -31,7 +31,9 @@
         {
             get
             {
-                Contract.Assert(UnderlyingConnection != null, "UnderlyingConnection should have been initialized before getting here.");
+                Contract.Assert(
+                    UnderlyingConnection != null,
+                    "UnderlyingConnection should have been initialized before getting here.");
 
                 var asEntityConnection = UnderlyingConnection as EntityConnection;
                 return asEntityConnection != null ? asEntityConnection.StoreConnection : UnderlyingConnection;
@@ -47,13 +49,16 @@
         {
             get
             {
-                Contract.Assert(UnderlyingConnection != null, "UnderlyingConnection should have been initialized before getting here.");
+                Contract.Assert(
+                    UnderlyingConnection != null,
+                    "UnderlyingConnection should have been initialized before getting here.");
 
                 return _key
                        ??
                        (_key =
                         String.Format(
-                            CultureInfo.InvariantCulture, "{0};{1}", UnderlyingConnection.GetType(), UnderlyingConnection.ConnectionString));
+                            CultureInfo.InvariantCulture, "{0};{1}", UnderlyingConnection.GetType(),
+                            UnderlyingConnection.ConnectionString));
             }
         }
 
@@ -67,7 +72,9 @@
         {
             get
             {
-                Contract.Assert(UnderlyingConnection != null, "UnderlyingConnection should have been initialized before getting here.");
+                Contract.Assert(
+                    UnderlyingConnection != null,
+                    "UnderlyingConnection should have been initialized before getting here.");
 
                 return UnderlyingConnection is EntityConnection;
             }
@@ -89,7 +96,11 @@
         /// </summary>
         public virtual string ProviderName
         {
-            get { return _providerName ?? (_providerName = UnderlyingConnection == null ? null : Connection.GetProviderInvariantName()); }
+            get
+            {
+                return _providerName
+                       ?? (_providerName = UnderlyingConnection == null ? null : Connection.GetProviderInvariantName());
+            }
             set { _providerName = value; }
         }
 
@@ -113,8 +124,12 @@
                 // Reset the original connection string if it has been changed.
                 // This helps in trying to use the correct connection if the connection string is mutated after it has
                 // been created.
-                if (!string.Equals(_originalDatabaseName, UnderlyingConnection.Database, StringComparison.OrdinalIgnoreCase) ||
-                    !string.Equals(_originalDataSource, UnderlyingConnection.DataSource, StringComparison.OrdinalIgnoreCase))
+                if (
+                    !string.Equals(
+                        _originalDatabaseName, UnderlyingConnection.Database, StringComparison.OrdinalIgnoreCase)
+                    ||
+                    !string.Equals(
+                        _originalDataSource, UnderlyingConnection.DataSource, StringComparison.OrdinalIgnoreCase))
                 {
                     OnConnectionInitialized();
                 }
@@ -130,8 +145,11 @@
         /// <returns>The newly created context.</returns>
         public virtual ObjectContext CreateObjectContextFromConnectionModel()
         {
-            Contract.Assert(UnderlyingConnection != null, "UnderlyingConnection should have been initialized before getting here.");
-            Contract.Assert(UnderlyingConnection is EntityConnection, "Cannot create context from connection for non-EntityConnection.");
+            Contract.Assert(
+                UnderlyingConnection != null, "UnderlyingConnection should have been initialized before getting here.");
+            Contract.Assert(
+                UnderlyingConnection is EntityConnection,
+                "Cannot create context from connection for non-EntityConnection.");
 
             var objectContext = new ObjectContext((EntityConnection)UnderlyingConnection);
 
@@ -169,13 +187,17 @@
             {
                 _originalDatabaseName = UnderlyingConnection.Database;
             }
-            catch (NotImplementedException) { }
+            catch (NotImplementedException)
+            {
+            }
 
             try
             {
                 _originalDataSource = UnderlyingConnection.DataSource;
             }
-            catch (NotImplementedException) { }
+            catch (NotImplementedException)
+            {
+            }
         }
 
         /// <summary>
@@ -205,7 +227,9 @@
                 const string defaultAppName = ".Net SqlClient Data Provider";
 
                 if ((string.IsNullOrWhiteSpace(connectionStringBuilder.ApplicationName)
-                     || string.Equals(connectionStringBuilder.ApplicationName, defaultAppName, StringComparison.OrdinalIgnoreCase))
+                     ||
+                     string.Equals(
+                         connectionStringBuilder.ApplicationName, defaultAppName, StringComparison.OrdinalIgnoreCase))
                     && (connectionStringBuilder.IntegratedSecurity
                         || !string.IsNullOrEmpty(connectionStringBuilder.Password)))
                 {

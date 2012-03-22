@@ -27,7 +27,8 @@ namespace System.Data.Entity.Edm.Serialization
             Contract.Requires(model != null);
             Contract.Requires(xmlWriter != null);
 
-            if (model.Namespaces.Count != 1 || model.Containers.Count != 1)
+            if (model.Namespaces.Count != 1
+                || model.Containers.Count != 1)
             {
                 Validator_OnError(
                     this,

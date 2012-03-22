@@ -43,8 +43,8 @@ namespace System.Data.Entity.Migrations.Utilities
             var fileExists = !string.IsNullOrWhiteSpace(configurationFile) && File.Exists(configurationFile);
             var configuration
                 = fileExists
-                    ? XDocument.Load(configurationFile)
-                    : new XDocument();
+                      ? XDocument.Load(configurationFile)
+                      : new XDocument();
 
             configuration.GetOrAddElement("configuration")
                 .GetOrAddElement("runtime")

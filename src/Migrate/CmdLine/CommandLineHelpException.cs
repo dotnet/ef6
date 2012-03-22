@@ -14,13 +14,13 @@ namespace CmdLine
         public CommandLineHelpException(CommandArgumentHelp argumentHelp)
             : base(argumentHelp.Message)
         {
-            this.ArgumentHelp = argumentHelp;
+            ArgumentHelp = argumentHelp;
         }
 
         public CommandLineHelpException(CommandArgumentHelp argumentHelp, Exception inner)
             : base(argumentHelp, inner)
         {
-            this.ArgumentHelp = argumentHelp;
+            ArgumentHelp = argumentHelp;
         }
 
         #endregion

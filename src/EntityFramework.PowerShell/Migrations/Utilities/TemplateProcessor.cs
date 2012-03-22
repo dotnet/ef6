@@ -25,14 +25,14 @@
             return _tokenRegex.Replace(
                 input,
                 match =>
-                {
-                    var tokenName = match.Groups["tokenName"].Value;
-                    string value = string.Empty;
+                    {
+                        var tokenName = match.Groups["tokenName"].Value;
+                        var value = string.Empty;
 
-                    tokens.TryGetValue(tokenName, out value);
+                        tokens.TryGetValue(tokenName, out value);
 
-                    return value;
-                });
+                        return value;
+                    });
         }
     }
 }

@@ -3,7 +3,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Utilities;
-    using System.Diagnostics.Contracts;
     using System.Reflection;
 
     /// <summary>
@@ -27,7 +26,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         internal sealed class KeyAttributeConventionImpl :
             AttributeConfigurationConvention<PropertyInfo, EntityTypeConfiguration, KeyAttribute>
         {
-            internal override void Apply(PropertyInfo propertyInfo, EntityTypeConfiguration entityTypeConfiguration, KeyAttribute _)
+            internal override void Apply(
+                PropertyInfo propertyInfo, EntityTypeConfiguration entityTypeConfiguration, KeyAttribute _)
             {
                 if (propertyInfo.IsValidEdmScalarProperty())
                 {

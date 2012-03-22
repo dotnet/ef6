@@ -47,7 +47,8 @@ namespace System.Data.Entity.Internal.Linq
             // If the ElementType is different than the generic type then we need to use the ElementType
             // for the underlying type because then we can support covariance at the IQueryable level. That
             // is, it is possible to create IQueryable<object>.
-            if (typeof(TElement) != ((IQueryable)objectQuery).ElementType)
+            if (typeof(TElement)
+                != ((IQueryable)objectQuery).ElementType)
             {
                 return (IQueryable<TElement>)CreateQuery(objectQuery);
             }
@@ -98,7 +99,8 @@ namespace System.Data.Entity.Internal.Linq
             var internalQuery = CreateInternalQuery(objectQuery);
 
             var genericDbQueryType = typeof(DbQuery<>).MakeGenericType(internalQuery.ElementType);
-            var constructor = genericDbQueryType.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic).Single();
+            var constructor =
+                genericDbQueryType.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic).Single();
             return (IQueryable)constructor.Invoke(new object[] { internalQuery });
         }
 
@@ -123,9 +125,11 @@ namespace System.Data.Entity.Internal.Linq
         {
             Contract.Requires(objectQuery != null);
 
-            var genericInternalQueryType = typeof(InternalQuery<>).MakeGenericType(((IQueryable)objectQuery).ElementType);
+            var genericInternalQueryType = typeof(InternalQuery<>).MakeGenericType(
+                ((IQueryable)objectQuery).ElementType);
             var constructor = genericInternalQueryType.GetConstructor(
-                BindingFlags.Instance | BindingFlags.Public, null, new[] { typeof(InternalContext), typeof(ObjectQuery) }, null);
+                BindingFlags.Instance | BindingFlags.Public, null,
+                new[] { typeof(InternalContext), typeof(ObjectQuery) }, null);
             return (IInternalQuery)constructor.Invoke(new object[] { _internalContext, objectQuery });
         }
 

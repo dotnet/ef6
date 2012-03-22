@@ -32,7 +32,8 @@
             return name.SelectMany(container.Elements);
         }
 
-        public static IEnumerable<XElement> Descendants<T>(this IEnumerable<T> source, IEnumerable<XName> name) where T : XContainer
+        public static IEnumerable<XElement> Descendants<T>(this IEnumerable<T> source, IEnumerable<XName> name)
+            where T : XContainer
         {
             return name.SelectMany(n => source.SelectMany(c => c.Descendants(n)));
         }

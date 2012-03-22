@@ -2,7 +2,6 @@ namespace System.Data.Entity.Internal.Linq
 {
     using System.Data.Entity.Infrastructure;
     using System.Data.Objects;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -42,7 +41,8 @@ namespace System.Data.Entity.Internal.Linq
             // If the ElementType is different than the generic type then we need to use the ElementType
             // for the underlying type because then we can support covariance at the IQueryable level. That
             // is, it is possible to create IQueryable<object>.
-            if (typeof(TElement) != ((IQueryable)objectQuery).ElementType)
+            if (typeof(TElement)
+                != ((IQueryable)objectQuery).ElementType)
             {
                 return (IQueryable<TElement>)CreateQuery(objectQuery);
             }

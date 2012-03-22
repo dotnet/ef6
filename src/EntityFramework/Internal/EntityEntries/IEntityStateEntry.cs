@@ -23,9 +23,8 @@
         EntityKey EntityKey { get; }
         IEnumerable<string> GetModifiedProperties();
         void SetModifiedProperty(string propertyName);
-        
+
         bool IsPropertyChanged(string propertyName);
         void RejectPropertyChanges(string propertyName);
-
     }
 }

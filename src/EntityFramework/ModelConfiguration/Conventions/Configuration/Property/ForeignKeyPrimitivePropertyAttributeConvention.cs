@@ -1,22 +1,22 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Mappers;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
 
     /// <summary>
     ///     Convention to process instances of <see cref = "ForeignKeyAttribute" /> found on foreign key properties in the model.
     /// </summary>
-    public sealed class ForeignKeyPrimitivePropertyAttributeConvention : IConfigurationConvention<PropertyInfo, ModelConfiguration>
+    public sealed class ForeignKeyPrimitivePropertyAttributeConvention :
+        IConfigurationConvention<PropertyInfo, ModelConfiguration>
     {
-        private readonly IConfigurationConvention<PropertyInfo, ModelConfiguration> _impl = new ForeignKeyAttributeConventionImpl();
+        private readonly IConfigurationConvention<PropertyInfo, ModelConfiguration> _impl =
+            new ForeignKeyAttributeConventionImpl();
 
         internal ForeignKeyPrimitivePropertyAttributeConvention()
         {
@@ -32,7 +32,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             AttributeConfigurationConvention<PropertyInfo, ModelConfiguration, ForeignKeyAttribute>
         {
             internal override void Apply(
-                PropertyInfo propertyInfo, ModelConfiguration modelConfiguration, ForeignKeyAttribute foreignKeyAttribute)
+                PropertyInfo propertyInfo, ModelConfiguration modelConfiguration,
+                ForeignKeyAttribute foreignKeyAttribute)
             {
                 if (propertyInfo.IsValidEdmScalarProperty())
                 {
@@ -41,7 +42,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             }
 
             private static void ApplyNavigationProperty(
-                PropertyInfo propertyInfo, ModelConfiguration modelConfiguration, ForeignKeyAttribute foreignKeyAttribute)
+                PropertyInfo propertyInfo, ModelConfiguration modelConfiguration,
+                ForeignKeyAttribute foreignKeyAttribute)
             {
                 var navigationPropertyInfo
                     = (from pi in new PropertyFilter().GetProperties(propertyInfo.ReflectedType, false)
@@ -80,7 +82,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                        || ((navigationPropertyConfiguration.InverseNavigationProperty != null)
                            && (modelConfiguration
                                   .Entity(propertyInfo.PropertyType.GetTargetType())
-                                  .Navigation(navigationPropertyConfiguration.InverseNavigationProperty)).Constraint != null);
+                                  .Navigation(navigationPropertyConfiguration.InverseNavigationProperty)).Constraint
+                           != null);
             }
         }
     }

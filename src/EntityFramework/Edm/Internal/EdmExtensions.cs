@@ -25,14 +25,16 @@ namespace System.Data.Entity.Edm.Internal
                         keyProps = new List<EdmProperty>();
                         var duplicateKeyProps = new HashSet<EdmProperty>();
                         var duplicateKeyPropNames = new HashSet<string>();
-                        var entityProps = new HashSet<EdmProperty>(declaringType.DeclaredProperties.Where(p => p != null));
+                        var entityProps =
+                            new HashSet<EdmProperty>(declaringType.DeclaredProperties.Where(p => p != null));
                         foreach (var keyProp in declaringType.DeclaredKeyProperties)
                         {
                             if (keyProp != null &&
                                 !duplicateKeyProps.Contains(keyProp) &&
                                 entityProps.Contains(keyProp) &&
                                 !string.IsNullOrEmpty(keyProp.Name) &&
-                                !string.IsNullOrWhiteSpace(keyProp.Name) &&
+                                !string.IsNullOrWhiteSpace(keyProp.Name)
+                                &&
                                 !duplicateKeyPropNames.Contains(keyProp.Name))
                             {
                                 keyProps.Add(keyProp);
@@ -97,7 +99,8 @@ namespace System.Data.Entity.Edm.Internal
         {
             var visitedTypes = new HashSet<T>();
             var thisType = startFrom;
-            while (thisType != null && !visitedTypes.Contains(thisType))
+            while (thisType != null
+                   && !visitedTypes.Contains(thisType))
             {
                 visitedTypes.Add(thisType);
                 yield return thisType;
@@ -108,11 +111,15 @@ namespace System.Data.Entity.Edm.Internal
         internal static EdmAssociationEnd GetFromEnd(this EdmNavigationProperty navProp)
         {
             Contract.Assert(
-                navProp.Association != null, "Association on EdmNavigationProperty should not be null, consider adding a null check");
-            return navProp.Association.SourceEnd == navProp.ResultEnd ? navProp.Association.TargetEnd : navProp.Association.SourceEnd;
+                navProp.Association != null,
+                "Association on EdmNavigationProperty should not be null, consider adding a null check");
+            return navProp.Association.SourceEnd == navProp.ResultEnd
+                       ? navProp.Association.TargetEnd
+                       : navProp.Association.SourceEnd;
         }
 
-        internal static EdmAssociationEnd PrincipalEnd(this EdmAssociationConstraint constraint, EdmAssociationType association)
+        internal static EdmAssociationEnd PrincipalEnd(
+            this EdmAssociationConstraint constraint, EdmAssociationType association)
         {
             Contract.Assert(constraint != null, "Constraint cannot be null");
             Contract.Assert(association != null, "EdmAssociationType cannot be null");
@@ -131,7 +138,8 @@ namespace System.Data.Entity.Edm.Internal
 
         internal static bool IsForeignKey(this EdmAssociationType association, double version)
         {
-            if (version >= DataModelVersions.Version2 &&
+            if (version >= DataModelVersions.Version2
+                &&
                 association.Constraint != null)
             {
                 // in V2, referential constraint implies foreign key

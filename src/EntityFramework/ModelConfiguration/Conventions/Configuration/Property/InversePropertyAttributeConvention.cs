@@ -1,12 +1,10 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Mappers;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
 
@@ -32,7 +30,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             AttributeConfigurationConvention<PropertyInfo, ModelConfiguration, InversePropertyAttribute>
         {
             internal override void Apply(
-                PropertyInfo propertyInfo, ModelConfiguration modelConfiguration, InversePropertyAttribute inversePropertyAttribute)
+                PropertyInfo propertyInfo, ModelConfiguration modelConfiguration,
+                InversePropertyAttribute inversePropertyAttribute)
             {
                 var navigationPropertyConfiguration
                     = modelConfiguration
@@ -48,7 +47,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 var inverseNavigationProperty
                     = new PropertyFilter()
                         .GetProperties(inverseType, false)
-                        .Where(p => string.Equals(p.Name, inversePropertyAttribute.Property, StringComparison.OrdinalIgnoreCase))
+                        .Where(
+                            p =>
+                            string.Equals(p.Name, inversePropertyAttribute.Property, StringComparison.OrdinalIgnoreCase))
                         .SingleOrDefault();
 
                 if (inverseNavigationProperty == null)

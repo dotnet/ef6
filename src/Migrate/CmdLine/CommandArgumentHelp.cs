@@ -25,19 +25,20 @@ namespace CmdLine
 
         public CommandArgumentHelp(Type argumentClassType, string message)
         {
-            this.Message = message;
+            Message = message;
             var cmdLineAttribute = CommandLineArgumentsAttribute.Get(argumentClassType);
 
             if (cmdLineAttribute != null)
             {
-                this.Title = cmdLineAttribute.Title;
-                this.Description = cmdLineAttribute.Description;
-                this.Program = cmdLineAttribute.Program;
+                Title = cmdLineAttribute.Title;
+                Description = cmdLineAttribute.Description;
+                Program = cmdLineAttribute.Program;
             }
 
-            foreach (var parameterAttribute in CommandLineParameterAttribute.GetAllPropertyParameters(argumentClassType))
+            foreach (var parameterAttribute in CommandLineParameterAttribute.GetAllPropertyParameters(argumentClassType)
+                )
             {
-                this.validArguments.Add(parameterAttribute);
+                validArguments.Add(parameterAttribute);
             }
         }
 
@@ -52,10 +53,7 @@ namespace CmdLine
 
         public string CommandLine
         {
-            get
-            {
-                return CmdLine.CommandLine.Text;
-            }
+            get { return CmdLine.CommandLine.Text; }
         }
 
         public string Description { get; set; }
@@ -72,10 +70,7 @@ namespace CmdLine
 
         public IEnumerable<CommandLineParameterAttribute> ValidArguments
         {
-            get
-            {
-                return this.validArguments;
-            }
+            get { return validArguments; }
         }
 
         #endregion
@@ -85,12 +80,12 @@ namespace CmdLine
         public string GetHelpText(int maxWidth, int margin = 5)
         {
             var sb = new StringBuilder();
-            sb.AppendLine(this.Title);
-            sb.AppendLine(this.Description);
+            sb.AppendLine(Title);
+            sb.AppendLine(Description);
             sb.AppendLine();
-            var maxParameterWidth = this.AppendCommandLineExample(sb, maxWidth, margin);
+            var maxParameterWidth = AppendCommandLineExample(sb, maxWidth, margin);
 
-            this.AppendParameters(sb, maxWidth, maxParameterWidth, margin);
+            AppendParameters(sb, maxWidth, maxParameterWidth, margin);
             return sb.ToString();
         }
 
@@ -98,12 +93,16 @@ namespace CmdLine
 
         #region Methods
 
-        private static void AppendLines(StringBuilder sb, int maxParameterWidth, IList<string> firstColum, IList<string> secondColumn)
+        private static void AppendLines(
+            StringBuilder sb, int maxParameterWidth, IList<string> firstColum, IList<string> secondColumn)
         {
             var format = string.Format("{{0,-{0}}}{{1}}", maxParameterWidth + 1);
             for (var i = 0; i < firstColum.Count || i < secondColumn.Count; i++)
             {
-                sb.AppendLine(string.Format(format, i < firstColum.Count ? firstColum[i] : string.Empty, i < secondColumn.Count ? secondColumn[i] : string.Empty));
+                sb.AppendLine(
+                    string.Format(
+                        format, i < firstColum.Count ? firstColum[i] : string.Empty,
+                        i < secondColumn.Count ? secondColumn[i] : string.Empty));
             }
         }
 
@@ -114,7 +113,9 @@ namespace CmdLine
 
         private static string FormatCommandArgument(CommandLineParameterAttribute parameter)
         {
-            return string.Format(parameter.Required ? "{0}{1} " : "[{0}{1}] ", CmdLine.CommandLine.CommandSeparators.First(), parameter.Command);
+            return string.Format(
+                parameter.Required ? "{0}{1} " : "[{0}{1}] ", CmdLine.CommandLine.CommandSeparators.First(),
+                parameter.Command);
         }
 
         private static string FormatCommandLineParameter(CommandLineParameterAttribute parameter)
@@ -148,7 +149,9 @@ namespace CmdLine
             var format = string.Format(@"(.{{1,{0}}})(\s+|$\n?)", width);
             var matches = Regex.Matches(text, format);
             var result = new List<string>(matches.Count);
-            result.AddRange(from object match in matches select match.ToString());
+            result.AddRange(
+                from object match in matches
+                select match.ToString());
             return result;
         }
 
@@ -157,7 +160,7 @@ namespace CmdLine
             var paramSb = new StringBuilder();
 
             var maxParameterWidth = 0;
-            foreach (var parameterName in this.ValidArguments.OrderBy(IsCommand).Select(FormatCommandLineParameter))
+            foreach (var parameterName in ValidArguments.OrderBy(IsCommand).Select(FormatCommandLineParameter))
             {
                 paramSb.AppendFormat("{0} ", parameterName);
                 if (parameterName.Length > maxParameterWidth)
@@ -166,8 +169,8 @@ namespace CmdLine
                 }
             }
             var parms = paramSb.ToString();
-            var width = this.Program.Length;
-            var nameLines = WrapText(this.Program, width);
+            var width = Program.Length;
+            var nameLines = WrapText(Program, width);
             var descriptionLines = WrapText(parms, maxWidth - width - margin);
             AppendLines(sb, width, nameLines, descriptionLines);
 
@@ -175,7 +178,8 @@ namespace CmdLine
             return maxParameterWidth;
         }
 
-        private void AppendParameter(StringBuilder sb, CommandLineParameterAttribute parameter, int maxWidth, int maxParameterWidth, int margin)
+        private void AppendParameter(
+            StringBuilder sb, CommandLineParameterAttribute parameter, int maxWidth, int maxParameterWidth, int margin)
         {
             var nameLines = WrapText(FormatCommandLineParameter(parameter), maxParameterWidth + margin);
             var descriptionLines = WrapText(parameter.Description, maxWidth - maxParameterWidth - margin);
@@ -185,13 +189,13 @@ namespace CmdLine
 
         private void AppendParameters(StringBuilder sb, int maxWidth, int maxParameterWidth, int margin)
         {
-            foreach (var parameter in this.ValidArguments.Where(IsParameter).OrderBy(ParameterIndex))
+            foreach (var parameter in ValidArguments.Where(IsParameter).OrderBy(ParameterIndex))
             {
-                this.AppendParameter(sb, parameter, maxWidth, maxParameterWidth, margin);
+                AppendParameter(sb, parameter, maxWidth, maxParameterWidth, margin);
             }
-            foreach (var parameter in this.ValidArguments.Where(IsCommand).OrderBy(CommandName))
+            foreach (var parameter in ValidArguments.Where(IsCommand).OrderBy(CommandName))
             {
-                this.AppendParameter(sb, parameter, maxWidth, maxParameterWidth, margin);
+                AppendParameter(sb, parameter, maxWidth, maxParameterWidth, margin);
             }
         }
 

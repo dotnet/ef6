@@ -86,7 +86,6 @@
         /// </summary>
         public abstract void SetEntityPropertyModified();
 
-
         /// <summary>
         /// Rejects changes to this property.
         /// If this is a property of a complex object, then this method rejects changes to the top-level
@@ -169,7 +168,9 @@
                 var parentOriginalValues = ParentOriginalValues;
                 if (parentOriginalValues == null)
                 {
-                    Contract.Assert(ParentPropertyEntry != null, "Should only have null parent original values for nested properties.");
+                    Contract.Assert(
+                        ParentPropertyEntry != null,
+                        "Should only have null parent original values for nested properties.");
 
                     throw Error.DbPropertyValues_CannotSetPropertyOnNullOriginalValue(Name, ParentPropertyEntry.Name);
                 }
@@ -196,7 +197,8 @@
                 }
 
                 // If that didn't work, then attempt to get the property from current values record
-                if (!InternalEntityEntry.IsDetached && EntryMetadata.IsMapped)
+                if (!InternalEntityEntry.IsDetached
+                    && EntryMetadata.IsMapped)
                 {
                     var parentCurrentValues = ParentCurrentValues;
                     var value = parentCurrentValues == null ? null : parentCurrentValues[Name];
@@ -218,7 +220,8 @@
                 CheckNotSettingComplexPropertyToNull(value);
 
                 // If the entity is not tracked, or is Deleted, then just set the property value directly onto the CLR type.
-                if (!EntryMetadata.IsMapped || InternalEntityEntry.IsDetached || InternalEntityEntry.State == EntityState.Deleted)
+                if (!EntryMetadata.IsMapped || InternalEntityEntry.IsDetached
+                    || InternalEntityEntry.State == EntityState.Deleted)
                 {
                     if (!SetCurrentValueOnClrObject(value))
                     {
@@ -232,7 +235,9 @@
                     var parentCurrentValues = ParentCurrentValues;
                     if (parentCurrentValues == null)
                     {
-                        Contract.Assert(ParentPropertyEntry != null, "Should only have null parent original values for nested properties.");
+                        Contract.Assert(
+                            ParentPropertyEntry != null,
+                            "Should only have null parent original values for nested properties.");
 
                         throw Error.DbPropertyValues_CannotSetPropertyOnNullCurrentValue(Name, ParentPropertyEntry.Name);
                     }
@@ -255,7 +260,8 @@
         /// <param name = "value">The value.</param>
         private void CheckNotSettingComplexPropertyToNull(object value)
         {
-            if (value == null && EntryMetadata.IsComplex)
+            if (value == null
+                && EntryMetadata.IsComplex)
             {
                 throw Error.DbPropertyValues_ComplexObjectCannotBeNull(Name, base.EntryMetadata.DeclaringType.Name);
             }
@@ -273,11 +279,14 @@
                 return false;
             }
 
-            if (Getter == null || !DbHelpers.KeyValuesEqual(value, Getter(InternalEntityEntry.Entity)))
+            if (Getter == null
+                || !DbHelpers.KeyValuesEqual(value, Getter(InternalEntityEntry.Entity)))
             {
                 Setter(InternalEntityEntry.Entity, value);
                 if (EntryMetadata.IsMapped
-                    && (InternalEntityEntry.State == EntityState.Modified || InternalEntityEntry.State == EntityState.Unchanged))
+                    &&
+                    (InternalEntityEntry.State == EntityState.Modified
+                     || InternalEntityEntry.State == EntityState.Unchanged))
                 {
                     IsModified = true;
                 }
@@ -302,7 +311,8 @@
                 // Setting values from a derived type is allowed, but setting values from a base type is not.
                 if (!nestedValues.ObjectType.IsAssignableFrom(value.GetType()))
                 {
-                    throw Error.DbPropertyValues_AttemptToSetValuesFromWrongObject(value.GetType().Name, nestedValues.ObjectType.Name);
+                    throw Error.DbPropertyValues_AttemptToSetValuesFromWrongObject(
+                        value.GetType().Name, nestedValues.ObjectType.Name);
                 }
 
                 nestedValues.SetValues(value);
@@ -326,12 +336,14 @@
         /// <param name = "requestedType">The type of object requested, which may be null or 'object' if any type can be accepted.</param>
         /// <param name = "requireComplex">if set to <c>true</c> then the found property must be a complex property.</param>
         /// <returns>The entry.</returns>
-        public virtual InternalPropertyEntry Property(string property, Type requestedType = null, bool requireComplex = false)
+        public virtual InternalPropertyEntry Property(
+            string property, Type requestedType = null, bool requireComplex = false)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(property));
 
             Contract.Assert(
-                EntryMetadata.IsMapped && EntryMetadata.IsComplex, "Should only be calling this from a DbComplexProperty instance.");
+                EntryMetadata.IsMapped && EntryMetadata.IsComplex,
+                "Should only be calling this from a DbComplexProperty instance.");
 
             return InternalEntityEntry.Property(this, property, requestedType ?? typeof(object), requireComplex);
         }
@@ -348,7 +360,8 @@
             get
             {
                 // If the entity is detached, then the property is not modified.
-                if (InternalEntityEntry.IsDetached || !EntryMetadata.IsMapped)
+                if (InternalEntityEntry.IsDetached
+                    || !EntryMetadata.IsMapped)
                 {
                     return false;
                 }

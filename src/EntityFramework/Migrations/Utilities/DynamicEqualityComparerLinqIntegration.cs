@@ -25,7 +25,8 @@ namespace System.Data.Entity.Migrations.Utilities
             return source.GroupBy(t => t, new DynamicEqualityComparer<TSource>(func));
         }
 
-        public static IEnumerable<T> Intersect<T>(this IEnumerable<T> first, IEnumerable<T> second, Func<T, T, bool> func)
+        public static IEnumerable<T> Intersect<T>(
+            this IEnumerable<T> first, IEnumerable<T> second, Func<T, T, bool> func)
             where T : class
         {
             Contract.Requires(first != null);

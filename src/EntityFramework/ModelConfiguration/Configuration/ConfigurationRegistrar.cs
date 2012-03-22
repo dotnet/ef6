@@ -35,7 +35,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <typeparam name = "TEntityType">The entity type being configured.</typeparam>
         /// <param name = "entityTypeConfiguration">The entity type configuration to be added.</param>
         /// <returns>The same ConfigurationRegistrar instance so that multiple calls can be chained.</returns>
-        public virtual ConfigurationRegistrar Add<TEntityType>(EntityTypeConfiguration<TEntityType> entityTypeConfiguration)
+        public virtual ConfigurationRegistrar Add<TEntityType>(
+            EntityTypeConfiguration<TEntityType> entityTypeConfiguration)
             where TEntityType : class
         {
             Contract.Requires(entityTypeConfiguration != null);
@@ -53,7 +54,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <typeparam name = "TComplexType">The complex type being configured.</typeparam>
         /// <param name = "complexTypeConfiguration">The complex type configuration to be added</param>
         /// <returns>The same ConfigurationRegistrar instance so that multiple calls can be chained.</returns>
-        public virtual ConfigurationRegistrar Add<TComplexType>(ComplexTypeConfiguration<TComplexType> complexTypeConfiguration)
+        public virtual ConfigurationRegistrar Add<TComplexType>(
+            ComplexTypeConfiguration<TComplexType> complexTypeConfiguration)
             where TComplexType : class
         {
             Contract.Requires(complexTypeConfiguration != null);

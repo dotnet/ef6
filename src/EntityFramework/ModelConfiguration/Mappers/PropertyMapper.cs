@@ -19,12 +19,14 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
         }
 
         public void Map(
-            PropertyInfo propertyInfo, EdmComplexType complexType, Func<ComplexTypeConfiguration> complexTypeConfiguration)
+            PropertyInfo propertyInfo, EdmComplexType complexType,
+            Func<ComplexTypeConfiguration> complexTypeConfiguration)
         {
             Contract.Requires(propertyInfo != null);
             Contract.Requires(complexType != null);
 
-            var property = MapPrimitiveOrComplexOrEnumProperty(propertyInfo, complexTypeConfiguration, discoverComplexTypes: true);
+            var property = MapPrimitiveOrComplexOrEnumProperty(
+                propertyInfo, complexTypeConfiguration, discoverComplexTypes: true);
 
             if (property != null)
             {
@@ -33,7 +35,8 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
         }
 
         public void Map(
-            PropertyInfo propertyInfo, EdmEntityType entityType, Func<EntityTypeConfiguration> entityTypeConfiguration, Type sourceType)
+            PropertyInfo propertyInfo, EdmEntityType entityType, Func<EntityTypeConfiguration> entityTypeConfiguration,
+            Type sourceType)
         {
             Contract.Requires(propertyInfo != null);
             Contract.Requires(entityType != null);
@@ -46,12 +49,14 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             }
             else
             {
-                new NavigationPropertyMapper(_typeMapper).Map(propertyInfo, entityType, entityTypeConfiguration, sourceType);
+                new NavigationPropertyMapper(_typeMapper).Map(
+                    propertyInfo, entityType, entityTypeConfiguration, sourceType);
             }
         }
 
         private EdmProperty MapPrimitiveOrComplexOrEnumProperty(
-            PropertyInfo propertyInfo, Func<StructuralTypeConfiguration> structuralTypeConfiguration, bool discoverComplexTypes = false)
+            PropertyInfo propertyInfo, Func<StructuralTypeConfiguration> structuralTypeConfiguration,
+            bool discoverComplexTypes = false)
         {
             Contract.Requires(propertyInfo != null);
 
@@ -64,7 +69,10 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
                 if (complexType != null)
                 {
-                    property = new EdmProperty { Name = propertyInfo.Name }.AsComplex(complexType);
+                    property = new EdmProperty
+                                   {
+                                       Name = propertyInfo.Name
+                                   }.AsComplex(complexType);
                 }
                 else
                 {
@@ -76,7 +84,10 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
                         if (enumType != null)
                         {
-                            property = new EdmProperty { Name = propertyInfo.Name, }.AsEnum(enumType);
+                            property = new EdmProperty
+                                           {
+                                               Name = propertyInfo.Name,
+                                           }.AsEnum(enumType);
                             property.PropertyType.IsNullable = isNullable;
                         }
                     }

@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Utilities;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -33,7 +32,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                           && ((a2Configuration == null)
                               || ((a2Configuration.InverseEndKind == null)
                                   && (a2Configuration.InverseNavigationProperty == null))))
-                   select new { a1, a2 })
+                   select new
+                              {
+                                  a1,
+                                  a2
+                              })
                     .Distinct((a, b) => a.a1 == b.a2 && a.a2 == b.a1)
                     .GroupBy(
                         (a, b) => a.a1.SourceEnd.EntityType == b.a2.TargetEnd.EntityType

@@ -17,7 +17,8 @@
         /// </summary>
         /// <param name = "propertyValidators">Property validators.</param>
         /// <param name = "typeLevelValidators">Type level validators.</param>
-        public ComplexTypeValidator(IEnumerable<PropertyValidator> propertyValidators, IEnumerable<IValidator> typeLevelValidators)
+        public ComplexTypeValidator(
+            IEnumerable<PropertyValidator> propertyValidators, IEnumerable<IValidator> typeLevelValidators)
             :
                 base(propertyValidators, typeLevelValidators)
         {
@@ -29,7 +30,8 @@
         /// <param name = "entityValidationContext">Entity validation context. Must not be null.</param>
         /// <param name = "property">The entry for the complex property. Null if validating an entity.</param>
         /// <returns><see cref = "DbEntityValidationResult" /> instance. Never null.</returns>
-        public new IEnumerable<DbValidationError> Validate(EntityValidationContext entityValidationContext, InternalPropertyEntry property)
+        public new IEnumerable<DbValidationError> Validate(
+            EntityValidationContext entityValidationContext, InternalPropertyEntry property)
         {
             return base.Validate(entityValidationContext, property);
         }
@@ -51,7 +53,8 @@
         ///     and a merge of validation error lists per entity.
         /// </remarks>
         protected override void ValidateProperties(
-            EntityValidationContext entityValidationContext, InternalPropertyEntry parentProperty, List<DbValidationError> validationErrors)
+            EntityValidationContext entityValidationContext, InternalPropertyEntry parentProperty,
+            List<DbValidationError> validationErrors)
         {
             Contract.Assert(parentProperty.EntryMetadata.IsComplex, "A complex type expected.");
             Contract.Assert(parentProperty.CurrentValue != null);

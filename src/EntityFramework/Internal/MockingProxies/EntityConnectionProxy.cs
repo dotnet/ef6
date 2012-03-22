@@ -36,7 +36,9 @@
 
         public virtual EntityConnectionProxy CreateNew(DbConnection storeConnection)
         {
-            return new EntityConnectionProxy(new EntityConnection(_entityConnection.GetMetadataWorkspace(), storeConnection));
+            return
+                new EntityConnectionProxy(
+                    new EntityConnection(_entityConnection.GetMetadataWorkspace(), storeConnection));
         }
     }
 }

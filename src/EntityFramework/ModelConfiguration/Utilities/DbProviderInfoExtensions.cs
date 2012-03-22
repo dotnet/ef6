@@ -10,7 +10,9 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
             Contract.Requires(providerInfo != null);
 
             return !string.IsNullOrWhiteSpace(providerInfo.ProviderInvariantName)
-                   && providerInfo.ProviderInvariantName.StartsWith("System.Data.SqlServerCe", StringComparison.OrdinalIgnoreCase);
+                   &&
+                   providerInfo.ProviderInvariantName.StartsWith(
+                       "System.Data.SqlServerCe", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

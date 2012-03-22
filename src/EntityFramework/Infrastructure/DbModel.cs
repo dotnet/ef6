@@ -52,7 +52,6 @@ namespace System.Data.Entity.Infrastructure
             get { return _cachedModelBuilder; }
         }
 
-
         internal DbDatabaseMapping DatabaseMapping
         {
             get { return _databaseMapping; }

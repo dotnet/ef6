@@ -21,11 +21,13 @@
         private readonly EntityFrameworkSection _entityFrameworkSettings;
 
         private readonly Lazy<IDbConnectionFactory> _defaultConnectionFactory;
+
         private readonly Lazy<IDbConnectionFactory> _defaultDefaultConnectionFactory =
             new Lazy<IDbConnectionFactory>(() => new SqlConnectionFactory(), isThreadSafe: true);
 
         private static bool _initializersApplied;
         private static readonly object Lock = new object();
+
         private static readonly MethodInfo Database_SetInitializerInternal =
             typeof(Database).GetMethod("SetInitializerInternal", BindingFlags.Static | BindingFlags.NonPublic);
 
@@ -61,9 +63,9 @@
         /// </remarks>
         private AppConfig()
             : this(
-            ConfigurationManager.ConnectionStrings,
-            Convert(ConfigurationManager.AppSettings),
-            (EntityFrameworkSection)ConfigurationManager.GetSection(_efSectionName))
+                ConfigurationManager.ConnectionStrings,
+                Convert(ConfigurationManager.AppSettings),
+                (EntityFrameworkSection)ConfigurationManager.GetSection(_efSectionName))
         {
         }
 
@@ -80,21 +82,23 @@
 
             if (_entityFrameworkSettings.DefaultConnectionFactory.ElementInformation.IsPresent)
             {
-                _defaultConnectionFactory = new Lazy<IDbConnectionFactory>(() =>
-                {
-                    var setting = _entityFrameworkSettings.DefaultConnectionFactory;
+                _defaultConnectionFactory = new Lazy<IDbConnectionFactory>(
+                    () =>
+                        {
+                            var setting = _entityFrameworkSettings.DefaultConnectionFactory;
 
-                    try
-                    {
-                        var type = setting.GetFactoryType();
-                        var args = setting.Parameters.GetTypedParameterValues();
-                        return (IDbConnectionFactory)Activator.CreateInstance(type, args);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new InvalidOperationException(Strings.SetConnectionFactoryFromConfigFailed(setting.FactoryTypeName), ex);
-                    }
-                }, isThreadSafe: true);
+                            try
+                            {
+                                var type = setting.GetFactoryType();
+                                var args = setting.Parameters.GetTypedParameterValues();
+                                return (IDbConnectionFactory)Activator.CreateInstance(type, args);
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new InvalidOperationException(
+                                    Strings.SetConnectionFactoryFromConfigFailed(setting.FactoryTypeName), ex);
+                            }
+                        }, isThreadSafe: true);
             }
             else
             {
@@ -143,7 +147,8 @@
                         {
                             foreach (ContextElement init in _entityFrameworkSettings.Contexts)
                             {
-                                if (init.IsDatabaseInitializationDisabled || init.DatabaseInitializer.ElementInformation.IsPresent)
+                                if (init.IsDatabaseInitializationDisabled
+                                    || init.DatabaseInitializer.ElementInformation.IsPresent)
                                 {
                                     try
                                     {
@@ -157,17 +162,21 @@
                                             initializer = Activator.CreateInstance(initializerType, args);
                                         }
 
-                                        var setInitializerMethod = Database_SetInitializerInternal.MakeGenericMethod(contextType);
-                                        setInitializerMethod.Invoke(null, BindingFlags.Static | BindingFlags.NonPublic, null, new[] { initializer, true }, null);
+                                        var setInitializerMethod =
+                                            Database_SetInitializerInternal.MakeGenericMethod(contextType);
+                                        setInitializerMethod.Invoke(
+                                            null, BindingFlags.Static | BindingFlags.NonPublic, null,
+                                            new[] { initializer, true }, null);
                                     }
                                     catch (Exception ex)
                                     {
                                         var initializerName = init.IsDatabaseInitializationDisabled
-                                            ? "Disabled"
-                                            : init.DatabaseInitializer.InitializerTypeName;
+                                                                  ? "Disabled"
+                                                                  : init.DatabaseInitializer.InitializerTypeName;
 
                                         throw new InvalidOperationException(
-                                            Strings.Database_InitializeFromConfigFailed(initializerName, init.ContextTypeName),
+                                            Strings.Database_InitializeFromConfigFailed(
+                                                initializerName, init.ContextTypeName),
                                             ex);
                                     }
                                 }

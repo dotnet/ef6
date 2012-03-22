@@ -6,7 +6,8 @@
 
     internal static class DbProviderServicesExtensions
     {
-        public static string GetProviderManifestTokenChecked(this DbProviderServices providerServices, DbConnection connection)
+        public static string GetProviderManifestTokenChecked(
+            this DbProviderServices providerServices, DbConnection connection)
         {
             Contract.Assert(providerServices != null);
             Contract.Assert(connection != null);

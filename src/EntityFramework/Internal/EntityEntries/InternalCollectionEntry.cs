@@ -25,7 +25,8 @@
         /// </summary>
         /// <param name = "internalEntityEntry">The internal entity entry.</param>
         /// <param name = "navigationMetadata">The navigation metadata.</param>
-        public InternalCollectionEntry(InternalEntityEntry internalEntityEntry, NavigationEntryMetadata navigationMetadata)
+        public InternalCollectionEntry(
+            InternalEntityEntry internalEntityEntry, NavigationEntryMetadata navigationMetadata)
             : base(internalEntityEntry, navigationMetadata)
         {
         }
@@ -65,9 +66,11 @@
                 {
                     Setter(InternalEntityEntry.Entity, value);
                 }
-                else if (InternalEntityEntry.IsDetached || !ReferenceEquals(RelatedEnd, value))
+                else if (InternalEntityEntry.IsDetached
+                         || !ReferenceEquals(RelatedEnd, value))
                 {
-                    throw Error.DbCollectionEntry_CannotSetCollectionProp(Name, InternalEntityEntry.Entity.GetType().ToString());
+                    throw Error.DbCollectionEntry_CannotSetCollectionProp(
+                        Name, InternalEntityEntry.Entity.GetType().ToString());
                 }
             }
         }
@@ -109,7 +112,8 @@
         /// <typeparam name = "TEntity">The type of the entity.</typeparam>
         /// <typeparam name = "TElement">The type of the element.</typeparam>
         /// <returns>The new entry.</returns>
-        public virtual DbCollectionEntry<TEntity, TElement> CreateDbCollectionEntry<TEntity, TElement>() where TEntity : class
+        public virtual DbCollectionEntry<TEntity, TElement> CreateDbCollectionEntry<TEntity, TElement>()
+            where TEntity : class
         {
             return new DbCollectionEntry<TEntity, TElement>(this);
         }
@@ -122,7 +126,8 @@
         /// <typeparam name = "TProperty">The type of the property.</typeparam>
         /// <param name = "elementType">Type of the element.</param>
         /// <returns>The set.</returns>
-        private DbMemberEntry<TEntity, TProperty> CreateDbCollectionEntry<TEntity, TProperty>(Type elementType) where TEntity : class
+        private DbMemberEntry<TEntity, TProperty> CreateDbCollectionEntry<TEntity, TProperty>(Type elementType)
+            where TEntity : class
         {
             var targetType = typeof(DbMemberEntry<TEntity, TProperty>);
 
@@ -141,7 +146,8 @@
                 }
 
                 var factoryMethod = genericType.GetMethod(
-                    "Create", BindingFlags.Static | BindingFlags.NonPublic, null, new[] { typeof(InternalCollectionEntry) }, null);
+                    "Create", BindingFlags.Static | BindingFlags.NonPublic, null,
+                    new[] { typeof(InternalCollectionEntry) }, null);
                 factory =
                     (Func<InternalCollectionEntry, object>)
                     Delegate.CreateDelegate(typeof(Func<InternalCollectionEntry, object>), factoryMethod);

@@ -15,7 +15,8 @@ namespace System.Data.Entity.Edm.Serialization
         /// <param name = "providerManifestToken"> ProviderManifestToken information on the Schema element </param>
         /// <param name = "xmlWriter"> The XmlWriter to serialize to </param>
         /// <returns> </returns>
-        public bool Serialize(DbDatabaseMetadata dbDatabase, string provider, string providerManifestToken, XmlWriter xmlWriter)
+        public bool Serialize(
+            DbDatabaseMetadata dbDatabase, string provider, string providerManifestToken, XmlWriter xmlWriter)
         {
             Contract.Requires(dbDatabase != null);
             Contract.Requires(xmlWriter != null);

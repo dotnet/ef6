@@ -39,10 +39,7 @@
         /// </summary>
         public virtual int SubKeyCount
         {
-            get
-            {
-                return _key == null ? 0 : _key.SubKeyCount;
-            }
+            get { return _key == null ? 0 : _key.SubKeyCount; }
         }
 
         /// <summary>

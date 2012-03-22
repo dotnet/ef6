@@ -1,20 +1,22 @@
 ﻿namespace System.Data.Entity
 {
     using System.Collections;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Collections.Generic;
 
     /// <summary>
     ///     An IDbSet represents the collection of all entities in the context, or that can be queried from the
     ///     database, of a given type.  DbSet is a concrete implementation of IDbSet.
     /// </summary>
     /// <typeparam name = "TEntity">The type that defines the set.</typeparam>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "Casing is intentional")]
-    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "Name is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
+        Justification = "Casing is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
+        Justification = "Name is intentional")]
     [ContractClass(typeof(IDbSetContracts<>))]
     public interface IDbSet<TEntity> : IQueryable<TEntity>
         where TEntity : class

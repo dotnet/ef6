@@ -38,12 +38,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     continue;
                 }
 
-                if (property.PropertyType.PrimitiveType == EdmPrimitiveType.String)
+                if (property.PropertyType.PrimitiveType
+                    == EdmPrimitiveType.String)
                 {
                     SetStringDefaults(property, keyProperties.Contains(property));
                 }
 
-                if (property.PropertyType.PrimitiveType == EdmPrimitiveType.Binary)
+                if (property.PropertyType.PrimitiveType
+                    == EdmPrimitiveType.Binary)
                 {
                     SetBinaryDefaults(property, keyProperties.Contains(property));
                 }
@@ -63,7 +65,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     .EntityType
                     .KeyProperties();
 
-            if (principalKeyProperties.Count() != associationType.Constraint.DependentProperties.Count)
+            if (principalKeyProperties.Count()
+                != associationType.Constraint.DependentProperties.Count)
             {
                 return;
             }

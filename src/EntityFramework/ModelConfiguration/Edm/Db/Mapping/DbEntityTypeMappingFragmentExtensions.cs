@@ -13,11 +13,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         private const string ConditionOnlyFragmentAnnotation = "ConditionOnlyFragment";
         private const string UnmappedPropertiesFragmentAnnotation = "UnmappedPropertiesFragment";
 
-        public static DbTableColumnMetadata GetDefaultDiscriminator(this DbEntityTypeMappingFragment entityTypeMapppingFragment)
+        public static DbTableColumnMetadata GetDefaultDiscriminator(
+            this DbEntityTypeMappingFragment entityTypeMapppingFragment)
         {
             Contract.Requires(entityTypeMapppingFragment != null);
 
-            return (DbTableColumnMetadata)entityTypeMapppingFragment.Annotations.GetAnnotation(DefaultDiscriminatorAnnotation);
+            return
+                (DbTableColumnMetadata)
+                entityTypeMapppingFragment.Annotations.GetAnnotation(DefaultDiscriminatorAnnotation);
         }
 
         public static void SetDefaultDiscriminator(
@@ -56,12 +59,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             if (entitySetMapping != null && entityTypeMappingFragment.IsConditionOnlyFragment() &&
                 !entityTypeMappingFragment.ColumnConditions.Any() && !entityTypeMappingFragment.PropertyConditions.Any())
 #else
-            if (entitySetMapping != null && entityTypeMappingFragment.IsConditionOnlyFragment() &&
+            if (entitySetMapping != null && entityTypeMappingFragment.IsConditionOnlyFragment()
+                &&
                 !entityTypeMappingFragment.ColumnConditions.Any())
 #endif
             {
                 var entityTypeMapping =
-                    entitySetMapping.EntityTypeMappings.Single(etm => etm.TypeMappingFragments.Contains(entityTypeMappingFragment));
+                    entitySetMapping.EntityTypeMappings.Single(
+                        etm => etm.TypeMappingFragments.Contains(entityTypeMappingFragment));
                 entityTypeMapping.TypeMappingFragments.Remove(entityTypeMappingFragment);
                 if (entityTypeMapping.TypeMappingFragments.Count == 0)
                 {
@@ -70,12 +75,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             }
         }
 
-        public static DbTableColumnMetadata RemoveDefaultDiscriminatorCondition(this DbEntityTypeMappingFragment entityTypeMappingFragment)
+        public static DbTableColumnMetadata RemoveDefaultDiscriminatorCondition(
+            this DbEntityTypeMappingFragment entityTypeMappingFragment)
         {
             Contract.Requires(entityTypeMappingFragment != null);
 
             var discriminatorColumn = entityTypeMappingFragment.GetDefaultDiscriminator();
-            if (discriminatorColumn != null && entityTypeMappingFragment.ColumnConditions.Count > 0)
+            if (discriminatorColumn != null
+                && entityTypeMappingFragment.ColumnConditions.Count > 0)
             {
                 Contract.Assert(entityTypeMappingFragment.ColumnConditions.Count == 1);
                 entityTypeMappingFragment.ColumnConditions.RemoveAt(0);
@@ -127,7 +134,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         {
             Contract.Requires(entityTypeMapppingFragment != null);
 
-            var isConditionOnlyFragment = entityTypeMapppingFragment.Annotations.GetAnnotation(ConditionOnlyFragmentAnnotation);
+            var isConditionOnlyFragment =
+                entityTypeMapppingFragment.Annotations.GetAnnotation(ConditionOnlyFragmentAnnotation);
             if (isConditionOnlyFragment != null)
             {
                 return (bool)isConditionOnlyFragment;
@@ -142,7 +150,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 
             if (isConditionOnlyFragment)
             {
-                entityTypeMapppingFragment.Annotations.SetAnnotation(ConditionOnlyFragmentAnnotation, isConditionOnlyFragment);
+                entityTypeMapppingFragment.Annotations.SetAnnotation(
+                    ConditionOnlyFragmentAnnotation, isConditionOnlyFragment);
             }
             else
             {
@@ -154,7 +163,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         {
             Contract.Requires(entityTypeMapppingFragment != null);
 
-            var isUnmappedPropertiesFragment = entityTypeMapppingFragment.Annotations.GetAnnotation(UnmappedPropertiesFragmentAnnotation);
+            var isUnmappedPropertiesFragment =
+                entityTypeMapppingFragment.Annotations.GetAnnotation(UnmappedPropertiesFragmentAnnotation);
             if (isUnmappedPropertiesFragment != null)
             {
                 return (bool)isUnmappedPropertiesFragment;
@@ -169,7 +179,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 
             if (isUnmappedPropertiesFragment)
             {
-                entityTypeMapppingFragment.Annotations.SetAnnotation(UnmappedPropertiesFragmentAnnotation, isUnmappedPropertiesFragment);
+                entityTypeMapppingFragment.Annotations.SetAnnotation(
+                    UnmappedPropertiesFragmentAnnotation, isUnmappedPropertiesFragment);
             }
             else
             {

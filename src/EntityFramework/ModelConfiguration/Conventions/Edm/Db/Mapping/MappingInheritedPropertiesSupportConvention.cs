@@ -6,7 +6,6 @@
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -27,7 +26,8 @@
                         {
                             foreach (var etm in esm.EntityTypeMappings)
                             {
-                                if (RemapsInheritedProperties(databaseMapping, etm) && HasBaseWithIsTypeOf(esm, etm.EntityType))
+                                if (RemapsInheritedProperties(databaseMapping, etm)
+                                    && HasBaseWithIsTypeOf(esm, etm.EntityType))
                                 {
                                     throw Error.UnsupportedHybridInheritanceMapping(etm.EntityType.Name);
                                 }
@@ -54,7 +54,8 @@
                         foreach (var baseTypeMapping in databaseMapping.GetEntityTypeMappings(baseType))
                         {
                             var baseFragment = GetFragmentForPropertyMapping(baseTypeMapping, property);
-                            if (baseFragment != null && baseFragment.Table != fragment.Table)
+                            if (baseFragment != null
+                                && baseFragment.Table != fragment.Table)
                             {
                                 return true;
                             }

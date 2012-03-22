@@ -20,7 +20,9 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
         private const string DataServicesNamespace = "http://schemas.microsoft.com/ado/2007/08/dataservices/metadata";
         private const string DataServicesMimeTypeAttribute = "System.Data.Services.MimeTypeAttribute";
         private const string DataServicesHasStreamAttribute = "System.Data.Services.Common.HasStreamAttribute";
-        private const string DataServicesEntityPropertyMappingAttribute = "System.Data.Services.Common.EntityPropertyMappingAttribute";
+
+        private const string DataServicesEntityPropertyMappingAttribute =
+            "System.Data.Services.Common.EntityPropertyMappingAttribute";
 
         internal static class XmlConstants
         {
@@ -146,29 +148,30 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
         }
 
         private static readonly string[] syndicationItemToTargetPath = new[]
-            {
-                String.Empty, // SyndicationItemProperty.Custom
-                XmlConstants.SyndAuthorEmail,
-                XmlConstants.SyndAuthorName,
-                XmlConstants.SyndAuthorUri,
-                XmlConstants.SyndContributorEmail,
-                XmlConstants.SyndContributorName,
-                XmlConstants.SyndContributorUri,
-                XmlConstants.SyndUpdated,
-                XmlConstants.SyndPublished,
-                XmlConstants.SyndRights,
-                XmlConstants.SyndSummary,
-                XmlConstants.SyndTitle,
-                XmlConstants.SyndCategoryLabel,
-                XmlConstants.SyndCategoryScheme,
-                XmlConstants.SyndCategoryTerm,
-                XmlConstants.SyndLinkHref,
-                XmlConstants.SyndLinkHrefLang,
-                XmlConstants.SyndLinkLength,
-                XmlConstants.SyndLinkRel,
-                XmlConstants.SyndLinkTitle,
-                XmlConstants.SyndLinkType,
-            };
+                                                                           {
+                                                                               String.Empty,
+                                                                               // SyndicationItemProperty.Custom
+                                                                               XmlConstants.SyndAuthorEmail,
+                                                                               XmlConstants.SyndAuthorName,
+                                                                               XmlConstants.SyndAuthorUri,
+                                                                               XmlConstants.SyndContributorEmail,
+                                                                               XmlConstants.SyndContributorName,
+                                                                               XmlConstants.SyndContributorUri,
+                                                                               XmlConstants.SyndUpdated,
+                                                                               XmlConstants.SyndPublished,
+                                                                               XmlConstants.SyndRights,
+                                                                               XmlConstants.SyndSummary,
+                                                                               XmlConstants.SyndTitle,
+                                                                               XmlConstants.SyndCategoryLabel,
+                                                                               XmlConstants.SyndCategoryScheme,
+                                                                               XmlConstants.SyndCategoryTerm,
+                                                                               XmlConstants.SyndLinkHref,
+                                                                               XmlConstants.SyndLinkHrefLang,
+                                                                               XmlConstants.SyndLinkLength,
+                                                                               XmlConstants.SyndLinkRel,
+                                                                               XmlConstants.SyndLinkTitle,
+                                                                               XmlConstants.SyndLinkType,
+                                                                           };
 
         private static string SyndicationTextContentKindToString(object value)
         {
@@ -176,11 +179,12 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
         }
 
         private static readonly string[] syndicationTextContentKindToString = new[]
-            {
-                XmlConstants.SyndContentKindPlaintext,
-                XmlConstants.SyndContentKindHtml,
-                XmlConstants.SyndContentKindXHtml
-            };
+                                                                                  {
+                                                                                      XmlConstants.
+                                                                                          SyndContentKindPlaintext,
+                                                                                      XmlConstants.SyndContentKindHtml,
+                                                                                      XmlConstants.SyndContentKindXHtml
+                                                                                  };
 
         #endregion
 
@@ -199,7 +203,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             if (_version == DataModelVersions.Version3)
             {
                 _xmlWriter.WriteAttributeString(
-                    CsdlConstants.Attribute_UseStrongSpatialTypes, CsdlConstants.AnnotationNamespace, CsdlConstants.Value_False);
+                    CsdlConstants.Attribute_UseStrongSpatialTypes, CsdlConstants.AnnotationNamespace,
+                    CsdlConstants.Value_False);
             }
         }
 
@@ -229,7 +234,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             if (edmType.BaseType != null)
             {
                 _xmlWriter.WriteAttributeString(
-                    CsdlConstants.Attribute_BaseType, GetQualifiedTypeName(CsdlConstants.Value_Self, edmType.BaseType.Name));
+                    CsdlConstants.Attribute_BaseType,
+                    GetQualifiedTypeName(CsdlConstants.Value_Self, edmType.BaseType.Name));
             }
 
             if (edmType.IsAbstract)
@@ -255,10 +261,13 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
                     {
                         // Move down to the appropriate property
                         var propertyName = a.GetType().GetProperty("MemberName").GetValue(a, null) as string;
-                        var property = entityType.Properties.SingleOrDefault(p => p.Name.Equals(propertyName, StringComparison.Ordinal));
+                        var property =
+                            entityType.Properties.SingleOrDefault(
+                                p => p.Name.Equals(propertyName, StringComparison.Ordinal));
                         AddAttributeAnnotation(property, a);
                     }
-                    else if (a.GetType().FullName.Equals(DataServicesEntityPropertyMappingAttribute, StringComparison.Ordinal))
+                    else if (a.GetType().FullName.Equals(
+                        DataServicesEntityPropertyMappingAttribute, StringComparison.Ordinal))
                     {
                         // Move down to the appropriate property
                         var sourcePath = a.GetType().GetProperty("SourcePath").GetValue(a, null) as string;
@@ -272,7 +281,9 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
                         {
                             propertyName = sourcePath.Substring(0, slashIndex);
                         }
-                        var property = entityType.Properties.SingleOrDefault(p => p.Name.Equals(propertyName, StringComparison.Ordinal));
+                        var property =
+                            entityType.Properties.SingleOrDefault(
+                                p => p.Name.Equals(propertyName, StringComparison.Ordinal));
                         AddAttributeAnnotation(property, a);
                     }
                 }
@@ -285,12 +296,14 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
         {
             _xmlWriter.WriteStartElement(CsdlConstants.Element_EnumType);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Name, enumType.Name);
-            _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_IsFlags, GetLowerCaseStringFromBoolValue(enumType.IsFlags));
+            _xmlWriter.WriteAttributeString(
+                CsdlConstants.Attribute_IsFlags, GetLowerCaseStringFromBoolValue(enumType.IsFlags));
 
             if (enumType.UnderlyingType != null)
             {
                 _xmlWriter.WriteAttributeString(
-                    CsdlConstants.Attribute_UnderlyingType, GetTypeNameFromPrimitiveTypeKind(enumType.UnderlyingType.PrimitiveTypeKind));
+                    CsdlConstants.Attribute_UnderlyingType,
+                    GetTypeNameFromPrimitiveTypeKind(enumType.UnderlyingType.PrimitiveTypeKind));
             }
         }
 
@@ -298,7 +311,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
         {
             _xmlWriter.WriteStartElement(CsdlConstants.Element_EnumTypeMember);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Name, enumTypeMember.Name);
-            _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Value, enumTypeMember.Value.ToString(CultureInfo.InvariantCulture));
+            _xmlWriter.WriteAttributeString(
+                CsdlConstants.Attribute_Value, enumTypeMember.Value.ToString(CultureInfo.InvariantCulture));
         }
 
         private static void AddAttributeAnnotation(EdmProperty property, Attribute a)
@@ -315,7 +329,11 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
                 }
                 else
                 {
-                    property.Annotations.SetClrAttributes(new List<Attribute> { a });
+                    property.Annotations.SetClrAttributes(
+                        new List<Attribute>
+                            {
+                                a
+                            });
                 }
             }
         }
@@ -339,8 +357,10 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Role, associationEnd.Name);
 
             var typeName = associationEnd.EntityType.Name;
-            _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Type, GetQualifiedTypeName(CsdlConstants.Value_Self, typeName));
-            _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Multiplicity, GetXmlMultiplicity(associationEnd.EndKind));
+            _xmlWriter.WriteAttributeString(
+                CsdlConstants.Attribute_Type, GetQualifiedTypeName(CsdlConstants.Value_Self, typeName));
+            _xmlWriter.WriteAttributeString(
+                CsdlConstants.Attribute_Multiplicity, GetXmlMultiplicity(associationEnd.EndKind));
         }
 
         internal void WriteOperationActionElement(string elementName, EdmOperationAction operationAction)
@@ -373,12 +393,15 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Name, property.Name);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Type, GetTypeReferenceName(property.PropertyType));
 
-            if (property.CollectionKind != EdmCollectionKind.Default)
+            if (property.CollectionKind
+                != EdmCollectionKind.Default)
             {
-                _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_CollectionKind, property.CollectionKind.ToString());
+                _xmlWriter.WriteAttributeString(
+                    CsdlConstants.Attribute_CollectionKind, property.CollectionKind.ToString());
             }
 
-            if (property.ConcurrencyMode == EdmConcurrencyMode.Fixed)
+            if (property.ConcurrencyMode
+                == EdmConcurrencyMode.Fixed)
             {
                 _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_ConcurrencyMode, CsdlConstants.Value_Fixed);
             }
@@ -393,16 +416,21 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
                         var mimeType = a.GetType().GetProperty("MimeType").GetValue(a, null) as string;
                         _xmlWriter.WriteAttributeString(DataServicesPrefix, "MimeType", DataServicesNamespace, mimeType);
                     }
-                    else if (a.GetType().FullName.Equals(DataServicesEntityPropertyMappingAttribute, StringComparison.Ordinal))
+                    else if (a.GetType().FullName.Equals(
+                        DataServicesEntityPropertyMappingAttribute, StringComparison.Ordinal))
                     {
-                        var suffix = epmCount == 0 ? String.Empty : string.Format(CultureInfo.InvariantCulture, "_{0}", epmCount);
+                        var suffix = epmCount == 0
+                                         ? String.Empty
+                                         : string.Format(CultureInfo.InvariantCulture, "_{0}", epmCount);
 
                         var sourcePath = a.GetType().GetProperty("SourcePath").GetValue(a, null) as string;
                         var slashIndex = sourcePath.IndexOf("/", StringComparison.Ordinal);
-                        if (slashIndex != -1 && slashIndex + 1 < sourcePath.Length)
+                        if (slashIndex != -1
+                            && slashIndex + 1 < sourcePath.Length)
                         {
                             _xmlWriter.WriteAttributeString(
-                                DataServicesPrefix, "FC_SourcePath" + suffix, DataServicesNamespace, sourcePath.Substring(slashIndex + 1));
+                                DataServicesPrefix, "FC_SourcePath" + suffix, DataServicesNamespace,
+                                sourcePath.Substring(slashIndex + 1));
                         }
 
                         // There are three ways to write out this attribute
@@ -423,23 +451,32 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
                                 DataServicesNamespace,
                                 SyndicationItemPropertyToString(syndicationItem));
                             _xmlWriter.WriteAttributeString(
-                                DataServicesPrefix, "FC_KeepInContent" + suffix, DataServicesNamespace, keepInContext);
+                                DataServicesPrefix, "FC_KeepInContent" + suffix, DataServicesNamespace,
+                                keepInContext);
                             _xmlWriter.WriteAttributeString(
-                                DataServicesPrefix, "FC_CriteriaValue" + suffix, DataServicesNamespace, criteriaValue);
+                                DataServicesPrefix, "FC_CriteriaValue" + suffix, DataServicesNamespace,
+                                criteriaValue);
                         }
-                        else if (string.Equals(syndicationItem.ToString(), "CustomProperty", StringComparison.Ordinal))
+                        else if (string.Equals(
+                            syndicationItem.ToString(), "CustomProperty", StringComparison.Ordinal))
                         {
                             var targetPath = a.GetType().GetProperty("TargetPath").GetValue(a, null).ToString();
-                            var targetNamespacePrefix = a.GetType().GetProperty("TargetNamespacePrefix").GetValue(a, null).ToString();
-                            var targetNamespaceUri = a.GetType().GetProperty("TargetNamespaceUri").GetValue(a, null).ToString();
+                            var targetNamespacePrefix =
+                                a.GetType().GetProperty("TargetNamespacePrefix").GetValue(a, null).ToString();
+                            var targetNamespaceUri =
+                                a.GetType().GetProperty("TargetNamespaceUri").GetValue(a, null).ToString();
 
-                            _xmlWriter.WriteAttributeString(DataServicesPrefix, "FC_TargetPath" + suffix, DataServicesNamespace, targetPath);
                             _xmlWriter.WriteAttributeString(
-                                DataServicesPrefix, "FC_NsUri" + suffix, DataServicesNamespace, targetNamespaceUri);
+                                DataServicesPrefix, "FC_TargetPath" + suffix, DataServicesNamespace, targetPath);
                             _xmlWriter.WriteAttributeString(
-                                DataServicesPrefix, "FC_NsPrefix" + suffix, DataServicesNamespace, targetNamespacePrefix);
+                                DataServicesPrefix, "FC_NsUri" + suffix, DataServicesNamespace,
+                                targetNamespaceUri);
                             _xmlWriter.WriteAttributeString(
-                                DataServicesPrefix, "FC_KeepInContent" + suffix, DataServicesNamespace, keepInContext);
+                                DataServicesPrefix, "FC_NsPrefix" + suffix, DataServicesNamespace,
+                                targetNamespacePrefix);
+                            _xmlWriter.WriteAttributeString(
+                                DataServicesPrefix, "FC_KeepInContent" + suffix, DataServicesNamespace,
+                                keepInContext);
                         }
                         else
                         {
@@ -456,7 +493,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
                                 DataServicesNamespace,
                                 SyndicationTextContentKindToString(contextKind));
                             _xmlWriter.WriteAttributeString(
-                                DataServicesPrefix, "FC_KeepInContent" + suffix, DataServicesNamespace, keepInContext);
+                                DataServicesPrefix, "FC_KeepInContent" + suffix, DataServicesNamespace,
+                                keepInContext);
                         }
 
                         epmCount++;
@@ -469,7 +507,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             if (property.Annotations.TryGetByName(SsdlConstants.Attribute_StoreGeneratedPattern, out annotation))
             {
                 _xmlWriter.WriteAttributeString(
-                    SsdlConstants.Attribute_StoreGeneratedPattern, CsdlConstants.AnnotationNamespace, annotation.Value.ToString());
+                    SsdlConstants.Attribute_StoreGeneratedPattern, CsdlConstants.AnnotationNamespace,
+                    annotation.Value.ToString());
             }
         }
 
@@ -501,17 +540,21 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
                 {
                     yield return
                         new KeyValuePair<string, string>(
-                            CsdlConstants.Attribute_FixedLength, GetLowerCaseStringFromBoolValue(facets.IsFixedLength.Value));
+                            CsdlConstants.Attribute_FixedLength,
+                            GetLowerCaseStringFromBoolValue(facets.IsFixedLength.Value));
                 }
-                if (facets.IsMaxLength.HasValue && facets.IsMaxLength.Value)
+                if (facets.IsMaxLength.HasValue
+                    && facets.IsMaxLength.Value)
                 {
-                    yield return new KeyValuePair<string, string>(CsdlConstants.Attribute_MaxLength, CsdlConstants.Value_Max);
+                    yield return
+                        new KeyValuePair<string, string>(CsdlConstants.Attribute_MaxLength, CsdlConstants.Value_Max);
                 }
                 else if (facets.MaxLength.HasValue)
                 {
                     yield return
                         new KeyValuePair<string, string>(
-                            CsdlConstants.Attribute_MaxLength, facets.MaxLength.Value.ToString(CultureInfo.InvariantCulture));
+                            CsdlConstants.Attribute_MaxLength,
+                            facets.MaxLength.Value.ToString(CultureInfo.InvariantCulture));
                 }
                 if (facets.IsUnicode.HasValue)
                 {
@@ -524,7 +567,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
                 {
                     yield return
                         new KeyValuePair<string, string>(
-                            CsdlConstants.Attribute_Precision, facets.Precision.Value.ToString(CultureInfo.InvariantCulture));
+                            CsdlConstants.Attribute_Precision,
+                            facets.Precision.Value.ToString(CultureInfo.InvariantCulture));
                 }
                 if (facets.Scale.HasValue)
                 {
@@ -546,7 +590,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             }
             if (typeRef.IsNullable.HasValue)
             {
-                _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Nullable, GetLowerCaseStringFromBoolValue(typeRef.IsNullable.Value));
+                _xmlWriter.WriteAttributeString(
+                    CsdlConstants.Attribute_Nullable, GetLowerCaseStringFromBoolValue(typeRef.IsNullable.Value));
             }
         }
 
@@ -555,7 +600,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             _xmlWriter.WriteStartElement(CsdlConstants.Element_NavigationProperty);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Name, member.Name);
             _xmlWriter.WriteAttributeString(
-                CsdlConstants.Attribute_Relationship, GetQualifiedTypeName(CsdlConstants.Value_Self, member.Association.Name));
+                CsdlConstants.Attribute_Relationship,
+                GetQualifiedTypeName(CsdlConstants.Value_Self, member.Association.Name));
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_FromRole, member.GetFromEnd().Name);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_ToRole, member.ResultEnd.Name);
         }
@@ -601,7 +647,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             _xmlWriter.WriteStartElement(CsdlConstants.Element_AssociationSet);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Name, associationSet.Name);
             _xmlWriter.WriteAttributeString(
-                CsdlConstants.Attribute_Association, GetQualifiedTypeName(CsdlConstants.Value_Self, associationSet.ElementType.Name));
+                CsdlConstants.Attribute_Association,
+                GetQualifiedTypeName(CsdlConstants.Value_Self, associationSet.ElementType.Name));
         }
 
         internal void WriteAssociationSetEndElement(EdmEntitySet end, string roleName)
@@ -617,7 +664,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             _xmlWriter.WriteStartElement(CsdlConstants.Element_EntitySet);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Name, entitySet.Name);
             _xmlWriter.WriteAttributeString(
-                CsdlConstants.Attribute_EntityType, GetQualifiedTypeName(CsdlConstants.Value_Self, entitySet.ElementType.Name));
+                CsdlConstants.Attribute_EntityType,
+                GetQualifiedTypeName(CsdlConstants.Value_Self, entitySet.ElementType.Name));
         }
     }
 }

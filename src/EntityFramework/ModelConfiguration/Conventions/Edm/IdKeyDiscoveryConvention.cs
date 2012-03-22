@@ -30,15 +30,16 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             private const string Id = "Id";
 
-            protected override EdmProperty MatchKeyProperty(EdmEntityType entityType, IEnumerable<EdmProperty> primitiveProperties)
+            protected override EdmProperty MatchKeyProperty(
+                EdmEntityType entityType, IEnumerable<EdmProperty> primitiveProperties)
             {
                 var matches = primitiveProperties
                     .Where(p => Id.Equals(p.Name, StringComparison.OrdinalIgnoreCase));
-                
+
                 if (!matches.Any())
                 {
                     matches = primitiveProperties
-                    .Where(p => (entityType.Name + Id).Equals(p.Name, StringComparison.OrdinalIgnoreCase));
+                        .Where(p => (entityType.Name + Id).Equals(p.Name, StringComparison.OrdinalIgnoreCase));
                 }
 
                 // If the number of matches is more than one, then multiple properties matched differing only by

@@ -39,7 +39,9 @@
         /// <returns>The set.</returns>
         public static InternalDbSet<TEntity> Create(InternalContext internalContext, IInternalSet internalSet)
         {
-            return new InternalDbSet<TEntity>((IInternalSet<TEntity>)internalSet ?? new InternalSet<TEntity>(internalContext));
+            return
+                new InternalDbSet<TEntity>(
+                    (IInternalSet<TEntity>)internalSet ?? new InternalSet<TEntity>(internalContext));
         }
 
         #endregion

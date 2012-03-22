@@ -3,7 +3,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
     using System.Reflection;
 
     /// <summary>
@@ -33,13 +32,16 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 StringPropertyConfiguration stringPropertyConfiguration,
                 StringLengthAttribute stringLengthAttribute)
             {
-                if (stringLengthAttribute.MaximumLength < -1 || stringLengthAttribute.MaximumLength == 0)
+                if (stringLengthAttribute.MaximumLength < -1
+                    || stringLengthAttribute.MaximumLength == 0)
                 {
-                    throw Error.StringLengthAttributeConvention_InvalidMaximumLength(propertyInfo.Name, propertyInfo.ReflectedType);
+                    throw Error.StringLengthAttributeConvention_InvalidMaximumLength(
+                        propertyInfo.Name, propertyInfo.ReflectedType);
                 }
 
                 // Set the length if the string configuration's maxlength is not yet set
-                if (stringPropertyConfiguration.IsMaxLength == null && stringPropertyConfiguration.MaxLength == null)
+                if (stringPropertyConfiguration.IsMaxLength == null
+                    && stringPropertyConfiguration.MaxLength == null)
                 {
                     stringPropertyConfiguration.MaxLength = stringLengthAttribute.MaximumLength;
                 }

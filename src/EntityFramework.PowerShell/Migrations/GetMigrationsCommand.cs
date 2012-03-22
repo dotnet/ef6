@@ -7,27 +7,28 @@
     {
         public GetMigrationsCommand()
         {
-            Execute(() =>
-                {
-                    using (var facade = GetFacade())
+            Execute(
+                () =>
                     {
-                        WriteLine(Strings.GetMigrationsCommand_Intro);
-
-                        var migrations = facade.GetDatabaseMigrations();
-
-                        if (migrations.Any())
+                        using (var facade = GetFacade())
                         {
-                            foreach (var migration in migrations)
+                            WriteLine(Strings.GetMigrationsCommand_Intro);
+
+                            var migrations = facade.GetDatabaseMigrations();
+
+                            if (migrations.Any())
                             {
-                                WriteLine(migration);
+                                foreach (var migration in migrations)
+                                {
+                                    WriteLine(migration);
+                                }
+                            }
+                            else
+                            {
+                                WriteLine(Strings.GetMigrationsCommand_NoHistory);
                             }
                         }
-                        else
-                        {
-                            WriteLine(Strings.GetMigrationsCommand_NoHistory);
-                        }
-                    }
-                });
+                    });
         }
     }
 }

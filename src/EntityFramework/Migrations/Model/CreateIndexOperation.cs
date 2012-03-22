@@ -33,10 +33,10 @@ namespace System.Data.Entity.Migrations.Model
             get
             {
                 var dropIndexOperation = new DropIndexOperation(this)
-                    {
-                        Name = Name,
-                        Table = Table
-                    };
+                                             {
+                                                 Name = Name,
+                                                 Table = Table
+                                             };
 
                 Columns.Each(c => dropIndexOperation.Columns.Add(c));
 

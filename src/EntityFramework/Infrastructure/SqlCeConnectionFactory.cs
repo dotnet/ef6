@@ -22,7 +22,8 @@
     ///     This class is immutable since multiple threads may access instances simultaneously
     ///     when creating connections.
     /// </remarks>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "Casing is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
+        Justification = "Casing is intentional")]
     public sealed class SqlCeConnectionFactory : IDbConnectionFactory
     {
         #region Constructors and fields
@@ -61,7 +62,8 @@
         ///     The connection string to use for options to the database other than the 'Data Source'. The Data Source will
         ///     be prepended to this string based on the database name when CreateConnection is called.
         /// </param>
-        public SqlCeConnectionFactory(string providerInvariantName, string databaseDirectory, string baseConnectionString)
+        public SqlCeConnectionFactory(
+            string providerInvariantName, string databaseDirectory, string baseConnectionString)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
             Contract.Requires(databaseDirectory != null);

@@ -1,8 +1,8 @@
 ﻿namespace System.Data.Entity.Migrations.Edm
 {
+    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Xml.Linq;
-    using System.Collections.Generic;
 
     internal static class EdmXNames
     {
@@ -184,7 +184,11 @@
             {
                 Contract.Requires(!string.IsNullOrWhiteSpace(elementName));
 
-                return new List<XName> { CsdlNamespaceV3 + elementName, CsdlNamespaceV2 + elementName };
+                return new List<XName>
+                           {
+                               CsdlNamespaceV3 + elementName,
+                               CsdlNamespaceV2 + elementName
+                           };
             }
         }
 
@@ -202,7 +206,11 @@
             {
                 Contract.Requires(!string.IsNullOrWhiteSpace(elementName));
 
-                return new List<XName> { MslNamespaceV3 + elementName, MslNamespaceV2 + elementName };
+                return new List<XName>
+                           {
+                               MslNamespaceV3 + elementName,
+                               MslNamespaceV2 + elementName
+                           };
             }
         }
 
@@ -224,7 +232,11 @@
             {
                 Contract.Requires(!string.IsNullOrWhiteSpace(elementName));
 
-                return new List<XName> { SsdlNamespaceV3 + elementName, SsdlNamespaceV2 + elementName };
+                return new List<XName>
+                           {
+                               SsdlNamespaceV3 + elementName,
+                               SsdlNamespaceV2 + elementName
+                           };
             }
         }
     }

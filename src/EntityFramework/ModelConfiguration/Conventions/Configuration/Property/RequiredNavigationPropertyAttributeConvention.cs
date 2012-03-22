@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Utilities;
-    using System.Diagnostics.Contracts;
     using System.Reflection;
 
     /// <summary>
@@ -30,7 +29,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             : AttributeConfigurationConvention<PropertyInfo, NavigationPropertyConfiguration, RequiredAttribute>
         {
             internal override void Apply(
-                PropertyInfo propertyInfo, NavigationPropertyConfiguration navigationPropertyConfiguration, RequiredAttribute _)
+                PropertyInfo propertyInfo, NavigationPropertyConfiguration navigationPropertyConfiguration,
+                RequiredAttribute _)
             {
                 if ((navigationPropertyConfiguration.EndKind == null)
                     && !propertyInfo.PropertyType.IsCollection())

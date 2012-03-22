@@ -41,7 +41,8 @@
                             MigrationsAssembly = contextType.Assembly,
                             MigrationsNamespace = contextType.Namespace,
                             TargetDatabase =
-                                new DbConnectionInfo(internalContext.OriginalConnectionString, internalContext.ProviderName)
+                                new DbConnectionInfo(
+                                internalContext.OriginalConnectionString, internalContext.ProviderName)
                         },
                     internalContext.Owner);
 

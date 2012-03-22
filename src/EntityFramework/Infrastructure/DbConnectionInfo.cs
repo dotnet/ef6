@@ -11,7 +11,8 @@
     ///     Represents information about a database connection.
     /// </summary>
     [Serializable]
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "Casing is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
+        Justification = "Casing is intentional")]
     public class DbConnectionInfo
     {
         private readonly string _connectionName;

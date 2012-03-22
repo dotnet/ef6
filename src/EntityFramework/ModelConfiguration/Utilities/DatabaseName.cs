@@ -72,7 +72,8 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
                 return true;
             }
 
-            if (obj.GetType() != typeof(DatabaseName))
+            if (obj.GetType()
+                != typeof(DatabaseName))
             {
                 return false;
             }

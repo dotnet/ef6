@@ -84,7 +84,9 @@ namespace System.Data.Entity
         internal DbModelBuilder(
             ModelConfiguration.Configuration.ModelConfiguration modelConfiguration,
             DbModelBuilderVersion modelBuilderVersion = DbModelBuilderVersion.Latest)
-            : this(modelConfiguration, new ConventionsConfiguration(SelectConventionSet(modelBuilderVersion)), modelBuilderVersion)
+            : this(
+                modelConfiguration, new ConventionsConfiguration(SelectConventionSet(modelBuilderVersion)),
+                modelBuilderVersion)
         {
         }
 
@@ -178,7 +180,9 @@ namespace System.Data.Entity
         public virtual EntityTypeConfiguration<TEntityType> Entity<TEntityType>()
             where TEntityType : class
         {
-            return new EntityTypeConfiguration<TEntityType>(_modelConfiguration.Entity(typeof(TEntityType), explicitEntity: true));
+            return
+                new EntityTypeConfiguration<TEntityType>(
+                    _modelConfiguration.Entity(typeof(TEntityType), explicitEntity: true));
         }
 
         /// <summary>
@@ -260,7 +264,8 @@ namespace System.Data.Entity
             return Build(providerManifest, providerInfo);
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         internal DbModelBuilderVersion Version
         {
             get { return _modelBuilderVersion; }
@@ -322,7 +327,8 @@ namespace System.Data.Entity
                 .Each(t => { throw Error.InvalidComplexType(t); });
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         internal ModelConfiguration.Configuration.ModelConfiguration ModelConfiguration
         {
             get { return _modelConfiguration; }

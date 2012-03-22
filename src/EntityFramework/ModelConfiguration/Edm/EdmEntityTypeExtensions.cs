@@ -25,7 +25,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return rootType;
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         public static bool IsAncestorOf(this EdmEntityType ancestor, EdmEntityType entityType)
         {
             Contract.Requires(ancestor != null);
@@ -56,7 +57,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return entityType.Annotations.GetConfiguration();
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         public static void SetConfiguration(this EdmEntityType entityType, object configuration)
         {
             Contract.Requires(entityType != null);
@@ -71,7 +73,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return entityType.Annotations.GetClrType();
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         public static void SetClrType(this EdmEntityType entityType, Type type)
         {
             Contract.Requires(entityType != null);
@@ -102,7 +105,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             }
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         public static EdmProperty AddPrimitiveProperty(this EdmEntityType entityType, string name)
         {
             Contract.Requires(entityType != null);
@@ -124,14 +128,18 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
             Contract.Requires(complexType != null);
 
-            var property = new EdmProperty { Name = name }.AsComplex(complexType);
+            var property = new EdmProperty
+                               {
+                                   Name = name
+                               }.AsComplex(complexType);
 
             entityType.DeclaredProperties.Add(property);
 
             return property;
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         public static EdmProperty GetDeclaredPrimitiveProperty(this EdmEntityType entityType, string name)
         {
             Contract.Requires(entityType != null);
@@ -165,18 +173,19 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(associationType != null);
 
             var navigationProperty = new EdmNavigationProperty
-                {
-                    Name = name,
-                    Association = associationType,
-                    ResultEnd = associationType.TargetEnd
-                };
+                                         {
+                                             Name = name,
+                                             Association = associationType,
+                                             ResultEnd = associationType.TargetEnd
+                                         };
 
             entityType.DeclaredNavigationProperties.Add(navigationProperty);
 
             return navigationProperty;
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         public static EdmNavigationProperty GetNavigationProperty(this EdmEntityType entityType, string name)
         {
             Contract.Requires(entityType != null);
@@ -185,7 +194,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return entityType.NavigationProperties.SingleOrDefault(np => np.Name == name);
         }
 
-        public static EdmNavigationProperty GetNavigationProperty(this EdmEntityType entityType, PropertyInfo propertyInfo)
+        public static EdmNavigationProperty GetNavigationProperty(
+            this EdmEntityType entityType, PropertyInfo propertyInfo)
         {
             Contract.Requires(entityType != null);
             Contract.Requires(propertyInfo != null);

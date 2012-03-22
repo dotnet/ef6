@@ -47,7 +47,8 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
             return propertyPath;
         }
 
-        public static IEnumerable<PropertyPath> GetSimplePropertyAccessList(this LambdaExpression propertyAccessExpression)
+        public static IEnumerable<PropertyPath> GetSimplePropertyAccessList(
+            this LambdaExpression propertyAccessExpression)
         {
             Contract.Requires(propertyAccessExpression != null);
             Contract.Assert(propertyAccessExpression.Parameters.Count() == 1);
@@ -63,7 +64,8 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
             return propertyPaths;
         }
 
-        public static IEnumerable<PropertyPath> GetComplexPropertyAccessList(this LambdaExpression propertyAccessExpression)
+        public static IEnumerable<PropertyPath> GetComplexPropertyAccessList(
+            this LambdaExpression propertyAccessExpression)
         {
             Contract.Requires(propertyAccessExpression != null);
             Contract.Assert(propertyAccessExpression.Parameters.Count() == 1);
@@ -98,7 +100,8 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
                         .Select(a => propertyMatcher(a, parameterExpression))
                         .Where(p => p != null);
 
-                if (propertyPaths.Count() == newExpression.Arguments.Count())
+                if (propertyPaths.Count()
+                    == newExpression.Arguments.Count())
                 {
                     return newExpression.HasDefaultMembersOnly(propertyPaths) ? propertyPaths : null;
                 }
@@ -109,13 +112,16 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
             return (propertyPath != null) ? propertyPath.AsEnumerable() : null;
         }
 
-        private static bool HasDefaultMembersOnly(this NewExpression newExpression, IEnumerable<PropertyPath> propertyPaths)
+        private static bool HasDefaultMembersOnly(
+            this NewExpression newExpression, IEnumerable<PropertyPath> propertyPaths)
         {
             Contract.Requires(newExpression != null);
             Contract.Requires(propertyPaths != null);
 
             return !newExpression.Members
-                        .Where((t, i) => !string.Equals(t.Name, propertyPaths.ElementAt(i).Last().Name, StringComparison.Ordinal))
+                        .Where(
+                            (t, i) =>
+                            !string.Equals(t.Name, propertyPaths.ElementAt(i).Last().Name, StringComparison.Ordinal))
                         .Any();
         }
 

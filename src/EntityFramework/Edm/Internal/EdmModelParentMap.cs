@@ -5,7 +5,9 @@ namespace System.Data.Entity.Edm.Internal
     internal class EdmModelParentMap
     {
         private readonly EdmModel model;
-        private readonly Dictionary<EdmNamespaceItem, EdmNamespace> itemToNamespaceMap = new Dictionary<EdmNamespaceItem, EdmNamespace>();
+
+        private readonly Dictionary<EdmNamespaceItem, EdmNamespace> itemToNamespaceMap =
+            new Dictionary<EdmNamespaceItem, EdmNamespace>();
 
         private readonly Dictionary<EdmEntityContainerItem, EdmEntityContainer> itemToContainerMap =
             new Dictionary<EdmEntityContainerItem, EdmEntityContainer>();

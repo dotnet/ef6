@@ -33,9 +33,9 @@
             Contract.Requires(!string.IsNullOrWhiteSpace(connectionStringName));
 
             _config = new TMigrationsConfiguration
-            {
-                TargetDatabase = new DbConnectionInfo(connectionStringName)
-            };
+                          {
+                              TargetDatabase = new DbConnectionInfo(connectionStringName)
+                          };
         }
 
         /// <inheritdoc/>

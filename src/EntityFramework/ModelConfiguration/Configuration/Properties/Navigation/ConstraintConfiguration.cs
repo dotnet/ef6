@@ -10,7 +10,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         internal abstract ConstraintConfiguration Clone();
 
         internal abstract void Configure(
-            EdmAssociationType associationType, EdmAssociationEnd dependentEnd, EntityTypeConfiguration entityTypeConfiguration);
+            EdmAssociationType associationType, EdmAssociationEnd dependentEnd,
+            EntityTypeConfiguration entityTypeConfiguration);
 
         internal virtual bool IsFullySpecified
         {
@@ -23,7 +24,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         private abstract class ConstraintConfigurationContracts : ConstraintConfiguration
         {
             internal override void Configure(
-                EdmAssociationType associationType, EdmAssociationEnd dependentEnd, EntityTypeConfiguration entityTypeConfiguration)
+                EdmAssociationType associationType, EdmAssociationEnd dependentEnd,
+                EntityTypeConfiguration entityTypeConfiguration)
             {
                 Contract.Requires(associationType != null);
                 Contract.Requires(dependentEnd != null);

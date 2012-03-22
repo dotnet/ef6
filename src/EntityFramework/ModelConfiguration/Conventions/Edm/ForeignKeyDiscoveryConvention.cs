@@ -81,17 +81,18 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 return;
             }
 
-            if (!dependentEnd.IsMany() && !fkEquivalentToDependentPk)
+            if (!dependentEnd.IsMany()
+                && !fkEquivalentToDependentPk)
             {
                 return;
             }
 
             var constraint
                 = new EdmAssociationConstraint
-                    {
-                        DependentEnd = dependentEnd,
-                        DependentProperties = foreignKeyProperties.ToList()
-                    };
+                      {
+                          DependentEnd = dependentEnd,
+                          DependentProperties = foreignKeyProperties.ToList()
+                      };
 
             associationType.Constraint = constraint;
 

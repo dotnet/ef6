@@ -30,7 +30,11 @@
 
             using (var memoryStream = new MemoryStream())
             {
-                using (var xmlWriter = XmlWriter.Create(memoryStream, new XmlWriterSettings { Indent = true }))
+                using (var xmlWriter = XmlWriter.Create(
+                    memoryStream, new XmlWriterSettings
+                                      {
+                                          Indent = true
+                                      }))
                 {
                     writeXml(xmlWriter);
                 }

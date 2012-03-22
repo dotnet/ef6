@@ -57,7 +57,10 @@ namespace System.Data.Entity.Migrations.Design
         /// <returns>An ordered list of namespace names.</returns>
         protected virtual IEnumerable<string> GetDefaultNamespaces(bool designer = false)
         {
-            var namespaces = new List<string> { "System.Data.Entity.Migrations" };
+            var namespaces = new List<string>
+                                 {
+                                     "System.Data.Entity.Migrations"
+                                 };
 
             if (designer)
             {

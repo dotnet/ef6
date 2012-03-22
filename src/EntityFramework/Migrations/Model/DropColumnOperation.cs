@@ -35,7 +35,8 @@ namespace System.Data.Entity.Migrations.Model
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
-        public DropColumnOperation(string table, string name, AddColumnOperation inverse, object anonymousArguments = null)
+        public DropColumnOperation(
+            string table, string name, AddColumnOperation inverse, object anonymousArguments = null)
             : base(anonymousArguments)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(table));

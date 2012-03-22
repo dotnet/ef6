@@ -1,9 +1,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
-    using System.Diagnostics.Contracts;
     using System.Reflection;
 
     /// <summary>

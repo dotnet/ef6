@@ -66,7 +66,8 @@
             Contract.Requires(model != null);
             Contract.Requires(writer != null);
 
-            new EdmxSerializer().Serialize(model.DatabaseMapping, model.DatabaseMapping.Database.GetProviderInfo(), writer);
+            new EdmxSerializer().Serialize(
+                model.DatabaseMapping, model.DatabaseMapping.Database.GetProviderInfo(), writer);
         }
 
         #endregion

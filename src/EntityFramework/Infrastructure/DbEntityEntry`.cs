@@ -130,11 +130,14 @@
         /// <typeparam name = "TProperty">The type of the property.</typeparam>
         /// <param name = "navigationProperty">The name of the navigation property.</param>
         /// <returns>An object representing the navigation property.</returns>
-        public DbReferenceEntry<TEntity, TProperty> Reference<TProperty>(string navigationProperty) where TProperty : class
+        public DbReferenceEntry<TEntity, TProperty> Reference<TProperty>(string navigationProperty)
+            where TProperty : class
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(navigationProperty));
 
-            return DbReferenceEntry<TEntity, TProperty>.Create(_internalEntityEntry.Reference(navigationProperty, typeof(TProperty)));
+            return
+                DbReferenceEntry<TEntity, TProperty>.Create(
+                    _internalEntityEntry.Reference(navigationProperty, typeof(TProperty)));
         }
 
         /// <summary>
@@ -144,7 +147,8 @@
         /// <typeparam name = "TProperty">The type of the property.</typeparam>
         /// <param name = "navigationProperty">An expression representing the navigation property.</param>
         /// <returns>An object representing the navigation property.</returns>
-        public DbReferenceEntry<TEntity, TProperty> Reference<TProperty>(Expression<Func<TEntity, TProperty>> navigationProperty)
+        public DbReferenceEntry<TEntity, TProperty> Reference<TProperty>(
+            Expression<Func<TEntity, TProperty>> navigationProperty)
             where TProperty : class
         {
             Contract.Requires(navigationProperty != null);
@@ -152,7 +156,8 @@
             return
                 DbReferenceEntry<TEntity, TProperty>.Create(
                     _internalEntityEntry.Reference(
-                        DbHelpers.ParsePropertySelector(navigationProperty, "Reference", "navigationProperty"), typeof(TProperty)));
+                        DbHelpers.ParsePropertySelector(navigationProperty, "Reference", "navigationProperty"),
+                        typeof(TProperty)));
         }
 
         /// <summary>
@@ -175,11 +180,14 @@
         /// <typeparam name = "TElement">The type of elements in the collection.</typeparam>
         /// <param name = "navigationProperty">The name of the navigation property.</param>
         /// <returns>An object representing the navigation property.</returns>
-        public DbCollectionEntry<TEntity, TElement> Collection<TElement>(string navigationProperty) where TElement : class
+        public DbCollectionEntry<TEntity, TElement> Collection<TElement>(string navigationProperty)
+            where TElement : class
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(navigationProperty));
 
-            return DbCollectionEntry<TEntity, TElement>.Create(_internalEntityEntry.Collection(navigationProperty, typeof(TElement)));
+            return
+                DbCollectionEntry<TEntity, TElement>.Create(
+                    _internalEntityEntry.Collection(navigationProperty, typeof(TElement)));
         }
 
         /// <summary>
@@ -194,7 +202,9 @@
         {
             Contract.Requires(navigationProperty != null);
 
-            return Collection<TElement>(DbHelpers.ParsePropertySelector(navigationProperty, "Collection", "navigationProperty"));
+            return
+                Collection<TElement>(
+                    DbHelpers.ParsePropertySelector(navigationProperty, "Collection", "navigationProperty"));
         }
 
         /// <summary>
@@ -219,7 +229,9 @@
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
 
-            return DbPropertyEntry<TEntity, TProperty>.Create(_internalEntityEntry.Property(propertyName, typeof(TProperty)));
+            return
+                DbPropertyEntry<TEntity, TProperty>.Create(
+                    _internalEntityEntry.Property(propertyName, typeof(TProperty)));
         }
 
         /// <summary>
@@ -246,7 +258,8 @@
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
 
-            return DbComplexPropertyEntry.Create(_internalEntityEntry.Property(propertyName, null, requireComplex: true));
+            return DbComplexPropertyEntry.Create(
+                _internalEntityEntry.Property(propertyName, null, requireComplex: true));
         }
 
         /// <summary>
@@ -364,10 +377,12 @@
         /// <returns>
         ///     <c>true</c> if the specified <see cref = "System.Object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        [EditorBrowsable(EditorBrowsableState.Never)] // Still hide it since it is generally not useful to see when dotting in the API.
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        // Still hide it since it is generally not useful to see when dotting in the API.
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj) || obj.GetType() != typeof(DbEntityEntry<TEntity>))
+            if (ReferenceEquals(null, obj)
+                || obj.GetType() != typeof(DbEntityEntry<TEntity>))
             {
                 return false;
             }
@@ -384,7 +399,8 @@
         /// <returns>
         ///     <c>true</c> if the specified <see cref = "DbEntityEntry{TEntity}" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        [EditorBrowsable(EditorBrowsableState.Never)] // Still hide it since it is generally not useful to see when dotting in the API.
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        // Still hide it since it is generally not useful to see when dotting in the API.
         public bool Equals(DbEntityEntry<TEntity> other)
         {
             if (ReferenceEquals(this, other))
@@ -401,7 +417,8 @@
         /// <returns>
         ///     A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
         /// </returns>
-        [EditorBrowsable(EditorBrowsableState.Never)] // Still hide it since it is generally not useful to see when dotting in the API.
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        // Still hide it since it is generally not useful to see when dotting in the API.
         public override int GetHashCode()
         {
             return _internalEntityEntry.GetHashCode();

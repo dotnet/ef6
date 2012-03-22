@@ -13,7 +13,8 @@ namespace System.Data.Entity.Edm.Db
     /// </summary>
     internal class DbForeignKeyConstraintMetadata : DbConstraintMetadata
     {
-        private readonly BackingList<DbTableColumnMetadata> dependentColumnsList = new BackingList<DbTableColumnMetadata>();
+        private readonly BackingList<DbTableColumnMetadata> dependentColumnsList =
+            new BackingList<DbTableColumnMetadata>();
 
         internal override DbItemKind GetMetadataKind()
         {

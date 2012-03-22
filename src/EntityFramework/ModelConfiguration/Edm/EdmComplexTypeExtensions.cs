@@ -8,7 +8,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
     internal static class EdmComplexTypeExtensions
     {
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         public static EdmProperty AddComplexProperty(
             this EdmComplexType complexType, string name, EdmComplexType targetComplexType)
         {
@@ -17,14 +18,18 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
             Contract.Requires(targetComplexType != null);
 
-            var property = new EdmProperty { Name = name }.AsComplex(targetComplexType);
+            var property = new EdmProperty
+                               {
+                                   Name = name
+                               }.AsComplex(targetComplexType);
 
             complexType.DeclaredProperties.Add(property);
 
             return property;
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         public static object GetConfiguration(this EdmComplexType complexType)
         {
             Contract.Requires(complexType != null);
@@ -32,7 +37,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return complexType.Annotations.GetConfiguration();
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         public static void SetConfiguration(this EdmComplexType complexType, object configuration)
         {
             Contract.Requires(complexType != null);
@@ -47,7 +53,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return complexType.Annotations.GetClrType();
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         public static void SetClrType(this EdmComplexType complexType, Type type)
         {
             Contract.Requires(complexType != null);
@@ -56,7 +63,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             complexType.Annotations.SetClrType(type);
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         public static EdmProperty AddPrimitiveProperty(this EdmComplexType complexType, string name)
         {
             Contract.Requires(complexType != null);
@@ -71,7 +79,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return property;
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         public static EdmProperty GetPrimitiveProperty(this EdmComplexType complexType, string name)
         {
             Contract.Requires(complexType != null);

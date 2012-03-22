@@ -2,7 +2,8 @@
 {
     using System.Data.Common;
 
-    internal class HistoryContextBase<TContext> : DbContext where TContext : DbContext
+    internal class HistoryContextBase<TContext> : DbContext
+        where TContext : DbContext
     {
         static HistoryContextBase()
         {

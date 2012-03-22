@@ -10,7 +10,8 @@ namespace System.Data.Entity.Infrastructure
     /// <summary>
     ///     Provides runtime information about a given <see cref = "DbContext" /> type.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "Casing is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
+        Justification = "Casing is intentional")]
     public class DbContextInfo
     {
         private readonly Type _contextType;
@@ -60,7 +61,9 @@ namespace System.Data.Entity.Infrastructure
         /// </remarks>
         /// <param name = "contextType">The type deriving from <see cref = "DbContext" />.</param>
         /// <param name = "connectionStringSettings">A collection of connection strings.</param>
-        [Obsolete(@"The application configuration can contain multiple settings that affect the connection used by a DbContext. To ensure all configuration is taken into account, use a DbContextInfo constructor that accepts System.Configuration.Configuration")]
+        [Obsolete(
+            @"The application configuration can contain multiple settings that affect the connection used by a DbContext. To ensure all configuration is taken into account, use a DbContextInfo constructor that accepts System.Configuration.Configuration"
+            )]
         public DbContextInfo(Type contextType, ConnectionStringSettingsCollection connectionStringSettings)
             : this(contextType, null, new AppConfig(connectionStringSettings), null)
         {

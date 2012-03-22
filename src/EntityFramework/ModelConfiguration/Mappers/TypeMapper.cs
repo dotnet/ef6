@@ -59,7 +59,12 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 enumType.UnderlyingType = primitiveType;
 
                 Enum.GetNames(type)
-                    .Zip(Enum.GetValues(type).Cast<object>(), (n, v) => new { n, v })
+                    .Zip(
+                        Enum.GetValues(type).Cast<object>(), (n, v) => new
+                                                                           {
+                                                                               n,
+                                                                               v
+                                                                           })
                     .Each(m => enumType.AddMember(m.n, Convert.ToInt64(m.v, CultureInfo.InvariantCulture)));
             }
             else if (type != enumType.GetClrType())
@@ -209,8 +214,10 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                     _mappingContext.ModelConfiguration.GetConfiguredProperties(type),
                     _mappingContext.ModelConfiguration.StructuralTypes))
             {
-                _mappingContext.ConventionsConfiguration.ApplyPropertyConfiguration(propertyInfo, _mappingContext.ModelConfiguration);
-                _mappingContext.ConventionsConfiguration.ApplyPropertyTypeConfiguration(propertyInfo, structuralTypeConfiguration);
+                _mappingContext.ConventionsConfiguration.ApplyPropertyConfiguration(
+                    propertyInfo, _mappingContext.ModelConfiguration);
+                _mappingContext.ConventionsConfiguration.ApplyPropertyTypeConfiguration(
+                    propertyInfo, structuralTypeConfiguration);
 
                 if (!_mappingContext.ModelConfiguration.IsIgnoredProperty(type, propertyInfo))
                 {
@@ -270,9 +277,13 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             {
                 entityTypeConfiguration.ClearKey();
 
-                foreach (var property in type.BaseType.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+                foreach (
+                    var property in
+                        type.BaseType.GetProperties(
+                            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
                 {
-                    if (property.DeclaringType != type && entityTypeConfiguration.IgnoredProperties.Any(p => p.IsSameAs(property)))
+                    if (property.DeclaringType != type
+                        && entityTypeConfiguration.IgnoredProperties.Any(p => p.IsSameAs(property)))
                     {
                         throw Error.CannotIgnoreMappedBaseProperty(property.Name, type, property.DeclaringType);
                     }

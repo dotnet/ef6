@@ -1,7 +1,6 @@
 ﻿namespace System.Data.Entity.Migrations.Model
 {
     using System.Data.Entity.Migrations.Extensions;
-    using System.Data.Entity.Migrations.Utilities;
     using System.Diagnostics.Contracts;
     using System.Reflection;
 

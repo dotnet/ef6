@@ -47,9 +47,9 @@ namespace System.Data.Entity.Migrations.Model
         {
             var dropIndexOperation
                 = new DropIndexOperation(_inverse.CreateCreateIndexOperation())
-                    {
-                        Table = DependentTable
-                    };
+                      {
+                          Table = DependentTable
+                      };
 
             DependentColumns.Each(c => dropIndexOperation.Columns.Add(c));
 

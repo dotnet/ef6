@@ -20,17 +20,17 @@ namespace CmdLine
         /// <param name = "match"></param>
         public CommandArgument(Match match)
         {
-            this.Token = GetGroupValue(match, TokenGroup);
-            this.SwitchSeparator = GetGroupValue(match, CommandLine.SwitchSeperatorGroup);
-            this.Command = GetGroupValue(match, CommandLine.SwitchNameGroup);
-            this.SwitchOption = GetGroupValue(match, CommandLine.SwitchOptionGroup);
-            this.Value = GetGroupValue(match, CommandLine.ValueGroup);
+            Token = GetGroupValue(match, TokenGroup);
+            SwitchSeparator = GetGroupValue(match, CommandLine.SwitchSeperatorGroup);
+            Command = GetGroupValue(match, CommandLine.SwitchNameGroup);
+            SwitchOption = GetGroupValue(match, CommandLine.SwitchOptionGroup);
+            Value = GetGroupValue(match, CommandLine.ValueGroup);
         }
 
         public CommandArgument(string token, int parameterIndex)
         {
-            this.Token = token;
-            this.ParameterIndex = parameterIndex;
+            Token = token;
+            ParameterIndex = parameterIndex;
         }
 
         public string SwitchOption { get; set; }
@@ -45,26 +45,17 @@ namespace CmdLine
         {
             get
             {
-                return string.IsNullOrWhiteSpace(this.value) && this.ParameterIndex != -1
-                           ? this.Token
-                           : this.value;
+                return string.IsNullOrWhiteSpace(value) && ParameterIndex != -1
+                           ? Token
+                           : value;
             }
-            set
-            {
-                this.value = value;
-            }
+            set { this.value = value; }
         }
 
         public int ParameterIndex
         {
-            get
-            {
-                return this.parameterIndex;
-            }
-            set
-            {
-                this.parameterIndex = value;
-            }
+            get { return parameterIndex; }
+            set { parameterIndex = value; }
         }
 
         /// <summary>
@@ -77,20 +68,20 @@ namespace CmdLine
         {
             get
             {
-                return this.IsParameter()
-                           ? CommandLineParameterAttribute.GetParameterKey(this.ParameterIndex)
-                           : CommandLine.CaseSensitive ? this.Command : this.Command.ToLowerInvariant();
+                return IsParameter()
+                           ? CommandLineParameterAttribute.GetParameterKey(ParameterIndex)
+                           : CommandLine.CaseSensitive ? Command : Command.ToLowerInvariant();
             }
         }
 
         public bool IsCommand()
         {
-            return !string.IsNullOrWhiteSpace(this.Command);
+            return !string.IsNullOrWhiteSpace(Command);
         }
 
         public bool IsParameter()
         {
-            return !this.IsCommand();
+            return !IsCommand();
         }
 
         private static string GetGroupValue(Match match, string group)
@@ -111,19 +102,19 @@ namespace CmdLine
         {
             var stringBuilder = new StringBuilder("CommandArgument");
 
-            this.AppendProperty(stringBuilder, "Token");
-            this.AppendProperty(stringBuilder, "Command");
-            this.AppendProperty(stringBuilder, "SwitchSeparator");
-            this.AppendProperty(stringBuilder, "SwitchOption");
-            this.AppendProperty(stringBuilder, "Value");
-            this.AppendProperty(stringBuilder, "ParameterIndex");
+            AppendProperty(stringBuilder, "Token");
+            AppendProperty(stringBuilder, "Command");
+            AppendProperty(stringBuilder, "SwitchSeparator");
+            AppendProperty(stringBuilder, "SwitchOption");
+            AppendProperty(stringBuilder, "Value");
+            AppendProperty(stringBuilder, "ParameterIndex");
 
             return stringBuilder.ToString();
         }
 
         private void AppendProperty(StringBuilder stringBuilder, string propertyName)
         {
-            var property = this.GetType().GetProperty(propertyName);
+            var property = GetType().GetProperty(propertyName);
             var propValue = property.GetValue(this, null);
 
             stringBuilder.AppendFormat(" {0}: \"{1}\"", propertyName, propValue);

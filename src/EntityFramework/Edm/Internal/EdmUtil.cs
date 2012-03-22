@@ -156,7 +156,8 @@ namespace System.Data.Entity.Edm.Internal
                     case UnicodeCategory.SpacingCombiningMark:
                     case UnicodeCategory.DecimalDigitNumber:
                     case UnicodeCategory.ConnectorPunctuation:
-                        if (!nextMustBeStartChar || (c == '_'))
+                        if (!nextMustBeStartChar
+                            || (c == '_'))
                         {
                             break;
                         }
@@ -168,7 +169,8 @@ namespace System.Data.Entity.Edm.Internal
                 nextMustBeStartChar = false;
                 continue;
                 Label_008C:
-                if (!isTypeName || !IsSpecialTypeChar(c, ref nextMustBeStartChar))
+                if (!isTypeName
+                    || !IsSpecialTypeChar(c, ref nextMustBeStartChar))
                 {
                     return false;
                 }

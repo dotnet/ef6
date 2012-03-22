@@ -9,7 +9,8 @@ namespace System.Data.Entity.Edm.Db.Mapping
     internal class DbEntityTypeMapping
         : DbMappingMetadataItem
     {
-        private readonly BackingList<DbEntityTypeMappingFragment> typeMappingFragments = new BackingList<DbEntityTypeMappingFragment>();
+        private readonly BackingList<DbEntityTypeMappingFragment> typeMappingFragments =
+            new BackingList<DbEntityTypeMappingFragment>();
 
         internal override DbMappingItemKind GetItemKind()
         {

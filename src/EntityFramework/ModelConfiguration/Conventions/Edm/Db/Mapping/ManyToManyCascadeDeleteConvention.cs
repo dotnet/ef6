@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Utilities;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>

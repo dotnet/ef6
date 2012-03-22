@@ -11,7 +11,8 @@ namespace System.Data.Entity
     using System.Linq;
     using System.Linq.Expressions;
 
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "Casing is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
+        Justification = "Casing is intentional")]
     public static class DbExtensions
     {
         #region Include
@@ -102,7 +103,8 @@ namespace System.Data.Entity
         private static T CommonInclude<T>(T source, string path)
         {
             var includeMethod = source.GetType().GetMethod("Include", StringIncludeTypes);
-            if (includeMethod != null && typeof(T).IsAssignableFrom(includeMethod.ReturnType))
+            if (includeMethod != null
+                && typeof(T).IsAssignableFrom(includeMethod.ReturnType))
             {
                 return (T)includeMethod.Invoke(source, new object[] { path });
             }
@@ -139,13 +141,15 @@ namespace System.Data.Entity
         /// <param name = "path">A lambda expression representing the path to include.</param>
         /// <returns>A new IQueryable<T> with the defined query path.</returns>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        public static IQueryable<T> Include<T, TProperty>(this IQueryable<T> source, Expression<Func<T, TProperty>> path) where T : class
+        public static IQueryable<T> Include<T, TProperty>(
+            this IQueryable<T> source, Expression<Func<T, TProperty>> path) where T : class
         {
             Contract.Requires(source != null);
             Contract.Requires(path != null);
 
             string include;
-            if (!DbHelpers.TryParsePath(path.Body, out include) || include == null)
+            if (!DbHelpers.TryParsePath(path.Body, out include)
+                || include == null)
             {
                 throw new ArgumentException(Strings.DbExtensions_InvalidIncludePathExpression, "path");
             }
@@ -204,7 +208,8 @@ namespace System.Data.Entity
             }
 
             var noTrackingMethod = source.GetType().GetMethod("AsNoTracking", Type.EmptyTypes);
-            if (noTrackingMethod != null && typeof(T).IsAssignableFrom(noTrackingMethod.ReturnType))
+            if (noTrackingMethod != null
+                && typeof(T).IsAssignableFrom(noTrackingMethod.ReturnType))
             {
                 return (T)noTrackingMethod.Invoke(source, null);
             }

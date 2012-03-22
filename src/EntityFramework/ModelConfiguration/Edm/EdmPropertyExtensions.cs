@@ -14,7 +14,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             Contract.Requires(property != null);
 
-            return (DbStoreGeneratedPattern?)property.Annotations.GetAnnotation(SsdlConstants.Attribute_StoreGeneratedPattern);
+            return
+                (DbStoreGeneratedPattern?)
+                property.Annotations.GetAnnotation(SsdlConstants.Attribute_StoreGeneratedPattern);
         }
 
         public static void SetStoreGeneratedPattern(
@@ -44,9 +46,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(property != null);
 
             property.PropertyType = new EdmTypeReference
-                {
-                    PrimitiveTypeFacets = new EdmPrimitiveTypeFacets()
-                };
+                                        {
+                                            PrimitiveTypeFacets = new EdmPrimitiveTypeFacets()
+                                        };
 
             return property;
         }
@@ -57,10 +59,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(complexType != null);
 
             property.PropertyType = new EdmTypeReference
-                {
-                    EdmType = complexType,
-                    IsNullable = false
-                };
+                                        {
+                                            EdmType = complexType,
+                                            IsNullable = false
+                                        };
 
             return property;
         }
@@ -71,10 +73,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(enumType != null);
 
             property.PropertyType = new EdmTypeReference
-                {
-                    EdmType = enumType,
-                    PrimitiveTypeFacets = new EdmPrimitiveTypeFacets()
-                };
+                                        {
+                                            EdmType = enumType,
+                                            PrimitiveTypeFacets = new EdmPrimitiveTypeFacets()
+                                        };
 
             return property;
         }
@@ -91,7 +93,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return propertyPaths;
         }
 
-        private static void IncludePropertyPath(List<EdmPropertyPath> propertyPaths, List<EdmProperty> currentPath, EdmProperty property)
+        private static void IncludePropertyPath(
+            List<EdmPropertyPath> propertyPaths, List<EdmProperty> currentPath, EdmProperty property)
         {
             currentPath.Add(property);
             if (property.PropertyType.IsUnderlyingPrimitiveType)

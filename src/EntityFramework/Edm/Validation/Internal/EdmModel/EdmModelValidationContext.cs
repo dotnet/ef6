@@ -21,7 +21,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 
         internal string GetQualifiedPrefix(EdmNamespaceItem item)
         {
-            Contract.Assert(ModelParentMap != null, "Model parent map was not initialized before calling GetQualifiedPrefix?");
+            Contract.Assert(
+                ModelParentMap != null, "Model parent map was not initialized before calling GetQualifiedPrefix?");
 
             string qualifiedPrefix = null;
             EdmNamespace parentNamespace;
@@ -35,7 +36,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 
         internal string GetQualifiedPrefix(EdmEntityContainerItem item)
         {
-            Contract.Assert(ModelParentMap != null, "Model parent map was not initialized before calling GetQualifiedPrefix?");
+            Contract.Assert(
+                ModelParentMap != null, "Model parent map was not initialized before calling GetQualifiedPrefix?");
 
             string qualifiedPrefix = null;
             EdmEntityContainer parentContainer = null;

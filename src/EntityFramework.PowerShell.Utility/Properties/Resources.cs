@@ -10,7 +10,7 @@ namespace System.Data.Entity.Resources
     /// </summary>
     [GeneratedCode("Resources.tt", "1.0.0.0")]
     internal static class Strings
-    {   
+    {
         /// <summary>
         /// A string like "The argument '{0}' cannot be null, empty or contain only white space."
         /// </summary>
@@ -26,7 +26,7 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.PreconditionFailed, p0, p1);
         }
-    } 
+    }
 
     /// <summary>
     ///    Strongly-typed and parameterized exception factory.
@@ -49,6 +49,7 @@ namespace System.Data.Entity.Resources
         {
             return new ArgumentException(Strings.PreconditionFailed(p0, p1));
         }
+
         /// <summary>
         /// The exception that is thrown when a null reference (Nothing in Visual Basic) is passed to a method that does not accept it as a valid argument.
         /// </summary>
@@ -56,7 +57,7 @@ namespace System.Data.Entity.Resources
         {
             return new ArgumentNullException(paramName);
         }
-        
+
         /// <summary>
         /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
         /// </summary>
@@ -79,7 +80,7 @@ namespace System.Data.Entity.Resources
         internal static Exception NotSupported()
         {
             return new NotSupportedException();
-        }        
+        }
     }
 
     /// <summary>
@@ -92,20 +93,21 @@ namespace System.Data.Entity.Resources
     {
         internal const string ArgumentIsNullOrWhitespace = "ArgumentIsNullOrWhitespace";
         internal const string PreconditionFailed = "PreconditionFailed";
-        
-        static EntityRes loader = null;
-        ResourceManager resources;
+
+        private static EntityRes loader;
+        private readonly ResourceManager resources;
 
         internal EntityRes()
         {
-            resources = new ResourceManager("System.Data.Entity.Migrations.Utilities.Properties.Resources", this.GetType().Assembly);
+            resources = new ResourceManager(
+                "System.Data.Entity.Migrations.Utilities.Properties.Resources", GetType().Assembly);
         }
-        
+
         private static EntityRes GetLoader()
         {
             if (loader == null)
             {
-                EntityRes sr = new EntityRes();
+                var sr = new EntityRes();
                 Interlocked.CompareExchange(ref loader, sr, null);
             }
             return loader;
@@ -113,30 +115,31 @@ namespace System.Data.Entity.Resources
 
         private static CultureInfo Culture
         {
-            get { return null/*use ResourceManager default, CultureInfo.CurrentUICulture*/; }
+            get { return null /*use ResourceManager default, CultureInfo.CurrentUICulture*/; }
         }
-        
+
         public static ResourceManager Resources
         {
-            get
-            {
-                return GetLoader().resources;
-            }
+            get { return GetLoader().resources; }
         }
-        
+
         public static string GetString(string name, params object[] args)
         {
-            EntityRes sys = GetLoader();
+            var sys = GetLoader();
             if (sys == null)
-                return null;
-            string res = sys.resources.GetString(name, EntityRes.Culture);
-
-            if (args != null && args.Length > 0)
             {
-                for (int i = 0; i < args.Length; i ++)
+                return null;
+            }
+            var res = sys.resources.GetString(name, Culture);
+
+            if (args != null
+                && args.Length > 0)
+            {
+                for (var i = 0; i < args.Length; i ++)
                 {
-                    String value = args[i] as String;
-                    if (value != null && value.Length > 1024)
+                    var value = args[i] as String;
+                    if (value != null
+                        && value.Length > 1024)
                     {
                         args[i] = value.Substring(0, 1024 - 3) + "...";
                     }
@@ -151,12 +154,14 @@ namespace System.Data.Entity.Resources
 
         public static string GetString(string name)
         {
-            EntityRes sys = GetLoader();
+            var sys = GetLoader();
             if (sys == null)
+            {
                 return null;
-            return sys.resources.GetString(name, EntityRes.Culture);
+            }
+            return sys.resources.GetString(name, Culture);
         }
-        
+
         public static string GetString(string name, out bool usedFallback)
         {
             // always false for this version of gensr
@@ -166,11 +171,12 @@ namespace System.Data.Entity.Resources
 
         public static object GetObject(string name)
         {
-            EntityRes sys = GetLoader();
+            var sys = GetLoader();
             if (sys == null)
+            {
                 return null;
-            return sys.resources.GetObject(name, EntityRes.Culture);
+            }
+            return sys.resources.GetObject(name, Culture);
         }
     }
 }
-

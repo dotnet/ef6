@@ -87,7 +87,8 @@ namespace System.Data.Entity.Internal.Linq
         /// <returns> A new query with NoTracking applied.</returns>
         public virtual IInternalQuery<TElement> AsNoTracking()
         {
-            return new InternalQuery<TElement>(_internalContext, (ObjectQuery)DbHelpers.CreateNoTrackingQuery(_objectQuery));
+            return new InternalQuery<TElement>(
+                _internalContext, (ObjectQuery)DbHelpers.CreateNoTrackingQuery(_objectQuery));
         }
 
         #endregion
@@ -199,7 +200,7 @@ namespace System.Data.Entity.Internal.Linq
             Contract.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
 
             InternalContext.Initialize();
-            
+
             return ((IEnumerable<TElement>)_objectQuery).GetEnumerator();
         }
 

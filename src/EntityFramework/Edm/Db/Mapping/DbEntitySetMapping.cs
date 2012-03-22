@@ -9,7 +9,8 @@ namespace System.Data.Entity.Edm.Db.Mapping
     internal class DbEntitySetMapping
         : DbMappingMetadataItem
     {
-        private readonly BackingList<DbEntityTypeMapping> entityTypeMappingsList = new BackingList<DbEntityTypeMapping>();
+        private readonly BackingList<DbEntityTypeMapping> entityTypeMappingsList =
+            new BackingList<DbEntityTypeMapping>();
 
 #if IncludeUnusedEdmCode
         private readonly BackingList<DbQueryViewMapping> queryViewMappings = new BackingList<DbQueryViewMapping>();

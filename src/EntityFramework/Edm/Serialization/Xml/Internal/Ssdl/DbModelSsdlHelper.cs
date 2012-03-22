@@ -14,7 +14,11 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Ssdl
         /// <returns> </returns>
         internal static string[] GetRoleNamePair(DbTableMetadata firstTable, DbTableMetadata secondTable)
         {
-            return new[] { firstTable.Name, firstTable != secondTable ? secondTable.Name : secondTable.Name + selfRefRoleNameSuffix };
+            return new[]
+                       {
+                           firstTable.Name,
+                           firstTable != secondTable ? secondTable.Name : secondTable.Name + selfRefRoleNameSuffix
+                       };
         }
     }
 }

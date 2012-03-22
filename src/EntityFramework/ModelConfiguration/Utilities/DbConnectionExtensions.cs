@@ -13,7 +13,8 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
             Contract.Requires(connection != null);
 
             var connectionProviderFactoryType = DbProviderServices.GetProviderFactory(connection).GetType();
-            var connectionProviderFactoryAssemblyName = new AssemblyName(connectionProviderFactoryType.Assembly.FullName);
+            var connectionProviderFactoryAssemblyName = new AssemblyName(
+                connectionProviderFactoryType.Assembly.FullName);
 
             foreach (DataRow row in DbProviderFactories.GetFactoryClasses().Rows)
             {
@@ -25,11 +26,11 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
                 Type.GetType(
                     assemblyQualifiedTypeName,
                     a =>
-                    {
-                        rowProviderFactoryAssemblyName = a;
+                        {
+                            rowProviderFactoryAssemblyName = a;
 
-                        return null;
-                    },
+                            return null;
+                        },
                     (_, __, ___) => { return null; });
 
                 if (rowProviderFactoryAssemblyName != null)
@@ -59,7 +60,8 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
             throw Error.ModelBuilder_ProviderNameNotFound(connection);
         }
 
-        public static DbProviderInfo GetProviderInfo(this DbConnection connection, out DbProviderManifest providerManifest)
+        public static DbProviderInfo GetProviderInfo(
+            this DbConnection connection, out DbProviderManifest providerManifest)
         {
             Contract.Requires(connection != null);
 

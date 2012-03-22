@@ -102,7 +102,10 @@
                 }
 
                 connectionString =
-                    new SqlConnectionStringBuilder(BaseConnectionString) { InitialCatalog = nameOrConnectionString }.ConnectionString;
+                    new SqlConnectionStringBuilder(BaseConnectionString)
+                        {
+                            InitialCatalog = nameOrConnectionString
+                        }.ConnectionString;
             }
 
             DbConnection connection = null;

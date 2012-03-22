@@ -95,7 +95,8 @@
             var propertyValidator = validationProvider.GetPropertyValidator(_internalEntityEntry, this);
 
             return propertyValidator != null
-                       ? propertyValidator.Validate(validationProvider.GetEntityValidationContext(_internalEntityEntry, null), this)
+                       ? propertyValidator.Validate(
+                           validationProvider.GetEntityValidationContext(_internalEntityEntry, null), this)
                        : Enumerable.Empty<DbValidationError>();
         }
 
@@ -117,7 +118,8 @@
         /// <typeparam name = "TEntity">The type of the entity.</typeparam>
         /// <typeparam name = "TProperty">The type of the property.</typeparam>
         /// <returns>The new entry.</returns>
-        public abstract DbMemberEntry<TEntity, TProperty> CreateDbMemberEntry<TEntity, TProperty>() where TEntity : class;
+        public abstract DbMemberEntry<TEntity, TProperty> CreateDbMemberEntry<TEntity, TProperty>()
+            where TEntity : class;
 
         #endregion
     }

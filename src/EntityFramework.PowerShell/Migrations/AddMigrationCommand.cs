@@ -12,62 +12,67 @@
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
 
-            Execute(() =>
-                {
-                    var project = Project;
-                    var rescaffolding = false;
-
-                    using (var facade = GetFacade())
+            Execute(
+                () =>
                     {
-                        var pendingMigrations = facade.GetPendingMigrations();
+                        var project = Project;
+                        var rescaffolding = false;
 
-                        if (pendingMigrations.Any())
+                        using (var facade = GetFacade())
                         {
-                            var lastMigration = pendingMigrations.Last();
+                            var pendingMigrations = facade.GetPendingMigrations();
 
-                            if (!string.Equals(lastMigration, name, StringComparison.OrdinalIgnoreCase)
-                                && !string.Equals(lastMigration.MigrationName(), name, StringComparison.OrdinalIgnoreCase))
+                            if (pendingMigrations.Any())
                             {
-                                throw Error.MigrationsPendingException(pendingMigrations.Join());
+                                var lastMigration = pendingMigrations.Last();
+
+                                if (!string.Equals(lastMigration, name, StringComparison.OrdinalIgnoreCase)
+                                    &&
+                                    !string.Equals(
+                                        lastMigration.MigrationName(), name, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    throw Error.MigrationsPendingException(pendingMigrations.Join());
+                                }
+
+                                rescaffolding = true;
+                                name = lastMigration;
                             }
 
-                            rescaffolding = true;
-                            name = lastMigration;
-                        }
+                            WriteLine(Strings.LoggingGenerate(name));
 
-                        WriteLine(Strings.LoggingGenerate(name));
+                            var scaffoldedMigration = facade.Scaffold(
+                                name, project.GetLanguage(), project.GetRootNamespace(), ignoreChanges);
 
-                        var scaffoldedMigration = facade.Scaffold(name, project.GetLanguage(), project.GetRootNamespace(), ignoreChanges);
+                            var userCodeFileName = scaffoldedMigration.MigrationId + "." + scaffoldedMigration.Language;
+                            var userCodePath = Path.Combine(scaffoldedMigration.Directory, userCodeFileName);
+                            var designerCodeFileName = scaffoldedMigration.MigrationId + ".Designer."
+                                                       + scaffoldedMigration.Language;
+                            var designerCodePath = Path.Combine(scaffoldedMigration.Directory, designerCodeFileName);
 
-                        var userCodeFileName = scaffoldedMigration.MigrationId + "." + scaffoldedMigration.Language;
-                        var userCodePath = Path.Combine(scaffoldedMigration.Directory, userCodeFileName);
-                        var designerCodeFileName = scaffoldedMigration.MigrationId + ".Designer." + scaffoldedMigration.Language;
-                        var designerCodePath = Path.Combine(scaffoldedMigration.Directory, designerCodeFileName);
-
-                        if (rescaffolding && !force)
-                        {
-                            var absoluteUserCodePath = Path.Combine(project.GetProjectDir(), userCodePath);
-
-                            if (!string.Equals(scaffoldedMigration.UserCode, File.ReadAllText(absoluteUserCodePath)))
+                            if (rescaffolding && !force)
                             {
-                                WriteWarning(Strings.RescaffoldNoForce(name));
+                                var absoluteUserCodePath = Path.Combine(project.GetProjectDir(), userCodePath);
+
+                                if (!string.Equals(scaffoldedMigration.UserCode, File.ReadAllText(absoluteUserCodePath)))
+                                {
+                                    WriteWarning(Strings.RescaffoldNoForce(name));
+                                }
                             }
-                        }
-                        else
-                        {
-                            project.AddFile(userCodePath, scaffoldedMigration.UserCode);
-                        }
+                            else
+                            {
+                                project.AddFile(userCodePath, scaffoldedMigration.UserCode);
+                            }
 
-                        project.AddFile(designerCodePath, scaffoldedMigration.DesignerCode);
+                            project.AddFile(designerCodePath, scaffoldedMigration.DesignerCode);
 
-                        if (!rescaffolding)
-                        {
-                            WriteWarning(Strings.SnapshotBehindWarning(scaffoldedMigration.MigrationId));
+                            if (!rescaffolding)
+                            {
+                                WriteWarning(Strings.SnapshotBehindWarning(scaffoldedMigration.MigrationId));
+                            }
+
+                            project.OpenFile(userCodePath);
                         }
-
-                        project.OpenFile(userCodePath);
-                    }
-                });
+                    });
         }
     }
 }

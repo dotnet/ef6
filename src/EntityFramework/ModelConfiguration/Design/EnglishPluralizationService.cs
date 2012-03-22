@@ -536,13 +536,16 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                 new StringBidirectionalDictionary(_irregularVerbList);
 
             _knownSingluarWords = new List<string>(
-                _irregularPluralsList.Keys.Concat(_assimilatedClassicalInflectionList.Keys).Concat(_oSuffixList.Keys).Concat(
-                    _classicalInflectionList.Keys).Concat(_irregularVerbList.Keys).Concat(_uninflectiveWords).Except(
+                _irregularPluralsList.Keys.Concat(_assimilatedClassicalInflectionList.Keys).Concat(_oSuffixList.Keys).
+                    Concat(
+                        _classicalInflectionList.Keys).Concat(_irregularVerbList.Keys).Concat(_uninflectiveWords).Except
+                    (
                         _knownConflictingPluralList)); // see the _knowConflictingPluralList comment above
 
             _knownPluralWords = new List<string>(
-                _irregularPluralsList.Values.Concat(_assimilatedClassicalInflectionList.Values).Concat(_oSuffixList.Values).Concat(
-                    _classicalInflectionList.Values).Concat(_irregularVerbList.Values).Concat(_uninflectiveWords));
+                _irregularPluralsList.Values.Concat(_assimilatedClassicalInflectionList.Values).Concat(
+                    _oSuffixList.Values).Concat(
+                        _classicalInflectionList.Values).Concat(_irregularVerbList.Values).Concat(_uninflectiveWords));
         }
 
         public override bool IsPlural(string word)
@@ -556,7 +559,8 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                 return false;
             }
 
-            if (IsUninflective(word) || _knownPluralWords.Contains(word.ToLower(Culture)))
+            if (IsUninflective(word)
+                || _knownPluralWords.Contains(word.ToLower(Culture)))
             {
                 return true;
             }
@@ -581,11 +585,13 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                 return false;
             }
 
-            if (IsUninflective(word) || _knownSingluarWords.Contains(word.ToLower(Culture)))
+            if (IsUninflective(word)
+                || _knownSingluarWords.Contains(word.ToLower(Culture)))
             {
                 return true;
             }
-            else if (!IsNoOpWord(word) && Singularize(word).Equals(word))
+            else if (!IsNoOpWord(word)
+                     && Singularize(word).Equals(word))
             {
                 return true;
             }
@@ -631,7 +637,8 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             }
 
             // if word is one of the known plural forms, then just return
-            if (_knownPluralWords.Contains(suffixWord.ToLowerInvariant()) || IsPlural(suffixWord))
+            if (_knownPluralWords.Contains(suffixWord.ToLowerInvariant())
+                || IsPlural(suffixWord))
             {
                 return prefixWord + suffixWord;
             }
@@ -646,7 +653,10 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             // handle irregular inflections for common suffixes, e.g. "mouse" -> "mice"
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "man" },
+                new List<string>
+                    {
+                        "man"
+                    },
                 (s) => s.Remove(s.Length - 2, 2) + "en",
                 Culture,
                 out newSuffixWord))
@@ -656,7 +666,11 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "louse", "mouse" },
+                new List<string>
+                    {
+                        "louse",
+                        "mouse"
+                    },
                 (s) => s.Remove(s.Length - 4, 4) + "ice",
                 Culture,
                 out newSuffixWord))
@@ -666,7 +680,10 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "tooth" },
+                new List<string>
+                    {
+                        "tooth"
+                    },
                 (s) => s.Remove(s.Length - 4, 4) + "eeth",
                 Culture,
                 out newSuffixWord))
@@ -675,7 +692,10 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             }
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "goose" },
+                new List<string>
+                    {
+                        "goose"
+                    },
                 (s) => s.Remove(s.Length - 4, 4) + "eese",
                 Culture,
                 out newSuffixWord))
@@ -684,7 +704,10 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             }
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "foot" },
+                new List<string>
+                    {
+                        "foot"
+                    },
                 (s) => s.Remove(s.Length - 3, 3) + "eet",
                 Culture,
                 out newSuffixWord))
@@ -693,7 +716,10 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             }
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "zoon" },
+                new List<string>
+                    {
+                        "zoon"
+                    },
                 (s) => s.Remove(s.Length - 3, 3) + "oa",
                 Culture,
                 out newSuffixWord))
@@ -702,7 +728,12 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             }
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "cis", "sis", "xis" },
+                new List<string>
+                    {
+                        "cis",
+                        "sis",
+                        "xis"
+                    },
                 (s) => s.Remove(s.Length - 2, 2) + "es",
                 Culture,
                 out newSuffixWord))
@@ -725,7 +756,10 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "trix" },
+                new List<string>
+                    {
+                        "trix"
+                    },
                 (s) => s.Remove(s.Length - 1, 1) + "ces",
                 Culture,
                 out newSuffixWord))
@@ -735,7 +769,11 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "eau", "ieu" },
+                new List<string>
+                    {
+                        "eau",
+                        "ieu"
+                    },
                 (s) => s + "x",
                 Culture,
                 out newSuffixWord))
@@ -745,7 +783,12 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "inx", "anx", "ynx" },
+                new List<string>
+                    {
+                        "inx",
+                        "anx",
+                        "ynx"
+                    },
                 (s) => s.Remove(s.Length - 1, 1) + "ges",
                 Culture,
                 out newSuffixWord))
@@ -755,7 +798,12 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 
             // [cs]h and ss that take es as plural form
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
-                suffixWord, new List<string> { "ch", "sh", "ss" }, (s) => s + "es", Culture, out newSuffixWord))
+                suffixWord, new List<string>
+                                {
+                                    "ch",
+                                    "sh",
+                                    "ss"
+                                }, (s) => s + "es", Culture, out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
             }
@@ -763,7 +811,14 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             // f, fe that take ves as plural form
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "alf", "elf", "olf", "eaf", "arf" },
+                new List<string>
+                    {
+                        "alf",
+                        "elf",
+                        "olf",
+                        "eaf",
+                        "arf"
+                    },
                 (s) => s.EndsWith("deaf", true, Culture) ? s : s.Remove(s.Length - 1, 1) + "ves",
                 Culture,
                 out newSuffixWord))
@@ -773,7 +828,12 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "nife", "life", "wife" },
+                new List<string>
+                    {
+                        "nife",
+                        "life",
+                        "wife"
+                    },
                 (s) => s.Remove(s.Length - 2, 2) + "ves",
                 Culture,
                 out newSuffixWord))
@@ -784,7 +844,14 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             // y takes ys as plural form if preceded by a vowel, but ies if preceded by a consonant, e.g. stays, skies
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "ay", "ey", "iy", "oy", "uy" },
+                new List<string>
+                    {
+                        "ay",
+                        "ey",
+                        "iy",
+                        "oy",
+                        "uy"
+                    },
                 (s) => s + "s",
                 Culture,
                 out newSuffixWord))
@@ -807,7 +874,14 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "ao", "eo", "io", "oo", "uo" },
+                new List<string>
+                    {
+                        "ao",
+                        "eo",
+                        "io",
+                        "oo",
+                        "uo"
+                    },
                 (s) => s + "s",
                 Culture,
                 out newSuffixWord))
@@ -898,7 +972,10 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             // handle irregular inflections for common suffixes, e.g. "mouse" -> "mice"
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "men" },
+                new List<string>
+                    {
+                        "men"
+                    },
                 (s) => s.Remove(s.Length - 2, 2) + "an",
                 Culture,
                 out newSuffixWord))
@@ -908,7 +985,11 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "lice", "mice" },
+                new List<string>
+                    {
+                        "lice",
+                        "mice"
+                    },
                 (s) => s.Remove(s.Length - 3, 3) + "ouse",
                 Culture,
                 out newSuffixWord))
@@ -918,7 +999,10 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "teeth" },
+                new List<string>
+                    {
+                        "teeth"
+                    },
                 (s) => s.Remove(s.Length - 4, 4) + "ooth",
                 Culture,
                 out newSuffixWord))
@@ -927,7 +1011,10 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             }
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "geese" },
+                new List<string>
+                    {
+                        "geese"
+                    },
                 (s) => s.Remove(s.Length - 4, 4) + "oose",
                 Culture,
                 out newSuffixWord))
@@ -936,7 +1023,10 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             }
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "feet" },
+                new List<string>
+                    {
+                        "feet"
+                    },
                 (s) => s.Remove(s.Length - 3, 3) + "oot",
                 Culture,
                 out newSuffixWord))
@@ -945,7 +1035,10 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             }
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "zoa" },
+                new List<string>
+                    {
+                        "zoa"
+                    },
                 (s) => s.Remove(s.Length - 2, 2) + "oon",
                 Culture,
                 out newSuffixWord))
@@ -956,7 +1049,12 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             // [cs]h and ss that take es as plural form, this is being moved up since the sses will be override by the ses
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "ches", "shes", "sses" },
+                new List<string>
+                    {
+                        "ches",
+                        "shes",
+                        "sses"
+                    },
                 (s) => s.Remove(s.Length - 2, 2),
                 Culture,
                 out newSuffixWord))
@@ -979,7 +1077,10 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "trices" },
+                new List<string>
+                    {
+                        "trices"
+                    },
                 (s) => s.Remove(s.Length - 3, 3) + "x",
                 Culture,
                 out newSuffixWord))
@@ -989,7 +1090,11 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "eaux", "ieux" },
+                new List<string>
+                    {
+                        "eaux",
+                        "ieux"
+                    },
                 (s) => s.Remove(s.Length - 1, 1),
                 Culture,
                 out newSuffixWord))
@@ -999,7 +1104,12 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "inges", "anges", "ynges" },
+                new List<string>
+                    {
+                        "inges",
+                        "anges",
+                        "ynges"
+                    },
                 (s) => s.Remove(s.Length - 3, 3) + "x",
                 Culture,
                 out newSuffixWord))
@@ -1010,7 +1120,14 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             // f, fe that take ves as plural form
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "alves", "elves", "olves", "eaves", "arves" },
+                new List<string>
+                    {
+                        "alves",
+                        "elves",
+                        "olves",
+                        "eaves",
+                        "arves"
+                    },
                 (s) => s.Remove(s.Length - 3, 3) + "f",
                 Culture,
                 out newSuffixWord))
@@ -1020,7 +1137,12 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "nives", "lives", "wives" },
+                new List<string>
+                    {
+                        "nives",
+                        "lives",
+                        "wives"
+                    },
                 (s) => s.Remove(s.Length - 3, 3) + "fe",
                 Culture,
                 out newSuffixWord))
@@ -1031,7 +1153,14 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             // y takes ys as plural form if preceded by a vowel, but ies if preceded by a consonant, e.g. stays, skies
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "ays", "eys", "iys", "oys", "uys" },
+                new List<string>
+                    {
+                        "ays",
+                        "eys",
+                        "iys",
+                        "oys",
+                        "uys"
+                    },
                 (s) => s.Remove(s.Length - 1, 1),
                 Culture,
                 out newSuffixWord))
@@ -1054,7 +1183,14 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "aos", "eos", "ios", "oos", "uos" },
+                new List<string>
+                    {
+                        "aos",
+                        "eos",
+                        "ios",
+                        "oos",
+                        "uos"
+                    },
                 (s) => suffixWord.Remove(suffixWord.Length - 1, 1),
                 Culture,
                 out newSuffixWord))
@@ -1069,7 +1205,10 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             // we treat them as special case
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "ces" },
+                new List<string>
+                    {
+                        "ces"
+                    },
                 (s) => s.Remove(s.Length - 1, 1),
                 Culture,
                 out newSuffixWord))
@@ -1079,7 +1218,12 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord,
-                new List<string> { "ces", "ses", "xes" },
+                new List<string>
+                    {
+                        "ces",
+                        "ses",
+                        "xes"
+                    },
                 (s) => s.Remove(s.Length - 2, 2),
                 Culture,
                 out newSuffixWord))
@@ -1163,7 +1307,8 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
         {
             // return false when the word is "[\s]*" or leading or tailing with spaces
             // or contains non alphabetical characters
-            if (string.IsNullOrEmpty(word.Trim()) || !word.Equals(word.Trim()) ||
+            if (string.IsNullOrEmpty(word.Trim()) || !word.Equals(word.Trim())
+                ||
                 Regex.IsMatch(word, "[^a-zA-Z\\s]"))
             {
                 return false;
@@ -1201,7 +1346,8 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
         private bool IsNoOpWord(string word)
         {
             if (!IsAlphabets(word) ||
-                word.Length <= 1 ||
+                word.Length <= 1
+                ||
                 _pronounList.Contains(word.ToLowerInvariant()))
             {
                 return true;

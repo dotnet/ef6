@@ -34,7 +34,8 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
         }
 
         internal static bool TryInflectOnSuffixInWord(
-            string word, IEnumerable<string> suffixes, Func<string, string> operationOnWord, CultureInfo culture, out string newWord)
+            string word, IEnumerable<string> suffixes, Func<string, string> operationOnWord, CultureInfo culture,
+            out string newWord)
         {
             newWord = null;
             string matchedSuffixString;

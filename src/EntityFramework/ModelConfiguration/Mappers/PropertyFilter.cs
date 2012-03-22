@@ -4,6 +4,7 @@
     using System.Data.Entity.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
+    using System.Data.Spatial;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
@@ -43,7 +44,8 @@
                   where p.IsValidStructuralProperty()
                   let m = p.GetGetMethod(true)
                   where (m.IsPublic || explicitlyMappedProperties.Contains(p) || knownTypes.Contains(p.PropertyType))
-                        && (!declaredOnly || !type.BaseType.GetProperties(DefaultBindingFlags).Any(bp => bp.Name == p.Name))
+                        &&
+                        (!declaredOnly || !type.BaseType.GetProperties(DefaultBindingFlags).Any(bp => bp.Name == p.Name))
                         && (EdmV3FeaturesSupported || !IsEnumType(p.PropertyType)
                             && (EdmV3FeaturesSupported || !IsSpatialType(p.PropertyType)))
                   select p;
@@ -61,7 +63,8 @@
             if (!EdmV3FeaturesSupported)
             {
                 var firstBadProperty =
-                    explicitlyMappedProperties.FirstOrDefault(p => IsEnumType(p.PropertyType) || IsSpatialType(p.PropertyType));
+                    explicitlyMappedProperties.FirstOrDefault(
+                        p => IsEnumType(p.PropertyType) || IsSpatialType(p.PropertyType));
                 if (firstBadProperty != null)
                 {
                     throw Error.UnsupportedUseOfV3Type(type.Name, firstBadProperty.Name);
@@ -85,7 +88,7 @@
         {
             type.TryUnwrapNullableType(out type);
 
-            return type == typeof(System.Data.Spatial.DbGeometry) || type == typeof(System.Data.Spatial.DbGeography);
+            return type == typeof(DbGeometry) || type == typeof(DbGeography);
         }
     }
 }

@@ -1,22 +1,22 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration.Configuration;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Convention to process instances of <see cref = "NotMappedAttribute" /> found on types in the model.
     /// </summary>
     public sealed class NotMappedTypeAttributeConvention : IConfigurationConvention<Type, ModelConfiguration>
     {
-        private readonly IConfigurationConvention<Type, ModelConfiguration> _impl = new NotMappedTypeAttributeConventionImpl();
+        private readonly IConfigurationConvention<Type, ModelConfiguration> _impl =
+            new NotMappedTypeAttributeConventionImpl();
 
         internal NotMappedTypeAttributeConvention()
         {
         }
 
-        void IConfigurationConvention<Type, ModelConfiguration>.Apply(Type memberInfo, Func<ModelConfiguration> configuration)
+        void IConfigurationConvention<Type, ModelConfiguration>.Apply(
+            Type memberInfo, Func<ModelConfiguration> configuration)
         {
             _impl.Apply(memberInfo, configuration);
         }

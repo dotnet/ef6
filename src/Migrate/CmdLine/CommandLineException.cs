@@ -14,18 +14,18 @@ namespace CmdLine
         public CommandLineException(CommandArgumentHelp argumentHelp)
             : base(argumentHelp.Message)
         {
-            this.ArgumentHelp = argumentHelp;
+            ArgumentHelp = argumentHelp;
         }
 
         public CommandLineException(CommandArgumentHelp argumentHelp, Exception inner)
             : base(argumentHelp.Message, inner)
         {
-            this.ArgumentHelp = argumentHelp;
+            ArgumentHelp = argumentHelp;
         }
 
         protected CommandLineException(SerializationInfo info, StreamingContext context)
         {
-            this.ArgumentHelp = (CommandArgumentHelp)info.GetValue("ArgumentHelp", typeof(CommandArgumentHelp));
+            ArgumentHelp = (CommandArgumentHelp)info.GetValue("ArgumentHelp", typeof(CommandArgumentHelp));
         }
 
         public CommandArgumentHelp ArgumentHelp { get; set; }
@@ -34,7 +34,7 @@ namespace CmdLine
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
-            info.AddValue("ArgumentHelp", this.ArgumentHelp);
+            info.AddValue("ArgumentHelp", ArgumentHelp);
         }
     }
 }

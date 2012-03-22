@@ -1,4 +1,5 @@
-﻿#if IncludeUnusedEdmCode
+﻿
+#if IncludeUnusedEdmCode
 
 namespace System.Data.Entity.Edm.Db.Mapping
 {

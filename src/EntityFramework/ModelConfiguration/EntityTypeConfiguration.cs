@@ -43,11 +43,15 @@ namespace System.Data.Entity.ModelConfiguration
             get { return _entityTypeConfiguration; }
         }
 
-        internal override TPrimitivePropertyConfiguration Property<TPrimitivePropertyConfiguration>(LambdaExpression lambdaExpression)
+        internal override TPrimitivePropertyConfiguration Property<TPrimitivePropertyConfiguration>(
+            LambdaExpression lambdaExpression)
         {
             return Configuration.Property(
                 lambdaExpression.GetComplexPropertyAccess(),
-                () => new TPrimitivePropertyConfiguration { OverridableConfigurationParts = OverridableConfigurationParts.None });
+                () => new TPrimitivePropertyConfiguration
+                          {
+                              OverridableConfigurationParts = OverridableConfigurationParts.None
+                          });
         }
 
         /// <summary>
@@ -130,7 +134,8 @@ namespace System.Data.Entity.ModelConfiguration
         /// </summary>
         /// <param name = "entityMappingConfigurationAction">An action that performs configuration against an <see cref = "EntityMappingConfiguration{TEntityType}" />.</param>
         /// <returns>The same EntityTypeConfiguration instance so that multiple calls can be chained.</returns>
-        public EntityTypeConfiguration<TEntityType> Map(Action<EntityMappingConfiguration<TEntityType>> entityMappingConfigurationAction)
+        public EntityTypeConfiguration<TEntityType> Map(
+            Action<EntityMappingConfiguration<TEntityType>> entityMappingConfigurationAction)
         {
             Contract.Requires(entityMappingConfigurationAction != null);
 
@@ -138,7 +143,8 @@ namespace System.Data.Entity.ModelConfiguration
 
             entityMappingConfigurationAction(entityMappingConfiguration);
 
-            _entityTypeConfiguration.AddMappingConfiguration(entityMappingConfiguration.EntityMappingConfigurationInstance);
+            _entityTypeConfiguration.AddMappingConfiguration(
+                entityMappingConfiguration.EntityMappingConfigurationInstance);
 
             return this;
         }
@@ -159,14 +165,17 @@ namespace System.Data.Entity.ModelConfiguration
             var entityMappingConfiguration = new EntityMappingConfiguration<TDerived>();
             derivedTypeMapConfigurationAction(entityMappingConfiguration);
 
-            if (typeof(TDerived) == typeof(TEntityType))
+            if (typeof(TDerived)
+                == typeof(TEntityType))
             {
-                _entityTypeConfiguration.AddMappingConfiguration(entityMappingConfiguration.EntityMappingConfigurationInstance);
+                _entityTypeConfiguration.AddMappingConfiguration(
+                    entityMappingConfiguration.EntityMappingConfigurationInstance);
             }
             else
             {
                 _entityTypeConfiguration
-                    .AddSubTypeMappingConfiguration(typeof(TDerived), entityMappingConfiguration.EntityMappingConfigurationInstance);
+                    .AddSubTypeMappingConfiguration(
+                        typeof(TDerived), entityMappingConfiguration.EntityMappingConfigurationInstance);
             }
 
             return this;

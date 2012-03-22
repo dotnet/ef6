@@ -1,16 +1,16 @@
 ﻿namespace System.Data.Entity.Migrations.Console
 {
-    using System;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Design;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Reflection;
     using CmdLine;
+    using Console = System.Console;
 
     internal class Program
     {
-        private Arguments _arguments;
+        private readonly Arguments _arguments;
 
         public Program(Arguments arguments)
         {
@@ -64,7 +64,8 @@
         {
             if (new AssemblyName(args.Name).Name == "EntityFramework")
             {
-                var assemblyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\lib\net45\EntityFramework.dll");
+                var assemblyPath = Path.Combine(
+                    AppDomain.CurrentDomain.BaseDirectory, @"..\lib\net45\EntityFramework.dll");
 
                 if (File.Exists(assemblyPath))
                 {
@@ -111,7 +112,8 @@
                 Contract.Assert(string.IsNullOrWhiteSpace(_arguments.ConnectionStringName));
                 Contract.Assert(!string.IsNullOrWhiteSpace(_arguments.ConnectionProviderName));
 
-                connectionStringInfo = new DbConnectionInfo(_arguments.ConnectionString, _arguments.ConnectionProviderName);
+                connectionStringInfo = new DbConnectionInfo(
+                    _arguments.ConnectionString, _arguments.ConnectionProviderName);
             }
 
             var facade

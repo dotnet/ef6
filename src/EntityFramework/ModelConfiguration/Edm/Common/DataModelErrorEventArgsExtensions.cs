@@ -16,7 +16,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common
 
             foreach (var error in validationErrors)
             {
-                errorMessage.AppendLine(Strings.ValidationItemFormat(error.Item, error.PropertyName, error.ErrorMessage));
+                errorMessage.AppendLine(
+                    Strings.ValidationItemFormat(error.Item, error.PropertyName, error.ErrorMessage));
             }
 
             return errorMessage.ToString();

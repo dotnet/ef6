@@ -51,7 +51,8 @@
         /// <value>
         ///     <c>true</c> if this instance is no-tracking; otherwise, <c>false</c>.
         /// </value>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         public bool IsNoTracking
         {
             get { return _isNoTracking; }

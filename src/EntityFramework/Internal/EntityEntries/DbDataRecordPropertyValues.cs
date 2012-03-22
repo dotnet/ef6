@@ -22,7 +22,8 @@
         /// <param name = "type">The type.</param>
         /// <param name = "dataRecord">The data record.</param>
         /// <param name = "isEntityValues">If set to <c>true</c> this is a dictionary for an entity, otherwise it is a dictionary for a complex object.</param>
-        internal DbDataRecordPropertyValues(InternalContext internalContext, Type type, DbUpdatableDataRecord dataRecord, bool isEntity)
+        internal DbDataRecordPropertyValues(
+            InternalContext internalContext, Type type, DbUpdatableDataRecord dataRecord, bool isEntity)
             : base(internalContext, type, isEntity)
         {
             Contract.Requires(dataRecord != null);
@@ -47,7 +48,8 @@
             var asDataRecord = value as DbUpdatableDataRecord;
             if (asDataRecord != null)
             {
-                value = new DbDataRecordPropertyValues(InternalContext, _dataRecord.GetFieldType(ordinal), asDataRecord, isEntity: false);
+                value = new DbDataRecordPropertyValues(
+                    InternalContext, _dataRecord.GetFieldType(ordinal), asDataRecord, isEntity: false);
             }
             else if (value == DBNull.Value)
             {

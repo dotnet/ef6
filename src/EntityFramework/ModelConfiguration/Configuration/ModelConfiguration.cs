@@ -77,7 +77,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 throw Error.DuplicateStructuralTypeConfiguration(entityTypeConfiguration.ClrType);
             }
 
-            if (existingConfiguration != null && existingConfiguration.IsReplaceable)
+            if (existingConfiguration != null
+                && existingConfiguration.IsReplaceable)
             {
                 _entityConfigurations.Remove(existingConfiguration.ClrType);
                 entityTypeConfiguration.ReplaceFrom(existingConfiguration);
@@ -117,7 +118,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             {
                 _entityConfigurations.Add(
                     entityType,
-                    entityTypeConfiguration = new EntityTypeConfiguration(entityType) { IsExplicitEntity = explicitEntity });
+                    entityTypeConfiguration = new EntityTypeConfiguration(entityType)
+                                                  {
+                                                      IsExplicitEntity = explicitEntity
+                                                  });
             }
 
             return entityTypeConfiguration;
@@ -136,7 +140,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             ComplexTypeConfiguration complexTypeConfiguration;
             if (!_complexTypeConfigurations.TryGetValue(complexType, out complexTypeConfiguration))
             {
-                _complexTypeConfigurations.Add(complexType, complexTypeConfiguration = new ComplexTypeConfiguration(complexType));
+                _complexTypeConfigurations.Add(
+                    complexType, complexTypeConfiguration = new ComplexTypeConfiguration(complexType));
             }
 
             return complexTypeConfiguration;
@@ -274,7 +279,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 var entityTypeMapping
                     = databaseMapping.GetEntityTypeMapping(entityTypeConfiguration.ClrType);
 
-                entityTypeConfiguration.ConfigureTablesAndConditions(entityTypeMapping, databaseMapping, providerManifest);
+                entityTypeConfiguration.ConfigureTablesAndConditions(
+                    entityTypeMapping, databaseMapping, providerManifest);
 
                 // run through all unconfigured derived types of the current entityType to make sure the property mappings now point to the right places
                 ConfigureUnconfiguredDerivedTypes(
@@ -308,7 +314,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
                 // Configure the derived type if it is not abstract and is not otherwise configured
                 // if the type is not configured, then also run through that type's derived types
-                if (!currentType.IsAbstract &&
+                if (!currentType.IsAbstract
+                    &&
                     !sortedEntityConfigurations.Any(etc => etc.ClrType == currentType.GetClrType()))
                 {
                     // run through mapping configuration to make sure property mappings point to where the base type is now mapping them
@@ -331,7 +338,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
         }
 
-        private static void ConfigureTable(DbDatabaseMetadata database, DbSchemaMetadata containingSchema, DbTableMetadata table)
+        private static void ConfigureTable(
+            DbDatabaseMetadata database, DbSchemaMetadata containingSchema, DbTableMetadata table)
         {
             Contract.Requires(database != null);
             Contract.Requires(containingSchema != null);
@@ -355,10 +363,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 {
                     database.Schemas.Add(
                         containingSchema = new DbSchemaMetadata
-                            {
-                                Name = tableName.Schema,
-                                DatabaseIdentifier = tableName.Schema
-                            });
+                                               {
+                                                   Name = tableName.Schema,
+                                                   DatabaseIdentifier = tableName.Schema
+                                               });
                 }
 
                 database.RemoveTable(table);
@@ -371,7 +379,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
         }
 
-        private IEnumerable<EntityTypeConfiguration> SortEntityConfigurationsByInheritance(DbDatabaseMapping databaseMapping)
+        private IEnumerable<EntityTypeConfiguration> SortEntityConfigurationsByInheritance(
+            DbDatabaseMapping databaseMapping)
         {
             var entityConfigurationsSortedByInheritance = new List<EntityTypeConfiguration>();
 
@@ -406,8 +415,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     {
                         entityType = derivedTypes.Pop();
                         var correspondingEntityConfiguration =
-                            ActiveEntityConfigurations.Where(ec => ec.ClrType == entityType.GetClrType()).SingleOrDefault();
-                        if ((correspondingEntityConfiguration != null) &&
+                            ActiveEntityConfigurations.Where(ec => ec.ClrType == entityType.GetClrType()).
+                                SingleOrDefault();
+                        if ((correspondingEntityConfiguration != null)
+                            &&
                             (!entityConfigurationsSortedByInheritance.Contains(correspondingEntityConfiguration)))
                         {
                             entityConfigurationsSortedByInheritance.Add(correspondingEntityConfiguration);
@@ -455,7 +466,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                         _entityConfigurations.Add(subTypeClrType, subTypeEntityConfiguration);
                     }
 
-                    subTypeEntityConfiguration.AddMappingConfiguration(subTypeAndMappingConfigurationPair.Value, cloneable: false);
+                    subTypeEntityConfiguration.AddMappingConfiguration(
+                        subTypeAndMappingConfigurationPair.Value, cloneable: false);
                 }
             }
         }
@@ -467,16 +479,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             // Remove all the default discriminators where there is only one table using it
             (from esm in databaseMapping.GetEntitySetMappings()
              select new
-                 {
-                     Set = esm,
-                     Fragments =
+                        {
+                            Set = esm,
+                            Fragments =
                  (from etm in esm.EntityTypeMappings
                   from etmf in etm.TypeMappingFragments
                   group etmf by etmf.Table
                   into g
                   where g.Count(x => x.GetDefaultDiscriminator() != null) == 1
                   select g.Single(x => x.GetDefaultDiscriminator() != null))
-                 })
+                        })
                 .Each(x => x.Fragments.Each(f => f.RemoveDefaultDiscriminator(x.Set)));
         }
 

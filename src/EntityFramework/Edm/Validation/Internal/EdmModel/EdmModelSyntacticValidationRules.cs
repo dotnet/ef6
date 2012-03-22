@@ -76,91 +76,100 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 
         #region EdmAssociationType
 
-        internal static readonly EdmModelValidationRule<EdmAssociationType> EdmAssociationType_AssocationEndMustNotBeNull =
-            new EdmModelValidationRule<EdmAssociationType>(
-                (context, edmAssociationType) =>
-                    {
-                        if (edmAssociationType.SourceEnd == null ||
-                            edmAssociationType.TargetEnd == null)
+        internal static readonly EdmModelValidationRule<EdmAssociationType>
+            EdmAssociationType_AssocationEndMustNotBeNull =
+                new EdmModelValidationRule<EdmAssociationType>(
+                    (context, edmAssociationType) =>
                         {
-                            context.AddError(
-                                edmAssociationType,
-                                CsdlConstants.Element_End,
-                                Strings.EdmModel_Validator_Syntactic_EdmAssociationType_AssocationEndMustNotBeNull,
-                                XmlErrorCode.EdmAssociationType_AssocationEndMustNotBeNull);
+                            if (edmAssociationType.SourceEnd == null
+                                ||
+                                edmAssociationType.TargetEnd == null)
+                            {
+                                context.AddError(
+                                    edmAssociationType,
+                                    CsdlConstants.Element_End,
+                                    Strings.EdmModel_Validator_Syntactic_EdmAssociationType_AssocationEndMustNotBeNull,
+                                    XmlErrorCode.EdmAssociationType_AssocationEndMustNotBeNull);
+                            }
                         }
-                    }
-                );
+                    );
 
         #endregion
 
         #region EdmAssociationConstraint
 
-        internal static readonly EdmModelValidationRule<EdmAssociationConstraint> EdmAssociationConstraint_DependentEndMustNotBeNull =
-            new EdmModelValidationRule<EdmAssociationConstraint>(
-                (context, edmAssociationConstraint) =>
-                    {
-                        if (edmAssociationConstraint.DependentEnd == null)
+        internal static readonly EdmModelValidationRule<EdmAssociationConstraint>
+            EdmAssociationConstraint_DependentEndMustNotBeNull =
+                new EdmModelValidationRule<EdmAssociationConstraint>(
+                    (context, edmAssociationConstraint) =>
                         {
-                            context.AddError(
-                                edmAssociationConstraint,
-                                CsdlConstants.Element_Dependent,
-                                Strings.EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentEndMustNotBeNull,
-                                XmlErrorCode.EdmAssociationConstraint_DependentEndMustNotBeNull);
+                            if (edmAssociationConstraint.DependentEnd == null)
+                            {
+                                context.AddError(
+                                    edmAssociationConstraint,
+                                    CsdlConstants.Element_Dependent,
+                                    Strings.
+                                        EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentEndMustNotBeNull,
+                                    XmlErrorCode.EdmAssociationConstraint_DependentEndMustNotBeNull);
+                            }
                         }
-                    }
-                );
+                    );
 
-        internal static readonly EdmModelValidationRule<EdmAssociationConstraint> EdmAssociationConstraint_DependentPropertiesMustNotBeEmpty
-            =
-            new EdmModelValidationRule<EdmAssociationConstraint>(
-                (context, edmAssociationConstraint) =>
-                    {
-                        if (edmAssociationConstraint.DependentProperties == null ||
-                            edmAssociationConstraint.DependentProperties.Count() == 0)
+        internal static readonly EdmModelValidationRule<EdmAssociationConstraint>
+            EdmAssociationConstraint_DependentPropertiesMustNotBeEmpty
+                =
+                new EdmModelValidationRule<EdmAssociationConstraint>(
+                    (context, edmAssociationConstraint) =>
                         {
-                            context.AddError(
-                                edmAssociationConstraint,
-                                CsdlConstants.Element_Dependent,
-                                Strings.EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentPropertiesMustNotBeEmpty,
-                                XmlErrorCode.EdmAssociationConstraint_DependentPropertiesMustNotBeEmpty);
+                            if (edmAssociationConstraint.DependentProperties == null
+                                ||
+                                edmAssociationConstraint.DependentProperties.Count() == 0)
+                            {
+                                context.AddError(
+                                    edmAssociationConstraint,
+                                    CsdlConstants.Element_Dependent,
+                                    Strings.
+                                        EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentPropertiesMustNotBeEmpty,
+                                    XmlErrorCode.EdmAssociationConstraint_DependentPropertiesMustNotBeEmpty);
+                            }
                         }
-                    }
-                );
+                    );
 
         #endregion
 
         #region EdmNavigationProperty
 
-        internal static readonly EdmModelValidationRule<EdmNavigationProperty> EdmNavigationProperty_AssocationMustNotBeNull =
-            new EdmModelValidationRule<EdmNavigationProperty>(
-                (context, edmNavigationProperty) =>
-                    {
-                        if (edmNavigationProperty.Association == null)
+        internal static readonly EdmModelValidationRule<EdmNavigationProperty>
+            EdmNavigationProperty_AssocationMustNotBeNull =
+                new EdmModelValidationRule<EdmNavigationProperty>(
+                    (context, edmNavigationProperty) =>
                         {
-                            context.AddError(
-                                edmNavigationProperty,
-                                CsdlConstants.Attribute_Relationship,
-                                Strings.EdmModel_Validator_Syntactic_EdmNavigationProperty_AssocationMustNotBeNull,
-                                XmlErrorCode.EdmNavigationProperty_AssocationMustNotBeNull);
+                            if (edmNavigationProperty.Association == null)
+                            {
+                                context.AddError(
+                                    edmNavigationProperty,
+                                    CsdlConstants.Attribute_Relationship,
+                                    Strings.EdmModel_Validator_Syntactic_EdmNavigationProperty_AssocationMustNotBeNull,
+                                    XmlErrorCode.EdmNavigationProperty_AssocationMustNotBeNull);
+                            }
                         }
-                    }
-                );
+                    );
 
-        internal static readonly EdmModelValidationRule<EdmNavigationProperty> EdmNavigationProperty_ResultEndMustNotBeNull =
-            new EdmModelValidationRule<EdmNavigationProperty>(
-                (context, edmNavigationProperty) =>
-                    {
-                        if (edmNavigationProperty.ResultEnd == null)
+        internal static readonly EdmModelValidationRule<EdmNavigationProperty>
+            EdmNavigationProperty_ResultEndMustNotBeNull =
+                new EdmModelValidationRule<EdmNavigationProperty>(
+                    (context, edmNavigationProperty) =>
                         {
-                            context.AddError(
-                                edmNavigationProperty,
-                                CsdlConstants.Attribute_ResultEnd,
-                                Strings.EdmModel_Validator_Syntactic_EdmNavigationProperty_ResultEndMustNotBeNull,
-                                XmlErrorCode.EdmNavigationProperty_ResultEndMustNotBeNull);
+                            if (edmNavigationProperty.ResultEnd == null)
+                            {
+                                context.AddError(
+                                    edmNavigationProperty,
+                                    CsdlConstants.Attribute_ResultEnd,
+                                    Strings.EdmModel_Validator_Syntactic_EdmNavigationProperty_ResultEndMustNotBeNull,
+                                    XmlErrorCode.EdmNavigationProperty_ResultEndMustNotBeNull);
+                            }
                         }
-                    }
-                );
+                    );
 
         #endregion
 

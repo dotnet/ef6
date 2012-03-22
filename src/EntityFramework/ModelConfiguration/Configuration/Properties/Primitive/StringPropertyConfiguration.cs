@@ -63,7 +63,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         {
             base.FillFrom(other, inCSpace);
             var strConfigRhs = other as StringPropertyConfiguration;
-            if (strConfigRhs != null && IsUnicode == null)
+            if (strConfigRhs != null
+                && IsUnicode == null)
             {
                 IsUnicode = strConfigRhs.IsUnicode;
             }

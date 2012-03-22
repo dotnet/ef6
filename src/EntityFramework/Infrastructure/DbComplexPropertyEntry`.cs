@@ -25,11 +25,14 @@
         /// </summary>
         /// <param name = "internalPropertyEntry">The internal property entry.</param>
         /// <returns>The new entry.</returns>
-        internal static new DbComplexPropertyEntry<TEntity, TComplexProperty> Create(InternalPropertyEntry internalPropertyEntry)
+        internal new static DbComplexPropertyEntry<TEntity, TComplexProperty> Create(
+            InternalPropertyEntry internalPropertyEntry)
         {
             Contract.Requires(internalPropertyEntry != null);
 
-            return (DbComplexPropertyEntry<TEntity, TComplexProperty>)internalPropertyEntry.CreateDbMemberEntry<TEntity, TComplexProperty>();
+            return
+                (DbComplexPropertyEntry<TEntity, TComplexProperty>)
+                internalPropertyEntry.CreateDbMemberEntry<TEntity, TComplexProperty>();
         }
 
         /// <summary>
@@ -85,7 +88,9 @@
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
 
-            return DbPropertyEntry<TEntity, TNestedProperty>.Create(InternalPropertyEntry.Property(propertyName, typeof(TNestedProperty)));
+            return
+                DbPropertyEntry<TEntity, TNestedProperty>.Create(
+                    InternalPropertyEntry.Property(propertyName, typeof(TNestedProperty)));
         }
 
         /// <summary>
@@ -114,7 +119,8 @@
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
 
-            return DbComplexPropertyEntry.Create(InternalPropertyEntry.Property(propertyName, null, requireComplex: true));
+            return
+                DbComplexPropertyEntry.Create(InternalPropertyEntry.Property(propertyName, null, requireComplex: true));
         }
 
         /// <summary>
@@ -123,7 +129,8 @@
         /// <typeparam name = "TNestedComplexProperty">The type of the nested property.</typeparam>
         /// <param name = "propertyName">The name of the nested property.</param>
         /// <returns>An object representing the nested property.</returns>
-        public DbComplexPropertyEntry<TEntity, TNestedComplexProperty> ComplexProperty<TNestedComplexProperty>(string propertyName)
+        public DbComplexPropertyEntry<TEntity, TNestedComplexProperty> ComplexProperty<TNestedComplexProperty>(
+            string propertyName)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
 
@@ -145,7 +152,9 @@
         {
             Contract.Requires(property != null);
 
-            return ComplexProperty<TNestedComplexProperty>(DbHelpers.ParsePropertySelector(property, "Property", "property"));
+            return
+                ComplexProperty<TNestedComplexProperty>(
+                    DbHelpers.ParsePropertySelector(property, "Property", "property"));
         }
 
         #endregion

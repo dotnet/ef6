@@ -27,14 +27,16 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         }
 
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "edm")]
-        protected abstract EdmProperty MatchKeyProperty(EdmEntityType entityType, IEnumerable<EdmProperty> primitiveProperties);
+        protected abstract EdmProperty MatchKeyProperty(
+            EdmEntityType entityType, IEnumerable<EdmProperty> primitiveProperties);
 
         #region Base Member Contracts
 
         [ContractClassFor(typeof(KeyDiscoveryConvention))]
         private abstract class KeyDiscoveryConventionContracts : KeyDiscoveryConvention
         {
-            protected override EdmProperty MatchKeyProperty(EdmEntityType entityType, IEnumerable<EdmProperty> primitiveProperties)
+            protected override EdmProperty MatchKeyProperty(
+                EdmEntityType entityType, IEnumerable<EdmProperty> primitiveProperties)
             {
                 Contract.Requires(entityType != null);
                 Contract.Requires(primitiveProperties != null);

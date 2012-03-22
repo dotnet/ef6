@@ -31,7 +31,12 @@
         /// <value>The type of the member entry.</value>
         public override MemberEntryType MemberEntryType
         {
-            get { return _isCollection ? MemberEntryType.CollectionNavigationProperty : MemberEntryType.ReferenceNavigationProperty; }
+            get
+            {
+                return _isCollection
+                           ? MemberEntryType.CollectionNavigationProperty
+                           : MemberEntryType.ReferenceNavigationProperty;
+            }
         }
 
         /// <summary>
@@ -58,7 +63,8 @@
         public override InternalMemberEntry CreateMemberEntry(
             InternalEntityEntry internalEntityEntry, InternalPropertyEntry parentPropertyEntry)
         {
-            Contract.Assert(parentPropertyEntry == null, "Navigation entries cannot be nested; parentPropertyEntry must be null.");
+            Contract.Assert(
+                parentPropertyEntry == null, "Navigation entries cannot be nested; parentPropertyEntry must be null.");
 
             return _isCollection
                        ? (InternalMemberEntry)new InternalCollectionEntry(internalEntityEntry, this)

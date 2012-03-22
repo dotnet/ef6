@@ -47,7 +47,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Msl
 
             _xmlWriter.WriteStartElement(MslConstants.Element_EntityContainerMapping);
             _xmlWriter.WriteAttributeString(MslConstants.Attribute_StorageEntityContainer, _dbSchemaName);
-            _xmlWriter.WriteAttributeString(MslConstants.Attribute_CDMEntityContainer, containerMapping.EntityContainer.Name);
+            _xmlWriter.WriteAttributeString(
+                MslConstants.Attribute_CDMEntityContainer, containerMapping.EntityContainer.Name);
 
             foreach (var set in containerMapping.EntitySetMappings)
             {
@@ -115,7 +116,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Msl
             _xmlWriter.WriteStartElement(MslConstants.Element_EntityTypeMapping);
             _xmlWriter.WriteAttributeString(
                 MslConstants.Attribute_TypeName,
-                GetEntityTypeName(_entityTypeNamespace + "." + entityTypeMapping.EntityType.Name, entityTypeMapping.IsHierarchyMapping));
+                GetEntityTypeName(
+                    _entityTypeNamespace + "." + entityTypeMapping.EntityType.Name, entityTypeMapping.IsHierarchyMapping));
 
             foreach (var mappingFragment in entityTypeMapping.TypeMappingFragments)
             {
@@ -169,7 +171,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Msl
             _xmlWriter.WriteStartElement(MslConstants.Element_Condition);
             if (condition.IsNull.HasValue)
             {
-                _xmlWriter.WriteAttributeString(MslConstants.Attribute_IsNull, GetLowerCaseStringFromBoolValue(condition.IsNull.Value));
+                _xmlWriter.WriteAttributeString(
+                    MslConstants.Attribute_IsNull, GetLowerCaseStringFromBoolValue(condition.IsNull.Value));
             }
             else
             {

@@ -41,7 +41,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         {
             Contract.Requires(model != null);
 
-            var databaseMapping = new DbDatabaseMapping().Initialize(model, new DbDatabaseMetadata().Initialize(model.Version));
+            var databaseMapping = new DbDatabaseMapping().Initialize(
+                model, new DbDatabaseMetadata().Initialize(model.Version));
 
             databaseMapping.EntityContainerMappings.Single().EntityContainer = model.Containers.Single();
 

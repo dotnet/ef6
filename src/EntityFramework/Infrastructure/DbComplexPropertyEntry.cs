@@ -21,7 +21,7 @@
         /// </summary>
         /// <param name = "internalPropertyEntry">The internal property entry.</param>
         /// <returns>The new entry.</returns>
-        internal static new DbComplexPropertyEntry Create(InternalPropertyEntry internalPropertyEntry)
+        internal new static DbComplexPropertyEntry Create(InternalPropertyEntry internalPropertyEntry)
         {
             Contract.Requires(internalPropertyEntry != null);
 
@@ -65,7 +65,8 @@
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
 
-            return Create(((InternalPropertyEntry)InternalMemberEntry).Property(propertyName, null, requireComplex: true));
+            return
+                Create(((InternalPropertyEntry)InternalMemberEntry).Property(propertyName, null, requireComplex: true));
         }
 
         #endregion
@@ -78,7 +79,8 @@
         /// <typeparam name = "TEntity">The type of entity on which the member is declared.</typeparam>
         /// <typeparam name = "TComplexProperty">The type of the complex property.</typeparam>
         /// <returns>The equivalent generic object.</returns>
-        public new DbComplexPropertyEntry<TEntity, TComplexProperty> Cast<TEntity, TComplexProperty>() where TEntity : class
+        public new DbComplexPropertyEntry<TEntity, TComplexProperty> Cast<TEntity, TComplexProperty>()
+            where TEntity : class
         {
             var metadata = InternalMemberEntry.EntryMetadata;
             if (!typeof(TEntity).IsAssignableFrom(metadata.DeclaringType)

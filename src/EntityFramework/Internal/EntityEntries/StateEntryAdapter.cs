@@ -73,7 +73,6 @@
             _stateEntry.SetModifiedProperty(propertyName);
         }
 
-
         public void RejectPropertyChanges(string propertyName)
         {
             _stateEntry.RejectPropertyChanges(propertyName);

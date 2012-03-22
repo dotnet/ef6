@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
 
@@ -44,7 +43,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 PropertyInfo navPropInfo;
                 if (navPropConfig != null &&
                     navProp != null &&
-                    ((navPropInfo = navProp.Annotations.GetClrPropertyInfo()) != null) &&
+                    ((navPropInfo = navProp.Annotations.GetClrPropertyInfo()) != null)
+                    &&
                     ((navPropInfo == navPropConfig.NavigationProperty && navPropConfig.EndKind.HasValue) ||
                      (navPropInfo == navPropConfig.InverseNavigationProperty && navPropConfig.InverseEndKind.HasValue)))
                 {

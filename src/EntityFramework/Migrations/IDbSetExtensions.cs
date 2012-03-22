@@ -151,7 +151,8 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        private static IEnumerable<PropertyInfo> GetKeyProperties<TEntity>(Type entityType, InternalSet<TEntity> internalSet)
+        private static IEnumerable<PropertyInfo> GetKeyProperties<TEntity>(
+            Type entityType, InternalSet<TEntity> internalSet)
             where TEntity : class
         {
             Contract.Requires(entityType != null);

@@ -5,13 +5,14 @@
     using System.Globalization;
     using System.Linq;
     using System.ServiceProcess;
-    
+
     /// <summary>
     /// Detects whether SQL Express and/or LocalDB are installed/available on this machine.
     /// </summary>
     internal class SqlServerDetector : IDisposable
     {
-        public const string BaseConnectionStringTemplate = @"Data Source={0}; Integrated Security=True; MultipleActiveResultSets=True";
+        public const string BaseConnectionStringTemplate =
+            @"Data Source={0}; Integrated Security=True; MultipleActiveResultSets=True";
 
         private readonly RegistryKeyProxy _localMachine;
         private readonly ServiceControllerProxy _controller;
@@ -45,7 +46,9 @@
             return String.Format(
                 CultureInfo.InvariantCulture,
                 BaseConnectionStringTemplate,
-                IsSqlExpressInstalled() ? @".\SQLEXPRESS" : (@"(localdb)\v" + (TryGetLocalDBVersionInstalled() ?? "11.0")));
+                IsSqlExpressInstalled()
+                    ? @".\SQLEXPRESS"
+                    : (@"(localdb)\v" + (TryGetLocalDBVersionInstalled() ?? "11.0")));
         }
 
         /// <summary>

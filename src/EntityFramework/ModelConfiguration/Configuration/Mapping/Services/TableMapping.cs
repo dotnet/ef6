@@ -39,7 +39,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             get { return _columns; }
         }
 
-        public void AddEntityTypeMappingFragment(EdmEntitySet entitySet, EdmEntityType entityType, DbEntityTypeMappingFragment fragment)
+        public void AddEntityTypeMappingFragment(
+            EdmEntitySet entitySet, EdmEntityType entityType, DbEntityTypeMappingFragment fragment)
         {
             Contract.Assert(fragment.Table == Table);
 
@@ -49,7 +50,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             DbColumnCondition defaultDiscriminatorCondition = null;
             if (defaultDiscriminatorColumn != null)
             {
-                defaultDiscriminatorCondition = fragment.ColumnConditions.SingleOrDefault(cc => cc.Column == defaultDiscriminatorColumn);
+                defaultDiscriminatorCondition =
+                    fragment.ColumnConditions.SingleOrDefault(cc => cc.Column == defaultDiscriminatorColumn);
             }
 
             foreach (var pm in fragment.PropertyMappings)
@@ -63,7 +65,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             }
 
             // Add any column conditions that aren't mapped to properties
-            foreach (var cc in fragment.ColumnConditions.Where(cc => !fragment.PropertyMappings.Any(pm => pm.Column == cc.Column)))
+            foreach (
+                var cc in
+                    fragment.ColumnConditions.Where(cc => !fragment.PropertyMappings.Any(pm => pm.Column == cc.Column)))
             {
                 var columnMapping = FindOrCreateColumnMapping(cc.Column);
                 columnMapping.AddMapping(entityType, null, new[] { cc }, defaultDiscriminatorColumn == cc.Column);

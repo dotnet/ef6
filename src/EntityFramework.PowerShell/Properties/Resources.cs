@@ -1,7 +1,10 @@
 namespace System.Data.Entity.Resources
 {
     using System.CodeDom.Compiler;
+    using System.Data.Entity.Migrations;
+    using System.Data.Entity.Migrations.Infrastructure;
     using System.Globalization;
+    using System.IO;
     using System.Resources;
     using System.Threading;
 
@@ -10,7 +13,7 @@ namespace System.Data.Entity.Resources
     /// </summary>
     [GeneratedCode("Resources.tt", "1.0.0.0")]
     internal static class Strings
-    {   
+    {
         /// <summary>
         /// A string like "The argument '{0}' cannot be null, empty or contain only white space."
         /// </summary>
@@ -32,10 +35,7 @@ namespace System.Data.Entity.Resources
         /// </summary>
         internal static string UpdateDatabaseCommand_VerboseInstructions
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.UpdateDatabaseCommand_VerboseInstructions);
-            }
+            get { return EntityRes.GetString(EntityRes.UpdateDatabaseCommand_VerboseInstructions); }
         }
 
         /// <summary>
@@ -43,10 +43,7 @@ namespace System.Data.Entity.Resources
         /// </summary>
         internal static string UpdateDatabaseCommand_SourceMigrationWithoutScript
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.UpdateDatabaseCommand_SourceMigrationWithoutScript);
-            }
+            get { return EntityRes.GetString(EntityRes.UpdateDatabaseCommand_SourceMigrationWithoutScript); }
         }
 
         /// <summary>
@@ -54,10 +51,7 @@ namespace System.Data.Entity.Resources
         /// </summary>
         internal static string GetMigrationsCommand_NoHistory
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.GetMigrationsCommand_NoHistory);
-            }
+            get { return EntityRes.GetString(EntityRes.GetMigrationsCommand_NoHistory); }
         }
 
         /// <summary>
@@ -97,10 +91,7 @@ namespace System.Data.Entity.Resources
         /// </summary>
         internal static string AutomaticMigration
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.AutomaticMigration);
-            }
+            get { return EntityRes.GetString(EntityRes.AutomaticMigration); }
         }
 
         /// <summary>
@@ -108,10 +99,7 @@ namespace System.Data.Entity.Resources
         /// </summary>
         internal static string AutomaticMigrationDisabledInfo
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.AutomaticMigrationDisabledInfo);
-            }
+            get { return EntityRes.GetString(EntityRes.AutomaticMigrationDisabledInfo); }
         }
 
         /// <summary>
@@ -119,10 +107,7 @@ namespace System.Data.Entity.Resources
         /// </summary>
         internal static string EnableMigrations_ManuallyEnterContext
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.EnableMigrations_ManuallyEnterContext);
-            }
+            get { return EntityRes.GetString(EntityRes.EnableMigrations_ManuallyEnterContext); }
         }
 
         /// <summary>
@@ -130,10 +115,7 @@ namespace System.Data.Entity.Resources
         /// </summary>
         internal static string EnableMigrations_NoContexts
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.EnableMigrations_NoContexts);
-            }
+            get { return EntityRes.GetString(EntityRes.EnableMigrations_NoContexts); }
         }
 
         /// <summary>
@@ -141,10 +123,7 @@ namespace System.Data.Entity.Resources
         /// </summary>
         internal static string EnableMigrations_MultipleContexts
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.EnableMigrations_MultipleContexts);
-            }
+            get { return EntityRes.GetString(EntityRes.EnableMigrations_MultipleContexts); }
         }
 
         /// <summary>
@@ -152,10 +131,7 @@ namespace System.Data.Entity.Resources
         /// </summary>
         internal static string EnableMigrations_ErrorFindingContexts
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.EnableMigrations_ErrorFindingContexts);
-            }
+            get { return EntityRes.GetString(EntityRes.EnableMigrations_ErrorFindingContexts); }
         }
 
         /// <summary>
@@ -171,10 +147,7 @@ namespace System.Data.Entity.Resources
         /// </summary>
         internal static string EnableMigrations_BeginInitialScaffold
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.EnableMigrations_BeginInitialScaffold);
-            }
+            get { return EntityRes.GetString(EntityRes.EnableMigrations_BeginInitialScaffold); }
         }
 
         /// <summary>
@@ -190,10 +163,7 @@ namespace System.Data.Entity.Resources
         /// </summary>
         internal static string WebSiteProjectNotSupported
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.WebSiteProjectNotSupported);
-            }
+            get { return EntityRes.GetString(EntityRes.WebSiteProjectNotSupported); }
         }
 
         /// <summary>
@@ -201,10 +171,7 @@ namespace System.Data.Entity.Resources
         /// </summary>
         internal static string GetMigrationsCommand_Intro
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.GetMigrationsCommand_Intro);
-            }
+            get { return EntityRes.GetString(EntityRes.GetMigrationsCommand_Intro); }
         }
 
         /// <summary>
@@ -222,7 +189,7 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.SaveConnectionFactoryInConfigFailed, p0);
         }
-    } 
+    }
 
     /// <summary>
     ///    Strongly-typed and parameterized exception factory.
@@ -251,7 +218,7 @@ namespace System.Data.Entity.Resources
         /// </summary>
         internal static Exception MigrationsPendingException(object p0)
         {
-            return new Migrations.MigrationsPendingException(Strings.MigrationsPendingException(p0));
+            return new MigrationsPendingException(Strings.MigrationsPendingException(p0));
         }
 
         /// <summary>
@@ -259,7 +226,7 @@ namespace System.Data.Entity.Resources
         /// </summary>
         internal static Exception WebSiteProjectNotSupported()
         {
-            return new Migrations.ProjectTypeNotSupportedException(Strings.WebSiteProjectNotSupported);
+            return new ProjectTypeNotSupportedException(Strings.WebSiteProjectNotSupported);
         }
 
         /// <summary>
@@ -267,7 +234,7 @@ namespace System.Data.Entity.Resources
         /// </summary>
         internal static Exception MigrationsAlreadyEnabled(object p0)
         {
-            return new Migrations.Infrastructure.MigrationsException(Strings.MigrationsAlreadyEnabled(p0));
+            return new MigrationsException(Strings.MigrationsAlreadyEnabled(p0));
         }
 
         /// <summary>
@@ -275,8 +242,9 @@ namespace System.Data.Entity.Resources
         /// </summary>
         internal static Exception SaveConnectionFactoryInConfigFailed(object p0)
         {
-            return new System.IO.IOException(Strings.SaveConnectionFactoryInConfigFailed(p0));
+            return new IOException(Strings.SaveConnectionFactoryInConfigFailed(p0));
         }
+
         /// <summary>
         /// The exception that is thrown when a null reference (Nothing in Visual Basic) is passed to a method that does not accept it as a valid argument.
         /// </summary>
@@ -284,7 +252,7 @@ namespace System.Data.Entity.Resources
         {
             return new ArgumentNullException(paramName);
         }
-        
+
         /// <summary>
         /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
         /// </summary>
@@ -307,7 +275,7 @@ namespace System.Data.Entity.Resources
         internal static Exception NotSupported()
         {
             return new NotSupportedException();
-        }        
+        }
     }
 
     /// <summary>
@@ -321,7 +289,10 @@ namespace System.Data.Entity.Resources
         internal const string ArgumentIsNullOrWhitespace = "ArgumentIsNullOrWhitespace";
         internal const string PreconditionFailed = "PreconditionFailed";
         internal const string UpdateDatabaseCommand_VerboseInstructions = "UpdateDatabaseCommand_VerboseInstructions";
-        internal const string UpdateDatabaseCommand_SourceMigrationWithoutScript = "UpdateDatabaseCommand_SourceMigrationWithoutScript";
+
+        internal const string UpdateDatabaseCommand_SourceMigrationWithoutScript =
+            "UpdateDatabaseCommand_SourceMigrationWithoutScript";
+
         internal const string GetMigrationsCommand_NoHistory = "GetMigrationsCommand_NoHistory";
         internal const string LoggingGenerate = "LoggingGenerate";
         internal const string RescaffoldNoForce = "RescaffoldNoForce";
@@ -340,20 +311,20 @@ namespace System.Data.Entity.Resources
         internal const string GetMigrationsCommand_Intro = "GetMigrationsCommand_Intro";
         internal const string MigrationsAlreadyEnabled = "MigrationsAlreadyEnabled";
         internal const string SaveConnectionFactoryInConfigFailed = "SaveConnectionFactoryInConfigFailed";
-        
-        static EntityRes loader = null;
-        ResourceManager resources;
+
+        private static EntityRes loader;
+        private readonly ResourceManager resources;
 
         internal EntityRes()
         {
-            resources = new ResourceManager("System.Properties.Resources", this.GetType().Assembly);
+            resources = new ResourceManager("System.Properties.Resources", GetType().Assembly);
         }
-        
+
         private static EntityRes GetLoader()
         {
             if (loader == null)
             {
-                EntityRes sr = new EntityRes();
+                var sr = new EntityRes();
                 Interlocked.CompareExchange(ref loader, sr, null);
             }
             return loader;
@@ -361,30 +332,31 @@ namespace System.Data.Entity.Resources
 
         private static CultureInfo Culture
         {
-            get { return null/*use ResourceManager default, CultureInfo.CurrentUICulture*/; }
+            get { return null /*use ResourceManager default, CultureInfo.CurrentUICulture*/; }
         }
-        
+
         public static ResourceManager Resources
         {
-            get
-            {
-                return GetLoader().resources;
-            }
+            get { return GetLoader().resources; }
         }
-        
+
         public static string GetString(string name, params object[] args)
         {
-            EntityRes sys = GetLoader();
+            var sys = GetLoader();
             if (sys == null)
-                return null;
-            string res = sys.resources.GetString(name, EntityRes.Culture);
-
-            if (args != null && args.Length > 0)
             {
-                for (int i = 0; i < args.Length; i ++)
+                return null;
+            }
+            var res = sys.resources.GetString(name, Culture);
+
+            if (args != null
+                && args.Length > 0)
+            {
+                for (var i = 0; i < args.Length; i ++)
                 {
-                    String value = args[i] as String;
-                    if (value != null && value.Length > 1024)
+                    var value = args[i] as String;
+                    if (value != null
+                        && value.Length > 1024)
                     {
                         args[i] = value.Substring(0, 1024 - 3) + "...";
                     }
@@ -399,12 +371,14 @@ namespace System.Data.Entity.Resources
 
         public static string GetString(string name)
         {
-            EntityRes sys = GetLoader();
+            var sys = GetLoader();
             if (sys == null)
+            {
                 return null;
-            return sys.resources.GetString(name, EntityRes.Culture);
+            }
+            return sys.resources.GetString(name, Culture);
         }
-        
+
         public static string GetString(string name, out bool usedFallback)
         {
             // always false for this version of gensr
@@ -414,11 +388,12 @@ namespace System.Data.Entity.Resources
 
         public static object GetObject(string name)
         {
-            EntityRes sys = GetLoader();
+            var sys = GetLoader();
             if (sys == null)
+            {
                 return null;
-            return sys.resources.GetObject(name, EntityRes.Culture);
+            }
+            return sys.resources.GetObject(name, Culture);
         }
     }
 }
-

@@ -2,7 +2,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
-    using System.Diagnostics.Contracts;
     using System.Reflection;
 
     /// <summary>

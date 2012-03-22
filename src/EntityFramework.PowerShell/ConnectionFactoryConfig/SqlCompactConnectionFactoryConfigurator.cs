@@ -30,10 +30,9 @@
                 project.ProjectItems,
                 i => processor.ProcessConfigFile(
                     i, new Func<XDocument, bool>[]
-                       {
-                           manipulator.AddSqlCompactConnectionFactoryToConfig
-                       }));
-
+                           {
+                               manipulator.AddSqlCompactConnectionFactoryToConfig
+                           }));
         }
     }
 }

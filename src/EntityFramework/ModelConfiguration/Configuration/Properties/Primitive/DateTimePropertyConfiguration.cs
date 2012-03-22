@@ -63,7 +63,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         {
             base.FillFrom(other, inCSpace);
             var strConfigRhs = other as DateTimePropertyConfiguration;
-            if (strConfigRhs != null && Precision == null)
+            if (strConfigRhs != null
+                && Precision == null)
             {
                 Precision = strConfigRhs.Precision;
             }

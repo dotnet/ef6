@@ -8,49 +8,53 @@
 
     internal class UpdateDatabaseCommand : MigrationsDomainCommand
     {
-        public UpdateDatabaseCommand(string sourceMigration, string targetMigration, bool script, bool force, bool verbose)
+        public UpdateDatabaseCommand(
+            string sourceMigration, string targetMigration, bool script, bool force, bool verbose)
         {
             Contract.Requires(
-                string.IsNullOrWhiteSpace(sourceMigration) || script, "sourceMigration can only be specified when script is true");
+                string.IsNullOrWhiteSpace(sourceMigration) || script,
+                "sourceMigration can only be specified when script is true");
 
-            Execute(() =>
-                {
-                    var project = Project;
-
-                    using (var facade = GetFacade())
+            Execute(
+                () =>
                     {
-                        if (script)
-                        {
-                            var sql = facade.ScriptUpdate(sourceMigration, targetMigration, force);
+                        var project = Project;
 
-                            project.NewSqlFile(sql);
-                        }
-                        else
+                        using (var facade = GetFacade())
                         {
-                            if (!verbose)
+                            if (script)
                             {
-                                WriteLine(Strings.UpdateDatabaseCommand_VerboseInstructions);
-                            }
+                                var sql = facade.ScriptUpdate(sourceMigration, targetMigration, force);
 
-                            try
-                            {
-                                facade.Update(targetMigration, force);
+                                project.NewSqlFile(sql);
                             }
-                            catch (ToolingException ex)
+                            else
                             {
-                                if (ex.InnerType == typeof(AutomaticMigrationsDisabledException).FullName)
+                                if (!verbose)
                                 {
-                                    facade.LogWarningDelegate(ex.Message);
-                                    facade.LogWarningDelegate(Strings.AutomaticMigrationDisabledInfo);
+                                    WriteLine(Strings.UpdateDatabaseCommand_VerboseInstructions);
                                 }
-                                else
+
+                                try
                                 {
-                                    throw;
+                                    facade.Update(targetMigration, force);
+                                }
+                                catch (ToolingException ex)
+                                {
+                                    if (ex.InnerType
+                                        == typeof(AutomaticMigrationsDisabledException).FullName)
+                                    {
+                                        facade.LogWarningDelegate(ex.Message);
+                                        facade.LogWarningDelegate(Strings.AutomaticMigrationDisabledInfo);
+                                    }
+                                    else
+                                    {
+                                        throw;
+                                    }
                                 }
                             }
                         }
-                    }
-                });
+                    });
         }
     }
 }

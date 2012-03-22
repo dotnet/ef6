@@ -3,12 +3,9 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Data.Common;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Validation;
-    using System.Data.EntityClient;
-    using System.Data.Metadata.Edm;
     using System.Data.Objects;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -19,7 +16,8 @@
     /// <summary>
     ///     Static helper methods only.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "Casing is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
+        Justification = "Casing is intentional")]
     internal static class DbHelpers
     {
         #region Null/empty/type checking
@@ -82,14 +80,16 @@
 
             var xBytes = x as byte[];
             var yBytes = y as byte[];
-            if (xBytes == null || yBytes == null || xBytes.Length != yBytes.Length)
+            if (xBytes == null || yBytes == null
+                || xBytes.Length != yBytes.Length)
             {
                 return false;
             }
 
             for (var i = 0; i < xBytes.Length; i++)
             {
-                if (xBytes[i] != yBytes[i])
+                if (xBytes[i]
+                    != yBytes[i])
                 {
                     return false;
                 }
@@ -161,7 +161,8 @@
             }
 
             // If the keyword before the single '=' is "name" then return the name value
-            if (nameOrConnectionString.Substring(0, firstEquals).Trim().Equals("name", StringComparison.OrdinalIgnoreCase))
+            if (nameOrConnectionString.Substring(0, firstEquals).Trim().Equals(
+                "name", StringComparison.OrdinalIgnoreCase))
             {
                 name = nameOrConnectionString.Substring(firstEquals + 1).Trim();
                 return true;
@@ -188,7 +189,8 @@
             // but that seems very, very unlikely.
 
             var tokens = nameOrConnectionString.ToUpperInvariant().Split('=', ';').Select(t => t.Trim());
-            return tokens.Contains("PROVIDER") && tokens.Contains("PROVIDER CONNECTION STRING") && tokens.Contains("METADATA");
+            return tokens.Contains("PROVIDER") && tokens.Contains("PROVIDER CONNECTION STRING")
+                   && tokens.Contains("METADATA");
         }
 
         #endregion
@@ -212,9 +214,11 @@
             Contract.Requires(property != null);
 
             string path;
-            if (!TryParsePath(property.Body, out path) || path == null)
+            if (!TryParsePath(property.Body, out path)
+                || path == null)
             {
-                throw new ArgumentException(Strings.DbEntityEntry_BadPropertyExpression(methodName, typeof(TEntity).Name), paramName);
+                throw new ArgumentException(
+                    Strings.DbEntityEntry_BadPropertyExpression(methodName, typeof(TEntity).Name), paramName);
             }
             return path;
         }
@@ -249,7 +253,8 @@
             }
             else if (callExpression != null)
             {
-                if (callExpression.Method.Name == "Select" && callExpression.Arguments.Count == 2)
+                if (callExpression.Method.Name == "Select"
+                    && callExpression.Arguments.Count == 2)
                 {
                     string parentPart;
                     if (!TryParsePath(callExpression.Arguments[0], out parentPart))
@@ -284,7 +289,8 @@
 
         #region Compiled delegates for accessing property getters and setters
 
-        private const BindingFlags PropertyBindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+        private const BindingFlags PropertyBindingFlags =
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
         private static readonly MethodInfo DbHelpers_ConvertAndSet = typeof(DbHelpers).GetMethod(
             "ConvertAndSet", BindingFlags.Static | BindingFlags.NonPublic);
@@ -292,7 +298,8 @@
         private static readonly ConcurrentDictionary<Type, IDictionary<string, Type>> PropertyTypes =
             new ConcurrentDictionary<Type, IDictionary<string, Type>>();
 
-        private static readonly ConcurrentDictionary<Type, IDictionary<string, Action<object, object>>> PropertySetters =
+        private static readonly ConcurrentDictionary<Type, IDictionary<string, Action<object, object>>> PropertySetters
+            =
             new ConcurrentDictionary<Type, IDictionary<string, Action<object, object>>>();
 
         private static readonly ConcurrentDictionary<Type, IDictionary<string, Func<object, object>>> PropertyGetters =
@@ -345,15 +352,19 @@
                         var valueParam = Expression.Parameter(typeof(object), "value");
                         var instanceParam = Expression.Parameter(typeof(object), "instance");
                         var setterExpression = Expression.Call(
-                            Expression.Convert(instanceParam, type), setMethod, Expression.Convert(valueParam, property.PropertyType));
-                        var setter = Expression.Lambda<Action<object, object>>(setterExpression, instanceParam, valueParam).Compile();
+                            Expression.Convert(instanceParam, type), setMethod,
+                            Expression.Convert(valueParam, property.PropertyType));
+                        var setter =
+                            Expression.Lambda<Action<object, object>>(setterExpression, instanceParam, valueParam).
+                                Compile();
 
                         // Next create a delegate with CreateDelegate that calls the internal ConvertAndSet method below.
                         // This works in partial trust because it is using CreateDelegate to avoid creating any dynamic code.
                         var convertMethod = DbHelpers_ConvertAndSet.MakeGenericMethod(property.PropertyType);
                         var convertAndSet = (Action<object, object, Action<object, object>, string, string>)
                                             Delegate.CreateDelegate(
-                                                typeof(Action<object, object, Action<object, object>, string, string>), convertMethod);
+                                                typeof(Action<object, object, Action<object, object>, string, string>),
+                                                convertMethod);
 
                         // Finally create a closure around the ConvertAndSet call to pass in things specific to this property
                         // instance, including the actual dynamic setter delegate that we created above.
@@ -373,7 +384,8 @@
         private static void ConvertAndSet<T>(
             object instance, object value, Action<object, object> setter, string propertyName, string typeName)
         {
-            if (value == null && typeof(T).IsValueType && Nullable.GetUnderlyingType(typeof(T)) == null)
+            if (value == null && typeof(T).IsValueType
+                && Nullable.GetUnderlyingType(typeof(T)) == null)
             {
                 throw Error.DbPropertyValues_CannotSetNullValue(propertyName, typeof(T).Name, typeName);
             }
@@ -401,7 +413,8 @@
                         var instanceParam = Expression.Parameter(typeof(object), "instance");
                         var getterExpression = Expression.Convert(
                             Expression.Call(Expression.Convert(instanceParam, type), getMethod), typeof(object));
-                        getters[property.Name] = Expression.Lambda<Func<object, object>>(getterExpression, instanceParam).Compile();
+                        getters[property.Name] =
+                            Expression.Lambda<Func<object, object>>(getterExpression, instanceParam).Compile();
                     }
                 }
                 PropertyGetters.TryAdd(type, getters);
@@ -517,7 +530,8 @@
 
         #region Collection types for element types
 
-        private static readonly ConcurrentDictionary<Type, Type> CollectionTypes = new ConcurrentDictionary<Type, Type>();
+        private static readonly ConcurrentDictionary<Type, Type> CollectionTypes =
+            new ConcurrentDictionary<Type, Type>();
 
         /// <summary>
         ///     Gets an <see cref = "ICollection{T}" /> type for the given element type.

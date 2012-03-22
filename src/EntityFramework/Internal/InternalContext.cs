@@ -46,13 +46,16 @@
             new ConcurrentDictionary<Type, Func<InternalContext, object>>();
 
         private static readonly MethodInfo InternalContext_ExecuteSqlQueryAsIEnumerable =
-            typeof(InternalContext).GetMethod("ExecuteSqlQueryAsIEnumerable", BindingFlags.Instance | BindingFlags.NonPublic);
+            typeof(InternalContext).GetMethod(
+                "ExecuteSqlQueryAsIEnumerable", BindingFlags.Instance | BindingFlags.NonPublic);
 
-        private static readonly ConcurrentDictionary<Type, Func<InternalContext, string, object[], IEnumerable>> QueryExecutors =
-            new ConcurrentDictionary<Type, Func<InternalContext, string, object[], IEnumerable>>();
+        private static readonly ConcurrentDictionary<Type, Func<InternalContext, string, object[], IEnumerable>>
+            QueryExecutors =
+                new ConcurrentDictionary<Type, Func<InternalContext, string, object[], IEnumerable>>();
 
-        private static readonly ConcurrentDictionary<Type, Func<InternalContext, IInternalSet, IInternalSetAdapter>> SetFactories =
-            new ConcurrentDictionary<Type, Func<InternalContext, IInternalSet, IInternalSetAdapter>>();
+        private static readonly ConcurrentDictionary<Type, Func<InternalContext, IInternalSet, IInternalSetAdapter>>
+            SetFactories =
+                new ConcurrentDictionary<Type, Func<InternalContext, IInternalSet, IInternalSetAdapter>>();
 
         // The configuration to use for initializers, connection strings and default connection factory
         private AppConfig _appConfig = AppConfig.DefaultInstance;
@@ -73,8 +76,11 @@
         private int _tempObjectContextCount;
 
         // Cache of created DbSet<T>/DbSet objects so that DbContext.Set<T>/Set always returns the same instance.
-        private readonly Dictionary<Type, IInternalSetAdapter> _genericSets = new Dictionary<Type, IInternalSetAdapter>();
-        private readonly Dictionary<Type, IInternalSetAdapter> _nonGenericSets = new Dictionary<Type, IInternalSetAdapter>();
+        private readonly Dictionary<Type, IInternalSetAdapter> _genericSets =
+            new Dictionary<Type, IInternalSetAdapter>();
+
+        private readonly Dictionary<Type, IInternalSetAdapter> _nonGenericSets =
+            new Dictionary<Type, IInternalSetAdapter>();
 
         // Used to create validators to validate entities or properties and contexts for validating entities and properties.
         private readonly ValidationProvider _validationProvider = new ValidationProvider();
@@ -131,7 +137,9 @@
         {
             InitializeContext();
 
-            return new ClonedObjectContext(new ObjectContextProxy(GetObjectContextWithoutDatabaseInitialization()), OriginalConnectionString, transferLoadedAssemblies: false);
+            return new ClonedObjectContext(
+                new ObjectContextProxy(GetObjectContextWithoutDatabaseInitialization()), OriginalConnectionString,
+                transferLoadedAssemblies: false);
         }
 
         /// <summary>
@@ -155,7 +163,10 @@
             _tempObjectContextCount++;
             if (_tempObjectContext == null)
             {
-                _tempObjectContext = new ClonedObjectContext(new ObjectContextProxy(GetObjectContextWithoutDatabaseInitialization()), OriginalConnectionString);
+                _tempObjectContext =
+                    new ClonedObjectContext(
+                        new ObjectContextProxy(GetObjectContextWithoutDatabaseInitialization()),
+                        OriginalConnectionString);
 
                 InitializeEntitySetMappings();
             }
@@ -169,7 +180,8 @@
         {
             if (_tempObjectContextCount > 0)
             {
-                if (--_tempObjectContextCount == 0 && _tempObjectContext != null)
+                if (--_tempObjectContextCount == 0
+                    && _tempObjectContext != null)
                 {
                     _tempObjectContext.Dispose();
                     _tempObjectContext = null;
@@ -197,7 +209,8 @@
         public virtual void CreateDatabase(ObjectContext objectContext)
         {
             // objectContext may be null when testing.
-            new DatabaseCreator().CreateDatabase(this, (config, context) => new DbMigrator(config, context), objectContext);
+            new DatabaseCreator().CreateDatabase(
+                this, (config, context) => new DbMigrator(config, context), objectContext);
         }
 
         /// <summary>
@@ -206,7 +219,8 @@
         /// <returns> True if the model hash in the context and the database match; false otherwise.</returns>
         public virtual bool CompatibleWithModel(bool throwIfNoMetadata)
         {
-            return new ModelCompatibilityChecker().CompatibleWithModel(this, new ModelHashCalculator(), throwIfNoMetadata);
+            return new ModelCompatibilityChecker().CompatibleWithModel(
+                this, new ModelHashCalculator(), throwIfNoMetadata);
         }
 
         /// <summary>
@@ -226,8 +240,9 @@
         /// <returns>The model hash, or null if not found.</returns>
         public virtual string QueryForModelHash()
         {
-            return new EdmMetadataRepository(OriginalConnectionString, DbProviderServices.GetProviderFactory(Connection))
-                    .QueryForModelHash(c => new EdmMetadataContext(c));
+            return new EdmMetadataRepository(
+                OriginalConnectionString, DbProviderServices.GetProviderFactory(Connection))
+                .QueryForModelHash(c => new EdmMetadataContext(c));
         }
 
         /// <summary>
@@ -248,7 +263,8 @@
             if (CodeFirstModel != null)
             {
                 PerformInitializationAction(
-                    () => new HistoryRepository(OriginalConnectionString, DbProviderServices.GetProviderFactory(Connection))
+                    () =>
+                    new HistoryRepository(OriginalConnectionString, DbProviderServices.GetProviderFactory(Connection))
                         .BootstrapUsingEFProviderDdl(Owner.GetModel()));
             }
         }
@@ -332,7 +348,8 @@
                     var validationResults = Owner.GetValidationErrors();
                     if (validationResults.Any())
                     {
-                        throw new DbEntityValidationException(Strings.DbEntityValidationException_ValidationFailed, validationResults);
+                        throw new DbEntityValidationException(
+                            Strings.DbEntityValidationException_ValidationFailed, validationResults);
                     }
                 }
 
@@ -495,7 +512,8 @@
         /// <returns>A set for the given entity type.</returns>
         public virtual IDbSet<TEntity> Set<TEntity>() where TEntity : class
         {
-            if (typeof(TEntity) != ObjectContextTypeCache.GetObjectType(typeof(TEntity)))
+            if (typeof(TEntity)
+                != ObjectContextTypeCache.GetObjectType(typeof(TEntity)))
             {
                 throw Error.CannotCallGenericSetWithProxyType();
             }
@@ -505,7 +523,9 @@
             {
                 // Check to see if we created the internal set already for a non_generic DbSet wrapper.  If we did,
                 // then re-use it.  If not, then create one.
-                var internalSet = _nonGenericSets.TryGetValue(typeof(TEntity), out set) ? set.InternalSet : new InternalSet<TEntity>(this);
+                var internalSet = _nonGenericSets.TryGetValue(typeof(TEntity), out set)
+                                      ? set.InternalSet
+                                      : new InternalSet<TEntity>(this);
                 set = new DbSet<TEntity>((InternalSet<TEntity>)internalSet);
                 _genericSets.Add(typeof(TEntity), set);
             }
@@ -528,7 +548,8 @@
                 // We need to create a non-generic DbSet instance here, which is actually an instance of InternalDbSet<T>.
                 // The CreateInternalSet method does this and will wrap the new object either around an existing
                 // internal set if one can be found from the generic sets cache, or else will create a new one.
-                set = CreateInternalSet(entityType, _genericSets.TryGetValue(entityType, out set) ? set.InternalSet : null);
+                set = CreateInternalSet(
+                    entityType, _genericSets.TryGetValue(entityType, out set) ? set.InternalSet : null);
                 _nonGenericSets.Add(entityType, set);
             }
             return set;
@@ -552,10 +573,12 @@
 
                 var genericType = typeof(InternalDbSet<>).MakeGenericType(entityType);
                 var factoryMethod = genericType.GetMethod(
-                    "Create", BindingFlags.Static | BindingFlags.Public, null, new[] { typeof(InternalContext), typeof(IInternalSet) }, null);
+                    "Create", BindingFlags.Static | BindingFlags.Public, null,
+                    new[] { typeof(InternalContext), typeof(IInternalSet) }, null);
                 factory =
                     (Func<InternalContext, IInternalSet, IInternalSetAdapter>)
-                    Delegate.CreateDelegate(typeof(Func<InternalContext, IInternalSet, IInternalSetAdapter>), factoryMethod);
+                    Delegate.CreateDelegate(
+                        typeof(Func<InternalContext, IInternalSet, IInternalSetAdapter>), factoryMethod);
                 SetFactories.TryAdd(entityType, factory);
             }
             return factory(this, internalSet);
@@ -571,7 +594,8 @@
         {
             Contract.Assert(entityType != null);
             Contract.Assert(
-                entityType == ObjectContextTypeCache.GetObjectType(entityType), "Proxy type should have been converted to real type");
+                entityType == ObjectContextTypeCache.GetObjectType(entityType),
+                "Proxy type should have been converted to real type");
 
             Initialize();
 
@@ -590,7 +614,8 @@
         {
             Contract.Assert(entityType != null);
             Contract.Assert(
-                entityType == ObjectContextTypeCache.GetObjectType(entityType), "Proxy type should have been converted to real type");
+                entityType == ObjectContextTypeCache.GetObjectType(entityType),
+                "Proxy type should have been converted to real type");
 
             Initialize();
 
@@ -606,7 +631,8 @@
         {
             Contract.Assert(entityType != null);
             Contract.Assert(
-                entityType == ObjectContextTypeCache.GetObjectType(entityType), "Proxy type should have been converted to real type");
+                entityType == ObjectContextTypeCache.GetObjectType(entityType),
+                "Proxy type should have been converted to real type");
 
             Initialize();
 
@@ -628,8 +654,9 @@
             const EntityState StatesToInclude = EntityState.Added | EntityState.Modified | EntityState.Unchanged;
 
             return
-                ObjectContext.ObjectStateManager.GetObjectStateEntries(StatesToInclude).Where(e => e.Entity is TEntity).Select(
-                    e => (TEntity)e.Entity);
+                ObjectContext.ObjectStateManager.GetObjectStateEntries(StatesToInclude).Where(e => e.Entity is TEntity).
+                    Select(
+                        e => (TEntity)e.Entity);
         }
 
         #endregion
@@ -673,7 +700,8 @@
                 var genericExecuteMethod = InternalContext_ExecuteSqlQueryAsIEnumerable.MakeGenericMethod(elementType);
                 executor =
                     (Func<InternalContext, string, object[], IEnumerable>)
-                    Delegate.CreateDelegate(typeof(Func<InternalContext, string, object[], IEnumerable>), genericExecuteMethod);
+                    Delegate.CreateDelegate(
+                        typeof(Func<InternalContext, string, object[], IEnumerable>), genericExecuteMethod);
                 QueryExecutors.TryAdd(elementType, executor);
             }
             return executor(this, sql, parameters);
@@ -817,7 +845,9 @@
             if (!EntityFactories.TryGetValue(type, out entityFactory))
             {
                 var factoryMethod = InternalContext_CreateObjectAsObject.MakeGenericMethod(type);
-                entityFactory = (Func<InternalContext, object>)Delegate.CreateDelegate(typeof(Func<InternalContext, object>), factoryMethod);
+                entityFactory =
+                    (Func<InternalContext, object>)
+                    Delegate.CreateDelegate(typeof(Func<InternalContext, object>), factoryMethod);
                 EntityFactories.TryAdd(type, entityFactory);
             }
             return entityFactory(this);
@@ -982,7 +1012,8 @@
         private bool TryUpdateEntitySetMappingsForType(Type entityType)
         {
             Contract.Assert(
-                entityType == ObjectContextTypeCache.GetObjectType(entityType), "Proxy type should have been converted to real type");
+                entityType == ObjectContextTypeCache.GetObjectType(entityType),
+                "Proxy type should have been converted to real type");
 
             if (_entitySetMappings.ContainsKey(entityType))
             {
@@ -996,7 +1027,8 @@
                 ObjectContext.MetadataWorkspace.LoadFromAssembly(typeToLoad.Assembly);
                 typeToLoad = typeToLoad.BaseType;
             }
-            while (typeToLoad != null && typeToLoad != typeof(Object));
+            while (typeToLoad != null
+                   && typeToLoad != typeof(Object));
 
             UpdateEntitySetMappings();
 
@@ -1010,7 +1042,8 @@
         private void UpdateEntitySetMappingsForType(Type entityType)
         {
             Contract.Assert(
-                entityType == ObjectContextTypeCache.GetObjectType(entityType), "Proxy type should have been converted to real type");
+                entityType == ObjectContextTypeCache.GetObjectType(entityType),
+                "Proxy type should have been converted to real type");
 
             if (!TryUpdateEntitySetMappingsForType(entityType))
             {
@@ -1071,14 +1104,16 @@
                 while (cspaceType != null);
 
                 EntitySet entitySet = null;
-                while (entitySet == null && inverseHierarchy.Count > 0)
+                while (entitySet == null
+                       && inverseHierarchy.Count > 0)
                 {
                     cspaceType = inverseHierarchy.Pop();
                     foreach (var container in metadataWorkspace.GetItems<EntityContainer>(DataSpace.CSpace))
                     {
                         var entitySets = container.BaseEntitySets.Where(s => s.ElementType == cspaceType);
                         var entitySetsCount = entitySets.Count();
-                        if (entitySetsCount > 1 || entitySetsCount == 1 && entitySet != null)
+                        if (entitySetsCount > 1
+                            || entitySetsCount == 1 && entitySet != null)
                         {
                             throw Error.DbContext_MESTNotSupported();
                         }
@@ -1163,26 +1198,14 @@
 
         public override bool LazyLoadingEnabled
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
         }
 
         public override bool ProxyCreationEnabled
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
         }
 
         public override DbConnection Connection

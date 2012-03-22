@@ -22,7 +22,8 @@ namespace System.Data.Entity.Migrations.Model
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
-        public AlterColumnOperation(string table, ColumnModel column, bool isDestructiveChange, object anonymousArguments = null)
+        public AlterColumnOperation(
+            string table, ColumnModel column, bool isDestructiveChange, object anonymousArguments = null)
             : base(anonymousArguments)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(table));
@@ -45,7 +46,8 @@ namespace System.Data.Entity.Migrations.Model
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
         public AlterColumnOperation(
-            string table, ColumnModel column, bool isDestructiveChange, AlterColumnOperation inverse, object anonymousArguments = null)
+            string table, ColumnModel column, bool isDestructiveChange, AlterColumnOperation inverse,
+            object anonymousArguments = null)
             : this(table, column, isDestructiveChange)
         {
             Contract.Requires(inverse != null);

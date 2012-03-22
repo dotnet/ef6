@@ -82,7 +82,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             _schemaWriter.WriteEndElement();
         }
 
-        protected override void VisitDeclaredKeyProperties(EdmEntityType entityType, IEnumerable<EdmProperty> properties)
+        protected override void VisitDeclaredKeyProperties(
+            EdmEntityType entityType, IEnumerable<EdmProperty> properties)
         {
             if (properties.Count() > 0)
             {
@@ -127,7 +128,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
         protected override void VisitEdmAssociationEnd(EdmAssociationEnd item)
         {
             _schemaWriter.WriteAssociationEndElementHeader(item);
-            if (item.DeleteAction.HasValue && item.DeleteAction.Value != EdmOperationAction.None)
+            if (item.DeleteAction.HasValue
+                && item.DeleteAction.Value != EdmOperationAction.None)
             {
                 _schemaWriter.WriteOperationActionElement(CsdlConstants.Element_OnDelete, item.DeleteAction.Value);
             }

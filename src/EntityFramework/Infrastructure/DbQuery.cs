@@ -11,8 +11,10 @@ namespace System.Data.Entity.Infrastructure
     /// <summary>
     ///     Represents a non-generic LINQ to Entities query against a DbContext.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "Casing is intentional")]
-    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "Name is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
+        Justification = "Casing is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
+        Justification = "Name is intentional")]
     public abstract class DbQuery : IOrderedQueryable, IListSource, IInternalQueryAdapter
     {
         #region Fields and constructors
@@ -138,9 +140,11 @@ namespace System.Data.Entity.Infrastructure
         /// <returns>The generic set object.</returns>
         public DbQuery<TElement> Cast<TElement>()
         {
-            if (typeof(TElement) != InternalQuery.ElementType)
+            if (typeof(TElement)
+                != InternalQuery.ElementType)
             {
-                throw Error.DbEntity_BadTypeForCast(typeof(DbQuery).Name, typeof(TElement).Name, InternalQuery.ElementType.Name);
+                throw Error.DbEntity_BadTypeForCast(
+                    typeof(DbQuery).Name, typeof(TElement).Name, InternalQuery.ElementType.Name);
             }
 
             return new DbQuery<TElement>((IInternalQuery<TElement>)InternalQuery);

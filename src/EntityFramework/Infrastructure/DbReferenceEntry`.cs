@@ -32,7 +32,8 @@
         {
             Contract.Requires(internalReferenceEntry != null);
 
-            return (DbReferenceEntry<TEntity, TProperty>)internalReferenceEntry.CreateDbMemberEntry<TEntity, TProperty>();
+            return
+                (DbReferenceEntry<TEntity, TProperty>)internalReferenceEntry.CreateDbMemberEntry<TEntity, TProperty>();
         }
 
         /// <summary>

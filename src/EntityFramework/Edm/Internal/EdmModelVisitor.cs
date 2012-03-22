@@ -71,7 +71,8 @@ namespace System.Data.Entity.Edm.Internal
             VisitEdmNamedMetadataItem(item);
         }
 
-        protected virtual void VisitAssociationSets(EdmEntityContainer container, IEnumerable<EdmAssociationSet> associationSets)
+        protected virtual void VisitAssociationSets(
+            EdmEntityContainer container, IEnumerable<EdmAssociationSet> associationSets)
         {
             VisitCollection(associationSets, VisitEdmAssociationSet);
         }
@@ -244,7 +245,8 @@ namespace System.Data.Entity.Edm.Internal
             VisitCollection(navigationProperties, VisitEdmNavigationProperty);
         }
 
-        protected virtual void VisitAssociationTypes(EdmNamespace edmNamespace, IEnumerable<EdmAssociationType> associationTypes)
+        protected virtual void VisitAssociationTypes(
+            EdmNamespace edmNamespace, IEnumerable<EdmAssociationType> associationTypes)
         {
             VisitCollection(associationTypes, VisitEdmAssociationType);
         }

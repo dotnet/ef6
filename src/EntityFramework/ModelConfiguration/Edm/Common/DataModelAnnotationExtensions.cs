@@ -20,7 +20,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common
             return (IList<Attribute>)dataModelAnnotations.GetAnnotation(ClrAttributesAnnotation);
         }
 
-        public static void SetClrAttributes(this ICollection<DataModelAnnotation> dataModelAnnotations, IList<Attribute> attributes)
+        public static void SetClrAttributes(
+            this ICollection<DataModelAnnotation> dataModelAnnotations, IList<Attribute> attributes)
         {
             Contract.Requires(dataModelAnnotations != null);
             Contract.Requires(attributes != null);
@@ -35,7 +36,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common
             return (PropertyInfo)dataModelAnnotations.GetAnnotation(ClrPropertyInfoAnnotation);
         }
 
-        public static void SetClrPropertyInfo(this ICollection<DataModelAnnotation> dataModelAnnotations, PropertyInfo propertyInfo)
+        public static void SetClrPropertyInfo(
+            this ICollection<DataModelAnnotation> dataModelAnnotations, PropertyInfo propertyInfo)
         {
             Contract.Requires(dataModelAnnotations != null);
             Contract.Requires(propertyInfo != null);
@@ -65,7 +67,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common
             return dataModelAnnotations.GetAnnotation(ConfiguationAnnotation);
         }
 
-        public static void SetConfiguration(this ICollection<DataModelAnnotation> dataModelAnnotations, object configuration)
+        public static void SetConfiguration(
+            this ICollection<DataModelAnnotation> dataModelAnnotations, object configuration)
         {
             Contract.Requires(dataModelAnnotations != null);
 
@@ -82,7 +85,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common
             return annotation != null ? annotation.Value : null;
         }
 
-        public static void SetAnnotation(this ICollection<DataModelAnnotation> dataModelAnnotations, string name, object value)
+        public static void SetAnnotation(
+            this ICollection<DataModelAnnotation> dataModelAnnotations, string name, object value)
         {
             Contract.Requires(dataModelAnnotations != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
@@ -92,7 +96,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common
 
             if (annotation == null)
             {
-                dataModelAnnotations.Add(annotation = new DataModelAnnotation { Name = name });
+                dataModelAnnotations.Add(
+                    annotation = new DataModelAnnotation
+                                     {
+                                         Name = name
+                                     });
             }
 
             annotation.Value = value;
@@ -103,7 +111,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common
             Contract.Requires(dataModelAnnotations != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
 
-            var annotationToRemove = dataModelAnnotations.SingleOrDefault(a => a.Name.Equals(name, StringComparison.Ordinal));
+            var annotationToRemove =
+                dataModelAnnotations.SingleOrDefault(a => a.Name.Equals(name, StringComparison.Ordinal));
 
             if (annotationToRemove != null)
             {
@@ -111,7 +120,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common
             }
         }
 
-        public static void Copy(this ICollection<DataModelAnnotation> sourceAnnotations, ICollection<DataModelAnnotation> targetAnnotations)
+        public static void Copy(
+            this ICollection<DataModelAnnotation> sourceAnnotations, ICollection<DataModelAnnotation> targetAnnotations)
         {
             Contract.Requires(sourceAnnotations != null);
             Contract.Requires(targetAnnotations != null);

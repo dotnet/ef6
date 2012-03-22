@@ -12,7 +12,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     {
         private readonly NavigationPropertyConfiguration _navigationPropertyConfiguration;
 
-        internal ManyToManyNavigationPropertyConfiguration(NavigationPropertyConfiguration navigationPropertyConfiguration)
+        internal ManyToManyNavigationPropertyConfiguration(
+            NavigationPropertyConfiguration navigationPropertyConfiguration)
         {
             Contract.Requires(navigationPropertyConfiguration != null);
 

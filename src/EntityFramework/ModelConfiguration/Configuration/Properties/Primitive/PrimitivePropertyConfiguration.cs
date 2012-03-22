@@ -1,7 +1,6 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive
 {
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Common;
     using System.Data.Entity.Edm;
@@ -66,14 +65,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             if (existingConfiguration != null)
             {
                 string errorMessage;
-                if ((existingConfiguration.OverridableConfigurationParts & OverridableConfigurationParts.OverridableInCSpace)
+                if ((existingConfiguration.OverridableConfigurationParts
+                     & OverridableConfigurationParts.OverridableInCSpace)
                     != OverridableConfigurationParts.OverridableInCSpace
                     && !existingConfiguration.IsCompatible(this, inCSpace: true, errorMessage: out errorMessage))
                 {
                     var propertyInfo = property.GetClrPropertyInfo();
                     var declaringTypeName = propertyInfo == null
                                                 ? string.Empty
-                                                : ObjectContextTypeCache.GetObjectType(propertyInfo.DeclaringType).FullName;
+                                                : ObjectContextTypeCache.GetObjectType(propertyInfo.DeclaringType).
+                                                      FullName;
                     throw Error.ConflictingPropertyConfiguration(property.Name, declaringTypeName, errorMessage);
                 }
 
@@ -110,7 +111,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             {
                 property.SetStoreGeneratedPattern((DbStoreGeneratedPattern)DatabaseGeneratedOption.Value);
 
-                if (DatabaseGeneratedOption.Value == ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)
+                if (DatabaseGeneratedOption.Value
+                    == ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)
                 {
                     property.PropertyType.IsNullable = false;
                 }
@@ -129,7 +131,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         internal virtual void Configure(
-            DbTableColumnMetadata column, DbTableMetadata table, DbProviderManifest providerManifest, bool allowOverride = false)
+            DbTableColumnMetadata column, DbTableMetadata table, DbProviderManifest providerManifest,
+            bool allowOverride = false)
         {
             Contract.Requires(column != null);
             Contract.Requires(table != null);
@@ -142,7 +145,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                 var overridable = column.GetAllowOverride();
 
                 string errorMessage;
-                if ((existingConfiguration.OverridableConfigurationParts & OverridableConfigurationParts.OverridableInSSpace)
+                if ((existingConfiguration.OverridableConfigurationParts
+                     & OverridableConfigurationParts.OverridableInSSpace)
                     != OverridableConfigurationParts.OverridableInSSpace
                     && !overridable
                     && !allowOverride
@@ -198,7 +202,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                         && ((configuration == null) || (configuration.ColumnName == null))
                   select c;
 
-            var renamedColumns = new List<DbColumnMetadata> { column };
+            var renamedColumns = new List<DbColumnMetadata>
+                                     {
+                                         column
+                                     };
 
             // re-uniquify the conflicting columns
             pendingRenames
@@ -229,15 +236,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
         public virtual void FillFrom(PrimitivePropertyConfiguration other, bool inCSpace)
         {
-            if (ColumnName == null && !inCSpace)
+            if (ColumnName == null
+                && !inCSpace)
             {
                 ColumnName = other.ColumnName;
             }
-            if (ColumnOrder == null && !inCSpace)
+            if (ColumnOrder == null
+                && !inCSpace)
             {
                 ColumnOrder = other.ColumnOrder;
             }
-            if (ColumnType == null && !inCSpace)
+            if (ColumnType == null
+                && !inCSpace)
             {
                 ColumnType = other.ColumnType;
             }
@@ -267,7 +277,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
             var isNullableIsCompatible = !inCSpace || IsCompatible(c => c.IsNullable, other, ref errorMessage);
             var concurrencyModeIsCompatible = !inCSpace || IsCompatible(c => c.ConcurrencyMode, other, ref errorMessage);
-            var databaseGeneratedOptionIsCompatible = !inCSpace || IsCompatible(c => c.DatabaseGeneratedOption, other, ref errorMessage);
+            var databaseGeneratedOptionIsCompatible = !inCSpace
+                                                      ||
+                                                      IsCompatible(
+                                                          c => c.DatabaseGeneratedOption, other, ref errorMessage);
             var columnNameIsCompatible = inCSpace || IsCompatible(c => c.ColumnName, other, ref errorMessage);
             var columnOrderIsCompatible = inCSpace || IsCompatible(c => c.ColumnOrder, other, ref errorMessage);
             var columnTypeIsCompatible = inCSpace || IsCompatible(c => c.ColumnType, other, ref errorMessage);
@@ -298,7 +311,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             else
             {
                 errorMessage += Environment.NewLine + "\t" +
-                                Strings.ConflictingConfigurationValue(propertyInfo.Name, thisValue, propertyInfo.Name, otherValue);
+                                Strings.ConflictingConfigurationValue(
+                                    propertyInfo.Name, thisValue, propertyInfo.Name, otherValue);
                 return false;
             }
         }
@@ -320,7 +334,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             else
             {
                 errorMessage += Environment.NewLine + "\t" +
-                                Strings.ConflictingConfigurationValue(propertyInfo.Name, thisValue, propertyInfo.Name, otherValue);
+                                Strings.ConflictingConfigurationValue(
+                                    propertyInfo.Name, thisValue, propertyInfo.Name, otherValue);
                 return false;
             }
         }

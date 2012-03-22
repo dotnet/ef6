@@ -31,7 +31,9 @@
         {
             Contract.Requires(project != null);
 
-            using (var detector = new SqlServerDetector(Registry.LocalMachine, new ServiceControllerProxy(new ServiceController("MSSQL$SQLEXPRESS"))))
+            using (
+                var detector = new SqlServerDetector(
+                    Registry.LocalMachine, new ServiceControllerProxy(new ServiceController("MSSQL$SQLEXPRESS"))))
             {
                 var baseConnectionString = detector.BuildBaseConnectionString();
                 var manipulator = new ConfigFileManipulator();
@@ -42,10 +44,10 @@
                     project.ProjectItems,
                     i => processor.ProcessConfigFile(
                         i, new Func<XDocument, bool>[]
-                           {
-                               c => manipulator.AddOrUpdateConfigSection(c, efVersion),
-                               c => manipulator.AddConnectionFactoryToConfig(c, baseConnectionString)
-                           }));
+                               {
+                                   c => manipulator.AddOrUpdateConfigSection(c, efVersion),
+                                   c => manipulator.AddConnectionFactoryToConfig(c, baseConnectionString)
+                               }));
             }
         }
     }

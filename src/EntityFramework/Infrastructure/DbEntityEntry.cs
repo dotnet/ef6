@@ -153,7 +153,8 @@
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
 
-            return DbComplexPropertyEntry.Create(_internalEntityEntry.Property(propertyName, null, requireComplex: true));
+            return DbComplexPropertyEntry.Create(
+                _internalEntityEntry.Property(propertyName, null, requireComplex: true));
         }
 
         /// <summary>
@@ -190,7 +191,8 @@
         {
             if (!typeof(TEntity).IsAssignableFrom(_internalEntityEntry.EntityType))
             {
-                throw Error.DbEntity_BadTypeForCast(typeof(DbEntityEntry).Name, typeof(TEntity).Name, _internalEntityEntry.EntityType.Name);
+                throw Error.DbEntity_BadTypeForCast(
+                    typeof(DbEntityEntry).Name, typeof(TEntity).Name, _internalEntityEntry.EntityType.Name);
             }
 
             return new DbEntityEntry<TEntity>(_internalEntityEntry);
@@ -239,10 +241,12 @@
         /// <returns>
         ///     <c>true</c> if the specified <see cref = "System.Object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        [EditorBrowsable(EditorBrowsableState.Never)] // Still hide it since it is generally not useful to see when dotting in the API.
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        // Still hide it since it is generally not useful to see when dotting in the API.
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj) || obj.GetType() != typeof(DbEntityEntry))
+            if (ReferenceEquals(null, obj)
+                || obj.GetType() != typeof(DbEntityEntry))
             {
                 return false;
             }
@@ -259,7 +263,8 @@
         /// <returns>
         ///     <c>true</c> if the specified <see cref = "DbEntityEntry" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        [EditorBrowsable(EditorBrowsableState.Never)] // Still hide it since it is generally not useful to see when dotting in the API.
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        // Still hide it since it is generally not useful to see when dotting in the API.
         public bool Equals(DbEntityEntry other)
         {
             if (ReferenceEquals(this, other))
@@ -276,7 +281,8 @@
         /// <returns>
         ///     A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
         /// </returns>
-        [EditorBrowsable(EditorBrowsableState.Never)] // Still hide it since it is generally not useful to see when dotting in the API.
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        // Still hide it since it is generally not useful to see when dotting in the API.
         public override int GetHashCode()
         {
             return _internalEntityEntry.GetHashCode();

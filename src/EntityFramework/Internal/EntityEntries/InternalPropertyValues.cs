@@ -16,8 +16,11 @@
     {
         #region Fields and constructors
 
-        private const BindingFlags PropertyBindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-        private static readonly ConcurrentDictionary<Type, Func<object>> NonEntityFactories = new ConcurrentDictionary<Type, Func<object>>();
+        private const BindingFlags PropertyBindingFlags =
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
+        private static readonly ConcurrentDictionary<Type, Func<object>> NonEntityFactories =
+            new ConcurrentDictionary<Type, Func<object>>();
 
         private readonly InternalContext _internalContext;
         private readonly Type _type;
@@ -110,7 +113,8 @@
             Func<object> nonEntityFactory;
             if (!NonEntityFactories.TryGetValue(_type, out nonEntityFactory))
             {
-                var factoryExpression = Expression.New(_type.GetConstructor(PropertyBindingFlags, null, Type.EmptyTypes, null));
+                var factoryExpression =
+                    Expression.New(_type.GetConstructor(PropertyBindingFlags, null, Type.EmptyTypes, null));
                 nonEntityFactory = Expression.Lambda<Func<object>>(factoryExpression, null).Compile();
                 NonEntityFactories.TryAdd(_type, nonEntityFactory);
             }
@@ -139,7 +143,8 @@
                     var item = GetItem(propertyName);
 
                     // Cannot set values from a null complex property.
-                    if (propertyValue == null && item.IsComplex)
+                    if (propertyValue == null
+                        && item.IsComplex)
                     {
                         throw Error.DbPropertyValues_ComplexObjectCannotBeNull(propertyName, _type.Name);
                     }
@@ -191,7 +196,8 @@
             {
                 var item = values.GetItem(propertyName);
 
-                if (item.Value == null && item.IsComplex)
+                if (item.Value == null
+                    && item.IsComplex)
                 {
                     throw Error.DbPropertyValues_NestedPropertyValuesNull(propertyName, _type.Name);
                 }
@@ -275,14 +281,17 @@
             // TODO: Update this to ensure UDT comparisons are done correctly.
             if (!DbHelpers.KeyValuesEqual(item.Value, newValue))
             {
-                if (item.Value == null && item.IsComplex)
+                if (item.Value == null
+                    && item.IsComplex)
                 {
                     throw Error.DbPropertyValues_NestedPropertyValuesNull(item.Name, _type.Name);
                 }
 
-                if (newValue != null && !item.Type.IsAssignableFrom(newValue.GetType()))
+                if (newValue != null
+                    && !item.Type.IsAssignableFrom(newValue.GetType()))
                 {
-                    throw Error.DbPropertyValues_WrongTypeForAssignment(newValue.GetType().Name, item.Name, item.Type.Name, _type.Name);
+                    throw Error.DbPropertyValues_WrongTypeForAssignment(
+                        newValue.GetType().Name, item.Name, item.Type.Name, _type.Name);
                 }
 
                 item.Value = newValue;

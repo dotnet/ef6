@@ -22,14 +22,16 @@
             new ConcurrentDictionary<Type, Action<IRelatedEnd, object>>();
 
         private static readonly MethodInfo SetValueOnEntityReferenceMethod =
-            typeof(InternalReferenceEntry).GetMethod("SetValueOnEntityReference", BindingFlags.NonPublic | BindingFlags.Static);
+            typeof(InternalReferenceEntry).GetMethod(
+                "SetValueOnEntityReference", BindingFlags.NonPublic | BindingFlags.Static);
 
         /// <summary>
         ///     Initializes a new instance of the <see cref = "InternalReferenceEntry" /> class.
         /// </summary>
         /// <param name = "internalEntityEntry">The internal entity entry.</param>
         /// <param name = "navigationMetadata">The navigation metadata.</param>
-        public InternalReferenceEntry(InternalEntityEntry internalEntityEntry, NavigationEntryMetadata navigationMetadata)
+        public InternalReferenceEntry(
+            InternalEntityEntry internalEntityEntry, NavigationEntryMetadata navigationMetadata)
             : base(internalEntityEntry, navigationMetadata)
         {
         }
@@ -68,8 +70,10 @@
             Action<IRelatedEnd, object> setter;
             if (!EntityReferenceValueSetters.TryGetValue(entityRefType, out setter))
             {
-                var setMethod = SetValueOnEntityReferenceMethod.MakeGenericMethod(entityRefType.GetGenericArguments().Single());
-                setter = (Action<IRelatedEnd, object>)Delegate.CreateDelegate(typeof(Action<IRelatedEnd, object>), setMethod);
+                var setMethod =
+                    SetValueOnEntityReferenceMethod.MakeGenericMethod(entityRefType.GetGenericArguments().Single());
+                setter =
+                    (Action<IRelatedEnd, object>)Delegate.CreateDelegate(typeof(Action<IRelatedEnd, object>), setMethod);
                 EntityReferenceValueSetters.TryAdd(entityRefType, setter);
             }
             setter(RelatedEnd, value);
@@ -110,7 +114,8 @@
             {
                 // Always try to set using the related end if we can since it doesn't require a call to
                 // DetectChanges for the change to be tracked.
-                if (RelatedEnd != null && InternalEntityEntry.State != EntityState.Deleted)
+                if (RelatedEnd != null
+                    && InternalEntityEntry.State != EntityState.Deleted)
                 {
                     SetNavigationPropertyOnRelatedEnd(value);
                 }
@@ -123,7 +128,8 @@
                     else
                     {
                         Contract.Assert(
-                            InternalEntityEntry.State == EntityState.Detached || InternalEntityEntry.State == EntityState.Deleted);
+                            InternalEntityEntry.State == EntityState.Detached
+                            || InternalEntityEntry.State == EntityState.Deleted);
 
                         throw Error.DbPropertyEntry_SettingEntityRefNotSupported(
                             Name, InternalEntityEntry.EntityType.Name, InternalEntityEntry.State);

@@ -109,7 +109,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                         select t)
                           .SingleOrDefault())
                       ?? database.Schemas.Single().Tables
-                             .SingleOrDefault(t => string.Equals(t.DatabaseIdentifier, _tableName.Name, StringComparison.Ordinal));
+                             .SingleOrDefault(
+                                 t => string.Equals(t.DatabaseIdentifier, _tableName.Name, StringComparison.Ordinal));
 
                 if (targetTable == null)
                 {
@@ -188,7 +189,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 return true;
             }
 
-            if (obj.GetType() != typeof(ForeignKeyAssociationMappingConfiguration))
+            if (obj.GetType()
+                != typeof(ForeignKeyAssociationMappingConfiguration))
             {
                 return false;
             }

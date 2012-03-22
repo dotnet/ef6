@@ -54,10 +54,12 @@
             validationErrors.AddRange(base.Validate(entityValidationContext, property));
 
             // don't drill into complex types if there were errors or the complex property has not been initialized at all
-            if (!validationErrors.Any() && property.CurrentValue != null &&
+            if (!validationErrors.Any() && property.CurrentValue != null
+                &&
                 _complexTypeValidator != null)
             {
-                validationErrors.AddRange(_complexTypeValidator.Validate(entityValidationContext, (InternalPropertyEntry)property));
+                validationErrors.AddRange(
+                    _complexTypeValidator.Validate(entityValidationContext, (InternalPropertyEntry)property));
             }
 
             return validationErrors;

@@ -120,7 +120,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             ConfigureColumnNames(_rightKeyColumnNames, associationSetMapping.TargetEndMapping.PropertyMappings);
         }
 
-        private static void ConfigureColumnNames(ICollection<string> keyColumnNames, IList<DbEdmPropertyMapping> propertyMappings)
+        private static void ConfigureColumnNames(
+            ICollection<string> keyColumnNames, IList<DbEdmPropertyMapping> propertyMappings)
         {
             Contract.Requires(keyColumnNames != null);
             Contract.Requires(propertyMappings != null);
@@ -186,7 +187,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 return true;
             }
 
-            if (obj.GetType() != typeof(ManyToManyAssociationMappingConfiguration))
+            if (obj.GetType()
+                != typeof(ManyToManyAssociationMappingConfiguration))
             {
                 return false;
             }

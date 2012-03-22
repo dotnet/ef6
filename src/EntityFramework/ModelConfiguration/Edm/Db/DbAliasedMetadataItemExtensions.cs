@@ -7,7 +7,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
 
     internal static class DbAliasedMetadataItemExtensions
     {
-        public static string UniquifyIdentifier(this IEnumerable<DbAliasedMetadataItem> aliasedMetadataItems, string identifier)
+        public static string UniquifyIdentifier(
+            this IEnumerable<DbAliasedMetadataItem> aliasedMetadataItems, string identifier)
         {
             Contract.Requires(aliasedMetadataItems != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(identifier));

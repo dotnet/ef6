@@ -58,7 +58,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 tableColumnMetadata.StoreGeneratedPattern = storeGeneratedPattern.Value;
             }
 
-            MapPrimitivePropertyFacets(property.PropertyType.PrimitiveTypeFacets, tableColumnMetadata.Facets, storeTypeUsage);
+            MapPrimitivePropertyFacets(
+                property.PropertyType.PrimitiveTypeFacets, tableColumnMetadata.Facets, storeTypeUsage);
         }
 
         private static TypeUsage GetEdmTypeUsage(EdmTypeReference edmTypeReference)
@@ -71,7 +72,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var primitiveType = PrimitiveType.GetEdmPrimitiveType((PrimitiveTypeKind)primitiveTypeKind);
 
-            if (edmTypeReference.PrimitiveType == EdmPrimitiveType.String)
+            if (edmTypeReference.PrimitiveType
+                == EdmPrimitiveType.String)
             {
                 if ((primitiveTypeFacets.IsUnicode != null)
                     && (primitiveTypeFacets.IsFixedLength != null))
@@ -89,7 +91,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 }
             }
 
-            if (edmTypeReference.PrimitiveType == EdmPrimitiveType.Binary)
+            if (edmTypeReference.PrimitiveType
+                == EdmPrimitiveType.Binary)
             {
                 if (primitiveTypeFacets.IsFixedLength != null)
                 {
@@ -128,7 +131,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     primitiveTypeFacets.Precision);
             }
 
-            if (edmTypeReference.PrimitiveType == EdmPrimitiveType.Decimal)
+            if (edmTypeReference.PrimitiveType
+                == EdmPrimitiveType.Decimal)
             {
                 return ((primitiveTypeFacets.Precision != null)
                         && primitiveTypeFacets.Scale != null)
@@ -208,7 +212,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             if (entityTypeMapping == null)
             {
-                var entitySetMapping = databaseMapping.GetEntitySetMapping(databaseMapping.Model.GetEntitySet(entityType));
+                var entitySetMapping =
+                    databaseMapping.GetEntitySetMapping(databaseMapping.Model.GetEntitySet(entityType));
 
                 if (entitySetMapping != null)
                 {

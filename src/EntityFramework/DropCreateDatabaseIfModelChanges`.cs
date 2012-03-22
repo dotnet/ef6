@@ -1,6 +1,5 @@
 ﻿namespace System.Data.Entity
 {
-    using System.Diagnostics.Contracts;
     using System.Transactions;
 
     /// <summary>

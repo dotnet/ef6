@@ -3,7 +3,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Diagnostics.Contracts;
 
     internal class IndependentConstraintConfiguration : ConstraintConfiguration
     {
@@ -19,7 +18,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         }
 
         internal override void Configure(
-            EdmAssociationType associationType, EdmAssociationEnd dependentEnd, EntityTypeConfiguration entityTypeConfiguration)
+            EdmAssociationType associationType, EdmAssociationEnd dependentEnd,
+            EntityTypeConfiguration entityTypeConfiguration)
         {
             associationType.MarkIndependent();
         }

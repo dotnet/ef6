@@ -25,7 +25,8 @@
         /// </summary>
         /// <param name = "internalEntityEntry">The internal entity entry.</param>
         /// <param name = "navigationMetadata">The navigation metadata.</param>
-        protected InternalNavigationEntry(InternalEntityEntry internalEntityEntry, NavigationEntryMetadata navigationMetadata)
+        protected InternalNavigationEntry(
+            InternalEntityEntry internalEntityEntry, NavigationEntryMetadata navigationMetadata)
             : base(internalEntityEntry, navigationMetadata)
         {
         }
@@ -80,7 +81,8 @@
         {
             get
             {
-                if (_relatedEnd == null && !InternalEntityEntry.IsDetached)
+                if (_relatedEnd == null
+                    && !InternalEntityEntry.IsDetached)
                 {
                     _relatedEnd = InternalEntityEntry.GetRelatedEnd(Name);
                 }
@@ -174,7 +176,8 @@
             {
                 if (InternalEntityEntry.IsDetached)
                 {
-                    throw Error.DbPropertyEntry_NotSupportedForDetached(method, Name, InternalEntityEntry.EntityType.Name);
+                    throw Error.DbPropertyEntry_NotSupportedForDetached(
+                        method, Name, InternalEntityEntry.EntityType.Name);
                 }
 
                 _relatedEnd = InternalEntityEntry.GetRelatedEnd(Name);

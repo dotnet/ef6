@@ -16,7 +16,8 @@ namespace System.Data.Entity.Infrastructure
     ///     <see cref = "ObjectContext" /> or can be passed to the constructor of a <see cref = "DbContext" />. 
     ///     For increased performance, instances of this type should be cached and re-used to construct contexts.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "Casing is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
+        Justification = "Casing is intentional")]
     public class DbCompiledModel
     {
         #region Fields and constructors
@@ -26,7 +27,8 @@ namespace System.Data.Entity.Infrastructure
             new ConcurrentDictionary<Type, Func<EntityConnection, ObjectContext>>();
 
         // Delegate to create an instance of a non-derived ObjectContext.
-        private static readonly Func<EntityConnection, ObjectContext> ObjectContextConstructor = c => new ObjectContext(c);
+        private static readonly Func<EntityConnection, ObjectContext> ObjectContextConstructor =
+            c => new ObjectContext(c);
 
         // An object that can be used to get a cached MetadataWorkspace.
         private readonly ICachedMetadataWorkspace _workspace;
@@ -112,10 +114,12 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Gets a cached delegate (or creates a new one) used to call the constructor for the given derived ObjectContext type.
         /// </summary>
-        internal static Func<EntityConnection, ObjectContext> GetConstructorDelegate<TContext>() where TContext : ObjectContext
+        internal static Func<EntityConnection, ObjectContext> GetConstructorDelegate<TContext>()
+            where TContext : ObjectContext
         {
             // Optimize for case where just ObjectContext (non-derived) is asked for.
-            if (typeof(TContext) == typeof(ObjectContext))
+            if (typeof(TContext)
+                == typeof(ObjectContext))
             {
                 return ObjectContextConstructor;
             }
@@ -132,7 +136,8 @@ namespace System.Data.Entity.Infrastructure
 
                 var connectionParam = Expression.Parameter(typeof(EntityConnection), "connection");
                 constructorDelegate =
-                    Expression.Lambda<Func<EntityConnection, ObjectContext>>(Expression.New(constructor, connectionParam), connectionParam).
+                    Expression.Lambda<Func<EntityConnection, ObjectContext>>(
+                        Expression.New(constructor, connectionParam), connectionParam).
                         Compile();
 
                 ContextConstructors.TryAdd(typeof(TContext), constructorDelegate);

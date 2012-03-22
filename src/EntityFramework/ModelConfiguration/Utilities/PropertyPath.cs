@@ -88,7 +88,8 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
                 return true;
             }
 
-            if (obj.GetType() != typeof(PropertyPath))
+            if (obj.GetType()
+                != typeof(PropertyPath))
             {
                 return false;
             }

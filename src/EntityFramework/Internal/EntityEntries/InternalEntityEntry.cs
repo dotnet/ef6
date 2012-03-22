@@ -98,7 +98,8 @@
             {
                 if (!IsDetached)
                 {
-                    if (_stateEntry.State == EntityState.Modified && value == EntityState.Unchanged)
+                    if (_stateEntry.State == EntityState.Modified
+                        && value == EntityState.Unchanged)
                     {
                         // Special case modified to unchanged to be "reject changes" even
                         // ChangeState will do "accept changes".  This keeps the behavior consistent with
@@ -146,7 +147,8 @@
             {
                 ValidateStateToGetValues("CurrentValues", EntityState.Deleted);
 
-                return new DbDataRecordPropertyValues(_internalContext, _entityType, _stateEntry.CurrentValues, isEntity: true);
+                return new DbDataRecordPropertyValues(
+                    _internalContext, _entityType, _stateEntry.CurrentValues, isEntity: true);
             }
         }
 
@@ -219,12 +221,15 @@
 
                 var name = string.Format(CultureInfo.InvariantCulture, "p{0}", i.ToString(CultureInfo.InvariantCulture));
                 queryBuilder.AppendFormat(
-                    CultureInfo.InvariantCulture, "X.{0} = @{1}", DbHelpers.QuoteIdentifier(entityKeyValues[i].Key), name);
+                    CultureInfo.InvariantCulture, "X.{0} = @{1}", DbHelpers.QuoteIdentifier(entityKeyValues[i].Key),
+                    name);
                 parameters[i] = new ObjectParameter(name, entityKeyValues[i].Value);
             }
 
             // Execute the query
-            var dataRecord = _internalContext.ObjectContext.CreateQuery<DbDataRecord>(queryBuilder.ToString(), parameters).SingleOrDefault();
+            var dataRecord =
+                _internalContext.ObjectContext.CreateQuery<DbDataRecord>(queryBuilder.ToString(), parameters).
+                    SingleOrDefault();
 
             return dataRecord == null ? null : new ClonedPropertyValues(OriginalValues, dataRecord);
         }
@@ -237,7 +242,8 @@
         /// <param name = "queryBuilder">The query builder.</param>
         /// <param name = "prefix">The qualifier with which to prefix each property name.</param>
         /// <param name = "templateValues">The dictionary that acts as a template for the properties to query.</param>
-        private void AppendEntitySqlRow(StringBuilder queryBuilder, string prefix, InternalPropertyValues templateValues)
+        private void AppendEntitySqlRow(
+            StringBuilder queryBuilder, string prefix, InternalPropertyValues templateValues)
         {
             var commaRequired = false;
             foreach (var propertyName in templateValues.PropertyNames)
@@ -260,13 +266,15 @@
                     var nestedValues = templateItem.Value as InternalPropertyValues;
                     if (nestedValues == null)
                     {
-                        throw Error.DbPropertyValues_CannotGetStoreValuesWhenComplexPropertyIsNull(propertyName, EntityType.Name);
+                        throw Error.DbPropertyValues_CannotGetStoreValuesWhenComplexPropertyIsNull(
+                            propertyName, EntityType.Name);
                     }
 
                     // Call the same method recursively to get all the values of the complex property
                     queryBuilder.Append("ROW(");
                     AppendEntitySqlRow(
-                        queryBuilder, String.Format(CultureInfo.InvariantCulture, "{0}.{1}", prefix, quotedName), nestedValues);
+                        queryBuilder, String.Format(CultureInfo.InvariantCulture, "{0}.{1}", prefix, quotedName),
+                        nestedValues);
                     queryBuilder.AppendFormat(CultureInfo.InvariantCulture, ") AS {0}", quotedName);
                 }
                 else
@@ -318,7 +326,8 @@
 
             return
                 (InternalReferenceEntry)
-                ValidateAndGetNavigationMetadata(navigationProperty, requestedType ?? typeof(object), requireCollection: false).
+                ValidateAndGetNavigationMetadata(
+                    navigationProperty, requestedType ?? typeof(object), requireCollection: false).
                     CreateMemberEntry(this, null);
         }
 
@@ -335,7 +344,8 @@
 
             return
                 (InternalCollectionEntry)
-                ValidateAndGetNavigationMetadata(navigationProperty, requestedType ?? typeof(object), requireCollection: true).
+                ValidateAndGetNavigationMetadata(
+                    navigationProperty, requestedType ?? typeof(object), requireCollection: true).
                     CreateMemberEntry(this, null);
         }
 
@@ -359,7 +369,8 @@
             }
 
             var memberMetadata = GetNavigationMetadata(propertyName) ??
-                                 (MemberEntryMetadata)ValidateAndGetPropertyMetadata(propertyName, EntityType, requestedType);
+                                 (MemberEntryMetadata)
+                                 ValidateAndGetPropertyMetadata(propertyName, EntityType, requestedType);
 
             if (memberMetadata == null)
             {
@@ -372,7 +383,8 @@
             // If (!SomeStringProp is Object) => okay
             // If (!SomeFeaturedProduct is Product) => okay
             // If (!SomeProduct is FeaturedProduct) => throw
-            if (memberMetadata.MemberEntryType != MemberEntryType.CollectionNavigationProperty &&
+            if (memberMetadata.MemberEntryType != MemberEntryType.CollectionNavigationProperty
+                &&
                 !requestedType.IsAssignableFrom(memberMetadata.MemberType))
             {
                 throw Error.DbEntityEntry_WrongGenericForNavProp(
@@ -390,7 +402,8 @@
         /// <param name = "requestedType">The type of object requested, which may be null or 'object' if any type can be accepted.</param>
         /// <param name = "requireComplex">if set to <c>true</c> then the found property must be a complex property.</param>
         /// <returns>The entry.</returns>
-        public virtual InternalPropertyEntry Property(string property, Type requestedType = null, bool requireComplex = false)
+        public virtual InternalPropertyEntry Property(
+            string property, Type requestedType = null, bool requireComplex = false)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(property));
 
@@ -423,7 +436,8 @@
         /// <param name = "requireComplex">if set to <c>true</c> then the found property must be a complex property.</param>
         /// <returns>The entry.</returns>
         private InternalPropertyEntry Property(
-            InternalPropertyEntry parentProperty, string propertyName, IList<string> properties, Type requestedType, bool requireComplex)
+            InternalPropertyEntry parentProperty, string propertyName, IList<string> properties, Type requestedType,
+            bool requireComplex)
         {
             var isDotted = properties.Count > 1;
             var currentRequestedType = isDotted ? typeof(object) : requestedType;
@@ -431,7 +445,8 @@
 
             var propertyMetadata = ValidateAndGetPropertyMetadata(properties[0], declaringType, currentRequestedType);
 
-            if (propertyMetadata == null || ((isDotted || requireComplex) && !propertyMetadata.IsComplex))
+            if (propertyMetadata == null
+                || ((isDotted || requireComplex) && !propertyMetadata.IsComplex))
             {
                 if (isDotted)
                 {
@@ -444,7 +459,9 @@
 
             var internalPropertyEntry = (InternalPropertyEntry)propertyMetadata.CreateMemberEntry(this, parentProperty);
             return isDotted
-                       ? Property(internalPropertyEntry, propertyName, properties.Skip(1).ToList(), requestedType, requireComplex)
+                       ? Property(
+                           internalPropertyEntry, propertyName, properties.Skip(1).ToList(), requestedType,
+                           requireComplex)
                        : internalPropertyEntry;
         }
 
@@ -468,12 +485,14 @@
 
             if (requireCollection)
             {
-                if (propertyMetadata.MemberEntryType == MemberEntryType.ReferenceNavigationProperty)
+                if (propertyMetadata.MemberEntryType
+                    == MemberEntryType.ReferenceNavigationProperty)
                 {
                     throw Error.DbEntityEntry_UsedCollectionForReferenceProp(navigationProperty, EntityType.Name);
                 }
             }
-            else if (propertyMetadata.MemberEntryType == MemberEntryType.CollectionNavigationProperty)
+            else if (propertyMetadata.MemberEntryType
+                     == MemberEntryType.CollectionNavigationProperty)
             {
                 throw Error.DbEntityEntry_UsedReferenceForCollectionProp(navigationProperty, EntityType.Name);
             }
@@ -518,7 +537,8 @@
             var metadataWorkspace = _internalContext.ObjectContext.MetadataWorkspace;
 
             var cSpaceType =
-                navigationProperty.RelationshipType.RelationshipEndMembers.Single(e => navigationProperty.ToEndMember.Name == e.Name).
+                navigationProperty.RelationshipType.RelationshipEndMembers.Single(
+                    e => navigationProperty.ToEndMember.Name == e.Name).
                     GetEntityType();
             var oSpaceType = metadataWorkspace.GetObjectSpaceType(cSpaceType);
 
@@ -536,11 +556,13 @@
             EdmMember member;
             EdmEntityType.Members.TryGetValue(navigationProperty, false, out member);
 
-            Contract.Assert(member is NavigationProperty, "Property should have already been validated as a nav property.");
+            Contract.Assert(
+                member is NavigationProperty, "Property should have already been validated as a nav property.");
             var asNavProperty = (NavigationProperty)member;
 
             var relationshipManager = _internalContext.ObjectContext.ObjectStateManager.GetRelationshipManager(Entity);
-            return relationshipManager.GetRelatedEnd(asNavProperty.RelationshipType.FullName, asNavProperty.ToEndMember.Name);
+            return relationshipManager.GetRelatedEnd(
+                asNavProperty.RelationshipType.FullName, asNavProperty.ToEndMember.Name);
         }
 
         /// <summary>
@@ -552,9 +574,11 @@
         /// <param name = "declaringType">The type on which the property is declared.</param>
         /// <param name = "requestedType">The type of object requested, which may be 'object' if any type can be accepted.</param>
         /// <returns>Metadata for the property.</returns>
-        public virtual PropertyEntryMetadata ValidateAndGetPropertyMetadata(string propertyName, Type declaringType, Type requestedType)
+        public virtual PropertyEntryMetadata ValidateAndGetPropertyMetadata(
+            string propertyName, Type declaringType, Type requestedType)
         {
-            return PropertyEntryMetadata.ValidateNameAndGetMetadata(_internalContext, declaringType, requestedType, propertyName);
+            return PropertyEntryMetadata.ValidateNameAndGetMetadata(
+                _internalContext, declaringType, requestedType, propertyName);
         }
 
         /// <summary>
@@ -593,7 +617,8 @@
         {
             get
             {
-                if (_stateEntry == null || _stateEntry.State == EntityState.Detached)
+                if (_stateEntry == null
+                    || _stateEntry.State == EntityState.Detached)
                 {
                     _stateEntry = _internalContext.GetStateEntry(_entity);
                     if (_stateEntry == null)
@@ -642,7 +667,8 @@
         {
             get
             {
-                Contract.Assert(_stateEntry != null, "ObjectStateEntry is not available from entries for detached entities.");
+                Contract.Assert(
+                    _stateEntry != null, "ObjectStateEntry is not available from entries for detached entities.");
 
                 return _stateEntry;
             }
@@ -677,7 +703,8 @@
             try
             {
                 result = entityValidator != null
-                             ? entityValidator.Validate(InternalContext.ValidationProvider.GetEntityValidationContext(this, items))
+                             ? entityValidator.Validate(
+                                 InternalContext.ValidationProvider.GetEntityValidationContext(this, items))
                              : new DbEntityValidationResult(this, Enumerable.Empty<DbValidationError>());
             }
             finally
@@ -703,7 +730,8 @@
         /// </returns>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj) || obj.GetType() != typeof(InternalEntityEntry))
+            if (ReferenceEquals(null, obj)
+                || obj.GetType() != typeof(InternalEntityEntry))
             {
                 return false;
             }

@@ -76,9 +76,11 @@
             Type clrType,
             IEnumerable<EdmProperty> edmProperties,
             IEnumerable<NavigationProperty> navigationProperties,
-            Func<IEnumerable<PropertyValidator>, IEnumerable<IValidator>, T> validatorFactoryFunc) where T : TypeValidator
+            Func<IEnumerable<PropertyValidator>, IEnumerable<IValidator>, T> validatorFactoryFunc)
+            where T : TypeValidator
         {
-            var propertyValidators = BuildValidatorsForProperties(GetPublicInstanceProperties(clrType), edmProperties, navigationProperties);
+            var propertyValidators = BuildValidatorsForProperties(
+                GetPublicInstanceProperties(clrType), edmProperties, navigationProperties);
 
             var attributes = _attributeProvider.GetAttributes(clrType);
 
@@ -125,13 +127,15 @@
                 if (edmProperty != null)
                 {
                     var referencingAssociations = from navigationProperty in navigationProperties
-                                                  let associationType = navigationProperty.RelationshipType as AssociationType
+                                                  let associationType =
+                                                      navigationProperty.RelationshipType as AssociationType
                                                   where associationType != null
                                                   from constraint in associationType.ReferentialConstraints
                                                   where constraint.ToProperties.Contains(edmProperty)
                                                   select constraint;
 
-                    propertyValidator = BuildPropertyValidator(property, edmProperty, buildFacetValidators: !referencingAssociations.Any());
+                    propertyValidator = BuildPropertyValidator(
+                        property, edmProperty, buildFacetValidators: !referencingAssociations.Any());
                 }
                 else
                 {
@@ -175,7 +179,8 @@
 
             propertyAttributeValidators.AddRange(BuildValidationAttributeValidators(attributes));
 
-            if (edmProperty.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.ComplexType)
+            if (edmProperty.TypeUsage.EdmType.BuiltInTypeKind
+                == BuiltInTypeKind.ComplexType)
             {
                 // this is a complex type so build validators for child properties
                 var complexType = (ComplexType)edmProperty.TypeUsage.EdmType;
@@ -183,7 +188,8 @@
                 // finally build validators for type level validation mechanisms defined for this complex type
                 var complexTypeValidator = BuildComplexTypeValidator(clrProperty.PropertyType, complexType);
                 return propertyAttributeValidators.Any() || complexTypeValidator != null
-                           ? new ComplexPropertyValidator(clrProperty.Name, propertyAttributeValidators, complexTypeValidator)
+                           ? new ComplexPropertyValidator(
+                                 clrProperty.Name, propertyAttributeValidators, complexTypeValidator)
                            : null;
             }
             else if (buildFacetValidators)
@@ -282,23 +288,31 @@
 
             var nullableFacetIsFalse = nullable != null && nullable.Value != null && !(bool)nullable.Value;
 
-            if (nullableFacetIsFalse && !propertyIsStoreGenerated && clrProperty.PropertyType.IsNullable() &&
+            if (nullableFacetIsFalse && !propertyIsStoreGenerated && clrProperty.PropertyType.IsNullable()
+                &&
                 !existingAttributes.Any(a => a is RequiredAttribute))
             {
-                facetDerivedAttributes.Add(new RequiredAttribute { AllowEmptyStrings = true });
+                facetDerivedAttributes.Add(
+                    new RequiredAttribute
+                        {
+                            AllowEmptyStrings = true
+                        });
             }
 
             Facet MaxLength;
             edmProperty.TypeUsage.Facets.TryGetValue(SsdlConstants.Attribute_MaxLength, false, out MaxLength);
             if (MaxLength != null && MaxLength.Value != null && MaxLength.Value is int &&
-                !existingAttributes.Any(a => a is MaxLengthAttribute) &&
+                !existingAttributes.Any(a => a is MaxLengthAttribute)
+                &&
                 !existingAttributes.Any(a => a is StringLengthAttribute))
             {
                 facetDerivedAttributes.Add(new MaxLengthAttribute((int)MaxLength.Value));
             }
 
             return from attribute in facetDerivedAttributes
-                   select new ValidationAttributeValidator(attribute, existingAttributes.OfType<DisplayAttribute>().SingleOrDefault());
+                   select
+                       new ValidationAttributeValidator(
+                       attribute, existingAttributes.OfType<DisplayAttribute>().SingleOrDefault());
         }
     }
 }

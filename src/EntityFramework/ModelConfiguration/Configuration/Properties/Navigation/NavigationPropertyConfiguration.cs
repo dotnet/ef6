@@ -123,7 +123,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             }
         }
 
-        internal void Configure(EdmNavigationProperty navigationProperty, EdmModel model, EntityTypeConfiguration entityTypeConfiguration)
+        internal void Configure(
+            EdmNavigationProperty navigationProperty, EdmModel model, EntityTypeConfiguration entityTypeConfiguration)
         {
             Contract.Requires(navigationProperty != null);
             Contract.Requires(model != null);
@@ -201,7 +202,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             }
         }
 
-        private void ConfigureEndKinds(EdmAssociationType associationType, NavigationPropertyConfiguration configuration)
+        private void ConfigureEndKinds(
+            EdmAssociationType associationType, NavigationPropertyConfiguration configuration)
         {
             Contract.Requires(associationType != null);
 
@@ -273,7 +275,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
             if ((navigationPropertyConfiguration.IsNavigationPropertyDeclaringTypePrincipal != null)
                 && (IsNavigationPropertyDeclaringTypePrincipal != null)
-                && navigationPropertyConfiguration.IsNavigationPropertyDeclaringTypePrincipal == IsNavigationPropertyDeclaringTypePrincipal)
+                &&
+                navigationPropertyConfiguration.IsNavigationPropertyDeclaringTypePrincipal
+                == IsNavigationPropertyDeclaringTypePrincipal)
             {
                 throw Error.ConflictingConstraint(
                     NavigationProperty.Name, NavigationProperty.ReflectedType);
@@ -281,7 +285,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
             if ((navigationPropertyConfiguration.AssociationMappingConfiguration != null)
                 && (AssociationMappingConfiguration != null)
-                && !Equals(navigationPropertyConfiguration.AssociationMappingConfiguration, AssociationMappingConfiguration))
+                &&
+                !Equals(
+                    navigationPropertyConfiguration.AssociationMappingConfiguration, AssociationMappingConfiguration))
             {
                 throw Error.ConflictingMapping(
                     NavigationProperty.Name, NavigationProperty.ReflectedType);
@@ -366,7 +372,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                     // The dependent FK is also the PK. We need to adjust the multiplicity
                     // when it has not been explicity configured because the default is *:0..1
 
-                    if ((_inverseEndKind == null) && associationType.SourceEnd.IsMany())
+                    if ((_inverseEndKind == null)
+                        && associationType.SourceEnd.IsMany())
                     {
                         associationType.SourceEnd.EndKind = EdmAssociationEndKind.Optional;
                         associationType.TargetEnd.EndKind = EdmAssociationEndKind.Required;

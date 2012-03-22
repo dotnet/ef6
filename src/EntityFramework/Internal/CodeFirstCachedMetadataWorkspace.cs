@@ -40,7 +40,8 @@ namespace System.Data.Entity.Internal
 
             _assemblies = databaseMapping.Model.GetClrTypes().Select(t => t.Assembly).Distinct().ToList();
 
-            Contract.Assert(databaseMapping.Model.Containers.Count() == 1, "Expecting Code First to create only one container.");
+            Contract.Assert(
+                databaseMapping.Model.Containers.Count() == 1, "Expecting Code First to create only one container.");
             _defaultContainerName = databaseMapping.Model.Containers.First().Name;
         }
 

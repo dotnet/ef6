@@ -27,8 +27,9 @@
             new ConcurrentDictionary<Type, InitializerLockPair>();
 
         // The default factory object used to create a DbConnection from a database name.
-        private static readonly Lazy<IDbConnectionFactory> _defaultDefaultConnectionFactory = new Lazy<IDbConnectionFactory>(() => AppConfig.DefaultInstance.DefaultConnectionFactory, isThreadSafe: true);
- 
+        private static readonly Lazy<IDbConnectionFactory> _defaultDefaultConnectionFactory =
+            new Lazy<IDbConnectionFactory>(() => AppConfig.DefaultInstance.DefaultConnectionFactory, isThreadSafe: true);
+
         private static volatile Lazy<IDbConnectionFactory> _defaultConnectionFactory = _defaultDefaultConnectionFactory;
 
         // The context that backs this instance.
@@ -57,10 +58,7 @@
         /// <exception cref = "InvalidOperationException">Thrown if the context has been disposed.</exception>
         public DbConnection Connection
         {
-            get
-            {
-                return _internalContext.Connection;
-            }
+            get { return _internalContext.Connection; }
         }
 
         #endregion
@@ -90,7 +88,8 @@
         /// <typeparam name = "TContext">The type of the context.</typeparam>
         /// <param name = "strategy">The strategy.</param>
         /// <param name = "lockStrategy">if set to <c>true</c> then the strategy is locked.</param>
-        internal static void SetInitializerInternal<TContext>(IDatabaseInitializer<TContext> strategy, bool lockStrategy)
+        internal static void SetInitializerInternal<TContext>(
+            IDatabaseInitializer<TContext> strategy, bool lockStrategy)
             where TContext : DbContext
         {
             var executor = strategy == null ? (Action<DbContext>)null : c => strategy.InitializeDatabase((TContext)c);
@@ -265,7 +264,8 @@
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(nameOrConnectionString));
 
-            return PerformDatabaseOp(new LazyInternalConnection(nameOrConnectionString), new DatabaseOperations().Exists);
+            return PerformDatabaseOp(
+                new LazyInternalConnection(nameOrConnectionString), new DatabaseOperations().Exists);
         }
 
         /// <summary>
@@ -279,7 +279,8 @@
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(nameOrConnectionString));
 
-            return PerformDatabaseOp(new LazyInternalConnection(nameOrConnectionString), new DatabaseOperations().DeleteIfExists);
+            return PerformDatabaseOp(
+                new LazyInternalConnection(nameOrConnectionString), new DatabaseOperations().DeleteIfExists);
         }
 
         /// <summary>
@@ -362,7 +363,8 @@
         /// <param name = "lazyConnection">Information used to create a DbConnection.</param>
         /// <param name = "operation">The operation to perform.</param>
         /// <returns>The return value of the operation.</returns>
-        private static bool PerformDatabaseOp(LazyInternalConnection lazyConnection, Func<ObjectContext, bool> operation)
+        private static bool PerformDatabaseOp(
+            LazyInternalConnection lazyConnection, Func<ObjectContext, bool> operation)
         {
             using (lazyConnection)
             {
@@ -421,7 +423,9 @@
             Contract.Requires(!string.IsNullOrWhiteSpace(sql));
             Contract.Requires(parameters != null);
 
-            return new InternalSqlQuery<TElement>(new InternalSqlNonSetQuery(_internalContext, typeof(TElement), sql, parameters));
+            return
+                new InternalSqlQuery<TElement>(
+                    new InternalSqlNonSetQuery(_internalContext, typeof(TElement), sql, parameters));
         }
 
         /// <summary>

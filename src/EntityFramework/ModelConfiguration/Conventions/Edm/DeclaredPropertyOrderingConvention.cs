@@ -3,7 +3,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Utilities;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
 
@@ -12,7 +11,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public sealed class DeclaredPropertyOrderingConvention : IEdmConvention<EdmEntityType>
     {
-        private const BindingFlags DefaultBindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+        private const BindingFlags DefaultBindingFlags =
+            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
         internal DeclaredPropertyOrderingConvention()
         {

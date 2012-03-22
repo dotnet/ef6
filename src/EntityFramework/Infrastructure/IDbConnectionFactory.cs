@@ -18,7 +18,8 @@
     ///     Note that implementations should be thread safe or immutable since they may
     ///     be accessed by multiple threads at the same time.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "Casing is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
+        Justification = "Casing is intentional")]
     [ContractClass(typeof(IDbConnectionFactoryContracts))]
     public interface IDbConnectionFactory
     {

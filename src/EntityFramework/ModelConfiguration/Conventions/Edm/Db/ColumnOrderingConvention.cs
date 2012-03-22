@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Utilities;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -29,7 +28,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             var columnOrders
                 = from c in columns
-                  select new { Column = c, Order = c.GetOrder() ?? int.MaxValue };
+                  select new
+                             {
+                                 Column = c,
+                                 Order = c.GetOrder() ?? int.MaxValue
+                             };
 
             return columnOrders
                 .OrderBy(c => c.Order)

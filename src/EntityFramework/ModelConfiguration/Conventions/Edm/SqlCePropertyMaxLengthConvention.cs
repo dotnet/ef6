@@ -10,7 +10,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to set a default maximum length of 4000 for properties whose type supports length facets when SqlCe is the provider.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "Casing is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
+        Justification = "Casing is intentional")]
     public sealed class SqlCePropertyMaxLengthConvention : IEdmConvention<EdmEntityType>, IEdmConvention<EdmComplexType>
     {
         private const int DefaultLength = 4000;
@@ -23,7 +24,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             var providerInfo = model.GetProviderInfo();
 
-            if ((providerInfo != null) && providerInfo.IsSqlCe())
+            if ((providerInfo != null)
+                && providerInfo.IsSqlCe())
             {
                 SetLength(entityType.DeclaredProperties);
             }
@@ -33,7 +35,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             var providerInfo = model.GetProviderInfo();
 
-            if ((providerInfo != null) && providerInfo.IsSqlCe())
+            if ((providerInfo != null)
+                && providerInfo.IsSqlCe())
             {
                 SetLength(complexType.DeclaredProperties);
             }

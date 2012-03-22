@@ -5,7 +5,8 @@
 
     internal static class XContainerExtensions
     {
-        public static XElement GetOrCreateElement(this XContainer container, string elementName, params XAttribute[] attributes)
+        public static XElement GetOrCreateElement(
+            this XContainer container, string elementName, params XAttribute[] attributes)
         {
             Contract.Assert(container != null);
             Contract.Assert(!string.IsNullOrWhiteSpace(elementName));

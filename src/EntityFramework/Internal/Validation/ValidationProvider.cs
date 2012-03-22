@@ -61,7 +61,8 @@ namespace System.Data.Entity.Internal.Validation
         ///     Validator to validate <paramref name = "property" />. Possibly null if no validation 
         ///     has been specified for the requested property.
         /// </returns>
-        public virtual PropertyValidator GetPropertyValidator(InternalEntityEntry owningEntity, InternalMemberEntry property)
+        public virtual PropertyValidator GetPropertyValidator(
+            InternalEntityEntry owningEntity, InternalMemberEntry property)
         {
             Contract.Requires(owningEntity != null);
             Contract.Requires(property != null);
@@ -86,13 +87,15 @@ namespace System.Data.Entity.Internal.Validation
         ///     returned for an ancestor is null it means that there is no validation defined beneath and the method just 
         ///     propagates (and eventually returns) null.
         /// </remarks>
-        protected virtual PropertyValidator GetValidatorForProperty(EntityValidator entityValidator, InternalMemberEntry memberEntry)
+        protected virtual PropertyValidator GetValidatorForProperty(
+            EntityValidator entityValidator, InternalMemberEntry memberEntry)
         {
             var complexPropertyEntry = memberEntry as InternalNestedPropertyEntry;
             if (complexPropertyEntry != null)
             {
                 var propertyValidator =
-                    GetValidatorForProperty(entityValidator, complexPropertyEntry.ParentPropertyEntry) as ComplexPropertyValidator;
+                    GetValidatorForProperty(entityValidator, complexPropertyEntry.ParentPropertyEntry) as
+                    ComplexPropertyValidator;
                 // if a validator for parent property is null there is no validation for child properties.  
                 // just propagate the null.
                 return propertyValidator != null && propertyValidator.ComplexTypeValidator != null

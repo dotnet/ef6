@@ -14,8 +14,10 @@
     ///     state manager to keep the view in sync.
     /// </summary>
     /// <typeparam name = "TEntity">The type of the entity.</typeparam>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "Casing is intentional")]
-    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "Name is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
+        Justification = "Casing is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
+        Justification = "Name is intentional")]
     internal class DbLocalView<TEntity> : ObservableCollection<TEntity>
         where TEntity : class
     {
@@ -88,7 +90,8 @@
             // We therefore don't want to try to repeat that change in the state manager.
             if (!_inStateManagerChanged)
             {
-                if (e.Action == NotifyCollectionChangedAction.Remove || e.Action == NotifyCollectionChangedAction.Replace)
+                if (e.Action == NotifyCollectionChangedAction.Remove
+                    || e.Action == NotifyCollectionChangedAction.Replace)
                 {
                     foreach (TEntity entity in e.OldItems)
                     {
@@ -96,7 +99,8 @@
                     }
                 }
 
-                if (e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Replace)
+                if (e.Action == NotifyCollectionChangedAction.Add
+                    || e.Action == NotifyCollectionChangedAction.Replace)
                 {
                     foreach (TEntity entity in e.NewItems)
                     {
@@ -133,11 +137,13 @@
                 var entity = e.Element as TEntity;
                 if (entity != null)
                 {
-                    if (e.Action == CollectionChangeAction.Remove && Contains(entity))
+                    if (e.Action == CollectionChangeAction.Remove
+                        && Contains(entity))
                     {
                         Remove(entity);
                     }
-                    else if (e.Action == CollectionChangeAction.Add && !Contains(entity))
+                    else if (e.Action == CollectionChangeAction.Add
+                             && !Contains(entity))
                     {
                         Add(entity);
                     }

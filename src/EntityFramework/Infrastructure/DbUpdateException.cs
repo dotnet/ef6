@@ -33,9 +33,12 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         /// <param name = "internalContext">The internal context.</param>
         /// <param name = "innerException">The inner exception.</param>
-        internal DbUpdateException(InternalContext internalContext, UpdateException innerException, bool involvesIndependentAssociations)
+        internal DbUpdateException(
+            InternalContext internalContext, UpdateException innerException, bool involvesIndependentAssociations)
             : base(
-                involvesIndependentAssociations ? Strings.DbContext_IndependentAssociationUpdateException : innerException.Message,
+                involvesIndependentAssociations
+                    ? Strings.DbContext_IndependentAssociationUpdateException
+                    : innerException.Message,
                 innerException)
         {
             _internalContext = internalContext;

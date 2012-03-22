@@ -39,7 +39,8 @@
 
         public static string RestrictTo(this string s, int size)
         {
-            if (string.IsNullOrEmpty(s) || s.Length <= size)
+            if (string.IsNullOrEmpty(s)
+                || s.Length <= size)
             {
                 return s;
             }
@@ -52,7 +53,7 @@
             Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
 
             return _migrationIdPattern.IsMatch(migrationId)
-                || migrationId == DbMigrator.InitialDatabase;
+                   || migrationId == DbMigrator.InitialDatabase;
         }
 
         public static bool IsAutomaticMigration(this string migrationId)

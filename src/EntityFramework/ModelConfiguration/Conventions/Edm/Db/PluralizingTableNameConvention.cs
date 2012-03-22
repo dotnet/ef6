@@ -3,7 +3,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Design.PluralizationServices;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
 

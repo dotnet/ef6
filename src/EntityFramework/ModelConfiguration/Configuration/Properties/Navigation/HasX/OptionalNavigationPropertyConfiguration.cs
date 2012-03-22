@@ -21,7 +21,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     {
         private readonly NavigationPropertyConfiguration _navigationPropertyConfiguration;
 
-        internal OptionalNavigationPropertyConfiguration(NavigationPropertyConfiguration navigationPropertyConfiguration)
+        internal OptionalNavigationPropertyConfiguration(
+            NavigationPropertyConfiguration navigationPropertyConfiguration)
         {
             Contract.Requires(navigationPropertyConfiguration != null);
 

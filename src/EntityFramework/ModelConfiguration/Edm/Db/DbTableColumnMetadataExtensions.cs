@@ -26,15 +26,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
             Contract.Requires(tableColumn != null);
 
             return new DbTableColumnMetadata
-                {
-                    Name = tableColumn.Name,
-                    TypeName = tableColumn.TypeName,
-                    IsNullable = tableColumn.IsNullable,
-                    IsPrimaryKeyColumn = tableColumn.IsPrimaryKeyColumn,
-                    StoreGeneratedPattern = tableColumn.StoreGeneratedPattern,
-                    Facets = tableColumn.Facets.Clone(),
-                    Annotations = tableColumn.Annotations.ToList()
-                };
+                       {
+                           Name = tableColumn.Name,
+                           TypeName = tableColumn.TypeName,
+                           IsNullable = tableColumn.IsNullable,
+                           IsPrimaryKeyColumn = tableColumn.IsPrimaryKeyColumn,
+                           StoreGeneratedPattern = tableColumn.StoreGeneratedPattern,
+                           Facets = tableColumn.Facets.Clone(),
+                           Annotations = tableColumn.Annotations.ToList()
+                       };
         }
 
         public static int? GetOrder(this DbTableColumnMetadata tableColumn)
@@ -83,7 +83,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
         {
             Contract.Requires(tableColumn != null);
 
-            if (tableColumn.StoreGeneratedPattern == DbStoreGeneratedPattern.Identity)
+            if (tableColumn.StoreGeneratedPattern
+                == DbStoreGeneratedPattern.Identity)
             {
                 tableColumn.StoreGeneratedPattern = DbStoreGeneratedPattern.None;
             }

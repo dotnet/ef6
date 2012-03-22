@@ -1,13 +1,11 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -53,15 +51,15 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                         .Single();
 
                 var constraint = new EdmAssociationConstraint
-                    {
-                        DependentEnd = dependentEnd,
-                        DependentProperties
-                            = GetDependentProperties(
-                                dependentEnd.EntityType,
-                                dependentPropertyNames,
-                                declaringEntityType,
-                                navigationProperty).ToList()
-                    };
+                                     {
+                                         DependentEnd = dependentEnd,
+                                         DependentProperties
+                                             = GetDependentProperties(
+                                                 dependentEnd.EntityType,
+                                                 dependentPropertyNames,
+                                                 declaringEntityType,
+                                                 navigationProperty).ToList()
+                                     };
 
                 var dependentKeyProperties = dependentEnd.EntityType.KeyProperties();
 

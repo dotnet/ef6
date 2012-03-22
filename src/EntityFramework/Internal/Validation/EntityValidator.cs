@@ -18,7 +18,8 @@
         /// </summary>
         /// <param name = "propertyValidators">Property validators.</param>
         /// <param name = "typeLevelValidators">Entity type level validators.</param>
-        public EntityValidator(IEnumerable<PropertyValidator> propertyValidators, IEnumerable<IValidator> typeLevelValidators)
+        public EntityValidator(
+            IEnumerable<PropertyValidator> propertyValidators, IEnumerable<IValidator> typeLevelValidators)
             :
                 base(propertyValidators, typeLevelValidators)
         {
@@ -56,13 +57,15 @@
         ///     and a merge of validation error lists per entity.
         /// </remarks>
         protected override void ValidateProperties(
-            EntityValidationContext entityValidationContext, InternalPropertyEntry parentProperty, List<DbValidationError> validationErrors)
+            EntityValidationContext entityValidationContext, InternalPropertyEntry parentProperty,
+            List<DbValidationError> validationErrors)
         {
             var entityEntry = entityValidationContext.InternalEntity;
 
             foreach (var validator in PropertyValidators)
             {
-                validationErrors.AddRange(validator.Validate(entityValidationContext, entityEntry.Member(validator.PropertyName)));
+                validationErrors.AddRange(
+                    validator.Validate(entityValidationContext, entityEntry.Member(validator.PropertyName)));
             }
         }
     }

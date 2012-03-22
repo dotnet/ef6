@@ -8,7 +8,8 @@
     ///     Represents an entity used to store metadata about an EDM in the database.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
-    [Obsolete("EdmMetadata is no longer used. The Code First Migrations <see cref=\"EdmModelDiffer\" /> is used instead.")]
+    [Obsolete(
+        "EdmMetadata is no longer used. The Code First Migrations <see cref=\"EdmModelDiffer\" /> is used instead.")]
     public class EdmMetadata
     {
         #region Entity properties

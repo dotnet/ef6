@@ -18,7 +18,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
             Contract.Requires(table != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
 
-            var tableColumn = new DbTableColumnMetadata { Name = table.Columns.UniquifyName(name) }.Initialize();
+            var tableColumn = new DbTableColumnMetadata
+                                  {
+                                      Name = table.Columns.UniquifyName(name)
+                                  }.Initialize();
 
             tableColumn.SetPreferredName(name);
 
@@ -27,7 +30,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
             return tableColumn;
         }
 
-        public static bool ContainsEquivalentForeignKey(this DbTableMetadata table, DbForeignKeyConstraintMetadata foreignKey)
+        public static bool ContainsEquivalentForeignKey(
+            this DbTableMetadata table, DbForeignKeyConstraintMetadata foreignKey)
         {
             return table.ForeignKeyConstraints
                 .Any(
@@ -35,7 +39,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
                           && fk.DependentColumns.SequenceEqual(foreignKey.DependentColumns));
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         public static object GetConfiguration(this DbTableMetadata table)
         {
             Contract.Requires(table != null);

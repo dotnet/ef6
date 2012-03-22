@@ -10,7 +10,9 @@ namespace System.Data.Entity.Edm.Db.Mapping
         : DbMappingMetadataItem
     {
         private readonly BackingList<DbEntitySetMapping> entitySetMappingsList = new BackingList<DbEntitySetMapping>();
-        private readonly BackingList<DbAssociationSetMapping> associationSetMappings = new BackingList<DbAssociationSetMapping>();
+
+        private readonly BackingList<DbAssociationSetMapping> associationSetMappings =
+            new BackingList<DbAssociationSetMapping>();
 
         internal override DbMappingItemKind GetItemKind()
         {

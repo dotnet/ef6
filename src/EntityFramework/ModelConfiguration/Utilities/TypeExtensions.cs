@@ -47,7 +47,8 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
                         t => t.IsGenericType
                              && t.GetGenericTypeDefinition() == typeof(ICollection<>));
 
-            if (!type.IsArray && collectionInterface != null)
+            if (!type.IsArray
+                && collectionInterface != null)
             {
                 elementType = collectionInterface.GetGenericArguments().Single();
 

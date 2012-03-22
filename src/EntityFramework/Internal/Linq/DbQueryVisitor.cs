@@ -17,7 +17,8 @@ namespace System.Data.Entity.Internal.Linq
     {
         #region Fields and constructors
 
-        private const BindingFlags SetAccessBindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+        private const BindingFlags SetAccessBindingFlags =
+            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
         private static readonly ConcurrentDictionary<Type, Func<ObjectQuery, object>> WrapperFactories =
             new ConcurrentDictionary<Type, Func<ObjectQuery, object>>();
@@ -47,10 +48,13 @@ namespace System.Data.Entity.Internal.Linq
                     // as a function.
                     var context = GetContextFromConstantExpression(memberExpression.Expression, memberExpression.Member);
                     if (context != null &&
-                        !node.Method.GetCustomAttributes(typeof(EdmFunctionAttribute), false).Any() &&
+                        !node.Method.GetCustomAttributes(typeof(EdmFunctionAttribute), false).Any()
+                        &&
                         node.Method.GetParameters().Length == 0)
                     {
-                        var expression = CreateObjectQueryConstant(node.Method.Invoke(context, SetAccessBindingFlags, null, null, null));
+                        var expression =
+                            CreateObjectQueryConstant(
+                                node.Method.Invoke(context, SetAccessBindingFlags, null, null, null));
                         if (expression != null)
                         {
                             return expression;
@@ -76,13 +80,15 @@ namespace System.Data.Entity.Internal.Linq
             var memberExpression = node.Expression as MemberExpression;
 
             if (propInfo != null && memberExpression != null &&
-                typeof(IQueryable).IsAssignableFrom(propInfo.PropertyType) &&
+                typeof(IQueryable).IsAssignableFrom(propInfo.PropertyType)
+                &&
                 typeof(DbContext).IsAssignableFrom(node.Member.DeclaringType))
             {
                 var context = GetContextFromConstantExpression(memberExpression.Expression, memberExpression.Member);
                 if (context != null)
                 {
-                    var expression = CreateObjectQueryConstant(propInfo.GetValue(context, SetAccessBindingFlags, null, null, null));
+                    var expression =
+                        CreateObjectQueryConstant(propInfo.GetValue(context, SetAccessBindingFlags, null, null, null));
                     if (expression != null)
                     {
                         return expression;
@@ -193,8 +199,11 @@ namespace System.Data.Entity.Internal.Linq
                 {
                     var genericType = typeof(ReplacementDbQueryWrapper<>).MakeGenericType(elementType);
                     var factoryMethod = genericType.GetMethod(
-                        "Create", BindingFlags.Static | BindingFlags.NonPublic, null, new[] { typeof(ObjectQuery) }, null);
-                    factory = (Func<ObjectQuery, object>)Delegate.CreateDelegate(typeof(Func<ObjectQuery, object>), factoryMethod);
+                        "Create", BindingFlags.Static | BindingFlags.NonPublic, null, new[] { typeof(ObjectQuery) },
+                        null);
+                    factory =
+                        (Func<ObjectQuery, object>)
+                        Delegate.CreateDelegate(typeof(Func<ObjectQuery, object>), factoryMethod);
                     WrapperFactories.TryAdd(elementType, factory);
                 }
 

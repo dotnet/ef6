@@ -53,7 +53,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 if ((propertyConfigurationConvention != null)
                     && typeof(TPropertyConfiguration).IsAssignableFrom(_propertyConfigurationType))
                 {
-                    propertyConfigurationConvention.Apply(_propertyInfo, () => (TPropertyConfiguration)_propertyConfiguration());
+                    propertyConfigurationConvention.Apply(
+                        _propertyInfo, () => (TPropertyConfiguration)_propertyConfiguration());
                 }
             }
         }

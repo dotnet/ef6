@@ -17,7 +17,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
     [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     internal static class DbDatabaseMappingExtensions
     {
-        internal static DbDatabaseMapping Initialize(this DbDatabaseMapping databaseMapping, EdmModel model, DbDatabaseMetadata database)
+        internal static DbDatabaseMapping Initialize(
+            this DbDatabaseMapping databaseMapping, EdmModel model, DbDatabaseMetadata database)
         {
             Contract.Requires(databaseMapping != null);
             Contract.Requires(databaseMapping != null);
@@ -27,15 +28,16 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             databaseMapping.Database = database;
             var entityContainerMapping
                 = new DbEntityContainerMapping
-                    {
-                        EntityContainer = model.Containers.Single()
-                    };
+                      {
+                          EntityContainer = model.Containers.Single()
+                      };
             databaseMapping.EntityContainerMappings.Add(entityContainerMapping);
 
             return databaseMapping;
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         internal static MetadataWorkspace ToMetadataWorkspace(this DbDatabaseMapping databaseMapping)
         {
             Contract.Requires(databaseMapping != null);
@@ -56,8 +58,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             return metadataWorkspace;
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
-        internal static StorageMappingItemCollection ToStorageMappingItemCollection(this DbDatabaseMapping databaseMapping)
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
+        internal static StorageMappingItemCollection ToStorageMappingItemCollection(
+            this DbDatabaseMapping databaseMapping)
         {
             Contract.Requires(databaseMapping != null);
 
@@ -67,7 +71,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         }
 
         private static StorageMappingItemCollection ToStorageMappingItemCollection(
-            this DbDatabaseMapping databaseMapping, EdmItemCollection itemCollection, StoreItemCollection storeItemCollection)
+            this DbDatabaseMapping databaseMapping, EdmItemCollection itemCollection,
+            StoreItemCollection storeItemCollection)
         {
             Contract.Requires(databaseMapping != null);
             Contract.Requires(itemCollection != null);
@@ -75,7 +80,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 
             var stringBuilder = new StringBuilder();
 
-            using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true }))
+            using (var xmlWriter = XmlWriter.Create(
+                stringBuilder, new XmlWriterSettings
+                                   {
+                                       Indent = true
+                                   }))
             {
                 new MslSerializer().Serialize(databaseMapping, xmlWriter);
             }
@@ -179,7 +188,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
                 .EntitySetMappings;
         }
 
-        internal static IEnumerable<DbAssociationSetMapping> GetAssociationSetMappings(this DbDatabaseMapping databaseMapping)
+        internal static IEnumerable<DbAssociationSetMapping> GetAssociationSetMappings(
+            this DbDatabaseMapping databaseMapping)
         {
             Contract.Requires(databaseMapping != null);
 
@@ -195,7 +205,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             Contract.Requires(databaseMapping != null);
             Contract.Requires(entitySet != null);
 
-            var entitySetMapping = new DbEntitySetMapping { EntitySet = entitySet };
+            var entitySetMapping = new DbEntitySetMapping
+                                       {
+                                           EntitySet = entitySet
+                                       };
 
             databaseMapping
                 .EntityContainerMappings
@@ -213,7 +226,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             Contract.Requires(associationSet != null);
 
             var associationSetMapping
-                = new DbAssociationSetMapping { AssociationSet = associationSet }.Initialize();
+                = new DbAssociationSetMapping
+                      {
+                          AssociationSet = associationSet
+                      }.Initialize();
 
             databaseMapping
                 .EntityContainerMappings

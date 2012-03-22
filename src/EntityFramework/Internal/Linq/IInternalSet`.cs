@@ -1,12 +1,12 @@
 ﻿namespace System.Data.Entity.Internal.Linq
 {
     using System.Collections;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Objects;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Collections.Generic;
 
     /// <summary>
     ///     An interface implemented by <see cref = "InternalSet{TEntity}" />.

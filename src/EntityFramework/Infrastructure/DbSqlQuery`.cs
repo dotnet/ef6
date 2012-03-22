@@ -15,7 +15,8 @@
     ///     SQL queries for non-entities are created using the <see cref = "DbContext.Database" />.
     ///     See <see cref = "DbSqlQuery" /> for a non-generic version of this class.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "Name is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
+        Justification = "Name is intentional")]
     [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db",
         Justification = "FxCop rule is wrong; Db is not an abbreviation for data base.")]
     public class DbSqlQuery<TEntity> : IEnumerable<TEntity>, IListSource

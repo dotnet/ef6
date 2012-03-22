@@ -28,10 +28,10 @@ namespace System.Data.Entity.Migrations.Model
             get
             {
                 var addPrimaryKeyOperation = new AddPrimaryKeyOperation
-                    {
-                        Name = Name,
-                        Table = Table
-                    };
+                                                 {
+                                                     Name = Name,
+                                                     Table = Table
+                                                 };
 
                 Columns.Each(c => addPrimaryKeyOperation.Columns.Add(c));
 

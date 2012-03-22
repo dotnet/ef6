@@ -17,7 +17,8 @@
         /// </summary>
         /// <param name = "parentPropertyEntry">The parent property entry.</param>
         /// <param name = "propertyMetadata">The property metadata.</param>
-        public InternalNestedPropertyEntry(InternalPropertyEntry parentPropertyEntry, PropertyEntryMetadata propertyMetadata)
+        public InternalNestedPropertyEntry(
+            InternalPropertyEntry parentPropertyEntry, PropertyEntryMetadata propertyMetadata)
             : base(parentPropertyEntry.InternalEntityEntry, propertyMetadata)
         {
             Contract.Requires(parentPropertyEntry != null);
@@ -98,10 +99,10 @@
             }
 
             return o =>
-                {
-                    var parent = parentGetter(o);
-                    return parent == null ? null : getter(parent);
-                };
+                       {
+                           var parent = parentGetter(o);
+                           return parent == null ? null : getter(parent);
+                       };
         }
 
         /// <summary>
@@ -123,14 +124,15 @@
             }
 
             return (o, v) =>
-                {
-                    var parent = parentGetter(o);
-                    if (parent == null)
-                    {
-                        throw Error.DbPropertyValues_CannotSetPropertyOnNullCurrentValue(Name, ParentPropertyEntry.Name);
-                    }
-                    setter(parentGetter(o), v);
-                };
+                       {
+                           var parent = parentGetter(o);
+                           if (parent == null)
+                           {
+                               throw Error.DbPropertyValues_CannotSetPropertyOnNullCurrentValue(
+                                   Name, ParentPropertyEntry.Name);
+                           }
+                           setter(parentGetter(o), v);
+                       };
         }
 
         /// <summary>
@@ -154,12 +156,11 @@
             _parentPropertyEntry.SetEntityPropertyModified();
         }
 
-
-    /// <summary>
-    /// Rejects changes to this property.
-    /// Since this is a property of a complex object this method rejects changes to the top-level
-    /// complex property.
-    /// </summary>
+        /// <summary>
+        /// Rejects changes to this property.
+        /// Since this is a property of a complex object this method rejects changes to the top-level
+        /// complex property.
+        /// </summary>
         public override void RejectEntityPropertyChanges()
         {
             CurrentValue = OriginalValue;
@@ -176,7 +177,6 @@
         {
             _parentPropertyEntry.UpdateComplexPropertyState();
         }
-
 
         #endregion
     }

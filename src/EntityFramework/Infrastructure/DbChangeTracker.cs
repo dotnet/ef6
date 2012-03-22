@@ -11,7 +11,8 @@
     ///     Returned by the ChangeTracker method of <see cref = "DbContext" /> to provide access to features of
     ///     the context that are related to change tracking of entities.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "Casing is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
+        Justification = "Casing is intentional")]
     public class DbChangeTracker
     {
         #region Construction and fields
@@ -39,7 +40,9 @@
         /// <returns>The entries.</returns>
         public IEnumerable<DbEntityEntry> Entries()
         {
-            return _internalContext.GetStateEntries().Select(e => new DbEntityEntry(new InternalEntityEntry(_internalContext, e)));
+            return
+                _internalContext.GetStateEntries().Select(
+                    e => new DbEntityEntry(new InternalEntityEntry(_internalContext, e)));
         }
 
         /// <summary>

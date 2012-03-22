@@ -145,7 +145,8 @@
         public new DbReferenceEntry<TEntity, TProperty> Cast<TEntity, TProperty>() where TEntity : class
         {
             var metadata = _internalReferenceEntry.EntryMetadata;
-            if (!typeof(TEntity).IsAssignableFrom(metadata.DeclaringType) || !typeof(TProperty).IsAssignableFrom(metadata.ElementType))
+            if (!typeof(TEntity).IsAssignableFrom(metadata.DeclaringType)
+                || !typeof(TProperty).IsAssignableFrom(metadata.ElementType))
             {
                 throw Error.DbMember_BadTypeForCast(
                     typeof(DbReferenceEntry).Name,

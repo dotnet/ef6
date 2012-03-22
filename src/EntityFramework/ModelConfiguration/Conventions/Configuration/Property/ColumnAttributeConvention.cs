@@ -1,9 +1,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
-    using System.Diagnostics.Contracts;
     using System.Reflection;
 
     /// <summary>
@@ -29,7 +27,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             : AttributeConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration, ColumnAttribute>
         {
             internal override void Apply(
-                PropertyInfo propertyInfo, PrimitivePropertyConfiguration primitivePropertyConfiguration, ColumnAttribute columnAttribute)
+                PropertyInfo propertyInfo, PrimitivePropertyConfiguration primitivePropertyConfiguration,
+                ColumnAttribute columnAttribute)
             {
                 if (string.IsNullOrWhiteSpace(primitivePropertyConfiguration.ColumnName)
                     && !string.IsNullOrWhiteSpace(columnAttribute.Name))

@@ -76,7 +76,8 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
                 return true;
             }
 
-            if (obj.GetType() != typeof(EdmPropertyPath))
+            if (obj.GetType()
+                != typeof(EdmPropertyPath))
             {
                 return false;
             }

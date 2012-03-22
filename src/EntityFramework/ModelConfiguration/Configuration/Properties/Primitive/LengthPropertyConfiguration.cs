@@ -98,7 +98,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             var lenRhs = other as LengthPropertyConfiguration;
 
             var baseIsCompatible = base.IsCompatible(other, InCSpace, out errorMessage);
-            var isFixedLengthIsCompatible = lenRhs == null || IsCompatible(c => c.IsFixedLength, lenRhs, ref errorMessage);
+            var isFixedLengthIsCompatible = lenRhs == null
+                                            || IsCompatible(c => c.IsFixedLength, lenRhs, ref errorMessage);
             var isMaxLengthIsCompatible = lenRhs == null || IsCompatible(c => c.IsMaxLength, lenRhs, ref errorMessage);
             var maxLengthIsCompatible = lenRhs == null || IsCompatible(c => c.MaxLength, lenRhs, ref errorMessage);
 

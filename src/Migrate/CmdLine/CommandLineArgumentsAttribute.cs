@@ -20,7 +20,9 @@ namespace CmdLine
         /// <returns></returns>
         public static CommandLineArgumentsAttribute Get(MemberInfo member)
         {
-            return GetCustomAttributes(member, typeof(CommandLineArgumentsAttribute)).Cast<CommandLineArgumentsAttribute>().FirstOrDefault();
+            return
+                GetCustomAttributes(member, typeof(CommandLineArgumentsAttribute)).Cast<CommandLineArgumentsAttribute>()
+                    .FirstOrDefault();
         }
     }
 }

@@ -1,14 +1,14 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Edm;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Convention to discover foreign key properties whose names match the principal type primary key property name(s).
     /// </summary>
     public sealed class PrimaryKeyNameForeignKeyDiscoveryConvention : IEdmConvention<EdmAssociationType>
     {
-        private readonly IEdmConvention<EdmAssociationType> _impl = new PrimaryKeyNameForeignKeyDiscoveryConventionImpl();
+        private readonly IEdmConvention<EdmAssociationType> _impl =
+            new PrimaryKeyNameForeignKeyDiscoveryConventionImpl();
 
         internal PrimaryKeyNameForeignKeyDiscoveryConvention()
         {
@@ -29,7 +29,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 EdmEntityType principalEntityType,
                 EdmProperty principalKeyProperty)
             {
-                return string.Equals(dependentProperty.Name, principalKeyProperty.Name, StringComparison.OrdinalIgnoreCase);
+                return string.Equals(
+                    dependentProperty.Name, principalKeyProperty.Name, StringComparison.OrdinalIgnoreCase);
             }
         }
     }

@@ -65,7 +65,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         }
 
         internal override void Configure(
-            EdmAssociationType associationType, EdmAssociationEnd dependentEnd, EntityTypeConfiguration entityTypeConfiguration)
+            EdmAssociationType associationType, EdmAssociationEnd dependentEnd,
+            EntityTypeConfiguration entityTypeConfiguration)
         {
             if (!_dependentProperties.Any())
             {
@@ -73,7 +74,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             }
 
             var associationConstraint
-                = new EdmAssociationConstraint { DependentEnd = dependentEnd };
+                = new EdmAssociationConstraint
+                      {
+                          DependentEnd = dependentEnd
+                      };
 
             var dependentProperties = Enumerable.AsEnumerable(_dependentProperties);
 
@@ -82,10 +86,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                 var foreignKeys
                     = from p in _dependentProperties
                       select new
-                          {
-                              PropertyInfo = p,
-                              entityTypeConfiguration.Property(new PropertyPath(p)).ColumnOrder
-                          };
+                                 {
+                                     PropertyInfo = p,
+                                     entityTypeConfiguration.Property(new PropertyPath(p)).ColumnOrder
+                                 };
 
                 if ((_dependentProperties.Count > 1)
                     && foreignKeys.Any(p => !p.ColumnOrder.HasValue))
@@ -93,7 +97,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                     var dependentKeys = dependentEnd.EntityType.DeclaredKeyProperties;
 
                     if ((dependentKeys.Count == _dependentProperties.Count)
-                        && foreignKeys.All(fk => dependentKeys.Any(p => p.GetClrPropertyInfo().IsSameAs(fk.PropertyInfo))))
+                        &&
+                        foreignKeys.All(fk => dependentKeys.Any(p => p.GetClrPropertyInfo().IsSameAs(fk.PropertyInfo))))
                     {
                         // The FK and PK sets are equal, we know the order
                         dependentProperties = dependentKeys.Select(p => p.GetClrPropertyInfo());
@@ -119,7 +124,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
                 if (property == null)
                 {
-                    throw Error.ForeignKeyPropertyNotFound(dependentProperty.Name, associationConstraint.DependentEnd.EntityType.Name);
+                    throw Error.ForeignKeyPropertyNotFound(
+                        dependentProperty.Name, associationConstraint.DependentEnd.EntityType.Name);
                 }
 
                 associationConstraint.DependentProperties.Add(property);
@@ -165,7 +171,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                 return true;
             }
 
-            if (obj.GetType() != typeof(ForeignKeyConstraintConfiguration))
+            if (obj.GetType()
+                != typeof(ForeignKeyConstraintConfiguration))
             {
                 return false;
             }

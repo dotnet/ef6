@@ -170,12 +170,12 @@
 
             var addForeignKeyOperation
                 = new AddForeignKeyOperation(anonymousArguments)
-                    {
-                        DependentTable = dependentTable,
-                        PrincipalTable = principalTable,
-                        CascadeDelete = cascadeDelete,
-                        Name = name
-                    };
+                      {
+                          DependentTable = dependentTable,
+                          PrincipalTable = principalTable,
+                          CascadeDelete = cascadeDelete,
+                          Name = name
+                      };
 
             dependentColumns.Each(c => addForeignKeyOperation.DependentColumns.Add(c));
 
@@ -206,10 +206,10 @@
 
             var dropForeignKeyOperation
                 = new DropForeignKeyOperation(anonymousArguments)
-                    {
-                        DependentTable = dependentTable,
-                        Name = name
-                    };
+                      {
+                          DependentTable = dependentTable,
+                          Name = name
+                      };
 
             AddOperation(dropForeignKeyOperation);
         }
@@ -279,10 +279,10 @@
 
             var dropForeignKeyOperation
                 = new DropForeignKeyOperation(anonymousArguments)
-                    {
-                        DependentTable = dependentTable,
-                        PrincipalTable = principalTable
-                    };
+                      {
+                          DependentTable = dependentTable,
+                          PrincipalTable = principalTable
+                      };
 
             dependentColumns.Each(c => dropForeignKeyOperation.DependentColumns.Add(c));
 
@@ -362,7 +362,8 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
-        protected internal void RenameColumn(string table, string name, string newName, object anonymousArguments = null)
+        protected internal void RenameColumn(
+            string table, string name, string newName, object anonymousArguments = null)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(table));
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
@@ -451,7 +452,9 @@
 
             columnModel.Name = name;
 
-            AddOperation(new AlterColumnOperation(table, columnModel, isDestructiveChange: false, anonymousArguments: anonymousArguments));
+            AddOperation(
+                new AlterColumnOperation(
+                    table, columnModel, isDestructiveChange: false, anonymousArguments: anonymousArguments));
         }
 
         /// <summary>
@@ -510,10 +513,10 @@
 
             var addPrimaryKeyOperation
                 = new AddPrimaryKeyOperation(anonymousArguments)
-                    {
-                        Table = table,
-                        Name = name
-                    };
+                      {
+                          Table = table,
+                          Name = name
+                      };
 
             columns.Each(c => addPrimaryKeyOperation.Columns.Add(c));
 
@@ -539,10 +542,10 @@
 
             var dropPrimaryKeyOperation
                 = new DropPrimaryKeyOperation(anonymousArguments)
-                    {
-                        Table = table,
-                        Name = name,
-                    };
+                      {
+                          Table = table,
+                          Name = name,
+                      };
 
             AddOperation(dropPrimaryKeyOperation);
         }
@@ -564,9 +567,9 @@
 
             var dropPrimaryKeyOperation
                 = new DropPrimaryKeyOperation(anonymousArguments)
-                    {
-                        Table = table,
-                    };
+                      {
+                          Table = table,
+                      };
 
             AddOperation(dropPrimaryKeyOperation);
         }
@@ -637,11 +640,11 @@
 
             var createIndexOperation
                 = new CreateIndexOperation(anonymousArguments)
-                    {
-                        Table = table,
-                        IsUnique = unique,
-                        Name = name
-                    };
+                      {
+                          Table = table,
+                          IsUnique = unique,
+                          Name = name
+                      };
 
             columns.Each(c => createIndexOperation.Columns.Add(c));
 
@@ -670,10 +673,10 @@
 
             var dropIndexOperation
                 = new DropIndexOperation(anonymousArguments)
-                    {
-                        Table = table,
-                        Name = name,
-                    };
+                      {
+                          Table = table,
+                          Name = name,
+                      };
 
             AddOperation(dropIndexOperation);
         }
@@ -701,9 +704,9 @@
 
             var dropIndexOperation
                 = new DropIndexOperation(anonymousArguments)
-                    {
-                        Table = table,
-                    };
+                      {
+                          Table = table,
+                      };
 
             columns.Each(c => dropIndexOperation.Columns.Add(c));
 
@@ -727,7 +730,11 @@
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(sql));
 
-            AddOperation(new SqlOperation(sql, anonymousArguments) { SuppressTransaction = suppressTransaction });
+            AddOperation(
+                new SqlOperation(sql, anonymousArguments)
+                    {
+                        SuppressTransaction = suppressTransaction
+                    });
         }
 
         internal void AddOperation(MigrationOperation migrationOperation)

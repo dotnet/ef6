@@ -10,7 +10,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 
     internal static class DbEntityTypeMappingExtensions
     {
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         public static object GetConfiguration(this DbEntityTypeMapping entityTypeMapping)
         {
             Contract.Requires(entityTypeMapping != null);
@@ -18,7 +19,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             return entityTypeMapping.Annotations.GetConfiguration();
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         public static void SetConfiguration(this DbEntityTypeMapping entityTypeMapping, object configuration)
         {
             Contract.Requires(entityTypeMapping != null);
@@ -69,9 +71,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             Contract.Requires(entityTypeMappping != null);
 
             var clone = new DbEntityTypeMapping
-                {
-                    EntityType = entityTypeMappping.EntityType
-                };
+                            {
+                                EntityType = entityTypeMappping.EntityType
+                            };
             entityTypeMappping.Annotations.Copy(clone.Annotations);
 
             return clone;

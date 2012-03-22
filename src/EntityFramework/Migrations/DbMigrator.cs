@@ -11,12 +11,14 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Migrations.Utilities;
+    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
     using System.Xml.Linq;
+    using IEnumerableExtensions = System.Data.Entity.Migrations.Extensions.IEnumerableExtensions;
 
     /// <summary>
     ///     DbMigrator is used to apply existing migrations to a database. 
@@ -101,17 +103,19 @@ namespace System.Data.Entity.Migrations
             var context = usersContext ?? _usersContextInfo.CreateInstance();
             try
             {
-                _migrationAssembly = new MigrationAssembly(_configuration.MigrationsAssembly, _configuration.MigrationsNamespace);
+                _migrationAssembly = new MigrationAssembly(
+                    _configuration.MigrationsAssembly, _configuration.MigrationsNamespace);
                 _currentModel = context.GetModel();
-                
+
                 var connection = context.Database.Connection;
                 _providerFactory = DbProviderServices.GetProviderFactory(connection);
                 _historyRepository = new HistoryRepository(_usersContextInfo.ConnectionString, _providerFactory);
                 _providerManifestToken = context.InternalContext.ModelProviderInfo != null
                                              ? context.InternalContext.ModelProviderInfo.ProviderManifestToken
-                    // TODO: Not calling using extension method syntax here because of conflicts due to duplicate extension methods
-                    // Should fix this post EF5.
-                                             : ModelConfiguration.Utilities.DbProviderServicesExtensions.GetProviderManifestTokenChecked(DbProviderServices.GetProviderServices(connection), connection);
+                                         // TODO: Not calling using extension method syntax here because of conflicts due to duplicate extension methods
+                                         // Should fix this post EF5.
+                                             : DbProviderServicesExtensions.GetProviderManifestTokenChecked(
+                                                 DbProviderServices.GetProviderServices(connection), connection);
 
                 _targetDatabase
                     = Strings.LoggingTargetDatabaseFormat(
@@ -178,7 +182,7 @@ namespace System.Data.Entity.Migrations
                        ?? (_sqlGenerator = _configuration.GetSqlGenerator(_usersContextInfo.ConnectionProviderName));
             }
         }
-        
+
         /// <summary>
         ///     Gets all migrations that are defined in the configured migrations assembly.
         /// </summary>
@@ -239,12 +243,12 @@ namespace System.Data.Entity.Migrations
 
             var migrationOperations
                 = ignoreChanges
-                ? Enumerable.Empty<MigrationOperation>()
-                : _modelDiffer.Diff(
-                    sourceModel,
-                    _currentModel,
-                    _usersContextInfo.ConnectionString)
-                    .ToList();
+                      ? Enumerable.Empty<MigrationOperation>()
+                      : _modelDiffer.Diff(
+                          sourceModel,
+                          _currentModel,
+                          _usersContextInfo.ConnectionString)
+                            .ToList();
 
             string migrationId;
 
@@ -290,7 +294,8 @@ namespace System.Data.Entity.Migrations
         {
             Contract.Requires(onCompatible != null);
 
-            if (!_calledByCreateDatabase && !_historyRepository.Exists())
+            if (!_calledByCreateDatabase
+                && !_historyRepository.Exists())
             {
                 using (var context = _usersContextInfo.CreateInstance())
                 {
@@ -362,7 +367,9 @@ namespace System.Data.Entity.Migrations
                 {
                     pendingMigrations
                         = pendingMigrations
-                            .Where(m => string.CompareOrdinal(m.ToLowerInvariant(), targetMigrationId.ToLowerInvariant()) <= 0);
+                            .Where(
+                                m =>
+                                string.CompareOrdinal(m.ToLowerInvariant(), targetMigrationId.ToLowerInvariant()) <= 0);
                 }
                 else
                 {
@@ -397,8 +404,8 @@ namespace System.Data.Entity.Migrations
 
             var migrationId
                 = GetPendingMigrations()
-                    .SingleOrDefault(m => m.MigrationName().EqualsIgnoreCase(migration))
-                    ?? _historyRepository.GetMigrationId(migration);
+                      .SingleOrDefault(m => m.MigrationName().EqualsIgnoreCase(migration))
+                  ?? _historyRepository.GetMigrationId(migration);
 
             if (migrationId == null)
             {
@@ -682,7 +689,8 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        private static void FillInForeignKeyOperations(IEnumerable<MigrationOperation> operations, XDocument targetModel)
+        private static void FillInForeignKeyOperations(
+            IEnumerable<MigrationOperation> operations, XDocument targetModel)
         {
             Contract.Requires(operations != null);
             Contract.Requires(targetModel != null);
@@ -703,9 +711,10 @@ namespace System.Data.Entity.Migrations
                         = targetModel.Descendants(EdmXNames.Ssdl.EntityTypeNames)
                             .Single(et => et.NameAttribute().EqualsIgnoreCase(entitySetName));
 
-                    entityTypeElement
-                        .Descendants(EdmXNames.Ssdl.PropertyRefNames)
-                        .Each(pr => foreignKeyOperation.PrincipalColumns.Add(pr.NameAttribute()));
+                    IEnumerableExtensions.Each(
+                        entityTypeElement
+                            .Descendants(EdmXNames.Ssdl.PropertyRefNames),
+                        pr => foreignKeyOperation.PrincipalColumns.Add(pr.NameAttribute()));
                 }
                 else
                 {
@@ -718,7 +727,8 @@ namespace System.Data.Entity.Migrations
                     if ((table != null)
                         && (table.PrimaryKey != null))
                     {
-                        table.PrimaryKey.Columns.Each(c => foreignKeyOperation.PrincipalColumns.Add(c));
+                        IEnumerableExtensions.Each(
+                            table.PrimaryKey.Columns, c => foreignKeyOperation.PrincipalColumns.Add(c));
                     }
                     else
                     {

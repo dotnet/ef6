@@ -131,7 +131,8 @@
         public DbMemberEntry<TEntity, TProperty> Cast<TEntity, TProperty>() where TEntity : class
         {
             var metadata = InternalMemberEntry.EntryMetadata;
-            if (!typeof(TEntity).IsAssignableFrom(metadata.DeclaringType) || !typeof(TProperty).IsAssignableFrom(metadata.MemberType))
+            if (!typeof(TEntity).IsAssignableFrom(metadata.DeclaringType)
+                || !typeof(TProperty).IsAssignableFrom(metadata.MemberType))
             {
                 throw Error.DbMember_BadTypeForCast(
                     typeof(DbMemberEntry).Name,

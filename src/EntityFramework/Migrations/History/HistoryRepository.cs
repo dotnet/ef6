@@ -45,7 +45,12 @@ namespace System.Data.Entity.Migrations.History
                 var lastModel
                     = context.History
                         .OrderByDescending(h => h.MigrationId)
-                        .Select(s => new { s.MigrationId, s.Model })
+                        .Select(
+                            s => new
+                                     {
+                                         s.MigrationId,
+                                         s.Model
+                                     })
                         .FirstOrDefault();
 
                 if (lastModel == null)
@@ -112,7 +117,8 @@ namespace System.Data.Entity.Migrations.History
 
                 if (migrationId != DbMigrator.InitialDatabase)
                 {
-                    if (!exists || !context.History.Any(h => h.MigrationId == migrationId))
+                    if (!exists
+                        || !context.History.Any(h => h.MigrationId == migrationId))
                     {
                         throw Error.MigrationNotFound(migrationId);
                     }
@@ -195,7 +201,9 @@ namespace System.Data.Entity.Migrations.History
             }
         }
 
-        private bool? ColumnExists<TContext, TResult>(Func<HistoryContextBase<TContext>> createContext, Expression<Func<HistoryRow, TResult>> selector) where TContext : DbContext
+        private bool? ColumnExists<TContext, TResult>(
+            Func<HistoryContextBase<TContext>> createContext, Expression<Func<HistoryRow, TResult>> selector)
+            where TContext : DbContext
         {
             using (var context = createContext())
             {
@@ -224,7 +232,9 @@ namespace System.Data.Entity.Migrations.History
             return CreateCreateTableOperation(c => new HistoryContext(c, false), modelDiffer);
         }
 
-        public virtual MigrationOperation CreateCreateTableOperation<TContext>(Func<DbConnection, HistoryContextBase<TContext>> createContext, ModelDiffer modelDiffer) where TContext : DbContext
+        public virtual MigrationOperation CreateCreateTableOperation<TContext>(
+            Func<DbConnection, HistoryContextBase<TContext>> createContext, ModelDiffer modelDiffer)
+            where TContext : DbContext
         {
             Contract.Requires(modelDiffer != null);
 
@@ -301,11 +311,11 @@ namespace System.Data.Entity.Migrations.History
 
                 context.History.Add(
                     new HistoryRow
-                    {
-                        MigrationId = MigrationAssembly.CreateMigrationId(Strings.InitialCreate),
-                        Model = new ModelCompressor().Compress(model),
-                        ProductVersion = Assembly.GetExecutingAssembly().GetInformationalVersion()
-                    });
+                        {
+                            MigrationId = MigrationAssembly.CreateMigrationId(Strings.InitialCreate),
+                            Model = new ModelCompressor().Compress(model),
+                            ProductVersion = Assembly.GetExecutingAssembly().GetInformationalVersion()
+                        });
 
                 context.SaveChanges();
             }

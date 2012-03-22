@@ -38,7 +38,9 @@
                 return true;
             }
 
-            return String.Equals(databaseModelHash, modelHashCalculator.Calculate(internalContext.CodeFirstModel), StringComparison.Ordinal);
+            return String.Equals(
+                databaseModelHash, modelHashCalculator.Calculate(internalContext.CodeFirstModel),
+                StringComparison.Ordinal);
         }
     }
 }

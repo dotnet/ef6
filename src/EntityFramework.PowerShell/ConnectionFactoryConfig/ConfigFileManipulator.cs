@@ -13,8 +13,12 @@
     /// </summary>
     internal class ConfigFileManipulator
     {
-        public const string DefaultConnectionFactoryName = "System.Data.Entity.Infrastructure.SqlConnectionFactory, EntityFramework";
-        public const string SqlCompactConnectionFactoryName = "System.Data.Entity.Infrastructure.SqlCeConnectionFactory, EntityFramework";
+        public const string DefaultConnectionFactoryName =
+            "System.Data.Entity.Infrastructure.SqlConnectionFactory, EntityFramework";
+
+        public const string SqlCompactConnectionFactoryName =
+            "System.Data.Entity.Infrastructure.SqlCeConnectionFactory, EntityFramework";
+
         public const string SqlCompactProviderName = "System.Data.SqlServerCe.4.0";
         public const string ConfigurationElementName = "configuration";
         public const string EntityFrameworkElementName = "entityFramework";
@@ -50,8 +54,9 @@
             }
 
             entityFramework
-                .GetOrCreateElement(DefaultConnectionFactoryElementName,
-                                    new XAttribute("type", DefaultConnectionFactoryName))
+                .GetOrCreateElement(
+                    DefaultConnectionFactoryElementName,
+                    new XAttribute("type", DefaultConnectionFactoryName))
                 .GetOrCreateElement(ParametersElementName)
                 .GetOrCreateElement(ParameterElementName, new XAttribute("value", baseConnectionString));
 
@@ -115,10 +120,12 @@
                 .FirstOrDefault();
 
             // Hard coding this so that we don't need to load EntityFramework.dll to get it.
-            const string entityFrameworkSectionName = "System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version={0}, Culture=neutral, PublicKeyToken=b77a5c561934e089";
+            const string entityFrameworkSectionName =
+                "System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version={0}, Culture=neutral, PublicKeyToken=b77a5c561934e089";
 
-            var efSectionTypeName = string.Format(CultureInfo.InvariantCulture, entityFrameworkSectionName,
-                                                  entityFrameworkVersion);
+            var efSectionTypeName = string.Format(
+                CultureInfo.InvariantCulture, entityFrameworkSectionName,
+                entityFrameworkVersion);
 
             if (typeAttribute != null)
             {
@@ -131,8 +138,10 @@
             }
             else
             {
-                configSections.Add(new XElement(SectionElementName, new XAttribute("name", EntityFrameworkElementName),
-                                                new XAttribute("type", efSectionTypeName)));
+                configSections.Add(
+                    new XElement(
+                        SectionElementName, new XAttribute("name", EntityFrameworkElementName),
+                        new XAttribute("type", efSectionTypeName)));
             }
 
             return true;

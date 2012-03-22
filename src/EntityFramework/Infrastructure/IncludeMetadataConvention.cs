@@ -3,7 +3,6 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Conventions;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     This <see cref = "DbModelBuilder" /> convention causes DbModelBuilder to include metadata about the model 
@@ -15,7 +14,9 @@ namespace System.Data.Entity.Infrastructure
     ///     This convention can be removed from the <see cref = "DbModelBuilder" /> conventions by overriding
     ///     the OnModelCreating method on a derived DbContext class.
     /// </summary>
-    [Obsolete("The IncludeMetadataConvention is no longer used. EdmMetadata is not included in the model. <see cref=\"EdmModelDiffer\" /> is now used to detect changes in the model.")]
+    [Obsolete(
+        "The IncludeMetadataConvention is no longer used. EdmMetadata is not included in the model. <see cref=\"EdmModelDiffer\" /> is now used to detect changes in the model."
+        )]
     public class IncludeMetadataConvention : IConfigurationConvention
     {
         /// <summary>

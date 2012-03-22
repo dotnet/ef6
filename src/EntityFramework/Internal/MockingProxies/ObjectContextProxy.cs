@@ -51,7 +51,9 @@
 
         public virtual IEnumerable<GlobalItem> GetObjectItemCollection()
         {
-            return _objectItemCollection = (ObjectItemCollection)_objectContext.MetadataWorkspace.GetItemCollection(DataSpace.OSpace);
+            return
+                _objectItemCollection =
+                (ObjectItemCollection)_objectContext.MetadataWorkspace.GetItemCollection(DataSpace.OSpace);
         }
 
         public virtual Type GetClrType(StructuralType item)

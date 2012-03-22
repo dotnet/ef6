@@ -64,7 +64,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
             foreach (var et in entityTypes)
             {
-                if (et != entityType &&
+                if (et != entityType
+                    &&
                     et.IsAncestorOf(entityType))
                 {
                     isRoot = false;

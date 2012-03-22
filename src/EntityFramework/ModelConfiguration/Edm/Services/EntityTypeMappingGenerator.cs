@@ -32,13 +32,16 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                       ? entitySetMapping.EntityTypeMappings.First().TypeMappingFragments.First().Table
                       : databaseMapping.Database.AddTable(entityType.GetRootType().Name);
 
-            var entityTypeMappingFragment = new DbEntityTypeMappingFragment { Table = table };
+            var entityTypeMappingFragment = new DbEntityTypeMappingFragment
+                                                {
+                                                    Table = table
+                                                };
 
             var entityTypeMapping = new DbEntityTypeMapping
-                {
-                    EntityType = entityType,
-                    IsHierarchyMapping = false
-                };
+                                        {
+                                            EntityType = entityType,
+                                            IsHierarchyMapping = false
+                                        };
             entityTypeMapping.TypeMappingFragments.Add(entityTypeMappingFragment);
             entityTypeMapping.SetClrType(entityType.GetClrType());
 

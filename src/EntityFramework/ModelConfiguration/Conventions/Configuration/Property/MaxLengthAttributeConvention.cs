@@ -3,7 +3,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
     using System.Reflection;
 
     /// <summary>
@@ -31,16 +30,19 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             private const int MaxLengthIndicator = -1;
 
             internal override void Apply(
-                PropertyInfo propertyInfo, LengthPropertyConfiguration lengthPropertyConfiguration, MaxLengthAttribute maxLengthAttribute)
+                PropertyInfo propertyInfo, LengthPropertyConfiguration lengthPropertyConfiguration,
+                MaxLengthAttribute maxLengthAttribute)
             {
                 if ((maxLengthAttribute.Length == 0)
                     || (maxLengthAttribute.Length < MaxLengthIndicator))
                 {
-                    throw Error.MaxLengthAttributeConvention_InvalidMaxLength(propertyInfo.Name, propertyInfo.ReflectedType);
+                    throw Error.MaxLengthAttributeConvention_InvalidMaxLength(
+                        propertyInfo.Name, propertyInfo.ReflectedType);
                 }
 
                 // Set the length if the length configuration's maxlength is not yet set
-                if (lengthPropertyConfiguration.IsMaxLength == null && lengthPropertyConfiguration.MaxLength == null)
+                if (lengthPropertyConfiguration.IsMaxLength == null
+                    && lengthPropertyConfiguration.MaxLength == null)
                 {
                     if (maxLengthAttribute.Length == MaxLengthIndicator)
                     {

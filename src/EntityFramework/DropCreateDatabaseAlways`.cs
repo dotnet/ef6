@@ -1,7 +1,5 @@
 ﻿namespace System.Data.Entity
 {
-    using System.Diagnostics.Contracts;
-
     /// <summary>
     ///     An implementation of IDatabaseInitializer that will always recreate and optionally re-seed the
     ///     database the first time that a context is used in the app domain.

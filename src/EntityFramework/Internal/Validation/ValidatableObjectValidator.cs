@@ -50,7 +50,8 @@
                 (property != null && (property.CurrentValue == null || property.CurrentValue is IValidatableObject)),
                 "Neither entity nor complex type implements IValidatableObject.");
 
-            if (property != null && property.CurrentValue == null)
+            if (property != null
+                && property.CurrentValue == null)
             {
                 return Enumerable.Empty<DbValidationError>();
             }

@@ -23,7 +23,8 @@
         /// </summary>
         /// <param name = "propertyValidators">Property validators.</param>
         /// <param name = "typeLevelValidators">Type level validators.</param>
-        public TypeValidator(IEnumerable<PropertyValidator> propertyValidators, IEnumerable<IValidator> typeLevelValidators)
+        public TypeValidator(
+            IEnumerable<PropertyValidator> propertyValidators, IEnumerable<IValidator> typeLevelValidators)
         {
             Contract.Requires(typeLevelValidators != null);
             Contract.Requires(propertyValidators != null);
@@ -32,7 +33,8 @@
             _propertyValidators = propertyValidators;
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         public IEnumerable<IValidator> TypeLevelValidators
         {
             get { return _typeLevelValidators; }
@@ -52,7 +54,8 @@
         /// <remarks>
         ///     Protected so it doesn't appear on EntityValidator.
         /// </remarks>
-        protected IEnumerable<DbValidationError> Validate(EntityValidationContext entityValidationContext, InternalPropertyEntry property)
+        protected IEnumerable<DbValidationError> Validate(
+            EntityValidationContext entityValidationContext, InternalPropertyEntry property)
         {
             var validationErrors = new List<DbValidationError>();
 
@@ -87,7 +90,8 @@
         ///     and a merge of validation error lists per entity.
         /// </remarks>
         protected abstract void ValidateProperties(
-            EntityValidationContext entityValidationContext, InternalPropertyEntry parentProperty, List<DbValidationError> validationErrors);
+            EntityValidationContext entityValidationContext, InternalPropertyEntry parentProperty,
+            List<DbValidationError> validationErrors);
 
         /// <summary>
         ///     Returns a validator for a child property.
@@ -104,12 +108,15 @@
         [ContractClassFor(typeof(TypeValidator))]
         private abstract class TypeValidatorContracts : TypeValidator
         {
-            protected TypeValidatorContracts(IEnumerable<PropertyValidator> propertyValidators, IEnumerable<IValidator> typeLevelValidators)
+            protected TypeValidatorContracts(
+                IEnumerable<PropertyValidator> propertyValidators, IEnumerable<IValidator> typeLevelValidators)
                 : base(propertyValidators, typeLevelValidators)
             {
             }
 
-            protected override void ValidateProperties(EntityValidationContext entityValidationContext, InternalPropertyEntry parentProperty, List<DbValidationError> validationErrors)
+            protected override void ValidateProperties(
+                EntityValidationContext entityValidationContext, InternalPropertyEntry parentProperty,
+                List<DbValidationError> validationErrors)
             {
                 Contract.Requires(entityValidationContext != null);
                 Contract.Requires(validationErrors != null);

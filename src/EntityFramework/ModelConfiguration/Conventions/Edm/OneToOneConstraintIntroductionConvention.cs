@@ -2,7 +2,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -35,10 +34,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                         dependentEnd = dependentEnd ?? associationType.TargetEnd;
 
                         var constraint = new EdmAssociationConstraint
-                            {
-                                DependentEnd = dependentEnd,
-                                DependentProperties = dependentEnd.EntityType.KeyProperties().ToList()
-                            };
+                                             {
+                                                 DependentEnd = dependentEnd,
+                                                 DependentProperties = dependentEnd.EntityType.KeyProperties().ToList()
+                                             };
 
                         associationType.Constraint = constraint;
                     }

@@ -10,7 +10,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     /// </summary>
     public class ForeignKeyNavigationPropertyConfiguration : CascadableNavigationPropertyConfiguration
     {
-        internal ForeignKeyNavigationPropertyConfiguration(NavigationPropertyConfiguration navigationPropertyConfiguration)
+        internal ForeignKeyNavigationPropertyConfiguration(
+            NavigationPropertyConfiguration navigationPropertyConfiguration)
             : base(navigationPropertyConfiguration)
         {
         }

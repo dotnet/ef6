@@ -55,7 +55,8 @@ namespace System.Data.Entity
     ///     version of conventions used by the context when it creates a model. If no attribute is applied then the
     ///     latest version of conventions will be used.
     /// </remarks>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "Casing is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
+        Justification = "Casing is intentional")]
     public class DbContext : IDisposable, IObjectContextAdapter
     {
         #region Construction and fields
@@ -304,15 +305,16 @@ namespace System.Data.Entity
             //ChangeTracker.Entries() will call DetectChanges unless disabled by the user
             foreach (var dbEntityEntry in ChangeTracker.Entries())
             {
-
-                #pragma warning disable 612,618
-                if (dbEntityEntry.InternalEntry.EntityType != typeof(EdmMetadata) &&
-                #pragma warning restore 612,618
+#pragma warning disable 612,618
+                if (dbEntityEntry.InternalEntry.EntityType != typeof(EdmMetadata)
+                    &&
+#pragma warning restore 612,618
                     ShouldValidateEntity(dbEntityEntry))
                 {
                     var validationResult = ValidateEntity(dbEntityEntry, new Dictionary<object, object>());
 
-                    if (validationResult != null && !validationResult.IsValid)
+                    if (validationResult != null
+                        && !validationResult.IsValid)
                     {
                         validationResults.Add(validationResult);
                     }
@@ -345,7 +347,8 @@ namespace System.Data.Entity
         ///     and will be exposed as <see cref = "System.ComponentModel.DataAnnotations.ValidationContext.Items" />.
         ///     This parameter is optional and can be null.</param>
         /// <returns>Entity validation result. Possibly null when overridden.</returns>
-        protected virtual DbEntityValidationResult ValidateEntity(DbEntityEntry entityEntry, IDictionary<object, object> items)
+        protected virtual DbEntityValidationResult ValidateEntity(
+            DbEntityEntry entityEntry, IDictionary<object, object> items)
         {
             Contract.Requires(entityEntry != null);
 

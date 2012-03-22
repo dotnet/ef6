@@ -184,7 +184,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var sourceEnd = associationType.SourceEnd;
             var targetEnd = associationType.TargetEnd;
 
-            if (sourceEnd.EndKind != targetEnd.EndKind)
+            if (sourceEnd.EndKind
+                != targetEnd.EndKind)
             {
                 principalEnd
                     = (sourceEnd.IsRequired()

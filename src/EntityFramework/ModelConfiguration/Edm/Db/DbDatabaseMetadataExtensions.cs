@@ -18,13 +18,19 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
         public const string DefaultSchema = "dbo";
         private const string ProviderInfoAnnotation = "ProviderInfo";
 
-        public static DbDatabaseMetadata Initialize(this DbDatabaseMetadata database, double version = DataModelVersions.Version3)
+        public static DbDatabaseMetadata Initialize(
+            this DbDatabaseMetadata database, double version = DataModelVersions.Version3)
         {
             Contract.Requires(database != null);
 
             database.Version = version;
             database.Name = "CodeFirstDatabase";
-            database.Schemas.Add(new DbSchemaMetadata { Name = DefaultSchema, DatabaseIdentifier = DefaultSchema });
+            database.Schemas.Add(
+                new DbSchemaMetadata
+                    {
+                        Name = DefaultSchema,
+                        DatabaseIdentifier = DefaultSchema
+                    });
 
             return database;
         }
@@ -41,9 +47,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
 
             var stringBuilder = new StringBuilder();
 
-            using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true }))
+            using (var xmlWriter = XmlWriter.Create(
+                stringBuilder, new XmlWriterSettings
+                                   {
+                                       Indent = true
+                                   }))
             {
-                new SsdlSerializer().Serialize(database, providerInfo.ProviderInvariantName, providerInfo.ProviderManifestToken, xmlWriter);
+                new SsdlSerializer().Serialize(
+                    database, providerInfo.ProviderInvariantName, providerInfo.ProviderManifestToken, xmlWriter);
             }
 
             var xml = stringBuilder.ToString();
@@ -64,17 +75,18 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
             var uniqueIdentifier = schema.Tables.UniquifyName(name);
 
             var table = new DbTableMetadata
-                {
-                    Name = uniqueIdentifier,
-                    DatabaseIdentifier = uniqueIdentifier
-                };
+                            {
+                                Name = uniqueIdentifier,
+                                DatabaseIdentifier = uniqueIdentifier
+                            };
 
             schema.Tables.Add(table);
 
             return table;
         }
 
-        public static DbTableMetadata AddTable(this DbDatabaseMetadata database, string name, DbTableMetadata pkSource, bool isIdentity)
+        public static DbTableMetadata AddTable(
+            this DbDatabaseMetadata database, string name, DbTableMetadata pkSource, bool isIdentity)
         {
             var table = database.AddTable(name);
 

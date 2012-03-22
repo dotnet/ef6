@@ -42,7 +42,8 @@
         /// </summary>
         /// <param name = "message">The exception message.</param>
         /// <param name = "entityValidationResults">Validation results.</param>
-        public DbEntityValidationException(string message, IEnumerable<DbEntityValidationResult> entityValidationResults)
+        public DbEntityValidationException(
+            string message, IEnumerable<DbEntityValidationResult> entityValidationResults)
             : base(message)
         {
             // Users should be able to set the errors to null but we should not

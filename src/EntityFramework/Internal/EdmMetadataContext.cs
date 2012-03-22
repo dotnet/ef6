@@ -17,9 +17,9 @@
         {
         }
 
-        #pragma warning disable 612,618
+#pragma warning disable 612,618
         public virtual IDbSet<EdmMetadata> Metadata { get; set; }
-        #pragma warning restore 612,618
+#pragma warning restore 612,618
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -30,9 +30,9 @@
         {
             Contract.Requires(modelConfiguration != null);
 
-            #pragma warning disable 612,618
+#pragma warning disable 612,618
             modelConfiguration.Entity(typeof(EdmMetadata)).ToTable("EdmMetadata");
-            #pragma warning restore 612,618
+#pragma warning restore 612,618
         }
     }
 }

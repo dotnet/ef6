@@ -106,8 +106,8 @@
             Contract.Requires(project != null);
 
             return project.GetProjectTypes().Any(
-                    g => g.EqualsIgnoreCase(WebApplicationProjectTypeGuid)
-                        || g.EqualsIgnoreCase(WebSiteProjectTypeGuid));
+                g => g.EqualsIgnoreCase(WebApplicationProjectTypeGuid)
+                     || g.EqualsIgnoreCase(WebSiteProjectTypeGuid));
         }
 
         public static bool IsWebSiteProject(this Project project)
@@ -144,24 +144,24 @@
                     .Aggregate(
                         project.ProjectItems,
                         (pi, dir) =>
-                        {
-                            Contract.Assert(pi != null);
-                            Contract.Assert(pi.Kind == VsProjectItemKindPhysicalFolder);
-
-                            try
                             {
-                                var subDir = pi.Item(dir);
-                                return subDir.ProjectItems;
-                            }
-                            catch
-                            {
-                            }
+                                Contract.Assert(pi != null);
+                                Contract.Assert(pi.Kind == VsProjectItemKindPhysicalFolder);
 
-                            var projectDir = ((Project)pi.Parent).GetProjectDir();
-                            var absoluteDir = Path.Combine(projectDir, dir);
+                                try
+                                {
+                                    var subDir = pi.Item(dir);
+                                    return subDir.ProjectItems;
+                                }
+                                catch
+                                {
+                                }
 
-                            return pi.AddFromDirectory(absoluteDir).ProjectItems;
-                        });
+                                var projectDir = ((Project)pi.Parent).GetProjectDir();
+                                var absoluteDir = Path.Combine(projectDir, dir);
+
+                                return pi.AddFromDirectory(absoluteDir).ProjectItems;
+                            });
 
             try
             {

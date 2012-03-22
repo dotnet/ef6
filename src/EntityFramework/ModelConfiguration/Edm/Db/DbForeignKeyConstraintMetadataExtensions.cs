@@ -44,7 +44,8 @@
             return fk.Annotations.GetAnnotation(AssociationType) as EdmAssociationType;
         }
 
-        public static void SetAssociationType(this DbForeignKeyConstraintMetadata fk, EdmAssociationType associationType)
+        public static void SetAssociationType(
+            this DbForeignKeyConstraintMetadata fk, EdmAssociationType associationType)
         {
             Contract.Requires(fk != null);
             Contract.Requires(associationType != null);

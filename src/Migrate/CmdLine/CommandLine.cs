@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
@@ -78,79 +77,51 @@
 
                 return args;
             }
-            internal set
-            {
-                args = value;
-            }
+            internal set { args = value; }
         }
 
         public static bool CaseSensitive { get; set; }
 
         public static ICommandEnvironment CommandEnvironment
         {
-            get
-            {
-                return commandEnvironment;
-            }
-            set
-            {
-                commandEnvironment = value;
-            }
+            get { return commandEnvironment; }
+            set { commandEnvironment = value; }
         }
 
         public static IEnumerable<string> CommandSeparators
         {
-            get
-            {
-                return commandSeparatorList;
-            }
-            set
-            {
-                commandSeparatorList = new List<string>(value);
-            }
+            get { return commandSeparatorList; }
+            set { commandSeparatorList = new List<string>(value); }
         }
 
         public static string Program
         {
-            get
-            {
-                return CommandEnvironment.GetCommandLineArgs()[0];
-            }
+            get { return CommandEnvironment.GetCommandLineArgs()[0]; }
         }
 
         public static string Text
         {
-            get
-            {
-                return CommandEnvironment.CommandLine;
-            }
+            get { return CommandEnvironment.CommandLine; }
         }
 
         public static IEnumerable<string> ValueSeparators
         {
-            get
-            {
-                return valueSeparatorList;
-            }
-            set
-            {
-                valueSeparatorList = new List<string>(value);
-            }
+            get { return valueSeparatorList; }
+            set { valueSeparatorList = new List<string>(value); }
         }
 
         private static Regex RegexTokenize
         {
-            get
-            {
-                return new Regex(TokenizePattern, RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace);
-            }
+            get { return new Regex(TokenizePattern, RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace); }
         }
 
         private static string TokenizePattern
         {
             get
             {
-                return string.Format(TokenizeExpressionFormat, GetCaseSensitiveOption(), string.Join("", CommandSeparators), string.Join("", ValueSeparators));
+                return string.Format(
+                    TokenizeExpressionFormat, GetCaseSensitiveOption(), string.Join("", CommandSeparators),
+                    string.Join("", ValueSeparators));
             }
         }
 
@@ -210,7 +181,8 @@
                 validKey = allowedKeys.Contains(keyChar);
                 if (!validKey)
                 {
-                    Console.WriteLine("\r\n\"{0}\" is not a valid choice, valid keys are \"{1}\"", keyChar, allowedString);
+                    Console.WriteLine(
+                        "\r\n\"{0}\" is not a valid choice, valid keys are \"{1}\"", keyChar, allowedString);
                 }
                 else
                 {
@@ -232,7 +204,7 @@
             }
 
             var nextPosition = 1;
-            
+
             tokenList.AddRange(
                 from arg in Args
                 let matches = RegexTokenize.Matches(arg)
@@ -277,9 +249,17 @@
             return CaseSensitive ? null : "-";
         }
 
-        private static IEnumerable<CommandLineParameterAttribute> InferCommandLineParameterAttribute(PropertyInfo property)
+        private static IEnumerable<CommandLineParameterAttribute> InferCommandLineParameterAttribute(
+            PropertyInfo property)
         {
-            return new[] { new CommandLineParameterAttribute { Name = property.Name, Command = property.Name } };
+            return new[]
+                       {
+                           new CommandLineParameterAttribute
+                               {
+                                   Name = property.Name,
+                                   Command = property.Name
+                               }
+                       };
         }
 
         private static T InitializeNewArgument<T>() where T : new()
@@ -303,7 +283,8 @@
             {
                 var allowedKey = allowedKeys[index];
                 sb.Append(allowedKey);
-                if (index + 1 < allowedKeys.Length)
+                if (index + 1
+                    < allowedKeys.Length)
                 {
                     sb.Append(',');
                 }
@@ -324,9 +305,9 @@
 
             internal CommandLineParametersCollection(Type argumentType)
             {
-                this.Parameters = new Dictionary<string, CommandLineParameter>();
-                this.ArgumentType = argumentType;
-                this.Load();
+                Parameters = new Dictionary<string, CommandLineParameter>();
+                ArgumentType = argumentType;
+                Load();
             }
 
             #endregion
@@ -335,10 +316,7 @@
 
             public IEnumerable<CommandLineParameter> Values
             {
-                get
-                {
-                    return this.Parameters.Values;
-                }
+                get { return Parameters.Values; }
             }
 
             private Type ArgumentType { get; set; }
@@ -353,16 +331,17 @@
             {
                 CommandLineParameter parameter;
 
-                this.Parameters.TryGetValue(cmd.Key, out parameter);
+                Parameters.TryGetValue(cmd.Key, out parameter);
 
                 return parameter;
             }
 
             public void VerifyRequiredArguments()
             {
-                foreach (var parameter in this.Values.Where(parameter => !parameter.RequiredArgumentSupplied))
+                foreach (var parameter in Values.Where(parameter => !parameter.RequiredArgumentSupplied))
                 {
-                    throw new CommandLineRequiredArgumentMissingException(this.ArgumentType, parameter.Attribute.NameOrCommand, parameter.Attribute.ParameterIndex);
+                    throw new CommandLineRequiredArgumentMissingException(
+                        ArgumentType, parameter.Attribute.NameOrCommand, parameter.Attribute.ParameterIndex);
                 }
             }
 
@@ -385,7 +364,7 @@
                 // Each attribute is uniquely keyed
                 try
                 {
-                    this.Parameters.Add(parameter.Key, parameter);
+                    Parameters.Add(parameter.Key, parameter);
                 }
                 catch (ArgumentException exception)
                 {
@@ -394,7 +373,9 @@
                             parameter.Property.DeclaringType,
                             parameter.IsCommand()
                                 ? string.Format("Duplicate Command \"{0}\"", parameter.Command)
-                                : string.Format("Duplicate Parameter Index [{0}] on Property \"{1}\"", parameter.Attribute.ParameterIndex, parameter.Property.Name)),
+                                : string.Format(
+                                    "Duplicate Parameter Index [{0}] on Property \"{1}\"",
+                                    parameter.Attribute.ParameterIndex, parameter.Property.Name)),
                         exception);
                 }
             }
@@ -402,22 +383,22 @@
             private void Load()
             {
                 // Select all the CommandLineParameterAttribute attributes from all the properties on the type and create a command line parameter for it
-                CommandLineParameterAttribute.ForEach(this.ArgumentType, this.Add);
+                CommandLineParameterAttribute.ForEach(ArgumentType, Add);
 
-                this.VerifyPositionalArgumentsInSequence();
+                VerifyPositionalArgumentsInSequence();
 
                 // If there are no attributed properties
-                if (this.Parameters.Count == 0)
+                if (Parameters.Count == 0)
                 {
                     // infer them based on the property names
-                    CommandLineParameterAttribute.ForEach(this.ArgumentType, InferCommandLineParameterAttribute, this.Add);
+                    CommandLineParameterAttribute.ForEach(ArgumentType, InferCommandLineParameterAttribute, Add);
                 }
             }
 
             private void VerifyPositionalArgumentsInSequence()
             {
                 // Get the positional arguments ordered by position
-                var parameters = this.Parameters.Values.Where(IsParameter).OrderBy(ParameterIndex);
+                var parameters = Parameters.Values.Where(IsParameter).OrderBy(ParameterIndex);
 
                 for (var i = 0; i < parameters.Count(); i++)
                 {

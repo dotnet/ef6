@@ -22,7 +22,8 @@
         /// <param name = "propertyName">The property name.</param>
         /// <param name = "isMapped">if set to <c>true</c> the property is mapped in the EDM.</param>
         /// <param name = "isComplex">if set to <c>true</c> the property is a complex property.</param>
-        public PropertyEntryMetadata(Type declaringType, Type propertyType, string propertyName, bool isMapped, bool isComplex)
+        public PropertyEntryMetadata(
+            Type declaringType, Type propertyType, string propertyName, bool isMapped, bool isComplex)
             : base(declaringType, propertyType, propertyName)
         {
             _isMapped = isMapped;
@@ -77,9 +78,11 @@
                     else
                     {
                         Contract.Assert(
-                            edmProperty.TypeUsage.EdmType is StructuralType, "Expected a structural type if property type is not primitive.");
+                            edmProperty.TypeUsage.EdmType is StructuralType,
+                            "Expected a structural type if property type is not primitive.");
 
-                        var objectItemCollection = (ObjectItemCollection)metadataWorkspace.GetItemCollection(DataSpace.OSpace);
+                        var objectItemCollection =
+                            (ObjectItemCollection)metadataWorkspace.GetItemCollection(DataSpace.OSpace);
                         propertyType = objectItemCollection.GetClrType((StructuralType)edmProperty.TypeUsage.EdmType);
                     }
                 }
@@ -97,12 +100,14 @@
                     return null;
                 }
 
-                Contract.Assert(propertyType != null, "If the property has a getter or setter, then it must exist and have a type.");
+                Contract.Assert(
+                    propertyType != null, "If the property has a getter or setter, then it must exist and have a type.");
             }
 
             if (!requestedType.IsAssignableFrom(propertyType))
             {
-                throw Error.DbEntityEntry_WrongGenericForProp(propertyName, declaringType.Name, requestedType.Name, propertyType.Name);
+                throw Error.DbEntityEntry_WrongGenericForProp(
+                    propertyName, declaringType.Name, requestedType.Name, propertyType.Name);
             }
 
             return new PropertyEntryMetadata(declaringType, propertyType, propertyName, isMapped, isComplex);

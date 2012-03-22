@@ -16,8 +16,10 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
             return source.Distinct(new DynamicEqualityComparer<T>(func));
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
-        public static IEnumerable<T> Intersect<T>(this IEnumerable<T> first, IEnumerable<T> second, Func<T, T, bool> func)
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
+        public static IEnumerable<T> Intersect<T>(
+            this IEnumerable<T> first, IEnumerable<T> second, Func<T, T, bool> func)
             where T : class
         {
             Contract.Requires(first != null);

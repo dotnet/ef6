@@ -3,6 +3,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.ComponentModel;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Utilities;
+    using System.Data.Spatial;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -51,18 +52,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 Property<Properties.Primitive.PrimitivePropertyConfiguration>(propertyExpression));
         }
 
-
-    /// <summary>
-    ///   Configures a <see cref = "T:DbGeometry" /> property that is defined on this type.
-    /// </summary>
-    /// <param name = "propertyExpression">
-    ///   A lambda expression representing the property to be configured.
-    ///   C#: t => t.MyProperty   
-    ///   VB.Net: Function(t) t.MyProperty
-    /// </param>
-    /// <returns>A configuration object that can be used to configure the property.</returns>
+        /// <summary>
+        ///   Configures a <see cref = "T:DbGeometry" /> property that is defined on this type.
+        /// </summary>
+        /// <param name = "propertyExpression">
+        ///   A lambda expression representing the property to be configured.
+        ///   C#: t => t.MyProperty   
+        ///   VB.Net: Function(t) t.MyProperty
+        /// </param>
+        /// <returns>A configuration object that can be used to configure the property.</returns>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        public PrimitivePropertyConfiguration Property(Expression<Func<TStructuralType, System.Data.Spatial.DbGeometry>> propertyExpression)
+        public PrimitivePropertyConfiguration Property(Expression<Func<TStructuralType, DbGeometry>> propertyExpression)
         {
             return new PrimitivePropertyConfiguration(
                 Property<Properties.Primitive.PrimitivePropertyConfiguration>(propertyExpression));
@@ -78,7 +78,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </param>
         /// <returns>A configuration object that can be used to configure the property.</returns>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        public PrimitivePropertyConfiguration Property(Expression<Func<TStructuralType, System.Data.Spatial.DbGeography>> propertyExpression)
+        public PrimitivePropertyConfiguration Property(
+            Expression<Func<TStructuralType, DbGeography>> propertyExpression)
         {
             return new PrimitivePropertyConfiguration(
                 Property<Properties.Primitive.PrimitivePropertyConfiguration>(propertyExpression));
@@ -190,7 +191,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </param>
         /// <returns>A configuration object that can be used to configure the property.</returns>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        public DateTimePropertyConfiguration Property(Expression<Func<TStructuralType, DateTimeOffset>> propertyExpression)
+        public DateTimePropertyConfiguration Property(
+            Expression<Func<TStructuralType, DateTimeOffset>> propertyExpression)
         {
             return new DateTimePropertyConfiguration(
                 Property<Properties.Primitive.DateTimePropertyConfiguration>(propertyExpression));
@@ -206,7 +208,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </param>
         /// <returns>A configuration object that can be used to configure the property.</returns>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        public DateTimePropertyConfiguration Property(Expression<Func<TStructuralType, DateTimeOffset?>> propertyExpression)
+        public DateTimePropertyConfiguration Property(
+            Expression<Func<TStructuralType, DateTimeOffset?>> propertyExpression)
         {
             return new DateTimePropertyConfiguration(
                 Property<Properties.Primitive.DateTimePropertyConfiguration>(propertyExpression));
@@ -263,7 +266,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal abstract StructuralTypeConfiguration Configuration { get; }
 
-        internal abstract TPrimitivePropertyConfiguration Property<TPrimitivePropertyConfiguration>(LambdaExpression lambdaExpression)
+        internal abstract TPrimitivePropertyConfiguration Property<TPrimitivePropertyConfiguration>(
+            LambdaExpression lambdaExpression)
             where TPrimitivePropertyConfiguration : Properties.Primitive.PrimitivePropertyConfiguration, new();
 
         [EditorBrowsable(EditorBrowsableState.Never)]

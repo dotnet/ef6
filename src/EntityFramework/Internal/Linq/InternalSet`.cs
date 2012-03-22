@@ -81,7 +81,8 @@
             // the state manager.
             var entity = FindInStateManager(key) ?? FindInStore(key, "keyValues");
 
-            if (entity != null && !(entity is TEntity))
+            if (entity != null
+                && !(entity is TEntity))
             {
                 throw Error.DbSet_WrongEntityTypeFound(entity.GetType().Name, typeof(TEntity).Name);
             }
@@ -104,7 +105,8 @@
                 // First lookup non-added entries by key.  Added entries won't be found this way because they
                 // have temp keys.
                 ObjectStateEntry stateEntry;
-                if (InternalContext.ObjectContext.ObjectStateManager.TryGetObjectStateEntry(key.EntityKey, out stateEntry))
+                if (InternalContext.ObjectContext.ObjectStateManager.TryGetObjectStateEntry(
+                    key.EntityKey, out stateEntry))
                 {
                     return stateEntry.Entity;
                 }
@@ -114,11 +116,13 @@
             // need to look at the key values in entity itself because temp keys don't contain any useful
             // information.
             object entity = null;
-            foreach (var addedEntry in from e in InternalContext.ObjectContext.ObjectStateManager.GetObjectStateEntries(EntityState.Added)
-                                       where !e.IsRelationship &&
-                                             e.Entity != null &&
-                                             EntitySetBaseType.IsAssignableFrom(e.Entity.GetType())
-                                       select e)
+            foreach (
+                var addedEntry in
+                    from e in InternalContext.ObjectContext.ObjectStateManager.GetObjectStateEntries(EntityState.Added)
+                    where !e.IsRelationship &&
+                          e.Entity != null &&
+                          EntitySetBaseType.IsAssignableFrom(e.Entity.GetType())
+                    select e)
             {
                 var match = true;
                 // Note that key names from the entity set and CurrentValues are both c-space, so we don't need any mapping here.
@@ -182,7 +186,9 @@
 
             try
             {
-                return InternalContext.ObjectContext.CreateQuery<TEntity>(queryBuilder.ToString(), parameters).SingleOrDefault();
+                return
+                    InternalContext.ObjectContext.CreateQuery<TEntity>(queryBuilder.ToString(), parameters).
+                        SingleOrDefault();
             }
             catch (EntitySqlException ex)
             {
@@ -226,7 +232,9 @@
         /// <param name = "entity">The entity to attach.</param>
         public virtual void Attach(object entity)
         {
-            ActOnSet(() => InternalContext.ObjectContext.AttachTo(EntitySetName, entity), EntityState.Unchanged, entity, "Attach");
+            ActOnSet(
+                () => InternalContext.ObjectContext.AttachTo(EntitySetName, entity), EntityState.Unchanged, entity,
+                "Attach");
         }
 
         /// <summary>
@@ -241,7 +249,8 @@
         /// <param name = "entity">The entity to add.</param>
         public virtual void Add(object entity)
         {
-            ActOnSet(() => InternalContext.ObjectContext.AddObject(EntitySetName, entity), EntityState.Added, entity, "Add");
+            ActOnSet(
+                () => InternalContext.ObjectContext.AddObject(EntitySetName, entity), EntityState.Added, entity, "Add");
         }
 
         /// <summary>
@@ -445,7 +454,8 @@
             _entitySet = pair.EntitySet;
             _baseType = pair.BaseType;
 
-            _entitySetName = string.Format(CultureInfo.InvariantCulture, "{0}.{1}", _entitySet.EntityContainer.Name, _entitySet.Name);
+            _entitySetName = string.Format(
+                CultureInfo.InvariantCulture, "{0}.{1}", _entitySet.EntityContainer.Name, _entitySet.Name);
             _quotedEntitySetName = string.Format(
                 CultureInfo.InvariantCulture,
                 "{0}.{1}",

@@ -135,7 +135,8 @@
 
                 if (CanSortWithIComparable(prop.PropertyType))
                 {
-                    var property = typeof(Comparer<>).MakeGenericType(new[] { prop.PropertyType }).GetProperty("Default");
+                    var property = typeof(Comparer<>).MakeGenericType(new[] { prop.PropertyType }).GetProperty(
+                        "Default");
                     _comparer = (IComparer)property.GetValue(null, null);
                     _useToString = false;
                 }

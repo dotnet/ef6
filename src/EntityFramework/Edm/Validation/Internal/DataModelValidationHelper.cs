@@ -19,7 +19,8 @@ namespace System.Data.Entity.Edm.Validation.Internal
             KeyValuePair<EdmAssociationSet, EdmEntitySet> left, KeyValuePair<EdmAssociationSet, EdmEntitySet> right)
         {
             // TODO: consider build up a back pointer cache
-            if (ReferenceEquals(left.Value, right.Value) &&
+            if (ReferenceEquals(left.Value, right.Value)
+                &&
                 ReferenceEquals(left.Key.ElementType, right.Key.ElementType))
             {
                 return true;
@@ -41,12 +42,14 @@ namespace System.Data.Entity.Edm.Validation.Internal
                 return false;
             }
 
-            if (constraint.PrincipalEnd(association) == null || constraint.DependentEnd == null)
+            if (constraint.PrincipalEnd(association) == null
+                || constraint.DependentEnd == null)
             {
                 return false;
             }
 
-            if (constraint.PrincipalEnd(association).EntityType == null || constraint.DependentEnd.EntityType == null)
+            if (constraint.PrincipalEnd(association).EntityType == null
+                || constraint.DependentEnd.EntityType == null)
             {
                 return false;
             }
@@ -60,7 +63,8 @@ namespace System.Data.Entity.Edm.Validation.Internal
                         return false;
                     }
 
-                    if (propRef.PropertyType == null || propRef.PropertyType.EdmType == null)
+                    if (propRef.PropertyType == null
+                        || propRef.PropertyType.EdmType == null)
                     {
                         return false;
                     }
@@ -77,7 +81,8 @@ namespace System.Data.Entity.Edm.Validation.Internal
                 foreach (var propRef in keyList)
                 {
                     if (propRef == null ||
-                        propRef.PropertyType == null ||
+                        propRef.PropertyType == null
+                        ||
                         propRef.PropertyType.EdmType == null)
                     {
                         return false;
@@ -113,7 +118,8 @@ namespace System.Data.Entity.Edm.Validation.Internal
             isAnyPropertyNullable = false;
             isSubsetOfKeyProperties = true;
 
-            if (roleElement.EntityType.GetValidKey().Count() != roleProperties.Count())
+            if (roleElement.EntityType.GetValidKey().Count()
+                != roleProperties.Count())
             {
                 isKeyProperty = false;
             }
@@ -211,7 +217,8 @@ namespace System.Data.Entity.Edm.Validation.Internal
             {
                 if (property.PropertyType != null)
                 {
-                    if (property.PropertyType.PrimitiveType != null && property.ConcurrencyMode != EdmConcurrencyMode.None)
+                    if (property.PropertyType.PrimitiveType != null
+                        && property.ConcurrencyMode != EdmConcurrencyMode.None)
                     {
                         return true;
                     }
@@ -320,7 +327,8 @@ namespace System.Data.Entity.Edm.Validation.Internal
         {
             Contract.Assert(primitiveType1.IsPrimitiveType, "primitiveType1 must be a PrimitiveType");
             Contract.Assert(primitiveType2.IsPrimitiveType, "primitiveType2 must be a PrimitiveType");
-            if (primitiveType1.PrimitiveType.PrimitiveTypeKind == primitiveType2.PrimitiveType.PrimitiveTypeKind)
+            if (primitiveType1.PrimitiveType.PrimitiveTypeKind
+                == primitiveType2.PrimitiveType.PrimitiveTypeKind)
             {
                 return true;
             }
@@ -333,7 +341,8 @@ namespace System.Data.Entity.Edm.Validation.Internal
             return IsEdmTypeReferenceValid(typeReference, visitedValidTypeReferences);
         }
 
-        private static bool IsEdmTypeReferenceValid(EdmTypeReference typeReference, HashSet<EdmTypeReference> visitedValidTypeReferences)
+        private static bool IsEdmTypeReferenceValid(
+            EdmTypeReference typeReference, HashSet<EdmTypeReference> visitedValidTypeReferences)
         {
             if (visitedValidTypeReferences.Contains(typeReference))
             {

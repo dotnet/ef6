@@ -33,7 +33,8 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
             foreach (var attribute in type.GetCustomAttributes(true).Cast<Attribute>()
                 .Where(
                     a =>
-                    a.GetType().FullName.Equals("System.Data.Services.Common.EntityPropertyMappingAttribute", StringComparison.Ordinal) &&
+                    a.GetType().FullName.Equals(
+                        "System.Data.Services.Common.EntityPropertyMappingAttribute", StringComparison.Ordinal) &&
                     !attrs.Contains(a)))
             {
                 attrs.Add(attribute);

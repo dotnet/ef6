@@ -51,7 +51,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Ssdl
             _xmlWriter.WriteAttributeString(SsdlConstants.Attribute_Name, entityType.Name);
         }
 
-        internal void WriteForeignKeyConstraintElement(DbTableMetadata dbTableMetadata, DbForeignKeyConstraintMetadata tableFKConstraint)
+        internal void WriteForeignKeyConstraintElement(
+            DbTableMetadata dbTableMetadata, DbForeignKeyConstraintMetadata tableFKConstraint)
         {
             _xmlWriter.WriteStartElement(SsdlConstants.Element_Association);
             _xmlWriter.WriteAttributeString(SsdlConstants.Attribute_Name, tableFKConstraint.Name);
@@ -64,7 +65,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Ssdl
             // End
             WriteAssociationEndElementHeader(roleNames[0], tableFKConstraint.PrincipalTable, multiplicity.Key);
 
-            if (tableFKConstraint.DeleteAction != DbOperationAction.None)
+            if (tableFKConstraint.DeleteAction
+                != DbOperationAction.None)
             {
                 WriteOperationActionElement(SsdlConstants.Element_OnDelete, tableFKConstraint.DeleteAction);
             }
@@ -77,7 +79,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Ssdl
             WriteReferentialConstraintElementHeader();
             WriteReferentialConstraintRoleElement(
                 SsdlConstants.Element_PrincipalRole, roleNames[0], tableFKConstraint.PrincipalTable.KeyColumns);
-            WriteReferentialConstraintRoleElement(SsdlConstants.Element_DependentRole, roleNames[1], tableFKConstraint.DependentColumns);
+            WriteReferentialConstraintRoleElement(
+                SsdlConstants.Element_DependentRole, roleNames[1], tableFKConstraint.DependentColumns);
             WriteEndElement();
 
             WriteEndElement();
@@ -90,13 +93,15 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Ssdl
             _xmlWriter.WriteEndElement();
         }
 
-        internal void WriteAssociationEndElementHeader(string roleName, DbTableMetadata associationEnd, string multiplicity)
+        internal void WriteAssociationEndElementHeader(
+            string roleName, DbTableMetadata associationEnd, string multiplicity)
         {
             _xmlWriter.WriteStartElement(SsdlConstants.Element_End);
             _xmlWriter.WriteAttributeString(SsdlConstants.Attribute_Role, roleName);
 
             var typeName = associationEnd.Name;
-            _xmlWriter.WriteAttributeString(SsdlConstants.Attribute_Type, GetQualifiedTypeName(SsdlConstants.Value_Self, typeName));
+            _xmlWriter.WriteAttributeString(
+                SsdlConstants.Attribute_Type, GetQualifiedTypeName(SsdlConstants.Value_Self, typeName));
             _xmlWriter.WriteAttributeString(SsdlConstants.Attribute_Multiplicity, multiplicity);
         }
 
@@ -161,7 +166,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Ssdl
             WritePropertyTypeFacets(property);
         }
 
-        private IEnumerable<KeyValuePair<string, string>> GetEnumerableFacetValueFromPrimitiveTypeFacets(DbPrimitiveTypeFacets facets)
+        private IEnumerable<KeyValuePair<string, string>> GetEnumerableFacetValueFromPrimitiveTypeFacets(
+            DbPrimitiveTypeFacets facets)
         {
             if (facets != null)
             {
@@ -169,11 +175,13 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Ssdl
                 {
                     yield return
                         new KeyValuePair<string, string>(
-                            SsdlConstants.Attribute_FixedLength, GetLowerCaseStringFromBoolValue(facets.IsFixedLength.Value));
+                            SsdlConstants.Attribute_FixedLength,
+                            GetLowerCaseStringFromBoolValue(facets.IsFixedLength.Value));
                 }
                 if (facets.IsMaxLength.HasValue)
                 {
-                    yield return new KeyValuePair<string, string>(SsdlConstants.Attribute_MaxLength, SsdlConstants.Value_Max);
+                    yield return
+                        new KeyValuePair<string, string>(SsdlConstants.Attribute_MaxLength, SsdlConstants.Value_Max);
                 }
                 if (facets.IsUnicode.HasValue)
                 {
@@ -185,13 +193,15 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Ssdl
                 {
                     yield return
                         new KeyValuePair<string, string>(
-                            SsdlConstants.Attribute_MaxLength, facets.MaxLength.Value.ToString(CultureInfo.InvariantCulture));
+                            SsdlConstants.Attribute_MaxLength,
+                            facets.MaxLength.Value.ToString(CultureInfo.InvariantCulture));
                 }
                 if (facets.Precision.HasValue)
                 {
                     yield return
                         new KeyValuePair<string, string>(
-                            SsdlConstants.Attribute_Precision, facets.Precision.Value.ToString(CultureInfo.InvariantCulture));
+                            SsdlConstants.Attribute_Precision,
+                            facets.Precision.Value.ToString(CultureInfo.InvariantCulture));
                 }
                 if (facets.Scale.HasValue)
                 {
@@ -212,7 +222,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Ssdl
                     _xmlWriter.WriteAttributeString(facet.Key, facet.Value);
                 }
             }
-            if (property.StoreGeneratedPattern != DbStoreGeneratedPattern.None)
+            if (property.StoreGeneratedPattern
+                != DbStoreGeneratedPattern.None)
             {
                 _xmlWriter.WriteAttributeString(
                     SsdlConstants.Attribute_StoreGeneratedPattern,
@@ -220,7 +231,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Ssdl
                         ? CsdlConstants.Value_Computed
                         : CsdlConstants.Value_Identity);
             }
-            _xmlWriter.WriteAttributeString(SsdlConstants.Attribute_Nullable, GetLowerCaseStringFromBoolValue(property.IsNullable));
+            _xmlWriter.WriteAttributeString(
+                SsdlConstants.Attribute_Nullable, GetLowerCaseStringFromBoolValue(property.IsNullable));
         }
 
         internal void WriteReferentialConstraintRoleElement(

@@ -36,7 +36,11 @@
             databaseMetadata.Version = 2.0; // Ensures SSDL version matches that created by EF 4.1/4.2
 
             var stringBuilder = new StringBuilder();
-            using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true }))
+            using (var xmlWriter = XmlWriter.Create(
+                stringBuilder, new XmlWriterSettings
+                                   {
+                                       Indent = true
+                                   }))
             {
                 new SsdlSerializer().Serialize(
                     databaseMetadata,

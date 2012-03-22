@@ -44,11 +44,11 @@ namespace System.Data.Entity.Migrations.Design
 
             var generatedMigration
                 = new ScaffoldedMigration
-                    {
-                        Language = "vb",
-                        UserCode = Generate(operations, @namespace, className),
-                        DesignerCode = Generate(migrationId, sourceModel, targetModel, @namespace, className)
-                    };
+                      {
+                          Language = "vb",
+                          UserCode = Generate(operations, @namespace, className),
+                          DesignerCode = Generate(migrationId, sourceModel, targetModel, @namespace, className)
+                      };
 
             return generatedMigration;
         }
@@ -61,7 +61,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name = "className">Name of the class that should be generated.</param>
         /// <returns>The generated code.</returns>
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
-        protected virtual string Generate(IEnumerable<MigrationOperation> operations, string @namespace, string className)
+        protected virtual string Generate(
+            IEnumerable<MigrationOperation> operations, string @namespace, string className)
         {
             Contract.Requires(operations != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(className));
@@ -70,8 +71,9 @@ namespace System.Data.Entity.Migrations.Design
             {
                 using (var writer = new IndentedTextWriter(stringWriter, "    "))
                 {
-                    WriteClassStart(@namespace, className, writer, "Inherits DbMigration", designer: false,
-                                    namespaces: GetNamespaces(operations));
+                    WriteClassStart(
+                        @namespace, className, writer, "Inherits DbMigration", designer: false,
+                        namespaces: GetNamespaces(operations));
 
                     writer.WriteLine("Public Overrides Sub Up()");
                     writer.Indent++;
@@ -115,7 +117,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name = "className">Name of the class that should be generated.</param>
         /// <returns>The generated code.</returns>
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
-        protected virtual string Generate(string migrationId, string sourceModel, string targetModel, string @namespace, string className)
+        protected virtual string Generate(
+            string migrationId, string sourceModel, string targetModel, string @namespace, string className)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
             Contract.Requires(!string.IsNullOrWhiteSpace(targetModel));
@@ -189,7 +192,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name = "designer">A value indicating if this class is being generated for a code-behind file.</param>
         /// <param name="namespaces">Namespaces for which Imports directives will be added. If null, then the namespaces returned from GetDefaultNamespaces will be used.</param>
         protected virtual void WriteClassStart(
-            string @namespace, string className, IndentedTextWriter writer, string @base, bool designer = false, IEnumerable<string> namespaces = null)
+            string @namespace, string className, IndentedTextWriter writer, string @base, bool designer = false,
+            IEnumerable<string> namespaces = null)
         {
             Contract.Requires(writer != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(className));
@@ -321,21 +325,21 @@ namespace System.Data.Entity.Migrations.Design
 
             createTableOperation.Columns.Each(
                 (c, i) =>
-                {
-                    var scrubbedName = ScrubName(c.Name);
-
-                    writer.Write(".");
-                    writer.Write(scrubbedName);
-                    writer.Write(" =");
-                    Generate(c, writer, !string.Equals(c.Name, scrubbedName, StringComparison.Ordinal));
-
-                    if (i < columnCount - 1)
                     {
-                        writer.Write(",");
-                    }
+                        var scrubbedName = ScrubName(c.Name);
 
-                    writer.WriteLine();
-                });
+                        writer.Write(".");
+                        writer.Write(scrubbedName);
+                        writer.Write(" =");
+                        Generate(c, writer, !string.Equals(c.Name, scrubbedName, StringComparison.Ordinal));
+
+                        if (i < columnCount - 1)
+                        {
+                            writer.Write(",");
+                        }
+
+                        writer.WriteLine();
+                    });
 
             writer.Indent--;
             writer.Write("}");
@@ -922,7 +926,10 @@ namespace System.Data.Entity.Migrations.Design
             writer.Write("MoveTable(name := ");
             writer.Write(Quote(moveTableOperation.Name));
             writer.Write(", newSchema := ");
-            writer.Write(string.IsNullOrWhiteSpace(moveTableOperation.NewSchema) ? "Nothing" : Quote(moveTableOperation.NewSchema));
+            writer.Write(
+                string.IsNullOrWhiteSpace(moveTableOperation.NewSchema)
+                    ? "Nothing"
+                    : Quote(moveTableOperation.NewSchema));
             writer.WriteLine(")");
         }
 

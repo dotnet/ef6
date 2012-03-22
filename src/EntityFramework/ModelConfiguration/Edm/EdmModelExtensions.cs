@@ -28,8 +28,16 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             model.Name = "CodeFirstModel";
             model.Version = version;
-            model.Containers.Add(new EdmEntityContainer { Name = "CodeFirstContainer" });
-            model.Namespaces.Add(new EdmNamespace { Name = "CodeFirstNamespace" });
+            model.Containers.Add(
+                new EdmEntityContainer
+                    {
+                        Name = "CodeFirstContainer"
+                    });
+            model.Namespaces.Add(
+                new EdmNamespace
+                    {
+                        Name = "CodeFirstNamespace"
+                    });
 
             return model;
         }
@@ -49,7 +57,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             model.Annotations.SetAnnotation(ProviderInfoAnnotation, providerInfo);
         }
 
-        public static bool HasCascadeDeletePath(this EdmModel model, EdmEntityType sourceEntityType, EdmEntityType targetEntityType)
+        public static bool HasCascadeDeletePath(
+            this EdmModel model, EdmEntityType sourceEntityType, EdmEntityType targetEntityType)
         {
             Contract.Requires(model != null);
             Contract.Requires(sourceEntityType != null);
@@ -94,7 +103,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             var stringBuilder = new StringBuilder();
 
-            using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true }))
+            using (var xmlWriter = XmlWriter.Create(
+                stringBuilder, new XmlWriterSettings
+                                   {
+                                       Indent = true
+                                   }))
             {
                 model.ValidateAndSerializeCsdl(xmlWriter);
             }
@@ -112,7 +125,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             model.ValidateAndSerializeCsdl(XmlWriter.Create(Stream.Null));
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         public static List<DataModelErrorEventArgs> GetCsdlErrors(this EdmModel model)
         {
             Contract.Requires(model != null);
@@ -145,12 +159,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             var success = csdlSerializer.Serialize(model, writer);
 
-            Contract.Assert(success == (validationErrors.Count == 0), "Serializer success and error count did not match.");
+            Contract.Assert(
+                success == (validationErrors.Count == 0), "Serializer success and error count did not match.");
 
             return validationErrors;
         }
 
-        public static DbDatabaseMapping GenerateDatabaseMapping(this EdmModel model, DbProviderManifest providerManifest)
+        public static DbDatabaseMapping GenerateDatabaseMapping(
+            this EdmModel model, DbProviderManifest providerManifest)
         {
             Contract.Requires(model != null);
             Contract.Assert(model.Namespaces.Count == 1);
@@ -158,7 +174,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return new DatabaseMappingGenerator(providerManifest).Generate(model);
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         public static EdmNamespaceItem GetStructuralType(this EdmModel model, string name)
         {
             Contract.Requires(model != null);
@@ -219,7 +236,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
             Contract.Assert(model.Namespaces.Count == 1);
 
-            var entityType = new EdmEntityType { Name = name };
+            var entityType = new EdmEntityType
+                                 {
+                                     Name = name
+                                 };
 
             model.Namespaces.Single().EntityTypes.Add(entityType);
 
@@ -261,10 +281,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Assert(model.Containers.Count == 1);
 
             var entitySet = new EdmEntitySet
-                {
-                    Name = name,
-                    ElementType = elementType
-                };
+                                {
+                                    Name = name,
+                                    ElementType = elementType
+                                };
 
             model.Containers.Single().EntitySets.Add(entitySet);
 
@@ -277,7 +297,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
             Contract.Assert(model.Namespaces.Count == 1);
 
-            var complexType = new EdmComplexType { Name = name };
+            var complexType = new EdmComplexType
+                                  {
+                                      Name = name
+                                  };
 
             model.Namespaces.Single().ComplexTypes.Add(complexType);
 
@@ -290,14 +313,18 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
             Contract.Assert(model.Namespaces.Count == 1);
 
-            var enumType = new EdmEnumType { Name = name };
+            var enumType = new EdmEnumType
+                               {
+                                   Name = name
+                               };
 
             model.Namespaces.Single().EnumTypes.Add(enumType);
 
             return enumType;
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         public static EdmAssociationType GetAssociationType(this EdmModel model, string name)
         {
             Contract.Requires(model != null);
@@ -406,7 +433,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var entitySet = container.EntitySets.SingleOrDefault(a => a.ElementType == entityType);
             container.EntitySets.Remove(entitySet);
 
-            if (entitySet != null && newSet != null)
+            if (entitySet != null
+                && newSet != null)
             {
                 // Update AssociationSets to point to entitySet instead of derivedEntitySet
                 foreach (var associationSet in model.Containers.Single().AssociationSets)
@@ -435,7 +463,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             var container = model.Containers.Single();
 
-            container.AssociationSets.Remove(container.AssociationSets.SingleOrDefault(a => a.ElementType == associationType));
+            container.AssociationSets.Remove(
+                container.AssociationSets.SingleOrDefault(a => a.ElementType == associationType));
         }
 
         public static EdmAssociationSet AddAssociationSet(
@@ -447,12 +476,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Assert(model.Containers.Count == 1);
 
             var associationSet = new EdmAssociationSet
-                {
-                    Name = name,
-                    ElementType = associationType,
-                    SourceSet = model.GetEntitySet(associationType.SourceEnd.EntityType),
-                    TargetSet = model.GetEntitySet(associationType.TargetEnd.EntityType)
-                };
+                                     {
+                                         Name = name,
+                                         ElementType = associationType,
+                                         SourceSet = model.GetEntitySet(associationType.SourceEnd.EntityType),
+                                         TargetSet = model.GetEntitySet(associationType.TargetEnd.EntityType)
+                                     };
 
             model.Containers.Single().AssociationSets.Add(associationSet);
 

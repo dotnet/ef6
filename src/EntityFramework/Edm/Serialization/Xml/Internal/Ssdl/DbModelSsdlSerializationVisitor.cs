@@ -11,8 +11,9 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Ssdl
         private readonly DbModelSsdlSchemaWriter _schemaWriter;
         private readonly XmlWriter _xmlWriter;
 
-        private readonly Dictionary<DbTableMetadata, IEnumerable<DbForeignKeyConstraintMetadata>> _foreignKeyConstraintList =
-            new Dictionary<DbTableMetadata, IEnumerable<DbForeignKeyConstraintMetadata>>();
+        private readonly Dictionary<DbTableMetadata, IEnumerable<DbForeignKeyConstraintMetadata>>
+            _foreignKeyConstraintList =
+                new Dictionary<DbTableMetadata, IEnumerable<DbForeignKeyConstraintMetadata>>();
 
         internal DbModelSsdlSerializationVisitor(XmlWriter xmlWriter, double dbVersion)
         {
@@ -137,7 +138,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Ssdl
 
                         var roleNames = DbModelSsdlHelper.GetRoleNamePair(
                             foreignKeyConstraintInTable.PrincipalTable, foreignKeyConstraint.Key);
-                        _containerSchemaWriter.WriteAssociationSetEndElement(foreignKeyConstraintInTable.PrincipalTable, roleNames[0]);
+                        _containerSchemaWriter.WriteAssociationSetEndElement(
+                            foreignKeyConstraintInTable.PrincipalTable, roleNames[0]);
                         _containerSchemaWriter.WriteAssociationSetEndElement(foreignKeyConstraint.Key, roleNames[1]);
 
                         _containerSchemaWriter.WriteEndElement();

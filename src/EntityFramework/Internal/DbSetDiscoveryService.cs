@@ -17,7 +17,8 @@ namespace System.Data.Entity.Internal
     ///     then a delegate is compiled to set the property to a new instance of DbSet.
     ///     All of this information is cached per app domain.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "Casing is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
+        Justification = "Casing is intentional")]
     internal class DbSetDiscoveryService
     {
         #region Fields and constructors
@@ -103,19 +104,20 @@ namespace System.Data.Entity.Internal
                                 var newExpression = Expression.Call(dbContextParam, setMethod);
                                 var setExpression = Expression.Call(
                                     Expression.Convert(dbContextParam, _context.GetType()), setter, newExpression);
-                                initDelegates.Add(Expression.Lambda<Action<DbContext>>(setExpression, dbContextParam).Compile());
+                                initDelegates.Add(
+                                    Expression.Lambda<Action<DbContext>>(setExpression, dbContextParam).Compile());
                             }
                         }
                     }
                 }
 
                 Action<DbContext> initializer = dbContext =>
-                    {
-                        foreach (var initer in initDelegates)
-                        {
-                            initer(dbContext);
-                        }
-                    };
+                                                    {
+                                                        foreach (var initer in initDelegates)
+                                                        {
+                                                            initer(dbContext);
+                                                        }
+                                                    };
 
                 setsInfo = new DbContextTypesInitializersPair(entityTypes, initializer);
 
@@ -158,8 +160,10 @@ namespace System.Data.Entity.Internal
         /// </summary>
         private static bool DbSetPropertyShouldBeInitialized(PropertyInfo propertyInfo)
         {
-            return propertyInfo.GetCustomAttributes(typeof(SuppressDbSetInitializationAttribute), inherit: false).Length == 0 &&
-                   propertyInfo.DeclaringType.GetCustomAttributes(typeof(SuppressDbSetInitializationAttribute), inherit: false).Length == 0;
+            return propertyInfo.GetCustomAttributes(typeof(SuppressDbSetInitializationAttribute), inherit: false).Length
+                   == 0 &&
+                   propertyInfo.DeclaringType.GetCustomAttributes(
+                       typeof(SuppressDbSetInitializationAttribute), inherit: false).Length == 0;
         }
 
         #endregion
@@ -207,7 +211,8 @@ namespace System.Data.Entity.Internal
                         : setType.GetInterface(typeof(IDbSet<>).FullName);
 
                 // We need to make sure the type is fully specified otherwise we won't be able to add element to it.
-                if (setInterface != null && !setInterface.ContainsGenericParameters)
+                if (setInterface != null
+                    && !setInterface.ContainsGenericParameters)
                 {
                     return setInterface.GetGenericArguments()[0];
                 }

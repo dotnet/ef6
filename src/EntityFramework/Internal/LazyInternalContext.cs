@@ -25,8 +25,9 @@
             new CreateDatabaseIfNotExists<DbContext>();
 
         // A cache from context type and provider invariant name to DbCompiledModel objects such that the model for a derived context type is only used once.
-        private static readonly ConcurrentDictionary<Tuple<Type, string>, RetryLazy<LazyInternalContext, DbCompiledModel>> CachedModels =
-            new ConcurrentDictionary<Tuple<Type, string>, RetryLazy<LazyInternalContext, DbCompiledModel>>();
+        private static readonly
+            ConcurrentDictionary<Tuple<Type, string>, RetryLazy<LazyInternalContext, DbCompiledModel>> CachedModels =
+                new ConcurrentDictionary<Tuple<Type, string>, RetryLazy<LazyInternalContext, DbCompiledModel>>();
 
         // The databases that have been initialized in this app domain in terms of the DbCompiledModel
         // and the connection strings that have been used with that model.
@@ -34,8 +35,9 @@
         // model/connection pair so that it is only done once per app domain.
         // The lazy is there so that even if two threads attempt to set initialized or perform initialization
         // at virtually the same time the database will only actually be initialized once.
-        private static readonly ConcurrentDictionary<Tuple<DbCompiledModel, string>, RetryAction<InternalContext>> InitializedDatabases =
-            new ConcurrentDictionary<Tuple<DbCompiledModel, string>, RetryAction<InternalContext>>();
+        private static readonly ConcurrentDictionary<Tuple<DbCompiledModel, string>, RetryAction<InternalContext>>
+            InitializedDatabases =
+                new ConcurrentDictionary<Tuple<DbCompiledModel, string>, RetryAction<InternalContext>>();
 
         // Responsible for creating a connection lazily when the context is used for the first time.
         private IInternalConnection _internalConnection;
@@ -204,7 +206,6 @@
             get { return _internalConnection.OriginalConnectionString; }
         }
 
-
         /// <summary>
         ///     Returns the origin of the underlying connection string.
         /// </summary>
@@ -223,10 +224,7 @@
         /// </summary>
         public override AppConfig AppConfig
         {
-            get
-            {
-                return base.AppConfig;
-            }
+            get { return base.AppConfig; }
             set
             {
                 base.AppConfig = value;
@@ -300,13 +298,14 @@
             Contract.Assert(_creatingModel == false);
             Contract.Assert(_objectContext == null);
 
-            connection.AppConfig = this.AppConfig;
+            connection.AppConfig = AppConfig;
 
-            if (connection.ConnectionHasModel != _internalConnection.ConnectionHasModel)
+            if (connection.ConnectionHasModel
+                != _internalConnection.ConnectionHasModel)
             {
                 throw _internalConnection.ConnectionHasModel
-                    ? Error.LazyInternalContext_CannotReplaceEfConnectionWithDbConnection()
-                    : Error.LazyInternalContext_CannotReplaceDbConnectionWithEfConnection();
+                          ? Error.LazyInternalContext_CannotReplaceEfConnectionWithDbConnection()
+                          : Error.LazyInternalContext_CannotReplaceDbConnectionWithEfConnection();
             }
 
             _internalConnection = connection;
@@ -380,7 +379,6 @@
                     _objectContext.ContextOptions.ProxyCreationEnabled = _initialProxyCreationFlag;
 
                     _objectContext.ContextOptions.UseConsistentNullReferenceBehavior = true;
-
 
                     InitializeEntitySetMappings();
                 }
@@ -537,7 +535,12 @@
         /// </summary>
         public override bool LazyLoadingEnabled
         {
-            get { return _objectContext != null ? _objectContext.ContextOptions.LazyLoadingEnabled : _initialLazyLoadingFlag; }
+            get
+            {
+                return _objectContext != null
+                           ? _objectContext.ContextOptions.LazyLoadingEnabled
+                           : _initialLazyLoadingFlag;
+            }
             set
             {
                 if (_objectContext != null)
@@ -560,7 +563,12 @@
         /// </summary>
         public override bool ProxyCreationEnabled
         {
-            get { return _objectContext != null ? _objectContext.ContextOptions.ProxyCreationEnabled : _initialProxyCreationFlag; }
+            get
+            {
+                return _objectContext != null
+                           ? _objectContext.ContextOptions.ProxyCreationEnabled
+                           : _initialProxyCreationFlag;
+            }
             set
             {
                 if (_objectContext != null)

@@ -9,7 +9,8 @@ namespace System.Data.Entity.Infrastructure
     ///     in the model but will not be automatically initialized.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class, AllowMultiple = false)]
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "Casing is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
+        Justification = "Casing is intentional")]
     public sealed class SuppressDbSetInitializationAttribute : Attribute
     {
     }

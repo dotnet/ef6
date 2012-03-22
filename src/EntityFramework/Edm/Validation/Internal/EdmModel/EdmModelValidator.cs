@@ -15,7 +15,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
         internal static void Validate(EdmModel validateRoot, EdmModelValidationContext context)
         {
             // build up the rule set and the visitor
-            var edmModelValidationRuleSet = EdmModelRuleSet.CreateEdmModelRuleSet(context.ValidationContextVersion, context.ValidateSyntax);
+            var edmModelValidationRuleSet = EdmModelRuleSet.CreateEdmModelRuleSet(
+                context.ValidationContextVersion, context.ValidateSyntax);
 
             var modelVisitor = new EdmModelValidationVisitor(context, edmModelValidationRuleSet);
 

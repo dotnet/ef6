@@ -21,7 +21,8 @@
         /// <param name = "elementType">Type of the element.</param>
         /// <param name = "sql">The SQL.</param>
         /// <param name = "parameters">The parameters.</param>
-        internal InternalSqlNonSetQuery(InternalContext internalContext, Type elementType, string sql, object[] parameters)
+        internal InternalSqlNonSetQuery(
+            InternalContext internalContext, Type elementType, string sql, object[] parameters)
             : base(sql, parameters)
         {
             Contract.Requires(internalContext != null);

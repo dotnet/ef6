@@ -3,7 +3,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -54,12 +53,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                             = declaringEntity.NavigationProperties
                             .Where(n => n.ResultEnd.EntityType == entityType)
                         select new
-                            {
-                                DeclaringEnd = declaringEnd,
-                                AssociationType = associationType,
-                                DeclaringEntityType = declaringEntity,
-                                NavigationProperties = navigationProperties.ToList()
-                            }
+                                   {
+                                       DeclaringEnd = declaringEnd,
+                                       AssociationType = associationType,
+                                       DeclaringEntityType = declaringEntity,
+                                       NavigationProperties = navigationProperties.ToList()
+                                   }
                   where matchingAssociations.All(
                       a => a.AssociationType.Constraint == null // (4)
                            && a.AssociationType.GetConfiguration() == null // (5)
@@ -68,10 +67,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                            && a.NavigationProperties.All(n => n.GetConfiguration() == null))
                   // (8)
                   select new
-                      {
-                          EntityType = entityType,
-                          MatchingAssociations = matchingAssociations.ToList(),
-                      };
+                             {
+                                 EntityType = entityType,
+                                 MatchingAssociations = matchingAssociations.ToList(),
+                             };
 
             // Transform candidate entities into complex types
             foreach (var candidate in candidates.ToList())
@@ -95,7 +94,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                         if (association.DeclaringEntityType.NavigationProperties.Contains(navigationProperty))
                         {
                             association.DeclaringEntityType.DeclaredNavigationProperties.Remove(navigationProperty);
-                            var complexProperty = association.DeclaringEntityType.AddComplexProperty(navigationProperty.Name, complexType);
+                            var complexProperty =
+                                association.DeclaringEntityType.AddComplexProperty(navigationProperty.Name, complexType);
                             foreach (var annotation in navigationProperty.Annotations)
                             {
                                 complexProperty.Annotations.Add(annotation);

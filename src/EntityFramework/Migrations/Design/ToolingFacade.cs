@@ -84,7 +84,10 @@
             _configurationTypeName = configurationTypeName;
             _connectionStringInfo = connectionStringInfo;
 
-            var info = new AppDomainSetup { ShadowCopyFiles = "true" };
+            var info = new AppDomainSetup
+                           {
+                               ShadowCopyFiles = "true"
+                           };
 
             if (!string.IsNullOrWhiteSpace(workingDirectory))
             {
@@ -165,10 +168,10 @@
         public void Update(string targetMigration, bool force)
         {
             var runner = new UpdateRunner
-                {
-                    TargetMigration = targetMigration,
-                    Force = force
-                };
+                             {
+                                 TargetMigration = targetMigration,
+                                 Force = force
+                             };
             ConfigureRunner(runner);
 
             Run(runner);
@@ -191,11 +194,11 @@
         {
             var runner
                 = new ScriptUpdateRunner
-                    {
-                        SourceMigration = sourceMigration,
-                        TargetMigration = targetMigration,
-                        Force = force
-                    };
+                      {
+                          SourceMigration = sourceMigration,
+                          TargetMigration = targetMigration,
+                          Force = force
+                      };
             ConfigureRunner(runner);
 
             Run(runner);
@@ -211,16 +214,17 @@
         /// <param name = "rootNamespace">The root namespace of the project the migration will be added to.</param>
         /// <param name = "ignoreChanges">Whether or not to include model changes.</param>
         /// <returns>The scaffolded migration.</returns>
-        public ScaffoldedMigration Scaffold(string migrationName, string language, string rootNamespace, bool ignoreChanges)
+        public ScaffoldedMigration Scaffold(
+            string migrationName, string language, string rootNamespace, bool ignoreChanges)
         {
             var runner
                 = new ScaffoldRunner
-                    {
-                        MigrationName = migrationName,
-                        Language = language,
-                        RootNamespace = rootNamespace,
-                        IgnoreChanges = ignoreChanges
-                    };
+                      {
+                          MigrationName = migrationName,
+                          Language = language,
+                          RootNamespace = rootNamespace,
+                          IgnoreChanges = ignoreChanges
+                      };
             ConfigureRunner(runner);
 
             Run(runner);
@@ -238,10 +242,10 @@
         {
             var runner
                 = new InitialCreateScaffoldRunner
-                    {
-                        Language = language,
-                        RootNamespace = rootNamespace
-                    };
+                      {
+                          Language = language,
+                          RootNamespace = rootNamespace
+                      };
 
             ConfigureRunner(runner);
 
@@ -258,13 +262,13 @@
             }
 
             return new ScaffoldedMigration
-                {
-                    DesignerCode = (string)_appDomain.GetData("result.DesignerCode"),
-                    Language = (string)_appDomain.GetData("result.Language"),
-                    MigrationId = (string)_appDomain.GetData("result.MigrationId"),
-                    UserCode = (string)_appDomain.GetData("result.UserCode"),
-                    Directory = (string)_appDomain.GetData("result.Folder")
-                };
+                       {
+                           DesignerCode = (string)_appDomain.GetData("result.DesignerCode"),
+                           Language = (string)_appDomain.GetData("result.Language"),
+                           MigrationId = (string)_appDomain.GetData("result.MigrationId"),
+                           UserCode = (string)_appDomain.GetData("result.UserCode"),
+                           Directory = (string)_appDomain.GetData("result.Folder")
+                       };
         }
 
         /// <inheritdoc />
@@ -431,7 +435,9 @@
                     {
                         configurationTypes
                             = configurationTypes
-                                .Where(t => string.Equals(t.Name, ConfigurationTypeName, StringComparison.OrdinalIgnoreCase))
+                                .Where(
+                                    t =>
+                                    string.Equals(t.Name, ConfigurationTypeName, StringComparison.OrdinalIgnoreCase))
                                 .ToList();
 
                         // Disambiguate using case
@@ -450,7 +456,8 @@
 
                         if (configurationTypes.Count() > 1)
                         {
-                            throw Error.AssemblyMigrator_MultipleConfigurationsWithName(ConfigurationTypeName, assemblyName);
+                            throw Error.AssemblyMigrator_MultipleConfigurationsWithName(
+                                ConfigurationTypeName, assemblyName);
                         }
                     }
                     else
@@ -603,13 +610,15 @@
 
                 // Need to strip project namespace when generating code for VB projects 
                 // (The VB compiler automatically prefixes the project namespace)
-                if (Language == "vb" && !string.IsNullOrWhiteSpace(RootNamespace))
+                if (Language == "vb"
+                    && !string.IsNullOrWhiteSpace(RootNamespace))
                 {
                     if (RootNamespace.EqualsIgnoreCase(@namespace))
                     {
                         @namespace = null;
                     }
-                    else if (@namespace != null && @namespace.StartsWith(RootNamespace + ".", StringComparison.OrdinalIgnoreCase))
+                    else if (@namespace != null
+                             && @namespace.StartsWith(RootNamespace + ".", StringComparison.OrdinalIgnoreCase))
                     {
                         @namespace = @namespace.Substring(RootNamespace.Length + 1);
                     }
@@ -651,7 +660,8 @@
                 base.OverrideConfiguration(configuration);
 
                 // If the user hasn't set their own generator and their using a VB project then switch in the default VB one
-                if (Language == "vb" && configuration.CodeGenerator is CSharpMigrationCodeGenerator)
+                if (Language == "vb"
+                    && configuration.CodeGenerator is CSharpMigrationCodeGenerator)
                 {
                     configuration.CodeGenerator = new VisualBasicMigrationCodeGenerator();
                 }

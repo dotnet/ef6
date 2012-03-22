@@ -1,7 +1,6 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Edm;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Convention to discover foreign key properties whose names are a combination
@@ -31,7 +30,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 EdmProperty principalKeyProperty)
             {
                 return string.Equals(
-                    dependentProperty.Name, principalEntityType.Name + principalKeyProperty.Name, StringComparison.OrdinalIgnoreCase);
+                    dependentProperty.Name, principalEntityType.Name + principalKeyProperty.Name,
+                    StringComparison.OrdinalIgnoreCase);
             }
         }
     }

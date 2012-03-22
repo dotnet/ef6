@@ -5,7 +5,8 @@ namespace System.Data.Entity.Edm.Db.Mapping
 
     internal class DbDatabaseMapping : DbMappingMetadataItem
     {
-        private readonly BackingList<DbEntityContainerMapping> entityContainerMappingsList = new BackingList<DbEntityContainerMapping>();
+        private readonly BackingList<DbEntityContainerMapping> entityContainerMappingsList =
+            new BackingList<DbEntityContainerMapping>();
 
         internal override DbMappingItemKind GetItemKind()
         {

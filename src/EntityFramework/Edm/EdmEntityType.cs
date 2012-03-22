@@ -14,7 +14,9 @@ namespace System.Data.Entity.Edm
     {
         private readonly BackingList<EdmProperty> declaredPropertiesList = new BackingList<EdmProperty>();
         private readonly BackingList<EdmProperty> declaredKeyPropertiesList = new BackingList<EdmProperty>();
-        private readonly BackingList<EdmNavigationProperty> declaredNavigationPropertiesList = new BackingList<EdmNavigationProperty>();
+
+        private readonly BackingList<EdmNavigationProperty> declaredNavigationPropertiesList =
+            new BackingList<EdmNavigationProperty>();
 
         private EdmEntityType baseEntityType;
         private bool isAbstract;

@@ -113,10 +113,7 @@ namespace System.Data.Entity.Internal
                 Initialize();
                 return base.ProviderName;
             }
-            set
-            {
-                base.ProviderName = value;
-            }
+            set { base.ProviderName = value; }
         }
 
         #endregion
@@ -138,18 +135,19 @@ namespace System.Data.Entity.Internal
                     // Avoid initializing the connection just to work out if it is an EF connection
                     if (UnderlyingConnection == null)
                     {
-                        string connectionString = _nameOrConnectionString;
+                        var connectionString = _nameOrConnectionString;
                         string name;
                         if (_connectionInfo != null)
                         {
-                            connectionString = _connectionInfo.GetConnectionString(this.AppConfig).ConnectionString;
+                            connectionString = _connectionInfo.GetConnectionString(AppConfig).ConnectionString;
                         }
                         else if (DbHelpers.TryGetConnectionName(_nameOrConnectionString, out name))
                         {
-                            var setting = FindConnectionInConfig(name, this.AppConfig);
+                            var setting = FindConnectionInConfig(name, AppConfig);
 
                             // If the connection string is of the form name=, but the name was not found in the config file
-                            if (setting == null && DbHelpers.TreatAsConnectionString(_nameOrConnectionString))
+                            if (setting == null
+                                && DbHelpers.TreatAsConnectionString(_nameOrConnectionString))
                             {
                                 throw Error.DbContext_ConnectionStringNotFound(name);
                             }
@@ -227,20 +225,21 @@ namespace System.Data.Entity.Internal
                 string name;
                 if (_connectionInfo != null)
                 {
-                    var connection = _connectionInfo.GetConnectionString(this.AppConfig);
+                    var connection = _connectionInfo.GetConnectionString(AppConfig);
                     InitializeFromConnectionStringSetting(connection);
 
                     _connectionStringOrigin = DbConnectionStringOrigin.DbContextInfo;
                     _connectionStringName = connection.Name;
                 }
-                // If the name or connection string is a simple name or is in the form "name=foo" then use
-                // that name to try to load from the app/web config file. 
+                    // If the name or connection string is a simple name or is in the form "name=foo" then use
+                    // that name to try to load from the app/web config file. 
                 else if (!DbHelpers.TryGetConnectionName(_nameOrConnectionString, out name)
-                     || !TryInitializeFromAppConfig(name, AppConfig))
+                         || !TryInitializeFromAppConfig(name, AppConfig))
                 {
                     // If the connection string is of the form name=, but the name was not found in the config file
                     // then always throw since we always interpret name= to mean find in the config file only.
-                    if (name != null && DbHelpers.TreatAsConnectionString(_nameOrConnectionString))
+                    if (name != null
+                        && DbHelpers.TreatAsConnectionString(_nameOrConnectionString))
                     {
                         throw Error.DbContext_ConnectionStringNotFound(name);
                     }
@@ -260,11 +259,12 @@ namespace System.Data.Entity.Internal
                         {
                             // Otherwise figure out the connection factory to use (either the default,
                             // the one set in code, or one provided by DbContextInfo via the AppSettings property
-                            var defaultConnectionFactory = Database.DefaultConnectionFactoryChanged ?
-                                Database.DefaultConnectionFactory :
-                                AppConfig.DefaultConnectionFactory;
+                            var defaultConnectionFactory = Database.DefaultConnectionFactoryChanged
+                                                               ? Database.DefaultConnectionFactory
+                                                               : AppConfig.DefaultConnectionFactory;
 
-                            UnderlyingConnection = defaultConnectionFactory.CreateConnection(name ?? _nameOrConnectionString);
+                            UnderlyingConnection =
+                                defaultConnectionFactory.CreateConnection(name ?? _nameOrConnectionString);
                             if (UnderlyingConnection == null)
                             {
                                 throw Error.DbContext_ConnectionFactoryReturnedNullConnection();
@@ -323,11 +323,15 @@ namespace System.Data.Entity.Internal
         {
             // Build a list of candidate names that might be found in the app.config/web.config file.
             // The first entry is the full name.
-            var candidates = new List<string> { name };
+            var candidates = new List<string>
+                                 {
+                                     name
+                                 };
 
             // Second entry is full name with namespace stripped out.
             var lastDot = name.LastIndexOf('.');
-            if (lastDot >= 0 && lastDot + 1 < name.Length)
+            if (lastDot >= 0
+                && lastDot + 1 < name.Length)
             {
                 candidates.Add(name.Substring(lastDot + 1));
             }
@@ -338,7 +342,7 @@ namespace System.Data.Entity.Internal
                                        select config.GetConnectionString(c)).FirstOrDefault();
             return appConfigConnection;
         }
-        
+
         /// <summary>
         /// Initializes the connection based on a connection string.
         /// </summary>

@@ -61,20 +61,21 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 var targetConfig = (EntityTypeConfiguration)association.TargetEnd.EntityType.GetConfiguration();
 
                 return sourceConfig == null
-                    || targetConfig == null
-                    || sourceConfig.GetTableName() == null
-                    || targetConfig.GetTableName() == null
-                    || !sourceConfig.GetTableName().Equals(targetConfig.GetTableName());
+                       || targetConfig == null
+                       || sourceConfig.GetTableName() == null
+                       || targetConfig.GetTableName() == null
+                       || !sourceConfig.GetTableName().Equals(targetConfig.GetTableName());
             }
             return false;
         }
-        
+
         private bool ParentOfTpc(EdmEntityType entityType, EdmModel model)
         {
             foreach (var e in model.GetEntityTypes().Where(et => et.GetRootType() == entityType))
             {
                 var configuration = e.GetConfiguration() as EntityTypeConfiguration;
-                if (configuration != null && configuration.IsMappingAnyInheritedProperty(e))
+                if (configuration != null
+                    && configuration.IsMappingAnyInheritedProperty(e))
                 {
                     return true;
                 }

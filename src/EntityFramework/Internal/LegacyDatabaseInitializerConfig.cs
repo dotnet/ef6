@@ -33,12 +33,14 @@
         {
             Contract.Requires(configKey != null);
 
-            System.Diagnostics.Contracts.Contract.Assert(
-                configKey.StartsWith(ConfigKeyKey, StringComparison.OrdinalIgnoreCase), "configKey must start with " + ConfigKeyKey);
+            Contract.Assert(
+                configKey.StartsWith(ConfigKeyKey, StringComparison.OrdinalIgnoreCase),
+                "configKey must start with " + ConfigKeyKey);
 
             _contextTypeName = configKey.Remove(0, ConfigKeyKey.Length).Trim();
 
-            if (String.IsNullOrWhiteSpace(configValue) ||
+            if (String.IsNullOrWhiteSpace(configValue)
+                ||
                 configValue.Trim().Equals(DisabledSpecialValue, StringComparison.OrdinalIgnoreCase))
             {
                 _disabled = true;
@@ -48,7 +50,8 @@
                 _initializerTypeName = configValue.Trim();
             }
 
-            if (String.IsNullOrWhiteSpace(_contextTypeName) || (!_disabled && (String.IsNullOrWhiteSpace(_initializerTypeName))))
+            if (String.IsNullOrWhiteSpace(_contextTypeName)
+                || (!_disabled && (String.IsNullOrWhiteSpace(_initializerTypeName))))
             {
                 throw Error.Database_BadLegacyInitializerEntry(configKey, configValue);
             }
@@ -85,12 +88,14 @@
                 }
 
                 var setInitializerMethod = Database_SetInitializerInternal.MakeGenericMethod(contextType);
-                setInitializerMethod.Invoke(null, BindingFlags.Static | BindingFlags.NonPublic, null, new[] { initializer, true }, null);
+                setInitializerMethod.Invoke(
+                    null, BindingFlags.Static | BindingFlags.NonPublic, null, new[] { initializer, true }, null);
             }
             catch (Exception ex)
             {
                 throw new InvalidOperationException(
-                    Strings.Database_InitializeFromLegacyConfigFailed(_disabled ? "Disabled" : _initializerTypeName, _contextTypeName), ex);
+                    Strings.Database_InitializeFromLegacyConfigFailed(
+                        _disabled ? "Disabled" : _initializerTypeName, _contextTypeName), ex);
             }
         }
 

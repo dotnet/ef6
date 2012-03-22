@@ -17,7 +17,8 @@
         /// <param name = "property">Property to validate. Can be null for type level validation.</param>
         /// <returns>Validation error as<see cref = "IEnumerable{DbValidationError}" />. Empty if no errors. Never null.
         /// </returns>
-        IEnumerable<DbValidationError> Validate(EntityValidationContext entityValidationContext, InternalMemberEntry property);
+        IEnumerable<DbValidationError> Validate(
+            EntityValidationContext entityValidationContext, InternalMemberEntry property);
     }
 
     [ContractClassFor(typeof(IValidator))]
@@ -29,7 +30,8 @@
         /// <param name = "entityValidationContext">Validation context.</param>
         /// <param name = "property">Property.</param>
         /// <returns>Nothing - always throws.</returns>
-        IEnumerable<DbValidationError> IValidator.Validate(EntityValidationContext entityValidationContext, InternalMemberEntry property)
+        IEnumerable<DbValidationError> IValidator.Validate(
+            EntityValidationContext entityValidationContext, InternalMemberEntry property)
         {
             Contract.Requires(entityValidationContext != null);
             Contract.Ensures(Contract.Result<IEnumerable<DbValidationError>>() != null);

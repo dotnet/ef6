@@ -26,12 +26,14 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
             {
                 Match match;
 
-                if (((match = IsNotNull.Match(conditionText)) != null) && match.Success)
+                if (((match = IsNotNull.Match(conditionText)) != null)
+                    && match.Success)
                 {
                     throw Error.ArgumentNull(match.Groups[1].Value);
                 }
 
-                if (((match = IsNullOrWhiteSpace.Match(conditionText)) != null) && match.Success)
+                if (((match = IsNullOrWhiteSpace.Match(conditionText)) != null)
+                    && match.Success)
                 {
                     throw Error.ArgumentIsNullOrWhitespace(match.Groups[1].Value);
                 }

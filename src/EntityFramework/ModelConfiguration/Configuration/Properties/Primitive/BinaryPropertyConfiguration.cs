@@ -77,7 +77,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         {
             base.FillFrom(other, inCSpace);
             var strConfigRhs = other as BinaryPropertyConfiguration;
-            if (strConfigRhs != null && IsRowVersion == null)
+            if (strConfigRhs != null
+                && IsRowVersion == null)
             {
                 IsRowVersion = strConfigRhs.IsRowVersion;
             }
@@ -88,7 +89,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             var binaryRhs = other as BinaryPropertyConfiguration;
 
             var baseIsCompatible = base.IsCompatible(other, InCSpace, out errorMessage);
-            var isRowVersionIsCompatible = binaryRhs == null || IsCompatible(c => c.IsRowVersion, binaryRhs, ref errorMessage);
+            var isRowVersionIsCompatible = binaryRhs == null
+                                           || IsCompatible(c => c.IsRowVersion, binaryRhs, ref errorMessage);
 
             return baseIsCompatible &&
                    isRowVersionIsCompatible;

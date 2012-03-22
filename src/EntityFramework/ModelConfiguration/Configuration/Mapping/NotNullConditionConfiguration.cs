@@ -21,7 +21,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal PropertyPath PropertyPath { get; set; }
 
-        internal NotNullConditionConfiguration(EntityMappingConfiguration entityMapConfiguration, PropertyPath propertyPath)
+        internal NotNullConditionConfiguration(
+            EntityMappingConfiguration entityMapConfiguration, PropertyPath propertyPath)
         {
             Contract.Requires(entityMapConfiguration != null);
             Contract.Requires(propertyPath != null);
@@ -55,7 +56,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             _entityMappingConfiguration.AddNullabilityCondition(this);
         }
 
-        internal void Configure(DbDatabaseMapping databaseMapping, DbEntityTypeMappingFragment fragment, EdmEntityType entityType)
+        internal void Configure(
+            DbDatabaseMapping databaseMapping, DbEntityTypeMappingFragment fragment, EdmEntityType entityType)
         {
             Contract.Requires(fragment != null);
 
@@ -72,22 +74,25 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     .Select(pm => pm.Column)
                     .SingleOrDefault();
 
-            if (column == null || !fragment.Table.Columns.Contains(column))
+            if (column == null
+                || !fragment.Table.Columns.Contains(column))
             {
                 throw Error.InvalidNotNullCondition(PropertyPath.ToString(), entityType.Name);
             }
 
-            if (ValueConditionConfiguration.AnyBaseTypeToTableWithoutColumnCondition(databaseMapping, entityType, fragment.Table, column))
+            if (ValueConditionConfiguration.AnyBaseTypeToTableWithoutColumnCondition(
+                databaseMapping, entityType, fragment.Table, column))
             {
                 column.IsNullable = true;
             }
 
             // Make the property required
             var newConfiguration = new Properties.Primitive.PrimitivePropertyConfiguration
-                {
-                    IsNullable = false,
-                    OverridableConfigurationParts = OverridableConfigurationParts.OverridableInSSpace
-                };
+                                       {
+                                           IsNullable = false,
+                                           OverridableConfigurationParts =
+                                               OverridableConfigurationParts.OverridableInSSpace
+                                       };
 
             newConfiguration.Configure(edmPropertyPath.Single().Last());
 

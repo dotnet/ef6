@@ -2,7 +2,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -11,7 +10,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public sealed class NavigationPropertyNameForeignKeyDiscoveryConvention : IEdmConvention<EdmAssociationType>
     {
-        private readonly IEdmConvention<EdmAssociationType> _impl = new NavigationPropertyNameForeignKeyDiscoveryConventionImpl();
+        private readonly IEdmConvention<EdmAssociationType> _impl =
+            new NavigationPropertyNameForeignKeyDiscoveryConventionImpl();
 
         internal NavigationPropertyNameForeignKeyDiscoveryConvention()
         {
@@ -44,7 +44,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 }
 
                 return string.Equals(
-                    dependentProperty.Name, navigationProperty.Name + principalKeyProperty.Name, StringComparison.OrdinalIgnoreCase);
+                    dependentProperty.Name, navigationProperty.Name + principalKeyProperty.Name,
+                    StringComparison.OrdinalIgnoreCase);
             }
 
             protected override bool SupportsMultipleAssociations

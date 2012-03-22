@@ -55,7 +55,8 @@
         /// <param name = "itemIndex">Index of the item.</param>
         public override void CancelNew(int itemIndex)
         {
-            if (itemIndex >= 0 && itemIndex < Count && Equals(base[itemIndex], _addNewInstance))
+            if (itemIndex >= 0 && itemIndex < Count
+                && Equals(base[itemIndex], _addNewInstance))
             {
                 _cancelNewInstance = _addNewInstance;
                 _addNewInstance = default(T);
@@ -82,7 +83,8 @@
         /// <param name = "itemIndex">Index of the item.</param>
         public override void EndNew(int itemIndex)
         {
-            if (itemIndex >= 0 && itemIndex < Count && Equals(base[itemIndex], _addNewInstance))
+            if (itemIndex >= 0 && itemIndex < Count
+                && Equals(base[itemIndex], _addNewInstance))
             {
                 AddToObservableCollection(_addNewInstance);
                 _addNewInstance = default(T);
@@ -99,7 +101,8 @@
         protected override void InsertItem(int index, T item)
         {
             base.InsertItem(index, item);
-            if (!_addingNewInstance && index >= 0 && index <= Count)
+            if (!_addingNewInstance && index >= 0
+                && index <= Count)
             {
                 AddToObservableCollection(item);
             }
@@ -111,7 +114,8 @@
         /// <param name = "index">The index.</param>
         protected override void RemoveItem(int index)
         {
-            if (index >= 0 && index < Count && Equals(base[index], _cancelNewInstance))
+            if (index >= 0 && index < Count
+                && Equals(base[index], _cancelNewInstance))
             {
                 _cancelNewInstance = default(T);
             }
@@ -132,7 +136,8 @@
             var entity = base[index];
             base.SetItem(index, item);
 
-            if (index >= 0 && index < Count)
+            if (index >= 0
+                && index < Count)
             {
                 // Check to see if the user is trying to set an item that is currently being added via AddNew
                 // If so then the list should not continue the AddNew; but instead add the item
@@ -172,12 +177,14 @@
                     // to prevent that.
                     _inCollectionChanged = true;
 
-                    if (e.Action == NotifyCollectionChangedAction.Reset)
+                    if (e.Action
+                        == NotifyCollectionChangedAction.Reset)
                     {
                         Clear();
                     }
 
-                    if (e.Action == NotifyCollectionChangedAction.Remove ||
+                    if (e.Action == NotifyCollectionChangedAction.Remove
+                        ||
                         e.Action == NotifyCollectionChangedAction.Replace)
                     {
                         foreach (T entity in e.OldItems)
@@ -186,7 +193,8 @@
                         }
                     }
 
-                    if (e.Action == NotifyCollectionChangedAction.Add ||
+                    if (e.Action == NotifyCollectionChangedAction.Add
+                        ||
                         e.Action == NotifyCollectionChangedAction.Replace)
                     {
                         foreach (T entity in e.NewItems)

@@ -2,7 +2,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
-    using System.Diagnostics.Contracts;
     using System.Reflection;
 
     /// <summary>
@@ -28,7 +27,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             : AttributeConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration, RequiredAttribute>
         {
             internal override void Apply(
-                PropertyInfo memberInfo, PrimitivePropertyConfiguration primitivePropertyConfiguration, RequiredAttribute attribute)
+                PropertyInfo memberInfo, PrimitivePropertyConfiguration primitivePropertyConfiguration,
+                RequiredAttribute attribute)
             {
                 if (primitivePropertyConfiguration.IsNullable == null)
                 {

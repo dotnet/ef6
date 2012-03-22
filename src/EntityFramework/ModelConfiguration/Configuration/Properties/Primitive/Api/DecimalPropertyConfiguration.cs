@@ -1,7 +1,6 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
     /// <summary>
@@ -49,7 +48,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     Setting 'null' will cause the same runtime behavior as specifying 'None'.
         /// </param>
         /// <returns>The same DecimalPropertyConfiguration instance so that multiple calls can be chained.</returns>
-        public new DecimalPropertyConfiguration HasDatabaseGeneratedOption(DatabaseGeneratedOption? databaseGeneratedOption)
+        public new DecimalPropertyConfiguration HasDatabaseGeneratedOption(
+            DatabaseGeneratedOption? databaseGeneratedOption)
         {
             base.HasDatabaseGeneratedOption(databaseGeneratedOption);
 

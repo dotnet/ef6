@@ -8,17 +8,18 @@ namespace CmdLine
     {
         internal CommandLineParameter(PropertyInfo property, CommandLineParameterAttribute attribute)
         {
-            this.Property = property;
-            this.Attribute = attribute;
-            this.Command = this.Attribute.Command;
+            Property = property;
+            Attribute = attribute;
+            Command = Attribute.Command;
 
             // Set the defaults
-            if (property.PropertyType == typeof(bool))
+            if (property.PropertyType
+                == typeof(bool))
             {
                 // If no switch is specified for bool properties then the name is the switch
-                if (string.IsNullOrWhiteSpace(this.Command))
+                if (string.IsNullOrWhiteSpace(Command))
                 {
-                    this.Command = property.Name;
+                    Command = property.Name;
                 }
             }
         }
@@ -35,88 +36,93 @@ namespace CmdLine
 
         internal bool RequiredArgumentSupplied
         {
-            get
-            {
-                return !this.Attribute.Required || this.ArgumentSupplied;
-            }
+            get { return !Attribute.Required || ArgumentSupplied; }
         }
 
         public string Key
         {
             get
             {
-                return this.IsCommand()
+                return IsCommand()
                            ? CommandLine.CaseSensitive
-                                 ? this.Command
-                                 : this.Command.ToLowerInvariant()
-                           : CommandLineParameterAttribute.GetParameterKey(this.Attribute.ParameterIndex);
+                                 ? Command
+                                 : Command.ToLowerInvariant()
+                           : CommandLineParameterAttribute.GetParameterKey(Attribute.ParameterIndex);
             }
         }
 
         internal bool IsParameter()
         {
-            return !this.IsCommand();
+            return !IsCommand();
         }
 
         internal bool IsCommand()
         {
-            return !string.IsNullOrWhiteSpace(this.Command);
+            return !string.IsNullOrWhiteSpace(Command);
         }
 
         public void SetDefaultValue(object argument)
         {
-            if (this.Attribute == null || this.Attribute.Default == null)
+            if (Attribute == null
+                || Attribute.Default == null)
             {
                 return;
             }
 
-            var property = argument.GetType().GetProperty(this.Property.Name);
-            property.SetValue(argument, this.Attribute.Default, null);
+            var property = argument.GetType().GetProperty(Property.Name);
+            property.SetValue(argument, Attribute.Default, null);
         }
 
         public void SetValue(object argument, CommandArgument cmd)
         {
             // Argument already supplied
-            if (!this.IsCollection() && this.ArgumentSupplied)
+            if (!IsCollection() && ArgumentSupplied)
             {
                 throw new CommandLineArgumentInvalidException(argument.GetType(), cmd);
             }
 
-            this.Argument = cmd;
+            Argument = cmd;
 
-            if (this.Property.PropertyType == typeof(bool))
+            if (Property.PropertyType
+                == typeof(bool))
             {
-                this.Property.SetValue(argument, GetBoolValue(cmd), null);
+                Property.SetValue(argument, GetBoolValue(cmd), null);
             }
-            else if (this.Property.PropertyType == typeof(int))
+            else if (Property.PropertyType
+                     == typeof(int))
             {
-                this.Property.SetValue(argument, Convert.ToInt32(cmd.Value), null);
+                Property.SetValue(argument, Convert.ToInt32(cmd.Value), null);
             }
-            else if (this.Property.PropertyType == typeof(DateTime))
+            else if (Property.PropertyType
+                     == typeof(DateTime))
             {
-                this.Property.SetValue(argument, Convert.ToDateTime(cmd.Value), null);
+                Property.SetValue(argument, Convert.ToDateTime(cmd.Value), null);
             }
-            else if (this.Property.PropertyType == typeof(string))
+            else if (Property.PropertyType
+                     == typeof(string))
             {
-                this.Property.SetValue(argument, cmd.Value, null);
+                Property.SetValue(argument, cmd.Value, null);
             }
-            else if (this.Property.PropertyType == typeof(List<string>))
+            else if (Property.PropertyType
+                     == typeof(List<string>))
             {
-                var list = (List<string>)this.Property.GetValue(argument, null) ?? new List<string>();
+                var list = (List<string>)Property.GetValue(argument, null) ?? new List<string>();
                 list.Add(cmd.Value);
-                this.Property.SetValue(argument, list, null);
+                Property.SetValue(argument, list, null);
             }
             else
             {
-                throw new CommandLineException(new CommandArgumentHelp(argument.GetType(), string.Format("Unsupported property type {0}", this.Property.PropertyType)));
+                throw new CommandLineException(
+                    new CommandArgumentHelp(
+                        argument.GetType(), string.Format("Unsupported property type {0}", Property.PropertyType)));
             }
 
-            this.ArgumentSupplied = true;
+            ArgumentSupplied = true;
         }
 
         private bool IsCollection()
         {
-            return this.Property.PropertyType == typeof(List<string>);
+            return Property.PropertyType == typeof(List<string>);
         }
 
         /// <summary>

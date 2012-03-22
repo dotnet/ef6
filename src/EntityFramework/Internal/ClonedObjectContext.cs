@@ -1,14 +1,10 @@
 ﻿namespace System.Data.Entity.Internal
 {
-    using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Internal.MockingProxies;
-    using System.Data.EntityClient;
     using System.Data.Metadata.Edm;
-    using System.Data.Objects;
     using System.Diagnostics.Contracts;
     using System.Linq;
-    using System.Reflection;
 
     /// <summary>
     /// Encapsulates a cloned <see cref="ObjectContext"/> and store <see cref="DbConnection"/>. Note that these
@@ -31,7 +27,8 @@
         /// the context is also cloned and the given connection string is used for the connection string of
         /// the cloned connection.
         /// </summary>
-        public ClonedObjectContext(ObjectContextProxy objectContext, string connectionString, bool transferLoadedAssemblies = true)
+        public ClonedObjectContext(
+            ObjectContextProxy objectContext, string connectionString, bool transferLoadedAssemblies = true)
         {
             Contract.Requires(objectContext != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(connectionString));
@@ -84,8 +81,9 @@
             var assemblies = objectItemCollection
                 .Where(i => i is EntityType || i is ComplexType)
                 .Select(i => source.GetClrType((StructuralType)i).Assembly)
-                .Union(objectItemCollection.OfType<EnumType>()
-                           .Select(i => source.GetClrType(i).Assembly))
+                .Union(
+                    objectItemCollection.OfType<EnumType>()
+                        .Select(i => source.GetClrType(i).Assembly))
                 .Distinct();
 
             foreach (var assembly in assemblies)

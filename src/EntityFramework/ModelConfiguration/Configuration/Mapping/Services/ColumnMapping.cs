@@ -38,7 +38,8 @@
             bool isDefaultDiscriminatorCondition)
         {
             _propertyMappings.Add(
-                new PropertyMappingSpecification(entityType, propertyPath, conditions.ToList(), isDefaultDiscriminatorCondition));
+                new PropertyMappingSpecification(
+                    entityType, propertyPath, conditions.ToList(), isDefaultDiscriminatorCondition));
         }
     }
 }

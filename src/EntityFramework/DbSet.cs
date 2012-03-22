@@ -14,8 +14,10 @@
     ///     A non-generic version of <see cref = "DbSet{T}" /> which can be used when the type of entity
     ///     is not known at build time.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "Casing is intentional")]
-    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "Name is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
+        Justification = "Casing is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
+        Justification = "Name is intentional")]
     public abstract class DbSet : DbQuery, IInternalSetAdapter
     {
         #region Fields and constructors
@@ -166,9 +168,11 @@
         /// <returns>The generic set object.</returns>
         public new DbSet<TEntity> Cast<TEntity>() where TEntity : class
         {
-            if (typeof(TEntity) != InternalSet.ElementType)
+            if (typeof(TEntity)
+                != InternalSet.ElementType)
             {
-                throw Error.DbEntity_BadTypeForCast(typeof(DbSet).Name, typeof(TEntity).Name, InternalSet.ElementType.Name);
+                throw Error.DbEntity_BadTypeForCast(
+                    typeof(DbSet).Name, typeof(TEntity).Name, InternalSet.ElementType.Name);
             }
 
             return (DbSet<TEntity>)InternalSet.InternalContext.Set<TEntity>();

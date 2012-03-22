@@ -38,12 +38,16 @@ namespace System.Data.Entity.ModelConfiguration
             get { return _complexTypeConfiguration; }
         }
 
-        internal override TPrimitivePropertyConfiguration Property<TPrimitivePropertyConfiguration>(LambdaExpression lambdaExpression)
+        internal override TPrimitivePropertyConfiguration Property<TPrimitivePropertyConfiguration>(
+            LambdaExpression lambdaExpression)
         {
             return Configuration.Property(
                 lambdaExpression.GetSimplePropertyAccess(),
                 () =>
-                new TPrimitivePropertyConfiguration { OverridableConfigurationParts = OverridableConfigurationParts.OverridableInSSpace });
+                new TPrimitivePropertyConfiguration
+                    {
+                        OverridableConfigurationParts = OverridableConfigurationParts.OverridableInSSpace
+                    });
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]

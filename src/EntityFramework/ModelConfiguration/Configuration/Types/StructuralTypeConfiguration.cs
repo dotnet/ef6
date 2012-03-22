@@ -12,6 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
+    using System.Data.Spatial;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
@@ -47,10 +48,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
 
             return (propertyType.IsValueType
-
-                    || propertyType == typeof(System.Data.Spatial.DbGeography)
-                    || propertyType == typeof(System.Data.Spatial.DbGeometry)
-
+                    || propertyType == typeof(DbGeography)
+                    || propertyType == typeof(DbGeometry)
                    )
                        ? typeof(PrimitivePropertyConfiguration)
                        : typeof(NavigationPropertyConfiguration);
@@ -76,7 +75,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
         internal StructuralTypeConfiguration(StructuralTypeConfiguration source)
         {
-            source._primitivePropertyConfigurations.Each(c => _primitivePropertyConfigurations.Add(c.Key, c.Value.Clone()));
+            source._primitivePropertyConfigurations.Each(
+                c => _primitivePropertyConfigurations.Add(c.Key, c.Value.Clone()));
 
             _ignoredProperties.AddRange(source._ignoredProperties);
 

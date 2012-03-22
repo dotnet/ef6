@@ -101,14 +101,14 @@ namespace System.Data.Entity.Migrations.Sql
 
                 createTableOperation.Columns.Each(
                     (c, i) =>
-                    {
-                        Generate(c, writer);
-
-                        if (i < columnCount - 1)
                         {
-                            writer.WriteLine(",");
-                        }
-                    });
+                            Generate(c, writer);
+
+                            if (i < columnCount - 1)
+                            {
+                                writer.WriteLine(",");
+                            }
+                        });
 
                 if (createTableOperation.PrimaryKey != null)
                 {
@@ -362,8 +362,9 @@ namespace System.Data.Entity.Migrations.Sql
                     && !column.StoreType.EqualsIgnoreCase("timestamp"))
                 {
                     writer.Write(" DEFAULT ");
-                    
-                    if (column.Type == PrimitiveTypeKind.DateTime)
+
+                    if (column.Type
+                        == PrimitiveTypeKind.DateTime)
                     {
                         writer.Write(Generate(DateTime.Parse("1900-01-01 00:00:00")));
                     }
@@ -371,7 +372,6 @@ namespace System.Data.Entity.Migrations.Sql
                     {
                         writer.Write(Generate((dynamic)column.ClrDefaultValue));
                     }
-
                 }
 
                 Statement(writer);
@@ -881,7 +881,12 @@ namespace System.Data.Entity.Migrations.Sql
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(sql));
 
-            _statements.Add(new MigrationStatement { Sql = sql, SuppressTransaction = suppressTransaction });
+            _statements.Add(
+                new MigrationStatement
+                    {
+                        Sql = sql,
+                        SuppressTransaction = suppressTransaction
+                    });
         }
 
         /// <summary>

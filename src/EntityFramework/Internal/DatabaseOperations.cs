@@ -52,7 +52,8 @@
                 // case for the purpose of this call we assume that it does not exist and
                 // return false since this functionally gives the best experience in most
                 // scenarios.
-                if (objectContext.Connection.State == ConnectionState.Open)
+                if (objectContext.Connection.State
+                    == ConnectionState.Open)
                 {
                     return true;
                 }

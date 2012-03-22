@@ -27,7 +27,8 @@ namespace System.Data.Entity.Internal
         /// <param name = "entitySetName">The fully qualified name of the given entity set.</param>
         /// <param name = "keyValues">The key values, which may be null or contain null values.</param>
         /// <param name = "keyValuesParamName">The name of the parameter passed for keyValue by the user, which is used when throwing exceptions.</param>
-        public WrappedEntityKey(EntitySet entitySet, string entitySetName, object[] keyValues, string keyValuesParamName)
+        public WrappedEntityKey(
+            EntitySet entitySet, string entitySetName, object[] keyValues, string keyValuesParamName)
         {
             // Treat a null array as an array with a single null value since the common case for this is Find(null)
             if (keyValues == null)
@@ -36,7 +37,8 @@ namespace System.Data.Entity.Internal
             }
 
             var keyNames = entitySet.ElementType.KeyMembers.Select(m => m.Name).ToList();
-            if (keyNames.Count != keyValues.Length)
+            if (keyNames.Count
+                != keyValues.Length)
             {
                 throw new ArgumentException(Strings.DbSet_WrongNumberOfKeyValuesPassed, keyValuesParamName);
             }

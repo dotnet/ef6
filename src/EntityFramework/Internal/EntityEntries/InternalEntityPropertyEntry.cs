@@ -14,7 +14,8 @@
         /// </summary>
         /// <param name = "internalEntityEntry">The internal entry.</param>
         /// <param name = "propertyMetadata">The property info.</param>
-        public InternalEntityPropertyEntry(InternalEntityEntry internalEntityEntry, PropertyEntryMetadata propertyMetadata)
+        public InternalEntityPropertyEntry(
+            InternalEntityEntry internalEntityEntry, PropertyEntryMetadata propertyMetadata)
             : base(internalEntityEntry, propertyMetadata)
         {
         }
@@ -98,10 +99,9 @@
             InternalEntityEntry.ObjectStateEntry.SetModifiedProperty(Name);
         }
 
-
-    /// <summary>
-    /// Rejects changes to this property.
-    /// </summary>
+        /// <summary>
+        /// Rejects changes to this property.
+        /// </summary>
         public override void RejectEntityPropertyChanges()
         {
             InternalEntityEntry.ObjectStateEntry.RejectPropertyChanges(Name);

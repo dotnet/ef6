@@ -49,10 +49,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             Contract.Requires(source != null);
 
             _keyProperties.AddRange(source._keyProperties);
-            source._navigationPropertyConfigurations.Each(c => _navigationPropertyConfigurations.Add(c.Key, c.Value.Clone()));
-            source._entitySubTypesMappingConfigurations.Each(c => _entitySubTypesMappingConfigurations.Add(c.Key, c.Value.Clone()));
+            source._navigationPropertyConfigurations.Each(
+                c => _navigationPropertyConfigurations.Add(c.Key, c.Value.Clone()));
+            source._entitySubTypesMappingConfigurations.Each(
+                c => _entitySubTypesMappingConfigurations.Add(c.Key, c.Value.Clone()));
 
-            _entityMappingConfigurations.AddRange(source._entityMappingConfigurations.Except(source._nonCloneableMappings).Select(e => e.Clone()));
+            _entityMappingConfigurations.AddRange(
+                source._entityMappingConfigurations.Except(source._nonCloneableMappings).Select(e => e.Clone()));
 
             _isKeyConfigured = source._isKeyConfigured;
             _entitySetName = source._entitySetName;
@@ -112,7 +115,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             _isKeyConfigured = true;
         }
 
-        public virtual void Key(PropertyInfo propertyInfo, OverridableConfigurationParts? overridableConfigurationParts = null)
+        public virtual void Key(
+            PropertyInfo propertyInfo, OverridableConfigurationParts? overridableConfigurationParts = null)
         {
             Contract.Requires(propertyInfo != null);
 
@@ -121,7 +125,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 throw Error.ModelBuilder_KeyPropertiesMustBePrimitive(propertyInfo.Name, ClrType);
             }
 
-            if (!_isKeyConfigured &&
+            if (!_isKeyConfigured
+                &&
                 // DevDiv #324763 (DbModelBuilder.Build is not idempotent):  If build is called twice when keys are configured via attributes 
                 // _isKeyConfigured is not set, thus we need to check whether the key has already been included.
                 !_keyProperties.ContainsSame(propertyInfo))
@@ -340,10 +345,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 var primaryKeys
                     = from p in _keyProperties
                       select new
-                          {
-                              PropertyInfo = p,
-                              Property(new PropertyPath(p)).ColumnOrder
-                          };
+                                 {
+                                     PropertyInfo = p,
+                                     Property(new PropertyPath(p)).ColumnOrder
+                                 };
 
                 if ((_keyProperties.Count > 1)
                     && primaryKeys.Any(p => !p.ColumnOrder.HasValue))
@@ -462,7 +467,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         private void ConfigurePropertyMappings(
-            DbDatabaseMapping databaseMapping, EdmEntityType entityType, DbProviderManifest providerManifest, bool allowOverride = false)
+            DbDatabaseMapping databaseMapping, EdmEntityType entityType, DbProviderManifest providerManifest,
+            bool allowOverride = false)
         {
             Contract.Requires(databaseMapping != null);
             Contract.Requires(entityType != null);
@@ -478,7 +484,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
             Configure(propertyMappings, providerManifest, allowOverride);
 
-            foreach (var derivedEntityType in databaseMapping.Model.GetEntityTypes().Where(et => et.BaseType == entityType))
+            foreach (
+                var derivedEntityType in databaseMapping.Model.GetEntityTypes().Where(et => et.BaseType == entityType))
             {
                 ConfigurePropertyMappings(databaseMapping, derivedEntityType, providerManifest, true);
             }
@@ -523,7 +530,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                     .Each(
                         (c, i) =>
                             {
-                                var primitivePropertyConfiguration = c.GetConfiguration() as PrimitivePropertyConfiguration;
+                                var primitivePropertyConfiguration =
+                                    c.GetConfiguration() as PrimitivePropertyConfiguration;
 
                                 if ((primitivePropertyConfiguration != null)
                                     && (primitivePropertyConfiguration.ColumnType != null))
@@ -540,7 +548,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         private static void VerifyAllCSpacePropertiesAreMapped(
-            IEnumerable<DbEntityTypeMapping> entityTypeMappings, IEnumerable<EdmProperty> properties, IList<EdmProperty> propertyPath)
+            IEnumerable<DbEntityTypeMapping> entityTypeMappings, IEnumerable<EdmProperty> properties,
+            IList<EdmProperty> propertyPath)
         {
             Contract.Requires(entityTypeMappings != null);
 
@@ -559,7 +568,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 }
                 else if (!entityTypeMappings.SelectMany(etm => etm.TypeMappingFragments)
                               .SelectMany(mf => mf.PropertyMappings)
-                              .Where(pm => pm.PropertyPath.SequenceEqual(propertyPath)).Any() && !entityType.IsAbstract)
+                              .Where(pm => pm.PropertyPath.SequenceEqual(propertyPath)).Any()
+                         && !entityType.IsAbstract)
                 {
                     throw Error.InvalidEntitySplittingProperties(entityType.Name);
                 }

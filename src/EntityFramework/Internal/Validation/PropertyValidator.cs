@@ -41,7 +41,8 @@
         /// <summary>
         ///     Simple validators for the corresponding property.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
         public IEnumerable<IValidator> PropertyAttributeValidators
         {
             get { return _propertyValidators; }
