@@ -298,7 +298,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                                                 })
                    where (n1.index == n2.index)
                          && !n1.name.EqualsIgnoreCase(n2.name)
-                   let t = GetQualifiedTableName(_target.Model, d1.RoleAttribute())
+                   let t = GetQualifiedTableName(_target.Model, d2.RoleAttribute())
                    select new RenameColumnOperation(t, n1.name, n2.name);
         }
 
