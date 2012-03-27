@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<xs:schema id="AnnotationSchema" targetNamespace="http://schemas.microsoft.com/ado/2009/02/edm/annotation" elementFormDefault="unqualified" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:attribute name="StoreGeneratedPattern" type="TStoreGeneratedPattern" />
+  <xs:simpleType name="TStoreGeneratedPattern">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="None" />
+      <xs:enumeration value="Identity" />
+      <xs:enumeration value="Computed" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:attribute name="LazyLoadingEnabled" type="xs:boolean" />
+
+</xs:schema>

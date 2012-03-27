@@ -1,0 +1,577 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Edmx Version="2.0" xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <Runtime>
+    <ConceptualModels>
+      <Schema Namespace="AdvancedPatternsModelFirst" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:codegen="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" >
+        <ComplexType Name="AddressMf" codegen:TypeAccess="Public" >
+          <Property Name="Street" Type="String" Nullable="true" codegen:GetterAccess="Public" codegen:SetterAccess="Public" />
+          <Property Name="City" Type="String" Nullable="true" codegen:GetterAccess="Private" codegen:SetterAccess="Public" />
+          <Property Name="State" Type="String" Nullable="true" codegen:GetterAccess="Internal" codegen:SetterAccess="Internal" />
+          <Property Name="ZipCode" Type="String" Nullable="true" codegen:GetterAccess="Internal" codegen:SetterAccess="Private"/>
+          <Property Name="SiteInfo" Type="Self.SiteInfoMf" Nullable="false" codegen:GetterAccess="Internal" codegen:SetterAccess="Private"/>
+        </ComplexType>
+        <ComplexType Name="SiteInfoMf" codegen:TypeAccess="Internal">
+          <Property Name="Zone" Type="Int32" Nullable="true" codegen:GetterAccess="Protected" codegen:SetterAccess="Private" />
+          <Property Name="Environment" Type="String" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="EmployeeMf" Abstract="true">
+          <Key>
+            <PropertyRef Name="EmployeeId" />
+          </Key>
+          <Property Name="EmployeeId" Type="Int32" Nullable="false" p6:StoreGeneratedPattern="Identity" xmlns:p6="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Name="FirstName" Type="String" FixedLength="false" Unicode="true" MaxLength="4000" Nullable="true" codegen:GetterAccess="Public" codegen:SetterAccess="Private" />
+          <Property Name="LastName" Type="String" FixedLength="false" Unicode="true" MaxLength="4000" Nullable="true" codegen:GetterAccess="Private" codegen:SetterAccess="Internal" />
+        </EntityType>
+        <EntityType Name="CurrentEmployeeMf" BaseType="Self.EmployeeMf">
+          <Property Name="LeaveBalance" Type="Decimal" Nullable="true" />
+          <NavigationProperty Name="Manager" Relationship="Self.CurrentEmployee_Manager" FromRole="CurrentEmployee_Manager_Source" ToRole="CurrentEmployee_Manager_Target" />
+          <NavigationProperty Name="Office" Relationship="Self.CurrentEmployee_Office" FromRole="CurrentEmployee_Office_Source" ToRole="CurrentEmployee_Office_Target" />
+        </EntityType>
+        <EntityType Name="OfficeMf">
+          <Key>
+            <PropertyRef Name="Number" />
+            <PropertyRef Name="BuildingId" />
+          </Key>
+          <Property Name="Number" Type="String" FixedLength="false" Unicode="true" MaxLength="128" Nullable="false" />
+          <Property Name="BuildingId" Type="Guid" Nullable="false" />
+          <Property Name="Description" Type="String" FixedLength="false" Unicode="true" MaxLength="4000" Nullable="true"  codegen:GetterAccess="Internal" codegen:SetterAccess="Private"/>
+          <NavigationProperty Name="Building" Relationship="Self.Building_Offices" FromRole="Building_Offices_Target" ToRole="Building_Offices_Source" codegen:GetterAccess="Private" codegen:SetterAccess="Private" />
+          <NavigationProperty Name="WhiteBoards" Relationship="Self.Whiteboard_Office" FromRole="Whiteboard_Office_Target" ToRole="Whiteboard_Office_Source" codegen:GetterAccess="Internal" codegen:SetterAccess="Public" />
+        </EntityType>
+        <EntityType Name="BuildingMf">
+          <Key>
+            <PropertyRef Name="BuildingId" />
+          </Key>
+          <Property Name="BuildingId" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" FixedLength="false" Unicode="true" MaxLength="4000" Nullable="true" />
+          <Property Name="Value" Type="Decimal" Nullable="false" codegen:GetterAccess="Internal" codegen:SetterAccess="Internal" />
+          <Property Name="Address" Type="Self.AddressMf" Nullable="false" codegen:GetterAccess="Internal" codegen:SetterAccess="Private" />
+          <NavigationProperty Name="Offices" Relationship="Self.Building_Offices" FromRole="Building_Offices_Source" ToRole="Building_Offices_Target" />
+          <NavigationProperty Name="MailRooms" Relationship="Self.MailRoom_Building" FromRole="MailRoom_Building_Target" ToRole="MailRoom_Building_Source" codegen:GetterAccess="Internal" codegen:SetterAccess="Private"/>
+        </EntityType>
+        <EntityType Name="MailRoomMf" codegen:TypeAccess="Internal">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" p6:StoreGeneratedPattern="Identity" xmlns:p6="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Name="BuildingId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Building" Relationship="Self.MailRoom_Building" FromRole="MailRoom_Building_Source" ToRole="MailRoom_Building_Target" />
+        </EntityType>
+        <EntityType Name="WhiteboardMf">
+          <Key>
+            <PropertyRef Name="iD" />
+          </Key>
+          <Property Name="iD" Type="Binary" FixedLength="false" MaxLength="128" Nullable="false" />
+          <Property Name="AssetTag" Type="String" FixedLength="false" Unicode="true" MaxLength="4000" Nullable="true" />
+          <NavigationProperty Name="Office" Relationship="Self.Whiteboard_Office" FromRole="Whiteboard_Office_Source" ToRole="Whiteboard_Office_Target" />
+        </EntityType>
+        <EntityType Name="PastEmployeeMf" BaseType="Self.EmployeeMf">
+          <Property Name="TerminationDate" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BuildingDetailMf" codegen:TypeAccess="Public">
+          <Key>
+            <PropertyRef Name="BuildingId" />
+          </Key>
+          <Property Name="BuildingId" Type="Guid" Nullable="false" />
+          <Property Name="Details" Type="String" FixedLength="false" Unicode="true" MaxLength="4000" Nullable="true" />
+          <NavigationProperty Name="Building" Relationship="Self.BuildingDetail_Building" FromRole="BuildingDetail_Building_Source" ToRole="BuildingDetail_Building_Target" />
+        </EntityType>
+        <EntityType Name="WorkOrderMf">
+          <Key>
+            <PropertyRef Name="WorkOrderId" />
+          </Key>
+          <Property Name="WorkOrderId" Type="Int32" Nullable="false" p6:StoreGeneratedPattern="Identity" xmlns:p6="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Name="EmployeeId" Type="Int32" Nullable="false" />
+          <Property Name="Details" Type="String" FixedLength="false" Unicode="true" MaxLength="4000" Nullable="true" />
+          <NavigationProperty Name="Employee" Relationship="Self.WorkOrder_Employee" FromRole="WorkOrder_Employee_Source" ToRole="WorkOrder_Employee_Target" codegen:GetterAccess="Internal" codegen:SetterAccess="Internal"/>
+        </EntityType>
+        <Association Name="CurrentEmployee_Manager">
+          <End Role="CurrentEmployee_Manager_Source" Type="Self.CurrentEmployeeMf" Multiplicity="*" />
+          <End Role="CurrentEmployee_Manager_Target" Type="Self.CurrentEmployeeMf" Multiplicity="0..1" />
+        </Association>
+        <Association Name="Building_Offices">
+          <End Role="Building_Offices_Source" Type="Self.BuildingMf" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Building_Offices_Target" Type="Self.OfficeMf" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Building_Offices_Source">
+              <PropertyRef Name="BuildingId" />
+            </Principal>
+            <Dependent Role="Building_Offices_Target">
+              <PropertyRef Name="BuildingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MailRoom_Building">
+          <End Role="MailRoom_Building_Source" Type="Self.MailRoomMf" Multiplicity="*" />
+          <End Role="MailRoom_Building_Target" Type="Self.BuildingMf" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="MailRoom_Building_Target">
+              <PropertyRef Name="BuildingId" />
+            </Principal>
+            <Dependent Role="MailRoom_Building_Source">
+              <PropertyRef Name="BuildingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Whiteboard_Office">
+          <End Role="Whiteboard_Office_Source" Type="Self.WhiteboardMf" Multiplicity="*" />
+          <End Role="Whiteboard_Office_Target" Type="Self.OfficeMf" Multiplicity="0..1" />
+        </Association>
+        <Association Name="CurrentEmployee_Office">
+          <End Role="CurrentEmployee_Office_Source" Type="Self.CurrentEmployeeMf" Multiplicity="*" />
+          <End Role="CurrentEmployee_Office_Target" Type="Self.OfficeMf" Multiplicity="0..1" />
+        </Association>
+        <Association Name="BuildingDetail_Building">
+          <End Role="BuildingDetail_Building_Source" Type="Self.BuildingDetailMf" Multiplicity="0..1" />
+          <End Role="BuildingDetail_Building_Target" Type="Self.BuildingMf" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="BuildingDetail_Building_Target">
+              <PropertyRef Name="BuildingId" />
+            </Principal>
+            <Dependent Role="BuildingDetail_Building_Source">
+              <PropertyRef Name="BuildingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="WorkOrder_Employee">
+          <End Role="WorkOrder_Employee_Source" Type="Self.WorkOrderMf" Multiplicity="*" />
+          <End Role="WorkOrder_Employee_Target" Type="Self.EmployeeMf" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="WorkOrder_Employee_Target">
+              <PropertyRef Name="EmployeeId" />
+            </Principal>
+            <Dependent Role="WorkOrder_Employee_Source">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AdvancedPatternsModelFirstContext" codegen:TypeAccess="Internal" annotation:LazyLoadingEnabled="false">
+          <EntitySet Name="Employees" EntityType="Self.EmployeeMf" />
+          <EntitySet Name="Offices" EntityType="Self.OfficeMf" />
+          <EntitySet Name="Buildings" EntityType="Self.BuildingMf" />
+          <EntitySet Name="MailRooms" EntityType="Self.MailRoomMf" codegen:GetterAccess="Internal"/>
+          <EntitySet Name="Whiteboards" EntityType="Self.WhiteboardMf" />
+          <EntitySet Name="BuildingDetails" EntityType="Self.BuildingDetailMf" />
+          <EntitySet Name="WorkOrders" EntityType="Self.WorkOrderMf" />
+          <AssociationSet Name="CurrentEmployee_Manager" Association="Self.CurrentEmployee_Manager">
+            <End Role="CurrentEmployee_Manager_Source" EntitySet="Employees" />
+            <End Role="CurrentEmployee_Manager_Target" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="Building_Offices" Association="Self.Building_Offices">
+            <End Role="Building_Offices_Source" EntitySet="Buildings" />
+            <End Role="Building_Offices_Target" EntitySet="Offices" />
+          </AssociationSet>
+          <AssociationSet Name="MailRoom_Building" Association="Self.MailRoom_Building">
+            <End Role="MailRoom_Building_Source" EntitySet="MailRooms" />
+            <End Role="MailRoom_Building_Target" EntitySet="Buildings" />
+          </AssociationSet>
+          <AssociationSet Name="Whiteboard_Office" Association="Self.Whiteboard_Office">
+            <End Role="Whiteboard_Office_Source" EntitySet="Whiteboards" />
+            <End Role="Whiteboard_Office_Target" EntitySet="Offices" />
+          </AssociationSet>
+          <AssociationSet Name="CurrentEmployee_Office" Association="Self.CurrentEmployee_Office">
+            <End Role="CurrentEmployee_Office_Source" EntitySet="Employees" />
+            <End Role="CurrentEmployee_Office_Target" EntitySet="Offices" />
+          </AssociationSet>
+          <AssociationSet Name="BuildingDetail_Building" Association="Self.BuildingDetail_Building">
+            <End Role="BuildingDetail_Building_Source" EntitySet="BuildingDetails" />
+            <End Role="BuildingDetail_Building_Target" EntitySet="Buildings" />
+          </AssociationSet>
+          <AssociationSet Name="WorkOrder_Employee" Association="Self.WorkOrder_Employee">
+            <End Role="WorkOrder_Employee_Source" EntitySet="WorkOrders" />
+            <End Role="WorkOrder_Employee_Target" EntitySet="Employees" />
+          </AssociationSet>
+          <FunctionImport Name="AllOfficesStoredProc" EntitySet="Offices" ReturnType="Collection(Self.OfficeMf)" />
+          <FunctionImport Name="EmployeeIdsInOfficeStoredProc" ReturnType="Collection(Int32)">
+            <Parameter Name="OfficeNumber" Mode="In" Type="String" />
+            <Parameter Name="BuildingId" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="OfficesInBuildingStoredProc" EntitySet="Offices" ReturnType="Collection(Self.OfficeMf)">
+            <Parameter Name="BuildingId" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="SkimOffLeaveBalanceStoredProc">
+            <Parameter Name="First" Mode="In" Type="String" />
+            <Parameter Name="Last" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="AllSiteInfoStoredProc" ReturnType="Collection(Self.SiteInfoMf)" />
+        </EntityContainer>
+      </Schema>
+    </ConceptualModels>
+    <Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="dbo" CdmEntityContainer="AdvancedPatternsModelFirstContext">
+          <EntitySetMapping Name="Employees">
+            <EntityTypeMapping TypeName="IsTypeOf(AdvancedPatternsModelFirst.EmployeeMf)">
+              <MappingFragment StoreEntitySet="Employees">
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="AdvancedPatternsModelFirst.CurrentEmployeeMf">
+              <MappingFragment StoreEntitySet="Employees">
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="LeaveBalance" ColumnName="LeaveBalance" />
+                <Condition Value="CurrentEmployee" ColumnName="Discriminator" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="AdvancedPatternsModelFirst.PastEmployeeMf">
+              <MappingFragment StoreEntitySet="Employees">
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="TerminationDate" ColumnName="TerminationDate" />
+                <Condition Value="PastEmployee" ColumnName="Discriminator" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Offices">
+            <EntityTypeMapping TypeName="AdvancedPatternsModelFirst.OfficeMf">
+              <MappingFragment StoreEntitySet="Offices">
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="BuildingId" ColumnName="BuildingId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Buildings">
+            <EntityTypeMapping TypeName="AdvancedPatternsModelFirst.BuildingMf">
+              <MappingFragment StoreEntitySet="Buildings">
+                <ScalarProperty Name="BuildingId" ColumnName="BuildingId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ComplexProperty Name="Address" TypeName="AdvancedPatternsModelFirst.AddressMf">
+                  <ScalarProperty Name="Street" ColumnName="Street" />
+                  <ScalarProperty Name="City" ColumnName="City" />
+                  <ScalarProperty Name="State" ColumnName="State" />
+                  <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                  <ComplexProperty Name="SiteInfo" TypeName="AdvancedPatternsModelFirst.SiteInfoMf">
+                    <ScalarProperty Name="Zone" ColumnName="Zone" />
+                    <ScalarProperty Name="Environment" ColumnName="Environment" />
+                  </ComplexProperty>
+                </ComplexProperty>
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MailRooms">
+            <EntityTypeMapping TypeName="AdvancedPatternsModelFirst.MailRoomMf">
+              <MappingFragment StoreEntitySet="MailRooms">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="BuildingId" ColumnName="BuildingId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Whiteboards">
+            <EntityTypeMapping TypeName="AdvancedPatternsModelFirst.WhiteboardMf">
+              <MappingFragment StoreEntitySet="Whiteboards">
+                <ScalarProperty Name="iD" ColumnName="iD" />
+                <ScalarProperty Name="AssetTag" ColumnName="AssetTag" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BuildingDetails">
+            <EntityTypeMapping TypeName="AdvancedPatternsModelFirst.BuildingDetailMf">
+              <MappingFragment StoreEntitySet="BuildingDetails">
+                <ScalarProperty Name="BuildingId" ColumnName="BuildingId" />
+                <ScalarProperty Name="Details" ColumnName="Details" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkOrders">
+            <EntityTypeMapping TypeName="AdvancedPatternsModelFirst.WorkOrderMf">
+              <MappingFragment StoreEntitySet="WorkOrders">
+                <ScalarProperty Name="WorkOrderId" ColumnName="WorkOrderId" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="Details" ColumnName="Details" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="CurrentEmployee_Manager" TypeName="AdvancedPatternsModelFirst.CurrentEmployee_Manager" StoreEntitySet="Employees">
+            <EndProperty Name="CurrentEmployee_Manager_Target">
+              <ScalarProperty Name="EmployeeId" ColumnName="CurrentEmployeeEmployeeId" />
+            </EndProperty>
+            <EndProperty Name="CurrentEmployee_Manager_Source">
+              <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="CurrentEmployeeEmployeeId" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="Whiteboard_Office" TypeName="AdvancedPatternsModelFirst.Whiteboard_Office" StoreEntitySet="Whiteboards">
+            <EndProperty Name="Whiteboard_Office_Target">
+              <ScalarProperty Name="Number" ColumnName="OfficeNumber" />
+              <ScalarProperty Name="BuildingId" ColumnName="OfficeBuildingId" />
+            </EndProperty>
+            <EndProperty Name="Whiteboard_Office_Source">
+              <ScalarProperty Name="iD" ColumnName="iD" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="OfficeNumber" />
+            <Condition IsNull="false" ColumnName="OfficeBuildingId" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="CurrentEmployee_Office" TypeName="AdvancedPatternsModelFirst.CurrentEmployee_Office" StoreEntitySet="Employees">
+            <EndProperty Name="CurrentEmployee_Office_Target">
+              <ScalarProperty Name="Number" ColumnName="OfficeNumber" />
+              <ScalarProperty Name="BuildingId" ColumnName="OfficeBuildingId" />
+            </EndProperty>
+            <EndProperty Name="CurrentEmployee_Office_Source">
+              <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="OfficeNumber" />
+            <Condition IsNull="false" ColumnName="OfficeBuildingId" />
+          </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="AllOfficesStoredProc" FunctionName="dboNamespace.AllOffices" />
+          <FunctionImportMapping FunctionImportName="EmployeeIdsInOfficeStoredProc" FunctionName="dboNamespace.EmployeeIdsInOffice" />
+          <FunctionImportMapping FunctionImportName="OfficesInBuildingStoredProc" FunctionName="dboNamespace.OfficesInBuilding" />
+          <FunctionImportMapping FunctionImportName="SkimOffLeaveBalanceStoredProc" FunctionName="dboNamespace.SkimOffLeaveBalance" />
+          <FunctionImportMapping FunctionImportName="AllSiteInfoStoredProc" FunctionName="dboNamespace.AllSiteInfo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="AdvancedPatternsModelFirst.SiteInfoMf">
+                <ScalarProperty Name="Zone" ColumnName="Zone" />
+                <ScalarProperty Name="Environment" ColumnName="Environment" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </Mappings>
+    <StorageModels>
+      <Schema Namespace="dboNamespace" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityType Name="Employees">
+          <Key>
+            <PropertyRef Name="EmployeeId" />
+          </Key>
+          <Property Name="EmployeeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="4000" Nullable="true" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="4000" Nullable="true" />
+          <Property Name="LeaveBalance" Type="decimal" Nullable="true" />
+          <Property Name="TerminationDate" Type="datetime" Nullable="true" />
+          <Property Name="Discriminator" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CurrentEmployeeEmployeeId" Type="int" Nullable="true" />
+          <Property Name="OfficeNumber" Type="nvarchar" MaxLength="128" Nullable="true" />
+          <Property Name="OfficeBuildingId" Type="uniqueidentifier" Nullable="true" />
+        </EntityType>
+        <EntityType Name="Offices">
+          <Key>
+            <PropertyRef Name="Number" />
+            <PropertyRef Name="BuildingId" />
+          </Key>
+          <Property Name="Number" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="BuildingId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="4000" Nullable="true" />
+        </EntityType>
+        <EntityType Name="Buildings">
+          <Key>
+            <PropertyRef Name="BuildingId" />
+          </Key>
+          <Property Name="BuildingId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="4000" Nullable="true" />
+          <Property Name="Value" Type="decimal" Nullable="false" />
+          <Property Name="Street" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="City" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="State" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="ZipCode" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="Zone" Type="int" Nullable="true" />
+          <Property Name="Environment" Type="nvarchar(max)" Nullable="true" />
+        </EntityType>
+        <EntityType Name="MailRooms">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BuildingId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Whiteboards">
+          <Key>
+            <PropertyRef Name="iD" />
+          </Key>
+          <Property Name="iD" Type="varbinary" MaxLength="128" Nullable="false" />
+          <Property Name="AssetTag" Type="nvarchar" MaxLength="4000" Nullable="true" />
+          <Property Name="OfficeNumber" Type="nvarchar" MaxLength="128" Nullable="true" />
+          <Property Name="OfficeBuildingId" Type="uniqueidentifier" Nullable="true" />
+        </EntityType>
+        <EntityType Name="BuildingDetails">
+          <Key>
+            <PropertyRef Name="BuildingId" />
+          </Key>
+          <Property Name="BuildingId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Details" Type="nvarchar" MaxLength="4000" Nullable="true" />
+        </EntityType>
+        <EntityType Name="WorkOrders">
+          <Key>
+            <PropertyRef Name="WorkOrderId" />
+          </Key>
+          <Property Name="WorkOrderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmployeeId" Type="int" Nullable="false" />
+          <Property Name="Details" Type="nvarchar" MaxLength="4000" Nullable="true" />
+        </EntityType>
+        <Association Name="CurrentEmployee_Manager">
+          <End Role="Employees" Type="Self.Employees" Multiplicity="0..1" />
+          <End Role="EmployeesSelf" Type="Self.Employees" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employees">
+              <PropertyRef Name="EmployeeId" />
+            </Principal>
+            <Dependent Role="EmployeesSelf">
+              <PropertyRef Name="CurrentEmployeeEmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CurrentEmployee_Office">
+          <End Role="Offices" Type="Self.Offices" Multiplicity="0..1" />
+          <End Role="Employees" Type="Self.Employees" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Offices">
+              <PropertyRef Name="Number" />
+              <PropertyRef Name="BuildingId" />
+            </Principal>
+            <Dependent Role="Employees">
+              <PropertyRef Name="OfficeNumber" />
+              <PropertyRef Name="OfficeBuildingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Building_Offices">
+          <End Role="Buildings" Type="Self.Buildings" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Offices" Type="Self.Offices" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Buildings">
+              <PropertyRef Name="BuildingId" />
+            </Principal>
+            <Dependent Role="Offices">
+              <PropertyRef Name="BuildingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MailRoom_Building">
+          <End Role="Buildings" Type="Self.Buildings" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MailRooms" Type="Self.MailRooms" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Buildings">
+              <PropertyRef Name="BuildingId" />
+            </Principal>
+            <Dependent Role="MailRooms">
+              <PropertyRef Name="BuildingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Whiteboard_Office">
+          <End Role="Offices" Type="Self.Offices" Multiplicity="0..1" />
+          <End Role="Whiteboards" Type="Self.Whiteboards" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Offices">
+              <PropertyRef Name="Number" />
+              <PropertyRef Name="BuildingId" />
+            </Principal>
+            <Dependent Role="Whiteboards">
+              <PropertyRef Name="OfficeNumber" />
+              <PropertyRef Name="OfficeBuildingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="BuildingDetail_Building">
+          <End Role="Buildings" Type="Self.Buildings" Multiplicity="1" />
+          <End Role="BuildingDetails" Type="Self.BuildingDetails" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Buildings">
+              <PropertyRef Name="BuildingId" />
+            </Principal>
+            <Dependent Role="BuildingDetails">
+              <PropertyRef Name="BuildingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="WorkOrder_Employee">
+          <End Role="Employees" Type="Self.Employees" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="WorkOrders" Type="Self.WorkOrders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employees">
+              <PropertyRef Name="EmployeeId" />
+            </Principal>
+            <Dependent Role="WorkOrders">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="dbo">
+          <EntitySet Name="Employees" EntityType="Self.Employees" />
+          <EntitySet Name="Offices" EntityType="Self.Offices" />
+          <EntitySet Name="Buildings" EntityType="Self.Buildings" />
+          <EntitySet Name="MailRooms" EntityType="Self.MailRooms" />
+          <EntitySet Name="Whiteboards" EntityType="Self.Whiteboards" />
+          <EntitySet Name="BuildingDetails" EntityType="Self.BuildingDetails" />
+          <EntitySet Name="WorkOrders" EntityType="Self.WorkOrders" />
+          <AssociationSet Name="CurrentEmployee_Manager" Association="Self.CurrentEmployee_Manager">
+            <End Role="Employees" EntitySet="Employees" />
+            <End Role="EmployeesSelf" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="CurrentEmployee_Office" Association="Self.CurrentEmployee_Office">
+            <End Role="Offices" EntitySet="Offices" />
+            <End Role="Employees" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="Building_Offices" Association="Self.Building_Offices">
+            <End Role="Buildings" EntitySet="Buildings" />
+            <End Role="Offices" EntitySet="Offices" />
+          </AssociationSet>
+          <AssociationSet Name="MailRoom_Building" Association="Self.MailRoom_Building">
+            <End Role="Buildings" EntitySet="Buildings" />
+            <End Role="MailRooms" EntitySet="MailRooms" />
+          </AssociationSet>
+          <AssociationSet Name="Whiteboard_Office" Association="Self.Whiteboard_Office">
+            <End Role="Offices" EntitySet="Offices" />
+            <End Role="Whiteboards" EntitySet="Whiteboards" />
+          </AssociationSet>
+          <AssociationSet Name="BuildingDetail_Building" Association="Self.BuildingDetail_Building">
+            <End Role="Buildings" EntitySet="Buildings" />
+            <End Role="BuildingDetails" EntitySet="BuildingDetails" />
+          </AssociationSet>
+          <AssociationSet Name="WorkOrder_Employee" Association="Self.WorkOrder_Employee">
+            <End Role="Employees" EntitySet="Employees" />
+            <End Role="WorkOrders" EntitySet="WorkOrders" />
+          </AssociationSet>
+        </EntityContainer>
+        <Function Name="AllOffices" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="AllSiteInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="EmployeeIdsInOffice" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="OfficeNumber" Type="nvarchar" Mode="In" />
+          <Parameter Name="BuildingId" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="OfficesInBuilding" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="BuildingId" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="SkimOffLeaveBalance" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="First" Type="nvarchar" Mode="In" />
+          <Parameter Name="Last" Type="nvarchar" Mode="In" />
+        </Function>
+      </Schema>
+    </StorageModels>
+  </Runtime>
+  <Designer>
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="ProcessDependentTemplatesOnSave" Value="False" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <Diagrams>
+      <Diagram Name="Sample" />
+    </Diagrams>
+  </Designer>
+</Edmx>

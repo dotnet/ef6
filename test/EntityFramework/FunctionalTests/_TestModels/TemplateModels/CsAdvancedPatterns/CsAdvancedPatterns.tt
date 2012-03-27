@@ -1,0 +1,300 @@
+<#
+//*********************************************************
+//
+//    Copyright (c) Microsoft. All rights reserved.
+//    This code is licensed under the Microsoft Public License.
+//    THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+//    ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+//    IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+//    PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+//
+//*********************************************************
+#>
+<#@ template language="C#" debug="false" hostspecific="true"#>
+<#@ include file="EF.Utility.CS.ttinclude"#><#@
+ output extension=".cs"#><#
+
+DefineMetadata();
+
+CodeGenerationTools code = new CodeGenerationTools(this);
+MetadataLoader loader = new MetadataLoader(this);
+CodeRegion region = new CodeRegion(this, 1);
+MetadataTools ef = new MetadataTools(this);
+
+string inputFile = @"..\Schemas\AdvancedPatterns.edmx";
+EdmItemCollection ItemCollection = loader.CreateEdmItemCollection(inputFile);
+string namespaceName = code.VsNamespaceSuggestion();
+
+EntityFrameworkTemplateFileManager fileManager = EntityFrameworkTemplateFileManager.Create(this);
+
+if (!code.VerifyCaseInsensitiveTypeUniqueness(code.GetAllGlobalItems(ItemCollection), inputFile))
+{
+    return string.Empty;
+}
+
+WriteHeader(fileManager);
+
+foreach (var entity in code.GetItemsToGenerate<EntityType>(ItemCollection).OrderBy(e => e.Name))
+{
+    fileManager.StartNewFile(entity.Name + ".cs");
+    BeginNamespace(namespaceName, code);
+#>
+using System;
+using System.Collections.Generic;
+
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=code.Escape(entity)#><#=code.StringBefore(" : ", code.GetTypeName(entity.BaseType))#>
+{
+<#
+    var propertiesWithDefaultValues = entity.Properties.Where(p => p.TypeUsage.EdmType is SimpleType && p.DeclaringType == entity && p.DefaultValue != null);
+    var collectionNavigationProperties = entity.NavigationProperties.Where(np => np.DeclaringType == entity && np.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many);
+    var complexProperties = entity.Properties.Where(p => p.TypeUsage.EdmType is ComplexType && p.DeclaringType == entity);
+
+    if (propertiesWithDefaultValues.Any() || collectionNavigationProperties.Any() || complexProperties.Any())
+    {
+#>
+    public <#=code.Escape(entity)#>()
+    {
+<#
+        foreach (var edmProperty in propertiesWithDefaultValues)
+        {
+#>
+        this.<#=code.Escape(edmProperty)#> = <#=code.CreateLiteral(edmProperty.DefaultValue)#>;
+<#
+        }
+
+        foreach (var navigationProperty in collectionNavigationProperties)
+        {
+#>
+        this.<#=code.Escape(navigationProperty)#> = new HashSet<<#=code.GetTypeName(navigationProperty.ToEndMember.GetEntityType())#>>();
+<#
+        }
+
+        foreach (var complexProperty in complexProperties)
+        {
+#>
+        this.<#=code.Escape(complexProperty)#> = new <#=code.GetTypeName(complexProperty.TypeUsage)#>();
+<#
+        }
+#>
+    }
+
+<#
+    }
+
+    var simpleProperties = entity.Properties.Where(p => p.TypeUsage.EdmType is SimpleType && p.DeclaringType == entity);
+    if (simpleProperties.Any())
+    {
+        foreach (var edmProperty in simpleProperties)
+        {
+            WriteProperty(code, edmProperty);
+        }
+    }
+
+    if (complexProperties.Any())
+    {
+#>
+
+<#
+        foreach(var complexProperty in complexProperties)
+        {
+            WriteProperty(code, complexProperty);
+        }
+    }
+
+    var navigationProperties = entity.NavigationProperties.Where(np => np.DeclaringType == entity);
+    if (navigationProperties.Any())
+    {
+#>
+
+<#
+        foreach (var navigationProperty in navigationProperties)
+        {
+            WriteNavigationProperty(code, navigationProperty);
+        }
+    }
+#>
+}
+<#
+    EndNamespace(namespaceName);
+}
+
+foreach (var complex in code.GetItemsToGenerate<ComplexType>(ItemCollection).OrderBy(e => e.Name))
+{
+    fileManager.StartNewFile(complex.Name + ".cs");
+    BeginNamespace(namespaceName, code);
+#>
+using System;
+
+<#=Accessibility.ForType(complex)#> partial class <#=code.Escape(complex)#>
+{
+<#
+    var complexProperties = complex.Properties.Where(p => p.TypeUsage.EdmType is ComplexType && p.DeclaringType == complex);
+    var propertiesWithDefaultValues = complex.Properties.Where(p => p.TypeUsage.EdmType is SimpleType && p.DeclaringType == complex && p.DefaultValue != null);
+
+    if (propertiesWithDefaultValues.Any() || complexProperties.Any())
+    {
+#>
+    public <#=code.Escape(complex)#>()
+    {
+<#
+        foreach (var edmProperty in propertiesWithDefaultValues)
+        {
+#>
+        this.<#=code.Escape(edmProperty)#> = <#=code.CreateLiteral(edmProperty.DefaultValue)#>;
+<#
+        }
+
+        foreach (var complexProperty in complexProperties)
+        {
+#>
+        this.<#=code.Escape(complexProperty)#> = new <#=code.GetTypeName(complexProperty.TypeUsage)#>();
+<#
+        }
+#>
+    }
+
+<#
+    }
+
+    var simpleProperties = complex.Properties.Where(p => p.TypeUsage.EdmType is SimpleType && p.DeclaringType == complex);
+    if (simpleProperties.Any())
+    {
+        foreach(var edmProperty in simpleProperties)
+        {
+            WriteProperty(code, edmProperty);
+        }
+    }
+
+    if (complexProperties.Any())
+    {
+#>
+
+<#
+        foreach(var edmProperty in complexProperties)
+        {
+            WriteProperty(code, edmProperty);
+        }
+    }
+#>
+}
+<#
+    EndNamespace(namespaceName);
+}
+
+foreach (EnumType enumType in code.GetItemsToGenerate<EnumType>(ItemCollection).OrderBy(e => e.Name))
+{
+    fileManager.StartNewFile(enumType.Name + ".cs");
+    BeginNamespace(namespaceName, code);
+#>
+using System;
+<#
+    if (enumType.IsFlags)
+    {
+#>
+[Flags]
+<#
+    }
+#>
+<#=Accessibility.ForType(enumType)#> enum <#=code.Escape(enumType)#> : <#=code.Escape(enumType.UnderlyingType.ClrEquivalentType, fullyQualifySystemTypes: false)#>
+{
+<#
+    foreach (EnumMember member in enumType.Members)
+    {
+#>
+    <#=code.Escape(member)#> = <#=member.Value#>,
+<#
+    }
+
+    if (enumType.Members.Any())
+    {
+        this.GenerationEnvironment.Remove(this.GenerationEnvironment.Length - 3, 1);
+    }
+#>
+}
+<#
+    EndNamespace(namespaceName);
+}
+
+fileManager.Process();
+
+#>
+<#+
+void WriteHeader(EntityFrameworkTemplateFileManager fileManager)
+{
+    fileManager.StartHeader();
+#>
+//------------------------------------------------------------------------------
+// <auto-generated>
+//    This code was generated from a template.
+//
+//    Manual changes to this file may cause unexpected behavior in your application.
+//    Manual changes to this file will be overwritten if the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+<#+
+    fileManager.EndBlock();
+}
+
+void BeginNamespace(string namespaceName, CodeGenerationTools code)
+{
+    CodeRegion region = new CodeRegion(this);
+    if (!String.IsNullOrEmpty(namespaceName))
+    {
+#>
+namespace <#=code.EscapeNamespace(namespaceName)#>
+{
+<#+
+        PushIndent(CodeRegion.GetIndent(1));
+    }
+}
+
+void EndNamespace(string namespaceName)
+{
+    if (!String.IsNullOrEmpty(namespaceName))
+    {
+        PopIndent();
+#>
+}
+<#+
+    }
+}
+
+void WriteProperty(CodeGenerationTools code, EdmProperty edmProperty)
+{
+    WriteProperty(Accessibility.ForProperty(edmProperty),
+                  code.GetTypeName(edmProperty.TypeUsage),
+                  code.Escape(edmProperty),
+                  code.SpaceAfter(Accessibility.ForGetter(edmProperty)),
+                  code.SpaceAfter(Accessibility.ForSetter(edmProperty)));
+}
+
+void WriteNavigationProperty(CodeGenerationTools code, NavigationProperty navigationProperty)
+{
+    var endType = code.GetTypeName(navigationProperty.ToEndMember.GetEntityType());
+    WriteProperty(PropertyVirtualModifier(Accessibility.ForProperty(navigationProperty)),
+                  navigationProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many ? ("ICollection<" + endType + ">") : endType,
+                  code.Escape(navigationProperty),
+                  code.SpaceAfter(Accessibility.ForGetter(navigationProperty)),
+                  code.SpaceAfter(Accessibility.ForSetter(navigationProperty)));
+}
+
+void WriteProperty(string accessibility, string type, string name, string getterAccessibility, string setterAccessibility)
+{
+#>
+    <#=accessibility#> <#=type#> <#=name#> { <#=getterAccessibility#>get; <#=setterAccessibility#>set; }
+<#+
+}
+
+string PropertyVirtualModifier(string accessibility)
+{
+    return accessibility + (accessibility != "private" ? " virtual" : "");
+}
+
+private void DefineMetadata()
+{
+    TemplateMetadata[MetadataConstants.TT_TEMPLATE_NAME] = "CSharpDbContext.Types";
+    TemplateMetadata[MetadataConstants.TT_TEMPLATE_VERSION] = "5.0";
+    TemplateMetadata[MetadataConstants.TT_MINIMUM_ENTITY_FRAMEWORK_VERSION] = "5.0";
+}
+#>

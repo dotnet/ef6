@@ -1,0 +1,544 @@
+﻿namespace ProductivityApiTests
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Data.Entity;
+    using System.Data.SqlClient;
+    using System.Linq;
+    using System.Transactions;
+    using AdvancedPatternsModel;
+    using SimpleModel;
+    using Xunit;
+
+    /// <summary>
+    /// Functional tests for DbSqlQuery and other raw SQL functionality. 
+    /// Unit tests also exist in the unit tests project.
+    /// </summary>
+    public class DbSqlQueryTests : FunctionalTestBase
+    {
+        #region Infrastructure/setup
+
+        static DbSqlQueryTests()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                context.Database.Initialize(force: false);
+            }
+        }
+
+        #endregion
+
+        #region SQL queries for entities
+
+        [Fact]
+        public void SQL_query_can_be_used_to_materialize_entities_into_a_set()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var productsQuery = context.Products.SqlQuery("select * from Products");
+
+                // Quick check that creating the query object does not execute the query.
+                Assert.Equal(0, context.Products.Local.Count);
+
+                var products = productsQuery.ToList();
+
+                Assert.Equal(7, products.Count);
+                Assert.Equal(products.Count, context.Products.Local.Count);
+
+                ValidateBovril(products.Single(d => d.Name == "Bovril"));
+                CadillacIsNotFeaturedProduct(products.Single(d => d.Name == "Cadillac"));
+            }
+        }
+
+        [Fact]
+        public void Non_generic_SQL_query_can_be_used_to_materialize_entities_into_a_set()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var productsQuery = context.Set(typeof(Product)).SqlQuery("select * from Products");
+
+                // Quick check that creating the query object does not execute the query.
+                Assert.Equal(0, context.Products.Local.Count);
+
+                var products = productsQuery.ToList<Product>();
+
+                Assert.Equal(7, products.Count);
+                Assert.Equal(products.Count, context.Products.Local.Count);
+
+                ValidateBovril(products.Single(d => d.Name == "Bovril"));
+                CadillacIsNotFeaturedProduct(products.Single(d => d.Name == "Cadillac"));
+            }
+        }
+
+        [Fact]
+        public void SQL_query_uses_identity_resolution()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var trackedProducts = context.Products.Where(p => !(p is FeaturedProduct)).OrderBy(p => p.Id).ToList();
+                var products = context.Set<Product>().SqlQuery("select * from Products").OrderBy(p => p.Id).ToList();
+
+                Assert.Equal(6, trackedProducts.Count);
+                Assert.Equal(7, products.Count);
+                Assert.Equal(products.Count, context.Products.Local.Count);
+
+                products.Remove(products.Single(d => d.Name == "Cadillac"));
+                Assert.True(products.SequenceEqual(trackedProducts));
+            }
+        }
+
+        [Fact]
+        public void
+            SQL_query_identity_resolution_fails_when_type_returned_from_query_is_different_from_type_in_state_manager()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                context.Products.Load();
+
+                var query = context.Set<Product>().SqlQuery("select * from Products");
+                Assert.Throws<NotSupportedException>(() => query.ToList()).ValidateMessage(SystemDataEntityAssembly,
+                                                                                           "Materializer_RecyclingEntity",
+                                                                                           "System.Data.Entity",
+                                                                                           "SimpleModelContext.Products",
+                                                                                           "SimpleModel.Product",
+                                                                                           "SimpleModel.FeaturedProduct",
+                                                                                           "EntitySet=Products;Id=7");
+            }
+        }
+
+        [Fact]
+        public void SQL_query_with_parameters_can_be_used_to_materialize_entities_into_a_set()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var products =
+                    context.Products.SqlQuery("select * from Products where Id < {0} and CategoryId = {1}", 4,
+                                              "Beverages").ToList();
+
+                Assert.Equal(1, context.Products.Local.Count);
+                ValidateBovril(products);
+            }
+        }
+
+        [Fact]
+        public void Non_generic_SQL_query_with_parameters_can_be_used_to_materialize_entities_into_a_set()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var products =
+                    context.Set(typeof(Product)).SqlQuery("select * from Products where Id < {0} and CategoryId = {1}",
+                                                          4, "Beverages").ToList<Product>();
+
+                Assert.Equal(1, context.Products.Local.Count);
+                ValidateBovril(products);
+            }
+        }
+
+        [Fact]
+        public void SQL_query_with_SqlParameter_parameters_can_be_used_to_materialize_entities_into_a_set()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var products = context.Products.SqlQuery("select * from Products where Id < @p0 and CategoryId = @p1",
+                                                         new SqlParameter { ParameterName = "p0", Value = 4 },
+                                                         new SqlParameter { ParameterName = "p1", Value = "Beverages" })
+                    .ToList();
+
+                Assert.Equal(1, context.Products.Local.Count);
+                ValidateBovril(products);
+            }
+        }
+
+        [Fact]
+        public void Non_generic_SQL_query_with_SqlParameter_parameters_can_be_used_to_materialize_entities_into_a_set()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var products =
+                    context.Set(typeof(Product)).SqlQuery("select * from Products where Id < @p0 and CategoryId = @p1",
+                                                          new SqlParameter { ParameterName = "p0", Value = 4 },
+                                                          new SqlParameter { ParameterName = "p1", Value = "Beverages" })
+                        .ToList<Product>();
+
+                Assert.Equal(1, context.Products.Local.Count);
+                ValidateBovril(products);
+            }
+        }
+
+        [Fact]
+        public void SQL_query_can_be_used_to_materialize_entities_with_AsNoTracking()
+        {
+            SQL_query_can_be_used_to_materialize_entities_without_tracking(
+                (c, s) => c.Products.SqlQuery(s).AsNoTracking().ToList());
+        }
+
+        [Fact]
+        public void SQL_query_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery()
+        {
+            SQL_query_can_be_used_to_materialize_entities_without_tracking(
+                (c, s) => c.Database.SqlQuery<Product>(s).ToList());
+        }
+
+        [Fact]
+        public void Non_generic_SQL_query_can_be_used_to_materialize_entities_with_AsNoTracking()
+        {
+            SQL_query_can_be_used_to_materialize_entities_without_tracking(
+                (c, s) => c.Set(typeof(Product)).SqlQuery(s).AsNoTracking().ToList<Product>());
+        }
+
+        [Fact]
+        public void
+            Non_generic_SQL_query_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery()
+        {
+            SQL_query_can_be_used_to_materialize_entities_without_tracking(
+                (c, s) => c.Database.SqlQuery(typeof(Product), s).ToList<Product>());
+        }
+
+        private void SQL_query_can_be_used_to_materialize_entities_without_tracking(
+            Func<SimpleModelContext, string, List<Product>> query)
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var products = query(context, "select * from Products");
+
+                Assert.Equal(7, products.Count);
+                Assert.Equal(0, context.Products.Local.Count);
+
+                ValidateBovril(products.Single(d => d.Name == "Bovril"));
+                CadillacIsNotFeaturedProduct(products.Single(d => d.Name == "Cadillac"));
+            }
+        }
+
+        [Fact]
+        public void SQL_query_with_parameters_can_be_used_to_materialize_entities_with_AsNoTracking()
+        {
+            SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
+                (c, s, p) => c.Products.SqlQuery(s, p).AsNoTracking().ToList());
+        }
+
+        [Fact]
+        public void
+            SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery()
+        {
+            SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
+                (c, s, p) => c.Database.SqlQuery<Product>(s, p).ToList());
+        }
+
+        [Fact]
+        public void Non_generic_SQL_query_with_parameters_can_be_used_to_materialize_entities_with_AsNoTracking()
+        {
+            SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
+                (c, s, p) => c.Set(typeof(Product)).SqlQuery(s, p).AsNoTracking().ToList<Product>());
+        }
+
+        [Fact]
+        public void Non_generic_SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery()
+        {
+            SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
+                (c, s, p) => c.Database.SqlQuery(typeof(Product), s, p).ToList<Product>());
+        }
+
+        private void SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
+            Func<SimpleModelContext, string, object[], List<Product>> query)
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var products = query(context, "select * from Products where Id < {0} and CategoryId = {1}",
+                                     new object[] { 4, "Beverages" });
+
+                Assert.Equal(0, context.Products.Local.Count);
+                ValidateBovril(products);
+            }
+        }
+
+        [Fact]
+        public void SQL_query_can_be_used_to_materialize_derived_entities_into_a_set()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var products =
+                    context.Set<FeaturedProduct>().SqlQuery(
+                        "select * from Products where Discriminator = 'FeaturedProduct'").ToList();
+
+                Assert.Equal(1, products.Count);
+                Assert.Equal(products.Count, context.Products.Local.Count);
+
+                ValidateCadillac(products.Single());
+            }
+        }
+
+        [Fact]
+        public void
+            SQL_query_can_be_used_to_materialize_derived_entities_into_a_set_even_when_base_entities_are_returned()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var products = context.Set<FeaturedProduct>().SqlQuery("select * from Products").ToList();
+
+                Assert.Equal(7, products.Count);
+                Assert.Equal(products.Count, context.Products.Local.Count);
+
+                ValidateBovril(products.Single(d => d.Name == "Bovril"));
+                ValidateCadillac(products.Single(d => d.Name == "Cadillac"));
+            }
+        }
+
+        [Fact]
+        public void SQL_query_for_entity_where_columns_dont_map_throws()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var query = context.Products.SqlQuery("select * from Categories");
+
+                Assert.Throws<EntityCommandExecutionException>(() => query.ToList()).ValidateMessage(
+                    SystemDataEntityAssembly, "ADP_InvalidDataReaderMissingColumnForType", "System.Data.Entity",
+                    "SimpleModel.Product", "CategoryId");
+            }
+        }
+
+        [Fact]
+        public void SQL_query_for_entity_can_be_executed_multiple_times()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var query = context.Products.SqlQuery("select * from Products");
+
+                Assert.True(query.ToList().SequenceEqual(query.ToList()));
+            }
+        }
+
+        [Fact]
+        public void Non_generic_SQL_query_for_entity_can_be_executed_multiple_times()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var query = context.Set(typeof(Product)).SqlQuery("select * from Products");
+
+                Assert.True(query.ToList<Product>().SequenceEqual(query.ToList<Product>()));
+            }
+        }
+
+        private void ValidateBovril(List<Product> products)
+        {
+            Assert.Equal(1, products.Count);
+            ValidateBovril(products.Single());
+        }
+
+        private void ValidateBovril(dynamic bovril)
+        {
+            Assert.Equal(2, bovril.Id);
+            Assert.Equal("Bovril", bovril.Name);
+            Assert.Equal("Beverages", bovril.CategoryId);
+        }
+
+        private void ValidateCadillac(Product cadillac)
+        {
+            Assert.IsType<FeaturedProduct>(cadillac);
+            var asFeaturedProduct = (FeaturedProduct)cadillac;
+
+            Assert.Equal(7, asFeaturedProduct.Id);
+            Assert.Equal("Cadillac", asFeaturedProduct.Name);
+            Assert.Equal("Cars", asFeaturedProduct.CategoryId);
+            Assert.Equal("Ed Wood", asFeaturedProduct.PromotionalCode);
+        }
+
+        private void CadillacIsNotFeaturedProduct(Product cadillac)
+        {
+            Assert.IsNotType<FeaturedProduct>(cadillac);
+
+            Assert.Equal(7, cadillac.Id);
+            Assert.Equal("Cadillac", cadillac.Name);
+            Assert.Equal("Cars", cadillac.CategoryId);
+        }
+
+        #endregion
+
+        #region SQL queries for non-entities
+
+        public class UnMappedProduct
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public string CategoryId { get; set; }
+        }
+
+        [Fact]
+        public void SQL_query_can_be_used_to_materialize_unmapped_types()
+        {
+            SQL_query_can_be_used_to_materialize_unmapped_types_implementation(
+                (c, s) => c.Database.SqlQuery<UnMappedProduct>(s).ToList());
+        }
+
+        [Fact]
+        public void Non_generic_SQL_query_can_be_used_to_materialize_unmapped_types()
+        {
+            SQL_query_can_be_used_to_materialize_unmapped_types_implementation(
+                (c, s) => c.Database.SqlQuery(typeof(UnMappedProduct), s).ToList<UnMappedProduct>());
+        }
+
+        private void SQL_query_can_be_used_to_materialize_unmapped_types_implementation(
+            Func<SimpleModelContext, string, List<UnMappedProduct>> query)
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var products = query(context, "select * from Products");
+
+                Assert.Equal(7, products.Count);
+                Assert.Equal(0, context.Products.Local.Count);
+
+                ValidateBovril(products.Single(d => d.Name == "Bovril"));
+            }
+        }
+
+        [Fact]
+        public void SQL_query_with_parameters_can_be_used_to_materialize_unmapped_types()
+        {
+            SQL_query_with_parameters_can_be_used_to_materialize_unmapped_types_implementation(
+                (c, s, p) => c.Database.SqlQuery<UnMappedProduct>(s, p).ToList());
+        }
+
+        [Fact]
+        public void Non_generic_SQL_query_with_parameters_can_be_used_to_materialize_unmapped_types()
+        {
+            SQL_query_with_parameters_can_be_used_to_materialize_unmapped_types_implementation(
+                (c, s, p) => c.Database.SqlQuery(typeof(UnMappedProduct), s, p).ToList<UnMappedProduct>());
+        }
+
+        private void SQL_query_with_parameters_can_be_used_to_materialize_unmapped_types_implementation(
+            Func<SimpleModelContext, string, object[], List<UnMappedProduct>> query)
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var products = query(context, "select * from Products where Id < {0} and CategoryId = {1}",
+                                     new object[] { 4, "Beverages" });
+
+                Assert.Equal(1, products.Count);
+                Assert.Equal(0, context.Products.Local.Count);
+
+                ValidateBovril(products.Single());
+            }
+        }
+
+        [Fact]
+        public void SQL_query_for_non_entity_where_columns_dont_map_throws()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var query = context.Database.SqlQuery<UnMappedProduct>("select * from Categories");
+
+                Assert.Throws<InvalidOperationException>(() => query.ToList()).ValidateMessage(
+                    SystemDataEntityAssembly, "Materializer_InvalidCastReference", "System.Data.Entity", "System.String",
+                    "System.Int32");
+            }
+        }
+
+        [Fact]
+        public void SQL_query_cannot_be_used_to_materialize_anonymous_types()
+        {
+            SQL_query_cannot_be_used_to_materialize_anonymous_types_implementation(
+                new { Id = 2, Name = "Bovril", CategoryId = "Foods" });
+        }
+
+        private void SQL_query_cannot_be_used_to_materialize_anonymous_types_implementation<TElement>(TElement _)
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var query = context.Database.SqlQuery<TElement>("select * from Products");
+                Assert.Throws<InvalidOperationException>(() => query.ToList()).ValidateMessage(
+                    SystemDataEntityAssembly, "ObjectContext_InvalidTypeForStoreQuery", "System.Data.Entity",
+                    typeof(TElement).ToString());
+            }
+        }
+
+        [Fact]
+        public void SQL_query_can_be_used_to_materialize_value_types()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var products = context.Database.SqlQuery<int>("select Id from Products").ToList();
+
+                Assert.Equal(7, products.Count);
+                Assert.Equal(0, context.Products.Local.Count);
+
+                Assert.True(products.Contains(2));
+            }
+        }
+
+        [Fact]
+        public void SQL_query_can_be_used_to_materialize_complex_types()
+        {
+            using (var context = new AdvancedPatternsMasterContext())
+            {
+                var siteInfos = context.Database.SqlQuery<SiteInfo>(
+                    @"select Address_SiteInfo_Zone as Zone, Address_SiteInfo_Environment as Environment from Buildings")
+                    .ToList();
+
+                Assert.Equal(2, siteInfos.Count);
+            }
+        }
+
+        [Fact]
+        public void SQL_query_for_non_entity_an_be_executed_multiple_times()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var query = context.Database.SqlQuery<int>("select Id from Products");
+
+                Assert.True(query.ToList().SequenceEqual(query.ToList()));
+            }
+        }
+
+        [Fact]
+        public void Non_generic_SQL_query_for_non_entity_can_be_executed_multiple_times()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var query = context.Database.SqlQuery(typeof(int), "select Id from Products");
+
+                Assert.True(query.ToList<int>().SequenceEqual(query.ToList<int>()));
+            }
+        }
+
+        #endregion
+
+        #region SQL command tests
+
+        [Fact]
+        public void SQL_commands_can_be_executed_against_the_database()
+        {
+            using (new TransactionScope())
+            {
+                using (var context = new SimpleModelContext())
+                {
+                    var result =
+                        context.Database.ExecuteSqlCommand(
+                            "update Products set Name = 'Vegemite' where Name = 'Marmite'");
+
+                    Assert.Equal(1, result);
+
+                    Assert.NotNull(context.Products.SingleOrDefault(p => p.Name == "Vegemite"));
+                }
+            }
+        }
+
+        [Fact]
+        public void SQL_commands_with_parameters_can_be_executed_against_the_database()
+        {
+            using (new TransactionScope())
+            {
+                using (var context = new SimpleModelContext())
+                {
+                    var result = context.Database.ExecuteSqlCommand("update Products set Name = {0} where Name = {1}",
+                                                                    "Vegemite", "Marmite");
+
+                    Assert.Equal(1, result);
+
+                    Assert.NotNull(context.Products.SingleOrDefault(p => p.Name == "Vegemite"));
+                }
+            }
+        }
+
+        #endregion
+    }
+}

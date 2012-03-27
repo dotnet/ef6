@@ -1,0 +1,273 @@
+<#
+'*********************************************************
+'
+'    Copyright (c) Microsoft. All rights reserved.
+'    This code is licensed under the Microsoft Public License.
+'    THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+'    ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+'    IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+'    PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+'
+'*********************************************************
+#>
+<#@ template language="VB" debug="false" hostspecific="true"#>
+<#@ include file="EF.Utility.VB.ttinclude"#><#@
+ output extension=".vb"#><#
+
+DefineMetadata()
+
+Dim code As New CodeGenerationTools(Me)
+Dim loader As New MetadataLoader(Me)
+Dim region As New CodeRegion(Me, 1)
+Dim ef As New MetadataTools(Me)
+
+Dim inputFile As String = "..\..\FunctionalTests\ProductivityApi\TemplateModels\Schemas\AdvancedPatterns.edmx"
+Dim ItemCollection As EdmItemCollection = loader.CreateEdmItemCollection(inputFile)
+Dim namespaceName As String = code.VsNamespaceSuggestion()
+
+Dim fileManager As EntityFrameworkTemplateFileManager = EntityFrameworkTemplateFileManager.Create(Me)
+
+If Not code.VerifyCaseInsensitiveTypeUniqueness(code.GetAllGlobalItems(ItemCollection), inputFile)  Then
+    Return String.Empty
+End If
+
+WriteHeader(fileManager)
+
+For Each loopEntity As EntityType In Code.GetItemsToGenerate(Of EntityType)(ItemCollection).OrderBy(Function(e) e.Name)
+    Dim entity as EntityType = loopEntity
+    fileManager.StartNewFile(entity.Name & ".vb")
+#>
+Imports System
+Imports System.Collections.Generic
+
+<#
+    BeginNamespace(namespaceName, code)
+#>
+Partial <#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.MustInheritOption(entity))#>Class <#=code.Escape(entity)#><#=code.StringBefore(Environment.NewLine & CodeRegion.GetIndent(region.CurrentIndentLevel + 2) & " Inherits ", code.GetTypeName(entity.BaseType))#>
+<#
+    Dim simpleProperties as IEnumerable(Of EdmProperty) = entity.Properties.Where(Function(p) TypeOf p.TypeUsage.EdmType Is SimpleType AndAlso p.DeclaringType Is entity)
+    If simpleProperties.Any() Then
+        For Each edmProperty As EdmProperty In simpleProperties
+            WriteProperty(code, edmProperty)
+        Next
+    End If
+
+    Dim complexProperties as IEnumerable(Of EdmProperty) = entity.Properties.Where(Function(p) TypeOf p.TypeUsage.EdmType Is ComplexType AndAlso p.DeclaringType Is entity)
+    If complexProperties.Any() Then
+#>
+
+<#
+       For Each complexProperty As EdmProperty In complexProperties
+            WriteComplexProperty(code, complexProperty)
+       Next
+    End If
+
+    Dim navigationProperties as IEnumerable(Of NavigationProperty) = entity.NavigationProperties.Where(Function(np) np.DeclaringType Is entity)
+    If navigationProperties.Any() Then
+#>
+
+<#
+        For Each navigationProperty As NavigationProperty In navigationProperties
+            WriteNavigationProperty(code, navigationProperty)
+        Next
+    End If
+
+#>
+
+End Class
+<#
+    EndNamespace(namespaceName)
+
+    If Not code.VerifyCaseInsensitiveMemberUniqueness(code.GetAllDeclaredMembers(entity), entity.FullName, inputFile) Then
+        Return String.Empty
+    End If
+Next
+
+For Each loopComplex As ComplexType In Code.GetItemsToGenerate(Of ComplexType)(ItemCollection).OrderBy(Function(e) e.Name)
+    Dim complex as ComplexType = loopComplex
+    fileManager.StartNewFile(complex.Name & ".vb")
+#>
+Imports System
+
+<#
+    BeginNamespace(namespaceName, code)
+#>
+Partial <#=Accessibility.ForType(complex)#> Class <#=code.Escape(complex)#>
+<#
+
+    Dim simpleProperties as IEnumerable(Of EdmProperty) = complex.Properties.Where(Function(p) TypeOf p.TypeUsage.EdmType Is SimpleType AndAlso p.DeclaringType Is complex)
+    If simpleProperties.Any() Then
+        For Each edmProperty As EdmProperty In simpleProperties
+            WriteProperty(code, edmProperty)
+        Next
+    End If
+
+    Dim complexProperties as IEnumerable(Of EdmProperty) = complex.Properties.Where(Function(p) TypeOf p.TypeUsage.EdmType Is ComplexType AndAlso p.DeclaringType Is complex)
+    If complexProperties.Any() Then
+#>
+
+<#
+        For Each complexProperty As EdmProperty In complexProperties
+            WriteComplexProperty(code, complexProperty)
+        Next
+    End If
+
+#>
+
+End Class
+<#
+    EndNamespace(namespaceName)
+
+    If Not code.VerifyCaseInsensitiveMemberUniqueness(code.GetAllDeclaredMembers(complex), complex.FullName, inputFile) Then
+        Return String.Empty
+    End If
+Next
+
+For Each enumType As EnumType In Code.GetItemsToGenerate(Of EnumType)(ItemCollection).OrderBy(Function(e) e.Name)
+    fileManager.StartNewFile(enumType.Name & ".vb")
+#>
+Imports System
+
+<#
+    BeginNamespace(namespaceName, code)
+    If enumType.IsFlags Then
+#>
+<Flags>
+<#
+    End If
+#>
+<#=Accessibility.ForType(enumType)#> Enum <#=code.Escape(enumType)#> As <#=code.Escape(enumType.UnderlyingType.ClrEquivalentType, fullyQualifySystemTypes:= False)#>
+<#
+    For Each member As EnumMember In enumType.Members
+#>
+    <#=code.Escape(member)#> = <#=member.Value#>
+<#
+    Next
+    If Not enumType.Members.Any() Then
+#>
+    None
+<#
+    End If
+#>
+End Enum
+<#
+    EndNamespace(namespaceName)
+
+    If Not code.VerifyCaseInsensitiveMemberUniqueness(code.GetAllDeclaredMembers(enumType), enumType.FullName, inputFile) Then
+        Return String.Empty
+    End If
+Next
+
+fileManager.Process()
+#>
+<#+
+Private Sub WriteHeader(ByVal fileManager As EntityFrameworkTemplateFileManager)
+    fileManager.StartHeader()
+#>
+'------------------------------------------------------------------------------
+' <auto-generated>
+'    This code was generated from a template.
+'
+'    Manual changes to this file may cause unexpected behavior in your application.
+'    Manual changes to this file will be overwritten if the code is regenerated.
+' </auto-generated>
+'------------------------------------------------------------------------------
+
+<#+
+    FileManager.EndBlock()
+End Sub
+
+Private Sub BeginNamespace(ByVal namespaceName As String, ByVal code As CodeGenerationTools)
+    Dim region As CodeRegion = New CodeRegion(Me)
+    If Not String.IsNullOrEmpty(namespaceName) Then
+#>
+Namespace <#=code.EscapeNamespace(namespaceName)#>
+
+<#+
+        PushIndent(CodeRegion.GetIndent(1))
+    End If
+End Sub
+
+Private Sub EndNamespace(namespaceName As String)
+    If Not String.IsNullOrEmpty(namespaceName) Then
+        PopIndent()
+#>
+
+End Namespace
+<#+
+    End If
+End Sub
+
+Private Sub WriteProperty(code As CodeGenerationTools, edmProperty As EdmProperty)
+    WriteProperty(code, edmProperty, code.StringBefore(" = ", code.CreateLiteral(edmProperty.DefaultValue)))
+End Sub
+
+Private Sub WriteComplexProperty(code As CodeGenerationTools, complexProperty As EdmProperty)
+    WriteProperty(code, complexProperty, " = New " & code.GetTypeName(complexProperty.TypeUsage))
+End Sub
+
+Private Sub WriteProperty(code As CodeGenerationTools, edmProperty As EdmProperty, defaultValue As String)
+    WriteProperty(Accessibility.ForProperty(edmProperty), _
+                  code.GetTypeName(edmProperty.TypeUsage), _
+                  code.Escape(edmProperty), _
+                  code.SpaceAfter(Accessibility.ForGetter(edmProperty)), _
+                  code.SpaceAfter(Accessibility.ForSetter(edmProperty)), _
+                  defaultValue)
+End Sub
+
+Private Sub WriteNavigationProperty(code As CodeGenerationTools, navigationProperty As NavigationProperty)
+    Dim endType = code.GetTypeName(navigationProperty.ToEndMember.GetEntityType())
+    Dim defaultValue = ""
+    Dim propertyType = endType
+
+    If(navigationProperty.ToEndMember.RelationshipMultiplicity = RelationshipMultiplicity.Many)
+        defaultValue = " = New HashSet(Of " & propertyType & ")"
+        propertyType = "ICollection(Of " & propertyType & ")"
+    End If
+
+    WriteProperty(PropertyAccessibilityAndVirtual(navigationProperty), _
+                  propertyType, _
+                  code.Escape(navigationProperty), _
+                  code.SpaceAfter(Accessibility.ForGetter(navigationProperty)), _
+                  code.SpaceAfter(Accessibility.ForSetter(navigationProperty)), _
+                  defaultValue)
+End Sub
+
+Private Sub WriteProperty(accessibility As String, type As String, name As String, getterAccessibility As String, setterAccessibility As String, defaultValue As String)
+   If ([String].IsNullOrEmpty(getterAccessibility) AndAlso [String].IsNullOrEmpty(setterAccessibility))
+#>
+    <#=accessibility#> Property <#=name#> As <#=type#><#=defaultValue#>
+<#+
+    Else
+#>
+
+    Private _<#=name#> As <#=type#><#=defaultValue#>
+    <#=accessibility#> Property <#=name#> As <#=type#>
+        <#=getterAccessibility#>Get
+            Return _<#=name#>
+        End Get
+        <#=setterAccessibility#>Set(ByVal value As <#=type#>)
+            _<#=name#> = value
+        End Set
+    End Property
+<#+
+    End If
+End Sub
+
+Private Function PropertyAccessibilityAndVirtual(ByVal member As EdmMember) As String
+    Dim propertyAccess As String = Accessibility.ForProperty(member)
+    Dim setAccess as String = Accessibility.ForSetter(member)
+    Dim getAccess as String = Accessibility.ForGetter(member)
+    If propertyAccess <> "Private" AndAlso setAccess <> "Private" AndAlso getAccess <> "Private" Then
+        Return propertyAccess & " Overridable"
+    End If
+
+    Return propertyAccess
+End Function
+
+Private Sub DefineMetadata()
+    TemplateMetadata(MetadataConstants.TT_TEMPLATE_NAME) = "VBDbContext.Types"
+    TemplateMetadata(MetadataConstants.TT_TEMPLATE_VERSION) = "5.0"
+    TemplateMetadata(MetadataConstants.TT_MINIMUM_ENTITY_FRAMEWORK_VERSION) = "5.0"
+End Sub
+#>

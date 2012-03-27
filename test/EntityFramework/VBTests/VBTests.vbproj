@@ -74,15 +74,207 @@
     <Import Include="System.Diagnostics" />
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
+    <Import Include="Xunit" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Compile Include="TemplateTests.vb" />
+    <Compile Include="_VbAdvancedPatterns\AddressMf.vb">
+      <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbAdvancedPatterns\BuildingDetailMf.vb">
+      <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbAdvancedPatterns\BuildingMf.vb">
+      <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbAdvancedPatterns\CurrentEmployeeMf.vb">
+      <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbAdvancedPatterns\EmployeeMf.vb">
+      <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbAdvancedPatterns\MailRoomMf.vb">
+      <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbAdvancedPatterns\OfficeMf.vb">
+      <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbAdvancedPatterns\Partials\AddressMf.vb" />
+    <Compile Include="_VbAdvancedPatterns\Partials\AdvancedPatternsModelFirstContext.vb" />
+    <Compile Include="_VbAdvancedPatterns\Partials\BuildingMf.vb" />
+    <Compile Include="_VbAdvancedPatterns\Partials\OfficeMf.vb" />
+    <Compile Include="_VbAdvancedPatterns\Partials\SiteInfoMf.vb" />
+    <Compile Include="_VbAdvancedPatterns\PastEmployeeMf.vb">
+      <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbAdvancedPatterns\SiteInfoMf.vb">
+      <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbAdvancedPatterns\VbAdvancedPatterns.Context.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VbAdvancedPatterns.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbAdvancedPatterns\VbAdvancedPatterns.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbAdvancedPatterns\WhiteboardMf.vb">
+      <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbAdvancedPatterns\WorkOrderMf.vb">
+      <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\BackOrderLine2Mm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\BackOrderLineMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\BarcodeDetailMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\BarcodeMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\ComplaintMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\ComputerDetailMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\ComputerMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\ConcurrencyInfoMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\ContactDetailsMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\CustomerInfoMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\DimensionsMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\DiscontinuedProductMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\DriverMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\ExternalTypes\AuditInfoMm.vb" />
+    <Compile Include="_VbMonsterModel\ExternalTypes\CustomerMm.vb" />
+    <Compile Include="_VbMonsterModel\ExternalTypes\LicenseStateMm.vb" />
+    <Compile Include="_VbMonsterModel\ExternalTypes\LoginMm.vb" />
+    <Compile Include="_VbMonsterModel\ExternalTypes\PhoneMm.vb" />
+    <Compile Include="_VbMonsterModel\ExternalTypes\PhoneTypeMm.vb" />
+    <Compile Include="_VbMonsterModel\IncorrectScanMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\LastLoginMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\LicenseMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\MessageMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\OrderLineMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\OrderMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\OrderNoteMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\OrderQualityCheckMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\PageViewMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\PasswordResetMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\ProductDetailMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\ProductMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\ProductPageViewMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\ProductPhotoMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\ProductReviewMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\ProductWebFeatureMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\ResolutionMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\RSATokenMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\SmartCardMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\SupplierInfoMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\SupplierLogoMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\SupplierMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\SuspiciousActivityMm.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="_VbMonsterModel\VbMonsterModel.Context.vb">
+      <DependentUpon>VbMonsterModel.Context.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="_VbMonsterModel\VbMonsterModel.vb">
+      <DependentUpon>VbMonsterModel.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <None Include="_VbAdvancedPatterns\VbAdvancedPatterns.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <CustomToolNamespace>AdvancedPatternsVB</CustomToolNamespace>
+      <LastGenOutput>VbAdvancedPatterns.Context.vb</LastGenOutput>
+    </None>
+    <None Include="_VbAdvancedPatterns\VbAdvancedPatterns.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <CustomToolNamespace>AdvancedPatternsVB</CustomToolNamespace>
+      <LastGenOutput>VbAdvancedPatterns.vb</LastGenOutput>
+    </None>
+    <None Include="_VbMonsterModel\VbMonsterModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>VbMonsterModel.Context.vb</LastGenOutput>
+    </None>
+    <None Include="_VbMonsterModel\VbMonsterModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>VbMonsterModel.vb</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="My Project\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\EntityFramework\EntityFramework.csproj">
@@ -95,7 +287,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Stub.vb" />
+    <Folder Include="My Project\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

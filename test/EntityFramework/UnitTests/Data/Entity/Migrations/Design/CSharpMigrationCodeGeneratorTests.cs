@@ -1,0 +1,757 @@
+namespace System.Data.Entity.Migrations
+{
+    using System.Data.Entity.Migrations.Design;
+    using System.Data.Entity.Migrations.Model;
+    using System.Data.Metadata.Edm;
+    using System.Data.Spatial;
+    using System.IO;
+    using Xunit;
+
+    public class CSharpMigrationCodeGeneratorTests
+    {
+        [Fact]
+        public void Generate_should_not_produce_lines_that_are_too_long_for_the_compiler()
+        {
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[] {},
+                    new string('a', 10000),
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            using (var stringReader = new StringReader(generatedMigration.DesignerCode))
+            {
+                string line;
+                while ((line = stringReader.ReadLine()) != null)
+                {
+                    Assert.True(line.Length <= 1100);
+                }
+            }
+        }
+
+        [Fact]
+        public void Generate_can_output_drop_primary_key_with_explicit_name()
+        {
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            var dropPrimaryKeyOperation
+                = new DropPrimaryKeyOperation
+                      {
+                          Table = "T",
+                          Name = "PK"
+                      };
+
+            dropPrimaryKeyOperation.Columns.Add("c1");
+            dropPrimaryKeyOperation.Columns.Add("c2");
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[] {dropPrimaryKeyOperation},
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            DropPrimaryKey(""T"", ""PK"");
+        }
+        
+        public override void Down()
+        {
+            AddPrimaryKey(""T"", new[] { ""c1"", ""c2"" }, name: ""PK"");
+        }
+    }
+}
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
+        public void Generate_can_output_drop_primary_key_with_implicit_name()
+        {
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            var dropPrimaryKeyOperation
+                = new DropPrimaryKeyOperation
+                      {
+                          Table = "T"
+                      };
+
+            dropPrimaryKeyOperation.Columns.Add("c1");
+            dropPrimaryKeyOperation.Columns.Add("c2");
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[] {dropPrimaryKeyOperation},
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            DropPrimaryKey(""T"", new[] { ""c1"", ""c2"" });
+        }
+        
+        public override void Down()
+        {
+            AddPrimaryKey(""T"", new[] { ""c1"", ""c2"" });
+        }
+    }
+}
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
+        public void Generate_can_output_add_primary_key_with_explicit_name()
+        {
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            var addPrimaryKeyOperation
+                = new AddPrimaryKeyOperation
+                      {
+                          Table = "T",
+                          Name = "PK"
+                      };
+
+            addPrimaryKeyOperation.Columns.Add("c1");
+            addPrimaryKeyOperation.Columns.Add("c2");
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[] {addPrimaryKeyOperation},
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            AddPrimaryKey(""T"", new[] { ""c1"", ""c2"" }, name: ""PK"");
+        }
+        
+        public override void Down()
+        {
+            DropPrimaryKey(""T"", ""PK"");
+        }
+    }
+}
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
+        public void Generate_can_output_add_primary_key_with_implicit_name()
+        {
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            var addPrimaryKeyOperation
+                = new AddPrimaryKeyOperation
+                      {
+                          Table = "T"
+                      };
+
+            addPrimaryKeyOperation.Columns.Add("c1");
+            addPrimaryKeyOperation.Columns.Add("c2");
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[] {addPrimaryKeyOperation},
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            AddPrimaryKey(""T"", new[] { ""c1"", ""c2"" });
+        }
+        
+        public override void Down()
+        {
+            DropPrimaryKey(""T"", new[] { ""c1"", ""c2"" });
+        }
+    }
+}
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
+        public void Generate_can_output_simple_add_foreign_key()
+        {
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            var addForeignKeyOperation
+                = new AddForeignKeyOperation
+                      {
+                          DependentTable = "Orders",
+                          PrincipalTable = "Customers",
+                          CascadeDelete = true
+                      };
+
+            addForeignKeyOperation.DependentColumns.Add("CustomerId");
+            addForeignKeyOperation.PrincipalColumns.Add("Id");
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[] {addForeignKeyOperation},
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            AddForeignKey(""Orders"", ""CustomerId"", ""Customers"", ""Id"", cascadeDelete: true);
+        }
+        
+        public override void Down()
+        {
+            DropForeignKey(""Orders"", ""CustomerId"", ""Customers"");
+        }
+    }
+}
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
+        public void Generate_can_output_composite_add_foreign_key()
+        {
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            var addForeignKeyOperation
+                = new AddForeignKeyOperation
+                      {
+                          DependentTable = "Orders",
+                          PrincipalTable = "Customers"
+                      };
+
+            addForeignKeyOperation.DependentColumns.Add("CustomerId1");
+            addForeignKeyOperation.DependentColumns.Add("CustomerId2");
+            addForeignKeyOperation.PrincipalColumns.Add("Id1");
+            addForeignKeyOperation.PrincipalColumns.Add("Id2");
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[] {addForeignKeyOperation},
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            AddForeignKey(""Orders"", new[] { ""CustomerId1"", ""CustomerId2"" }, ""Customers"", new[] { ""Id1"", ""Id2"" });
+        }
+        
+        public override void Down()
+        {
+            DropForeignKey(""Orders"", new[] { ""CustomerId1"", ""CustomerId2"" }, ""Customers"");
+        }
+    }
+}
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
+        public void Generate_can_output_drop_column()
+        {
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            var dropColumnOperation = new DropColumnOperation("Customers", "Foo");
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[] {dropColumnOperation},
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            DropColumn(""Customers"", ""Foo"");
+        }
+        
+        public override void Down()
+        {
+        }
+    }
+}
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
+        public void Generate_can_output_timestamp_column()
+        {
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            var createTableOperation = new CreateTableOperation("Customers");
+            var column = new ColumnModel(PrimitiveTypeKind.Binary) {Name = "Version", IsTimestamp = true};
+            createTableOperation.Columns.Add(column);
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[] {createTableOperation},
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            CreateTable(
+                ""Customers"",
+                c => new
+                    {
+                        Version = c.Binary(timestamp: true),
+                    });
+            
+        }
+        
+        public override void Down()
+        {
+            DropTable(""Customers"");
+        }
+    }
+}
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
+        public void Generate_can_output_create_table_statement()
+        {
+            var createTableOperation = new CreateTableOperation("Customers");
+            var idColumn = new ColumnModel(PrimitiveTypeKind.Int32) {Name = "Id", IsNullable = true, IsIdentity = true};
+            createTableOperation.Columns.Add(idColumn);
+            createTableOperation.Columns.Add(new ColumnModel(PrimitiveTypeKind.String)
+                                                 {Name = "Name", IsNullable = false});
+            createTableOperation.PrimaryKey = new AddPrimaryKeyOperation {Name = "MyPK"};
+            createTableOperation.PrimaryKey.Columns.Add(idColumn.Name);
+
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            var addForeignKeyOperation = new AddForeignKeyOperation
+                                             {
+                                                 DependentTable = "Customers",
+                                                 PrincipalTable = "Blogs",
+                                                 CascadeDelete = true
+                                             };
+            addForeignKeyOperation.DependentColumns.Add("Blog_Id");
+            addForeignKeyOperation.PrincipalColumns.Add("Id");
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[]
+                        {
+                            createTableOperation,
+                            addForeignKeyOperation,
+                            addForeignKeyOperation.CreateCreateIndexOperation()
+                        },
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            CreateTable(
+                ""Customers"",
+                c => new
+                    {
+                        Id = c.Int(identity: true),
+                        Name = c.String(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id, name: ""MyPK"")
+                .ForeignKey(""Blogs"", t => t.Blog_Id, cascadeDelete: true)
+                .Index(t => t.Blog_Id);
+            
+        }
+        
+        public override void Down()
+        {
+            DropIndex(""Customers"", new[] { ""Blog_Id"" });
+            DropForeignKey(""Customers"", ""Blog_Id"", ""Blogs"");
+            DropTable(""Customers"");
+        }
+    }
+}
+",
+                generatedMigration.UserCode);
+
+            Assert.Equal(
+                @"// <auto-generated />
+namespace Foo
+{
+    using System.Data.Entity.Migrations;
+    using System.Data.Entity.Migrations.Infrastructure;
+    
+    public sealed partial class Bar : IMigrationMetadata
+    {
+        string IMigrationMetadata.Id
+        {
+            get { return ""Migration""; }
+        }
+        
+        string IMigrationMetadata.Source
+        {
+            get { return ""Source""; }
+        }
+        
+        string IMigrationMetadata.Target
+        {
+            get { return ""Target""; }
+        }
+    }
+}
+",
+                generatedMigration.DesignerCode);
+
+            Assert.Equal("cs", generatedMigration.Language);
+        }
+
+        [Fact]
+        public void Generate_can_output_drop_table_statement()
+        {
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new[] {new DropTableOperation("Customers")},
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            DropTable(""Customers"");
+        }
+        
+        public override void Down()
+        {
+        }
+    }
+}
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
+        public void Generate_should_scrub_class_name()
+        {
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            var generatedMigration = codeGenerator.Generate(
+                "Migration",
+                new MigrationOperation[] {},
+                "Source",
+                "Target",
+                "Foo",
+                "1$%^&DFDSH");
+
+            Assert.True(generatedMigration.UserCode.Contains("class _1DFDSH"));
+
+            generatedMigration = codeGenerator.Generate(
+                "Migration",
+                new MigrationOperation[] {},
+                "Source",
+                "Target",
+                "Foo",
+                "while");
+
+            Assert.True(generatedMigration.UserCode.Contains("class _while"));
+        }
+
+        [Fact]
+        public void Generate_can_process_null_source_model()
+        {
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            var generatedMigration = codeGenerator.Generate(
+                "Migration",
+                new MigrationOperation[] {},
+                null,
+                "Target",
+                "Foo",
+                "Bar");
+
+            Assert.Equal(
+                @"// <auto-generated />
+namespace Foo
+{
+    using System.Data.Entity.Migrations;
+    using System.Data.Entity.Migrations.Infrastructure;
+    
+    public sealed partial class Bar : IMigrationMetadata
+    {
+        string IMigrationMetadata.Id
+        {
+            get { return ""Migration""; }
+        }
+        
+        string IMigrationMetadata.Source
+        {
+            get { return null; }
+        }
+        
+        string IMigrationMetadata.Target
+        {
+            get { return ""Target""; }
+        }
+    }
+}
+",
+                generatedMigration.DesignerCode);
+        }
+
+        [Fact]
+        public void Generate_can_output_add_column_for_geography_type_with_default_value()
+        {
+            var generatedMigration
+                = new CSharpMigrationCodeGenerator().Generate(
+                    "Migration",
+                    new[]
+                        {
+                            new AddColumnOperation(
+                                "T",
+                                new ColumnModel(PrimitiveTypeKind.Geography)
+                                    {
+                                        IsNullable = false,
+                                        Name = "C",
+                                        DefaultValue = DbGeography.FromText("POINT (6 7)")
+                                    })
+                        },
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    using System.Data.Spatial;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            AddColumn(""T"", ""C"", c => c.Geography(nullable: false, defaultValue: DbGeography.FromText(""POINT (6 7)"", 4326)));
+        }
+        
+        public override void Down()
+        {
+            DropColumn(""T"", ""C"");
+        }
+    }
+}
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
+        public void Generate_can_output_add_column_for_geometry_type_with_default_value()
+        {
+            var generatedMigration
+                = new CSharpMigrationCodeGenerator().Generate(
+                    "Migration",
+                    new[]
+                        {
+                            new AddColumnOperation(
+                                "T",
+                                new ColumnModel(PrimitiveTypeKind.Geometry)
+                                    {
+                                        IsNullable = false,
+                                        Name = "C",
+                                        DefaultValue = DbGeometry.FromText("POINT (8 9)")
+                                    })
+                        },
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    using System.Data.Spatial;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            AddColumn(""T"", ""C"", c => c.Geometry(nullable: false, defaultValue: DbGeometry.FromText(""POINT (8 9)"", 0)));
+        }
+        
+        public override void Down()
+        {
+            DropColumn(""T"", ""C"");
+        }
+    }
+}
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
+        public void Generate_can_process_null_namespace()
+        {
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            var generatedMigration = codeGenerator.Generate(
+                "Migration",
+                new MigrationOperation[0],
+                null,
+                "Target",
+                null,
+                "Bar");
+
+            Assert.Equal(
+                @"// <auto-generated />
+using System.Data.Entity.Migrations;
+using System.Data.Entity.Migrations.Infrastructure;
+
+public sealed partial class Bar : IMigrationMetadata
+{
+    string IMigrationMetadata.Id
+    {
+        get { return ""Migration""; }
+    }
+    
+    string IMigrationMetadata.Source
+    {
+        get { return null; }
+    }
+    
+    string IMigrationMetadata.Target
+    {
+        get { return ""Target""; }
+    }
+}
+",
+                generatedMigration.DesignerCode);
+
+            Assert.Equal(
+                @"using System;
+using System.Data.Entity.Migrations;
+
+public partial class Bar : DbMigration
+{
+    public override void Up()
+    {
+    }
+    
+    public override void Down()
+    {
+    }
+}
+",
+                generatedMigration.UserCode);
+        }
+    }
+}
