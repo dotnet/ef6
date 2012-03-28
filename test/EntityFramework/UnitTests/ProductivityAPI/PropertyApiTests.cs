@@ -1197,7 +1197,7 @@
 
             refEntry.CurrentValue = new List<FakeEntity>();
 
-            mockEntry.VerifySet(e => e.CurrentValue, Times.Once());
+            mockEntry.VerifySet(e => e.CurrentValue = It.IsAny<object>(), Times.Once());
         }
 
         [Fact]
@@ -1208,7 +1208,7 @@
 
             refEntry.CurrentValue = new List<FakeEntity>();
 
-            mockEntry.VerifySet(e => e.CurrentValue, Times.Once());
+            mockEntry.VerifySet(e => e.CurrentValue = It.IsAny<object>(), Times.Once());
         }
 
         #endregion

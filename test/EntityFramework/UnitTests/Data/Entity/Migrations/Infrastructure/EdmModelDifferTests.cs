@@ -5,6 +5,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
+    using System.Data.Entity.Migrations.UserRoles_v1;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Metadata.Edm;
     using System.Linq;
@@ -54,6 +55,27 @@ namespace System.Data.Entity.Migrations
                 model1.ToXDocument(), model2.ToXDocument(), ConnectionString);
 
             Assert.Equal(1, operations.Count());
+        }
+
+        [MigrationsTheory]
+        public void Bug_47549_crash_when_many_to_many_end_renamed_in_ospace()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<User>();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<UserRoles_v2.User2>();
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations = new EdmModelDiffer().Diff(
+                model1.ToXDocument(), model2.ToXDocument(), ConnectionString);
+
+            Assert.Equal(13, operations.Count());
         }
 
         [MigrationsTheory]

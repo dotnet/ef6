@@ -317,4 +317,34 @@
         public int? MigrationsBlogId { get; set; }
         public MigrationsBlog Blog { get; set; }
     }
+
+    namespace UserRoles_v1
+    {
+        public class Role
+        {
+            public long Id { get; set; }
+            public virtual ICollection<User> AssignedUsers { get; set; }
+        }
+
+        public class User
+        {
+            public long Id { get; set; }
+            public virtual ICollection<Role> AssignedRoles { get; set; }
+        }
+    }
+
+    namespace UserRoles_v2
+    {
+        public class Role
+        {
+            public long Id { get; set; }
+            public virtual ICollection<User2> AssignedUsers { get; set; }
+        }
+
+        public class User2
+        {
+            public long Id { get; set; }
+            public virtual ICollection<Role> AssignedRoles { get; set; }
+        }
+    }
 }
