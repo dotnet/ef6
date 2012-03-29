@@ -347,16 +347,16 @@
         [Fact]
         public void ObjectContext_connection_is_not_disposed_after_use()
         {
-            ObjectContext_connection_is_not_disposed_after_use(dbContextOwnsObjectContext: false);
+            ObjectContext_connection_is_not_disposed_after_use_implementation(dbContextOwnsObjectContext: false);
         }
 
         [Fact]
         public void ObjectContext_connection_is_not_disposed_after_use_when_DbContext_owns_ObjectContext_when_ObjectContext_does_not_own_connection()
         {
-            ObjectContext_connection_is_not_disposed_after_use(dbContextOwnsObjectContext: true);
+            ObjectContext_connection_is_not_disposed_after_use_implementation(dbContextOwnsObjectContext: true);
         }
 
-        private void ObjectContext_connection_is_not_disposed_after_use(bool dbContextOwnsObjectContext)
+        private void ObjectContext_connection_is_not_disposed_after_use_implementation(bool dbContextOwnsObjectContext)
         {
             bool disposed = false;
             using (var outerContext = new SimpleModelContext())
