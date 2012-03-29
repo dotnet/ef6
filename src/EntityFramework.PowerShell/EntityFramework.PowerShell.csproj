@@ -18,6 +18,8 @@
     <DelaySign>true</DelaySign>
     <TargetFrameworkProfile />
     <BuildPackages>true</BuildPackages>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\OpenEF\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -206,4 +208,5 @@
   <Target Name="AfterBuild" Condition="$(BuildPackages) == 'true'">
     <MSBuild Projects="..\NuGet\NuGet.proj" />
   </Target>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 </Project>
