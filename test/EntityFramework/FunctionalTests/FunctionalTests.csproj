@@ -85,9 +85,15 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <EmbeddedResource Include="_TestModels\SpatialTvfsModel\226644SpatialModel.csdl" />
-    <EmbeddedResource Include="_TestModels\SpatialTvfsModel\226644SpatialModel.msl" />
-    <EmbeddedResource Include="_TestModels\SpatialTvfsModel\226644SpatialModel.ssdl" />
+    <EmbeddedResource Include="_TestModels\SpatialTvfsModel\226644SpatialModel.csdl">
+        <LogicalName>FunctionalTests.ProductivityApi.SpatialTvfsModel.226644SpatialModel.csdl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="_TestModels\SpatialTvfsModel\226644SpatialModel.msl">
+        <LogicalName>FunctionalTests.ProductivityApi.SpatialTvfsModel.226644SpatialModel.msl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="_TestModels\SpatialTvfsModel\226644SpatialModel.ssdl">
+        <LogicalName>FunctionalTests.ProductivityApi.SpatialTvfsModel.226644SpatialModel.ssdl</LogicalName>
+    </EmbeddedResource>
     <None Include="_TestModels\TemplateModels\CsAdvancedPatterns\CsAdvancedPatterns.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CsAdvancedPatterns.Context.cs</LastGenOutput>
@@ -111,10 +117,18 @@
     <None Include="_TestModels\TemplateModels\ProcessCsTemplate.bat" />
     <None Include="_TestModels\TemplateModels\ProcessTemplates.bat" />
     <None Include="_TestModels\TemplateModels\ProcessVbTemplate.bat" />
-    <EmbeddedResource Include="_TestModels\TemplateModels\Schemas\AdvancedPatterns.edmx" />
-    <EmbeddedResource Include="_TestModels\TemplateModels\Schemas\MonsterModel.csdl" />
-    <EmbeddedResource Include="_TestModels\TemplateModels\Schemas\MonsterModel.msl" />
-    <EmbeddedResource Include="_TestModels\TemplateModels\Schemas\MonsterModel.ssdl" />
+    <EmbeddedResource Include="_TestModels\TemplateModels\Schemas\AdvancedPatterns.edmx">
+        <LogicalName>FunctionalTests.ProductivityApi.TemplateModels.Schemas.AdvancedPatterns.edmx</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="_TestModels\TemplateModels\Schemas\MonsterModel.csdl">
+        <LogicalName>FunctionalTests.ProductivityApi.TemplateModels.Schemas.MonsterModel.csdl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="_TestModels\TemplateModels\Schemas\MonsterModel.msl">
+        <LogicalName>FunctionalTests.ProductivityApi.TemplateModels.Schemas.MonsterModel.msl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="_TestModels\TemplateModels\Schemas\MonsterModel.ssdl">
+        <LogicalName>FunctionalTests.ProductivityApi.TemplateModels.Schemas.MonsterModel.ssdl</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\EntityFramework\EntityFramework.csproj">
