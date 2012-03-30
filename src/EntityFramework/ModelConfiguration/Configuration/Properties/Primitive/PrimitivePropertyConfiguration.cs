@@ -308,13 +308,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             {
                 return true;
             }
-            else
-            {
-                errorMessage += Environment.NewLine + "\t" +
-                                Strings.ConflictingConfigurationValue(
-                                    propertyInfo.Name, thisValue, propertyInfo.Name, otherValue);
-                return false;
-            }
+
+            errorMessage += Environment.NewLine + "\t" +
+                            Strings.ConflictingConfigurationValue(
+                                propertyInfo.Name, thisValue, propertyInfo.Name, otherValue);
+            return false;
         }
 
         protected bool IsCompatible<C>(Expression<Func<C, string>> propertyExpression, C other, ref string errorMessage)
@@ -331,16 +329,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             {
                 return true;
             }
-            else
-            {
-                errorMessage += Environment.NewLine + "\t" +
-                                Strings.ConflictingConfigurationValue(
-                                    propertyInfo.Name, thisValue, propertyInfo.Name, otherValue);
-                return false;
-            }
+
+            errorMessage += Environment.NewLine + "\t" +
+                            Strings.ConflictingConfigurationValue(
+                                propertyInfo.Name, thisValue, propertyInfo.Name, otherValue);
+            return false;
         }
 
-        protected bool IsCompatible<T>(T? thisConfiguration, T? other) where T : struct
+        protected static bool IsCompatible<T>(T? thisConfiguration, T? other)
+            where T : struct
         {
             if (thisConfiguration.HasValue)
             {
@@ -348,18 +345,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                 {
                     return Equals(thisConfiguration.Value, other.Value);
                 }
-                else
-                {
-                    return true;
-                }
-            }
-            else
-            {
+
                 return true;
             }
+
+            return true;
         }
 
-        protected bool IsCompatible(string thisConfiguration, string other)
+        protected static bool IsCompatible(string thisConfiguration, string other)
         {
             if (thisConfiguration != null)
             {
@@ -367,15 +360,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                 {
                     return Equals(thisConfiguration, other);
                 }
-                else
-                {
-                    return true;
-                }
-            }
-            else
-            {
+
                 return true;
             }
+
+            return true;
         }
     }
 }

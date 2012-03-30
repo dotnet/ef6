@@ -63,6 +63,7 @@ namespace System.Data.Entity.Migrations
             Contract.Requires(configuration.ContextType != null);
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal DbMigrator(DbMigrationsConfiguration configuration, DbContext usersContext)
             : base(null)
         {
@@ -114,8 +115,8 @@ namespace System.Data.Entity.Migrations
                                              ? context.InternalContext.ModelProviderInfo.ProviderManifestToken
                                          // TODO: Not calling using extension method syntax here because of conflicts due to duplicate extension methods
                                          // Should fix this post EF5.
-                                             : DbProviderServicesExtensions.GetProviderManifestTokenChecked(
-                                                 DbProviderServices.GetProviderServices(connection), connection);
+                                             : DbProviderServices.GetProviderServices(connection).
+                                                   GetProviderManifestTokenChecked(connection);
 
                 _targetDatabase
                     = Strings.LoggingTargetDatabaseFormat(
@@ -290,6 +291,7 @@ namespace System.Data.Entity.Migrations
             return _historyRepository.GetPendingMigrations(_migrationAssembly.MigrationIds);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private void CheckLegacyCompatibility(Action onCompatible)
         {
             Contract.Requires(onCompatible != null);
@@ -326,6 +328,7 @@ namespace System.Data.Entity.Migrations
         ///     Updates the target database to a given migration.
         /// </summary>
         /// <param name = "targetMigration">The migration to upgrade/downgrade to.</param>
+        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         public override void Update(string targetMigration)
         {
             base.EnsureDatabaseExists();

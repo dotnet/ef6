@@ -11,8 +11,6 @@
     ///     Represents information about a database connection.
     /// </summary>
     [Serializable]
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
-        Justification = "Casing is intentional")]
     public class DbConnectionInfo
     {
         private readonly string _connectionName;
@@ -86,6 +84,7 @@
             return base.GetHashCode();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

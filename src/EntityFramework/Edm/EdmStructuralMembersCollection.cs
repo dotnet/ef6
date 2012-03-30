@@ -9,26 +9,12 @@ namespace System.Data.Entity.Edm
     internal sealed class EdmStructuralTypeMemberCollection : IEnumerable<EdmStructuralMember>
     {
         private readonly Func<IEnumerable<EdmStructuralMember>> getAllMembers;
-        private readonly Func<IEnumerable<EdmStructuralMember>> getDeclaredMembers;
 
         internal EdmStructuralTypeMemberCollection(
-            Func<IEnumerable<EdmStructuralMember>> allMembers, Func<IEnumerable<EdmStructuralMember>> declaredMembers)
+            Func<IEnumerable<EdmStructuralMember>> allMembers)
         {
             getAllMembers = allMembers;
-            getDeclaredMembers = declaredMembers;
         }
-
-        internal EdmStructuralTypeMemberCollection(Func<IEnumerable<EdmStructuralMember>> declaredMembers)
-            : this(declaredMembers, declaredMembers)
-        {
-        }
-
-#if IncludeUnusedEdmCode
-    /// <summary>
-    /// Returns only the members that are declared by the structural type, without those members that are inherited from any base types.
-    /// </summary>
-        public IEnumerable<EdmStructuralMember> DeclaredOnly { get { return this.getDeclaredMembers(); } }
-#endif
 
         public IEnumerator<EdmStructuralMember> GetEnumerator()
         {

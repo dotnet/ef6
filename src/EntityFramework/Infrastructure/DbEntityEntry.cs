@@ -11,8 +11,6 @@
     /// <summary>
     ///     A non-generic version of the <see cref = "DbEntityEntry{T}" /> class.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db",
-        Justification = "FxCop rule is wrong; Database is not two words.")]
     public class DbEntityEntry
     {
         #region Fields and constructors
@@ -87,6 +85,7 @@
         ///     If the entity is not found in the database then null is returned.
         /// </summary>
         /// <returns>The store values.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public DbPropertyValues GetDatabaseValues()
         {
             var storeValues = _internalEntityEntry.GetDatabaseValues();
@@ -209,6 +208,7 @@
         ///     Entity validation result. Possibly null if 
         ///     <see cref = "DbContext.ValidateEntity(DbEntityEntry, IDictionary{object,object})" /> method is overridden.
         /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public DbEntityValidationResult GetValidationResult()
         {
             // need to call the method on DbContext to pickup validation 
@@ -298,6 +298,7 @@
             return base.ToString();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

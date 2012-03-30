@@ -51,13 +51,6 @@ namespace System.Data.Entity.Edm.Internal
                 {
                     VisitAssociationSets(item, item.AssociationSets);
                 }
-
-#if IncludeUnusedEdmCode
-                if (item.HasFunctionImports)
-                {
-                    this.VisitFunctionImports(item, item.FunctionImports);
-                }
-#endif
             }
         }
 
@@ -95,29 +88,6 @@ namespace System.Data.Entity.Edm.Internal
             VisitEdmNamedMetadataItem(item);
         }
 
-#if IncludeUnusedEdmCode
-        protected virtual void VisitFunctionImports(EdmEntityContainer container, IEnumerable<EdmFunctionImport> functionImports)
-        {
-            VisitCollection(functionImports, this.VisitFunctionImport);
-        }
-
-        protected virtual void VisitFunctionImport(EdmFunctionImport item)
-        {
-            this.VisitEdmNamedMetadataItem(item);
-            if (item.ReturnType != null)
-            {
-                this.VisitEdmTypeReference(item.ReturnType);
-            }
-
-            this.VisitFunctionImportParameters(item, item.Parameters);
-        }
-
-        protected virtual void VisitFunctionImportParameters(EdmFunctionImport item, IEnumerable<EdmFunctionParameter> parameters)
-        {
-            VisitCollection(item.Parameters, this.VisitFunctionParameter);
-        }
-#endif
-
         #endregion
 
         #region Namespace, EntityType, ComplexType, Association, Function
@@ -151,13 +121,6 @@ namespace System.Data.Entity.Edm.Internal
                 {
                     VisitAssociationTypes(item, item.AssociationTypes);
                 }
-
-#if IncludeUnusedEdmCode
-                if (item.HasFunctionGroups)
-                {
-                    this.VisitFunctionGroups(item, item.FunctionGroups);
-                }
-#endif
             }
         }
 
@@ -272,48 +235,6 @@ namespace System.Data.Entity.Edm.Internal
             }
         }
 
-#if IncludeUnusedEdmCode
-
-        protected virtual void VisitFunctionGroups(EdmNamespace edmNamespace, IEnumerable<EdmFunctionGroup> functionGroups)
-        {
-            VisitCollection(functionGroups, this.VisitEdmFunctionGroup);
-        }
-
-        protected virtual void VisitEdmFunctionGroup(EdmFunctionGroup item)
-        {
-            this.VisitEdmNamespaceItem(item);
-            if (item != null)
-            {
-                if(item.HasOverloads)
-                {
-                    VisitFunctionOverloads(item, item.Overloads);
-                }
-            }
-        }
-
-        protected virtual void VisitFunctionOverloads(EdmFunctionGroup functionGroup, IEnumerable<EdmFunctionOverload> functionOverloads)
-        {
-            VisitCollection(functionOverloads, this.VisitEdmFunctionOverload);
-        }
-
-        protected virtual void VisitEdmFunctionOverload(EdmFunctionOverload item)
-        {
-            VisitEdmMetadataItem(item);
-            if(item != null)
-            {
-                if (item.ReturnType != null)
-                {
-                    this.VisitEdmTypeReference(item.ReturnType);
-                }
-
-                if(item.HasParameters)
-                {
-                    this.VisitFunctionOverloadParameters(item, item.Parameters);
-                }
-            }
-        }
-#endif
-
         protected virtual void VisitEdmTypeReference(EdmTypeReference reference)
         {
             VisitEdmMetadataItem(reference);
@@ -364,22 +285,6 @@ namespace System.Data.Entity.Edm.Internal
         {
             VisitEdmNamedMetadataItem(item);
         }
-
-#if IncludeUnusedEdmCode
-        protected virtual void VisitFunctionOverloadParameters(EdmFunctionOverload functionOverload, IEnumerable<EdmFunctionParameter> functionParameters)
-        {
-            VisitCollection(functionParameters, this.VisitFunctionParameter);
-        }
-
-        protected virtual void VisitFunctionParameter(EdmFunctionParameter item)
-        {
-            this.VisitEdmNamedMetadataItem(item);
-            if (item.ParameterType != null)
-            {
-                this.VisitEdmTypeReference(item.ParameterType);
-            }
-        }
-#endif
 
         #endregion
 

@@ -26,6 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     VB.Net: Function(t) t.MyProperty
         /// </param>
         /// <returns>A configuration object that can be used to configure the property.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public PrimitivePropertyConfiguration Property<T>(Expression<Func<TStructuralType, T>> propertyExpression)
             where T : struct
@@ -44,6 +45,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     VB.Net: Function(t) t.MyProperty
         /// </param>
         /// <returns>A configuration object that can be used to configure the property.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public PrimitivePropertyConfiguration Property<T>(Expression<Func<TStructuralType, T?>> propertyExpression)
             where T : struct
@@ -61,6 +63,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///   VB.Net: Function(t) t.MyProperty
         /// </param>
         /// <returns>A configuration object that can be used to configure the property.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public PrimitivePropertyConfiguration Property(Expression<Func<TStructuralType, DbGeometry>> propertyExpression)
         {
@@ -77,6 +80,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///   VB.Net: Function(t) t.MyProperty
         /// </param>
         /// <returns>A configuration object that can be used to configure the property.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public PrimitivePropertyConfiguration Property(
             Expression<Func<TStructuralType, DbGeography>> propertyExpression)
@@ -94,6 +98,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     VB.Net: Function(t) t.MyProperty
         /// </param>
         /// <returns>A configuration object that can be used to configure the property.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public StringPropertyConfiguration Property(Expression<Func<TStructuralType, string>> propertyExpression)
         {
@@ -110,6 +115,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     VB.Net: Function(t) t.MyProperty
         /// </param>
         /// <returns>A configuration object that can be used to configure the property.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public BinaryPropertyConfiguration Property(Expression<Func<TStructuralType, byte[]>> propertyExpression)
         {
@@ -126,6 +132,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     VB.Net: Function(t) t.MyProperty
         /// </param>
         /// <returns>A configuration object that can be used to configure the property.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public DecimalPropertyConfiguration Property(Expression<Func<TStructuralType, decimal>> propertyExpression)
         {
@@ -142,6 +149,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     VB.Net: Function(t) t.MyProperty
         /// </param>
         /// <returns>A configuration object that can be used to configure the property.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public DecimalPropertyConfiguration Property(Expression<Func<TStructuralType, decimal?>> propertyExpression)
         {
@@ -158,6 +166,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     VB.Net: Function(t) t.MyProperty
         /// </param>
         /// <returns>A configuration object that can be used to configure the property.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public DateTimePropertyConfiguration Property(Expression<Func<TStructuralType, DateTime>> propertyExpression)
         {
@@ -174,6 +183,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     VB.Net: Function(t) t.MyProperty
         /// </param>
         /// <returns>A configuration object that can be used to configure the property.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public DateTimePropertyConfiguration Property(Expression<Func<TStructuralType, DateTime?>> propertyExpression)
         {
@@ -190,6 +200,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     VB.Net: Function(t) t.MyProperty
         /// </param>
         /// <returns>A configuration object that can be used to configure the property.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public DateTimePropertyConfiguration Property(
             Expression<Func<TStructuralType, DateTimeOffset>> propertyExpression)
@@ -207,6 +218,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     VB.Net: Function(t) t.MyProperty
         /// </param>
         /// <returns>A configuration object that can be used to configure the property.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public DateTimePropertyConfiguration Property(
             Expression<Func<TStructuralType, DateTimeOffset?>> propertyExpression)
@@ -224,6 +236,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     VB.Net: Function(t) t.MyProperty
         /// </param>
         /// <returns>A configuration object that can be used to configure the property.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public DateTimePropertyConfiguration Property(Expression<Func<TStructuralType, TimeSpan>> propertyExpression)
         {
@@ -240,6 +253,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     VB.Net: Function(t) t.MyProperty
         /// </param>
         /// <returns>A configuration object that can be used to configure the property.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public DateTimePropertyConfiguration Property(Expression<Func<TStructuralType, TimeSpan?>> propertyExpression)
         {
@@ -256,6 +270,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     C#: t => t.MyProperty   
         ///     VB.Net: Function(t) t.MyProperty
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public void Ignore<TProperty>(Expression<Func<TStructuralType, TProperty>> propertyExpression)
         {
@@ -288,6 +303,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return base.GetHashCode();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

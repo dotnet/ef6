@@ -6,6 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
@@ -64,6 +65,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             }
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         internal override void Configure(
             EdmAssociationType associationType, EdmAssociationEnd dependentEnd,
             EntityTypeConfiguration entityTypeConfiguration)

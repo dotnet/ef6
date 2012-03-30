@@ -3,15 +3,12 @@ namespace System.Data.Entity.Infrastructure
     using System.Configuration;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
     ///     Provides runtime information about a given <see cref = "DbContext" /> type.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
-        Justification = "Casing is intentional")]
     public class DbContextInfo
     {
         private readonly Type _contextType;
@@ -251,6 +248,7 @@ namespace System.Data.Entity.Infrastructure
             return context;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private void ConfigureContext(DbContext context)
         {
             Contract.Requires(context != null);

@@ -55,14 +55,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
                     .Each(column => table.Columns.Remove(column));
             }
 
-#if IncludeUnusedEdmCode
-            if (entitySetMapping != null && entityTypeMappingFragment.IsConditionOnlyFragment() &&
-                !entityTypeMappingFragment.ColumnConditions.Any() && !entityTypeMappingFragment.PropertyConditions.Any())
-#else
             if (entitySetMapping != null && entityTypeMappingFragment.IsConditionOnlyFragment()
                 &&
                 !entityTypeMappingFragment.ColumnConditions.Any())
-#endif
             {
                 var entityTypeMapping =
                     entitySetMapping.EntityTypeMappings.Single(

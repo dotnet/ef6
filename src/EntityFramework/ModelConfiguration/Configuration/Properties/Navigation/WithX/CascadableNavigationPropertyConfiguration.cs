@@ -65,6 +65,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return base.GetHashCode();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

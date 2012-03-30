@@ -3,7 +3,6 @@
     using System.Data.Common;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
@@ -22,8 +21,6 @@
     ///     This class is immutable since multiple threads may access instances simultaneously
     ///     when creating connections.
     /// </remarks>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
-        Justification = "Casing is intentional")]
     public sealed class SqlCeConnectionFactory : IDbConnectionFactory
     {
         #region Constructors and fields

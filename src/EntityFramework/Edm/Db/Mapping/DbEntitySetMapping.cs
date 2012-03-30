@@ -12,10 +12,6 @@ namespace System.Data.Entity.Edm.Db.Mapping
         private readonly BackingList<DbEntityTypeMapping> entityTypeMappingsList =
             new BackingList<DbEntityTypeMapping>();
 
-#if IncludeUnusedEdmCode
-        private readonly BackingList<DbQueryViewMapping> queryViewMappings = new BackingList<DbQueryViewMapping>();
-#endif
-
         internal override DbMappingItemKind GetItemKind()
         {
             return DbMappingItemKind.EntitySetMapping;
@@ -34,14 +30,5 @@ namespace System.Data.Entity.Edm.Db.Mapping
             get { return entityTypeMappingsList.EnsureValue(); }
             set { entityTypeMappingsList.SetValue(value); }
         }
-
-#if IncludeUnusedEdmCode
-    /// <summary>
-    /// Gets the collection of <see cref="DbQueryViewMapping"/>s that specifies the .
-    /// </summary>
-        public virtual IList<DbQueryViewMapping> QueryViewMappings { get { return this.queryViewMappings.EnsureValue(); } set { this.queryViewMappings.SetValue(value); } }
-        
-        internal bool HasEntityTypeMappings { get { return this.entityTypeMappingsList.HasValue; } }
-#endif
     }
 }

@@ -3,6 +3,7 @@ namespace System.Data.Entity.Migrations.Builders
     using System.ComponentModel;
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Model;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
@@ -48,6 +49,9 @@ namespace System.Data.Entity.Migrations.Builders
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
         /// <returns>Itself, so that multiple calls can be chained.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public TableBuilder<TColumns> PrimaryKey(
             Expression<Func<TColumns, object>> keyExpression,
             string name = null,
@@ -88,6 +92,9 @@ namespace System.Data.Entity.Migrations.Builders
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
         /// <returns>Itself, so that multiple calls can be chained.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public TableBuilder<TColumns> Index(
             Expression<Func<TColumns, object>> indexExpression, bool unique = false, object anonymousArguments = null)
         {
@@ -134,6 +141,9 @@ namespace System.Data.Entity.Migrations.Builders
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
         /// <returns>Itself, so that multiple calls can be chained.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public TableBuilder<TColumns> ForeignKey(
             string principalTable,
             Expression<Func<TColumns, object>> dependentKeyExpression,
@@ -182,6 +192,7 @@ namespace System.Data.Entity.Migrations.Builders
             return base.GetHashCode();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

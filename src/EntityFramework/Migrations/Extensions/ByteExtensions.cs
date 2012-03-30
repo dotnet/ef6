@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.Text;
 
     internal static class ByteExtensions
@@ -14,7 +15,7 @@
 
             foreach (var @byte in bytes)
             {
-                stringBuilder.Append(@byte.ToString("X2"));
+                stringBuilder.Append(@byte.ToString("X2", CultureInfo.InvariantCulture));
             }
 
             return stringBuilder.ToString();

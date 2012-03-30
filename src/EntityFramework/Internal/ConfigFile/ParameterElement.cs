@@ -1,6 +1,7 @@
 ﻿namespace System.Data.Entity.Internal.ConfigFile
 {
     using System.Configuration;
+    using System.Globalization;
 
     /// <summary>
     ///     Represents a parameter to be passed to a method
@@ -34,7 +35,8 @@
         public object GetTypedParameterValue()
         {
             var type = Type.GetType(TypeName, throwOnError: true);
-            return Convert.ChangeType(ValueString, type);
+
+            return Convert.ChangeType(ValueString, type, CultureInfo.InvariantCulture);
         }
     }
 }

@@ -7,8 +7,6 @@ namespace System.Data.Entity.Validation
     ///     Exception thrown from <see cref = "DbContext.GetValidationErrors()" /> when an exception is thrown from the validation
     ///     code.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db",
-        Justification = "Spelling is intentional.")]
     [Serializable]
     public class DbUnexpectedValidationException : DataException
     {

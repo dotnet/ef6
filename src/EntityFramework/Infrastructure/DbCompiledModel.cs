@@ -6,7 +6,6 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Resources;
     using System.Data.EntityClient;
     using System.Data.Objects;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -16,8 +15,6 @@ namespace System.Data.Entity.Infrastructure
     ///     <see cref = "ObjectContext" /> or can be passed to the constructor of a <see cref = "DbContext" />. 
     ///     For increased performance, instances of this type should be cached and re-used to construct contexts.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
-        Justification = "Casing is intentional")]
     public class DbCompiledModel
     {
         #region Fields and constructors
@@ -89,6 +86,7 @@ namespace System.Data.Entity.Infrastructure
         /// <typeparam name = "TContext">The type of context to create.</typeparam>
         /// <param name = "existingConnection">An existing connection to a database for use by the context.</param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public TContext CreateObjectContext<TContext>(DbConnection existingConnection) where TContext : ObjectContext
         {
             Contract.Requires(existingConnection != null);

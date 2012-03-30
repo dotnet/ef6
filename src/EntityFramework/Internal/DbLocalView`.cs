@@ -14,8 +14,6 @@
     ///     state manager to keep the view in sync.
     /// </summary>
     /// <typeparam name = "TEntity">The type of the entity.</typeparam>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
-        Justification = "Casing is intentional")]
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
         Justification = "Name is intentional")]
     internal class DbLocalView<TEntity> : ObservableCollection<TEntity>

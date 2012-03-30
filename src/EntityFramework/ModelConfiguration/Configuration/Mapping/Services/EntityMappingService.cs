@@ -9,6 +9,7 @@
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Utilities;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
 
@@ -54,6 +55,8 @@
             }
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void Transform()
         {
             foreach (var entitySet in _entityTypes.GetEntitySets())
@@ -75,7 +78,6 @@
 
                         RemoveRedundantDefaultDiscriminators(tableMapping);
 
-                        var isRoot = tableMapping.EntityTypes.IsRoot(entitySet, entityType);
                         var requiresIsTypeOf = DetermineRequiresIsTypeOf(tableMapping, entitySet, entityType);
                         var requiresSplit = false;
 
@@ -96,7 +98,7 @@
 
                         // Determine if the entity type mapping needs to be split into separate properties and condition type mappings.
                         requiresSplit = DetermineRequiresSplitEntityTypeMapping(
-                            tableMapping, entityType, isRoot, requiresIsTypeOf, propertiesTypeMapping);
+                            tableMapping, entityType, requiresIsTypeOf);
 
                         // Find the entity type mapping and fragment for this table / entity type mapping where conditions will be mapped
                         var conditionTypeMapping = FindConditionTypeMapping(
@@ -249,7 +251,7 @@
         /// <summary>
         ///     Makes sure only the required property mappings are present
         /// </summary>
-        private void ConfigureTypeMappings(
+        private static void ConfigureTypeMappings(
             TableMapping tableMapping,
             Dictionary<EdmEntityType, DbEntityTypeMapping> rootMappings,
             EdmEntityType entityType,
@@ -370,7 +372,7 @@
         }
 
         private bool DetermineRequiresIsTypeOf(
-            TableMapping tableMapping, EdmEntitySet entitySet, EdmEntityType entityType /*, bool isRoot*/)
+            TableMapping tableMapping, EdmEntitySet entitySet, EdmEntityType entityType)
         {
             // IsTypeOf if this is the root for this table and any derived type shares a property mapping
             return entityType.IsRootOfSet(tableMapping.EntityTypes.GetEntityTypes(entitySet)) &&
@@ -385,12 +387,10 @@
                             fk => fk.GetIsTypeConstraint() && fk.PrincipalTable == tableMapping.Table)));
         }
 
-        private bool DetermineRequiresSplitEntityTypeMapping(
+        private static bool DetermineRequiresSplitEntityTypeMapping(
             TableMapping tableMapping,
             EdmEntityType entityType,
-            bool isRoot,
-            bool requiresIsTypeOf,
-            DbEntityTypeMapping propertiesTypeMapping)
+            bool requiresIsTypeOf)
         {
             return requiresIsTypeOf && HasConditions(tableMapping, entityType);
         }
@@ -465,7 +465,7 @@
             }
         }
 
-        private void RemoveRedundantDefaultDiscriminators(TableMapping tableMapping)
+        private static void RemoveRedundantDefaultDiscriminators(TableMapping tableMapping)
         {
             foreach (var entitySet in tableMapping.EntityTypes.GetEntitySets())
             {
@@ -490,13 +490,13 @@
             }
         }
 
-        private bool HasConditions(TableMapping tableMapping, EdmEntityType entityType)
+        private static bool HasConditions(TableMapping tableMapping, EdmEntityType entityType)
         {
             return tableMapping.ColumnMappings.SelectMany(cm => cm.PropertyMappings)
                 .Any(pm => pm.EntityType == entityType && pm.Conditions.Count > 0);
         }
 
-        private bool IsRootTypeMapping(
+        private static bool IsRootTypeMapping(
             Dictionary<EdmEntityType, DbEntityTypeMapping> rootMappings, EdmEntityType entityType,
             IList<EdmProperty> propertyPath)
         {

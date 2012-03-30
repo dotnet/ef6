@@ -60,7 +60,7 @@
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
 
-            return migrationId.EndsWith(Strings.AutomaticMigration);
+            return migrationId.EndsWith(Strings.AutomaticMigration, StringComparison.Ordinal);
         }
 
         public static bool ComesBefore(this string migrationId1, string migrationId2)

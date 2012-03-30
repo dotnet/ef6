@@ -1,10 +1,8 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Edm.Db.Mapping;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     [ContractClass(typeof(IDbMappingConventionContracts))]
     internal interface IDbMappingConvention : IConvention
     {

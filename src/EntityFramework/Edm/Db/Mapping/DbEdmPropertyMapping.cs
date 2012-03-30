@@ -25,10 +25,6 @@ namespace System.Data.Entity.Edm.Db.Mapping
             set { propertyPathList.SetValue(value); }
         }
 
-#if IncludeUnusedEdmCode
-        internal bool HasPropertyPath { get { return this.propertyPathList.HasValue; } }
-#endif
-
         /// <summary>
         ///     Gets or sets a <see cref = "DbTableColumnMetadata" /> value representing the table column to which the entity property is being mapped.
         /// </summary>

@@ -1,12 +1,14 @@
 namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     // <summary>
     /// Allows the construction and modification of an association type in an Entity Data Model (EDM)
     /// <see cref = "EdmNamespace" />
     /// .
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     internal class EdmAssociationType
         : EdmStructuralType
     {

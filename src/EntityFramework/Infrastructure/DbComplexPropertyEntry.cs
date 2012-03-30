@@ -8,8 +8,6 @@
     /// <summary>
     ///     A non-generic version of the <see cref = "DbComplexPropertyEntry{TEntity, TProperty}" /> class.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db",
-        Justification = "FxCop rule is wrong; Database is not two words.")]
     public class DbComplexPropertyEntry : DbPropertyEntry
     {
         #region Fields and constructors

@@ -3,6 +3,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
 
@@ -89,6 +90,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return base.GetHashCode();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

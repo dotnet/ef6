@@ -1,6 +1,7 @@
 ﻿namespace System.Data.Entity.Internal
 {
     using System.Data.Objects;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -32,6 +33,7 @@
         ///     This is factored in this way so that we do the same thing regardless of how we get to
         ///     having an ObjectContext.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public virtual bool Exists(ObjectContext objectContext)
         {
             Contract.Requires(objectContext != null);

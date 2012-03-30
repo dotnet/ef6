@@ -4,18 +4,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.Edm.Serialization;
     using System.Data.Entity.Infrastructure;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Xml;
 
-    [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edmx")]
     internal sealed class EdmxSerializer
     {
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
         private const string EdmXmlNamespaceV2 = "http://schemas.microsoft.com/ado/2008/10/edmx";
 
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
         private const string EdmXmlNamespaceV3 = "http://schemas.microsoft.com/ado/2009/11/edmx";
 
         private DbDatabaseMapping _databaseMapping;
@@ -61,18 +57,16 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
 
                 using (Element("Mappings"))
                 {
-                    var success = new MslSerializer().Serialize(_databaseMapping, _xmlWriter);
-                    Contract.Assert(success, "MslSerializer does not do validation and so should always succeeed.");
+                    new MslSerializer().Serialize(_databaseMapping, _xmlWriter);
                 }
 
                 using (Element("StorageModels"))
                 {
-                    var success = new SsdlSerializer().Serialize(
+                    new SsdlSerializer().Serialize(
                         _databaseMapping.Database,
                         _providerInfo.ProviderInvariantName,
                         _providerInfo.ProviderManifestToken,
                         _xmlWriter);
-                    Contract.Assert(success, "SsdlSerializer does not do validation and so should always succeeed.");
                 }
             }
         }

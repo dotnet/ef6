@@ -5,7 +5,7 @@
 
     internal class DatabaseCreator
     {
-        public void Create(DbConnection connection)
+        public virtual void Create(DbConnection connection)
         {
             using (var context = new EmptyContext(connection))
             {

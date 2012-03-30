@@ -136,7 +136,7 @@ namespace System.Data.Entity.Internal.Linq
         /// <param name = "expression">The expression for the object for the member, which may be null for a static member.</param>
         /// <param name = "member">The member.</param>
         /// <returns>The context or null.</returns>
-        private DbContext GetContextFromConstantExpression(Expression expression, MemberInfo member)
+        private static DbContext GetContextFromConstantExpression(Expression expression, MemberInfo member)
         {
             Contract.Requires(member != null);
 
@@ -165,7 +165,7 @@ namespace System.Data.Entity.Internal.Linq
         /// <param name = "member">The member.</param>
         /// <param name = "value">The value of the object to get the instance from, or null if the member is static.</param>
         /// <returns>The context instance or null.</returns>
-        private DbContext GetContextFromMember(MemberInfo member, object value)
+        private static DbContext GetContextFromMember(MemberInfo member, object value)
         {
             Contract.Requires(member != null);
 
@@ -186,7 +186,7 @@ namespace System.Data.Entity.Internal.Linq
         ///     Takes a <see cref = "DbQuery{T}" /> or <see cref = "DbQuery" /> and creates an expression
         ///     for the underlying <see cref = "ObjectQuery{T}" />.
         /// </summary>
-        private Expression CreateObjectQueryConstant(object dbQuery)
+        private static Expression CreateObjectQueryConstant(object dbQuery)
         {
             var objectQuery = ExtractObjectQuery(dbQuery);
 
@@ -219,7 +219,7 @@ namespace System.Data.Entity.Internal.Linq
         /// <summary>
         ///     Takes a <see cref = "DbQuery{T}" /> or <see cref = "DbQuery" /> and extracts the underlying <see cref = "ObjectQuery{T}" />.
         /// </summary>
-        private ObjectQuery ExtractObjectQuery(object dbQuery)
+        private static ObjectQuery ExtractObjectQuery(object dbQuery)
         {
             var adapted = dbQuery as IInternalQueryAdapter;
             return adapted == null ? null : adapted.InternalQuery.ObjectQuery;

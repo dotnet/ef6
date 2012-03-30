@@ -35,8 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
         }
 
         public void Map(
-            PropertyInfo propertyInfo, EdmEntityType entityType, Func<EntityTypeConfiguration> entityTypeConfiguration,
-            Type sourceType)
+            PropertyInfo propertyInfo, EdmEntityType entityType, Func<EntityTypeConfiguration> entityTypeConfiguration)
         {
             Contract.Requires(propertyInfo != null);
             Contract.Requires(entityType != null);
@@ -49,8 +48,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             }
             else
             {
-                new NavigationPropertyMapper(_typeMapper).Map(
-                    propertyInfo, entityType, entityTypeConfiguration, sourceType);
+                new NavigationPropertyMapper(_typeMapper).Map(propertyInfo, entityType, entityTypeConfiguration);
             }
         }
 

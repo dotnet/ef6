@@ -586,7 +586,7 @@
         /// </summary>
         /// <param name = "propertyName">Name of the property.</param>
         /// <returns>The parts of the name.</returns>
-        private IList<string> SplitName(string propertyName)
+        private static IList<string> SplitName(string propertyName)
         {
             Contract.Requires(propertyName != null);
 

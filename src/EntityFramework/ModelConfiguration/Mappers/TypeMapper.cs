@@ -168,7 +168,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 MapStructuralElements(
                     type,
                     entityType.Annotations,
-                    (m, p) => m.Map(p, entityType, entityTypeConfiguration, type),
+                    (m, p) => m.Map(p, entityType, entityTypeConfiguration),
                     entityType.BaseType != null,
                     entityTypeConfiguration);
 

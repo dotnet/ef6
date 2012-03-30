@@ -50,10 +50,6 @@ namespace System.Data.Entity.Edm.Internal
             }
         }
 
-#if IncludeUnusedEdmCode
-        internal IEnumerable<EdmEntityContainerItem> ContainerItems { get { return this.itemToContainerMap.Keys; } }
-#endif
-
         internal IEnumerable<EdmNamespaceItem> NamespaceItems
         {
             get { return itemToNamespaceMap.Keys; }
@@ -69,16 +65,6 @@ namespace System.Data.Entity.Edm.Internal
             return false;
         }
 
-#if IncludeUnusedEdmCode
-        internal EdmEntityContainer GetEntityContainer(EdmEntityContainerItem item)
-        {
-            EdmEntityContainer result;
-            this.TryGetEntityContainer(item, out result);
-            System.Diagnostics.Contracts.Contract.Assert(result != null, "GetEntityContainer did not find expected container for item");
-            return result;
-        }
-#endif
-
         internal bool TryGetNamespace(EdmNamespaceItem item, out EdmNamespace itemNamespace)
         {
             if (item != null)
@@ -88,15 +74,5 @@ namespace System.Data.Entity.Edm.Internal
             itemNamespace = null;
             return false;
         }
-
-#if IncludeUnusedEdmCode
-        internal EdmNamespace GetNamespace(EdmNamespaceItem item)
-        {
-            EdmNamespace result;
-            this.TryGetNamespace(item, out result);
-            System.Diagnostics.Contracts.Contract.Assert(result != null, "GetNamespace did not find expected namespace for item");
-            return result;
-        }
-#endif
     }
 }

@@ -40,6 +40,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     VB.Net: Function(t) t.MyProperty
         /// </param>
         /// <returns>A configuration object that can be used to further configure the relationship.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public DependentNavigationPropertyConfiguration<TEntityType> WithMany(
             Expression<Func<TTargetEntityType, ICollection<TEntityType>>> navigationPropertyExpression)
@@ -72,6 +73,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     VB.Net: Function(t) t.MyProperty
         /// </param>
         /// <returns>A configuration object that can be used to further configure the relationship.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public ForeignKeyNavigationPropertyConfiguration WithRequired(
@@ -107,6 +109,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     VB.Net: Function(t) t.MyProperty
         /// </param>
         /// <returns>A configuration object that can be used to further configure the relationship.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public ForeignKeyNavigationPropertyConfiguration WithOptionalDependent(
             Expression<Func<TTargetEntityType, TEntityType>> navigationPropertyExpression)
@@ -145,6 +148,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     A lambda expression representing the navigation property on the other end of the relationship.
         /// </param>
         /// <returns>A configuration object that can be used to further configure the relationship.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public ForeignKeyNavigationPropertyConfiguration WithOptionalPrincipal(
             Expression<Func<TTargetEntityType, TEntityType>> navigationPropertyExpression)
@@ -192,6 +196,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return base.GetHashCode();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

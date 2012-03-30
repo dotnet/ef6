@@ -208,7 +208,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             }
         }
 
-        private string GetCsdlNamespace(double edmVersion)
+        private static string GetCsdlNamespace(double edmVersion)
         {
             if (edmVersion == DataModelVersions.Version1)
             {
@@ -370,7 +370,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             _xmlWriter.WriteEndElement();
         }
 
-        internal void WriteReferentialConstraintElementHeader(EdmAssociationConstraint constraint)
+        internal void WriteReferentialConstraintElementHeader()
         {
             _xmlWriter.WriteStartElement(CsdlConstants.Element_ReferentialConstraint);
         }
@@ -512,7 +512,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             }
         }
 
-        private string GetTypeReferenceName(EdmTypeReference typeReference)
+        private static string GetTypeReferenceName(EdmTypeReference typeReference)
         {
             Contract.Assert(!typeReference.IsCollectionType, "Primitive, Enum or Complex property type expected");
 
@@ -606,7 +606,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_ToRole, member.ResultEnd.Name);
         }
 
-        private string GetXmlMultiplicity(EdmAssociationEndKind endKind)
+        private static string GetXmlMultiplicity(EdmAssociationEndKind endKind)
         {
             switch (endKind)
             {

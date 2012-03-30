@@ -6,6 +6,7 @@
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Xml.Linq;
@@ -47,6 +48,7 @@
         ///     Gets a list of the pending migrations that have not been applied to the database.
         /// </summary>
         /// <returns>List of migration Ids</returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public virtual IEnumerable<string> GetPendingMigrations()
         {
             return _this.GetPendingMigrations();
@@ -89,6 +91,7 @@
         ///     Gets a list of the migrations that are defined in the assembly.
         /// </summary>
         /// <returns>List of migration Ids</returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public virtual IEnumerable<string> GetLocalMigrations()
         {
             return _this.GetLocalMigrations();
@@ -98,6 +101,7 @@
         ///     Gets a list of the migrations that have been applied to the database.
         /// </summary>
         /// <returns>List of migration Ids</returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public virtual IEnumerable<string> GetDatabaseMigrations()
         {
             return _this.GetDatabaseMigrations();

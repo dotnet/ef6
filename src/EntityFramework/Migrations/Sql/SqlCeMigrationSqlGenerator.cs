@@ -3,6 +3,7 @@
     using System.Data.Common;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Resources;
+    using System.Globalization;
     using System.Linq;
 
     /// <summary>
@@ -128,7 +129,7 @@
         /// <inheritdoc />
         protected override string Generate(DateTime defaultValue)
         {
-            return "'" + defaultValue.ToString("yyyy-MM-ddTHH:mm:ss.fff") + "'";
+            return "'" + defaultValue.ToString("yyyy-MM-ddTHH:mm:ss.fff", CultureInfo.InvariantCulture) + "'";
         }
 
         /// <inheritdoc />

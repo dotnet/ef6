@@ -2,7 +2,9 @@ namespace System.Data.Entity.Migrations.Model
 {
     using System.Collections.Generic;
     using System.Data.Entity.Migrations.Extensions;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
 
     /// <summary>
     ///     Common base class to represent operations affecting primary keys.
@@ -21,6 +23,7 @@ namespace System.Data.Entity.Migrations.Model
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected PrimaryKeyOperation(object anonymousArguments = null)
             : base(anonymousArguments)
         {
@@ -74,7 +77,7 @@ namespace System.Data.Entity.Migrations.Model
 
         internal string DefaultName
         {
-            get { return string.Format("PK_{0}", Table).RestrictTo(128); }
+            get { return string.Format(CultureInfo.InvariantCulture, "PK_{0}", Table).RestrictTo(128); }
         }
     }
 }

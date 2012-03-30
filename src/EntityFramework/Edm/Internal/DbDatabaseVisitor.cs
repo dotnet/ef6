@@ -30,13 +30,6 @@ namespace System.Data.Entity.Edm.Internal
                 {
                     VisitCollection(item.Tables, VisitDbTableMetadata);
                 }
-
-#if IncludeUnusedEdmCode
-                if (item.HasFunctions)
-                {
-                    VisitCollection(item.Functions, this.VisitDbFunctionMetadata);
-                }
-#endif
             }
         }
 
@@ -105,21 +98,6 @@ namespace System.Data.Entity.Edm.Internal
             VisitDbAliasedMetadataItem(item);
         }
 
-#if IncludeUnusedEdmCode
-        protected virtual void VisitDbFunctionMetadata(DbFunctionMetadata item)
-        {
-            this.VisitDbSchemaMetadataItem(item);
-            if (item != null)
-            {
-                this.VisitDbFunctionTypeMetadata(item.ReturnType);
-                if (item.HasParameters)
-                {
-                    VisitCollection(item.Parameters, this.VisitDbFunctionParameterMetadata);
-                }
-            }
-        }
-#endif
-
         protected virtual void VisitDbTypeMetadata(DbTypeMetadata item)
         {
             VisitDbMetadataItem(item);
@@ -129,42 +107,13 @@ namespace System.Data.Entity.Edm.Internal
                 {
                     VisitDbPrimitiveTypeFacets(item.Facets);
                 }
-#if IncludeUnusedEdmCode
-                else if (item.HasRowColumns)
-                {
-                    VisitCollection(item.RowColumns, this.VisitDbRowColumnMetadata);
-                }
-#endif
             }
         }
-
-#if IncludeUnusedEdmCode
-        protected void VisitDbRowColumnMetadata(DbRowColumnMetadata item)
-        {
-            this.VisitDbColumnMetadata(item);
-        }
-#endif
 
         protected void VisitDbPrimitiveTypeFacets(DbPrimitiveTypeFacets item)
         {
             VisitDbDataModelItem(item);
         }
-
-#if IncludeUnusedEdmCode
-        protected virtual void VisitDbFunctionParameterMetadata(DbFunctionParameterMetadata item)
-        {
-            this.VisitDbNamedMetadataItem(item);
-            if (item != null)
-            {
-                this.VisitDbFunctionTypeMetadata(item.ParameterType);
-            }
-        }
-
-        protected virtual void VisitDbFunctionTypeMetadata(DbFunctionTypeMetadata item)
-        {
-            this.VisitDbTypeMetadata(item);
-        }
-#endif
 
         protected virtual void VisitDbTableColumnMetadata(DbTableColumnMetadata item)
         {

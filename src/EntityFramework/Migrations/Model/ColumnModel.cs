@@ -4,7 +4,9 @@ namespace System.Data.Entity.Migrations.Model
     using System.Data.Common;
     using System.Data.Metadata.Edm;
     using System.Data.Spatial;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
 
     /// <summary>
     ///     Represents information about a column.
@@ -69,6 +71,7 @@ namespace System.Data.Entity.Migrations.Model
         /// <summary>
         ///     Gets the data type for this column.
         /// </summary>
+        [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods")]
         public virtual PrimitiveTypeKind Type
         {
             get { return _type; }
@@ -220,8 +223,8 @@ namespace System.Data.Entity.Migrations.Model
                     continue;
                 }
 
-                var valueAsInt = Convert.ToInt32(facet.Value);
-                var otherValueAsInt = Convert.ToInt32(otherFacet.Value);
+                var valueAsInt = Convert.ToInt32(facet.Value, CultureInfo.InvariantCulture);
+                var otherValueAsInt = Convert.ToInt32(otherFacet.Value, CultureInfo.InvariantCulture);
 
                 if (valueAsInt < otherValueAsInt)
                 {

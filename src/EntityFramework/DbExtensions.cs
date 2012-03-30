@@ -11,8 +11,6 @@ namespace System.Data.Entity
     using System.Linq;
     using System.Linq.Expressions;
 
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
-        Justification = "Casing is intentional")]
     public static class DbExtensions
     {
         #region Include
@@ -140,6 +138,7 @@ namespace System.Data.Entity
         /// <param name = "source">The source IQueryable on which to call Include.</param>
         /// <param name = "path">A lambda expression representing the path to include.</param>
         /// <returns>A new IQueryable<T> with the defined query path.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static IQueryable<T> Include<T, TProperty>(
             this IQueryable<T> source, Expression<Func<T, TProperty>> path) where T : class

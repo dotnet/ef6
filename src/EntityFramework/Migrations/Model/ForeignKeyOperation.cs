@@ -2,7 +2,9 @@
 {
     using System.Collections.Generic;
     using System.Data.Entity.Migrations.Extensions;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
 
     /// <summary>
     ///     Base class for changes that affect foreign key constraints.
@@ -23,6 +25,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected ForeignKeyOperation(object anonymousArguments = null)
             : base(anonymousArguments)
         {
@@ -88,6 +91,7 @@
             {
                 return
                     string.Format(
+                        CultureInfo.InvariantCulture,
                         "FK_{0}_{1}_{2}",
                         DependentTable,
                         PrincipalTable,

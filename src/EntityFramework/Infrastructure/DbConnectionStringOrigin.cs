@@ -1,12 +1,8 @@
 ﻿namespace System.Data.Entity.Infrastructure
 {
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     ///     Describes the origin of the database connection string associated with a <see cref = "DbContext" />.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
-        Justification = "Casing is intentional")]
     public enum DbConnectionStringOrigin
     {
         /// <summary>

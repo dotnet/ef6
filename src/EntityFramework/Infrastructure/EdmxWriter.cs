@@ -5,7 +5,6 @@
     using System.Data.Entity.ModelConfiguration.Edm.Serialization;
     using System.Data.Entity.Resources;
     using System.Data.Objects;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Xml;
 
@@ -14,7 +13,6 @@
     ///     These methods are typically used for debugging when there is a need to look at the model that
     ///     Code First creates internally.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edmx")]
     public static class EdmxWriter
     {
         #region WriteEdmx
@@ -28,7 +26,6 @@
         /// </summary>
         /// <param name = "context">The context.</param>
         /// <param name = "writer">The writer.</param>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edmx")]
         public static void WriteEdmx(DbContext context, XmlWriter writer)
         {
             Contract.Requires(context != null);
@@ -60,7 +57,6 @@
         /// </summary>
         /// <param name = "modelaseMapping">An object representing the EDM.</param>
         /// <param name = "writer">The writer.</param>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edmx")]
         public static void WriteEdmx(DbModel model, XmlWriter writer)
         {
             Contract.Requires(model != null);

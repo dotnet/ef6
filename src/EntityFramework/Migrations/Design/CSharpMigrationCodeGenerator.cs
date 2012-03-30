@@ -8,6 +8,7 @@ namespace System.Data.Entity.Migrations.Design
     using System.Data.Spatial;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -60,6 +61,7 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name = "namespace">Namespace that code should be generated in.</param>
         /// <param name = "className">Name of the class that should be generated.</param>
         /// <returns>The generated code.</returns>
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "namespace")]
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         protected virtual string Generate(
             IEnumerable<MigrationOperation> operations, string @namespace, string className)
@@ -67,7 +69,7 @@ namespace System.Data.Entity.Migrations.Design
             Contract.Requires(operations != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(className));
 
-            using (var stringWriter = new StringWriter())
+            using (var stringWriter = new StringWriter(CultureInfo.InvariantCulture))
             {
                 using (var writer = new IndentedTextWriter(stringWriter, "    "))
                 {
@@ -118,6 +120,7 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name = "namespace">Namespace that code should be generated in.</param>
         /// <param name = "className">Name of the class that should be generated.</param>
         /// <returns>The generated code.</returns>
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "namespace")]
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         protected virtual string Generate(
             string migrationId, string sourceModel, string targetModel, string @namespace, string className)
@@ -126,7 +129,7 @@ namespace System.Data.Entity.Migrations.Design
             Contract.Requires(!string.IsNullOrWhiteSpace(targetModel));
             Contract.Requires(!string.IsNullOrWhiteSpace(className));
 
-            using (var stringWriter = new StringWriter())
+            using (var stringWriter = new StringWriter(CultureInfo.InvariantCulture))
             {
                 using (var writer = new IndentedTextWriter(stringWriter, "    "))
                 {
@@ -189,6 +192,9 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name = "base">Base class for the generated class.</param>
         /// <param name = "designer">A value indicating if this class is being generated for a code-behind file.</param>
         /// <param name="namespaces">Namespaces for which using directives will be added. If null, then the namespaces returned from GetDefaultNamespaces will be used.</param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "namespace")]
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "base")]
         protected virtual void WriteClassStart(
             string @namespace, string className, IndentedTextWriter writer, string @base, bool designer = false,
             IEnumerable<string> namespaces = null)
@@ -229,6 +235,7 @@ namespace System.Data.Entity.Migrations.Design
         ///     Generates the closing code for a class that was started with WriteClassStart.
         /// </summary>
         /// <param name = "writer">Text writer to add the generated code to.</param>
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "namespace")]
         protected virtual void WriteClassEnd(string @namespace, IndentedTextWriter writer)
         {
             Contract.Requires(writer != null);
@@ -678,6 +685,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name = "column">The column definition to generate code for.</param>
         /// <param name = "writer">Text writer to add the generated code to.</param>
         /// <param name = "emitName">A value indicating whether to include the column name in the definition.</param>
+        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected virtual void Generate(ColumnModel column, IndentedTextWriter writer, bool emitName = false)
         {
             Contract.Requires(column != null);
@@ -792,7 +801,7 @@ namespace System.Data.Entity.Migrations.Design
         /// <returns>Code representing the default value.</returns>
         protected virtual string Generate(byte defaultValue)
         {
-            return defaultValue.ToString();
+            return defaultValue.ToString(CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -822,7 +831,7 @@ namespace System.Data.Entity.Migrations.Design
         /// <returns>Code representing the default value.</returns>
         protected virtual string Generate(long defaultValue)
         {
-            return defaultValue.ToString();
+            return defaultValue.ToString(CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -880,6 +889,7 @@ namespace System.Data.Entity.Migrations.Design
         /// </summary>
         /// <param name = "defaultValue">The value to be used as the default.</param>
         /// <returns>Code representing the default value.</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         protected virtual string Generate(object defaultValue)
         {
             return defaultValue.ToString().ToLowerInvariant();
@@ -980,6 +990,7 @@ namespace System.Data.Entity.Migrations.Design
         /// </summary>
         /// <param name = "name">The name to be scrubbed.</param>
         /// <returns>The scrubbed name.</returns>
+        [SuppressMessage("Microsoft.Security", "CA2141:TransparentMethodsMustNotSatisfyLinkDemandsFxCopRule")]
         protected virtual string ScrubName(string name)
         {
             var invalidChars

@@ -7,7 +7,6 @@
     using System.Data.Entity.Resources;
     using System.Data.Entity.Validation;
     using System.Data.Objects;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
@@ -16,8 +15,6 @@
     /// <summary>
     ///     Static helper methods only.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
-        Justification = "Casing is intentional")]
     internal static class DbHelpers
     {
         #region Null/empty/type checking

@@ -1,12 +1,8 @@
 ﻿namespace System.Data.Entity.Validation
 {
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     ///     Validation error. Can be either entity or property level validation error.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db",
-        Justification = "FxCop rule is wrong; Database is not two words.")]
     [Serializable]
     public class DbValidationError
     {

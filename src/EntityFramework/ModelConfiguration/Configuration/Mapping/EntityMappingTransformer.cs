@@ -10,6 +10,7 @@
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Utilities;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
@@ -141,6 +142,8 @@
             }
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private static void UpdatePrincipalTables(
             DbDatabaseMapping databaseMapping, DbTableMetadata toTable, bool removeFks,
             EdmAssociationType associationType, EdmEntityType et)
@@ -270,10 +273,9 @@
         }
 
         private static void CopyForeignKeyConstraint(
-            DbDatabaseMetadata database, DbTableMetadata fromTable, DbTableMetadata toTable,
+            DbDatabaseMetadata database, DbTableMetadata toTable,
             DbForeignKeyConstraintMetadata fk)
         {
-            Contract.Requires(fromTable != null);
             Contract.Requires(toTable != null);
             Contract.Requires(fk != null);
 
@@ -334,7 +336,7 @@
 
             FindAllForeignKeyConstraintsForColumn(fromTable, toTable, column)
                 .ToArray()
-                .Each(fk => { CopyForeignKeyConstraint(database, fromTable, toTable, fk); });
+                .Each(fk => CopyForeignKeyConstraint(database, toTable, fk));
         }
 
         public static void MoveAllDeclaredForeignKeyConstraintsForPrimaryKeyColumns(
@@ -375,7 +377,7 @@
                             {
                                 if (!fk.GetIsTypeConstraint())
                                 {
-                                    CopyForeignKeyConstraint(database, fromTable, toTable, fk);
+                                    CopyForeignKeyConstraint(database, toTable, fk);
                                 }
                             });
             }
@@ -484,14 +486,14 @@
             DbTableMetadata toTable,
             bool useExisting)
         {
-            propertyMapping.Column = TableOperations.CopyColumnAndAnyConstraints(
-                database, fromTable, toTable, propertyMapping.Column, useExisting, false);
+            propertyMapping.Column
+                = TableOperations.CopyColumnAndAnyConstraints(
+                    database, fromTable, toTable, propertyMapping.Column, useExisting, false);
             propertyMapping.SyncNullabilityCSSpace();
         }
 
         public static void UpdatePropertyMappings(
             DbDatabaseMetadata database,
-            EdmEntityType entityType,
             DbTableMetadata fromTable,
             DbEntityTypeMappingFragment fragment,
             bool useExisting)
@@ -500,7 +502,7 @@
             if (fromTable != fragment.Table)
             {
                 fragment.PropertyMappings.Each(
-                    pm => { UpdatePropertyMapping(database, pm, fromTable, fragment.Table, useExisting); });
+                    pm => UpdatePropertyMapping(database, pm, fromTable, fragment.Table, useExisting));
             }
         }
 
@@ -552,51 +554,18 @@
                         });
             }
         }
-
-#if IncludeUnusedEdmCode
-        public static void CopyColumnConditions(DbEntityTypeMapping typeMapping, DbEntityTypeMappingFragment propertiesTypeMappingFragment, ref DbEntityTypeMappingFragment conditionTypeMappingFragment)
-        {
-            CopyCondition(typeMapping, propertiesTypeMappingFragment, ref conditionTypeMappingFragment, x => x.ColumnConditions);
-        }
-
-         public static void CopyPropertyConditions(DbEntityTypeMapping typeMapping, DbEntityTypeMappingFragment propertiesTypeMappingFragment, ref DbEntityTypeMappingFragment conditionTypeMappingFragment)
-        {
-            CopyCondition(typeMapping, propertiesTypeMappingFragment, ref conditionTypeMappingFragment, x => x.PropertyConditions);
-        }
-
-        private static void CopyCondition<T>(DbEntityTypeMapping typeMapping, DbEntityTypeMappingFragment propertiesTypeMappingFragment, ref DbEntityTypeMappingFragment conditionTypeMappingFragment, Func<DbEntityTypeMappingFragment, IList<T>> getConditions)
-        {
-            foreach (var cc in getConditions(propertiesTypeMappingFragment))
-            {
-                if (conditionTypeMappingFragment == null)
-                {
-                    conditionTypeMappingFragment = CreateTypeMappingFragment(typeMapping, propertiesTypeMappingFragment, propertiesTypeMappingFragment.Table);
-                    conditionTypeMappingFragment.SetIsConditionOnlyFragment(true);
-                    if (propertiesTypeMappingFragment.GetDefaultDiscriminator() != null)
-                    {
-                        conditionTypeMappingFragment.SetDefaultDiscriminator(propertiesTypeMappingFragment.GetDefaultDiscriminator());
-                        propertiesTypeMappingFragment.RemoveDefaultDiscriminatorAnnotation();
-                    }
-                }
-                getConditions(conditionTypeMappingFragment).Add(cc);
-            }
-            getConditions(propertiesTypeMappingFragment).Clear();
-        }
-#endif
     }
 
     internal class AssociationMappingOperations
     {
         private static void MoveAssociationSetMappingDependents(
-            DbAssociationSetMapping asm,
+            DbAssociationSetMapping associationSetMapping,
             DbAssociationEndMapping dependentMapping,
-            DbTableMetadata fromTable,
             DbTableMetadata toTable,
             bool useExistingColumns)
         {
-            Contract.Requires(asm != null);
+            Contract.Requires(associationSetMapping != null);
             Contract.Requires(dependentMapping != null);
-            Contract.Requires(fromTable != null);
             Contract.Requires(toTable != null);
 
             dependentMapping.PropertyMappings.Each(
@@ -604,13 +573,13 @@
                     {
                         var oldColumn = pm.Column;
                         pm.Column = TableOperations.MoveColumnAndAnyConstraints(
-                            asm.Table, toTable, oldColumn, useExistingColumns);
-                        asm.ColumnConditions.Where(cc => cc.Column == oldColumn).Each(
+                            associationSetMapping.Table, toTable, oldColumn, useExistingColumns);
+                        associationSetMapping.ColumnConditions.Where(cc => cc.Column == oldColumn).Each(
                             cc =>
                             cc.Column = pm.Column);
                     });
 
-            asm.Table = toTable;
+            associationSetMapping.Table = toTable;
         }
 
         public static void MoveAllDeclaredAssociationSetMappings(
@@ -625,25 +594,31 @@
             Contract.Requires(fromTable != null);
             Contract.Requires(toTable != null);
 
-            foreach (var asm in databaseMapping.EntityContainerMappings.SelectMany(asm => asm.AssociationSetMappings)
-                .Where(
-                    a =>
-                    a.Table == fromTable &&
-                    (a.AssociationSet.ElementType.SourceEnd.EntityType == entityType ||
-                     a.AssociationSet.ElementType.TargetEnd.EntityType == entityType)).ToArray())
+            foreach (
+                var associationSetMapping in
+                    databaseMapping.EntityContainerMappings.SelectMany(asm => asm.AssociationSetMappings)
+                        .Where(
+                            a =>
+                            a.Table == fromTable &&
+                            (a.AssociationSet.ElementType.SourceEnd.EntityType == entityType ||
+                             a.AssociationSet.ElementType.TargetEnd.EntityType == entityType)).ToArray())
             {
                 EdmAssociationEnd _, dependentEnd;
-                if (!asm.AssociationSet.ElementType.TryGuessPrincipalAndDependentEnds(out _, out dependentEnd))
+                if (
+                    !associationSetMapping.AssociationSet.ElementType.TryGuessPrincipalAndDependentEnds(
+                        out _, out dependentEnd))
                 {
-                    dependentEnd = asm.AssociationSet.ElementType.TargetEnd;
+                    dependentEnd = associationSetMapping.AssociationSet.ElementType.TargetEnd;
                 }
 
                 if (dependentEnd.EntityType == entityType)
                 {
-                    var dependentMapping = dependentEnd == asm.TargetEndMapping.AssociationEnd
-                                               ? asm.SourceEndMapping
-                                               : asm.TargetEndMapping;
-                    MoveAssociationSetMappingDependents(asm, dependentMapping, fromTable, toTable, useExistingColumns);
+                    var dependentMapping = dependentEnd == associationSetMapping.TargetEndMapping.AssociationEnd
+                                               ? associationSetMapping.SourceEndMapping
+                                               : associationSetMapping.TargetEndMapping;
+
+                    MoveAssociationSetMappingDependents(
+                        associationSetMapping, dependentMapping, toTable, useExistingColumns);
                 }
             }
         }

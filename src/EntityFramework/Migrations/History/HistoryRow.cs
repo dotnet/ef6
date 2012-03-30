@@ -1,5 +1,7 @@
 namespace System.Data.Entity.Migrations.History
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     ///     This class is used by Code First Migrations to read and write migration history
     ///     from the database. It is not intended to be used by other code and is only public
@@ -22,6 +24,7 @@ namespace System.Data.Entity.Migrations.History
         /// <summary>
         ///     Gets or sets the state of the model after this migration was applied.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         public byte[] Model { get; set; }
 
         /// <summary>

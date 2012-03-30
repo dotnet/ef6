@@ -107,6 +107,8 @@
     <CodeContractsSuggestEnsures>False</CodeContractsSuggestEnsures>
     <CodeContractsSuggestObjectInvariants>False</CodeContractsSuggestObjectInvariants>
     <CodeContractsDisjunctiveRequires>False</CodeContractsDisjunctiveRequires>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\Strict.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -126,6 +128,7 @@
     </Compile>
     <Compile Include="Edm\EdmEnumType.cs" />
     <Compile Include="Edm\EdmEnumTypeMember.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Infrastructure\DbConnectionInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -653,6 +656,9 @@
     <Compile Include="Validation\DbEntityValidationResult.cs" />
     <Compile Include="Validation\DbUnexpectedValidationException.cs" />
     <Compile Include="Validation\DbValidationError.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\CodeAnalysisDictionary.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\EcmaPublicKey.snk">

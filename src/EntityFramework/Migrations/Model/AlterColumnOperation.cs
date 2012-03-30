@@ -1,5 +1,6 @@
 namespace System.Data.Entity.Migrations.Model
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -22,6 +23,7 @@ namespace System.Data.Entity.Migrations.Model
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public AlterColumnOperation(
             string table, ColumnModel column, bool isDestructiveChange, object anonymousArguments = null)
             : base(anonymousArguments)
@@ -45,10 +47,11 @@ namespace System.Data.Entity.Migrations.Model
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public AlterColumnOperation(
             string table, ColumnModel column, bool isDestructiveChange, AlterColumnOperation inverse,
             object anonymousArguments = null)
-            : this(table, column, isDestructiveChange)
+            : this(table, column, isDestructiveChange, anonymousArguments)
         {
             Contract.Requires(inverse != null);
 

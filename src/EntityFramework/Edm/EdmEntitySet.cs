@@ -1,11 +1,13 @@
 namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
     ///     Allows the construction and modification of an entity set in an Entity Data Model (EDM) <see cref = "EdmEntityContainer" /> .
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     internal class EdmEntitySet
         : EdmEntityContainerItem
     {

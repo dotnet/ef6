@@ -5,7 +5,6 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
@@ -17,8 +16,6 @@ namespace System.Data.Entity.Internal
     ///     then a delegate is compiled to set the property to a new instance of DbSet.
     ///     All of this information is cached per app domain.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
-        Justification = "Casing is intentional")]
     internal class DbSetDiscoveryService
     {
         #region Fields and constructors

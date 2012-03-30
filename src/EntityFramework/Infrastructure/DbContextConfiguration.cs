@@ -9,8 +9,6 @@
     ///     Returned by the Configuration method of <see cref = "DbContext" /> to provide access to configuration
     ///     options for the context.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
-        Justification = "Casing is intentional")]
     public class DbContextConfiguration
     {
         #region Construction and fields
@@ -50,6 +48,7 @@
             return base.GetHashCode();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

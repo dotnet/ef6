@@ -1,6 +1,7 @@
 ﻿namespace System.Data.Entity.Migrations.Model
 {
     using System.Data.Entity.Migrations.Extensions;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Reflection;
 
@@ -25,6 +26,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public InsertHistoryOperation(
             string table,
             string migrationId,
@@ -40,6 +42,7 @@
         /// <summary>
         ///     Gets the value to store in the history table representing the target model of the migration.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         public byte[] Model
         {
             get { return _model; }
@@ -48,7 +51,7 @@
         /// <summary>
         ///     Gets the value to store in the history table indicating the version of Entity Framework used to produce this migration.
         /// </summary>
-        public string ProductVersion
+        public virtual string ProductVersion
         {
             get { return _productVersion; }
         }

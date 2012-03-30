@@ -1,5 +1,6 @@
 ﻿namespace System.Data.Entity.Migrations.Utilities
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Text;
@@ -86,6 +87,7 @@
         /// </summary>
         /// <param name = "writer">The <see cref = "T:System.IO.TextWriter" /> to use for output. </param>
         /// <param name = "tabString">The tab string to use for indentation. </param>
+        [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
         public IndentedTextWriter(TextWriter writer, string tabString)
             : base(CultureInfo.InvariantCulture)
         {
@@ -130,11 +132,11 @@
         /// <summary>
         ///     Writes the specified string to the text stream.
         /// </summary>
-        /// <param name = "s">The string to write. </param>
-        public override void Write(string s)
+        /// <param name = "value">The string to write. </param>
+        public override void Write(string value)
         {
             OutputTabs();
-            _writer.Write(s);
+            _writer.Write(value);
         }
 
         /// <summary>
@@ -266,20 +268,20 @@
         /// <summary>
         ///     Writes the specified string to a line without tabs.
         /// </summary>
-        /// <param name = "s">The string to write. </param>
-        public void WriteLineNoTabs(string s)
+        /// <param name = "value">The string to write. </param>
+        public void WriteLineNoTabs(string value)
         {
-            _writer.WriteLine(s);
+            _writer.WriteLine(value);
         }
 
         /// <summary>
         ///     Writes the specified string, followed by a line terminator, to the text stream.
         /// </summary>
-        /// <param name = "s">The string to write. </param>
-        public override void WriteLine(string s)
+        /// <param name = "value">The string to write. </param>
+        public override void WriteLine(string value)
         {
             OutputTabs();
-            _writer.WriteLine(s);
+            _writer.WriteLine(value);
             _tabsPending = true;
         }
 

@@ -607,6 +607,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             return Capitalize(word, InternalPluralize);
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         private string InternalPluralize(string word)
         {
@@ -908,6 +909,8 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             return Capitalize(word, InternalSingularize);
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode")]
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         private string InternalSingularize(string word)
         {
@@ -1259,7 +1262,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
         /// <param name = "word"></param>
         /// <param name = "action"></param>
         /// <returns></returns>
-        private string Capitalize(string word, Func<string, string> action)
+        private static string Capitalize(string word, Func<string, string> action)
         {
             var result = action(word);
 
@@ -1288,7 +1291,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
         /// <param name = "word"></param>
         /// <param name = "prefixWord"></param>
         /// <returns></returns>
-        private string GetSuffixWord(string word, out string prefixWord)
+        private static string GetSuffixWord(string word, out string prefixWord)
         {
             // use the last space to separate the words
             var lastSpaceIndex = word.LastIndexOf(' ');
@@ -1298,12 +1301,12 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             // CONSIDER(leil): use capital letters to separate the words
         }
 
-        private bool IsCapitalized(string word)
+        private static bool IsCapitalized(string word)
         {
             return string.IsNullOrEmpty(word) ? false : char.IsUpper(word, 0);
         }
 
-        private bool IsAlphabets(string word)
+        private static bool IsAlphabets(string word)
         {
             // return false when the word is "[\s]*" or leading or tailing with spaces
             // or contains non alphabetical characters

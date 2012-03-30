@@ -4,6 +4,7 @@
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -90,6 +91,7 @@
         /// </summary>
         /// <param name = "nameOrConnectionString">The database name or connection string.</param>
         /// <returns>An initialized DbConnection.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public DbConnection CreateConnection(string nameOrConnectionString)
         {
             // If the "name or connection string" contains an '=' character then it is treated as a connection string.

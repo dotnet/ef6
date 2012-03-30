@@ -2,10 +2,12 @@ namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Allows the construction and modification of a primitive- or complex-valued property of an Entity Data Model (EDM) entity or complex type.
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     [DebuggerDisplay("{Name}")]
     internal class EdmProperty : EdmStructuralMember
     {

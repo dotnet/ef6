@@ -1,13 +1,10 @@
 namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Helper class that extends Tuple to give the Item1 and Item2 properties more meaningful names.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
-        Justification = "Casing is intentional")]
     internal class DbContextTypesInitializersPair : Tuple<Dictionary<Type, List<string>>, Action<DbContext>>
     {
         #region Constructor

@@ -3,15 +3,12 @@
     using System.Collections.Generic;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
     ///     Represents validation results for single entity.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db",
-        Justification = "FxCop rule is wrong; Database is not two words.")]
     [Serializable]
     public class DbEntityValidationResult
     {

@@ -5,10 +5,6 @@ namespace System.Data.Entity.Edm.Db
     /// </summary>
     internal abstract class DbTypeMetadata : DbMetadataItem
     {
-#if IncludeUnusedEdmCode
-        private readonly BackingList<DbRowColumnMetadata> rowColumnsList = new BackingList<DbRowColumnMetadata>();
-#endif
-
         private DbPrimitiveTypeFacets facets;
 
         public virtual string TypeName { get; set; }
@@ -53,22 +49,7 @@ namespace System.Data.Entity.Edm.Db
         /// </summary>
         public virtual bool IsRow
         {
-            get
-            {
-#if IncludeUnusedEdmCode
-                return (this.HasRowColumns &&
-                        this.RowColumns.Count > 0 &&
-                        this.TypeName == null &&
-                        !this.HasFacets);
-#endif
-                return TypeName == null && !HasFacets;
-            }
+            get { return TypeName == null && !HasFacets; }
         }
-
-#if IncludeUnusedEdmCode
-        public virtual IList<DbRowColumnMetadata> RowColumns { get { return this.rowColumnsList.EnsureValue(); } set { this.rowColumnsList.SetValue(value); } }
-
-        internal bool HasRowColumns { get { return this.rowColumnsList.HasValue; } }
-#endif
     }
 }

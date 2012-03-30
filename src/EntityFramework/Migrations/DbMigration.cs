@@ -5,6 +5,7 @@
     using System.Data.Entity.Migrations.Builders;
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Model;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
 
@@ -43,6 +44,7 @@
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
         /// <returns>An object that allows further configuration of the table creation operation.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal TableBuilder<TColumns> CreateTable<TColumns>(
             string name, Func<ColumnBuilder, TColumns> columnsAction, object anonymousArguments = null)
         {
@@ -103,6 +105,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void AddForeignKey(
             string dependentTable,
             string dependentColumn,
@@ -154,6 +157,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void AddForeignKey(
             string dependentTable,
             string[] dependentColumns,
@@ -199,6 +203,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void DropForeignKey(string dependentTable, string name, object anonymousArguments = null)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(dependentTable));
@@ -231,11 +236,11 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void DropForeignKey(
             string dependentTable,
             string dependentColumn,
             string principalTable,
-            string principalColumn = null,
             object anonymousArguments = null)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(dependentTable));
@@ -266,6 +271,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void DropForeignKey(
             string dependentTable,
             string[] dependentColumns,
@@ -300,6 +306,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void DropTable(string name, object anonymousArguments = null)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
@@ -319,6 +326,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void MoveTable(string name, string newSchema, object anonymousArguments = null)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
@@ -341,6 +349,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void RenameTable(string name, string newName, object anonymousArguments = null)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
@@ -362,6 +371,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void RenameColumn(
             string table, string name, string newName, object anonymousArguments = null)
         {
@@ -390,6 +400,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void AddColumn(
             string table, string name, Func<ColumnBuilder, ColumnModel> columnAction, object anonymousArguments = null)
         {
@@ -416,6 +427,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void DropColumn(
             string table, string name, object anonymousArguments = null)
         {
@@ -441,6 +453,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void AlterColumn(
             string table, string name, Func<ColumnBuilder, ColumnModel> columnAction, object anonymousArguments = null)
         {
@@ -473,6 +486,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void AddPrimaryKey(
             string table,
             string column,
@@ -501,6 +515,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void AddPrimaryKey(
             string table,
             string[] columns,
@@ -535,6 +550,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void DropPrimaryKey(string table, string name, object anonymousArguments = null)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(table));
@@ -561,6 +577,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void DropPrimaryKey(string table, object anonymousArguments = null)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(table));
@@ -594,6 +611,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void CreateIndex(
             string table,
             string column,
@@ -627,6 +645,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void CreateIndex(
             string table,
             string[] columns,
@@ -663,6 +682,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void DropIndex(
             string table,
             string name,
@@ -693,6 +713,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void DropIndex(
             string table,
             string[] columns,
@@ -726,6 +747,8 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#")]
         protected internal void Sql(string sql, bool suppressTransaction = false, object anonymousArguments = null)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(sql));
@@ -774,6 +797,7 @@
             return base.GetHashCode();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

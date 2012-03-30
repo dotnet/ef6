@@ -1,5 +1,7 @@
 ﻿namespace System.Data.Entity.Migrations.Model
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     ///     Represents deleting a new record from the migrations history table.
     ///     The migrations history table is used to store a log of the migrations that have been applied to the database.
@@ -15,6 +17,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public DeleteHistoryOperation(string table, string migrationId, object anonymousArguments = null)
             : base(table, migrationId, anonymousArguments)
         {

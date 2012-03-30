@@ -1,9 +1,7 @@
 namespace System.Data.Entity.Infrastructure
 {
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbProviderInfo
     {
         private readonly string _providerInvariantName;

@@ -14,7 +14,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
     using System.Text;
     using System.Xml;
 
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     internal static class DbDatabaseMappingExtensions
     {
         internal static DbDatabaseMapping Initialize(
@@ -70,6 +69,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
                 databaseMapping.Database.ToStoreItemCollection());
         }
 
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private static StorageMappingItemCollection ToStorageMappingItemCollection(
             this DbDatabaseMapping databaseMapping, EdmItemCollection itemCollection,
             StoreItemCollection storeItemCollection)

@@ -13,7 +13,7 @@ namespace System.Data.Entity.Edm.Serialization
         /// </summary>
         /// <param name = "databaseMapping"> The DbModel to serialize </param>
         /// <param name = "xmlWriter"> The XmlWriter to serialize to </param>
-        public bool Serialize(DbDatabaseMapping databaseMapping, XmlWriter xmlWriter)
+        public virtual bool Serialize(DbDatabaseMapping databaseMapping, XmlWriter xmlWriter)
         {
             Contract.Requires(databaseMapping != null);
             Contract.Requires(xmlWriter != null);

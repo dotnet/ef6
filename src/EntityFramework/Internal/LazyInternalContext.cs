@@ -308,6 +308,8 @@
                           : Error.LazyInternalContext_CannotReplaceDbConnectionWithEfConnection();
             }
 
+            _internalConnection.Dispose();
+
             _internalConnection = connection;
         }
 

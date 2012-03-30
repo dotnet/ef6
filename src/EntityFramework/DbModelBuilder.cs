@@ -42,7 +42,6 @@ namespace System.Data.Entity
     ///     Configuration done via the DbModelBuilder API takes precedence over data annotations which 
     ///     in turn take precedence over the default conventions.
     /// </remarks>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public class DbModelBuilder
     {
         private readonly ModelConfiguration.Configuration.ModelConfiguration _modelConfiguration;
@@ -144,6 +143,7 @@ namespace System.Data.Entity
         /// </summary>
         /// <typeparam name = "T">The type to be excluded.</typeparam>
         /// <returns>The same DbModelBuilder instance so that multiple calls can be chained.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public virtual DbModelBuilder Ignore<T>()
             where T : class
         {
@@ -352,6 +352,7 @@ namespace System.Data.Entity
             return base.GetHashCode();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

@@ -35,6 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     the primary key properties were configured for the principal entity type.
         /// </param>
         /// <returns>A configuration object that can be used to further configure the relationship.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public CascadableNavigationPropertyConfiguration HasForeignKey<TKey>(
             Expression<Func<TDependentEntityType, TKey>> foreignKeyExpression)
@@ -67,6 +68,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return base.GetHashCode();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

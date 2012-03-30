@@ -11,6 +11,7 @@ namespace System.Data.Entity.Edm
     /// <summary>
     ///     Represents one of the fixed set of Entity Data Model (EDM) primitive types.
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     internal sealed class EdmPrimitiveType
         : EdmScalarType
 
@@ -79,45 +80,41 @@ namespace System.Data.Entity.Edm
         private static readonly EdmPrimitiveType geographyCollectionType =
             new EdmPrimitiveType(EdmPrimitiveTypeKind.GeographyCollection);
 
-        private static readonly Dictionary<EdmPrimitiveTypeKind, EdmPrimitiveType> typeKindToTypeMap;
-
-        static EdmPrimitiveType()
-        {
-            var kindMap = new Dictionary<EdmPrimitiveTypeKind, EdmPrimitiveType>();
-            kindMap.Add(EdmPrimitiveTypeKind.Binary, binaryType);
-            kindMap.Add(EdmPrimitiveTypeKind.Boolean, booleanType);
-            kindMap.Add(EdmPrimitiveTypeKind.Byte, byteType);
-            kindMap.Add(EdmPrimitiveTypeKind.DateTime, dateTimeType);
-            kindMap.Add(EdmPrimitiveTypeKind.DateTimeOffset, dateTimeOffsetType);
-            kindMap.Add(EdmPrimitiveTypeKind.Decimal, decimalType);
-            kindMap.Add(EdmPrimitiveTypeKind.Double, doubleType);
-            kindMap.Add(EdmPrimitiveTypeKind.Guid, guidType);
-            kindMap.Add(EdmPrimitiveTypeKind.Int16, int16Type);
-            kindMap.Add(EdmPrimitiveTypeKind.Int32, int32Type);
-            kindMap.Add(EdmPrimitiveTypeKind.Int64, int64Type);
-            kindMap.Add(EdmPrimitiveTypeKind.SByte, sbyteType);
-            kindMap.Add(EdmPrimitiveTypeKind.Single, singleType);
-            kindMap.Add(EdmPrimitiveTypeKind.String, stringType);
-            kindMap.Add(EdmPrimitiveTypeKind.Time, timeType);
-            kindMap.Add(EdmPrimitiveTypeKind.Geometry, geometryType);
-            kindMap.Add(EdmPrimitiveTypeKind.GeometricPoint, geometricPointType);
-            kindMap.Add(EdmPrimitiveTypeKind.GeometricLinestring, geometricLinestringType);
-            kindMap.Add(EdmPrimitiveTypeKind.GeometricPolygon, geometricPolygonType);
-            kindMap.Add(EdmPrimitiveTypeKind.GeometricMultiPoint, geometricMultiPointType);
-            kindMap.Add(EdmPrimitiveTypeKind.GeometricMultiLinestring, geometricMultiLinestringType);
-            kindMap.Add(EdmPrimitiveTypeKind.GeometricMultiPolygon, geometricMultiPolygonType);
-            kindMap.Add(EdmPrimitiveTypeKind.GeometryCollection, geometryCollectionType);
-            kindMap.Add(EdmPrimitiveTypeKind.Geography, geographyType);
-            kindMap.Add(EdmPrimitiveTypeKind.GeographicPoint, geographicPointType);
-            kindMap.Add(EdmPrimitiveTypeKind.GeographicLinestring, geographicLinestringType);
-            kindMap.Add(EdmPrimitiveTypeKind.GeographicPolygon, geographicPolygonType);
-            kindMap.Add(EdmPrimitiveTypeKind.GeographicMultiPoint, geographicMultiPointType);
-            kindMap.Add(EdmPrimitiveTypeKind.GeographicMultiLinestring, geographicMultiLinestringType);
-            kindMap.Add(EdmPrimitiveTypeKind.GeographicMultiPolygon, geographicMultiPolygonType);
-            kindMap.Add(EdmPrimitiveTypeKind.GeographyCollection, geographyCollectionType);
-
-            typeKindToTypeMap = kindMap;
-        }
+        private static readonly Dictionary<EdmPrimitiveTypeKind, EdmPrimitiveType> typeKindToTypeMap
+            = new Dictionary<EdmPrimitiveTypeKind, EdmPrimitiveType>
+                  {
+                      { EdmPrimitiveTypeKind.Binary, binaryType },
+                      { EdmPrimitiveTypeKind.Boolean, booleanType },
+                      { EdmPrimitiveTypeKind.Byte, byteType },
+                      { EdmPrimitiveTypeKind.DateTime, dateTimeType },
+                      { EdmPrimitiveTypeKind.DateTimeOffset, dateTimeOffsetType },
+                      { EdmPrimitiveTypeKind.Decimal, decimalType },
+                      { EdmPrimitiveTypeKind.Double, doubleType },
+                      { EdmPrimitiveTypeKind.Guid, guidType },
+                      { EdmPrimitiveTypeKind.Int16, int16Type },
+                      { EdmPrimitiveTypeKind.Int32, int32Type },
+                      { EdmPrimitiveTypeKind.Int64, int64Type },
+                      { EdmPrimitiveTypeKind.SByte, sbyteType },
+                      { EdmPrimitiveTypeKind.Single, singleType },
+                      { EdmPrimitiveTypeKind.String, stringType },
+                      { EdmPrimitiveTypeKind.Time, timeType },
+                      { EdmPrimitiveTypeKind.Geometry, geometryType },
+                      { EdmPrimitiveTypeKind.GeometricPoint, geometricPointType },
+                      { EdmPrimitiveTypeKind.GeometricLinestring, geometricLinestringType },
+                      { EdmPrimitiveTypeKind.GeometricPolygon, geometricPolygonType },
+                      { EdmPrimitiveTypeKind.GeometricMultiPoint, geometricMultiPointType },
+                      { EdmPrimitiveTypeKind.GeometricMultiLinestring, geometricMultiLinestringType },
+                      { EdmPrimitiveTypeKind.GeometricMultiPolygon, geometricMultiPolygonType },
+                      { EdmPrimitiveTypeKind.GeometryCollection, geometryCollectionType },
+                      { EdmPrimitiveTypeKind.Geography, geographyType },
+                      { EdmPrimitiveTypeKind.GeographicPoint, geographicPointType },
+                      { EdmPrimitiveTypeKind.GeographicLinestring, geographicLinestringType },
+                      { EdmPrimitiveTypeKind.GeographicPolygon, geographicPolygonType },
+                      { EdmPrimitiveTypeKind.GeographicMultiPoint, geographicMultiPointType },
+                      { EdmPrimitiveTypeKind.GeographicMultiLinestring, geographicMultiLinestringType },
+                      { EdmPrimitiveTypeKind.GeographicMultiPolygon, geographicMultiPolygonType },
+                      { EdmPrimitiveTypeKind.GeographyCollection, geographyCollectionType }
+                  };
 
         private readonly EdmPrimitiveTypeKind typeKind;
 

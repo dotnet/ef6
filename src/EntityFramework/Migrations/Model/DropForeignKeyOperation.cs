@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Migrations.Model
 {
     using System.Data.Entity.Migrations.Extensions;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -18,6 +19,7 @@ namespace System.Data.Entity.Migrations.Model
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public DropForeignKeyOperation(object anonymousArguments = null)
             : base(anonymousArguments)
         {
@@ -31,6 +33,7 @@ namespace System.Data.Entity.Migrations.Model
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public DropForeignKeyOperation(AddForeignKeyOperation inverse, object anonymousArguments = null)
             : base(anonymousArguments)
         {

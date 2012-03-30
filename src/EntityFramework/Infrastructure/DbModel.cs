@@ -1,7 +1,6 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Edm.Db.Mapping;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -10,7 +9,6 @@ namespace System.Data.Entity.Infrastructure
     ///     which is a compiled snapshot of the model suitable for caching and creation of
     ///     <see cref = "DbContext" /> or <see cref = "T:System.Data.Objects.ObjectContext" /> instances.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public class DbModel
     {
         #region Fields and constructore

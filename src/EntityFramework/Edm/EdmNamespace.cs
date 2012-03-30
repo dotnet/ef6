@@ -2,20 +2,19 @@ namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
     using System.Data.Entity.Edm.Internal;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
     ///     Allows the construction and modification of a namespace in an <see cref = "EdmModel" /> .
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     internal class EdmNamespace : EdmQualifiedNameMetadataItem
     {
         private readonly BackingList<EdmAssociationType> associationTypesList = new BackingList<EdmAssociationType>();
         private readonly BackingList<EdmComplexType> complexTypesList = new BackingList<EdmComplexType>();
         private readonly BackingList<EdmEntityType> entityTypesList = new BackingList<EdmEntityType>();
         private readonly BackingList<EdmEnumType> enumTypesList = new BackingList<EdmEnumType>();
-#if IncludeUnusedEdmCode
-        private readonly BackingList<EdmFunctionGroup> functionGroupsList = new BackingList<EdmFunctionGroup>();
-#endif
 
         internal override EdmItemKind GetItemKind()
         {
@@ -38,9 +37,6 @@ namespace System.Data.Entity.Edm
                     .Concat<EdmNamespaceItem>(complexTypesList)
                     .Concat(entityTypesList)
                     .Concat(enumTypesList);
-#if IncludeUnusedEdmCode
-                            .Concat(this.functionGroupsList);
-#endif
             }
         }
 
@@ -96,14 +92,5 @@ namespace System.Data.Entity.Edm
         {
             get { return enumTypesList.HasValue; }
         }
-
-#if IncludeUnusedEdmCode
-    /// <summary>
-    /// Gets or sets the <see cref="EdmFunctionGroup"/>s declared within the namespace.
-    /// </summary>
-        public virtual IList<EdmFunctionGroup> FunctionGroups { get { return this.functionGroupsList.EnsureValue(); } set { this.functionGroupsList.SetValue(value); } }
-
-        internal bool HasFunctionGroups { get { return this.functionGroupsList.HasValue; } }
-#endif
     }
 }

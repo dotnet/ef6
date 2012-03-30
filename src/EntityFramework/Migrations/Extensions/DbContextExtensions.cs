@@ -24,6 +24,7 @@
             return GetModel(w => EdmxWriter.WriteEdmx(model, w));
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         private static XDocument GetModel(Action<XmlWriter> writeXml)
         {
             Contract.Requires(writeXml != null);

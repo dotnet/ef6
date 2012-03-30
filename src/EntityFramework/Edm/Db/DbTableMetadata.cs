@@ -3,11 +3,13 @@ namespace System.Data.Entity.Edm.Db
     using System.Collections.Generic;
     using System.Data.Entity.Edm.Internal;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
     ///     Allows the construction and modification a table in a <see cref = "DbSchemaMetadata" /> database schema.
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     [DebuggerDisplay("{Name}")]
     internal class DbTableMetadata : DbSchemaMetadataItem
     {

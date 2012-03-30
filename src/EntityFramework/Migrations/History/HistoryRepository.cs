@@ -201,7 +201,7 @@ namespace System.Data.Entity.Migrations.History
             }
         }
 
-        private bool? ColumnExists<TContext, TResult>(
+        private static bool? ColumnExists<TContext, TResult>(
             Func<HistoryContextBase<TContext>> createContext, Expression<Func<HistoryRow, TResult>> selector)
             where TContext : DbContext
         {

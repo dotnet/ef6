@@ -13,8 +13,6 @@
     ///     database, of a given type.  DbSet is a concrete implementation of IDbSet.
     /// </summary>
     /// <typeparam name = "TEntity">The type that defines the set.</typeparam>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
-        Justification = "Casing is intentional")]
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
         Justification = "Name is intentional")]
     [ContractClass(typeof(IDbSetContracts<>))]

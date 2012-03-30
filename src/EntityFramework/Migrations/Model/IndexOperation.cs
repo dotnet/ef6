@@ -2,7 +2,9 @@
 {
     using System.Collections.Generic;
     using System.Data.Entity.Migrations.Extensions;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
 
     /// <summary>
     ///     Common base class for operations affecting indexes.
@@ -20,6 +22,7 @@
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected IndexOperation(object anonymousArguments = null)
             : base(anonymousArguments)
         {
@@ -67,7 +70,11 @@
 
         internal string DefaultName
         {
-            get { return string.Format("IX_{0}", Columns.Join(separator: "_")).RestrictTo(128); }
+            get
+            {
+                return
+                    string.Format(CultureInfo.InvariantCulture, "IX_{0}", Columns.Join(separator: "_")).RestrictTo(128);
+            }
         }
     }
 }

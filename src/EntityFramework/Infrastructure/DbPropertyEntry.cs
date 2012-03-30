@@ -2,14 +2,11 @@
 {
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     A non-generic version of the <see cref = "DbPropertyEntry{TEntity, TProperty}" /> class.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db",
-        Justification = "FxCop rule is wrong; Database is not two words.")]
     public class DbPropertyEntry : DbMemberEntry
     {
         #region Fields and constructors

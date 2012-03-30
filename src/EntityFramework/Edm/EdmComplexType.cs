@@ -2,11 +2,13 @@ namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
     using System.Data.Entity.Edm.Internal;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
     ///     Allows the construction and modification of a complex type in an Entity Data Model (EDM) <see cref = "EdmNamespace" /> .
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     internal class EdmComplexType
         : EdmStructuralType
     {
@@ -27,7 +29,7 @@ namespace System.Data.Entity.Edm
 
         public override EdmStructuralTypeMemberCollection Members
         {
-            get { return new EdmStructuralTypeMemberCollection(() => Properties, () => declaredPropertiesList); }
+            get { return new EdmStructuralTypeMemberCollection(() => Properties); }
         }
 
         /// <summary>

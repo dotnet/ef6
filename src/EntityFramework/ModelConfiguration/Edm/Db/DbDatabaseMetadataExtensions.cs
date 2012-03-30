@@ -7,6 +7,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Metadata.Edm;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
@@ -35,6 +36,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
             return database;
         }
 
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public static StoreItemCollection ToStoreItemCollection(this DbDatabaseMetadata database)
         {
             Contract.Requires(database != null);
@@ -86,7 +88,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
         }
 
         public static DbTableMetadata AddTable(
-            this DbDatabaseMetadata database, string name, DbTableMetadata pkSource, bool isIdentity)
+            this DbDatabaseMetadata database, string name, DbTableMetadata pkSource)
         {
             var table = database.AddTable(name);
 
@@ -96,6 +98,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
                 var pk = col.Clone();
                 table.Columns.Add(pk);
             }
+
             return table;
         }
 

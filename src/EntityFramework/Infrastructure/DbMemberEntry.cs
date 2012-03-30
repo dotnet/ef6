@@ -15,8 +15,6 @@
     ///     reference navigation properties use the derived class <see cref = "DbReferenceEntry" />, and collection
     ///     navigation properties use the derived class <see cref = "DbCollectionEntry" />.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db",
-        Justification = "FxCop rule is wrong; Database is not two words.")]
     public abstract class DbMemberEntry
     {
         #region  Factory methods
@@ -75,6 +73,7 @@
         /// <returns>
         ///     Collection of <see cref = "DbValidationError" /> objects. Never null. If the entity is valid the collection will be empty.
         /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public ICollection<DbValidationError> GetValidationErrors()
         {
             return InternalMemberEntry.GetValidationErrors().ToList();
@@ -102,6 +101,7 @@
             return base.GetHashCode();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

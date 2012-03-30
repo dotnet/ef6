@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Migrations.Utilities
 {
     using System.Data.Entity.Migrations.Extensions;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Reflection;
     using System.Xml.Linq;
@@ -13,6 +14,7 @@ namespace System.Data.Entity.Migrations.Utilities
         private static readonly XNamespace Asm = "urn:schemas-microsoft-com:asm.v1";
         private static readonly XElement DependentAssemblyElement;
 
+        [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
         static ConfigurationFileUpdater()
         {
             var executingAssemblyName = Assembly.GetExecutingAssembly().GetName();
@@ -38,7 +40,7 @@ namespace System.Data.Entity.Migrations.Utilities
         /// </summary>
         /// <param name = "configurationFile">That path of the user's config file. Can also be null or a path to an non-existent file.</param>
         /// <returns>The path of the updated config file. It is the caller's responsibility to delete this.</returns>
-        public string Update(string configurationFile)
+        public virtual string Update(string configurationFile)
         {
             var fileExists = !string.IsNullOrWhiteSpace(configurationFile) && File.Exists(configurationFile);
             var configuration

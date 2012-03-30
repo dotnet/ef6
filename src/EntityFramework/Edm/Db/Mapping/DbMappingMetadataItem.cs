@@ -30,9 +30,5 @@ namespace System.Data.Entity.Edm.Db.Mapping
             get { return annotationsList.EnsureValue(); }
             set { annotationsList.SetValue(value); }
         }
-
-#if IncludeUnusedEdmCode
-        internal bool HasAnnotations { get { return this.annotationsList.HasValue; } }
-#endif
     }
 }

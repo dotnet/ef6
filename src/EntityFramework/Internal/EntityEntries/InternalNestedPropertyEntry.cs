@@ -1,6 +1,7 @@
 ﻿namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Resources;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -47,12 +48,14 @@
         ///     That is, the current values that contains the value for this property.
         /// </summary>
         /// <value>The parent current values.</value>
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         public override InternalPropertyValues ParentCurrentValues
         {
             get
             {
                 var parentCurrentValues = _parentPropertyEntry.ParentCurrentValues;
                 var nestedValues = parentCurrentValues == null ? null : parentCurrentValues[_parentPropertyEntry.Name];
+
                 Contract.Assert(
                     nestedValues == null || nestedValues is InternalPropertyValues,
                     "Nested values for nested property should be an InternalPropertyValues object.");
@@ -66,12 +69,14 @@
         ///     That is, the original values that contains the value for this property.
         /// </summary>
         /// <value>The parent original values.</value>
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         public override InternalPropertyValues ParentOriginalValues
         {
             get
             {
                 var parentOriginalValues = _parentPropertyEntry.ParentOriginalValues;
                 var nestedValues = parentOriginalValues == null ? null : parentOriginalValues[_parentPropertyEntry.Name];
+
                 Contract.Assert(
                     nestedValues == null || nestedValues is InternalPropertyValues,
                     "Nested values for nested property should be an InternalPropertyValues object.");

@@ -8,10 +8,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Metadata.Edm;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.Linq;
     using System.Xml.Linq;
 
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal class EdmModelDiffer : ModelDiffer
     {
         private static readonly PrimitiveTypeKind[] ValidIdentityTypes
@@ -275,6 +278,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                    select new RenameColumnOperation(table, p1.ColumnNameAttribute(), p2.ColumnNameAttribute());
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private IEnumerable<RenameColumnOperation> FindRenamedIndependentAssociationColumns()
         {
             return from a1 in _source.Model.Descendants(EdmXNames.Ssdl.AssociationNames)
@@ -567,20 +571,21 @@ namespace System.Data.Entity.Migrations.Infrastructure
                       {
                           Name = nameAttribute,
                           IsNullable
-                              = !string.IsNullOrWhiteSpace(nullableAttribute) && !Convert.ToBoolean(nullableAttribute)
+                              = !string.IsNullOrWhiteSpace(nullableAttribute)
+                                && !Convert.ToBoolean(nullableAttribute, CultureInfo.InvariantCulture)
                                     ? false
                                     : (bool?)null,
                           MaxLength
                               = !string.IsNullOrWhiteSpace(maxLengthAttribute)
-                                    ? Convert.ToInt32(maxLengthAttribute)
+                                    ? Convert.ToInt32(maxLengthAttribute, CultureInfo.InvariantCulture)
                                     : (int?)null,
                           Precision
                               = !string.IsNullOrWhiteSpace(precisionAttribute)
-                                    ? Convert.ToByte(precisionAttribute)
+                                    ? Convert.ToByte(precisionAttribute, CultureInfo.InvariantCulture)
                                     : (byte?)null,
                           Scale
                               = !string.IsNullOrWhiteSpace(scaleAttribute)
-                                    ? Convert.ToByte(scaleAttribute)
+                                    ? Convert.ToByte(scaleAttribute, CultureInfo.InvariantCulture)
                                     : (byte?)null,
                           StoreType
                               = !storeType.EqualsIgnoreCase(defaultStoreTypeName)

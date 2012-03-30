@@ -52,7 +52,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         /// in the same table is used for table splitting and can still be an identity column because
         /// the update pipeline is only inserting into one column of one table.
         /// </summary>
-        private bool IsNonTableSplittingForeignKey(EdmAssociationType association, EdmProperty property)
+        private static bool IsNonTableSplittingForeignKey(EdmAssociationType association, EdmProperty property)
         {
             if (association.Constraint != null
                 && association.Constraint.DependentProperties.Contains(property))
@@ -69,18 +69,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             return false;
         }
 
-        private bool ParentOfTpc(EdmEntityType entityType, EdmModel model)
+        private static bool ParentOfTpc(EdmEntityType entityType, EdmModel model)
         {
-            foreach (var e in model.GetEntityTypes().Where(et => et.GetRootType() == entityType))
-            {
-                var configuration = e.GetConfiguration() as EntityTypeConfiguration;
-                if (configuration != null
-                    && configuration.IsMappingAnyInheritedProperty(e))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return (from e in model.GetEntityTypes().Where(et => et.GetRootType() == entityType)
+                    let configuration = e.GetConfiguration() as EntityTypeConfiguration
+                    where configuration != null && configuration.IsMappingAnyInheritedProperty(e)
+                    select e).Any();
         }
     }
 }

@@ -97,6 +97,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return navigationProperties.FirstOrDefault();
         }
 
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public static EdmItemCollection ToEdmItemCollection(this EdmModel model)
         {
             Contract.Requires(model != null);
@@ -157,10 +158,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             csdlSerializer.OnError += (s, e) => validationErrors.Add(e);
 
-            var success = csdlSerializer.Serialize(model, writer);
-
-            Contract.Assert(
-                success == (validationErrors.Count == 0), "Serializer success and error count did not match.");
+            csdlSerializer.Serialize(model, writer);
 
             return validationErrors;
         }

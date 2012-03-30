@@ -99,6 +99,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     The default conventions that are available for removal can be found in the System.Data.Entity.ModelConfiguration.Conventions namespace.
         /// </summary>
         /// <typeparam name = "TConvention">The type of the convention to be disabled.</typeparam>
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public void Remove<TConvention>()
             where TConvention : IConvention
         {
@@ -282,6 +283,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return base.GetHashCode();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

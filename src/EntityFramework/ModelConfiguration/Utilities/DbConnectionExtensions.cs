@@ -3,11 +3,13 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Reflection;
 
     internal static class DbConnectionExtensions
     {
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public static string GetProviderInvariantName(this DbConnection connection)
         {
             Contract.Requires(connection != null);

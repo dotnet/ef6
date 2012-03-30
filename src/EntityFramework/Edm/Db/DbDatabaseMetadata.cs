@@ -2,10 +2,12 @@ namespace System.Data.Entity.Edm.Db
 {
     using System.Collections.Generic;
     using System.Data.Entity.Edm.Internal;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Allows the construction and modification of a database in a Database Metadata model.
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     internal class DbDatabaseMetadata
         : DbAliasedMetadataItem
     {

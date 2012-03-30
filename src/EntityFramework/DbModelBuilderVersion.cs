@@ -16,7 +16,6 @@ namespace System.Data.Entity
     ///     This can be avoided by using a specific version of the conventions, but if a version
     ///     other than the latest is set then not all the latest functionality will be available.
     /// </remarks>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public enum DbModelBuilderVersion
     {
         /// <summary>

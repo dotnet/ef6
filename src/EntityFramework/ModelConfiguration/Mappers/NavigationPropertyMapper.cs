@@ -22,12 +22,10 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
         }
 
         public void Map(
-            PropertyInfo propertyInfo, EdmEntityType entityType, Func<EntityTypeConfiguration> entityTypeConfiguration,
-            Type sourceType)
+            PropertyInfo propertyInfo, EdmEntityType entityType, Func<EntityTypeConfiguration> entityTypeConfiguration)
         {
             Contract.Requires(propertyInfo != null);
             Contract.Requires(entityType != null);
-            Contract.Requires(sourceType != null);
             Contract.Requires(entityTypeConfiguration != null);
 
             var targetType = propertyInfo.PropertyType;

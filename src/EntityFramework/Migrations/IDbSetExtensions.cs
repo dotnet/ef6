@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Internal.Linq;
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Resources;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
@@ -71,6 +72,7 @@ namespace System.Data.Entity.Migrations
         ///     When the <param name="set"/> parameter is a custom or fake IDbSet implementation, this method will
         ///     attempt to locate and invoke a public, instance method with the same signature as this extension method.
         /// </remarks>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static void AddOrUpdate<TEntity>(
             this IDbSet<TEntity> set, Expression<Func<TEntity, object>> identifierExpression, params TEntity[] entities)
             where TEntity : class

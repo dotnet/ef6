@@ -264,26 +264,6 @@ namespace System.Data.Entity.Edm.Validation.Internal
             return !string.IsNullOrWhiteSpace(stringToCheck) && !string.IsNullOrEmpty(stringToCheck);
         }
 
-#if IncludeUnusedEdmCode
-    /// <summary>
-    /// Determines whether this type is of the same type as baseType, 
-    /// or is derived from baseType.
-    /// </summary>
-    /// <param name="baseType"></param>
-    /// <returns>true if this type is of the baseType, false otherwise</returns>
-        internal static bool IsOfType(this EdmEntityType type, EdmEntityType baseType)
-        {
-            System.Diagnostics.Contracts.Contract.Assert(type != null, "type cannot be null");
-
-            while (type != null && type != baseType)
-            {
-                type = type.BaseType;
-            }
-
-            return (type == baseType);
-        }
-#endif
-
         /// <summary>
         ///     Determine if a cycle exists in the type hierarchy: use two pointers to walk the chain, if one catches up with the other, we have a cycle.
         /// </summary>
@@ -356,19 +336,6 @@ namespace System.Data.Entity.Edm.Validation.Internal
             else
             {
                 visitedValidTypeReferences.Add(typeReference);
-
-#if IncludeUnusedEdmCode
-                if (typeReference.RowType != null)
-                {
-                    foreach (var rowProperty in typeReference.RowType.Columns)
-                    {
-                        if (rowProperty == null || !IsEdmTypeReferenceValid(rowProperty.ColumnType, visitedValidTypeReferences))
-                        {
-                            return false;
-                        }
-                    }
-                }
-#endif
             }
 
             return true;

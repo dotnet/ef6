@@ -11,10 +11,8 @@ namespace System.Data.Entity.Infrastructure
     /// <summary>
     ///     Represents a non-generic LINQ to Entities query against a DbContext.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
-        Justification = "Casing is intentional")]
-    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
-        Justification = "Name is intentional")]
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
+    [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
     public abstract class DbQuery : IOrderedQueryable, IListSource, IInternalQueryAdapter
     {
         #region Fields and constructors
@@ -36,6 +34,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Returns <c>false</c>.
         /// </summary>
         /// <returns><c>false</c>.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IListSource.ContainsListCollection
         {
             get { return false; }
@@ -50,6 +49,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns>
         ///     Never returns; always throws.
         /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IList IListSource.GetList()
         {
             throw Error.DbQuery_BindingToDbQueryNotSupported();
@@ -63,6 +63,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Gets the enumeration of this query causing it to be executed against the store.
         /// </summary>
         /// <returns>An enumerator for the query</returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerator IEnumerable.GetEnumerator()
         {
             return InternalQuery.GetEnumerator();
@@ -83,6 +84,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     The IQueryable LINQ Expression.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         Expression IQueryable.Expression
         {
             get { return InternalQuery.Expression; }
@@ -91,6 +93,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     The IQueryable provider.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IQueryProvider IQueryable.Provider
         {
             get
@@ -199,6 +202,7 @@ namespace System.Data.Entity.Infrastructure
             return base.GetHashCode();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

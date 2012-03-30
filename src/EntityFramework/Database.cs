@@ -9,6 +9,7 @@
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Objects;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -260,6 +261,7 @@
         /// </summary>
         /// <param name = "nameOrConnectionString">The database name or a connection string to the database.</param>
         /// <returns>True if the database exists; false otherwise.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public static bool Exists(string nameOrConnectionString)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(nameOrConnectionString));
@@ -275,6 +277,7 @@
         /// </summary>
         /// <param name = "nameOrConnectionString">The database name or a connection string to the database.</param>
         /// <returns>True if the database did exist and was deleted; false otherwise.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public static bool Delete(string nameOrConnectionString)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(nameOrConnectionString));
@@ -485,6 +488,7 @@
             return base.GetHashCode();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

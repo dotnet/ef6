@@ -1,15 +1,12 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Edm;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
-    [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
     [ContractClass(typeof(IEdmConventionContracts<>))]
     internal interface IEdmConvention<TEdmDataModelItem> : IConvention
         where TEdmDataModelItem : EdmDataModelItem
     {
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "edm")]
         void Apply(TEdmDataModelItem edmDataModelItem, EdmModel model);
     }
 

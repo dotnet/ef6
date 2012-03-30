@@ -49,15 +49,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 base.VisitEdmModel(item);
             }
 
-#if IncludeUnusedEdmCode
-            protected override void VisitFunctionParameter(EdmFunctionParameter item)
-            {
-                Dispatch(item);
-
-                base.VisitFunctionParameter(item);
-            }
-#endif
-
             protected override void VisitEdmNavigationProperty(EdmNavigationProperty item)
             {
                 Dispatch(item);
@@ -145,15 +136,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 base.VisitEdmAssociationSetEnd(item);
             }
 
-#if IncludeUnusedEdmCode
-            protected override void VisitFunctionImport(EdmFunctionImport item)
-            {
-                Dispatch(item);
-
-                base.VisitFunctionImport(item);
-            }
-#endif
-
             protected override void VisitEdmNamespace(EdmNamespace item)
             {
                 Dispatch(item);
@@ -187,15 +169,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
                 base.VisitEdmAssociationType(item);
             }
-
-#if IncludeUnusedEdmCode
-           protected override void VisitEdmFunctionGroup(EdmFunctionGroup item)
-            {
-                Dispatch(item);
-
-                base.VisitEdmFunctionGroup(item);
-            }
-#endif
         }
     }
 }

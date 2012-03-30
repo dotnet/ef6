@@ -15,10 +15,7 @@
     ///     SQL queries for non-entities are created using the <see cref = "DbContext.Database" />.
     ///     See <see cref = "DbSqlQuery" /> for a non-generic version of this class.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
-        Justification = "Name is intentional")]
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db",
-        Justification = "FxCop rule is wrong; Db is not an abbreviation for data base.")]
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public class DbSqlQuery<TEntity> : IEnumerable<TEntity>, IListSource
         where TEntity : class
     {
@@ -108,6 +105,7 @@
         ///     Returns <c>false</c>.
         /// </summary>
         /// <returns><c>false</c>.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IListSource.ContainsListCollection
         {
             get
@@ -123,6 +121,7 @@
         /// <returns>
         ///     Never returns; always throws.
         /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IList IListSource.GetList()
         {
             // Note that _internalQuery will always throw;
@@ -145,6 +144,7 @@
             return base.GetHashCode();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

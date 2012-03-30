@@ -94,37 +94,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 base.VisitDbTableMetadata(item);
             }
 
-#if IncludeUnusedEdmCode
-            protected override void VisitDbFunctionMetadata(DbFunctionMetadata item)
-            {
-                Dispatch(item);
-
-                base.VisitDbFunctionMetadata(item);
-            }
-#endif
-
             protected override void VisitDbTypeMetadata(DbTypeMetadata item)
             {
                 Dispatch(item);
 
                 base.VisitDbTypeMetadata(item);
             }
-
-#if IncludeUnusedEdmCode
-            protected override void VisitDbFunctionParameterMetadata(DbFunctionParameterMetadata item)
-            {
-                Dispatch(item);
-
-                base.VisitDbFunctionParameterMetadata(item);
-            }
-
-            protected override void VisitDbFunctionTypeMetadata(DbFunctionTypeMetadata item)
-            {
-                Dispatch(item);
-
-                base.VisitDbFunctionTypeMetadata(item);
-            }
-#endif
 
             protected override void VisitDbTableColumnMetadata(DbTableColumnMetadata item)
             {

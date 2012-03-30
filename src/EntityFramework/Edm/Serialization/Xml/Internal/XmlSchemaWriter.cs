@@ -14,7 +14,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal
             _xmlWriter.WriteEndElement();
         }
 
-        protected string GetQualifiedTypeName(string prefix, string typeName)
+        protected static string GetQualifiedTypeName(string prefix, string typeName)
         {
             var sb = new StringBuilder();
             return sb.Append(prefix).Append(".").Append(typeName).ToString();

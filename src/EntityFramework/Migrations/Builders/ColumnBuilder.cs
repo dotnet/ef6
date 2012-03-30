@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Builders
     using System.Data.Entity.Migrations.Model;
     using System.Data.Metadata.Edm;
     using System.Data.Spatial;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Helper class that is used to configure a column.
@@ -23,11 +24,12 @@ namespace System.Data.Entity.Migrations.Builders
         /// <param name = "name">The name of the column.</param>
         /// <param name = "storeType">Provider specific data type to use for this column.</param>
         /// <returns>The newly constructed column definition.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Binary(
             bool? nullable = null,
             int? maxLength = null,
             bool? fixedLength = null,
-            bool? isMaxLength = null,
             byte[] defaultValue = null,
             string defaultValueSql = null,
             bool timestamp = false,
@@ -55,6 +57,8 @@ namespace System.Data.Entity.Migrations.Builders
         /// <param name = "name">The name of the column.</param>
         /// <param name = "storeType">Provider specific data type to use for this column.</param>
         /// <returns>The newly constructed column definition.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Boolean(
             bool? nullable = null,
             bool? defaultValue = null,
@@ -81,6 +85,8 @@ namespace System.Data.Entity.Migrations.Builders
         /// <param name = "name">The name of the column.</param>
         /// <param name = "storeType">Provider specific data type to use for this column.</param>
         /// <returns>The newly constructed column definition.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Byte(
             bool? nullable = null,
             bool identity = false,
@@ -109,6 +115,8 @@ namespace System.Data.Entity.Migrations.Builders
         /// <param name = "name">The name of the column.</param>
         /// <param name = "storeType">Provider specific data type to use for this column.</param>
         /// <returns>The newly constructed column definition.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel DateTime(
             bool? nullable = null,
             byte? precision = null,
@@ -139,6 +147,8 @@ namespace System.Data.Entity.Migrations.Builders
         /// <param name = "storeType">Provider specific data type to use for this column.</param>
         /// <param name = "identity">Value indicating whether or not the database will generate values for this column during insert.</param>
         /// <returns>The newly constructed column definition.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Decimal(
             bool? nullable = null,
             byte? precision = null,
@@ -170,6 +180,8 @@ namespace System.Data.Entity.Migrations.Builders
         /// <param name = "name">The name of the column.</param>
         /// <param name = "storeType">Provider specific data type to use for this column.</param>
         /// <returns>The newly constructed column definition.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Double(
             bool? nullable = null,
             double? defaultValue = null,
@@ -196,6 +208,8 @@ namespace System.Data.Entity.Migrations.Builders
         /// <param name = "name">The name of the column.</param>
         /// <param name = "storeType">Provider specific data type to use for this column.</param>
         /// <returns>The newly constructed column definition.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Guid(
             bool? nullable = null,
             bool identity = false,
@@ -223,6 +237,8 @@ namespace System.Data.Entity.Migrations.Builders
         /// <param name = "name">The name of the column.</param>
         /// <param name = "storeType">Provider specific data type to use for this column.</param>
         /// <returns>The newly constructed column definition.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Single(
             bool? nullable = null,
             float? defaultValue = null,
@@ -249,6 +265,8 @@ namespace System.Data.Entity.Migrations.Builders
         /// <param name = "name">The name of the column.</param>
         /// <param name = "storeType">Provider specific data type to use for this column.</param>
         /// <returns>The newly constructed column definition.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Short(
             bool? nullable = null,
             bool identity = false,
@@ -277,6 +295,8 @@ namespace System.Data.Entity.Migrations.Builders
         /// <param name = "name">The name of the column.</param>
         /// <param name = "storeType">Provider specific data type to use for this column.</param>
         /// <returns>The newly constructed column definition.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Int(
             bool? nullable = null,
             bool identity = false,
@@ -305,6 +325,8 @@ namespace System.Data.Entity.Migrations.Builders
         /// <param name = "name">The name of the column.</param>
         /// <param name = "storeType">Provider specific data type to use for this column.</param>
         /// <returns>The newly constructed column definition.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Long(
             bool? nullable = null,
             bool identity = false,
@@ -336,11 +358,12 @@ namespace System.Data.Entity.Migrations.Builders
         /// <param name = "name">The name of the column.</param>
         /// <param name = "storeType">Provider specific data type to use for this column.</param>
         /// <returns>The newly constructed column definition.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel String(
             bool? nullable = null,
             int? maxLength = null,
             bool? fixedLength = null,
-            bool? isMaxLength = null,
             bool? unicode = null,
             string defaultValue = null,
             string defaultValueSql = null,
@@ -352,7 +375,7 @@ namespace System.Data.Entity.Migrations.Builders
                 nullable,
                 defaultValue,
                 defaultValueSql,
-                maxLength: maxLength,
+                maxLength,
                 fixedLength: fixedLength,
                 unicode: unicode,
                 name: name,
@@ -369,6 +392,8 @@ namespace System.Data.Entity.Migrations.Builders
         /// <param name = "name">The name of the column.</param>
         /// <param name = "storeType">Provider specific data type to use for this column.</param>
         /// <returns>The newly constructed column definition.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Time(
             bool? nullable = null,
             byte? precision = null,
@@ -397,6 +422,8 @@ namespace System.Data.Entity.Migrations.Builders
         /// <param name = "name">The name of the column.</param>
         /// <param name = "storeType">Provider specific data type to use for this column.</param>
         /// <returns>The newly constructed column definition.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel DateTimeOffset(
             bool? nullable = null,
             byte? precision = null,
@@ -424,6 +451,8 @@ namespace System.Data.Entity.Migrations.Builders
         /// <param name = "name">The name of the column.</param>
         /// <param name = "storeType">Provider specific data type to use for this column.</param>
         /// <returns>The newly constructed column definition.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Geography(
             bool? nullable = null,
             DbGeography defaultValue = null,
@@ -449,6 +478,8 @@ namespace System.Data.Entity.Migrations.Builders
         /// <param name = "name">The name of the column.</param>
         /// <param name = "storeType">Provider specific data type to use for this column.</param>
         /// <returns>The newly constructed column definition.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Geometry(
             bool? nullable = null,
             DbGeometry defaultValue = null,
@@ -520,6 +551,7 @@ namespace System.Data.Entity.Migrations.Builders
             return base.GetHashCode();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

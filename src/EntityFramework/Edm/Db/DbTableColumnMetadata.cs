@@ -1,10 +1,12 @@
 namespace System.Data.Entity.Edm.Db
 {
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Allows the construction and modification of a column in a <see cref = "DbTableMetadata" /> table.
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     [DebuggerDisplay("{Name}")]
     internal class DbTableColumnMetadata : DbColumnMetadata
     {

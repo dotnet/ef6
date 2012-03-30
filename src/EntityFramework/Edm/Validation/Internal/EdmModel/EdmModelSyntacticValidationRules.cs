@@ -262,46 +262,6 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 
         #endregion
 
-#if IncludeUnusedEdmCode
-        #region EdmFunctionImport
-        internal static readonly EdmModelValidationRule<EdmFunctionImport> EdmFunctionImport_ReturnTypeMustBeCollectionType =
-            new EdmModelValidationRule<EdmFunctionImport>(
-                (context, edmFunctionImport) =>
-                {
-                    if (edmFunctionImport.ReturnType != null)
-                    {
-                        if (!edmFunctionImport.ReturnType.IsCollectionType)
-                        {
-                            context.AddError(
-                                edmFunctionImport,
-                                CsdlConstants.Attribute_ReturnType,
-                                Strings.EdmModel_Validator_Syntactic_EdmFunctionImport_ReturnTypeMustBeCollectionType,
-                                XmlErrorCode.EdmFunctionImport_ReturnTypeMustBeCollectionType);
-                        }
-                    }
-                }
-                );
-        #endregion
-
-        #region EdmFunction // ModelDefinedFunction
-
-        internal static readonly EdmModelValidationRule<EdmFunctionGroup> EdmFunction_MustExistIn20OrHigher =
-            new EdmModelValidationRule<EdmFunctionGroup>(
-                (context, edmFunction) =>
-                {
-                    if (edmFunction != null)
-                    {
-                        context.AddError(
-                            edmFunction,
-                            null,
-                            Strings.EdmModel_Validator_Syntactic_EdmFunctionCanOnlyExist20OrHigher,
-                            XmlErrorCode.EdmFunctionNotExistsInV1);
-                    }
-                }
-                );
-        #endregion
-#endif
-
         #region EdmTypeReference
 
         internal static readonly EdmModelValidationRule<EdmTypeReference> EdmTypeReference_TypeNotValid =

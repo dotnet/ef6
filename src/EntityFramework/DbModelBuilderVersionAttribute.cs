@@ -1,7 +1,5 @@
 ﻿namespace System.Data.Entity
 {
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     ///     This attribute can be applied to a class derived from <see cref = "DbContext" /> to set which
     ///     version of the DbContext and <see cref = "DbModelBuilder" /> conventions should be used when building
@@ -12,7 +10,6 @@
     ///     If the attribute is missing from DbContextthen DbContext will always use the latest
     ///     version of the conventions.  This is equivalent to using DbModelBuilderVersion.Latest.
     /// </remarks>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public sealed class DbModelBuilderVersionAttribute : Attribute
     {

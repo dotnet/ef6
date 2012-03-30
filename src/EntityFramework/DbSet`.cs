@@ -17,8 +17,6 @@ namespace System.Data.Entity
     ///     one-to-one correlation between a type and a set.
     /// </remarks>
     /// <typeparam name = "TEntity">The type that defines the set.</typeparam>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
-        Justification = "Casing is intentional")]
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
         Justification = "Name is intentional")]
     public class DbSet<TEntity> : DbQuery<TEntity>, IDbSet<TEntity>, IInternalSetAdapter
@@ -244,6 +242,7 @@ namespace System.Data.Entity
             return base.GetHashCode();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

@@ -11,8 +11,6 @@
     ///     Returned by the ChangeTracker method of <see cref = "DbContext" /> to provide access to features of
     ///     the context that are related to change tracking of entities.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
-        Justification = "Casing is intentional")]
     public class DbChangeTracker
     {
         #region Construction and fields
@@ -51,6 +49,7 @@
         /// </summary>
         /// <typeparam name = "TEntity">The type of the entity.</typeparam>
         /// <returns>The entries.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public IEnumerable<DbEntityEntry<TEntity>> Entries<TEntity>() where TEntity : class
         {
             return
@@ -98,6 +97,7 @@
             return base.GetHashCode();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

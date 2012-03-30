@@ -381,7 +381,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         }
 
         [Fact]
-        public void GetDerivedTypes_must_return_list_of_direct_descendents()
+        public void GetDerivedTypes_must_return_list_of_direct_descendants()
         {
             var model = new EdmModel().Initialize();
             var entity1 = model.AddEntityType("E1");

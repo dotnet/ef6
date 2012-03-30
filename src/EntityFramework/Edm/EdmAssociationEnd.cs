@@ -1,11 +1,13 @@
 namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
     ///     Allows the construction and modification of one end of an Entity Data Model (EDM) association.
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     internal class EdmAssociationEnd : EdmStructuralMember
     {
         internal override EdmItemKind GetItemKind()

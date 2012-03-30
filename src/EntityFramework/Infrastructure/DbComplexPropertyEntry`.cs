@@ -11,8 +11,6 @@
     /// </summary>
     /// <typeparam name = "TEntity">The type of the entity to which this property belongs.</typeparam>
     /// <typeparam name = "TComplexProperty">The type of the property.</typeparam>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db",
-        Justification = "FxCop rule is wrong; Database is not two words.")]
     public class DbComplexPropertyEntry<TEntity, TComplexProperty> : DbPropertyEntry<TEntity, TComplexProperty>
         where TEntity : class
     {
@@ -100,6 +98,7 @@
         /// <typeparam name = "TNestedProperty">The type of the nested property.</typeparam>
         /// <param name = "navigationProperty">An expression representing the nested property.</param>
         /// <returns>An object representing the nested property.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#",
             Justification = "Rule predates more fluent naming conventions.")]
         public DbPropertyEntry<TEntity, TNestedProperty> Property<TNestedProperty>(
@@ -145,6 +144,7 @@
         /// <typeparam name = "TNestedComplexProperty">The type of the nested property.</typeparam>
         /// <param name = "navigationProperty">An expression representing the nested property.</param>
         /// <returns>An object representing the nested property.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#",
             Justification = "Rule predates more fluent naming conventions.")]
         public DbComplexPropertyEntry<TEntity, TNestedComplexProperty> ComplexProperty<TNestedComplexProperty>(

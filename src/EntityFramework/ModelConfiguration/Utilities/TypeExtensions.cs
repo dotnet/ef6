@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
     using System.Data.Entity.Edm;
     using System.Data.Metadata.Edm;
     using System.Data.Objects.DataClasses;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
 
@@ -12,6 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
         private static readonly Dictionary<Type, EdmPrimitiveType> _primitiveTypesMap
             = new Dictionary<Type, EdmPrimitiveType>();
 
+        [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
         static TypeExtensions()
         {
             foreach (var efPrimitiveType in PrimitiveType.GetEdmPrimitiveTypes())

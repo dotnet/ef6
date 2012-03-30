@@ -2,11 +2,13 @@ namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
     ///     Allows the construction and modification of an Entity Data Model (EDM) navigation property.
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     [DebuggerDisplay("{Name}")]
     internal class EdmNavigationProperty
         : EdmStructuralMember

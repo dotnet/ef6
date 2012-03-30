@@ -18,7 +18,7 @@
         ///     or SQL Compact. The core is used for non-Code First models and for other providers even
         ///     when using Code First.
         /// </summary>
-        public void CreateDatabase(
+        public virtual void CreateDatabase(
             InternalContext internalContext,
             Func<DbMigrationsConfiguration, DbContext, DbMigrator> createMigrator,
             ObjectContext objectContext)

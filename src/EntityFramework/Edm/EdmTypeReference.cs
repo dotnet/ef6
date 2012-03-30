@@ -74,26 +74,6 @@ namespace System.Data.Entity.Edm
             get { return IsValid() && CollectionRank > 0; }
         }
 
-#if IncludeUnusedEdmCode
-    /// <summary>
-    /// Gets an <see cref="EdmTypeReferenceElementType"/> instance that can be used to inspect the element type of this type reference if it represents a collection (when <see cref="CollectionRank"/> is greater than zero).
-    /// </summary>
-        public EdmTypeReferenceElementType CollectionElementType
-        {
-            get { return new EdmTypeReferenceElementType(this); }
-        }
-
-        /// <summary>
-        /// Indicates whether the <see cref="EdmType"/> property of this type reference currently refers to an <see cref="EdmAssociationType"/>, is not a collection type, and does not have primitive facet values specified.
-        /// </summary>
-        public bool IsAssociationType { get { return this.IsValidNonPrimitive(EdmItemKind.AssociationType); } }
-
-        /// <summary>
-        /// Gets the <see cref="EdmAssociationType"/> currently referred to by this type reference, or <code>null</code> if the type reference is a collection type or does not refer to an association type.
-        /// </summary>
-        public EdmAssociationType AssociationType { get { return this.GetEdmTypeAs<EdmAssociationType>(this.IsValidNonPrimitive(EdmItemKind.AssociationType)); } }
-#endif
-
         /// <summary>
         ///     Indicates whether the <see cref = "EdmType" /> property of this type reference currently refers to an <see cref = "EdmComplexType" /> , is not a collection type, and does not have primitive facet values specified.
         /// </summary>
@@ -109,18 +89,6 @@ namespace System.Data.Entity.Edm
         {
             get { return GetEdmTypeAs<EdmComplexType>(IsValidNonPrimitive(EdmItemKind.ComplexType)); }
         }
-
-#if IncludeUnusedEdmCode
-    /// <summary>
-    /// Indicates whether the <see cref="EdmType"/> property of this type reference currently refers to an <see cref="EdmEntityType"/>, is not a collection type, and does not have primitive facet values specified.
-    /// </summary>
-        public bool IsEntityType { get { return this.IsValidNonPrimitive(EdmItemKind.EntityType); } }
-
-        /// <summary>
-        /// Gets the <see cref="EdmEntityType"/> currently referred to by this type reference, or <code>null</code> if the type reference is a collection type or does not refer to an entity type.
-        /// </summary>
-        public EdmEntityType EntityType { get { return this.GetEdmTypeAs<EdmEntityType>(this.IsValidNonPrimitive(EdmItemKind.EntityType)); } }
-#endif
 
         /// <summary>
         ///     Indicates whether the <see cref = "EdmType" /> property of this type reference currently refers to an <see cref = "EdmPrimitiveType" /> and is not a collection type.
@@ -158,28 +126,6 @@ namespace System.Data.Entity.Edm
             get { return IsEnumType ? EnumType.UnderlyingType : PrimitiveType; }
         }
 
-#if IncludeUnusedEdmCode
-    /// <summary>
-    /// Indicates whether the <see cref="EdmType"/> property of this type reference currently refers to an <see cref="EdmRefType"/>, is not a collection type, and does not have primitive facet values specified.
-    /// </summary>
-        public bool IsRefType { get { return this.IsValidNonPrimitive(EdmItemKind.RefType); } }
-
-        /// <summary>
-        /// Gets the <see cref="EdmRefType"/> currently referred to by this type reference, or <code>null</code> if the type reference does not refer to a ref type.
-        /// </summary>
-        public EdmRefType RefType { get { return this.GetEdmTypeAs<EdmRefType>(this.IsValidNonPrimitive(EdmItemKind.RefType)); } }
-
-        /// <summary>
-        /// Indicates whether the <see cref="EdmType"/> property of this type reference currently refers to an <see cref="EdmRowType"/>, is not a collection type, and does not have primitive facet values specified.
-        /// </summary>
-        public bool IsRowType { get { return this.IsValidNonPrimitive(EdmItemKind.RowType); } }
-
-        /// <summary>
-        /// Gets the <see cref="EdmRowType"/> currently referred to by this type reference, or <code>null</code> if the type reference does not refer to a row type.
-        /// </summary>
-        public EdmRowType RowType { get { return this.GetEdmTypeAs<EdmRowType>(this.IsValidNonPrimitive(EdmItemKind.RowType)); } }
-#endif
-
         private bool IsValid()
         {
             return (EdmType != null &&
@@ -200,20 +146,6 @@ namespace System.Data.Entity.Edm
 
             return (IsValid() && EdmType.ItemKind == kind && CollectionRank == 0);
         }
-
-#if IncludeUnusedEdmCode
-        internal bool IsValidPrimitiveCollection()
-        {
-            return (this.IsValid() && this.EdmType.ItemKind == EdmItemKind.PrimitiveType && this.CollectionRank > 0);
-        }
-
-        internal bool IsValidNonPrimitiveCollection(EdmItemKind typeKind)
-        {
-            System.Diagnostics.Contracts.Contract.Assert(typeKind != EdmItemKind.PrimitiveType, "Calling IsNonPrimitiveCollection with EdmItemKind.Primitive as TypeKind?");
-
-            return (this.IsValid() && this.EdmType.ItemKind == typeKind && this.CollectionRank > 0);
-        }
-#endif
 
         internal TEdmType GetEdmTypeAs<TEdmType>(bool condition)
             where TEdmType : EdmDataModelType

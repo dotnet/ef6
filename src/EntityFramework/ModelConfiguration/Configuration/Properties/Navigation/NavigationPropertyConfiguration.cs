@@ -347,7 +347,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             }
 
             ConfigureConstraint(associationType, dependentEnd, entityTypeConfiguration);
-            ConfigureDeleteAction(associationType, associationType.GetOtherEnd(dependentEnd));
+            ConfigureDeleteAction(associationType.GetOtherEnd(dependentEnd));
         }
 
         private void ConfigureConstraint(
@@ -382,9 +382,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             }
         }
 
-        private void ConfigureDeleteAction(EdmAssociationType associationType, EdmAssociationEnd principalEnd)
+        private void ConfigureDeleteAction(EdmAssociationEnd principalEnd)
         {
-            Contract.Requires(associationType != null);
             Contract.Requires(principalEnd != null);
 
             if (DeleteAction != null)

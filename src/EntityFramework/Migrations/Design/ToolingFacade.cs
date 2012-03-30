@@ -6,6 +6,7 @@
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Resources;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
@@ -70,6 +71,7 @@
         ///     The connection to the database to be migrated.
         ///     If null is supplied, the default connection for the context will be used.
         /// </param>
+        [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
         public ToolingFacade(
             string assemblyName,
             string configurationTypeName,
@@ -119,6 +121,7 @@
         ///     Gets the fully qualified name of all types deriving from <see cref = "DbContext" />.
         /// </summary>
         /// <returns>All context types found.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public IEnumerable<string> GetContextTypes()
         {
             var runner = new GetContextTypesRunner();
@@ -133,6 +136,7 @@
         ///     Gets a list of all migrations that have been applied to the database.
         /// </summary>
         /// <returns>Ids of applied migrations.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public IEnumerable<string> GetDatabaseMigrations()
         {
             var runner = new GetDatabaseMigrationsRunner();
@@ -147,6 +151,7 @@
         ///     Gets a list of all migrations that have not been applied to the database.
         /// </summary>
         /// <returns>Ids of pending migrations.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public IEnumerable<string> GetPendingMigrations()
         {
             var runner = new GetPendingMigrationsRunner();
@@ -306,6 +311,7 @@
             runner.Log = new ToolLogger(this);
         }
 
+        [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
         private void Run(BaseRunner runner)
         {
             _appDomain.SetData("error", null);
@@ -367,6 +373,8 @@
             public DbConnectionInfo ConnectionStringInfo { get; set; }
             public ToolLogger Log { get; set; }
 
+            [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
+            [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
             public void Run()
             {
                 try
@@ -522,6 +530,7 @@
         [Serializable]
         private class GetDatabaseMigrationsRunner : BaseRunner
         {
+            [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
             protected override void RunCore()
             {
                 var databaseMigrations = GetMigrator().GetDatabaseMigrations();
@@ -533,6 +542,7 @@
         [Serializable]
         private class GetPendingMigrationsRunner : BaseRunner
         {
+            [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
             protected override void RunCore()
             {
                 var pendingMigrations = GetMigrator().GetPendingMigrations();
@@ -570,6 +580,7 @@
             public string TargetMigration { get; set; }
             public bool Force { get; set; }
 
+            [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
             protected override void RunCore()
             {
                 var migrator = GetMigrator();
@@ -600,6 +611,7 @@
             public string RootNamespace { get; set; }
             public bool IgnoreChanges { get; set; }
 
+            [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
             protected override void RunCore()
             {
                 var configuration = GetConfiguration();
@@ -680,6 +692,7 @@
         [Serializable]
         private class GetContextTypesRunner : BaseRunner
         {
+            [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
             protected override void RunCore()
             {
                 var assembly = Assembly.Load(AssemblyName);

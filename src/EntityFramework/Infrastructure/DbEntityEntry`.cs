@@ -14,8 +14,6 @@
     ///     the context to obtain objects of this type.
     /// </summary>
     /// <typeparam name = "TEntity">The type of the entity.</typeparam>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db",
-        Justification = "FxCop rule is wrong; Database is not two words.")]
     public class DbEntityEntry<TEntity>
         where TEntity : class
     {
@@ -91,6 +89,7 @@
         ///     If the entity is not found in the database then null is returned.
         /// </summary>
         /// <returns>The store values.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public DbPropertyValues GetDatabaseValues()
         {
             var storeValues = _internalEntityEntry.GetDatabaseValues();
@@ -147,6 +146,7 @@
         /// <typeparam name = "TProperty">The type of the property.</typeparam>
         /// <param name = "navigationProperty">An expression representing the navigation property.</param>
         /// <returns>An object representing the navigation property.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public DbReferenceEntry<TEntity, TProperty> Reference<TProperty>(
             Expression<Func<TEntity, TProperty>> navigationProperty)
             where TProperty : class
@@ -197,6 +197,7 @@
         /// <typeparam name = "TElement">The type of elements in the collection.</typeparam>
         /// <param name = "navigationProperty">An expression representing the navigation property.</param>
         /// <returns>An object representing the navigation property.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public DbCollectionEntry<TEntity, TElement> Collection<TElement>(
             Expression<Func<TEntity, ICollection<TElement>>> navigationProperty) where TElement : class
         {
@@ -240,6 +241,7 @@
         /// <typeparam name = "TProperty">The type of the property.</typeparam>
         /// <param name = "navigationProperty">An expression representing the property.</param>
         /// <returns>An object representing the property.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#",
             Justification = "Rule predates more fluent naming conventions.")]
         public DbPropertyEntry<TEntity, TProperty> Property<TProperty>(Expression<Func<TEntity, TProperty>> property)
@@ -283,6 +285,7 @@
         /// <typeparam name = "TComplexProperty">The type of the complex property.</typeparam>
         /// <param name = "navigationProperty">An expression representing the complex property.</param>
         /// <returns>An object representing the complex property.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#",
             Justification = "Rule predates more fluent naming conventions.")]
         public DbComplexPropertyEntry<TEntity, TComplexProperty> ComplexProperty<TComplexProperty>(
@@ -357,6 +360,7 @@
         ///     Entity validation result. Possibly null if 
         ///     <see cref = "DbContext.ValidateEntity(DbEntityEntry, IDictionary{object, object})" /> method is overridden.
         /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public DbEntityValidationResult GetValidationResult()
         {
             // need to call the method on DbContext to pickup potential validation 
@@ -434,6 +438,7 @@
             return base.ToString();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

@@ -139,7 +139,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
 
         protected override void VisitEdmAssociationConstraint(EdmAssociationConstraint item)
         {
-            _schemaWriter.WriteReferentialConstraintElementHeader(item);
+            _schemaWriter.WriteReferentialConstraintElementHeader();
             _schemaWriter.WriteReferentialConstraintRoleElement(
                 CsdlConstants.Element_Principal,
                 item.PrincipalEnd(_currentAssociationType),

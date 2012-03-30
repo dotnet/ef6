@@ -68,6 +68,7 @@ namespace System.Data.Entity.ModelConfiguration
         ///     VB.Net: Function(t) New With { t.Id1, t.Id2 }
         /// </param>
         /// <returns>The same EntityTypeConfiguration instance so that multiple calls can be chained.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public EntityTypeConfiguration<TEntityType> HasKey<TKey>(Expression<Func<TEntityType, TKey>> keyExpression)
         {
@@ -134,6 +135,7 @@ namespace System.Data.Entity.ModelConfiguration
         /// </summary>
         /// <param name = "entityMappingConfigurationAction">An action that performs configuration against an <see cref = "EntityMappingConfiguration{TEntityType}" />.</param>
         /// <returns>The same EntityTypeConfiguration instance so that multiple calls can be chained.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public EntityTypeConfiguration<TEntityType> Map(
             Action<EntityMappingConfiguration<TEntityType>> entityMappingConfigurationAction)
         {
@@ -156,6 +158,7 @@ namespace System.Data.Entity.ModelConfiguration
         /// <typeparam name = "TDerived">The derived entity type to be configured.</typeparam>
         /// <param name = "derivedTypeMapConfigurationAction">An action that performs configuration against an <see cref = "EntityMappingConfiguration{TEntityType}" />.</param>
         /// <returns>The same EntityTypeConfiguration instance so that multiple calls can be chained.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public EntityTypeConfiguration<TEntityType> Map<TDerived>(
             Action<EntityMappingConfiguration<TDerived>> derivedTypeMapConfigurationAction)
             where TDerived : class, TEntityType
@@ -195,6 +198,7 @@ namespace System.Data.Entity.ModelConfiguration
         ///     VB.Net: Function(t) t.MyProperty
         /// </param>
         /// <returns>A configuration object that can be used to further configure the relationship.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public OptionalNavigationPropertyConfiguration<TEntityType, TTargetEntity> HasOptional<TTargetEntity>(
             Expression<Func<TEntityType, TTargetEntity>> navigationPropertyExpression)
@@ -218,6 +222,7 @@ namespace System.Data.Entity.ModelConfiguration
         ///     VB.Net: Function(t) t.MyProperty
         /// </param>
         /// <returns>A configuration object that can be used to further configure the relationship.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public RequiredNavigationPropertyConfiguration<TEntityType, TTargetEntity> HasRequired<TTargetEntity>(
             Expression<Func<TEntityType, TTargetEntity>> navigationPropertyExpression)
@@ -239,6 +244,7 @@ namespace System.Data.Entity.ModelConfiguration
         ///     VB.Net: Function(t) t.MyProperty
         /// </param>
         /// <returns>A configuration object that can be used to further configure the relationship.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public ManyNavigationPropertyConfiguration<TEntityType, TTargetEntity> HasMany<TTargetEntity>(
             Expression<Func<TEntityType, ICollection<TTargetEntity>>> navigationPropertyExpression)
@@ -268,6 +274,7 @@ namespace System.Data.Entity.ModelConfiguration
             return base.GetHashCode();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

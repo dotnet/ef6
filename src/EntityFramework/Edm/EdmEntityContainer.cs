@@ -13,10 +13,6 @@ namespace System.Data.Entity.Edm
         private readonly BackingList<EdmAssociationSet> associationSetsList = new BackingList<EdmAssociationSet>();
         private readonly BackingList<EdmEntitySet> entitySetsList = new BackingList<EdmEntitySet>();
 
-#if IncludeUnusedEdmCode
-        private readonly BackingList<EdmFunctionImport> functionImportsList = new BackingList<EdmFunctionImport>();
-#endif
-
         internal override EdmItemKind GetItemKind()
         {
             return EdmItemKind.EntityContainer;
@@ -36,9 +32,6 @@ namespace System.Data.Entity.Edm
             {
                 return associationSetsList
                     .Concat<EdmEntityContainerItem>(entitySetsList);
-#if IncludeUnusedEdmCode
-                       .Concat(this.functionImportsList);
-#endif
             }
         }
 
@@ -69,14 +62,5 @@ namespace System.Data.Entity.Edm
         {
             get { return entitySetsList.HasValue; }
         }
-
-#if IncludeUnusedEdmCode
-    /// <summary>
-    /// Gets or sets the collection of <see cref="EdmFunctionImport"/>s that specifies the imported functions within the container.
-    /// </summary>
-        public virtual IList<EdmFunctionImport> FunctionImports { get { return this.functionImportsList.EnsureValue(); } set { this.functionImportsList.SetValue(value); } }
-
-        internal bool HasFunctionImports { get { return this.functionImportsList.HasValue; } }
-#endif
     }
 }

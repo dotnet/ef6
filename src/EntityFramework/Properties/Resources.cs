@@ -816,7 +816,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The abstract type '{0}' has no mapped descendents and so cannot be mapped. Either remove '{0}' from the model or add one or more types deriving from '{0}' to the model. "
+        /// A string like "The abstract type '{0}' has no mapped descendants and so cannot be mapped. Either remove '{0}' from the model or add one or more types deriving from '{0}' to the model. "
         /// </summary>
         internal static string UnmappedAbstractType(object p0)
         {
@@ -2759,7 +2759,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// InvalidOperationException with message like "The abstract type '{0}' has no mapped descendents and so cannot be mapped. Either remove '{0}' from the model or add one or more types deriving from '{0}' to the model. "
+        /// InvalidOperationException with message like "The abstract type '{0}' has no mapped descendants and so cannot be mapped. Either remove '{0}' from the model or add one or more types deriving from '{0}' to the model. "
         /// </summary>
         internal static Exception UnmappedAbstractType(object p0)
         {

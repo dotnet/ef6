@@ -3,6 +3,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
@@ -14,6 +15,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         void IEdmConvention.Apply(EdmModel model)
         {
             // Query the model for candidate complex types.
@@ -37,7 +40,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                   where ((entityTypeConfiguration == null) // (2)
                          || (!entityTypeConfiguration.IsExplicitEntity
                              && entityTypeConfiguration.IsStructuralConfigurationOnly)) // (2)
-                        && entityType.NavigationProperties.Count() == 0
+                        && !entityType.NavigationProperties.Any()
                   // (3)
                   let matchingAssociations
                       = from associationType in model.GetAssociationTypes()

@@ -1,6 +1,7 @@
 ﻿namespace System.Data.Entity.Migrations.Utilities
 {
     using System.Diagnostics.Contracts;
+    using System.Globalization;
 
     /// <summary>
     /// Used for generating <see cref="DateTime.UtcNow"/> values that are always in sequential
@@ -31,8 +32,9 @@
             // At least on some machines DateTime.UtcNow can return values that are a little bit (< 1 second) less than the
             // last value that it returned.
             if (now <= _lastNow
-                ||
-                now.ToString(MigrationIdFormat).Equals(_lastNow.ToString(MigrationIdFormat), StringComparison.Ordinal))
+                || now.ToString(MigrationIdFormat, CultureInfo.InvariantCulture)
+                       .Equals(
+                           _lastNow.ToString(MigrationIdFormat, CultureInfo.InvariantCulture), StringComparison.Ordinal))
             {
                 now = _lastNow.AddMilliseconds(100);
 
@@ -51,7 +53,7 @@
         /// </summary>
         public static string UtcNowAsMigrationIdTimestamp()
         {
-            return UtcNow().ToString(MigrationIdFormat);
+            return UtcNow().ToString(MigrationIdFormat, CultureInfo.InvariantCulture);
         }
     }
 }

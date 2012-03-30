@@ -14,6 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.Resources;
     using System.Data.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
 
@@ -123,7 +124,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     GetOrCreateConfiguration<Properties.Primitive.StringPropertyConfiguration>());
         }
 
-        private void ValidateValueType(object value)
+        private static void ValidateValueType(object value)
         {
             EdmPrimitiveType edmType;
             if (value != null
@@ -279,6 +280,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return base.GetHashCode();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

@@ -10,6 +10,7 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Data.SqlClient;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
 
@@ -366,7 +367,7 @@ namespace System.Data.Entity.Migrations.Sql
                     if (column.Type
                         == PrimitiveTypeKind.DateTime)
                     {
-                        writer.Write(Generate(DateTime.Parse("1900-01-01 00:00:00")));
+                        writer.Write(Generate(DateTime.Parse("1900-01-01 00:00:00", CultureInfo.InvariantCulture)));
                     }
                     else
                     {
@@ -697,7 +698,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <returns>SQL representing the default value.</returns>
         protected virtual string Generate(DateTime defaultValue)
         {
-            return "'" + defaultValue.ToString(DateTimeFormat) + "'";
+            return "'" + defaultValue.ToString(DateTimeFormat, CultureInfo.InvariantCulture) + "'";
         }
 
         /// <summary>
@@ -708,7 +709,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <returns>SQL representing the default value.</returns>
         protected virtual string Generate(DateTimeOffset defaultValue)
         {
-            return "'" + defaultValue.ToString(DateTimeOffsetFormat) + "'";
+            return "'" + defaultValue.ToString(DateTimeOffsetFormat, CultureInfo.InvariantCulture) + "'";
         }
 
         /// <summary>
@@ -849,6 +850,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// </summary>
         /// <param name = "name">The name to be quoted.</param>
         /// <returns>The quoted name.</returns>
+        [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#")]
         protected virtual string Name(string name)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
@@ -877,6 +879,7 @@ namespace System.Data.Entity.Migrations.Sql
         ///     the transaction scope that is used to make the migration process transactional.
         ///     If set to true, this operation will not be rolled back if the migration process fails.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected void Statement(string sql, bool suppressTransaction = false)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(sql));
@@ -900,7 +903,7 @@ namespace System.Data.Entity.Migrations.Sql
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected static IndentedTextWriter Writer()
         {
-            return new IndentedTextWriter(new StringWriter());
+            return new IndentedTextWriter(new StringWriter(CultureInfo.InvariantCulture));
         }
 
         /// <summary>

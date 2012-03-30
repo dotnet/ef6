@@ -12,8 +12,6 @@
     /// </summary>
     /// <typeparam name = "TEntity">The type of the entity to which this property belongs.</typeparam>
     /// <typeparam name = "TProperty">The type of the property.</typeparam>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db",
-        Justification = "FxCop rule is wrong; Database is not two words.")]
     public class DbReferenceEntry<TEntity, TProperty> : DbMemberEntry<TEntity, TProperty>
         where TEntity : class
     {

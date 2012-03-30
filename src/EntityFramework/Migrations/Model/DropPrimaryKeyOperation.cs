@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Migrations.Model
 {
     using System.Data.Entity.Migrations.Extensions;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Represents dropping a primary key from a table.
@@ -15,6 +16,7 @@ namespace System.Data.Entity.Migrations.Model
         ///     Additional arguments that may be processed by providers. 
         ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public DropPrimaryKeyOperation(object anonymousArguments = null)
             : base(anonymousArguments)
         {

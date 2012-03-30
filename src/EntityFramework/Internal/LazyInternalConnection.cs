@@ -7,6 +7,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Resources;
     using System.Data.EntityClient;
     using System.Data.Objects;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
 
@@ -30,6 +31,7 @@ namespace System.Data.Entity.Internal
         ///     The DbConnection object will be created lazily on demand and will be disposed when the LazyInternalConnection is disposed.
         /// </summary>
         /// <param name = "nameOrConnectionString">Either the database name or a connection string.</param>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public LazyInternalConnection(string nameOrConnectionString)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(nameOrConnectionString));
@@ -43,6 +45,7 @@ namespace System.Data.Entity.Internal
         ///     The DbConnection object will be created lazily on demand and will be disposed when the LazyInternalConnection is disposed.
         /// </summary>
         /// <param name="connectionInfo">The connection to target.</param>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public LazyInternalConnection(DbConnectionInfo connectionInfo)
         {
             Contract.Requires(connectionInfo != null);

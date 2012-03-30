@@ -3,7 +3,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Collections.Generic;
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     [ContractClass(typeof(KeyDiscoveryConventionContracts))]
@@ -26,7 +25,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             }
         }
 
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "edm")]
         protected abstract EdmProperty MatchKeyProperty(
             EdmEntityType entityType, IEnumerable<EdmProperty> primitiveProperties);
 

@@ -47,6 +47,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     C#: t => new { t.Id, t.Property1, t.Property2 }
         ///     VB.Net: Function(t) New With { p.Id, t.Property1, t.Property2 }
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public void Properties<TObject>(Expression<Func<TEntityType, TObject>> propertiesExpression)
         {
@@ -117,6 +118,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     VB.Net: Function(t) t.MyProperty
         /// </param>
         /// <returns>A configuration object to further configure the discriminator condition.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public NotNullConditionConfiguration Requires<TProperty>(Expression<Func<TEntityType, TProperty>> property)
         {
@@ -143,6 +145,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return base.GetHashCode();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
         {

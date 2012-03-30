@@ -3,6 +3,7 @@ namespace System.Data.Entity.Migrations.Design
     using System.Collections.Generic;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Metadata.Edm;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
 
@@ -22,6 +23,7 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name = "namespace">Namespace that code should be generated in.</param>
         /// <param name = "className">Name of the class that should be generated.</param>
         /// <returns>The generated code.</returns>
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "namespace")]
         public abstract ScaffoldedMigration Generate(
             string migrationId,
             IEnumerable<MigrationOperation> operations,
@@ -55,12 +57,14 @@ namespace System.Data.Entity.Migrations.Design
         /// </summary>
         /// <param name = "designer">A value indicating if this class is being generated for a code-behind file.</param>
         /// <returns>An ordered list of namespace names.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected virtual IEnumerable<string> GetDefaultNamespaces(bool designer = false)
         {
-            var namespaces = new List<string>
-                                 {
-                                     "System.Data.Entity.Migrations"
-                                 };
+            var namespaces
+                = new List<string>
+                      {
+                          "System.Data.Entity.Migrations"
+                      };
 
             if (designer)
             {

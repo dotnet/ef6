@@ -2,6 +2,7 @@ namespace System.Data.Entity.Edm.Db
 {
     using System.Collections.Generic;
     using System.Data.Entity.Edm.Internal;
+    using System.Diagnostics.CodeAnalysis;
 
     internal abstract class DbConstraintMetadata
         : DbNamedMetadataItem
@@ -11,6 +12,7 @@ namespace System.Data.Entity.Edm.Db
     /// <summary>
     ///     Allows the construction and modification of a foreign key constraint sourced by a <see cref = "DbTableMetadata" /> instance.
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     internal class DbForeignKeyConstraintMetadata : DbConstraintMetadata
     {
         private readonly BackingList<DbTableColumnMetadata> dependentColumnsList =

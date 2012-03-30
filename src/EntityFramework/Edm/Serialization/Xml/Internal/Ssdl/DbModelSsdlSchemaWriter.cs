@@ -105,7 +105,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Ssdl
             _xmlWriter.WriteAttributeString(SsdlConstants.Attribute_Multiplicity, multiplicity);
         }
 
-        private KeyValuePair<string, string> DetermineMultiplicity(
+        private static KeyValuePair<string, string> DetermineMultiplicity(
             DbTableMetadata dependentTable, DbForeignKeyConstraintMetadata constraint)
         {
             var principalMultiplicity = CsdlConstants.Value_EndOptional;

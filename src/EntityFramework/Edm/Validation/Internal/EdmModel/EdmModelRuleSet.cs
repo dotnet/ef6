@@ -74,17 +74,6 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 
             AddRule(EdmModelSemanticValidationRules.EdmComplexType_InvalidMemberNameMatchesTypeName);
 
-#if IncludeUnusedEdmCode
-            this.AddRule(EdmModelSemanticValidationRules.EdmFunctionImport_FunctionImportUnknownEntitySet);
-            this.AddRule(EdmModelSemanticValidationRules.EdmFunctionImport_ComposableFunctionWithoutReturnType);
-            this.AddRule(EdmModelSemanticValidationRules.EdmFunctionImport_NonComposableFunctionMustNotDeclareReturnType);
-            this.AddRule(EdmModelSemanticValidationRules.EdmFunctionImport_FunctionImportReturnEntitiesButDoesNotSpecifyEntitySet);
-            this.AddRule(EdmModelSemanticValidationRules.EdmFunctionImport_FunctionImportEntityTypeDoesNotMatchEntitySet);
-            this.AddRule(EdmModelSemanticValidationRules.EdmFunctionImport_ComplexTypeAsReturnTypeAndDefinedEntitySet);
-            this.AddRule(EdmModelSemanticValidationRules.EdmFunctionImport_FunctionImportSpecifiesEntitySetButDoesNotReturnEntityType);
-            this.AddRule(EdmModelSemanticValidationRules.EdmFunctionImport_ParameterNameAlreadyDefinedDuplicate);
-#endif
-
             AddRule(EdmModelSemanticValidationRules.EdmNamespace_TypeNameAlreadyDefinedDuplicate);
 
             #endregion
@@ -108,16 +97,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             internal V1RuleSet(bool validateSyntax)
                 : base(validateSyntax)
             {
-#if IncludeUnusedEdmCode
-                this.AddRule(EdmModelSemanticValidationRules.EdmFunctionImport_FunctionImportUnsupportedReturnType_V1);
-#endif
-
                 AddRule(EdmModelSemanticValidationRules.EdmProperty_InvalidPropertyType);
-
-#if IncludeUnusedEdmCode
-                this.AddRule(EdmModelSyntacticValidationRules.EdmFunctionImport_ReturnTypeMustBeCollectionType);
-                this.AddRule(EdmModelSyntacticValidationRules.EdmFunction_MustExistIn20OrHigher);
-#endif
             }
         }
 
@@ -129,15 +109,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                 AddRule(EdmModelSemanticValidationRules.EdmComplexType_PropertyNameAlreadyDefinedDuplicate_V1_1);
                 AddRule(EdmModelSemanticValidationRules.EdmComplexType_CycleInTypeHierarchy_V1_1);
 
-#if IncludeUnusedEdmCode
-                this.AddRule(EdmModelSemanticValidationRules.EdmFunctionImport_FunctionImportUnsupportedReturnType_V1_1);
-#endif
                 AddRule(EdmModelSemanticValidationRules.EdmProperty_InvalidCollectionKind_V1_1);
                 AddRule(EdmModelSemanticValidationRules.EdmProperty_InvalidPropertyType_V1_1);
-
-#if IncludeUnusedEdmCode
-                this.AddRule(EdmModelSyntacticValidationRules.EdmFunction_MustExistIn20OrHigher);
-#endif
             }
         }
 
@@ -146,15 +119,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             internal V2RuleSet(bool validateSyntax)
                 : base(validateSyntax)
             {
-#if IncludeUnusedEdmCode
-                this.AddRule(EdmModelSemanticValidationRules.EdmFunctionImport_FunctionImportUnsupportedReturnType_V2);
-                this.AddRule(EdmModelSemanticValidationRules.EdmFunction_ParameterNameAlreadyDefinedDuplicate);
-#endif
                 AddRule(EdmModelSemanticValidationRules.EdmProperty_InvalidPropertyType);
-
-#if IncludeUnusedEdmCode
-                this.AddRule(EdmModelSyntacticValidationRules.EdmFunctionImport_ReturnTypeMustBeCollectionType);
-#endif
             }
         }
 

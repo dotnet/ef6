@@ -124,12 +124,9 @@
                 // Reset the original connection string if it has been changed.
                 // This helps in trying to use the correct connection if the connection string is mutated after it has
                 // been created.
-                if (
-                    !string.Equals(
-                        _originalDatabaseName, UnderlyingConnection.Database, StringComparison.OrdinalIgnoreCase)
-                    ||
-                    !string.Equals(
-                        _originalDataSource, UnderlyingConnection.DataSource, StringComparison.OrdinalIgnoreCase))
+                if (!string.Equals(
+                    _originalDatabaseName, UnderlyingConnection.Database, StringComparison.OrdinalIgnoreCase)
+                    || !string.Equals(_originalDataSource, UnderlyingConnection.DataSource, StringComparison.OrdinalIgnoreCase))
                 {
                     OnConnectionInitialized();
                 }
@@ -143,6 +140,7 @@
         ///     only be called if ConnectionHasModel returns true.
         /// </summary>
         /// <returns>The newly created context.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public virtual ObjectContext CreateObjectContextFromConnectionModel()
         {
             Contract.Assert(

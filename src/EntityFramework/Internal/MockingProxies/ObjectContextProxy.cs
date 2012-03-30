@@ -71,6 +71,7 @@
             _objectContext.MetadataWorkspace.LoadFromAssembly(assembly);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public virtual ObjectContextProxy CreateNew(EntityConnectionProxy entityConnection)
         {
             return new ObjectContextProxy(new ObjectContext(entityConnection));

@@ -41,9 +41,5 @@ namespace System.Data.Entity.Edm.Db.Mapping
             get { return associationSetMappings.EnsureValue(); }
             set { associationSetMappings.SetValue(value); }
         }
-
-#if IncludeUnusedEdmCode
-        internal bool HasEntitySetMappings { get { return this.entitySetMappingsList.HasValue; } }
-#endif
     }
 }

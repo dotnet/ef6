@@ -1,7 +1,6 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Objects;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -10,7 +9,6 @@ namespace System.Data.Entity.Infrastructure
     ///     and <see cref = "DbQuery" />.
     /// </summary>
     /// <typeparam name = "TElement">The type of the element.</typeparam>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class ReplacementDbQueryWrapper<TElement>
     {
         #region Fields and constructors

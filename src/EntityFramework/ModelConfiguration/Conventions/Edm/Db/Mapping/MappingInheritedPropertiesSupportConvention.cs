@@ -35,7 +35,8 @@
                         });
         }
 
-        private bool RemapsInheritedProperties(DbDatabaseMapping databaseMapping, DbEntityTypeMapping entityTypeMapping)
+        private static bool RemapsInheritedProperties(
+            DbDatabaseMapping databaseMapping, DbEntityTypeMapping entityTypeMapping)
         {
             var inheritedProperties = entityTypeMapping.EntityType.Properties
                 .Except(entityTypeMapping.EntityType.DeclaredProperties)
@@ -51,14 +52,13 @@
                     var baseType = entityTypeMapping.EntityType.BaseType;
                     while (baseType != null)
                     {
-                        foreach (var baseTypeMapping in databaseMapping.GetEntityTypeMappings(baseType))
+                        if (databaseMapping.GetEntityTypeMappings(baseType)
+                            .Select(baseTypeMapping => GetFragmentForPropertyMapping(baseTypeMapping, property))
+                            .Any(
+                                baseFragment => baseFragment != null
+                                                && baseFragment.Table != fragment.Table))
                         {
-                            var baseFragment = GetFragmentForPropertyMapping(baseTypeMapping, property);
-                            if (baseFragment != null
-                                && baseFragment.Table != fragment.Table)
-                            {
-                                return true;
-                            }
+                            return true;
                         }
                         baseType = baseType.BaseType;
                     }
@@ -71,13 +71,13 @@
             DbEntityTypeMapping entityTypeMapping, EdmProperty property)
         {
             return entityTypeMapping.TypeMappingFragments
-                .Where(tmf => tmf.PropertyMappings.Any(pm => pm.PropertyPath.Last() == property))
-                .SingleOrDefault();
+                .SingleOrDefault(tmf => tmf.PropertyMappings.Any(pm => pm.PropertyPath.Last() == property));
         }
 
-        private bool HasBaseWithIsTypeOf(DbEntitySetMapping entitySetMapping, EdmEntityType entityType)
+        private static bool HasBaseWithIsTypeOf(DbEntitySetMapping entitySetMapping, EdmEntityType entityType)
         {
             var baseType = entityType.BaseType;
+
             while (baseType != null)
             {
                 if (entitySetMapping.EntityTypeMappings
@@ -86,8 +86,10 @@
                 {
                     return true;
                 }
+
                 baseType = baseType.BaseType;
             }
+
             return false;
         }
     }

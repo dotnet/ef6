@@ -396,10 +396,6 @@
 
             public MappingFragmentAssertions HasNoPropertyConditions()
             {
-                // Always true because Code First never adds any.
-#if IncludeUnusedEdmCode
-                Xunit.Assert.IsTrue(_fragment.PropertyConditions.Count == 0);
-#endif
                 return this;
             }
         }

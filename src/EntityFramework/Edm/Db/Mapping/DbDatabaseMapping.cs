@@ -31,9 +31,5 @@ namespace System.Data.Entity.Edm.Db.Mapping
             get { return entityContainerMappingsList.EnsureValue(); }
             set { entityContainerMappingsList.SetValue(value); }
         }
-
-#if IncludeUnusedEdmCode
-        internal bool HasEntityContainerMappings { get { return this.entityContainerMappingsList.HasValue; } }
-#endif
     }
 }

@@ -68,13 +68,6 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Msl
             _xmlWriter.WriteStartElement(MslConstants.Element_EntitySetMapping);
             _xmlWriter.WriteAttributeString(MslConstants.Attribute_Name, set.EntitySet.Name);
 
-#if IncludeUnusedEdmCode
-            foreach (var queryViewMapping in set.QueryViewMappings)
-            {
-                WriteQueryView(queryViewMapping);
-            }
-#endif
-
             foreach (var entityTypeMapping in set.EntityTypeMappings)
             {
                 WriteEntityTypeMappingElement(entityTypeMapping);
@@ -127,16 +120,6 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Msl
             _xmlWriter.WriteEndElement();
         }
 
-#if IncludeUnusedEdmCode
-        private void WriteQueryView(DbQueryViewMapping queryViewMapping)
-        {
-            _xmlWriter.WriteStartElement(MslConstants.Element_QueryView);
-            _xmlWriter.WriteAttributeString(MslConstants.Attribute_TypeName, GetEntityTypeName(_entityTypeNamespace + "." + queryViewMapping.EntityType.Name, queryViewMapping.IsHierarchyMapping));
-            _xmlWriter.WriteCData(queryViewMapping.QueryView);
-            _xmlWriter.WriteEndElement();
-        }
-#endif
-
         private void WriteMappingFragmentElement(DbEntityTypeMappingFragment mappingFragment)
         {
             _xmlWriter.WriteStartElement(MslConstants.Element_MappingFragment);
@@ -146,13 +129,6 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Msl
             {
                 WriteConditionElement(conditionColumn);
             }
-
-#if IncludeUnusedEdmCode
-            foreach (var conditionProperty in mappingFragment.PropertyConditions)
-            {
-                WriteConditionElement(conditionProperty);
-            }
-#endif
 
             _xmlWriter.WriteEndElement();
         }
@@ -188,23 +164,6 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Msl
             _xmlWriter.WriteAttributeString(MslConstants.Attribute_ColumnName, condition.Column.Name);
             _xmlWriter.WriteEndElement();
         }
-
-#if IncludeUnusedEdmCode
-        private void WriteConditionElement(DbPropertyCondition condition)
-        {
-            _xmlWriter.WriteStartElement(MslConstants.Element_Condition);
-            if (condition.IsNull.HasValue)
-            {
-                _xmlWriter.WriteAttributeString(MslConstants.Attribute_IsNull, GetLowerCaseStringFromBoolValue(condition.IsNull.Value));
-            }
-            else
-            {
-                _xmlWriter.WriteAttributeString(MslConstants.Attribute_Value, condition.Value.ToString());
-            }
-            _xmlWriter.WriteAttributeString(MslConstants.Attribute_ColumnName, condition.Property.Name);
-            _xmlWriter.WriteEndElement();
-        }
-#endif
 
         private void WritePropertyMappings(IEnumerable<DbEdmPropertyMapping> propertyMappings, int level = 0)
         {

@@ -1,7 +1,6 @@
 ﻿namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Common;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -18,8 +17,6 @@
     ///     Note that implementations should be thread safe or immutable since they may
     ///     be accessed by multiple threads at the same time.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly",
-        Justification = "Casing is intentional")]
     [ContractClass(typeof(IDbConnectionFactoryContracts))]
     public interface IDbConnectionFactory
     {

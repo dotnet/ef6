@@ -8,10 +8,6 @@ namespace System.Data.Entity.Edm.Db.Mapping
         private readonly BackingList<DbEdmPropertyMapping> propertyMappings = new BackingList<DbEdmPropertyMapping>();
         private readonly BackingList<DbColumnCondition> columnConditions = new BackingList<DbColumnCondition>();
 
-#if IncludeUnusedEdmCode
-        private readonly BackingList<DbPropertyCondition> propertyConditions = new BackingList<DbPropertyCondition>();
-#endif
-
         /// <summary>
         ///     Gets a <see cref = "DbTableMetadata" /> value representing the table to which the entity type's properties are being mapped.
         /// </summary>
@@ -34,13 +30,6 @@ namespace System.Data.Entity.Edm.Db.Mapping
             get { return columnConditions.EnsureValue(); }
             set { columnConditions.SetValue(value); }
         }
-
-#if IncludeUnusedEdmCode
-    /// <summary>
-    /// Gets the collection of <see cref="DbPropertyCondition"/>s that specifies the constant or null values that property must have for this type mapping fragment to apply.
-    /// </summary>
-        public virtual IList<DbPropertyCondition> PropertyConditions { get { return this.propertyConditions.EnsureValue(); } set { this.propertyConditions.SetValue(value); } }
-#endif
 
         internal override DbMappingItemKind GetItemKind()
         {
