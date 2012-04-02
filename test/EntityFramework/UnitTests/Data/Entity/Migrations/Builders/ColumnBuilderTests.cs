@@ -159,7 +159,6 @@ namespace System.Data.Entity.Migrations
                     nullable: false,
                     maxLength: 42,
                     fixedLength: false,
-                    isMaxLength: false,
                     unicode: true,
                     name: "Foo",
                     storeType: "Bar",

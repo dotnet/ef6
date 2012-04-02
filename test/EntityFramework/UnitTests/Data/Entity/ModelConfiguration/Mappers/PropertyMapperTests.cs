@@ -35,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
                 = new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), new EdmModel().Initialize());
 
             new PropertyMapper(new TypeMapper(mappingContext))
-                .Map(new MockPropertyInfo(new MockType(), "Foo"), entityType, () => new EntityTypeConfiguration(typeof(object)), typeof(object));
+                .Map(new MockPropertyInfo(new MockType(), "Foo"), entityType, () => new EntityTypeConfiguration(typeof(object)));
 
             Assert.Equal(1, entityType.DeclaredNavigationProperties.Count);
         }
@@ -55,7 +55,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
                 = new MappingContext(mockModelConfiguration.Object, new ConventionsConfiguration(), new EdmModel().Initialize());
 
             new PropertyMapper(new TypeMapper(mappingContext))
-                .Map(new MockPropertyInfo(mockComplexType, "Foo"), entityType, () => new EntityTypeConfiguration(typeof(object)), typeof(object));
+                .Map(new MockPropertyInfo(mockComplexType, "Foo"), entityType, () => new EntityTypeConfiguration(typeof(object)));
 
             Assert.Equal(0, entityType.DeclaredNavigationProperties.Count);
             Assert.Equal(1, entityType.DeclaredProperties.Count);
@@ -70,7 +70,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
                 = new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), new EdmModel().Initialize());
 
             new PropertyMapper(new TypeMapper(mappingContext))
-                .Map(new MockPropertyInfo(typeof(int), "Foo"), entityType, () => new EntityTypeConfiguration(typeof(object)), typeof(object));
+                .Map(new MockPropertyInfo(typeof(int), "Foo"), entityType, () => new EntityTypeConfiguration(typeof(object)));
 
             Assert.Equal(1, entityType.DeclaredProperties.Count);
 
@@ -88,7 +88,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 
             new PropertyMapper(new TypeMapper(mappingContext))
                 .Map(new MockPropertyInfo(typeof(int?), "Foo"),
-                    entityType, () => new EntityTypeConfiguration(typeof(object)), typeof(object));
+                    entityType, () => new EntityTypeConfiguration(typeof(object)));
 
             var property = entityType.GetDeclaredPrimitiveProperty("Foo");
 
@@ -97,7 +97,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 
             new PropertyMapper(new TypeMapper(mappingContext))
                 .Map(new MockPropertyInfo(typeof(int), "Bar"),
-                    entityType, () => new EntityTypeConfiguration(typeof(object)), typeof(object));
+                    entityType, () => new EntityTypeConfiguration(typeof(object)));
 
             property = entityType.GetDeclaredPrimitiveProperty("Bar");
 

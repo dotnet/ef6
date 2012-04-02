@@ -20,7 +20,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 
             new NavigationPropertyMapper(new TypeMapper(mappingContext))
                 .Map(new MockPropertyInfo(new MockType("Target"), "Nav"), entityType,
-                    () => new EntityTypeConfiguration(typeof(object)), typeof(object));
+                    () => new EntityTypeConfiguration(typeof(object)));
 
             Assert.Equal(1, model.Namespaces.Single().AssociationTypes.Count);
 
@@ -40,7 +40,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 
             new NavigationPropertyMapper(new TypeMapper(mappingContext))
                 .Map(new MockPropertyInfo(new MockType("Target"), "Nav"), entityType,
-                    () => new EntityTypeConfiguration(typeof(object)), typeof(object));
+                    () => new EntityTypeConfiguration(typeof(object)));
 
             Assert.Equal(1, model.Containers.Single().AssociationSets.Count);
 
@@ -61,7 +61,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 
             new NavigationPropertyMapper(new TypeMapper(mappingContext))
                 .Map(new MockPropertyInfo(typeof(List<NavigationPropertyMapperTests>), "Nav"), entityType,
-                    () => new EntityTypeConfiguration(typeof(object)), typeof(object));
+                    () => new EntityTypeConfiguration(typeof(object)));
 
             Assert.Equal(1, model.Namespaces.Single().AssociationTypes.Count);
 
@@ -81,7 +81,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 
             new NavigationPropertyMapper(new TypeMapper(mappingContext))
                 .Map(new MockPropertyInfo(typeof(NavigationPropertyMapperTests[]), "Nav"), entityType,
-                    () => new EntityTypeConfiguration(typeof(object)), typeof(object));
+                    () => new EntityTypeConfiguration(typeof(object)));
 
             Assert.Equal(0, model.Namespaces.Single().AssociationTypes.Count);
         }
@@ -96,7 +96,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 
             new NavigationPropertyMapper(new TypeMapper(mappingContext))
                 .Map(new MockPropertyInfo(new MockType("Target"), "Nav"), entityType,
-                    () => new EntityTypeConfiguration(typeof(object)), typeof(object));
+                    () => new EntityTypeConfiguration(typeof(object)));
 
             Assert.Equal(1, entityType.DeclaredNavigationProperties.Count);
 

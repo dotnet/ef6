@@ -12,7 +12,7 @@ namespace System.Data.Entity.Migrations
         {
             public override void Up()
             {
-                DropForeignKey("OrderLines", "OrderId", "ordering.Orders", "OrderId");
+                DropForeignKey("OrderLines", "OrderId", "ordering.Orders");
             }
         }
 

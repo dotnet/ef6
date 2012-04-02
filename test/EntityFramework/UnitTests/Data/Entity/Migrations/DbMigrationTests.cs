@@ -102,7 +102,7 @@ namespace System.Data.Entity.Migrations
         {
             var migration = new TestMigration();
 
-            migration.DropForeignKey("d", "dc", "p", "pc");
+            migration.DropForeignKey("d", "dc", "p");
 
             var dropForeignKeyOperation = migration.Operations.Cast<DropForeignKeyOperation>().Single();
 
