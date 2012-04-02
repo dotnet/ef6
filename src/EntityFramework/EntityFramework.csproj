@@ -263,9 +263,6 @@
     <Compile Include="Edm\Db\DbDatabaseMetadata.cs" />
     <Compile Include="Edm\Db\DbDataModelItem.cs" />
     <Compile Include="Edm\Db\DbForeignKeyConstraintMetadata.cs" />
-    <Compile Include="Edm\Db\DbFunctionMetadata.cs" />
-    <Compile Include="Edm\Db\DbFunctionParameterMetadata.cs" />
-    <Compile Include="Edm\Db\DbFunctionTypeMetadata.cs" />
     <Compile Include="Edm\Db\DbItemKind.cs" />
     <Compile Include="Edm\Db\DbMetadataItem.cs" />
     <Compile Include="Edm\Db\DbNamedMetadataItem.cs" />
@@ -273,7 +270,6 @@
     <Compile Include="Edm\Db\DbParameterMode.cs" />
     <Compile Include="Edm\Db\DbParameterTypeSemantics.cs" />
     <Compile Include="Edm\Db\DbPrimitiveTypeFacets.cs" />
-    <Compile Include="Edm\Db\DbRowColumnMetadata.cs" />
     <Compile Include="Edm\Db\DbSchemaMetadata.cs" />
     <Compile Include="Edm\Db\DbSchemaMetadataItem.cs" />
     <Compile Include="Edm\Db\DbStoreGeneratedPattern.cs" />
@@ -292,8 +288,6 @@
     <Compile Include="Edm\Db\Mapping\DbMappingItemKind.cs" />
     <Compile Include="Edm\Db\Mapping\DbMappingMetadataItem.cs" />
     <Compile Include="Edm\Db\Mapping\DbMappingModelItem.cs" />
-    <Compile Include="Edm\Db\Mapping\DbPropertyCondition.cs" />
-    <Compile Include="Edm\Db\Mapping\DbQueryViewMapping.cs" />
     <Compile Include="Edm\EdmAssociationConstraint.cs" />
     <Compile Include="Edm\EdmAssociationEnd.cs" />
     <Compile Include="Edm\EdmAssociationEndKind.cs" />
@@ -308,10 +302,6 @@
     <Compile Include="Edm\EdmEntityContainerItem.cs" />
     <Compile Include="Edm\EdmEntitySet.cs" />
     <Compile Include="Edm\EdmEntityType.cs" />
-    <Compile Include="Edm\EdmFunctionGroup.cs" />
-    <Compile Include="Edm\EdmFunctionImport.cs" />
-    <Compile Include="Edm\EdmFunctionOverload.cs" />
-    <Compile Include="Edm\EdmFunctionParameter.cs" />
     <Compile Include="Edm\EdmItemKind.cs" />
     <Compile Include="Edm\EdmMetadataItem.cs" />
     <Compile Include="Edm\EdmModel.cs" />
@@ -326,15 +316,11 @@
     <Compile Include="Edm\EdmPrimitiveTypeKind.cs" />
     <Compile Include="Edm\EdmProperty.cs" />
     <Compile Include="Edm\EdmQualifiedNameMetadataItem.cs" />
-    <Compile Include="Edm\EdmRefType.cs" />
-    <Compile Include="Edm\EdmRowColumn.cs" />
-    <Compile Include="Edm\EdmRowType.cs" />
     <Compile Include="Edm\EdmScalarType.cs" />
     <Compile Include="Edm\EdmStructuralMember.cs" />
     <Compile Include="Edm\EdmStructuralMembersCollection.cs" />
     <Compile Include="Edm\EdmStructuralType.cs" />
     <Compile Include="Edm\EdmTypeReference.cs" />
-    <Compile Include="Edm\EdmTypeReferenceElementType.cs" />
     <Compile Include="Edm\Internal\BackingList.cs" />
     <Compile Include="Edm\Internal\DataModelItemVisitor.cs" />
     <Compile Include="Edm\Internal\DbDatabaseVisitor.cs" />

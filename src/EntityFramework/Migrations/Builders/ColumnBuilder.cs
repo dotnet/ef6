@@ -17,7 +17,6 @@ namespace System.Data.Entity.Migrations.Builders
         /// <param name = "nullable">Value indicating whether or not the column allows null values.</param>
         /// <param name = "maxLength">The maximum allowable length of the array data.</param>
         /// <param name = "fixedLength">Value indicating whether or not all data should be padded to the maximum length.</param>
-        /// <param name = "isMaxLength">Value indicating whether or not the maximum length supported by the database provider should be used.</param>
         /// <param name = "defaultValue">Constant value to use as the default value for this column.</param>
         /// <param name = "defaultValueSql">SQL expression used as the default value for this column.</param>
         /// <param name = "timestamp">Value indicating whether or not this column should be configured as a timestamp.</param>
@@ -351,7 +350,6 @@ namespace System.Data.Entity.Migrations.Builders
         /// <param name = "nullable">Value indicating whether or not the column allows null values.</param>
         /// <param name = "maxLength">The maximum allowable length of the string data.</param>
         /// <param name = "fixedLength">Value indicating whether or not all data should be padded to the maximum length.</param>
-        /// <param name = "isMaxLength">Value indicating whether or not the maximum length supported by the database provider should be used.</param>
         /// <param name = "unicode">Value indicating whether or not the column supports Unicode content.</param>
         /// <param name = "defaultValue">Constant value to use as the default value for this column.</param>
         /// <param name = "defaultValueSql">SQL expression used as the default value for this column.</param>
