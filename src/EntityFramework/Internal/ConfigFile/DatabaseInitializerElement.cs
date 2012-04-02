@@ -5,6 +5,7 @@
     /// <summary>
     ///     Represents setting the database initializer for a specific context type
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
     internal class DatabaseInitializerElement : ConfigurationElement
     {
         private const string _typeKey = "type";

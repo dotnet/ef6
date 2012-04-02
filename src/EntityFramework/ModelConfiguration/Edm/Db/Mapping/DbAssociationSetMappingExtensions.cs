@@ -16,6 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             return associationSetMapping;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public static object GetConfiguration(this DbAssociationSetMapping associationSetMapping)
         {
             Contract.Requires(associationSetMapping != null);

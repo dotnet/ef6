@@ -18,14 +18,14 @@
 
         internal int Key { get; private set; }
 
-        [ConfigurationProperty(_valueKey, IsRequired = true)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode"), ConfigurationProperty(_valueKey, IsRequired = true)]
         public string ValueString
         {
             get { return (string)this[_valueKey]; }
             set { this[_valueKey] = value; }
         }
 
-        [ConfigurationProperty(_typeKey, DefaultValue = "System.String")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode"), ConfigurationProperty(_typeKey, DefaultValue = "System.String")]
         public string TypeName
         {
             get { return (string)this[_typeKey]; }

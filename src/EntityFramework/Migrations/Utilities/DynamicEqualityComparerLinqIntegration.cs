@@ -6,6 +6,7 @@ namespace System.Data.Entity.Migrations.Utilities
 
     internal static class DynamicEqualityComparerLinqIntegration
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public static IEnumerable<T> Distinct<T>(this IEnumerable<T> source, Func<T, T, bool> func)
             where T : class
         {
@@ -15,6 +16,7 @@ namespace System.Data.Entity.Migrations.Utilities
             return source.Distinct(new DynamicEqualityComparer<T>(func));
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public static IEnumerable<IGrouping<TSource, TSource>> GroupBy<TSource>(
             this IEnumerable<TSource> source, Func<TSource, TSource, bool> func)
             where TSource : class
@@ -25,6 +27,7 @@ namespace System.Data.Entity.Migrations.Utilities
             return source.GroupBy(t => t, new DynamicEqualityComparer<TSource>(func));
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public static IEnumerable<T> Intersect<T>(
             this IEnumerable<T> first, IEnumerable<T> second, Func<T, T, bool> func)
             where T : class
@@ -46,6 +49,7 @@ namespace System.Data.Entity.Migrations.Utilities
             return first.Except(second, new DynamicEqualityComparer<T>(func));
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public static bool SequenceEqual<TSource>(
             this IEnumerable<TSource> source, IEnumerable<TSource> other, Func<TSource, TSource, bool> func)
             where TSource : class

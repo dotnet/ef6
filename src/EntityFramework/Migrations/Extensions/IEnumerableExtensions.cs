@@ -31,6 +31,7 @@ namespace System.Data.Entity.Migrations.Extensions
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public static void Each<T, S>(this IEnumerable<T> ts, Func<T, S> action)
         {
             Contract.Requires(ts != null);

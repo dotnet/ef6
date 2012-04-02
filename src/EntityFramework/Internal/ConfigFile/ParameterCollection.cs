@@ -6,6 +6,7 @@
     /// <summary>
     ///     Represents a series of parameters to pass to a method
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
     internal class ParameterCollection : ConfigurationElementCollection
     {
         private const string _parameterKey = "parameter";

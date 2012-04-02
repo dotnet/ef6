@@ -10,7 +10,7 @@
         private const string _defaultConnectionFactoryKey = "defaultConnectionFactory";
         private const string _contextsKey = "contexts";
 
-        [ConfigurationProperty(_defaultConnectionFactoryKey)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode"), ConfigurationProperty(_defaultConnectionFactoryKey)]
         public DefaultConnectionFactoryElement DefaultConnectionFactory
         {
             get { return (DefaultConnectionFactoryElement)this[_defaultConnectionFactoryKey]; }

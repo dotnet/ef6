@@ -31,6 +31,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Initializes a new instance of the <see cref = "DbModel" /> class.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal DbModel(DbDatabaseMapping databaseMapping)
         {
             Contract.Requires(databaseMapping != null);
