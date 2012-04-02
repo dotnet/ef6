@@ -3,6 +3,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Configuration;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
 
@@ -248,7 +249,7 @@ namespace System.Data.Entity.Infrastructure
             return context;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private void ConfigureContext(DbContext context)
         {
             Contract.Requires(context != null);

@@ -1,6 +1,7 @@
 ﻿namespace System.Data.Entity.Migrations.Edm
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Xml.Linq;
 
@@ -38,7 +39,7 @@
             return (string)element.Attribute("ColumnName");
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public static string EntitySetAttribute(this XElement element)
         {
             Contract.Requires(element != null);
@@ -74,7 +75,7 @@
             return (string)element.Attribute("MaxLength");
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public static string FixedLengthAttribute(this XElement element)
         {
             Contract.Requires(element != null);
@@ -117,7 +118,7 @@
             return (string)element.Attribute("StoreGeneratedPattern");
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public static string UnicodeAttribute(this XElement element)
         {
             Contract.Requires(element != null);
@@ -176,17 +177,22 @@
 
         public static class Csdl
         {
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+            [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
             public static readonly IEnumerable<XName> AssociationNames = Names("Association");
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+
+            [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
             public static readonly IEnumerable<XName> ComplexTypeNames = Names("ComplexType");
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+
+            [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
             public static readonly IEnumerable<XName> EndNames = Names("End");
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+
+            [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
             public static readonly IEnumerable<XName> EntityTypeNames = Names("EntityType");
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+
+            [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
             public static readonly IEnumerable<XName> PropertyNames = Names("Property");
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+
+            [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
             public static readonly IEnumerable<XName> SchemaNames = Names("Schema");
 
             private static IEnumerable<XName> Names(string elementName)
@@ -203,13 +209,16 @@
 
         public static class Msl
         {
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+            [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
             public static readonly IEnumerable<XName> AssociationSetMappingNames = Names("AssociationSetMapping");
+
             public static readonly IEnumerable<XName> ComplexPropertyNames = Names("ComplexProperty");
             public static readonly IEnumerable<XName> ConditionNames = Names("Condition");
             public static readonly IEnumerable<XName> EntityTypeMappingNames = Names("EntityTypeMapping");
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+
+            [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
             public static readonly IEnumerable<XName> MappingNames = Names("Mapping");
+
             public static readonly IEnumerable<XName> MappingFragmentNames = Names("MappingFragment");
             public static readonly IEnumerable<XName> ScalarPropertyNames = Names("ScalarProperty");
 

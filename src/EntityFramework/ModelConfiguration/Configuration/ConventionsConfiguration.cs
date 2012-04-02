@@ -58,7 +58,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             conventions.Each(c => _conventions.Add(c));
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal void Add<TConvention>()
             where TConvention : IConvention, new()
         {

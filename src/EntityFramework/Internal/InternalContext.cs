@@ -35,7 +35,8 @@
     ///     Two concrete classes derive from this abstract class - <see cref = "LazyInternalContext" /> and
     ///     <see cref = "EagerInternalContext" />.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable"), SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
+    [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     [ContractClass(typeof(InternalContextContracts))]
     internal abstract class InternalContext
     {
@@ -135,7 +136,7 @@
         ///     or the database initialization strategy to be executed.
         ///     This is used to get a context that can then be used for database creation/initialization.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public virtual ClonedObjectContext CreateObjectContextForDdlOps()
         {
             InitializeContext();
@@ -161,7 +162,7 @@
         ///     such as initializing and seeding the database, after which it can be thrown away.
         ///     This isolates the real <see cref = "ObjectContext" /> from any changes made and and saves performed.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public virtual void UseTempObjectContext()
         {
             _tempObjectContextCount++;

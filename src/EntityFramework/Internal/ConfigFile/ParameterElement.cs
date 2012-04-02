@@ -1,6 +1,7 @@
 ﻿namespace System.Data.Entity.Internal.ConfigFile
 {
     using System.Configuration;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
     /// <summary>
@@ -18,14 +19,16 @@
 
         internal int Key { get; private set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode"), ConfigurationProperty(_valueKey, IsRequired = true)]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [ConfigurationProperty(_valueKey, IsRequired = true)]
         public string ValueString
         {
             get { return (string)this[_valueKey]; }
             set { this[_valueKey] = value; }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode"), ConfigurationProperty(_typeKey, DefaultValue = "System.String")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [ConfigurationProperty(_typeKey, DefaultValue = "System.String")]
         public string TypeName
         {
             get { return (string)this[_typeKey]; }

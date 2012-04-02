@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Edm.Db.Mapping;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -31,7 +32,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Initializes a new instance of the <see cref = "DbModel" /> class.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal DbModel(DbDatabaseMapping databaseMapping)
         {
             Contract.Requires(databaseMapping != null);

@@ -2,6 +2,7 @@ namespace System.Data.Entity.Migrations.Extensions
 {
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
 
@@ -31,7 +32,7 @@ namespace System.Data.Entity.Migrations.Extensions
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public static void Each<T, S>(this IEnumerable<T> ts, Func<T, S> action)
         {
             Contract.Requires(ts != null);

@@ -3,6 +3,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     using System.Collections.Generic;
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     internal class SortedEntityTypeIndex
@@ -54,7 +55,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             return _entityTypes.TryGetValue(entitySet, out setTypes) && setTypes.Contains(entityType);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public bool IsRoot(EdmEntitySet entitySet, EdmEntityType entityType)
         {
             Contract.Requires(entitySet != null);

@@ -5,6 +5,7 @@
     using System.Data.Entity.Resources;
     using System.Data.EntityClient;
     using System.Data.Objects;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -25,7 +26,7 @@
         /// <summary>
         /// For mocking.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public EagerInternalContext(DbContext owner)
             : base(owner)
         {

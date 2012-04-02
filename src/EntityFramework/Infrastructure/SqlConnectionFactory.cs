@@ -59,7 +59,7 @@
         /// <summary>
         ///     Remove hard dependency on DbProviderFactories.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Func<string, DbProviderFactory> ProviderFactory
         {
             get { return _providerFactoryCreator ?? (name => DbProviderFactories.GetFactory(name)); }

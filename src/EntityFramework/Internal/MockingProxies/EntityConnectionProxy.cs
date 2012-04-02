@@ -2,6 +2,7 @@
 {
     using System.Data.Common;
     using System.Data.EntityClient;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -34,7 +35,7 @@
             get { return _entityConnection.StoreConnection; }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public virtual EntityConnectionProxy CreateNew(DbConnection storeConnection)
         {
             return

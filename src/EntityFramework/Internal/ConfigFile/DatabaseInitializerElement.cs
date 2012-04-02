@@ -1,11 +1,12 @@
 ﻿namespace System.Data.Entity.Internal.ConfigFile
 {
     using System.Configuration;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Represents setting the database initializer for a specific context type
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
+    [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
     internal class DatabaseInitializerElement : ConfigurationElement
     {
         private const string _typeKey = "type";

@@ -1,11 +1,12 @@
 ﻿namespace System.Data.Entity.Internal.ConfigFile
 {
     using System.Configuration;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Represents setting the default connection factory
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
+    [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
     internal class DefaultConnectionFactoryElement : ConfigurationElement
     {
         private const string _typeKey = "type";

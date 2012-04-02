@@ -68,7 +68,7 @@ namespace System.Data.Entity
         ///     of the derived context class.
         ///     See the class remarks for how this is used to create a connection.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected DbContext()
         {
             InitializeLazyInternalContext(new LazyInternalConnection(GetType().DatabaseName()));
@@ -81,7 +81,7 @@ namespace System.Data.Entity
         ///     See the class remarks for how this is used to create a connection.
         /// </summary>
         /// <param name = "model">The model that will back this context.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected DbContext(DbCompiledModel model)
         {
             Contract.Requires(model != null);
@@ -95,7 +95,7 @@ namespace System.Data.Entity
         ///     See the class remarks for how this is used to create a connection.
         /// </summary>
         /// <param name = "nameOrConnectionString">Either the database name or a connection string.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public DbContext(string nameOrConnectionString)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(nameOrConnectionString));
@@ -110,7 +110,7 @@ namespace System.Data.Entity
         /// </summary>
         /// <param name = "nameOrConnectionString">Either the database name or a connection string.</param>
         /// <param name = "model">The model that will back this context.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public DbContext(string nameOrConnectionString, DbCompiledModel model)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(nameOrConnectionString));
@@ -126,7 +126,7 @@ namespace System.Data.Entity
         /// <param name = "existingConnection">An existing connection to use for the new context.</param>
         /// <param name = "contextOwnsConnection">If set to <c>true</c> the connection is disposed when
         ///     the context is disposed, otherwise the caller must dispose the connection.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public DbContext(DbConnection existingConnection, bool contextOwnsConnection)
         {
             Contract.Requires(existingConnection != null);
@@ -143,7 +143,7 @@ namespace System.Data.Entity
         ///     <param name = "contextOwnsConnection">If set to <c>true</c> the connection is disposed when
         ///         the context is disposed, otherwise the caller must dispose the connection.</param>
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public DbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
         {
             Contract.Requires(existingConnection != null);

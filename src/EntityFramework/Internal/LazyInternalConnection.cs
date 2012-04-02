@@ -209,7 +209,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets a value indicating if the lazy connection has been initialized.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal bool IsInitialized
         {
             get { return UnderlyingConnection != null; }

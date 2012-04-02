@@ -7,6 +7,7 @@
     using System.Data.Metadata.Edm;
     using System.Data.Objects;
     using System.Data.SqlClient;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
@@ -140,7 +141,7 @@
         ///     only be called if ConnectionHasModel returns true.
         /// </summary>
         /// <returns>The newly created context.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public virtual ObjectContext CreateObjectContextFromConnectionModel()
         {
             Contract.Assert(

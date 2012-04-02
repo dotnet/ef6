@@ -1,6 +1,7 @@
 ﻿namespace System.Data.Entity.Internal.ConfigFile
 {
     using System.Configuration;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Represents all Entity Framework related configuration
@@ -10,7 +11,8 @@
         private const string _defaultConnectionFactoryKey = "defaultConnectionFactory";
         private const string _contextsKey = "contexts";
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode"), ConfigurationProperty(_defaultConnectionFactoryKey)]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [ConfigurationProperty(_defaultConnectionFactoryKey)]
         public DefaultConnectionFactoryElement DefaultConnectionFactory
         {
             get { return (DefaultConnectionFactoryElement)this[_defaultConnectionFactoryKey]; }

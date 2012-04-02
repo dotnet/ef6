@@ -4,6 +4,7 @@
     using System.Data.EntityClient;
     using System.Data.Metadata.Edm;
     using System.Data.Objects;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Reflection;
 
@@ -71,7 +72,7 @@
             _objectContext.MetadataWorkspace.LoadFromAssembly(assembly);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public virtual ObjectContextProxy CreateNew(EntityConnectionProxy entityConnection)
         {
             return new ObjectContextProxy(new ObjectContext(entityConnection));

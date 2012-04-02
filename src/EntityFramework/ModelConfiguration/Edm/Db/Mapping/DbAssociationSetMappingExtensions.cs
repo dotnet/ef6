@@ -2,6 +2,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 {
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     internal static class DbAssociationSetMappingExtensions
@@ -16,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             return associationSetMapping;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public static object GetConfiguration(this DbAssociationSetMapping associationSetMapping)
         {
             Contract.Requires(associationSetMapping != null);
