@@ -113,17 +113,7 @@
 
             if (!Directory.Exists(dataDirectory))
             {
-                var directorySecurity = new DirectorySecurity();
-
-                // SERVICE account must have access to the MDF files
-                var rule = new FileSystemAccessRule("NETWORK SERVICE", FileSystemRights.FullControl,
-                                                    AccessControlType.Allow);
-                directorySecurity.AddAccessRule(rule);
-
-                rule = new FileSystemAccessRule("Administrators", FileSystemRights.FullControl, AccessControlType.Allow);
-                directorySecurity.AddAccessRule(rule);
-
-                Directory.CreateDirectory(dataDirectory, directorySecurity);
+                Directory.CreateDirectory(dataDirectory);
             }
 
             var databasePath = Path.Combine(dataDirectory, databaseName + ".mdf");
