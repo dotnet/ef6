@@ -109,14 +109,7 @@
         /// <returns>The connection string.</returns>
         public static string SimpleAttachConnectionString(string databaseName)
         {
-            var dataDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataDirectory");
-
-            if (!Directory.Exists(dataDirectory))
-            {
-                Directory.CreateDirectory(dataDirectory);
-            }
-
-            var databasePath = Path.Combine(dataDirectory, databaseName + ".mdf");
+            var databasePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, databaseName + ".mdf");
 
             return String.Format(CultureInfo.InvariantCulture,
                                  @"Data Source=.\SQLEXPRESS;Initial Catalog={0};AttachDBFilename={1};Integrated Security=True;MultipleActiveResultSets=True",
