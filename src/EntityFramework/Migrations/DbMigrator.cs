@@ -676,7 +676,7 @@ namespace System.Data.Entity.Migrations
                 return;
             }
 
-            Console.WriteLine(migrationStatement.Sql);
+            //Console.WriteLine(migrationStatement.Sql);
 
             if (!migrationStatement.SuppressTransaction)
             {
