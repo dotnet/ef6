@@ -10,7 +10,6 @@
 Imports System
 Imports System.Collections.Generic
 
-#If Not NET40 Then
 Partial Public Class OrderNoteMm
     Public Property NoteId As Integer
     Public Property Note As String
@@ -18,4 +17,3 @@ Partial Public Class OrderNoteMm
     Public Overridable Property Order As OrderMm
 
 End Class
-#End If

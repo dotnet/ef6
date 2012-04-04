@@ -10,7 +10,6 @@
 Imports System
 Imports System.Collections.Generic
 
-#If Not NET40 Then
 Partial Public Class PageViewMm
     Public Property PageViewId As Integer
     Public Property Username As String
@@ -20,4 +19,3 @@ Partial Public Class PageViewMm
     Public Overridable Property Login As Another.Place.LoginMm
 
 End Class
-#End If

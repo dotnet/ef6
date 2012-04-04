@@ -10,7 +10,6 @@
 Imports System
 Imports System.Collections.Generic
 
-#If Not NET40 Then
 Partial Public Class RSATokenMm
     Public Property Serial As String
     Public Property Issued As Date
@@ -18,4 +17,3 @@ Partial Public Class RSATokenMm
     Public Overridable Property Login As Another.Place.LoginMm
 
 End Class
-#End If

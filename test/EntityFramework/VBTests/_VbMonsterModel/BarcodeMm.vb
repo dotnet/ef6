@@ -10,7 +10,6 @@
 Imports System
 Imports System.Collections.Generic
 
-#If Not NET40 Then
 Partial Public Class BarcodeMm
     Public Property Code As Byte()
     Public Property ProductId As Integer
@@ -21,4 +20,3 @@ Partial Public Class BarcodeMm
     Public Overridable Property Detail As BarcodeDetailMm
 
 End Class
-#End If

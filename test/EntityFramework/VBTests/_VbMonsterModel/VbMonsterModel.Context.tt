@@ -38,7 +38,6 @@ End If
 ' </auto-generated>
 '------------------------------------------------------------------------------
 
-#If Not NET40 Then
 Imports System
 Imports System.Data.Entity
 Imports System.Data.Entity.Infrastructure
@@ -104,7 +103,6 @@ End Namespace
 <#
 End If
 #>
-#End If
 <#+
 Public Sub WriteFunctionImport(typeMapper As TypeMapper, codeStringGenerator As CodeStringGenerator, edmFunction As EdmFunction, modelNamespace As String, includeMergeOption As Boolean)
     If typeMapper.IsComposable(edmFunction) Then

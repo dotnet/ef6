@@ -45,7 +45,6 @@ var codeNamespace = code.VsNamespaceSuggestion();
 if (!String.IsNullOrEmpty(codeNamespace))
 {
 #>
-#if !NET40
 namespace <#=code.EscapeNamespace(codeNamespace)#>
 {
 <#
@@ -108,7 +107,6 @@ if (!String.IsNullOrEmpty(codeNamespace))
     PopIndent();
 #>
 }
-#endif
 <#
 }
 #>

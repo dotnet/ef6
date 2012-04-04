@@ -10,7 +10,6 @@
 Imports System
 Imports System.Collections.Generic
 
-#If Not NET40 Then
 Partial Public Class ComplaintMm
     Public Property ComplaintId As Integer
     Public Property CustomerId As Nullable(Of Integer)
@@ -21,4 +20,3 @@ Partial Public Class ComplaintMm
     Public Overridable Property Resolution As ResolutionMm
 
 End Class
-#End If

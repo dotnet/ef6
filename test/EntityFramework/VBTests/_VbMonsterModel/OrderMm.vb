@@ -10,7 +10,6 @@
 Imports System
 Imports System.Collections.Generic
 
-#If Not NET40 Then
 Partial Public Class OrderMm
     Public Property OrderId As Integer
     Public Property CustomerId As Nullable(Of Integer)
@@ -23,4 +22,3 @@ Partial Public Class OrderMm
     Public Overridable Property Login As Another.Place.LoginMm
 
 End Class
-#End If

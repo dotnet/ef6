@@ -10,7 +10,6 @@
 Imports System
 Imports System.Collections.Generic
 
-#If Not NET40 Then
 Partial Public Class ResolutionMm
     Public Property ResolutionId As Integer
     Public Property Details As String
@@ -18,4 +17,3 @@ Partial Public Class ResolutionMm
     Public Overridable Property Complaint As ComplaintMm
 
 End Class
-#End If

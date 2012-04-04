@@ -10,10 +10,8 @@
 Imports System
 Imports System.Collections.Generic
 
-#If Not NET40 Then
 Partial Public Class BarcodeDetailMm
     Public Property Code As Byte()
     Public Property RegisteredTo As String
 
 End Class
-#End If

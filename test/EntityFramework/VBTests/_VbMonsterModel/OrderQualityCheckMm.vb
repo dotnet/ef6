@@ -10,7 +10,6 @@
 Imports System
 Imports System.Collections.Generic
 
-#If Not NET40 Then
 Partial Public Class OrderQualityCheckMm
     Public Property OrderId As Integer
     Public Property CheckedBy As String
@@ -19,4 +18,3 @@ Partial Public Class OrderQualityCheckMm
     Public Overridable Property Order As OrderMm
 
 End Class
-#End If

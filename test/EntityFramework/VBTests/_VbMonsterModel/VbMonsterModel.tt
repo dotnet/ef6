@@ -167,7 +167,6 @@ End Sub
 
 Public Sub BeginNamespace(ByVal code As CodeGenerationTools)
 #>
-#If Not NET40 Then
 <#+
     Dim codeNamespace as String = code.VsNamespaceSuggestion()
     If Not String.IsNullOrEmpty(codeNamespace) Then
@@ -181,7 +180,6 @@ End Sub
 
 Public Sub EndNamespace(ByVal code As CodeGenerationTools)
 #>
-#End If
 <#+
     If Not String.IsNullOrEmpty(code.VsNamespaceSuggestion()) Then
         PopIndent()

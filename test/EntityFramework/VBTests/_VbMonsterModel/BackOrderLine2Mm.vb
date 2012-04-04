@@ -10,9 +10,7 @@
 Imports System
 Imports System.Collections.Generic
 
-#If Not NET40 Then
 Partial Public Class BackOrderLine2Mm
          Inherits BackOrderLineMm
 
 End Class
-#End If

@@ -10,7 +10,6 @@
 Imports System
 Imports System.Collections.Generic
 
-#If Not NET40 Then
 Partial Public Class ProductDetailMm
     Public Property ProductId As Integer
     Public Property Details As String
@@ -18,4 +17,3 @@ Partial Public Class ProductDetailMm
     Public Overridable Property Product As ProductMm
 
 End Class
-#End If

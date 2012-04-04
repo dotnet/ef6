@@ -7,7 +7,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-#if !NET40
 namespace FunctionalTests.ProductivityApi.TemplateModels.CsMonsterModel
 {
     using System;
@@ -32,4 +31,3 @@ namespace FunctionalTests.ProductivityApi.TemplateModels.CsMonsterModel
         public virtual ComputerMm Computer { get; set; }
     }
 }
-#endif

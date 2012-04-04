@@ -10,10 +10,8 @@
 Imports System
 Imports System.Collections.Generic
 
-#If Not NET40 Then
 Partial Public Class ConcurrencyInfoMm
     Public Property Token As String
     Public Property QueriedDateTime As Nullable(Of Date)
 
 End Class
-#End If
