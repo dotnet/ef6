@@ -347,4 +347,27 @@
             public virtual ICollection<Role> AssignedRoles { get; set; }
         }
     }
+
+    public class ProcessedTransactionContext : DbContext
+    {
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder
+                .Entity<ProcessedTransaction>()
+                .HasMany(e => e.ChildTransactions)
+                .WithOptional()
+                .HasForeignKey(e => e.ParentTransactionId);
+        }
+    }
+
+    public class ProcessedTransaction
+    {
+        public int Id { get; set; }
+
+        public int? ParentTransactionId { get; set; }
+
+        public virtual ProcessedTransaction ParentTransaction { get; set; }
+
+        public virtual ICollection<ProcessedTransaction> ChildTransactions { get; set; }
+    }
 }

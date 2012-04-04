@@ -234,8 +234,8 @@
     <Compile Include="Migrations\Sql\SqlServerMigrationSqlGenerator.cs" />
     <Compile Include="Migrations\Utilities\ConfigurationFileUpdater.cs" />
     <Compile Include="Migrations\Utilities\DatabaseCreator.cs" />
-    <Compile Include="Migrations\Utilities\DynamicEqualityComparer.cs" />
-    <Compile Include="Migrations\Utilities\DynamicEqualityComparerLinqIntegration.cs" />
+    <Compile Include="Utilities\DynamicEqualityComparer.cs" />
+    <Compile Include="Utilities\DynamicEqualityComparerLinqIntegration.cs" />
     <Compile Include="Migrations\Utilities\EmptyContext.cs" />
     <Compile Include="Migrations\Utilities\IndentedTextWriter.cs" />
     <Compile Include="Migrations\Utilities\UtcNowGenerator.cs" />
@@ -629,8 +629,6 @@
     <Compile Include="ModelConfiguration\Utilities\DbConnectionExtensions.cs" />
     <Compile Include="ModelConfiguration\Utilities\DbProviderInfoExtensions.cs" />
     <Compile Include="ModelConfiguration\Utilities\DbProviderManifestExtensions.cs" />
-    <Compile Include="ModelConfiguration\Utilities\DynamicEqualityComparer.cs" />
-    <Compile Include="ModelConfiguration\Utilities\DynamicEqualityComparerLinqIntegration.cs" />
     <Compile Include="ModelConfiguration\Utilities\ExpressionExtensions.cs" />
     <Compile Include="ModelConfiguration\Utilities\HashSetExtensions.cs" />
     <Compile Include="ModelConfiguration\Utilities\IEnumerableExtensions.cs" />

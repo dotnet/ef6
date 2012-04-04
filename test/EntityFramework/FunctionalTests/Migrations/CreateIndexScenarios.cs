@@ -53,5 +53,15 @@ namespace System.Data.Entity.Migrations
 
             // TODO: Verify
         }
+
+        [MigrationsTheory]
+        public void Bug_49966_should_not_generate_duplicate_foreign_keys()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ProcessedTransactionContext>();
+
+            migrator.Update();
+        }
     }
 }

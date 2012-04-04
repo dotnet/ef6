@@ -1,4 +1,4 @@
-namespace System.Data.Entity.ModelConfiguration.Utilities
+namespace System.Data.Entity.Utilities
 {
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;

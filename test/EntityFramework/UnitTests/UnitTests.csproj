@@ -137,8 +137,8 @@
     <Compile Include="Data\Entity\Migrations\Sql\SqlServerMigrationSqlGeneratorTests.cs" />
     <Compile Include="Data\Entity\Migrations\Utilities\ConfigurationFileUpdaterTests.cs" />
     <Compile Include="Data\Entity\Migrations\Utilities\DatabaseCreatorTests.cs" />
-    <Compile Include="Data\Entity\Migrations\Utilities\DynamicEqualityComparerLinqIntegrationTests.cs" />
-    <Compile Include="Data\Entity\Migrations\Utilities\DynamicEqualityComparerTests.cs" />
+    <Compile Include="Data\Entity\Utilities\DynamicEqualityComparerLinqIntegrationTests.cs" />
+    <Compile Include="Data\Entity\Utilities\DynamicEqualityComparerTests.cs" />
     <Compile Include="Data\Entity\Migrations\Utilities\EmptyContextTests.cs" />
     <Compile Include="Data\Entity\Migrations\Utilities\TemplateProcessorTests.cs" />
     <Compile Include="Data\Entity\Migrations\Utilities\UtcNowGeneratorTests.cs" />
@@ -259,8 +259,6 @@
     <Compile Include="Data\Entity\ModelConfiguration\Utilities\DatabaseNameTests.cs" />
     <Compile Include="Data\Entity\ModelConfiguration\Utilities\DbConnectionExtensionTests.cs" />
     <Compile Include="Data\Entity\ModelConfiguration\Utilities\DbProviderInfoExtensionsTests.cs" />
-    <Compile Include="Data\Entity\ModelConfiguration\Utilities\DynamicEqualityComparerLinqIntegrationTests.cs" />
-    <Compile Include="Data\Entity\ModelConfiguration\Utilities\DynamicEqualityComparerTests.cs" />
     <Compile Include="Data\Entity\ModelConfiguration\Utilities\ExpressionExtensionsTests.cs" />
     <Compile Include="Data\Entity\ModelConfiguration\Utilities\IEnumerableExtensionsTests.cs" />
     <Compile Include="Data\Entity\ModelConfiguration\Utilities\ObjectExtensionsTests.cs" />

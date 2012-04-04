@@ -3,6 +3,7 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Text;

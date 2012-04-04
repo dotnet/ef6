@@ -6,7 +6,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Entity.Migrations.Edm;
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Model;
-    using System.Data.Entity.Migrations.Utilities;
+    using System.Data.Entity.Utilities;
     using System.Data.Metadata.Edm;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;

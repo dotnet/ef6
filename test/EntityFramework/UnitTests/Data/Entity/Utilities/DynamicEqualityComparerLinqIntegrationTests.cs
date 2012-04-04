@@ -1,6 +1,5 @@
-namespace System.Data.Entity.Migrations
+namespace System.Data.Entity.Utilities
 {
-    using System.Data.Entity.Migrations.Utilities;
     using System.Linq;
     using Xunit;
 

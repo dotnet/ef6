@@ -13,6 +13,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -589,11 +590,11 @@ namespace System.Data.Entity.Migrations
                 throw Error.AutomaticDataLoss();
             }
 
-            ExecuteOperations(migrationId, targetModel, operations, downgrading);
+            ExecuteOperations(migrationId, targetModel, operations, downgrading, auto: true);
         }
 
         private void ExecuteOperations(
-            string migrationId, XDocument targetModel, IEnumerable<MigrationOperation> operations, bool downgrading)
+            string migrationId, XDocument targetModel, IEnumerable<MigrationOperation> operations, bool downgrading, bool auto = false)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
             Contract.Requires(targetModel != null);
@@ -635,9 +636,18 @@ namespace System.Data.Entity.Migrations
                 orderedOperations.Add(_historyRepository.CreateInsertOperation(migrationId, targetModel));
             }
 
-            var sqlStatements = SqlGenerator.Generate(orderedOperations, _providerManifestToken);
+            var migrationStatements = SqlGenerator.Generate(orderedOperations, _providerManifestToken);
 
-            base.ExecuteStatements(sqlStatements);
+            if (auto)
+            {
+                // Filter duplicates when auto-migrating. Duplicates can be caused by
+                // duplicates in the model such as shared FKs.
+
+                migrationStatements 
+                    = migrationStatements.Distinct((m1, m2) => string.Equals(m1.Sql, m2.Sql, StringComparison.Ordinal));
+            }
+
+            base.ExecuteStatements(migrationStatements);
         }
 
         internal override void ExecuteStatements(IEnumerable<MigrationStatement> migrationStatements)
@@ -666,7 +676,7 @@ namespace System.Data.Entity.Migrations
                 return;
             }
 
-            //Console.WriteLine(migrationStatement.Sql);
+            Console.WriteLine(migrationStatement.Sql);
 
             if (!migrationStatement.SuppressTransaction)
             {
