@@ -1,13 +1,4 @@
-﻿'---------------------------------------------------------------------
-' <copyright file="SiteInfoMf.vb" company="Microsoft">
-'      Copyright (c) Microsoft Corporation.  All rights reserved.
-' </copyright>
-'
-' @owner       avickers
-' @backupOwner bricelam
-'---------------------------------------------------------------------
-
-Namespace AdvancedPatternsVB
+﻿Namespace AdvancedPatternsVB
 
     Partial Friend Class SiteInfoMf
 

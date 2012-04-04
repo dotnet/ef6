@@ -1,13 +1,4 @@
-﻿'---------------------------------------------------------------------
-' <copyright file="CustomerMm.vb" company="Microsoft">
-'      Copyright (c) Microsoft Corporation.  All rights reserved.
-' </copyright>
-'
-' @owner       avickers
-' @backupOwner bricelam
-'---------------------------------------------------------------------
-
-Imports System
+﻿Imports System
 Imports System.Collections.Generic
 
 Namespace Another.Place

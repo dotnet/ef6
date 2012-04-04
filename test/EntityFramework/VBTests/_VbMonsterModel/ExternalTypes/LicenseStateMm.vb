@@ -1,13 +1,4 @@
-﻿'---------------------------------------------------------------------
-' <copyright file="LicenseStateMm.vb" company="Microsoft">
-'      Copyright (c) Microsoft Corporation.  All rights reserved.
-' </copyright>
-'
-' @owner       avickers
-' @backupOwner bricelam
-'---------------------------------------------------------------------
-
-Namespace Another.Place
+﻿Namespace Another.Place
     Public Enum LicenseStateMm
         Active = 1
         Suspended = 2

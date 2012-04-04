@@ -1,13 +1,4 @@
-﻿'---------------------------------------------------------------------
-' <copyright file="OfficeMf.vb" company="Microsoft">
-'      Copyright (c) Microsoft Corporation.  All rights reserved.
-' </copyright>
-'
-' @owner       avickers
-' @backupOwner bricelam
-'---------------------------------------------------------------------
-
-Namespace AdvancedPatternsVB
+﻿Namespace AdvancedPatternsVB
 
     Partial Public Class OfficeMf
 
