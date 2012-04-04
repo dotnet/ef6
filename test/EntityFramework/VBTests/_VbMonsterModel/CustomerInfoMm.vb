@@ -10,8 +10,10 @@
 Imports System
 Imports System.Collections.Generic
 
+#If Not NET40 Then
 Partial Public Class CustomerInfoMm
     Public Property CustomerInfoId As Integer
     Public Property Information As String
 
 End Class
+#End If

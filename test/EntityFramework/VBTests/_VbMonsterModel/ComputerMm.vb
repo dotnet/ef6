@@ -10,6 +10,7 @@
 Imports System
 Imports System.Collections.Generic
 
+#If Not NET40 Then
 Partial Public Class ComputerMm
     Public Property ComputerId As Integer
     Public Property Name As String
@@ -17,3 +18,4 @@ Partial Public Class ComputerMm
     Public Overridable Property ComputerDetail As ComputerDetailMm
 
 End Class
+#End If

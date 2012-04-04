@@ -10,6 +10,7 @@
 Imports System
 Imports System.Collections.Generic
 
+#If Not NET40 Then
 Partial Public Class BackOrderLineMm
          Inherits OrderLineMm
     Public Property ETA As Date
@@ -17,3 +18,4 @@ Partial Public Class BackOrderLineMm
     Public Overridable Property Supplier As SupplierMm
 
 End Class
+#End If

@@ -8,10 +8,13 @@
 '------------------------------------------------------------------------------
 
 Imports System
+Imports System.Collections.Generic
 
+#If Not NET40 Then
 Partial Public Class DimensionsMm
     Public Property Width As Decimal
     Public Property Height As Decimal
     Public Property Depth As Decimal
 
 End Class
+#End If

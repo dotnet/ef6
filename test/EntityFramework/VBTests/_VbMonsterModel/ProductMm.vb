@@ -10,6 +10,7 @@
 Imports System
 Imports System.Collections.Generic
 
+#If Not NET40 Then
 Partial Public Class ProductMm
     Public Property ProductId As Integer
     Public Property Description As String
@@ -27,3 +28,4 @@ Partial Public Class ProductMm
     Public Overridable Property Barcodes As ICollection(Of BarcodeMm) = New HashSet(Of BarcodeMm)
 
 End Class
+#End If

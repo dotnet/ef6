@@ -10,6 +10,7 @@
 Imports System
 Imports System.Collections.Generic
 
+#If Not NET40 Then
 Partial Public Class ProductPageViewMm
          Inherits PageViewMm
     Public Property ProductId As Integer
@@ -17,3 +18,4 @@ Partial Public Class ProductPageViewMm
     Public Overridable Property Product As ProductMm
 
 End Class
+#End If

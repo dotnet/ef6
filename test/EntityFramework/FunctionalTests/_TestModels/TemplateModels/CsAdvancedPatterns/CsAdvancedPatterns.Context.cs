@@ -7,6 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+#if !NET40
 namespace FunctionalTests.ProductivityApi.TemplateModels.CsAdvancedPatterns
 {
     using System;
@@ -97,3 +98,4 @@ namespace FunctionalTests.ProductivityApi.TemplateModels.CsAdvancedPatterns
         }
     }
 }
+#endif

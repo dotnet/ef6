@@ -10,6 +10,7 @@
 Imports System
 Imports System.Collections.Generic
 
+#If Not NET40 Then
 Partial Public Class LastLoginMm
     Public Property Username As String
     Public Property LoggedIn As Date
@@ -18,3 +19,4 @@ Partial Public Class LastLoginMm
     Public Overridable Property Login As Another.Place.LoginMm
 
 End Class
+#End If

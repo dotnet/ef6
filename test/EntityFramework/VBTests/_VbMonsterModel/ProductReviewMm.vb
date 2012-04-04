@@ -10,6 +10,7 @@
 Imports System
 Imports System.Collections.Generic
 
+#If Not NET40 Then
 Partial Public Class ProductReviewMm
     Public Property ProductId As Integer
     Public Property ReviewId As Integer
@@ -19,3 +20,4 @@ Partial Public Class ProductReviewMm
     Public Overridable Property Features As ICollection(Of ProductWebFeatureMm) = New HashSet(Of ProductWebFeatureMm)
 
 End Class
+#End If

@@ -10,8 +10,10 @@
 Imports System
 Imports System.Collections.Generic
 
+#If Not NET40 Then
 Partial Public Class SupplierLogoMm
     Public Property SupplierId As Integer
     Public Property Logo As Byte()
 
 End Class
+#End If

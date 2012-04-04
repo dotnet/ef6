@@ -10,6 +10,7 @@
 Imports System
 Imports System.Collections.Generic
 
+#If Not NET40 Then
 Partial Public Class DriverMm
     Public Property Name As String
     Public Property BirthDate As Date
@@ -17,3 +18,4 @@ Partial Public Class DriverMm
     Public Overridable Property License As LicenseMm
 
 End Class
+#End If

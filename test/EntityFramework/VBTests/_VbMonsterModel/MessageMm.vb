@@ -10,6 +10,7 @@
 Imports System
 Imports System.Collections.Generic
 
+#If Not NET40 Then
 Partial Public Class MessageMm
     Public Property MessageId As Integer
     Public Property FromUsername As String
@@ -23,3 +24,4 @@ Partial Public Class MessageMm
     Public Overridable Property Recipient As Another.Place.LoginMm
 
 End Class
+#End If

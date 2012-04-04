@@ -7,6 +7,7 @@
 ' </auto-generated>
 '------------------------------------------------------------------------------
 
+#If Not NET40 Then
 Imports System
 Imports System.Data.Entity
 Imports System.Data.Entity.Infrastructure
@@ -94,3 +95,4 @@ Partial Public Class MonsterModel
     End Function
 
 End Class
+#End If

@@ -10,6 +10,7 @@
 Imports System
 Imports System.Collections.Generic
 
+#If Not NET40 Then
 Partial Public Class ProductWebFeatureMm
     Public Property FeatureId As Integer
     Public Property ProductId As Nullable(Of Integer)
@@ -21,3 +22,4 @@ Partial Public Class ProductWebFeatureMm
     Public Overridable Property Photo As ProductPhotoMm
 
 End Class
+#End If

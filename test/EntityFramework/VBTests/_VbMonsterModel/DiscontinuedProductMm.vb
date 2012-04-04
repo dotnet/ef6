@@ -10,6 +10,7 @@
 Imports System
 Imports System.Collections.Generic
 
+#If Not NET40 Then
 Partial Public Class DiscontinuedProductMm
          Inherits ProductMm
     Public Property Discontinued As Date
@@ -18,3 +19,4 @@ Partial Public Class DiscontinuedProductMm
     Public Overridable Property ReplacedBy As ProductMm
 
 End Class
+#End If

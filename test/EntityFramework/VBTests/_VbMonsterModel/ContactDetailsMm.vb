@@ -8,7 +8,9 @@
 '------------------------------------------------------------------------------
 
 Imports System
+Imports System.Collections.Generic
 
+#If Not NET40 Then
 Partial Public Class ContactDetailsMm
     Public Property Email As String
 
@@ -17,3 +19,4 @@ Partial Public Class ContactDetailsMm
     Public Property MobilePhone As Another.Place.PhoneMm = New Another.Place.PhoneMm
 
 End Class
+#End If

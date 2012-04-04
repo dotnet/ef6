@@ -10,8 +10,10 @@
 Imports System
 Imports System.Collections.Generic
 
+#If Not NET40 Then
 Partial Public Class SuspiciousActivityMm
     Public Property SuspiciousActivityId As Integer
     Public Property Activity As String
 
 End Class
+#End If

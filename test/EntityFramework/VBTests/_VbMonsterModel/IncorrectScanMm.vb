@@ -10,6 +10,7 @@
 Imports System
 Imports System.Collections.Generic
 
+#If Not NET40 Then
 Partial Public Class IncorrectScanMm
     Public Property IncorrectScanId As Integer
     Public Property ExpectedCode As Byte()
@@ -21,3 +22,4 @@ Partial Public Class IncorrectScanMm
     Public Overridable Property ActualBarcode As BarcodeMm
 
 End Class
+#End If

@@ -10,6 +10,7 @@
 Imports System
 Imports System.Collections.Generic
 
+#If Not NET40 Then
 Partial Public Class LicenseMm
     Public Property Name As String
     Public Property LicenseNumber As String
@@ -21,3 +22,4 @@ Partial Public Class LicenseMm
     Public Overridable Property Driver As DriverMm
 
 End Class
+#End If

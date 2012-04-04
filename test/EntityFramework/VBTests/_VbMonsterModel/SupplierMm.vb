@@ -10,6 +10,7 @@
 Imports System
 Imports System.Collections.Generic
 
+#If Not NET40 Then
 Partial Public Class SupplierMm
     Public Property SupplierId As Integer
     Public Property Name As String
@@ -19,3 +20,4 @@ Partial Public Class SupplierMm
     Public Overridable Property Logo As SupplierLogoMm
 
 End Class
+#End If

@@ -10,6 +10,7 @@
 Imports System
 Imports System.Collections.Generic
 
+#If Not NET40 Then
 Partial Public Class PasswordResetMm
     Public Property ResetNo As Integer
     Public Property Username As String
@@ -19,3 +20,4 @@ Partial Public Class PasswordResetMm
     Public Overridable Property Login As Another.Place.LoginMm
 
 End Class
+#End If

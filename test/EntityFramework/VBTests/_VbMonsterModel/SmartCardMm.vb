@@ -10,6 +10,7 @@
 Imports System
 Imports System.Collections.Generic
 
+#If Not NET40 Then
 Partial Public Class SmartCardMm
     Public Property Username As String
     Public Property CardSerial As String
@@ -19,3 +20,4 @@ Partial Public Class SmartCardMm
     Public Overridable Property LastLogin As LastLoginMm
 
 End Class
+#End If
