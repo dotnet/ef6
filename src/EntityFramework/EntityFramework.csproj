@@ -134,6 +134,7 @@
     <Compile Include="Infrastructure\DbConnectionInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Infrastructure\LocalDbConnectionFactory.cs" />
     <Compile Include="Internal\ClonedObjectContext.cs" />
     <Compile Include="Internal\ConfigFile\DatabaseInitializerElement.cs" />
     <Compile Include="Internal\ConfigFile\ParameterElement.cs" />

@@ -3,6 +3,7 @@
     // An alias is required because Error, Strings, IEnumerableExtensions etc. are defined in EntityFramework.dll and EntityFramework.PowerShell.dll
     extern alias powershell;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity;
@@ -20,7 +21,7 @@
     using powershell::System.Data.Entity.Resources;
     using Xunit;
 
-    public class ConnectionFactoryConfigTests : TestBase
+    public class ConnectionFactoryConfigTests : UnitTestBase
     {
         #region Well-known values
 
@@ -30,54 +31,57 @@
         // Hard-coding this rather than getting it dynamically because the product code gets it dynamically
         // and the tests need to make sure it gets the correct thing. This will need to be updated when the
         // assembly version number is incremented.
-        private static readonly Version EntityFrameworkVersion = new Version("6.0.0.0");
-        private static readonly Version OldEntityFrameworkVersion = new Version("4.3.1.0");
+        private static readonly Version BuiltEntityFrameworkVersion = new Version("6.0.0.0");
+        private static readonly Version Net45EntityFrameworkVersion = new Version("6.0.0.0");
+        private static readonly Version Net40EntityFrameworkVersion = new Version("4.4.0.0");
 
         private const string EntityFrameworkSectionFormat = "System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version={0}, Culture=neutral, PublicKeyToken=b77a5c561934e089";
-        private static readonly string EntityFrameworkSectionName = string.Format(CultureInfo.InvariantCulture, EntityFrameworkSectionFormat, EntityFrameworkVersion);
-        private static readonly string OldEntityFrameworkSectionName = string.Format(CultureInfo.InvariantCulture, EntityFrameworkSectionFormat, OldEntityFrameworkVersion);
+        private static readonly string Net45EntityFrameworkSectionName = string.Format(CultureInfo.InvariantCulture, EntityFrameworkSectionFormat, Net45EntityFrameworkVersion);
+        private static readonly string Net40EntityFrameworkSectionName = string.Format(CultureInfo.InvariantCulture, EntityFrameworkSectionFormat, Net40EntityFrameworkVersion);
 
         #endregion
 
         #region Version mapping
 
         [Fact]
-        public void VersionMapper_maps_dotNET_4_to_EF_4_3_assembly()
+        public void VersionMapper_maps_dotNET_4_to_net40_assembly()
         {
-            Assert.Equal(OldEntityFrameworkVersion,
+            Assert.Equal(Net40EntityFrameworkVersion,
                          new VersionMapper().GetEntityFrameworkVersion(CreateMockProject(".NET Framework, Version=4.0")));
         }
 
         [Fact]
-        public void VersionMapper_maps_dotNET_4_client_to_EF_4_3_assembly()
+        public void VersionMapper_maps_dotNET_4_client_to_net40_assembly()
         {
-            Assert.Equal(OldEntityFrameworkVersion,
+            Assert.Equal(Net40EntityFrameworkVersion,
                          new VersionMapper().GetEntityFrameworkVersion(CreateMockProject(".NET Framework, Version=4.0, Profile=Client")));
         }
 
         [Fact]
-        public void VersionMapper_maps_dotNET_4_5_to_EF_5_0_assembly()
+        public void VersionMapper_maps_dotNET_4_5_to_built_assembly()
         {
-            Assert.Equal(EntityFrameworkVersion,
+            Assert.Equal(BuiltEntityFrameworkVersion,
                          new VersionMapper().GetEntityFrameworkVersion(CreateMockProject(".NET Framework, Version=4.5")));
         }
 
         [Fact]
-        public void VersionMapper_maps_future_dotNET_version_to_EF_5_0_assembly()
+        public void VersionMapper_maps_future_dotNET_version_to_built_assembly()
         {
-            Assert.Equal(EntityFrameworkVersion,
+            Assert.Equal(BuiltEntityFrameworkVersion,
                          new VersionMapper().GetEntityFrameworkVersion(CreateMockProject(".NET Framework, Version=7.3")));
         }
 
         private Project CreateMockProject(string frameworkName)
         {
             var mockMonikerProperty = new Mock<Property>();
+            mockMonikerProperty.Setup(m => m.Name).Returns("TargetFrameworkMoniker");
             mockMonikerProperty.Setup(m => m.Value).Returns(frameworkName);
 
+            var mockProperties = new Mock<Properties>();
+            mockProperties.Setup(m => m.Item("TargetFrameworkMoniker")).Returns(mockMonikerProperty.Object);
+
             var mockProject = new Mock<Project>();
-            mockProject
-                .Setup(m => m.Properties.Item("TargetFrameworkMoniker"))
-                .Returns(mockMonikerProperty.Object);
+            mockProject.Setup(m => m.Properties).Returns(mockProperties.Object);
 
             return mockProject.Object;
         }
@@ -97,7 +101,7 @@
                     var mockManipulator = new Mock<ConfigFileManipulator>();
 
                     mockManipulator
-                        .Setup(m => m.AddConnectionFactoryToConfig(It.IsAny<XDocument>(), It.IsAny<string>())).
+                        .Setup(m => m.AddConnectionFactoryToConfig(It.IsAny<XDocument>(), It.IsAny<ConnectionFactorySpecification>())).
                         Returns(true);
 
                     mockManipulator
@@ -113,26 +117,31 @@
                         .ProcessConfigFile(
                             mockedItem.Object, new Func<XDocument, bool>[]
                                                {
-                                                   c => mockManipulator.Object.AddOrUpdateConfigSection(c, EntityFrameworkVersion),
-                                                   c => mockManipulator.Object.AddConnectionFactoryToConfig(c, "Foo")
+                                                   c => mockManipulator.Object.AddOrUpdateConfigSection(c, Net45EntityFrameworkVersion),
+                                                   c => mockManipulator.Object.AddConnectionFactoryToConfig(c, new ConnectionFactorySpecification("F"))
                                                });
 
-                    mockManipulator.Verify(m => m.AddConnectionFactoryToConfig(It.IsAny<XDocument>(), It.IsAny<string>()));
-                    mockManipulator.Verify(m => m.AddOrUpdateConfigSection(It.IsAny<XDocument>(), EntityFrameworkVersion));
+                    mockManipulator.Verify(m => m.AddConnectionFactoryToConfig(It.IsAny<XDocument>(), It.IsAny<ConnectionFactorySpecification>()));
+                    mockManipulator.Verify(m => m.AddOrUpdateConfigSection(It.IsAny<XDocument>(), Net45EntityFrameworkVersion));
                 });
         }
 
         [Fact]
         public void AddSqlCompactConnectionFactoryToConfig_does_nothing_if_correct_SQL_Compact_entry_already_exists()
         {
-            var config = CreateConnectionFactoryConfigDoc(ConfigFileManipulator.SqlCompactConnectionFactoryName,
-                                                          ConfigFileManipulator.SqlCompactProviderName);
+            var config = CreateConnectionFactoryConfigDoc(ConnectionFactorySpecification.SqlCeConnectionFactoryName,
+                                                          ConnectionFactorySpecification.SqlCompactProviderName);
 
-            var factoryAdded = new ConfigFileManipulator().AddSqlCompactConnectionFactoryToConfig(config);
+            var factoryAdded = new ConfigFileManipulator()
+                .AddOrUpdateConnectionFactoryInConfig(
+                config,
+                new ConnectionFactorySpecification(
+                    ConnectionFactorySpecification.SqlCeConnectionFactoryName,
+                    ConnectionFactorySpecification.SqlCompactProviderName));
 
             Assert.False(factoryAdded);
-            Assert.Equal(ConfigFileManipulator.SqlCompactConnectionFactoryName, GetFactoryName(config));
-            Assert.Equal(ConfigFileManipulator.SqlCompactProviderName, GetArgument(config));
+            Assert.Equal(ConnectionFactorySpecification.SqlCeConnectionFactoryName, GetFactoryName(config));
+            Assert.Equal(ConnectionFactorySpecification.SqlCompactProviderName, GetArgument(config));
         }
 
         [Fact]
@@ -140,11 +149,16 @@
         {
             var config = CreateConnectionFactoryConfigDoc(null);
 
-            var factoryAdded = new ConfigFileManipulator().AddSqlCompactConnectionFactoryToConfig(config);
+            var factoryAdded = new ConfigFileManipulator()
+                .AddOrUpdateConnectionFactoryInConfig(
+                config,
+                new ConnectionFactorySpecification(
+                    ConnectionFactorySpecification.SqlCeConnectionFactoryName,
+                    ConnectionFactorySpecification.SqlCompactProviderName));
 
             Assert.True(factoryAdded);
-            Assert.Equal(ConfigFileManipulator.SqlCompactConnectionFactoryName, GetFactoryName(config));
-            Assert.Equal(ConfigFileManipulator.SqlCompactProviderName, GetArgument(config));
+            Assert.Equal(ConnectionFactorySpecification.SqlCeConnectionFactoryName, GetFactoryName(config));
+            Assert.Equal(ConnectionFactorySpecification.SqlCompactProviderName, GetArgument(config));
         }
 
         [Fact]
@@ -152,11 +166,16 @@
         {
             var config = new XDocument(new XElement(ConfigFileManipulator.ConfigurationElementName));
 
-            var factoryAdded = new ConfigFileManipulator().AddSqlCompactConnectionFactoryToConfig(config);
+            var factoryAdded = new ConfigFileManipulator()
+                .AddOrUpdateConnectionFactoryInConfig(
+                config,
+                new ConnectionFactorySpecification(
+                    ConnectionFactorySpecification.SqlCeConnectionFactoryName,
+                    ConnectionFactorySpecification.SqlCompactProviderName));
 
             Assert.True(factoryAdded);
-            Assert.Equal(ConfigFileManipulator.SqlCompactConnectionFactoryName, GetFactoryName(config));
-            Assert.Equal(ConfigFileManipulator.SqlCompactProviderName, GetArgument(config));
+            Assert.Equal(ConnectionFactorySpecification.SqlCeConnectionFactoryName, GetFactoryName(config));
+            Assert.Equal(ConnectionFactorySpecification.SqlCompactProviderName, GetArgument(config));
         }
 
         [Fact]
@@ -164,11 +183,16 @@
         {
             var config = new XDocument();
 
-            var factoryAdded = new ConfigFileManipulator().AddSqlCompactConnectionFactoryToConfig(config);
+            var factoryAdded = new ConfigFileManipulator()
+                .AddOrUpdateConnectionFactoryInConfig(
+                config,
+                new ConnectionFactorySpecification(
+                    ConnectionFactorySpecification.SqlCeConnectionFactoryName,
+                    ConnectionFactorySpecification.SqlCompactProviderName));
 
             Assert.True(factoryAdded);
-            Assert.Equal(ConfigFileManipulator.SqlCompactConnectionFactoryName, GetFactoryName(config));
-            Assert.Equal(ConfigFileManipulator.SqlCompactProviderName, GetArgument(config));
+            Assert.Equal(ConnectionFactorySpecification.SqlCeConnectionFactoryName, GetFactoryName(config));
+            Assert.Equal(ConnectionFactorySpecification.SqlCompactProviderName, GetArgument(config));
         }
 
         [Fact]
@@ -176,23 +200,33 @@
         {
             var config = CreateConnectionFactoryConfigDoc("SomeConnectionFactory");
 
-            var factoryAdded = new ConfigFileManipulator().AddSqlCompactConnectionFactoryToConfig(config);
+            var factoryAdded = new ConfigFileManipulator()
+                .AddOrUpdateConnectionFactoryInConfig(
+                config,
+                new ConnectionFactorySpecification(
+                    ConnectionFactorySpecification.SqlCeConnectionFactoryName,
+                    ConnectionFactorySpecification.SqlCompactProviderName));
 
             Assert.True(factoryAdded);
-            Assert.Equal(ConfigFileManipulator.SqlCompactConnectionFactoryName, GetFactoryName(config));
-            Assert.Equal(ConfigFileManipulator.SqlCompactProviderName, GetArgument(config));
+            Assert.Equal(ConnectionFactorySpecification.SqlCeConnectionFactoryName, GetFactoryName(config));
+            Assert.Equal(ConnectionFactorySpecification.SqlCompactProviderName, GetArgument(config));
         }
 
         [Fact]
         public void AddSqlCompactConnectionFactoryToConfig_sets_factory_to_SQL_Compact_even_if_entry_with_param_already_exists()
         {
-            var config = CreateConnectionFactoryConfigDoc(ConfigFileManipulator.DefaultConnectionFactoryName, "Database=Bob");
+            var config = CreateConnectionFactoryConfigDoc(ConnectionFactorySpecification.SqlConnectionFactoryName, "Database=Bob");
 
-            var factoryAdded = new ConfigFileManipulator().AddSqlCompactConnectionFactoryToConfig(config);
+            var factoryAdded = new ConfigFileManipulator()
+                .AddOrUpdateConnectionFactoryInConfig(
+                config,
+                new ConnectionFactorySpecification(
+                    ConnectionFactorySpecification.SqlCeConnectionFactoryName,
+                    ConnectionFactorySpecification.SqlCompactProviderName));
 
             Assert.True(factoryAdded);
-            Assert.Equal(ConfigFileManipulator.SqlCompactConnectionFactoryName, GetFactoryName(config));
-            Assert.Equal(ConfigFileManipulator.SqlCompactProviderName, GetArgument(config));
+            Assert.Equal(ConnectionFactorySpecification.SqlCeConnectionFactoryName, GetFactoryName(config));
+            Assert.Equal(ConnectionFactorySpecification.SqlCompactProviderName, GetArgument(config));
         }
 
         [Fact]
@@ -200,7 +234,7 @@
         {
             var config = CreateConnectionFactoryConfigDoc("SomeConnectionFactory");
 
-            var factoryAdded = new ConfigFileManipulator().AddConnectionFactoryToConfig(config, "NewBaseConnectionString");
+            var factoryAdded = new ConfigFileManipulator().AddConnectionFactoryToConfig(config, new ConnectionFactorySpecification("NewConnectionFactory", "NewBaseConnectionString"));
 
             Assert.False(factoryAdded);
             Assert.Equal("SomeConnectionFactory", GetFactoryName(config));
@@ -211,10 +245,10 @@
         {
             var config = CreateConnectionFactoryConfigDoc(null);
 
-            var factoryAdded = new ConfigFileManipulator().AddConnectionFactoryToConfig(config, "NewBaseConnectionString");
+            var factoryAdded = new ConfigFileManipulator().AddConnectionFactoryToConfig(config, new ConnectionFactorySpecification("NewConnectionFactory", "NewBaseConnectionString"));
 
             Assert.True(factoryAdded);
-            Assert.Equal(ConfigFileManipulator.DefaultConnectionFactoryName, GetFactoryName(config));
+            Assert.Equal("NewConnectionFactory", GetFactoryName(config));
             Assert.Equal("NewBaseConnectionString", GetArgument(config));
         }
 
@@ -223,10 +257,10 @@
         {
             var config = new XDocument(new XElement(ConfigFileManipulator.ConfigurationElementName));
 
-            var factoryAdded = new ConfigFileManipulator().AddConnectionFactoryToConfig(config, "NewBaseConnectionString");
+            var factoryAdded = new ConfigFileManipulator().AddConnectionFactoryToConfig(config, new ConnectionFactorySpecification("NewConnectionFactory", "NewBaseConnectionString"));
 
             Assert.True(factoryAdded);
-            Assert.Equal(ConfigFileManipulator.DefaultConnectionFactoryName, GetFactoryName(config));
+            Assert.Equal("NewConnectionFactory", GetFactoryName(config));
             Assert.Equal("NewBaseConnectionString", GetArgument(config));
         }
 
@@ -235,11 +269,41 @@
         {
             var config = new XDocument();
 
-            var factoryAdded = new ConfigFileManipulator().AddConnectionFactoryToConfig(config, "NewBaseConnectionString");
+            var factoryAdded = new ConfigFileManipulator().AddConnectionFactoryToConfig(config, new ConnectionFactorySpecification("NewConnectionFactory", "NewBaseConnectionString"));
 
             Assert.True(factoryAdded);
-            Assert.Equal(ConfigFileManipulator.DefaultConnectionFactoryName, GetFactoryName(config));
+            Assert.Equal("NewConnectionFactory", GetFactoryName(config));
             Assert.Equal("NewBaseConnectionString", GetArgument(config));
+        }
+
+        [Fact]
+        public void AddConnectionFactoryToConfig_adds_factory_with_no_parameters()
+        {
+            var config = new XDocument();
+
+            var factoryAdded = new ConfigFileManipulator().AddConnectionFactoryToConfig(config, new ConnectionFactorySpecification("NewConnectionFactory"));
+
+            Assert.True(factoryAdded);
+            Assert.Equal("NewConnectionFactory", GetFactoryName(config));
+
+            Assert.Null(config.Element(ConfigFileManipulator.ConfigurationElementName)
+                            .Element(ConfigFileManipulator.EntityFrameworkElementName)
+                            .Element(ConfigFileManipulator.DefaultConnectionFactoryElementName)
+                            .Element(ConfigFileManipulator.ParametersElementName));
+        }
+
+        [Fact]
+        public void AddConnectionFactoryToConfig_adds_factory_with_many_parameters()
+        {
+            var config = new XDocument();
+
+            var factoryAdded = new ConfigFileManipulator().AddConnectionFactoryToConfig(config, new ConnectionFactorySpecification("NewConnectionFactory", "1", "2", "3"));
+
+            Assert.True(factoryAdded);
+            Assert.Equal("NewConnectionFactory", GetFactoryName(config));
+            Assert.Equal("1", GetArguments(config).First());
+            Assert.Equal("2", GetArguments(config).Skip(1).First());
+            Assert.Equal("3", GetArguments(config).Skip(2).First());
         }
 
         private XDocument CreateConnectionFactoryConfigDoc(string factoryName)
@@ -279,24 +343,28 @@
 
         private string GetArgument(XDocument config)
         {
+            return GetArguments(config).Single();
+        }
+
+        private IEnumerable<string> GetArguments(XDocument config)
+        {
             return config.Element(ConfigFileManipulator.ConfigurationElementName)
                 .Element(ConfigFileManipulator.EntityFrameworkElementName)
                 .Element(ConfigFileManipulator.DefaultConnectionFactoryElementName)
                 .Element(ConfigFileManipulator.ParametersElementName)
-                .Element(ConfigFileManipulator.ParameterElementName)
-                .Attribute("value")
-                .Value;
+                .Elements(ConfigFileManipulator.ParameterElementName)
+                .Select(e => e.Attribute("value").Value);
         }
 
         [Fact]
         public void AddOrUpdateConfigSection_does_nothing_if_EF_assembly_name_is_up_to_date()
         {
-            var config = CreateConfigSectionDoc(EntityFrameworkSectionName);
+            var config = CreateConfigSectionDoc(Net45EntityFrameworkSectionName);
 
-            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, EntityFrameworkVersion);
+            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, Net45EntityFrameworkVersion);
 
             Assert.False(sectionModified);
-            Assert.Equal(EntityFrameworkSectionName, GetEfSectionName(config));
+            Assert.Equal(Net45EntityFrameworkSectionName, GetEfSectionName(config));
         }
 
         [Fact]
@@ -304,10 +372,10 @@
         {
             var config = new XDocument();
 
-            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, EntityFrameworkVersion);
+            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, Net45EntityFrameworkVersion);
 
             Assert.True(sectionModified);
-            Assert.Equal(EntityFrameworkSectionName, GetEfSectionName(config));
+            Assert.Equal(Net45EntityFrameworkSectionName, GetEfSectionName(config));
         }
 
         [Fact]
@@ -315,10 +383,10 @@
         {
             var config = new XDocument(new XElement(ConfigFileManipulator.ConfigurationElementName));
 
-            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, EntityFrameworkVersion);
+            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, Net45EntityFrameworkVersion);
 
             Assert.True(sectionModified);
-            Assert.Equal(EntityFrameworkSectionName, GetEfSectionName(config));
+            Assert.Equal(Net45EntityFrameworkSectionName, GetEfSectionName(config));
         }
 
         [Fact]
@@ -328,10 +396,10 @@
                 new XDocument(new XElement(ConfigFileManipulator.ConfigurationElementName,
                                            new XElement(ConfigFileManipulator.ConfigSectionsElementName)));
 
-            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, EntityFrameworkVersion);
+            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, Net45EntityFrameworkVersion);
 
             Assert.True(sectionModified);
-            Assert.Equal(EntityFrameworkSectionName, GetEfSectionName(config));
+            Assert.Equal(Net45EntityFrameworkSectionName, GetEfSectionName(config));
         }
 
         [Fact]
@@ -339,43 +407,43 @@
         {
             var config = CreateConfigSectionDoc(assemblyName: null);
 
-            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, EntityFrameworkVersion);
+            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, Net45EntityFrameworkVersion);
 
             Assert.True(sectionModified);
-            Assert.Equal(EntityFrameworkSectionName, GetEfSectionName(config));
+            Assert.Equal(Net45EntityFrameworkSectionName, GetEfSectionName(config));
         }
 
         [Fact]
         public void AddOrUpdateConfigSection_updates_EF_section_if_configSections_element_is_out_of_date()
         {
-            var config = CreateConfigSectionDoc(OldEntityFrameworkSectionName);
+            var config = CreateConfigSectionDoc(Net40EntityFrameworkSectionName);
 
-            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, EntityFrameworkVersion);
+            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, Net45EntityFrameworkVersion);
 
             Assert.True(sectionModified);
-            Assert.Equal(EntityFrameworkSectionName, GetEfSectionName(config));
+            Assert.Equal(Net45EntityFrameworkSectionName, GetEfSectionName(config));
         }
 
         [Fact]
         public void AddOrUpdateConfigSection_when_using_NET4_EF_assembly_does_nothing_if_EF_assembly_name_is_up_to_date()
         {
-            var config = CreateConfigSectionDoc(OldEntityFrameworkSectionName);
+            var config = CreateConfigSectionDoc(Net40EntityFrameworkSectionName);
 
-            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, OldEntityFrameworkVersion);
+            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, Net40EntityFrameworkVersion);
 
             Assert.False(sectionModified);
-            Assert.Equal(OldEntityFrameworkSectionName, GetEfSectionName(config));
+            Assert.Equal(Net40EntityFrameworkSectionName, GetEfSectionName(config));
         }
 
         [Fact]
         public void AddOrUpdateConfigSection_when_using_NET4_EF_assembly_updates_EF_section_if_configSections_element_is_too_new()
         {
-            var config = CreateConfigSectionDoc(EntityFrameworkSectionName);
+            var config = CreateConfigSectionDoc(Net45EntityFrameworkSectionName);
 
-            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, OldEntityFrameworkVersion);
+            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, Net40EntityFrameworkVersion);
 
             Assert.True(sectionModified);
-            Assert.Equal(OldEntityFrameworkSectionName, GetEfSectionName(config));
+            Assert.Equal(Net40EntityFrameworkSectionName, GetEfSectionName(config));
         }
 
         private XDocument CreateConfigSectionDoc(string assemblyName)
@@ -498,8 +566,8 @@
 
                     var mockedManipulator = new Mock<ConfigFileManipulator>();
                     mockedManipulator
-                        .Setup<bool>(m => m.AddConnectionFactoryToConfig(It.IsAny<XDocument>(), It.IsAny<string>()))
-                        .Callback((XDocument config, string _) => config.Element("fake").Add(new XElement("modified")))
+                        .Setup<bool>(m => m.AddConnectionFactoryToConfig(It.IsAny<XDocument>(), It.IsAny<ConnectionFactorySpecification>()))
+                        .Callback((XDocument config, ConnectionFactorySpecification _) => config.Element("fake").Add(new XElement("modified")))
                         .Returns(shouldSave);
 
                     Assert.ThrowsDelegate test =
@@ -508,8 +576,8 @@
                                       mockedItem.Object,
                                       new Func<XDocument, bool>[]
                                       {
-                                          c => mockedManipulator.Object.AddOrUpdateConfigSection(c, EntityFrameworkVersion),
-                                          c => mockedManipulator.Object.AddConnectionFactoryToConfig(c, "")
+                                          c => mockedManipulator.Object.AddOrUpdateConfigSection(c, Net45EntityFrameworkVersion),
+                                          c => mockedManipulator.Object.AddConnectionFactoryToConfig(c, new ConnectionFactorySpecification("F"))
                                       });
 
                     if (shouldSave && writeProtectFile)
@@ -686,37 +754,41 @@
         [Fact]
         public void SqlServerDetector_generates_SQL_Express_base_connection_string_if_both_Express_and_LocalDB_are_installed()
         {
-            Assert.Equal(
-                SqlExpressBaseConnectionString,
-                new SqlServerDetector(CreatedMockedRegistryKey("11.0"), CreateMockedController())
-                .BuildBaseConnectionString());
+            var specification = new SqlServerDetector(CreatedMockedRegistryKey("11.0"), CreateMockedController())
+                .BuildConnectionFactorySpecification();
+
+            Assert.Equal(ConnectionFactorySpecification.SqlConnectionFactoryName, specification.ConnectionFactoryName);
+            Assert.Empty(specification.ConstructorArguments);
         }
 
         [Fact]
         public void SqlServerDetector_generates_SQL_Express_base_connection_string_if_Express_is_installed_and_LocalDB_is_not()
         {
-            Assert.Equal(
-                SqlExpressBaseConnectionString,
-                new SqlServerDetector(CreatedMockedRegistryKey(new string[0]), CreateMockedController())
-                .BuildBaseConnectionString());
+            var specification = new SqlServerDetector(CreatedMockedRegistryKey(new string[0]), CreateMockedController())
+                .BuildConnectionFactorySpecification();
+
+            Assert.Equal(ConnectionFactorySpecification.SqlConnectionFactoryName, specification.ConnectionFactoryName);
+            Assert.Empty(specification.ConstructorArguments);
         }
 
         [Fact]
         public void SqlServerDetector_generates_LocalDB_base_connection_string_if_LocalDB_is_installed_and_Express_is_not()
         {
-            Assert.Equal(
-                @"Data Source=(localdb)\v12.0; Integrated Security=True; MultipleActiveResultSets=True",
-                new SqlServerDetector(CreatedMockedRegistryKey("12.0"), CreateMockedController(status: null))
-                .BuildBaseConnectionString());
+            var specification = new SqlServerDetector(CreatedMockedRegistryKey("12.0"), CreateMockedController(status: null))
+                .BuildConnectionFactorySpecification();
+
+            Assert.Equal(ConnectionFactorySpecification.LocalDbConnectionFactoryName, specification.ConnectionFactoryName);
+            Assert.Equal("v12.0", specification.ConstructorArguments.Single());
         }
 
         [Fact]
         public void SqlServerDetector_generates_LocalDB_11_base_connection_string_if_neither_LocalDB_or_Express_are_installed()
         {
-            Assert.Equal(
-                LocalDBBaseConnectionString,
-                new SqlServerDetector(CreatedMockedRegistryKey(new string[0]), CreateMockedController(status: null))
-                .BuildBaseConnectionString());
+            var specification = new SqlServerDetector(CreatedMockedRegistryKey(new string[0]), CreateMockedController(status: null))
+                .BuildConnectionFactorySpecification();
+
+            Assert.Equal(ConnectionFactorySpecification.LocalDbConnectionFactoryName, specification.ConnectionFactoryName);
+            Assert.Equal("v11.0", specification.ConstructorArguments.Single());
         }
 
         [Fact]
@@ -742,7 +814,10 @@
         {
             using (var detector = new SqlServerDetector(Registry.LocalMachine, new ServiceControllerProxy(new ServiceController("MSSQL$SQLEXPRESS"))))
             {
-                Assert.Equal(SqlExpressBaseConnectionString, detector.BuildBaseConnectionString());
+                var specification = detector.BuildConnectionFactorySpecification();
+
+                Assert.Equal(ConnectionFactorySpecification.SqlConnectionFactoryName, specification.ConnectionFactoryName);
+                Assert.Empty(specification.ConstructorArguments);
             }
         }
 
@@ -770,11 +845,11 @@
                     var config = XDocument.Load(i.FileNames[0]);
 
                     // Checked in app.config for unit tests has no connection factory, so one should be added
-                    var modified = new ConfigFileManipulator().AddConnectionFactoryToConfig(config, "SomeConnectionString");
+                    var modified = new ConfigFileManipulator().AddConnectionFactoryToConfig(config, new ConnectionFactorySpecification(ConnectionFactorySpecification.SqlConnectionFactoryName, "SomeConnectionString"));
 
                     Assert.True(modified);
 
-                    Assert.Equal(ConfigFileManipulator.DefaultConnectionFactoryName, GetFactoryName(config));
+                    Assert.Equal(ConnectionFactorySpecification.SqlConnectionFactoryName, GetFactoryName(config));
                     Assert.Equal("SomeConnectionString", GetArgument(config));
                 });
 

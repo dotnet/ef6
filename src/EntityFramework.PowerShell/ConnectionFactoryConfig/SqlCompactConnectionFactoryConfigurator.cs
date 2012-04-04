@@ -31,7 +31,12 @@
                 i => processor.ProcessConfigFile(
                     i, new Func<XDocument, bool>[]
                            {
-                               manipulator.AddSqlCompactConnectionFactoryToConfig
+                               c => manipulator.AddOrUpdateConnectionFactoryInConfig(
+                                   c,
+                                   new ConnectionFactorySpecification(
+                                        ConnectionFactorySpecification.SqlCeConnectionFactoryName,
+                                        ConnectionFactorySpecification.SqlCompactProviderName))
+
                            }));
         }
     }

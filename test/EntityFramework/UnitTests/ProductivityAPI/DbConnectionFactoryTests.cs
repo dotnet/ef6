@@ -406,5 +406,171 @@ namespace ProductivityApiUnitTests
 
         #endregion
 
+        #region LocalDbConnectionFactory tests
+
+        [Fact]
+        public void LocalDbConnectionFactory_throws_when_null_base_connection_string_is_used()
+        {
+            Assert.Equal(
+                "baseConnectionString",
+                Assert.Throws<ArgumentNullException>(() => new LocalDbConnectionFactory("v11.0", null)).ParamName);
+        }
+
+        [Fact]
+        public void LocalDbConnectionFactory_throws_when_null_or_empty_LocalDb_version_is_used()
+        {
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("localDbVersion"),
+                Assert.Throws<ArgumentException>(() => new LocalDbConnectionFactory(null)).Message);
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("localDbVersion"),
+                Assert.Throws<ArgumentException>(() => new LocalDbConnectionFactory("")).Message);
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("localDbVersion"),
+                Assert.Throws<ArgumentException>(() => new LocalDbConnectionFactory(" ")).Message);
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("localDbVersion"),
+                Assert.Throws<ArgumentException>(() => new LocalDbConnectionFactory(null, "")).Message);
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("localDbVersion"),
+                Assert.Throws<ArgumentException>(() => new LocalDbConnectionFactory("", "")).Message);
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("localDbVersion"),
+                Assert.Throws<ArgumentException>(() => new LocalDbConnectionFactory(" ", "")).Message);
+        }
+
+        [Fact]
+        public void LocalDbConnectionFactory_creates_a_LocalDb_connection_from_a_database_name()
+        {
+            using (var connection = new LocalDbConnectionFactory("v99").CreateConnection("MyDatabase"))
+            {
+                Assert.Equal(@"(localdb)\v99", connection.DataSource);
+                Assert.Equal(@"MyDatabase", connection.Database);
+            }
+        }
+
+        [Fact]
+        public void LocalDbConnectionFactory_just_uses_full_connection_string_if_given_one()
+        {
+            using (var connection = new LocalDbConnectionFactory("v99").CreateConnection("Database=AndBingoWasHisNameo"))
+            {
+                Assert.Equal("Database=AndBingoWasHisNameo", connection.ConnectionString);
+            }
+        }
+
+        [Fact]
+        public void LocalDbConnectionFactory_uses_database_name_as_mdf_filename_if_DataDirectory_is_set()
+        {
+            WithDataDirectory(@"C:\Some\Data\Directory",
+                () =>
+                {
+                    using (var connection = new LocalDbConnectionFactory("v99").CreateConnection("MyDatabase"))
+                    {
+                        Assert.Equal(
+                            @"Data Source=(localdb)\v99;AttachDbFilename=|DataDirectory|MyDatabase.mdf;Initial Catalog=MyDatabase;Integrated Security=True;MultipleActiveResultSets=True",
+                            connection.ConnectionString);
+                    }
+                });
+        }
+
+        [Fact]
+        public void LocalDbConnectionFactory_does_not_set_AttachDbFileName_if_DataDirectory_is_not_set()
+        {
+            WithDataDirectory(null,
+                () =>
+                {
+                    using (var connection = new LocalDbConnectionFactory("v99").CreateConnection("MyDatabase"))
+                    {
+                        Assert.Equal(
+                            @"Data Source=(localdb)\v99;Initial Catalog=MyDatabase;Integrated Security=True;MultipleActiveResultSets=True",
+                            connection.ConnectionString);
+                    }
+                });
+        }
+
+        [Fact]
+        public void LocalDbConnectionFactory_creates_a_LocalDb_connection_from_a_database_name_using_given_base_connection_string()
+        {
+            WithDataDirectory(null,
+                () =>
+                {
+                    using (var connection = new LocalDbConnectionFactory("v99", "Integrated Security=True").CreateConnection("MyDatabase"))
+                    {
+                        Assert.Equal(
+                            @"Data Source=(localdb)\v99;Initial Catalog=MyDatabase;Integrated Security=True",
+                            connection.ConnectionString);
+                    }
+                });
+        }
+
+        [Fact]
+        public void LocalDbConnectionFactory_creates_a_LocalDb_connection_with_AttachDbFileName_from_a_database_name_using_given_base_connection_string_if_DataDirectory_is_set()
+        {
+            WithDataDirectory(@"C:\Some\Data\Directory",
+                () =>
+                {
+                    using (var connection = new LocalDbConnectionFactory("v99", "Integrated Security=True").CreateConnection("MyDatabase"))
+                    {
+                        Assert.Equal(
+                            @"Data Source=(localdb)\v99;AttachDbFilename=|DataDirectory|MyDatabase.mdf;Initial Catalog=MyDatabase;Integrated Security=True",
+                            connection.ConnectionString);
+                    }
+                });
+        }
+
+        [Fact]
+        public void LocalDbConnectionFactory_uses_Data_Source_set_in_base_connection_string_if_set()
+        {
+            using (var connection = new LocalDbConnectionFactory("v99", "Data Source=NotLocalDb").CreateConnection("MyDatabase"))
+            {
+                Assert.Equal("NotLocalDb", connection.DataSource);
+            }
+        }
+
+        [Fact]
+        public void LocalDbConnectionFactory_uses_AttachDbFilename_set_by_factory_even_if_set_in_base_connection_string()
+        {
+            WithDataDirectory(@"C:\Some\Data\Directory",
+                () =>
+                {
+                    using (var connection = new LocalDbConnectionFactory("v99", "AttachDbFilename=|DataDirectory|ADifferent.mdf;")
+                                .CreateConnection("MyDatabase"))
+                    {
+                        Assert.Equal(
+                            "|DataDirectory|MyDatabase.mdf",
+                            new DbConnectionStringBuilder { ConnectionString = connection.ConnectionString }["AttachDbFilename"]);
+                    }
+                });
+        }
+
+        [Fact]
+        public void LocalDbConnectionFactory_uses_Initial_Catalog_set_by_factory_even_if_set_in_base_connection_string()
+        {
+            using (var connection = new LocalDbConnectionFactory("v99", "Initial Catalog=YourDatabase").CreateConnection("MyDatabase"))
+            {
+                Assert.Equal("MyDatabase", connection.Database);
+            }
+        }
+
+        private static void WithDataDirectory(string dataDirectory, Action test)
+        {
+            var previousDataDirectory = AppDomain.CurrentDomain.GetData("DataDirectory");
+            try
+            {
+                AppDomain.CurrentDomain.SetData("DataDirectory", dataDirectory);
+                test();
+            }
+            finally
+            {
+                AppDomain.CurrentDomain.SetData("DataDirectory", previousDataDirectory);
+            }
+        }
+
+        #endregion
     }
 }
