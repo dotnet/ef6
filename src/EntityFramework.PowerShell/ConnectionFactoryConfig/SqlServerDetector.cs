@@ -30,25 +30,25 @@
             _controller = controller;
         }
 
+
         /// <summary>
-        /// Builds a base connection string that uses SQL Express as the data source if it is found, or
-        /// LocalDB if SQL Express is not found.
+        /// Builds a specification for a default connection factory that will use SQL Express if it
+        /// running on this machine, otherwise LocalDb.
         /// </summary>
         /// <remarks>
-        /// A base connection string is a connection string without a 'Database' or 'Initial Catalog' specified.
         /// If the SQL Express service is found, then SQL Express will be configured.
-        /// Otherwise, if a particular version of LocalDB is found, then the connection string will use that version. If
+        /// Otherwise, if a particular version of LocalDB is found, then that version will be used. If
         /// multiple versions are found then an attempt to use the highest version will be made. If no version
         /// of SQL Express or LocalDB is found, then LocalDB v11.0 (SQL Server 2012) will be used.
         /// </remarks>
-        public virtual string BuildBaseConnectionString()
+        public virtual ConnectionFactorySpecification BuildConnectionFactorySpecification()
         {
-            return String.Format(
-                CultureInfo.InvariantCulture,
-                BaseConnectionStringTemplate,
-                IsSqlExpressInstalled()
-                    ? @".\SQLEXPRESS"
-                    : (@"(localdb)\v" + (TryGetLocalDBVersionInstalled() ?? "11.0")));
+            return IsSqlExpressInstalled()
+                       ? new ConnectionFactorySpecification(
+                           ConnectionFactorySpecification.SqlConnectionFactoryName)
+                       : new ConnectionFactorySpecification(
+                           ConnectionFactorySpecification.LocalDbConnectionFactoryName,
+                           "v" + (TryGetLocalDBVersionInstalled() ?? "11.0"));
         }
 
         /// <summary>

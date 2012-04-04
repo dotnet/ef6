@@ -603,7 +603,6 @@
         {
         }
 
-        [Fact(Skip = "EF bug 42190")]
         public void Existing_initializer_can_be_disabled_from_configuration()
         {
             GenericFakeInitializerForAppConfig<FakeForAppConfigDisable>.Reset();

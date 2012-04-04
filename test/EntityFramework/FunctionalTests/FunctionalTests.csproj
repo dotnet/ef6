@@ -86,13 +86,13 @@
       <SubType>Designer</SubType>
     </None>
     <EmbeddedResource Include="_TestModels\SpatialTvfsModel\226644SpatialModel.csdl">
-        <LogicalName>FunctionalTests.ProductivityApi.SpatialTvfsModel.226644SpatialModel.csdl</LogicalName>
+      <LogicalName>FunctionalTests.ProductivityApi.SpatialTvfsModel.226644SpatialModel.csdl</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="_TestModels\SpatialTvfsModel\226644SpatialModel.msl">
-        <LogicalName>FunctionalTests.ProductivityApi.SpatialTvfsModel.226644SpatialModel.msl</LogicalName>
+      <LogicalName>FunctionalTests.ProductivityApi.SpatialTvfsModel.226644SpatialModel.msl</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="_TestModels\SpatialTvfsModel\226644SpatialModel.ssdl">
-        <LogicalName>FunctionalTests.ProductivityApi.SpatialTvfsModel.226644SpatialModel.ssdl</LogicalName>
+      <LogicalName>FunctionalTests.ProductivityApi.SpatialTvfsModel.226644SpatialModel.ssdl</LogicalName>
     </EmbeddedResource>
     <None Include="_TestModels\TemplateModels\CsAdvancedPatterns\CsAdvancedPatterns.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -118,16 +118,16 @@
     <None Include="_TestModels\TemplateModels\ProcessTemplates.bat" />
     <None Include="_TestModels\TemplateModels\ProcessVbTemplate.bat" />
     <EmbeddedResource Include="_TestModels\TemplateModels\Schemas\AdvancedPatterns.edmx">
-        <LogicalName>FunctionalTests.ProductivityApi.TemplateModels.Schemas.AdvancedPatterns.edmx</LogicalName>
+      <LogicalName>FunctionalTests.ProductivityApi.TemplateModels.Schemas.AdvancedPatterns.edmx</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="_TestModels\TemplateModels\Schemas\MonsterModel.csdl">
-        <LogicalName>FunctionalTests.ProductivityApi.TemplateModels.Schemas.MonsterModel.csdl</LogicalName>
+      <LogicalName>FunctionalTests.ProductivityApi.TemplateModels.Schemas.MonsterModel.csdl</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="_TestModels\TemplateModels\Schemas\MonsterModel.msl">
-        <LogicalName>FunctionalTests.ProductivityApi.TemplateModels.Schemas.MonsterModel.msl</LogicalName>
+      <LogicalName>FunctionalTests.ProductivityApi.TemplateModels.Schemas.MonsterModel.msl</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="_TestModels\TemplateModels\Schemas\MonsterModel.ssdl">
-        <LogicalName>FunctionalTests.ProductivityApi.TemplateModels.Schemas.MonsterModel.ssdl</LogicalName>
+      <LogicalName>FunctionalTests.ProductivityApi.TemplateModels.Schemas.MonsterModel.ssdl</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -170,10 +170,15 @@
     <Compile Include="Migrations\_TestModel\DbContextTestExtensions.cs" />
     <Compile Include="Migrations\_TestModel\TestMigration.cs" />
     <Compile Include="Migrations\_TestModel\TestModels.cs" />
+    <Compile Include="ProductivityApi\SimpleScenariosForLocalDb.cs" />
     <Compile Include="_TestHelpers\DynamicAssembly.cs" />
     <Compile Include="EnumsScenarioTests.cs" />
     <Compile Include="_TestHelpers\FunctionalTestBase.cs" />
     <Compile Include="InheritanceScenarioTests.cs" />
+    <Compile Include="_TestModels\SimpleModel\LocalDbLoginsContext.cs" />
+    <Compile Include="_TestModels\SimpleModel\SimpleLocalDbModelContext.cs" />
+    <Compile Include="_TestModels\SimpleModel\SimpleLocalDbModelContextWithNoData.cs" />
+    <Compile Include="_TestModels\SimpleModel\SimpleLocalDbModelInitializer.cs" />
     <Compile Include="_TestModels\StoreModel\AbstractType1.cs" />
     <Compile Include="_TestModels\StoreModel\AbstractType1_1.cs" />
     <Compile Include="_TestModels\StoreModel\Address.cs" />

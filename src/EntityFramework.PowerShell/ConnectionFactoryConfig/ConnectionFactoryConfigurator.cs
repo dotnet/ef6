@@ -35,7 +35,7 @@
                 var detector = new SqlServerDetector(
                     Registry.LocalMachine, new ServiceControllerProxy(new ServiceController("MSSQL$SQLEXPRESS"))))
             {
-                var baseConnectionString = detector.BuildBaseConnectionString();
+                var factorySpecification = detector.BuildConnectionFactorySpecification();
                 var manipulator = new ConfigFileManipulator();
                 var processor = new ConfigFileProcessor();
                 var efVersion = new VersionMapper().GetEntityFrameworkVersion(project);
@@ -46,7 +46,7 @@
                         i, new Func<XDocument, bool>[]
                                {
                                    c => manipulator.AddOrUpdateConfigSection(c, efVersion),
-                                   c => manipulator.AddConnectionFactoryToConfig(c, baseConnectionString)
+                                   c => manipulator.AddConnectionFactoryToConfig(c, factorySpecification)
                                }));
             }
         }

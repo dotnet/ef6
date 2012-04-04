@@ -13,13 +13,6 @@
     /// </summary>
     internal class ConfigFileManipulator
     {
-        public const string DefaultConnectionFactoryName =
-            "System.Data.Entity.Infrastructure.SqlConnectionFactory, EntityFramework";
-
-        public const string SqlCompactConnectionFactoryName =
-            "System.Data.Entity.Infrastructure.SqlCeConnectionFactory, EntityFramework";
-
-        public const string SqlCompactProviderName = "System.Data.SqlServerCe.4.0";
         public const string ConfigurationElementName = "configuration";
         public const string EntityFrameworkElementName = "entityFramework";
         public const string DefaultConnectionFactoryElementName = "defaultConnectionFactory";
@@ -31,18 +24,15 @@
         /// <summary>
         /// Checks whether or not the given XML document representing a .config file contains
         /// an EntityFramework "defaultConnectionFactory" entry or not. If no entry is found then one
-        /// is added for SqlServerConnectionFactory and the given base connection string is added
-        /// as the only constructor argument.
+        /// is added for the given connection factory specification.
         /// </summary>
         /// <param name="config"> An XML document representing the config file.</param>
-        /// <param name="baseConnectionString">
-        /// The base connection string that will be passed as the argument to the connection factory constructor.
-        /// </param>
+        /// <param name="specification"> Specifies the connection factory and constructor arguments to use.</param>
         /// <returns>True if the document was modified; false if no change was made.</returns>
-        public virtual bool AddConnectionFactoryToConfig(XDocument config, string baseConnectionString)
+        public virtual bool AddConnectionFactoryToConfig(XDocument config, ConnectionFactorySpecification specification)
         {
             Contract.Requires(config != null);
-            Contract.Requires(baseConnectionString != null);
+            Contract.Requires(specification != null);
 
             var entityFramework = config
                 .GetOrCreateElement(ConfigurationElementName)
@@ -53,25 +43,25 @@
                 return false;
             }
 
-            entityFramework
-                .GetOrCreateElement(
-                    DefaultConnectionFactoryElementName,
-                    new XAttribute("type", DefaultConnectionFactoryName))
-                .GetOrCreateElement(ParametersElementName)
-                .GetOrCreateElement(ParameterElementName, new XAttribute("value", baseConnectionString));
+            var factoryElement = entityFramework
+                .GetOrCreateElement(DefaultConnectionFactoryElementName,
+                                    new XAttribute("type", specification.ConnectionFactoryName));
+
+            AddFactoryArguments(factoryElement, specification);
 
             return true;
         }
 
         /// <summary>
         /// Sets the EntityFramework "defaultConnectionFactory" in the given XML document representing a
-        /// .config file to use SQL Server Compact. This method differs from AddConnectionFactoryToConfig
-        /// in that it always sets the entry to use SQL Compact even if it was already present and set to
-        /// something else.
+        /// .config file to use th given specification. This method differs from AddConnectionFactoryToConfig
+        /// in that it always sets the entry to use the given specification even if it was already present
+        /// and set to something else.
         /// </summary>
         /// <param name="config"> An XML document representing the config file.</param>
+        /// <param name="specification"> Specifies the connection factory and constructor arguments to use.</param>
         /// <returns>True if the document was modified; false if no change was made.</returns>
-        public virtual bool AddSqlCompactConnectionFactoryToConfig(XDocument config)
+        public virtual bool AddOrUpdateConnectionFactoryInConfig(XDocument config, ConnectionFactorySpecification specification)
         {
             Contract.Requires(config != null);
 
@@ -80,21 +70,29 @@
                 .GetOrCreateElement(EntityFrameworkElementName)
                 .GetOrCreateElement(DefaultConnectionFactoryElementName);
 
-            connectionFactoryElement.ReplaceAttributes(new XAttribute("type", SqlCompactConnectionFactoryName));
-
-            var parameterElement = connectionFactoryElement
-                .GetOrCreateElement(ParametersElementName)
-                .GetOrCreateElement(ParameterElementName);
-
-            if (parameterElement.Attributes("value").Any(a => a.Value == SqlCompactProviderName))
+            var currentFactoryAttribute = connectionFactoryElement.Attribute("type");
+            if (currentFactoryAttribute != null
+                && specification.ConnectionFactoryName.Equals(currentFactoryAttribute.Value, StringComparison.OrdinalIgnoreCase))
             {
-                // Assumption that if the attribute is already present and represents the SqlCompactProviderName
-                // then we didn't actually change anything, so return false.
                 return false;
             }
 
-            parameterElement.ReplaceAttributes(new XAttribute("value", SqlCompactProviderName));
+            connectionFactoryElement.RemoveAll();
+            connectionFactoryElement.Add(new XAttribute("type", specification.ConnectionFactoryName));
+
+            AddFactoryArguments(connectionFactoryElement, specification);
+
             return true;
+        }
+
+        private void AddFactoryArguments(XElement factoryElement, ConnectionFactorySpecification specification)
+        {
+            if (specification.ConstructorArguments.Any())
+            {
+                var parametersElement = factoryElement.GetOrCreateElement(ParametersElementName);
+                specification.ConstructorArguments.Each(
+                    a => parametersElement.Add(new XElement(ParameterElementName, new XAttribute("value", a))));
+            }
         }
 
         /// <summary>

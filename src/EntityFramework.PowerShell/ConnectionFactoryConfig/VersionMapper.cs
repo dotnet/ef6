@@ -18,13 +18,12 @@
 
             // This gets the correct version of the most recent assembly based on shared version info.
             // For the older assembly the string is hard coded because there is nowhere to pull it from.
-
             var targetFrameworkVersion
                 = (string)project.Properties.Item("TargetFrameworkMoniker").Value;
 
             return
                 new FrameworkName(targetFrameworkVersion).Version < new Version(4, 5)
-                    ? new Version("4.3.1.0")
+                    ? new Version("4.4.0.0")
                     : GetType().Assembly.GetName().Version;
         }
     }
