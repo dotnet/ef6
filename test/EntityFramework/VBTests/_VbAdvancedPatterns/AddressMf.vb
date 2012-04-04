@@ -8,6 +8,7 @@
 '------------------------------------------------------------------------------
 
 Imports System
+Imports System.Collections.Generic
 
 Namespace AdvancedPatternsVB
 

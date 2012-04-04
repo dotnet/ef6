@@ -8,6 +8,7 @@
 '------------------------------------------------------------------------------
 
 Imports System
+Imports System.Collections.Generic
 
 Partial Public Class DimensionsMm
     Public Property Width As Decimal

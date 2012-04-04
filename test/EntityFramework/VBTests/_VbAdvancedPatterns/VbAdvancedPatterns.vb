@@ -7,3 +7,6 @@
 ' </auto-generated>
 '------------------------------------------------------------------------------
 
+Imports System
+Imports System.Collections.Generic
+
