@@ -1,0 +1,277 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet href="../../../../Common/Overview.xsl" type="text/xsl"?>
+<VSSDKSample>
+  <ImagePath>../../../../Common</ImagePath>
+  <Status>
+    <Accessibility>true</Accessibility>
+    <ArchitectureDiagram>false</ArchitectureDiagram>
+    <Comments>true</Comments>
+    <Documentation>true</Documentation>
+    <ErrorHandling>true</ErrorHandling>
+    <FollowSDKCodingStandards>true</FollowSDKCodingStandards>
+    <Localizable>true</Localizable>
+    <Overview>true</Overview>
+    <ScenarioTests>true</ScenarioTests>
+    <Supported>true</Supported>
+    <UnitTests>true</UnitTests>
+    <Style>Example</Style>
+  </Status>
+  <Overview>
+    <ShortName>C# Example.ExtendedProvider</ShortName>
+    <LongName>C# Extended DDEX Provider Sample</LongName>
+    <Phrase>Demonstrates how to implement a scenario-complete DDEX provider.</Phrase>
+  </Overview>
+  <Introduction>
+    <Summary>
+      This sample demonstrates how to implement a DDEX provider based on the
+      .NET Framework Data Provider for SQL Server that supports all the common
+      data design time scenarios.
+    </Summary>
+    <Goal>Supplying all features of the basic DDEX provider sample</Goal>
+    <Goal>Embedding the XML support files as assembly resources</Goal>
+    <Goal>Customizing the data object selector service</Goal>
+    <Goal>Customizing the data object identifier resolver service</Goal>
+    <Goal>Customizing the data source information service</Goal>
+    <Goal>Enabling localization of many exposed strings</Goal>
+    <Goal>Supporting all the common data design time scenarios</Goal>
+  </Introduction>
+  <SampleInfo>
+    <State>New</State>
+    <Type>Example</Type>
+    <Complexity>1</Complexity>
+    <Screenshot />
+    <Area>Data</Area>
+    <Language>C#</Language>
+    <Folder>VisualStudioIntegration\Samples\Data\CSharp\Example.ExtendedProvider\</Folder>
+    <SampleSolution>ExtendedProvider.sln</SampleSolution>
+    <FolderUnitTest>VisualStudioIntegration\Samples\Data\CSharp\Example.ExtendedProvider\UnitTests</FolderUnitTest>
+    <UnitTestStartup>ExtendedProvider.UnitTests.csproj</UnitTestStartup>
+    <Doc />
+    <Keywords>
+      <Keyword>Data</Keyword>
+      <Keyword>DDEX</Keyword>
+      <Keyword>Provider</Keyword>
+    </Keywords>
+  </SampleInfo>
+  <GettingStarted>
+    <Paragraph>
+      This sample focuses on fixing the issues surrounding the data design time
+      scenarios that were in the basic DDEX provider sample.  This is done by
+      providing an assembly containing code that customizes key parts of the
+      provider.
+    </Paragraph>
+    <Paragraph>
+      The main addition in this sample is a custom data object selector to
+      supplement or in some cases replace the schema information returned by
+      the .NET Framework Data Provider for SQL Server.  This includes providing
+      information such as the server instance name, the default schema, as well
+      as collections like indexes and index columns (which include primary
+      and unique keys), foreign keys and foreign key columns, stored procedures
+      and stored procedure parameters and columns, and user-defined functions
+      and user-defined function parameters and columns.
+    </Paragraph>
+    <Paragraph>
+      A further addition is a custom object identifier resolver, which
+      correctly expands an identifier based on the active connection.  For
+      example, if the identifier "Customers" is supplied, the active connection
+      can expand this to "Northwind.dbo.Customers" based on the current active
+      database and default schema in that database.
+    </Paragraph>
+    <Paragraph>
+      Other enhancements include a customized data source information class
+      to return properties that require computing and the localization of
+      some strings.
+    </Paragraph>
+    <Paragraph>
+      Due to the extensions added in this sample, this provider will only
+      connect to instances of Microsoft SQL Server 2005 or later.  Also note
+      that table-valued functions with parameters are not supported in some
+      data design scenarios due to a lack of extensibility in this area.
+    </Paragraph>
+    <Paragraph>
+      Since there is already a DDEX provider based on the .NET Framework Data
+      Provider for SQL Server that ships with Visual Studio, installing another
+      such provider has potential for ambiguity, as many data design scenarios
+      refer to the ADO.NET provider invariant name only and from this there is
+      a one-to-many mapping to DDEX providers.  To ensure that this sample DDEX
+      provider is being used for the various data design scenarios, make sure
+      the last selected data source and provider combination in the data
+      connection dialog uses this sample DDEX provider.  Visual Studio
+      incorporates a heuristic for determining the correct DDEX provider to use
+      given an ADO.NET invariant name that is based on the last provider
+      selection made for each registered DDEX data source.
+    </Paragraph>
+  </GettingStarted>
+  <BuildingTheSample>
+    <Step>
+      Open the <bold>ExtendedProvider.sln</bold> solution.
+    </Step>
+    <Step>
+      Press F5 to build the sample and register it in the experimental hive,
+      then launch Visual Studio from the experimental hive.
+    </Step>
+    <Step>
+      Alternatively, run the <bold>Install.cmd /ranu</bold> script from a
+      command line, passing in a Visual Studio registry root (optional) and
+      location of the built assembly binary (required). The Visual Studio
+      registry root defaults to the SDK experimental hive.  Exclude the
+      <bold>/ranu</bold> argument when installing to a non-experimental Visual
+      Studio registry hive.
+    </Step>
+  </BuildingTheSample>
+  <RunningTheSample>
+    <SampleTask>
+      <Description>
+        To add a data connection...
+      </Description>
+      <Step>
+        On the <bold>View</bold> menu, click <bold>Server Explorer</bold>.
+      </Step>
+      <Step>
+        In the <bold>Server Explorer</bold> window, right click the <bold>Data
+        Connections</bold> node and choose <bold>Add Connection...</bold>.
+      </Step>
+      <Step>
+        If the <bold>Add Connection</bold> dialog shows, click the <bold>
+        Change...</bold> button to show the <bold>Change Data Source</bold>
+        dialog.
+      </Step>
+      <Step>
+        Pick the <bold>Microsoft SQL Server</bold> data source and drop down
+        the <bold>Data Provider</bold> combo box, then choose this sample's
+        data provider (marked as "Extended Sample").
+      </Step>
+      <Step>
+        Click <bold>OK</bold> to move to the <bold>Add Connection</bold>
+        dialog.
+      </Step>
+      <Step>
+        In the property grid, enter information to connect to an instance of
+        Microsoft SQL Server.  For the SQL Express instance installed by
+        default with Visual Studio, enter ".\SQLEXPRESS" as the <bold>Data
+        Source</bold> value.
+      </Step>
+      <Step>
+        Click <bold>OK</bold> to create a connection in the Server Explorer.
+      </Step>
+    </SampleTask>
+    <SampleTask>
+      <Description>
+        To enumerate data objects...
+      </Description>
+      <Step>
+        Follow the steps for adding a data connection with this provider.
+      </Step>
+      <Step>
+        Expand the resulting data connection.
+      </Step>
+      <Step>
+        Expand the various nodes to see data objects.
+      </Step>
+    </SampleTask>
+    <SampleTask>
+      <Description>
+        To initiate an end-to-end data design time scenario
+      </Description>
+      <Step>
+        Create a new VB or C# project.
+      </Step>
+      <Step>
+        On the <bold>Data</bold> menu, click <bold>Show Data Sources</bold>.
+      </Step>
+      <Step>
+        In the <bold>Data Sources</bold> window, click <bold>Add New Data
+        Source...</bold>.
+      </Step>
+      <Step>
+        Follow the steps in the Data Source Configuration Wizard.
+      </Step>
+    </SampleTask>
+  </RunningTheSample>
+  <AdditionalResources>
+    <Resource>
+      <Title>Visual Studio SDK Website</Title>
+      <URL>http://msdn.microsoft.com/vstudio/extend</URL>
+    </Resource>
+  </AdditionalResources>
+  <UnitTests>
+    <Test>
+      SqlObjectIdentifierResolverTests.ExpandIdentifierTest.  Ensure an
+      identifier "Customers" is properly expanded to "Northwind", "dbo",
+      "Customers" given appropriate mocks that return a hard coded default
+      catalog and schema.
+    </Test>
+    <Test>
+      SqlObjectSelectorTests.SelectObjectsTest.  Ensure all the different
+      enumerations execute successfully and in some cases, check the actual
+      returned result set.
+    </Test>
+    <Test>
+      SqlSourceInformationTests.ItemIndexerTest.  Ensure retrieval of the
+      default schema executes successfully and returns the correct value.
+    </Test>
+  </UnitTests>
+  <FunctionalTests>
+    <Test>
+      See the DDEX SDK documentation for information about functional tests.
+    </Test>
+  </FunctionalTests>
+  <ProjectFiles>
+    <File>
+      <Name>ExtendedProvider.reg</Name>
+      <Description>
+        This file contains the registry entries that register this provider.
+      </Description>
+    </File>
+    <File>
+      <Name>SqlObjectIdentifierResolver.cs</Name>
+      <Description>
+        This file contains the custom implementation of the data object
+        identifier resolver connection service.
+      </Description>
+    </File>
+    <File>
+      <Name>SqlObjectSelector.cs</Name>
+      <Description>
+        This file contains the custom implementation of the data object
+        selector connection service.
+      </Description>
+    </File>
+    <File>
+      <Name>SqlObjectSupport.xml</Name>
+      <Description>
+        This file defines the structure of the data source as a set of objects.
+      </Description>
+    </File>
+    <File>
+      <Name>SqlObjectTypes.cs</Name>
+      <Description>
+        This file contains static strings identifying the different types of
+        objects defined in the data object support XML file, for programmatic
+        purposes.
+      </Description>
+    </File>
+    <File>
+      <Name>SqlSourceInformation.cs</Name>
+      <Description>
+        This file contains the custom implementation of the data source
+        information connection service.
+      </Description>
+    </File>
+    <File>
+      <Name>SqlViewSupport.xml</Name>
+      <Description>
+        This file defines the presentation of the data source objects in a
+        hierarchical form.
+      </Description>
+    </File>
+  </ProjectFiles>
+  <History>
+    <Change>
+      <Date>2007-07-08</Date>
+      <Description>
+        Created this sample for the Visual Studio 2008 SDK.
+      </Description>
+    </Change>
+  </History>
+</VSSDKSample>

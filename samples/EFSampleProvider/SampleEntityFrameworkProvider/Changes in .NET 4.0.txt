@@ -1,0 +1,12 @@
+﻿Changes in .NET 4.0 Beta 2
+
+Summary
+	The sample provider has been updated with support for the Entity Framework runtime features introduced in .NET 4.0 Beta 1 and .NET 4.0 Beta 2 that impact providers. Also, some code refactoring has been done. 
+
+Details
+	Added support for the canonical functions introduced by .NET 4.0 Beta 1. 
+	Added FunctionStubGenerator, a sample tool to generate a class that exposes the sample provider's store functions to LINQ to Entites users.
+	Added support for the feature "Translating String.StartsWith, String.EndsWith and String.Contains to LIKE in LINQ to Entities". In particular, the methods DbProviderManifest.SupportsEscapingLikeArgument and DbProviderManifest.EscapeLikeArgument have been implemented.
+	Added support for SQL Server 2008. The sample provider now supports both SQL Server 2005 and SQL Server 2008.
+	Minor code refactoring.
+    Added DDL generation support for DatabaseExists/DeleteDatabase/CreateDatabase

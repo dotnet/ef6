@@ -1,0 +1,8 @@
+* removed DbProviderServices.GetProviderManifest(DbConnection)
+* added DbProviderServices.GetProviderManifestToken(DbConnection) 
+* completely redesigned CSDL/SSDL/MSL for SchemaInformation
+* changed the format of the provider manifest XML:
+	- DefaultValue vs Default
+	- removed facets from functions 
+* added DbProviderManifest.Token/DbProviderManifest.Provider properties 
+  (they are not used in SP1Beta and will removed in RTM).

@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema xmlns="http://schemas.microsoft.com/ado/2006/04/edm" xmlns:edm="http://schemas.microsoft.com/ado/2006/04/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" Namespace="Store" Alias="Self">
+
+  <EntityContainer Name="SchemaInformation">
+
+    <EntitySet Name="Tables" EntityType="Self.Table" />
+    <EntitySet Name="TableColumns" EntityType="Self.Column" />
+    <EntitySet Name="TableConstraints" EntityType="Self.Constraint" />
+    <EntitySet Name="TableForeignKeys" EntityType="Self.ForeignKey" />
+    
+    <EntitySet Name="Views" EntityType="Self.View" />
+    <EntitySet Name="ViewColumns" EntityType="Self.Column" />
+    <EntitySet Name="ViewConstraints" EntityType="Self.Constraint" />
+    <EntitySet Name="ViewForeignKeys" EntityType="Self.ForeignKey" />
+    
+    <EntitySet Name="Functions" EntityType="Self.Function" />
+    <EntitySet Name="FunctionParameters" EntityType="Self.Parameter" />
+    <EntitySet Name="Procedures" EntityType="Self.Procedure" />
+    <EntitySet Name="ProcedureParameters" EntityType="Self.Parameter" />
+ 
+    <AssociationSet Name="TableTableColumns" Association="Self.TableOrViewColumn" >
+      <End Role="Parent" EntitySet="Tables"/>
+      <End Role="Column" EntitySet="TableColumns"/>
+    </AssociationSet>
+    <AssociationSet Name="TableTableConstraints" Association="Self.TableOrViewConstraint" >
+      <End Role="Parent" EntitySet="Tables"/>
+      <End Role="Constraint" EntitySet="TableConstraints"/>
+    </AssociationSet>
+    <AssociationSet Name="TableConstraintColumns" Association="Self.TableOrViewConstraintColumn" >
+      <End Role="Column" EntitySet="TableColumns"/>
+      <End Role="Constraint" EntitySet="TableConstraints"/>
+    </AssociationSet>
+    <AssociationSet Name="TableConstraintForeignKeys" Association="Self.ConstraintForeignKey" >
+      <End Role="ForeignKey" EntitySet="TableForeignKeys"/>
+      <End Role="Constraint" EntitySet="TableConstraints"/>
+    </AssociationSet>
+    <AssociationSet Name="FromTableForeignKeyColumns" Association="Self.FromForeignKeyColumn" >
+      <End Role="Column" EntitySet="TableColumns"/>
+      <End Role="ForeignKey" EntitySet="TableForeignKeys"/>
+    </AssociationSet>
+    <AssociationSet Name="ToTableForeignKeyColumns" Association="Self.ToForeignKeyColumn" >
+      <End Role="Column" EntitySet="TableColumns"/>
+      <End Role="ForeignKey" EntitySet="TableForeignKeys"/>
+    </AssociationSet>
+    
+    <AssociationSet Name="ViewViewColumns" Association="Self.TableOrViewColumn" >
+      <End Role="Parent" EntitySet="Views"/>
+      <End Role="Column" EntitySet="ViewColumns"/>
+    </AssociationSet>
+    <AssociationSet Name="ViewViewConstraints" Association="Self.TableOrViewConstraint" >
+      <End Role="Parent" EntitySet="Views"/>
+      <End Role="Constraint" EntitySet="ViewConstraints"/>
+    </AssociationSet>
+    <AssociationSet Name="ViewConstraintColumns" Association="Self.TableOrViewConstraintColumn" >
+      <End Role="Column" EntitySet="ViewColumns"/>
+      <End Role="Constraint" EntitySet="ViewConstraints"/>
+    </AssociationSet>
+    <AssociationSet Name="ViewConstraintForeignKeys" Association="Self.ConstraintForeignKey" >
+      <End Role="ForeignKey" EntitySet="ViewForeignKeys"/>
+      <End Role="Constraint" EntitySet="ViewConstraints"/>
+    </AssociationSet>
+    <AssociationSet Name="FromViewForeignKeyColumns" Association="Self.FromForeignKeyColumn" >
+      <End Role="Column" EntitySet="ViewColumns"/>
+      <End Role="ForeignKey" EntitySet="ViewForeignKeys"/>
+    </AssociationSet>
+    <AssociationSet Name="ToViewForeignKeyColumns" Association="Self.ToForeignKeyColumn" >
+      <End Role="Column" EntitySet="ViewColumns"/>
+      <End Role="ForeignKey" EntitySet="ViewForeignKeys"/>
+    </AssociationSet>
+    
+    <AssociationSet Name="FunctionFunctionParameters" Association="Self.RoutineParameter" >
+      <End Role="Routine" EntitySet="Functions"/>
+      <End Role="Parameter" EntitySet="FunctionParameters"/>
+    </AssociationSet>
+    
+    <AssociationSet Name="ProcedureProcedureParameters" Association="Self.RoutineParameter" >
+      <End Role="Routine" EntitySet="Procedures"/>
+      <End Role="Parameter" EntitySet="ProcedureParameters"/>
+    </AssociationSet>
+
+  </EntityContainer>
+
+  <ComplexType Name="TypeSpecification">
+    <Property Name="TypeName" Nullable="false" Type="String"  />
+    <Property Name="MaxLength" Nullable="true" Type="Int32" />
+    <Property Name="Precision" Nullable="true" Type="Int16" />
+    <Property Name="DateTimePrecision" Nullable="true" Type="Int32" />
+    <Property Name="Scale" Nullable="true" Type="Int32" />
+    <Property Name="Collation" Nullable="false" Type="Self.Collation" />
+    <Property Name="CharacterSet" Nullable="false" Type="Self.CharacterSet" />
+    <Property Name="IsMultiSet" Nullable="false" Type="Boolean"/>
+  </ComplexType>
+
+  <ComplexType Name="Collation">
+    <Property Name="CatalogName" Nullable="true" Type="String"  />
+    <Property Name="SchemaName" Nullable="true" Type="String" />
+    <Property Name="Name" Nullable="true" Type="String" />
+  </ComplexType>
+
+  <ComplexType Name="CharacterSet">
+    <Property Name="CatalogName" Nullable="true" Type="String"  />
+    <Property Name="SchemaName" Nullable="true" Type="String" />
+    <Property Name="Name" Nullable="true" Type="String" />
+  </ComplexType>
+
+  <EntityType Name="TableOrView" Abstract="true">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="String"  />
+    <Property Name="Name" Nullable="false" Type="String"  />
+    <Property Name="CatalogName" Type="String"  />
+    <Property Name="SchemaName" Type="String"  />
+    <NavigationProperty Relationship="Self.TableOrViewColumn" Name="Columns" FromRole="Parent" ToRole="Column" />
+    <NavigationProperty Relationship="Self.TableOrViewConstraint" Name="Constraints" FromRole="Parent" ToRole="Constraint" />
+  </EntityType>
+
+  <EntityType Name="Table" BaseType="Self.TableOrView">
+  </EntityType>
+
+  <EntityType Name="Column">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="String"  />
+    <Property Name="Name" Nullable="false" Type="String" />
+    <Property Name="Ordinal" Nullable="false" Type="Int32" />
+    <Property Name="IsNullable" Nullable="false" Type="Boolean" />
+    <Property Name="ColumnType" Nullable="false" Type="Self.TypeSpecification"/>
+    <Property Name="IsIdentity" Nullable="false" Type="Boolean" />
+    <Property Name="IsStoreGenerated" Nullable="false" Type="Boolean" />
+    <Property Name="Default" Type="String" />
+    <NavigationProperty Relationship="Self.TableOrViewColumn" Name="Parent" FromRole="Column" ToRole="Parent" />
+  </EntityType>
+  
+  <EntityType Name="View" BaseType="Self.TableOrView">
+    <Property Name="IsUpdatable" Nullable="false" Type="Boolean" />
+    <Property Name="ViewDefinition" Nullable="true" Type="String"  />
+  </EntityType>
+  
+  <EntityType Name="Routine" Abstract="true">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="String"  />
+    <Property Name="CatalogName" Type="String"  />
+    <Property Name="SchemaName" Type="String"  />
+    <Property Name="Name" Nullable="false" Type="String"  />
+    <NavigationProperty Relationship="Self.RoutineParameter" Name="Parameters" FromRole="Routine" ToRole="Parameter" />
+  </EntityType>
+  
+  <EntityType Name="Parameter">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="String"  />
+    <Property Name="Name" Nullable="false" Type="String"  />
+    <Property Name="Ordinal" Nullable="false" Type="Int32" />
+    <Property Name="ParameterType" Nullable="false" Type="Self.TypeSpecification"/>
+    <Property Name="Mode" Type="String"  />
+    <Property Name="Default" Type="String"  />
+    <NavigationProperty Relationship="Self.RoutineParameter" Name="Routine" FromRole="Parameter" ToRole="Routine" />
+  </EntityType>
+
+  <EntityType Name="Function" BaseType="Self.Routine" Abstract="true">
+    <Property Name="IsBuiltIn" Type="Boolean" />
+    <Property Name="IsNiladic" Type="Boolean" />
+  </EntityType>
+
+  <EntityType Name="ScalarFunction" BaseType="Self.Function">
+    <Property Name="ReturnType" Type="Self.TypeSpecification" Nullable="false"/>
+    <Property Name="IsAggregate" Type="Boolean" />
+  </EntityType>
+
+  <EntityType Name="Procedure" BaseType="Self.Routine">
+  </EntityType>
+
+  <EntityType Name="Constraint" Abstract="true">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="String"  />
+    <Property Name="Name" Nullable="false" Type="String"  />
+    <Property Name="IsDeferrable" Nullable="false" Type="Boolean"  />
+    <Property Name="IsInitiallyDeferred" Nullable="false" Type="Boolean"  />
+    <NavigationProperty Relationship="Self.TableOrViewConstraint" Name="Parent" FromRole="Constraint" ToRole="Parent" />
+  </EntityType>
+
+  <EntityType Name="CheckConstraint" BaseType="Self.Constraint">
+    <Property Name="Expression" Nullable="false" Type="String" />
+  </EntityType>
+  
+  <EntityType Name="TableOrViewColumnConstraint" BaseType="Self.Constraint" Abstract="true">
+    <NavigationProperty Relationship="Self.TableOrViewConstraintColumn" Name="Columns" FromRole="Constraint" ToRole="Column" />
+  </EntityType>
+
+  <EntityType Name="PrimaryKeyConstraint" BaseType="Self.TableOrViewColumnConstraint">
+  </EntityType>
+
+  <EntityType Name="UniqueConstraint" BaseType="Self.TableOrViewColumnConstraint">
+  </EntityType>
+
+  <EntityType Name="ForeignKeyConstraint" BaseType="Self.Constraint">
+    <Property Name="UpdateRule" Nullable="false" Type="String"  />
+    <Property Name="DeleteRule" Nullable="false" Type="String"  />
+    <NavigationProperty Relationship="Self.ConstraintForeignKey" Name="ForeignKeys" FromRole="Constraint" ToRole="ForeignKey" />
+  </EntityType>
+
+  <EntityType Name="ForeignKey">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="String"  />
+    <Property Name="Ordinal" Nullable="false" Type="Int32" />
+    <NavigationProperty Relationship="Self.ConstraintForeignKey" Name="Constraint" FromRole="ForeignKey" ToRole="Constraint" />
+    <NavigationProperty Relationship="Self.FromForeignKeyColumn" Name="FromColumn" FromRole="ForeignKey" ToRole="Column" />
+    <NavigationProperty Relationship="Self.ToForeignKeyColumn" Name="ToColumn" FromRole="ForeignKey" ToRole="Column" />
+  </EntityType>
+  
+  <Association Name="TableOrViewColumn">
+    <End Type="Self.TableOrView" Role="Parent" Multiplicity="1" />
+    <End Type="Self.Column" Role="Column" Multiplicity="*" />
+  </Association>
+  
+  <Association Name="TableOrViewConstraint">
+    <End Type="Self.TableOrView" Role="Parent" Multiplicity="1" />
+    <End Type="Self.Constraint" Role="Constraint" Multiplicity="*" />
+  </Association>
+
+  <Association Name="TableOrViewConstraintColumn">
+    <End Type="Self.TableOrViewColumnConstraint" Role="Constraint" Multiplicity="*" />
+    <End Type="Self.Column" Role="Column" Multiplicity="*" />
+  </Association>
+
+  <Association Name="ConstraintForeignKey">
+    <End Type="Self.ForeignKeyConstraint" Role="Constraint" Multiplicity="1" />
+    <End Type="Self.ForeignKey" Role="ForeignKey" Multiplicity="*" />
+  </Association>
+
+  <Association Name="ToForeignKeyColumn">
+    <End Type="Self.ForeignKey" Role="ForeignKey" Multiplicity="*" />
+    <End Type="Self.Column" Role="Column" Multiplicity="1" />
+  </Association>
+
+  <Association Name="FromForeignKeyColumn">
+    <End Type="Self.ForeignKey" Role="ForeignKey" Multiplicity="*" />
+    <End Type="Self.Column" Role="Column" Multiplicity="1" />
+  </Association>
+  
+  <Association Name="RoutineParameter">
+    <End Type="Self.Routine" Role="Routine" Multiplicity="1" />
+    <End Type="Self.Parameter" Role="Parameter" Multiplicity="*" />
+  </Association>
+
+</Schema>

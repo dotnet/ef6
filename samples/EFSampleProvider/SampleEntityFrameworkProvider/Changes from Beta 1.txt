@@ -1,0 +1,18 @@
+﻿Overall project:
+  Renamed from OrcasSampleProvider to SampleEntityFrameworkProvider
+
+ProviderServices:
+  Remove CreateCommandDefinition(DbCommand prototype)
+  Rename CreateCommandDefinition(DbConnection connection, DbCommandTree commandTree) to CreateDbCommandDefinition, mark as protected
+  Remove GetProviderManifest
+  Add GetDbInformation
+
+SqlGenerator:
+  Rename Namespace NamespaceName in HandleDatepartDateFunction, WriteFunctionName functions
+  GetSqlPrimitiveType overhauled
+  Visit(DbGroupByExpression) overhauled
+  Added support for canonical functions
+  
+MetadataHelpers:
+  Remove reference to PrimitiveTypeKind.Money, PrimitiveTypeKind.Xml in GetDbType
+
