@@ -11,7 +11,7 @@
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Validation;
-    using System.Data.Metadata.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -524,7 +524,7 @@
         #region String resource helpers
 
         readonly string DbEntityValidationException_ValidationFailed = LookupString
-            (CodeFirstAssembly, "System.Data.Entity.Properties.Resources", "DbEntityValidationException_ValidationFailed");
+            (EntityFrameworkAssembly, "System.Data.Entity.Properties.Resources", "DbEntityValidationException_ValidationFailed");
 
         readonly string RangeAttribute_ValidationError = LookupString
             (SystemComponentModelDataAnnotationsAssembly, "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources", "RangeAttribute_ValidationError");

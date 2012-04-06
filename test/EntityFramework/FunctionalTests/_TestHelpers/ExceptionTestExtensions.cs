@@ -16,7 +16,7 @@
             Contract.Requires(exception != null);
             Contract.Requires(expectedResourceKey != null);
 
-            ValidateMessage(exception, TestBase.CodeFirstAssembly, expectedResourceKey, null, parameters);
+            ValidateMessage(exception, TestBase.EntityFrameworkAssembly, expectedResourceKey, null, parameters);
         }
 
         public static void ValidateMessage(
@@ -30,7 +30,7 @@
             Contract.Requires(resourceAssembly != null);
             Contract.Requires(expectedResourceKey != null);
 
-            if (resourceTable == null && resourceAssembly == TestBase.CodeFirstAssembly)
+            if (resourceTable == null && resourceAssembly == TestBase.EntityFrameworkAssembly)
             {
                 resourceTable = "System.Data.Entity.Properties.Resources";
             }

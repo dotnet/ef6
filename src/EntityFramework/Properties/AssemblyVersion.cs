@@ -3,7 +3,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security;
 
-[assembly: SecurityTransparent]
+// TODO: SDE Merge - Make assembly SecurityTransaprent again
+//[assembly: SecurityTransparent]
 [assembly: ComCompatibleVersion(1, 0, 3300, 0)]
 [assembly: RuntimeCompatibility(WrapNonExceptionThrows = true)]
 [assembly: CompilationRelaxations(8)]

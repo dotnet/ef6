@@ -10,7 +10,7 @@ namespace FunctionalTests
     {
         using System.ComponentModel.DataAnnotations;
         using System.ComponentModel.DataAnnotations.Schema;
-        using System.Data.Spatial;
+        using System.Data.Entity.Core.Spatial;
 
         public class Spatial_Customer
         {

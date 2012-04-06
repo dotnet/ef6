@@ -2,6 +2,7 @@ namespace ProductivityApiTests
 {
     using System;
     using System.Collections;
+    using System.Data.Entity.Core;
     using System.Data;
     using System.Data.Entity;
     using System.Linq;
@@ -1128,7 +1129,7 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 Assert.Throws<InvalidOperationException>(() => context.Set<FeaturedProduct>().Find(1)).ValidateMessage(
-                    SystemDataEntityAssembly, "Materializer_InvalidCastReference", "System.Data.Entity",
+                    "Materializer_InvalidCastReference", 
                     "SimpleModel.Product", "SimpleModel.FeaturedProduct");
                 Assert.Equal(0, GetStateEntries(context).Count());
             }
@@ -1140,7 +1141,7 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 Assert.Throws<InvalidOperationException>(() => context.Set(typeof(FeaturedProduct)).Find(1)).
-                    ValidateMessage(SystemDataEntityAssembly, "Materializer_InvalidCastReference", "System.Data.Entity",
+                    ValidateMessage("Materializer_InvalidCastReference", 
                                     "SimpleModel.Product", "SimpleModel.FeaturedProduct");
                 Assert.Equal(0, GetStateEntries(context).Count());
             }
@@ -1336,7 +1337,7 @@ namespace ProductivityApiTests
                 {
                     Assert.Equal("keyValues", ex.ParamName);
                     var withNoParam = ex.Message.Substring(0, ex.Message.LastIndexOf("\r\n"));
-                    new StringResourceVerifier(new AssemblyResourceLookup(CodeFirstAssembly,
+                    new StringResourceVerifier(new AssemblyResourceLookup(EntityFrameworkAssembly,
                                                                           "System.Data.Entity.Properties.Resources")).
                         VerifyMatch("DbSet_WrongKeyValueType", withNoParam);
 
@@ -1388,7 +1389,7 @@ namespace ProductivityApiTests
                 {
                     Assert.Equal("keyValues", ex.ParamName);
                     var withNoParam = ex.Message.Substring(0, ex.Message.LastIndexOf("\r\n"));
-                    new StringResourceVerifier(new AssemblyResourceLookup(CodeFirstAssembly,
+                    new StringResourceVerifier(new AssemblyResourceLookup(EntityFrameworkAssembly,
                                                                           "System.Data.Entity.Properties.Resources")).
                         VerifyMatch("DbSet_WrongKeyValueType", withNoParam);
 
@@ -1407,8 +1408,8 @@ namespace ProductivityApiTests
                 // context.CompositeKeyEntities.Find(new byte[] { 1, 2, 3, 4 }, 2.3F, 1);
                 Assert.Throws<InvalidOperationException>(
                     () => context.CompositeKeyEntities.Find(new byte[] { 1, 2, 3, 4 }, 2.3F, 1)).ValidateMessage(
-                        CodeFirstAssembly, "ModelGeneration_UnableToDetermineKeyOrder",
-                        "System.Data.Entity.Properties.Resources", typeof(CompositeKeyEntityWithNoOrdering).ToString());
+                        "ModelGeneration_UnableToDetermineKeyOrder",
+                        typeof(CompositeKeyEntityWithNoOrdering).ToString());
             }
         }
 

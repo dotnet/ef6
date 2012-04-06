@@ -1,5 +1,6 @@
 ﻿namespace System.Data.Entity
 {
+    using System.Data.Entity.Core.Common;
     using System.Data.Common;
 
     public class GenericProviderFactory<T> : DbProviderFactory

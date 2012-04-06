@@ -1,11 +1,12 @@
 ﻿Imports System.Data.Entity
 Imports System.Data.Entity.Infrastructure
-Imports System.Data.Objects
+Imports System.Data.Entity.Core.Objects
 Imports System.Reflection
 Imports System.Transactions
 Imports AdvancedPatternsVB
 Imports Another.Place
 Imports CodeFirstTest
+Imports System.Data.Entity.Core
 
 ''' <summary>
 ''' Visual Basic tests that use T4 models generated in Visual Basic.

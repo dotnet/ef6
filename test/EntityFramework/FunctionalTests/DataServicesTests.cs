@@ -4,7 +4,7 @@ namespace FunctionalTests
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
-    using System.Data.Metadata.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Services;
     using System.Data.Services.Common;
     using Xunit;

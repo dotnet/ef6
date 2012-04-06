@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Data.Entity.Core;
     using System.Data;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
@@ -1811,7 +1812,7 @@
         #region String resource helpers
 
         private readonly string MaxLengthAttribute_ValidationError = LookupString
-            (CodeFirstAssembly, "System.Data.Entity.Properties.Resources", "MaxLengthAttribute_ValidationError");
+            (EntityFrameworkAssembly, "System.Data.Entity.Properties.Resources", "MaxLengthAttribute_ValidationError");
 
         private readonly string RangeAttribute_ValidationError = LookupString
             (SystemComponentModelDataAnnotationsAssembly,

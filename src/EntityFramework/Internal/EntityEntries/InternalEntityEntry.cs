@@ -1,12 +1,14 @@
 ﻿namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Validation;
-    using System.Data.Metadata.Edm;
-    using System.Data.Objects;
-    using System.Data.Objects.DataClasses;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;

@@ -1,6 +1,6 @@
 ﻿namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
 {
-    using System.Data.Objects;
+    using System.Data.Entity.Core.Objects;
 
     public class FakeDerivedObjectContext : ObjectContext
     {

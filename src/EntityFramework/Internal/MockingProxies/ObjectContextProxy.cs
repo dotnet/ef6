@@ -1,9 +1,9 @@
 ﻿namespace System.Data.Entity.Internal.MockingProxies
 {
     using System.Collections.Generic;
-    using System.Data.EntityClient;
-    using System.Data.Metadata.Edm;
-    using System.Data.Objects;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Reflection;

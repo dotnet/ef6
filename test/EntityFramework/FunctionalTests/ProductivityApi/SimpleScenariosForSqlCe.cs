@@ -1,6 +1,7 @@
 ﻿namespace ProductivityApiTests
 {
     using System;
+    using System.Data.Entity.Core;
     using System.Data;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
@@ -38,7 +39,7 @@
 
         #region Scenarios for SQL Server Compact Edition
 
-        [Fact]
+        [Fact(Skip = "No CE Provider")]
         public void SqlCe_Database_can_be_created_with_columns_that_explicitly_total_more_that_8060_bytes_but_data_longer_than_8060_cannot_be_inserted()
         {
             RunInSqlCeTransaction<ModelWithWidePropertiesForSqlCe>(context =>
@@ -67,7 +68,7 @@
                                                                    });
         }
 
-        [Fact]
+        [Fact(Skip = "No CE Provider")]
         public void SqlCe_Database_can_be_created_with_columns_that_implicitly_total_more_that_8060_bytes_but_data_longer_than_8060_cannot_be_inserted()
         {
             RunInSqlCeTransaction<ModelWithWidePropertiesForSqlCe>(context =>
@@ -96,7 +97,7 @@
                                                                    });
         }
 
-        [Fact]
+        [Fact(Skip = "No CE Provider")]
         public void Scenario_Find_OnSqlCe()
         {
             using (var context = new SimpleModelContext())
@@ -117,7 +118,7 @@
             }
         }
 
-        [Fact]
+        [Fact(Skip = "No CE Provider")]
         public void Scenario_Insert_OnSqlCe()
         {
             RunInSqlCeTransaction<SimpleModelContext>(context =>
@@ -133,7 +134,7 @@
                                                       });
         }
 
-        [Fact]
+        [Fact(Skip = "No CE Provider")]
         public void Scenario_Update_OnSqlCe()
         {
             RunInSqlCeTransaction<SimpleModelContext>(context =>
@@ -149,7 +150,7 @@
                                                       });
         }
 
-        [Fact]
+        [Fact(Skip = "No CE Provider")]
         public void Scenario_Query_OnSqlCe()
         {
             using (var context = new SimpleModelContext())
@@ -162,7 +163,7 @@
             }
         }
 
-        [Fact]
+        [Fact(Skip = "No CE Provider")]
         public void Scenario_Relate_using_query_OnSqlCe()
         {
             RunInSqlCeTransaction<SimpleModelContext>(context =>
@@ -188,7 +189,7 @@
                                                       });
         }
 
-        [Fact]
+        [Fact(Skip = "No CE Provider")]
         public void Scenario_Relate_using_FK_OnSqlCe()
         {
             RunInSqlCeTransaction<SimpleModelContext>(context =>
@@ -206,7 +207,7 @@
                                                       });
         }
 
-        [Fact]
+        [Fact(Skip = "No CE Provider")]
         public void Scenario_CodeFirst_with_ModelBuilder_OnSqlCe()
         {
             Database.Delete("Scenario_CodeFirstWithModelBuilder");
@@ -229,7 +230,7 @@
             }
         }
 
-        [Fact]
+        [Fact(Skip = "No CE Provider")]
         public void Scenario_Using_two_databases_OnSqlCe()
         {
             using (var context = new CeLoginsContext())
@@ -272,7 +273,7 @@
                                                       });
         }
 
-        [Fact]
+        [Fact(Skip = "No CE Provider")]
         public void Scenario_Use_AppConfig_connection_string_OnSqlCe()
         {
             Database.Delete("Scenario_Use_SqlCe_AppConfig_connection_string");
@@ -313,7 +314,7 @@
             context.SaveChanges();
         }
 
-        [Fact]
+        [Fact(Skip = "No CE Provider")]
         public void Scenario_Include_OnSqlCe()
         {
             using (var context = new SimpleModelContext())
@@ -328,7 +329,7 @@
             }
         }
 
-        [Fact]
+        [Fact(Skip = "No CE Provider")]
         public void Scenario_IncludeWithLambda_OnSqlCe()
         {
             using (var context = new SimpleModelContext())

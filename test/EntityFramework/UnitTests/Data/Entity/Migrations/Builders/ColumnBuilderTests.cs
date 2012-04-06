@@ -1,8 +1,8 @@
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Builders;
-    using System.Data.Metadata.Edm;
-    using System.Data.Spatial;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Spatial;
     using Xunit;
 
     public class ColumnBuilderTests

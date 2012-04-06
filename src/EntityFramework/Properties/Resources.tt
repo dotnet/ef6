@@ -96,6 +96,7 @@ if (!string.IsNullOrWhiteSpace(customToolNamespace))
 namespace <#= outputNamespace #>.Resources
 {
     using System.CodeDom.Compiler;
+	using System.Data.Entity.Core;
     using System.Globalization;
     using System.Resources;
     using System.Threading;

@@ -1,9 +1,10 @@
 namespace System.Data.Entity.ModelConfiguration.Utilities
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core;
     using System.Data.Entity.Edm;
-    using System.Data.Metadata.Edm;
-    using System.Data.Objects.DataClasses;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;

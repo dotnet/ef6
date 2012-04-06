@@ -7,8 +7,8 @@
     using System.Data.Entity.Internal;
     using System.Data.Entity.Internal.Linq;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
-    using System.Data.EntityClient;
-    using System.Data.Objects;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Objects;
     using System.Threading.Tasks;
     using Moq;
     using Xunit;

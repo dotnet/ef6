@@ -2,6 +2,7 @@ namespace System.Data.Entity
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity.Edm;
     using System.Data.Entity.Infrastructure;
@@ -324,7 +325,7 @@ namespace System.Data.Entity
 
             _modelConfiguration.ComplexTypes
                 .Where(type => typeMapper.MapComplexType(type) == null)
-                .Each(t => { throw Error.InvalidComplexType(t); });
+                .Each(t => { throw Error.CodeFirstInvalidComplexType(t); });
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",

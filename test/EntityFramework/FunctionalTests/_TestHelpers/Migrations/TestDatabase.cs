@@ -1,5 +1,6 @@
 ﻿namespace System.Data.Entity.Migrations
 {
+    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.SqlClient;

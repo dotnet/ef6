@@ -1,6 +1,7 @@
 ﻿namespace ProductivityApiTests
 {
     using System;
+    using System.Data.Entity.Core;
     using System.Data;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
@@ -269,7 +270,7 @@
 
         private void VerifyIndependentAssociationUpdateMessage(string message)
         {
-            new StringResourceVerifier(new AssemblyResourceLookup(CodeFirstAssembly,
+            new StringResourceVerifier(new AssemblyResourceLookup(EntityFrameworkAssembly,
                                                                   "System.Data.Entity.Properties.Resources")).
                 VerifyMatch(
                     "DbContext_IndependentAssociationUpdateException", message);

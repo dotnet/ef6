@@ -1,7 +1,8 @@
 namespace System.Data.Entity.ModelConfiguration.Utilities
 {
+    using System.Data.Entity.Core.Common;
     using System.Data.Common;
-    using System.Data.Metadata.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.Contracts;
 
     internal static class DbProviderManifestExtensions

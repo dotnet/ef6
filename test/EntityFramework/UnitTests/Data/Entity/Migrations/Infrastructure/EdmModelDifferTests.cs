@@ -7,12 +7,13 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.UserRoles_v1;
     using System.Data.Entity.ModelConfiguration.Conventions;
-    using System.Data.Metadata.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
-    [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
+    // TODO: SDE Merge - No CE Provider
+    //[Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     public class EdmModelDifferTests : DbTestCase
     {
         [MigrationsTheory]
@@ -199,7 +200,7 @@ namespace System.Data.Entity.Migrations
             Assert.Equal("Id", dropPrimaryKeyOperation.Columns.Single());
         }
 
-        [MigrationsTheory]
+        [MigrationsTheory(Skip = "No CE Provider")]
         public void Cross_provider_diff_should_be_clean_when_same_model()
         {
             var modelBuilder = new DbModelBuilder();

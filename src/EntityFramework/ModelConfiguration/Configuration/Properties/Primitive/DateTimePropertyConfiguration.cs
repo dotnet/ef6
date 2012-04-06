@@ -2,7 +2,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 {
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Parsing.Xml.Internal.Ssdl;
-    using System.Data.Metadata.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.Contracts;
     using EdmProperty = System.Data.Entity.Edm.EdmProperty;
 

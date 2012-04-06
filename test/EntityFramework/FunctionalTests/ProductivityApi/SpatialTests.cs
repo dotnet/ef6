@@ -2,13 +2,15 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity.Core;
     using System.Data;
+    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-    using System.Data.EntityClient;
-    using System.Data.Objects.DataClasses;
-    using System.Data.Spatial;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Core.Spatial;
     using System.Globalization;
     using System.Linq;
     using Xunit;

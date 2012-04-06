@@ -6,7 +6,7 @@
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.ModelConfiguration;
-    using System.Data.Objects.DataClasses;
+    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Linq;
     using System.Reflection;
     using AdvancedPatternsModel;
@@ -330,8 +330,7 @@
             {
                 var office = new UnMappedOffice();
                 Assert.Throws<InvalidOperationException>(() => context.Offices.Add(office)).ValidateMessage(
-                    SystemDataEntityAssembly, "ObjectContext_NoMappingForEntityType", "System.Data.Entity",
-                    typeof(UnMappedOffice).FullName);
+                    "ObjectContext_NoMappingForEntityType", typeof(UnMappedOffice).FullName);
             }
         }
 
@@ -342,8 +341,7 @@
             {
                 var office = new UnMappedOffice();
                 Assert.Throws<InvalidOperationException>(() => context.Set(typeof(Office)).Add(office)).ValidateMessage(
-                    SystemDataEntityAssembly, "ObjectContext_NoMappingForEntityType", "System.Data.Entity",
-                    typeof(UnMappedOffice).FullName);
+                    "ObjectContext_NoMappingForEntityType", typeof(UnMappedOffice).FullName);
             }
         }
 
@@ -390,8 +388,7 @@
             {
                 var office = new UnMappedOffice();
                 Assert.Throws<InvalidOperationException>(() => context.Offices.Attach(office)).ValidateMessage(
-                    SystemDataEntityAssembly, "ObjectContext_NoMappingForEntityType", "System.Data.Entity",
-                    typeof(UnMappedOffice).FullName);
+                    "ObjectContext_NoMappingForEntityType", typeof(UnMappedOffice).FullName);
             }
         }
 
@@ -402,8 +399,7 @@
             {
                 var office = new UnMappedOffice();
                 Assert.Throws<InvalidOperationException>(() => context.Set(typeof(Office)).Attach(office)).
-                    ValidateMessage(SystemDataEntityAssembly, "ObjectContext_NoMappingForEntityType",
-                                    "System.Data.Entity", typeof(UnMappedOffice).FullName);
+                    ValidateMessage("ObjectContext_NoMappingForEntityType", typeof(UnMappedOffice).FullName);
             }
         }
 

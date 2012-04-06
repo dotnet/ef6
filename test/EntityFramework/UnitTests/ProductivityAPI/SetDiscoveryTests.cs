@@ -9,7 +9,7 @@
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
-    using System.Data.Objects.DataClasses;
+    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Linq;
     using System.Reflection;
     using Moq;

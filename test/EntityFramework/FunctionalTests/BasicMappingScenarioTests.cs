@@ -4,6 +4,7 @@ namespace FunctionalTests
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Core;
     using System.Data;
     using System.Data.Entity;
     using System.Data.Entity.Edm.Db;
@@ -12,7 +13,7 @@ namespace FunctionalTests
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Services;
     using System.Data.Entity.Resources;
-    using System.Data.Metadata.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
     using System.Windows.Media;
     using FunctionalTests.Model;

@@ -4,7 +4,7 @@
     using System.Data.Entity.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
-    using System.Data.Spatial;
+    using System.Data.Entity.Core.Spatial;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;

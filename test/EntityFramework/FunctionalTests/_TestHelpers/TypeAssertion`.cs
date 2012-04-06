@@ -1,6 +1,6 @@
 ﻿namespace System.Data.Entity
 {
-    using System.Data.Metadata.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using Xunit;
 
     public class TypeAssertion<TStructuralType> where TStructuralType : class

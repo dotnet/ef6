@@ -8,7 +8,7 @@
     using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
-    using System.Data.Objects.DataClasses;
+    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Linq.Expressions;
     using Moq;
     using Xunit;

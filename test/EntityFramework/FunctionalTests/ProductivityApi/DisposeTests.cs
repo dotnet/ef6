@@ -1,12 +1,14 @@
 ﻿namespace ProductivityApiTests
 {
     using System;
+    using System.Data.Entity.Core;
     using System.Data;
+    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-    using System.Data.EntityClient;
-    using System.Data.Objects;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Objects;
     using System.Linq;
     using System.Transactions;
     using SimpleModel;
@@ -85,7 +87,7 @@
             }
 
             Assert.Throws<ObjectDisposedException>(() => new SimpleModelContext(objectContext)).ValidateMessage(
-                SystemDataEntityAssembly, "ObjectContext_ObjectDisposed");
+                "ObjectContext_ObjectDisposed");
         }
 
         [Fact]
@@ -175,7 +177,7 @@
                 storeConnection = context.Database.Connection;
             }
             Assert.Throws<ObjectDisposedException>(() => objectContext.SaveChanges()).ValidateMessage(
-                SystemDataEntityAssembly, "ObjectContext_ObjectDisposed");
+                "ObjectContext_ObjectDisposed");
             Assert.True(storeConnection.State == ConnectionState.Closed &&
                         storeConnection.ConnectionString.Equals(string.Empty));
         }
@@ -208,7 +210,7 @@
             }
 
             Assert.Throws<ObjectDisposedException>(() => objectContext.SaveChanges()).ValidateMessage(
-                SystemDataEntityAssembly, "ObjectContext_ObjectDisposed");
+                "ObjectContext_ObjectDisposed");
         }
 
         [Fact]
@@ -228,7 +230,7 @@
 
             // Assert
             Assert.Throws<ObjectDisposedException>(() => objectContext.SaveChanges()).ValidateMessage(
-                SystemDataEntityAssembly, "ObjectContext_ObjectDisposed");
+                "ObjectContext_ObjectDisposed");
             Assert.True(storeConnection.State == ConnectionState.Closed &&
                         storeConnection.ConnectionString.Equals(string.Empty));
         }
@@ -314,7 +316,7 @@
 
             // Assert
             Assert.Throws<ObjectDisposedException>(() => objectContext.SaveChanges()).ValidateMessage(
-                SystemDataEntityAssembly, "ObjectContext_ObjectDisposed");
+                "ObjectContext_ObjectDisposed");
             Assert.True(connection.State == ConnectionState.Closed && connection.ConnectionString.Equals(string.Empty));
         }
 

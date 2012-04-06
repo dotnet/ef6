@@ -2,7 +2,8 @@ namespace System.Data.Entity.ModelConfiguration.Utilities.UnitTests
 {
     using System.Collections;
     using System.Collections.Generic;
-    using System.Data.Objects.DataClasses;
+    using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Reflection;
     using Moq.Protected;
     using Xunit;

@@ -2,10 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity.Core;
     using System.Data;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Objects;
+    using System.Data.Entity.Core.Objects;
     using System.Linq;
     using AdvancedPatternsModel;
     using ConcurrencyModel;
@@ -1443,7 +1444,7 @@
                 var values = getPropertyValues(context.Entry(building));
 
                 Assert.Throws<InvalidOperationException>(() => values["BuildingId"] = new Guid()).ValidateMessage(
-                    SystemDataEntityAssembly, exceptionStringResource, "System.Data.Entity", "BuildingId");
+                    exceptionStringResource, "BuildingId");
 
                 Assert.Equal(key, values["BuildingId"]);
                 Assert.Equal(key, building.BuildingId);
@@ -1459,8 +1460,7 @@
                 var values = context.Entry(building).CurrentValues;
 
                 Assert.Throws<ConstraintException>(() => values["Value"] = null).ValidateMessage(
-                    SystemDataEntityAssembly, "Materializer_SetInvalidValue", "System.Data.Entity", "Decimal",
-                    "Building", "Value", "null");
+                    "Materializer_SetInvalidValue", "Decimal", "Building", "Value", "null");
 
                 Assert.Equal(1500000m, values["Value"]);
                 Assert.Equal(1500000m, building.Value);
@@ -1476,8 +1476,8 @@
                 var values = context.Entry(building).OriginalValues;
 
                 Assert.Throws<InvalidOperationException>(() => values["Value"] = null).ValidateMessage(
-                    SystemDataEntityAssembly, "ObjectStateEntry_NullOriginalValueForNonNullableProperty",
-                    "System.Data.Entity", "Value", "Value", "AdvancedPatternsModel.Building");
+                    "ObjectStateEntry_NullOriginalValueForNonNullableProperty",
+                    "Value", "Value", "AdvancedPatternsModel.Building");
 
                 Assert.Equal(1500000m, values["Value"]);
             }
@@ -1555,7 +1555,7 @@
                 newBuilding.BuildingId = new Guid();
 
                 Assert.Throws<InvalidOperationException>(() => values.SetValues(newBuilding)).ValidateMessage(
-                    SystemDataEntityAssembly, exceptionStringResource, "System.Data.Entity", "BuildingId");
+                    exceptionStringResource, "BuildingId");
 
                 Assert.Equal(key, values["BuildingId"]);
                 Assert.Equal(key, building.BuildingId);
@@ -1587,7 +1587,7 @@
                 clone["BuildingId"] = new Guid();
 
                 Assert.Throws<InvalidOperationException>(() => values.SetValues(clone)).ValidateMessage(
-                    SystemDataEntityAssembly, exceptionStringResource, "System.Data.Entity", "BuildingId");
+                    exceptionStringResource, "BuildingId");
 
                 Assert.Equal(key, values["BuildingId"]);
                 Assert.Equal(key, building.BuildingId);
@@ -1606,7 +1606,7 @@
                 clone["Value"] = null;
 
                 Assert.Throws<ConstraintException>(() => values.SetValues(clone)).ValidateMessage(
-                    SystemDataEntityAssembly, "Materializer_SetInvalidValue", "System.Data.Entity", "Decimal",
+                    "Materializer_SetInvalidValue", "Decimal",
                     "Building", "Value", "null");
             }
         }
@@ -1623,8 +1623,8 @@
                 clone["Value"] = null;
 
                 Assert.Throws<InvalidOperationException>(() => values.SetValues(clone)).ValidateMessage(
-                    SystemDataEntityAssembly, "ObjectStateEntry_NullOriginalValueForNonNullableProperty",
-                    "System.Data.Entity", "Value", "Value", "AdvancedPatternsModel.Building");
+                    "ObjectStateEntry_NullOriginalValueForNonNullableProperty",
+                    "Value", "Value", "AdvancedPatternsModel.Building");
             }
         }
 

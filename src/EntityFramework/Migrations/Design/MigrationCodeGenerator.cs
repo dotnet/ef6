@@ -2,7 +2,7 @@ namespace System.Data.Entity.Migrations.Design
 {
     using System.Collections.Generic;
     using System.Data.Entity.Migrations.Model;
-    using System.Data.Metadata.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -45,7 +45,7 @@ namespace System.Data.Entity.Migrations.Design
             if (operations.OfType<AddColumnOperation>().Any(
                 o => o.Column.Type == PrimitiveTypeKind.Geography || o.Column.Type == PrimitiveTypeKind.Geometry))
             {
-                namespaces = namespaces.Concat(new[] { "System.Data.Spatial" });
+                namespaces = namespaces.Concat(new[] { "System.Data.Entity.Core.Spatial" });
             }
 
             return namespaces.Distinct().OrderBy(n => n);

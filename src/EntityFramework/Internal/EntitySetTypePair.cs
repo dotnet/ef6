@@ -1,6 +1,6 @@
 namespace System.Data.Entity.Internal
 {
-    using System.Data.Metadata.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
     ///     Helper class that extends Tuple to give the Item1 and Item2 properties more meaningful names.

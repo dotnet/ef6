@@ -1,6 +1,7 @@
 ﻿namespace System.Data.Entity
 {
     using System;
+    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.SqlClient;

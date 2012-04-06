@@ -1,7 +1,7 @@
 ﻿namespace System.Data.Entity.Internal
 {
-    using System.Data.Metadata.Edm;
-    using System.Data.Objects;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
 
     /// <summary>
     ///     An implementation of <see cref = "IPropertyValuesItem" /> for an item in a <see cref = "DbDataRecordPropertyValues" />.

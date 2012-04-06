@@ -3,16 +3,18 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Data.Entity.Core;
     using System.Data;
+    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.Validation;
-    using System.Data.EntityClient;
-    using System.Data.Metadata.Edm;
-    using System.Data.Objects;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
     using System.Globalization;
     using System.Linq;
     using System.Transactions;
@@ -199,7 +201,7 @@
             VerifySetsAreInitialized<SimpleModelContextWithNoData>(DbCompiledModelContents.DontMatch);
         }
 
-        [Fact]
+        [Fact(Skip = "No CE Provider")]
         public void Model_Tweaking_is_ignored_when_using_model_ctor_on_DbContext()
         {
             // Arrange
@@ -536,7 +538,7 @@
                 "DbContext_ConnectionStringNotFound", "NonexistentConnectionString");
         }
 
-        [Fact]
+        [Fact(Skip = "No CE Provider")]
         public void DbContext_caches_models_for_two_providers()
         {
             // Ensure that the model is in use with a SQL connection
@@ -705,7 +707,7 @@
                     GetObjectContext(context).ObjectStateManager.ChangeObjectState(emp, EntityState.Deleted);
 
                     Assert.Throws<InvalidOperationException>(() => context.SaveChanges()).ValidateMessage(
-                        SystemDataEntityAssembly, "ObjectContext_CommitWithConceptualNull");
+                        "ObjectContext_CommitWithConceptualNull");
                 }
             }
         }
@@ -721,7 +723,7 @@
                     context.Products.Add(prod);
 
                     Assert.Throws<DbUpdateException>(() => context.SaveChanges()).ValidateMessage(
-                        SystemDataEntityAssembly, "Update_GeneralExecutionException");
+                        "Update_GeneralExecutionException");
                 }
             }
         }
@@ -742,7 +744,7 @@
                     // Accept will fail because of PK violation
                     // (cat1 doesn't actually exist in the store so update pipeline will succeed)
                     Assert.Throws<InvalidOperationException>(() => context.SaveChanges()).ValidateMessage(
-                        SystemDataEntityAssembly, "ObjectContext_AcceptAllChangesFailure");
+                        "ObjectContext_AcceptAllChangesFailure");
                 }
             }
         }
@@ -760,8 +762,7 @@
                         (entry) => { return new DbEntityValidationResult(entry, new[] { new DbValidationError("Id", "error") }); };
                     context.Categories.Add(new Category("FOOD"));
                     Assert.Throws<DbEntityValidationException>(() => context.SaveChanges()).ValidateMessage(
-                        CodeFirstAssembly, "DbEntityValidationException_ValidationFailed",
-                        "System.Data.Entity.Properties.Resources");
+                        "DbEntityValidationException_ValidationFailed");
                 }
             }
         }
@@ -1279,7 +1280,7 @@
             }
             catch (InvalidOperationException ex)
             {
-                var resourceLookup = new AssemblyResourceLookup(CodeFirstAssembly,
+                var resourceLookup = new AssemblyResourceLookup(EntityFrameworkAssembly,
                                                                 "System.Data.Entity.Properties.Resources");
                 var messageTemplate = resourceLookup.LookupString("InvalidEntityType");
 
@@ -1309,7 +1310,7 @@
             }
             catch (InvalidOperationException ex)
             {
-                var resourceLookup = new AssemblyResourceLookup(CodeFirstAssembly,
+                var resourceLookup = new AssemblyResourceLookup(EntityFrameworkAssembly,
                                                                 "System.Data.Entity.Properties.Resources");
                 var messageTemplate = resourceLookup.LookupString("InvalidEntityType");
 
@@ -2980,7 +2981,7 @@
             }
         }
 
-        [Fact]
+        [Fact(Skip = "No CE Provider")]
         public void Can_replace_connection_with_different_provider()
         {
             using (var context = new ReplaceConnectionContext())

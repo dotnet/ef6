@@ -2,9 +2,10 @@
 {
     using System.CodeDom.Compiler;
     using System.ComponentModel;
+    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity.Migrations.Extensions;
-    using System.Data.Spatial;
+    using System.Data.Entity.Core.Spatial;
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Text;

@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
-    using System.Data.Objects.DataClasses;
+    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Reflection;
 
     /// <summary>

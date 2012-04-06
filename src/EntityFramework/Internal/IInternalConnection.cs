@@ -1,8 +1,9 @@
 ﻿namespace System.Data.Entity.Internal
 {
+    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Objects;
+    using System.Data.Entity.Core.Objects;
 
     /// <summary>
     ///     IInternalConnection objects manage DbConnections.

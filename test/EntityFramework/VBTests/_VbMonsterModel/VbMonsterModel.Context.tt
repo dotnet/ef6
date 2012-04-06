@@ -32,8 +32,8 @@ Imports System.Data.Entity.Infrastructure
 <#
 If container.FunctionImports.Any()
 #>
-Imports System.Data.Objects
-Imports System.Data.Objects.DataClasses
+Imports System.Data.Entity.Core.Objects
+Imports System.Data.Entity.Core.Objects.DataClasses
 Imports System.Linq
 <#
 End If

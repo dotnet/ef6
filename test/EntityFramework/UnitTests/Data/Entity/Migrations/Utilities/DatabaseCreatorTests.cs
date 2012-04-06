@@ -4,7 +4,8 @@
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
-    [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
+    // TODO: SDE Merge - No CE Provider
+    //[Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     public class DatabaseCreatorTests : DbTestCase
     {
         [MigrationsTheory]

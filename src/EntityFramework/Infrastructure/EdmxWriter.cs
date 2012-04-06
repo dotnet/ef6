@@ -4,7 +4,7 @@
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Serialization;
     using System.Data.Entity.Resources;
-    using System.Data.Objects;
+    using System.Data.Entity.Core.Objects;
     using System.Diagnostics.Contracts;
     using System.Xml;
 

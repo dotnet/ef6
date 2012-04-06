@@ -1,5 +1,6 @@
 namespace System.Data.Entity.Migrations
 {
+    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Edm;
@@ -8,7 +9,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Resources;
-    using System.Data.Metadata.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
     using System.Text;
     using System.Xml;
@@ -16,7 +17,8 @@ namespace System.Data.Entity.Migrations
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
-    [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
+    // TODO: SDE Merge - No CE Provider
+    //[Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     public class HistoryRepositoryTests : DbTestCase
     {
         [MigrationsTheory]

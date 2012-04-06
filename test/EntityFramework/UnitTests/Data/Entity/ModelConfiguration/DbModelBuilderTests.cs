@@ -81,7 +81,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
 
             modelBuilder.ComplexType<object>();
 
-            Assert.Equal(Strings.InvalidComplexType(typeof(object)), Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Equal(Strings.CodeFirstInvalidComplexType(typeof(object)), Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
         }
 
         [Fact]

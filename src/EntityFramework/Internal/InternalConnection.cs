@@ -1,11 +1,12 @@
 ﻿namespace System.Data.Entity.Internal
 {
+    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Utilities;
-    using System.Data.EntityClient;
-    using System.Data.Metadata.Edm;
-    using System.Data.Objects;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
     using System.Data.SqlClient;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;

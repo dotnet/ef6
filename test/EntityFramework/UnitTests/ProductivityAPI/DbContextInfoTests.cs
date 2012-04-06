@@ -2,14 +2,15 @@
 {
     using System;
     using System.Configuration;
+    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
-    using System.Data.EntityClient;
-    using System.Data.Objects;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Objects;
     using System.Data.SqlClient;
     using Moq;
     using Xunit;
@@ -311,7 +312,7 @@
             Assert.Equal(Strings.DbContextServices_MissingDefaultCtor(typeof(ContextWithoutDefaultCtorBadFactory.ContextFactory)), Assert.Throws<InvalidOperationException>(() => new DbContextInfo(typeof(ContextWithoutDefaultCtorBadFactory))).Message);
         }
 
-        [Fact]
+        [Fact(Skip = "No CE Provider")]
         public void CreateInstance_should_use_passed_provider_info_when_building_model()
         {
             var contextInfo = new DbContextInfo(typeof(SimpleContext), ProviderRegistry.SqlCe4_ProviderInfo);

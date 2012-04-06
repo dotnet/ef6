@@ -1,6 +1,6 @@
 ﻿namespace System.Data.Entity.Infrastructure
 {
-    using System.Data.Objects;
+    using System.Data.Entity.Core.Objects;
 
     /// <summary>
     ///     Interface implemented by objects that can provide an <see cref = "ObjectContext" /> instance.

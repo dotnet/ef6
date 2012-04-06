@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Data.Entity.Core;
     using System.Data;
     using System.Data.Entity;
     using System.Linq;

@@ -2,7 +2,7 @@
 {
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
-    using System.Data.Objects;
+    using System.Data.Entity.Core.Objects;
     using System.Text;
     using Moq;
     using Moq.Protected;

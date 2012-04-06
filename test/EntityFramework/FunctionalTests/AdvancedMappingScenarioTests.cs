@@ -1,6 +1,7 @@
 namespace FunctionalTests
 {
     using System;
+    using System.Data.Entity.Core;
     using System.Data;
     using System.Data.Entity;
     using System.Data.Entity.Edm;
@@ -127,7 +128,7 @@ namespace FunctionalTests
 
     public sealed class AdvancedMappingScenarioTests : TestBase
     {
-        [Fact]
+        [Fact(Skip = "No CE provider for EF6 yet.")]
         public void Sql_ce_should_get_explicit_max_lengths_for_string_and_binary_properties_by_convention()
         {
             var modelBuilder = new DbModelBuilder();
@@ -151,7 +152,7 @@ namespace FunctionalTests
             databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual("varbinary", c => c.TypeName);
         }
 
-        [Fact]
+        [Fact(Skip = "No CE provider for EF6 yet.")]
         public void Sql_ce_should_get_explicit_max_lengths_for_fixed_length_string_and_fixed_length_binary_properties_by_convention()
         {
             var modelBuilder = new DbModelBuilder();

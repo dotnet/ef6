@@ -5,7 +5,7 @@
     using System.Data.Entity;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Internal.MockingProxies;
-    using System.Data.Metadata.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.SqlClient;
     using System.Reflection;
     using Moq;

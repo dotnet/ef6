@@ -4,6 +4,7 @@ namespace ProductivityApiTests
     using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Core;
     using System.Data;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
@@ -957,7 +958,7 @@ namespace ProductivityApiTests
 
                 // Act - Assert
                 Assert.Throws<InvalidOperationException>(() => context.Categories.Add(category)).ValidateMessage(
-                    SystemDataEntityAssembly, "RelatedEnd_UnableToAddRelationshipWithDeletedEntity");
+                    "RelatedEnd_UnableToAddRelationshipWithDeletedEntity");
             }
         }
 
@@ -1721,7 +1722,7 @@ namespace ProductivityApiTests
                 var badCategory = new Category(null);
                 context.Categories.Add(badCategory);
                 Assert.Throws<ArgumentException>(() => context.Categories.Attach(badCategory)).ValidateMessage(
-                    SystemDataEntityAssembly, "ObjectStateManager_ChangeStateFromAddedWithNullKeyIsInvalid");
+                    "ObjectStateManager_ChangeStateFromAddedWithNullKeyIsInvalid");
             }
         }
 
@@ -1732,8 +1733,7 @@ namespace ProductivityApiTests
             {
                 var category = new Category();
                 Assert.Throws<InvalidOperationException>(() => context.Categories.Attach(category)).ValidateMessage(
-                    SystemDataEntityAssembly, "EntityKey_NullKeyValue", "System.Data.Entity", "Id",
-                    typeof(Category).Name);
+                    "EntityKey_NullKeyValue", "Id", typeof(Category).Name);
             }
         }
 
@@ -1749,7 +1749,7 @@ namespace ProductivityApiTests
                 category.Products.Add(product);
 
                 Assert.Throws<InvalidOperationException>(() => context.Categories.Attach(category)).ValidateMessage(
-                    SystemDataEntityAssembly, "RelationshipManager_InconsistentReferentialConstraintProperties");
+                    "RelationshipManager_InconsistentReferentialConstraintProperties");
 
                 Assert.Null(context.Categories.Find("Spreads"));
                 Assert.Null(context.Products.Find(0));
@@ -2198,7 +2198,7 @@ namespace ProductivityApiTests
             {
                 var product = new Product() { Name = "Digestive Biscuits" };
                 Assert.Throws<InvalidOperationException>(() => context.Products.Remove(product)).ValidateMessage(
-                    SystemDataEntityAssembly, "ObjectContext_CannotDeleteEntityNotInObjectStateManager");
+                    "ObjectContext_CannotDeleteEntityNotInObjectStateManager");
             }
         }
 
@@ -2209,7 +2209,7 @@ namespace ProductivityApiTests
             {
                 var product = new Product() { Name = "Digestive Biscuits" };
                 Assert.Throws<InvalidOperationException>(() => context.Set(typeof(Product)).Remove(product)).
-                    ValidateMessage(SystemDataEntityAssembly, "ObjectContext_CannotDeleteEntityNotInObjectStateManager");
+                    ValidateMessage("ObjectContext_CannotDeleteEntityNotInObjectStateManager");
             }
         }
 

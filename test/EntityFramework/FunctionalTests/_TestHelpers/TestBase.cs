@@ -3,12 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.Infrastructure;
-    using System.Data.EntityClient;
-    using System.Data.Metadata.Edm;
-    using System.Data.Objects;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
     using System.Data.SqlClient;
     using System.Reflection;
     using System.Threading.Tasks;
@@ -43,17 +44,9 @@
         /// <summary>
         /// The assembly containing Code First and the Productivity API.
         /// </summary>
-        public static Assembly CodeFirstAssembly
+        public static Assembly EntityFrameworkAssembly
         {
             get { return typeof(DbModelBuilder).Assembly; }
-        }
-
-        /// <summary>
-        /// System.Data.Entity.
-        /// </summary>
-        public static Assembly SystemDataEntityAssembly
-        {
-            get { return typeof(ObjectContext).Assembly; }
         }
 
         /// <summary>

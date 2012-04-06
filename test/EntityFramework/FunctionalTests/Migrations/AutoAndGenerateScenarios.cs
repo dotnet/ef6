@@ -4,7 +4,7 @@
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.ModelConfiguration.Conventions;
-    using System.Data.Metadata.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
     using FunctionalTests.Model;
     using Xunit;

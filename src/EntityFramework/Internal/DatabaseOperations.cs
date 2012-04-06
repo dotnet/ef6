@@ -1,6 +1,7 @@
 ﻿namespace System.Data.Entity.Internal
 {
-    using System.Data.Objects;
+    using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Objects;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 

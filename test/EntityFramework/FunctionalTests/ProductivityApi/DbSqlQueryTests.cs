@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity.Core;
     using System.Data;
     using System.Data.Entity;
     using System.Data.SqlClient;
@@ -97,9 +98,7 @@
                 context.Products.Load();
 
                 var query = context.Set<Product>().SqlQuery("select * from Products");
-                Assert.Throws<NotSupportedException>(() => query.ToList()).ValidateMessage(SystemDataEntityAssembly,
-                                                                                           "Materializer_RecyclingEntity",
-                                                                                           "System.Data.Entity",
+                Assert.Throws<NotSupportedException>(() => query.ToList()).ValidateMessage("Materializer_RecyclingEntity",
                                                                                            "SimpleModelContext.Products",
                                                                                            "SimpleModel.Product",
                                                                                            "SimpleModel.FeaturedProduct",
@@ -292,7 +291,7 @@
                 var query = context.Products.SqlQuery("select * from Categories");
 
                 Assert.Throws<EntityCommandExecutionException>(() => query.ToList()).ValidateMessage(
-                    SystemDataEntityAssembly, "ADP_InvalidDataReaderMissingColumnForType", "System.Data.Entity",
+                    "ADP_InvalidDataReaderMissingColumnForType", 
                     "SimpleModel.Product", "CategoryId");
             }
         }
@@ -428,7 +427,7 @@
                 var query = context.Database.SqlQuery<UnMappedProduct>("select * from Categories");
 
                 Assert.Throws<InvalidOperationException>(() => query.ToList()).ValidateMessage(
-                    SystemDataEntityAssembly, "Materializer_InvalidCastReference", "System.Data.Entity", "System.String",
+                    "Materializer_InvalidCastReference", "System.String",
                     "System.Int32");
             }
         }
@@ -446,7 +445,7 @@
             {
                 var query = context.Database.SqlQuery<TElement>("select * from Products");
                 Assert.Throws<InvalidOperationException>(() => query.ToList()).ValidateMessage(
-                    SystemDataEntityAssembly, "ObjectContext_InvalidTypeForStoreQuery", "System.Data.Entity",
+                    "ObjectContext_InvalidTypeForStoreQuery", 
                     typeof(TElement).ToString());
             }
         }

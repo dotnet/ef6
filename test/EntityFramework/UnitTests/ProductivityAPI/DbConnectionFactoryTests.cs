@@ -1,7 +1,9 @@
 namespace ProductivityApiUnitTests
 {
     using System;
+    using System.Data.Entity.Core;
     using System.Data;
+    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;

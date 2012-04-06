@@ -1,12 +1,14 @@
 ﻿namespace ProductivityApiTests
 {
     using System;
+    using System.Data.Entity.Core;
     using System.Data;
+    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-    using System.Data.EntityClient;
-    using System.Data.Objects;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Objects;
     using System.Data.SqlClient;
     using System.Linq;
     using SimpleModel;
@@ -659,8 +661,7 @@
         {
             using (var context = new OnModelConnectionContextWithOpen())
             {
-                Assert.Throws<ArgumentException>(() => context.Database.Initialize(force: false)).ValidateMessage(
-                    SystemDataEntityAssembly, "EntityClient_ConnectionMustBeClosed");
+                Assert.Throws<ArgumentException>(() => context.Database.Initialize(force: false)).ValidateMessage("EntityClient_ConnectionMustBeClosed");
 
                 Assert.True(context.ModelCreated);
             }

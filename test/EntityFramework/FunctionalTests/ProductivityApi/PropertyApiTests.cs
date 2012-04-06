@@ -2,10 +2,11 @@ namespace ProductivityApiTests
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity.Core;
     using System.Data;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Objects;
+    using System.Data.Entity.Core.Objects;
     using System.Linq;
     using System.Transactions;
     using AdvancedPatternsModel;
@@ -1150,7 +1151,7 @@ namespace ProductivityApiTests
 
                 // Conceptual null is still set so should throw now.
                 Assert.Throws<InvalidOperationException>(() => GetObjectContext(context).AcceptAllChanges()).
-                    ValidateMessage(SystemDataEntityAssembly, "ObjectContext_CommitWithConceptualNull");
+                    ValidateMessage("ObjectContext_CommitWithConceptualNull");
             }
         }
 
@@ -1243,8 +1244,7 @@ namespace ProductivityApiTests
                 var stateEntry = GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(hamilton);
 
                 Assert.Throws<ArgumentException>(() => stateEntry.RejectPropertyChanges("bing")).ValidateMessage(
-                    SystemDataEntityAssembly, "ObjectStateEntry_SetModifiedOnInvalidProperty", "System.Data.Entity",
-                    "bing");
+                    "ObjectStateEntry_SetModifiedOnInvalidProperty", "bing");
             }
         }
 
@@ -1257,8 +1257,7 @@ namespace ProductivityApiTests
                 var stateEntry = GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(hamilton);
 
                 Assert.Throws<ArgumentException>(() => stateEntry.RejectPropertyChanges("Team")).ValidateMessage(
-                    SystemDataEntityAssembly, "ObjectStateEntry_SetModifiedOnInvalidProperty", "System.Data.Entity",
-                    "Team");
+                    "ObjectStateEntry_SetModifiedOnInvalidProperty", "Team");
             }
         }
 
@@ -1272,7 +1271,7 @@ namespace ProductivityApiTests
                 context.Entry(hamilton).State = EntityState.Detached;
 
                 Assert.Throws<InvalidOperationException>(() => stateEntry.RejectPropertyChanges("Name")).ValidateMessage
-                    (SystemDataEntityAssembly, "ObjectStateEntry_InvalidState", "System.Data.Entity");
+                    ("ObjectStateEntry_InvalidState");
             }
         }
 
@@ -1286,7 +1285,7 @@ namespace ProductivityApiTests
                 context.Entry(hamilton).State = EntityState.Added;
 
                 Assert.Throws<InvalidOperationException>(() => stateEntry.RejectPropertyChanges("Name")).ValidateMessage
-                    (SystemDataEntityAssembly, "ObjectStateEntry_SetModifiedStates", "System.Data.Entity");
+                    ("ObjectStateEntry_SetModifiedStates");
             }
         }
 
@@ -1300,7 +1299,7 @@ namespace ProductivityApiTests
                 context.Entry(hamilton).State = EntityState.Deleted;
 
                 Assert.Throws<InvalidOperationException>(() => stateEntry.RejectPropertyChanges("Name")).ValidateMessage
-                    (SystemDataEntityAssembly, "ObjectStateEntry_SetModifiedStates", "System.Data.Entity");
+                    ("ObjectStateEntry_SetModifiedStates");
             }
         }
 
@@ -1317,7 +1316,7 @@ namespace ProductivityApiTests
                     .First();
 
                 Assert.Throws<InvalidOperationException>(() => stateEntry.RejectPropertyChanges("Name")).ValidateMessage
-                    (SystemDataEntityAssembly, "ObjectStateEntry_CannotModifyKeyEntryState", "System.Data.Entity");
+                    ("ObjectStateEntry_CannotModifyKeyEntryState");
             }
         }
 
@@ -1334,7 +1333,7 @@ namespace ProductivityApiTests
                     .First();
 
                 Assert.Throws<InvalidOperationException>(() => stateEntry.RejectPropertyChanges("Name")).ValidateMessage
-                    (SystemDataEntityAssembly, "ObjectStateEntry_CantModifyRelationState", "System.Data.Entity");
+                    ("ObjectStateEntry_CantModifyRelationState");
             }
         }
 
@@ -1610,8 +1609,7 @@ namespace ProductivityApiTests
 
                                       Assert.Throws<InvalidOperationException>(
                                           () => stateEntry.IsPropertyChanged("Address")).ValidateMessage(
-                                              SystemDataEntityAssembly, "ComplexObject_NullableComplexTypesNotSupported",
-                                              "System.Data.Entity", "Address");
+                                              "ComplexObject_NullableComplexTypesNotSupported", "Address");
                                   });
         }
 
@@ -1637,8 +1635,7 @@ namespace ProductivityApiTests
                 var stateEntry = GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(hamilton);
 
                 Assert.Throws<ArgumentException>(() => stateEntry.IsPropertyChanged("bing")).ValidateMessage(
-                    SystemDataEntityAssembly, "ObjectStateEntry_SetModifiedOnInvalidProperty", "System.Data.Entity",
-                    "bing");
+                    "ObjectStateEntry_SetModifiedOnInvalidProperty", "bing");
             }
         }
 
@@ -1651,8 +1648,7 @@ namespace ProductivityApiTests
                 var stateEntry = GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(hamilton);
 
                 Assert.Throws<ArgumentException>(() => stateEntry.IsPropertyChanged("Team")).ValidateMessage(
-                    SystemDataEntityAssembly, "ObjectStateEntry_SetModifiedOnInvalidProperty", "System.Data.Entity",
-                    "Team");
+                     "ObjectStateEntry_SetModifiedOnInvalidProperty", "Team");
             }
         }
 
@@ -1666,7 +1662,7 @@ namespace ProductivityApiTests
                 context.Entry(hamilton).State = EntityState.Detached;
 
                 Assert.Throws<InvalidOperationException>(() => stateEntry.IsPropertyChanged("Name")).ValidateMessage(
-                    SystemDataEntityAssembly, "ObjectStateEntry_InvalidState", "System.Data.Entity");
+                    "ObjectStateEntry_InvalidState");
             }
         }
 
@@ -1680,7 +1676,7 @@ namespace ProductivityApiTests
                 context.Entry(hamilton).State = EntityState.Added;
 
                 Assert.Throws<InvalidOperationException>(() => stateEntry.IsPropertyChanged("Name")).ValidateMessage(
-                    SystemDataEntityAssembly, "ObjectStateEntry_SetModifiedStates", "System.Data.Entity");
+                    "ObjectStateEntry_SetModifiedStates");
             }
         }
 
@@ -1694,7 +1690,7 @@ namespace ProductivityApiTests
                 context.Entry(hamilton).State = EntityState.Deleted;
 
                 Assert.Throws<InvalidOperationException>(() => stateEntry.IsPropertyChanged("Name")).ValidateMessage(
-                    SystemDataEntityAssembly, "ObjectStateEntry_SetModifiedStates", "System.Data.Entity");
+                    "ObjectStateEntry_SetModifiedStates");
             }
         }
 
@@ -1711,7 +1707,7 @@ namespace ProductivityApiTests
                     .First();
 
                 Assert.Throws<InvalidOperationException>(() => stateEntry.IsPropertyChanged("Name")).ValidateMessage(
-                    SystemDataEntityAssembly, "ObjectStateEntry_CannotModifyKeyEntryState", "System.Data.Entity");
+                    "ObjectStateEntry_CannotModifyKeyEntryState");
             }
         }
 
@@ -1728,7 +1724,7 @@ namespace ProductivityApiTests
                     .First();
 
                 Assert.Throws<InvalidOperationException>(() => stateEntry.IsPropertyChanged("Name")).ValidateMessage(
-                    SystemDataEntityAssembly, "ObjectStateEntry_CantModifyRelationState", "System.Data.Entity");
+                    "ObjectStateEntry_CantModifyRelationState");
             }
         }
 
@@ -1741,8 +1737,7 @@ namespace ProductivityApiTests
                 var stateEntry = GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(hamilton);
 
                 Assert.Throws<ArgumentException>(() => stateEntry.SetModifiedProperty("bing")).ValidateMessage(
-                    SystemDataEntityAssembly, "ObjectStateEntry_SetModifiedOnInvalidProperty", "System.Data.Entity",
-                    "bing");
+                    "ObjectStateEntry_SetModifiedOnInvalidProperty", "bing");
 
                 Assert.Equal(EntityState.Unchanged, stateEntry.State);
             }
@@ -2214,7 +2209,7 @@ namespace ProductivityApiTests
             {
                 Assert.False(propertyEntry.IsModified);
                 Assert.Throws<InvalidOperationException>(() => propertyEntry.IsModified = true).ValidateMessage(
-                    SystemDataEntityAssembly, "ObjectStateEntry_SetModifiedStates");
+                    "ObjectStateEntry_SetModifiedStates");
                 return;
             }
 
@@ -3765,7 +3760,7 @@ namespace ProductivityApiTests
                 if (state == EntityState.Deleted)
                 {
                     Assert.Throws<InvalidOperationException>(() => context.ChangeTracker.DetectChanges()).
-                        ValidateMessage(SystemDataEntityAssembly, "RelatedEnd_UnableToAddRelationshipWithDeletedEntity");
+                        ValidateMessage("RelatedEnd_UnableToAddRelationshipWithDeletedEntity");
                 }
                 else
                 {
@@ -3833,7 +3828,7 @@ namespace ProductivityApiTests
                     // Changing the reference to the principal will cause EF to throw a referential integrity exception
                     // because it would need a change in the PK of the dependent.
                     Assert.Throws<InvalidOperationException>(() => refEntry.CurrentValue = new Team()).ValidateMessage(
-                        SystemDataEntityAssembly, "EntityReference_CannotChangeReferentialConstraintProperty");
+                        "EntityReference_CannotChangeReferentialConstraintProperty");
                 }
                 else
                 {
@@ -3844,8 +3839,7 @@ namespace ProductivityApiTests
                     if (state == EntityState.Deleted)
                     {
                         Assert.Throws<InvalidOperationException>(() => context.ChangeTracker.DetectChanges()).
-                            ValidateMessage(SystemDataEntityAssembly,
-                                            "RelatedEnd_UnableToAddRelationshipWithDeletedEntity");
+                            ValidateMessage("RelatedEnd_UnableToAddRelationshipWithDeletedEntity");
                     }
                     else
                     {
@@ -3922,7 +3916,7 @@ namespace ProductivityApiTests
                 if (state == EntityState.Deleted)
                 {
                     Assert.Throws<InvalidOperationException>(() => context.ChangeTracker.DetectChanges()).
-                        ValidateMessage(SystemDataEntityAssembly, "RelatedEnd_UnableToAddRelationshipWithDeletedEntity");
+                        ValidateMessage("RelatedEnd_UnableToAddRelationshipWithDeletedEntity");
                 }
                 else
                 {
@@ -4099,7 +4093,7 @@ namespace ProductivityApiTests
                 if (state == EntityState.Deleted)
                 {
                     Assert.Throws<InvalidOperationException>(() => context.ChangeTracker.DetectChanges()).
-                        ValidateMessage(SystemDataEntityAssembly, "RelatedEnd_UnableToAddRelationshipWithDeletedEntity");
+                        ValidateMessage("RelatedEnd_UnableToAddRelationshipWithDeletedEntity");
                 }
                 else
                 {

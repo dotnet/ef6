@@ -2,10 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity.Core;
     using System.Data;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Objects;
+    using System.Data.Entity.Core.Objects;
     using System.Data.SqlClient;
     using System.Linq;
     using System.Reflection;
@@ -29,81 +30,81 @@
 
         #region Partial trust tests
 
-        [Fact]
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void DbPropertyValues_ToObject_for_an_entity_works_under_partial_trust()
         {
             PartialTrustCodeInstance.DbPropertyValues_ToObject_for_an_entity_works_under_partial_trust();
         }
 
-        [Fact]
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void DbContextInfo_works_under_partial_trust()
         {
             PartialTrustCodeInstance.DbContextInfo_works_under_partial_trust();
         }
 
-        [Fact]
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void DbPropertyValues_ToObject_for_a_complex_type_works_under_partial_trust()
         {
             PartialTrustCodeInstance.DbPropertyValues_ToObject_for_a_complex_type_works_under_partial_trust();
         }
 
-        [Fact]
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void Non_generic_DbSet_creation_works_under_partial_trust()
         {
             PartialTrustCodeInstance.Non_generic_DbSet_creation_works_under_partial_trust();
         }
 
-        [Fact]
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void DbEntityEntry_Member_works_for_collections_under_partial_trust()
         {
             PartialTrustCodeInstance.DbEntityEntry_Member_works_for_collections_under_partial_trust();
         }
 
-        [Fact]
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void Non_generic_DbSet_Create_works_under_partial_trust()
         {
             PartialTrustCodeInstance.Non_generic_DbSet_Create_works_under_partial_trust();
         }
 
-        [Fact]
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void DbPropertyValues_SetValues_for_an_entity_wih_complex_objects_works_under_partial_trust()
         {
             PartialTrustCodeInstance.
                 DbPropertyValues_SetValues_for_an_entity_wih_complex_objects_works_under_partial_trust();
         }
 
-        [Fact]
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void DbContext_set_initialization_works_under_partial_trust()
         {
             PartialTrustCodeInstance.DbContext_set_initialization_works_under_partial_trust();
         }
 
-        [Fact]
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void Non_generic_store_query_works_under_partial_trust()
         {
             PartialTrustCodeInstance.Non_generic_store_query_works_under_partial_trust();
         }
 
-        [Fact]
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void SelectMany_works_under_partial_trust()
         {
             PartialTrustCodeInstance.SelectMany_works_under_partial_trust();
         }
 
-        [Fact]
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void Setting_current_value_of_reference_nav_prop_works_under_partial_trust()
         {
             PartialTrustCodeInstance.Setting_current_value_of_reference_nav_prop_works_under_partial_trust();
         }
 
-        [Fact]
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void Query_with_top_level_nested_query_obtained_from_context_field_in_select_works_under_partial_trust()
         {
             PartialTrustCodeInstance.
                 Query_with_top_level_nested_query_obtained_from_context_field_in_select_works_under_partial_trust();
         }
 
-        [Fact]
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void PropertyConstraintException_can_be_serialized_and_deserialized_under_partial_trust()
         {
             try
@@ -340,7 +341,7 @@
         }
 
         private static readonly Type AspProxy =
-            typeof(ObjectContext).Assembly.GetType("System.Data.Metadata.Edm.AspProxy");
+            typeof(ObjectContext).Assembly.GetType("System.Data.Entity.Core.Metadata.Edm.AspProxy");
 
         // Dev11 216491
         public void IsAspNetEnvironment_swallows_security_exception_when_System_Web_is_considered_non_APTCA()

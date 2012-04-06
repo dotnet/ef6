@@ -2,7 +2,7 @@
 {
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
-    using System.Data.Objects;
+    using System.Data.Entity.Core.Objects;
     using System.Diagnostics.Contracts;
 
     /// <summary>

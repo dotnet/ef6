@@ -6,7 +6,7 @@
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Validation;
-    using System.Data.Objects;
+    using System.Data.Entity.Core.Objects;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;

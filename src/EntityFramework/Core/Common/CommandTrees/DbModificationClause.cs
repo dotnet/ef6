@@ -1,0 +1,38 @@
+using System;
+using System.Collections.Generic;
+
+using System.Data.Entity.Core.Metadata.Edm;
+using System.Data.Entity.Core.Common.CommandTrees.Internal;
+using System.Data.Entity.Core.Common.Utils;
+using System.Diagnostics;
+
+namespace System.Data.Entity.Core.Common.CommandTrees
+{
+    /// <summary>
+    /// Specifies a single clause in an insert or update modification operation, see
+    /// <see cref="DbInsertCommandTree.SetClauses"/> and <see cref="DbUpdateCommandTree.SetClauses"/>
+    /// </summary>
+    /// <remarks>
+    /// An abstract base class allows the possibility of patterns other than
+    /// Property = Value in future versions, e.g.,
+    /// <code>
+    /// update Foo
+    /// set ComplexTypeColumn.Bar()
+    /// where Id = 2
+    /// </code>
+    /// </remarks>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
+    public abstract class DbModificationClause
+    {
+        internal DbModificationClause()
+        {
+        }
+
+        // Effects: describes the contents of this clause using the given dumper
+        internal abstract void DumpStructure(ExpressionDumper dumper);
+
+        // Effects: produces a tree node describing this clause, recursively producing nodes
+        // for child expressions using the given expression visitor
+        internal abstract TreeNode Print(DbExpressionVisitor<TreeNode> visitor);
+    }
+}

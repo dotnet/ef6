@@ -1,5 +1,6 @@
 ﻿namespace System.Data.Entity.Internal
 {
+    using System.Data.Entity.Core;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Diagnostics.Contracts;
@@ -391,7 +392,7 @@
         #region Handling entries for detached entities
 
         /// <summary>
-        ///     Validates that the owning entity entry is associated with an underlying <see cref = "System.Data.Objects.ObjectStateEntry" /> and
+        ///     Validates that the owning entity entry is associated with an underlying <see cref = "System.Data.Entity.Core.Objects.ObjectStateEntry" /> and
         ///     is not just wrapping a non-attached entity.
         /// </summary>
         private void ValidateNotDetachedAndInModel(string method)

@@ -2,11 +2,13 @@ namespace System.Data.Entity
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Validation;
-    using System.Data.Objects;
+    using System.Data.Entity.Core.Objects;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
@@ -31,7 +33,7 @@ namespace System.Data.Entity
     /// 
     ///     When using the Database First or Model First approach the Entity Data Model can be created using the
     ///     Entity Designer (or manually through creation of an EDMX file) and then this model can be specified using
-    ///     entity connection string or an <see cref = "System.Data.EntityClient.EntityConnection" /> object.
+    ///     entity connection string or an <see cref = "System.Data.Entity.Core.EntityClient.EntityConnection" /> object.
     /// 
     ///     The connection to the database (including the name of the database) can be specified in several ways.
     ///     If the parameterless DbContext constructor is called from a derived context, then the name of the derived context

@@ -26,7 +26,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        [MigrationsTheory]
+        [MigrationsTheory(Skip = "No CE provider")]
         public void Can_scaffold_on_sql_server_and_run_on_ce()
         {
             DatabaseProvider = DatabaseProvider.SqlClient;
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Migrations
             Assert.True(TableExists("MigrationsProducts"));
         }
 
-        [MigrationsTheory]
+        [MigrationsTheory(Skip = "No CE provider")]
         public void Can_scaffold_on_ce_and_run_on_sql()
         {
             DatabaseProvider = DatabaseProvider.SqlServerCe;
@@ -70,7 +70,7 @@ namespace System.Data.Entity.Migrations
             Assert.True(TableExists("MigrationsProducts"));
         }
 
-        [MigrationsTheory]
+        [MigrationsTheory(Skip = "No CE provider")]
         public void Can_scaffold_on_sql_and_run_on_ce_after_initial_auto()
         {
             DatabaseProvider = DatabaseProvider.SqlClient;
