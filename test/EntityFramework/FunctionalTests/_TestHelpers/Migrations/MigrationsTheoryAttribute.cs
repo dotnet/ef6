@@ -10,39 +10,43 @@
     {
         protected override IEnumerable<ITestCommand> EnumerateTestCommands(IMethodInfo method)
         {
-            IEnumerable<VariantAttribute> _providerLanguageCominations = GetCombinations(method.MethodInfo);
+            var _providerLanguageCominations = GetCombinations(method.MethodInfo);
 
-            IEnumerable<ITestCommand> testCommands;
-            if (method.MethodInfo.GetParameters().Length == 0)
-            {
-                testCommands = new[] { new FactCommand(method) };
-            }
-            else
-            {
-                testCommands = base.EnumerateTestCommands(method);
-            }
+            var testCommands
+                = method.MethodInfo.GetParameters().Length == 0
+                      ? new[] { new FactCommand(method) }
+                      : base.EnumerateTestCommands(method);
 
-            foreach (var providerLanguageComination in _providerLanguageCominations)
-            {
-                foreach (var testCommand in testCommands)
-                {
-                    yield return new MigrationsTheoryCommand(testCommand, providerLanguageComination.DatabaseProvider, providerLanguageComination.ProgrammingLanguage);
-                }
-            }
+            return (from providerLanguageCombination in _providerLanguageCominations
+                    from testCommand in testCommands
+                    select new MigrationsTheoryCommand(
+                        testCommand,
+                        providerLanguageCombination.DatabaseProvider,
+                        providerLanguageCombination.ProgrammingLanguage));
         }
 
-        static IEnumerable<VariantAttribute> GetCombinations(MethodInfo method)
+        private static IEnumerable<VariantAttribute> GetCombinations(MethodInfo method)
         {
-            var variants = method.GetCustomAttributes(typeof(VariantAttribute), true).Cast<VariantAttribute>();
-            if (variants.Count() > 0)
+            var methodVariants
+                = method
+                    .GetCustomAttributes(typeof(VariantAttribute), true)
+                    .Cast<VariantAttribute>()
+                    .ToList();
+
+            if (methodVariants.Any())
             {
-                return variants;
+                return methodVariants;
             }
 
-            variants = method.DeclaringType.GetCustomAttributes(typeof(VariantAttribute), true).Cast<VariantAttribute>();
-            if (variants.Count() > 0)
+            var typeVariants
+                = method.DeclaringType
+                    .GetCustomAttributes(typeof(VariantAttribute), true)
+                    .Cast<VariantAttribute>()
+                    .ToList();
+
+            if (typeVariants.Any())
             {
-                return variants;
+                return typeVariants;
             }
 
             return new[] { new VariantAttribute(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp) };
