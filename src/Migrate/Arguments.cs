@@ -1,103 +1,88 @@
 ﻿namespace System.Data.Entity.Migrations.Console
 {
+    using System.Data.Entity.Migrations.Console.Resources;
     using CmdLine;
 
     [CommandLineArguments(
         Program = "migrate",
-        Title = "Code First Migrations Command Line Utility",
-        Description = "Applies any pending migrations to the database.")]
+        TitleResourceId = EntityRes.MigrateTitle,
+        DescriptionResourceId = EntityRes.MigrateDescription)]
     public class Arguments
     {
         [CommandLineParameter(
             ParameterIndex = 1,
-            Name = "assembly",
+            NameResourceId = EntityRes.AssemblyNameArgument,
             Required = true,
-            Description = "Specifies the name of the assembly that contains the migrations configuration type.")]
+            DescriptionResourceId = EntityRes.AssemblyNameDescription)]
         public string AssemblyName { get; set; }
 
         [CommandLineParameter(
             ParameterIndex = 2,
-            Name = "configurationType",
-            Description =
-                "Specifies the name of the migrations configuration type. If omitted, Code First Migrations will attempt to locate a single migrations configuration type in the specified assembly."
-            )]
+            NameResourceId = EntityRes.ConfigurationTypeNameArgument,
+            DescriptionResourceId = EntityRes.ConfigurationTypeNameDescription)]
         public string ConfigurationTypeName { get; set; }
 
         [CommandLineParameter(
             Command = "targetMigration",
-            Description =
-                "Specifies the name of a particular migration to update the database to. If omitted, the current model will be used."
-            )]
+            DescriptionResourceId = EntityRes.TargetMigrationDescription)]
         public string TargetMigration { get; set; }
 
         [CommandLineParameter(
-            Command = "StartUpDirectory",
-            Description = "Specifies the working directory of your application.")]
+            Command = "startUpDirectory",
+            DescriptionResourceId = EntityRes.WorkingDirectoryDescription)]
         public string WorkingDirectory { get; set; }
 
         [CommandLineParameter(
             Command = "startUpConfigurationFile",
-            Description = "Specifies the Web.config or App.config file of your application.")]
+            DescriptionResourceId = EntityRes.ConfigurationFileDescription)]
         public string ConfigurationFile { get; set; }
 
         [CommandLineParameter(
             Command = "startUpDataDirectory",
-            Description =
-                "Specifies the directory to use when resolving connection strings containing the |DataDirectory| substitution string."
-            )]
+            DescriptionResourceId = EntityRes.DataDirectoryDescription)]
         public string DataDirectory { get; set; }
 
         [CommandLineParameter(
             Command = "connectionStringName",
-            Description =
-                "Specifies the name of the connection string to use from the specified configuration file. If omitted, the context's default connection will be used."
-            )]
+            DescriptionResourceId = EntityRes.ConnectionStringNameDescription)]
         public string ConnectionStringName { get; set; }
 
         [CommandLineParameter(
             Command = "connectionString",
-            Description =
-                "Specifies the the connection string to use. If omitted, the context's default connection will be used."
-            )]
+            DescriptionResourceId = EntityRes.ConnectionStringDescription)]
         public string ConnectionString { get; set; }
 
         [CommandLineParameter(
             Command = "connectionProviderName",
-            Description = "Specifies the provider invariant name of the connection string.")]
+            DescriptionResourceId = EntityRes.ConnectionProviderNameDescription)]
         public string ConnectionProviderName { get; set; }
 
         [CommandLineParameter(
             Command = "force",
-            Description = "Indicates that automatic migrations which might incur data loss should be allowed.")]
+            DescriptionResourceId = EntityRes.ForceDescription)]
         public bool Force { get; set; }
 
         [CommandLineParameter(
             Command = "verbose",
-            Description =
-                "Indicates that the executing SQL and additional diagnostic information should be output to the console window."
-            )]
+            DescriptionResourceId = EntityRes.VerboseDescription)]
         public bool Verbose { get; set; }
 
         [CommandLineParameter(
             Command = "?",
             IsHelp = true,
-            Description = "Display this help message")]
+            DescriptionResourceId = EntityRes.HelpDescription)]
         public bool Help { get; set; }
 
         internal void Validate()
         {
-            if (!string.IsNullOrWhiteSpace(ConnectionStringName)
-                && !string.IsNullOrWhiteSpace(ConnectionString))
+            if (!string.IsNullOrWhiteSpace(ConnectionStringName) && !string.IsNullOrWhiteSpace(ConnectionString))
             {
-                throw new CommandLineException(
-                    "Only one of /connectionStringName or /connectionString can be specified.");
+                throw Error.AmbiguousConnectionString();
             }
 
-            if (string.IsNullOrWhiteSpace(ConnectionString)
-                != string.IsNullOrWhiteSpace(ConnectionProviderName))
+            if (string.IsNullOrWhiteSpace(ConnectionString) != string.IsNullOrWhiteSpace(ConnectionProviderName))
             {
-                throw new CommandLineException(
-                    "/connectionString and /connectionProviderName must be specified together.");
+                throw Error.MissingConnectionInfo();
             }
         }
 

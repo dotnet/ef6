@@ -1,9 +1,11 @@
 ﻿namespace CmdLine.Tests
 {
+    extern alias migrate;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using migrate::CmdLine;
     using Xunit;
 
     public class CommandLineTest

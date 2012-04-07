@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity.Migrations.Console.Resources;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
@@ -18,18 +19,16 @@
         public static readonly string[] DefaultSwitchSeparators = new[] { "/", "-" };
 
         public static readonly string[] DefaultValueSeparators = new[] { ":", "=" };
-
-        internal const string PositionalValueGroup = "PositionalValue";
-
+        
         internal const string SwitchNameGroup = "SwitchName";
 
         internal const string SwitchOptionGroup = "SwitchOption";
 
-        internal const string SwitchSeperatorGroup = "SwitchSeperator";
+        internal const string SwitchSeparatorGroup = "SwitchSeparator";
 
         internal const string ValueGroup = "Value";
 
-        internal const string ValueSeperatorGroup = "ValueSeperator";
+        internal const string ValueSeparatorGroup = "ValueSeparator";
 
         /// <summary>
         ///   Expression for a switch with a value i.e. /S:Value or /S:Some Value
@@ -40,7 +39,7 @@
         private const string TokenizeExpressionFormat =
             @"(?{0}i) # Case Sensitive Option
 # Capture the switch begin of string or preceeded by whitespace
-(?<SwitchSeperator>\A[{1}])
+(?<SwitchSeparator>\A[{1}])
 # Capture the switch name
 (?<SwitchName>[^{2}+-]+) 
 # Capture switch option or end of string
@@ -120,8 +119,8 @@
             get
             {
                 return string.Format(
-                    TokenizeExpressionFormat, GetCaseSensitiveOption(), string.Join("", CommandSeparators),
-                    string.Join("", ValueSeparators));
+                    TokenizeExpressionFormat, GetCaseSensitiveOption(), string.Join(string.Empty, CommandSeparators),
+                    string.Join(string.Empty, ValueSeparators));
             }
         }
 
@@ -161,8 +160,9 @@
             return argument;
         }
 
-        public static void Pause(string text = "Press any key to continue...", ConsoleColor color = ConsoleColor.Yellow)
+        public static void Pause(string text = null, ConsoleColor color = ConsoleColor.Yellow)
         {
+            text = text ?? Strings.PressAnyKey;
             WriteLineColor(color, text);
             Console.ReadKey(true);
         }
@@ -181,8 +181,8 @@
                 validKey = allowedKeys.Contains(keyChar);
                 if (!validKey)
                 {
-                    Console.WriteLine(
-                        "\r\n\"{0}\" is not a valid choice, valid keys are \"{1}\"", keyChar, allowedString);
+                    Console.WriteLine();
+                    Console.WriteLine(Strings.InvalidKey(keyChar, allowedString));
                 }
                 else
                 {
@@ -372,10 +372,8 @@
                         new CommandArgumentHelp(
                             parameter.Property.DeclaringType,
                             parameter.IsCommand()
-                                ? string.Format("Duplicate Command \"{0}\"", parameter.Command)
-                                : string.Format(
-                                    "Duplicate Parameter Index [{0}] on Property \"{1}\"",
-                                    parameter.Attribute.ParameterIndex, parameter.Property.Name)),
+                                ? Strings.DuplicateCommand(parameter.Command)
+                                : Strings.DuplicateParameterIndex(parameter.Attribute.ParameterIndex, parameter.Property.Name)),
                         exception);
                 }
             }
@@ -411,8 +409,7 @@
                         throw new CommandLineException(
                             new CommandArgumentHelp(
                                 arg.Property.DeclaringType,
-                                string.Format(
-                                    "Out of order parameter \"{0}\" should have be at parameter index {1} but was found at {2}",
+                                Strings.ParameterOutOfOrder(
                                     arg.Attribute.Name,
                                     expectedIndex,
                                     arg.Attribute.ParameterIndex)));

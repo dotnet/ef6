@@ -18683,9 +18683,9 @@ namespace System.Data.Entity.Resources
         static EntityRes loader = null;
         ResourceManager resources;
 
-        internal EntityRes()
+        private EntityRes()
         {
-            resources = new ResourceManager("System.Data.Entity.Properties.Resources", this.GetType().Assembly);
+            resources = new ResourceManager("System.Data.Entity.Properties.Resources", typeof(System.Data.Entity.DbContext).Assembly);
         }
         
         private static EntityRes GetLoader()

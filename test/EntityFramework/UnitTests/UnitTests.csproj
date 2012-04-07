@@ -78,6 +78,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <Compile Include="AssemblyTests.cs" />
+    <Compile Include="CommandLine\CommandLineParameterAttributeTests.cs" />
     <Compile Include="CommandLine\_TestHelpers\BadPositionArgMissingTwo.cs" />
     <Compile Include="CommandLine\_TestHelpers\BadPositionArgNoOne.cs" />
     <Compile Include="CommandLine\CommandLineArgumentsAttributeTest.cs" />
@@ -347,6 +348,7 @@
     <ProjectReference Include="..\..\..\src\Migrate\Migrate.csproj">
       <Project>{0D77532F-7478-4BBB-9790-95F52A3DADDA}</Project>
       <Name>Migrate</Name>
+      <Aliases>migrate</Aliases>
     </ProjectReference>
     <ProjectReference Include="..\FunctionalTests\FunctionalTests.csproj">
       <Project>{23330EF8-2593-4B0A-A70F-12E6BE1F46C4}</Project>

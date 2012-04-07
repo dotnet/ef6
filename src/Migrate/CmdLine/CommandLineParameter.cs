@@ -1,6 +1,7 @@
 namespace CmdLine
 {
     using System;
+    using System.Data.Entity.Migrations.Console.Resources;
     using System.Collections.Generic;
     using System.Reflection;
 
@@ -114,7 +115,7 @@ namespace CmdLine
             {
                 throw new CommandLineException(
                     new CommandArgumentHelp(
-                        argument.GetType(), string.Format("Unsupported property type {0}", Property.PropertyType)));
+                        argument.GetType(), Strings.UnsupportedPropertyType(Property.PropertyType)));
             }
 
             ArgumentSupplied = true;

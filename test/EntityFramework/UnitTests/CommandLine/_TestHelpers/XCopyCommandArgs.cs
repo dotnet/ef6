@@ -1,5 +1,7 @@
 ﻿namespace CmdLine.Tests
 {
+    extern alias migrate;
+    using migrate::CmdLine;
     using System;
 
     /// <summary>
@@ -92,7 +94,7 @@
         public DateTime ChangedAfterDate { get; set; }
 
         /// /EXCLUDE:file1[+file2][+file3]...
-        [CommandLineParameter(Command = "EXCLUDE", ValueExample = "file1[+file2][+file3]...", DescriptionID = "ExcludeDescription")]
+        [CommandLineParameter(Command = "EXCLUDE", ValueExample = "file1[+file2][+file3]...", DescriptionResourceId = "ExcludeDescription")]
         public string ExcludeFiles { get; set; }
     }
 }

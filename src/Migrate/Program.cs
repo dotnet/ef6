@@ -1,6 +1,7 @@
 ﻿namespace System.Data.Entity.Migrations.Console
 {
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Migrations.Console.Resources;
     using System.Data.Entity.Migrations.Design;
     using System.Diagnostics.Contracts;
     using System.IO;
@@ -83,12 +84,12 @@
 
         private static void WriteError(string message)
         {
-            CommandLine.WriteLineColor(ConsoleColor.Red, "ERROR: " + message);
+            CommandLine.WriteLineColor(ConsoleColor.Red, Strings.ErrorMessage(message));
         }
 
         private static void WriteWarning(string message)
         {
-            CommandLine.WriteLineColor(ConsoleColor.Yellow, "WARNING: " + message);
+            CommandLine.WriteLineColor(ConsoleColor.Yellow, Strings.WarningMessage(message));
         }
 
         private static void WriteVerbose(string message)
@@ -130,7 +131,7 @@
 
             if (_arguments.Verbose)
             {
-                facade.LogVerboseDelegate = sql => WriteVerbose("VERBOSE: " + sql);
+                facade.LogVerboseDelegate = sql => WriteVerbose(Strings.VerboseMessage(sql));
             }
 
             return facade;

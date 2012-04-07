@@ -1,6 +1,6 @@
 ﻿namespace System.Data.Entity.Migrations
 {
-    using System.Data.Entity.Resources;
+    using System.Data.Entity.Migrations.Resources;
     using System.Linq;
 
     internal class GetMigrationsCommand : MigrationsDomainCommand

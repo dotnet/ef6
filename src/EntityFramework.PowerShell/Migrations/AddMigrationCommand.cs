@@ -1,7 +1,7 @@
 ﻿namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Extensions;
-    using System.Data.Entity.Resources;
+    using System.Data.Entity.Migrations.Resources;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;

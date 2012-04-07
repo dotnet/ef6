@@ -2,6 +2,7 @@ namespace CmdLine
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity.Migrations.Console.Resources;
     using System.Linq;
     using System.Reflection;
 
@@ -19,17 +20,85 @@ namespace CmdLine
             Command = command;
         }
 
-        public string Name { get; set; }
+        private string name;
+
+        public string Name
+        {
+            get
+            {
+                if (NameResourceId != null)
+                {
+                    return EntityRes.GetString(NameResourceId);
+                }
+                return name;
+            }
+            set
+            {
+                if (NameResourceId != null)
+                {
+                    throw Error.AmbiguousAttributeValues("Name", "NameResourceId");
+                }
+                name = value;
+            }
+        }
+
+        private string nameResourceId;
+
+        public string NameResourceId
+        {
+            get { return nameResourceId; }
+            set
+            {
+                if (Name != null)
+                {
+                    throw Error.AmbiguousAttributeValues("Name", "NameResourceId");
+                }
+                nameResourceId = value;
+            }
+        }
+
+        private string description;
 
         /// <summary>
         ///   The description of the command
         /// </summary>
-        public string Description { get; set; }
+        public string Description
+        {
+            get
+            {
+                if (DescriptionResourceId != null)
+                {
+                    return EntityRes.GetString(DescriptionResourceId);
+                }
+                return description;
+            }
+            set
+            {
+                if (DescriptionResourceId != null)
+                {
+                    throw Error.AmbiguousAttributeValues("Description", "DescriptionResourceId");
+                }
+                description = value;
+            }
+        }
+
+        private string descriptionResourceId;
 
         /// <summary>
-        ///   The Resource ID of the description
+        ///   The resource id of the command description
         /// </summary>
-        public string DescriptionID { get; set; }
+        public string DescriptionResourceId
+        {
+            get { return descriptionResourceId; }
+            set
+            {
+                if (Description != null)
+                {
+                    throw Error.AmbiguousAttributeValues("Description", "DescriptionResourceId");
+                }
+                descriptionResourceId = value;
+            }
+        }
 
         public object Default { get; set; }
 
@@ -44,7 +113,7 @@ namespace CmdLine
             {
                 if (value < 1)
                 {
-                    throw new CommandLineException("Invalid ParameterIndex value ");
+                    throw Error.InvalidParameterIndexValue();
                 }
 
                 parameterIndex = value;
@@ -104,9 +173,7 @@ namespace CmdLine
             if (ParameterIndex < 1)
             {
                 throw new CommandLineException(
-                    new CommandArgumentHelp(
-                        parameter.Property,
-                        string.Format("Invalid ParameterIndex value on Property \"{0}\"", parameter.Property.Name)));
+                    new CommandArgumentHelp(parameter.Property, Strings.InvalidPropertyParameterIndexValue(parameter.Property.Name)));
             }
         }
 

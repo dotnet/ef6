@@ -1,5 +1,8 @@
 namespace CmdLine.Tests
 {
+    extern alias migrate;
+    using migrate::CmdLine;
+
     public class ThreeRequiredPositionArgs
     {
         [CommandLineParameter(Name="String 1", ParameterIndex = 1, Required = true)]

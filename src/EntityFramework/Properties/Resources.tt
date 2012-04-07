@@ -14,7 +14,7 @@ var serviceProvider = (IServiceProvider)Host;
 var dte = (EnvDTE.DTE)serviceProvider.GetService(typeof(EnvDTE.DTE));
 var parameterMatcher = new Regex(@"\{(\d)\}");
 var lines = new List<Tuple<string, string, string, bool, string, string>>();
-var resourcesTxt = Host.ResolvePath("Resources.txt");
+var resourcesTxt = Host.ResolvePath(Path.ChangeExtension(Host.TemplateFile, "txt"));
 var resourcesRes = Path.ChangeExtension(Host.TemplateFile, "resources");
 
 if ((dte.SourceControl != null)
@@ -104,7 +104,7 @@ namespace <#= outputNamespace #>.Resources
     /// <summary>
     ///    Strongly-typed and parameterized string resources.
     /// </summary>
-    [GeneratedCode("Resources.tt", "1.0.0.0")]
+    [GeneratedCode("<#= Path.GetFileName(Host.TemplateFile) #>", "1.0.0.0")]
     internal static class Strings
     {   <#
         foreach (var line in lines)
@@ -138,7 +138,7 @@ namespace <#= outputNamespace #>.Resources
     /// <summary>
     ///    Strongly-typed and parameterized exception factory.
     /// </summary>
-    [GeneratedCode("Resources.tt", "1.0.0.0")]
+    [GeneratedCode("<#= Path.GetFileName(Host.TemplateFile) #>", "1.0.0.0")]
     internal static class Error
     {<#
         foreach (var line in lines.Where(l => l.Item3 != null))
@@ -192,7 +192,7 @@ namespace <#= outputNamespace #>.Resources
     ///
     ///        string s = EntityRes.GetString(EntityRes.MyIdenfitier);
     /// </summary>
-    [GeneratedCode("Resources.tt", "1.0.0.0")]
+    [GeneratedCode("<#= Path.GetFileName(Host.TemplateFile) #>", "1.0.0.0")]
     internal sealed class EntityRes
     {
         <#
@@ -206,9 +206,9 @@ namespace <#= outputNamespace #>.Resources
         static EntityRes loader = null;
         ResourceManager resources;
 
-        internal EntityRes()
+        private EntityRes()
         {
-            resources = new ResourceManager("<#= defaultNamespace #>.Properties.Resources", this.GetType().Assembly);
+            resources = new ResourceManager("System.Data.Entity.Properties.<#= Path.GetFileNameWithoutExtension(Host.TemplateFile) #>", typeof(System.Data.Entity.DbContext).Assembly);
         }
         
         private static EntityRes GetLoader()

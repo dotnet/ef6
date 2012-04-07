@@ -44,6 +44,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,6 +53,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\EntityFramework\Properties\Resources.cs">
+      <Link>Properties\Resources.cs</Link>
+    </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
@@ -69,6 +74,23 @@
     <Compile Include="CmdLine\ICommandEnvironment.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="Properties\Resources.Migrate.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Resources.Migrate.cs</LastGenOutput>
+      <CustomToolNamespace>System.Data.Entity.Migrations.Console</CustomToolNamespace>
+    </None>
+    <None Include="Properties\Resources.Migrate.txt">
+      <DependentUpon>Resources.Migrate.tt</DependentUpon>
+    </None>
+    <None Include="Properties\Resources.Migrate.resources">
+      <DependentUpon>Resources.Migrate.tt</DependentUpon>
+    </None>
+    <Compile Include="Properties\InternalsVisibleTo.cs" />
+    <Compile Include="Properties\Resources.Migrate.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.Migrate.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EntityFramework\EntityFramework.csproj">
@@ -80,6 +102,9 @@
     <None Include="..\EcmaPublicKey.snk">
       <Link>Properties\EcmaPublicKey.snk</Link>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

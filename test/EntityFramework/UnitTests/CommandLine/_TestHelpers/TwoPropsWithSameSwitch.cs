@@ -1,5 +1,8 @@
 namespace CmdLine.Tests
 {
+    extern alias migrate;
+    using migrate::CmdLine;
+
     public class TwoPropsWithSameSwitch
     {
         [CommandLineParameter("B")]

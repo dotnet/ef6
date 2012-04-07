@@ -1,5 +1,8 @@
 namespace CmdLine.Tests
 {
+    extern alias migrate;
+    using migrate::CmdLine;
+
     public class BadPositionArgMissingTwo
     {
         [CommandLineParameter(Name = "source", ParameterIndex = 1, Required = true, Description = "Specifies the file(s) to copy.")]

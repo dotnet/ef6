@@ -19,7 +19,7 @@
     using Microsoft.Win32;
     using Moq;
     using powershell::System.Data.Entity.ConnectionFactoryConfig;
-    using powershell::System.Data.Entity.Resources;
+    using powershell::System.Data.Entity.Migrations.Resources;
     using Xunit;
 
     public class ConnectionFactoryConfigTests : UnitTestBase

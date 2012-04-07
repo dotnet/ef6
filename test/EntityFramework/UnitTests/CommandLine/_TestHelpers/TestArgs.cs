@@ -1,6 +1,7 @@
 namespace CmdLine.Tests
 {
-    using CmdLine;
+    extern alias migrate;
+    using migrate::CmdLine;
 
     [CommandLineArguments(Title = TestArgsTitle, Description = TestArgsDescription)]
     public class TestArgs

@@ -3,12 +3,6 @@
 ; NOTE: leave the [strings] alone
 ; 
 
-## ExceptionType=ArgumentException
-ArgumentIsNullOrWhitespace=The argument '{0}' cannot be null, empty or contain only white space.
-
-## ExceptionType=ArgumentException
-PreconditionFailed=The precondition '{0}' failed. {1}
-
 UpdateDatabaseCommand_VerboseInstructions=Specify the '-Verbose' flag to view the SQL statements being applied to the target database.
 
 UpdateDatabaseCommand_SourceMigrationWithoutScript=The '-SourceMigration' parameter is only valid when using '-Script'.
@@ -23,8 +17,6 @@ SnapshotBehindWarning=The Designer Code for this migration file includes a snaps
 
 ## ExceptionType=Migrations.MigrationsPendingException
 MigrationsPendingException=Unable to generate an explicit migration because the following explicit migrations are pending: [{0}]. Apply the pending explicit migrations before attempting to generate a new explicit migration.
-
-AutomaticMigration=AutomaticMigration
 
 AutomaticMigrationDisabledInfo=You can use the Add-Migration command to write the pending model changes to a code-based migration.
 

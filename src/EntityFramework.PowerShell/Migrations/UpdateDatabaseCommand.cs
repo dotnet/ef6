@@ -3,7 +3,7 @@
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Infrastructure;
-    using System.Data.Entity.Resources;
+    using System.Data.Entity.Migrations.Resources;
     using System.Diagnostics.Contracts;
 
     internal class UpdateDatabaseCommand : MigrationsDomainCommand

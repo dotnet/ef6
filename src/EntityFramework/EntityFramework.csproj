@@ -1463,6 +1463,12 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\EntityFramework.PowerShell\Properties\Resources.PowerShell.resources">
+      <Link>Properties\Resources.PowerShell.resources</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Migrate\Properties\Resources.Migrate.resources">
+      <Link>Properties\Resources.Migrate.resources</Link>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resources">
       <DependentUpon>Resources.tt</DependentUpon>
     </EmbeddedResource>
