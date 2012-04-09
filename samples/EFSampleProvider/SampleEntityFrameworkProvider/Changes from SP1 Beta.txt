@@ -1,5 +1,0 @@
-1. Removed DbProviderManifest.Token and DbProviderManifest.Provider properties
-2. Removed DbFunctionExpression.IsLambda
-3. Renamed DbFunctionCommandTree.Function to DbFunctionCommandTree.EdmFunction
-4. Removed DbCommandTree.Validate()
-
