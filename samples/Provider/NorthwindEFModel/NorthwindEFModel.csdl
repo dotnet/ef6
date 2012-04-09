@@ -1,0 +1,355 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="NorthwindEFModel" Alias="Self"
+xmlns="http://schemas.microsoft.com/ado/2009/11/edm"
+xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation"
+p1:UseStrongSpatialTypes="false"
+>
+
+  <!-- Model Defined Function (MDF) -->
+  <Function Name="TimesMDF" ReturnType="Int32">
+    <Parameter Name="X" Type="Int32" />
+    <Parameter Name="Y" Type="Int32" />
+    <DefiningExpression>X * Y</DefiningExpression>
+  </Function>
+
+  <!-- MDF that returns a collection of entities-->
+  <Function Name="GetProductsForCategory" ReturnType="Collection(NorthwindEFModel.Product)">
+    <Parameter Name="categoryName" Type="String" />
+    <DefiningExpression>Select Value P FROM NorthwindEntities.Products As P Where P.Category.CategoryName = categoryName</DefiningExpression>
+  </Function>
+
+  <!-- MDF that takes a collection of entities and returns a filtered collection of entities-->
+  <Function Name="GetProductsForCategory" ReturnType="Collection(NorthwindEFModel.Product)">
+    <Parameter Name="productsSet">
+      <CollectionType>
+        <TypeRef Type="NorthwindEFModel.Product" />
+      </CollectionType>
+    </Parameter>
+    <!--An alternate declaration syntax for the productsSet argument is: 
+    <Parameter Name="productsSet" Type="Collection(NorthwindEFModel.Product)"/>-->
+    <Parameter Name="categoryName" Type="String" />
+    <DefiningExpression>Select Value P FROM productsSet As P Where P.Category.CategoryName = categoryName</DefiningExpression>
+  </Function>
+
+  <EntityContainer Name="NorthwindEntities">
+    <EntitySet Name="Employees" EntityType="NorthwindEFModel.Employee" />
+    <EntitySet Name="Territories" EntityType="NorthwindEFModel.Territory" />
+
+    <!-- AssociationSet for Territories/Region relationship -->
+    <AssociationSet Name="TerritoriesRegion" Association="NorthwindEFModel.TerritoriesRegion">
+      <End Role="Region" EntitySet="Regions" />
+      <End Role="Territories" EntitySet="Territories" />
+    </AssociationSet>
+    <EntitySet Name="Regions" EntityType="NorthwindEFModel.Region" />
+
+    <!-- AssociationSet for Employees/Territores relationship -->
+    <AssociationSet Name="EmployeesTerritories" Association="NorthwindEFModel.EmployeesTerritories">
+      <End Role="Employees" EntitySet="Employees" />
+      <End Role="Territories" EntitySet="Territories" />
+    </AssociationSet>
+
+    <!-- AssociationSet for Products/Supplier relationship -->
+    <AssociationSet Name="Products_Supplier" Association="NorthwindEFModel.Products_Supplier">
+      <End Role="Supplier" EntitySet="Suppliers" />
+      <End Role="Products" EntitySet="Products" />
+    </AssociationSet>
+
+    <EntitySet Name="Suppliers" EntityType="NorthwindEFModel.Supplier" />
+    <EntitySet Name="Products" EntityType="NorthwindEFModel.Product" />
+    <EntitySet Name="Categories" EntityType="NorthwindEFModel.Category" />
+
+    <!-- AssociationSet for Products/Category relationship -->
+    <AssociationSet Name="Products_Category" Association="NorthwindEFModel.Products_Category">
+      <End Role="Category" EntitySet="Categories" />
+      <End Role="Products" EntitySet="Products" />
+    </AssociationSet>
+
+
+    <EntitySet Name="Customers" EntityType="NorthwindEFModel.Customer" />
+
+    <AssociationSet Name="CustomerOrders" Association="NorthwindEFModel.CustomerOrders">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <EntitySet Name="Orders" EntityType="NorthwindEFModel.Order" />
+    <EntitySet Name="OrderDetails" EntityType="NorthwindEFModel.OrderDetail" />
+
+    <!-- AssociationSet for Products/Category relationship -->
+    <AssociationSet Name="Order_Details_Order" Association="NorthwindEFModel.Order_Details_Order">
+      <End Role="Order" EntitySet="Orders" />
+      <End Role="OrderDetails" EntitySet="OrderDetails" />
+    </AssociationSet>
+
+    <!-- AssociationSet for Products/Order Details relationship -->
+    <AssociationSet Name="Order_Details_Product" Association="NorthwindEFModel.Order_Details_Product">
+      <End Role="Product" EntitySet="Products" />
+      <End Role="OrderDetails" EntitySet="OrderDetails" />
+    </AssociationSet>
+
+    <!-- Function Imports -->
+    <FunctionImport Name="fx_SuppliersWithinRange" ReturnType="Collection(NorthwindEFModel.fx_SuppliersWithinRange_Result)" IsComposable="true">
+      <Parameter Name="miles" Type="Int32" />
+      <Parameter Name="location" Type="Geography" />
+    </FunctionImport>
+
+    <!-- This Function Import returns a collection of entities, so the entity set needs to be defined-->
+    <FunctionImport Name="fx_OrdersForShippingStatus" ReturnType="Collection(NorthwindEFModel.Order)" IsComposable="true" EntitySet="Orders">
+      <Parameter Name="shippingStatus" Type="NorthwindEFModel.ShippingStatus" />
+    </FunctionImport>
+
+    <FunctionImport Name="fx_CustomerLocationForCountry" ReturnType="Collection(Geography)" IsComposable="true">
+      <Parameter Name="country" Type="String" />
+    </FunctionImport>
+
+    <!-- This function returns multiple results sets-->
+    <FunctionImport Name="CustomerWithRecentOrders">
+      <ReturnType Type="Collection(NorthwindEFModel.CustomerWithRecentOrders_CustomerInfo)" />
+      <ReturnType Type="Collection(NorthwindEFModel.CustomerWithRecentOrders_OrderInfo)" />
+      <Parameter Name="CustomerID" Mode="In" Type="String" />
+    </FunctionImport>
+
+  </EntityContainer>
+
+
+  <!-- TPT  -->
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="OrderID" />
+    </Key>
+    <Property Name="OrderID" Type="Int32" Nullable="false"  />
+    <Property Name="EmployeeID" Type="Int32" Nullable="false" />
+    <Property Name="OrderDate" Type="DateTime" />
+    <Property Name="RequiredDate" Type="DateTime" />
+    <Property Name="ShippedDate" Type="DateTime" />
+    <Property Name="Freight" Type="Decimal" />
+    <Property Name="ShipName" Type="String"  />
+    <Property Name="ShipAddress" Type="String" />
+    <Property Name="ShipCity" Type="String" />
+    <Property Name="ShipRegion" Type="String" />
+    <Property Name="ShipPostalCode" Type="String" />
+    <Property Name="ShipCountry" Type="String" />
+    <Property Name="ShipLocation" Type="Geography" />
+    <Property Name="ContainerSize" Type="Geometry" />
+    <Property Name="ShippingStatus" Type="NorthwindEFModel.ShippingStatus" />
+    <NavigationProperty Name="Customer" Relationship="NorthwindEFModel.CustomerOrders" FromRole="Orders" ToRole="Customer" />
+    <NavigationProperty Name="OrderDetails" Relationship="NorthwindEFModel.Order_Details_Order" FromRole="Order" ToRole="OrderDetails" />
+  </EntityType>
+  <EntityType Name="InternationalOrder" BaseType ="NorthwindEFModel.Order">
+    <Property Name="CustomsDescription" Type="String" Nullable="false"  />
+    <Property Name="ExciseTax" Type="Decimal" Nullable="false" />
+  </EntityType>
+  <!-- End of TPT  -->
+
+  <!-- TPC -->
+  <EntityType Name="Employee" Abstract="true">
+    <Key>
+      <PropertyRef Name="EmployeeID" />
+    </Key>
+    <Property Name="EmployeeID" Type="Int32" Nullable="false" />
+    <Property Name="LastName" Type="String" Nullable="false"  />
+    <Property Name="FirstName" Type="String" Nullable="false" />
+    <Property Name="Title" Type="String"  />
+    <Property Name="TitleOfCourtesy" Type="String"  />
+    <Property Name="BirthDate" Type="DateTime" />
+    <Property Name="HireDate" Type="DateTime" />
+    <Property Name="Address" Type="NorthwindEFModel.CommonAddress" Nullable ="false" />
+    <Property Name="HomePhone" Type="String"  />
+    <Property Name="Extension" Type="String"  />
+    <Property Name="Photo" Type="Binary"  />
+    <Property Name="Notes" Type="String"  />
+    <Property Name="PhotoPath" Type="String"  />
+    <Property Name="Location" Type="Geography" />
+    <NavigationProperty Name="Territories" Relationship="NorthwindEFModel.EmployeesTerritories" FromRole="Employees" ToRole="Territories" />
+  </EntityType>
+  <EntityType Name="CurrentEmployee" BaseType ="NorthwindEFModel.Employee" ></EntityType>
+  <EntityType Name="PreviousEmployee" BaseType ="NorthwindEFModel.Employee" ></EntityType>
+  <!-- End of TPC example -->
+
+  <!-- TPH -->
+  <EntityType Name="Product">
+    <Key>
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="ProductName" Type="String" Nullable="false"  />
+    <Property Name="QuantityPerUnit" Type="String"  />
+    <Property Name="UnitPrice" Type="Decimal" />
+    <Property Name="UnitsInStock" Type="Int16" />
+    <Property Name="UnitsOnOrder" Type="Int16" />
+    <Property Name="ReorderLevel" Type="Int16" />
+    <NavigationProperty Name="Category" Relationship="NorthwindEFModel.Products_Category" FromRole="Products" ToRole="Category" />
+    <NavigationProperty Name="OrderDetails" Relationship="NorthwindEFModel.Order_Details_Product" FromRole="Product" ToRole="OrderDetails" />
+    <NavigationProperty Name="Supplier" Relationship="NorthwindEFModel.Products_Supplier" FromRole="Products" ToRole="Supplier" />
+  </EntityType>
+
+  <EntityType Name ="DiscontinuedProduct" BaseType ="NorthwindEFModel.Product">
+    <Property Name="DiscontinuedDate" Type="DateTime" />
+  </EntityType>
+  <!-- End of TPH -->
+
+
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="CustomerID" />
+    </Key>
+    <Property Name="CustomerID" Type="String" Nullable="false"  />
+    <Property Name="CompanyName" Type="String" Nullable="false"  />
+    <Property Name="ContactName" Type="String"  />
+    <Property Name="ContactTitle" Type="String"  />
+    <Property Name="Address" Type="NorthwindEFModel.CommonAddress" Nullable="false" />
+    <Property Name="Phone" Type="String"  />
+    <Property Name="Fax" Type="String"  />
+    <Property Name="Location" Type="Geography" />
+    <NavigationProperty Name="Orders" Relationship="NorthwindEFModel.CustomerOrders" FromRole="Customer" ToRole="Orders" />
+  </EntityType>
+
+  <Association Name="CustomerOrders">
+    <End Role="Customer" Type="NorthwindEFModel.Customer" Multiplicity="0..1" />
+    <End Role="Orders" Type="NorthwindEFModel.Order" Multiplicity="*" />
+  </Association>
+
+  <EntityType Name="Category">
+    <Key>
+      <PropertyRef Name="CategoryID" />
+    </Key>
+    <Property Name="CategoryID" Type="Int32" Nullable="false" />
+    <Property Name="CategoryName" Type="String" Nullable="false" />
+    <Property Name="Description" Type="String"  />
+    <Property Name="Picture" Type="Binary"  />
+    <NavigationProperty Name="Products" Relationship="NorthwindEFModel.Products_Category" FromRole="Category" ToRole="Products" />
+  </EntityType>
+
+  <Association Name="Products_Category">
+    <End Role="Category" Type="NorthwindEFModel.Category" Multiplicity="0..1" />
+    <End Role="Products" Type="NorthwindEFModel.Product" Multiplicity="*" />
+  </Association>
+
+
+  <EntityType Name="Supplier">
+    <Key>
+      <PropertyRef Name="SupplierID" />
+    </Key>
+    <Property Name="SupplierID" Type="Int32" Nullable="false" />
+    <Property Name="CompanyName" Type="String" Nullable="false"  />
+    <Property Name="ContactName" Type="String"  />
+    <Property Name="ContactTitle" Type="String"  />
+    <Property Name="Address" Type="NorthwindEFModel.CommonAddress" Nullable="false" />
+    <Property Name="Phone" Type="String"  />
+    <Property Name="Fax" Type="String"  />
+    <Property Name="HomePage" Type="String"  />
+    <Property Name="Location" Type="Geography" />
+    <NavigationProperty Name="Products" Relationship="NorthwindEFModel.Products_Supplier" FromRole="Supplier" ToRole="Products" />
+  </EntityType>
+
+  <Association Name="Products_Supplier">
+    <End Role="Supplier" Type="NorthwindEFModel.Supplier" Multiplicity="0..1" />
+    <End Role="Products" Type="NorthwindEFModel.Product" Multiplicity="*" />
+  </Association>
+
+  <EntityType Name="OrderDetail">
+    <Key>
+      <PropertyRef Name="OrderID" />
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="OrderID" Type="Int32" Nullable="false" />
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="UnitPrice" Type="Decimal" Nullable="false" />
+    <Property Name="Quantity" Type="Int16" Nullable="false" />
+    <Property Name="Discount" Type="Single" Nullable="false" />
+    <NavigationProperty Name="Order" Relationship="NorthwindEFModel.Order_Details_Order" FromRole="OrderDetails" ToRole="Order" />
+    <NavigationProperty Name="Product" Relationship="NorthwindEFModel.Order_Details_Product" FromRole="OrderDetails" ToRole="Product" />
+  </EntityType>
+
+  <Association Name="Order_Details_Product">
+    <End Role="Product" Type="NorthwindEFModel.Product" Multiplicity="1" />
+    <End Role="OrderDetails" Type="NorthwindEFModel.OrderDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="OrderDetails">
+        <PropertyRef Name="ProductID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+
+  <Association Name="Order_Details_Order">
+    <End Role="Order" Type="NorthwindEFModel.Order" Multiplicity="1" />
+    <End Role="OrderDetails" Type="NorthwindEFModel.OrderDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Order">
+        <PropertyRef Name="OrderID" />
+      </Principal>
+      <Dependent Role="OrderDetails">
+        <PropertyRef Name="OrderID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+
+  <!-- Complex type -->
+  <ComplexType Name="CommonAddress" >
+    <Property Name ="Address" Type="String"  />
+    <Property Name ="City" Type="String" />
+    <Property Name ="Region" Type="String" />
+    <Property Name ="PostalCode" Type="String" />
+    <Property Name ="Country" Type="String" />
+  </ComplexType>
+
+  <!-- Complex type that maps to the table returned by a TVF -->
+  <ComplexType Name="fx_SuppliersWithinRange_Result">
+    <Property Name="SupplierID" Type="Int32" Nullable="false" />
+    <Property Name="CompanyName" Type="String" Nullable="false" MaxLength="40" Unicode="true" FixedLength="false" />
+    <Property Name="Location" Type="Geography" />
+  </ComplexType>
+
+  <!-- Complex types that map to the return types of a stored procedure with multiple results sets -->
+  <ComplexType Name="CustomerWithRecentOrders_CustomerInfo">
+    <Property Name="CustomerID" Type="String" Nullable="false" MaxLength="5" />
+    <Property Name="CompanyName" Type="String" Nullable="false" MaxLength="40" />
+    <Property Name="ContactName" Type="String" Nullable="true" MaxLength="30" />
+    <Property Name="Phone" Type="String" Nullable="true" MaxLength="24" />
+  </ComplexType>
+  <ComplexType Name="CustomerWithRecentOrders_OrderInfo">
+    <Property Name="OrderID" Type="Int32" Nullable="false" />
+    <Property Name="OrderDate" Type="DateTime" Nullable="false" />
+    <Property Name="RequiredDate" Type="DateTime" Nullable="false" />
+    <Property Name="ShippedDate" Type="DateTime" Nullable="false" />
+    <Property Name="ShipLocation" Type="Geography" Nullable="false" />
+  </ComplexType>
+
+
+  <!-- Start of Employees sub graph -->
+  <Association Name="EmployeesTerritories">
+    <End Role="Employees" Type="NorthwindEFModel.Employee" Multiplicity="*" />
+    <End Role="Territories" Type="NorthwindEFModel.Territory" Multiplicity="*" />
+  </Association>
+
+  <EntityType Name="Territory">
+    <Key>
+      <PropertyRef Name="TerritoryID" />
+    </Key>
+    <Property Name="TerritoryID" Type="Int32" Nullable="false" />
+    <Property Name="TerritoryDescription" Type="String" Nullable="false"  />
+  </EntityType>
+
+  <Association Name="TerritoriesRegion">
+    <End Role="Region" Type="NorthwindEFModel.Region" Multiplicity="1" />
+    <End Role="Territories" Type="NorthwindEFModel.Territory" Multiplicity="*" />
+  </Association>
+
+  <EntityType Name="Region">
+    <Key>
+      <PropertyRef Name="RegionID" />
+    </Key>
+    <Property Name="RegionID" Type="Int32" Nullable="false" />
+    <Property Name="RegionDescription" Type="String" Nullable="false"  />
+  </EntityType>
+  <!-- End of Employees sub graph -->
+
+  <!-- Enum definition-->
+  <EnumType Name="ShippingStatus">
+    <Member Name="NotStarted" Value="0" />
+    <Member Name="InTransit" Value="1" />
+    <Member Name="Received" Value="2" />
+  </EnumType>
+</Schema>

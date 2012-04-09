@@ -1,0 +1,1459 @@
+﻿<?xml version="1.0" encoding="utf-8"?> 
+
+<!-- 
+***************************************************************************
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    This code is licensed under the Visual Studio SDK license terms.
+    THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+    ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+    IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+    PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+***************************************************************************
+-->
+
+<!--
+	Data object support describes a set of object types that can be used to
+	represent the structure of the data source as an object model.  Underlying
+	object types are specific to the data source and describe information that
+	uniquely identifies instances of the type, properties of the type, and a set
+	of services that can perform useful actions given the type.  Mapped object
+	types describe a mapping from the underlying object types to generic types
+	and properties, and can be consumed by data designers that do not have
+	knowledge of any specific data source.
+-->
+<DataObjectSupport xmlns="http://schemas.microsoft.com/VisualStudio/2007/07/Data/DataObjectSupport">
+	<!-- Underlying object types -->
+	<Types>
+		<!--
+			Defines the root type, which represents one object with no identifier.
+		-->
+		<RootType>
+			<!--
+				Properties are represented simply by their name and type.  Note that
+				in this case the type is not specified, defaulting to "System.String".
+			-->
+			<Properties>
+				<Property name="Server" />
+				<Property name="Instance" />
+				<Property name="Login" />
+				<Property name="Database" />
+				<Property name="User" />
+				<Property name="Schema" />
+			</Properties>
+			<!--
+				Services are represented by a type name (typically an interface) and
+				a reference to some entity that implements it (typically a class).
+				Methods called on the service may be passed parameters specified in
+				the XML file, allowing the service to adapt depending on the context.
+				The parameters expected by any given method are defined by and
+				completely dependent on the service implementation.
+			-->
+			<Services>
+				<!--
+					This service provides the ability to select instances of this type.
+					The service implementation specified here is supplied by this sample
+					and provides better information than the basic sample.  This is the
+					default implementation of this service registered by the sample so
+					it does not need to be explicitly specified here, but it is shown
+					anyway for sample purposes.
+				-->
+				<Service type="IVsDataObjectSelector" implementationType="Microsoft.Samples.VisualStudio.Data.ExtendedProvider.SqlObjectSelector" />
+			</Services>
+		</RootType>
+		<!--
+			Defines a type that represents a user.  This type specifies a preferred
+			ordering, meaning services consuming the data object support model
+			directly (such as the data object store service) should ensure that
+			collections of this object type are ordered this way by default.
+		-->
+		<Type name="User" preferredOrdering="Name">
+			<!--
+				The identifier for a type defines the information required to uniquely
+				identify instances of the type.  In this case only a name is needed.
+			-->
+			<Identifier>
+				<Part name="Name" />
+			</Identifier>
+			<Properties>
+				<!--
+					The name property is also an identifier part, so it is marked with
+					an attribute telling direct consumers of the data object support
+					model that this property and the identifier part with the same name
+					are in fact the same metadata.  Omitting this attribute would be an
+					error as identifier parts and properties are in a single namespace.
+				-->
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Id" />
+				<Property name="CreateDate" type="System.DateTime" />
+				<Property name="UpdateDate" type="System.DateTime" />
+			</Properties>
+			<Services>
+				<!--
+					The service implementation specified here makes a call to the
+					DbConnection.GetSchema() method on the ADO .NET provider.  Since
+					this implementation is not in the main provider assembly, it must
+					be fully qualified.
+				-->
+				<Service type="IVsDataObjectSelector" implementationType="Microsoft.VisualStudio.Data.Framework.AdoDotNet.AdoDotNetObjectSelector, Microsoft.VisualStudio.Data.Framework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+					<!--
+						The SelectObjects method in this implementation takes one required
+						parameter that specifies the metadata collection name to pass to
+						the DbConnection.GetSchema() method.  It also takes one optional
+						parameter that defines a mapping of underlying columns from the
+						resulting DataTable object to the actual names of properties
+						defined above.  The parameter is expected to contain a list of
+						sub-parameters that define an expected property name (e.g. "Name")
+						with an inner parameter for the column name (e.g. "user_name").
+					-->
+					<Parameters method="SelectObjects">
+						<Parameter value="Users" />
+						<Parameter>
+							<Parameter value="Name">
+								<Parameter value="user_name" />
+							</Parameter>
+							<Parameter value="Id">
+								<Parameter value="uid" />
+							</Parameter>
+							<Parameter value="CreateDate">
+								<Parameter value="createdate" />
+							</Parameter>
+							<Parameter value="UpdateDate">
+								<Parameter value="updatedate" />
+							</Parameter>
+						</Parameter>
+					</Parameters>
+				</Service>
+			</Services>
+		</Type>
+		<!--
+			Defines a type that represents a table.  Notice the preferred ordering
+			is on multiple identifier parts and specified as a comma-delimited list.
+		-->
+		<Type name="Table" preferredOrdering="Database, Schema, Name">
+			<!--
+				The identifier for a table contains multiple parts, indicating that a
+				database name, a schema name and a table name are all required to
+				uniquely identify the table object on the server.
+			-->
+			<Identifier>
+				<Part name="Database" />
+				<Part name="Schema" />
+				<Part name="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Schema" isIdentifierPart="true" />
+				<Property name="Type" />
+			</Properties>
+			<Services>
+				<Service type="IVsDataObjectSelector" implementationType="Microsoft.VisualStudio.Data.Framework.AdoDotNet.AdoDotNetObjectSelector, Microsoft.VisualStudio.Data.Framework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+					<!--
+						The GetSupportedRestrictions method in this implementation takes
+						zero or more optional parameters defining the identifier parts
+						and/or properties that may be restricted on when passed to the
+						SelectObjects method.  By default, the restrictions are the same
+						as the set of identifier parts, however in this case the selector
+						supports restricting on table type in addition to the identifier
+						parts, so we explicitly specify the supported restrictions here.
+					-->
+					<Parameters method="GetSupportedRestrictions">
+						<Parameter value="Database" />
+						<Parameter value="Schema" />
+						<Parameter value="Name" />
+						<Parameter value="Type" />
+					</Parameters>
+					<Parameters method="SelectObjects">
+						<Parameter value="Tables" />
+						<Parameter>
+							<Parameter value="Database">
+								<Parameter value="TABLE_CATALOG" />
+							</Parameter>
+							<Parameter value="Schema">
+								<Parameter value="TABLE_SCHEMA" />
+							</Parameter>
+							<Parameter value="Name">
+								<Parameter value="TABLE_NAME" />
+							</Parameter>
+							<Parameter value="Type">
+								<Parameter value="TABLE_TYPE" />
+							</Parameter>
+						</Parameter>
+					</Parameters>
+				</Service>
+				<!--
+					This service provides the ability to build a DSRef object for a
+					given instance of this type.  DSRef objects can be placed on the
+					clipboard and used to represent objects as they are copied and
+					pasted, or dragged and dropped, from one location to another.  A
+					default implementation of this service has been registered by the
+					sample so it does not need to be explicitly specified here, but it
+					is shown anyway for sample purposes.
+				-->
+				<Service type="IDSRefBuilder" implementationType="Microsoft.VisualStudio.Data.Framework.DSRefBuilder, Microsoft.VisualStudio.Data.Framework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+					<!--
+						The AppendToDSRef method in this implementation takes one or more
+						parameters that specify how the DSRef tree should be built given
+						values of identifier parts for an instance of this object type.
+					-->
+					<Parameters method="AppendToDSRef">
+						<!-- Top level parameters add nodes under the root node -->
+						<Parameter>
+							<!-- The node name (typically name of the object) -->
+							<Parameter value="{2}" />
+							<!-- The node owner (typically schema of the object) -->
+							<Parameter value="{1}" />
+							<!-- The node type (from the __DSREFTYPE enumeration) -->
+							<Parameter value="Table" />
+							<!-- The node extended type (not used very often) -->
+							<Parameter />
+							<!-- The node properties, identified by specific GUIDs -->
+							<Parameter>
+								<!-- GUID_DSRefProperty_PreciseType -->
+								<Parameter value="39A5A7E7-513F-44a4-B79D-7652CD8962D9">
+									<Parameter value="101" type="System.Int32" /> <!-- Table -->
+								</Parameter>
+							</Parameter>
+						</Parameter>
+					</Parameters>
+				</Service>
+			</Services>
+		</Type>
+		<!--
+			Defines a type that represents a table column.
+		-->
+		<Type name="Column" preferredOrdering="Database, Schema, Table, Ordinal">
+			<Identifier>
+				<Part name="Database" />
+				<Part name="Schema" />
+				<Part name="Table" />
+				<Part name="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Ordinal" type="System.Int16" />
+				<Property name="DataType" />
+				<Property name="MaxLength" type="System.Int32" />
+				<Property name="Precision" type="System.Byte" />
+				<Property name="Scale" type="System.Int32" />
+				<Property name="IsNullable" />
+				<Property name="DefaultValue" />
+			</Properties>
+			<Services>
+				<Service type="IVsDataObjectSelector" implementationType="Microsoft.VisualStudio.Data.Framework.AdoDotNet.AdoDotNetObjectSelector, Microsoft.VisualStudio.Data.Framework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+					<Parameters method="SelectObjects">
+						<Parameter value="Columns" />
+						<Parameter>
+							<Parameter value="Database">
+								<Parameter value="TABLE_CATALOG" />
+							</Parameter>
+							<Parameter value="Schema">
+								<Parameter value="TABLE_SCHEMA" />
+							</Parameter>
+							<Parameter value="Table">
+								<Parameter value="TABLE_NAME" />
+							</Parameter>
+							<Parameter value="Name">
+								<Parameter value="COLUMN_NAME" />
+							</Parameter>
+							<Parameter value="Ordinal">
+								<Parameter value="ORDINAL_POSITION" />
+							</Parameter>
+							<Parameter value="DataType">
+								<Parameter value="DATA_TYPE" />
+							</Parameter>
+							<Parameter value="MaxLength">
+								<Parameter value="CHARACTER_MAXIMUM_LENGTH" />
+							</Parameter>
+							<Parameter value="Precision">
+								<Parameter value="NUMERIC_PRECISION" />
+							</Parameter>
+							<Parameter value="Scale">
+								<Parameter value="NUMERIC_SCALE" />
+							</Parameter>
+							<Parameter value="IsNullable">
+								<Parameter value="IS_NULLABLE" />
+							</Parameter>
+							<Parameter value="DefaultValue">
+								<Parameter value="COLUMN_DEFAULT" />
+							</Parameter>
+						</Parameter>
+					</Parameters>
+				</Service>
+				<Service type="IDSRefBuilder">
+					<Parameters method="AppendToDSRef">
+						<Parameter>
+							<Parameter value="{2}" />
+							<Parameter value="{1}" />
+							<Parameter value="Table" />
+							<Parameter />
+							<Parameter>
+								<!-- GUID_DSRefProperty_PreciseType -->
+								<Parameter value="39A5A7E7-513F-44a4-B79D-7652CD8962D9">
+									<Parameter value="101" type="System.Int32" /> <!-- Table -->
+								</Parameter>
+							</Parameter>
+							<!-- This parameter specifies child nodes -->
+							<Parameter>
+								<Parameter>
+									<Parameter value="{3}" />
+									<Parameter />
+									<Parameter value="Field" />
+									<Parameter />
+									<Parameter>
+										<!-- GUID_DSRefProperty_PreciseType -->
+										<Parameter value="39A5A7E7-513F-44a4-B79D-7652CD8962D9">
+											<Parameter value="102" type="System.Int32" /> <!-- Table_Column -->
+										</Parameter>
+									</Parameter>
+								</Parameter>
+							</Parameter>
+						</Parameter>
+					</Parameters>
+				</Service>
+			</Services>
+		</Type>
+		<!--
+			Defines a type that represents an index.
+		-->
+		<Type name="Index" preferredOrdering="Database, Schema, Table, Name">
+			<Identifier>
+				<Part name="Database" />
+				<Part name="Schema" />
+				<Part name="Table" />
+				<Part name="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="IsUnique" type="System.Boolean" />
+				<Property name="IsPrimary" type="System.Boolean" />
+			</Properties>
+			<Services>
+				<Service type="IVsDataObjectSelector" />
+				<Service type="IDSRefBuilder">
+					<Parameters method="AppendToDSRef">
+						<Parameter>
+							<Parameter value="{2}" />
+							<Parameter value="{1}" />
+							<Parameter value="Table" />
+							<Parameter />
+							<Parameter>
+								<!-- GUID_DSRefProperty_PreciseType -->
+								<Parameter value="39A5A7E7-513F-44a4-B79D-7652CD8962D9">
+									<Parameter value="101" type="System.Int32" /> <!-- Table -->
+								</Parameter>
+							</Parameter>
+							<Parameter>
+								<Parameter>
+									<Parameter value="{3}" />
+									<Parameter />
+									<Parameter value="Index" />
+								</Parameter>
+							</Parameter>
+						</Parameter>
+					</Parameters>
+				</Service>
+			</Services>
+		</Type>
+		<!--
+			Defines a type that represents an index column.
+		-->
+		<Type name="IndexColumn" preferredOrdering="Database, Schema, Table, Index, Ordinal">
+			<Identifier>
+				<Part name="Database" />
+				<Part name="Schema" />
+				<Part name="Table" />
+				<Part name="Index" />
+				<Part name="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Ordinal" type="System.Byte" />
+			</Properties>
+			<Services>
+				<Service type="IVsDataObjectSelector" />
+				<Service type="IDSRefBuilder">
+					<Parameters method="AppendToDSRef">
+						<Parameter>
+							<Parameter value="{2}" />
+							<Parameter value="{1}" />
+							<Parameter value="Table" />
+							<Parameter />
+							<Parameter>
+								<!-- GUID_DSRefProperty_PreciseType -->
+								<Parameter value="39A5A7E7-513F-44a4-B79D-7652CD8962D9">
+									<Parameter value="101" type="System.Int32" /> <!-- Table -->
+								</Parameter>
+							</Parameter>
+							<Parameter>
+								<Parameter>
+									<Parameter value="{3}" />
+									<Parameter />
+									<Parameter value="Index" />
+									<Parameter />
+									<Parameter />
+									<Parameter>
+										<Parameter>
+											<Parameter value="{4}" />
+											<Parameter />
+											<Parameter value="Field" />
+										</Parameter>
+									</Parameter>
+								</Parameter>
+							</Parameter>
+						</Parameter>
+					</Parameters>
+				</Service>
+			</Services>
+		</Type>
+		<!--
+			Defines a type that represents a foreign key.
+		-->
+		<Type name="ForeignKey" preferredOrdering="Database, Schema, Table, Name">
+			<Identifier>
+				<Part name="Database" />
+				<Part name="Schema" />
+				<Part name="Table" />
+				<Part name="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="ReferencedTableSchema" />
+				<Property name="ReferencedTableName" />
+				<Property name="UpdateAction" type="System.Byte" />
+				<Property name="DeleteAction" type="System.Byte" />
+			</Properties>
+			<Services>
+				<Service type="IVsDataObjectSelector" />
+			</Services>
+		</Type>
+		<!--
+			Defines a type that represents a foreign key column.
+		-->
+		<Type name="ForeignKeyColumn" preferredOrdering="Database, Schema, Table, ForeignKey, Ordinal">
+			<Identifier>
+				<Part name="Database" />
+				<Part name="Schema" />
+				<Part name="Table" />
+				<Part name="ForeignKey" />
+				<Part name="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Ordinal" type="System.Int32" />
+				<Property name="ReferencedColumnName" />
+			</Properties>
+			<Services>
+				<Service type="IVsDataObjectSelector" />
+			</Services>
+		</Type>
+		<!--
+			Defines a type that represents a view.
+		-->
+		<Type name="View" preferredOrdering="Database, Schema, Name">
+			<Identifier>
+				<Part name="Database" />
+				<Part name="Schema" />
+				<Part name="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Schema" isIdentifierPart="true" />
+				<Property name="CheckOption" />
+				<Property name="IsUpdatable" />
+			</Properties>
+			<Services>
+				<Service type="IVsDataObjectSelector" implementationType="Microsoft.VisualStudio.Data.Framework.AdoDotNet.AdoDotNetObjectSelector, Microsoft.VisualStudio.Data.Framework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+					<Parameters method="SelectObjects">
+						<Parameter value="Views" />
+						<Parameter>
+							<Parameter value="Database">
+								<Parameter value="TABLE_CATALOG" />
+							</Parameter>
+							<Parameter value="Schema">
+								<Parameter value="TABLE_SCHEMA" />
+							</Parameter>
+							<Parameter value="Name">
+								<Parameter value="TABLE_NAME" />
+							</Parameter>
+							<Parameter value="CheckOption">
+								<Parameter value="CHECK_OPTION" />
+							</Parameter>
+							<Parameter value="IsUpdatable">
+								<Parameter value="IS_UPDATABLE" />
+							</Parameter>
+						</Parameter>
+					</Parameters>
+				</Service>
+				<Service type="IDSRefBuilder">
+					<Parameters method="AppendToDSRef">
+						<Parameter>
+							<Parameter value="{2}" />
+							<Parameter value="{1}" />
+							<Parameter value="View" />
+							<Parameter />
+							<Parameter>
+								<!-- GUID_DSRefProperty_PreciseType -->
+								<Parameter value="39A5A7E7-513F-44a4-B79D-7652CD8962D9">
+									<Parameter value="301" type="System.Int32" /> <!-- View -->
+								</Parameter>
+							</Parameter>
+						</Parameter>
+					</Parameters>
+				</Service>
+			</Services>
+		</Type>
+		<!--
+			Defines a type that represents a view column.
+		-->
+		<Type name="ViewColumn" preferredOrdering="Database, Schema, View, Ordinal">
+			<Identifier>
+				<Part name="Database" />
+				<Part name="Schema" />
+				<Part name="View" />
+				<Part name="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Ordinal" type="System.Int16" />
+				<Property name="DataType" />
+				<Property name="MaxLength" type="System.Int32" />
+				<Property name="Precision" type="System.Byte" />
+				<Property name="Scale" type="System.Int32" />
+				<Property name="IsNullable" />
+				<Property name="DefaultValue" />
+			</Properties>
+			<Services>
+				<Service type="IVsDataObjectSelector" implementationType="Microsoft.VisualStudio.Data.Framework.AdoDotNet.AdoDotNetObjectSelector, Microsoft.VisualStudio.Data.Framework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+					<Parameters method="SelectObjects">
+						<Parameter value="Columns" />
+						<Parameter>
+							<Parameter value="Database">
+								<Parameter value="TABLE_CATALOG" />
+							</Parameter>
+							<Parameter value="Schema">
+								<Parameter value="TABLE_SCHEMA" />
+							</Parameter>
+							<Parameter value="View">
+								<Parameter value="TABLE_NAME" />
+							</Parameter>
+							<Parameter value="Name">
+								<Parameter value="COLUMN_NAME" />
+							</Parameter>
+							<Parameter value="Ordinal">
+								<Parameter value="ORDINAL_POSITION" />
+							</Parameter>
+							<Parameter value="DataType">
+								<Parameter value="DATA_TYPE" />
+							</Parameter>
+							<Parameter value="MaxLength">
+								<Parameter value="CHARACTER_MAXIMUM_LENGTH" />
+							</Parameter>
+							<Parameter value="Precision">
+								<Parameter value="NUMERIC_PRECISION" />
+							</Parameter>
+							<Parameter value="Scale">
+								<Parameter value="NUMERIC_SCALE" />
+							</Parameter>
+							<Parameter value="IsNullable">
+								<Parameter value="IS_NULLABLE" />
+							</Parameter>
+							<Parameter value="DefaultValue">
+								<Parameter value="COLUMN_DEFAULT" />
+							</Parameter>
+						</Parameter>
+					</Parameters>
+				</Service>
+				<Service type="IDSRefBuilder">
+					<Parameters method="AppendToDSRef">
+						<Parameter>
+							<Parameter value="{2}" />
+							<Parameter value="{1}" />
+							<Parameter value="View" />
+							<Parameter />
+							<Parameter>
+								<!-- GUID_DSRefProperty_PreciseType -->
+								<Parameter value="39A5A7E7-513F-44a4-B79D-7652CD8962D9">
+									<Parameter value="301" type="System.Int32" /> <!-- View -->
+								</Parameter>
+							</Parameter>
+							<Parameter>
+								<Parameter>
+									<Parameter value="{3}" />
+									<Parameter />
+									<Parameter value="Field" />
+									<Parameter />
+									<Parameter>
+										<!-- GUID_DSRefProperty_PreciseType -->
+										<Parameter value="39A5A7E7-513F-44a4-B79D-7652CD8962D9">
+											<Parameter value="302" type="System.Int32" /> <!-- View_Column -->
+										</Parameter>
+									</Parameter>
+								</Parameter>
+							</Parameter>
+						</Parameter>
+					</Parameters>
+				</Service>
+			</Services>
+		</Type>
+		<!--
+			Defines a type that represents a stored procedure.
+		-->
+		<Type name="StoredProcedure" preferredOrdering="Database, Schema, Name">
+			<Identifier>
+				<Part name="Database" />
+				<Part name="Schema" />
+				<Part name="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Schema" isIdentifierPart="true" />
+			</Properties>
+			<Services>
+				<Service type="IVsDataObjectSelector" />
+				<Service type="IDSRefBuilder">
+					<Parameters method="AppendToDSRef">
+						<Parameter>
+							<Parameter value="{2}" />
+							<Parameter value="{1}" />
+							<Parameter value="StoredProcedure" />
+							<Parameter />
+							<Parameter>
+								<!-- GUID_DSRefProperty_PreciseType -->
+								<Parameter value="39A5A7E7-513F-44a4-B79D-7652CD8962D9">
+									<Parameter value="401" type="System.Int32" /> <!-- Procedure -->
+								</Parameter>
+							</Parameter>
+						</Parameter>
+					</Parameters>
+				</Service>
+			</Services>
+		</Type>
+		<!--
+			Defines a type that represents a stored procedure parameter.
+		-->
+		<Type name="StoredProcedureParameter" preferredOrdering="Database, Schema, StoredProcedure, Ordinal">
+			<Identifier>
+				<Part name="Database" />
+				<Part name="Schema" />
+				<Part name="StoredProcedure" />
+				<Part name="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Ordinal" type="System.Int16" />
+				<Property name="DataType" />
+				<Property name="MaxLength" type="System.Int32" />
+				<Property name="Precision" type="System.Byte" />
+				<Property name="Scale" type="System.Int32" />
+				<Property name="IsOutput" />
+			</Properties>
+			<Services>
+				<Service type="IVsDataObjectSelector" />
+			</Services>
+		</Type>
+		<!--
+			Defines a type that represents a stored procedure column.
+		-->
+		<Type name="StoredProcedureColumn" preferredOrdering="Database, Schema, StoredProcedure, Ordinal">
+			<Identifier>
+				<Part name="Database" />
+				<Part name="Schema" />
+				<Part name="StoredProcedure" />
+				<Part name="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Ordinal" type="System.Int16" />
+				<Property name="ProviderType" type="System.Int32" />
+				<Property name="FrameworkType" type="System.Type" />
+				<Property name="MaxLength" type="System.Int32" />
+				<Property name="Precision" type="System.Int16" />
+				<Property name="Scale" type="System.Int16" />
+				<Property name="IsNullable" type="System.Boolean" />
+			</Properties>
+			<Services>
+				<Service type="IVsDataObjectSelector" />
+			</Services>
+		</Type>
+		<!--
+			Defines a type that represents a function.
+		-->
+		<Type name="Function" preferredOrdering="Database, Schema, Name">
+			<Identifier>
+				<Part name="Database" />
+				<Part name="Schema" />
+				<Part name="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Schema" isIdentifierPart="true" />
+				<Property name="Type" />
+			</Properties>
+			<Services>
+				<Service type="IVsDataObjectSelector" />
+				<Service type="IDSRefBuilder">
+					<Parameters method="AppendToDSRef">
+						<Parameter>
+							<Parameter value="{2}" />
+							<Parameter value="{1}" />
+							<Parameter value="Function" />
+							<Parameter />
+							<Parameter>
+								<!-- GUID_DSRefProperty_PreciseType -->
+								<Parameter value="39A5A7E7-513F-44a4-B79D-7652CD8962D9">
+									<Parameter value="501" type="System.Int32" /> <!-- Function -->
+								</Parameter>
+							</Parameter>
+						</Parameter>
+					</Parameters>
+				</Service>
+			</Services>
+		</Type>
+		<!--
+			Defines a type that represents a function parameter.
+		-->
+		<Type name="FunctionParameter" preferredOrdering="Database, Schema, Function, Ordinal">
+			<Identifier>
+				<Part name="Database" />
+				<Part name="Schema" />
+				<Part name="Function" />
+				<Part name="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Ordinal" type="System.Int16" />
+				<Property name="DataType" />
+				<Property name="MaxLength" type="System.Int32" />
+				<Property name="Precision" type="System.Byte" />
+				<Property name="Scale" type="System.Int32" />
+				<Property name="IsOutput" />
+			</Properties>
+			<Services>
+				<Service type="IVsDataObjectSelector" />
+			</Services>
+		</Type>
+		<!--
+			Defines a type that represents a function column.
+		-->
+		<Type name="FunctionColumn" preferredOrdering="Database, Schema, Function, Ordinal">
+			<Identifier>
+				<Part name="Database" />
+				<Part name="Schema" />
+				<Part name="Function" />
+				<Part name="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Ordinal" type="System.Int16" />
+				<Property name="DataType" />
+				<Property name="MaxLength" type="System.Int32" />
+				<Property name="Precision" type="System.Byte" />
+				<Property name="Scale" type="System.Int32" />
+			</Properties>
+			<Services>
+				<Service type="IVsDataObjectSelector" />
+			</Services>
+		</Type>
+		<!--
+			Defines a type that represents a user defined type.  User defined types
+			are specific to SQL Server 2005 or later, so the minSourceVersion
+			attribute is applied to ensure this type only exists for this version.
+		-->
+		<Type name="UserDefinedType" preferredOrdering="Name, Assembly" minSourceVersion="09">
+			<Identifier>
+				<Part name="Assembly" />
+				<Part name="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="CreateDate" type="System.DateTime" />
+				<Property name="IsFixedLength" type="System.Boolean" />
+				<Property name="MaxLength" type="System.Int32" />
+			</Properties>
+			<Services>
+				<Service type="IVsDataObjectSelector" implementationType="Microsoft.VisualStudio.Data.Framework.AdoDotNet.AdoDotNetObjectSelector, Microsoft.VisualStudio.Data.Framework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+					<Parameters method="SelectObjects">
+						<Parameter value="UserDefinedTypes" />
+						<Parameter>
+							<Parameter value="Assembly">
+								<Parameter value="assembly_name" />
+							</Parameter>
+							<Parameter value="Name">
+								<Parameter value="udt_name" />
+							</Parameter>
+							<Parameter value="CreateDate">
+								<Parameter value="create_date" />
+							</Parameter>
+							<Parameter value="IsFixedLength">
+								<Parameter value="is_fixed_length" />
+							</Parameter>
+							<Parameter value="MaxLength">
+								<Parameter value="max_length" />
+							</Parameter>
+						</Parameter>
+					</Parameters>
+				</Service>
+			</Services>
+		</Type>
+	</Types>
+	<!-- Mapped object types -->
+	<MappedTypes>
+		<!--
+			The "Table" mapped type is a generic representation of object types that
+			represent raw tabular data in a relational object model.  See the
+			Microsoft.VisualStudio.Data.Services.RelationalObjectModel.IVsDataTable
+			type for more information.  The underlying type is obviously "Table".
+		-->
+		<MappedType name="Table" underlyingType="Table">
+			<!--
+				The selection element for a mapped type defines how to map a generic
+				request for instances of the mapped type to restrictions, filter and
+				ordering on the underlying type.  In this case, there is a one-to-one
+				mapping between the Catalog, Schema and Name generic restrictions
+				defined for this mapped type and the underlying Database, Schema and
+				Name restrictions.  There is also an additional restriction on the
+				table type to "BASE TABLE", ensuring only these types are returned.
+			-->
+			<Selection restrictions="{Catalog},{Schema},{Name},BASE TABLE" />
+			<!--
+				The Identifier element for a mapped type defines how to represent a
+				generic identifier in terms of an underlying identifier.  In this
+				case it is simple; there is a one-to-one mapping between the Catalog,
+				Schema and Name generic identifier defined for this mapped type and
+				the underlying Database, Schema and Name identifier parts.
+			-->
+			<Identifier>
+				<Part name="Catalog" underlyingMember="Database" />
+				<Part name="Schema" underlyingMember="Schema" />
+				<Part name="Name" underlyingMember="Name" />
+			</Identifier>
+			<!--
+				The Properties element for a mapped type defines how to represent
+				generic properties in terms of underlying properties.
+			-->
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Schema" isIdentifierPart="true" />
+				<Property name="Type" underlyingMember="Schema">
+					<!--
+						The generic Type property is supposed to represent whether the
+						table is a user or system table, with the strings "USER" and
+						"SYSTEM" respectively.  There is no explicit information in the
+						underlying type for this, but there is a heuristic based on the
+						underlying Schema property value: if the table is in the
+						INFORMATION_SCHEMA schema, then it must be a system table, else
+						assume it is a user table.  To specify this, a Conversion element
+						is used with one conversion step, which calculates the value.
+					-->
+					<Conversion>
+						<Calculate expr="IIF(NOT ({0} = 'INFORMATION_SCHEMA'), 'USER', 'SYSTEM')" exprType="System.String" />
+					</Conversion>
+				</Property>
+			</Properties>
+		</MappedType>
+		<!--
+			The "TableColumn" mapped type is a generic representation of object
+			types that represent columns in tables.  See the Microsoft.VisualStudio.
+			Data.Services.RelationalObjectModel.IVsDataTableColumn type for more
+			information.  Notice how the name of the mapped type and the underlying
+			type are different in this case.
+		-->
+		<MappedType name="TableColumn" underlyingType="Column">
+			<Selection restrictions="{Catalog},{Schema},{Table},{Name}" />
+			<Identifier>
+				<Part name="Catalog" underlyingMember="Database" />
+				<Part name="Schema" underlyingMember="Schema" />
+				<Part name="Table" underlyingMember="Table" />
+				<Part name="Name" underlyingMember="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Ordinal" underlyingMember="Ordinal">
+					<!--
+						The generic Ordinal property is defined as a System.Int32 type
+						but the underlying member returns a System.Int16, so a conversion
+						is required with a ChangeType step to produce the correct value.
+					-->
+					<Conversion>
+						<ChangeType type="System.Int32" />
+					</Conversion>
+				</Property>
+				<Property name="UserDataType" underlyingMember="DataType" />
+				<Property name="NativeDataType" underlyingMember="DataType" />
+				<Property name="AdoDotNetDataType" underlyingMember="DataType">
+					<!--
+						The generic AdoDotNetDataType property is defined to be a value
+						from the ADO .NET provider specific enumeration representing the
+						column data type, when the DDEX provider technology is ADO .NET.
+						Since the underlying type only returns a string representation of
+						the data type, a custom mapper is required to convert these
+						strings into the appropriate value.  Fortunately, the default
+						ADO .NET implementation of the IVsDataMappedObjectConverter
+						interface has this capability, using the ADO .NET DataTypes schema
+						collection.  Since it is the default implementation it does not
+						need to be explicitly specified here, however it is shown anyway
+						for sample purposes.
+					-->
+					<Conversion>
+						<CallMapper implementationType="Microsoft.VisualStudio.Data.Framework.AdoDotNet.AdoDotNetMappedObjectConverter, Microsoft.VisualStudio.Data.Framework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+					</Conversion>
+				</Property>
+				<Property name="AdoDotNetDbType" underlyingMember="DataType">
+					<!--
+						The generic AdoDotNetDbType property is defined to be a value from
+						the System.Data.DbType enumeration representing the column data
+						type, when the DDEX provider technology is ADO .NET.  The default
+						implementation of the IVsDataMappedObjectConverter interface is
+						able to infer this value based on information in the ADO .NET
+						DataTypes schema collection.
+					-->
+					<Conversion>
+						<CallMapper />
+					</Conversion>
+				</Property>
+				<Property name="FrameworkDataType" underlyingMember="DataType">
+					<!--
+						The generic FrameworkDataType property is defined to be a
+						System.Type representation of the column data type.  The default
+						implementation of the IVsDataMappedObjectConverter interface is
+						able to produce this value based on information in the ADO .NET
+						DataTypes schema collection.
+					-->
+					<Conversion>
+						<CallMapper />
+					</Conversion>
+				</Property>
+				<Property name="Length" underlyingMember="MaxLength" />
+				<Property name="Precision" underlyingMember="Precision">
+					<Conversion>
+						<ChangeType type="System.Int32" />
+					</Conversion>
+				</Property>
+				<Property name="Scale" underlyingMember="Scale" />
+				<Property name="IsNullable" underlyingMember="IsNullable">
+					<Conversion>
+						<Calculate expr="IIF({0} = 'YES', true, false)" exprType="System.Boolean" />
+					</Conversion>
+				</Property>
+				<!--
+					Notice that while the mapped type defines an IsComputed property,
+					there is no property on the underlying type that supplies this
+					information.  Only properties that can be mapped should be mapped;
+					others should be omitted.  Therefore this property is not included.
+				-->
+				<!-- <Property name="IsComputed" underlyingMember="<none>" /> -->
+				<Property name="DefaultValue" underlyingMember="DefaultValue" />
+			</Properties>
+		</MappedType>
+		<!--
+			The "TableUniqueKey" mapped type is a generic representation of object
+			types that represent unique keys in tables.  See the Microsoft.
+			VisualStudio.Data.Services.RelationalObjectModel.IVsDataTableUniqueKey
+			type for more information.  Notice the mapping to the underlying type
+			"Index"; in SQL Server all unique keys are represented as indexes.
+		-->
+		<MappedType name="TableUniqueKey" underlyingType="Index">
+			<!--
+				Since the underlying type represents objects with greater scope than
+				just table unique keys, a filter must be supplied to ensure only the
+				indexes that are unique get returned when selecting this mapped type.
+			-->
+			<Selection restrictions="{Catalog},{Schema},{Table},{Name}" filter="IsUnique = true" />
+			<Identifier>
+				<Part name="Catalog" underlyingMember="Database" />
+				<Part name="Schema" underlyingMember="Schema" />
+				<Part name="Table" underlyingMember="Table" />
+				<Part name="Name" underlyingMember="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="IsPrimary" underlyingMember="IsPrimary" />
+			</Properties>
+		</MappedType>
+		<!--
+			The "TableUniqueKeyColumn" mapped type is a generic representation of
+			object types that represent unique keys in tables.  See the Microsoft.
+			VisualStudio.Data.Services.RelationalObjectModel.
+			IVsDataTableUniqueKeyColumn type for more information.  Notice the
+			mapping to the underlying type "IndexColumns"; in SQL Server all unique
+			key columns are represented as index columns.
+		-->
+		<MappedType name="TableUniqueKeyColumn" underlyingType="IndexColumn">
+			<Selection restrictions="{Catalog},{Schema},{Table},{TableUniqueKey},{Name}" />
+			<Identifier>
+				<Part name="Catalog" underlyingMember="Database" />
+				<Part name="Schema" underlyingMember="Schema" />
+				<Part name="Table" underlyingMember="Table" />
+				<Part name="TableUniqueKey" underlyingMember="Index" />
+				<Part name="Name" underlyingMember="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Ordinal" underlyingMember="Ordinal">
+					<Conversion>
+						<ChangeType type="System.Int32" />
+					</Conversion>
+				</Property>
+			</Properties>
+		</MappedType>
+		<!--
+			The "TableForeignKey" mapped type is a generic representation of object
+			types that represent foreign keys in tables.  See the Microsoft.
+			VisualStudio.Data.Services.RelationalObjectModel.IVsDataTableForeignKey
+			type for more information.
+		-->
+		<MappedType name="TableForeignKey" underlyingType="ForeignKey">
+			<Selection restrictions="{Catalog},{Schema},{Table},{Name}" />
+			<Identifier>
+				<Part name="Catalog" underlyingMember="Database" />
+				<Part name="Schema" underlyingMember="Schema" />
+				<Part name="Table" underlyingMember="Table" />
+				<Part name="Name" underlyingMember="Name" />
+			</Identifier>
+			<!--
+				The properties for this mapped type are quite special in that they
+				need to reference another table object.  The preferred method for
+				doing this is to map generic properties representing the generic
+				identifier of the referenced table.  When this is not possible, an
+				alternative method is to map generic properties representing the
+				underlying identifier of the referenced table.  For completeness
+				purposes, it is recommended to specify both when possible.  This
+				sample illustrates mapping both ways.
+			-->
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="ReferencedTableId0" underlyingMember="Database" />
+				<Property name="ReferencedTableId1" underlyingMember="ReferencedTableSchema" />
+				<Property name="ReferencedTableId2" underlyingMember="ReferencedTableName" />
+				<Property name="ReferencedTableCatalog" underlyingMember="Database" />
+				<Property name="ReferencedTableSchema" underlyingMember="ReferencedTableSchema" />
+				<Property name="ReferencedTableName" underlyingMember="ReferencedTableName" />
+				<!--
+					The update action is a value from the System.Data.Rule enumeration
+					and it just happens that the underlying values are the same mapping.
+				-->
+				<Property name="UpdateAction" underlyingMember="UpdateAction">
+					<Conversion>
+						<ChangeType type="System.Int32" />
+					</Conversion>
+				</Property>
+				<!--
+					The delete action is a value from the System.Data.Rule enumeration
+					and it just happens that the underlying values are the same mapping.
+				-->
+				<Property name="DeleteAction" underlyingMember="DeleteAction">
+					<Conversion>
+						<ChangeType type="System.Int32" />
+					</Conversion>
+				</Property>
+			</Properties>
+		</MappedType>
+		<!--
+			The "TableForeignKeyColumn" mapped type is a generic representation of
+			object types that represent unique keys in tables.  See the Microsoft.
+			VisualStudio.Data.Services.RelationalObjectModel.
+			IVsDataTableForeignKeyColumn type for more information.
+		-->
+		<MappedType name="TableForeignKeyColumn" underlyingType="ForeignKeyColumn">
+			<Selection restrictions="{Catalog},{Schema},{Table},{TableForeignKey},{Name}" />
+			<Identifier>
+				<Part name="Catalog" underlyingMember="Database" />
+				<Part name="Schema" underlyingMember="Schema" />
+				<Part name="Table" underlyingMember="Table" />
+				<Part name="TableForeignKey" underlyingMember="ForeignKey" />
+				<Part name="Name" underlyingMember="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Ordinal" underlyingMember="Ordinal">
+					<Conversion>
+						<ChangeType type="System.Int32" />
+					</Conversion>
+				</Property>
+				<Property name="ReferencedTableColumn" underlyingMember="ReferencedColumnName" />
+			</Properties>
+		</MappedType>
+		<!--
+			The "View" mapped type is a generic representation of object types that
+			represent derived tabular data in a relational object model.  See the
+			Microsoft.VisualStudio.Data.Services.RelationalObjectModel.IVsDataView
+			type for more information.
+		-->
+		<MappedType name="View" underlyingType="View">
+			<Selection restrictions="{Catalog},{Schema},{Name}" />
+			<Identifier>
+				<Part name="Catalog" underlyingMember="Database" />
+				<Part name="Schema" underlyingMember="Schema" />
+				<Part name="Name" underlyingMember="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Schema" isIdentifierPart="true" />
+			</Properties>
+		</MappedType>
+		<!--
+			The "ViewColumn" mapped type is a generic representation of object
+			types that represent columns in views.  See the Microsoft.VisualStudio.
+			Data.Services.RelationalObjectModel.IVsDataColumn type for more
+			information.
+		-->
+		<MappedType name="ViewColumn" underlyingType="ViewColumn">
+			<Selection restrictions="{Catalog},{Schema},{View},{Name}" />
+			<Identifier>
+				<Part name="Catalog" underlyingMember="Database" />
+				<Part name="Schema" underlyingMember="Schema" />
+				<Part name="View" underlyingMember="View" />
+				<Part name="Name" underlyingMember="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Ordinal" underlyingMember="Ordinal">
+					<Conversion>
+						<ChangeType type="System.Int32" />
+					</Conversion>
+				</Property>
+				<Property name="UserDataType" underlyingMember="DataType" />
+				<Property name="NativeDataType" underlyingMember="DataType" />
+				<Property name="AdoDotNetDataType" underlyingMember="DataType">
+					<Conversion>
+						<CallMapper />
+					</Conversion>
+				</Property>
+				<Property name="AdoDotNetDbType" underlyingMember="DataType">
+					<Conversion>
+						<CallMapper />
+					</Conversion>
+				</Property>
+				<Property name="FrameworkDataType" underlyingMember="DataType">
+					<Conversion>
+						<CallMapper />
+					</Conversion>
+				</Property>
+				<Property name="Length" underlyingMember="MaxLength" />
+				<Property name="Precision" underlyingMember="Precision">
+					<Conversion>
+						<ChangeType type="System.Int32" />
+					</Conversion>
+				</Property>
+				<Property name="Scale" underlyingMember="Scale" />
+				<Property name="IsNullable" underlyingMember="IsNullable">
+					<Conversion>
+						<Calculate expr="IIF({0} = 'YES', true, false)" exprType="System.Boolean" />
+					</Conversion>
+				</Property>
+			</Properties>
+		</MappedType>
+		<!--
+			The "StoredProcedure" mapped type is a generic representation of object
+			types that represent executable code with parameters that may return
+			tabular data.  See the Microsoft.VisualStudio.Data.Services.
+			RelationalObjectModel.IVsDataStoredProcedure type for more information.
+		-->
+		<MappedType name="StoredProcedure" underlyingType="StoredProcedure">
+			<Selection restrictions="{Catalog},{Schema},{Name}" />
+			<Identifier>
+				<Part name="Catalog" underlyingMember="Database" />
+				<Part name="Schema" underlyingMember="Schema" />
+				<Part name="Name" underlyingMember="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Schema" isIdentifierPart="true" />
+			</Properties>
+		</MappedType>
+		<!--
+			The "StoredProcedureParameter" mapped type is a generic representation
+			of object types that represent parameters in stored procedures.  See the
+			Microsoft.VisualStudio.Data.Services.RelationalObjectModel.
+			IVsDataParameter type for more information.
+		-->
+		<MappedType name="StoredProcedureParameter" underlyingType="StoredProcedureParameter">
+			<Selection restrictions="{Catalog},{Schema},{StoredProcedure},{Name}" />
+			<Identifier>
+				<Part name="Catalog" underlyingMember="Database" />
+				<Part name="Schema" underlyingMember="Schema" />
+				<Part name="StoredProcedure" underlyingMember="StoredProcedure" />
+				<Part name="Name" underlyingMember="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Ordinal" underlyingMember="Ordinal">
+					<Conversion>
+						<ChangeType type="System.Int32" />
+					</Conversion>
+				</Property>
+				<!--
+					Based on the underlying metadata available, the generic direction
+					property must be computed from two underlying members, which can be
+					done by specifying the underlyingMembers attribute.
+				-->
+				<Property name="Direction" underlyingMembers="Ordinal, IsOutput">
+					<Conversion>
+						<!--
+							This calculation says if the Ordinal equals 0, it is a return
+							value parameter.  Otherwise if IsOutput = false, it is an input
+							parameter, else it is both input and output.
+						-->
+						<Calculate expr="IIF({0} > 0, IIF({1} = false, 'IN', 'IN/OUT'), 'RETVAL')" exprType="System.String" />
+					</Conversion>
+				</Property>
+				<Property name="UserDataType" underlyingMember="DataType" />
+				<Property name="NativeDataType" underlyingMember="DataType" />
+				<Property name="AdoDotNetDataType" underlyingMember="DataType">
+					<Conversion>
+						<CallMapper />
+					</Conversion>
+				</Property>
+				<Property name="AdoDotNetDbType" underlyingMember="DataType">
+					<Conversion>
+						<CallMapper />
+					</Conversion>
+				</Property>
+				<Property name="FrameworkDataType" underlyingMember="DataType">
+					<Conversion>
+						<CallMapper />
+					</Conversion>
+				</Property>
+				<Property name="Length" underlyingMember="MaxLength" />
+				<Property name="Precision" underlyingMember="Precision">
+					<Conversion>
+						<ChangeType type="System.Int32" />
+					</Conversion>
+				</Property>
+				<Property name="Scale" underlyingMember="Scale" />
+			</Properties>
+		</MappedType>
+		<!--
+			The "StoredProcedureColumn" mapped type is a generic representation
+			of object types that represent returned columns in stored procedures.
+			See the Microsoft.VisualStudio.Data.Services.RelationalObjectModel.
+			IVsDataColumn type for more information.
+		-->
+		<MappedType name="StoredProcedureColumn" underlyingType="StoredProcedureColumn">
+			<Selection restrictions="{Catalog},{Schema},{StoredProcedure},{Name}" />
+			<Identifier>
+				<Part name="Catalog" underlyingMember="Database" />
+				<Part name="Schema" underlyingMember="Schema" />
+				<Part name="StoredProcedure" underlyingMember="StoredProcedure" />
+				<Part name="Name" underlyingMember="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Ordinal" underlyingMember="Ordinal" />
+				<Property name="AdoDotNetDataType" underlyingMember="ProviderType" />
+				<Property name="FrameworkDataType" underlyingMember="FrameworkType">
+					<Conversion>
+						<ChangeType type="System.String" />
+					</Conversion>
+				</Property>
+				<Property name="Length" underlyingMember="MaxLength" />
+				<Property name="Precision" underlyingMember="Precision">
+					<Conversion>
+						<ChangeType type="System.Int32" />
+					</Conversion>
+				</Property>
+				<Property name="Scale" underlyingMember="Scale">
+					<Conversion>
+						<ChangeType type="System.Int32" />
+					</Conversion>
+				</Property>
+				<Property name="IsNullable" underlyingMember="IsNullable" />
+			</Properties>
+		</MappedType>
+		<!--
+			The "ScalarFunction" mapped type is a generic representation of object
+			types that represent executable code with parameters that returns a
+			scalar value.  See the Microsoft.VisualStudio.Data.Services.
+			RelationalObjectModel.IVsDataScalarFunction type for more information.
+		-->
+		<MappedType name="ScalarFunction" underlyingType="Function">
+			<!--
+				Notice how the selection of this mapped type limits the selection on
+				the underlying type to those objects of type "FN" or "FS".
+			-->
+			<Selection restrictions="{Catalog},{Schema},{Name}" filter="Type IN ('FN', 'FS')" />
+			<Identifier>
+				<Part name="Catalog" underlyingMember="Database" />
+				<Part name="Schema" underlyingMember="Schema" />
+				<Part name="Name" underlyingMember="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Schema" isIdentifierPart="true" />
+			</Properties>
+		</MappedType>
+		<!--
+			The "ScalarFunctionParameter" mapped type is a generic representation
+			of object types that represent parameters in scalar functions.  See the
+			Microsoft.VisualStudio.Data.Services.RelationalObjectModel.
+			IVsDataParameter type for more information.
+		-->
+		<MappedType name="ScalarFunctionParameter" underlyingType="FunctionParameter">
+			<Selection restrictions="{Catalog},{Schema},{ScalarFunction},{Name}" />
+			<Identifier>
+				<Part name="Catalog" underlyingMember="Database" />
+				<Part name="Schema" underlyingMember="Schema" />
+				<Part name="ScalarFunction" underlyingMember="Function" />
+				<Part name="Name" underlyingMember="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Ordinal" underlyingMember="Ordinal">
+					<Conversion>
+						<ChangeType type="System.Int32" />
+					</Conversion>
+				</Property>
+				<Property name="Direction" underlyingMembers="Ordinal, IsOutput">
+					<Conversion>
+						<Calculate expr="IIF({0} > 0, IIF({1} = false, 'IN', 'IN/OUT'), 'RETVAL')" exprType="System.String" />
+					</Conversion>
+				</Property>
+				<Property name="UserDataType" underlyingMember="DataType" />
+				<Property name="NativeDataType" underlyingMember="DataType" />
+				<Property name="AdoDotNetDataType" underlyingMember="DataType">
+					<Conversion>
+						<CallMapper />
+					</Conversion>
+				</Property>
+				<Property name="AdoDotNetDbType" underlyingMember="DataType">
+					<Conversion>
+						<CallMapper />
+					</Conversion>
+				</Property>
+				<Property name="FrameworkDataType" underlyingMember="DataType">
+					<Conversion>
+						<CallMapper />
+					</Conversion>
+				</Property>
+				<Property name="Length" underlyingMember="MaxLength" />
+				<Property name="Precision" underlyingMember="Precision">
+					<Conversion>
+						<ChangeType type="System.Int32" />
+					</Conversion>
+				</Property>
+				<Property name="Scale" underlyingMember="Scale" />
+			</Properties>
+		</MappedType>
+		<!--
+			The "TabularFunction" mapped type is a generic representation of object
+			types that represent executable code with parameters that returns a
+			tabular structure.  See the Microsoft.VisualStudio.Data.Services.
+			RelationalObjectModel.IVsDataTabularFunction type for more information.
+		-->
+		<MappedType name="TabularFunction" underlyingType="Function">
+			<!--
+				Notice how the selection of this mapped type limits the selection on
+				the underlying type to those objects of type "FT", "IF" or "TF".
+			-->
+			<Selection restrictions="{Catalog},{Schema},{Name}" filter="Type IN ('FT', 'IF', 'TF')" />
+			<Identifier>
+				<Part name="Catalog" underlyingMember="Database" />
+				<Part name="Schema" underlyingMember="Schema" />
+				<Part name="Name" underlyingMember="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Schema" isIdentifierPart="true" />
+			</Properties>
+		</MappedType>
+		<!--
+			The "TabularFunctionParameter" mapped type is a generic representation
+			of object types that represent parameters in tabular functions.  See the
+			Microsoft.VisualStudio.Data.Services.RelationalObjectModel.
+			IVsDataParameter type for more information.
+		-->
+		<MappedType name="TabularFunctionParameter" underlyingType="FunctionParameter">
+			<Selection restrictions="{Catalog},{Schema},{TabularFunction},{Name}" />
+			<Identifier>
+				<Part name="Catalog" underlyingMember="Database" />
+				<Part name="Schema" underlyingMember="Schema" />
+				<Part name="TabularFunction" underlyingMember="Function" />
+				<Part name="Name" underlyingMember="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Ordinal" underlyingMember="Ordinal">
+					<Conversion>
+						<ChangeType type="System.Int32" />
+					</Conversion>
+				</Property>
+				<Property name="Direction" underlyingMembers="Ordinal, IsOutput">
+					<Conversion>
+						<Calculate expr="IIF({0} > 0, IIF({1} = false, 'IN', 'IN/OUT'), 'RETVAL')" exprType="System.String" />
+					</Conversion>
+				</Property>
+				<Property name="UserDataType" underlyingMember="DataType" />
+				<Property name="NativeDataType" underlyingMember="DataType" />
+				<Property name="AdoDotNetDataType" underlyingMember="DataType">
+					<Conversion>
+						<CallMapper />
+					</Conversion>
+				</Property>
+				<Property name="AdoDotNetDbType" underlyingMember="DataType">
+					<Conversion>
+						<CallMapper />
+					</Conversion>
+				</Property>
+				<Property name="FrameworkDataType" underlyingMember="DataType">
+					<Conversion>
+						<CallMapper />
+					</Conversion>
+				</Property>
+				<Property name="Length" underlyingMember="MaxLength" />
+				<Property name="Precision" underlyingMember="Precision">
+					<Conversion>
+						<ChangeType type="System.Int32" />
+					</Conversion>
+				</Property>
+				<Property name="Scale" underlyingMember="Scale" />
+			</Properties>
+		</MappedType>
+		<!--
+			The "TabularFunctionColumn" mapped type is a generic representation
+			of object types that represent returned columns in tabular functions.
+			See the Microsoft.VisualStudio.Data.Services.RelationalObjectModel.
+			IVsDataColumn type for more information.
+		-->
+		<MappedType name="TabularFunctionColumn" underlyingType="FunctionColumn">
+			<Selection restrictions="{Catalog},{Schema},{TabularFunction},{Name}" />
+			<Identifier>
+				<Part name="Catalog" underlyingMember="Database" />
+				<Part name="Schema" underlyingMember="Schema" />
+				<Part name="TabularFunction" underlyingMember="Function" />
+				<Part name="Name" underlyingMember="Name" />
+			</Identifier>
+			<Properties>
+				<Property name="Name" isIdentifierPart="true" />
+				<Property name="Ordinal" underlyingMember="Ordinal">
+					<Conversion>
+						<ChangeType type="System.Int32" />
+					</Conversion>
+				</Property>
+				<Property name="UserDataType" underlyingMember="DataType" />
+				<Property name="NativeDataType" underlyingMember="DataType" />
+				<Property name="AdoDotNetDataType" underlyingMember="DataType">
+					<Conversion>
+						<CallMapper />
+					</Conversion>
+				</Property>
+				<Property name="AdoDotNetDbType" underlyingMember="DataType">
+					<Conversion>
+						<CallMapper />
+					</Conversion>
+				</Property>
+				<Property name="FrameworkDataType" underlyingMember="DataType">
+					<Conversion>
+						<CallMapper />
+					</Conversion>
+				</Property>
+				<Property name="Length" underlyingMember="MaxLength" />
+				<Property name="Precision" underlyingMember="Precision">
+					<Conversion>
+						<ChangeType type="System.Int32" />
+					</Conversion>
+				</Property>
+				<Property name="Scale" underlyingMember="Scale" />
+			</Properties>
+		</MappedType>
+	</MappedTypes>
+</DataObjectSupport>

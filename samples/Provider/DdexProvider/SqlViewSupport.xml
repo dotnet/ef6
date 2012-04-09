@@ -1,0 +1,262 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+***************************************************************************
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    This code is licensed under the Visual Studio SDK license terms.
+    THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+    ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+    IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+    PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+***************************************************************************
+-->
+
+<!--
+	Data view support describes a hierarchical representation of objects using
+	the information from data object support, which is currently used to drive
+	the content of the Server/Database Explorer.  Presentation information such
+	as node labels, icons and commands are included in this file.
+-->
+<DataViewSupport xmlns="http://schemas.microsoft.com/VisualStudio/2007/07/Data/DataViewSupport">
+	<Views>
+		<!--
+			This sample defines a single view.  When multiple views are specified,
+			the end user is able to choose which view is most appropriate for them.
+		-->
+		<View name="SQL Server">
+			<!--
+				The display name of the view will be shown when the user is picking
+				between multiple views.  This will not occur in this case, but the
+				display name is included anyway for sample purposes.  Notice the
+				display name is extracted from a resource instead of being hard-coded
+				in place with this element.  The resources for this sample can be
+				found at the end of this file.
+			-->
+			<DisplayName resource="DataView_SqlServer" />
+			<!--
+				All views are rooted with a connection node.  For this sample, the
+				connection node is a static node, i.e. it has no underlying object.
+			-->
+			<ConnectionNode>
+				<!--
+					A connection node must specify an initial display name for the node
+					(in Server/Database Explorer, the end user can modify connection
+					node names, hence this is only an initial display name).  In this
+					sample, the display name is based on two properties from the single
+					root type object instance, specified using DDEX data specifiers.
+				-->
+				<InitialDisplayName>{Root.Server}.{Root.Database}.{Root.Schema}</InitialDisplayName>
+				<!--
+					Commands can be defined for a node, allowing them to show up on
+					context menus.  The code determining whether or how the command
+					should show and what happens when the command is invoked is
+					determined by a command provider associated with each command.
+				-->
+				<Commands>
+					<!--
+						This command is a built-in command that can launch the Visual
+						Studio Query Designer to allow building a new query.  The command
+						provider is specified using a COM class ID registered in the
+						Visual Studio local registry hive.
+					-->
+					<Command guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="0x3528" provider="884DD964-5327-461f-9F06-6484DD540F8F" />
+				</Commands>
+				<!--
+					Any node can define one or more children of various types.  In this
+					sample, the children of the connection nodes are a set of static
+					nodes representing folders that contain instances of the types of
+					object that have been defined in the data object support XML file.
+				-->
+				<Children>
+					<StaticNode>
+						<DisplayName resource="Node_Tables" />
+						<Commands>
+							<Command guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="0x3528" provider="884DD964-5327-461f-9F06-6484DD540F8F" />
+						</Commands>
+						<Children>
+							<!--
+								The children for this node are a selection of table objects.
+								This is specified using a Selection element with information
+								defining the appropriate call to be made to the data object
+								store.  For this sample, this means passing "Table" as the
+								type and null for each restriction except the type
+								restriction, which is "BASE TABLE".
+							-->
+							<Selection type="Table" restrictions="null,null,null,BASE TABLE">
+								<!--
+									A given selection also defines the characteristics for each
+									object node that is returned as part of the selection.  In
+									this case, the SelectionNode element defines how to present
+									a table object.  Each table node is given a node ID which
+									is used by table node children to request properties from
+									the parent table node.
+								-->
+								<SelectionNode nodeId="Table">
+									<!--
+										Since the root object now provides default schema metadata
+										we can add a condition to the display name of top level
+										objects so it only shows the schema when it is a
+										non-default schema.
+									-->
+									<DisplayName when="NOT ({Schema} = {Root.Schema})" resource="Node_ObjectWithSchema" />
+									<!--
+										Icons can be picked from a pre-existing set based on name
+										or from a custom resource, or using an icon provider.
+										This sample simply chooses "Table" from the existing set.
+									-->
+									<Icon name="Table" />
+									<Commands>
+										<!--
+											This command supplies an ability to launch the Visual
+											Studio Query Designer prepopulated with the results of
+											retrieving data from this table.  A requirement for this
+											command to work is the ability to build a DSRef object
+											from the underlying table object instance, as defined
+											by including the IDSRefBuilder service for this type in
+											the data object support XML file.
+										-->
+										<Command guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="0x3060" provider="884DD964-5327-461f-9F06-6484DD540F8F" />
+									</Commands>
+									<Children>
+										<!--
+											Each table node contains the set of columns that are in
+											that table.  This is defined with another selection
+											with specific restrictions to ensure only columns for
+											the appropriate table is returned.  The node ID defined
+											on the parent table node is used to access properties
+											of the table object using DDEX data specifiers.
+										-->
+										<Selection type="Column" restrictions="{Table.Database},{Table.Schema},{Table.Name}">
+											<SelectionNode>
+												<Icon name="Column" />
+											</SelectionNode>
+										</Selection>
+									</Children>
+								</SelectionNode>
+							</Selection>
+						</Children>
+					</StaticNode>
+					<StaticNode>
+						<DisplayName resource="Node_Views" />
+						<Commands>
+							<Command guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="0x3528" provider="884DD964-5327-461f-9F06-6484DD540F8F" />
+						</Commands>
+						<Children>
+							<Selection type="View">
+								<SelectionNode nodeId="View">
+									<DisplayName when="NOT ({Schema} = {Root.Schema})" resource="Node_ObjectWithSchema" />
+									<Icon name="View" />
+									<Commands>
+										<Command guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="0x3060" provider="884DD964-5327-461f-9F06-6484DD540F8F" />
+									</Commands>
+									<Children>
+										<Selection type="ViewColumn" restrictions="{View.Database},{View.Schema},{View.Name}">
+											<SelectionNode>
+												<Icon name="Column" />
+											</SelectionNode>
+										</Selection>
+									</Children>
+								</SelectionNode>
+							</Selection>
+						</Children>
+					</StaticNode>
+					<StaticNode>
+						<DisplayName resource="Node_StoredProcedures" />
+						<Children>
+							<Selection type="StoredProcedure" restrictions="{Root.Database}">
+								<SelectionNode nodeId="StoredProcedure">
+									<DisplayName when="NOT ({Schema} = {Root.Schema})" resource="Node_ObjectWithSchema" />
+									<Icon name="StoredProcedure" />
+									<Children>
+										<Selection type="StoredProcedureParameter" restrictions="{StoredProcedure.Database},{StoredProcedure.Schema},{StoredProcedure.Name}">
+											<SelectionNode>
+												<!--
+													The following element illustrates how it is possible
+													to choose a different name based on object data.
+													When the expression here evaluates to false, the
+													default display name will be used.
+												-->
+												<DisplayName when="{Ordinal} = 0">@RETURN_VALUE</DisplayName>
+												<!--
+													The following elements illustrate how it is possible
+													to choose a different icon based on object data.
+												-->
+												<Icon when="{Ordinal} = 0" name="ReturnValue" />
+												<Icon when="{IsOutput} = false" name="InputParameter" />
+												<Icon when="{IsOutput} = true" name="OutputParameter" />
+											</SelectionNode>
+										</Selection>
+										<Selection type="StoredProcedureColumn" restrictions="{StoredProcedure.Database},{StoredProcedure.Schema},{StoredProcedure.Name}">
+											<SelectionNode>
+												<Icon name="Column" />
+											</SelectionNode>
+										</Selection>
+									</Children>
+								</SelectionNode>
+							</Selection>
+						</Children>
+					</StaticNode>
+					<StaticNode>
+						<DisplayName resource="Node_Functions" />
+						<Children>
+							<Selection type="Function" restrictions="{Root.Database}">
+								<SelectionNode nodeId="Function">
+									<DisplayName when="NOT ({Schema} = {Root.Schema})" resource="Node_ObjectWithSchema" />
+									<Icon when="{Type} IN ('FN', 'FS')" name="ScalarFunction" />
+									<Icon when="{Type} IN ('FT', 'IF', 'TF')" name="TabularFunction" />
+									<Icon when="{Type} IN ('AF')" name="AggregateFunction" />
+									<Children>
+										<Selection type="FunctionParameter" restrictions="{Function.Database},{Function.Schema},{Function.Name}">
+											<SelectionNode>
+												<Icon when="{Ordinal} = 0" name="ReturnValue" />
+												<Icon when="{IsOutput} = false" name="InputParameter" />
+												<Icon when="{IsOutput} = true" name="OutputParameter" />
+											</SelectionNode>
+										</Selection>
+										<Selection type="FunctionColumn" restrictions="{Function.Database},{Function.Schema},{Function.Name}">
+											<SelectionNode>
+												<Icon name="Column" />
+											</SelectionNode>
+										</Selection>
+									</Children>
+								</SelectionNode>
+							</Selection>
+						</Children>
+					</StaticNode>
+					<!--
+						Just as the data object support XML file can specify minimum or
+						maximum data source versions for elements, the data view support
+						XML file can filter the same way, ensuring only the correct nodes
+						for the correct data source version show up.  In this case, user
+						defined types should not be shown unless the version is 9 or more.
+					-->
+					<StaticNode minSourceVersion="09">
+						<DisplayName resource="Node_UserDefinedTypes" />
+						<Children>
+							<Selection type="UserDefinedType">
+								<SelectionNode>
+									<Icon name="DataType" />
+								</SelectionNode>
+							</Selection>
+						</Children>
+					</StaticNode>
+					<StaticNode>
+						<DisplayName resource="Node_Users" />
+						<Children>
+							<Selection type="User" />
+						</Children>
+					</StaticNode>
+				</Children>
+			</ConnectionNode>
+		</View>
+	</Views>
+	<!--
+		This section identifies strings that can be referenced from any place in
+		this file.  Specifying the baseName attribute indicates a resource in the
+		sample assembly that contains localized strings.  Any strings specified
+		directly here are simply for sharing purposes and are not localized.
+	-->
+	<Resources baseName="Microsoft.Samples.VisualStudio.Data.ExtendedProvider.Properties.Resources">
+		<Resource name="Node_ObjectWithSchema">{Name} ({Schema})</Resource>
+	</Resources>
+</DataViewSupport>
