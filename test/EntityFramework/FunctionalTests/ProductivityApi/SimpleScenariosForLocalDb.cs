@@ -29,6 +29,19 @@
 
         public void Dispose()
         {
+            // Ensure LocalDb databases are deleted after use so that LocalDb doesn't throw if
+            // the temp location in which they are stored is later cleaned.
+            using (var context = new SimpleLocalDbModelContext())
+            {
+                context.Database.Delete();
+            }
+            using (var context = new LocalDbLoginsContext())
+            {
+                context.Database.Delete();
+            }
+            Database.Delete("Scenario_CodeFirstWithModelBuilder");
+            Database.Delete("Scenario_Use_AppConfig_LocalDb_connection_string");
+
             Database.DefaultConnectionFactory = _previousConnectionFactory;
             AppDomain.CurrentDomain.SetData("DataDirectory", _previousDataDirectory);
         }
