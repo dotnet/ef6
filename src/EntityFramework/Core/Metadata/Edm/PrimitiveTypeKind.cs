@@ -4,6 +4,8 @@ using System.Text;
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Primitive Types as defined by EDM
     /// </summary>
@@ -112,21 +114,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Geometric multi-point type kind
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702", MessageId = "MultiPoint")]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId="Multi")]
+        [SuppressMessage("Microsoft.Naming", "CA1702", MessageId = "MultiPoint")]
+		[SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId="Multi")]
         GeometryMultiPoint = 20,
 
         /// <summary>
         /// Geometric multi-linestring type kind
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702", MessageId = "MultiLine")]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId="Multi")]
+        [SuppressMessage("Microsoft.Naming", "CA1702", MessageId = "MultiLine")]
+		[SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId="Multi")]
         GeometryMultiLineString = 21,
 
         /// <summary>
         /// Geometric multi-polygon type kind
         /// </summary>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId="Multi")]
+		[SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId="Multi")]
         GeometryMultiPolygon = 22,
 
         /// <summary>
@@ -152,21 +154,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Geographic multi-point type kind
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702", MessageId = "MultiPoint")]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId="Multi")]
+        [SuppressMessage("Microsoft.Naming", "CA1702", MessageId = "MultiPoint")]
+		[SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId="Multi")]
         GeographyMultiPoint = 27,
 
         /// <summary>
         /// Geographic multi-linestring type kind
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702", MessageId = "MultiLine")]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId="Multi")]
+        [SuppressMessage("Microsoft.Naming", "CA1702", MessageId = "MultiLine")]
+		[SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId="Multi")]
         GeographyMultiLineString = 28,
 
         /// <summary>
         /// Geographic multi-polygon type kind
         /// </summary>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId="Multi")]
+		[SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId="Multi")]
         GeographyMultiPolygon = 29,
 
         /// <summary>

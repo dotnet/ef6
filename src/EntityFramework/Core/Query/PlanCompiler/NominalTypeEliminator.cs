@@ -27,6 +27,8 @@ using System.Data.Entity.Core.Query.PlanCompiler;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// The goal of this module is to eliminate all references to nominal types
     /// in the tree. Additionally, all structured types are replaced by "flat"
@@ -58,6 +60,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     /// Notes: This phase could be combined later with the PropertyPushdown phase
     /// 
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal class NominalTypeEliminator : BasicOpVisitorOfNode
     {
 
@@ -148,7 +151,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Phase 1: Top-down property pushdown
             Dictionary<Var, PropertyRefList> varPropertyMap;
             Dictionary<Node, PropertyRefList> nodePropertyMap;
-            PropertyPushdownHelper.Process(compilerState.Command, structuredTypeInfo, out varPropertyMap, out nodePropertyMap);
+            PropertyPushdownHelper.Process(compilerState.Command, out varPropertyMap, out nodePropertyMap);
 
 #if DEBUG
             //string phase1 = Dump.ToXml(compilerState.Command);
@@ -178,6 +181,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// The real driver. Invokes the visitor to traverse the tree bottom-up,
         /// and modifies the tree along the way.
         /// </summary>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "PhysicalProjectOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void Process()
         {
             // Replace command enum parameters with a counterpart whose type is the underlying enum type of the original parameter
@@ -356,6 +360,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="node">the input expression to "cast"</param>
         /// <param name="targetType">the target type</param>
         /// <returns>the "cast"ed expression</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SoftCast"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-ScalarOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node BuildSoftCast(Node node, md.TypeUsage targetType)
         {
             PlanCompiler.Assert(node.Op.IsScalarOp, "Attempting SoftCast around non-ScalarOp?");
@@ -445,6 +450,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="typeInfo"></param>
         /// <param name="opKind"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "isNull"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IsNull"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "opKind"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private IEnumerable<PropertyRef> GetPropertyRefsForComparisonAndIsNull(TypeInfo typeInfo, OperationKind opKind)
         {
             PlanCompiler.Assert(opKind == OperationKind.IsNull || opKind == OperationKind.Equality,
@@ -525,6 +531,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="typeInfo"></param>
         /// <param name="opKind"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GetPropertyRefs"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "OperationKind"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private IEnumerable<PropertyRef> GetPropertyRefs(TypeInfo typeInfo, OperationKind opKind)
         {
             PlanCompiler.Assert(opKind != OperationKind.All, "unexpected attempt to GetPropertyRefs(...,OperationKind.All)");
@@ -688,6 +695,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// The <paramref name="unnestNode"/> contains a TVF call. 
         /// Return new node with ProjectOp and <paramref name="newVars"/> representing the projection outputs.
         /// </summary>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node CreateTVFProjection(Node unnestNode, List<Var> unnestOpTableColumns, TypeInfo unnestOpTableTypeInfo, out List<Var> newVars)
         {
             md.RowType originalRowType = unnestOpTableTypeInfo.Type.EdmType as md.RowType;
@@ -761,6 +769,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarDefOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(VarDefListOp op, Node n)
         {
             VisitChildren(n);
@@ -806,6 +815,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="newNodes">list of new nodes produced</param>
         /// <param name="newType"></param>
         /// <returns>VarInfo for this var</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void FlattenComputedVar(ComputedVar v, Node node, out List<Node> newNodes, out md.TypeUsage newType)
         {
             newNodes = new List<Node>();
@@ -887,7 +897,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="propertyRef"></param>
         /// <returns></returns>
-        private bool IsNullSentinelPropertyRef(PropertyRef propertyRef)
+        private static bool IsNullSentinelPropertyRef(PropertyRef propertyRef)
         {
             if (propertyRef is NullSentinelPropertyRef)
             {
@@ -944,6 +954,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return n;
         }
 
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "NominalTypeEliminator"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarRefColumnMap"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SimpleCollectionColumnMap"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private SimpleCollectionColumnMap ExpandColumnMap(SimpleCollectionColumnMap columnMap)
         {
             VarRefColumnMap varRefColumnMap = columnMap.Element as VarRefColumnMap;
@@ -1242,6 +1253,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op">the ScanViewOp</param>
         /// <param name="n">current subtree</param>
         /// <returns>the flattened view definition</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "inputVar"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "scanViewOp"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScanViewOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(ScanViewOp op, Node n)
         {
             //
@@ -1303,6 +1315,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns>new subtree</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "newUnnestVar"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "unnest"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(UnnestOp op, Node n)
         {
             // Visit the children first
@@ -1507,6 +1520,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="varMap">the varmap for this child</param>
         /// <param name="newComputedVars">list of new Vars produced</param>
         /// <returns>new node for the setOpchild (if any)</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "newComputedVars"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "varMap"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "setOpChild"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node FixupSetOpChild(Node setOpChild, VarMap varMap, List<ComputedVar> newComputedVars)
         {
             PlanCompiler.Assert(null != setOpChild, "null setOpChild?");
@@ -1550,6 +1564,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="varMap">The VarMap to fixup</param>
         /// <param name="newComputedVars">list of any new computedVars that are created</param>
         /// <returns>a new VarMap</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarInfo"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private VarMap FlattenVarMap(VarMap varMap, out List<ComputedVar> newComputedVars)
         {
             newComputedVars = null;
@@ -1710,6 +1725,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "NullSentinelProperty"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(SoftCastOp op, Node n)
         {
             md.TypeUsage inputTypeUsage = n.Child0.Op.Type;
@@ -1814,6 +1830,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"><see cref="CastOp"/> operator.</param>
         /// <param name="n">Current node.</param>
         /// <returns>Visited, possible rewritten <paramref name="n"/>.</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(CastOp op, Node n)
         {
             // Visit children first to get rid of all the nominal types (including enums) in the subtree. 
@@ -1862,6 +1879,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"><see cref="ConstantOp"/> operator.</param>
         /// <param name="n">Current node.</param>
         /// <returns>Possible rewritten <paramref name="n"/>.</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(ConstantOp op, Node n)
         {
             PlanCompiler.Assert(n.Children.Count == 0, "Constant operations don't have children.");
@@ -1949,7 +1967,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // We've got a structured type, so the CaseOp is flattened out into 
                 // a NewRecordOp via the FlattenCaseOp method.
                 PropertyRefList desiredProperties = m_nodePropertyMap[n];
-                Node newNode = FlattenCaseOp(op, n, m_typeInfo.GetTypeInfo(op.Type), desiredProperties);
+                Node newNode = FlattenCaseOp(n, m_typeInfo.GetTypeInfo(op.Type), desiredProperties);
                 return newNode;
             }
             else
@@ -1975,6 +1993,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="thenClauseIsNull"></param>
         /// <param name="rewrittenNode"></param>
         /// <returns>Whether a rewrite was done</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private bool TryRewriteCaseOp(Node n, bool thenClauseIsNull, out Node rewrittenNode)
         {
             rewrittenNode = n;
@@ -2032,12 +2051,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// The property extraction is optimized by producing only those properties 
         /// that have actually been requested.
         /// </summary>
-        /// <param name="op">the CaseOp</param>
         /// <param name="n">Node corresponding to the CaseOp</param>
         /// <param name="typeInfo">Information about the type</param>
         /// <param name="desiredProperties">Set of properties desired</param>
         /// <returns></returns>
-        private Node FlattenCaseOp(CaseOp op, Node n, TypeInfo typeInfo, PropertyRefList desiredProperties)
+        private Node FlattenCaseOp(Node n, TypeInfo typeInfo, PropertyRefList desiredProperties)
         {
             // Build up a type constructor - with only as many fields filled in 
             // as are desired. 
@@ -2104,6 +2122,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(ComparisonOp op, Node n)
         {
             md.TypeUsage child0Type = ((ScalarOp)n.Child0.Op).Type;
@@ -2163,6 +2182,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GetPropertyValues"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IsNull"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(ConditionalOp op, Node n)
         {
             if (op.OpType != OpType.IsNull)
@@ -2270,6 +2290,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op">the GetRefKey/GetEntityKey op</param>
         /// <param name="n">current subtree</param>
         /// <returns>new expression subtree</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "fieldTypes"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "OpType"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GetEntityRef"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GetRefKey"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node FlattenGetKeyOp(ScalarOp op, Node n)
         {
             PlanCompiler.Assert(op.OpType == OpType.GetEntityRef || op.OpType == OpType.GetRefKey, "Expecting GetEntityRef or GetRefKey ops");
@@ -2320,6 +2341,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="propertyRef"></param>
         /// <param name="throwIfMissing">ignore missing properties</param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "optype"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node VisitPropertyOp(Op op, Node n, PropertyRef propertyRef, bool throwIfMissing)
         {
             PlanCompiler.Assert(op.OpType == OpType.Property || op.OpType == OpType.RelProperty,
@@ -2330,13 +2352,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // First visit all my children
             VisitChildren(n);
-
-            // If the instance is not a structured type (ie) it is a udt, then there 
-            // is little for us to do. Simply return 
-            if (TypeUtils.IsUdt(inputType))
-            {
-                return n;
-            }
 
             Node newNode = null;
             TypeInfo inputTypeInfo = m_typeInfo.GetTypeInfo(inputType);
@@ -2423,6 +2438,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "entitySetId"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(RefOp op, Node n)
         {
             TypeInfo inputTypeInfo = m_typeInfo.GetTypeInfo(((ScalarOp)n.Child0.Op).Type);
@@ -2446,7 +2462,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 if (inputTypeInfo.HasNullSentinelProperty && !outputTypeInfo.HasNullSentinelProperty)
                 {  // realistically, REFs can't have null sentinels, but I'm being pedantic...
                     PlanCompiler.Assert(outputFields.Count == inputFields.Count, "Mismatched field count: Expected " + inputFields.Count + "; Got " + outputFields.Count);
-                    RemoveNullSentinel(inputTypeInfo, inputFields, inputFieldValues, outputFields);
+                    RemoveNullSentinel(inputTypeInfo, inputFields, inputFieldValues);
                 }
                 else
                 {
@@ -2461,7 +2477,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 if (inputTypeInfo.HasNullSentinelProperty && !outputTypeInfo.HasNullSentinelProperty)
                 { // realistically, REFs can't have null sentinels, but I'm being pedantic...
-                    RemoveNullSentinel(inputTypeInfo, inputFields, inputFieldValues, outputFields);
+                    RemoveNullSentinel(inputTypeInfo, inputFields, inputFieldValues);
                 }
 
                 PlanCompiler.Assert(outputFields.Count == inputFields.Count, "Mismatched field count: Expected " + inputFields.Count + "; Got " + outputFields.Count);
@@ -2478,7 +2494,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // columns (See SQLBUDT #553534 for an example).  Note that we shouldn't
         // have to add null sentinels here, since reference types won't be expecting
         // them (the fact that the key is null is good enough...)
-        private static void RemoveNullSentinel(TypeInfo inputTypeInfo, List<md.EdmProperty> inputFields, List<Node> inputFieldValues, List<md.EdmProperty> outputFields)
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        private static void RemoveNullSentinel(TypeInfo inputTypeInfo, List<md.EdmProperty> inputFields, List<Node> inputFieldValues)
         {
             PlanCompiler.Assert(inputFields[0] == inputTypeInfo.NullSentinelProperty, "InputField0 must be the null sentinel property");
             inputFields.RemoveAt(0);
@@ -2495,6 +2512,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op">the VarRefOp</param>
         /// <param name="n">the node</param>
         /// <returns>new subtree</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "varInfo"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(VarRefOp op, Node n)
         {
             // Lookup my VarInfo
@@ -2668,6 +2686,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op">The NewRecordOp/NewInstanceOp</param>
         /// <param name="n">The current subtree</param>
         /// <returns>the new subtree</returns>
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "optype"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node FlattenConstructor(ScalarOp op, Node n)
         {
             PlanCompiler.Assert(op.OpType == OpType.NewInstance || op.OpType == OpType.NewRecord || op.OpType == OpType.DiscriminatedNewEntity || op.OpType == OpType.NewEntity,
@@ -2960,7 +2979,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // desired properties
             //
             PropertyRefList desiredProperties = m_nodePropertyMap[n];
-            Node flattenedCaseNode = FlattenCaseOp(caseOp, caseNode, typeInfo, desiredProperties);
+            Node flattenedCaseNode = FlattenCaseOp(caseNode, typeInfo, desiredProperties);
             return flattenedCaseNode;
         }
 
@@ -3013,6 +3032,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="typeInfo"></param>
         /// <param name="typeIdProperty"></param>
         /// <returns>type hierarchy check</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DiscriminatorMap"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node CreateDisjunctiveTypeComparisonOp(TypeInfo typeInfo, Node typeIdProperty)
         {
             PlanCompiler.Assert(typeInfo.RootType.DiscriminatorMap != null, "should be used only for DiscriminatorMap type checks");

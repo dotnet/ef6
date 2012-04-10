@@ -3,11 +3,11 @@ using System.Data;
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// This class encapsulates the error information for a generic EDM error.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
     [Serializable]
     public abstract class EdmError
     {

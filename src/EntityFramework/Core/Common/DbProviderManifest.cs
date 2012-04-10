@@ -1,12 +1,12 @@
 namespace System.Data.Entity.Core.Common
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics.CodeAnalysis;
     using System.Xml;
 
     /// <summary>
     /// Metadata Interface for all CLR types types
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public abstract class DbProviderManifest
     {
         /// <summary>
@@ -90,38 +90,37 @@ namespace System.Data.Entity.Core.Common
         /// Return the set of types supported by the store
         /// </summary>
         /// <returns>A collection of primitive types</returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public abstract System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType> GetStoreTypes();
 
         /// <summary>
         /// Returns all the edm functions supported by the provider manifest.
         /// </summary>
         /// <returns>A collection of edm functions.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public abstract System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction> GetStoreFunctions();
 
         /// <summary>
-        /// Returns all the FacetDescriptions for a particular type
+        /// Returns all the FacetDescriptions for a particular edmType
         /// </summary>
-        /// <param name="edmType">the type to return FacetDescriptions for</param>
-        /// <returns>The FacetDescriptions for the type given</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "edm")]
+        /// <param name="edmType">the edmType to return FacetDescriptions for</param>
+        /// <returns>The FacetDescriptions for the edmType given</returns>
         public abstract System.Collections.ObjectModel.ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType edmType);
 
         /// <summary>
-        /// This method allows a provider writer to take a type and a set of facets
-        /// and reason about what the best mapped equivalent type in EDM would be.
+        /// This method allows a provider writer to take a edmType and a set of facets
+        /// and reason about what the best mapped equivalent edmType in EDM would be.
         /// </summary>
-        /// <param name="storeType">A TypeUsage encapsulating a store type and a set of facets</param>
-        /// <returns>A TypeUsage encapsulating an EDM type and a set of facets</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
+        /// <param name="storeType">A TypeUsage encapsulating a store edmType and a set of facets</param>
+        /// <returns>A TypeUsage encapsulating an EDM edmType and a set of facets</returns>
         public abstract TypeUsage GetEdmType(TypeUsage storeType);
 
         /// <summary>
-        /// This method allows a provider writer to take a type and a set of facets
-        /// and reason about what the best mapped equivalent type in the store would be.
+        /// This method allows a provider writer to take a edmType and a set of facets
+        /// and reason about what the best mapped equivalent edmType in the store would be.
         /// </summary>
-        /// <param name="storeType">A TypeUsage encapsulating an EDM type and a set of facets</param>
-        /// <returns>A TypeUsage encapsulating a store type and a set of facets</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "edm")]
+        /// <param name="storeType">A TypeUsage encapsulating an EDM edmType and a set of facets</param>
+        /// <returns>A TypeUsage encapsulating a store edmType and a set of facets</returns>
         public abstract TypeUsage GetStoreType(TypeUsage edmType);
 
         /// <summary>
@@ -131,7 +130,6 @@ namespace System.Data.Entity.Core.Common
         /// </summary>
         /// <param name="informationType">The name of the information to be retrieved.</param>
         /// <returns>An XmlReader at the begining of the information requested.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
         protected abstract XmlReader GetDbInformation(string informationType);
 
         /// <summary>
@@ -185,6 +183,7 @@ namespace System.Data.Entity.Core.Common
         /// as the escape character</param>
         /// <returns>True, if this provider supports escaping strings to be used as patterns in a Like expression,
         /// false otherwise. The default implementation returns false.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "0#")]
         public virtual bool SupportsEscapingLikeArgument(out char escapeCharacter)
         {
             escapeCharacter = default(char);

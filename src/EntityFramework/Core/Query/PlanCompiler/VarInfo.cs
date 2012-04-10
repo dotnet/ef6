@@ -25,6 +25,7 @@ using System.Data.Entity.Core.Query.InternalTrees;
 using System.Data.Entity.Core.Query.PlanCompiler;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler {
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Kind of VarInfo
@@ -117,6 +118,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler {
         /// <param name="newVars">List of vars to replace current Var</param>
         /// <param name="newTypeProperties">List of properties in the "flat" record type</param>
         /// <param name="newVarsIncludeNullSentinelVar">Do the new vars include a var that represents a null sentinel either for this type or for any nested type</param>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal StructuredVarInfo(md.RowType newType, List<Var> newVars, List<md.EdmProperty> newTypeProperties, bool newVarsIncludeNullSentinelVar)
         {
             PlanCompiler.Assert(newVars.Count == newTypeProperties.Count, "count mismatch");
@@ -301,6 +303,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler {
         /// <param name="v">Current variable of primitive or enum type.</param>
         /// <param name="newVar">The new variable replacing <paramref name="v"/>.</param>
         /// <returns><see cref="PrimitiveTypeVarInfo"/> for <paramref name="v"/>.</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal VarInfo CreatePrimitiveTypeVarInfo(Var v, Var newVar)
         {
             System.Diagnostics.Debug.Assert(v != null, "v != null");

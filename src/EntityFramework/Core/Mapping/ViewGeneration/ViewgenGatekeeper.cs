@@ -28,14 +28,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             EntityUtil.CheckArgumentNull(config, "config");
             Debug.Assert(containerMapping.HasViews, "Precondition Violated: No mapping exists to generate views for!");
 
+#if DEBUG
             if (config.IsNormalTracing)
             {
                 containerMapping.Print(0);
             }
+#endif
 
             //Create Cells from StorageEntityContainerMapping
             CellCreator cellCreator = new CellCreator(containerMapping);
-            List<Cell> cells = cellCreator.GenerateCells(config);
+            List<Cell> cells = cellCreator.GenerateCells();
             CqlIdentifiers identifiers = cellCreator.Identifiers;
 
             return GenerateViewsFromCells(cells, config, identifiers, containerMapping);
@@ -90,7 +92,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
 
             ViewGenResults viewGenResults = new ViewGenResults();
-            ErrorLog tmpLog = EnsureAllCSpaceContainerSetsAreMapped(cells, config, containerMapping);
+            ErrorLog tmpLog = EnsureAllCSpaceContainerSetsAreMapped(cells, containerMapping);
             if (tmpLog.Count > 0)
             {
                 viewGenResults.AddErrors(tmpLog);
@@ -159,7 +161,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             Debug.Assert(container != null);
 
             ViewGenResults viewGenResults = new ViewGenResults();
-            ErrorLog tmpLog = EnsureAllCSpaceContainerSetsAreMapped(cells, config, containerMapping);
+            ErrorLog tmpLog = EnsureAllCSpaceContainerSetsAreMapped(cells, containerMapping);
             if (tmpLog.Count > 0)
             {
                 viewGenResults.AddErrors(tmpLog);
@@ -209,7 +211,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         // effects: Given a container, ensures that all entity/association
         // sets in container on the C-side have been mapped
         private static ErrorLog EnsureAllCSpaceContainerSetsAreMapped(IEnumerable<Cell> cells,
-                                                                      ConfigViewGenerator config,
                                                                       StorageEntityContainerMapping containerMapping)
         {
 

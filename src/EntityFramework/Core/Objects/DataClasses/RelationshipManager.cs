@@ -199,21 +199,20 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             where TSourceEntity : class
             where TTargetEntity : class
         {
-            EntityCollection<TTargetEntity> collection;
             RelatedEnd relatedEnd;
             TryGetCachedRelatedEnd(relationshipName, targetRoleName, out relatedEnd);
 
+            var previousCollection = relatedEnd as EntityCollection<TTargetEntity>;
             if (existingRelatedEnd == null)
             {
                 if (relatedEnd != null)
                 {
-                    collection = relatedEnd as EntityCollection<TTargetEntity>;
                     // Because this is a private method that will only be called for target roles that actually have a
                     // multiplicity that works with EntityReference, this should never be null. If the user requests
                     // a collection or reference and it doesn't match the target role multiplicity, it will be detected
                     // in the public GetRelatedCollection<T> or GetRelatedReference<T>
-                    Debug.Assert(collection != null, "should never receive anything but an EntityCollection here");
-                    return collection;
+                    Debug.Assert(previousCollection != null, "should never receive anything but an EntityCollection here");
+                    return previousCollection;
                 }
                 else
                 {
@@ -234,14 +233,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 }
 
                 RelationshipNavigation navigation = new RelationshipNavigation(relationshipName, sourceRoleName, targetRoleName, sourceAccessor, targetAccessor);
-                collection = CreateRelatedEnd<TSourceEntity, TTargetEntity>(navigation, sourceRoleMultiplicity, RelationshipMultiplicity.Many, existingRelatedEnd) as EntityCollection<TTargetEntity>;
+                var collection = CreateRelatedEnd<TSourceEntity, TTargetEntity>(navigation, sourceRoleMultiplicity, RelationshipMultiplicity.Many, existingRelatedEnd) as EntityCollection<TTargetEntity>;
 
                 if (collection != null)
                 {
                     bool doCleanup = true;
                     try
                     {
-                        RemergeCollections(relatedEnd as EntityCollection<TTargetEntity>, collection);
+                        RemergeCollections(previousCollection, collection);
                         doCleanup = false;
                     }
                     finally
@@ -266,7 +265,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <typeparam name="TTargetEntity"></typeparam>
         /// <param name="previousCollection">The previous EntityCollection containing items that have already had fixup performed</param>
         /// <param name="collection">The new EntityCollection</param>
-        private void RemergeCollections<TTargetEntity>(EntityCollection<TTargetEntity> previousCollection,
+        private static void RemergeCollections<TTargetEntity>(EntityCollection<TTargetEntity> previousCollection,
             EntityCollection<TTargetEntity> collection)
                 where TTargetEntity : class
         {
@@ -361,6 +360,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         /// <param name="navigationProperty">the name of the property to lookup</param>
         /// <returns>the related end for the given property</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         internal RelatedEnd GetRelatedEnd(string navigationProperty, bool throwArgumentException = false)
         {
             IEntityWrapper wrappedOwner = WrappedOwner;
@@ -695,7 +695,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             ObjectItemCollection objectItemCollection = GetObjectItemCollection(wrappedOwner);
             if (objectItemCollection != null)
             {
-                associationType = objectItemCollection.GetRelationshipType(entityClrType, relationshipName);
+                associationType = objectItemCollection.GetRelationshipType(relationshipName);
             }
             else
             {
@@ -974,6 +974,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// Returns an enumeration of all the related ends.  The enumeration 
         /// will be empty if the relationships have not been populated.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public IEnumerable<IRelatedEnd> GetAllRelatedEnds()
         {
             IEntityWrapper wrappedOwner = WrappedOwner;

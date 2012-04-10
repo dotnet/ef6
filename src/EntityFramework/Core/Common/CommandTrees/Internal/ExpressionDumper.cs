@@ -9,9 +9,12 @@ using System.Data.Entity.Core.Common.CommandTrees;
 
 namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Writes a description of a given expression, in a format determined by the specific implementation of a derived type
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal abstract class ExpressionDumper : DbExpressionVisitor
     {
         #region Constructors

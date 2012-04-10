@@ -3,10 +3,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Handles copying of operators
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal class OpCopier : BasicOpVisitorOfNode
     {
         #region (pseudo) Public API

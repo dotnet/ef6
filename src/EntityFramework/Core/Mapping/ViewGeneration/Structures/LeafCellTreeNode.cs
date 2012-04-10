@@ -20,7 +20,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             : base(context)
         {
             m_cellWrapper = cellWrapper;
-            m_leftFragmentQuery = cellWrapper.FragmentQuery;
             cellWrapper.AssertHasUniqueCell();
             m_rightFragmentQuery = FragmentQuery.Create(
                                         cellWrapper.OriginalCellNumberString,
@@ -31,7 +30,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             : base(context)
         {
             m_cellWrapper = cellWrapper;
-            m_leftFragmentQuery = cellWrapper.FragmentQuery;
             m_rightFragmentQuery = rightFragmentQuery;
         }
         #endregion
@@ -41,7 +39,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         // The cell at the leaf level
         private LeftCellWrapper m_cellWrapper;
-        private FragmentQuery m_leftFragmentQuery;
         private FragmentQuery m_rightFragmentQuery;
         #endregion
 
@@ -137,7 +134,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 if (requiredSlots[i] && slot == null)
                 {
                     MemberPath memberPath = ProjectedSlotMap[i];
-                    ConstantProjectedSlot defaultValue = new ConstantProjectedSlot(Domain.GetDefaultValueForMemberPath(memberPath, GetLeaves(), ViewgenContext.Config), memberPath);
+                    ConstantProjectedSlot defaultValue = new ConstantProjectedSlot(Domain.GetDefaultValueForMemberPath(memberPath, GetLeaves(), ViewgenContext.Config));
                     cellQuery.FixMissingSlotAsDefaultConstant(i, defaultValue);
                     slot = defaultValue;
                 }
@@ -189,7 +186,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return result;
         }
 
-        private bool TryGetWithRelationship(StorageAssociationSetMapping colocatedAssociationSetMap,
+        private static bool TryGetWithRelationship(StorageAssociationSetMapping colocatedAssociationSetMap,
                                             EntitySetBase thisExtent,
                                             MemberPath sRootNode,
                                             ref List<SlotInfo> foreignKeySlots,
@@ -199,7 +196,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             withRelationship = null;
 
             //Get the map for foreign key end
-            StorageEndPropertyMapping foreignKeyEndMap = GetForeignKeyEndMapFromAssocitionMap(colocatedAssociationSetMap, thisExtent);
+            StorageEndPropertyMapping foreignKeyEndMap = GetForeignKeyEndMapFromAssocitionMap(colocatedAssociationSetMap);
             if (foreignKeyEndMap == null || foreignKeyEndMap.EndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many)
             {
                 return false;
@@ -246,7 +243,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         //Gets the end that is not mapped to the primary key of the table
-        private StorageEndPropertyMapping GetForeignKeyEndMapFromAssocitionMap(StorageAssociationSetMapping colocatedAssociationSetMap, EntitySetBase thisExtent)
+        private static StorageEndPropertyMapping GetForeignKeyEndMapFromAssocitionMap(StorageAssociationSetMapping colocatedAssociationSetMap)
         {
             StorageMappingFragment mapFragment = colocatedAssociationSetMap.TypeMappings.First().MappingFragments.First();
             EntitySet storeEntitySet = (EntitySet)(colocatedAssociationSetMap.StoreEntitySet);

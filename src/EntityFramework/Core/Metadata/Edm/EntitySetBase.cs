@@ -7,6 +7,8 @@ using System.Text;
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Class for representing a entity set
     /// </summary>
@@ -92,7 +94,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Gets or sets escaped SQL describing this entity set.
         /// </summary>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")] // referenced by System.Data.Entity.Design.dll
         internal string DefiningQuery
         {
             get { return _definingQuery; }

@@ -11,6 +11,8 @@ using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Describes a binding for an expression. Conceptually similar to a foreach loop
     /// in C#. The DbExpression property defines the collection being iterated over,
@@ -21,7 +23,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// </summary>
     /// <seealso cref="DbExpression"/>
     /// <seealso cref="Variable"/>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbExpressionBinding
     {
         private readonly DbExpression _expr;
@@ -63,10 +64,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// also provides access to the group element via the <seealso cref="GroupVariable"/> variable reference
     /// and to the group aggregate via the <seealso cref="GroupAggregate"/> property.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbGroupExpressionBinding
     {
-        private /*readonly*/ DbExpression _expr;
+        private readonly DbExpression _expr;
         private readonly DbVariableReferenceExpression _varRef;
         private readonly DbVariableReferenceExpression _groupVarRef;
         private  DbGroupAggregate _groupAggregate;

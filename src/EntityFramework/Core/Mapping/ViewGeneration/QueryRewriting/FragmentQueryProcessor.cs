@@ -11,6 +11,7 @@ using System.Globalization;
 
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 {
+    using System.Diagnostics.CodeAnalysis;
     using BoolDomainConstraint = DomainConstraint<BoolLiteral, Constant>;
 
     internal class FragmentQueryProcessor : TileQueryProcessor<FragmentQuery>
@@ -36,7 +37,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         }
 
         // resulting query contains an intersection of attributes
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCode", Justification = "Based on Bug VSTS Pioneer #433188: IsVisibleOutsideAssembly is wrong on generic instantiations.")]   
+        [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCode", Justification = "Based on Bug VSTS Pioneer #433188: IsVisibleOutsideAssembly is wrong on generic instantiations.")]   
         internal override FragmentQuery Union(FragmentQuery q1, FragmentQuery q2)
         {
             HashSet<MemberPath> attributes = new HashSet<MemberPath>(q1.Attributes);
@@ -62,7 +63,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             return IsContainedIn(q1, q2) && IsContainedIn(q2, q1);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCode", Justification = "Based on Bug VSTS Pioneer #433188: IsVisibleOutsideAssembly is wrong on generic instantiations.")]
+        [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCode", Justification = "Based on Bug VSTS Pioneer #433188: IsVisibleOutsideAssembly is wrong on generic instantiations.")]
         internal override FragmentQuery Intersect(FragmentQuery q1, FragmentQuery q2)
         {
             HashSet<MemberPath> attributes = new HashSet<MemberPath>(q1.Attributes);
@@ -154,11 +155,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 
         private class AttributeSetComparator : IEqualityComparer<HashSet<MemberPath>>
         {
-            internal static readonly AttributeSetComparator DefaultInstance = new AttributeSetComparator();
-
             #region IEqualityComparer<HashSet<MemberPath>> Members
 
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCode", Justification = "Based on Bug VSTS Pioneer #433188: IsVisibleOutsideAssembly is wrong on generic instantiations.")]
+            [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCode", Justification = "Based on Bug VSTS Pioneer #433188: IsVisibleOutsideAssembly is wrong on generic instantiations.")]
             public bool Equals(HashSet<MemberPath> x, HashSet<MemberPath> y)
             {
                 return x.SetEquals(y);

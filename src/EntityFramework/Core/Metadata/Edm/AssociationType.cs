@@ -8,9 +8,12 @@ using System.Diagnostics;
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Represents the EDM Association Type
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     public sealed class AssociationType : RelationshipType
     {
         #region Constructors

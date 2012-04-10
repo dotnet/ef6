@@ -11,6 +11,8 @@ using System.Globalization;
 
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 {
+    using System.Diagnostics.CodeAnalysis;
+
     internal class FragmentQuery : ITileQuery
     {
         private BoolExpression m_fromVariable; // optional
@@ -142,7 +144,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 
             #region IEqualityComparer<FragmentQuery> Members
 
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCode", Justification = "Based on Bug VSTS Pioneer #433188: IsVisibleOutsideAssembly is wrong on generic instantiations.")]       
+            [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCode", Justification = "Based on Bug VSTS Pioneer #433188: IsVisibleOutsideAssembly is wrong on generic instantiations.")]       
             public bool Equals(FragmentQuery x, FragmentQuery y)
             {
                 if (!x.Attributes.SetEquals(y.Attributes))

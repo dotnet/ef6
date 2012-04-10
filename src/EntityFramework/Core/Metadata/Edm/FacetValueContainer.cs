@@ -6,6 +6,8 @@ using System.Diagnostics;
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// This Class is never expected to be used except for by the FacetValues class.  
     /// 
@@ -49,6 +51,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         // don't add an implicit conversion from object because it will kill the compile time type checking.
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "unbounded")]
         public static implicit operator FacetValueContainer<T>(System.Data.Entity.Core.Metadata.Edm.EdmConstants.Unbounded unbounded)
         {
             Debug.Assert(object.ReferenceEquals(unbounded, EdmConstants.UnboundedValue), "you must pass the unbounded value.  If you are trying to set null, use the T parameter overload");

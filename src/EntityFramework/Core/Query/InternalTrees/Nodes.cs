@@ -6,6 +6,8 @@ using System.Diagnostics;
 
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// A Node describes a node in a query tree. Each node has an operator, and
     /// a list of zero or more children of that operator.
@@ -13,13 +15,16 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     internal class Node
     {
         #region private state
+        [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         private int m_id;
+
         private List<Node> m_children;
         private Op m_op;
         private NodeInfo m_nodeInfo;
         #endregion
 
         #region constructors
+
         /// <summary>
         /// Basic constructor. 
         /// 
@@ -53,7 +58,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 #if DEBUG
         internal int Id { get { return m_id; } }
 #endif
-
+        
         /// <summary>
         /// Get the list of children
         /// </summary>

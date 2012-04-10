@@ -23,6 +23,8 @@ using System.Data.Entity.Core.Query.PlanCompiler;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// The PlanCompiler class is used by the BridgeCommand to produce an 
     /// execution plan - this execution plan is the plan object. The plan compilation
@@ -82,6 +84,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         /// The phase of the process we're currently in.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         private PlanCompilerPhase m_phase;
 
         /// <summary>
@@ -156,6 +159,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="resultColumnMap">column map for result assembly</param>
         /// <param name="entitySets">the entity sets referenced in this query</param>
         /// <returns>a compiled plan object</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal static void Compile(cqt.DbCommandTree ctree, out List<ProviderCommandInfo> providerCommands, out ColumnMap resultColumnMap, out int columnCount, out Common.Utils.Set<md.EntitySet> entitySets)
         {
             PlanCompiler.Assert(ctree != null, "Expected a valid, non-null Command Tree input");
@@ -411,12 +415,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="newPhase"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "newPhase")]
         private string SwitchToPhase(PlanCompilerPhase newPhase)
         {
             string iqtDumpResult = string.Empty;
 
             m_phase = newPhase;
-
 #if DEBUG
             if (s_traceCallback != null)
             {
@@ -478,6 +482,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         /// Converts the CTree into an ITree, and initializes the plan
         /// </summary>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void Initialize()
         {
             // Only support queries for now

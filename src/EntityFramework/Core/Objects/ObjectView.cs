@@ -12,6 +12,8 @@ using System.Reflection;
 
 namespace System.Data.Entity.Core.Objects
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Manages a list suitable for data binding.
     /// </summary>
@@ -84,7 +86,7 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        private bool IsElementTypeAbstract
+        private static bool IsElementTypeAbstract
         {
             get { return typeof(TElement).IsAbstract; }
         }
@@ -264,6 +266,8 @@ namespace System.Data.Entity.Core.Objects
         /// to determine the Type of elements in the bound list. 
         /// The list of properties available for binding can then be determined from that element Type.
         /// </remarks>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "value")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "index")]
         public TElement this[int index]
         {
             get

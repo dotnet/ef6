@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     using System.Data.Entity.Core.Common.EntitySql;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
@@ -24,16 +25,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             Debug.Assert(targetWorkspace != null, "Metadata workspace is null");
             _metadata = targetWorkspace;
             _perspective = new ModelPerspective(targetWorkspace);
-        }
-
-        // TODO: DbExpressionBuilder.CopyTo(this DbExpression, MetadataWorkspace) will require this
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal static DbExpression BindToWorkspace(DbExpression expression, MetadataWorkspace targetWorkspace)
-        {
-            Debug.Assert(expression != null, "expression is null");
-
-            DbExpressionRebinder copier = new DbExpressionRebinder(targetWorkspace);
-            return copier.VisitExpression(expression);
         }
 
         protected override EntitySetBase VisitEntitySet(EntitySetBase entitySet)
@@ -188,7 +179,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             return TypeUsage.Create(retEdmType, facets);
         }
 
-        private bool TryGetMember<TMember>(DbExpression instance, string memberName, out TMember member) where TMember : EdmMember
+        private static bool TryGetMember<TMember>(DbExpression instance, string memberName, out TMember member) where TMember : EdmMember
         {
             member = null;
             StructuralType declType = instance.ResultType.EdmType as StructuralType;

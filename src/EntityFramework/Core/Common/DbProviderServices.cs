@@ -10,6 +10,7 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Entity.Core.SqlClient;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Reflection;
     using System.Xml;
@@ -19,7 +20,6 @@ namespace System.Data.Entity.Core.Common
     /// as the argument to the IServiceProvider.GetService method on the provider
     /// factory;
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     [CLSCompliant(false)]
     abstract public class DbProviderServices
     {
@@ -75,7 +75,6 @@ namespace System.Data.Entity.Core.Common
         /// <param name="connection">provider manifest previously retrieved from the store provider</param>
         /// <param name="commandTree">command tree for the statement</param>
         /// <returns>an exectable command definition object</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
         protected abstract DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree);
 
         /// <summary>
@@ -149,7 +148,6 @@ namespace System.Data.Entity.Core.Common
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
         protected abstract string GetDbProviderManifestToken(DbConnection connection);
 
         public DbProviderManifest GetProviderManifest(string manifestToken) {
@@ -176,7 +174,6 @@ namespace System.Data.Entity.Core.Common
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
         protected abstract DbProviderManifest GetDbProviderManifest(string manifestToken);
 
         public DbSpatialDataReader GetSpatialDataReader(DbDataReader fromReader, string manifestToken)
@@ -231,14 +228,12 @@ namespace System.Data.Entity.Core.Common
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
         protected virtual DbSpatialDataReader GetDbSpatialDataReader(DbDataReader fromReader, string manifestToken)
         {
             // Must be a virtual method; abstract would break previous implementors of DbProviderServices
             throw EntityUtil.ProviderIncompatible(Strings.ProviderDidNotReturnSpatialServices);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
         protected virtual DbSpatialServices DbGetSpatialServices(string manifestToken)
         {
             // Must be a virtual method; abstract would break previous implementors of DbProviderServices
@@ -253,7 +248,6 @@ namespace System.Data.Entity.Core.Common
             this.SetDbParameterValue(parameter, parameterType, value);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
         protected virtual void SetDbParameterValue(DbParameter parameter, TypeUsage parameterType, object value)
         {
             EntityUtil.CheckArgumentNull(parameter, "parameter");
@@ -366,7 +360,6 @@ namespace System.Data.Entity.Core.Common
            return DbCreateDatabaseScript(providerManifestToken, storeItemCollection);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
         protected virtual string DbCreateDatabaseScript(string providerManifestToken, StoreItemCollection storeItemCollection)
         {
             throw EntityUtil.ProviderIncompatible(Strings.ProviderDoesNotSupportCreateDatabaseScript);
@@ -385,7 +378,6 @@ namespace System.Data.Entity.Core.Common
             DbCreateDatabase(connection, commandTimeout, storeItemCollection);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
         protected virtual void DbCreateDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
             throw EntityUtil.ProviderIncompatible(Strings.ProviderDoesNotSupportCreateDatabase);
@@ -407,7 +399,6 @@ namespace System.Data.Entity.Core.Common
             return DbDatabaseExists(connection, commandTimeout, storeItemCollection);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
         protected virtual bool DbDatabaseExists(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
             throw EntityUtil.ProviderIncompatible(Strings.ProviderDoesNotSupportDatabaseExists);
@@ -425,7 +416,6 @@ namespace System.Data.Entity.Core.Common
             DbDeleteDatabase(connection, commandTimeout, storeItemCollection);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
         protected virtual void DbDeleteDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
             throw EntityUtil.ProviderIncompatible(Strings.ProviderDoesNotSupportDeleteDatabase);

@@ -104,12 +104,15 @@ namespace System.Data.Entity.Core.Mapping {
             this.m_fragments.Add(fragment);
         }
 
+#if DEBUG
         /// <summary>
         /// This method is primarily for debugging purposes.
         /// Will be removed shortly.
         /// </summary>
         /// <param name="index"></param>
         internal abstract void Print(int index);
+#endif
+
         #endregion
     }
 }

@@ -359,12 +359,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
             CellQuery mergedLeftCellQuery;
             CellQuery mergedRightCellQuery;
-            if (!TryMergeTwoCellQueries(leaf1.LeftCellWrapper.RightCellQuery, leaf2.LeftCellWrapper.RightCellQuery, opType, m_viewgenContext.MemberMaps.RightDomainMap, out mergedRightCellQuery))
+            if (!TryMergeTwoCellQueries(leaf1.LeftCellWrapper.RightCellQuery, leaf2.LeftCellWrapper.RightCellQuery, opType, out mergedRightCellQuery))
             {
                 return false;
             }
 
-            if (!TryMergeTwoCellQueries(leaf1.LeftCellWrapper.LeftCellQuery, leaf2.LeftCellWrapper.LeftCellQuery, opType, m_viewgenContext.MemberMaps.LeftDomainMap, out mergedLeftCellQuery))
+            if (!TryMergeTwoCellQueries(leaf1.LeftCellWrapper.LeftCellQuery, leaf2.LeftCellWrapper.LeftCellQuery, opType, out mergedLeftCellQuery))
             {
                 return false;
             }
@@ -401,8 +401,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         // effects: Merges query2 with this according to the TM/SP rules for opType and
         // returns the merged result. canBooleansOverlap indicates whether the bools in this and query2 can overlap, i.e.
         // the same cells may have contributed to query2 and this earlier in the merge process
-        internal bool TryMergeTwoCellQueries(CellQuery query1, CellQuery query2, CellTreeOpType opType,
-                               MemberDomainMap memberDomainMap, out CellQuery mergedQuery)
+        internal static bool TryMergeTwoCellQueries(CellQuery query1, CellQuery query2, CellTreeOpType opType,
+                               out CellQuery mergedQuery)
         {
 
             mergedQuery = null;

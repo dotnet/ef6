@@ -25,6 +25,8 @@ using System.Data.Entity.Core.Query.InternalTrees;
 //
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// The KeyPullup class subclasses the default visitor and pulls up keys
     /// for the different node classes below. 
@@ -205,10 +207,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op">the UnionAllOp</param>
         /// <param name="n">current subtree</param>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override void Visit(UnionAllOp op, Node n)
         {
 #if DEBUG
-            string input = Dump.ToXml(m_command, n);
+            string input = Dump.ToXml(n);
 #endif //DEBUG
 
             // Ensure we have keys pulled up on each branch of the union all.
@@ -378,7 +381,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
 #if DEBUG
             input = input.Trim();
-            string output = Dump.ToXml(m_command, n);
+            string output = Dump.ToXml(n);
 #endif //DEBUG
         }
         #endregion

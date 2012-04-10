@@ -4,6 +4,7 @@
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Xml;
 
     internal class FunctionImportElement : Function
@@ -173,12 +174,13 @@
                 owner.AddError(ErrorCode.FunctionImportUnsupportedReturnType,
                     EdmSchemaErrorSeverity.Error,
                     owner,
-                    GetReturnTypeErrorMessage(Schema.SchemaVersion, this.Name)
+                    GetReturnTypeErrorMessage(this.Name)
                     );
             }
             ValidateFunctionImportReturnType(owner, returnType, entitySet, entitySetPathDefined);
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         private bool ReturnTypeMeetsFunctionImportBasicRequirements(SchemaType type, CollectionKind returnTypeCollectionKind)
         {
             if (type is ScalarType && returnTypeCollectionKind == CollectionKind.Bag) 
@@ -277,7 +279,7 @@
             }
         }
 
-        private string GetReturnTypeErrorMessage(double schemaVersion, string functionName)
+        private string GetReturnTypeErrorMessage(string functionName)
         {
             string errorMessage;
             if (Schema.SchemaVersion == XmlConstants.EdmVersionForV1)

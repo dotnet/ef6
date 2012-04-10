@@ -176,7 +176,7 @@
                 #endregion
 
                 #region Lambda composition: merge arguments to operators to create a single operator
-                protected DbProjectExpression ComposeProject(DbExpression input, DbProjectExpression first, DbProjectExpression second)
+                protected static DbProjectExpression ComposeProject(DbExpression input, DbProjectExpression first, DbProjectExpression second)
                 {
                     // source.Project(first).Project(second) -> source.Project(e => second(first(e)))
 
@@ -189,7 +189,7 @@
                     return RebindProject(input, composed);
                 }
 
-                protected DbFilterExpression ComposeFilter(DbExpression input, DbProjectExpression first, DbFilterExpression second)
+                protected static DbFilterExpression ComposeFilter(DbExpression input, DbProjectExpression first, DbFilterExpression second)
                 {
                     // source.Project(first).Filter(second) -> source.Filter(e => second(first(e)))
 
@@ -204,7 +204,7 @@
                 #endregion
 
                 #region Paging op reducers
-                protected DbSkipExpression AddToSkip(DbExpression input, DbSkipExpression skip, DbExpression plusK)
+                protected static DbSkipExpression AddToSkip(DbExpression input, DbSkipExpression skip, DbExpression plusK)
                 {
                     // source.Skip(k, o).Skip(k2) -> source.Skip(k + k2, o)
                     DbExpression newCount = CombineIntegers(skip.Count, plusK,
@@ -212,21 +212,21 @@
                     return RebindSkip(input, skip, newCount);
                 }
 
-                protected DbLimitExpression SubtractFromLimit(DbExpression input, DbLimitExpression limit, DbExpression minusK)
+                protected static DbLimitExpression SubtractFromLimit(DbExpression input, DbLimitExpression limit, DbExpression minusK)
                 {
                     DbExpression newCount = CombineIntegers(limit.Limit, minusK,
                         (l, r) => r > l ? 0 : l - r); // can't limit to less than zero rows)
                     return DbExpressionBuilder.Limit(input, newCount);
                 }
 
-                protected DbLimitExpression MinimumLimit(DbExpression input, DbLimitExpression limit, DbExpression k)
+                protected static DbLimitExpression MinimumLimit(DbExpression input, DbLimitExpression limit, DbExpression k)
                 {
                     // source.Limit(k).Limit(k2) -> source.Limit(Min(k, k2))
                     DbExpression newCount = CombineIntegers(limit.Limit, k, Math.Min);
                     return DbExpressionBuilder.Limit(input, newCount);
                 }
 
-                protected DbExpression CombineIntegers(DbExpression left, DbExpression right,
+                private static DbExpression CombineIntegers(DbExpression left, DbExpression right,
                     Func<int, int, int> combineConstants)
                 {
                     if (left.ExpressionKind == DbExpressionKind.Constant &&
@@ -245,37 +245,37 @@
                 #endregion
 
                 #region Rebinders: take an operator and apply it to a different input
-                protected DbProjectExpression RebindProject(DbExpression input, DbProjectExpression project)
+                protected static DbProjectExpression RebindProject(DbExpression input, DbProjectExpression project)
                 {
                     DbExpressionBinding inputBinding = input.BindAs(project.Input.VariableName);
                     return inputBinding.Project(project.Projection);
                 }
 
-                protected DbFilterExpression RebindFilter(DbExpression input, DbFilterExpression filter)
+                protected static DbFilterExpression RebindFilter(DbExpression input, DbFilterExpression filter)
                 {
                     DbExpressionBinding inputBinding = input.BindAs(filter.Input.VariableName);
                     return inputBinding.Filter(filter.Predicate);
                 }
 
-                protected DbSortExpression RebindSort(DbExpression input, DbSortExpression sort)
+                protected static DbSortExpression RebindSort(DbExpression input, DbSortExpression sort)
                 {
                     DbExpressionBinding inputBinding = input.BindAs(sort.Input.VariableName);
                     return inputBinding.Sort(sort.SortOrder);
                 }
 
-                protected DbSortExpression ApplySkipOrderToSort(DbExpression input, DbSkipExpression sortSpec)
+                protected static DbSortExpression ApplySkipOrderToSort(DbExpression input, DbSkipExpression sortSpec)
                 {
                     DbExpressionBinding inputBinding = input.BindAs(sortSpec.Input.VariableName);
                     return inputBinding.Sort(sortSpec.SortOrder);
                 }
 
-                protected DbSkipExpression ApplySortOrderToSkip(DbExpression input, DbSortExpression sort, DbExpression k)
+                protected static DbSkipExpression ApplySortOrderToSkip(DbExpression input, DbSortExpression sort, DbExpression k)
                 {
                     DbExpressionBinding inputBinding = input.BindAs(sort.Input.VariableName);
                     return inputBinding.Skip(sort.SortOrder, k);
                 }
 
-                protected DbSkipExpression RebindSkip(DbExpression input, DbSkipExpression skip, DbExpression k)
+                protected static DbSkipExpression RebindSkip(DbExpression input, DbSkipExpression skip, DbExpression k)
                 {
                     DbExpressionBinding inputBinding = input.BindAs(skip.Input.VariableName);
                     return inputBinding.Skip(skip.SortOrder, k);

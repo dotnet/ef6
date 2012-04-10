@@ -83,12 +83,6 @@ namespace System.Data.Entity.Core.EntityClient {
             }
         }
 
-        internal int Offset {
-            get {
-                return 0;
-            }
-        }
-
         [
         EntityResCategoryAttribute(EntityRes.DataCategory_Data),
         EntityResDescriptionAttribute(EntityRes.DbParameter_Size),
@@ -211,21 +205,7 @@ namespace System.Data.Entity.Core.EntityClient {
             return ParameterName;
         }
 
-        private byte ValuePrecisionCore(object value) { 
-            if (value is Decimal) {
-                return ((System.Data.SqlTypes.SqlDecimal)(Decimal) value).Precision; 
-            }
-            return 0;
-        }
-
-        private  byte ValueScaleCore(object value) { 
-            if (value is Decimal) {
-                return (byte)((Decimal.GetBits((Decimal)value)[3] & 0x00ff0000) >> 0x10);
-            }
-            return 0;
-        }
-
-        private  int ValueSizeCore(object value) { 
+        private static int ValueSizeCore(object value) { 
             if (!EntityUtil.IsNull(value)) {
                 string svalue = (value as string);
                 if (null != svalue) {

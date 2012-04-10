@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Runtime.Versioning;
     using System.Xml;
@@ -53,37 +54,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _providerManifest = manifest;
             _providerManifestToken = providerManifestToken;
             _cachedCTypeFunction = new Memoizer<EdmFunction, EdmFunction>(ConvertFunctionSignatureToCType, null);
-            LoadProviderManifest(_providerManifest, true /*checkForSystemNamespace*/);
-        }
-
-        /// <summary>
-        /// constructor that loads the metadata files from the specified xmlReaders, and returns the list of errors
-        /// encountered during load as the out parameter errors.
-        /// 
-        /// Publicly available from System.Data.Entity.Desgin.dll
-        /// </summary>
-        /// <param name="xmlReaders">xmlReaders where the CDM schemas are loaded</param>
-        /// <param name="filePaths">the paths where the files can be found that match the xml readers collection</param>
-        /// <param name="errors">An out parameter to return the collection of errors encountered while loading</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")] // referenced by System.Data.Entity.Design.dll
-        internal StoreItemCollection(IEnumerable<XmlReader> xmlReaders,
-                                     System.Collections.ObjectModel.ReadOnlyCollection<string> filePaths,
-                                     out IList<EdmSchemaError> errors)
-            : base(DataSpace.SSpace)
-        {
-            // we will check the parameters for this internal ctor becuase
-            // it is pretty much publicly exposed through the MetadataItemCollectionFactory
-            // in System.Data.Entity.Design
-            EntityUtil.CheckArgumentNull(xmlReaders, "xmlReaders");
-            EntityUtil.CheckArgumentContainsNull(ref xmlReaders, "xmlReaders");
-            EntityUtil.CheckArgumentEmpty(ref xmlReaders, Strings.StoreItemCollectionMustHaveOneArtifact, "xmlReader");
-            // filePaths is allowed to be null
-
-            errors = this.Init(xmlReaders, filePaths, false,
-                out _providerManifest,
-                out _providerFactory,
-                out _providerManifestToken,
-                out _cachedCTypeFunction);
+            LoadProviderManifest(_providerManifest);
         }
 
         /// <summary>
@@ -197,7 +168,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // load the items into the colleciton
             if (!loader.HasNonWarningErrors)
             {
-                LoadProviderManifest(loader.ProviderManifest, true /* check for system namespace */);
+                LoadProviderManifest(loader.ProviderManifest /* check for system namespace */);
                 List<EdmSchemaError> errorList = EdmItemCollection.LoadItems(_providerManifest, loader.Schemas, this);
                 foreach (var error in errorList)
                 {
@@ -268,6 +239,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Get the list of primitive types for the given space
         /// </summary>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType> GetPrimitiveTypes()
         {
             return _primitiveTypeMaps.GetTypes();
@@ -284,16 +256,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _primitiveTypeMaps.TryGetType(primitiveTypeKind, null, out type);
             return type;
         }
-               
+
         /// <summary>
         /// checks if the schemaKey refers to the provider manifest schema key 
         /// and if true, loads the provider manifest
         /// </summary>
         /// <param name="connection">The connection where the store manifest is loaded from</param>
-        /// <param name="checkForSystemNamespace">Check for System namespace</param>
         /// <returns>The provider manifest object that was loaded</returns>
-        private void LoadProviderManifest(DbProviderManifest storeManifest,
-                                                      bool checkForSystemNamespace)
+        private void LoadProviderManifest(DbProviderManifest storeManifest)
         {
 
             foreach (PrimitiveType primitiveType in storeManifest.GetStoreTypes())

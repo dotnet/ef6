@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
     /// <summary>
@@ -90,8 +91,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="edmType">An EdmType for which to create a TypeUsage</param>
         /// <returns>A TypeUsage instance with default facet values for the specified EdmType</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "0#edm")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "edm")]
         public static TypeUsage CreateDefaultTypeUsage(EdmType edmType)
         {
             EntityUtil.CheckArgumentNull<EdmType>(edmType, "edmType");
@@ -352,7 +351,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Gets the type that this TypeUsage describes
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
         [MetadataProperty(BuiltInTypeKind.EdmType, false)]
         public EdmType EdmType
         {

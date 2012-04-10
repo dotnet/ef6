@@ -5,11 +5,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
     using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Provides an API to construct <see cref="DbExpression"/>s that invoke spatial realted canonical EDM functions, and, where appropriate, allows that API to be accessed as extension methods on the expression type itself.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
     public static class SpatialEdmFunctions
     {
         #region Spatial Functions - Geometry well known text Constructors
@@ -110,10 +110,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <returns>A new DbFunctionExpression that returns a new geometry multi-point value based on the specified values.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPointWellKnownText"/> or <paramref name="coordinateSystemId"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'GeometryMultiPointFromText' function accepts arguments with the result types of <paramref name="multiPointWellKnownText"/> and <paramref name="coordinateSystemId"/>.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
         public static DbFunctionExpression GeometryMultiPointFromText(DbExpression multiPointWellKnownText, DbExpression coordinateSystemId)
         {
             EntityUtil.CheckArgumentNull(multiPointWellKnownText, "multiPointWellKnownText");
@@ -131,10 +131,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <returns>A new DbFunctionExpression that returns a new geometry multi-line value based on the specified values.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiLineWellKnownText"/> or <paramref name="coordinateSystemId"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'GeometryMultiLineFromText' function accepts arguments with the result types of <paramref name="multiLineWellKnownText"/> and <paramref name="coordinateSystemId"/>.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
         public static DbFunctionExpression GeometryMultiLineFromText(DbExpression multiLineWellKnownText, DbExpression coordinateSystemId)
         {
             EntityUtil.CheckArgumentNull(multiLineWellKnownText, "multiLineWellKnownText");
@@ -152,8 +152,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <returns>A new DbFunctionExpression that returns a new geometry multi-polygon value based on the specified values.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPolygonWellKnownText"/> or <paramref name="coordinateSystemId"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'GeometryMultiPolygonFromText' function accepts arguments with the result types of <paramref name="multiPolygonWellKnownText"/> and <paramref name="coordinateSystemId"/>.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
         public static DbFunctionExpression GeometryMultiPolygonFromText(DbExpression multiPolygonWellKnownText, DbExpression coordinateSystemId)
         {
             EntityUtil.CheckArgumentNull(multiPolygonWellKnownText, "multiPolygonWellKnownText");
@@ -276,10 +276,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <returns>A new DbFunctionExpression that returns a new geometry multi-point value based on the specified values.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPointWellKnownBinaryValue"/> or <paramref name="coordinateSystemId"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'GeometryMultiPointFromBinary' function accepts arguments with the result types of <paramref name="multiPointWellKnownBinaryValue"/> and <paramref name="coordinateSystemId"/>.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
         public static DbFunctionExpression GeometryMultiPointFromBinary(DbExpression multiPointWellKnownBinaryValue, DbExpression coordinateSystemId)
         {
             EntityUtil.CheckArgumentNull(multiPointWellKnownBinaryValue, "multiPointWellKnownBinaryValue");
@@ -297,10 +297,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <returns>A new DbFunctionExpression that returns a new geometry multi-line value based on the specified values.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiLineWellKnownBinaryValue"/> or <paramref name="coordinateSystemId"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'GeometryMultiLineFromBinary' function accepts arguments with the result types of <paramref name="multiLineWellKnownBinaryValue"/> and <paramref name="coordinateSystemId"/>.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
         public static DbFunctionExpression GeometryMultiLineFromBinary(DbExpression multiLineWellKnownBinaryValue, DbExpression coordinateSystemId)
         {
             EntityUtil.CheckArgumentNull(multiLineWellKnownBinaryValue, "multiLineWellKnownBinaryValue");
@@ -318,8 +318,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <returns>A new DbFunctionExpression that returns a new geometry multi-polygon value based on the specified values.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPolygonWellKnownBinaryValue"/> or <paramref name="coordinateSystemId"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'GeometryMultiPolygonFromBinary' function accepts arguments with the result types of <paramref name="multiPolygonWellKnownBinaryValue"/> and <paramref name="coordinateSystemId"/>.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
         public static DbFunctionExpression GeometryMultiPolygonFromBinary(DbExpression multiPolygonWellKnownBinaryValue, DbExpression coordinateSystemId)
         {
             EntityUtil.CheckArgumentNull(multiPolygonWellKnownBinaryValue, "multiPolygonWellKnownBinaryValue");
@@ -356,7 +356,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <returns>A new DbFunctionExpression that returns a new geometry value based on the specified value with the default coordinate system id (SRID) of the underlying provider.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="geometryMarkup"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'GeometryFromGml' function accepts an argument with the result type of <paramref name="geometryMarkup"/>.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Gml", Justification = "Abbreviation more meaningful than what it stands for")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Gml", Justification = "Abbreviation more meaningful than what it stands for")]
         public static DbFunctionExpression GeometryFromGml(DbExpression geometryMarkup)
         {
             EntityUtil.CheckArgumentNull(geometryMarkup, "geometryMarkup");
@@ -373,7 +373,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <returns>A new DbFunctionExpression that returns a new geometry value based on the specified values.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="geometryMarkup"/> or <paramref name="coordinateSystemId"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'GeometryFromGml' function accepts arguments with the result types of <paramref name="geometryMarkup"/> and <paramref name="coordinateSystemId"/>.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Gml", Justification = "Abbreviation more meaningful than what it stands for")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Gml", Justification = "Abbreviation more meaningful than what it stands for")]
         public static DbFunctionExpression GeometryFromGml(DbExpression geometryMarkup, DbExpression coordinateSystemId)
         {
             EntityUtil.CheckArgumentNull(geometryMarkup, "geometryMarkup");
@@ -478,10 +478,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <returns>A new DbFunctionExpression that returns a new geography multi-point value based on the specified values.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPointWellKnownText"/> or <paramref name="coordinateSystemId"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'GeographyMultiPointFromText' function accepts arguments with the result types of <paramref name="multiPointWellKnownText"/> and <paramref name="coordinateSystemId"/>.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
         public static DbFunctionExpression GeographyMultiPointFromText(DbExpression multiPointWellKnownText, DbExpression coordinateSystemId)
         {
             EntityUtil.CheckArgumentNull(multiPointWellKnownText, "multiPointWellKnownText");
@@ -499,10 +499,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <returns>A new DbFunctionExpression that returns a new geography multi-line value based on the specified values.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiLineWellKnownText"/> or <paramref name="coordinateSystemId"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'GeographyMultiLineFromText' function accepts arguments with the result types of <paramref name="multiLineWellKnownText"/> and <paramref name="coordinateSystemId"/>.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
         public static DbFunctionExpression GeographyMultiLineFromText(DbExpression multiLineWellKnownText, DbExpression coordinateSystemId)
         {
             EntityUtil.CheckArgumentNull(multiLineWellKnownText, "multiLineWellKnownText");
@@ -520,8 +520,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <returns>A new DbFunctionExpression that returns a new geography multi-polygon value based on the specified values.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPolygonWellKnownText"/> or <paramref name="coordinateSystemId"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'GeographyMultiPolygonFromText' function accepts arguments with the result types of <paramref name="multiPolygonWellKnownText"/> and <paramref name="coordinateSystemId"/>.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
         public static DbFunctionExpression GeographyMultiPolygonFromText(DbExpression multiPolygonWellKnownText, DbExpression coordinateSystemId)
         {
             EntityUtil.CheckArgumentNull(multiPolygonWellKnownText, "multiPolygonWellKnownText");
@@ -644,10 +644,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <returns>A new DbFunctionExpression that returns a new geography multi-point value based on the specified values.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPointWellKnownBinaryValue"/> or <paramref name="coordinateSystemId"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'GeographyMultiPointFromBinary' function accepts arguments with the result types of <paramref name="multiPointWellKnownBinaryValue"/> and <paramref name="coordinateSystemId"/>.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
         public static DbFunctionExpression GeographyMultiPointFromBinary(DbExpression multiPointWellKnownBinaryValue, DbExpression coordinateSystemId)
         {
             EntityUtil.CheckArgumentNull(multiPointWellKnownBinaryValue, "multiPointWellKnownBinaryValue");
@@ -665,10 +665,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <returns>A new DbFunctionExpression that returns a new geography multi-line value based on the specified values.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiLineWellKnownBinaryValue"/> or <paramref name="coordinateSystemId"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'GeographyMultiLineFromBinary' function accepts arguments with the result types of <paramref name="multiLineWellKnownBinaryValue"/> and <paramref name="coordinateSystemId"/>.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
         public static DbFunctionExpression GeographyMultiLineFromBinary(DbExpression multiLineWellKnownBinaryValue, DbExpression coordinateSystemId)
         {
             EntityUtil.CheckArgumentNull(multiLineWellKnownBinaryValue, "multiLineWellKnownBinaryValue");
@@ -686,8 +686,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <returns>A new DbFunctionExpression that returns a new geography multi-polygon value based on the specified values.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPolygonWellKnownBinaryValue"/> or <paramref name="coordinateSystemId"/> is null.</exception>polygonWellKnownBinaryValue
         /// <exception cref="ArgumentException">No overload of the canonical 'GeographyMultiPolygonFromBinary' function accepts arguments with the result types of <paramref name="multiPolygonWellKnownBinaryValue"/> and <paramref name="coordinateSystemId"/>.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
         public static DbFunctionExpression GeographyMultiPolygonFromBinary(DbExpression multiPolygonWellKnownBinaryValue, DbExpression coordinateSystemId)
         {
             EntityUtil.CheckArgumentNull(multiPolygonWellKnownBinaryValue, "multiPolygonWellKnownBinaryValue");
@@ -724,7 +724,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <returns>A new DbFunctionExpression that returns a new geography value based on the specified value with the default coordinate system id (SRID) of the underlying provider.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="geographyMarkup"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'GeographyFromGml' function accepts an argument with the result type of <paramref name="geographyMarkup"/>.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Gml")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Gml")]
         public static DbFunctionExpression GeographyFromGml(DbExpression geographyMarkup)
         {
             EntityUtil.CheckArgumentNull(geographyMarkup, "geographyMarkup");
@@ -741,7 +741,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <returns>A new DbFunctionExpression that returns a new geography value based on the specified values.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="geographyMarkup"/> or <paramref name="coordinateSystemId"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'GeographyFromGml' function accepts arguments with the result types of <paramref name="geographyMarkup"/> and <paramref name="coordinateSystemId"/>.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Gml")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Gml")]
         public static DbFunctionExpression GeographyFromGml(DbExpression geographyMarkup, DbExpression coordinateSystemId)
         {
             EntityUtil.CheckArgumentNull(geographyMarkup, "geographyMarkup");
@@ -840,7 +840,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <returns>A new DbFunctionExpression that returns the Geography Markup Language (GML) representation of <paramref name="spatialValue"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="spatialValue"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'AsGml' function accepts an argument with the result type of <paramref name="spatialValue"/>.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Gml")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Gml")]
         public static DbFunctionExpression AsGml(this DbExpression spatialValue)
         {
             EntityUtil.CheckArgumentNull(spatialValue, "spatialValue");
@@ -1463,7 +1463,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <returns>A new DbFunctionExpression that returns either the centroid point of <paramref name="geometryValue"/> (which may not be on the surface itself) or <c>null</c> if <paramref name="geometryValue"/> is not a surface.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="geometryValue"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'Centroid' function accepts an argument with the result type of <paramref name="geometryValue"/>.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Centroid", Justification = "Standard bame")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Centroid", Justification = "Standard bame")]
         public static DbFunctionExpression Centroid(this DbExpression geometryValue)
         {
             EntityUtil.CheckArgumentNull(geometryValue, "geometryValue");

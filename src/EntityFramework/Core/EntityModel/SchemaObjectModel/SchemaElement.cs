@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Xml;
@@ -421,7 +422,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="field"></param>
         /// <param name="errorMessageId"></param>
         /// <returns></returns>
-        protected ReturnValue<string> HandleDottedNameAttribute(XmlReader reader, string field, Func<object, string> errorFormat)
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "field")]
+        protected ReturnValue<string> HandleDottedNameAttribute(XmlReader reader, string field)
         {
             ReturnValue<string> returnValue = new ReturnValue<string>();
             Debug.Assert(string.IsNullOrEmpty(field), string.Format(CultureInfo.CurrentCulture, "{0} is already defined", reader.Name));
@@ -491,7 +493,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             Parse(reader);
         }
 
-        protected void SkipElement(XmlReader reader)
+        protected virtual void SkipElement(XmlReader reader)
         {
             using (XmlReader subtree = reader.ReadSubtree())
             {
@@ -683,9 +685,13 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 using (XmlReader subtree = reader.ReadSubtree())
                 {
                     subtree.Read();
-                    XElement element = XElement.Load(new StringReader(subtree.ReadOuterXml()));
+                    using (var stringReader = new StringReader(subtree.ReadOuterXml()))
+                    {
+                        XElement element = XElement.Load(stringReader);
 
-                    property = CreateMetadataPropertyFromOtherNamespaceXmlArtifact(element.Name.NamespaceName, element.Name.LocalName, element);
+                        property = CreateMetadataPropertyFromOtherNamespaceXmlArtifact(
+                            element.Name.NamespaceName, element.Name.LocalName, element);
+                    }
                 }
             }
             else

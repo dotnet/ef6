@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// The validation severity level
@@ -153,7 +154,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // Check to make sure the item has an identity
             if (string.IsNullOrEmpty(item.Identity))
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_EmptyIdentity,item));
+                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_EmptyIdentity));
             }
 
             switch (item.BuiltInTypeKind)
@@ -227,12 +228,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // Check that it doesn't have a base type
             if (item.BaseType != null)
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_CollectionTypesCannotHaveBaseType, item));
+                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_CollectionTypesCannotHaveBaseType));
             }
 
             if (item.TypeUsage == null)
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_CollectionHasNoTypeUsage, item));
+                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_CollectionHasNoTypeUsage));
             }
             else
             {
@@ -258,6 +259,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="item">The EdmType object to validate</param>
         /// <param name="errors">An error collection for adding validation errors</param>
         /// <param name="validatedItems">A dictionary keeping track of items that have been validated</param>
+        [SuppressMessage("Microsoft.Performance", "CA1820:TestForEmptyStringsUsingStringLength")]
         private void ValidateEdmType(EdmType item, List<EdmItemError> errors, HashSet<MetadataItem> validatedItems)
         {
             ValidateItem(item, errors, validatedItems);
@@ -265,12 +267,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // Check that this type has a name and namespace
             if (string.IsNullOrEmpty(item.Name))
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_TypeHasNoName, item));
+                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_TypeHasNoName));
             }
             if (null == item.NamespaceName ||
                 item.DataSpace != DataSpace.OSpace && string.Empty == item.NamespaceName)
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_TypeHasNoNamespace, item));
+                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_TypeHasNoNamespace));
             }
 
             // We don't need to verify that the base type chain eventually gets to null because
@@ -296,7 +298,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 // Check that there is at least one key member
                 if (item.KeyMembers.Count < 1)
                 {
-                    AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_NoKeyMembers(item.FullName), item));
+                    AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_NoKeyMembers(item.FullName)));
                 }
                 else
                 {
@@ -304,7 +306,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     {
                         if (keyProperty.Nullable)
                         {
-                            AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_NullableEntityKeyProperty(keyProperty.Name, item.FullName), keyProperty));
+                            AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_NullableEntityKeyProperty(keyProperty.Name, item.FullName)));
                         }
                     }
                 }
@@ -328,13 +330,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // Check that this facet has a name
             if (string.IsNullOrEmpty(item.Name))
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_FacetHasNoName, item));
+                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_FacetHasNoName));
             }
 
             // Validate the type
             if (item.FacetType == null)
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_FacetTypeIsNull, item));
+                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_FacetTypeIsNull));
             }
             else
             {
@@ -374,12 +376,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // Check that this member has a name
             if (string.IsNullOrEmpty(item.Name))
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_MemberHasNoName, item));
+                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_MemberHasNoName));
             }
 
             if (item.DeclaringType == null)
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_MemberHasNullDeclaringType, item));
+                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_MemberHasNullDeclaringType));
             }
             else
             {
@@ -388,7 +390,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (item.TypeUsage == null)
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_MemberHasNullTypeUsage, item));
+                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_MemberHasNullTypeUsage));
             }
             else
             {
@@ -412,12 +414,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 // Check that this member has a name
                 if (string.IsNullOrEmpty(item.Name))
                 {
-                    AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_MetadataPropertyHasNoName, item));
+                    AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_MetadataPropertyHasNoName));
                 }
 
                 if (item.TypeUsage == null)
                 {
-                    AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_ItemAttributeHasNullTypeUsage, item));
+                    AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_ItemAttributeHasNullTypeUsage));
                 }
                 else
                 {
@@ -473,13 +475,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // Check that it doesn't have a base type
             if (item.BaseType != null)
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_RefTypesCannotHaveBaseType, item));
+                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_RefTypesCannotHaveBaseType));
             }
 
             // Just validate the element type, there is nothing on the collection itself to validate
             if (item.ElementType == null)
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_RefTypeHasNullEntityType, null));
+                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_RefTypeHasNullEntityType));
             }
             else
             {
@@ -516,7 +518,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 EdmMember baseMember = null;
                 if (allMembers.TryGetValue(member.Name, out baseMember))
                 {                    
-                    AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_BaseTypeHasMemberOfSameName, item));
+                    AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_BaseTypeHasMemberOfSameName));
                 }
                 else
                 {
@@ -539,7 +541,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (item.EdmType == null)
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_TypeUsageHasNullEdmType, item));
+                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_TypeUsageHasNullEdmType));
             }
             else
             {

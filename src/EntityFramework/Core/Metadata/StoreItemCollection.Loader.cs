@@ -196,7 +196,7 @@
                 return _providerManifest;
             }
 
-            private void AddProviderIncompatibleError(ProviderIncompatibleException provEx, Action<string, ErrorCode, EdmSchemaErrorSeverity> addError)
+            private static void AddProviderIncompatibleError(ProviderIncompatibleException provEx, Action<string, ErrorCode, EdmSchemaErrorSeverity> addError)
             {
                 Debug.Assert(provEx != null);
                 Debug.Assert(addError != null);

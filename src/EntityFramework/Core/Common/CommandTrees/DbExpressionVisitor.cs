@@ -3,10 +3,11 @@ using System.Data.Entity.Core.Metadata.Edm;
 
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// The expression visitor pattern abstract base class that should be implemented by visitors that do not return a result value.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public abstract class DbExpressionVisitor
     {
         /// <summary>

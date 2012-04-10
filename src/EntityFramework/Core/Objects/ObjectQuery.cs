@@ -10,12 +10,13 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
     ///   This class implements untyped queries at the object-layer. 
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
+    [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface"), SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public abstract class ObjectQuery : IEnumerable, IQueryable, IOrderedQueryable, IListSource
     {
         #region Private Instance Members
@@ -83,6 +84,7 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         /// Gets the result element type for this query instance.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         Type IQueryable.ElementType
         {
             get { return this._state.ElementType; }
@@ -95,6 +97,7 @@ namespace System.Data.Entity.Core.Objects
         /// default expression is not cached. This allows us to differentiate
         /// between LINQ and Entity-SQL queries.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         System.Linq.Expressions.Expression IQueryable.Expression
         {
             get
@@ -108,6 +111,7 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         /// Gets the IQueryProvider associated with this query instance.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IQueryProvider IQueryable.Provider
         {
             get
@@ -134,6 +138,7 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///   IListSource.ContainsListCollection implementation. Always returns true.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IListSource.ContainsListCollection
         {
             get
@@ -234,6 +239,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>
         ///   IList interface over the data to bind
         /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IList IListSource.GetList()
         {
             return this.GetIListSourceListInternal();
@@ -255,6 +261,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>
         ///   The TypeMetadata that describes the shape of the query results.
         /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public TypeUsage GetResultType ()
         {
             Context.EnsureMetadata();
@@ -305,6 +312,7 @@ namespace System.Data.Entity.Core.Objects
                 
         #region IEnumerable implementation
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumeratorInternal();

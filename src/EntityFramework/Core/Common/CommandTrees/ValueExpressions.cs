@@ -7,11 +7,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Core.Common.CommandTrees.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Represents a constant value.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbConstantExpression : DbExpression
     {
         private readonly bool _shouldCloneValue;
@@ -92,7 +92,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents null.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbNullExpression : DbExpression
     {
         internal DbNullExpression(TypeUsage type)
@@ -120,7 +119,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents a reference to a variable that is currently in scope.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbVariableReferenceExpression : DbExpression
     {
         private readonly string _name;
@@ -158,7 +156,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents a reference to a parameter declared on the command tree that contains this expression.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbParameterReferenceExpression : DbExpression
     {
         private readonly string _name;
@@ -196,7 +193,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents the retrieval of a static or instance property.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbPropertyExpression : DbExpression
     {
         private readonly EdmMember _property;
@@ -261,7 +257,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents the invocation of a function.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbFunctionExpression : DbExpression
     {
         private readonly EdmFunction _functionInfo;
@@ -308,7 +303,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents the application of a Lambda function.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbLambdaExpression : DbExpression
     {
         private readonly DbLambda _lambda;
@@ -471,7 +465,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents the navigation of a (composition or association) relationship given the 'from' role, the 'to' role and an instance of the from role
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbRelationshipNavigationExpression : DbExpression
     {
         private readonly RelationshipType _relation;
@@ -543,7 +536,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// Instances of DbRelatedEntityRef may be specified when creating a <see cref="DbNewInstanceExpression"/> that
     /// constructs an Entity, allowing information about Entities that are related to the newly constructed Entity to be captured.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     internal sealed class DbRelatedEntityRef
     {
         private readonly RelationshipEndMember _sourceEnd;
@@ -621,7 +613,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents the construction of a new instance of a given type, including set and record types.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbNewInstanceExpression : DbExpression
     {
         private readonly DbExpressionList _elements;
@@ -679,7 +670,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents a (strongly typed) reference to a specific instance within a given entity set.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbRefExpression : DbUnaryExpression
     {
         private readonly EntitySet _entitySet;
@@ -717,7 +707,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents the retrieval of a given entity using the specified Ref.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Deref"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
+    [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Deref")]
     public sealed class DbDerefExpression : DbUnaryExpression
     {
         internal DbDerefExpression(TypeUsage entityResultType, DbExpression refExpr)
@@ -746,7 +736,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents a 'scan' of all elements of a given entity set.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbScanExpression : DbExpression
     {
         private readonly EntitySetBase _targetSet;

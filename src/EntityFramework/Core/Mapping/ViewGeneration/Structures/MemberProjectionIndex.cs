@@ -9,6 +9,8 @@ using System.Data.Entity.Core.Metadata.Edm;
 
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Manages <see cref="MemberPath"/>s of the members of the types stored in an extent.
     /// This is a bi-directional dictionary of <see cref="MemberPath"/>s to integer indexes and back.
@@ -128,6 +130,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// <summary>
         /// Given the index of a boolean variable (e.g., of from1), returns the slot number for that boolean in this.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "numBoolSlots")]
         internal int BoolIndexToSlot(int boolIndex, int numBoolSlots)
         {
             // Booleans appear after the regular slots
@@ -138,6 +141,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// <summary>
         /// Given the <paramref name="slotNum"/> corresponding to a boolean slot, returns the cell number that the cell corresponds to.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "numBoolSlots")]
         internal int SlotToBoolIndex(int slotNum, int numBoolSlots)
         {
             Debug.Assert(slotNum < this.Count + numBoolSlots && slotNum >= this.Count, "No such boolean slot");
@@ -147,6 +151,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// <summary>
         /// Returns true if <paramref name="slotNum"/> corresponds to a key slot in the output extent view.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "numBoolSlots")]
         internal bool IsKeySlot(int slotNum, int numBoolSlots)
         {
             Debug.Assert(slotNum < this.Count + numBoolSlots, "No such slot in tree");
@@ -156,6 +161,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// <summary>
         /// Returns true if <paramref name="slotNum"/> corresponds to a bool slot and not a regular field.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "numBoolSlots")]
         internal bool IsBoolSlot(int slotNum, int numBoolSlots)
         {
             Debug.Assert(slotNum < this.Count + numBoolSlots, "Boolean slot does not exist in tree");

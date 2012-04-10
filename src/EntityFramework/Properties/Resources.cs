@@ -7022,7 +7022,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "Unable to complete operation. The supplied SqlConnection does not specify an initial catalog or AttachDBFilename."
+        /// A string like "Unable to complete operation. The supplied SqlConnection does not specify an initial catalog or AttachDBFileName."
         /// </summary>
         internal static string SqlProvider_DdlGeneration_MissingInitialCatalog
         {
@@ -7033,7 +7033,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "Unable to delete the database. There is no database that corresponds to the given AttachDBFilename."
+        /// A string like "Unable to delete the database. There is no database that corresponds to the given AttachDBFileName."
         /// </summary>
         internal static string SqlProvider_DdlGeneration_CannotDeleteDatabaseNoInitialCatalog
         {
@@ -7044,7 +7044,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "A connection to the specified database could not be opened. See InnerException for details. However, there is a database registered with the server that corresponds to the given AttachDbFilename."
+        /// A string like "A connection to the specified database could not be opened. See InnerException for details. However, there is a database registered with the server that corresponds to the given AttachDbFileName."
         /// </summary>
         internal static string SqlProvider_DdlGeneration_CannotTellIfDatabaseExists
         {
@@ -10434,7 +10434,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The upper and lower limits of the BETWEEN expression cannot be untyped nulls."
+        /// A string like "The upper and lower limits of the BETWEEN expression cannot be un-typed nulls."
         /// </summary>
         internal static string BetweenLimitsCannotBeUntypedNulls
         {
@@ -10480,7 +10480,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "A multiset of untyped NULLs is not valid."
+        /// A string like "A multiset of un-typed NULLs is not valid."
         /// </summary>
         internal static string CannotCreateMultisetofNulls
         {
@@ -10787,7 +10787,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The CASE/WHEN/THEN expression is not valid, because all resulting expressions are untyped."
+        /// A string like "The CASE/WHEN/THEN expression is not valid, because all resulting expressions are un-typed."
         /// </summary>
         internal static string InvalidCaseWhenThenNullType
         {
@@ -11076,7 +11076,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "Untyped NULL arguments are not valid in arithmetic expressions."
+        /// A string like "Un-typed NULL arguments are not valid in arithmetic expressions."
         /// </summary>
         internal static string InvalidNullArithmetic
         {
@@ -11087,7 +11087,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "Untyped NULL arguments are not valid in comparison expressions."
+        /// A string like "Un-typed NULL arguments are not valid in comparison expressions."
         /// </summary>
         internal static string InvalidNullComparison
         {
@@ -11427,7 +11427,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "'{0}' is not a member of '{1}'. To extract a property of a collection element, use a subquery to iterate over the collection."
+        /// A string like "'{0}' is not a member of '{1}'. To extract a property of a collection element, use a sub-query to iterate over the collection."
         /// </summary>
         internal static string NotAMemberOfCollection(object p0, object p1)
         {
@@ -11648,7 +11648,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The resulting expression of the query cannot be untyped NULL."
+        /// A string like "The resulting expression of the query cannot be un-typed NULL."
         /// </summary>
         internal static string ResultingExpressionTypeCannotBeNull
         {
@@ -11670,7 +11670,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The ROW constructor cannot have untyped NULL columns."
+        /// A string like "The ROW constructor cannot have un-typed NULL columns."
         /// </summary>
         internal static string RowCtorElementCannotBeNull
         {
@@ -11912,7 +11912,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "INTERNAL ERROR: The Ast expression is not a valid command expression type."
+        /// A string like "INTERNAL ERROR: The abstract syntax tree expression is not a valid command expression type."
         /// </summary>
         internal static string UnknownAstCommandExpression
         {
@@ -11923,7 +11923,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "INTERNAL ERROR: The Ast expression has an unknown type."
+        /// A string like "INTERNAL ERROR: The abstract syntax tree expression has an unknown type."
         /// </summary>
         internal static string UnknownAstExpressionType
         {
@@ -11934,7 +11934,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "INTERNAL ERROR: The specified built-in Ast expression type is unknown. "
+        /// A string like "INTERNAL ERROR: The specified built-in abstract syntax tree expression type is unknown. "
         /// </summary>
         internal static string UnknownBuiltInAstExpressionType
         {

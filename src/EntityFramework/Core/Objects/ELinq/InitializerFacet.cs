@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -57,10 +58,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         // Initializes an initializer for a MemberInit expression
-        internal static InitializerMetadata CreateProjectionInitializer(EdmItemCollection itemCollection, MemberInitExpression initExpression,
-            MemberInfo[] members)
+        internal static InitializerMetadata CreateProjectionInitializer(EdmItemCollection itemCollection, MemberInitExpression initExpression)
         {
-            return itemCollection.GetCanonicalInitializerMetadata(new ProjectionInitializerMetadata(initExpression, members));
+            return itemCollection.GetCanonicalInitializerMetadata(new ProjectionInitializerMetadata(initExpression));
         }
 
         // Initializes an initializer for a New expression
@@ -109,7 +109,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             return IsStructurallyEquivalent(other);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2303", Justification="ClrType is not expected to be an Embedded Interop Type.")]
+        [SuppressMessage("Microsoft.Usage", "CA2303", Justification="ClrType is not expected to be an Embedded Interop Type.")]
         public override int GetHashCode()
         {
             return ClrType.GetHashCode();
@@ -343,17 +343,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// </summary>
         private class ProjectionInitializerMetadata : InitializerMetadata
         {
-            internal ProjectionInitializerMetadata(MemberInitExpression initExpression, MemberInfo[] members)
+            internal ProjectionInitializerMetadata(MemberInitExpression initExpression)
                 : base(initExpression.Type)
             {
                 Debug.Assert(null != initExpression);
-                Debug.Assert(null != members);
                 _initExpression = initExpression;
-                _members = members;
             }
 
             private readonly MemberInitExpression _initExpression;
-            private readonly MemberInfo[] _members;
 
             internal override InitializerMetadataKind Kind { get { return InitializerMetadataKind.ProjectionInitializer; } }
 
@@ -481,7 +478,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 return result;
             }
 
-            public static EntityCollection<T> CreateEntityCollection<T>(Shaper state, IEntityWrapper wrappedOwner, Coordinator<T> coordinator, string relationshipName, string targetRoleName)
+            public static EntityCollection<T> CreateEntityCollection<T>(IEntityWrapper wrappedOwner, Coordinator<T> coordinator, string relationshipName, string targetRoleName)
                 where T : class
             {
                 if (null == wrappedOwner.Entity)

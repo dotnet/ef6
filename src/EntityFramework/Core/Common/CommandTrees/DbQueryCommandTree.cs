@@ -11,7 +11,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents a query operation expressed as a canonical command tree.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbQueryCommandTree : DbCommandTree
     {
         // Query expression

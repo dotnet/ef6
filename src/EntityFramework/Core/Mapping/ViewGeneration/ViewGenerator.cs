@@ -199,7 +199,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 cell.SQuery.WhereClause.FixDomainMap(m_updateDomainMap);
             }
 
-            errorLog = GenerateQueryViewForExtentAndType(m_entityContainerMapping, identifiers, views, entity, type, mode);
+            errorLog = GenerateQueryViewForExtentAndType(identifiers, views, entity, type, mode);
 
             return errorLog;
         }
@@ -225,12 +225,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
             // Fix enumerable domains - currently it is only applicable to boolean type. Note that it is 
             // not applicable to enumerated types since we allow any value of the underlying type of the enum type.
-            queryDomainMap.ReduceEnumerableDomainToEnumeratedValues(ViewTarget.QueryView, config);
-            updateDomainMap.ReduceEnumerableDomainToEnumeratedValues(ViewTarget.UpdateView, config);
+            queryDomainMap.ReduceEnumerableDomainToEnumeratedValues(config);
+            updateDomainMap.ReduceEnumerableDomainToEnumeratedValues(config);
         }
 
 
-        private ErrorLog GenerateQueryViewForExtentAndType(StorageEntityContainerMapping entityContainerMapping, CqlIdentifiers identifiers, ViewSet views, EntitySetBase entity, EntityTypeBase type, ViewGenMode mode)
+        private ErrorLog GenerateQueryViewForExtentAndType(CqlIdentifiers identifiers, ViewSet views, EntitySetBase entity, EntityTypeBase type, ViewGenMode mode)
         {
             Debug.Assert(mode != ViewGenMode.GenerateAllViews);
 
@@ -444,7 +444,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return queryRewriter;
         }
 
-        private CellTreeNode GenerateSimplifiedView(CellTreeNode basicView, List<LeftCellWrapper> usedCells)
+        private static CellTreeNode GenerateSimplifiedView(CellTreeNode basicView, List<LeftCellWrapper> usedCells)
         {
             Debug.Assert(false == basicView.IsEmptyRightFragmentQuery, "Basic view is empty?");
 

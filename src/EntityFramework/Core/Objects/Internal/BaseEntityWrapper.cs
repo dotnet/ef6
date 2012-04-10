@@ -6,6 +6,8 @@ using System.Data.Entity.Core.Metadata.Edm;
 
 namespace System.Data.Entity.Core.Objects.Internal
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Base class containing common code for different implementations of the IEntityWrapper
     /// interface.  Generally speaking, operations involving the ObjectContext, RelationshipManager
@@ -34,6 +36,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// </summary>
         /// <param name="entity">The entity to be wrapped</param>
         /// <param name="relationshipManager">the RelationshipManager associated with this entity</param>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "entity")]
         protected BaseEntityWrapper(TEntity entity, RelationshipManager relationshipManager)
         {
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");

@@ -2,6 +2,7 @@
 {
     using System.Collections;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Versioning;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -90,7 +91,7 @@
         // * this method queries "DataDirectory" value from the current AppDomain.
         //   This string is used for to replace "!DataDirectory!" values in the connection string, it is not considered as an "exposed resource".
         // * This method uses GetFullPath to validate that root path is valid, the result is not exposed out.
-        [ResourceExposure(ResourceScope.None)]
+        [SuppressMessage("Microsoft.Performance", "CA1820:TestForEmptyStringsUsingStringLength"), ResourceExposure(ResourceScope.None)]
         [ResourceConsumption(ResourceScope.Machine, ResourceScope.Machine)]
         internal static string ExpandDataDirectory(string keyword, string value)
         {
@@ -144,7 +145,7 @@
             return fullPath;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
+        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         static private string GetKeyName(StringBuilder buffer)
         {
             int count = buffer.Length;
@@ -188,7 +189,8 @@
             QuotedValueEnd,
             NullTermination,
         };
-        
+
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         static private int GetKeyValuePair(string connectionString, int currentPosition, StringBuilder buffer, out string keyname, out string keyvalue)
         {
             int startposition = currentPosition;
@@ -371,7 +373,7 @@
         }
 
 #if DEBUG
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
+        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         private static Hashtable SplitConnectionString(string connectionString, Hashtable synonyms)
         {
             Hashtable parsetable = new Hashtable();
@@ -502,11 +504,11 @@
 
                     if (null != localKeychain)
                     {
-                        localKeychain = localKeychain.Next = new NameValuePair(realkeyname, keyvalue, nextStartPosition - startPosition);
+                        localKeychain = localKeychain.Next = new NameValuePair();
                     }
                     else 
                     { // first time only - don't contain modified chain from UDL file
-                        keychain = localKeychain = new NameValuePair(realkeyname, keyvalue, nextStartPosition - startPosition);
+                        keychain = localKeychain = new NameValuePair();
                     }
                 }
 #if DEBUG

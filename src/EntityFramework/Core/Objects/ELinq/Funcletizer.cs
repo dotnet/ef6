@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private readonly HashSet<Expression> _linqExpressionStack = new HashSet<Expression>();
 
         // Object parameters
-        private static readonly string s_parameterPrefix = "p__linq__";
+        private const string s_parameterPrefix = "p__linq__";
         private long _parameterNumber;
 
         private Funcletizer(
@@ -430,7 +430,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             /// <summary>
             /// Compiles a delegate returning the value of the given expression.
             /// </summary>
-            private Func<object> CompileExpression(Expression expression)
+            private static Func<object> CompileExpression(Expression expression)
             {
                 Func<object> func = Expression
                     .Lambda<Func<object>>(TypeSystem.EnsureType(expression, typeof(object)))
@@ -675,7 +675,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             get { return EntityExpressionVisitor.CustomExpression; }
         }
 
-        private bool TryEvaluatePath(Expression expression, out ConstantExpression constantExpression)
+        private static bool TryEvaluatePath(Expression expression, out ConstantExpression constantExpression)
         {
             MemberExpression me = expression as MemberExpression;
             constantExpression = null;
@@ -713,7 +713,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             return false;
         }
 
-        private bool TryGetFieldOrPropertyValue(MemberExpression me, object instance, out object memberValue)
+        private static bool TryGetFieldOrPropertyValue(MemberExpression me, object instance, out object memberValue)
         {
             bool result = false;
             memberValue = null;

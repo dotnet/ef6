@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
     /// <summary>
@@ -27,6 +28,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
             this.Children = new Vertex[] { };
         }
 
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.EntityUtil.BoolExprAssert(System.Boolean,System.String)")]
         internal Vertex(int variable, Vertex[] children)
         {
             EntityUtil.BoolExprAssert(variable < int.MaxValue,

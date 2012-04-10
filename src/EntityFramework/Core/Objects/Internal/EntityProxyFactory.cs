@@ -2,11 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -295,7 +295,7 @@
             }
         }
 
-        public Func<object, object> CreateBaseGetter(Type declaringType, PropertyInfo propertyInfo)
+        public virtual Func<object, object> CreateBaseGetter(Type declaringType, PropertyInfo propertyInfo)
         {
             Debug.Assert(propertyInfo != null, "Null propertyInfo");
 
@@ -334,7 +334,7 @@
             return false;
         }
 
-        public Action<object, object> CreateBaseSetter(Type declaringType, PropertyInfo propertyInfo)
+        public virtual Action<object, object> CreateBaseSetter(Type declaringType, PropertyInfo propertyInfo)
         {
             Debug.Assert(propertyInfo != null, "Null propertyInfo");
 
@@ -407,7 +407,7 @@
                 }
 
                 SetResetFKSetterFlagDelegate(proxyType, proxyTypeInfo);
-                SetCompareByteArraysDelegate(proxyType, proxyTypeInfo);
+                SetCompareByteArraysDelegate(proxyType);
             }
             else
             {
@@ -470,7 +470,7 @@
         /// <param name="interceptorField">
         /// Field define on the proxy type to store the reference to the interception delegate.
         /// </param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2128")]
+        [SuppressMessage("Microsoft.Security", "CA2128")]
         [SecuritySafeCritical]
         [ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
@@ -527,7 +527,7 @@
         /// Sets a delegate onto the _compareByteArrays field such that it can be executed to check
         /// whether two byte arrays are the same by value comparison.
         /// </summary>
-        private static void SetCompareByteArraysDelegate(Type proxyType, EntityProxyTypeInfo proxyTypeInfo)
+        private static void SetCompareByteArraysDelegate(Type proxyType)
         {
             var compareByteArraysField = proxyType.GetField(CompareByteArraysFieldName, BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.NonPublic);
             Debug.Assert(compareByteArraysField != null, "Expected compareByteArraysField to be defined on the proxy type.");
@@ -680,7 +680,7 @@
 
                     if (_typeBuilder != null)
                     {
-                        _baseImplementor.Implement(TypeBuilder, RegisterInstanceField);
+                        _baseImplementor.Implement(TypeBuilder);
                         _iserializableImplementor.Implement(TypeBuilder, _serializedFields);
                     }
                 }
@@ -715,14 +715,14 @@
                         // WCF data contract serialization is not compatible with types that implement ISerializable.
                         if (!_iserializableImplementor.TypeImplementsISerializable)
                         {
-                            _dataContractImplementor.Implement(_typeBuilder, registerField);
+                            _dataContractImplementor.Implement(_typeBuilder);
                         }
                     }
                     return _typeBuilder;
                 }
             }
 
-            private void EmitBaseGetter(TypeBuilder typeBuilder, PropertyBuilder propertyBuilder, PropertyInfo baseProperty)
+            private static void EmitBaseGetter(TypeBuilder typeBuilder, PropertyBuilder propertyBuilder, PropertyInfo baseProperty)
             {
                 if (CanProxyGetter(baseProperty))
                 {
@@ -742,7 +742,7 @@
                 }
             }
 
-            private void EmitBaseSetter(TypeBuilder typeBuilder, PropertyBuilder propertyBuilder, PropertyInfo baseProperty)
+            private static void EmitBaseSetter(TypeBuilder typeBuilder, PropertyBuilder propertyBuilder, PropertyInfo baseProperty)
             {
                 if (CanProxySetter(baseProperty))
                 {
@@ -827,7 +827,7 @@
             return _members.Contains(member);
         }
 
-        public void Implement(TypeBuilder typeBuilder, Action<FieldBuilder, bool> registerField)
+        public virtual void Implement(TypeBuilder typeBuilder, Action<FieldBuilder, bool> registerField)
         {
             // Add instance field to store IEntityWrapper instance
             // The field is typed as object, for two reasons:
@@ -934,7 +934,7 @@
             _baseSetters.Add(baseProperty);
         }
 
-        public void Implement(TypeBuilder typeBuilder, Action<FieldBuilder, bool> registerField)
+        public void Implement(TypeBuilder typeBuilder)
         {
             if (_baseGetters.Count > 0)
             {
@@ -1030,8 +1030,6 @@
         static readonly MethodInfo s_IEntityWrapper_GetEntity = typeof(IEntityWrapper).GetProperty("Entity").GetGetMethod();
         static readonly MethodInfo s_Action_Invoke = typeof(Action<object>).GetMethod("Invoke", new Type[] { typeof(object) });
         static readonly MethodInfo s_Func_object_object_bool_Invoke = typeof(Func<object, object, bool>).GetMethod("Invoke", new Type[] { typeof(object), typeof(object) });
-
-        private static readonly ConstructorInfo s_BrowsableAttributeConstructor = typeof(BrowsableAttribute).GetConstructor(new Type[] { typeof(bool) });
 
         public IPOCOImplementor(EntityType ospaceEntityType)
         {
@@ -1501,7 +1499,7 @@
             }
         }
 
-        internal void Implement(TypeBuilder typeBuilder, Action<FieldBuilder, bool> registerField)
+        internal void Implement(TypeBuilder typeBuilder)
         {
             if (_dataContract != null)
             {

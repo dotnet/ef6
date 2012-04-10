@@ -1,5 +1,6 @@
 namespace System.Data.Entity.Edm.Common
 {
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -15,7 +16,6 @@ namespace System.Data.Entity.Edm.Common
         /// <summary>
         ///     Gets a value that identifies the specific error that is being raised.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public int ErrorCode { get; internal set; }
 
         /// <summary>

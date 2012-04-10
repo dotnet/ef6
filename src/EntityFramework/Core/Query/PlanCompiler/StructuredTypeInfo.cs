@@ -26,6 +26,7 @@ using System.Data.Entity.Core.Query.InternalTrees;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// The type flattener module is part of the structured type elimination phase,
@@ -152,6 +153,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="freeFloatingEntityConstructorTypes">free-floating entityConstructor types</param>
         /// <param name="discriminatorMaps">discriminator information for entity sets mapped using TPH pattern</param>
         /// <param name="relPropertyHelper">helper for rel properties</param>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "itree"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void Process(Command itree,
             HashSet<md.TypeUsage> referencedTypes,
             HashSet<md.EntitySet> referencedEntitySets,
@@ -216,6 +218,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="e">the entityset</param>
         /// <returns>entitysetid value</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal int GetEntitySetId(md.EntitySet e)
         {
             int result = 0;
@@ -244,6 +247,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="type">the type to look up</param>
         /// <returns>the typeinfo for the type (null if we couldn't find one)</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "typeInfo"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal TypeInfo GetTypeInfo(md.TypeUsage type)
         {
             if (!TypeUtils.IsStructuredType(type))
@@ -485,6 +489,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="type">New type to add</param>
         /// <param name="discriminatorMap">type discriminator map</param>
         /// <returns>The TypeInfo for this type</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private TypeInfo CreateTypeInfoForStructuredType(md.TypeUsage type, ExplicitDiscriminatorMap discriminatorMap)
         {
             TypeInfo typeInfo;
@@ -635,7 +640,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="typeInfo"></param>
         /// <returns></returns>
-        private bool NeedsTypeIdProperty(TypeInfo typeInfo)
+        private static bool NeedsTypeIdProperty(TypeInfo typeInfo)
         {
             return typeInfo.ImmediateSubTypes.Count > 0 && !md.TypeSemantics.IsReferenceType(typeInfo.Type);
         }
@@ -930,6 +935,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// Finally, we identify the TypeId and EntitySetId property if they exist
         /// </summary>
         /// <param name="type"></param>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void CreateFlattenedRecordType(RootTypeInfo type)
         {
             //
@@ -1054,6 +1060,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="typeInfo">typeinfo of the current type</param>
         /// <param name="p">current property ref</param>
         /// <returns>the datatype of the property</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private md.TypeUsage GetPropertyType(RootTypeInfo typeInfo, PropertyRef p)
         {
             md.TypeUsage result = null;
@@ -1073,9 +1080,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // Get to the innermost type that specifies this typeid (the entity type),
                 // get the datatype for the typeid column from that type
                 //
-                if (innerProperty != null && innerProperty is SimplePropertyRef)
+                var simplePropertyRef = (SimplePropertyRef)innerProperty;
+                if (simplePropertyRef != null)
                 {
-                    md.TypeUsage innerType = ((SimplePropertyRef)innerProperty).Property.TypeUsage;
+                    md.TypeUsage innerType = simplePropertyRef.Property.TypeUsage;
                     TypeInfo innerTypeInfo = GetTypeInfo(innerType);
                     result = innerTypeInfo.RootType.TypeIdType;
                 }
@@ -1090,7 +1098,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             else if (p is RelPropertyRef)
             {
-                result = (p as RelPropertyRef).Property.ToEnd.TypeUsage;
+                result = ((RelPropertyRef)p).Property.ToEnd.TypeUsage;
             }
             else
             {

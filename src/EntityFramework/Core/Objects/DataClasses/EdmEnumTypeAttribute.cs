@@ -1,11 +1,11 @@
 ﻿namespace System.Data.Entity.Core.Objects.DataClasses
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Attribute indicating an enum type.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
     [System.AttributeUsage(AttributeTargets.Enum)]
     public sealed class EdmEnumTypeAttribute : EdmTypeAttribute
     {

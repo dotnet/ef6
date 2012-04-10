@@ -5,6 +5,8 @@ using System.Text;
 
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 {
+    using System.Diagnostics.CodeAnalysis;
+
     internal abstract class TileProcessor<T_Tile>
     {
         internal abstract bool IsEmpty(T_Tile tile);
@@ -50,14 +52,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             numUnion = m_numUnion;
             numDifference = m_numDifference;
             numErrors = m_numErrors;
-        }
-
-        public void PrintStatistics()
-        {
-            Console.WriteLine("{0} containment checks, {4} set operations ({1} intersections + {2} unions + {3} differences)",
-                m_numSATChecks, m_numIntersection, m_numUnion, m_numDifference,
-                                m_numIntersection + m_numUnion + m_numDifference);
-            Console.WriteLine("{0} errors", m_numErrors);
         }
 
         internal override T_Tile GetArg1(T_Tile tile)

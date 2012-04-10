@@ -10,6 +10,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Xml;
@@ -44,10 +45,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         private bool? _useStrongSpatialTypes;
 
-        #endregion
-
-        #region Static Fields
-        private static IList<string> _emptyPathList = new List<string>(0).AsReadOnly();
         #endregion
 
         #region Public Methods
@@ -88,6 +85,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="sourceReader">TextReader containing the schema xml definition</param>
         /// <param name="source">Uri containing path to a schema file (may be null)</param>
         /// <returns>list of errors</returns>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         internal IList<EdmSchemaError> Parse(XmlReader sourceReader, string sourceLocation)
         {
             // We don't Assert (sourceReader != null) here any more because third-party
@@ -95,15 +93,13 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             // following code eventually detects the anomaly and a ProviderIncompatible
             // exception is thrown (which is the right thing to do in such cases).
 
-            XmlReader wrappedReader = null;
             try
             {
                 // user specified a stream to read from, read from it.
                 // The Uri is just used to identify the stream in errors.
                 XmlReaderSettings readerSettings = CreateXmlReaderSettings();
-                wrappedReader = XmlReader.Create(sourceReader, readerSettings);
+                var wrappedReader = XmlReader.Create(sourceReader, readerSettings);
                 return InternalParse(wrappedReader, sourceLocation);
-
             }
             catch (System.IO.IOException ex)
             {
@@ -533,15 +529,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             }
         }
 
-        // ISSUE: jthunter-03/14/05 - The Sync "schemas" don't follow the ".Store" assembly 
-        // naming convention but need to have the right StoreNamespace reported.
-        //
-        private static readonly string[] ClientNamespaceOfSchemasMissingStoreSuffix =
-        {
-            "System.Storage.Sync.Utility",
-            "System.Storage.Sync.Services"
-        };
-
         /// <summary>
         /// Uri containing the file that defines the schema
         /// </summary>
@@ -822,7 +809,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             // get the schema(s) that match the namespace/alias
             string actualQualification;
             string unqualifiedTypeName;
-            Utils.ExtractNamespaceAndName(DataModel, typeName, out actualQualification, out unqualifiedTypeName);
+            Utils.ExtractNamespaceAndName(typeName, out actualQualification, out unqualifiedTypeName);
             string definingQualification = actualQualification;
 
             if (definingQualification == null)
@@ -929,7 +916,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(reader != null);
 
-            ReturnValue<string> returnValue = HandleDottedNameAttribute(reader, Namespace, null);
+            ReturnValue<string> returnValue = HandleDottedNameAttribute(reader, Namespace);
             if (!returnValue.Succeeded)
                 return;
 

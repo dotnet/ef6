@@ -10,10 +10,11 @@ using System.Data.Entity.Core.Common.CommandTrees.Internal;
 
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Represents an apply operation, which is the invocation of the specified functor for each element in the specified input set.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbApplyExpression : DbExpression
     {
         private readonly DbExpressionBinding _input;
@@ -64,7 +65,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// DbDistinctExpression requires that its argument has a collection result type
     /// with an element type that is equality comparable.
     /// </remarks>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbDistinctExpression : DbUnaryExpression
     {
         internal DbDistinctExpression(TypeUsage resultType, DbExpression argument)
@@ -97,7 +97,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <remarks>
     /// DbElementExpression requires that its argument has a collection result type
     /// </remarks>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbElementExpression : DbUnaryExpression
     {
         private bool _singlePropertyUnwrapped;
@@ -143,7 +142,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <remarks>
     /// DbExceptExpression requires that its arguments have a common collection result type
     /// </remarks>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbExceptExpression : DbBinaryExpression
     {
         internal DbExceptExpression(TypeUsage resultType, DbExpression left, DbExpression right)
@@ -172,7 +170,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents a predicate applied to an input set to produce the set of elements that satisfy the predicate.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbFilterExpression : DbExpression
     {
         private readonly DbExpressionBinding _input;
@@ -219,7 +216,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents a group by operation, which is a grouping of the elements in the input set based on the specified key expressions followed by the application of the specified aggregates.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbGroupByExpression : DbExpression
     {
         private readonly DbGroupExpressionBinding _input;
@@ -280,7 +276,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <remarks>
     /// DbIntersectExpression requires that its arguments have a common collection result type
     /// </remarks>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbIntersectExpression : DbBinaryExpression
     {
         internal DbIntersectExpression(TypeUsage resultType, DbExpression left, DbExpression right)
@@ -308,7 +303,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents an unconditional join operation between the given collection arguments
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbCrossJoinExpression : DbExpression
     {
         private readonly System.Collections.ObjectModel.ReadOnlyCollection<DbExpressionBinding> _inputs;
@@ -347,7 +341,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents an inner, left outer or full outer join operation between the given collection arguments on the specified join condition.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbJoinExpression : DbExpression
     {
         private readonly DbExpressionBinding _left;
@@ -405,7 +398,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents the restriction of the number of elements in the Argument collection to the specified Limit value.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbLimitExpression : DbExpression
     {
         private readonly DbExpression _argument;
@@ -459,7 +451,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents the projection of a given set of values over the specified input set.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbProjectExpression : DbExpression
     {
         private readonly DbExpressionBinding _input;
@@ -505,7 +496,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents a quantifier operation of the specified kind (Any, All) over the elements of the specified input set.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbQuantifierExpression : DbExpression
     {
         private readonly DbExpressionBinding _input;
@@ -553,7 +543,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Specifies a sort key that can be used as part of the sort order in a DbSortExpression.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbSortClause
     {
         private readonly DbExpression _expr;
@@ -588,7 +577,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents a skip operation of the specified number of elements of the input set after the ordering described in the given sort keys is applied.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbSkipExpression : DbExpression
     {
         private readonly DbExpressionBinding _input;
@@ -646,7 +634,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents a sort operation applied to the elements of the specified input set based on the given sort keys.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbSortExpression : DbExpression
     {
         private readonly DbExpressionBinding _input;
@@ -696,7 +683,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <remarks>
     /// DbUnionAllExpression requires that its arguments have a common collection result type
     /// </remarks>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbUnionAllExpression : DbBinaryExpression
     {
         internal DbUnionAllExpression(TypeUsage resultType, DbExpression left, DbExpression right)

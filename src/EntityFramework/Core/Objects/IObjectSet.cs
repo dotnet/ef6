@@ -4,11 +4,13 @@ using System.Linq;
 
 namespace System.Data.Entity.Core.Objects
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Defines behavior for implementations of IQueryable that allow modifications to the membership of the resulting set.
     /// </summary>
     /// <typeparam name="TEntity">Type of entities returned from the queryable.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public interface IObjectSet<TEntity> : IQueryable<TEntity>
         where TEntity : class
     {

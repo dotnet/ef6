@@ -7,11 +7,11 @@ using System.Linq;
 
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Represents a function invocation expressed as a canonical command tree
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbFunctionCommandTree : DbCommandTree
     {
         private readonly EdmFunction _edmFunction;
@@ -56,7 +56,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets the <see cref="EdmFunction"/> that represents the function to invoke
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
         public EdmFunction EdmFunction
         {
             get

@@ -101,7 +101,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         internal void WriteIdentity(StringBuilder builder)
         {
             builder.Append("Parameter(");
-            if (UnresolvedType != null && !UnresolvedType.Trim().Equals(String.Empty))
+            if (!string.IsNullOrWhiteSpace(UnresolvedType))
             {
                 if (_collectionKind != CollectionKind.None)
                 {

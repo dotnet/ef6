@@ -12,6 +12,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
     using System.Data.Entity.Core.SqlClient.Internal;
     using System.Data.SqlClient;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Text;
@@ -197,6 +198,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
     /// </example>
     /// </para>
     /// </remarks>
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal sealed class SqlGenerator : DbExpressionVisitor<ISqlFragment>
     {
         #region Visitor parameter stacks
@@ -363,7 +365,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             {
                 if (defaultStringTypeName == null)
                 {
-                    defaultStringTypeName = GetSqlPrimitiveType(TypeUsage.CreateStringTypeUsage(this.metadataWorkspace.GetModelPrimitiveType(PrimitiveTypeKind.String), isUnicode: true, isFixedLength: false));
+                    defaultStringTypeName = GetSqlPrimitiveType(TypeUsage.CreateStringTypeUsage(MetadataWorkspace.GetModelPrimitiveType(PrimitiveTypeKind.String), isUnicode: true, isFixedLength: false));
                 }
                 return defaultStringTypeName;
             }
@@ -855,7 +857,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// </summary>
         /// <param name="argument"></param>
         /// <returns></returns>
-        private bool MatchSourcePatternForForcingNonUnicode(DbExpression argument)
+        private static bool MatchSourcePatternForForcingNonUnicode(DbExpression argument)
         {
             bool isUnicode;
             return (argument.ExpressionKind == DbExpressionKind.Property) &&
@@ -868,7 +870,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// </summary>
         /// <param name="argument"></param>
         /// <returns></returns>
-        private bool IsConstParamOrNullExpressionUnicodeNotSpecified(DbExpression argument)
+        private static bool IsConstParamOrNullExpressionUnicodeNotSpecified(DbExpression argument)
         {
             bool isUnicode;
             DbExpressionKind expressionKind = argument.ExpressionKind;
@@ -2112,7 +2114,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// </summary>
         /// <param name="e">DbExpression to consider</param>
         /// <returns>True if the expression can be used as a key, false otherwise</returns>
-        private bool IsKeyForIn(DbExpression e)
+        private static bool IsKeyForIn(DbExpression e)
         {
             return (e.ExpressionKind == DbExpressionKind.Property
                 || e.ExpressionKind == DbExpressionKind.VariableReference
@@ -2126,7 +2128,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="e">DbBinaryExpression to consider</param>
         /// <param name="values">KeyToListMap to add the sides of the binary expression to</param>
         /// <returns>True if the expression was added, false otherwise</returns>
-        private bool TryAddExpressionForIn(DbBinaryExpression e, KeyToListMap<DbExpression, DbExpression> values)
+        private static bool TryAddExpressionForIn(DbBinaryExpression e, KeyToListMap<DbExpression, DbExpression> values)
         {
             if (IsKeyForIn(e.Left))
             {
@@ -2149,6 +2151,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="e">DbExpression representing the branch to evaluate</param>
         /// <param name="values">KeyToListMap to which to add references and value equality tests encountered</param>
         /// <returns>True if this branch contained just equality tests or further OR branches, false otherwise</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         private bool HasBuiltMapForIn(DbExpression e, KeyToListMap<DbExpression, DbExpression> values)
         {
             switch(e.ExpressionKind)
@@ -2169,7 +2172,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                     }
                 case DbExpressionKind.Or:
                     {
-                        var comparisonExpression = e as DbBinaryExpression;
+                        var comparisonExpression = (DbBinaryExpression)e;
                         return HasBuiltMapForIn(comparisonExpression.Left, values) && HasBuiltMapForIn(comparisonExpression.Right, values);
                     }
                 default:
@@ -3959,6 +3962,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="result">The SqlSelectStatement of the input to the relational node.</param>
         /// <param name="expressionKind">The kind of the expression node(not the input's)</param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private static bool IsCompatible(SqlSelectStatement result, DbExpressionKind expressionKind)
         {
             switch (expressionKind)

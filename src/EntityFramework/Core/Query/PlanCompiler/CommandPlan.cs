@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Data.Entity.Core.Common;
 using System.Data.Common;
@@ -46,9 +45,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #region private state
-        private cqt.DbCommandTree _commandTree;
-        private ProviderCommandInfo _parent;
-        private List<ProviderCommandInfo> _children;
+        private readonly cqt.DbCommandTree _commandTree;
+
         #endregion
 
         #region constructors
@@ -57,22 +55,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// Internal constructor for a ProviderCommandInfo object
         /// </summary>
         /// <param name="commandTree">command tree for the provider command</param>
-        /// <param name="children">children command infos</param>
-        internal ProviderCommandInfo(cqt.DbCommandTree commandTree, 
-            List<ProviderCommandInfo> children)
+        internal ProviderCommandInfo(cqt.DbCommandTree commandTree)
         {
             _commandTree = commandTree;
-            _children = children;
-
-            if (_children == null)
-            {
-                _children = new List<ProviderCommandInfo>();
-            }
-
-            foreach (ProviderCommandInfo child in _children)
-            {
-                child._parent = this;
-            }
         }
         #endregion
     }

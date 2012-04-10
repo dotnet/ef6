@@ -9,9 +9,11 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Common;
     using System.Data.ProviderBase;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Runtime.InteropServices;
 
+    [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
     public sealed partial class EntityParameterCollection : DbParameterCollection {
         private List<EntityParameter> _items; 
 
@@ -176,7 +178,7 @@ namespace System.Data.Entity.Core.EntityClient
         override public void Insert(int index, object value) {
             OnChange();  
             ValidateType(value);
-            Validate(-1, (EntityParameter)value);
+            Validate(-1, value);
             InnerList.Insert(index, (EntityParameter)value);
         }
 
@@ -247,8 +249,9 @@ namespace System.Data.Entity.Core.EntityClient
             if (null == value) {
                 throw EntityUtil.EntityParameterNull("value");
             }
-            
-            object parent = ((EntityParameter)value).CompareExchangeParent(this, null);
+
+            var entityParameter = (EntityParameter)value;
+            object parent = entityParameter.CompareExchangeParent(this, null);
             if (null != parent) {
                 if (this != parent) {
                     throw EntityUtil.EntityParameterContainedByAnotherCollection();
@@ -258,18 +261,18 @@ namespace System.Data.Entity.Core.EntityClient
                 }
             }
             
-            String name = ((EntityParameter)value).ParameterName;
+            String name = entityParameter.ParameterName;
             if (0 == name.Length) {
                 index = 1;
                 do {
                     name = EntityUtil.Parameter + index.ToString(CultureInfo.CurrentCulture);
                     index++;
                 } while (-1 != IndexOf(name));
-                ((EntityParameter)value).ParameterName = name;
+                entityParameter.ParameterName = name;
             }
         }
 
-        private void ValidateType(object value) {
+        private static void ValidateType(object value) {
             if (null == value) {
                 throw EntityUtil.EntityParameterNull("value");
             }

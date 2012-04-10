@@ -5,6 +5,8 @@ using System.Linq.Expressions;
 
 namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// An immutable class used to generate new RecordStates, which are used
     /// at runtime to produce value-layer (aka DataReader) results.  
@@ -81,6 +83,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// description we'll have once we compile the Expressions; debugging a problem 
         /// with retail bits would be pretty hard without this.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         private readonly string Description;
 
         #endregion

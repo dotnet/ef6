@@ -95,6 +95,7 @@ namespace System.Data.Entity.Core.Mapping {
             this.m_typeMappings.Add(typeMapping);
         }
 
+#if DEBUG
         /// <summary>
         /// This method is primarily for debugging purposes.
         /// Will be removed shortly.
@@ -117,6 +118,8 @@ namespace System.Data.Entity.Core.Mapping {
             }
 
         }
+#endif
+
         #endregion
     }
 }

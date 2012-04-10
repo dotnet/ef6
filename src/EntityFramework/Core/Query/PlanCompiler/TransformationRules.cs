@@ -24,6 +24,8 @@ using System.Data.Entity.Core.Query.InternalTrees;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Diagnostics.CodeAnalysis;
+
     internal class TransformationRulesContext : RuleProcessingContext
     {
         #region public methods and properties
@@ -75,6 +77,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="node">Current subtree to process</param>
         /// <param name="varMap"></param>
         /// <returns>The updated subtree</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "scalarOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal Node ReMap(Node node, Dictionary<Var, Node> varMap)
         {
             PlanCompiler.Assert(node.Op.IsScalarOp, "Expected a scalarOp: Found " + Dump.AutoString.ToString(node.Op.OpType));
@@ -254,6 +257,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="node">current subtree</param>
         /// <param name="varRefMap">dictionary of var refcounts to fill in</param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "varRef"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal bool IsScalarOpTree(Node node, Dictionary<Var, int> varRefMap)
         {
             PlanCompiler.Assert(varRefMap != null, "Null varRef map");
@@ -277,6 +281,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="varDefListNode">The varDefListOp subtree</param>
         /// <param name="varRefMap">ref counts for each referenced var</param>
         /// <returns>mapping from Var->replacement xpressions</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "varDef"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal Dictionary<Var, Node> GetVarMap(Node varDefListNode, Dictionary<Var, int> varRefMap)
         {
             VarDefListOp varDefListOp = (VarDefListOp)varDefListNode.Op;
@@ -465,6 +470,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// If the given node has a RelOp it is popped from the relOp ancestors stack.
         /// </summary>
         /// <param name="subtree"></param>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "RelOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal override void PostProcessSubTree(Node subtree)
         {
             if (subtree.Op.IsRelOp)
@@ -836,7 +842,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Can I collapse the entire case-expression into a single expression - yes, 
             // if all the then/else clauses are the same expression
             //
-            if (ProcessSimplifyCase_Collapse(caseOp, caseOpNode, out newNode))
+            if (ProcessSimplifyCase_Collapse(caseOpNode, out newNode))
             {
                 return true;
             }
@@ -861,11 +867,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///   => t1
         ///  if t1 is equivalent to t2 is equivalent to ... to e
         /// </summary>
-        /// <param name="caseOp">the current caseOp</param>
         /// <param name="caseOpNode">current subtree</param>
         /// <param name="newNode">new subtree</param>
         /// <returns>true, if we performed a transformation</returns>
-        private static bool ProcessSimplifyCase_Collapse(CaseOp caseOp, Node caseOpNode, out Node newNode)
+        private static bool ProcessSimplifyCase_Collapse(Node caseOpNode, out Node newNode)
         {
             newNode = caseOpNode;
             Node firstThenNode = caseOpNode.Child1;
@@ -902,6 +907,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="caseOpNode">Current subtree</param>
         /// <param name="newNode">the new subtree</param>
         /// <returns>true, if there was a transformation</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private static bool ProcessSimplifyCase_EliminateWhenClauses(RuleProcessingContext context, CaseOp caseOp, Node caseOpNode, out Node newNode)
         {
             List<Node> newNodeArgs = null;
@@ -1061,6 +1067,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="node">current node</param>
         /// <param name="newNode">possibly modified subtree</param>
         /// <returns>true, if transformation was successful</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         static bool ProcessComparisonsOverConstant(RuleProcessingContext context, Node node, out Node newNode)
         {
             newNode = node;
@@ -1178,6 +1185,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="otherNode">The other child of the LogOp (possibly null)</param>
         /// <param name="newNode">new subtree</param>
         /// <returns>transformation status</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "OpType"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "constantPredicateOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         static bool ProcessLogOpOverConstant(RuleProcessingContext context, Node node,
             Node constantPredicateNode, Node otherNode,
             out Node newNode)
@@ -1781,6 +1789,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="filterNode">Current FilterOp subtree</param>
         /// <param name="newNode">Modified subtree</param>
         /// <returns>Transformation status</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-InnerJoin"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         static bool ProcessFilterOverJoin(RuleProcessingContext context, Node filterNode, out Node newNode)
         {
             newNode = filterNode;
@@ -1988,6 +1997,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="n">Current subtree</param>
         /// <param name="newNode">modified subtree</param>
         /// <returns>transformation status</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         static bool ProcessFilterWithConstantPredicate(RuleProcessingContext context, Node n, out Node newNode)
         {
             newNode = n;
@@ -2691,6 +2701,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="applyNode">The ApplyOp subtree</param>
         /// <param name="newNode">transformed subtree</param>
         /// <returns>Transfomation status</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarDefOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         static bool ProcessOuterApplyOverProject(RuleProcessingContext context, Node applyNode, out Node newNode)
         {
             newNode = applyNode;
@@ -3378,6 +3389,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="joinNode">Current JoinOp tree to process</param>
         /// <param name="newNode">Transformed subtree</param>
         /// <returns>transformation status</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-LeftOuterJoin"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         static bool ProcessJoinOverProject(RuleProcessingContext context, Node joinNode, out Node newNode)
         {
             newNode = joinNode;

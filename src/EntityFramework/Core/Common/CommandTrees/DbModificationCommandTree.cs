@@ -8,10 +8,11 @@ using System.Linq;
 
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Represents a DML operation expressed as a canonical command tree
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public abstract class DbModificationCommandTree : DbCommandTree
     {
         private readonly DbExpressionBinding _target;

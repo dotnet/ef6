@@ -8,6 +8,7 @@ using System.Diagnostics;
 
 namespace System.Data.Entity.Core.Objects
 {
+    using System.Diagnostics.CodeAnalysis;
 
     internal struct EntitySetQualifiedType : IEqualityComparer<EntitySetQualifiedType>
     {
@@ -32,7 +33,7 @@ namespace System.Data.Entity.Core.Objects
                     Object.ReferenceEquals(x.EntitySet, y.EntitySet));
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2303", Justification="ClrType is not expected to be an Embedded Interop Type.")]
+        [SuppressMessage("Microsoft.Usage", "CA2303", Justification="ClrType is not expected to be an Embedded Interop Type.")]
         public int GetHashCode(EntitySetQualifiedType obj)
         {
             return unchecked(obj.ClrType.GetHashCode() +
@@ -134,7 +135,6 @@ namespace System.Data.Entity.Core.Objects
     internal sealed class StateManagerTypeMetadata
     {
         private readonly TypeUsage _typeUsage; // CSpace
-        private readonly ObjectTypeMapping _ocObjectMap;
         private readonly StateManagerMemberMetadata[] _members;
         private readonly Dictionary<string, int> _objectNameToOrdinal;
         private readonly Dictionary<string, int> _cLayerNameToOrdinal;
@@ -152,7 +152,6 @@ namespace System.Data.Entity.Core.Objects
 
             _typeUsage = TypeUsage.Create(edmType);
             _recordInfo = new DataRecordInfo(_typeUsage);
-            _ocObjectMap = mapping;
 
             ReadOnlyMetadataCollection<EdmProperty> members = TypeHelpers.GetProperties(edmType);
             _members = new StateManagerMemberMetadata[members.Count];

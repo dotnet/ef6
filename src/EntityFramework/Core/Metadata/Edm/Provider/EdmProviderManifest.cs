@@ -7,6 +7,8 @@ using System.Threading;
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
+
     internal class EdmProviderManifest : DbProviderManifest
     {
         /// <summary>
@@ -56,7 +58,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Store version hint
         /// </summary>
-        internal string Token
+        internal virtual string Token
         {
             // we shouldn't throw exception on properties
             get { return String.Empty; }
@@ -198,6 +200,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="primitiveTypeKind">Type of the primitive type which is getting initialized</param>
         /// <param name="name">name of the built in type</param>
         /// <param name="clrType">the CLR Type of that maps to the EDM PrimitiveType</param>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "clrType")]
         private void InitializePrimitiveType(PrimitiveType primitiveType,
                                              PrimitiveTypeKind primitiveTypeKind,
                                              string name,
@@ -210,8 +213,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                true /* isabstract */,
                                null /* baseType */);
             PrimitiveType.Initialize(primitiveType,
-                                     primitiveTypeKind,
-                                     true, // isDefault
+                                     primitiveTypeKind, // isDefault
                                      this);
             Debug.Assert(clrType == primitiveType.ClrEquivalentType, "ClrEquivalentType mismatch");
         }
@@ -479,6 +481,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Boostrapping all the canonical functions for the EDM Provider Manifest
         /// </summary>
+        [SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode"), SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void InitializeCanonicalFunctions()
         {
             if (_functions != null)
@@ -509,8 +512,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                      PrimitiveTypeKind.Time,
                                      PrimitiveTypeKind.DateTimeOffset };
 
-            functions.ForTypes(parameterTypes, type => functions.AddAggregate("Max", type));
-            functions.ForTypes(parameterTypes, type => functions.AddAggregate("Min", type));
+            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate("Max", type));
+            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate("Min", type));
 
             // Avg, Sum
             parameterTypes = new[] { PrimitiveTypeKind.Decimal,
@@ -518,8 +521,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                      PrimitiveTypeKind.Int32,
                                      PrimitiveTypeKind.Int64 };
 
-            functions.ForTypes(parameterTypes, type => functions.AddAggregate("Avg", type));
-            functions.ForTypes(parameterTypes, type => functions.AddAggregate("Sum", type));
+            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate("Avg", type));
+            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate("Sum", type));
 
             // STDEV, STDEVP, VAR, VARP
             parameterTypes = new[] { PrimitiveTypeKind.Decimal,
@@ -527,14 +530,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                      PrimitiveTypeKind.Int32,
                                      PrimitiveTypeKind.Int64};
 
-            functions.ForTypes(parameterTypes, type => functions.AddAggregate(PrimitiveTypeKind.Double, "StDev", type));
-            functions.ForTypes(parameterTypes, type => functions.AddAggregate(PrimitiveTypeKind.Double, "StDevP", type));
-            functions.ForTypes(parameterTypes, type => functions.AddAggregate(PrimitiveTypeKind.Double, "Var", type));
-            functions.ForTypes(parameterTypes, type => functions.AddAggregate(PrimitiveTypeKind.Double, "VarP", type));
+            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate(PrimitiveTypeKind.Double, "StDev", type));
+            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate(PrimitiveTypeKind.Double, "StDevP", type));
+            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate(PrimitiveTypeKind.Double, "Var", type));
+            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate(PrimitiveTypeKind.Double, "VarP", type));
 
             // Count and Big Count must be supported for all edm types, except the strong spatial types.
-            functions.ForAllBasePrimitiveTypes(type => functions.AddAggregate(PrimitiveTypeKind.Int32, "Count", type));
-            functions.ForAllBasePrimitiveTypes(type => functions.AddAggregate(PrimitiveTypeKind.Int64, "BigCount", type));
+            EdmProviderManifestFunctionBuilder.ForAllBasePrimitiveTypes(type => functions.AddAggregate(PrimitiveTypeKind.Int32, "Count", type));
+            EdmProviderManifestFunctionBuilder.ForAllBasePrimitiveTypes(type => functions.AddAggregate(PrimitiveTypeKind.Int64, "BigCount", type));
             
             #endregion
 
@@ -553,9 +556,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                      PrimitiveTypeKind.Int64,
                                      PrimitiveTypeKind.SByte };
 
-            functions.ForTypes(parameterTypes, type => functions.AddFunction(PrimitiveTypeKind.String, "Substring", PrimitiveTypeKind.String, "stringArgument", type, "start", type, "length"));
-            functions.ForTypes(parameterTypes, type => functions.AddFunction(PrimitiveTypeKind.String, "Left", PrimitiveTypeKind.String, "stringArgument", type, "length"));
-            functions.ForTypes(parameterTypes, type => functions.AddFunction(PrimitiveTypeKind.String, "Right", PrimitiveTypeKind.String, "stringArgument", type, "length"));
+            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(PrimitiveTypeKind.String, "Substring", PrimitiveTypeKind.String, "stringArgument", type, "start", type, "length"));
+            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(PrimitiveTypeKind.String, "Left", PrimitiveTypeKind.String, "stringArgument", type, "length"));
+            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(PrimitiveTypeKind.String, "Right", PrimitiveTypeKind.String, "stringArgument", type, "length"));
             
             functions.AddFunction(PrimitiveTypeKind.String,  "Replace", PrimitiveTypeKind.String, "stringArgument", PrimitiveTypeKind.String, "toReplace", PrimitiveTypeKind.String, "replacement");
             functions.AddFunction(PrimitiveTypeKind.Int32,   "IndexOf", PrimitiveTypeKind.String, "searchString", PrimitiveTypeKind.String, "stringToFind");
@@ -572,18 +575,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
             
             PrimitiveTypeKind[] dateTimeParameterTypes = { PrimitiveTypeKind.DateTimeOffset,
                                                            PrimitiveTypeKind.DateTime };
-            functions.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Year", type, "dateValue"));
-            functions.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Month", type, "dateValue"));
-            functions.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Day", type, "dateValue"));
-            functions.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DayOfYear", type, "dateValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Year", type, "dateValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Month", type, "dateValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Day", type, "dateValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DayOfYear", type, "dateValue"));
 
             PrimitiveTypeKind[] timeParameterTypes = { PrimitiveTypeKind.DateTimeOffset,
                                                        PrimitiveTypeKind.DateTime,
                                                        PrimitiveTypeKind.Time };
-            functions.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Hour", type, "timeValue"));
-            functions.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Minute", type, "timeValue"));
-            functions.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Second", type, "timeValue"));
-            functions.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Millisecond", type, "timeValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Hour", type, "timeValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Minute", type, "timeValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Second", type, "timeValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Millisecond", type, "timeValue"));
 
             functions.AddFunction(PrimitiveTypeKind.DateTime, "CurrentDateTime");
             functions.AddFunction(PrimitiveTypeKind.DateTimeOffset, "CurrentDateTimeOffset");
@@ -591,7 +594,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             functions.AddFunction(PrimitiveTypeKind.DateTime, "CurrentUtcDateTime");
             
             //TruncateTime
-            functions.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(type, "TruncateTime", type, "dateValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(type, "TruncateTime", type, "dateValue"));
             
             //DateTime constructor
             functions.AddFunction(PrimitiveTypeKind.DateTime, "CreateDateTime", PrimitiveTypeKind.Int32, "year",
@@ -615,28 +618,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
             functions.AddFunction(PrimitiveTypeKind.Time, "CreateTime", PrimitiveTypeKind.Int32, "hour", PrimitiveTypeKind.Int32, "minute", PrimitiveTypeKind.Double, "second");
 
             //Date and time addition functions
-            functions.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(type, "AddYears", type, "dateValue", PrimitiveTypeKind.Int32, "addValue"));
-            functions.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(type, "AddMonths", type, "dateValue", PrimitiveTypeKind.Int32, "addValue"));
-            functions.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(type, "AddDays", type, "dateValue", PrimitiveTypeKind.Int32, "addValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(type, "AddYears", type, "dateValue", PrimitiveTypeKind.Int32, "addValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(type, "AddMonths", type, "dateValue", PrimitiveTypeKind.Int32, "addValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(type, "AddDays", type, "dateValue", PrimitiveTypeKind.Int32, "addValue"));
 
-            functions.ForTypes(timeParameterTypes, type => functions.AddFunction(type, "AddHours", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
-            functions.ForTypes(timeParameterTypes, type => functions.AddFunction(type, "AddMinutes", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
-            functions.ForTypes(timeParameterTypes, type => functions.AddFunction(type, "AddSeconds", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
-            functions.ForTypes(timeParameterTypes, type => functions.AddFunction(type, "AddMilliseconds", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
-            functions.ForTypes(timeParameterTypes, type => functions.AddFunction(type, "AddMicroseconds", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
-            functions.ForTypes(timeParameterTypes, type => functions.AddFunction(type, "AddNanoseconds", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(type, "AddHours", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(type, "AddMinutes", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(type, "AddSeconds", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(type, "AddMilliseconds", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(type, "AddMicroseconds", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(type, "AddNanoseconds", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
             
             // Date and time diff functions
-            functions.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffYears", type, "dateValue1", type, "dateValue2"));
-            functions.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffMonths", type, "dateValue1", type, "dateValue2"));
-            functions.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffDays", type, "dateValue1", type, "dateValue2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffYears", type, "dateValue1", type, "dateValue2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffMonths", type, "dateValue1", type, "dateValue2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffDays", type, "dateValue1", type, "dateValue2"));
             
-            functions.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffHours", type, "timeValue1", type, "timeValue2"));
-            functions.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffMinutes", type, "timeValue1", type, "timeValue2"));
-            functions.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffSeconds", type, "timeValue1", type, "timeValue2"));
-            functions.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffMilliseconds", type, "timeValue1", type, "timeValue2"));
-            functions.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffMicroseconds", type, "timeValue1", type, "timeValue2"));
-            functions.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffNanoseconds", type, "timeValue1", type, "timeValue2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffHours", type, "timeValue1", type, "timeValue2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffMinutes", type, "timeValue1", type, "timeValue2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffSeconds", type, "timeValue1", type, "timeValue2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffMilliseconds", type, "timeValue1", type, "timeValue2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffMicroseconds", type, "timeValue1", type, "timeValue2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffNanoseconds", type, "timeValue1", type, "timeValue2"));
                         
             #endregion // DateTime Functions
             
@@ -646,15 +649,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             parameterTypes = new[] { PrimitiveTypeKind.Single,
                                      PrimitiveTypeKind.Double,
                                      PrimitiveTypeKind.Decimal };
-            functions.ForTypes(parameterTypes, type => functions.AddFunction(type, "Round", type, "value"));
-            functions.ForTypes(parameterTypes, type => functions.AddFunction(type, "Floor", type, "value"));
-            functions.ForTypes(parameterTypes, type => functions.AddFunction(type, "Ceiling", type, "value"));
+            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "Round", type, "value"));
+            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "Floor", type, "value"));
+            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "Ceiling", type, "value"));
 
             // Overloads for ROUND, TRUNCATE
             parameterTypes = new [] { PrimitiveTypeKind.Double,
                                       PrimitiveTypeKind.Decimal };
-            functions.ForTypes(parameterTypes, type => functions.AddFunction(type, "Round", type, "value", PrimitiveTypeKind.Int32, "digits"));
-            functions.ForTypes(parameterTypes, type => functions.AddFunction(type, "Truncate", type, "value", PrimitiveTypeKind.Int32, "digits"));
+            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "Round", type, "value", PrimitiveTypeKind.Int32, "digits"));
+            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "Truncate", type, "value", PrimitiveTypeKind.Int32, "digits"));
             
             // Overloads for ABS functions
             parameterTypes = new[] { PrimitiveTypeKind.Decimal,
@@ -664,7 +667,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                      PrimitiveTypeKind.Int64,
                                      PrimitiveTypeKind.Byte,
                                      PrimitiveTypeKind.Single };
-            functions.ForTypes(parameterTypes, type => functions.AddFunction(type, "Abs", type, "value"));
+            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "Abs", type, "value"));
             
             // Overloads for POWER functions
             PrimitiveTypeKind[] powerFirstParameterTypes = { PrimitiveTypeKind.Decimal,
@@ -694,10 +697,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                      PrimitiveTypeKind.Int64,
                                      PrimitiveTypeKind.Byte };
 
-            functions.ForTypes(parameterTypes, type => functions.AddFunction(type, "BitwiseAnd", type, "value1", type, "value2"));
-            functions.ForTypes(parameterTypes, type => functions.AddFunction(type, "BitwiseOr", type, "value1", type, "value2"));
-            functions.ForTypes(parameterTypes, type => functions.AddFunction(type, "BitwiseXor", type, "value1", type, "value2"));
-            functions.ForTypes(parameterTypes, type => functions.AddFunction(type, "BitwiseNot", type, "value"));
+            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "BitwiseAnd", type, "value1", type, "value2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "BitwiseOr", type, "value1", type, "value2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "BitwiseXor", type, "value1", type, "value2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "BitwiseNot", type, "value"));
             
             #endregion
 

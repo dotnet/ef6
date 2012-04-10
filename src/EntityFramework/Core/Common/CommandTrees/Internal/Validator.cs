@@ -135,23 +135,23 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             TMetadata result = map(metadata);
             if (!object.ReferenceEquals(metadata, result))
             {
-                ThrowInvalidMetadata(metadata);
+                ThrowInvalidMetadata<TMetadata>();
             }
 
             DataSpace resultSpace = getDataSpace(result);
             if (!allowedSpaces.Any(ds => ds == resultSpace))
             {
-                ThrowInvalidSpace(metadata);
+                ThrowInvalidSpace<TMetadata>();
             }
             return result;
         }
                 
-        private void ThrowInvalidMetadata<TMetadata>(TMetadata invalid)
+        private void ThrowInvalidMetadata<TMetadata>()
         {
             ThrowInvalid(Strings.Cqt_Validator_InvalidOtherWorkspaceMetadata(typeof(TMetadata).Name));
         }
 
-        private void ThrowInvalidSpace<TMetadata>(TMetadata invalid)
+        private void ThrowInvalidSpace<TMetadata>()
         {
             ThrowInvalid(Strings.Cqt_Validator_InvalidIncorrectDataSpaceMetadata(typeof(TMetadata).Name, Enum.GetName(typeof(DataSpace), this.requiredSpace)));
         }

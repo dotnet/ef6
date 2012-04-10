@@ -208,15 +208,15 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                         break;
 
                     case LiteralKind.Binary:
-                        _computedValue = ConvertBinaryLiteralValue(ErrCtx, _originalValue);
+                        _computedValue = ConvertBinaryLiteralValue(_originalValue);
                         break;
 
                     case LiteralKind.DateTime:
-                        _computedValue = ConvertDateTimeLiteralValue(ErrCtx, _originalValue);
+                        _computedValue = ConvertDateTimeLiteralValue(_originalValue);
                         break;
 
                     case LiteralKind.Time:
-                        _computedValue = ConvertTimeLiteralValue(ErrCtx, _originalValue);
+                        _computedValue = ConvertTimeLiteralValue(_originalValue);
                         break;
 
                     case LiteralKind.DateTimeOffset:
@@ -224,7 +224,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                         break;
 
                     case LiteralKind.Guid:
-                        _computedValue = ConvertGuidLiteralValue(ErrCtx, _originalValue);
+                        _computedValue = ConvertGuidLiteralValue(_originalValue);
                         break;
 
                     case LiteralKind.Null:
@@ -429,7 +429,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// <summary>
         /// Converts hex string to byte array.
         /// </summary>
-        private static byte[] ConvertBinaryLiteralValue(ErrorContext errCtx, string binaryLiteralValue)
+        private static byte[] ConvertBinaryLiteralValue(string binaryLiteralValue)
         {
             Debug.Assert(null != binaryLiteralValue, "binaryStringLiteral must not be null");
 
@@ -479,14 +479,12 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
 
 
         static readonly char[] _datetimeSeparators = new char[] { ' ', ':', '-', '.' };
-        static readonly char[] _dateSeparators = new char[] { '-' };
-        static readonly char[] _timeSeparators = new char[] { ':', '.' };
         static readonly char[] _datetimeOffsetSeparators = new char[] { ' ', ':', '-', '.', '+', '-' };
 
         /// <summary>
         /// Converts datetime literal value.
         /// </summary>
-        private static DateTime ConvertDateTimeLiteralValue(ErrorContext errCtx, string datetimeLiteralValue)
+        private static DateTime ConvertDateTimeLiteralValue(string datetimeLiteralValue)
         {
             string[] datetimeParts = datetimeLiteralValue.Split(_datetimeSeparators, StringSplitOptions.RemoveEmptyEntries);
 
@@ -565,7 +563,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// <summary>
         /// Converts time literal value.
         /// </summary>
-        private static TimeSpan ConvertTimeLiteralValue(ErrorContext errCtx, string datetimeLiteralValue)
+        private static TimeSpan ConvertTimeLiteralValue(string datetimeLiteralValue)
         {
             string[] datetimeParts = datetimeLiteralValue.Split(_datetimeSeparators, StringSplitOptions.RemoveEmptyEntries);
 
@@ -645,7 +643,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// <summary>
         /// Converts guid literal value.
         /// </summary>
-        private static Guid ConvertGuidLiteralValue(ErrorContext errCtx, string guidLiteralValue)
+        private static Guid ConvertGuidLiteralValue(string guidLiteralValue)
         {
             return new Guid(guidLiteralValue);
         }

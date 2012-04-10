@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
 
@@ -118,7 +119,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Gets a value indicating whether the enum type is defined as flags (i.e. can be treated as a bit field)
         /// </summary>
-        [MetadataProperty(PrimitiveTypeKind.Boolean, false)]
+        [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags"), MetadataProperty(PrimitiveTypeKind.Boolean, false)]
         public bool IsFlags
         {
             get { return _isFlags; }
@@ -168,6 +169,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// <summary>
     /// Represents an enumeration type that has a reference to the backing CLR type.
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     internal sealed class ClrEnumType : EnumType
     {
         /// <summary>cached CLR type handle, allowing the Type reference to be GC'd</summary>

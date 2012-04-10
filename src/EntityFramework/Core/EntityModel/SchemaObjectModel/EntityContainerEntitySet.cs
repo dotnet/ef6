@@ -2,7 +2,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Xml;
     
@@ -160,7 +159,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert( reader != null );
 
-            ReturnValue<string> value = HandleDottedNameAttribute( reader, _unresolvedEntityTypeName, Strings.PropertyTypeAlreadyDefined );
+            ReturnValue<string> value = HandleDottedNameAttribute( reader, _unresolvedEntityTypeName );
             if ( value.Succeeded )
             {
                 _unresolvedEntityTypeName = value.Value;

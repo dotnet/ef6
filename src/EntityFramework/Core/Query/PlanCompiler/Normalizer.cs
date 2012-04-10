@@ -28,6 +28,8 @@ using System.Data.Entity.Core.Query.InternalTrees;
 //
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// The normalizer performs transformations of the tree to bring it to a 'normalized' format
     /// </summary>
@@ -103,10 +105,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="collectionNode">the scalarop collection node</param>
         /// <returns>the unnest node</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node BuildUnnest(Node collectionNode)
         {
-            PlanCompiler.Assert(collectionNode.Op.IsScalarOp, "non-scalar usage of Unnest?");
-            PlanCompiler.Assert(TypeSemantics.IsCollectionType(collectionNode.Op.Type), "non-collection usage for Unnest?");
+            PlanCompiler.Assert(collectionNode.Op.IsScalarOp, "non-scalar usage of Un-nest?");
+            PlanCompiler.Assert(TypeSemantics.IsCollectionType(collectionNode.Op.Type), "non-collection usage for Un-nest?");
 
             Var newVar;
             Node varDefNode = m_command.CreateVarDefNode(collectionNode, out newVar);
@@ -122,6 +125,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op">current function op</param>
         /// <param name="n">current function subtree</param>
         /// <returns>the new expression that corresponds to the TVF</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node VisitCollectionFunction(FunctionOp op, Node n)
         {
             PlanCompiler.Assert(TypeSemantics.IsCollectionType(op.Type), "non-TVF function?");
@@ -209,6 +213,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "functionOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(FunctionOp op, Node n)
         {
             VisitScalarOpDefault(op, n);
@@ -244,7 +249,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         protected override Node VisitJoinOp(JoinBaseOp op, Node n)
         {
-            if (base.ProcessJoinOp(op, n))
+            if (base.ProcessJoinOp(n))
             {
                 // update the join condition
                 // #479372: Build up a dummy project node over the input, as we always wrap the child of exists

@@ -8,6 +8,8 @@ using System.Linq;
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Class representing a primitive type
     /// </summary>
@@ -45,9 +47,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             this.BaseType = baseType;
 
-            Initialize(this, baseType.PrimitiveTypeKind,
-                false, // isDefault
-                providerManifest);
+            Initialize(this, baseType.PrimitiveTypeKind, providerManifest);
         }
 
         /// <summary>
@@ -208,11 +208,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="primitiveType">The primitive type to initialize</param>
         /// <param name="primitiveTypeKind">The primitive type kind of this primitive type</param>
-        /// <param name="isDefaultType">When true this is the default type to return when a type is asked for by PrimitiveTypeKind</param>
         /// <param name="providerManifest">The ProviderManifest of the provider of this type</param>
         internal static void Initialize(PrimitiveType primitiveType,
                                                       PrimitiveTypeKind primitiveTypeKind,
-                                                      bool isDefaultType,
                                                       DbProviderManifest providerManifest)
         {
             primitiveType._primitiveTypeKind = primitiveTypeKind;
@@ -227,7 +225,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// return type is "this".
         /// </summary>
         /// <returns></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
         public EdmType GetEdmPrimitiveType()
         {
             return MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind);
@@ -236,13 +233,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Returns the list of EDM primitive types
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public static System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType> GetEdmPrimitiveTypes()
         {
             return EdmProviderManifest.GetStoreTypes();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
         public static PrimitiveType GetEdmPrimitiveType(PrimitiveTypeKind primitiveTypeKind)
         {
             return MetadataItem.EdmProviderManifest.GetPrimitiveType(primitiveTypeKind);

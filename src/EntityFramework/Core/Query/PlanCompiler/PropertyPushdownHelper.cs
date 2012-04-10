@@ -25,6 +25,7 @@ using System.Data.Entity.Core.Query.InternalTrees;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// The PropertyPushdownHelper module is a submodule of the StructuredTypeEliminator 
@@ -60,15 +61,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         private readonly Dictionary<Node, PropertyRefList> m_nodePropertyRefMap;
         private readonly Dictionary<Var, PropertyRefList> m_varPropertyRefMap;
-        private readonly StructuredTypeInfo m_structuredTypeInfo;
 
         #endregion
 
         #region constructor
 
-        private PropertyPushdownHelper(StructuredTypeInfo structuredTypeInfo)
+        private PropertyPushdownHelper()
         {
-            m_structuredTypeInfo = structuredTypeInfo;
             m_varPropertyRefMap = new Dictionary<Var, PropertyRefList>();
             m_nodePropertyRefMap = new Dictionary<Node, PropertyRefList>();
         }
@@ -83,12 +82,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// to every node and Var in the tree.
         /// </summary>
         /// <param name="itree">The query tree</param>
-        /// <param name="structuredTypeInfo">Type info for structured types appearing in query.</param>
         /// <param name="varPropertyRefs">List of desired properties from each Var</param>
         /// <param name="nodePropertyRefs">List of desired properties from each node</param>
-        internal static void Process(Command itree, StructuredTypeInfo structuredTypeInfo, out Dictionary<Var, PropertyRefList> varPropertyRefs, out Dictionary<Node, PropertyRefList> nodePropertyRefs)
+        internal static void Process(Command itree, out Dictionary<Var, PropertyRefList> varPropertyRefs, out Dictionary<Node, PropertyRefList> nodePropertyRefs)
         {
-            PropertyPushdownHelper pph = new PropertyPushdownHelper(structuredTypeInfo);
+            PropertyPushdownHelper pph = new PropertyPushdownHelper();
             pph.Process(itree.Root);
 
             varPropertyRefs = pph.m_varPropertyRefMap;
@@ -189,6 +187,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="entityType"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "EntityType"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-EdmProperty"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private static PropertyRefList GetKeyProperties(md.EntityType entityType)
         {
             PropertyRefList desiredProperties = new PropertyRefList();
@@ -333,6 +332,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op"></param>
         /// <param name="n"></param>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "childOpType"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override void Visit(ComparisonOp op, Node n)
         {
             // Check to see if the children are structured types. Furthermore,
@@ -380,6 +380,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op"></param>
         /// <param name="n"></param>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScalarOp"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GetEntityRefOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override void Visit(GetEntityRefOp op, Node n)
         {
             ScalarOp childOp = n.Child0.Op as ScalarOp;
@@ -678,6 +679,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op"></param>
         /// <param name="n"></param>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "scanTableOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override void Visit(ScanTableOp op, Node n)
         {
             PlanCompiler.Assert(!n.HasChild0, "scanTableOp with an input?");
@@ -691,6 +693,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op">current ScanViewOp</param>
         /// <param name="n">current node</param>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScanViewOp's"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScanViewOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override void Visit(ScanViewOp op, Node n)
         {
             PlanCompiler.Assert(op.Table.Columns.Count == 1, "ScanViewOp with multiple columns?");

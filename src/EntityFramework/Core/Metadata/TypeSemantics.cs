@@ -7,6 +7,8 @@ using objectModel = System.Collections.ObjectModel;
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Provides type semantics service, type operations and type predicates for the EDM type system.
     /// </summary>
@@ -26,6 +28,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         //
         // cache commom super type closure
         //
+        [SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional", MessageId = "Member")]
         static private objectModel.ReadOnlyCollection<PrimitiveType>[,] _commonTypeClosure;
         #endregion
 
@@ -1096,6 +1099,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// This is done only once and cached as opposed to previous implementation that was computing
         /// this for every new pair of types.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional", MessageId = "Body")]
         private static void ComputeCommonTypeClosure()
         {
             if (null != _commonTypeClosure)

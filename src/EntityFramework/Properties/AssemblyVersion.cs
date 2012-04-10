@@ -5,6 +5,7 @@ using System.Security;
 
 // TODO: SDE Merge - Make assembly SecurityTransaprent again
 //[assembly: SecurityTransparent]
+[assembly: SecurityCritical]
 [assembly: ComCompatibleVersion(1, 0, 3300, 0)]
 [assembly: RuntimeCompatibility(WrapNonExceptionThrows = true)]
 [assembly: CompilationRelaxations(8)]

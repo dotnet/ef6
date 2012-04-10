@@ -11,6 +11,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Runtime.Versioning;
     using System.Text;
@@ -20,50 +21,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// <summary>
     /// Class for representing a collection of items in Edm space.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
     [CLSCompliant(false)]
     public sealed class EdmItemCollection : ItemCollection
     {
-        #region Constructors
-        /// <summary>
-        /// constructor that loads the metadata files from the specified xmlReaders, and returns the list of errors
-        /// encountered during load as the out parameter errors.
-        /// </summary>
-        /// <param name="xmlReaders">xmlReaders where the CDM schemas are loaded</param>
-        /// <param name="filePaths">Paths (URIs)to the CSDL files or resources</param>
-        /// <param name="errors">An out parameter to return the collection of errors encountered while loading</param>
-        // referenced by System.Data.Entity.Design.dll
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")] 
-        internal EdmItemCollection(IEnumerable<XmlReader> xmlReaders,
-                                   System.Collections.ObjectModel.ReadOnlyCollection<string> filePaths,
-                                   out IList<EdmSchemaError> errors)
-            : base(DataSpace.CSpace)
-        {
-            // we will check the parameters for this internal ctor becuase
-            // it is pretty much publicly exposed through the MetadataItemCollectionFactory
-            // in System.Data.Entity.Design
-            //
-            // we are intentionally not checking for an empty enumerable
-            EntityUtil.CheckArgumentNull(xmlReaders, "xmlReaders");
-            EntityUtil.CheckArgumentContainsNull(ref xmlReaders, "xmlReaders");
-            // filePaths is allowed to be null
-            
-            errors = this.Init(xmlReaders, filePaths, false /*throwOnErrors*/);
-        }
-
-        /// <summary>
-        /// constructor that loads the metadata files from the specified schemas
-        /// </summary>
-        /// <param name="schemas">list of schemas to be loaded into the ItemCollection</param>
-        // referenced by System.Data.Entity.Design.dll
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal EdmItemCollection(IList<Schema> schemas)
-            : base(DataSpace.CSpace)
-        {
-            this.Init();
-            LoadItems(MetadataItem.EdmProviderManifest, schemas, this);
-        }
-
         /// <summary>
         /// constructor that loads the metadata files from the specified xmlReaders
         /// </summary>
@@ -162,8 +122,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return errors;
         }
 
-        #endregion
-
         #region Fields
 
         // Cache for primitive type maps for Edm to provider
@@ -189,7 +147,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Version of the EDM that this ItemCollection represents.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
         public Double EdmVersion
         {
             get { return _edmVersion; }
@@ -373,7 +330,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="edmVersion">The version of edm to use</param>
         /// <returns></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "edm")]
    	    public System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType> GetPrimitiveTypes(double edmVersion)
         {
             if (edmVersion == XmlConstants.EdmVersionForV1 || edmVersion == XmlConstants.EdmVersionForV1_1 || edmVersion == XmlConstants.EdmVersionForV2)
@@ -456,9 +412,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             DbLambda generatedDefinition;
 
             // Generate the body
-            generatedDefinition = Mapping.ViewGeneration.Utils.ExternalCalls.CompileFunctionDefinition(
-                function.FullName,
-                function.CommandTextAttribute,
+            generatedDefinition = Mapping.ViewGeneration.Utils.ExternalCalls.CompileFunctionDefinition(function.CommandTextAttribute,
                 function.Parameters,
                 this);
 

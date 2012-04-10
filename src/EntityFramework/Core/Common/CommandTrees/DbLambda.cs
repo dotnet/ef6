@@ -8,11 +8,12 @@ using System.Data.Entity.Core.Metadata.Edm;
 using System.Reflection;
 
 namespace System.Data.Entity.Core.Common.CommandTrees
-{ 
+{
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Represents a Lambda function that can be invoked to produce a <see cref="DbLambdaExpression"/>.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbLambda
     {
         private readonly ReadOnlyVariables _variables;

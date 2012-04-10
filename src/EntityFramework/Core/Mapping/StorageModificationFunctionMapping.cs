@@ -47,6 +47,7 @@ namespace System.Data.Entity.Core.Mapping
                 InsertFunctionMapping, Environment.NewLine + "  ");
         }
 
+#if DEBUG
         internal void Print(int index)
         {
             StorageEntityContainerMapping.GetPrettyPrintString(ref index);
@@ -56,6 +57,7 @@ namespace System.Data.Entity.Core.Mapping
             sb.Append(this.ToString());
             Console.WriteLine(sb.ToString());
         }
+#endif
     }
 
     /// <summary>
@@ -102,6 +104,7 @@ namespace System.Data.Entity.Core.Mapping
                 InsertFunctionMapping, UpdateFunctionMapping, Environment.NewLine + "  ");
         }
 
+#if DEBUG
         internal void Print(int index)
         {
             StorageEntityContainerMapping.GetPrettyPrintString(ref index);
@@ -111,6 +114,7 @@ namespace System.Data.Entity.Core.Mapping
             sb.Append(this.ToString());
             Console.WriteLine(sb.ToString());
         }
+#endif
     }
 
     /// <summary>

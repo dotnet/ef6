@@ -159,7 +159,7 @@ namespace System.Data.Entity.Core.Objects
         ///   the parameter object already exists in the collection, an exception is 
         ///   thrown.
         /// </summary>
-        /// <param name="parameter">
+        /// <param name="item">
         ///   The parameter object to add to the collection.
         /// </param>
         /// <returns></returns>
@@ -180,27 +180,27 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentOutOfRangeException">
         ///   If the type of the specified parameter is invalid. 
         /// </exception>
-        public void Add (ObjectParameter parameter)
+        public void Add (ObjectParameter item)
         {
-            EntityUtil.CheckArgumentNull(parameter, "parameter");
+            EntityUtil.CheckArgumentNull(item, "parameter");
             CheckUnlocked();
 
-            if (this.Contains(parameter))
+            if (this.Contains(item))
             {
-                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.ObjectParameterCollection_ParameterAlreadyExists(parameter.Name), "parameter");
+                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.ObjectParameterCollection_ParameterAlreadyExists(item.Name), "parameter");
             }
 
-            if (this.Contains(parameter.Name))
+            if (this.Contains(item.Name))
             {
-                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.ObjectParameterCollection_DuplicateParameterName(parameter.Name), "parameter");
+                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.ObjectParameterCollection_DuplicateParameterName(item.Name), "parameter");
             }
 
-            if (!parameter.ValidateParameterType(this._perspective))
+            if (!item.ValidateParameterType(this._perspective))
             {
-                throw EntityUtil.ArgumentOutOfRange(System.Data.Entity.Resources.Strings.ObjectParameter_InvalidParameterType(parameter.ParameterType.FullName), "parameter");
+                throw EntityUtil.ArgumentOutOfRange(System.Data.Entity.Resources.Strings.ObjectParameter_InvalidParameterType(item.ParameterType.FullName), "parameter");
             }
 
-            this._parameters.Add(parameter);
+            this._parameters.Add(item);
             this._cacheKey = null;
         }
 
@@ -227,7 +227,7 @@ namespace System.Data.Entity.Core.Objects
         ///   This methods checks for the existence of a given parameter object in the
         ///   collection by reference.
         /// </summary>
-        /// <param name="parameter">
+        /// <param name="item">
         ///   The parameter object to look for in the collection.
         /// </param>
         /// <returns>
@@ -239,11 +239,11 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentNullException">
         ///   If the value of the parameter argument is null.
         /// </exception>
-        public bool Contains (ObjectParameter parameter)
+        public bool Contains (ObjectParameter item)
         {
-            EntityUtil.CheckArgumentNull(parameter, "parameter");
+            EntityUtil.CheckArgumentNull(item, "item");
             
-            return this._parameters.Contains(parameter);
+            return this._parameters.Contains(item);
         }
 
         #endregion
@@ -287,13 +287,13 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="array">
         ///   The array into which to copy the parameters.
         /// </param>
-        /// <param name="index">
+        /// <param name="arrayIndex">
         ///   The index in the array at which to start copying the parameters.
         /// </param>
         /// <returns></returns>
-        public void CopyTo (ObjectParameter[] array, int index)
+        public void CopyTo (ObjectParameter[] array, int arrayIndex)
         {
-            this._parameters.CopyTo(array, index);
+            this._parameters.CopyTo(array, arrayIndex);
         }
 
         #endregion
@@ -306,7 +306,7 @@ namespace System.Data.Entity.Core.Objects
         ///   first use the Contains(name) method or this[name] indexer to retrieve
         ///   the parameter instance, then remove it using this method.
         /// </summary>
-        /// <param name="parameter">
+        /// <param name="item">
         ///   The parameter object to remove from the collection.
         /// </param>
         /// <returns>
@@ -318,12 +318,12 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentNullException">
         ///   If the value of the parameter argument is null.
         /// </exception>
-        public bool Remove (ObjectParameter parameter)
+        public bool Remove (ObjectParameter item)
         {
-            EntityUtil.CheckArgumentNull(parameter, "parameter");
+            EntityUtil.CheckArgumentNull(item, "item");
             CheckUnlocked();
             
-            bool removed = this._parameters.Remove(parameter);
+            bool removed = this._parameters.Remove(item);
 
             // If the specified parameter was found in the collection and removed, 
             // clear out the cached string representation of this parameter collection

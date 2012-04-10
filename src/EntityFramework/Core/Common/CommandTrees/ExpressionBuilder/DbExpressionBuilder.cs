@@ -11,6 +11,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
@@ -19,7 +20,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
     /// <summary>
     /// Provides an API to construct <see cref="DbExpression"/>s and allows that API to be accessed as extension methods on the expression type itself.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling"), SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public static class DbExpressionBuilder
     {
         #region Private Implementation
@@ -467,6 +468,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <remarks>
         ///     DbGroupByExpression allows either the list of keys or the list of aggregates to be empty, but not both.
         /// </remarks>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static DbGroupByExpression GroupBy(this DbGroupExpressionBinding input, IEnumerable<KeyValuePair<string, DbExpression>> keys, IEnumerable<KeyValuePair<string, DbAggregate>> aggregates)
         {
             DbExpressionList validKeys;
@@ -940,7 +942,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         public static DbIsNullExpression IsNull(this DbExpression argument)
         {
             TypeUsage resultType = ArgumentValidation.ValidateIsNull(argument);
-            return new DbIsNullExpression(resultType, argument, false);
+            return new DbIsNullExpression(resultType, argument);
         }
 
         /// <summary>
@@ -1105,7 +1107,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <returns>A new DbDerefExpression that retrieves the specified Entity</returns>
         /// <exception cref="ArgumentNullException"><paramref name="argument"/> is null</exception>
         /// <exception cref="ArgumentException"><paramref name="argument"/> does not have a reference result type.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Deref")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Deref")]
         public static DbDerefExpression Deref(this DbExpression argument)
         {
             TypeUsage entityResultType = ArgumentValidation.ValidateDeref(argument);
@@ -1303,7 +1305,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <remarks>
         ///     <see cref="DbRelationshipNavigationExpression"/> requires that navigation always occur from a reference, and so <paramref name="navigateFrom"/> must always have a reference result type.
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public static DbRelationshipNavigationExpression Navigate(this RelationshipType type, string fromEndName, string toEndName, DbExpression navigateFrom)
         {
             RelationshipEndMember fromEnd;
@@ -1654,6 +1655,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <exception cref="ArgumentException">
         ///     <paramref name="columnValues"/> is empty, or contains a duplicate or invalid column name
         /// </exception>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static DbNewInstanceExpression NewRow(IEnumerable<KeyValuePair<string, DbExpression>> columnValues)
         {
             DbExpressionList validElements;
@@ -1668,7 +1670,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <param name="propertyMetadata">Metadata for the property to retrieve.</param>
         /// <returns>A new DbPropertyExpression representing the property retrieval.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="propertyMetadata"/> is null or <paramref name="instance"/> is null and the property is not static.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static DbPropertyExpression Property(this DbExpression instance, EdmProperty propertyMetadata)
         {
             return PropertyFromMember(instance, propertyMetadata, "propertyMetadata");
@@ -1681,7 +1683,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <param name="navigationProperty">Metadata for the navigation property to retrieve.</param>
         /// <returns>A new DbPropertyExpression representing the navigation property retrieval.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="navigationProperty"/> is null or <paramref name="instance"/> is null.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static DbPropertyExpression Property(this DbExpression instance, NavigationProperty navigationProperty)
         {
             return PropertyFromMember(instance, navigationProperty, "navigationProperty");
@@ -1694,7 +1696,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <param name="relationshipEnd">Metadata for the relationship end member to retrieve.</param>
         /// <returns>A new DbPropertyExpression representing the relationship end member retrieval.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="relationshipEnd"/> is null or <paramref name="instance"/> is null and the property is not static.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static DbPropertyExpression Property(this DbExpression instance, RelationshipEndMember relationshipEnd)
         {
             return PropertyFromMember(instance, relationshipEnd, "relationshipEnd");
@@ -1843,7 +1845,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             }
 
             PrimitiveTypeKind primitiveTypeKind;
-            if (ClrProviderManifest.Instance.TryGetPrimitiveTypeKind(valueType, out primitiveTypeKind))
+            if (ClrProviderManifest.TryGetPrimitiveTypeKind(valueType, out primitiveTypeKind))
             {
                 TypeUsage resultType = TypeHelpers.GetLiteralTypeUsage(primitiveTypeKind);
                 if (null == value)
@@ -1994,6 +1996,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <exception cref="ArgumentException"><paramref name="source"/> does not have a collection result type.</exception>
         /// <exception cref="ArgumentNullException">The result of <paramref name="apply"/> contains a name or expression that is null.</exception>
         /// <exception cref="ArgumentException">The result of <paramref name="apply"/> contains a name or expression that is not valid in an expression binding.</exception>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static DbApplyExpression CrossApply(this DbExpression source, Func<DbExpression, KeyValuePair<string, DbExpression>> apply)
         {
             return CreateApply(source, apply, DbExpressionBuilder.CrossApply);
@@ -2017,6 +2020,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <exception cref="ArgumentException"><paramref name="source"/> does not have a collection result type.</exception>
         /// <exception cref="ArgumentNullException">The result of <paramref name="apply"/> contains a name or expression that is null.</exception>
         /// <exception cref="ArgumentException">The result of <paramref name="apply"/> contains a name or expression that is not valid in an expression binding.</exception>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static DbApplyExpression OuterApply(this DbExpression source, Func<DbExpression, KeyValuePair<string, DbExpression>> apply)
         {
             return CreateApply(source, apply, DbExpressionBuilder.OuterApply);
@@ -2749,7 +2753,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         internal static DbIsNullExpression CreateIsNullExpressionAllowingRowTypeArgument(DbExpression argument)
         {
             TypeUsage resultType = ArgumentValidation.ValidateIsNull(argument, true);
-            return new DbIsNullExpression(resultType, argument, true);
+            return new DbIsNullExpression(resultType, argument);
         }
 
         /// <summary>

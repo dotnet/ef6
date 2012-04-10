@@ -2,12 +2,13 @@ using System;
 
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Attribute identifying the Ends defined for a RelationshipSet
     /// Implied default AttributeUsage properties Inherited=True, AllowMultiple=False,
     /// The metadata system expects this and will only look at the first of each of these attributes, even if there are more.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class EdmRelationshipNavigationPropertyAttribute : EdmPropertyAttribute
     {

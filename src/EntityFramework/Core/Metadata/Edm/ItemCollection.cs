@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
     using System.Runtime.CompilerServices;
     using System.Threading;
@@ -320,6 +321,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="functionName"></param>
         /// <param name="ignoreCase"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         protected static System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction> GetFunctions(
             Dictionary<string, System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction>> functionCollection,
             string functionName, bool ignoreCase)

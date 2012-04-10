@@ -100,7 +100,7 @@ namespace System.Data.Entity.Core.Mapping
                 {
                     // We should change the mode to runtime generation of views.
                     this.m_generatedViewsMode = false;
-                    this.SerializedGenerateViews(entityContainerMap, extentMappingViews);
+                    SerializedGenerateViews(entityContainerMap, extentMappingViews);
                 }
 
                 Debug.Assert(extentMappingViews.Count > 0, "view should be generated at this point");
@@ -114,7 +114,7 @@ namespace System.Data.Entity.Core.Mapping
             /// </summary>
             /// <param name="entityContainerMap"></param>
             /// <param name="resultDictionary"></param>
-            private void SerializedGenerateViews(StorageEntityContainerMapping entityContainerMap, Dictionary<EntitySetBase, GeneratedView> resultDictionary)
+            private static void SerializedGenerateViews(StorageEntityContainerMapping entityContainerMap, Dictionary<EntitySetBase, GeneratedView> resultDictionary)
             {
                 //If there are no entity set maps, don't call the view generation process
                 Debug.Assert(entityContainerMap.HasViews);
@@ -191,7 +191,7 @@ namespace System.Data.Entity.Core.Mapping
             ///   1) Passing in OfTypeOnly on an abstract type
             ///   2) In user-specified query views mode a query for the given type is absent
             /// </summary>
-            internal bool TryGetGeneratedViewOfType(MetadataWorkspace workspace, EntitySetBase entity, EntityTypeBase type, bool includeSubtypes, out GeneratedView generatedView)
+            internal bool TryGetGeneratedViewOfType(EntitySetBase entity, EntityTypeBase type, bool includeSubtypes, out GeneratedView generatedView)
             {
                 OfTypeQVCacheKey key = new OfTypeQVCacheKey(entity, new Pair<EntityTypeBase, bool>(type, includeSubtypes));
                 generatedView = this.m_generatedViewOfTypeMemoizer.Evaluate(key);
@@ -396,7 +396,7 @@ namespace System.Data.Entity.Core.Mapping
             {
                 StorageEntityContainerMapping storageEntityContainerMapping;
                 // first check
-                if (!this.TryGetCorrespondingStorageEntityContainerMapping(entityViewContainer,
+                if (!TryGetCorrespondingStorageEntityContainerMapping(entityViewContainer,
                     workspace.GetItemCollection(DataSpace.CSSpace).GetItems<StorageEntityContainerMapping>(), out storageEntityContainerMapping))
                 {
                     return;
@@ -411,7 +411,7 @@ namespace System.Data.Entity.Core.Mapping
 
                 // third check, prior to the check, we collect all the views in the entity view container to the dictionary
                 // if the views are changed then we will throw exception out
-                if (this.VerifyViewsHaveNotChanged(workspace, entityViewContainer))
+                if (VerifyViewsHaveNotChanged(workspace, entityViewContainer))
                 {
                     this.SerializedAddGeneratedViews(workspace, entityViewContainer, extentMappingViews);
                 }
@@ -422,7 +422,7 @@ namespace System.Data.Entity.Core.Mapping
             }
                     
 
-            private bool TryGetCorrespondingStorageEntityContainerMapping(EntityViewContainer viewContainer,
+            private static bool TryGetCorrespondingStorageEntityContainerMapping(EntityViewContainer viewContainer,
                 IEnumerable<StorageEntityContainerMapping> storageEntityContainerMappingList, out StorageEntityContainerMapping storageEntityContainerMapping)
             {
                 storageEntityContainerMapping = null;
@@ -451,7 +451,7 @@ namespace System.Data.Entity.Core.Mapping
                 return false;
             }
 
-            private bool VerifyViewsHaveNotChanged(MetadataWorkspace workspace, EntityViewContainer viewContainer)
+            private static bool VerifyViewsHaveNotChanged(MetadataWorkspace workspace, EntityViewContainer viewContainer)
             {
                 //Now check whether the hash of the generated views match the one
                 //we stored in the code file during design

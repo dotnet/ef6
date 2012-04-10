@@ -10,6 +10,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
 
@@ -237,6 +238,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         /// "select e.ID from ABCDSet" we want plan compiler to produce "select a.ID from A" instead of 
         /// "select a.ID from A LOJ B LOJ C LOJ D".
         /// </summary>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private CellTreeNode ConvertUnionsToNormalizedLOJs(CellTreeNode rootNode)
         {
             // Recursively, transform the subtrees rooted at rootNode's children.
@@ -652,7 +654,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 }
 
                 //Add Error
-                m_errorLog.AddEntry(new ErrorLog.Record(true, ViewGenErrorCode.DisjointConstraintViolation,
+                m_errorLog.AddEntry(new ErrorLog.Record(ViewGenErrorCode.DisjointConstraintViolation,
                         builder.ToString(), m_viewgenContext.AllWrappersForExtent, String.Empty));
 
                 ExceptionHelpers.ThrowMappingException(m_errorLog, m_config);

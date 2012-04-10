@@ -10,6 +10,7 @@ using System.Data.Entity.Core.Common.CommandTrees.Internal;
 
 namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 {
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Utility class that walks a mapping view and returns a simplified expression with projection
@@ -34,17 +35,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     {
         internal static DbQueryCommandTree SimplifyView(EntitySetBase extent, DbQueryCommandTree view)
         {
-            ViewSimplifier vs = new ViewSimplifier(view.MetadataWorkspace, extent);
+            ViewSimplifier vs = new ViewSimplifier(extent);
             view = vs.Simplify(view);
             return view;
         }
 
-        private readonly MetadataWorkspace metadata;
         private readonly EntitySetBase extent;
 
-        private ViewSimplifier(MetadataWorkspace mws, EntitySetBase viewTarget)
+        private ViewSimplifier(EntitySetBase viewTarget)
         {
-            this.metadata = mws;
             this.extent = viewTarget;
         }
 
@@ -88,6 +87,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         private bool doNotProcess;
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         private DbExpression AddFkRelatedEntityRefs(DbExpression viewConstructor)
         {
             // If the extent being simplified is not a C-Space entity set, or if it has already
@@ -401,6 +401,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         /// AS y
         ///     
         /// </summary>
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling"), SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private static DbExpression SimplifyNestedTphDiscriminator(DbExpression expression)
         {
             DbProjectExpression entityProjection = (DbProjectExpression)expression;
@@ -592,7 +593,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             {
                 if (caseExpression.Else.ExpressionKind != DbExpressionKind.Constant) { return false; }
                 var when = (DbConstantExpression)caseExpression.Else;
-                if (!false.Equals(when.Value)) { return false; }
+                if (true.Equals(when.Value)) { return false; }
             }
             simplified = caseExpression.When[0];
             return true;

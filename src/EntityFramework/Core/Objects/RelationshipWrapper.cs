@@ -5,6 +5,8 @@ using System.Data.Entity.Core.Metadata.Edm;
 
 namespace System.Data.Entity.Core.Objects
 {
+    using System.Diagnostics.CodeAnalysis;
+
     internal sealed class RelationshipWrapper : IEquatable<RelationshipWrapper>
     {
         internal readonly AssociationSet AssociationSet;
@@ -39,6 +41,7 @@ namespace System.Data.Entity.Core.Objects
         {
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "role1")]
         internal RelationshipWrapper(AssociationSet extent,
                                      string role0, EntityKey key0,
                                      string role1, EntityKey key1)

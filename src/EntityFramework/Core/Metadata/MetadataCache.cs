@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Versioning;
     using System.Security.Permissions;
     using System.Threading;
@@ -57,6 +58,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         // Periodic thread which runs every n mins (look up the cleanupPeriod variable to see the exact time), walks through
         // every item in other store and edm cache and tries to do some cleanup
+        [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         private static Timer timer = new Timer(PeriodicCleanupCallback, null, cleanupPeriod, cleanupPeriod);
 
         #endregion
@@ -569,6 +571,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             /// <summary>
             /// Check if the thread has appropriate permissions to use the already loaded metadata
             /// </summary>
+            [SuppressMessage("Microsoft.Security", "CA2143:TransparentMethodsShouldNotDemandFxCopRule")]
             internal void CheckFilePermission()
             {
                 Debug.Assert(_itemCollection != null, "Item collection must be present since we want to reuse the metadata");
@@ -622,7 +625,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             /// Just loads the edm item collection
             /// </summary>
             /// <returns></returns>
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2103:ReviewImperativeSecurity")]
+            [SuppressMessage("Microsoft.Security", "CA2103:ReviewImperativeSecurity")]
             internal void LoadEdmItemCollection(MetadataArtifactLoader loader)
             {
                 Debug.Assert(loader != null, "loader is null");
@@ -683,7 +686,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             /// </summary>
             /// <param name="factory">The store-specific provider factory</param>
             /// <param name="edmItemCollection">edmItemCollection</param>
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2103:ReviewImperativeSecurity")]
+            [SuppressMessage("Microsoft.Security", "CA2103:ReviewImperativeSecurity")]
             internal void LoadStoreCollection(EdmItemCollection edmItemCollection, MetadataArtifactLoader loader)
             {
                 StoreItemCollection storeItemCollection = null;

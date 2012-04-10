@@ -244,7 +244,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                             // NULL as projected slot
                             MemberPath memberPath = childBlock.MemberPath(slotNum);
                             paddedSlotInfo[slotNum] = new SlotInfo(true /* is required */, true /* is projected */,
-                                                             new ConstantProjectedSlot(Constant.Null, memberPath), memberPath);
+                                                             new ConstantProjectedSlot(Constant.Null), memberPath);
                         }
                     }
                     else
@@ -276,7 +276,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                         else
                         {
                             childSlots[index] = new SlotInfo(true /* is required */, true /* is projected */, 
-                                new ConstantProjectedSlot(Constant.Null, slotInfo.OutputMember), slotInfo.OutputMember);
+                                new ConstantProjectedSlot(Constant.Null), slotInfo.OutputMember);
 
                         }
                         //move on to the next slot added by children.
@@ -387,7 +387,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                         if (!child.IsProjected(keySlotNum) || !children[0].IsProjected(keySlotNum))
                         {
                             ErrorLog errorLog = new ErrorLog();
-                            errorLog.AddEntry(new ErrorLog.Record(true, ViewGenErrorCode.NoJoinKeyOrFKProvidedInMapping,
+                            errorLog.AddEntry(new ErrorLog.Record(ViewGenErrorCode.NoJoinKeyOrFKProvidedInMapping,
                                     Strings.Viewgen_NoJoinKeyOrFK, ViewgenContext.AllWrappersForExtent, String.Empty));
                             ExceptionHelpers.ThrowMappingException(errorLog, ViewgenContext.Config);
                         }
@@ -493,7 +493,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 }
                 else
                 {
-                    slot = new ConstantProjectedSlot(Domain.GetDefaultValueForMemberPath(memberPath, GetLeaves(), ViewgenContext.Config), memberPath);
+                    slot = new ConstantProjectedSlot(Domain.GetDefaultValueForMemberPath(memberPath, GetLeaves(), ViewgenContext.Config));
                 }
             }
 

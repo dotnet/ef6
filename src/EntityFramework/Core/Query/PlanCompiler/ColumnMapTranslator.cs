@@ -23,6 +23,7 @@ using System.Linq;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Delegate pattern that the ColumnMapTranslator uses to find its replacement
@@ -359,6 +360,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         /// MultipleDiscriminatorPolymorphicColumnMap
         /// </summary>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ColumnMapTranslator"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "MultipleDiscriminatorPolymorphicColumnMap")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal override ColumnMap Visit(MultipleDiscriminatorPolymorphicColumnMap columnMap, ColumnMapTranslatorTranslationDelegate translationDelegate)
         {
             // At this time, we shouldn't ever see this type here; it's for SPROCS which don't use

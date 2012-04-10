@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Objects
     /// This class implements IEnumerable of T and IDisposable. Instance of this class
     /// is returned from ObjectQuery&lt;T&gt;.Execute method.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public sealed class ObjectResult<T> : ObjectResult, IEnumerable<T>
     {
         private Shaper<T> _shaper;

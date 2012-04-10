@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using pc = System.Data.Entity.Core.Query.PlanCompiler; // To be able to use PlanCompiler.Assert instead of Debug.Assert in this class.
 
     /// <summary>
@@ -811,6 +812,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// No processing yet for this node - raises an exception
         /// </summary>
         /// <param name="n"></param>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal virtual TResultType Unimplemented(Node n)
         {
             pc.PlanCompiler.Assert(false, "Not implemented op type");

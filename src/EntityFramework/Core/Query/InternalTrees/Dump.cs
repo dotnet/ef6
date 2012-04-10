@@ -16,6 +16,7 @@ using md = System.Data.Entity.Core.Metadata.Edm;
 // comprehensions)
 //
 namespace System.Data.Entity.Core.Query.InternalTrees {
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// A dump module for the Iqt
@@ -31,10 +32,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees {
         #region constructors
 
         private Dump(Stream stream)
-            : this(stream, Dump.DefaultEncoding, true) { }
+            : this(stream, Dump.DefaultEncoding) { }
 
-        private Dump(Stream stream, Encoding encoding, bool indent)
-            : base() {
+        private Dump(Stream stream, Encoding encoding)
+        {
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.CheckCharacters = false;
             settings.Indent = true;
@@ -55,16 +56,16 @@ namespace System.Data.Entity.Core.Query.InternalTrees {
         /// <param name="itree"></param>
         /// <returns></returns>
         static internal string ToXml(Command itree) {
-            return ToXml(itree, itree.Root);
+            return ToXml(itree.Root);
         }
 
         /// <summary>
         /// Driver method to dump the a subtree of a tree
         /// </summary>
-        /// <param name="itree"></param>
         /// <param name="subtree"></param>
         /// <returns></returns>
-        static internal string ToXml(Command itree, Node subtree) {
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        static internal string ToXml(Node subtree) {
             MemoryStream stream = new MemoryStream();
 
             using (Dump dumper = new Dump(stream)) {
@@ -79,21 +80,25 @@ namespace System.Data.Entity.Core.Query.InternalTrees {
             return DefaultEncoding.GetString(stream.ToArray());
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "System.Data.Entity.Core.Query.InternalTrees.Dump.ToXml")]
-        static internal string ToXml(ColumnMap columnMap) {
+#if DEBUG
+        static internal string ToXml(ColumnMap columnMap)
+        {
             MemoryStream stream = new MemoryStream();
 
-            using (Dump dumper = new Dump(stream)) {
+            using (Dump dumper = new Dump(stream))
+            {
                 // Just in case the node we're provided doesn't dump as XML, we'll always stick
                 // an XML wrapper around it -- this happens when we're dumping scalarOps, for
                 // example, and it's unfortunate if you can't debug them using a dump...
-                using (new AutoXml(dumper, "columnMap")) {
+                using (new AutoXml(dumper, "columnMap"))
+                {
                     columnMap.Accept(ColumnMapDumper.Instance, dumper);
                 }
             }
 
             return DefaultEncoding.GetString(stream.ToArray());
         }
+#endif
 
         #endregion
 
@@ -134,7 +139,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees {
             WriteString(")");
         }
 
-        internal void End(string name) {
+        internal void End() {
             _writer.WriteEndElement();
         }
 
@@ -848,6 +853,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees {
                 }
             }
 
+            [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
             internal static string ToString(OpType op)
             {   // perf: Enum.ToString() actually is very perf intensive in time & memory
                 switch (op)
@@ -1046,7 +1052,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees {
             }
 
             public void Dispose() {
-                _dumper.End(_nodeName);
+                _dumper.End();
             }
         }
     }

@@ -3,6 +3,7 @@ using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
 using System.Runtime.Serialization;
 
 namespace System.Data.Entity.Core {
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Mapping exception class. Note that this class has state - so if you change even
@@ -24,7 +25,7 @@ namespace System.Data.Entity.Core {
         /// default constructor
         /// </summary>
         /// <param name="message">localized error message</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")] // required CTOR for exceptions.
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")] // required CTOR for exceptions.
         internal InternalMappingException(string message) // required ctor
             : base(message)
         {
@@ -35,7 +36,7 @@ namespace System.Data.Entity.Core {
         /// </summary>
         /// <param name="message">localized error message</param>
         /// <param name="innerException">inner exception</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")] // required CTOR for exceptions.
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")] // required CTOR for exceptions.
         internal InternalMappingException(string message, Exception innerException) // required ctor
             : base(message, innerException)
         {

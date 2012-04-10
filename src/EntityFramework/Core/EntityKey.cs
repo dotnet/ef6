@@ -67,13 +67,13 @@ namespace System.Data.Entity.Core
         /// <summary>
         /// A singleton EntityKey by which a read-only entity is identified.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]     // Justification: these are internal so they cannot be modified publically
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static readonly EntityKey NoEntitySetKey = new EntityKey(s_NoEntitySetKey);
 
         /// <summary>
         /// A singleton EntityKey identifying an entity resulted from a failed TREAT.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]     // Justification: these are internal so they cannot be modified publically
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static readonly EntityKey EntityNotValidKey = new EntityKey(s_EntityNotValidKey);
 
         /// <summary>
@@ -96,6 +96,7 @@ namespace System.Data.Entity.Core
         /// </summary>
         /// <param name="qualifiedEntitySetName">The EntitySet name, qualified by the EntityContainer name, of the entity</param>
         /// <param name="entityKeyValues">The key-value pairs that identify the entity</param>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public EntityKey(string qualifiedEntitySetName, IEnumerable<KeyValuePair<string, object>> entityKeyValues)
         {
             GetEntitySetName(qualifiedEntitySetName, out _entitySetName, out _entityContainerName);
@@ -279,7 +280,7 @@ namespace System.Data.Entity.Core
         /// Gets the key values that identify the entity.
         /// </summary>
         [DataMember]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "Required for this feature")]
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "Required for this feature")]
         public EntityKeyMember[] EntityKeyValues
         {
             get
@@ -1388,7 +1389,7 @@ namespace System.Data.Entity.Core
         /// <summary>
         /// Ensures that the instance can be written to (value must be null)
         /// </summary>
-        private void ValidateWritable(object instance)
+        private static void ValidateWritable(object instance)
         {
             if (instance != null)
             {

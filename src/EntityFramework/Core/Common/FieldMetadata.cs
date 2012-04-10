@@ -3,11 +3,12 @@ namespace System.Data.Entity.Core.Common {
     using System.Data;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
-    
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// FieldMetadata class providing the correlation between the column ordinals and MemberMetadata.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
+    [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
     public struct FieldMetadata {
 
         private readonly EdmMember _fieldType;

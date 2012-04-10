@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
     using System.Data.Common;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// An immutable type used to generate Shaper instances.
@@ -45,6 +46,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         private readonly int _stateCount;
         private readonly CoordinatorFactory<T> _rootCoordinatorFactory;
         private readonly Action _checkPermissions;
+        [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         private readonly MergeOption _mergeOption;
 
         internal ShaperFactory(int stateCount, CoordinatorFactory<T> rootCoordinatorFactory, Action checkPermissions, MergeOption mergeOption)

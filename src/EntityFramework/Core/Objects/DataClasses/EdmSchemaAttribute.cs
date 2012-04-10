@@ -1,10 +1,12 @@
 using System;
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Attribute for static types
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1019:DefineAccessorsForAttributeArguments"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
+    [SuppressMessage("Microsoft.Design", "CA1019:DefineAccessorsForAttributeArguments")]
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class, AllowMultiple = true)]
     public sealed class EdmSchemaAttribute : System.Attribute
     {

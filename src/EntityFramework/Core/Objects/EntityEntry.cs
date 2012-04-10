@@ -10,8 +10,10 @@
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal sealed class EntityEntry : ObjectStateEntry
     {
         private StateManagerTypeMetadata _cacheTypeMetadata;
@@ -2310,7 +2312,7 @@
         {
             IEntityWrapper relatedWrapper = EntityWrapperFactory.WrapEntityUsingStateManager(relatedObject, this.ObjectStateManager);
 
-            this.AddDetectedRelationship(relationships, relatedWrapper, relatedEndFrom);
+            AddDetectedRelationship(relationships, relatedWrapper, relatedEndFrom);
 
             RelatedEnd relatedEndTo = relatedEndFrom.GetOtherEndOfRelationship(relatedWrapper);
 
@@ -2323,7 +2325,7 @@
                 relatedEndTo.VerifyNavigationPropertyForAdd(_wrappedEntity);
             }
 
-            this.AddDetectedRelationship(relationships, _wrappedEntity, relatedEndTo);
+            AddDetectedRelationship(relationships, _wrappedEntity, relatedEndTo);
         }
 
         private void AddRelationshipDetectedByForeignKey(
@@ -2334,7 +2336,7 @@
             RelatedEnd relatedEndFrom)
         {
             Debug.Assert(!relatedKey.IsTemporary, "the relatedKey was created by a method which returns only permaanent keys");
-            this.AddDetectedRelationship(relationships, relatedKey, relatedEndFrom);
+            AddDetectedRelationship(relationships, relatedKey, relatedEndFrom);
 
             if (relatedEntry != null)
             {
@@ -2343,7 +2345,7 @@
                 RelatedEnd relatedEndTo = relatedEndFrom.GetOtherEndOfRelationship(relatedWrapper);
 
                 EntityKey permanentKeyOwner = this.ObjectStateManager.GetPermanentKey(relatedEntry.WrappedEntity, relatedEndTo, this.WrappedEntity);
-                this.AddDetectedRelationship(principalRelationships, permanentKeyOwner, relatedEndTo);
+                AddDetectedRelationship(principalRelationships, permanentKeyOwner, relatedEndTo);
             }
         }
 
@@ -2356,7 +2358,7 @@
         /// <param name="relationships">The set of detected relationships to add this entry to</param>
         /// <param name="relatedObject">The entity the relationship points to</param>
         /// <param name="relatedEnd">The related end the relationship originates from</param>
-        private void AddDetectedRelationship<T>(
+        private static void AddDetectedRelationship<T>(
             Dictionary<IEntityWrapper, Dictionary<RelatedEnd, HashSet<T>>> relationships,
             T relatedObject,
             RelatedEnd relatedEnd)
@@ -2820,7 +2822,7 @@
             }
         }
 
-        internal void PromoteKeyEntry(IEntityWrapper wrappedEntity, IExtendedDataRecord shadowValues, StateManagerTypeMetadata typeMetadata)
+        internal void PromoteKeyEntry(IEntityWrapper wrappedEntity, StateManagerTypeMetadata typeMetadata)
         {
             Debug.Assert(wrappedEntity != null, "entity wrapper cannot be null.");
             Debug.Assert(wrappedEntity.Entity != null, "entity cannot be null.");
@@ -2834,21 +2836,6 @@
             _cacheTypeMetadata = typeMetadata;
 
             SetChangeTrackingFlags();
-
-#if DEBUG   // performance, don't do this work in retail until shadow state is supported
-            if (shadowValues != null)
-            {
-                // shadowState always  coms from materializer, just copy the shadowstate values
-                Debug.Assert(shadowValues.DataRecordInfo.RecordType.EdmType.Equals(_cacheTypeMetadata.CdmMetadata.EdmType), "different cspace metadata instance");
-                for (int ordinal = 0; ordinal < _cacheTypeMetadata.FieldCount; ordinal++)
-                {
-                    if (_cacheTypeMetadata.IsMemberPartofShadowState(ordinal))
-                    {
-                        Debug.Assert(false, "shadowstate not supported");
-                    }
-                }
-            }
-#endif
         }
 
         /// <summary>
@@ -3046,7 +3033,7 @@
             }
         }
 
-        [Conditional("DEBUG")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"), Conditional("DEBUG")]
         private void VerifyIsNotRelated()
         {
             Debug.Assert(!this.IsKeyEntry, "shouldn't be called for a key entry");
@@ -3054,6 +3041,7 @@
             this.WrappedEntity.RelationshipManager.VerifyIsNotRelated();
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal void ChangeObjectState(EntityState requestedState)
         {
             if (this.IsKeyEntry)
@@ -3509,6 +3497,7 @@
         /// <param name="foreignKey">The foreign key, if it has already been computed</param>
         /// <param name="setIsLoaded">If true, then the IsLoaded flag for the relationship is set</param>
         /// <param name="replaceExistingRef">If true, then any existing references will be replaced</param>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal void FixupEntityReferenceToPrincipal(EntityReference relatedEnd, EntityKey foreignKey, bool setIsLoaded, bool replaceExistingRef)
         {
             Debug.Assert(relatedEnd != null, "Found null RelatedEnd or EntityCollection to principal");
@@ -3601,7 +3590,7 @@
         /// If it would, then an exception is thrown.  If it would not and we can safely overwrite the existing
         /// value, then true is returned.  If it would not but we should not overwrite the existing value,
         /// then false is returned.
-        private bool WillNotRefSteal(EntityReference refToPrincipal, IEntityWrapper wrappedPrincipal)
+        private static bool WillNotRefSteal(EntityReference refToPrincipal, IEntityWrapper wrappedPrincipal)
         {
             RelatedEnd dependentEnd = refToPrincipal.GetOtherEndOfRelationship(wrappedPrincipal);
             EntityReference refToDependent = dependentEnd as EntityReference;
@@ -3679,6 +3668,7 @@
         /// Do this in the order of fixing up values from the principal ends first, and then propogate those values to the dependents
         /// </summary>
         /// <param name="visited"></param>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void FixupForeignKeysByReference(List<EntityEntry> visited)
         {
             EntitySet entitySet = EntitySet as EntitySet;
@@ -3922,7 +3912,7 @@
                     {
                         //If current is null we are just deleting a relationship
                         Debug.Assert(!originalKeyIsConceptualNull, "If FK is nullable there shouldn't be a conceptual null set");
-                        this.AddDetectedRelationship(tm.DeletedRelationshipsByForeignKey, originalKey, entityReference);
+                        AddDetectedRelationship(tm.DeletedRelationshipsByForeignKey, originalKey, entityReference);
                     }
                     //If there is a Conceptual Null set we need to check if the current values
                     //are different from the values when the Conceptual Null was created
@@ -3937,7 +3927,7 @@
                         //And if the original key wasn't a conceptual null we are also deleting
                         if (!originalKeyIsConceptualNull)
                         {
-                            this.AddDetectedRelationship(tm.DeletedRelationshipsByForeignKey, originalKey, entityReference);
+                            AddDetectedRelationship(tm.DeletedRelationshipsByForeignKey, originalKey, entityReference);
                         }
                     }
                 }

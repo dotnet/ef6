@@ -1,10 +1,11 @@
 ﻿namespace System.Data.Entity.Core.Objects.DataClasses
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Indicates that the given method is a proxy for an EDM function.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
     public sealed class EdmFunctionAttribute : Attribute
     {
         private readonly string _namespaceName;

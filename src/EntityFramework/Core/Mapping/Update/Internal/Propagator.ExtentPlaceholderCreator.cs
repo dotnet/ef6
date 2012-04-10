@@ -17,20 +17,20 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private class ExtentPlaceholderCreator
         {
             #region Constructors
+
             /// <summary>
             /// Constructs a new placeholder creator.
             /// </summary>
-            /// <param name="parent">Context used to generate all elements of the placeholder.</param>
-            private ExtentPlaceholderCreator(UpdateTranslator parent)
+            private ExtentPlaceholderCreator()
             {
-                EntityUtil.CheckArgumentNull(parent, "parent");
-                m_parent = parent;
             }
+
             #endregion
 
             #region Fields
+            
             static private Dictionary<PrimitiveTypeKind, object> s_typeDefaultMap = InitializeTypeDefaultMap();
-            private UpdateTranslator m_parent;
+
             #endregion
 
             #region Methods
@@ -99,13 +99,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// consisting of some recursively built record for each column in the type.
             /// </remarks>
             /// <param name="extent">Extent</param>
-            /// <param name="parent">Command tree used to generate portions of the record</param>
             /// <returns>A default record for the </returns>
-            internal static PropagatorResult CreatePlaceholder(EntitySetBase extent, UpdateTranslator parent)
+            internal static PropagatorResult CreatePlaceholder(EntitySetBase extent)
             {
                 EntityUtil.CheckArgumentNull(extent, "extent");
 
-                ExtentPlaceholderCreator creator = new ExtentPlaceholderCreator(parent);
+                ExtentPlaceholderCreator creator = new ExtentPlaceholderCreator();
 
                 AssociationSet associationSet = extent as AssociationSet;
                 if (null != associationSet)
@@ -172,7 +171,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         keyValues[memberOrdinal] = keyValue;
                     }
 
-                    RowType endType = entityType.GetKeyRowType(m_parent.MetadataWorkspace);
+                    RowType endType = entityType.GetKeyRowType();
                     PropagatorResult refKeys = PropagatorResult.CreateStructuralValue(keyValues, endType, false);
 
                     endReferenceValues[endOrdinal] = refKeys;

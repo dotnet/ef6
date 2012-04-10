@@ -13,6 +13,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
     using System.Data.Entity;
     using System.Data.Entity.Resources;
+    using System.Diagnostics.CodeAnalysis;
     using AttributeSet = Set<MemberPath>;
 
     /// <summary>
@@ -258,7 +259,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return null;
             }
 
-            ErrorLog.Record record = new ErrorLog.Record(true, ViewGenErrorCode.DuplicateCPropertiesMapped, builder.ToString(), sourceCell, String.Empty);
+            ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.DuplicateCPropertiesMapped, builder.ToString(), sourceCell, String.Empty);
             return record;
         }
 
@@ -358,7 +359,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             {
                 return null;
             }
-            ErrorLog.Record record = new ErrorLog.Record(true, ViewGenErrorCode.NotNullNoProjectedSlot, builder.ToString(), sourceCell, String.Empty);
+            ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.NotNullNoProjectedSlot, builder.ToString(), sourceCell, String.Empty);
             return record;
         }
 
@@ -503,7 +504,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                         string keyPropertiesString = MemberPath.PropertiesToUserString(key.KeyFields, false);
                         message = formatAssociationSetMessage(keyPropertiesString, endName, Extent.Name);
                     }
-                    ErrorLog.Record error = new ErrorLog.Record(true, errorCode, message, ownerCell, String.Empty);
+                    ErrorLog.Record error = new ErrorLog.Record(errorCode, message, ownerCell, String.Empty);
                     return error;
                 }
             }
@@ -757,21 +758,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        // requires: whereClause is of the form specified in GetConjunctsFromWhereClause
-        // effects: Converts the whereclause to a user-readable string
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal void WhereClauseToUserString(StringBuilder builder, MetadataWorkspace workspace)
-        {
-            bool isFirst = true;
-            foreach (MemberRestriction restriction in GetConjunctsFromWhereClause())
-            {
-                if (isFirst == false)
-                {
-                    builder.Append(System.Data.Entity.Resources.Strings.ViewGen_AND);
-                }
-                restriction.ToUserString(false, builder, workspace);
-            }
-        }
         #endregion
 
         #region Full CellQuery methods
@@ -870,48 +856,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         public override string ToString()
         {
             return ToFullString();
-        }
-
-        // eSQL representation of cell query
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal string ToESqlString()
-        {
-            StringBuilder builder = new StringBuilder();
-            builder.Append("\n\tSELECT ");
-
-            if (m_selectDistinct == SelectDistinct.Yes)
-            {
-                builder.Append("DISTINCT ");
-            }
-
-            foreach (ProjectedSlot ps in m_projectedSlots)
-            {
-                MemberProjectedSlot jtn = ps as MemberProjectedSlot;
-                StructuralType st = jtn.MemberPath.LeafEdmMember.DeclaringType;
-                StringBuilder sb = new StringBuilder();
-                jtn.MemberPath.AsEsql(sb, "e");
-                builder.AppendFormat("{0}, ", sb.ToString());
-            }
-            //remove the extra-comma after the last slot         
-            builder.Remove(builder.Length - 2, 2);
-
-            builder.Append("\n\tFROM ");
-            EntitySetBase extent = m_extentMemberPath.Extent;
-            CqlWriter.AppendEscapedQualifiedName(builder, extent.EntityContainer.Name, extent.Name);
-            builder.Append(" AS e");
-
-            if (m_whereClause.IsTrue == false)
-            {
-                builder.Append("\n\tWHERE ");
-
-                StringBuilder qbuilder = new StringBuilder();
-                m_whereClause.AsEsql(qbuilder, "e");
-
-                builder.Append(qbuilder.ToString());
-            }
-            builder.Append("\n    ");
-
-            return builder.ToString();
         }
 
         #endregion

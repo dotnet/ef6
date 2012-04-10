@@ -4,6 +4,8 @@ using System.Diagnostics;
 
 namespace System.Data.Entity.Core.Mapping.ViewGeneration
 {
+    using System.Diagnostics.CodeAnalysis;
+
     internal enum ViewGenMode
     {
         GenerateAllViews = 0,
@@ -66,6 +68,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         /// <summary>
         /// Perf op being measured.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         private PerfType m_singlePerfOp;
         private bool m_enableValidation = true;
         private bool m_generateUpdateViews = true;
@@ -96,7 +99,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             set { m_traceLevel = value; }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal bool IsValidationEnabled
         {
             get { return m_enableValidation; }

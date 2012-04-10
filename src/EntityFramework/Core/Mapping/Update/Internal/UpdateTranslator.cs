@@ -60,7 +60,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             // ancillary propagation services
             m_recordConverter = new RecordConverter(this);
-            m_constraintValidator = new RelationshipConstraintValidator(this);
+            m_constraintValidator = new RelationshipConstraintValidator();
 
             m_providerServices = DbProviderServices.GetProviderServices(connection.StoreProviderFactory);
             m_connection = connection;
@@ -104,8 +104,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // metadata cache
         private readonly Dictionary<Tuple<EntitySetBase, StructuralType>, ExtractorMetadata> m_extractorMetadata;
 
-        // static members
-        private static readonly List<string> s_emptyMemberList = new List<string>();
         #endregion
 
         #region Properties
@@ -494,7 +492,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
         }
 
-        private void SetServerGenValue(PropagatorResult context, object value)
+        private static void SetServerGenValue(PropagatorResult context, object value)
         {
             if (context.RecordOrdinal != PropagatorResult.NullOrdinal)
             {
@@ -517,7 +515,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="member">Metadata for the member being set.</param>
         /// <param name="context">The context generating the return value.</param>
         /// <returns>Converted return value</returns>
-        private object AlignReturnValue(object value, EdmMember member, PropagatorResult context)
+        private static object AlignReturnValue(object value, EdmMember member, PropagatorResult context)
         {
             if (DBNull.Value.Equals(value))
             {
@@ -932,13 +930,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 // added, modified and unchanged entries have current values
                 record = (IExtendedDataRecord)stateEntry.CurrentValues;
-                ValidateRecord(extent, record, stateEntry);
+                ValidateRecord(extent, record);
             }
             if (0 != ((EntityState.Modified | EntityState.Deleted | EntityState.Unchanged) & stateEntry.State))
             {
                 // deleted, modified and unchanged entries have original values
                 record = (IExtendedDataRecord)stateEntry.OriginalValues;
-                ValidateRecord(extent, record, stateEntry);
+                ValidateRecord(extent, record);
             }
             Debug.Assert(null != record, "every state entry must contain a record");
 
@@ -1011,7 +1009,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
         }
 
-        private void ValidateRecord(EntitySetBase extent, IExtendedDataRecord record, IEntityStateEntry entry)
+        private void ValidateRecord(EntitySetBase extent, IExtendedDataRecord record)
         {
             Debug.Assert(null != extent, "must be verified by caller");
 

@@ -8,6 +8,8 @@ using md=System.Data.Entity.Core.Metadata.Edm;
 
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// The KeySet class encapsulates all information about the keys of a RelOp node in
     /// the query tree.
@@ -321,6 +323,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #endregion
 
         #region private methods
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"), Conditional("DEBUG")]
         private void ValidateRowCount()
         {
             Debug.Assert(m_maxRows >= m_minRows, "MaxRows less than MinRows?");
@@ -418,7 +421,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="definition"></param>
         /// <param name="nonNullableInputs"></param>
         /// <returns></returns>
-        private bool IsDefinitionNonNullable(Node definition, VarVec nonNullableInputs)
+        private static bool IsDefinitionNonNullable(Node definition, VarVec nonNullableInputs)
         {
             return (definition.Op.OpType == OpType.Constant
                 || definition.Op.OpType == OpType.InternalConstant

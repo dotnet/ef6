@@ -5,6 +5,8 @@ using System.Text;
 
 namespace System.Data.Entity.Core.Objects
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// EventArgs for the ObjectMaterialized event.
     /// </summary>
@@ -38,5 +40,6 @@ namespace System.Data.Entity.Core.Objects
     /// </summary>
     /// <param name="sender">The ObjectContext responsable for materializing the object.</param>
     /// <param name="e">EventArgs containing a reference to the materialized object.</param>
+    [SuppressMessage("Microsoft.Design", "CA1003:UseGenericEventHandlerInstances")]
     public delegate void ObjectMaterializedEventHandler(object sender, ObjectMaterializedEventArgs e);
 }

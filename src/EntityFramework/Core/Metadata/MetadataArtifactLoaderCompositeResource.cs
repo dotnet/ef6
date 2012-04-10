@@ -160,7 +160,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     if (AssemblyContainsResource(assembly, ref resourceName))
                     {
-                        LoadResourcesFromAssembly(assembly, resourceName, uriRegistry, loaders, resolver);
+                        LoadResourcesFromAssembly(assembly, resourceName, uriRegistry, loaders);
                     }
                 }
 
@@ -168,7 +168,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             else
             {
                 Assembly assembly = ResolveAssemblyName(assemblyName, resolver);
-                LoadResourcesFromAssembly(assembly, resourceName, uriRegistry, loaders, resolver);
+                LoadResourcesFromAssembly(assembly, resourceName, uriRegistry, loaders);
             }
 
             if (resourceName != null && loaders.Count == 0)
@@ -201,11 +201,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         }
 
-        private static void LoadResourcesFromAssembly(Assembly assembly, string resourceName, ICollection<string> uriRegistry, List<MetadataArtifactLoaderResource> loaders, MetadataArtifactAssemblyResolver resolver)
+        private static void LoadResourcesFromAssembly(Assembly assembly, string resourceName, ICollection<string> uriRegistry, List<MetadataArtifactLoaderResource> loaders)
         {
             if (resourceName == null)
             {
-                LoadAllResourcesFromAssembly(assembly, uriRegistry, loaders, resolver);
+                LoadAllResourcesFromAssembly(assembly, uriRegistry, loaders);
             }
             else if (AssemblyContainsResource(assembly, ref resourceName))
             {
@@ -217,7 +217,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        private static void LoadAllResourcesFromAssembly(Assembly assembly, ICollection<string> uriRegistry, List<MetadataArtifactLoaderResource> loaders, MetadataArtifactAssemblyResolver resolver)
+        private static void LoadAllResourcesFromAssembly(Assembly assembly, ICollection<string> uriRegistry, List<MetadataArtifactLoaderResource> loaders)
         {
             Debug.Assert(assembly != null);
             string[] allresources = GetManifestResourceNamesForAssembly(assembly);

@@ -12,6 +12,7 @@ using System.Text;
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 {
     using System.Data.Entity.Resources;
+    using System.Diagnostics.CodeAnalysis;
 
     // An abstraction that captures a foreign key constraint:
     // <child, columns> --> <parent, columns>
@@ -156,7 +157,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 string message = System.Data.Entity.Resources.Strings.ViewGen_Foreign_Key_Missing_Table_Mapping(
                                                ToUserString(), ChildTable.Name);
                 // Get the cells from the parent table
-                ErrorLog.Record record = new ErrorLog.Record(true, ViewGenErrorCode.ForeignKeyMissingTableMapping, message, parentRewriter.UsedCells, String.Empty);
+                ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.ForeignKeyMissingTableMapping, message, parentRewriter.UsedCells, String.Empty);
                 errorLog.AddEntry(record);
                 return;
             }
@@ -166,7 +167,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 string message = System.Data.Entity.Resources.Strings.ViewGen_Foreign_Key_Missing_Table_Mapping(
                                                ToUserString(), ParentTable.Name);
                 // Get the cells from the child table
-                ErrorLog.Record record = new ErrorLog.Record(true, ViewGenErrorCode.ForeignKeyMissingTableMapping, message, childRewriter.UsedCells, String.Empty);
+                ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.ForeignKeyMissingTableMapping, message, childRewriter.UsedCells, String.Empty);
                 errorLog.AddEntry(record);
                 return;
             }
@@ -177,7 +178,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             //First check if the FK is covered by Foreign Key Association
             //If we find this, we don't need to check for independent associations. If user maps the Fk to both FK and independent associations,
             //the regular round tripping validation will catch the error.
-            if (CheckIfConstraintMappedToForeignKeyAssociation(childRewriter, parentRewriter, cells, errorLog))
+            if (CheckIfConstraintMappedToForeignKeyAssociation(childRewriter, parentRewriter, cells))
             {
                 return;
             }
@@ -190,7 +191,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             int initialErrorLogSize = errorLog.Count;
             if (IsForeignKeySuperSetOfPrimaryKeyInChildTable())
             {
-                GuaranteeForeignKeyConstraintInCSpace(childRewriter, parentRewriter, errorLog, config);
+                GuaranteeForeignKeyConstraintInCSpace(childRewriter, parentRewriter, errorLog);
             }
             else
             {
@@ -212,7 +213,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         // requires: constraint.ChildColumns form a key in
         // constraint.ChildTable (actually they should subsume the primary key)
         private void GuaranteeForeignKeyConstraintInCSpace(QueryRewriter childRewriter, QueryRewriter parentRewriter,
-                                                           ErrorLog errorLog, ConfigViewGenerator config)
+                                                           ErrorLog errorLog)
         {
             ViewgenContext childContext = childRewriter.ViewgenContext;
             ViewgenContext parentContext = parentRewriter.ViewgenContext;
@@ -232,7 +233,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 // Add all wrappers into allWrappers
                 Set<LeftCellWrapper> allWrappers = new Set<LeftCellWrapper>(pNode.GetLeaves());
                 allWrappers.AddRange(cNode.GetLeaves());
-                ErrorLog.Record record = new ErrorLog.Record(true, ViewGenErrorCode.ForeignKeyNotGuaranteedInCSpace, message, allWrappers, String.Empty);
+                ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.ForeignKeyNotGuaranteedInCSpace, message, allWrappers, String.Empty);
                 errorLog.AddEntry(record);
             }
         }
@@ -299,7 +300,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                     // At this point, we know cell corresponds to an association set
                     AssociationSet assocSet = (AssociationSet)cell.CQuery.Extent;
                     EntitySet parentSet = MetadataHelper.GetEntitySetAtEnd(assocSet, parentEnd);
-                    foundCell = CheckConstraintWhenOnlyParentMapped(cell, parentSet, assocSet, parentEnd, childRewriter, parentRewriter, config);
+                    foundCell = CheckConstraintWhenOnlyParentMapped(assocSet, parentEnd, childRewriter, parentRewriter);
                     if (foundCell)
                     {
                         break;
@@ -328,13 +329,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 Set<LeftCellWrapper> bothExtentWrappers =
                     new Set<LeftCellWrapper>(parentWrappers);
                 bothExtentWrappers.AddRange(childWrappers);
-                ErrorLog.Record record = new ErrorLog.Record(true, ViewGenErrorCode.ForeignKeyMissingRelationshipMapping, message, bothExtentWrappers, String.Empty);
+                ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.ForeignKeyMissingRelationshipMapping, message, bothExtentWrappers, String.Empty);
                 errorLog.AddEntry(record);
             }
         }
 
         private bool CheckIfConstraintMappedToForeignKeyAssociation(QueryRewriter childRewriter, QueryRewriter parentRewriter,
-                                                              Set<Cell> cells, ErrorLog errorLog)
+                                                              Set<Cell> cells)
         {
             ViewgenContext childContext = childRewriter.ViewgenContext;
             ViewgenContext parentContext = parentRewriter.ViewgenContext;
@@ -399,7 +400,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         }
 
         //Return a set of integers that represent the indexes of first set of properties in the second set
-        private Set<int> GetPropertyIndexes(IEnumerable<EdmProperty> properties1, ReadOnlyMetadataCollection<EdmProperty> properties2)
+        private static Set<int> GetPropertyIndexes(IEnumerable<EdmProperty> properties1, ReadOnlyMetadataCollection<EdmProperty> properties2)
         {
             var propertyIndexes = new Set<int>();
             foreach (var prop in properties1)
@@ -416,9 +417,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         // effects: Checks if the constraint is correctly maintained in
         // C-space via an association set (being a subset of the
         // corresponding entitySet)
-        private bool CheckConstraintWhenOnlyParentMapped(Cell cell, EntitySet parentSet, AssociationSet assocSet, AssociationEndMember endMember,
-                                                         QueryRewriter childRewriter, QueryRewriter parentRewriter,
-                                                         ConfigViewGenerator config)
+        private static bool CheckConstraintWhenOnlyParentMapped(AssociationSet assocSet, AssociationEndMember endMember,
+                                                         QueryRewriter childRewriter, QueryRewriter parentRewriter)
         {
 
             ViewgenContext childContext = childRewriter.ViewgenContext;
@@ -456,7 +456,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 // about foreign keys here
                 string message = System.Data.Entity.Resources.Strings.ViewGen_Foreign_Key_UpperBound_MustBeOne(ToUserString(),
                                                cell.CQuery.Extent.Name, parentEnd.Name);
-                ErrorLog.Record record = new ErrorLog.Record(true, ViewGenErrorCode.ForeignKeyUpperBoundMustBeOne, message, cell, String.Empty);
+                ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.ForeignKeyUpperBoundMustBeOne, message, cell, String.Empty);
                 errorLog.AddEntry(record);
                 ok = false;
             }
@@ -467,7 +467,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 // is non-nullable and lower bound is not 1
                 string message = System.Data.Entity.Resources.Strings.ViewGen_Foreign_Key_LowerBound_MustBeOne(ToUserString(),
                                                cell.CQuery.Extent.Name, parentEnd.Name);
-                ErrorLog.Record record = new ErrorLog.Record(true, ViewGenErrorCode.ForeignKeyLowerBoundMustBeOne, message, cell, String.Empty);
+                ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.ForeignKeyLowerBoundMustBeOne, message, cell, String.Empty);
                 errorLog.AddEntry(record);
                 ok = false;
             }
@@ -507,7 +507,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 string message = System.Data.Entity.Resources.Strings.ViewGen_Foreign_Key_ParentTable_NotMappedToEnd(
                                                ToUserString(), ChildTable.Name,
                                                cell.CQuery.Extent.Name, parentEnd.Name, ParentTable.Name, endSet.Name);
-                ErrorLog.Record record = new ErrorLog.Record(true, ViewGenErrorCode.ForeignKeyParentTableNotMappedToEnd, message, cell, String.Empty);
+                ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.ForeignKeyParentTableNotMappedToEnd, message, cell, String.Empty);
                 errorList.Add(record);
                 return false;
             }
@@ -606,6 +606,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         }
 
         // effects: Returns wrappers for extent if there are some available in the context. Else returns an empty enumeration
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "extent")]
         private static List<LeftCellWrapper> GetWrappersFromContext(ViewgenContext context, EntitySetBase extent)
         {
             List<LeftCellWrapper> wrappers;
@@ -771,7 +772,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                                                ParentTable.Name,
                                                MemberPath.PropertiesToUserString(parentPaths, false),
                                                errorParentCell.CQuery.Extent.Name);
-                ErrorLog.Record record = new ErrorLog.Record(true, ViewGenErrorCode.ForeignKeyColumnOrderIncorrect, message, new Cell[] { errorParentCell, childCell }, String.Empty);
+                ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.ForeignKeyColumnOrderIncorrect, message, new Cell[] { errorParentCell, childCell }, String.Empty);
                 errorLog.AddEntry(record);
                 return false;
 

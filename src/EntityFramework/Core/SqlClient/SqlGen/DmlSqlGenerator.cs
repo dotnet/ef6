@@ -103,7 +103,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             ExpressionTranslator translator = new ExpressionTranslator(commandText, tree,
                 null != tree.Returning, sqlVersion);
 
-            bool useGeneratedValuesVariable = UseGeneratedValuesVariable(tree, sqlVersion, translator);
+            bool useGeneratedValuesVariable = UseGeneratedValuesVariable(tree, sqlVersion);
             EntityType tableType = (EntityType)((DbScanExpression)tree.Target.Expression).Target.ElementType;
 
             if (useGeneratedValuesVariable)
@@ -227,7 +227,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// but is not an integer type (and therefore can't be used with scope_identity()). It is also true
         /// where there is a compound server generated key.        
         /// </summary>
-        private static bool UseGeneratedValuesVariable(DbInsertCommandTree tree, SqlVersion sqlVersion, ExpressionTranslator translator)
+        private static bool UseGeneratedValuesVariable(DbInsertCommandTree tree, SqlVersion sqlVersion)
         {
             bool useGeneratedValuesVariable = false;
             if (sqlVersion > SqlVersion.Sql8 && tree.Returning != null)

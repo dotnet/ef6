@@ -26,6 +26,8 @@ using System.Data.Entity.Core.Query.InternalTrees;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Diagnostics.CodeAnalysis;
+
     internal delegate bool TryGetValue(Node key, out Node value);
 
     #region Helper Classes
@@ -417,6 +419,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="n"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node VisitCollect(Node n)
         {
             //Make sure the only children are projects over unnest
@@ -468,7 +471,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             PhysicalProjectOp physicalProjectOp = (PhysicalProjectOp)n.Child0.Op;
-            PlanCompiler.Assert(physicalProjectOp.Outputs.Count == 1, "PhysicalProject should only have one output at this stage");
+            PlanCompiler.Assert(physicalProjectOp.Outputs.Count == 1, "Physical project should only have one output at this stage");
             Var outputVar = physicalProjectOp.Outputs[0];
 
             Node computationTemplate = TranslateOverGroupAggregateVar(outputVar, null);
@@ -737,6 +740,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op">the unnestOp</param>
         /// <param name="n">current subtree</param>
         /// <returns>modified subtree</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override void Visit(UnnestOp op, Node n)
         {
             VisitDefault(n);
@@ -758,6 +762,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op"></param>
         /// <param name="n"></param>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override void Visit(FunctionOp op, Node n)
         {
             VisitDefault(n);
@@ -886,6 +891,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="candidate"></param>
         /// <param name="groupAggregateVarInfo"></param>
         /// <param name="m_childToParent"></param>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GroupByInto"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void TryProcessCandidate(
             KeyValuePair<Node, Node> candidate,
             GroupAggregateVarInfo groupAggregateVarInfo)

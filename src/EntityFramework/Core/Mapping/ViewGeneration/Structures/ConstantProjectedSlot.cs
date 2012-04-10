@@ -16,12 +16,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// <summary>
         /// Creates a slot with constant value being <paramref name="value"/>.
         /// </summary>
-        internal ConstantProjectedSlot(Constant value, MemberPath memberPath)
+        internal ConstantProjectedSlot(Constant value)
         {
             Debug.Assert(value != null);
             Debug.Assert(value.IsNotNull() == false, "Cannot store NotNull in a slot - NotNull is only for conditions");
             m_constant = value;
-            m_memberPath = memberPath;
         }
         #endregion
 
@@ -30,7 +29,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// The actual value.
         /// </summary>
         private readonly Constant m_constant;
-        private readonly MemberPath m_memberPath;
+
         #endregion
 
         #region Properties

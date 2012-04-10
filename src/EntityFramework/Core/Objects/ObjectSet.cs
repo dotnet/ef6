@@ -6,7 +6,9 @@ using System.Diagnostics;
 
 namespace System.Data.Entity.Core.Objects
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
+    using System.Diagnostics.CodeAnalysis;
+
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public class ObjectSet<TEntity> : ObjectQuery<TEntity>, IObjectSet<TEntity>
         where TEntity : class
     {

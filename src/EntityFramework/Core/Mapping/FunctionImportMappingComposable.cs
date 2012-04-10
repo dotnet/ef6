@@ -13,6 +13,8 @@ using System.Linq;
 
 namespace System.Data.Entity.Core.Mapping
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Represents a mapping from a model function import to a store composable function.
     /// </summary>
@@ -24,9 +26,7 @@ namespace System.Data.Entity.Core.Mapping
             EdmFunction targetFunction,
             List<Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>> structuralTypeMappings,
             EdmProperty[] targetFunctionKeys,
-            StorageMappingItemCollection mappingItemCollection,
-            string sourceLocation,
-            LineInfo lineInfo) 
+            StorageMappingItemCollection mappingItemCollection) 
             : base(functionImport, targetFunction)
         {
             EntityUtil.CheckArgumentNull(mappingItemCollection, "mappingItemCollection");
@@ -48,8 +48,6 @@ namespace System.Data.Entity.Core.Mapping
             m_commandParameters = functionImport.Parameters.Select(p => TypeHelpers.GetPrimitiveTypeUsageForScalar(p.TypeUsage).Parameter(p.Name)).ToArray();
             m_structuralTypeMappings = structuralTypeMappings;
             m_targetFunctionKeys = targetFunctionKeys;
-            m_sourceLocation = sourceLocation;
-            m_lineInfo = lineInfo;
         }
         #endregion
 
@@ -72,8 +70,7 @@ namespace System.Data.Entity.Core.Mapping
         /// ITree template. Requires function argument substitution during function view expansion.
         /// </summary>
         private Node m_internalTreeNode;
-        private readonly string m_sourceLocation;
-        private readonly LineInfo m_lineInfo;
+
         #endregion
 
         #region Properties/Methods
@@ -83,13 +80,14 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         #region GetInternalTree(...) implementation
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "projectOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal Node GetInternalTree(Command targetIqtCommand, IList<Node> targetIqtArguments)
         {
             if (m_internalTreeNode == null)
             {
                 var viewGenErrors = new List<EdmSchemaError>();
                 DiscriminatorMap discriminatorMap;
-                DbQueryCommandTree tree = GenerateFunctionView(viewGenErrors, out discriminatorMap);
+                DbQueryCommandTree tree = GenerateFunctionView(out discriminatorMap);
                 if (viewGenErrors.Count > 0)
                 {
                     throw new MappingException(Helper.CombineErrorMessage(viewGenErrors));
@@ -201,10 +199,8 @@ namespace System.Data.Entity.Core.Mapping
 
         #region GenerateFunctionView(...) implementation
         #region GenerateFunctionView
-        internal DbQueryCommandTree GenerateFunctionView(IList<EdmSchemaError> errors, out DiscriminatorMap discriminatorMap)
+        internal DbQueryCommandTree GenerateFunctionView(out DiscriminatorMap discriminatorMap)
         {
-            Debug.Assert(errors != null, "errors != null");
-
             discriminatorMap = null;
 
             // Prepare the direct call of the store function as StoreFunction(@EdmFunc_p1, ..., @EdmFunc_pN).
@@ -216,7 +212,7 @@ namespace System.Data.Entity.Core.Mapping
             DbExpression queryExpression;
             if (m_structuralTypeMappings != null)
             {
-                queryExpression = GenerateStructuralTypeResultMappingView(storeFunctionInvoke, errors, out discriminatorMap);
+                queryExpression = GenerateStructuralTypeResultMappingView(storeFunctionInvoke, out discriminatorMap);
                 Debug.Assert(queryExpression == null ||
                     TypeSemantics.IsPromotableTo(queryExpression.ResultType, this.FunctionImport.ReturnParameter.TypeUsage),
                     "TypeSemantics.IsPromotableTo(queryExpression.ResultType, this.FunctionImport.ReturnParameter.TypeUsage)");
@@ -251,16 +247,10 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")] // referenced by System.Data.Entity.Design.dll
-        internal void ValidateFunctionView(IList<EdmSchemaError> errors)
-        {
-            DiscriminatorMap dm;
-            GenerateFunctionView(errors, out dm);
-        }
         #endregion
 
         #region GenerateStructuralTypeResultMappingView
-        private DbExpression GenerateStructuralTypeResultMappingView(DbExpression storeFunctionInvoke, IList<EdmSchemaError> errors, out DiscriminatorMap discriminatorMap)
+        private DbExpression GenerateStructuralTypeResultMappingView(DbExpression storeFunctionInvoke, out DiscriminatorMap discriminatorMap)
         {
             Debug.Assert(m_structuralTypeMappings != null && m_structuralTypeMappings.Count > 0, "m_structuralTypeMappings != null && m_structuralTypeMappings.Count > 0");
 
@@ -285,7 +275,7 @@ namespace System.Data.Entity.Core.Mapping
                 }
 
                 var binding = queryExpression.BindAs("row");
-                var entityTypeMappingView = GenerateStructuralTypeMappingView(type, propertyMappings, binding.Variable, errors);
+                var entityTypeMappingView = GenerateStructuralTypeMappingView(type, propertyMappings, binding.Variable);
                 if (entityTypeMappingView == null)
                 {
                     return null;
@@ -312,7 +302,7 @@ namespace System.Data.Entity.Core.Mapping
                     var type = mapping.Item1;
                     var propertyMappings = mapping.Item3;
 
-                    var structuralTypeMappingView = GenerateStructuralTypeMappingView(type, propertyMappings, binding.Variable, errors);
+                    var structuralTypeMappingView = GenerateStructuralTypeMappingView(type, propertyMappings, binding.Variable);
                     if (structuralTypeMappingView == null)
                     {
                         continue;
@@ -325,7 +315,6 @@ namespace System.Data.Entity.Core.Mapping
                 Debug.Assert(structuralTypeMappingViews.Count == structuralTypePredicates.Count, "structuralTypeMappingViews.Count == structuralTypePredicates.Count");
                 if (structuralTypeMappingViews.Count != m_structuralTypeMappings.Count)
                 {
-                    Debug.Assert(errors.Count > 0, "errors.Count > 0");
                     return null;
                 }
 
@@ -346,7 +335,7 @@ namespace System.Data.Entity.Core.Mapping
             return queryExpression;
         }
 
-        private DbExpression GenerateStructuralTypeMappingView(StructuralType structuralType, List<StoragePropertyMapping> propertyMappings, DbExpression row, IList<EdmSchemaError> errors)
+        private static DbExpression GenerateStructuralTypeMappingView(StructuralType structuralType, List<StoragePropertyMapping> propertyMappings, DbExpression row)
         {
             // Generate property views.
             var properties = TypeHelpers.GetAllStructuralMembers(structuralType);
@@ -356,7 +345,7 @@ namespace System.Data.Entity.Core.Mapping
             {
                 var propertyMapping = propertyMappings[i];
                 Debug.Assert(properties[i].EdmEquals(propertyMapping.EdmProperty), "properties[i].EdmEquals(propertyMapping.EdmProperty)");
-                var propertyMappingView = GeneratePropertyMappingView(propertyMapping, row, new List<string>() { propertyMapping.EdmProperty.Name }, errors);
+                var propertyMappingView = GeneratePropertyMappingView(propertyMapping, row);
                 if (propertyMappingView != null)
                 {
                     constructorArgs.Add(propertyMappingView);
@@ -364,7 +353,6 @@ namespace System.Data.Entity.Core.Mapping
             }
             if (constructorArgs.Count != propertyMappings.Count)
             {
-                Debug.Assert(errors.Count > 0, "errors.Count > 0");
                 return null;
             }
             else
@@ -374,14 +362,14 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        private DbExpression GenerateStructuralTypeConditionsPredicate(List<StorageConditionPropertyMapping> conditions, DbExpression row)
+        private static DbExpression GenerateStructuralTypeConditionsPredicate(List<StorageConditionPropertyMapping> conditions, DbExpression row)
         {
             Debug.Assert(conditions.Count > 0, "conditions.Count > 0");
             DbExpression predicate = Helpers.BuildBalancedTreeInPlace(conditions.Select(c => GeneratePredicate(c, row)).ToArray(), (prev, next) => prev.And(next));
             return predicate;
         }
 
-        private DbExpression GeneratePredicate(StorageConditionPropertyMapping condition, DbExpression row)
+        private static DbExpression GeneratePredicate(StorageConditionPropertyMapping condition, DbExpression row)
         {
             Debug.Assert(condition.EdmProperty == null, "C-side conditions are not supported in function mappings.");
             DbExpression columnRef = GenerateColumnRef(row, condition.ColumnProperty);
@@ -396,14 +384,14 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        private DbExpression GeneratePropertyMappingView(StoragePropertyMapping mapping, DbExpression row, List<string> context, IList<EdmSchemaError> errors)
+        private static DbExpression GeneratePropertyMappingView(StoragePropertyMapping mapping, DbExpression row)
         {
             Debug.Assert(mapping is StorageScalarPropertyMapping, "Complex property mapping is not supported in function imports.");
             var scalarPropertyMapping = (StorageScalarPropertyMapping)mapping;
             return GenerateScalarPropertyMappingView(scalarPropertyMapping.EdmProperty, scalarPropertyMapping.ColumnProperty, row);
         }
 
-        private DbExpression GenerateScalarPropertyMappingView(EdmProperty edmProperty, EdmProperty columnProperty, DbExpression row)
+        private static DbExpression GenerateScalarPropertyMappingView(EdmProperty edmProperty, EdmProperty columnProperty, DbExpression row)
         {
             DbExpression accessorExpr = GenerateColumnRef(row, columnProperty);
             if (!TypeSemantics.IsEqual(accessorExpr.ResultType, edmProperty.TypeUsage))
@@ -413,7 +401,7 @@ namespace System.Data.Entity.Core.Mapping
             return accessorExpr;
         }
 
-        private DbExpression GenerateColumnRef(DbExpression row, EdmProperty column)
+        private static DbExpression GenerateColumnRef(DbExpression row, EdmProperty column)
         {
             Debug.Assert(row.ResultType.EdmType.BuiltInTypeKind == BuiltInTypeKind.RowType, "Input type is expected to be a row type.");
             var rowType = (RowType)row.ResultType.EdmType;

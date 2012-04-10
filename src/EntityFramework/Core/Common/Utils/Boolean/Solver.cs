@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
+    using System.Diagnostics.CodeAnalysis;
     using IfThenElseKey = Triple<Vertex, Vertex, Vertex>;
     using System.Diagnostics;
 
@@ -261,7 +262,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// <summary>
         /// Checks requirements for vertices. 
         /// </summary>
-        [Conditional("DEBUG")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"), Conditional("DEBUG")]
         private void AssertVerticesValid(IEnumerable<Vertex> vertices)
         {
             Debug.Assert(null != vertices);
@@ -275,7 +276,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// Checks requirements for a vertex argument (must not be null, and must be in scope
         /// for this solver)
         /// </summary>
-        [Conditional("DEBUG")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"), Conditional("DEBUG")]
         private void AssertVertexValid(Vertex vertex)
         {
             Debug.Assert(vertex != null, "vertex must not be null");

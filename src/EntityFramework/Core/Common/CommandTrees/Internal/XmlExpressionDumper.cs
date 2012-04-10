@@ -20,9 +20,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         private XmlWriter _writer;
 
         internal XmlExpressionDumper(Stream stream)
-            : this(stream, XmlExpressionDumper.DefaultEncoding, true) {}
+            : this(stream, XmlExpressionDumper.DefaultEncoding) {}
         
-        internal XmlExpressionDumper(Stream stream, Encoding encoding, bool indent) : base()
+        internal XmlExpressionDumper(Stream stream, Encoding encoding) : base()
         {
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.CheckCharacters = false;

@@ -5,6 +5,7 @@
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Xml;
 
@@ -101,6 +102,7 @@
 
         #region Methods
 
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         private bool TryGetFacets(EdmType edmType, bool complainOnMissingFacet, out Dictionary<string, Facet> calculatedFacets)
         {
             bool noErrors = true;
@@ -156,7 +158,7 @@
                     Facet facet = Facet.Create(Converter.ConcurrencyModeFacet, value.Value);
                     calculatedFacets.Add(facet.Name, facet);
                 }
-                else if (edmType is PrimitiveType && (edmType as PrimitiveType).PrimitiveTypeKind == PrimitiveTypeKind.String &&
+                else if (edmType is PrimitiveType && ((PrimitiveType)edmType).PrimitiveTypeKind == PrimitiveTypeKind.String &&
                    value.Key == EdmProviderManifest.CollationFacetName)
                 {
                     Facet facet = Facet.Create(Converter.CollationFacet, value.Value);

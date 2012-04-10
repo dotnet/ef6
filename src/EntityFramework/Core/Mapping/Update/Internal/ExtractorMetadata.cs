@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     internal enum ModifiedPropertiesBehavior
@@ -192,7 +193,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             // get metadata for key
             EntityType entityType = entityKey.GetEntitySet(m_translator.MetadataWorkspace).ElementType;
-            RowType keyRowType = entityType.GetKeyRowType(m_translator.MetadataWorkspace);
+            RowType keyRowType = entityType.GetKeyRowType();
 
             ExtractorMetadata keyMetadata = m_translator.GetExtractorMetadata(stateEntry.EntitySet, keyRowType);
             int keyMemberCount = keyRowType.Properties.Count;
@@ -360,6 +361,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <summary>
             /// Gets the member described by this wrapper.
             /// </summary>
+            [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
             internal readonly EdmMember Member;
 
             internal MemberInformation(int ordinal, int? entityKeyOrdinal, PropagatorFlags flags, EdmMember member, bool isServerGenerated, bool isNullConditionMember)

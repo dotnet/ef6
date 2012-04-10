@@ -15,6 +15,7 @@ namespace System.Data.Entity.Core {
     using System.Data.Entity.Resources;
     using System.Data.SqlTypes;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -23,6 +24,7 @@ namespace System.Data.Entity.Core {
     using System.Security.Permissions;
     using System.Text;
 
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal static class EntityUtil {
 
         internal const int AssemblyQualifiedNameIndex = 3;
@@ -292,6 +294,7 @@ namespace System.Data.Entity.Core {
         {
             return new ConstraintException(message);
         }
+        [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         static internal IndexOutOfRangeException IndexOutOfRange(string error)
         {
             return new IndexOutOfRangeException(error);
@@ -378,7 +381,7 @@ namespace System.Data.Entity.Core {
         /// <returns>EntityException</returns>
         static internal EntitySqlException EntitySqlError( System.Data.Entity.Core.Common.EntitySql.ErrorContext errCtx, string message, Exception innerException )
         {
-            return EntitySqlException.Create(errCtx, message, null);
+            return EntitySqlException.Create(errCtx, message, innerException);
         }
 
         /// <summary>
@@ -1438,9 +1441,6 @@ namespace System.Data.Entity.Core {
             return InvalidOperation(System.Data.Entity.Resources.Strings.EntityKey_NoCorrespondingOSpaceTypeForEnumKeyMember(keyField, cspaceTypeName));
         }
         internal static ArgumentException MissingKeyValue(string argument, string keyField, string typeName) {
-            return MissingKeyValue(argument, keyField, typeName, null);
-        }
-        internal static ArgumentException MissingKeyValue(string argument, string keyField, string typeName, Exception inner) {
             return Argument(System.Data.Entity.Resources.Strings.EntityKey_MissingKeyValue(keyField, typeName), argument);
         }
         internal static InvalidOperationException NullKeyValue(string keyField, string typeName)
@@ -1700,10 +1700,12 @@ namespace System.Data.Entity.Core {
                 TypeHelpers.GetFullName(generatedDefinitionResultType)));
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         static internal Exception EntityParameterCollectionInvalidIndex(int index, int count)
         {
             return new IndexOutOfRangeException(System.Data.Entity.Resources.Strings.EntityParameterCollectionInvalidIndex(index.ToString(CultureInfo.InvariantCulture), count.ToString(CultureInfo.InvariantCulture)));
         }
+        [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         static internal Exception EntityParameterCollectionInvalidParameterName(string parameterName)
         {
             return new IndexOutOfRangeException(System.Data.Entity.Resources.Strings.EntityParameterCollectionInvalidParameterName(parameterName));

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Reflection;
 namespace System.Data.Entity.Core.Objects.ELinq
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Replaces expression patterns produced by the compiler with approximations
     /// used in query translation. For instance, the following VB code:
@@ -113,7 +115,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <summary>
         /// Returns true if the given expression is a constant '0'.
         /// </summary>
-        private bool IsConstantZero(Expression expression)
+        private static bool IsConstantZero(Expression expression)
         {
             return expression.NodeType == ExpressionType.Constant &&
                 ((ConstantExpression)expression).Value.Equals(0);
@@ -125,6 +127,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// - Operator overloads
         /// - VB operators
         /// </summary>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal override Expression VisitMethodCall(MethodCallExpression m)
         {
             m = (MethodCallExpression)base.VisitMethodCall(m);

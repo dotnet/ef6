@@ -8,10 +8,11 @@ using System.Threading;
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Base EdmType class for all the model types
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
     public abstract class EdmType : GlobalItem
     {
         #region Constructors
@@ -30,7 +31,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="name">name of the type</param>
         /// <param name="namespaceName">namespace of the type</param>
         /// <param name="version">version of the type</param>
-        /// <param name="dataSpace">dataSpace in which this edmtype belongs to</param>
+        /// <param name="dataSpace">dataSpace in which this type belongs to</param>
         /// <exception cref="System.ArgumentNullException">Thrown if either the name, namespace or version arguments are null</exception>
         internal EdmType(string name,
                          string namespaceName,
@@ -218,7 +219,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal static string CreateEdmTypeIdentity(string namespaceName, string name)
         {
             string identity = string.Empty;
-            if (string.Empty != namespaceName)
+            if (!string.IsNullOrEmpty(namespaceName))
             {
                 identity = namespaceName + ".";
             }
@@ -236,27 +237,27 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Initialize the type. This method must be called since for bootstraping we only call the constructor. 
         /// This method will help us initialize the type
         /// </summary>
-        /// <param name="edmType">The edm type to initialize with item attributes</param>
+        /// <param name="type">The edm type to initialize with item attributes</param>
         /// <param name="name">The name of this type</param>
         /// <param name="namespaceName">The namespace of this type</param>
         /// <param name="version">The version of this type</param>
-        /// <param name="dataSpace">dataSpace in which this edmtype belongs to</param>
+        /// <param name="dataSpace">dataSpace in which this type belongs to</param>
         /// <param name="isAbstract">If the type is abstract</param>
         /// <param name="isSealed">If the type is sealed</param>
         /// <param name="baseType">The base type for this type</param>
         internal static void 
-            Initialize(EdmType edmType,
+            Initialize(EdmType type,
                                         string name,
                                         string namespaceName,
                                         DataSpace dataSpace,
                                         bool isAbstract,
                                         EdmType baseType)
         {
-            edmType._baseType = baseType;
-            edmType._name = name;
-            edmType._namespace = namespaceName;
-            edmType.DataSpace = dataSpace;
-            edmType.Abstract = isAbstract;
+            type._baseType = baseType;
+            type._name = name;
+            type._namespace = namespaceName;
+            type.DataSpace = dataSpace;
+            type.Abstract = isAbstract;
         }
 
         /// <summary>
@@ -271,6 +272,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Returns the collection type whose element type is this edm type
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public CollectionType GetCollectionType()
         {
             if (_collectionType == null)

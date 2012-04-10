@@ -48,6 +48,8 @@ using md = System.Data.Entity.Core.Metadata.Edm;
 //
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Diagnostics.CodeAnalysis;
+
     #region AugmentedNode
     //
     // This region describes a number of classes that are used to build an annotated 
@@ -97,6 +99,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="id">Id for this node</param>
         /// <param name="node">current node</param>
         /// <param name="children">list of children</param>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal AugmentedNode(int id, Node node, List<AugmentedNode> children)
         {
             m_id = id;
@@ -349,6 +352,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="joinKind">the Join Kind</param>
         /// <param name="leftVars">list of equijoin columns of the left table</param>
         /// <param name="rightVars">equijoin columns of the right table</param>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private JoinEdge(AugmentedTableNode left, AugmentedTableNode right,
             AugmentedJoinNode joinNode, JoinKind joinKind,
             List<ColumnVar> leftVars, List<ColumnVar> rightVars)
@@ -410,6 +414,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="leftVar">equijoin column of the left table</param>
         /// <param name="rightVar">equijoin column of the right table</param>
         /// <returns>the new join edge</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal static JoinEdge CreateJoinEdge(AugmentedTableNode left, AugmentedTableNode right,
             AugmentedJoinNode joinNode,
             ColumnVar leftVar, ColumnVar rightVar)
@@ -474,7 +479,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private Command m_command;
         private AugmentedJoinNode m_root;
         private List<AugmentedNode> m_vertexes;
-        private List<AugmentedTableNode> m_tableVertexes;
         private Dictionary<Table, AugmentedTableNode> m_tableVertexMap;
         private VarMap m_varMap;
         private Dictionary<Var, VarVec> m_reverseVarMap;
@@ -494,6 +498,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="constraintManager">current constraint manager</param>
         /// <param name="varRefManager">the var ref manager for the tree</param>
         /// <param name="joinNode">current join node</param>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal JoinGraph(Command command, ConstraintManager constraintManager, VarRefManager varRefManager, Node joinNode)
         {
             m_command = command;
@@ -501,7 +506,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             m_varRefManager = varRefManager;
 
             m_vertexes = new List<AugmentedNode>();
-            m_tableVertexes = new List<AugmentedTableNode>();
             m_tableVertexMap = new Dictionary<Table, AugmentedTableNode>();
             m_varMap = new VarMap();
             m_reverseVarMap = new Dictionary<Var, VarVec>();
@@ -593,6 +597,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="columnVars">the list of vars to fill in</param>
         /// <param name="vec">the var set</param>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "columnVar"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private static void GetColumnVars(List<ColumnVar> columnVars, IEnumerable<Var> vec)
         {
             foreach (Var v in vec)
@@ -978,7 +983,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="edge1"></param>
         /// <param name="edge2"></param>
-        private bool GenerateTransitiveEdge(JoinEdge edge1, JoinEdge edge2)
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        private static bool GenerateTransitiveEdge(JoinEdge edge1, JoinEdge edge2)
         {
             PlanCompiler.Assert(edge1.Right == edge2.Left, "need a common table for transitive predicate generation");
 
@@ -1150,7 +1156,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="root"></param>
         /// <param name="table"></param>
         /// <returns></returns>
-        private bool AreAllTableRowsPreserved(AugmentedNode root, AugmentedTableNode table)
+        private static bool AreAllTableRowsPreserved(AugmentedNode root, AugmentedTableNode table)
         {
             if (root is AugmentedTableNode)
             {
@@ -1178,7 +1184,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="joinEdges"></param>
         /// <param name="table"></param>
         /// <returns></returns>
-        private bool ContainsJoinEdgeForTable(IEnumerable<JoinEdge> joinEdges, Table table)
+        private static bool ContainsJoinEdgeForTable(IEnumerable<JoinEdge> joinEdges, Table table)
         {
             foreach (JoinEdge joinEdge in joinEdges)
             {
@@ -1240,13 +1246,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="joinEdge"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private bool IsConstraintPresentForTurningIntoInnerJoin(JoinEdge joinEdge)
         {
             List<ForeignKeyConstraint> fkConstraints;
 
             if (m_constraintManager.IsParentChildRelationship(joinEdge.Right.Table.TableMetadata.Extent, joinEdge.Left.Table.TableMetadata.Extent, out fkConstraints))
             {
-                PlanCompiler.Assert(fkConstraints != null && fkConstraints.Count > 0, "invalid fk constraints?");
+                PlanCompiler.Assert(fkConstraints != null && fkConstraints.Count > 0, "Invalid foreign key constraints");
                 foreach (ForeignKeyConstraint fkConstraint in fkConstraints)
                 {
                     IList<ColumnVar> columnVars;
@@ -1459,6 +1466,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="tableVars">list of vars to replace</param>
         /// <param name="replacementVars">list of vars to replace with</param>
         /// <typeparam name="T">Var or one of its subtypes</typeparam>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "vars"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void MarkTableAsEliminated<T>(AugmentedTableNode tableNode, AugmentedTableNode replacementNode,
             List<T> tableVars, List<T> replacementVars) where T : Var
         {
@@ -1654,7 +1662,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="edge1"></param>
         /// <param name="edge2"></param>
         /// <returns></returns>
-        private bool AreMatchingForStarSelfJoinElimination(JoinEdge edge1, JoinEdge edge2)
+        private static bool AreMatchingForStarSelfJoinElimination(JoinEdge edge1, JoinEdge edge2)
         {
             // In order for the join edges to be compatible thay have to  
             // represent joins on the same number of columns and of the same join kinds.
@@ -1881,6 +1889,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// Eliminate the left table 
         /// </summary>
         /// <param name="joinEdge"></param>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void EliminateLeftTable(JoinEdge joinEdge)
         {
             PlanCompiler.Assert(joinEdge.JoinKind == JoinKind.Inner, "Expected inner join");
@@ -1910,6 +1919,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// Eliminate the right table
         /// </summary>
         /// <param name="joinEdge"></param>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void EliminateRightTable(JoinEdge joinEdge)
         {
             PlanCompiler.Assert(joinEdge.JoinKind == JoinKind.LeftOuter, "Expected left-outer-join");
@@ -2175,6 +2185,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// Eliminate the join if possible, for this edge
         /// </summary>
         /// <param name="joinEdge">the current join edge</param>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void EliminateParentChildJoin(JoinEdge joinEdge)
         {
             List<ForeignKeyConstraint> fkConstraints;
@@ -2183,7 +2194,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             if (m_constraintManager.IsParentChildRelationship(joinEdge.Left.Table.TableMetadata.Extent, joinEdge.Right.Table.TableMetadata.Extent,
                 out fkConstraints))
             {
-                PlanCompiler.Assert(fkConstraints != null && fkConstraints.Count > 0, "invalid fk constraints?");
+                PlanCompiler.Assert(fkConstraints != null && fkConstraints.Count > 0, "Invalid foreign key constraints");
                 // Now walk through the list of foreign key constraints and attempt join 
                 // elimination
                 foreach (ForeignKeyConstraint fkConstraint in fkConstraints)
@@ -2203,7 +2214,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 if (m_constraintManager.IsParentChildRelationship(joinEdge.Right.Table.TableMetadata.Extent, joinEdge.Left.Table.TableMetadata.Extent,
                 out fkConstraints))
                 {
-                    PlanCompiler.Assert(fkConstraints != null && fkConstraints.Count > 0, "invalid fk constraints?");
+                    PlanCompiler.Assert(fkConstraints != null && fkConstraints.Count > 0, "Invalid foreign key constraints");
                     // Now walk through the list of foreign key constraints and attempt join 
                     // elimination
                     foreach (ForeignKeyConstraint fkConstraint in fkConstraints)
@@ -2261,6 +2272,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// Return the result of join elimination
         /// </summary>
         /// <returns>the transformed node tree</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node BuildNodeTree()
         {
             // Has anything changed? If not, then simply return the original tree.
@@ -2299,6 +2311,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="inputNode"></param>
         /// <param name="nonNullableColumns"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node BuildFilterForNullableColumns(Node inputNode, VarVec nonNullableColumns)
         {
             if (nonNullableColumns == null)
@@ -2441,6 +2454,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="joinNode">the crossjoin node</param>
         /// <returns>new node tree</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node RebuildNodeTreeForCrossJoins(AugmentedJoinNode joinNode)
         {
             List<Node> newChildren = new List<Node>();

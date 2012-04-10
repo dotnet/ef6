@@ -411,7 +411,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="inputBinding"></param>
         /// <param name="flattenedProperties"></param>
         /// <returns>An <see cref="DbExpressionBinding"/> over the newly created <see cref="DbProjectExpression"/></returns>
-        private DbExpressionBinding CapWithProject(DbExpressionBinding inputBinding, IList<DbPropertyExpression> flattenedProperties)
+        private static DbExpressionBinding CapWithProject(DbExpressionBinding inputBinding, IList<DbPropertyExpression> flattenedProperties)
         {
             List<KeyValuePair<string, DbExpression>> projectColumns = new List<KeyValuePair<string, DbExpression>>(flattenedProperties.Count);
 

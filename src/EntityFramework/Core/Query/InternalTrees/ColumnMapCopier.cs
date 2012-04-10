@@ -10,6 +10,8 @@ using System.Data.Entity.Core.Metadata.Edm;
 
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// The ColumnMapCopier clones an entire ColumnMap hierarchy; this is different
     /// than the ColumnMapTranslator, which only copies things that need to be copied.
@@ -216,6 +218,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         /// MultipleDiscriminatorPolymorphicColumnMap
         /// </summary>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ColumnMapCopier")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "MultipleDiscriminatorPolymorphicColumnMap")]
         internal override ColumnMap Visit(MultipleDiscriminatorPolymorphicColumnMap columnMap, VarMap replacementVarMap)
         {
             // At this time, we shouldn't ever see this type here; it's for SPROCS which don't use

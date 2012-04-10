@@ -16,15 +16,22 @@ namespace System.Data.Entity.Core.Mapping {
         /// </summary>
         /// <param name="isPartial">Whether the property mapping representation is 
         ///                         totally represented in this table mapping fragment or not. </param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "isPartial")]
         internal StorageComplexTypeMapping(bool isPartial) {
+#if DEBUG
             m_isPartial = isPartial;
+#endif
         }
         #endregion
 
         #region Fields
         Dictionary<string, StoragePropertyMapping> m_properties = new Dictionary<string, StoragePropertyMapping>(StringComparer.Ordinal);  //child property mappings that make up this complex property
         Dictionary<EdmProperty, StoragePropertyMapping> m_conditionProperties = new Dictionary<EdmProperty, StoragePropertyMapping>(EqualityComparer<EdmProperty>.Default);  //Condition property mappings for this complex type
+
+#if DEBUG
         bool m_isPartial;  //Whether the property mapping representation is 
+#endif
+
         //totally represented in this table mapping fragment or not.
         private Dictionary<string, ComplexType> m_types = new Dictionary<string, ComplexType>(StringComparer.Ordinal);  //Types for which the mapping holds true for.
         private Dictionary<string, ComplexType> m_isOfTypes = new Dictionary<string, ComplexType>(StringComparer.Ordinal);  //Types for which the mapping holds true for
@@ -153,6 +160,7 @@ namespace System.Data.Entity.Core.Mapping {
             return null;
         }
 
+#if DEBUG
         /// <summary>
         /// This method is primarily for debugging purposes.
         /// Will be removed shortly.
@@ -184,6 +192,8 @@ namespace System.Data.Entity.Core.Mapping {
                 propertyMapping.Print(index + 5);
             }
         }
+#endif
+
         #endregion
     }
 }

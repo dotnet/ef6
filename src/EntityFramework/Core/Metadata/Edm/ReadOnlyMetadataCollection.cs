@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Class representing a read-only wrapper around MetadataCollection
     /// </summary>
@@ -26,7 +28,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// The enumerator for MetadataCollection
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
+        [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
         public struct Enumerator : IEnumerator<T>
         {
             /// <summary>

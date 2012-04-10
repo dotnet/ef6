@@ -39,6 +39,8 @@ using md = System.Data.Entity.Core.Metadata.Edm;
 //
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// A PropertyRef class encapsulates a reference to one or more properties of
     /// a complex instance - a record type, a complex type or an entity type.
@@ -246,6 +248,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="innerProperty">the inner property</param>
         /// <param name="outerProperty">the outer property</param>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "NestedPropertyRef"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "innerProperty"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal NestedPropertyRef(PropertyRef innerProperty, PropertyRef outerProperty)
         {
             PlanCompiler.Assert(!(innerProperty is NestedPropertyRef), "innerProperty cannot be a NestedPropertyRef"); 

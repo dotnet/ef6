@@ -288,7 +288,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #endregion
 
-        #region AncillaryOps
+    #region AncillaryOps
         protected override void VisitAncillaryOpDefault(AncillaryOp op, Node n)
         {
             VisitDefault(n);
@@ -311,7 +311,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
         #endregion
 
-        #region RelOps
+    #region RelOps
         protected override void VisitRelOpDefault(RelOp op, Node n)
         {
             VisitDefault(n);
@@ -427,7 +427,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
         #endregion
 
-        #region PhysicalOps
+    #region PhysicalOps
         protected override void VisitPhysicalOpDefault(PhysicalOp op, Node n)
         {
             VisitDefault(n);
@@ -461,7 +461,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #endregion
 
-        #region private state
+    #region private state
         private Command m_command;
         #endregion
 

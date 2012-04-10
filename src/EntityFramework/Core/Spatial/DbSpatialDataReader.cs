@@ -1,9 +1,10 @@
 ﻿namespace System.Data.Entity.Core.Spatial
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// A provider-independent service API for geospatial (Geometry/Geography) type support.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public abstract class DbSpatialDataReader
     {
         /// <summary>

@@ -27,6 +27,7 @@ using System.Linq;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// This class "pulls" up nest operations to the root of the tree
@@ -35,6 +36,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     /// The goal of this module is to eliminate nest operations from the query - more
     /// specifically, the nest operations are pulled up to the root of the query instead.
     ///</remarks>
+    [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
     internal class NestPullup : BasicOpVisitorOfNode
     {
 
@@ -90,6 +92,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         /// The driver routine. Does all the hard work of processing
         /// </summary>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "physicalProject"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void Process()
         {
             PlanCompiler.Assert(Command.Root.Op.OpType == OpType.PhysicalProject, "root node is not physicalProject?");
@@ -117,6 +120,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="n"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "singleStreamNest"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private static bool IsNestOpNode(Node n)
         {
             PlanCompiler.Assert(n.Op.OpType != OpType.SingleStreamNest, "illegal singleStreamNest?");
@@ -350,6 +354,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ExistsOp"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "NestPull"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(ExistsOp op, Node n)
         {
             Var inputVar = ((ProjectOp)n.Child0.Op).Outputs.First;
@@ -712,6 +717,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GroupByIntoOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(GroupByIntoOp op, Node n)
         {
             PlanCompiler.Assert(n.HasChild3 && n.Child3.Children.Count > 0, "GroupByIntoOp with no group aggregates?");
@@ -791,7 +797,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override Node Visit(ProjectOp op, Node n)
         {
 #if DEBUG
-            string input = Dump.ToXml(Command, n);
+            string input = Dump.ToXml(n);
 #endif //DEBUG
 
             // First, visit my children
@@ -827,7 +833,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
 #if DEBUG
             int size = input.Length;// GC.KeepAlive makes FxCop Grumpy.
-            string output = Dump.ToXml(Command, newNode);
+            string output = Dump.ToXml(newNode);
 #endif //DEBUG
             return newNode;
         }
@@ -876,6 +882,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="nestNode"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Vars"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "collectionVar"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node MergeNestedNestOps(Node nestNode)
         {
 
@@ -888,7 +895,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
 #if DEBUG
-            string input = Dump.ToXml(Command, nestNode);
+            string input = Dump.ToXml(nestNode);
 #endif //DEBUG
             NestBaseOp nestOp = (NestBaseOp)nestNode.Op;
             Node nestedNestNode = nestNode.Child0;
@@ -951,7 +958,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
 #if DEBUG
             int size = input.Length;// GC.KeepAlive makes FxCop Grumpy.
-            string output = Dump.ToXml(Command, newNode);
+            string output = Dump.ToXml(newNode);
 #endif //DEBUG
             return newNode;
         }
@@ -965,10 +972,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="projectNode"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "physicalProject"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node ProjectOpCase1(Node projectNode)
         {
 #if DEBUG
-            string input = Dump.ToXml(Command, projectNode);
+            string input = Dump.ToXml(projectNode);
 #endif //DEBUG
 
             ProjectOp op = (ProjectOp)projectNode.Op;
@@ -1160,7 +1168,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
 #if DEBUG
             int size = input.Length;// GC.KeepAlive makes FxCop Grumpy.
-            string output = Dump.ToXml(Command, nestNode);
+            string output = Dump.ToXml(nestNode);
 #endif //DEBUG
             return nestNode;
         }
@@ -1306,10 +1314,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="projectNode"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node ProjectOpCase2(Node projectNode)
         {
 #if DEBUG
-            string input = Dump.ToXml(Command, projectNode);
+            string input = Dump.ToXml(projectNode);
 #endif //DEBUG
             ProjectOp projectOp = (ProjectOp)projectNode.Op;
             Node nestNode = projectNode.Child0;
@@ -1484,7 +1493,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             Command.RecomputeNodeInfo(nestNode);
 #if DEBUG
             int size = input.Length; // GC.KeepAlive makes FxCop Grumpy.
-            string output = Dump.ToXml(Command, nestNode);
+            string output = Dump.ToXml(nestNode);
 #endif //DEBUG
             return nestNode;
         }
@@ -1601,6 +1610,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="inputNestOp"></param>
         /// <param name="sortKeys"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SingleStreamNestOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private NestBaseOp GetNestOpWithConsolidatedSortKeys(NestBaseOp inputNestOp, List<InternalTrees.SortKey> sortKeys)
         {
             NestBaseOp result;
@@ -1717,10 +1727,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "physicalProject"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarDef"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(UnnestOp op, Node n)
         {
 #if DEBUG
-            string input = Dump.ToXml(Command, n);
+            string input = Dump.ToXml(n);
 #endif //DEBUG
             // First, visit my children
             VisitChildren(n);
@@ -1728,14 +1739,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // If we're unnesting a UDT, then simply return - we cannot eliminate this unnest
             // It must be handled by the store
             md.CollectionType collType = TypeHelpers.GetEdmType<md.CollectionType>(op.Var.Type);
-            if (TypeUtils.IsUdt(collType.TypeUsage))
-            {
-                return n;
-            }
 
             // Find the VarDef node for the var we're supposed to unnest.
-            PlanCompiler.Assert(n.Child0.Op.OpType == OpType.VarDef, "Unnest without VarDef input?");
-            PlanCompiler.Assert(((VarDefOp)n.Child0.Op).Var == op.Var, "Unnest var not found?");
+            PlanCompiler.Assert(n.Child0.Op.OpType == OpType.VarDef, "Un-nest without VarDef input?");
+            PlanCompiler.Assert(((VarDefOp)n.Child0.Op).Var == op.Var, "Un-nest var not found?");
             PlanCompiler.Assert(n.Child0.HasChild0, "VarDef without input?");
             Node newNode = n.Child0.Child0;
 
@@ -1795,7 +1802,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
 #if DEBUG
             int size = input.Length; // GC.KeepAlive makes FxCop Grumpy.
-            string output = Dump.ToXml(Command, newNode);
+            string output = Dump.ToXml(newNode);
 #endif //DEBUG
             return newNode;
         }
@@ -1913,6 +1920,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "physicalProject"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(PhysicalProjectOp op, Node n)
         {
             // cannot be multi-input (not at this point)
@@ -1934,7 +1942,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
 #if DEBUG
-            string input = Dump.ToXml(Command, n);
+            string input = Dump.ToXml(n);
 #endif //DEBUG
 
             Node nestNode = n.Child0;
@@ -1970,7 +1978,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
 #if DEBUG
             int size = input.Length;// GC.KeepAlive makes FxCop Grumpy.
-            string output = Dump.ToXml(Command, n);
+            string output = Dump.ToXml(n);
 #endif //DEBUG
 
             return n;
@@ -2018,6 +2026,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="ssnOp"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private List<InternalTrees.SortKey> BuildSortKeyList(SingleStreamNestOp ssnOp)
         {
             VarVec sortVars = Command.CreateVarVec();
@@ -2109,7 +2118,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private Node ConvertToSingleStreamNest(Node nestNode, Dictionary<Var, ColumnMap> varRefReplacementMap, VarList flattenedOutputVarList, out SimpleColumnMap[] parentKeyColumnMaps)
         {
 #if DEBUG
-            string input = Dump.ToXml(Command, nestNode);
+            string input = Dump.ToXml(nestNode);
 #endif //DEBUG
             MultiStreamNestOp nestOp = (MultiStreamNestOp)nestNode.Op;
 
@@ -2321,7 +2330,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
 #if DEBUG
             int size = input.Length;// GC.KeepAlive makes FxCop Grumpy.
-            string output = Dump.ToXml(Command, newNestNode);
+            string output = Dump.ToXml(newNestNode);
 #endif //DEBUG
 
             return newNestNode;

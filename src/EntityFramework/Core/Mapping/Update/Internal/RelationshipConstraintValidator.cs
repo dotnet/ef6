@@ -8,9 +8,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
 
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal partial class UpdateTranslator
     {
         /// <summary>
@@ -22,12 +24,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private class RelationshipConstraintValidator
         {
             #region Constructor
-            internal RelationshipConstraintValidator(UpdateTranslator updateTranslator)
+            internal RelationshipConstraintValidator()
             {
                 m_existingRelationships = new Dictionary<DirectionalRelationship, DirectionalRelationship>(EqualityComparer<DirectionalRelationship>.Default);
                 m_impliedRelationships = new Dictionary<DirectionalRelationship, IEntityStateEntry>(EqualityComparer<DirectionalRelationship>.Default);
                 m_referencingRelationshipSets = new Dictionary<EntitySet, List<AssociationSet>>(EqualityComparer<EntitySet>.Default);
-                m_updateTranslator = updateTranslator;
             }
             #endregion
 
@@ -47,10 +48,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// </summary>
             private readonly Dictionary<EntitySet, List<AssociationSet>> m_referencingRelationshipSets;
 
-            /// <summary>
-            /// Update translator containing session context.
-            /// </summary>
-            private readonly UpdateTranslator m_updateTranslator;
             #endregion
 
             #region Methods

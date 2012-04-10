@@ -114,6 +114,7 @@ namespace System.Data.Entity.Core.Objects
     /// ObjectContext is the top-level object that encapsulates a connection between the CLR and the database,
     /// serving as a gateway for Create, Read, Update, and Delete operations.
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     public class ObjectContext : IDisposable
     {
         #region Fields
@@ -150,7 +151,7 @@ namespace System.Data.Entity.Core.Objects
 
         private readonly ObjectContextOptions _options = new ObjectContextOptions();
 
-        private readonly string s_UseLegacyPreserveChangesBehavior = "EntityFramework_UseLegacyPreserveChangesBehavior";
+        private const string UseLegacyPreserveChangesBehavior = "EntityFramework_UseLegacyPreserveChangesBehavior";
 
         #endregion Fields
 
@@ -175,7 +176,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="connectionString">the connection string to use in the underlying EntityConnection to the store</param>
         /// <exception cref="ArgumentNullException">connectionString is null</exception>
         /// <exception cref="ArgumentException">if connectionString is invalid</exception>
-        [ResourceExposure(ResourceScope.Machine)] //Exposes the file names as part of ConnectionString which are a Machine resource
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope"), ResourceExposure(ResourceScope.Machine)] //Exposes the file names as part of ConnectionString which are a Machine resource
         [ResourceConsumption(ResourceScope.Machine)] //For CreateEntityConnection method. But the paths are not created in this method.
         public ObjectContext(string connectionString)
             : this(CreateEntityConnection(connectionString), false)
@@ -261,7 +262,7 @@ namespace System.Data.Entity.Core.Objects
             }
 
             // load config file properties
-            string value = ConfigurationManager.AppSettings[s_UseLegacyPreserveChangesBehavior];
+            string value = ConfigurationManager.AppSettings[UseLegacyPreserveChangesBehavior];
             bool useV35Behavior = false;
             if (Boolean.TryParse(value, out useV35Behavior))
             {
@@ -773,6 +774,7 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         /// <param name="entity">The source entity on which the relationship is defined</param>
         /// <param name="selector">A LINQ expression specifying the property to load</param>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public void LoadProperty<TEntity>(TEntity entity, Expression<Func<TEntity, object>> selector)
         {
             // We used to throw an ArgumentException if the expression contained a Convert.  Now we remove the convert,
@@ -798,6 +800,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="entity">The source entity on which the relationship is defined</param>
         /// <param name="selector">A LINQ expression specifying the property to load</param>
         /// <param name="mergeOption">The merge option to use for the load</param>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public void LoadProperty<TEntity>(TEntity entity, Expression<Func<TEntity, object>> selector, MergeOption mergeOption)
         {
             // We used to throw an ArgumentException if the expression contained a Convert.  Now we remove the convert,
@@ -1027,7 +1030,7 @@ namespace System.Data.Entity.Core.Objects
                 try
                 {
                     // Attach the root of entity graph to the cache.
-                    AttachSingleObject(wrappedEntity, entitySet, "entity");
+                    AttachSingleObject(wrappedEntity, entitySet);
                     doCleanup = false;
                 }
                 finally
@@ -1077,13 +1080,13 @@ namespace System.Data.Entity.Core.Objects
 
             this.AttachTo(null, entity);
         }
+
         /// <summary>
         /// Attaches single object to the cache without adding its related entities.
         /// </summary>
         /// <param name="entity">Entity to be attached.</param>
         /// <param name="entitySet">"Computed" entity set.</param>
-        /// <param name="argumentName">Name of the argument passed to a public method, for use in exceptions.</param>
-        internal void AttachSingleObject(IEntityWrapper wrappedEntity, EntitySet entitySet, string argumentName)
+        internal void AttachSingleObject(IEntityWrapper wrappedEntity, EntitySet entitySet)
         {
             Debug.Assert(wrappedEntity != null, "entity wrapper shouldn't be null");
             Debug.Assert(wrappedEntity.Entity != null, "entity shouldn't be null");
@@ -1133,7 +1136,7 @@ namespace System.Data.Entity.Core.Objects
                     // SetChangeTrackerOntoEntity is now called from PromoteKeyEntryInitialization(). 
                     // Calling PromoteKeyEntryInitialization() before calling relationshipManager.AttachContext prevents
                     // overriding Context property on relationshipManager (and attaching relatedEnds to current context).
-                    this.ObjectStateManager.PromoteKeyEntryInitialization(this, entry, wrappedEntity, /*shadowValues*/ null, /*replacingEntry*/ false);
+                    this.ObjectStateManager.PromoteKeyEntryInitialization(this, entry, wrappedEntity, /*replacingEntry*/ false);
 
                     Debug.Assert(this.ObjectStateManager.TransactionManager.TrackProcessedEntities, "Expected tracking processed entities to be true when adding.");
                     Debug.Assert(this.ObjectStateManager.TransactionManager.ProcessedEntities != null, "Expected non-null collection when flag set.");
@@ -1144,11 +1147,9 @@ namespace System.Data.Entity.Core.Objects
 
                     this.ObjectStateManager.PromoteKeyEntry(entry,
                         wrappedEntity,
-                        /*shadowValues*/ null,
                         /*replacingEntry*/ false,
                         /*setIsLoaded*/ false,
-                        /*keyEntryInitialized*/ true,
-                        "Attach");
+                        /*keyEntryInitialized*/ true);
 
                     ObjectStateManager.FixupReferencesByForeignKeys(entry);
 
@@ -1164,7 +1165,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 VerifyContextForAddOrAttach(wrappedEntity);
                 wrappedEntity.Context = this;
-                entry = this.ObjectStateManager.AttachEntry(key, wrappedEntity, entitySet, argumentName);
+                entry = this.ObjectStateManager.AttachEntry(key, wrappedEntity, entitySet);
 
                 Debug.Assert(this.ObjectStateManager.TransactionManager.TrackProcessedEntities, "Expected tracking processed entities to be true when adding.");
                 Debug.Assert(this.ObjectStateManager.TransactionManager.ProcessedEntities != null, "Expected non-null collection when flag set.");
@@ -1239,7 +1240,7 @@ namespace System.Data.Entity.Core.Objects
 
             IEntityWrapper wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(entityLike, this);
             EntityKey key = wrappedEntity.EntityKey;
-            RefreshCheck(entities, entityLike, key);
+            RefreshCheck(entities, key);
 
             // Retrieve the EntitySet for the EntityKey and add an entry in the dictionary
             // that maps a set to the keys of entities that should be refreshed from that set.
@@ -2004,15 +2005,10 @@ namespace System.Data.Entity.Core.Objects
         /// The entity is added to the entities dictionary, and checked for duplicates.
         /// </summary>
         /// <param name="entities">on exit, entity is added to this dictionary.</param>
-        /// <param name="entity">An object reference that is not "Added," has an ObjectStateEntry and is not in the entities list.</param>
         /// <param name="key"></param>
         private void RefreshCheck(
-            Dictionary<EntityKey, EntityEntry> entities,
-            object entity, EntityKey key)
+            Dictionary<EntityKey, EntityEntry> entities, EntityKey key)
         {
-            Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
-            Debug.Assert(entity != null, "The entity is null.");
-
             EntityEntry entry = ObjectStateManager.FindEntityEntry(key);
             if (null == entry)
             {
@@ -2034,7 +2030,6 @@ namespace System.Data.Entity.Core.Objects
                 throw EntityUtil.NthElementIsDuplicate(entities.Count);
             }
 
-            Debug.Assert(null != entity, "null entity");
             Debug.Assert(null != (object)key, "null entity.Key");
             Debug.Assert(null != key.EntitySetName, "null entity.Key.EntitySetName");
         }
@@ -2459,6 +2454,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="key">Key of the object to be found.</param>
         /// <param name="value">Out param for the object.</param>
         /// <returns>True if the object was found, false otherwise.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1007:UseGenericsWhereAppropriate")]
         public bool TryGetObjectByKey(EntityKey key, out object value)
         {
             // try the cache first
@@ -2626,7 +2622,7 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope"), SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         private EntityCommand CreateEntityCommandForFunctionImport(string functionName, out EdmFunction functionImport, params ObjectParameter[] parameters)
         {
             for (int i = 0; i < parameters.Length; i++)
@@ -2905,6 +2901,7 @@ namespace System.Data.Entity.Core.Objects
         /// Enumerable of the current set of CLR proxy types.
         /// This will never be null.
         /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public static IEnumerable<Type> GetKnownProxyTypes()
         {
             return EntityProxyFactory.GetKnownProxyTypes();

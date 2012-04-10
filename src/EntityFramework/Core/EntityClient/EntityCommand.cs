@@ -13,6 +13,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
@@ -417,7 +418,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// Create and return a new parameter object representing a parameter in the eSQL statement
         /// </summary>
         ///
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public new EntityParameter CreateParameter()
         {
             return new EntityParameter();
@@ -746,7 +747,7 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.EntityClient_CommandTreeMetadataIncompatible);
             }
-            EntityCommandDefinition result = EntityProviderServices.Instance.CreateCommandDefinition(this._connection.StoreProviderFactory, this._preparedCommandTree);
+            EntityCommandDefinition result = EntityProviderServices.CreateCommandDefinition(this._connection.StoreProviderFactory, this._preparedCommandTree);
             return result;
         }
 

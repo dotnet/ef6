@@ -12,6 +12,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     // joined (the Key part) and to carry context about the rows being joined (e.g. which components of the row 
     // correspond to the join key).
     using System.Data.Entity.Resources;
+    using System.Diagnostics.CodeAnalysis;
     using JoinDictionary = Dictionary<CompositeKey, Tuple<CompositeKey, PropagatorResult>>;
     internal partial class Propagator
     {
@@ -105,6 +106,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <summary>
             /// Initialize rules.
             /// </summary>
+            [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
             static JoinPropagator()
             {
                 s_innerJoinInsertRules = new Dictionary<Ops,Ops>(EqualityComparer<Ops>.Default);

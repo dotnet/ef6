@@ -6,6 +6,8 @@ using System.Data.Common;
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Initializes a new instance of the RelationshipEndMember class
     /// </summary>
@@ -68,6 +70,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
         #endregion
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public EntityType GetEntityType()
         {
             if (TypeUsage == null)

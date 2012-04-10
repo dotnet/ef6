@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
     using System.Reflection.Emit;
     using System.Runtime.CompilerServices;
@@ -558,6 +559,7 @@ namespace System.Data.Entity.Core.Objects
 
         internal static readonly ReflectionPermission MemberAccessReflectionPermission = new ReflectionPermission(ReflectionPermissionFlag.MemberAccess);
 
+        [SuppressMessage("Microsoft.Security", "CA2143:TransparentMethodsShouldNotDemandFxCopRule")]
         internal static bool HasMemberAccessReflectionPermission()
         {
             try
@@ -575,7 +577,7 @@ namespace System.Data.Entity.Core.Objects
         // but pruned as much as possible for the workingset helps, even little things
 
         // Assert MemberAccess to skip visibility check & ReflectionEmit so we can generate the method (make calls to EF internals).
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2128")]
+        [SuppressMessage("Microsoft.Security", "CA2128")]
         [System.Security.SecuritySafeCritical]
         [ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
         internal static DynamicMethod CreateDynamicMethod(string name, Type returnType, Type[] parameterTypes)

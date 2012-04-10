@@ -18,7 +18,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private readonly Dictionary<EntityKey, EntityKey> _valueKeyToTempKey = new Dictionary<EntityKey, EntityKey>();
         private readonly Dictionary<EntityKey, int> _keyIdentifiers = new Dictionary<EntityKey, int>();
         private readonly List<IdentifierInfo> _identifiers = new List<IdentifierInfo>() { new IdentifierInfo() };
-        private readonly UpdateTranslator _translator;
         private const NodeColor White = 0;
         private const NodeColor Black = 1;
         private const NodeColor Gray = 2;
@@ -27,7 +26,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         #region Constructors
         internal KeyManager(UpdateTranslator translator)
         {
-            _translator = EntityUtil.CheckArgumentNull(translator, "translator");
+            EntityUtil.CheckArgumentNull(translator, "translator");
         }
         #endregion
 

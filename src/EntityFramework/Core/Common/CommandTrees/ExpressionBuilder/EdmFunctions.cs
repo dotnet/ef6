@@ -6,11 +6,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Provides an API to construct <see cref="DbExpression"/>s that invoke canonical EDM functions, and allows that API to be accessed as extension methods on the expression type itself.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
     public static class EdmFunctions
     {
         #region Private Implementation
@@ -153,7 +153,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <returns>A new DbFunctionExpression that produces the standard deviation value over non-null members of the collection.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'StDev' function accepts an argument with the result type of <paramref name="collection"/>.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "St")]
+        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "St")]
         public static DbFunctionExpression StDev(this DbExpression collection)
         {
             EntityUtil.CheckArgumentNull(collection, "collection");
@@ -168,7 +168,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <returns>A new DbFunctionExpression that produces the standard deviation value.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'StDevP' function accepts an argument with the result type of <paramref name="collection"/>.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "St")]
+        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "St")]
         public static DbFunctionExpression StDevP(this DbExpression collection)
         {
             EntityUtil.CheckArgumentNull(collection, "collection");

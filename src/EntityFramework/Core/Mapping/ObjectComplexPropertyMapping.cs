@@ -12,21 +12,20 @@ namespace System.Data.Entity.Core.Mapping {
     internal class ObjectComplexPropertyMapping : ObjectPropertyMapping
     {
         #region Constructors
+
         /// <summary>
         /// Constrcut a new member mapping metadata object
         /// </summary>
         /// <param name="edmProperty"></param>
         /// <param name="clrProperty"></param>
-        /// <param name="complexTypeMapping"></param>
-        internal ObjectComplexPropertyMapping(EdmProperty edmProperty, EdmProperty clrProperty, ObjectTypeMapping complexTypeMapping)
+        internal ObjectComplexPropertyMapping(EdmProperty edmProperty, EdmProperty clrProperty)
             : base(edmProperty, clrProperty)
         {
-            m_objectTypeMapping = complexTypeMapping;
         }
         #endregion
 
         #region Fields
-        private readonly ObjectTypeMapping m_objectTypeMapping;
+
         #endregion
 
         #region Properties

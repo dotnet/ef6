@@ -14,17 +14,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Construct the EdmItemError with an error message
         /// </summary>
         /// <param name="message">The error message for this validation error</param>
-        /// <param name="item">The item that causes the validation error</param>
-        public EdmItemError(string message, MetadataItem item)
+        public EdmItemError(string message)
             : base(message)
         {
-            _item = item;
         }
 
         #endregion
 
         #region Fields
-        private MetadataItem _item; //Metadata item for which the error is being reported
+
         #endregion
     }
 }

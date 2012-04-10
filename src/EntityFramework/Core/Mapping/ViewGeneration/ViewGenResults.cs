@@ -7,6 +7,7 @@ using System.Text;
 
 namespace System.Data.Entity.Core.Mapping.ViewGeneration
 {
+    using System.Diagnostics.CodeAnalysis;
 
     // This class is responsible for keeping track of the results from view
     // generation - errors and correct views
@@ -38,7 +39,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
         // effects: Returns the errors that were generated. If no errors,
         // returns an empty list
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")] // referenced (indirectly) by System.Data.Entity.Design.dll
         internal IEnumerable<EdmSchemaError> Errors
         {
             get

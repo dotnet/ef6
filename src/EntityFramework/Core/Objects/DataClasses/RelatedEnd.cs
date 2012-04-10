@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     /// Base class for EntityCollection and EntityReference
     /// </summary>
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling"), SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     [DataContract]
     [Serializable]
     public abstract class RelatedEnd : IRelatedEnd
@@ -198,6 +198,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerable IRelatedEnd.CreateSourceQuery()
         {
             CheckOwnerNull();
@@ -316,6 +317,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="hasResults">Indicates whether the query can produce results.
         /// For instance, a lookup with null key values cannot produce results.</param>
         /// <returns>The query loading related entities.</returns>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity"), SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         internal ObjectQuery<TEntity> CreateSourceQuery<TEntity>(MergeOption mergeOption, out bool hasResults)
         {
             // must have a context
@@ -640,7 +642,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             if (ofTypeRequired)
             {
                 sourceBuilder.Append(", [");
-                if (targetEntityType.NamespaceName != string.Empty)
+                if (!string.IsNullOrEmpty(targetEntityType.NamespaceName))
                 {
                     sourceBuilder.Append(targetEntityType.NamespaceName);
                     sourceBuilder.Append("].[");
@@ -805,6 +807,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="entity">The entity to attach to the related end</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="entity"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Thrown when the entity cannot be related via the current relationship end.</exception>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         void IRelatedEnd.Attach(IEntityWithRelationships entity)
         {
             ((IRelatedEnd)this).Attach((object)entity);
@@ -822,6 +825,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="entity">The entity to attach to the related end</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="entity"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Thrown when the entity cannot be related via the current relationship end.</exception>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         void IRelatedEnd.Attach(object entity)
         {
             CheckOwnerNull();
@@ -968,6 +972,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="entity">
         ///   Entity instance to add to the related end
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         void IRelatedEnd.Add(IEntityWithRelationships entity)
         {
             ((IRelatedEnd)this).Add((object)entity);
@@ -983,6 +988,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="entity">
         ///   Entity instance to add to the related end
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         void IRelatedEnd.Add(object entity)
         {
             EntityUtil.CheckArgumentNull(entity, "entity");
@@ -1013,6 +1019,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         ///   Entity instance to remove from the related end
         /// </param>
         /// <returns>Returns true if the entity was successfully removed, false if the entity was not part of the RelatedEnd.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IRelatedEnd.Remove(IEntityWithRelationships entity)
         {
             return ((IRelatedEnd)this).Remove((object)entity);
@@ -1027,6 +1034,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         ///   Entity instance to remove from the related end
         /// </param>
         /// <returns>Returns true if the entity was successfully removed, false if the entity was not part of the RelatedEnd.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IRelatedEnd.Remove(object entity)
         {
             EntityUtil.CheckArgumentNull(entity, "entity");
@@ -1112,6 +1120,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal void Add(IEntityWrapper wrappedTarget,
             bool applyConstraints,
             bool addRelationshipAsUnchanged,
@@ -1556,6 +1565,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         //Add given entity and its relationship to ObjectStateManager. Walk graph to recursively
         // add all entities in the graph.
         // If doAttach==TRUE, the entities are attached directly as Unchanged without calling AcceptChanges()
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal void IncludeEntity(IEntityWrapper wrappedEntity, bool addRelationshipAsUnchanged, bool doAttach)
         {
             Debug.Assert(wrappedEntity != null, "IEntityWrapper instance is null.");
@@ -1789,10 +1799,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         internal bool CheckReferentialConstraintProperties(EntityEntry ownerEntry)
         {
             // if the related end contains a real entity or is a reference with a detached entitykey, we need to check for RI constraints
+            var entityReference = this as EntityReference;
             if (!this.IsEmpty() ||
                 ((ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.ZeroOrOne ||
                 ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One) &&
-                ((EntityReference)this).DetachedEntityKey != null))
+                entityReference.DetachedEntityKey != null))
             {
                 foreach (ReferentialConstraint constraint in ((AssociationType)this.RelationMetadata).ReferentialConstraints)
                 {
@@ -1810,16 +1821,16 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                                 !(this.ObjectContext.ObjectStateManager.TransactionManager.IsAddTracking ||
                                   this.ObjectContext.ObjectStateManager.TransactionManager.IsAttachTracking))
                             {
-                                principalKey = ((EntityReference)this).EntityKey;
+                                principalKey = entityReference.EntityKey;
                             }
                             else
                             {
-                                principalKey = ((EntityReference)this).DetachedEntityKey;
+                                principalKey = entityReference.DetachedEntityKey;
                             }
                         }
                         else
                         {
-                            IEntityWrapper wrappedRelatedEntity = ((EntityReference)this).ReferenceValue;
+                            IEntityWrapper wrappedRelatedEntity = entityReference.ReferenceValue;
                             // For Added entities, it doesn't matter what the key value is since it can't be trusted anyway.
                             if (wrappedRelatedEntity.ObjectStateEntry != null && wrappedRelatedEntity.ObjectStateEntry.State == EntityState.Added)
                             {
@@ -1837,7 +1848,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         if (IsEmpty())
                         {
                             // related end is empty, so we must have a reference with a detached key
-                            EntityKey detachedKey = ((EntityReference)this).DetachedEntityKey;
+                            EntityKey detachedKey = entityReference.DetachedEntityKey;
 #if DEBUG
                             // If the constraint is not PK<->PK then we can't validate it here.
                             // This debug code checks that we don't try to validate it.
@@ -1989,6 +2000,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     ownerEntityState == EntityState.Added ||
                     _fromEndProperty.RelationshipMultiplicity == RelationshipMultiplicity.Many;
 
+            EntityReference entityReference = this as EntityReference;
+
             // every-fix up will fire with Remove action
             // every forward operation (removing from this relatedEnd) will fire with Refresh
             // do not merge the loops, handle the related ends separately (when the event is being fired, 
@@ -2003,7 +2016,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 }
 
                 // if this is a reference, set the EntityKey property before removing the relationship and entity
-                EntityReference entityReference = this as EntityReference;
                 if (entityReference != null)
                 {
                     entityReference.DetachedEntityKey = entityReference.AttachedEntityKey;
@@ -2021,7 +2033,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // Clear the DetachedEntityKey if this is a foreign key
             if (IsForeignKey)
             {
-                EntityReference entityReference = this as EntityReference;
                 if (entityReference != null)
                 {
                     entityReference.DetachedEntityKey = null;
@@ -2030,7 +2041,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             foreach (IEntityWrapper wrappedEntity in deletedEntities)
             {
-                RelatedEnd relatedEnd = GetOtherEndOfRelationship(wrappedEntity);
+                GetOtherEndOfRelationship(wrappedEntity);
                 this.RemoveFromCache(wrappedEntity, /* resetIsLoaded */ false, /*preserveForeignKey*/ false);
             }
             this.OnAssociationChanged(CollectionChangeAction.Refresh, null);
@@ -2105,7 +2116,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
             else
             {
-                _context.AttachSingleObject(wrappedEntity, es, "entity");
+                _context.AttachSingleObject(wrappedEntity, es);
             }
 
             // Now that we know we have a valid EntityKey for the target entity, verify that it matches the detached EntityKey, if there is one
@@ -2341,7 +2352,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                             if (associationset.ElementType == relationshipType &&
                                 associationset.AssociationSetEnds[_navigation.From].EntitySet != entitySet &&
                                 associationset.AssociationSetEnds[_navigation.From].EntitySet.ElementType == entitySet.ElementType)
-                                throw EntityUtil.EntitySetIsNotValidForRelationship(entitySet.EntityContainer.Name, entitySet.Name, _navigation.From, ((AssociationSet)set).EntityContainer.Name, ((AssociationSet)set).Name);
+                                throw EntityUtil.EntitySetIsNotValidForRelationship(entitySet.EntityContainer.Name, entitySet.Name, _navigation.From, set.EntityContainer.Name, set.Name);
                         }
                     }
                     throw EntityUtil.NoRelationshipSetMatched(_navigation.RelationshipName);

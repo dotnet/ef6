@@ -11,6 +11,7 @@ namespace System.Data.Entity.Core.EntityClient {
     using System.Data.Entity.Core.Query.PlanCompiler;
     using System.Data.Entity.Core.Query.ResultAssembly;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
 
@@ -50,6 +51,7 @@ namespace System.Data.Entity.Core.EntityClient {
         /// </summary>
         /// <exception cref="EntityCommandCompilationException">Cannot prepare the command definition for execution; consult the InnerException for more information.</exception>
         /// <exception cref="NotSupportedException">The ADO.NET Data Provider you are using does not support CommandTrees.</exception>
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         internal EntityCommandDefinition(DbProviderFactory storeProviderFactory, DbCommandTree commandTree) {
             EntityUtil.CheckArgumentNull(storeProviderFactory, "storeProviderFactory");
             EntityUtil.CheckArgumentNull(commandTree, "commandTree");
@@ -88,10 +90,10 @@ namespace System.Data.Entity.Core.EntityClient {
                     IList<FunctionParameter> returnParameters = entityCommandTree.EdmFunction.ReturnParameters;
                     int resultSetCount = returnParameters.Count > 1 ? returnParameters.Count : 1;
                     _columnMapGenerators = new IColumnMapGenerator[resultSetCount];
-                    TypeUsage storeResultType = DetermineStoreResultType(entityCommandTree.MetadataWorkspace, mapping, 0, out _columnMapGenerators[0]);
+                    TypeUsage storeResultType = DetermineStoreResultType(mapping, 0, out _columnMapGenerators[0]);
                     for (int i = 1; i < resultSetCount; i++)
                     {
-                        DetermineStoreResultType(entityCommandTree.MetadataWorkspace, mapping, i, out _columnMapGenerators[i]);
+                        DetermineStoreResultType(mapping, i, out _columnMapGenerators[i]);
                     }
                     // Copy over parameters (this happens through a more indirect route in the plan compiler, but
                     // it happens nonetheless)
@@ -146,7 +148,7 @@ namespace System.Data.Entity.Core.EntityClient {
         /// <summary>
         /// Determines the store type for a function import.
         /// </summary>
-        private TypeUsage DetermineStoreResultType(MetadataWorkspace workspace, FunctionImportMappingNonComposable mapping, int resultSetIndex, out IColumnMapGenerator columnMapGenerator) {
+        private static TypeUsage DetermineStoreResultType(FunctionImportMappingNonComposable mapping, int resultSetIndex, out IColumnMapGenerator columnMapGenerator) {
             // Determine column maps and infer result types for the mapped function. There are four varieties:
             // Collection(Entity)
             // Collection(PrimitiveType)
@@ -170,7 +172,7 @@ namespace System.Data.Entity.Core.EntityClient {
                     // We don't actually know the return type for the stored procedure, but we can infer
                     // one based on the mapping (i.e.: a column for every property of the mapped types
                     // and for all discriminator columns)
-                    storeResultType = mapping.GetExpectedTargetResultType(workspace, resultSetIndex);
+                    storeResultType = mapping.GetExpectedTargetResultType(resultSetIndex);
                 }
 
                 // Collection(PrimitiveType)
@@ -210,7 +212,7 @@ namespace System.Data.Entity.Core.EntityClient {
         /// Nested ComplexType Property in ComplexType
         /// </summary>
         /// <param name="resultType"></param>
-        private void ValidateEdmResultType(EdmType resultType, EdmFunction functionImport)
+        private static void ValidateEdmResultType(EdmType resultType, EdmFunction functionImport)
         {
             if (Helper.IsComplexType(resultType))
             {
@@ -259,22 +261,6 @@ namespace System.Data.Entity.Core.EntityClient {
         #endregion
 
         #region internal methods
-
-        /// <summary>
-        /// Get a list of commands to be executed by the provider
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal IEnumerable<string> MappedCommands {
-            get {
-                // Build up the list of command texts, if we haven't done so yet
-                List<string> mappedCommandTexts = new List<string>();
-                foreach (DbCommandDefinition commandDefinition in _mappedCommandDefinitions) {
-                    DbCommand mappedCommand = commandDefinition.CreateCommand();
-                    mappedCommandTexts.Add(mappedCommand.CommandText);
-                }
-                return mappedCommandTexts;
-            }
-        }
 
         /// <summary>
         /// Creates ColumnMap for result assembly using the given reader.

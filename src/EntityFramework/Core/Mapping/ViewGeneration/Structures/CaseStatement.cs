@@ -142,7 +142,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        private bool TryGetInstantiatedType(ProjectedSlot slot, out EdmType type)
+        private static bool TryGetInstantiatedType(ProjectedSlot slot, out EdmType type)
         {
             type = null;
             ConstantProjectedSlot constantSlot = slot as ConstantProjectedSlot;
@@ -196,7 +196,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             if (eliminatedNullClauses && clauses.Count == 0)
             {
                 // There is nothing left -- we should add a null as the value
-                m_elseValue = new ConstantProjectedSlot(Constant.Null, m_memberPath);
+                m_elseValue = new ConstantProjectedSlot(Constant.Null);
             }
 
             // If we eliminated some undefined or null clauses, we do not want an else clause

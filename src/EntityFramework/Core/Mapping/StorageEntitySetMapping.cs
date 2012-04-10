@@ -74,6 +74,8 @@ namespace System.Data.Entity.Core.Mapping {
         #endregion
 
         #region Methods
+
+#if DEBUG
         /// <summary>
         /// This method is primarily for debugging purposes.
         /// Will be removed shortly.
@@ -100,6 +102,7 @@ namespace System.Data.Entity.Core.Mapping {
                 m.Print(index + 10);
             }
         }
+#endif
 
         /// <summary>
         /// Requires:

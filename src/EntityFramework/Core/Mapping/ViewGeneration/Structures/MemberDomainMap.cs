@@ -111,7 +111,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                     if (domainValues.Count <= 0 || (!domainValues.Contains(Constant.Null) && condition.Domain.Values.Contains(Constant.Null)))
                     {
                         string message = System.Data.Entity.Resources.Strings.ViewGen_InvalidCondition(memberPath.PathToString(false));
-                        ErrorLog.Record record = new ErrorLog.Record(true, ViewGenErrorCode.InvalidCondition, message, cell, String.Empty);
+                        ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.InvalidCondition, message, cell, String.Empty);
                         ExceptionHelpers.ThrowMappingException(record, config);
                     }
                     if (memberPath.IsAlwaysDefined(inheritanceGraph) == false)
@@ -141,7 +141,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                             memberSet.Add(Constant.Undefined);
                         }
                         memberSet = Domain.ExpandNegationsInDomain(memberSet, memberSet);
-                        m_nonConditionDomainMap.Add(member, new CellConstantSetInfo(memberSet, slot));
+                        m_nonConditionDomainMap.Add(member, new CellConstantSetInfo(memberSet));
                     }
                 }
             }
@@ -215,16 +215,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // effects: Shrinks the domain of members whose types can be enumerated - currently it applies 
         // only to boolean type as for enums we don't restrict enum values to specified members only. 
         // For example NOT(False, True, Null) for a boolean domain should be removed
-        internal void ReduceEnumerableDomainToEnumeratedValues(ViewTarget target, ConfigViewGenerator config)
+        internal void ReduceEnumerableDomainToEnumeratedValues(ConfigViewGenerator config)
         {
             // Go through the two maps
 
-            ReduceEnumerableDomainToEnumeratedValues(target, m_conditionDomainMap, config, m_edmItemCollection);
-            ReduceEnumerableDomainToEnumeratedValues(target, m_nonConditionDomainMap, config, m_edmItemCollection);
+            ReduceEnumerableDomainToEnumeratedValues(m_conditionDomainMap, config, m_edmItemCollection);
+            ReduceEnumerableDomainToEnumeratedValues(m_nonConditionDomainMap, config, m_edmItemCollection);
         }
 
         // effects: Fixes the domains of variables in this as specified in FixEnumerableDomains
-        private static void ReduceEnumerableDomainToEnumeratedValues(ViewTarget target, Dictionary<MemberPath, CellConstantSet> domainMap, ConfigViewGenerator config,
+        private static void ReduceEnumerableDomainToEnumeratedValues(Dictionary<MemberPath, CellConstantSet> domainMap, ConfigViewGenerator config,
                                                       EdmItemCollection edmItemCollection)
         {
             foreach (MemberPath member in domainMap.Keys)
@@ -404,17 +404,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // struct to keep track of the constant set for a particular slot
         private class CellConstantSetInfo : CellConstantSet
         {
-            internal CellConstantSetInfo(Set<Constant> iconstants, MemberProjectedSlot islot)
+            internal CellConstantSetInfo(Set<Constant> iconstants)
                 : base(iconstants)
             {
-                slot = islot;
-            }
-
-            internal MemberProjectedSlot slot;
-
-            public override string ToString()
-            {
-                return base.ToString();
             }
         }
     }

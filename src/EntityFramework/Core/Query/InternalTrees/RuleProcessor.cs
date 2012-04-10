@@ -159,7 +159,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         public Node m_subTreeRoot;
         private int m_hashCode;
         private Node m_parent;
-        private int m_parentHashCode;
         private int m_childIndex;
         #endregion
 
@@ -170,7 +169,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             m_parent = parent;
             m_childIndex = childIndex;
             m_hashCode = context.GetHashCode(node);
-            m_parentHashCode = parent == null ? 0 : context.GetHashCode(parent);
         }
         #endregion
 

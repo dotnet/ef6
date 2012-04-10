@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 
 namespace System.Data.Entity.Core.Common.Utils {
+    using System.Diagnostics.CodeAnalysis;
 
     // An interface for a set abstraction
     internal class Set<TElement> : InternalBase, IEnumerable<TElement>
@@ -290,13 +291,13 @@ namespace System.Data.Entity.Core.Common.Utils {
             return _values.GetEnumerator(); 
         }
 
-        [Conditional("DEBUG")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"), Conditional("DEBUG")]
         private void AssertReadWrite()
         {
             Debug.Assert(!_isReadOnly, "attempting to modify readonly collection");
         }
 
-        [Conditional("DEBUG")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"), Conditional("DEBUG")]
         private void AssertSetCompatible(Set<TElement> other)
         {
             Debug.Assert(other != null, "other set null");

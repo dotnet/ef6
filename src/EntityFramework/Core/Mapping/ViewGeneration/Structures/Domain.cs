@@ -193,7 +193,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             if (!Domain.TryGetDefaultValueForMemberPath(memberPath, out defaultValue))
             {
                 string message = Strings.ViewGen_No_Default_Value(memberPath.Extent.Name, memberPath.PathToString(false));
-                ErrorLog.Record record = new ErrorLog.Record(true, ViewGenErrorCode.NoDefaultValue, message, wrappersForErrorReporting, String.Empty);
+                ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.NoDefaultValue, message, wrappersForErrorReporting, String.Empty);
                 ExceptionHelpers.ThrowMappingException(record, config);
             }
             return defaultValue;

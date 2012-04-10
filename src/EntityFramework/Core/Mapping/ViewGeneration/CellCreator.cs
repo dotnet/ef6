@@ -8,6 +8,8 @@ using System.Linq;
 
 namespace System.Data.Entity.Core.Mapping.ViewGeneration
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// A class that handles creation of cells from the meta data information.
     /// </summary>
@@ -51,7 +53,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         #region External methods
         // effects: Generates the cells for all the entity containers
         // specified in this. The generated cells are geared for query view generation
-        internal List<Cell> GenerateCells(ConfigViewGenerator config)
+        internal List<Cell> GenerateCells()
         {
             List<Cell> cells = new List<Cell>();
 
@@ -84,6 +86,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         /// Expand ALL cells where they are projected. Why? See Unit Test case NullabilityConditionOnBoolean5.es
         /// Validation will fail because it will not be able to validate rewritings for partitions on the 'other' cells.
         /// </summary>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void ExpandCells(List<Cell> cells)
         {
             var sSideMembersToBeExpanded = new Set<MemberPath>();

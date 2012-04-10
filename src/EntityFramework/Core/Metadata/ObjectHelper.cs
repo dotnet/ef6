@@ -125,13 +125,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="edmProperty">Edm property containing the cspace member type information</param>
         /// <param name="columnProperty">edm property containing the sspace member type information</param>
         /// <param name="fileName">name of the mapping file from which this information was loaded from</param>
-        /// <param name="lineInfo">lineInfo containing the line information about the cspace and sspace property mapping</param>
-        /// <param name="parsingErrors">List of parsing errors - we need to add any new error to this list</param>
-        /// <param name="storeItemCollection">store item collection</param>
         /// <returns></returns>
         internal static TypeUsage ValidateAndConvertTypeUsage(EdmProperty edmProperty, 
-            EdmProperty columnProperty, Xml.IXmlLineInfo lineInfo, string sourceLocation, 
-            List<EdmSchemaError> parsingErrors, StoreItemCollection storeItemCollection)
+            EdmProperty columnProperty)
         {
             Debug.Assert(edmProperty.TypeUsage.EdmType.DataSpace == DataSpace.CSpace, "cspace property must have a cspace type");
             Debug.Assert(columnProperty.TypeUsage.EdmType.DataSpace == DataSpace.SSpace, "sspace type usage must have a sspace type");
@@ -140,24 +136,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 "cspace property must be of a primitive or enumeration type");
             Debug.Assert(Helper.IsPrimitiveType(columnProperty.TypeUsage.EdmType), "sspace property must contain a primitive type");
 
-            TypeUsage mappedStoreType = ValidateAndConvertTypeUsage(edmProperty, 
-                                                                    lineInfo, 
-                                                                    sourceLocation,
-                                                                    edmProperty.TypeUsage,
-                                                                    columnProperty.TypeUsage, 
-                                                                    parsingErrors, 
-                                                                    storeItemCollection);
+            TypeUsage mappedStoreType = ValidateAndConvertTypeUsage(edmProperty.TypeUsage,
+                                                                    columnProperty.TypeUsage);
 
             return mappedStoreType;
         }
 
-        internal static TypeUsage ValidateAndConvertTypeUsage(EdmMember edmMember,
-                                                                  Xml.IXmlLineInfo lineInfo,
-                                                                  string sourceLocation,
-                                                                  TypeUsage cspaceType,
-                                                                  TypeUsage sspaceType,
-                                                                  List<EdmSchemaError> parsingErrors,
-                                                                  StoreItemCollection storeItemCollection)
+        internal static TypeUsage ValidateAndConvertTypeUsage(TypeUsage cspaceType,
+                                                                  TypeUsage sspaceType)
         {
             // if we are already C-Space, dont call the provider. this can happen for functions.
             TypeUsage modelEquivalentSspace = sspaceType;

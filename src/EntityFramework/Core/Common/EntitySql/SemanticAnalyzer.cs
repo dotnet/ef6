@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
 
@@ -16,9 +17,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
     /// Implements Semantic Analysis and Conversion
     /// Provides the translation service between an abstract syntax tree to a canonical command tree
     /// For complete documentation of the language syntax and semantics, refer to http://sqlweb/default.asp?specDirId=764
-    /// The class was designed to be type system agnostic by delegating to a given SemanticResolver instance all type related services as well as to TypeHelper class, however
+    /// The class was designed to be edmType system agnostic by delegating to a given SemanticResolver instance all edmType related services as well as to TypeHelper class, however
     /// we rely on the assumption that metadata was pre-loaded and is relevant to the query.
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal sealed class SemanticAnalyzer
     {
         private SemanticResolver _sr;
@@ -26,7 +28,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <summary>
         /// Initializes semantic analyzer
         /// </summary>
-        /// <param name="sr">initialized SemanticResolver instance for a given typespace/type system</param>
+        /// <param name="sr">initialized SemanticResolver instance for a given typespace/edmType system</param>
         internal SemanticAnalyzer(SemanticResolver sr)
         {
             Debug.Assert(sr != null, "sr must not be null");
@@ -103,7 +105,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return lambda;
         }
 
-        private AST.Command ValidateQueryCommandAst(AST.Node astExpr)
+        private static AST.Command ValidateQueryCommandAst(AST.Node astExpr)
         {
             AST.Command astCommandExpr = astExpr as AST.Command;
             if (null == astCommandExpr)
@@ -118,7 +120,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// Converts namespace imports and adds them to the type resolver.
+        /// Converts namespace imports and adds them to the edmType resolver.
         /// </summary>
         private static void ConvertAndRegisterNamespaceImports(AST.NodeList<AST.NamespaceImport> nsImportList, ErrorContext cmdErrCtx, SemanticResolver sr)
         {
@@ -126,7 +128,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             List<Tuple<MetadataNamespace, ErrorContext>> namespaceImports = new List<Tuple<MetadataNamespace, ErrorContext>>();
 
             //
-            // Resolve all user-defined namespace imports to MetadataMember objects _before_ adding them to the type resolver,
+            // Resolve all user-defined namespace imports to MetadataMember objects _before_ adding them to the edmType resolver,
             // this is needed to keep resolution within the command prolog unaffected by previously resolved imports.
             //
             if (nsImportList != null)
@@ -159,13 +161,14 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
                     if (metadataMember.MetadataMemberClass == MetadataMemberClass.Namespace)
                     {
+                        var metadataNamespace = (MetadataNamespace)metadataMember;
                         if (alias != null)
                         {
-                            aliasedNamespaceImports.Add(Tuple.Create(alias, (MetadataNamespace)metadataMember, namespaceImport.ErrCtx));
+                            aliasedNamespaceImports.Add(Tuple.Create(alias, metadataNamespace, namespaceImport.ErrCtx));
                         }
                         else
                         {
-                            namespaceImports.Add(Tuple.Create((MetadataNamespace)metadataMember, namespaceImport.ErrCtx));
+                            namespaceImports.Add(Tuple.Create(metadataNamespace, namespaceImport.ErrCtx));
                         }
                     }
                     else
@@ -177,7 +180,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
 
             //
-            // Add resolved user-defined imports to the type resolver.
+            // Add resolved user-defined imports to the edmType resolver.
             // Before adding user-defined namespace imports, add EDM namespace import to make canonical functions and types available in the command text.
             //
             sr.TypeResolver.AddNamespaceImport(new MetadataNamespace(EdmConstants.EdmNamespace), nsImportList != null ? nsImportList.ErrCtx : cmdErrCtx);
@@ -248,7 +251,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <param name="sr">The <see cref="SemanticResolver"/>instance to use</param>
         /// <returns>
         ///     An instance of <see cref="DbExpression"/>, adjusted to handle 'inline' projections
-        ///     and validated to produce a result type appropriate for the root of a query command tree.
+        ///     and validated to produce a result edmType appropriate for the root of a query command tree.
         /// </returns>
         private static DbExpression ConvertQueryStatementToDbExpression(AST.Statement astStatement, SemanticResolver sr, out List<FunctionDefinition> functionDefs)
         {
@@ -291,8 +294,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
 
             //
-            // Ensure return type is valid for query. For V1, association types are the only 
-            // type that cannot be at 'top' level result. Note that this is only applicable in
+            // Ensure return edmType is valid for query. For V1, association types are the only 
+            // edmType that cannot be at 'top' level result. Note that this is only applicable in
             // general queries and association types are valid in view gen mode queries.
             // Use error context of the top-level expression.
             //
@@ -339,7 +342,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (functionDefList != null)
             {
                 //
-                // Process inline function signatures, declare functions in the type resolver.
+                // Process inline function signatures, declare functions in the edmType resolver.
                 //
                 List<InlineFunctionInfo> inlineFunctionInfos = new List<InlineFunctionInfo>();
                 foreach (AST.FunctionDefinition functionDefAst in functionDefList)
@@ -357,7 +360,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     Debug.Assert(parameters != null, "parameters must not be null"); // should be empty collection if no parameters
 
                     //
-                    // Register new function in the type resolver.
+                    // Register new function in the edmType resolver.
                     //
                     InlineFunctionInfo functionInfo = new InlineFunctionInfoImpl(functionDefAst, parameters);
                     inlineFunctionInfos.Add(functionInfo);
@@ -402,7 +405,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     }
 
                     //
-                    // Convert parameter type
+                    // Convert parameter edmType
                     //
                     TypeUsage typeUsage = ConvertTypeDefinition(paramDef.Type, sr);
                     Debug.Assert(typeUsage != null, "typeUsage must not be null");
@@ -557,7 +560,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// Converts left and right expressions. If any of them is the untyped null, derives the type and converts to a typed null.
+        /// Converts left and right expressions. If any of them is the untyped null, derives the edmType and converts to a typed null.
         /// Throws <see cref="EntitySqlException"/> if conversion is not possible.
         /// </summary>
         private static Pair<DbExpression, DbExpression> ConvertValueExpressionsWithUntypedNulls(AST.Node leftAst,
@@ -598,7 +601,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (literal.IsNullLiteral)
             {
                 //
-                // If it is literal null, return the untyped null: the type will be inferred depending on the specific expression in which it participates.
+                // If it is literal null, return the untyped null: the edmType will be inferred depending on the specific expression in which it participates.
                 //
                 return new ValueExpression(null);
             }
@@ -756,7 +759,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 aggregateInfo.EvaluatingScopeRegion.GroupAggregateInfos.Add(aggregateInfo);
 
                 //
-                // Return stub expression with same type as the group aggregate.
+                // Return stub expression with same edmType as the group aggregate.
                 //
                 converted = aggregateInfo.AggregateStubExpression;
             }
@@ -867,8 +870,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// and schema version is less than V2
         /// then ignore types in the resolution of Name1.
         /// This is needed in order to support the following V1 case:
-        ///     C-space type: AdventureWorks.Store
-        ///     S-space type: [AdventureWorks.Store].Customer
+        ///     C-space edmType: AdventureWorks.Store
+        ///     S-space edmType: [AdventureWorks.Store].Customer
         ///     query: select [AdventureWorks.Store].Customer(1, 2, 3) from ...
         /// </summary>
         private static IDisposable ConvertMethodExpr_TryEnterV1ViewGenBackwardCompatibilityResolution(AST.DotExpr leftExpr, SemanticResolver sr)
@@ -959,7 +962,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private static ValueExpression ConvertTypeConstructorCall(MetadataType metadataType, AST.MethodExpr methodExpr, SemanticResolver sr)
         {
             //
-            // Ensure type has a contructor.
+            // Ensure edmType has a contructor.
             //
             if (!TypeSemantics.IsComplexType(metadataType.TypeUsage) &&
                 !TypeSemantics.IsEntityType(metadataType.TypeUsage) &&
@@ -977,7 +980,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
 
             //
-            // DistinctKind must not be specified on a type constructor.
+            // DistinctKind must not be specified on a edmType constructor.
             //
             if (methodExpr.DistinctKind != AST.DistinctKind.None)
             {
@@ -1269,7 +1272,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
 
             //
-            // Aggregate functions can have only one argument and of collection type
+            // Aggregate functions can have only one argument and of collection edmType
             //
             Debug.Assert((1 == functionType.Parameters.Count), "(1 == functionType.Parameters.Count)"); // we only support monadic aggregate functions
             Debug.Assert(TypeSemantics.IsCollectionType(functionType.Parameters[0].TypeUsage), "functionType.Parameters[0].Type is CollectionType");
@@ -1299,7 +1302,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             aggregateInfo.EvaluatingScopeRegion.GroupAggregateInfos.Add(aggregateInfo);
 
             //
-            // Return stub expression with same type as the aggregate function.
+            // Return stub expression with same edmType as the aggregate function.
             //
             converted = aggregateInfo.AggregateStubExpression;
 
@@ -1310,7 +1313,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         #endregion ConvertAggregateFunctionInGroupScope implementation
 
         /// <summary>
-        /// Creates <see cref="DbExpression"/> representing a new instance of the given type.
+        /// Creates <see cref="DbExpression"/> representing a new instance of the given edmType.
         /// Validates and infers argument types.
         /// </summary>
         private static DbExpression CreateConstructorCallExpression(AST.MethodExpr methodExpr,
@@ -1319,7 +1322,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                                                                     List<DbRelatedEntityRef> relshipExprList,
                                                                     SemanticResolver sr)
         {
-            Debug.Assert(TypeSemantics.IsComplexType(type) || TypeSemantics.IsEntityType(type) || TypeSemantics.IsRelationshipType(type), "type must have a constructor");
+            Debug.Assert(TypeSemantics.IsComplexType(type) || TypeSemantics.IsEntityType(type) || TypeSemantics.IsRelationshipType(type), "edmType must have a constructor");
 
             DbExpression newInstance = null;
             int idx = 0;
@@ -1327,7 +1330,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             //
             // Find overloads by searching members in order of its definition.
-            // Each member will be considered as a formal argument type in the order of its definition.
+            // Each member will be considered as a formal argument edmType in the order of its definition.
             //
             StructuralType stype = (StructuralType)type.EdmType;
             foreach (EdmMember member in TypeHelpers.GetAllStructuralMembers(stype))
@@ -1345,7 +1348,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 }
 
                 //
-                // If the given argument is the untyped null, infer type from the ctor formal argument type.
+                // If the given argument is the untyped null, infer edmType from the ctor formal argument edmType.
                 //
                 if (args[idx] == null)
                 {
@@ -1359,7 +1362,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 }
 
                 //
-                // Ensure the given argument type is promotable to the formal ctor argument type.
+                // Ensure the given argument edmType is promotable to the formal ctor argument edmType.
                 //
                 bool isPromotable = TypeSemantics.IsPromotableTo(args[idx].ResultType, memberModelTypeUsage);
                 if (ParserOptions.CompilationMode.RestrictedViewGenerationMode == sr.ParserOptions.ParserCompilationMode ||
@@ -1543,10 +1546,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <param name="relshipExpr">the ast expression</param>
         /// <param name="sr">the Semantic Resolver context</param>
         /// <returns>a DbRelatedEntityRef instance</returns>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private static DbRelatedEntityRef ConvertRelatedEntityRef(AST.RelshipNavigationExpr relshipExpr, EntityType driverEntityType, SemanticResolver sr)
         {
             //
-            // Resolve relationship type name.
+            // Resolve relationship edmType name.
             //
             var edmType = ConvertTypeName(relshipExpr.TypeName, sr).EdmType;
             var relationshipType = edmType as RelationshipType;
@@ -1561,7 +1565,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             var targetEntityRef = ConvertValueExpression(relshipExpr.RefExpr, sr);
 
             //
-            // Make sure it is a ref type.
+            // Make sure it is a ref edmType.
             //
             var refType = targetEntityRef.ResultType.EdmType as RefType;
             if (refType == null)
@@ -1658,12 +1662,13 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <summary>
         /// Converts relationship navigation expression (AST.RelshipNavigationExpr)
         /// </summary>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private static ExpressionResolution ConvertRelshipNavigationExpr(AST.Node astExpr, SemanticResolver sr)
         {
             AST.RelshipNavigationExpr relshipExpr = (AST.RelshipNavigationExpr)astExpr;
 
             //
-            // Resolve relationship type name.
+            // Resolve relationship edmType name.
             //
             var edmType = ConvertTypeName(relshipExpr.TypeName, sr).EdmType;
             var relationshipType = edmType as RelationshipType;
@@ -1678,7 +1683,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             var sourceEntityRef = ConvertValueExpression(relshipExpr.RefExpr, sr);
 
             //
-            // Make sure it is a ref type. Convert to ref if possible.
+            // Make sure it is a ref edmType. Convert to ref if possible.
             //
             var sourceRefType = sourceEntityRef.ResultType.EdmType as RefType;
             if (sourceRefType == null)
@@ -1792,7 +1797,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             DbExpression converted = ConvertValueExpression(refExpr.ArgExpr, sr);
 
             //
-            // check if is entity type
+            // check if is entity edmType
             //
             if (!TypeSemantics.IsEntityType(converted.ResultType))
             {
@@ -1820,7 +1825,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             converted = ConvertValueExpression(deRefExpr.ArgExpr, sr);
 
             //
-            // check if return type is RefType
+            // check if return edmType is RefType
             //
             if (!TypeSemantics.IsReferenceType(converted.ResultType))
             {
@@ -1884,14 +1889,14 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
 
             //
-            // if CREATEREF specifies a type, resolve and validate the type
+            // if CREATEREF specifies a edmType, resolve and validate the edmType
             //
             if (null != createRefExpr.TypeIdentifier)
             {
                 TypeUsage targetTypeUsage = ConvertTypeName(createRefExpr.TypeIdentifier, sr);
 
                 //
-                // ensure type is entity
+                // ensure edmType is entity
                 //
                 if (!TypeSemantics.IsEntityType(targetTypeUsage))
                 {
@@ -2003,7 +2008,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// Converts Plus Args - specific case since string type is an allowed type for '+'
+        /// Converts Plus Args - specific case since string edmType is an allowed edmType for '+'
         /// </summary>
         /// <param name="astBuiltInExpr"></param>
         /// <param name="sr">SemanticResolver instance relative to a especif typespace/system</param>
@@ -2047,7 +2052,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             DbExpression leftExpr = ConvertValueExpressionAllowUntypedNulls(astBuiltInExpr.Arg1, sr);
             if (leftExpr == null)
             {
-                leftExpr = DbExpressionBuilder.Null(sr.TypeResolver.BooleanType);
+                leftExpr = DbExpressionBuilder.Null(TypeResolver.BooleanType);
             }
 
             DbExpression rightExpr = null;
@@ -2056,12 +2061,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 rightExpr = ConvertValueExpressionAllowUntypedNulls(astBuiltInExpr.Arg2, sr);
                 if (rightExpr == null)
                 {
-                    rightExpr = DbExpressionBuilder.Null(sr.TypeResolver.BooleanType);
+                    rightExpr = DbExpressionBuilder.Null(TypeResolver.BooleanType);
                 }
             }
 
             //
-            // ensure left expression type is boolean
+            // ensure left expression edmType is boolean
             //
             if (!IsBooleanType(leftExpr.ResultType))
             {
@@ -2069,7 +2074,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
 
             //
-            // ensure right expression type is boolean
+            // ensure right expression edmType is boolean
             //
             if (null != rightExpr && !IsBooleanType(rightExpr.ResultType))
             {
@@ -2160,7 +2165,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
 
                 //
-                // make sure left expression type is of sequence type (ICollection or Extent)
+                // make sure left expression edmType is of sequence edmType (ICollection or Extent)
                 //
                 if (!TypeSemantics.IsCollectionType(leftExpr.ResultType))
                 {
@@ -2173,7 +2178,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 rightExpr = ConvertValueExpression(astBuiltInExpr.Arg2, sr);
 
                 //
-                // make sure right expression type is of sequence type (ICollection or Extent)
+                // make sure right expression edmType is of sequence edmType (ICollection or Extent)
                 //
                 if (!TypeSemantics.IsCollectionType(rightExpr.ResultType))
                 {
@@ -2234,7 +2239,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
 
                 //
-                // make sure expression type is of sequence type (ICollection or Extent)
+                // make sure expression edmType is of sequence edmType (ICollection or Extent)
                 //
                 if (!TypeSemantics.IsCollectionType(leftExpr.ResultType))
                 {
@@ -2242,7 +2247,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 }
 
                 //
-                // make sure that if is distinct unary operator, arg element type must be equal-comparable
+                // make sure that if is distinct unary operator, arg element edmType must be equal-comparable
                 //
                 if (astBuiltInExpr.Kind == AST.BuiltInKind.Distinct && !TypeHelpers.IsValidDistinctOpType(TypeHelpers.GetElementTypeUsage(leftExpr.ResultType)))
                 {
@@ -2272,7 +2277,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (leftExpr == null)
             {
                 //
-                // If left expression type is null, infer its type from the collection element type.
+                // If left expression edmType is null, infer its edmType from the collection element edmType.
                 //
                 TypeUsage elementType = TypeHelpers.GetElementTypeUsage(rightExpr.ResultType);
                 ValidateTypeForNullExpression(elementType, astBuiltInExpr.Arg1.ErrCtx);
@@ -2305,11 +2310,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// Converts a type name.
+        /// Converts a edmType name.
         /// Type name can be represented by
         ///     - AST.Identifier, such as "Product"
         ///     - AST.DotExpr, such as "Northwind.Product"
-        ///     - AST.MethodExpr, such as "Edm.Decimal(10,4)", where "10" and "4" are type arguments.
+        ///     - AST.MethodExpr, such as "Edm.Decimal(10,4)", where "10" and "4" are edmType arguments.
         /// </summary>
         private static TypeUsage ConvertTypeName(AST.Node typeName, SemanticResolver sr)
         {
@@ -2319,7 +2324,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             AST.NodeList<AST.Node> typeSpecArgs = null;
 
             //
-            // Process AST.MethodExpr - reduce it to an identifier with type spec arguments
+            // Process AST.MethodExpr - reduce it to an identifier with edmType spec arguments
             //
             AST.MethodExpr methodExpr = typeName as AST.MethodExpr;
             if (methodExpr != null)
@@ -2351,7 +2356,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             if (name == null)
             {
-                Debug.Fail("Unexpected AST.Node in the type name");
+                Debug.Fail("Unexpected AST.Node in the edmType name");
                 throw EntityUtil.EntitySqlError(typeName.ErrCtx, Strings.InvalidMetadataMemberName);
             }
 
@@ -2366,7 +2371,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
                         if (typeSpecArgs != null)
                         {
-                            typeUsage = ConvertTypeSpecArgs(typeUsage, typeSpecArgs, typeName.ErrCtx, sr);
+                            typeUsage = ConvertTypeSpecArgs(typeUsage, typeSpecArgs, typeName.ErrCtx);
                         }
 
                         return typeUsage;
@@ -2381,7 +2386,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
         }
 
-        private static TypeUsage ConvertTypeSpecArgs(TypeUsage parameterizedType, AST.NodeList<AST.Node> typeSpecArgs, ErrorContext errCtx, SemanticResolver sr)
+        private static TypeUsage ConvertTypeSpecArgs(TypeUsage parameterizedType, AST.NodeList<AST.Node> typeSpecArgs, ErrorContext errCtx)
         {
             Debug.Assert(typeSpecArgs != null && typeSpecArgs.Count > 0, "typeSpecArgs must be null or a non-empty list");
 
@@ -2397,7 +2402,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
 
             //
-            // The only parameterized type supported is Edm.Decimal
+            // The only parameterized edmType supported is Edm.Decimal
             //
             PrimitiveType primitiveType = parameterizedType.EdmType as PrimitiveType;
             if (primitiveType == null || primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.Decimal)
@@ -2478,14 +2483,14 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (collTypeDefExpr != null)
             {
                 TypeUsage elementType = ConvertTypeDefinition(collTypeDefExpr.ElementTypeDef, sr);
-                converted = TypeHelpers.CreateCollectionTypeUsage(elementType, true /* readOnly */);
+                converted = TypeHelpers.CreateCollectionTypeUsage(elementType /* readOnly */);
             }
             else if (refTypeDefExpr != null)
             {
                 TypeUsage targetTypeUsage = ConvertTypeName(refTypeDefExpr.RefTypeIdentifier, sr);
 
                 //
-                // Ensure type is entity
+                // Ensure edmType is entity
                 //
                 if (!TypeSemantics.IsEntityType(targetTypeUsage))
                 {
@@ -2503,8 +2508,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 Debug.Assert(rowTypeDefExpr.Properties != null && rowTypeDefExpr.Properties.Count > 0, "rowTypeDefExpr.Properties must be a non-empty collection");
 
                 converted = TypeHelpers.CreateRowTypeUsage(
-                    rowTypeDefExpr.Properties.Select(p => new KeyValuePair<string, TypeUsage>(p.Name.Name, ConvertTypeDefinition(p.Type, sr))),
-                    true /* readOnly */);
+                    rowTypeDefExpr.Properties.Select(p => new KeyValuePair<string, TypeUsage>(p.Name.Name, ConvertTypeDefinition(p.Type, sr))) /* readOnly */);
             }
             else
             {
@@ -2555,7 +2559,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 fieldExprs.Add(colExpr);
             }
 
-            return new ValueExpression(DbExpressionBuilder.New(TypeHelpers.CreateRowTypeUsage(rowColumns, true /* readOnly */), fieldExprs));
+            return new ValueExpression(DbExpressionBuilder.New(TypeHelpers.CreateRowTypeUsage(rowColumns /* readOnly */), fieldExprs));
         }
 
         /// <summary>
@@ -2575,7 +2579,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             var multisetTypes = mSetExprs.Where(e => e != null).Select(e => e.ResultType).ToArray();
 
             //
-            // Ensure common type is not an untyped null.
+            // Ensure common edmType is not an untyped null.
             //
             if (multisetTypes.Length == 0)
             {
@@ -2585,7 +2589,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             TypeUsage commonType = TypeHelpers.GetCommonTypeUsage(multisetTypes);
             
             //
-            // Ensure all elems have a common type.
+            // Ensure all elems have a common edmType.
             //
             if (commonType == null)
             {
@@ -2606,7 +2610,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 }
             }
 
-            return new ValueExpression(DbExpressionBuilder.New(TypeHelpers.CreateCollectionTypeUsage(commonType, true /* readOnly */), mSetExprs));
+            return new ValueExpression(DbExpressionBuilder.New(TypeHelpers.CreateCollectionTypeUsage(commonType /* readOnly */), mSetExprs));
         }
 
         /// <summary>
@@ -2659,7 +2663,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
 
             //
-            // Derive common return type.
+            // Derive common return edmType.
             //
             TypeUsage resultType = TypeHelpers.GetCommonTypeUsage(resultTypes);
             if (resultType == null)
@@ -2683,7 +2687,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 if (caseExpr.ElseExpr == null && TypeSemantics.IsCollectionType(resultType))
                 {
                     //
-                    // If ELSE was omitted and common return type is a collection,
+                    // If ELSE was omitted and common return edmType is a collection,
                     // then use empty collection for elseExpr.
                     //
                     elseExpr = DbExpressionBuilder.NewEmptyCollection(resultType);
@@ -2829,7 +2833,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
                 // Ensure the converted expression is in the range of values.
                 //
-                ValidateExpressionIsCommandParamOrNonNegativeIntegerConstant(convertedLimit, limitExpr.ErrCtx, exprName, sr);
+                ValidateExpressionIsCommandParamOrNonNegativeIntegerConstant(convertedLimit, limitExpr.ErrCtx, exprName);
 
                 //
                 // Create the project expression with the limit.
@@ -2925,7 +2929,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (selectClause.DistinctKind == AST.DistinctKind.Distinct)
             {
                 //
-                // Ensure element type is equal-comparable.
+                // Ensure element edmType is equal-comparable.
                 //
                 ValidateDistinctProjection(projectExpression.ResultType, selectClause);
 
@@ -2970,7 +2974,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
         }
 
-        private static void ValidateExpressionIsCommandParamOrNonNegativeIntegerConstant(DbExpression expr, ErrorContext errCtx, string exprName, SemanticResolver sr)
+        private static void ValidateExpressionIsCommandParamOrNonNegativeIntegerConstant(DbExpression expr, ErrorContext errCtx, string exprName)
         {
             if (expr.ExpressionKind != DbExpressionKind.Constant &&
                 expr.ExpressionKind != DbExpressionKind.ParameterReference)
@@ -2978,7 +2982,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 throw EntityUtil.EntitySqlError(errCtx, Strings.PlaceholderExpressionMustBeConstant(exprName));
             }
 
-            if (!TypeSemantics.IsPromotableTo(expr.ResultType, sr.TypeResolver.Int64Type))
+            if (!TypeSemantics.IsPromotableTo(expr.ResultType, TypeResolver.Int64Type))
             {
                 throw EntityUtil.EntitySqlError(errCtx, Strings.PlaceholderExpressionMustBeCompatibleWithEdm64(exprName, expr.ResultType.EdmType.FullName));
             }
@@ -3074,7 +3078,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             DbExpression converted = ConvertValueExpression(aliasedExpr.Expr, sr);
 
             //
-            // Validate it is of collection type.
+            // Validate it is of collection edmType.
             //
             if (!TypeSemantics.IsCollectionType(converted.ResultType))
             {
@@ -3324,7 +3328,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             DbExpression filterConditionExpr = ConvertValueExpression(predicate, sr);
 
             //
-            // Ensure the predicate type is boolean.
+            // Ensure the predicate edmType is boolean.
             //
             if (!IsBooleanType(filterConditionExpr.ResultType))
             {
@@ -3358,6 +3362,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <summary>
         /// Process Group By Clause
         /// </summary>
+        [SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode"), SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity"), SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         private static DbExpressionBinding ProcessGroupByClause(DbExpressionBinding source, AST.QueryExpr queryExpr, SemanticResolver sr)
         {
             AST.GroupByClause groupByClause = queryExpr.GroupByClause;
@@ -3403,7 +3408,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             //
             // This set will include names of keys, aggregates and the group partition name if specified.
-            // All these properties become field names of the row type returned by the DbGroupByExpression.
+            // All these properties become field names of the row edmType returned by the DbGroupByExpression.
             //
             HashSet<string> groupPropertyNames = new HashSet<string>(sr.NameComparer);
 
@@ -3602,7 +3607,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     DbExpression converted = ConvertValueExpression(aliasedExpr.Expr, sr);
 
                     //
-                    // Create Null Expression with actual type.
+                    // Create Null Expression with actual edmType.
                     //
                     converted = converted.ExpressionKind == CommandTrees.DbExpressionKind.Null ? converted : converted.ResultType.Null();
 
@@ -3889,7 +3894,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             {
                 if (groupAggregateInfo.AggregateKind == GroupAggregateKind.Partition)
                 {
-                    DbExpression aggregateDefinition = ((GroupPartitionInfo)groupAggregateInfo).AggregateDefinition;
+                    var groupPartitionInfo = (GroupPartitionInfo)groupAggregateInfo;
+                    DbExpression aggregateDefinition = groupPartitionInfo.AggregateDefinition;
                     if (IsTrivialInputProjection(groupAggregateVarRef, aggregateDefinition))
                     {
                         //
@@ -3903,7 +3909,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         //
                         // Build a projection item for the non-trivial definition.
                         //
-                        DbLambda gpExpressionLambda = new DbLambda(gpExpressionLambdaVariables, ((GroupPartitionInfo)groupAggregateInfo).AggregateDefinition);
+                        DbLambda gpExpressionLambda = new DbLambda(gpExpressionLambdaVariables, groupPartitionInfo.AggregateDefinition);
                         groupPartitionDefinitions.Add(new KeyValuePair<string, DbExpression>(
                             groupAggregateInfo.AggregateName,
                             gpExpressionLambda.Invoke(groupBinding.Variable.Property(groupAggregateVarRef.VariableName))));
@@ -4068,7 +4074,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
                 // Ensure the converted expression is in the range of values.
                 //
-                ValidateExpressionIsCommandParamOrNonNegativeIntegerConstant(convertedSkip, orderByClause.SkipSubClause.ErrCtx, "SKIP", sr);
+                ValidateExpressionIsCommandParamOrNonNegativeIntegerConstant(convertedSkip, orderByClause.SkipSubClause.ErrCtx, "SKIP");
             }
             #endregion
 
@@ -4291,11 +4297,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// Convert "x in multiset(y1, y2, ..., yn)" into
         /// x = y1 or x = y2 or x = y3 ...
         /// </summary>
-        /// <param name="sr">semantic resolver</param>
         /// <param name="left">left-expression (the probe)</param>
         /// <param name="right">right expression (the collection)</param>
         /// <returns>Or tree of equality comparisons</returns>
-        private static DbExpression ConvertSimpleInExpression(SemanticResolver sr, DbExpression left, DbExpression right)
+        private static DbExpression ConvertSimpleInExpression(DbExpression left, DbExpression right)
         {
             // Only handle cases when the right-side is a new instance expression
             Debug.Assert(right.ExpressionKind == DbExpressionKind.NewInstance, "right.ExpressionKind == DbExpressionKind.NewInstance");
@@ -4360,6 +4365,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return astExprConverters;
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode"), SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private static Dictionary<AST.BuiltInKind, BuiltInExprConverter> CreateBuiltInExprConverter()
         {
             Dictionary<AST.BuiltInKind, BuiltInExprConverter> builtInExprConverter = new Dictionary<AST.BuiltInKind, BuiltInExprConverter>(sizeof(AST.BuiltInKind));
@@ -4748,7 +4754,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
                 if (args.Right.ExpressionKind == DbExpressionKind.NewInstance)
                 {
-                    return ConvertSimpleInExpression(sr, args.Left, args.Right);
+                    return ConvertSimpleInExpression(args.Left, args.Right);
                 }
                 else
                 {
@@ -4762,7 +4768,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     List<DbExpression> whenExpr = new List<DbExpression>(1);
                     whenExpr.Add(leftIn.IsNull());
                     List<DbExpression> thenExpr = new List<DbExpression>(1);
-                    thenExpr.Add(DbExpressionBuilder.Null(sr.TypeResolver.BooleanType));
+                    thenExpr.Add(DbExpressionBuilder.Null(TypeResolver.BooleanType));
 
                     DbExpression left = DbExpressionBuilder.Case(whenExpr, thenExpr, DbExpressionBuilder.False);
 
@@ -4783,7 +4789,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
                 if (args.Right.ExpressionKind == DbExpressionKind.NewInstance)
                 {
-                    return ConvertSimpleInExpression(sr, args.Left, args.Right).Not();
+                    return ConvertSimpleInExpression(args.Left, args.Right).Not();
                 }
                 else
                 {
@@ -4797,7 +4803,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     List<DbExpression> whenExpr = new List<DbExpression>(1);
                     whenExpr.Add(leftIn.IsNull());
                     List<DbExpression> thenExpr = new List<DbExpression>(1);
-                    thenExpr.Add(DbExpressionBuilder.Null(sr.TypeResolver.BooleanType));
+                    thenExpr.Add(DbExpressionBuilder.Null(TypeResolver.BooleanType));
 
                     DbExpression left = DbExpressionBuilder.Case(whenExpr, thenExpr, DbExpressionBuilder.True);
 
@@ -4834,7 +4840,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 DbExpression isNullExpr = ConvertValueExpressionAllowUntypedNulls(bltInExpr.Arg1, sr);
 
                 //
-                // Ensure expression type is valid for this operation.
+                // Ensure expression edmType is valid for this operation.
                 //
                 if (isNullExpr != null && !TypeHelpers.IsValidIsNullOpType(isNullExpr.ResultType))
                 {
@@ -4854,7 +4860,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 DbExpression isNullExpr = ConvertValueExpressionAllowUntypedNulls(bltInExpr.Arg1, sr);
 
                 //
-                // Ensure expression type is valid for this operation.
+                // Ensure expression edmType is valid for this operation.
                 //
                 if (isNullExpr != null && !TypeHelpers.IsValidIsNullOpType(isNullExpr.ResultType))
                 {
@@ -5022,7 +5028,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 var typeToCastTo = ConvertTypeName(bltInExpr.Arg2, sr);
 
                 //
-                // Ensure CAST target type is scalar.
+                // Ensure CAST target edmType is scalar.
                 //
                 if (!TypeSemantics.IsScalarType(typeToCastTo))
                 {
@@ -5035,7 +5041,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 }
 
                 //
-                // Ensure CAST source type is scalar.
+                // Ensure CAST source edmType is scalar.
                 //
                 if (!TypeSemantics.IsScalarType(exprToCast.ResultType))
                 {
@@ -5127,7 +5133,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 DbExpression matchExpr = ConvertValueExpressionAllowUntypedNulls(bltInExpr.Arg1, sr);
                 if (matchExpr == null)
                 {
-                    matchExpr = DbExpressionBuilder.Null(sr.TypeResolver.StringType);
+                    matchExpr = DbExpressionBuilder.Null(TypeResolver.StringType);
                 }
                 else if (!IsStringType(matchExpr.ResultType))
                 {
@@ -5137,7 +5143,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 DbExpression patternExpr = ConvertValueExpressionAllowUntypedNulls(bltInExpr.Arg2, sr);
                 if (patternExpr == null)
                 {
-                    patternExpr = DbExpressionBuilder.Null(sr.TypeResolver.StringType);
+                    patternExpr = DbExpressionBuilder.Null(TypeResolver.StringType);
                 }
                 else if (!IsStringType(patternExpr.ResultType))
                 {
@@ -5149,7 +5155,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     DbExpression escapeExpr = ConvertValueExpressionAllowUntypedNulls(bltInExpr.Arg3, sr);
                     if (escapeExpr == null)
                     {
-                        escapeExpr = DbExpressionBuilder.Null(sr.TypeResolver.StringType);
+                        escapeExpr = DbExpressionBuilder.Null(TypeResolver.StringType);
                     }
                     else if (!IsStringType(escapeExpr.ResultType))
                     {
@@ -5203,7 +5209,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 sr);
 
             //
-            // Get and check common type for limits
+            // Get and check common edmType for limits
             //
             TypeUsage rangeCommonType = TypeHelpers.GetCommonTypeUsage(limitsExpr.Left.ResultType, limitsExpr.Right.ResultType);
             if (null == rangeCommonType)

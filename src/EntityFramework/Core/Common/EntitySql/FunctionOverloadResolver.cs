@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
@@ -269,6 +270,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// Range of values: 0 to negative infinity, with 0 as the best rank (promotion to self).
         /// <paramref name="fromType"/> must be promotable to <paramref name="toType"/>, otherwise internal error is thrown.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "isPromotableTo")]
         private static int GetPromotionRank(TypeUsage fromType,
                                             TypeUsage toType,
                                             Func<TypeUsage, TypeUsage, bool> isPromotableTo,

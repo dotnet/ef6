@@ -13,15 +13,17 @@ using System.Globalization;
 
 namespace System.Data.Entity.Core.Mapping
 {
+    using System.Diagnostics.CodeAnalysis;
+
     internal partial class MetadataMappingHasherVisitor : BaseMetadataMappingVisitor
     {
         private CompressingHashBuilder m_hashSourceBuilder;
         private Dictionary<Object, int> m_itemsAlreadySeen = new Dictionary<Object, int>();
         private int m_instanceNumber = 0;
         private EdmItemCollection m_EdmItemCollection;
-        private double m_EdmVersion;
         private double m_MappingVersion;
 
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private MetadataMappingHasherVisitor(double mappingVersion)
         {
             m_MappingVersion = mappingVersion;
@@ -36,7 +38,6 @@ namespace System.Data.Entity.Core.Mapping
             // at the entry point of visitor, we setup the versions
             Debug.Assert(m_MappingVersion == storageEntityContainerMapping.StorageMappingItemCollection.MappingVersion, "the original version and the mapping collection version are not the same");
             this.m_MappingVersion = storageEntityContainerMapping.StorageMappingItemCollection.MappingVersion;
-            this.m_EdmVersion = storageEntityContainerMapping.StorageMappingItemCollection.EdmItemCollection.EdmVersion;
 
             this.m_EdmItemCollection = storageEntityContainerMapping.StorageMappingItemCollection.EdmItemCollection;
 
@@ -709,6 +710,7 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private void Clean()
         {
             this.m_hashSourceBuilder = new CompressingHashBuilder(MetadataHelper.CreateMetadataHashAlgorithm(m_MappingVersion));
@@ -753,14 +755,14 @@ namespace System.Data.Entity.Core.Mapping
             if (!TryAddSeenItem(o, out instanceIndex))
             {
                 this.AddObjectStartDumpToHashBuilder(o, instanceIndex);
-                this.AddSeenObjectToHashBuilder(o, instanceIndex);
+                this.AddSeenObjectToHashBuilder(instanceIndex);
                 this.AddObjectEndDumpToHashBuilder();
                 return false;
             }
             return true;
         }
 
-        private void AddSeenObjectToHashBuilder(object o, int instanceIndex)
+        private void AddSeenObjectToHashBuilder(int instanceIndex)
         {
             Debug.Assert(instanceIndex >= 0, "referencing index should not be less than 0");
             this.m_hashSourceBuilder.AppendLine("Instance Reference: " + instanceIndex);

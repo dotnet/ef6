@@ -5,6 +5,8 @@ using System.Diagnostics;
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Represent the Edm Complex Type
     /// </summary>
@@ -85,6 +87,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #endregion
     }
 
+    [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     internal sealed class ClrComplexType : ComplexType
     {
         /// <summary>cached CLR type handle, allowing the Type reference to be GC'd</summary>

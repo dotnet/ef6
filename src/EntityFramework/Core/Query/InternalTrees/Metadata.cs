@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal TableMD(TypeUsage type, EntitySetBase extent)
             : this(extent)
         {
-            m_columns.Add(new ColumnMD(this, "element", type));
+            m_columns.Add(new ColumnMD("element", type));
             m_flattened = !PlanCompiler.TypeUtils.IsStructuredType(type);
         }
 
@@ -67,7 +67,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
             foreach (EdmProperty p in properties)
             {
-                ColumnMD newColumn = new ColumnMD(this, p);
+                ColumnMD newColumn = new ColumnMD(p);
                 m_columns.Add(newColumn);
                 columnMap[p.Name] = newColumn;
             }
@@ -127,10 +127,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         /// Default constructor
         /// </summary>
-        /// <param name="table">Table containing this column</param>
         /// <param name="name">Column name</param>
         /// <param name="type">Datatype of the column</param>
-        internal ColumnMD(TableMD table, string name, TypeUsage type)
+        internal ColumnMD(string name, TypeUsage type)
         {
             m_name = name;
             m_type = type;
@@ -139,10 +138,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         /// More useful default constructor
         /// </summary>
-        /// <param name="table">table containing this column</param>
         /// <param name="property">property describing this column</param>
-        internal ColumnMD(TableMD table, EdmMember property)
-            : this(table, property.Name, property.TypeUsage)
+        internal ColumnMD(EdmMember property)
+            : this(property.Name, property.TypeUsage)
         {
             m_property = property;
         }

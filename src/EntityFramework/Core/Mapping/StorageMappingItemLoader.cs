@@ -15,6 +15,7 @@ using System.Data.Entity;
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Resources;
+    using System.Diagnostics.CodeAnalysis;
     using Triple = Pair<EntitySetBase, Pair<EntityTypeBase, bool>>;
 
     /// <summary>
@@ -73,6 +74,7 @@ namespace System.Data.Entity.Core.Mapping
     /// over DOM is that it exposes the line number of the current xml content.
     /// This is really helpful when throwing exceptions. Another advantage is
     /// </remarks>
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal class StorageMappingItemLoader
     {
         #region Constructors
@@ -414,7 +416,7 @@ namespace System.Data.Entity.Core.Mapping
                             }
                         case StorageMslConstructs.FunctionImportMappingElement:
                             {
-                                LoadFunctionImportMapping(nav.Clone(), entityContainerMapping, storageEntityContainerType);
+                                LoadFunctionImportMapping(nav.Clone(), entityContainerMapping);
                                 break;
                             }
                         default:
@@ -612,6 +614,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         /// <param name="nav"></param>
         /// <param name="entityContainerMapping">Container to validate.</param>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void ValidateEntitySetFunctionMappingClosure(XPathNavigator nav, StorageEntityContainerMapping entityContainerMapping)
         {
             // here we build a mapping between the tables and the sets,
@@ -1253,6 +1256,7 @@ namespace System.Data.Entity.Core.Mapping
                 typeNameString = typeNameString.Trim();
             }
 
+            var xmlLineInfo = nav as IXmlLineInfo;
             if (setMapping.QueryView == null)
             {
                 // QV must be the special-case first view.
@@ -1260,7 +1264,7 @@ namespace System.Data.Entity.Core.Mapping
                 {
                     AddToSchemaErrorsWithMemberInfo(val => Strings.Mapping_TypeName_For_First_QueryView,
                         setMapping.Set.Name, StorageMappingErrorCode.TypeNameForFirstQueryView,
-                        m_sourceLocation, (IXmlLineInfo)nav, m_parsingErrors);
+                        m_sourceLocation, xmlLineInfo, m_parsingErrors);
                     return false;
                 }
 
@@ -1268,7 +1272,7 @@ namespace System.Data.Entity.Core.Mapping
                 {
                     AddToSchemaErrorsWithMemberInfo(Strings.Mapping_Empty_QueryView,
                         setMapping.Set.Name, StorageMappingErrorCode.EmptyQueryView,
-                        m_sourceLocation, (IXmlLineInfo)nav, m_parsingErrors);
+                        m_sourceLocation, xmlLineInfo, m_parsingErrors);
                     return false;
                 }
                 setMapping.QueryView = queryView;
@@ -1282,7 +1286,7 @@ namespace System.Data.Entity.Core.Mapping
                 {
                     AddToSchemaErrorsWithMemberInfo(Strings.Mapping_QueryView_TypeName_Not_Defined,
                         setMapping.Set.Name, StorageMappingErrorCode.NoTypeNameForTypeSpecificQueryView,
-                        m_sourceLocation, (IXmlLineInfo)nav, m_parsingErrors);
+                        m_sourceLocation, xmlLineInfo, m_parsingErrors);
                     return false;
                 }
 
@@ -1316,7 +1320,7 @@ namespace System.Data.Entity.Core.Mapping
                 {
                     //More than one type
                     AddToSchemaErrorsWithMemberInfo(Strings.Mapping_QueryViewMultipleTypeInTypeName, setMapping.Set.ToString(),
-                        StorageMappingErrorCode.TypeNameContainsMultipleTypesForQueryView, m_sourceLocation, (IXmlLineInfo)nav, m_parsingErrors);
+                        StorageMappingErrorCode.TypeNameContainsMultipleTypesForQueryView, m_sourceLocation, xmlLineInfo, m_parsingErrors);
                     return false;
                 }
 
@@ -1324,7 +1328,7 @@ namespace System.Data.Entity.Core.Mapping
                 if (includeSubtypes && setMapping.Set.ElementType.EdmEquals(entityType))
                 {   //Don't allow TypeOFOnly(a) if a is a base type. 
                     AddToSchemaErrorWithMemberAndStructure(Strings.Mapping_QueryView_For_Base_Type, entityType.ToString(), setMapping.Set.ToString(),
-                        StorageMappingErrorCode.IsTypeOfQueryViewForBaseType, m_sourceLocation, (IXmlLineInfo)nav, m_parsingErrors);
+                        StorageMappingErrorCode.IsTypeOfQueryViewForBaseType, m_sourceLocation, xmlLineInfo, m_parsingErrors);
                     return false;                    
                 }
 
@@ -1334,14 +1338,14 @@ namespace System.Data.Entity.Core.Mapping
                     {
                         AddToSchemaErrorWithMemberAndStructure(Strings.Mapping_Empty_QueryView_OfType,
                             entityType.Name, setMapping.Set.Name, StorageMappingErrorCode.EmptyQueryView,
-                            m_sourceLocation, (IXmlLineInfo)nav, m_parsingErrors);
+                            m_sourceLocation, xmlLineInfo, m_parsingErrors);
                         return false;
                     }
                     else
                     {
                         AddToSchemaErrorWithMemberAndStructure(Strings.Mapping_Empty_QueryView_OfTypeOnly,
                             setMapping.Set.Name, entityType.Name, StorageMappingErrorCode.EmptyQueryView,
-                            m_sourceLocation, (IXmlLineInfo)nav, m_parsingErrors);
+                            m_sourceLocation, xmlLineInfo, m_parsingErrors);
                         return false;
                     }
                 }
@@ -1361,7 +1365,7 @@ namespace System.Data.Entity.Core.Mapping
                             new EdmSchemaError(
                                 Strings.Mapping_QueryView_Duplicate_OfType(setMapping.Set, entityType),
                                 (int)StorageMappingErrorCode.QueryViewExistsForEntitySetAndType, EdmSchemaErrorSeverity.Error, m_sourceLocation,
-                                ((IXmlLineInfo)nav).LineNumber, ((IXmlLineInfo)nav).LinePosition);
+                                xmlLineInfo.LineNumber, xmlLineInfo.LinePosition);
                     }
                     else
                     {
@@ -1369,7 +1373,7 @@ namespace System.Data.Entity.Core.Mapping
                             new EdmSchemaError(
                                 Strings.Mapping_QueryView_Duplicate_OfTypeOnly(setMapping.Set, entityType),
                                 (int)StorageMappingErrorCode.QueryViewExistsForEntitySetAndType, EdmSchemaErrorSeverity.Error, m_sourceLocation,
-                                ((IXmlLineInfo)nav).LineNumber, ((IXmlLineInfo)nav).LinePosition);
+                                xmlLineInfo.LineNumber, xmlLineInfo.LinePosition);
                     }
 
                     m_parsingErrors.Add(error);
@@ -1505,13 +1509,13 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         #region LoadFunctionImportMapping implementation
+
         /// <summary>
         /// The method loads a function import mapping element
         /// </summary>
         /// <param name="nav"></param>
         /// <param name="entityContainerMapping"></param>
-        /// <param name="storageEntityContainerType"></param>
-        private void LoadFunctionImportMapping(XPathNavigator nav, StorageEntityContainerMapping entityContainerMapping, EntityContainer storageEntityContainerType)
+        private void LoadFunctionImportMapping(XPathNavigator nav, StorageEntityContainerMapping entityContainerMapping)
         {
             IXmlLineInfo lineInfo = (IXmlLineInfo)(nav.Clone());
 
@@ -1557,7 +1561,7 @@ namespace System.Data.Entity.Core.Mapping
                 {
                     if (nav.LocalName == StorageMslConstructs.FunctionImportMappingResultMapping)
                     {
-                        List<FunctionImportStructuralTypeMapping> typeMappings = GetFunctionImportMappingResultMapping(nav.Clone(), lineInfo, targetFunction, functionImport, resultSetIndex, typeMappingsList);
+                        List<FunctionImportStructuralTypeMapping> typeMappings = GetFunctionImportMappingResultMapping(nav.Clone(), lineInfo, functionImport, resultSetIndex);
                         typeMappingsList.Add(typeMappings);
 
                     }
@@ -1604,7 +1608,6 @@ namespace System.Data.Entity.Core.Mapping
                                 functionImport,
                                 cTypeTargetFunction,
                                 typeMappings,
-                                (StructuralType)resultType,
                                 cTypeTvfElementType,
                                 sTypeTvfElementType,
                                 lineInfo,
@@ -1623,7 +1626,6 @@ namespace System.Data.Entity.Core.Mapping
                                 targetFunction,
                                 resultType,
                                 cTypeTvfElementType,
-                                sTypeTvfElementType,
                                 lineInfo,
                                 out mapping))
                         {
@@ -1824,10 +1826,8 @@ namespace System.Data.Entity.Core.Mapping
         private List<FunctionImportStructuralTypeMapping> GetFunctionImportMappingResultMapping(
             XPathNavigator nav,
             IXmlLineInfo functionImportMappingLineInfo,
-            EdmFunction targetFunction,
             EdmFunction functionImport, 
-            int resultSetIndex,
-            List<List<FunctionImportStructuralTypeMapping>> typeMappingsList)
+            int resultSetIndex)
         {
             List<FunctionImportStructuralTypeMapping> typeMappings = new List<FunctionImportStructuralTypeMapping>();
  
@@ -2066,11 +2066,11 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         private bool TryCreateFunctionImportMappingComposableWithStructuralResult(
             EdmFunction functionImport,
             EdmFunction cTypeTargetFunction,
             List<FunctionImportStructuralTypeMapping> typeMappings,
-            StructuralType structuralResultType,
             RowType cTypeTvfElementType,
             RowType sTypeTvfElementType,
             IXmlLineInfo lineInfo,
@@ -2179,9 +2179,7 @@ namespace System.Data.Entity.Core.Mapping
                 cTypeTargetFunction,
                 structuralTypeMappings,
                 targetFunctionKeys,
-                m_storageMappingItemCollection,
-                m_sourceLocation,
-                new LineInfo(lineInfo));
+                m_storageMappingItemCollection);
             return true;
         }
 
@@ -2252,7 +2250,6 @@ namespace System.Data.Entity.Core.Mapping
             EdmFunction sTypeTargetFunction,
             EdmType scalarResultType,
             RowType cTypeTvfElementType,
-            RowType sTypeTvfElementType,
             IXmlLineInfo lineInfo,
             out FunctionImportMappingComposable mapping)
         {
@@ -2284,13 +2281,11 @@ namespace System.Data.Entity.Core.Mapping
                 cTypeTargetFunction,
                 null,
                 null,
-                m_storageMappingItemCollection,
-                m_sourceLocation,
-                new LineInfo(lineInfo));
+                m_storageMappingItemCollection);
             return true;
         }
 
-        private bool ValidateFunctionImportMappingResultTypeCompatibility(TypeUsage cSpaceMemberType, TypeUsage sSpaceMemberType)
+        private static bool ValidateFunctionImportMappingResultTypeCompatibility(TypeUsage cSpaceMemberType, TypeUsage sSpaceMemberType)
         {
             // Function result data flows from S-side to C-side.
             var fromType = sSpaceMemberType;
@@ -2340,6 +2335,7 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         private bool TryConvertToEntityTypeConditionsAndPropertyMappings(
             EdmFunction functionImport,
             FunctionImportStructuralTypeMappingKB functionImportKB,
@@ -2583,12 +2579,10 @@ namespace System.Data.Entity.Core.Mapping
         /// Loads function mappings for the entity type.
         /// </summary>
         /// <param name="associationSetMapping"></param>
-        /// <param name="associationTypeMapping"></param>
         /// <param name="nav"></param>
         private void LoadAssociationTypeModificationFunctionMapping(
             XPathNavigator nav,
-            StorageAssociationSetMapping associationSetMapping,
-            StorageAssociationTypeMapping associationTypeMapping)
+            StorageAssociationSetMapping associationSetMapping)
         {
             // create function loader
             ModificationFunctionMappingLoader functionLoader = new ModificationFunctionMappingLoader(this, associationSetMapping.Set);
@@ -2802,7 +2796,7 @@ namespace System.Data.Entity.Core.Mapping
                         break;
                     case StorageMslConstructs.ModificationFunctionMappingElement:
                         setMapping.HasModificationFunctionMapping = true;
-                        LoadAssociationTypeModificationFunctionMapping(nav.Clone(), setMapping, typeMapping);
+                        LoadAssociationTypeModificationFunctionMapping(nav.Clone(), setMapping);
                         break;
                     default:
                         AddToSchemaErrors(Strings.Mapping_InvalidContent_General,
@@ -3169,6 +3163,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="containerType"></param>
         /// <param name="tableType"></param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private StorageConditionPropertyMapping LoadConditionPropertyMapping(XPathNavigator nav, EdmType containerType, ReadOnlyMetadataCollection<EdmProperty> tableProperties)
         {
             //Get the CDM side property name.
@@ -3418,7 +3413,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="nav"></param>
         /// <param name="attributeName"></param>
         /// <returns></returns>
-        private bool GetBoolAttributeValue(XPathNavigator nav, string attributeName, bool defaultValue)
+        private static bool GetBoolAttributeValue(XPathNavigator nav, string attributeName, bool defaultValue)
         {
             bool boolValue = defaultValue;
             object boolObj = Helper.GetTypedAttributeValue(nav, attributeName, typeof(bool));
@@ -3601,7 +3596,7 @@ namespace System.Data.Entity.Core.Mapping
                 // For e.g. If a CSpace member of type Edm.Int32 maps to SqlServer.Int64, the return type usage will contain SqlServer.int
                 //          which is store equivalent type for Edm.Int32
                 TypeUsage storeEquivalentTypeUsage = Helper.ValidateAndConvertTypeUsage(member,
-                    columnMember, lineInfo, m_sourceLocation, m_parsingErrors, StoreItemCollection);
+                    columnMember);
 
                 // If the cspace type is not compatible with the store type, add a schema error and return
                 if (storeEquivalentTypeUsage == null)
@@ -3652,7 +3647,7 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        private string GetInvalidMemberMappingErrorMessage(EdmMember cSpaceMember, EdmMember sSpaceMember)
+        private static string GetInvalidMemberMappingErrorMessage(EdmMember cSpaceMember, EdmMember sSpaceMember)
         {
             return Strings.Mapping_Invalid_Member_Mapping(
                 cSpaceMember.TypeUsage.EdmType + GetFacetsForDisplay(cSpaceMember.TypeUsage),
@@ -3663,7 +3658,7 @@ namespace System.Data.Entity.Core.Mapping
                 sSpaceMember.DeclaringType.FullName);
         }
 
-        private string GetFacetsForDisplay(TypeUsage typeUsage)
+        private static string GetFacetsForDisplay(TypeUsage typeUsage)
         {
             Debug.Assert(typeUsage != null);
 
@@ -4150,6 +4145,7 @@ namespace System.Data.Entity.Core.Mapping
                 return property;
             }
 
+            [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
             private StorageModificationFunctionParameterBinding LoadScalarPropertyParameterBinding(XPathNavigator nav, StructuralType type, bool restrictToKeyMembers)
             {
                 IXmlLineInfo xmlLineInfoNav = (IXmlLineInfo)nav;
@@ -4265,13 +4261,8 @@ namespace System.Data.Entity.Core.Mapping
 
                 int errorCount = m_parentLoader.m_parsingErrors.Count;
 
-                TypeUsage mappedStoreType = Helper.ValidateAndConvertTypeUsage(property,
-                                                                               xmlLineInfoNav,
-                                                                               m_parentLoader.m_sourceLocation,
-                                                                               property.TypeUsage,
-                                                                               parameter.TypeUsage,
-                                                                               m_parentLoader.m_parsingErrors,
-                                                                               m_storeItemCollection);
+                TypeUsage mappedStoreType = Helper.ValidateAndConvertTypeUsage(property.TypeUsage,
+                                                                               parameter.TypeUsage);
 
                 // validate type compatibility
                 if (mappedStoreType == null && errorCount == m_parentLoader.m_parsingErrors.Count)

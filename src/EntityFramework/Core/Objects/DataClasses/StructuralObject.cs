@@ -8,6 +8,8 @@ using System.Data.Entity.Core.Common.Utils;
 
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// This class contains the common methods need for an date object.
     /// </summary>
@@ -76,7 +78,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="property">
         /// The string name of the of the changed property.
         /// </param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Property")]
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Property")]
         protected virtual void OnPropertyChanged(string property)
         {
             if (PropertyChanged != null)
@@ -91,7 +93,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="property">
         /// The string name of the of the changing property.
         /// </param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Property")]
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Property")]
         protected virtual void OnPropertyChanging(string property)
         {
             if (PropertyChanging != null)
@@ -127,7 +129,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <exception cref="System.ArgumentNullException">
         /// When parameter member is null (Nothing in Visual Basic).
         /// </exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Property")]
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Property")]
         protected virtual void ReportPropertyChanging(
             string property)
         {
@@ -146,7 +148,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <exception cref="System.ArgumentNullException">
         /// When parameter member is null (Nothing in Visual Basic).
         /// </exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Property")]
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Property")]
         protected virtual void ReportPropertyChanged(
             string property)
         {
@@ -335,6 +337,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The Boolean value.
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static bool SetValidValue(bool value, string propertyName)
         {
             // no checks yet
@@ -368,6 +371,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The Boolean value.
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static Nullable<bool> SetValidValue(Nullable<bool> value, string propertyName)
         {
             // no checks yet
@@ -401,6 +405,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The Byte value.
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static byte SetValidValue(byte value, string propertyName)
         {
             // no checks yet
@@ -434,6 +439,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The Byte value.
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static Nullable<byte> SetValidValue(Nullable<byte> value, string propertyName)
         {
             // no checks yet
@@ -467,7 +473,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The sbyte value.
         /// </returns>
-        [CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName"), CLSCompliant(false)]
         protected internal static sbyte SetValidValue(sbyte value, string propertyName)
         {
             // no checks yet
@@ -503,7 +509,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The sbyte value.
         /// </returns>
-        [CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName"), CLSCompliant(false)]
         protected internal static Nullable<sbyte> SetValidValue(Nullable<sbyte> value, string propertyName)
         {
             // no checks yet
@@ -539,6 +545,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The datetime value.
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static DateTime SetValidValue(DateTime value, string propertyName)
         {
             // no checks yet
@@ -573,6 +580,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The datetime value.
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static Nullable<DateTime> SetValidValue(Nullable<DateTime> value, string propertyName)
         {
             // no checks yet
@@ -607,6 +615,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The timspan value.
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static TimeSpan SetValidValue(TimeSpan value, string propertyName)
         {
             // no checks yet
@@ -641,6 +650,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The timespan value.
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static Nullable<TimeSpan> SetValidValue(Nullable<TimeSpan> value, string propertyName)
         {
             // no checks yet
@@ -675,6 +685,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The datetimeoffset value.
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static DateTimeOffset SetValidValue(DateTimeOffset value, string propertyName)
         {
             // no checks yet
@@ -709,6 +720,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The datetimeoffset value.
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static Nullable<DateTimeOffset> SetValidValue(Nullable<DateTimeOffset> value, string propertyName)
         {
             // no checks yet
@@ -743,6 +755,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The decimal value.
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static Decimal SetValidValue(Decimal value, string propertyName)
         {
             // no checks yet
@@ -775,6 +788,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The decimal value.
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static Nullable<Decimal> SetValidValue(Nullable<Decimal> value, string propertyName)
         {
             // no checks yet
@@ -809,6 +823,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// the double value
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static double SetValidValue(double value, string propertyName)
         {
             // no checks yet
@@ -843,6 +858,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// the double value
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static Nullable<double> SetValidValue(Nullable<double> value, string propertyName)
         {
             // no checks yet
@@ -877,6 +893,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// the float value.
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static float SetValidValue(Single value, string propertyName)
         {
             // no checks yet
@@ -911,6 +928,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// the nullable Single value
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static Nullable<Single> SetValidValue(Nullable<Single> value, string propertyName)
         {
             // no checks yet
@@ -945,6 +963,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The Guid value
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static Guid SetValidValue(Guid value, string propertyName)
         {
             // no checks yet
@@ -979,6 +998,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The nullable Guid value
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static Nullable<Guid> SetValidValue(Nullable<Guid> value, string propertyName)
         {
             // no checks yet
@@ -1013,6 +1033,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The Int16 value
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static Int16 SetValidValue(Int16 value, string propertyName)
         {
             // no checks yet
@@ -1047,6 +1068,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The Int16 value
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static Nullable<Int16> SetValidValue(Nullable<Int16> value, string propertyName)
         {
             // no checks yet
@@ -1081,6 +1103,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The Int32 value
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static Int32 SetValidValue(Int32 value, string propertyName)
         {
             // no checks yet
@@ -1114,6 +1137,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </param>
         /// <returns>
         /// The nullable Int32</returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static Nullable<Int32> SetValidValue(Nullable<Int32> value, string propertyName)
         {
             // no checks yet
@@ -1147,6 +1171,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The Int64 value
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static Int64 SetValidValue(Int64 value, string propertyName)
         {
             // no checks yet
@@ -1181,6 +1206,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The nullable Int64 value
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
         protected internal static Nullable<Int64> SetValidValue(Nullable<Int64> value, string propertyName)
         {
             // no checks yet
@@ -1215,7 +1241,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The UInt16 value
         /// </returns>
-        [CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName"), CLSCompliant(false)]
         protected internal static UInt16 SetValidValue(UInt16 value, string propertyName)
         {
             // no checks yet
@@ -1251,7 +1277,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The nullable UInt16 value
         /// </returns>
-        [CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName"), CLSCompliant(false)]
         protected internal static Nullable<UInt16> SetValidValue(Nullable<UInt16> value, string propertyName)
         {
             // no checks yet
@@ -1287,7 +1313,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The UInt32 value
         /// </returns>
-        [CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName"), CLSCompliant(false)]
         protected internal static UInt32 SetValidValue(UInt32 value, string propertyName)
         {
             // no checks yet
@@ -1323,7 +1349,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The nullable UInt32 value
         /// </returns>
-        [CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName"), CLSCompliant(false)]
         protected internal static Nullable<UInt32> SetValidValue(Nullable<UInt32> value, string propertyName)
         {
             // no checks yet
@@ -1359,7 +1385,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The UInt64 value
         /// </returns>
-        [CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName"), CLSCompliant(false)]
         protected internal static UInt64 SetValidValue(UInt64 value, string propertyName)
         {
             // no checks yet
@@ -1395,7 +1421,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The nullable UInt64 value
         /// </returns>
-        [CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName"), CLSCompliant(false)]
         protected internal static Nullable<UInt64> SetValidValue(Nullable<UInt64> value, string propertyName)
         {
             // no checks yet

@@ -7,6 +7,8 @@ using System.Text;
 
 namespace System.Data.Entity.Core.Mapping
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Base class for the type created at design time to store the generated views.
     /// </summary>
@@ -43,7 +45,6 @@ namespace System.Data.Entity.Core.Mapping
 
         protected abstract System.Collections.Generic.KeyValuePair<string, string> GetViewAt(int index);
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
         public string EdmEntityContainerName
         {
             get
@@ -77,7 +78,7 @@ namespace System.Data.Entity.Core.Mapping
                 this.m_storedHashOverMappingClosure = value;
             }
         }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "OverAll")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "OverAll")]
         public string HashOverAllExtentViews
         {
             get

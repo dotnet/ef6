@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     /// <summary>
     /// Models a relationship end with multiplicity 1.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     [DataContract]
     [Serializable]
     public sealed class EntityReference<TEntity> : EntityReference

@@ -32,15 +32,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return this.functions.AsReadOnly();
         }
 
-        internal void ForAllTypes(Action<PrimitiveTypeKind> forEachType)
-        {
-            for (int idx = 0; idx < EdmConstants.NumPrimitiveTypes; idx++)
-            {
-                forEachType((PrimitiveTypeKind)idx);
-            }
-        }
-
-        internal void ForAllBasePrimitiveTypes(Action<PrimitiveTypeKind> forEachType)
+        internal static void ForAllBasePrimitiveTypes(Action<PrimitiveTypeKind> forEachType)
         {
             for (int idx = 0; idx < EdmConstants.NumPrimitiveTypes; idx++)
             {
@@ -52,7 +44,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        internal void ForTypes(IEnumerable<PrimitiveTypeKind> typeKinds, Action<PrimitiveTypeKind> forEachType)
+        internal static void ForTypes(IEnumerable<PrimitiveTypeKind> typeKinds, Action<PrimitiveTypeKind> forEachType)
         {
             foreach (PrimitiveTypeKind kind in typeKinds)
             {

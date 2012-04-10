@@ -25,6 +25,8 @@ using System.Data.Entity.Core.Query.PlanCompiler;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Helper class for creating a ProviderCommandInfo given an Iqt Node. 
     /// </summary>
@@ -39,12 +41,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="command">The owning command, used for creating VarVecs, etc</param>
         /// <param name="node">The root of the sub-command for which a ProviderCommandInfo should be generated</param>
-        /// <param name="children">A list of ProviderCommandInfos that were created for the child sub-commands.</param>
         /// <returns>The resulting ProviderCommandInfo</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "rowtype"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal static ProviderCommandInfo Create(
             Command command,
-            Node node, 
-            List<ProviderCommandInfo> children)
+            Node node)
         {
             PhysicalProjectOp projectOp = node.Op as PhysicalProjectOp;
             PlanCompiler.Assert(projectOp != null, "Expected root Op to be a physical Project");
@@ -61,28 +62,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Build up a mapping from Vars to the corresponding output property/column
             Dictionary<Var, md.EdmProperty> outputVarMap = BuildOutputVarMap(projectOp, collType.TypeUsage);
 
-            return new ProviderCommandInfo(ctree, children);
+            return new ProviderCommandInfo(ctree);
         }
 
-        /// <summary>
-        /// Creates a ProviderCommandInfo for the given node. 
-        /// This method should be called when the keys and the sort keys are not known ahead of time.
-        /// Typically it is used when there is only one command, that is no query factoring is done.
-        /// This method also has the option of pulling up keys and sort information. 
-        /// </summary>
-        /// <param name="command">The owning command, used for creating VarVecs, etc</param>
-        /// <param name="node">The root of the sub-command for which a ProviderCommandInfo should be generated</param>
-        /// <returns>The resulting ProviderCommandInfo</returns>
-        internal static ProviderCommandInfo Create(
-            Command command,
-            Node node)
-        {   
-            return Create(
-                command, 
-                node, 
-                new List<ProviderCommandInfo>() //children 
-                );
-        }
         #endregion
 
         #region Private Methods
@@ -92,6 +74,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="projectOp">the physical projectOp</param>
         /// <param name="outputType">output type</param>
         /// <returns>a map from Vars to the output type member</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "RowType"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "PhysicalProjectOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private static Dictionary<Var, md.EdmProperty> BuildOutputVarMap(PhysicalProjectOp projectOp, md.TypeUsage outputType)
         {
             Dictionary<Var, md.EdmProperty> outputVarMap = new Dictionary<Var, md.EdmProperty>();

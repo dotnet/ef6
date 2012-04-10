@@ -144,7 +144,7 @@
         internal override void WriteIdentity(StringBuilder builder)
         {
 
-            if (UnresolvedType != null && !UnresolvedType.Trim().Equals(String.Empty))
+            if (!string.IsNullOrWhiteSpace(UnresolvedType))
             {
                 builder.Append("Collection(" + UnresolvedType + ")");
             }

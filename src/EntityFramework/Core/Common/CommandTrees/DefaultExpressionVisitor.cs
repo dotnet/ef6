@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using CqtBuilder = System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.DbExpressionBuilder;
 
@@ -11,6 +12,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// Visits each element of an expression tree from a given root expression. If any element changes, the tree is
     /// rebuilt back to the root and the new root expression is returned; otherwise the original root expression is returned.
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     public class DefaultExpressionVisitor : DbExpressionVisitor<DbExpression>
     {
         private readonly Dictionary<DbVariableReferenceExpression, DbVariableReferenceExpression> varMappings = new Dictionary<DbVariableReferenceExpression, DbVariableReferenceExpression>();
@@ -23,6 +25,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
         }
 
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "toVar")]
         protected virtual void OnVariableRebound(DbVariableReferenceExpression fromVarRef, DbVariableReferenceExpression toVarRef)
         {
         }
@@ -68,7 +71,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         protected virtual IList<DbExpressionBinding> VisitExpressionBindingList(IList<DbExpressionBinding> list)
         {
-            return this.VisitList(list, this.VisitExpressionBinding);
+            return VisitList(list, this.VisitExpressionBinding);
         }
 
         protected virtual DbGroupExpressionBinding VisitGroupExpressionBinding(DbGroupExpressionBinding binding)
@@ -173,7 +176,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             EntityUtil.CheckArgumentNull(lambda, "lambda");
 
             DbLambda result = lambda;
-            IList<DbVariableReferenceExpression> newFormals = this.VisitList(lambda.Variables, varRef =>
+            IList<DbVariableReferenceExpression> newFormals = VisitList(lambda.Variables, varRef =>
                 {
                     TypeUsage newVarType = this.VisitTypeUsage(varRef.ResultType);
                     if (!object.ReferenceEquals(varRef.ResultType, newVarType))
@@ -214,7 +217,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
         }
 
-        private IList<TElement> VisitList<TElement>(IList<TElement> list, Func<TElement, TElement> map)
+        private static IList<TElement> VisitList<TElement>(IList<TElement> list, Func<TElement, TElement> map)
         {
             IList<TElement> result = list;
             if(list != null)
@@ -732,7 +735,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             bool unchanged = (object.ReferenceEquals(expression.ResultType, newType) && object.ReferenceEquals(expression.Arguments, newArguments));
             if (expression.HasRelatedEntityReferences)
             {
-                IList<DbRelatedEntityRef> newRefs = this.VisitList(expression.RelatedEntityReferences, this.VisitRelatedEntityRef);
+                IList<DbRelatedEntityRef> newRefs = VisitList(expression.RelatedEntityReferences, this.VisitRelatedEntityRef);
                 if (!unchanged ||
                     !object.ReferenceEquals(expression.RelatedEntityReferences, newRefs))
                 {
@@ -952,7 +955,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             IList<DbExpression> newKeys = this.VisitExpressionList(expression.Keys);
             this.ExitScope();
             this.EnterScope(newInput.GroupVariable);
-            IList<DbAggregate> newAggs = this.VisitList<DbAggregate>(expression.Aggregates, this.VisitAggregate);
+            IList<DbAggregate> newAggs = VisitList(expression.Aggregates, this.VisitAggregate);
             this.ExitScope();
 
             if (!object.ReferenceEquals(expression.Input, newInput) ||

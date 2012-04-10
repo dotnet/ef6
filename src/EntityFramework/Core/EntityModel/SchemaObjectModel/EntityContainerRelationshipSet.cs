@@ -3,7 +3,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Xml;
 
@@ -58,7 +57,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         protected void HandleRelationshipTypeNameAttribute( XmlReader reader )
         {
             Debug.Assert( reader != null );
-            ReturnValue<string> value = HandleDottedNameAttribute( reader, _unresolvedRelationshipTypeName, Strings.PropertyTypeAlreadyDefined );
+            ReturnValue<string> value = HandleDottedNameAttribute( reader, _unresolvedRelationshipTypeName );
             if ( value.Succeeded )
             {
                 _unresolvedRelationshipTypeName = value.Value;

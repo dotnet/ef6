@@ -72,14 +72,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
         /// Guarantees type match of lambda variables and <paramref name="functionParameters"/>.
         /// Passes thru all excepions coming from <see cref="CqlQuery"/>.
         /// </summary>
-        static internal DbLambda CompileFunctionDefinition(
-            string functionFullName,
-            string functionDefinition, 
+        static internal DbLambda CompileFunctionDefinition(string functionDefinition, 
             IList<FunctionParameter> functionParameters, 
             EdmItemCollection edmItemCollection)
         {
-            Debug.Assert(!String.IsNullOrEmpty(functionFullName), "!String.IsNullOrEmpty(functionFullName)");
-            Debug.Assert(!String.IsNullOrEmpty(functionDefinition), "!String.IsNullOrEmpty(functionDefinition)");
             Debug.Assert(functionParameters != null, "functionParameters != null");
             Debug.Assert(edmItemCollection != null, "edmItemCollection != null");
 

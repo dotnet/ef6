@@ -122,7 +122,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             // set up the default name in before validating anythig that might want to display it in an error message;
             if (Name == null && _unresolvedType != null)
-                Name = Utils.ExtractTypeName(Schema.DataModel, _unresolvedType);
+                Name = Utils.ExtractTypeName(_unresolvedType);
 
             base.HandleAttributesComplete();
         }

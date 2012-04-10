@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Resources;
+    using System.Diagnostics.CodeAnalysis;
     using eSQL = System.Data.Entity.Core.Common.EntitySql;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity;
@@ -119,7 +120,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #endregion
 
         #region public static Fields
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
         private static IEnumerable<double> SupportedEdmVersions
         {
             get
@@ -132,7 +132,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
         //The Max EDM version thats going to be supported by the runtime.
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
         public static readonly double MaximumEdmVersionSupported = SupportedEdmVersions.Last();
         #endregion
 
@@ -182,7 +181,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">if collection argument is null</exception>
         /// <exception cref="System.InvalidOperationException">If there is an ItemCollection that has already been registered for collection's space passed in</exception>
-        [CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity"), CLSCompliant(false)]
         public void RegisterItemCollection(ItemCollection collection)
         {
             EntityUtil.CheckArgumentNull(collection, "collection");
@@ -395,9 +394,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             if (TryGetItemCollection(DataSpace.OSpace, out collection))
             {   // if OSpace is not loaded - don't register
                 ObjectItemCollection objItemCollection = (ObjectItemCollection)collection;
-                ItemCollection edmItemCollection;
-                TryGetItemCollection(DataSpace.CSpace, out edmItemCollection);
-                if (!objItemCollection.ImplicitLoadAssemblyForType(type, (EdmItemCollection)edmItemCollection) && (null != callingAssembly))
+                ItemCollection itemCollection;
+                TryGetItemCollection(DataSpace.CSpace, out itemCollection);
+                var edmItemCollection = (EdmItemCollection)itemCollection;
+                if (!objItemCollection.ImplicitLoadAssemblyForType(type, edmItemCollection) && (null != callingAssembly))
                 {
                     // only load from callingAssembly if all types were filtered
                     // then loaded referenced assemblies of calling assembly
@@ -418,7 +418,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         // cache the knowledge that we found an attribute
                         // because it can be expesive to figure out
                         _foundAssemblyWithAttribute = true;
-                        objItemCollection.ImplicitLoadAllReferencedAssemblies(callingAssembly, (EdmItemCollection)edmItemCollection);
+                        objItemCollection.ImplicitLoadAllReferencedAssemblies(callingAssembly, edmItemCollection);
                     }
                     else
                     {
@@ -931,7 +931,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="edmSpaceType">The CSpace type to look up</param>
         /// <returns>The OSpace type mapped to the supplied argument</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "edm")]
         public StructuralType GetObjectSpaceType(StructuralType edmSpaceType)
         {
             return GetObjectSpaceType<StructuralType>(edmSpaceType);
@@ -946,7 +945,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="edmSpaceType">The CSpace type to look up</param>
         /// <param name="objectSpaceType">The OSpace type mapped to the supplied argument</param>
         /// <returns>true on success, false on failure</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "edm")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public bool TryGetObjectSpaceType(StructuralType edmSpaceType, out StructuralType objectSpaceType)
         {
             return TryGetObjectSpaceType<StructuralType>(edmSpaceType, out objectSpaceType);
@@ -959,7 +958,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="edmSpaceType">The CSpace type to look up</param>
         /// <returns>The OSpace type mapped to the supplied argument</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "edm")]
         public EnumType GetObjectSpaceType(EnumType edmSpaceType)
         {
             return GetObjectSpaceType<EnumType>(edmSpaceType);
@@ -974,7 +972,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="edmSpaceType">The CSpace type to look up</param>
         /// <param name="objectSpaceType">The OSpace type mapped to the supplied argument</param>
         /// <returns>true on success, false on failure</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "edm")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public bool TryGetObjectSpaceType(EnumType edmSpaceType, out EnumType objectSpaceType)
         {
             return TryGetObjectSpaceType<EnumType>(edmSpaceType, out objectSpaceType);
@@ -1050,7 +1048,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="objectSpaceType">The OSpace type to look up</param>
         /// <returns>The CSpace type mapped to the OSpace parameter</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
         public StructuralType GetEdmSpaceType(StructuralType objectSpaceType)
         {
             return GetEdmSpaceType<StructuralType>(objectSpaceType);
@@ -1064,7 +1061,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="objectSpaceType">The OSpace type to look up</param>
         /// <param name="edmSpaceType">The mapped CSpace type</param>
         /// <returns>true on success, false on failure</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "edm"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
         public bool TryGetEdmSpaceType(StructuralType objectSpaceType, out StructuralType edmSpaceType)
         {
             return TryGetEdmSpaceType<StructuralType>(objectSpaceType, out edmSpaceType);
@@ -1077,7 +1073,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="objectSpaceType">The OSpace type to look up</param>
         /// <returns>The CSpace type mapped to the OSpace parameter</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]        
         public EnumType GetEdmSpaceType(EnumType objectSpaceType)
         {
             return GetEdmSpaceType<EnumType>(objectSpaceType);
@@ -1091,7 +1086,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="objectSpaceType">The OSpace type to look up</param>
         /// <param name="edmSpaceType">The mapped CSpace type</param>
         /// <returns>true on success, false on failure</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "edm"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]        
         public bool TryGetEdmSpaceType(EnumType objectSpaceType, out EnumType edmSpaceType)
         {
             return TryGetEdmSpaceType<EnumType>(objectSpaceType, out edmSpaceType);
@@ -1188,7 +1182,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal bool TryGetGeneratedViewOfType(EntitySetBase extent, EntityTypeBase type, bool includeSubtypes, out GeneratedView generatedView)
         {
             ItemCollection collection = GetItemCollection(DataSpace.CSSpace, true);
-            return ((StorageMappingItemCollection)collection).TryGetGeneratedViewOfType(this, extent, type, includeSubtypes, out generatedView);
+            return ((StorageMappingItemCollection)collection).TryGetGeneratedViewOfType(extent, type, includeSubtypes, out generatedView);
         }
 
         /// <summary>
@@ -1345,7 +1339,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="primitiveTypeKind">PrimitiveTypeKind for which a canonical TypeUsage is expected</param>
         /// <returns>a canonical model TypeUsage</returns>
-        internal TypeUsage GetCanonicalModelTypeUsage(PrimitiveTypeKind primitiveTypeKind)
+        internal static TypeUsage GetCanonicalModelTypeUsage(PrimitiveTypeKind primitiveTypeKind)
         {
             return EdmProviderManifest.Instance.GetCanonicalModelTypeUsage(primitiveTypeKind);
         }
@@ -1355,7 +1349,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="primitiveTypeKind">a PrimitiveTypeKind for which a Model PrimitiveType is expected</param>
         /// <returns>Model PrimitiveType</returns>
-        internal PrimitiveType GetModelPrimitiveType(PrimitiveTypeKind primitiveTypeKind)
+        internal static PrimitiveType GetModelPrimitiveType(PrimitiveTypeKind primitiveTypeKind)
         {
             return EdmProviderManifest.Instance.GetPrimitiveType(primitiveTypeKind);
         }
@@ -1426,10 +1420,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Debug.Assert(entitySet.EntityContainer != null);
 
+            var associationSet = entitySet as AssociationSet;
+            
             //Check that EntitySet is from CSpace
             if (entitySet.EntityContainer.DataSpace != DataSpace.CSpace)
             {
-                AssociationSet associationSet = entitySet as AssociationSet;
                 if (associationSet != null)
                 {
                     throw EntityUtil.AssociationSetNotInCSpace(entitySet.Name);
@@ -1443,7 +1438,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             //Check that entityType belongs to entitySet
             if (!entitySet.ElementType.IsAssignableFrom(entityType))
             {
-                AssociationSet associationSet = entitySet as AssociationSet;
+                
                 if (associationSet != null)
                 {
                     throw EntityUtil.TypeNotInAssociationSet(entitySet.Name, entitySet.ElementType.FullName, entityType.FullName);

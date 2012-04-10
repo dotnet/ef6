@@ -109,7 +109,7 @@
     <CodeContractsSuggestEnsures>False</CodeContractsSuggestEnsures>
     <CodeContractsSuggestObjectInvariants>False</CodeContractsSuggestObjectInvariants>
     <CodeContractsDisjunctiveRequires>False</CodeContractsDisjunctiveRequires>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisRuleSet>..\Strict.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
@@ -236,7 +236,6 @@
     <Compile Include="Core\Common\QueryCache\QueryCacheKey.cs" />
     <Compile Include="Core\Common\QueryCache\QueryCacheManager.cs" />
     <Compile Include="Core\Common\QueryCache\shaperfactoryquerycachekey.cs" />
-    <Compile Include="Core\Common\ShippingAssemblyAttributes.cs" />
     <Compile Include="Core\Common\Utils\AliasGenerator.cs" />
     <Compile Include="Core\Common\Utils\Boolean\BoolExpr.cs" />
     <Compile Include="Core\Common\Utils\Boolean\Clause.cs" />

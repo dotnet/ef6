@@ -52,7 +52,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             outMember = null;
             return type.Members.TryGetValue(memberName, ignoreCase, out outMember);
         }
-        internal bool TryGetEnumMember(EnumType type, String memberName, bool ignoreCase, out EnumMember outMember)
+        internal virtual bool TryGetEnumMember(EnumType type, String memberName, bool ignoreCase, out EnumMember outMember)
         {
             EntityUtil.CheckArgumentNull(type, "type");
             EntityUtil.CheckStringArgument(memberName, "memberName");
@@ -68,7 +68,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="ignoreCase">Whether to do case-sensitive member look up or not</param>
         /// <param name="outSet">extent in target space, if a match is found</param>
         /// <returns>returns true, if a match is found otherwise returns false</returns>
-        internal bool TryGetExtent(EntityContainer entityContainer, String extentName, bool ignoreCase, out EntitySetBase outSet)
+        internal virtual bool TryGetExtent(EntityContainer entityContainer, String extentName, bool ignoreCase, out EntitySetBase outSet)
         {
             // There are no entity containers in the OSpace. So there is no mapping involved.
             // Hence the name should be a valid name in the CSpace.
@@ -78,7 +78,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Returns the function import in the target space, for the given entity container.
         /// </summary>
-        internal bool TryGetFunctionImport(EntityContainer entityContainer, String functionImportName, bool ignoreCase, out EdmFunction functionImport)
+        internal virtual bool TryGetFunctionImport(EntityContainer entityContainer, String functionImportName, bool ignoreCase, out EdmFunction functionImport)
         {
             // There are no entity containers in the OSpace. So there is no mapping involved.
             // Hence the name should be a valid name in the CSpace.

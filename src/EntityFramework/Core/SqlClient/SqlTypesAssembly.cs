@@ -9,6 +9,7 @@ using System.Reflection;
 namespace System.Data.Entity.Core.SqlClient
 {
     using System.Data.Entity.Core.SqlClient.Internal;
+    using System.Diagnostics.CodeAnalysis;
 
     internal static class Expressions
     {
@@ -142,6 +143,7 @@ namespace System.Data.Entity.Core.SqlClient
         /// </summary>
         internal static SqlTypesAssembly Latest { get { return latestVersion.Value; } }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private SqlTypesAssembly(Assembly sqlSpatialAssembly)
         {
             // Retrieve SQL Server spatial types and static constructor methods
@@ -491,6 +493,7 @@ namespace System.Data.Entity.Core.SqlClient
             throw spatialValue.NotSqlCompatible();
         }
 
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private static System.Xml.XmlReader XmlReaderFromString(string stringValue)
         {
             return System.Xml.XmlReader.Create(new System.IO.StringReader(stringValue));

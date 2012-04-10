@@ -10,6 +10,7 @@ using System.Text;
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
     using System.Data.Entity.Resources;
+    using System.Diagnostics.CodeAnalysis;
     using BoolDomainConstraint = DomainConstraint<BoolLiteral, Constant>;
     using DomainAndExpr = AndExpr<DomainConstraint<BoolLiteral, Constant>>;
     using DomainBoolExpr = BoolExpr<DomainConstraint<BoolLiteral, Constant>>;
@@ -154,22 +155,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 }
             }
         }
-
-        // effects: Yields all the leaves in this
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal IEnumerable<BoolLiteral> Leaves
-        {
-            get
-            {
-                // Create the term visitor and visit it to get terms
-                IEnumerable<DomainTermExpr> terms = TermVisitor.GetTerms(m_tree, true);
-                foreach (DomainTermExpr term in terms)
-                {
-                    yield return term.Identifier.Variable.Identifier;
-                }
-            }
-        }
-
 
         // effects: if this expression is a boolean expression of type BoolLiteral
         // Returns the literal, else returns null

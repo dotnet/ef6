@@ -10,7 +10,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// <summary>
     /// Represents the edm member class
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
     public abstract class EdmMember : MetadataItem
     {
         /// <summary>

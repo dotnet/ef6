@@ -677,8 +677,6 @@ namespace System.Data.Entity.Migrations
                 return;
             }
 
-            //Console.WriteLine(migrationStatement.Sql);
-
             if (!migrationStatement.SuppressTransaction)
             {
                 using (var command = transaction.Connection.CreateCommand())

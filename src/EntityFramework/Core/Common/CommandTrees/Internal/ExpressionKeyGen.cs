@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Spatial;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Text;
@@ -17,6 +18,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     /// <summary>
     /// Generates a key for a command tree.
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal sealed class ExpressionKeyGen : DbExpressionVisitor
     {
         internal static bool TryGenerateKey(DbExpression tree, out string key)

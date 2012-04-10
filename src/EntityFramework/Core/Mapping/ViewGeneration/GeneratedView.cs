@@ -10,6 +10,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Core.Query.PlanCompiler;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
     /// <summary>
@@ -193,6 +194,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return m_commandTree;
         }
 
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "projectOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal Node GetInternalTree(Command targetIqtCommand)
         {
             Debug.Assert(m_extent.EntityContainer.DataSpace == DataSpace.CSpace, "Internal Tree should be asked only for query view");

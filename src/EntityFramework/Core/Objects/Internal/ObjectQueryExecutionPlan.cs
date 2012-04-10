@@ -11,6 +11,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using CompiledQueryParameters = System.Collections.ObjectModel.ReadOnlyCollection<System.Collections.Generic.KeyValuePair<ObjectParameter, System.Data.Entity.Core.Objects.ELinq.QueryParameterExpression>>;
     
     /// <summary>
@@ -41,6 +42,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             this.CompiledQueryParameters = compiledQueryParameters;
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         internal static ObjectQueryExecutionPlan Prepare(ObjectContext context, DbQueryCommandTree tree, Type elementType, MergeOption mergeOption, Span span, CompiledQueryParameters compiledQueryParameters, AliasGenerator aliasGenerator)
         {
             TypeUsage treeResultType = tree.Query.ResultType;
@@ -150,6 +152,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             return traceString;
         }
 
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         internal ObjectResult<TResultType> Execute<TResultType>(ObjectContext context, ObjectParameterCollection parameterValues)
         {
             DbDataReader storeReader = null;

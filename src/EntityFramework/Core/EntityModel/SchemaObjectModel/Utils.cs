@@ -3,6 +3,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Text.RegularExpressions;
     using System.Xml;
@@ -34,14 +35,14 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         #region Static Methods
 
-        internal static void ExtractNamespaceAndName(SchemaDataModelOption dataModel, string qualifiedTypeName, out string namespaceName, out string name)
+        internal static void ExtractNamespaceAndName(string qualifiedTypeName, out string namespaceName, out string name)
         {
             Debug.Assert(!string.IsNullOrEmpty(qualifiedTypeName), "qualifiedTypeName parameter is null");
             GetBeforeAndAfterLastPeriod(qualifiedTypeName, out namespaceName, out name); 
         }
 
 
-        internal static string ExtractTypeName(SchemaDataModelOption dataModel, string qualifiedTypeName)
+        internal static string ExtractTypeName(string qualifiedTypeName)
         {
             Debug.Assert(!string.IsNullOrEmpty(qualifiedTypeName), "qualifiedTypeName parameter is null or empty");
             return GetEverythingAfterLastPeriod(qualifiedTypeName);
@@ -203,7 +204,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 && IsValidLanguageIndependentIdentifier(name);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
+        [SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
         [System.Security.SecuritySafeCritical]
         private static bool IsValidLanguageIndependentIdentifier(string name)
         {

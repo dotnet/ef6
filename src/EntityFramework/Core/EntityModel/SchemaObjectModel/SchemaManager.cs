@@ -156,8 +156,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 {
                     schemaCollection.Add(schema);
                     schemaManager.AddSchema(schema);
-                    var currentSchemaVersion = schema.SchemaVersion;
-                    Debug.Assert(schemaCollection.All(s => s.SchemaVersion == currentSchemaVersion || s.SchemaVersion != XmlConstants.UndefinedVersion));
+                    Debug.Assert(schemaCollection.All(s => s.SchemaVersion == schema.SchemaVersion || s.SchemaVersion != XmlConstants.UndefinedVersion));
                 }
                 index++;
             }

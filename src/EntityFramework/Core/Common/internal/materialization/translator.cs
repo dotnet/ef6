@@ -16,6 +16,7 @@
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -102,7 +103,7 @@
     {
         internal readonly Expression ExpressionToGetCoordinator;
 
-        internal CollectionTranslatorResult(Expression returnedExpression, ColumnMap columnMap, Type requestedType, Expression expressionToGetCoordinator)
+        internal CollectionTranslatorResult(Expression returnedExpression, Type requestedType, Expression expressionToGetCoordinator)
             : base(returnedExpression, requestedType)
         {
             this.ExpressionToGetCoordinator = expressionToGetCoordinator;
@@ -113,6 +114,7 @@
     /// Translates query ColumnMap into ShaperFactory. Basically, we interpret the 
     /// ColumnMap and compile delegates used to materialize results.
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal class Translator : ColumnMapVisitorWithResults<TranslatorResult, TranslatorArg>
     {
         #region private state
@@ -243,7 +245,7 @@
         /// method you must ensure that you've done a TestComple on expressions provided
         /// by the user to ensure the compilation doesn't violate them.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2128")]
+        [SuppressMessage("Microsoft.Security", "CA2128")]
         [System.Security.SecuritySafeCritical]
         [ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
         internal static Func<Shaper, TResult> Compile<TResult>(Expression body)
@@ -288,6 +290,7 @@
             return _hasNonPublicMembers ? (Action)DemandMemberAccess : null;
         }
 
+        [SuppressMessage("Microsoft.Security", "CA2143:TransparentMethodsShouldNotDemandFxCopRule")]
         private static void DemandMemberAccess()
         {
             LightweightCodeGenerator.MemberAccessReflectionPermission.Demand();
@@ -546,8 +549,6 @@
         private static readonly ConstructorInfo EntityKey_ctor_SingleKey = typeof(EntityKey).GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { typeof(EntitySet), typeof(object) }, null);
         private static readonly ConstructorInfo EntityKey_ctor_CompositeKey = typeof(EntityKey).GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { typeof(EntitySet), typeof(object[]) }, null);
 
-        private static readonly MethodInfo IEntityKeyWithKey_EntityKey = typeof(System.Data.Entity.Core.Objects.DataClasses.IEntityWithKey).GetProperty("EntityKey").GetSetMethod();
-
         private static readonly MethodInfo IEqualityComparerOfString_Equals = typeof(IEqualityComparer<String>).GetMethod("Equals", new Type[] { typeof(string), typeof(string) });
 
         private static readonly ConstructorInfo MaterializedDataRecord_ctor = typeof(MaterializedDataRecord).GetConstructor(
@@ -587,12 +588,6 @@
         private static readonly PropertyInfo IEntityWrapper_Entity = typeof(IEntityWrapper).GetProperty("Entity");
         private static readonly MethodInfo EntityProxyTypeInfo_SetEntityWrapper = typeof(EntityProxyTypeInfo).GetMethod("SetEntityWrapper", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        private static readonly ConstructorInfo PocoPropertyAccessorStrategy_ctor = typeof(PocoPropertyAccessorStrategy).GetConstructor(new Type[] { typeof(object) });
-        private static readonly ConstructorInfo EntityWithChangeTrackerStrategy_ctor = typeof(EntityWithChangeTrackerStrategy).GetConstructor(new Type[] { typeof(IEntityWithChangeTracker) });
-        private static readonly ConstructorInfo EntityWithKeyStrategy_ctor = typeof(EntityWithKeyStrategy).GetConstructor(new Type[] { typeof(IEntityWithKey) });
-        private static readonly ConstructorInfo PocoEntityKeyStrategy_ctor = typeof(PocoEntityKeyStrategy).GetConstructor(new Type[0]);
-        private static readonly PropertyInfo SnapshotChangeTrackingStrategy_Instance = typeof(SnapshotChangeTrackingStrategy).GetProperty("Instance", BindingFlags.Static | BindingFlags.Public);
-
         private static readonly MethodInfo EntityWrapperFactory_GetPocoPropertyAccessorStrategyFunc = typeof(EntityWrapperFactory).GetMethod("GetPocoPropertyAccessorStrategyFunc", BindingFlags.NonPublic | BindingFlags.Static);
         private static readonly MethodInfo EntityWrapperFactory_GetNullPropertyAccessorStrategyFunc = typeof(EntityWrapperFactory).GetMethod("GetNullPropertyAccessorStrategyFunc", BindingFlags.NonPublic | BindingFlags.Static);
         private static readonly MethodInfo EntityWrapperFactory_GetEntityWithChangeTrackerStrategyFunc = typeof(EntityWrapperFactory).GetMethod("GetEntityWithChangeTrackerStrategyFunc", BindingFlags.NonPublic | BindingFlags.Static);
@@ -607,7 +602,6 @@
         private static readonly Expression DBNull_Value = Expression.Constant(DBNull.Value, typeof(object));
 
         internal static readonly ParameterExpression Shaper_Parameter = Expression.Parameter(typeof(Shaper), "shaper");
-        private static readonly ParameterExpression EntityParameter = Expression.Parameter(typeof(object), "entity");
 
         internal static readonly Expression Shaper_Reader = Expression.Field(Shaper_Parameter, typeof(Shaper).GetField("Reader"));
         private static readonly Expression Shaper_Workspace = Expression.Field(Shaper_Parameter, typeof(Shaper).GetField("Workspace"));
@@ -689,9 +683,8 @@
         /// <summary>
         /// Emits an expression that represnts a NullEntityWrapper instance.
         /// </summary>
-        /// <param name="type">The type of the null to be wrapped</param>
         /// <returns>An expression represnting a wrapped null</returns>
-        internal static Expression Emit_WrappedNullConstant(Type type)
+        internal static Expression Emit_WrappedNullConstant()
         {
             return Expression.Property(null, EntityWrapperFactory_NullWrapper);
         }
@@ -1129,7 +1122,7 @@
         #region ColumnMapVisitor implementation
 
         // utility accept that looks up CLR type
-        private static TranslatorResult AcceptWithMappedType(Translator translator, ColumnMap columnMap, ColumnMap parent)
+        private static TranslatorResult AcceptWithMappedType(Translator translator, ColumnMap columnMap)
         {
             Type type = translator.DetermineClrType(columnMap.Type);
             TranslatorResult result = columnMap.Accept(translator, new TranslatorArg(type));
@@ -1163,7 +1156,7 @@
 
                 // Build expressions to read the property values from the source data 
                 // reader and bind them to their target properties
-                List<MemberBinding> propertyBindings = CreatePropertyBindings(columnMap, clrType, complexType.Properties);
+                List<MemberBinding> propertyBindings = CreatePropertyBindings(columnMap, complexType.Properties);
 
                 // We have all the property bindings now; go ahead and build the expression to
                 // construct the type and store the property values.
@@ -1217,7 +1210,7 @@
 
                 // Build expressions to read the property values from the source data 
                 // reader and bind them to their target properties
-                List<MemberBinding> propertyBindings = CreatePropertyBindings(columnMap, clrType, cSpaceType.Properties);
+                List<MemberBinding> propertyBindings = CreatePropertyBindings(columnMap, cSpaceType.Properties);
 
                 // We have all the property bindings now; go ahead and build the expression to
                 // construct the entity or proxy and store the property values.  We'll wrap it with more
@@ -1292,7 +1285,7 @@
                 result = Expression.Condition(
                                             Emit_EntityKey_HasValue(entityIdentity.Keys),
                                             constructEntity,
-                                            Emit_WrappedNullConstant(arg.RequestedType)
+                                            Emit_WrappedNullConstant()
                                             );
             }
 
@@ -1345,7 +1338,7 @@
         /// Along the way we'll keep track of non-public properties and properties that
         /// have link demands, so we can ensure enforce them.
         /// </summary>
-        private List<MemberBinding> CreatePropertyBindings(StructuredColumnMap columnMap, Type clrType, ReadOnlyMetadataCollection<EdmProperty> properties)
+        private List<MemberBinding> CreatePropertyBindings(StructuredColumnMap columnMap, ReadOnlyMetadataCollection<EdmProperty> properties)
         {
             List<MemberBinding> result = new List<MemberBinding>(columnMap.Properties.Length);
 
@@ -1421,7 +1414,7 @@
             // We're building a conditional ladder, where we'll compare each 
             // discriminator value with the one from the source data reader, and 
             // we'll pick that type if they match.
-            Expression discriminatorReader = AcceptWithMappedType(this, columnMap.TypeDiscriminator, columnMap).Expression;
+            Expression discriminatorReader = AcceptWithMappedType(this, columnMap.TypeDiscriminator).Expression;
 
             if (IsValueLayer)
             {
@@ -1431,7 +1424,7 @@
             }
             else
             {
-                result = Emit_WrappedNullConstant(arg.RequestedType); // the default
+                result = Emit_WrappedNullConstant(); // the default
             }
 
             foreach (var typeChoice in columnMap.TypeChoices)
@@ -1483,7 +1476,7 @@
         /// Helper method to simplify the construction of the types; I'm just too lazy to 
         /// create all the nested generic types needed to this by hand.
         /// </summary>
-        private Expression MultipleDiscriminatorPolymorphicColumnMapHelper<TElement>(MultipleDiscriminatorPolymorphicColumnMap columnMap, TranslatorArg arg)
+        private Expression MultipleDiscriminatorPolymorphicColumnMapHelper<TElement>(MultipleDiscriminatorPolymorphicColumnMap columnMap)
         {
             // construct an array of discriminator values
             Expression[] discriminatorReaders = new Expression[columnMap.TypeDiscriminators.Length];
@@ -1499,7 +1492,7 @@
             ConstructorInfo typeDelegatePairConstructor = typeDelegatePairType.GetConstructor(new Type[] { typeof(EntityType), typeof(Func<Shaper, TElement>) });
             foreach (var typeChoice in columnMap.TypeChoices)
             {
-                Expression typeReader = Emit_EnsureType(AcceptWithMappedType(this, typeChoice.Value, columnMap).UnwrappedExpression, typeof(TElement));
+                Expression typeReader = Emit_EnsureType(AcceptWithMappedType(this, typeChoice.Value).UnwrappedExpression, typeof(TElement));
                 LambdaExpression typeReaderDelegate = CreateInlineDelegate(typeReader);
                 Expression typeDelegatePair = Expression.New(
                                                     typeDelegatePairConstructor, 
@@ -1556,7 +1549,7 @@
                     if (null != _spanIndex && _spanIndex.HasSpanMap(spanRowType))
                     {
                         result = HandleSpandexRecord(columnMap, arg, spanRowType);
-                        nullConstant = Emit_WrappedNullConstant(result.Type);
+                        nullConstant = Emit_WrappedNullConstant();
                     }
                     else
                     {
@@ -1641,7 +1634,7 @@
             // it's value is DBNull.Value.
             if (null != nullCheckExpression)
             {
-                Expression nullResult = Expression.Call(Emit_Shaper_GetState(stateSlotNumber, typeof(RecordState)), RecordState_SetNullRecord, Shaper_Parameter);
+                Expression nullResult = Expression.Call(Emit_Shaper_GetState(stateSlotNumber, typeof(RecordState)), RecordState_SetNullRecord);
                 // nullCheckExpression ? (type)null : result
                 result = Expression.Condition(nullCheckExpression, nullResult, result);
             }
@@ -1689,7 +1682,7 @@
             Expression[] columnReaders = new Expression[columnMap.Properties.Length];
             for (int i = 0; i < columnReaders.Length; i++)
             {
-                Expression columnReader = AcceptWithMappedType(this, columnMap.Properties[i], columnMap).UnwrappedExpression;
+                Expression columnReader = AcceptWithMappedType(this, columnMap.Properties[i]).UnwrappedExpression;
 
                 // ((object)columnReader) ?? DBNull.Value
                 columnReaders[i] = Expression.Coalesce(Emit_EnsureType(columnReader, typeof(object)), DBNull_Value);
@@ -1728,7 +1721,7 @@
             for (int i = 1; i < columnMap.Properties.Length; i++)
             {
                 AssociationEndMember targetMember = spanMap[i];
-                TranslatorResult propertyTranslatorResult = AcceptWithMappedType(this, columnMap.Properties[i], columnMap);
+                TranslatorResult propertyTranslatorResult = AcceptWithMappedType(this, columnMap.Properties[i]);
                 Expression spannedResultReader = propertyTranslatorResult.Expression;
 
                 // figure out the flavor of the span
@@ -1838,7 +1831,7 @@
                 keyReaders = new Expression[columnMap.Keys.Length];
                 for (int i = 0; i < keyReaders.Length; i++)
                 {
-                    Expression keyReader = AcceptWithMappedType(this, columnMap.Keys[i], columnMap).Expression;
+                    Expression keyReader = AcceptWithMappedType(this, columnMap.Keys[i]).Expression;
                     keyReaders[i] = keyReader;
                 }
             }
@@ -1852,7 +1845,7 @@
             Expression discriminatorReader = null;
             if (null != discriminatorColumnMap)
             {
-                discriminatorReader = AcceptWithMappedType(this, discriminatorColumnMap, columnMap).Expression;
+                discriminatorReader = AcceptWithMappedType(this, discriminatorColumnMap).Expression;
             }
 
             // get expression retrieving the coordinator
@@ -1910,7 +1903,7 @@
                 }
             }
             ExitCoordinatorTranslateScope();
-            return new CollectionTranslatorResult(result, columnMap, arg.RequestedType, expressionToGetCoordinator);
+            return new CollectionTranslatorResult(result, arg.RequestedType, expressionToGetCoordinator);
         }
 
         /// <summary>

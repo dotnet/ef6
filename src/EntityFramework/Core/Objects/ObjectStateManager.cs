@@ -11,6 +11,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -18,6 +19,7 @@ namespace System.Data.Entity.Core.Objects
     /// <summary>
     /// implementation of ObjectStateManager class
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     public class ObjectStateManager : IEntityStateManager
     {
         // This is the initial capacity used for lists of entries.  We use this rather than the default because
@@ -497,7 +499,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         [ConditionalAttribute("DEBUG")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", Justification = "This method is compiled only when the compilation symbol DEBUG is defined")]
+        [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", Justification = "This method is compiled only when the compilation symbol DEBUG is defined")]
         internal void AssertAllForeignKeyIndexEntriesAreValid()
         {
             if (_danglingForeignKeys.Count == 0)
@@ -628,8 +630,7 @@ namespace System.Data.Entity.Core.Objects
         // devnote: see comment to SQLBU 555615 in ObjectContext.AttachSingleObject()
         internal void PromoteKeyEntryInitialization(ObjectContext contextToAttach, 
             EntityEntry keyEntry,
-            IEntityWrapper wrappedEntity,
-            IExtendedDataRecord shadowValues,            
+            IEntityWrapper wrappedEntity,            
             bool replacingEntry)
         {
             Debug.Assert(keyEntry != null, "keyEntry must be non-null.");
@@ -639,7 +640,7 @@ namespace System.Data.Entity.Core.Objects
             // Future Enhancement: Fixup already has this information, don't rediscover it
             StateManagerTypeMetadata typeMetadata = GetOrAddStateManagerTypeMetadata(wrappedEntity.IdentityType, (EntitySet)keyEntry.EntitySet);
             ValidateProxyType(wrappedEntity);
-            keyEntry.PromoteKeyEntry(wrappedEntity, shadowValues, typeMetadata);
+            keyEntry.PromoteKeyEntry(wrappedEntity, typeMetadata);
             AddEntryToKeylessStore(keyEntry);
 
             if (replacingEntry)
@@ -671,30 +672,24 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         /// <param name="keyEntry">the key entry that exists in the state manager</param>
         /// <param name="entity">the object to add</param>
-        /// <param name="shadowValues">a data record representation of the entity's values, including any values in shadow state</param>
         /// <param name="replacingEntry">True if this promoted key entry is replacing an existing detached entry</param>
         /// <param name="setIsLoaded">Tells whether we should allow the IsLoaded flag to be set to true for RelatedEnds</param>
-        /// <param name="argumentName">Name of the argument passed to a public method, for use in exceptions.</param>
         internal void PromoteKeyEntry(EntityEntry keyEntry,
             IEntityWrapper wrappedEntity,
-            IExtendedDataRecord shadowValues,
             bool replacingEntry,
             bool setIsLoaded,
-            bool keyEntryInitialized,
-            string argumentName)
+            bool keyEntryInitialized)
         {
             Debug.Assert(keyEntry != null, "keyEntry must be non-null.");
             Debug.Assert(wrappedEntity != null, "entity wrapper cannot be null.");
             Debug.Assert(wrappedEntity.Entity != null, "entity cannot be null.");
             Debug.Assert(wrappedEntity.Context != null, "the context should be already set");
-            // shadowValues is allowed to be null
-            Debug.Assert(argumentName != null, "argumentName cannot be null.");
 
             if (!keyEntryInitialized)
             {
                 // We pass null as the context here because, as asserted above, the context is already attached
                 // to the wrapper when it comes down this path.
-                this.PromoteKeyEntryInitialization(null, keyEntry, wrappedEntity, shadowValues, replacingEntry);
+                this.PromoteKeyEntryInitialization(null, keyEntry, wrappedEntity, replacingEntry);
             }
 
             bool doCleanup = true;
@@ -900,8 +895,8 @@ namespace System.Data.Entity.Core.Objects
                 "This verifies that UpdateRelatedEnd is a no-op in a keyEntryPromotion case when the method is called indirectly from ObjectContext.AttachTo");
 
             // If either end is an EntityReference, we may need to set IsLoaded or the DetachedEntityKey
-            UpdateRelatedEnd(relatedEnd, wrappedSource, wrappedTarget, setIsLoaded, mergeOption);
-            UpdateRelatedEnd(targetRelatedEnd, wrappedTarget, wrappedSource, setIsLoaded, mergeOption);
+            UpdateRelatedEnd(relatedEnd, wrappedTarget, setIsLoaded, mergeOption);
+            UpdateRelatedEnd(targetRelatedEnd, wrappedSource, setIsLoaded, mergeOption);
 
             // In case the method was called from ObjectContext.AttachTo, we have to track relationships which were "promoted"
             // Tracked relationships are used in recovery code of AttachTo.
@@ -914,7 +909,7 @@ namespace System.Data.Entity.Core.Objects
 
         // devnote: This method should only be used in scenarios where we are automatically hooking up relationships for
         // the user, and not in cases where they are manually setting relationships.
-        private static void UpdateRelatedEnd(RelatedEnd relatedEnd, IEntityWrapper wrappedEntity, IEntityWrapper wrappedRelatedEntity, bool setIsLoaded, MergeOption mergeOption)
+        private static void UpdateRelatedEnd(RelatedEnd relatedEnd, IEntityWrapper wrappedRelatedEntity, bool setIsLoaded, MergeOption mergeOption)
         {
             AssociationEndMember endMember = (AssociationEndMember)(relatedEnd.ToEndMember);
 
@@ -1152,6 +1147,7 @@ namespace System.Data.Entity.Core.Objects
         /// true if an existing relationship is found and updated, and no further action is needed
         /// false if either no relationship was found, or if one was found and updated, but a new one still needs to be added
         /// </returns>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal static bool TryUpdateExistingRelationships(ObjectContext context, MergeOption mergeOption, AssociationSet associationSet, AssociationEndMember sourceMember, EntityKey sourceKey, IEntityWrapper wrappedSource, AssociationEndMember targetMember, EntityKey targetKey, bool setIsLoaded, out EntityState newEntryState)
         {
             Debug.Assert(mergeOption != MergeOption.NoTracking, "Existing relationships should not be updated with NoTracking");
@@ -1396,14 +1392,12 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="entitySet"></param>
-        /// <param name="argumentName"></param>
-        internal EntityEntry AttachEntry(EntityKey entityKey, IEntityWrapper wrappedObject, EntitySet entitySet, string argumentName)
+        internal EntityEntry AttachEntry(EntityKey entityKey, IEntityWrapper wrappedObject, EntitySet entitySet)
         {
             Debug.Assert(wrappedObject != null, "entity wrapper cannot be null.");
             Debug.Assert(wrappedObject.Entity != null, "entity cannot be null.");
             Debug.Assert(wrappedObject.Context != null, "the context should be already set");
             Debug.Assert(entitySet != null, "entitySet must be non-null.");
-            Debug.Assert(argumentName != null, "argumentName cannot be null.");
             Debug.Assert(entityKey != null, "argumentName cannot be null.");
 
             // Get a StateManagerTypeMetadata for the entity type.
@@ -2029,7 +2023,7 @@ namespace System.Data.Entity.Core.Objects
                 Debug.Assert(existingEntry.State == EntityState.Unchanged, "entity stub must be in unchanged state");
                 Debug.Assert(existingEntry.IsKeyEntry, "existing entry must be a key entry to promote");
                 Debug.Assert(Object.ReferenceEquals(newKey, existingEntry.EntityKey), "should be same key reference");
-                PromoteKeyEntry(existingEntry, entry.WrappedEntity, null, true, /*setIsLoaded*/ false, /*keyEntryInitialized*/ false, "AcceptChanges");
+                PromoteKeyEntry(existingEntry, entry.WrappedEntity, true, /*setIsLoaded*/ false, /*keyEntryInitialized*/ false);
 
                 // leave the entity stub in the unchanged state
                 // the existing entity stub wins
@@ -2213,6 +2207,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="navigationPropertySelector">A LINQ expression specifying the navigation property</param>
         /// <param name="relationshipState">The requested state of the relationship</param>
         /// <returns>The ObjectStateEntry for changed relationship</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public ObjectStateEntry ChangeRelationshipState<TEntity>(
             TEntity sourceEntity,
             object targetEntity,
@@ -2313,7 +2308,7 @@ namespace System.Data.Entity.Core.Objects
             targetEntry = this.GetEntityEntryByObjectOrEntityKey(targetEntity);
         }
 
-        private void VerifyInitialStateForChangeRelationshipState(EntityEntry sourceEntry, EntityEntry targetEntry, RelatedEnd relatedEnd, EntityState relationshipState)
+        private static void VerifyInitialStateForChangeRelationshipState(EntityEntry sourceEntry, EntityEntry targetEntry, RelatedEnd relatedEnd, EntityState relationshipState)
         {
             relatedEnd.VerifyType(targetEntry.WrappedEntity);
 
@@ -3078,13 +3073,13 @@ namespace System.Data.Entity.Core.Objects
                 try
                 {
                     // Populate Transact-ionManager.DeletedRelationshipsByGraph and TransactionManager.AddedRelationshipsByGraph
-                    this.DetectChangesInNavigationProperties(entries);
+                    DetectChangesInNavigationProperties(entries);
 
                     // Populate TransactionManager.ChangedForeignKeys
-                    this.DetectChangesInScalarAndComplexProperties(entries);
+                    DetectChangesInScalarAndComplexProperties(entries);
 
                     // Populate TransactionManager.DeletedRelationshipsByForeignKey and TransactionManager.AddedRelationshipsByForeignKey
-                    this.DetectChangesInForeignKeys(entries);
+                    DetectChangesInForeignKeys(entries);
 
                     // Detect conflicts between changes to FK and navigation properties
                     this.DetectConflicts(entries);
@@ -3101,6 +3096,7 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void DetectConflicts(IList<EntityEntry> entries)
         {
             TransactionManager tm = this.TransactionManager;
@@ -3285,13 +3281,13 @@ namespace System.Data.Entity.Core.Objects
             }
             if (entityKey == null || entityKey.IsTemporary)
             {
-                entityKey = this.CreateEntityKey(this.GetEntitySetOfOtherEnd(entityFrom, relatedEndFrom), entityTo.Entity);
+                entityKey = this.CreateEntityKey(GetEntitySetOfOtherEnd(entityFrom, relatedEndFrom), entityTo.Entity);
             }
             return entityKey;
         }
 
 
-        private EntitySet GetEntitySetOfOtherEnd(IEntityWrapper entity, RelatedEnd relatedEnd)
+        private static EntitySet GetEntitySetOfOtherEnd(IEntityWrapper entity, RelatedEnd relatedEnd)
         {
             AssociationSet associationSet = (AssociationSet)relatedEnd.RelationshipSet;
 
@@ -3306,7 +3302,7 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        private void DetectChangesInForeignKeys(IList<EntityEntry> entries)
+        private static void DetectChangesInForeignKeys(IList<EntityEntry> entries)
         {
             foreach (var entry in entries)
             {
@@ -3323,6 +3319,7 @@ namespace System.Data.Entity.Core.Objects
             PerformAdd(entries);
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         private void PerformAdd(IList<EntityEntry> entries)
         {
             TransactionManager tm = this.TransactionManager;
@@ -3448,6 +3445,7 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity"), SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         private void PerformDelete(IList<EntityEntry> entries)
         {
             TransactionManager tm = this.TransactionManager;
@@ -3463,12 +3461,13 @@ namespace System.Data.Entity.Core.Objects
                         // find EntityKey of objects deleted from relatedEnd by changes of FKs
 
                         HashSet<EntityKey> entityKeysOfDeletedObjects = null;
+                        EntityReference reference = relatedEnd as EntityReference;
 
                         Dictionary<RelatedEnd, HashSet<EntityKey>> deletedRelationshipsByForeignKey;
-                        if (relatedEnd is EntityReference &&
+                        if (reference != null &&
                             tm.DeletedRelationshipsByForeignKey.TryGetValue(entry.WrappedEntity, out deletedRelationshipsByForeignKey))
                         {
-                            deletedRelationshipsByForeignKey.TryGetValue(relatedEnd as EntityReference, out entityKeysOfDeletedObjects);
+                            deletedRelationshipsByForeignKey.TryGetValue(reference, out entityKeysOfDeletedObjects);
                         }
 
                         // find IEntityWrappers of objects deleted from relatedEnd by changes to navigation property
@@ -3488,7 +3487,6 @@ namespace System.Data.Entity.Core.Objects
                             {
                                 EntityEntry relatedEntry;
                                 IEntityWrapper relatedEntity = null;
-                                EntityReference reference = relatedEnd as EntityReference;
                                 if (this.TryGetEntityEntry(key, out relatedEntry) &&
                                     relatedEntry.WrappedEntity.Entity != null)
                                 {
@@ -3558,7 +3556,6 @@ namespace System.Data.Entity.Core.Objects
                             foreach (IEntityWrapper entityToDelete in entitiesToDelete)
                             {
                                 bool preserveForeignKey = ShouldPreserveForeignKeyForPrincipal(entry.WrappedEntity, relatedEnd, entityToDelete, entitiesToDelete);
-                                EntityReference reference = relatedEnd as EntityReference;
                                 if (reference != null && IsReparentingReference(entry.WrappedEntity, reference))
                                 {
                                     TransactionManager.EntityBeingReparented = reference.GetDependentEndOfReferentialConstraint(reference.ReferenceValue.Entity);
@@ -3674,7 +3671,7 @@ namespace System.Data.Entity.Core.Objects
             return false;
         }
 
-        private void DetectChangesInNavigationProperties(IList<EntityEntry> entries)
+        private static void DetectChangesInNavigationProperties(IList<EntityEntry> entries)
         {
             // Detect changes in navigation properties
             // (populates this.TransactionManager.DeletedRelationships and this.TransactionManager.AddedRelationships)
@@ -3688,7 +3685,7 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        private void DetectChangesInScalarAndComplexProperties(IList<EntityEntry> entries)
+        private static void DetectChangesInScalarAndComplexProperties(IList<EntityEntry> entries)
         {
             foreach (var entry in entries)
             {

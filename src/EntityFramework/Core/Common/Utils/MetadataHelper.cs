@@ -8,7 +8,10 @@ using System.Security.Cryptography;
 
 namespace System.Data.Entity.Core.Common.Utils
 {
+    using System.Diagnostics.CodeAnalysis;
+
     // Helper functions to get metadata information
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal static class MetadataHelper
     {
         /// <summary>
@@ -393,7 +396,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
 
-        internal static IEnumerable<EdmType> GetTypeAndParentTypesOf(EdmType type, ItemCollection itemCollection, bool includeAbstractTypes)
+        internal static IEnumerable<EdmType> GetTypeAndParentTypesOf(EdmType type, bool includeAbstractTypes)
         {
             // We have to collect subtypes in ref to support conditional association mappings
             if (Helper.IsRefType(type))
@@ -492,7 +495,7 @@ namespace System.Data.Entity.Core.Common.Utils
         /// This is possible because refconstraints make certain Keys redundant. We subtract such redundant key sof "other" ends
         /// and see if what is left is contributed only from the given end's keys.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCode", Justification = "Based on Bug VSTS Pioneer #433188: IsVisibleOutsideAssembly is wrong on generic instantiations.")]
+        [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCode", Justification = "Based on Bug VSTS Pioneer #433188: IsVisibleOutsideAssembly is wrong on generic instantiations.")]
         internal static bool DoesEndKeySubsumeAssociationSetKey(AssociationSet assocSet, AssociationEndMember thisEnd, HashSet<Pair<EdmMember, EntityType>> associationkeys)
         {
             AssociationType assocType = assocSet.ElementType;
@@ -812,16 +815,19 @@ namespace System.Data.Entity.Core.Common.Utils
         /// <returns></returns>
         internal static string GenerateHashForAllExtentViewsContent(double schemaVersion, IEnumerable<KeyValuePair<string, string>> extentViews)
         {
-            CompressingHashBuilder builder = new CompressingHashBuilder(CreateMetadataHashAlgorithm(schemaVersion));
-            foreach (var view in extentViews)
+            using (var metadataHashAlgorithm = CreateMetadataHashAlgorithm(schemaVersion))
             {
-                builder.AppendLine(view.Key);
-                builder.AppendLine(view.Value);
+                var builder = new CompressingHashBuilder(metadataHashAlgorithm);
+                foreach (var view in extentViews)
+                {
+                    builder.AppendLine(view.Key);
+                    builder.AppendLine(view.Value);
+                }
+                return builder.ComputeHash();
             }
-            return builder.ComputeHash();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Cryptographic.Standard", "CA5350:Microsoft.Cryptographic.Standard", 
+        [SuppressMessage("Microsoft.Cryptographic.Standard", "CA5350:Microsoft.Cryptographic.Standard", 
             Justification = "MD5CryptoServiceProvider is not used for cryptography/security purposes and we do it only for v1 and v1.1 for compatibility reasons.")]
         internal static HashAlgorithm CreateMetadataHashAlgorithm(double schemaVersion)
         {

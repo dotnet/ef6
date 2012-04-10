@@ -82,7 +82,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         /// <param name="elementType"></param>
         /// <returns></returns>
-        private bool IsEditable(Type elementType)
+        private static bool IsEditable(Type elementType)
         {
             return !((elementType == typeof(DbDataRecord)) ||
                      ((elementType != typeof(DbDataRecord)) && elementType.IsSubclassOf(typeof(DbDataRecord))));

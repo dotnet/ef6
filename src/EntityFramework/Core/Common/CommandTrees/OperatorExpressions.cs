@@ -10,12 +10,13 @@ using System.Data.Entity.Core.Common.CommandTrees.Internal;
 
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
+    using System.Diagnostics.CodeAnalysis;
+
     #region Boolean Operators
     /// <summary>
     /// Represents the logical And of two Boolean arguments.
     /// </summary>
     /// <remarks>DbAndExpression requires that both of its arguments have a Boolean result type</remarks>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbAndExpression : DbBinaryExpression
     {
         internal DbAndExpression(TypeUsage booleanResultType, DbExpression left, DbExpression right)
@@ -45,7 +46,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// Represents the logical Or of two Boolean arguments.
     /// </summary>
     /// <remarks>DbOrExpression requires that both of its arguments have a Boolean result type</remarks>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbOrExpression : DbBinaryExpression
     {
         internal DbOrExpression(TypeUsage booleanResultType, DbExpression left, DbExpression right)
@@ -75,7 +75,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// Represents the logical Not of a single Boolean argument.
     /// </summary>
     /// <remarks>DbNotExpression requires that its argument has a Boolean result type</remarks>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbNotExpression : DbUnaryExpression
     {
         internal DbNotExpression(TypeUsage booleanResultType, DbExpression argument)
@@ -106,7 +105,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// Represents an arithmetic operation (addition, subtraction, multiplication, division, modulo or negation) applied to two numeric arguments.
     /// </summary>
     /// <remarks>DbArithmeticExpression requires that its arguments have a common numeric result type</remarks>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbArithmeticExpression : DbExpression
     {
         private readonly DbExpressionList _args;
@@ -167,7 +165,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents a Case When...Then...Else logical operation.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbCaseExpression : DbExpression
     {
         private readonly DbExpressionList _when;
@@ -222,7 +219,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents a cast operation applied to a polymorphic argument.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbCastExpression : DbUnaryExpression
     {
         internal DbCastExpression(TypeUsage type, DbExpression argument)
@@ -257,7 +253,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     ///     order comparable (for <see cref="DbExpressionKind"/>.GreaterThan and <see cref="DbExpressionKind"/>.LessThan),
     ///     or both (for <see cref="DbExpressionKind"/>.GreaterThanOrEquals and <see cref="DbExpressionKind"/>.LessThanOrEquals).
     /// </remarks>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbComparisonExpression : DbBinaryExpression
     {
         internal DbComparisonExpression(DbExpressionKind kind, TypeUsage booleanResultType, DbExpression left, DbExpression right)
@@ -297,7 +292,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents empty set determination applied to a single set argument.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbIsEmptyExpression : DbUnaryExpression
     {
         internal DbIsEmptyExpression(TypeUsage booleanResultType, DbExpression argument)
@@ -326,10 +320,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents null determination applied to a single argument.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbIsNullExpression : DbUnaryExpression
     {
-        internal DbIsNullExpression(TypeUsage booleanResultType, DbExpression arg, bool isRowTypeArgumentAllowed)
+        internal DbIsNullExpression(TypeUsage booleanResultType, DbExpression arg)
             : base(DbExpressionKind.IsNull, booleanResultType, arg)
         {
             Debug.Assert(TypeSemantics.IsBooleanType(booleanResultType), "DbIsNullExpression requires a Boolean result type");
@@ -355,7 +348,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents the type comparison of a single argument against the specified type.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbIsOfExpression : DbUnaryExpression
     {
         private TypeUsage _ofType;
@@ -397,7 +389,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents the retrieval of elements of the specified type from the given set argument.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbOfTypeExpression : DbUnaryExpression
     {
         private readonly TypeUsage _ofType;
@@ -443,7 +434,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents the type conversion of a single argument to the specified type.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbTreatExpression : DbUnaryExpression
     {
         internal DbTreatExpression(TypeUsage asType, DbExpression argument)
@@ -472,7 +462,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents a string comparison against the specified pattern with an optional escape string
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbLikeExpression : DbExpression
     {
         private readonly DbExpression _argument;
@@ -530,7 +519,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents the retrieval of a reference to the specified Entity as a Ref.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbEntityRefExpression : DbUnaryExpression
     {
         internal DbEntityRefExpression(TypeUsage refResultType, DbExpression entity)
@@ -559,7 +547,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents the retrieval of the key value of the specified Reference as a row.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbRefKeyExpression : DbUnaryExpression
     {
         internal DbRefKeyExpression(TypeUsage rowResultType, DbExpression reference)

@@ -11,6 +11,7 @@ using System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting;
 
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
+    using System.Diagnostics.CodeAnalysis;
 
     // This class essentially stores a cell but in a special form. When we
     // are generating a view for an extent, we denote the extent's side (C or
@@ -105,7 +106,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             get { return m_memberMaps.RightDomainMap; }
         }
 
-        [Conditional("DEBUG")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"), Conditional("DEBUG")]
         internal void AssertHasUniqueCell()
         {
             Debug.Assert(m_mergedCells.Count == 1);

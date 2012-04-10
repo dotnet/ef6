@@ -209,25 +209,25 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <summary>
         /// Returns <see cref="TypeUsage"/> for <see cref="PrimitiveTypeKind.String"/>.
         /// </summary>
-        internal TypeUsage StringType
+        internal static TypeUsage StringType
         {
-            get { return _perspective.MetadataWorkspace.GetCanonicalModelTypeUsage(PrimitiveTypeKind.String); }
+            get { return MetadataWorkspace.GetCanonicalModelTypeUsage(PrimitiveTypeKind.String); }
         }
 
         /// <summary>
         /// Returns <see cref="TypeUsage"/> for <see cref="PrimitiveTypeKind.Boolean"/>.
         /// </summary>
-        internal TypeUsage BooleanType
+        internal static TypeUsage BooleanType
         {
-            get { return _perspective.MetadataWorkspace.GetCanonicalModelTypeUsage(PrimitiveTypeKind.Boolean); }
+            get { return MetadataWorkspace.GetCanonicalModelTypeUsage(PrimitiveTypeKind.Boolean); }
         }
 
         /// <summary>
         /// Returns <see cref="TypeUsage"/> for <see cref="PrimitiveTypeKind.Int64"/>.
         /// </summary>
-        internal TypeUsage Int64Type
+        internal static TypeUsage Int64Type
         {
-            get { return _perspective.MetadataWorkspace.GetCanonicalModelTypeUsage(PrimitiveTypeKind.Int64); }
+            get { return MetadataWorkspace.GetCanonicalModelTypeUsage(PrimitiveTypeKind.Int64); }
         }
 
         /// <summary>

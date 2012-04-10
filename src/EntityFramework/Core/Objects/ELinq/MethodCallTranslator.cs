@@ -1322,9 +1322,9 @@
 
                 internal static bool IsEmptyArray(LinqExpression expression)
                 {
+                    var newArray = (NewArrayExpression)expression;
                     if (expression.NodeType == ExpressionType.NewArrayInit)
                     {
-                        NewArrayExpression newArray = (NewArrayExpression)expression;
                         if (newArray.Expressions.Count == 0)
                         {
                             return true;
@@ -1333,7 +1333,6 @@
                     else if (expression.NodeType == ExpressionType.NewArrayBounds)
                     {
                         // To be empty, the array must have rank 1 with a single bound of 0
-                        NewArrayExpression newArray = (NewArrayExpression)expression;
                         if (newArray.Expressions.Count == 1 &&
                             newArray.Expressions[0].NodeType == ExpressionType.Constant)
                         {
@@ -1452,21 +1451,12 @@
                 private const string s_DateIntervalFullName = "Microsoft.VisualBasic.DateInterval";
                 private const string s_FirstDayOfWeekFullName = "Microsoft.VisualBasic.FirstDayOfWeek";
                 private const string s_FirstWeekOfYearFullName = "Microsoft.VisualBasic.FirstWeekOfYear";
-                private static HashSet<string> s_supportedIntervals;
+
+                private static readonly HashSet<string> s_supportedIntervals = new HashSet<string> { Year, Month, Day, Hour, Minute, Second };
 
                 internal VBDatePartTranslator(Assembly vbAssembly)
                     : base(GetMethods(vbAssembly)) { }
 
-                static VBDatePartTranslator()
-                {
-                    s_supportedIntervals = new HashSet<string>();
-                    s_supportedIntervals.Add(ExpressionConverter.Year);
-                    s_supportedIntervals.Add(ExpressionConverter.Month);
-                    s_supportedIntervals.Add(ExpressionConverter.Day);
-                    s_supportedIntervals.Add(ExpressionConverter.Hour);
-                    s_supportedIntervals.Add(ExpressionConverter.Minute);
-                    s_supportedIntervals.Add(ExpressionConverter.Second);
-                }
 
                 private static IEnumerable<MethodInfo> GetMethods(Assembly vbAssembly)
                 {
@@ -1644,7 +1634,7 @@
                 protected BinarySequenceMethodTranslator(params SequenceMethod[] methods) : base(methods) { }
                 // This method is not required to be virtual (but TranslateRight has to be). This helps improve
                 // performance as this class is used frequently during CQT generation phase.
-                protected CqtExpression TranslateLeft(ExpressionConverter parent, LinqExpression expr)
+                private static CqtExpression TranslateLeft(ExpressionConverter parent, LinqExpression expr)
                 {
                     return parent.TranslateSet(expr);
                 }
@@ -1658,7 +1648,7 @@
                     {
                         // instance method
                         Debug.Assert(1 == call.Arguments.Count);
-                        CqtExpression left = this.TranslateLeft(parent, call.Object);
+                        CqtExpression left = TranslateLeft(parent, call.Object);
                         CqtExpression right = this.TranslateRight(parent, call.Arguments[0]);
                         return TranslateBinary(parent, left, right);
                     }
@@ -1666,7 +1656,7 @@
                     {
                         // static extension method
                         Debug.Assert(2 == call.Arguments.Count);
-                        CqtExpression left = this.TranslateLeft(parent, call.Arguments[0]);
+                        CqtExpression left = TranslateLeft(parent, call.Arguments[0]);
                         CqtExpression right = this.TranslateRight(parent, call.Arguments[1]);
                         return TranslateBinary(parent, left, right);
                     }
@@ -2295,7 +2285,7 @@
                     if (!parent.IsQueryRoot(call))
                     {
                         result = result.Element();
-                        result = AddDefaultCase(parent, result, call.Type);
+                        result = AddDefaultCase(result, call.Type);
                     }
 
                     // Span is preserved over First/FirstOrDefault with or without a predicate
@@ -2307,7 +2297,8 @@
 
                     return result;
                 }
-                internal static CqtExpression AddDefaultCase(ExpressionConverter parent, CqtExpression element, Type elementType)
+
+                internal static CqtExpression AddDefaultCase(CqtExpression element, Type elementType)
                 {
                     // Retrieve default value.
                     object defaultValue = TypeSystem.GetDefaultValue(elementType);
@@ -2322,7 +2313,7 @@
                     // Otherwise, use the default value for the type
                     List<CqtExpression> whenExpressions = new List<CqtExpression>(1);
 
-                    whenExpressions.Add(parent.CreateIsNullExpression(element, elementType));
+                    whenExpressions.Add(CreateIsNullExpression(element, elementType));
                     List<CqtExpression> thenExpressions = new List<CqtExpression>(1);
                     thenExpressions.Add(DbExpressionBuilder.Constant(element.ResultType, defaultValue));
                     DbCaseExpression caseExpression = DbExpressionBuilder.Case(whenExpressions, thenExpressions, element);
@@ -2403,7 +2394,7 @@
                     else
                     {
                         CqtExpression element = input.Element();
-                        element = FirstTranslatorBase.AddDefaultCase(parent, element, call.Type);
+                        element = FirstTranslatorBase.AddDefaultCase(element, call.Type);
 
                         // Span is preserved over First/FirstOrDefault with or without a predicate
                         Span inputSpan = null;
@@ -2901,7 +2892,7 @@
 
                     return selector;
                 }
-                private CqtExpression CollapseTrivialRenamingProjection(CqtExpression cqtExpression)
+                private static CqtExpression CollapseTrivialRenamingProjection(CqtExpression cqtExpression)
                 {
                     // Detect "select inner.x as m, inner.y as n
                     //         from (select ... as x, ... as y from ...) as inner"

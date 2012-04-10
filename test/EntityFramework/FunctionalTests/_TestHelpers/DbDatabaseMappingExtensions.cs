@@ -18,10 +18,6 @@ namespace System.Data.Entity
 
     public static class DbDatabaseMappingExtensions
     {
-        private static readonly MethodInfo _getViewsMethod
-            = typeof(StorageMappingItemCollection).GetMethod("GenerateEntitySetViews",
-                                                             BindingFlags.NonPublic | BindingFlags.Instance);
-
         internal static void ShellEdmx(this DbDatabaseMapping databaseMapping, string fileName = "Dump.edmx")
         {
             new EdmxSerializer().Serialize(databaseMapping, databaseMapping.Database.GetProviderInfo(),
@@ -52,16 +48,10 @@ namespace System.Data.Entity
 
         internal static void AssertValid(this DbDatabaseMapping databaseMapping, bool shouldThrow)
         {
-            var storageItemMappingCollection
-                = databaseMapping.ToStorageMappingItemCollection();
+            var storageItemMappingCollection = databaseMapping.ToStorageMappingItemCollection();
+            IList<EdmSchemaError> errors = new List<EdmSchemaError>();
 
-            Xunit.Assert.NotNull(_getViewsMethod);
-
-            var args = new object[] { null };
-
-            _getViewsMethod.Invoke(storageItemMappingCollection, args);
-
-            var errors = (IList<EdmSchemaError>)args[0];
+            storageItemMappingCollection.GenerateEntitySetViews(out errors);
 
             if (errors.Any())
             {

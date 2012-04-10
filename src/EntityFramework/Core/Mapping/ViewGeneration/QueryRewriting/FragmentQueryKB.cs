@@ -10,6 +10,8 @@ using System.Linq;
 
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 {
+    using System.Diagnostics.CodeAnalysis;
+
     internal class FragmentQueryKB : KnowledgeBase<DomainConstraint<BoolLiteral, Constant>>
     {
         private BoolExpr<DomainConstraint<BoolLiteral, Constant>> _kbExpression = TrueExpr<DomainConstraint<BoolLiteral, Constant>>.Value;
@@ -29,6 +31,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             CreateVariableConstraintsRecursion(extent.ElementType, new MemberPath(extent), domainMap, edmItemCollection);
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         internal void CreateAssociationConstraints(EntitySetBase extent, MemberDomainMap domainMap, EdmItemCollection edmItemCollection)
         {
             AssociationSet assocSet = extent as AssociationSet;
@@ -116,8 +119,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             }
         }
 
-        internal void CreateEquivalenceConstraintForOneToOneForeignKeyAssociation(AssociationSet assocSet, MemberDomainMap domainMap,
-            EdmItemCollection edmItemCollection)
+        internal void CreateEquivalenceConstraintForOneToOneForeignKeyAssociation(AssociationSet assocSet, MemberDomainMap domainMap)
         {
             AssociationType assocType = assocSet.ElementType;
             foreach (ReferentialConstraint constraint in assocType.ReferentialConstraints)

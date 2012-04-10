@@ -1,10 +1,11 @@
 namespace System.Data.Entity.Core {
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Describes state of an entity
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1714:FlagsEnumsShouldHavePluralNames")]
+    [SuppressMessage("Microsoft.Naming", "CA1714:FlagsEnumsShouldHavePluralNames")]
     [Flags]
     public enum EntityState {
         /// <summary>

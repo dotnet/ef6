@@ -10,6 +10,7 @@ using System.Threading;
 namespace System.Data.Entity.Core.SqlClient
 {
     using System.Data.Entity.Core.SqlClient.Internal;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// SqlClient specific implementation of <see cref="DbSpatialServices"/>
@@ -284,6 +285,7 @@ namespace System.Data.Entity.Core.SqlClient
 
         #region Argument Conversion (conversion to SQL Server Types)
 
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "argumentName")]
         private object ConvertToSqlValue(DbGeography geographyValue, string argumentName)
         {
             if (geographyValue == null)
@@ -294,6 +296,7 @@ namespace System.Data.Entity.Core.SqlClient
             return this.SqlTypes.ConvertToSqlTypesGeography(geographyValue);
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "argumentName")]
         private object ConvertToSqlValue(DbGeometry geometryValue, string argumentName)
         {
             if (geometryValue == null)
@@ -304,6 +307,7 @@ namespace System.Data.Entity.Core.SqlClient
             return this.SqlTypes.ConvertToSqlTypesGeometry(geometryValue);
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "argumentName")]
         private object ConvertToSqlBytes(byte[] binaryValue, string argumentName)
         {
             if (binaryValue == null)
@@ -314,6 +318,7 @@ namespace System.Data.Entity.Core.SqlClient
             return this.SqlTypes.SqlBytesFromByteArray(binaryValue);
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "argumentName")]
         private object ConvertToSqlChars(string stringValue, string argumentName)
         {
             if (stringValue == null)
@@ -324,6 +329,7 @@ namespace System.Data.Entity.Core.SqlClient
             return this.SqlTypes.SqlCharsFromString(stringValue);
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "argumentName")]
         private object ConvertToSqlString(string stringValue, string argumentName)
         {
             if (stringValue == null)
@@ -334,6 +340,7 @@ namespace System.Data.Entity.Core.SqlClient
             return this.SqlTypes.SqlStringFromString(stringValue);
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "argumentName")]
         private object ConvertToSqlXml(string stringValue, string argumentName)
         {
             if (stringValue == null)

@@ -4,17 +4,7 @@ namespace System.Data.Entity.Core.EntityClient
     /// Copied from System.Data.dll
     /// </summary>
     sealed internal class NameValuePair {
-        readonly private string _name;
-        readonly private string _value;
-        readonly private int _length;
         private NameValuePair _next;
-
-        internal NameValuePair(string name, string value, int length) {
-            System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(name), "empty keyname");
-            _name = name;
-            _value = value;
-            _length = length;
-        }
 
         internal NameValuePair Next {
             get {

@@ -4,6 +4,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Core.Common.CommandTrees.Internal;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -23,7 +25,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// DbCommandTree is the abstract base type for the Delete, Query, Insert and Update DbCommandTree types.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public abstract class DbCommandTree
     {      
         // Metadata collection
@@ -70,6 +71,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets the name and corresponding type of each parameter that can be referenced within this command tree.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public IEnumerable<KeyValuePair<string, TypeUsage>> Parameters
         {
             get
@@ -141,6 +143,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         internal abstract void DumpStructure(ExpressionDumper dumper);
 
+#if DEBUG
         internal string DumpXml()
         {
             //
@@ -168,6 +171,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             //
             return XmlExpressionDumper.DefaultEncoding.GetString(stream.ToArray());
         }
+#endif
 
         internal string Print()
         {

@@ -11,9 +11,12 @@ using System.Globalization;
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// concrete Representation the Entity Type
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     public class EntityType : EntityTypeBase
     {
         #region Constructors
@@ -164,6 +167,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Returns the Reference type pointing to this entity type
         /// </summary>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public RefType GetReferenceType()
         {
             if (_referenceType == null)
@@ -173,7 +177,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return _referenceType;
         }
 
-        internal RowType GetKeyRowType(MetadataWorkspace metadataWorkspace)
+        internal RowType GetKeyRowType()
         {
             if (_keyRow == null)
             {
@@ -217,6 +221,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
     }
 
+    [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     internal sealed class ClrEntityType : EntityType
     {
         /// <summary>cached CLR type handle, allowing the Type reference to be GC'd</summary>
@@ -249,7 +254,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>cached dynamic method to construct a CLR instance</summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Delegate Constructor
         {
             get { return _constructor; }
@@ -297,17 +302,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         private string BuildEntityTypeHash()
         {
-            var hash = System.Data.Entity.Core.Common.Utils.MetadataHelper.CreateSHA256HashAlgorithm()
-                .ComputeHash(Encoding.ASCII.GetBytes(BuildEntityTypeDescription()));
-
-            // convert num bytes to num hex digits
-            var builder = new StringBuilder(hash.Length * 2);
-            foreach (byte bite in hash)
+            using (var sha256HashAlgorithm = System.Data.Entity.Core.Common.Utils.MetadataHelper.CreateSHA256HashAlgorithm())
             {
-                builder.Append(bite.ToString("X2", CultureInfo.InvariantCulture));
-            }
+                var hash = sha256HashAlgorithm.ComputeHash(Encoding.ASCII.GetBytes(BuildEntityTypeDescription()));
 
-            return builder.ToString();
+                // convert num bytes to num hex digits
+                var builder = new StringBuilder(hash.Length * 2);
+                foreach (byte bite in hash)
+                {
+                    builder.Append(bite.ToString("X2", CultureInfo.InvariantCulture));
+                }
+
+                return builder.ToString();
+            }
         }
 
         /// <summary>

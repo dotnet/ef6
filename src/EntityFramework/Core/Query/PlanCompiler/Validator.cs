@@ -11,6 +11,8 @@ using System.Text;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Diagnostics.CodeAnalysis;
+
 #if DEBUG
     /// <summary>
     /// The Validator class extends the BasicValidator and enforces that the ITree is valid
@@ -283,7 +285,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             private readonly int[] m_array;
             private readonly int m_length;
 
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
             internal BitVec(int length)
             {
                 Debug.Assert(0 < length, "zero length");
@@ -295,13 +296,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 get { return m_length; }
             }
 
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
             internal void Set(int index)
             {
                 Debug.Assert(unchecked((uint)index < (uint)m_length), "index out of range");
                 m_array[index / 32] |= (1 << (index % 32));
             }
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+
             internal void ClearAll()
             {
                 for (int i = 0; i < m_array.Length; i++)
@@ -309,7 +309,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     m_array[i] = 0;
                 }
             }
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+
             internal bool IsEmpty()
             {
                 for (int i = 0; i < m_array.Length; i++)
@@ -326,7 +326,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 Debug.Assert(unchecked((uint)index < (uint)m_length), "index out of range");
                 return (m_array[index / 32] & (1 << (index % 32))) != 0;
             }
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+
             internal void Or(BitVec value)
             {
                 Debug.Assert(m_length == value.m_length, "unequal sized bitvec");
@@ -335,7 +335,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     m_array[i] |= value.m_array[i];
                 }
             }
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+
             internal void Minus(BitVec value)
             {
                 Debug.Assert(m_length == value.m_length, "unequal sized bitvec");

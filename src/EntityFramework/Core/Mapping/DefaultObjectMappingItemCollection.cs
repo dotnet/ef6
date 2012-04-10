@@ -294,13 +294,14 @@ namespace System.Data.Entity.Core.Mapping {
             else if (Helper.IsRowType(cdmType))
             {
                 List<EdmProperty> clrProperties = new List<EdmProperty>();
-                foreach (EdmProperty column in ((RowType)cdmType).Properties)
+                var rowType = (RowType)cdmType;
+                foreach (EdmProperty column in rowType.Properties)
                 {
                     EdmType clrPropertyType = ConvertCSpaceToOSpaceType(column.TypeUsage.EdmType);
                     EdmProperty clrProperty = new EdmProperty(column.Name, TypeUsage.Create(clrPropertyType));
                     clrProperties.Add(clrProperty);
                 }
-                clrType = new RowType(clrProperties, ((RowType)cdmType).InitializerMetadata);
+                clrType = new RowType(clrProperties, rowType.InitializerMetadata);
             }
             else if (Helper.IsRefType(cdmType))
             {
@@ -333,13 +334,14 @@ namespace System.Data.Entity.Core.Mapping {
             else if (Helper.IsRowType(clrType))
             {
                 List<EdmProperty> cdmProperties = new List<EdmProperty>();
-                foreach (EdmProperty column in ((RowType)clrType).Properties)
+                var rowType = (RowType)clrType;
+                foreach (EdmProperty column in rowType.Properties)
                 {
                     EdmType cdmPropertyType = ConvertOSpaceToCSpaceType(column.TypeUsage.EdmType);
                     EdmProperty cdmPorperty = new EdmProperty(column.Name, TypeUsage.Create(cdmPropertyType));
                     cdmProperties.Add(cdmPorperty);
                 }
-                cdmType = new RowType(cdmProperties, ((RowType)clrType).InitializerMetadata);
+                cdmType = new RowType(cdmProperties, rowType.InitializerMetadata);
             }
             else if (Helper.IsRefType(clrType))
             {
@@ -793,7 +795,7 @@ namespace System.Data.Entity.Core.Mapping {
 
             //Go through the CDMMembers and find the corresponding member in Object space
             //and create a member map.
-            return new ObjectComplexPropertyMapping(containingEdmMember, containingClrMember, complexTypeMapping);
+            return new ObjectComplexPropertyMapping(containingEdmMember, containingClrMember);
         }
 
         private static ObjectTypeMapping LoadTypeMapping(EdmType edmType, EdmType objectType, 

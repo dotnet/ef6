@@ -2,9 +2,10 @@ using System.Data.Entity.Core.Metadata.Edm; //for RelationshipMultiplicity
 
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     public sealed class EdmRelationshipAttribute : System.Attribute
     {

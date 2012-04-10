@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Diagnostics;
 
 namespace System.Data.Entity.Core.Common.Utils {
+    using System.Diagnostics.CodeAnalysis;
 
     // This class provides some useful string utilities, e.g., converting a
     // list to string.
@@ -171,27 +172,6 @@ namespace System.Data.Entity.Core.Common.Utils {
             return true;
         }
         
-        // separate implementation from IsNullOrEmptyOrWhiteSpace(string, int) because that one will
-        // pick up the jit optimization to avoid boundary checks and the this won't is unknown (most likely not)
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")] // referenced by System.Data.Entity.Design.dll
-        internal static bool IsNullOrEmptyOrWhiteSpace(string value, int offset, int length)
-        {
-            // don't use Trim(), which will copy the string, which may be large, just to test for emptyness
-            //return String.IsNullOrEmpty(value) || String.IsNullOrEmpty(value.Trim());
-            if (null != value)
-            {
-                length = Math.Min(value.Length, length);
-                for(int i = offset; i < length; ++i)
-                {
-                    if (!Char.IsWhiteSpace(value[i]))
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
         internal static string FormatInvariant(string format, params object[] args) {
             Debug.Assert(args.Length > 0, "Formatting utilities must be called with at least one argument");
             return String.Format(CultureInfo.InvariantCulture, format, args);

@@ -276,7 +276,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// Called from the Element expression on the Coordinator to indicate that
         /// the record should be NULL.
         /// </summary>
-        internal RecordState SetNullRecord(Shaper shaper)
+        internal RecordState SetNullRecord()
         {
             // CONSIDER(SteveSta): If additional, performance is needed, we could make these
             // singleton objects on the RecordStateFactory, but that has additional overhead 

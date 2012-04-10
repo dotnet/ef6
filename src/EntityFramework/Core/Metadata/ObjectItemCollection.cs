@@ -7,6 +7,7 @@ using System.Reflection;
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Data.Entity.Resources;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Class for representing a collection of items for the object layer.
@@ -125,7 +126,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="assembly">The assembly from which to load metadata</param>
         /// <exception cref="System.ArgumentNullException">thrown if assembly argument is null</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "edm")]
         public void LoadFromAssembly(Assembly assembly, EdmItemCollection edmItemCollection, Action<String> logLoadMessage)
         {
             EntityUtil.CheckArgumentNull(assembly, "assembly");
@@ -135,7 +135,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             ExplicitLoadFromAssembly(assembly, edmItemCollection, logLoadMessage);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "edm")]
         public void LoadFromAssembly(Assembly assembly, EdmItemCollection edmItemCollection)
         {
             EntityUtil.CheckArgumentNull(assembly, "assembly");
@@ -213,7 +212,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="clrType"></param>
         /// <param name="relationshipName"></param>
         /// <returns></returns>
-        internal AssociationType GetRelationshipType(Type entityClrType, string relationshipName)
+        internal AssociationType GetRelationshipType(string relationshipName)
         {
             AssociationType associationType;
             if (TryGetItem<AssociationType>(relationshipName, out associationType))
@@ -427,6 +426,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Get the list of primitive types for the given space
         /// </summary>
         /// <returns></returns> 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public IEnumerable<PrimitiveType> GetPrimitiveTypes()
         {
             return _primitiveTypeMaps.GetTypes();
@@ -438,6 +438,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="objectSpaceType">The OSpace type to look up</param>
         /// <returns>The CLR type of the OSpace argument</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public Type GetClrType(StructuralType objectSpaceType)
         {
             return ObjectItemCollection.GetClrType((EdmType)objectSpaceType);
@@ -451,6 +452,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="objectSpaceType">The OSpace type to look up</param>
         /// <param name="clrType">The CLR type of the OSpace argument</param>
         /// <returns>true on success, false on failure</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public bool TryGetClrType(StructuralType objectSpaceType, out Type clrType)
         {
             return ObjectItemCollection.TryGetClrType((EdmType)objectSpaceType, out clrType);
@@ -462,6 +464,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="objectSpaceType">The OSpace type to look up</param>
         /// <returns>The CLR type of the OSpace argument</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public Type GetClrType(EnumType objectSpaceType)
         {
             return ObjectItemCollection.GetClrType((EdmType)objectSpaceType);
@@ -475,6 +478,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="objectSpaceType">The OSpace enum type to look up</param>
         /// <param name="clrType">The CLR enum type of the OSpace argument</param>
         /// <returns>true on success, false on failure</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public bool TryGetClrType(EnumType objectSpaceType, out Type clrType)
         {
             return ObjectItemCollection.TryGetClrType((EdmType)objectSpaceType, out clrType);

@@ -11,6 +11,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
     using System.Data.Entity.Core.Spatial;
     using System.Data.SqlClient;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
 
@@ -248,6 +249,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// static method name, qualified with the 'geography::' prefix.
         /// </summary>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private static Dictionary<string, FunctionHandler> InitializeGeographyStaticMethodFunctionsDictionary()
         {
             Dictionary<string, FunctionHandler> staticGeographyFunctions = new Dictionary<string, FunctionHandler>();
@@ -336,6 +338,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// static method name, qualified with the 'geometry::' prefix.
         /// </summary>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private static Dictionary<string, FunctionHandler> InitializeGeometryStaticMethodFunctionsDictionary()
         {
             Dictionary<string, FunctionHandler> staticGeometryFunctions = new Dictionary<string, FunctionHandler>();
@@ -946,7 +949,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="sqlgen"></param>
         /// <param name="e"></param>
         /// <returns></returns> 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
+        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         private static ISqlFragment HandleCanonicalFunctionDatepart(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             return HandleCanonicalFunctionDatepart(sqlgen, e.Function.Name.ToLowerInvariant(), e);

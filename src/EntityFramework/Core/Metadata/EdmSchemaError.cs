@@ -1,11 +1,11 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// This class encapsulates the error information for a schema error that was encountered.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
     [Serializable]
     public sealed class EdmSchemaError : EdmError
     {

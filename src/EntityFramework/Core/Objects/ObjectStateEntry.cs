@@ -8,6 +8,8 @@ using System.Collections;
 
 namespace System.Data.Entity.Core.Objects
 {
+    using System.Diagnostics.CodeAnalysis;
+
     // Detached - nothing
 
     // Added - _entity & _currentValues only for shadowState
@@ -117,6 +119,7 @@ namespace System.Data.Entity.Core.Objects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)] // don't have debugger view expand this
         abstract public DbDataRecord OriginalValues { get; }
 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         abstract public OriginalValueRecord GetUpdatableOriginalValues();
 
         /// <summary>
@@ -255,6 +258,7 @@ namespace System.Data.Entity.Core.Objects
         /// The current value of the specified property is cached when this method is called.
         /// </summary>
         /// <param name="entityMemberName">The name of the entity property that is changing</param>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         void IEntityChangeTracker.EntityMemberChanging(string entityMemberName)
         {
             this.EntityMemberChanging(entityMemberName);
@@ -266,6 +270,7 @@ namespace System.Data.Entity.Core.Objects
         /// added to OriginalValues
         /// </summary>
         /// <param name="entityMemberName">The name of the entity property that has changing</param>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         void IEntityChangeTracker.EntityMemberChanged(string entityMemberName)
         {
             this.EntityMemberChanged(entityMemberName);
@@ -278,6 +283,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="entityMemberName">The name of the top-level entity property that is changing</param>
         /// <param name="complexObject">The complex object that contains the property that is changing</param>
         /// <param name="complexObjectMemberName">The name of the property that is changing on complexObject</param>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         void IEntityChangeTracker.EntityComplexMemberChanging(string entityMemberName, object complexObject, string complexObjectMemberName)
         {
             this.EntityComplexMemberChanging(entityMemberName, complexObject, complexObjectMemberName);
@@ -290,6 +296,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="entityMemberName">The name of the top-level entity property that has changed</param>
         /// <param name="complexObject">The complex object that contains the property that changed</param>
         /// <param name="complexObjectMemberName">The name of the property that changed on complexObject</param>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         void IEntityChangeTracker.EntityComplexMemberChanged(string entityMemberName, object complexObject, string complexObjectMemberName)
         {
             this.EntityComplexMemberChanged(entityMemberName, complexObject, complexObjectMemberName);
@@ -298,6 +305,7 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         /// Returns the EntityState from the ObjectStateEntry
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         EntityState IEntityChangeTracker.EntityState
         {
             get

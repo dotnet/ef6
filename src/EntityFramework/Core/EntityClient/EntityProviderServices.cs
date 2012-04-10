@@ -30,10 +30,10 @@ namespace System.Data.Entity.Core.EntityClient {
             EntityUtil.CheckArgumentNull(commandTree, "commandTree");
 
             StoreItemCollection storeMetadata = (StoreItemCollection)commandTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
-            return this.CreateCommandDefinition(storeMetadata.StoreProviderFactory, commandTree);
+            return CreateCommandDefinition(storeMetadata.StoreProviderFactory, commandTree);
         }
 
-        internal EntityCommandDefinition CreateCommandDefinition(DbProviderFactory storeProviderFactory, DbCommandTree commandTree) {
+        internal static EntityCommandDefinition CreateCommandDefinition(DbProviderFactory storeProviderFactory, DbCommandTree commandTree) {
             EntityUtil.CheckArgumentNull(storeProviderFactory, "storeProviderFactory");
             Debug.Assert(commandTree != null, "Command Tree cannot be null");
 

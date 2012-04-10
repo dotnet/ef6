@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Xml;
 
@@ -185,6 +186,7 @@
         /// <summary>
         /// Resolves the underlying type.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         internal override void ResolveTopLevelNames()
         {
             // if the underlying type was not specified in the CSDL we use int by default

@@ -308,10 +308,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///
         /// </summary>
-        public void Add(TEntity entity)
+        public void Add(TEntity item)
         {
-            EntityUtil.CheckArgumentNull(entity, "entity");
-            Add(EntityWrapperFactory.WrapEntityUsingContext(entity, ObjectContext));
+            EntityUtil.CheckArgumentNull(item, "item");
+            Add(EntityWrapperFactory.WrapEntityUsingContext(item, ObjectContext));
         }
 
         /// <summary>
@@ -363,11 +363,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         ///   Entity instance to remove from the EntityCollection
         /// </param>
         /// <returns>Returns true if the entity was successfully removed, false if the entity was not part of the RelatedEnd.</returns>
-        public bool Remove(TEntity entity)
+        public bool Remove(TEntity item)
         {
-            EntityUtil.CheckArgumentNull(entity, "entity");
+            EntityUtil.CheckArgumentNull(item, "item");
             DeferredLoad();
-            return RemoveInternal(entity);
+            return RemoveInternal(item);
         }
 
         internal bool RemoveInternal(TEntity entity)
@@ -680,10 +680,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         /// <return>true if the collection contains the object by reference;
         /// otherwise, false</return>
-        public bool Contains(TEntity entity)
+        public bool Contains(TEntity item)
         {
             DeferredLoad();
-            return _wrappedRelatedEntities == null ? false : _wrappedRelatedEntities.ContainsKey(entity);
+            return _wrappedRelatedEntities == null ? false : _wrappedRelatedEntities.ContainsKey(item);
         }
 
         /// <summary>
@@ -731,14 +731,15 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             if (value != null)
             {
-                if (!(value is IEnumerable))
+                var enumerable = value as IEnumerable;
+                if (enumerable == null)
                 {
                     throw new EntityException(System.Data.Entity.Resources.Strings.ObjectStateEntry_UnableToEnumerateCollection(
                                             this.TargetAccessor.PropertyName, this.WrappedOwner.Entity.GetType().FullName));
                 }
 
                 // TODO PERF: If the 'value' has a method "Contains", use it.
-                foreach (object o in (value as IEnumerable))
+                foreach (object o in enumerable)
                 {
                     if (Object.Equals(o, wrapper.Entity))
                     {

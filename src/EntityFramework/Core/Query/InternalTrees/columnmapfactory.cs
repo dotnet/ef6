@@ -14,6 +14,7 @@ using System.Reflection;
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Data.Entity.Resources;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Factory methods for prescriptive column map patterns (includes default
@@ -120,6 +121,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// and all properties of the type with a public setter taking a primitive type and having a corresponding 
         /// column in the reader.
         /// </summary>
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal static CollectionColumnMap CreateColumnMapFromReaderAndClrType(DbDataReader reader, Type type, MetadataWorkspace workspace)
         {
             Debug.Assert(null != reader);
@@ -186,7 +189,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             NewExpression newExpr = null == constructor ? Expression.New(type) : Expression.New(constructor);
             MemberInitExpression init = Expression.MemberInit(newExpr, memberBindings);
             InitializerMetadata initMetadata = InitializerMetadata.CreateProjectionInitializer(
-                (EdmItemCollection)workspace.GetItemCollection(DataSpace.CSpace), init, members);
+                (EdmItemCollection)workspace.GetItemCollection(DataSpace.CSpace), init);
 
             // column map (a collection of rows with InitializerMetadata markup)
             RowType rowType = new RowType(modelProperties, initMetadata);

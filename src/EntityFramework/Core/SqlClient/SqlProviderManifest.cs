@@ -11,6 +11,7 @@ using System.Xml;
 namespace System.Data.Entity.Core.SqlClient
 {
     using System.Data.Entity.Resources;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// The Provider Manifest for SQL Server
@@ -73,7 +74,7 @@ namespace System.Data.Entity.Core.SqlClient
             return DbProviderServices.GetXmlResource("System.Data.Resources.SqlClient.SqlProviderServices.ProviderManifest.xml");
         }
 
-        private XmlReader GetStoreSchemaMapping(string mslName)
+        private static XmlReader GetStoreSchemaMapping(string mslName)
         {
             return DbProviderServices.GetXmlResource("System.Data.Resources.SqlClient.SqlProviderServices." + mslName + ".msl");
         }
@@ -156,7 +157,7 @@ namespace System.Data.Entity.Core.SqlClient
             throw EntityUtil.ProviderIncompatible(System.Data.Entity.Resources.Strings.ProviderReturnedNullForGetDbInformation(informationType));
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
+        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         public override System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType> GetStoreTypes()
         {
             if (this._primitiveTypes == null)
@@ -330,7 +331,7 @@ namespace System.Data.Entity.Core.SqlClient
         /// </summary>
         /// <param name="storeType">A TypeUsage encapsulating a store type and a set of facets</param>
         /// <returns>A TypeUsage encapsulating an EDM type and a set of facets</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity"), SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         public override TypeUsage GetEdmType(TypeUsage storeType)
         {
             EntityUtil.CheckArgumentNull<TypeUsage>(storeType, "storeType");
@@ -504,6 +505,7 @@ namespace System.Data.Entity.Core.SqlClient
         /// </summary>
         /// <param name="storeType">A TypeUsage encapsulating an EDM type and a set of facets</param>
         /// <returns>A TypeUsage encapsulating a store type and a set of facets</returns>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public override TypeUsage GetStoreType(TypeUsage edmType)
         {
             EntityUtil.CheckArgumentNull<TypeUsage>(edmType, "edmType");

@@ -6,12 +6,12 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Xml;
 
     /// <summary>
     /// A specialization of the ProviderManifest that accepts an XmlReader
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public abstract class DbXmlEnabledProviderManifest : DbProviderManifest
     {
         private string _namespaceName;
@@ -43,7 +43,6 @@ namespace System.Data.Entity.Core.Common
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
         protected Dictionary<string, PrimitiveType> StoreTypeNameToEdmPrimitiveType
         {
             get
@@ -63,14 +62,14 @@ namespace System.Data.Entity.Core.Common
         #endregion
 
         /// <summary>
-        /// Returns all the FacetDescriptions for a particular type
+        /// Returns all the FacetDescriptions for a particular edmType
         /// </summary>
-        /// <param name="type">the type to return FacetDescriptions for.</param>
-        /// <returns>The FacetDescriptions for the type given.</returns>
-        public override System.Collections.ObjectModel.ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType type)
+        /// <param name="edmType">the edmType to return FacetDescriptions for.</param>
+        /// <returns>The FacetDescriptions for the edmType given.</returns>
+        public override System.Collections.ObjectModel.ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType edmType)
         {
-            Debug.Assert(type is PrimitiveType, "DbXmlEnabledProviderManifest.GetFacetDescriptions(): Argument is not a PrimitiveType");
-            return GetReadOnlyCollection(type as PrimitiveType, _facetDescriptions, Helper.EmptyFacetDescriptionEnumerable);
+            Debug.Assert(edmType is PrimitiveType, "DbXmlEnabledProviderManifest.GetFacetDescriptions(): Argument is not a PrimitiveType");
+            return GetReadOnlyCollection(edmType as PrimitiveType, _facetDescriptions, Helper.EmptyFacetDescriptionEnumerable);
         }
 
         public override System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType> GetStoreTypes()
@@ -87,7 +86,7 @@ namespace System.Data.Entity.Core.Common
             return _functions;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
+        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         private void Load(XmlReader reader)
         {
             Schema schema;

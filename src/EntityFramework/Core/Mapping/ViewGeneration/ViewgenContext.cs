@@ -140,7 +140,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             //Collect the facts for the foreign key association sets that are 1:1 and affecting this wrapper
             foreach (var assocSet in oneToOneForeignKeyAssociationSetsForThisWrapper)
             {
-                rightKB.CreateEquivalenceConstraintForOneToOneForeignKeyAssociation(assocSet, rightDomainMap, m_edmItemCollection);
+                rightKB.CreateEquivalenceConstraintForOneToOneForeignKeyAssociation(assocSet, rightDomainMap);
             }
         }
 
@@ -248,7 +248,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 if (!tokenMember.DeclaringType.IsAssignableFrom(extentType))
                 {
                     string message = System.Data.Entity.Resources.Strings.ViewGen_Concurrency_Derived_Class(tokenMember.Name, tokenMember.DeclaringType.Name, m_extent);
-                    ErrorLog.Record record = new ErrorLog.Record(true, ViewGenErrorCode.ConcurrencyDerivedClass, message, m_cellWrappers, String.Empty);
+                    ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.ConcurrencyDerivedClass, message, m_cellWrappers, String.Empty);
                     ExceptionHelpers.ThrowMappingException(record, m_config);
                 }
                 tokenPaths.Add(new MemberPath(m_extent, tokenMember));
@@ -267,7 +267,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                         // There is a condition on concurrency tokens. Throw an exception.
                         StringBuilder builder = new StringBuilder();
                         builder.AppendLine(Strings.ViewGen_Concurrency_Invalid_Condition(MemberPath.PropertiesToUserString(conditionMembers, false), m_extent.Name));
-                        ErrorLog.Record record = new ErrorLog.Record(true, ViewGenErrorCode.ConcurrencyTokenHasCondition, builder.ToString(), new LeftCellWrapper[] { wrapper }, String.Empty);
+                        ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.ConcurrencyTokenHasCondition, builder.ToString(), new LeftCellWrapper[] { wrapper }, String.Empty);
                         ExceptionHelpers.ThrowMappingException(record, m_config);
                     }
                 }

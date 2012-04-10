@@ -19,6 +19,8 @@ using System.Data.Entity.Core.Query.InternalTrees;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// The SubqueryTracking Visitor serves as a base class for the visitors that may turn 
     /// scalar subqueryies into outer-apply subqueries.
@@ -67,6 +69,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="outputVar">the output var to be used - at the current location - in lieu of the subquery</param>
         /// <param name="subquery">the subquery to move</param>
         /// <returns>a var ref node for the var returned from the subquery</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         protected Node AddSubqueryToParentRelOp(Var outputVar, Node subquery)
         {
             Node ancestor = FindRelOpAncestor();
@@ -184,6 +187,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op">Current RelOp</param>
         /// <param name="n">Node to process</param>
         /// <returns>Current subtree</returns> 
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VisitRelOpDefault"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         protected override Node VisitRelOpDefault(RelOp op, Node n)
         {
             VisitChildren(n); // visit all my children first
@@ -210,10 +214,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         /// Processing for all JoinOps
         /// </summary>
-        /// <param name="op">JoinOp</param>
         /// <param name="n">Current subtree</param>
         /// <returns>Whether the node was modified</returns>
-        protected bool ProcessJoinOp(JoinBaseOp op, Node n)
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "JoinOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        protected bool ProcessJoinOp(Node n)
         {
             VisitChildren(n); // visit all my children first
 

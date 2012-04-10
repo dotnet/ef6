@@ -10,6 +10,7 @@ using System.Text;
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
     using System.Data.Entity.Resources;
+    using System.Diagnostics.CodeAnalysis;
     using BoolDomainConstraint = DomainConstraint<BoolLiteral, Constant>;
     using DomainAndExpr = AndExpr<DomainConstraint<BoolLiteral, Constant>>;
     using DomainBoolExpr = BoolExpr<DomainConstraint<BoolLiteral, Constant>>;
@@ -534,9 +535,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         private class TermVisitor : Visitor<BoolDomainConstraint, IEnumerable<DomainTermExpr>>
         {
             #region Constructor/Fields/Invocation
+            [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "allowAllOperators", Scope = "member", Target = "System.Data.Entity.Core.Mapping.ViewGeneration.Structures.BoolExpression+TermVisitor.#.ctor(System.Boolean)")]
             private TermVisitor(bool allowAllOperators)
             {
+#if DEBUG
                 m_allowAllOperators = allowAllOperators;
+#endif
             }
 
             // effectS: Returns all the terms in expression. If
@@ -549,7 +553,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             #endregion
 
             #region Fields
+
+#if DEBUG
             private bool m_allowAllOperators;
+#endif
+            
             #endregion
 
             #region Visitors
@@ -570,7 +578,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
             internal override IEnumerable<DomainTermExpr> VisitNot(DomainNotExpr expression)
             {
+#if DEBUG
                 Debug.Assert(m_allowAllOperators, "Term should not be called when Nots are present in the expression");
+#endif
                 return VisitTreeNode(expression);
             }
 
@@ -592,7 +602,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
             internal override IEnumerable<DomainTermExpr> VisitOr(DomainOrExpr expression)
             {
+#if DEBUG
                 Debug.Assert(m_allowAllOperators, "TermVisitor should not be called when Ors are present in the expression");
+#endif
                 return VisitTreeNode(expression);
             }
             #endregion

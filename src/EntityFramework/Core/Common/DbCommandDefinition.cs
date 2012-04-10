@@ -3,12 +3,12 @@ using System.Data.Common;
 using System.Data.Entity.Core.Metadata.Edm;
 
 namespace System.Data.Entity.Core.Common {
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// A prepared command definition, can be cached and reused to avoid 
     /// repreparing a command.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public class DbCommandDefinition {
 
         private readonly ICloneable _prototype;

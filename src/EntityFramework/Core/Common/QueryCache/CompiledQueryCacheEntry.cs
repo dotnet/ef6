@@ -95,7 +95,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
             return this;
         }
 
-        private string GenerateLocalCacheKey(MergeOption mergeOption, bool useCSharpNullComparisonBehavior)
+        private static string GenerateLocalCacheKey(MergeOption mergeOption, bool useCSharpNullComparisonBehavior)
         {
             switch (mergeOption)
             {

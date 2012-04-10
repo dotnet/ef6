@@ -316,7 +316,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             if (null == extentModifications.Placeholder)
             {
                 // Bootstrap placeholder (essentially a record for the extent populated with default values).
-                extentModifications.Placeholder = ExtentPlaceholderCreator.CreatePlaceholder(extent, UpdateTranslator);
+                extentModifications.Placeholder = ExtentPlaceholderCreator.CreatePlaceholder(extent);
             }
 
             return extentModifications;

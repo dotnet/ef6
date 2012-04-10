@@ -2,6 +2,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Xml;
 
     /// <summary>
@@ -25,6 +26,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <summary>
         /// Validate this referential constraint
         /// </summary>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal override void Validate()
         {
             base.Validate();

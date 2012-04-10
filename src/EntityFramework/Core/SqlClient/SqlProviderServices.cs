@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.SqlClient {
     /// <summary>
     /// The DbProviderServices implementation for the SqlClient provider for SQL Server.
     /// </summary>
-    [CLSCompliant(false)]
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling"), CLSCompliant(false)]
     public sealed class SqlProviderServices : DbProviderServices
     {
         /// <summary>
@@ -47,6 +47,7 @@ namespace System.Data.Entity.Core.SqlClient {
         /// <param name="providerManifest">provider manifest that was determined from metadata</param>
         /// <param name="commandTree">command tree for the statement</param>
         /// <returns>an exectable command definition object</returns>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree) {
             Debug.Assert(providerManifest != null, "CreateCommandDefinition passed null provider manifest to CreateDbCommandDefinition?");
             Debug.Assert(commandTree != null, "CreateCommandDefinition did not validate commandTree argument?");
@@ -66,7 +67,7 @@ namespace System.Data.Entity.Core.SqlClient {
             StoreItemCollection storeMetadata = (StoreItemCollection)commandTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
             Debug.Assert(storeMetadata.StoreProviderManifest != null, "StoreItemCollection has null StoreProviderManifest?");
 
-            return this.CreateCommand(storeMetadata.StoreProviderManifest, commandTree);
+            return CreateCommand(storeMetadata.StoreProviderManifest, commandTree);
         }
 
         /// <summary>
@@ -75,8 +76,8 @@ namespace System.Data.Entity.Core.SqlClient {
         /// <param name="providerManifest">provider manifest</param>
         /// <param name="commandTree">command tree for the statement</param>
         /// <returns>a command object</returns>
-        [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
-        private DbCommand CreateCommand(DbProviderManifest providerManifest, DbCommandTree commandTree) {
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope"), SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling"), SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
+        private static DbCommand CreateCommand(DbProviderManifest providerManifest, DbCommandTree commandTree) {
             EntityUtil.CheckArgumentNull(providerManifest, "providerManifest");
             EntityUtil.CheckArgumentNull(commandTree, "commandTree");
 
@@ -207,6 +208,7 @@ namespace System.Data.Entity.Core.SqlClient {
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         protected override string GetDbProviderManifestToken(DbConnection connection) {
             EntityUtil.CheckArgumentNull(connection, "connection");
 
@@ -266,7 +268,7 @@ namespace System.Data.Entity.Core.SqlClient {
             return SqlSpatialServices.Instance;
         }
 
-        void ValidateVersionHint(string versionHint)
+        static void ValidateVersionHint(string versionHint)
         {
             if (string.IsNullOrEmpty(versionHint))
             {
@@ -642,7 +644,7 @@ namespace System.Data.Entity.Core.SqlClient {
         /// <summary>
         /// Chooses the appropriate SqlDbType for the given string type.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
+        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         private static SqlDbType GetStringDbType(TypeUsage type) {
             Debug.Assert(type.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType &&
                 PrimitiveTypeKind.String == ((PrimitiveType)type.EdmType).PrimitiveTypeKind, "only valid for string type");
@@ -708,6 +710,7 @@ namespace System.Data.Entity.Core.SqlClient {
         ///                     CreateDatabase
         /// For further details on the behavior when AttachDBFilename is specified see Dev10# 188936 
         /// </summary>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override void DbCreateDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
             EntityUtil.CheckArgumentNull(connection, "connection");
@@ -878,6 +881,7 @@ namespace System.Data.Entity.Core.SqlClient {
         /// Also note that checking for the existence of the file does not work for a remote server.  (Dev11 #290487)
         /// For further details on the behavior when AttachDBFilename is specified see Dev10# 188936 
         /// </summary>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override bool DbDatabaseExists(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
             EntityUtil.CheckArgumentNull(connection, "connection");
@@ -935,6 +939,7 @@ namespace System.Data.Entity.Core.SqlClient {
             return false;
         }
 
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private static bool CheckDatabaseExists(SqlConnection sqlConnection, int? commandTimeout, string databaseName)
         {
             bool databaseExistsInSysTables = false;
@@ -962,6 +967,7 @@ namespace System.Data.Entity.Core.SqlClient {
         /// <param name="connection"></param>
         /// <param name="commandTimeout"></param>
         /// <param name="storeItemCollection"></param>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override void DbDeleteDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
             EntityUtil.CheckArgumentNull(connection, "connection");
@@ -1015,6 +1021,7 @@ namespace System.Data.Entity.Core.SqlClient {
             }
         }
 
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private static void DropDatabase(SqlConnection sqlConnection, int? commandTimeout, string databaseName)
         {
             // clear the connection pool in case someone's holding on to the database still
@@ -1032,7 +1039,7 @@ namespace System.Data.Entity.Core.SqlClient {
             return SqlDdlBuilder.CreateObjectsScript(storeItemCollection, createSchemas: version != SqlVersion.Sql8);
         }
 
-        [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope"), SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         private static SqlCommand CreateCommand(SqlConnection sqlConnection, string commandText, int? commandTimeout)
         {
             Debug.Assert(sqlConnection != null);

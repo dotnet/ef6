@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 if (Helper.IsPrimitiveType(edmType))
                 {
-                    typeUsage = this.MetadataWorkspace.GetCanonicalModelTypeUsage(((PrimitiveType)edmType).PrimitiveTypeKind);
+                    typeUsage = MetadataWorkspace.GetCanonicalModelTypeUsage(((PrimitiveType)edmType).PrimitiveTypeKind);
                 }
                 else
                 {

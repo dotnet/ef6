@@ -12,6 +12,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -21,6 +22,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     /// <summary>
     /// Class supporting conversion of LINQ expressions to EDM CQT expressions.
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal sealed partial class ExpressionConverter
     {
         #region Fields
@@ -277,7 +279,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         //
         // This method performs an overly strict check, requiring that all initializers for a given type
         // are structurally equivalent.
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2301", Justification = "metadata.ClrType is not expected to be an Embedded Interop Type.")]
+        [SuppressMessage("Microsoft.Usage", "CA2301", Justification = "metadata.ClrType is not expected to be an Embedded Interop Type.")]
         internal void ValidateInitializerMetadata(InitializerMetadata metadata)
         {
             Debug.Assert(null != metadata);
@@ -613,12 +615,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <summary>
         /// Gets the target type for an Is or As expression.
         /// </summary>
-        /// <param name="fromType">Input type in model metadata.</param>
         /// <param name="toClrType">Test or return type.</param>
         /// <param name="operationType">Type of operation; used in error reporting.</param>
         /// <param name="fromClrType">Input type in CLR metadata.</param>
         /// <returns>Appropriate target type usage.</returns>
-        private TypeUsage GetIsOrAsTargetType(TypeUsage fromType, ExpressionType operationType, Type toClrType, Type fromClrType)
+        private TypeUsage GetIsOrAsTargetType(ExpressionType operationType, Type toClrType, Type fromClrType)
         {
             Debug.Assert(operationType == ExpressionType.TypeAs || operationType == ExpressionType.TypeIs);
 
@@ -1012,7 +1013,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             // See if this is a primitive type
             PrimitiveTypeKind primitiveTypeKind;
-            if (ClrProviderManifest.Instance.TryGetPrimitiveTypeKind(nonNullableType, out primitiveTypeKind))
+            if (ClrProviderManifest.TryGetPrimitiveTypeKind(nonNullableType, out primitiveTypeKind))
             {
                 type = EdmProviderManifest.Instance.GetCanonicalModelTypeUsage(primitiveTypeKind);
                 return true;
@@ -1040,7 +1041,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 // Note that if the underlying type is not any of the EF primitive types we will fail with and InvalidCastException.
                 // This is consistent with what we would do when seeing a cast to a primitive type that is not a EF valid primitive 
                 // type (e.g. ulong).
-                if(nonNullableType.IsEnum && ClrProviderManifest.Instance.TryGetPrimitiveTypeKind(nonNullableType.GetEnumUnderlyingType(), out primitiveTypeKind))
+                if(nonNullableType.IsEnum && ClrProviderManifest.TryGetPrimitiveTypeKind(nonNullableType.GetEnumUnderlyingType(), out primitiveTypeKind))
                 {
                     type = EdmProviderManifest.Instance.GetCanonicalModelTypeUsage(primitiveTypeKind);
                 }
@@ -1152,7 +1153,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <summary>
         /// Creates an implementation of IsNull. Throws exception when operand type is not supported.
         /// </summary>
-        private DbExpression CreateIsNullExpression(DbExpression operand, Type operandClrType)
+        private static DbExpression CreateIsNullExpression(DbExpression operand, Type operandClrType)
         {
             VerifyTypeSupportedForComparison(operandClrType, operand.ResultType, null);
             return operand.IsNull();
@@ -1556,7 +1557,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnresolvableStoreFunctionForExpression(Expression.NodeType));
         }
 
-        private DbNewInstanceExpression CreateNewRowExpression(List<KeyValuePair<string, DbExpression>> columns, InitializerMetadata initializerMetadata)
+        private static DbNewInstanceExpression CreateNewRowExpression(List<KeyValuePair<string, DbExpression>> columns, InitializerMetadata initializerMetadata)
         {
             List<DbExpression> propertyValues = new List<DbExpression>(columns.Count);
             List<EdmProperty> properties = new List<EdmProperty>(columns.Count);

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Globalization;
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
+    using System.Diagnostics.CodeAnalysis;
 
     // This class is responsible for ensuring unique aliases for _from0, etc
     // and block aliases T, T0, T1, etc
@@ -47,13 +48,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return GetNonConflictingName("T", -1);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
+        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         internal void AddIdentifier(string identifier)
         {
             m_identifiers.Add(identifier.ToLower(CultureInfo.InvariantCulture));
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
+        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         private string GetNonConflictingName(string prefix, int number)
         {
             // Do a case sensitive search but return the string that uses the

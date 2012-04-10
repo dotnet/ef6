@@ -12,6 +12,13 @@
             <Word>Scaffolder</Word>
             <Word>Ce</Word>
             <Word>Migrator</Word>
+            <Word>Niladic</Word>
+            <Word>Multiset</Word>
+            <Word>Composable</Word>
+            <Word>memberless</Word>
+            <Word>csdl</Word>
+            <Word>ssdl</Word>
+            <Word>msl</Word>
         </Recognized>
         <Compound></Compound>
     </Words>

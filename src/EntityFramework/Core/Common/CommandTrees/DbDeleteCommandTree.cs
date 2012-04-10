@@ -7,10 +7,11 @@ using System.Data.Entity.Core.Common.Utils;
 
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Represents a single row delete operation expressed as a canonical command tree.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbDeleteCommandTree : DbModificationCommandTree
     {
         private readonly DbExpression _predicate;

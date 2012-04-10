@@ -286,7 +286,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                     if (mapepdFragments.Any())
                     {
                         var cellsToReport = Enumerable.Union(Enumerable.Repeat(cell, 1), mapepdFragments);
-                        ErrorLog.Record record = new ErrorLog.Record(true, ViewGenErrorCode.MultipleFragmentsBetweenCandSExtentWithDistinct,
+                        ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.MultipleFragmentsBetweenCandSExtentWithDistinct,
                             Strings.Viewgen_MultipleFragmentsBetweenCandSExtentWithDistinct(cExtent.Name, sExtent.Name), cellsToReport, String.Empty);
                         m_errorLog.AddEntry(record);
                     }

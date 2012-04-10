@@ -72,7 +72,7 @@
                 {
                     // we were loading in convention mode, and ran into an assembly that can't be loaded by convention
                     // we know this because all cached assemblies are attribute based at the moment.
-                    sessionData.EdmItemErrors.Add(new EdmItemError(Strings.Validator_OSpace_Convention_AttributeAssemblyReferenced(assembly.FullName), null));
+                    sessionData.EdmItemErrors.Add(new EdmItemError(Strings.Validator_OSpace_Convention_AttributeAssemblyReferenced(assembly.FullName)));
                 }
                 return new ObjectItemCachedAssemblyLoader(assembly, cacheEntry, sessionData);
             }
@@ -145,7 +145,7 @@
             }
         }
 
-        protected bool TryGetPrimitiveType(Type type, out PrimitiveType primitiveType)
+        protected static bool TryGetPrimitiveType(Type type, out PrimitiveType primitiveType)
         {
             return ClrProviderManifest.Instance.TryGetPrimitiveType(Nullable.GetUnderlyingType(type) ?? type, out primitiveType);
         }

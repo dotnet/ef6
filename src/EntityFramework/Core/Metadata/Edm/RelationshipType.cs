@@ -6,9 +6,12 @@ using System.Threading;
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Represents the Relationship type
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     public abstract class RelationshipType : EntityTypeBase
     {
         private ReadOnlyMetadataCollection<RelationshipEndMember> _relationshipEndMembers;

@@ -245,7 +245,7 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        private FunctionImportReturnTypeStructuralTypeColumn GetLowestParentInHierachy(IEnumerable<FunctionImportReturnTypeStructuralTypeColumn> nodesInHierachy)
+        private static FunctionImportReturnTypeStructuralTypeColumn GetLowestParentInHierachy(IEnumerable<FunctionImportReturnTypeStructuralTypeColumn> nodesInHierachy)
         {
             FunctionImportReturnTypeStructuralTypeColumn lowestParent = null;
             foreach (var node in nodesInHierachy)

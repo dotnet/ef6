@@ -12,7 +12,7 @@ using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
 using System.Data.Entity.Core.Mapping.ViewGeneration.Validation;
 
 namespace System.Data.Entity.Core.Mapping {
-
+    using System.Diagnostics.CodeAnalysis;
     using CellGroup = Set<Cell>;
 
     /// <summary>
@@ -363,11 +363,15 @@ namespace System.Data.Entity.Core.Mapping {
             return false;
         }
 
+#if DEBUG
         ///<summary>
         /// The method builds up the spaces required for pretty printing each 
         /// part of the mapping.
         ///</summary>
-        internal static string GetPrettyPrintString(ref int index) {
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Console.Write(System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Console.WriteLine(System.String)")]
+        internal static string GetPrettyPrintString(ref int index)
+        {
 
             string spaces = "";
             spaces = spaces.PadLeft(index, ' ');
@@ -406,6 +410,7 @@ namespace System.Data.Entity.Core.Mapping {
                 extentMapping.Print(index + 5);
             }
         }
+#endif
 
         // Methods to modify and access function imports, which association a "functionImport" declared
         // in the model entity container with a targetFunction declared in the target
@@ -431,7 +436,7 @@ namespace System.Data.Entity.Core.Mapping {
             result.Success = true;
 
             CellCreator cellCreator = new CellCreator(args.ContainerMapping);
-            result.Cells = cellCreator.GenerateCells(args.Config);
+            result.Cells = cellCreator.GenerateCells();
             result.Identifiers = cellCreator.Identifiers;
 
             if (result.Cells.Count <= 0)

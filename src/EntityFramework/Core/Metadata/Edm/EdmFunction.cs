@@ -5,10 +5,11 @@ using System.Text;
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Class for representing a function
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
     public sealed class EdmFunction : EdmType
     {
         #region Constructors
@@ -243,7 +244,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Composable")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Composable")]
         [MetadataProperty(PrimitiveTypeKind.Boolean, false)]
         public bool IsComposableAttribute
         {

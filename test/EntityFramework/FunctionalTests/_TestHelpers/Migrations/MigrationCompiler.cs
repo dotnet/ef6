@@ -45,8 +45,6 @@
                 throw new InvalidOperationException(BuildCompileErrorMessage(compilerResults.Errors));
             }
 
-            //Console.WriteLine(sources[0]);
-
             return compilerResults.CompiledAssembly;
         }
 

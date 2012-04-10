@@ -76,34 +76,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal static class TypeUtils
     {
         /// <summary>
-        /// Is this type a UDT? (ie) a structural type supported by the store
-        /// </summary>
-        /// <param name="type">the type in question</param>
-        /// <returns>true, if the type was a UDT</returns>
-        internal static bool IsUdt(md.TypeUsage type)
-        {
-            return IsUdt(type.EdmType);
-        }
-
-        /// <summary>
-        /// Is this type a UDT? (ie) a structural type supported by the store
-        /// </summary>
-        /// <param name="type">the type in question</param>
-        /// <returns>true, if the type was a UDT</returns>
-        internal static bool IsUdt(md.EdmType type)
-        {
-#if UDT_SUPPORT
-            // Ideally this should be as simple as:
-            // return TypeUsage.HasExtendedAttribute(type, MetadataConstants.UdtAttribute);
-            // The definition below is 'Type is a ComplexType defined in the store'.
-            return (BuiltInTypeKind.ComplexType == type.BuiltInTypeKind &&
-                    TypeHelpers.HasExtendedAttribute(type, MetadataConstants.TargetAttribute));
-#else
-            return false;
-#endif
-        }
-
-        /// <summary>
         /// Is this a structured type? 
         /// Note: Structured, in this context means structured outside the server. 
         /// UDTs for instance, are considered to be scalar types - all WinFS types,
@@ -117,7 +89,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     md.TypeSemantics.IsRowType(type) ||
                     md.TypeSemantics.IsEntityType(type) ||
                     md.TypeSemantics.IsRelationshipType(type) ||
-                    (md.TypeSemantics.IsComplexType(type) && !IsUdt(type)));
+                    (md.TypeSemantics.IsComplexType(type)));
         }
 
         /// <summary>

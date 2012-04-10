@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 namespace System.Data.Entity.Core.Common.Internal
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Copied from System.Data.dll
     /// </summary>
@@ -49,6 +51,7 @@ namespace System.Data.Entity.Core.Common.Internal
         /// <param name="rightQuote">set of characters which are valid to stop a quote, array index's correspond to the the leftquote array.</param>
         /// <param name="separator">separator to use</param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal static List<string> ParseMultipartIdentifier(string name, string leftQuote, string rightQuote, char separator)
         {
             Debug.Assert(-1 == leftQuote.IndexOf(separator) && -1 == rightQuote.IndexOf(separator) && leftQuote.Length == rightQuote.Length, "Incorrect usage of quotes");

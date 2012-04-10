@@ -9,16 +9,20 @@ using Som = System.Data.Entity.Core.EntityModel.SchemaObjectModel;
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Helper Class for converting SOM objects to metadata objects
     /// This class should go away once we have completely integrated SOM and metadata
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal static class Converter
     {
         #region Constructor
         /// <summary>
         /// Static constructor for creating FacetDescription objects that we use
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
         static Converter()
         {
             Debug.Assert(Enum.GetUnderlyingType(typeof(ConcurrencyMode)) == typeof(int), "Please update underlying type below accordingly.");
@@ -120,9 +124,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 if (null == LoadSchemaElement(element, providerManifest, convertedItemCache, newGlobalItems))
                 {
-                    if (element is Som.Function)
+                    var function = element as Som.Function;
+                    if (function != null)
                     {
-                        funcsWithUnresolvedTypes.Add(element as Som.Function);
+                        funcsWithUnresolvedTypes.Add(function);
                     }
                 }
             }
@@ -166,6 +171,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="convertedItemCache">The item collection for currently existing metadata objects</param>
         /// <param name="newGlobalItems">The new GlobalItem objects that are created as a result of this conversion</param>
         /// <returns>The item resulting from the load</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         internal static MetadataItem LoadSchemaElement(Som.SchemaType element,
                                               DbProviderManifest providerManifest,
                                               ConversionCache convertedItemCache,
@@ -255,7 +261,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             foreach (Som.EntityContainerEntitySet entitySet in element.EntitySets)
             {
                 entityContainer.AddEntitySetBase(ConvertToEntitySet(entitySet,
-                                                                      entityContainer.Name,
                                                                       providerManifest,
                                                                       convertedItemCache,
                                                                       newGlobalItems));
@@ -434,6 +439,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="convertedItemCache">The item collection for currently existing metadata objects</param>
         /// <param name="newGlobalItems">The new GlobalItem objects that are created as a result of this conversion</param>
         /// <returns>The association type object resulting from the convert</returns>
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         private static AssociationType ConvertToAssociationType(Som.Relationship element,
                                                                 DbProviderManifest providerManifest,
                                                                 ConversionCache convertedItemCache,
@@ -591,13 +597,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Converts an entity set from SOM to metadata
         /// </summary>
         /// <param name="set">The SOM element to process</param>
-        /// <param name="containerName">the name of the container this will be added to</param>
         /// <param name="providerManifest">The provider manifest to be used for conversion</param>
         /// <param name="convertedItemCache">The item collection for currently existing metadata objects</param>
         /// <param name="newGlobalItems">The new GlobalItem objects that are created as a result of this conversion</param>
         /// <returns>The entity set object resulting from the convert</returns>
         private static EntitySet ConvertToEntitySet(Som.EntityContainerEntitySet set,
-                                                    string containerName,
                                                     DbProviderManifest providerManifest,
                                                     ConversionCache convertedItemCache,
                                                     Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
@@ -749,7 +753,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
             }
 
-            PopulateGeneralFacets(somProperty, providerManifest, ref typeUsage);
+            PopulateGeneralFacets(somProperty, ref typeUsage);
             property = new EdmProperty(somProperty.Name, typeUsage);
 
             // Extract the optional Documentation
@@ -844,6 +848,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="functionImportEntityContainer">For function imports, the entity container including the function declaration</param>
         /// <param name="newGlobalItems">The new GlobalItem objects that are created as a result of this conversion</param>
         /// <returns>The function object resulting from the convert</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily"), SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         private static EdmFunction ConvertToFunction(Som.Function somFunction,
                                                   DbProviderManifest providerManifest,
                                                   ConversionCache convertedItemCache,
@@ -875,7 +880,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                                             somReturnType.Type,
                                                             somReturnType.CollectionKind,
                                                             somReturnType.IsRefType /*isRefType*/,
-                                                            somFunction,
                                                             convertedItemCache,
                                                             newGlobalItems);
                     if (null != returnType)
@@ -905,7 +909,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                                         somFunction.Type,
                                                         somFunction.CollectionKind,
                                                         somFunction.IsReturnAttributeReftype /*isRefType*/,
-                                                        somFunction,
                                                         convertedItemCache,
                                                         newGlobalItems);
                 if (null != returnType)
@@ -964,7 +967,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                                                somParameter.Type,
                                                                somParameter.CollectionKind,
                                                                somParameter.IsRefType,
-                                                               somParameter,
                                                                convertedItemCache,
                                                                newGlobalItems);
                 if (parameterType == null)
@@ -1087,6 +1089,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return element.MetadataDocumentation;
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity"), SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         private static TypeUsage GetFunctionTypeUsage(bool isModelFunction,
                                                       Som.Function somFunction,
                                                       Som.FacetEnabledSchemaElement somParameter,
@@ -1095,7 +1098,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                                       Som.SchemaType type,
                                                       CollectionKind collectionKind,
                                                       bool isRefType,
-                                                      Som.SchemaElement schemaElement,
                                                       ConversionCache convertedItemCache,
                                                       Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
         {
@@ -1207,9 +1209,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             else
             {
-                if (edmType is EntityType && isRefType)
+                var entityType = edmType as EntityType;
+                if (entityType != null && isRefType)
                 {
-                    usage = TypeUsage.Create(new RefType(edmType as EntityType));
+                    usage = TypeUsage.Create(new RefType(entityType));
                 }
                 else
                 {
@@ -1286,9 +1289,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="somProperty">The property containing the information</param>
         /// <param name="propertyTypeUsage">The type usage object where to populate facet</param>
-        /// <param name="providerManifest">The provider manifest to be used for conversion</param>
         private static void PopulateGeneralFacets(Som.StructuredProperty somProperty,
-                                                  DbProviderManifest providerManifest,
                                                   ref TypeUsage propertyTypeUsage)
         {
             bool madeChanges = false;

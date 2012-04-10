@@ -25,14 +25,14 @@ namespace System.Data.Entity.Core.Objects
             return knownTypeResolver.ResolveName(typeName, typeNamespace, declaredType ,null);
         }
 
-        public override bool TryResolveType(Type dataContractType, Type declaredType, DataContractResolver knownTypeResolver, out System.Xml.XmlDictionaryString typeName, out System.Xml.XmlDictionaryString typeNamespace)
+        public override bool TryResolveType(Type type, Type declaredType, DataContractResolver knownTypeResolver, out System.Xml.XmlDictionaryString typeName, out System.Xml.XmlDictionaryString typeNamespace)
         {
-            EntityUtil.CheckArgumentNull(dataContractType, "dataContractType");
+            EntityUtil.CheckArgumentNull(type, "type");
             EntityUtil.CheckArgumentNull(declaredType, "declaredType");
             EntityUtil.CheckArgumentNull(knownTypeResolver, "knownTypeResolver");
 
-            Type nonProxyType = ObjectContext.GetObjectType(dataContractType);
-            if (nonProxyType != dataContractType)
+            Type nonProxyType = ObjectContext.GetObjectType(type);
+            if (nonProxyType != type)
             {
                 // Type was a proxy type, so map the name to the non-proxy name
                 XmlQualifiedName qualifiedName = _exporter.GetSchemaTypeName(nonProxyType);
@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Objects
             else 
             {
                 // Type was not a proxy type, so do the default
-                return knownTypeResolver.TryResolveType(dataContractType, declaredType, null, out typeName, out typeNamespace);
+                return knownTypeResolver.TryResolveType(type, declaredType, null, out typeName, out typeNamespace);
             } 
         }
     }

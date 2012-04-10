@@ -29,17 +29,6 @@ namespace System.Data.Entity.Infrastructure
             _cachedModelBuilder = modelBuilder;
         }
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref = "DbModel" /> class.
-        /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal DbModel(DbDatabaseMapping databaseMapping)
-        {
-            Contract.Requires(databaseMapping != null);
-
-            _databaseMapping = databaseMapping;
-        }
-
         #endregion
 
         #region Internal properties

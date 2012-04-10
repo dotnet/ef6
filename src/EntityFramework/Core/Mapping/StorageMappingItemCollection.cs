@@ -15,12 +15,13 @@ using som = System.Data.Entity.Core.EntityModel.SchemaObjectModel;
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Resources;
+    using System.Diagnostics.CodeAnalysis;
     using OfTypeQVCacheKey = Pair<EntitySetBase, Pair<EntityTypeBase, bool>>;
 
     /// <summary>
     /// Class for representing a collection of items in Storage Mapping( CS Mapping) space.
     /// </summary>
-    [CLSCompliant(false)]
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling"), CLSCompliant(false)]
     public partial class StorageMappingItemCollection : MappingItemCollection
     {
         #region Fields
@@ -67,7 +68,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="filePaths"></param>
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file path names which are a Machine resource
         [ResourceConsumption(ResourceScope.Machine)] //For MetadataArtifactLoader.CreateCompositeFromFilePaths method call but we do not create the file paths in this method
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "edm")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public StorageMappingItemCollection(EdmItemCollection edmCollection, StoreItemCollection storeCollection,
             params string[] filePaths)
             : base(DataSpace.CSSpace)
@@ -108,7 +109,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="edmCollection">The edm metadata collection that this mapping is to use</param>
         /// <param name="storeCollection">The store metadata collection that this mapping is to use</param>
         /// <param name="xmlReaders">The XmlReaders to load mapping from</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "edm")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public StorageMappingItemCollection(EdmItemCollection edmCollection,
                                             StoreItemCollection storeCollection,
                                             IEnumerable<XmlReader> xmlReaders)
@@ -136,8 +137,8 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="xmlReaders">The XmlReaders to load mapping from</param>
         /// <param name="errors">a list of errors for each file loaded</param>
         // referenced by System.Data.Entity.Design.dll
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal StorageMappingItemCollection(EdmItemCollection edmCollection,
                                               StoreItemCollection storeCollection,
                                               IEnumerable<XmlReader> xmlReaders,
@@ -163,7 +164,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="storeCollection">The store metadata collection that this mapping is to use</param>
         /// <param name="filePaths">Mapping URIs</param>
         /// <param name="xmlReaders">The XmlReaders to load mapping from</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal StorageMappingItemCollection(EdmItemCollection edmCollection,
                                               StoreItemCollection storeCollection,
                                               IEnumerable<XmlReader> xmlReaders,
@@ -387,7 +388,6 @@ namespace System.Data.Entity.Core.Mapping
         ///     - does not cache generated views in the mapping collection.
         /// The main purpose is design-time view validation and generation.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")] // referenced by System.Data.Entity.Design.dll
         internal Dictionary<EntitySetBase, string> GenerateEntitySetViews(out IList<EdmSchemaError> errors)
         {
             Dictionary<EntitySetBase, string> esqlViews = new Dictionary<EntitySetBase, string>();
@@ -622,7 +622,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="entitySetBase">Entity set <paramref name="entityType"/> relates to. Must not be null.</param>
         /// <param name="entityType">Entity type for which to find foreign key properties. Must not be null.</param>
         /// <param name="interestingMembers">The list the interesting members (if any) will be added to. Must not be null.</param>
-        private void FindForeignKeyProperties(EntitySetBase entitySetBase, EntityTypeBase entityType, List<EdmMember> interestingMembers)
+        private static void FindForeignKeyProperties(EntitySetBase entitySetBase, EntityTypeBase entityType, List<EdmMember> interestingMembers)
         {
             var entitySet = entitySetBase as EntitySet;
             if (entitySet != null && entitySet.HasForeignKeyRelationships)
@@ -630,7 +630,7 @@ namespace System.Data.Entity.Core.Mapping
                 // (6) Foreign keys
                 // select all foreign key properties defined on the entityType and all its ancestors
                 interestingMembers.AddRange(
-                        MetadataHelper.GetTypeAndParentTypesOf(entityType, this.m_edmCollection, true)
+                        MetadataHelper.GetTypeAndParentTypesOf(entityType, true)
                         .SelectMany(e => ((EntityType)e).Properties)
                         .Where(p => entitySet.ForeignKeyDependents.SelectMany(fk => fk.Item2.ToProperties).Contains(p)));
             }
@@ -866,15 +866,14 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         /// this method will be called in metadatworkspace, the signature is the same as the one in ViewDictionary
         /// </summary>
-        /// <param name="workspace"></param>
         /// <param name="entity"></param>
         /// <param name="type"></param>
         /// <param name="includeSubtypes"></param>
         /// <param name="generatedView"></param>
         /// <returns></returns>
-        internal bool TryGetGeneratedViewOfType(MetadataWorkspace workspace, EntitySetBase entity, EntityTypeBase type, bool includeSubtypes, out GeneratedView generatedView)
+        internal bool TryGetGeneratedViewOfType(EntitySetBase entity, EntityTypeBase type, bool includeSubtypes, out GeneratedView generatedView)
         {
-            return this.m_viewDictionary.TryGetGeneratedViewOfType(workspace, entity, type, includeSubtypes, out generatedView);
+            return this.m_viewDictionary.TryGetGeneratedViewOfType(entity, type, includeSubtypes, out generatedView);
         }
 
         // Check for duplicate items (items with same name) in edm item collection and store item collection. Mapping is the only logical place to do this. 

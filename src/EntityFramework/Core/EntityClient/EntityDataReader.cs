@@ -8,11 +8,12 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// A data reader class for the entity client provider
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
+    [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface"), SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public class EntityDataReader : DbDataReader, IExtendedDataRecord
     {
         // The command object that owns this reader

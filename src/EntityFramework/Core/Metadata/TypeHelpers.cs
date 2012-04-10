@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
     /// <summary>
@@ -22,7 +23,7 @@ namespace System.Data.Entity.Core.Common
         /// Asserts types are in Model space
         /// </summary>
         /// <param name="typeUsage"></param>
-        [Conditional("DEBUG")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "CSpace"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "PrimitiveType"), Conditional("DEBUG")]
         internal static void AssertEdmType(TypeUsage typeUsage)
         {
             EdmType type = typeUsage.EdmType;
@@ -353,11 +354,6 @@ namespace System.Data.Entity.Core.Common
 
         internal static TypeUsage CreateCollectionTypeUsage(TypeUsage elementType)
         {
-            return CreateCollectionTypeUsage(elementType, false /* readOnly */ );
-        }
-
-        internal static TypeUsage CreateCollectionTypeUsage(TypeUsage elementType, bool readOnly)
-        {
             return TypeUsage.Create(new CollectionType(elementType));
         }
 
@@ -376,7 +372,7 @@ namespace System.Data.Entity.Core.Common
             return new RowType(rowElements, initializerMetadata);
         }
 
-        internal static TypeUsage CreateRowTypeUsage(IEnumerable<KeyValuePair<string, TypeUsage>> columns, bool readOnly)
+        internal static TypeUsage CreateRowTypeUsage(IEnumerable<KeyValuePair<string, TypeUsage>> columns)
         {
             return TypeUsage.Create(CreateRowType(columns));
         }

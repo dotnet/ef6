@@ -8,6 +8,8 @@ using System.Diagnostics;
 
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Specifies a single clause in an insert or update modification operation, see
     /// <see cref="DbInsertCommandTree.SetClauses"/> and <see cref="DbUpdateCommandTree.SetClauses"/>
@@ -21,7 +23,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// where Id = 2
     /// </code>
     /// </remarks>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public abstract class DbModificationClause
     {
         internal DbModificationClause()

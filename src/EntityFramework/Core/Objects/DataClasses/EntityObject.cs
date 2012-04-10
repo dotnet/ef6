@@ -6,6 +6,8 @@ using System.Runtime.Serialization;
 
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// This is the class is the basis for all perscribed EntityObject classes.
     /// </summary>
@@ -120,6 +122,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="changeTracker">
         /// Reference to the ObjectStateEntry that contains this entity
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         void IEntityWithChangeTracker.SetChangeTracker(IEntityChangeTracker changeTracker)
         {
             // Fail if the change tracker is already set for this EntityObject and it's being set to something different
@@ -144,6 +147,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// Returns the container for the lazily created relationship 
         /// navigation property objects, collections and refs.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         RelationshipManager IEntityWithRelationships.RelationshipManager
         {
             get

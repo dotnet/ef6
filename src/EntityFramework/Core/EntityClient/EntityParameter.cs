@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.Common.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Class representing a parameter used in EntityCommand
@@ -188,7 +189,6 @@ namespace System.Data.Entity.Core.EntityClient
         /// that the DbType contains all the type information.
         /// Non-null values must not contradict DbType (only restate or specialize).
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
         public EdmType EdmType
         {
             get
@@ -409,7 +409,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        private int ValueSize(object value)
+        private static int ValueSize(object value)
         {
             return ValueSizeCore(value);
         }

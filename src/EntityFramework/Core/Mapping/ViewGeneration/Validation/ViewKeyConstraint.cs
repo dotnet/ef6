@@ -120,7 +120,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                                            cSetKey.ToUserString());
 
             string debugMessage = StringUtil.FormatInvariant("PROBLEM: Not implied {0}", rightKeyConstraint);
-            return new ErrorLog.Record(true, ViewGenErrorCode.KeyConstraintViolation, message, rightKeyConstraint.CellRelation.Cell, debugMessage);
+            return new ErrorLog.Record(ViewGenErrorCode.KeyConstraintViolation, message, rightKeyConstraint.CellRelation.Cell, debugMessage);
         }
 
         // effects: Given the fact that none of the rightKeyConstraint are not implied by a
@@ -176,7 +176,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             }
 
             string debugMessage = StringUtil.FormatInvariant("PROBLEM: Not implied {0}", rightKeyConstraint);
-            return new ErrorLog.Record(true, ViewGenErrorCode.KeyConstraintUpdateViolation, message, rightKeyConstraint.CellRelation.Cell, debugMessage);
+            return new ErrorLog.Record(ViewGenErrorCode.KeyConstraintUpdateViolation, message, rightKeyConstraint.CellRelation.Cell, debugMessage);
         }
         #endregion
     }

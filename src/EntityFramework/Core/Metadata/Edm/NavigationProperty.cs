@@ -7,6 +7,8 @@ using System.Linq;
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Represent the edm navigation property class
     /// </summary>
@@ -129,6 +131,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// of the principal end key properties.
         /// </summary>
         /// <returns>Foreign key properties</returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public IEnumerable<EdmProperty> GetDependentProperties()
         {
             // Get the declared type

@@ -84,7 +84,7 @@
                 if (edmType.ClrType != clrType)
                 {
                     SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.NewTypeConflictsWithExistingType(
-                                                clrType.AssemblyQualifiedName, edmType.ClrType.AssemblyQualifiedName), edmType));
+                                                clrType.AssemblyQualifiedName, edmType.ClrType.AssemblyQualifiedName)));
                     edmType = null;
                     return false;
                 }
@@ -171,7 +171,7 @@
                 // failing at a much later point of OC type mapping lookup with a super generic error message
                 if (type.IsGenericType)
                 {
-                    SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.GenericTypeNotSupported(type.FullName), null));
+                    SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.GenericTypeNotSupported(type.FullName)));
                     continue;
                 }
 
@@ -211,8 +211,7 @@
                 // return error if the role names are the same
                 if (roleAttribute.Role1Name == roleAttribute.Role2Name)
                 {
-                    SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.SameRoleNameOnRelationshipAttribute(roleAttribute.RelationshipName, roleAttribute.Role2Name),
-                               null));
+                    SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.SameRoleNameOnRelationshipAttribute(roleAttribute.RelationshipName, roleAttribute.Role2Name)));
                     errorEncountered = true;
                 }
 
@@ -250,8 +249,7 @@
             EntityType entityType;
             if (!TryGetRelationshipEndEntityType(clrType, out entityType))
             {
-                SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.RoleTypeInEdmRelationshipAttributeIsInvalidType(associationType.Name, roleName, clrType),
-                           null));
+                SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.RoleTypeInEdmRelationshipAttributeIsInvalidType(associationType.Name, roleName, clrType)));
                 return;
             }
             associationType.AddKeyMember(new AssociationEndMember(roleName, entityType.GetReferenceType(), multiplicity));
@@ -279,14 +277,14 @@
             {
                 if (clrType.IsNested)
                 {
-                    SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.NestedClassNotSupported(clrType.FullName, clrType.Assembly.FullName), null));
+                    SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.NestedClassNotSupported(clrType.FullName, clrType.Assembly.FullName)));
                     return;
                 }
                 EdmTypeAttribute typeAttribute = typeAttributes[0];
                 string cspaceTypeName = String.IsNullOrEmpty(typeAttribute.Name) ? clrType.Name : typeAttribute.Name;
                 if (String.IsNullOrEmpty(typeAttribute.NamespaceName) && clrType.Namespace == null)
                 {
-                    SessionData.EdmItemErrors.Add(new EdmItemError(Strings.Validator_TypeHasNoNamespace, edmType));
+                    SessionData.EdmItemErrors.Add(new EdmItemError(Strings.Validator_TypeHasNoNamespace));
                     return;
                 }
 
@@ -312,8 +310,7 @@
                     {
                         SessionData.EdmItemErrors.Add(
                             new EdmItemError(
-                                Strings.Validator_UnsupportedEnumUnderlyingType(clrType.GetEnumUnderlyingType().FullName),
-                                edmType));
+                                Strings.Validator_UnsupportedEnumUnderlyingType(clrType.GetEnumUnderlyingType().FullName)));
 
                         return;
                     }
@@ -371,7 +368,7 @@
         {
             if (roleAttribute.RelationshipName == null)
             {
-                SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.NullRelationshipNameforEdmRelationshipAttribute(SourceAssembly.FullName), null));
+                SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.NullRelationshipNameforEdmRelationshipAttribute(SourceAssembly.FullName)));
                 return true;
             }
 
@@ -380,35 +377,35 @@
             if (roleAttribute.RelationshipNamespaceName == null)
             {
                 SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.NullParameterForEdmRelationshipAttribute(
-                    "RelationshipNamespaceName", roleAttribute.RelationshipName), null));
+                    "RelationshipNamespaceName", roleAttribute.RelationshipName)));
                 nullsFound = true;
             }
 
             if (roleAttribute.Role1Name == null)
             {
                 SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.NullParameterForEdmRelationshipAttribute(
-                    "Role1Name", roleAttribute.RelationshipName), null));
+                    "Role1Name", roleAttribute.RelationshipName)));
                 nullsFound = true;
             }
 
             if (roleAttribute.Role1Type == null)
             {
                 SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.NullParameterForEdmRelationshipAttribute(
-                    "Role1Type", roleAttribute.RelationshipName), null));
+                    "Role1Type", roleAttribute.RelationshipName)));
                 nullsFound = true;
             }
 
             if (roleAttribute.Role2Name == null)
             {
                 SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.NullParameterForEdmRelationshipAttribute(
-                    "Role2Name", roleAttribute.RelationshipName), null));
+                    "Role2Name", roleAttribute.RelationshipName)));
                 nullsFound = true;
             }
 
             if (roleAttribute.Role2Type == null)
             {
                 SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.NullParameterForEdmRelationshipAttribute(
-                    "Role2Type", roleAttribute.RelationshipName), null));
+                    "Role2Type", roleAttribute.RelationshipName)));
                 nullsFound = true;
             }
 
@@ -529,7 +526,7 @@
             {
                 // Once an error is detected the property does not need to be validated further, just add to the errors
                 // collection and continue with the next property. The failure will cause an exception to be thrown later during validation of all of the types.
-                SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.Validator_OSpace_InvalidNavPropReturnType(propertyInfo.Name, propertyInfo.DeclaringType.FullName, propertyInfo.PropertyType.FullName), null));
+                SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.Validator_OSpace_InvalidNavPropReturnType(propertyInfo.Name, propertyInfo.DeclaringType.FullName, propertyInfo.PropertyType.FullName)));
                 return;
             }
             // else we have a valid EntityType or CollectionType that contains EntityType. ResolveNonSchemaType enforces that a collection type
@@ -565,7 +562,7 @@
                     else
                     {
                         SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.TargetRoleNameInNavigationPropertyNotValid(
-                                                    propertyInfo.Name, propertyInfo.DeclaringType.FullName, attribute.TargetRoleName, attribute.RelationshipName), navigationProperty));
+                                                    propertyInfo.Name, propertyInfo.DeclaringType.FullName, attribute.TargetRoleName, attribute.RelationshipName)));
                         member = null;
                     }
 
@@ -577,7 +574,7 @@
                                                     navigationProperty.Name,
                                                     relationshipType.FullName,
                                                     navigationProperty.FromEndMember.Name,
-                                                    ((RefType)navigationProperty.FromEndMember.TypeUsage.EdmType).ElementType.ClrType), navigationProperty));
+                                                    ((RefType)navigationProperty.FromEndMember.TypeUsage.EdmType).ElementType.ClrType)));
                         member = null;
                     }
                 }
@@ -585,7 +582,7 @@
             else
             {
                 SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.RelationshipNameInNavigationPropertyNotValid(
-                                            propertyInfo.Name, propertyInfo.DeclaringType.FullName, attribute.RelationshipName), declaringType));
+                                            propertyInfo.Name, propertyInfo.DeclaringType.FullName, attribute.RelationshipName)));
             }
 
             if (member != null)
@@ -619,7 +616,7 @@
             {
                 // This property does not need to be validated further, just add to the errors collection and continue with the next property
                 // This failure will cause an exception to be thrown later during validation of all of the types
-                SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.Validator_OSpace_ScalarPropertyNotPrimitive(property.Name, property.DeclaringType.FullName, property.PropertyType.FullName), null));
+                SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.Validator_OSpace_ScalarPropertyNotPrimitive(property.Name, property.DeclaringType.FullName, property.PropertyType.FullName)));
             }
             else
             {
@@ -660,7 +657,7 @@
                         System.Data.Entity.Resources.Strings.Validator_OSpace_ScalarPropertyNotPrimitive(
                             clrProperty.Name,
                             clrProperty.DeclaringType.FullName,
-                            clrProperty.PropertyType.FullName), null));
+                            clrProperty.PropertyType.FullName)));
             }
             else
             {
@@ -692,7 +689,7 @@
             {
                 // This property does not need to be validated further, just add to the errors collection and continue with the next property
                 // This failure will cause an exception to be thrown later during validation of all of the types
-                SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.Validator_OSpace_ComplexPropertyNotComplex(clrProperty.Name, clrProperty.DeclaringType.FullName, clrProperty.PropertyType.FullName), null));
+                SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.Validator_OSpace_ComplexPropertyNotComplex(clrProperty.Name, clrProperty.DeclaringType.FullName, clrProperty.PropertyType.FullName)));
             }
             else
             {

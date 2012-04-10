@@ -4,6 +4,8 @@ using System.Text;
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// List of all the built in types
     /// </summary>
@@ -67,7 +69,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Edm Type Kind
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
         EdmType,
 
         /// <summary>
@@ -103,7 +104,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// EdmFunction Kind
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
         EdmFunction,
 
         /// <summary>
@@ -134,7 +134,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// EdmMember Type Kind
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
         EdmMember,
         
         /// <summary>
@@ -155,7 +154,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// EdmProperty Type Kind
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
         EdmProperty,
 
         /// <summary>

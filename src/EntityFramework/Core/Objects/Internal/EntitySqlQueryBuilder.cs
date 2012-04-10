@@ -404,7 +404,7 @@ GROUP BY
                               queryText.Length +
                               _ofTypeInfix.Length +
                               newType.NamespaceName.Length +
-                              (newType.NamespaceName != string.Empty ? _ofTypeInfix2.Length : 0) +
+                              (!string.IsNullOrEmpty(newType.NamespaceName) ? _ofTypeInfix2.Length : 0) +
                               newType.Name.Length +
                               _ofTypeEpilog.Length;
 
@@ -412,7 +412,7 @@ GROUP BY
             builder.Append(_ofTypeProlog);
             builder.Append(queryText);
             builder.Append(_ofTypeInfix);
-            if (newType.NamespaceName != string.Empty)
+            if (!string.IsNullOrEmpty(newType.NamespaceName))
             {
                 builder.Append(newType.NamespaceName);
                 builder.Append(_ofTypeInfix2);

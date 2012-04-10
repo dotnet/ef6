@@ -217,7 +217,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             // Walks through all parameter bindings in the function mapping and binds the parameters to the
             // requested properties of the given state entry.
-            private void BindFunctionParameters(UpdateTranslator translator, ExtractedStateEntry stateEntry, StorageModificationFunctionMapping functionMapping, FunctionUpdateCommand command, Dictionary<AssociationEndMember, IEntityStateEntry> currentReferenceEnds, Dictionary<AssociationEndMember, IEntityStateEntry> originalReferenceEnds)
+            private static void BindFunctionParameters(UpdateTranslator translator, ExtractedStateEntry stateEntry, StorageModificationFunctionMapping functionMapping, FunctionUpdateCommand command, Dictionary<AssociationEndMember, IEntityStateEntry> currentReferenceEnds, Dictionary<AssociationEndMember, IEntityStateEntry> originalReferenceEnds)
             {
                 // bind all parameters
                 foreach (StorageModificationFunctionParameterBinding parameterBinding in functionMapping.ParameterBindings)

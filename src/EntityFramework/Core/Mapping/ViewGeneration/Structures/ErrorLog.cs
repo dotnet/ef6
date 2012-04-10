@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Text;
@@ -31,7 +32,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             get { return m_log.Count; }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")] // referenced (indirectly) by System.Data.Entity.Design.dll
         internal IEnumerable<EdmSchemaError> Errors
         {
             get
@@ -93,23 +93,23 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             // effects: Creates an error record for wrappers, a debug message
             // and an error message given by "message". Note: wrappers cannot
             // be null
-            internal Record(bool isError, ViewGenErrorCode errorCode, string message,
+            internal Record(ViewGenErrorCode errorCode, string message,
                             IEnumerable<LeftCellWrapper> wrappers, string debugMessage)
             {
                 Debug.Assert(wrappers != null);
                 IEnumerable<Cell> cells = LeftCellWrapper.GetInputCellsForWrappers(wrappers);
-                Init(isError, errorCode, message, cells, debugMessage);
+                Init(errorCode, message, cells, debugMessage);
             }
 
-            internal Record(bool isError, ViewGenErrorCode errorCode, string message, Cell sourceCell, string debugMessage)
+            internal Record(ViewGenErrorCode errorCode, string message, Cell sourceCell, string debugMessage)
             {
-                Init(isError, errorCode, message, new Cell[] { sourceCell }, debugMessage);
+                Init(errorCode, message, new Cell[] { sourceCell }, debugMessage);
             }
 
-            internal Record(bool isError, ViewGenErrorCode errorCode, string message, IEnumerable<Cell> sourceCells,
+            internal Record(ViewGenErrorCode errorCode, string message, IEnumerable<Cell> sourceCells,
                             string debugMessage)
             {
-                Init(isError, errorCode, message, sourceCells, debugMessage);
+                Init(errorCode, message, sourceCells, debugMessage);
             }
 
             //There are cases when we want to create a ViewGen error that is not specific to any mapping fragment
@@ -121,7 +121,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
 
 
-            private void Init(bool isError, ViewGenErrorCode errorCode, string message,
+            private void Init(ViewGenErrorCode errorCode, string message,
                               IEnumerable<Cell> sourceCells, string debugMessage)
             {
                 m_sourceCells = new List<Cell>(sourceCells);
@@ -134,8 +134,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 int lineNumber = label.StartLineNumber;
                 int columnNumber = label.StartLinePosition;
 
-                string userMessage = InternalToString(message, debugMessage, m_sourceCells, sourceLocation, errorCode, isError, false);
-                m_debugMessage = InternalToString(message, debugMessage, m_sourceCells, sourceLocation, errorCode, isError, true);
+                string userMessage = InternalToString(message, debugMessage, m_sourceCells, errorCode, false);
+                m_debugMessage = InternalToString(message, debugMessage, m_sourceCells, errorCode, true);
                 m_mappingError = new EdmSchemaError(userMessage, (int)errorCode, EdmSchemaErrorSeverity.Error, sourceLocation,
                                                       lineNumber, columnNumber);
             }
@@ -148,7 +148,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             #endregion
 
             #region Properties
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")] // referenced (indirectly) by System.Data.Entity.Design.dll
+            [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")] // referenced (indirectly) by System.Data.Entity.Design.dll
             internal EdmSchemaError Error
             {
                 get { return m_mappingError; }
@@ -184,8 +184,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             // message using resources (if isInvariant is false) or a test
             // message (if isInvariant is true)
             static private string InternalToString(string message, string debugMessage,
-                                                   List<Cell> sourceCells, string sourceLocation, ViewGenErrorCode errorCode,
-                                                   bool isError, bool isInvariant)
+                                                   List<Cell> sourceCells, ViewGenErrorCode errorCode, bool isInvariant)
             {
                 StringBuilder builder = new StringBuilder();
 

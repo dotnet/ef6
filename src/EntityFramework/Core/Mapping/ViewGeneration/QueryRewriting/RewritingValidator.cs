@@ -113,7 +113,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                         continue;
                     }
                 }
-                CheckConstraintsOnNonNullableMembers(plainMemberValueTrees, wrapper, sQueryTree, inExtentCondition);
+                CheckConstraintsOnNonNullableMembers(wrapper);
             }
 
             if (_errorLog.Count > 0)
@@ -176,7 +176,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             StringBuilder builder = new StringBuilder();
             builder.AppendLine(message);
             EntityConfigurationToUserString(extraConstraint, builder);
-            _errorLog.AddEntry(new ErrorLog.Record(true, errorCode, builder.ToString(), relevantCellWrappers, ""));
+            _errorLog.AddEntry(new ErrorLog.Record(errorCode, builder.ToString(), relevantCellWrappers, ""));
         }
 
         // according to case statements, where WHEN ... THEN was replaced by ELSE
@@ -282,10 +282,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 return expression;
             }
 
+            var negatedConstant = constant as NegatedConstant;
+
             // Look at the constants and determine if they correspond to
             // typeConstants or scalarConstants
             // This slot is being projected. We need to add a where clause element
-            Debug.Assert(constant is ScalarConstant || constant.IsNull() || constant is NegatedConstant, "Invalid type of constant");
+            Debug.Assert(constant is ScalarConstant || constant.IsNull() || negatedConstant != null, "Invalid type of constant");
 
             // We want the possible values for joinSlot.MemberPath which is a
             // C-side element -- so we use the queryDomainMap
@@ -293,11 +295,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             // Note: the values in constaints can be null or not null as
             // well (i.e., just not scalarConstants)
             Set<Constant> allowedValues = new Set<Constant>(Constant.EqualityComparer);
-            if (constant is NegatedConstant)
+            if (negatedConstant != null)
             {
                 // select all values from the c-side domain that are not in the negated set
                 allowedValues.Unite(possibleValues);
-                allowedValues.Difference(((NegatedConstant)constant).Elements);
+                allowedValues.Difference(negatedConstant.Elements);
             }
             else
             {
@@ -339,7 +341,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         /// Checks whether non nullable S-side members are mapped to nullable C-query.
         /// It is possible that C-side attribute is nullable but the fragment's C-query is not
         /// </summary>
-        private void CheckConstraintsOnNonNullableMembers(Dictionary<MemberValueBinding, CellTreeNode> memberValueTrees, LeftCellWrapper wrapper, CellTreeNode sQueryTree, BoolExpression inExtentCondition)
+        private void CheckConstraintsOnNonNullableMembers(LeftCellWrapper wrapper)
         {
             //For each non-condition member that has non-nullability constraint
             foreach (MemberPath column in _domainMap.NonConditionMembers(_viewgenContext.Extent))
@@ -352,7 +354,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
                     if (cFragment != null && _viewgenContext.RightFragmentQP.IsSatisfiable(cFragment))
                     {
-                        _errorLog.AddEntry(new ErrorLog.Record(true, ViewGenErrorCode.NullableMappingForNonNullableColumn, Strings.Viewgen_NullableMappingForNonNullableColumn(wrapper.LeftExtent.ToString(), column.ToFullString()), wrapper.Cells, ""));
+                        _errorLog.AddEntry(new ErrorLog.Record(ViewGenErrorCode.NullableMappingForNonNullableColumn, Strings.Viewgen_NullableMappingForNonNullableColumn(wrapper.LeftExtent.ToString(), column.ToFullString()), wrapper.Cells, ""));
                     }
                 }
             }
@@ -521,7 +523,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 {
                     string columnsString = MemberPath.PropertiesToUserString(collidingColumns, false);
                     string message = Strings.ViewGen_NonKeyProjectedWithOverlappingPartitions(columnsString);
-                    ErrorLog.Record record = new ErrorLog.Record(true, ViewGenErrorCode.NonKeyProjectedWithOverlappingPartitions, message,
+                    ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.NonKeyProjectedWithOverlappingPartitions, message,
                                                                  new LeftCellWrapper[] { m_wrapper, node.LeftCellWrapper }, String.Empty);
                     m_errorLog.AddEntry(record);
                 }

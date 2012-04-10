@@ -202,13 +202,14 @@ namespace System.Data.Entity.Core.Mapping {
             this.m_typeMappings.Add(typeMapping);
         }
 
+#if DEBUG
         /// <summary>
         /// This method is primarily for debugging purposes.
         /// Will be removed shortly.
         /// </summary>
         internal abstract void Print(int index);
-
-
+#endif
+        
         internal bool ContainsTypeSpecificQueryView(Triple key)
         {
             return m_typeSpecificQueryViews.ContainsKey(key);

@@ -27,6 +27,8 @@ using md=System.Data.Entity.Core.Metadata.Edm;
 //
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// A simple class that represents a pair of extents
     /// </summary>
@@ -118,7 +120,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #region constructors
-        internal ForeignKeyConstraint(md.RelationshipType relType, md.RelationshipSet relationshipSet, md.ReferentialConstraint constraint)
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        internal ForeignKeyConstraint(md.RelationshipSet relationshipSet, md.ReferentialConstraint constraint)
         {
             md.AssociationSet assocSet = relationshipSet as md.AssociationSet;
             md.AssociationEndMember fromEnd = constraint.FromRole as md.AssociationEndMember;
@@ -164,6 +167,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// Build up an equivalence map of primary keys and foreign keys (ie) for each
         /// foreign key column, identify the corresponding primary key property
         /// </summary>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void BuildKeyMap()
         {
             if (m_keyMap != null)
@@ -248,7 +252,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 foreach (md.ReferentialConstraint constraint in assocType.ReferentialConstraints)
                 {
                     List<ForeignKeyConstraint> fkConstraintList;
-                    ForeignKeyConstraint fkConstraint = new ForeignKeyConstraint(relationshipType, relationshipSet, constraint);
+                    ForeignKeyConstraint fkConstraint = new ForeignKeyConstraint(relationshipSet, constraint);
                     if (!m_parentChildRelationships.TryGetValue(fkConstraint.Pair, out fkConstraintList))
                     {
                         fkConstraintList = new List<ForeignKeyConstraint>();

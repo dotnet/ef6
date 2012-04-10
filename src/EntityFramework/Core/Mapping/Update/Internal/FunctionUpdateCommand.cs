@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Data.Entity.Core.Spatial;
@@ -198,6 +199,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // All server-generated values are added to the generatedValues list. If those values are identifiers, they are
         // also added to the identifierValues dictionary, which associates proxy identifiers for keys in the session
         // with their actual values, permitting fix-up of identifiers across relationships.
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         internal override long Execute(UpdateTranslator translator, EntityConnection connection, Dictionary<int, object> identifierValues,
             List<KeyValuePair<PropagatorResult, object>> generatedValues)
         {

@@ -9,13 +9,14 @@ namespace System.Data.Entity.Core.Objects
     /// This class implements IEnumerable and IDisposable. Instance of this class
     /// is returned from ObjectQuery.Execute method.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
+    [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface"), SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public abstract class ObjectResult : IEnumerable, IDisposable, IListSource
     {
         internal ObjectResult()
         {
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumeratorInternal();
@@ -27,6 +28,7 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///   IListSource.ContainsListCollection implementation. Always returns false.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IListSource.ContainsListCollection
         {
             get
@@ -44,6 +46,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>
         ///   IList interface over the data to bind
         /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IList IListSource.GetList()
         {
             return this.GetIListSourceListInternal();

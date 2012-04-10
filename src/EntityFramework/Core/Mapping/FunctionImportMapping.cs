@@ -8,6 +8,7 @@
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Xml;
@@ -38,6 +39,7 @@
 
     internal sealed class FunctionImportStructuralTypeMappingKB
     {
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal FunctionImportStructuralTypeMappingKB(
             IEnumerable<FunctionImportStructuralTypeMapping> structuralTypeMappings,
             ItemCollection itemCollection)

@@ -172,7 +172,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                     return RewriteEntity(expression, (EntityType)expression.ResultType.EdmType);
 
                 case BuiltInTypeKind.CollectionType:
-                    return RewriteCollection(expression, (CollectionType)expression.ResultType.EdmType);
+                    return RewriteCollection(expression);
 
                 case BuiltInTypeKind.RowType:
                     return RewriteRow(expression, (RowType)expression.ResultType.EdmType);
@@ -446,7 +446,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
         }
         
-        private DbExpression RewriteCollection(DbExpression expression, CollectionType collectionType)
+        private DbExpression RewriteCollection(DbExpression expression)
         {
             DbExpression target = expression;
 
@@ -702,8 +702,6 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         private class NavigationInfo
         {
-            private readonly DbRelationshipNavigationExpression _original;
-            private readonly DbRelationshipNavigationExpression _rewritten;
             private DbVariableReferenceExpression _sourceRef;
             private AssociationEndMember _sourceEnd;
             private DbExpression _source;            
@@ -713,8 +711,6 @@ namespace System.Data.Entity.Core.Objects.Internal
                 Debug.Assert(originalNavigation != null, "originalNavigation cannot be null");
                 Debug.Assert(rewrittenNavigation != null, "rewrittenNavigation cannot be null");
 
-                this._original = originalNavigation;
-                this._rewritten = rewrittenNavigation;
                 this._sourceEnd = (AssociationEndMember)originalNavigation.NavigateFrom;
                 this._sourceRef = (DbVariableReferenceExpression)rewrittenNavigation.NavigationSource;
                 this._source = originalNavigation.NavigationSource;

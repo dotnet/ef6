@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -34,6 +35,7 @@
         // This is used when metadata is not otherwise available to the proxy
         private readonly Dictionary<Tuple<string, string>, AssociationType> _navigationPropertyAssociationTypes;
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         internal EntityProxyTypeInfo(Type proxyType, ClrEntityType ospaceEntityType, DynamicMethod initializeCollections, List<PropertyInfo> baseGetters, List<PropertyInfo> baseSetters)
         {
             Debug.Assert(proxyType != null, "proxyType must be non-null");

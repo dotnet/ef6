@@ -35,14 +35,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
        /// Returns all mapping fragments for the given entity set's types and their parent types.
        /// </summary>
         internal static IEnumerable<StorageTypeMapping> GetMappingsForEntitySetAndSuperTypes(StorageMappingItemCollection mappingCollection, EntityContainer container, EntitySetBase entitySet, EntityTypeBase childEntityType)
-        {
-            return MetadataHelper.GetTypeAndParentTypesOf(childEntityType, mappingCollection.EdmItemCollection, true /*includeAbstractTypes*/).SelectMany(
-                edmType => 
-                    edmType.EdmEquals(childEntityType) ? 
-                      GetMappingsForEntitySetAndType(mappingCollection, container, entitySet, (edmType as EntityTypeBase))
-                    : GetIsTypeOfMappingsForEntitySetAndType(mappingCollection, container, entitySet, (edmType as EntityTypeBase), childEntityType)
-                ).ToList();
-        }
+       {
+           return MetadataHelper.GetTypeAndParentTypesOf(childEntityType, true /*includeAbstractTypes*/).SelectMany(
+               edmType =>
+                   {
+                       var entityTypeBase = edmType as EntityTypeBase;
+                       return edmType.EdmEquals(childEntityType)
+                                  ? GetMappingsForEntitySetAndType(mappingCollection, container, entitySet, entityTypeBase)
+                                  : GetIsTypeOfMappingsForEntitySetAndType(
+                                      mappingCollection, container, entitySet, entityTypeBase, childEntityType);
+                   }).ToList();
+       }
 
         /// <summary>
         /// Returns mappings for the given set/type only if the mapping applies also to childEntittyType either via IsTypeOf or explicitly specifying multiple types in mapping fragments.

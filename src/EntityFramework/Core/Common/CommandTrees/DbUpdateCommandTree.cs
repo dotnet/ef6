@@ -10,12 +10,13 @@ using ReadOnlyModificationClauses = System.Collections.ObjectModel.ReadOnlyColle
 
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Represents a single-row update operation expressed as a canonical command tree.
     /// When the <see cref="Returning"/> property is set, the command returns a reader; otherwise,
     /// it returns a scalar indicating the number of rows affected.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbUpdateCommandTree : DbModificationCommandTree
     {
         private readonly DbExpression _predicate;

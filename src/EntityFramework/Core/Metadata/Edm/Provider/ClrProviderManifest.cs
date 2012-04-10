@@ -67,7 +67,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="clrType">The CLR type for which the PrimitiveTypeKind value should be resolved</param>
         /// <param name="primitiveType">The PrimitiveTypeKind value to which the CLR type resolves, if any.</param>
         /// <returns>True if the CLR type represents a primitive (EDM) type; otherwise false.</returns>
-        internal bool TryGetPrimitiveTypeKind(Type clrType, out PrimitiveTypeKind resolvedPrimitiveTypeKind)
+        internal static bool TryGetPrimitiveTypeKind(Type clrType, out PrimitiveTypeKind resolvedPrimitiveTypeKind)
         {
             PrimitiveTypeKind? primitiveTypeKind = null;
             if (!clrType.IsEnum) // Enums return the TypeCode of their underlying type

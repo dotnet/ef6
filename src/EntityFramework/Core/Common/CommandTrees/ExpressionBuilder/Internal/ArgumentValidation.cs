@@ -8,9 +8,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm; // for TypeHelpers
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
 
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal static class ArgumentValidation
     {
         private static TypeUsage _booleanType = EdmProviderManifest.Instance.GetCanonicalModelTypeUsage(PrimitiveTypeKind.Boolean);
@@ -21,7 +23,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             return new System.Collections.ObjectModel.ReadOnlyCollection<TElement>(list);
         }
 
-        private static void RequirePolymorphicType(TypeUsage type, string typeArgumentName)
+        private static void RequirePolymorphicType(TypeUsage type)
         {
             Debug.Assert(type != null, "Ensure type is non-null before calling RequirePolymorphicType");
 
@@ -1011,7 +1013,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             //
             // Verify the type to treat as. Treat-As (NullType) is not allowed.
             //
-            RequirePolymorphicType(asType, "asType");
+            RequirePolymorphicType(asType);
 
             //
             // Verify that the Treat operation is allowed
@@ -1030,7 +1032,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             // Ensure that the type is non-null and valid - from the same metadata collection and dataspace and the command tree.
             // The type is also not allowed to be NullType.
             //
-            RequirePolymorphicType(type, "type");
+            RequirePolymorphicType(type);
 
             //
             // Ensure that the argument is actually of a collection type.
@@ -1061,7 +1063,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             // Ensure the ofType is non-null, associated with the correct metadata workspace/dataspace,
             // is not NullType, and is polymorphic
             //
-            RequirePolymorphicType(type, "type");
+            RequirePolymorphicType(type);
 
             //
             // Verify that the IsOf operation is allowed
@@ -1203,7 +1205,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             return CreateResultType(TypeHelpers.CreateKeyRowType(refType.ElementType));
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal static TypeUsage ValidateNavigate(DbExpression navigateFrom, RelationshipType type, string fromEndName, string toEndName, out RelationshipEndMember fromEnd, out RelationshipEndMember toEnd)
         {
             EntityUtil.CheckArgumentNull(navigateFrom, "navigateFrom");
@@ -2052,7 +2053,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         private static bool TryGetPrimitiveTypeKind(Type clrType, out PrimitiveTypeKind primitiveTypeKind)
         {
-            return ClrProviderManifest.Instance.TryGetPrimitiveTypeKind(clrType, out primitiveTypeKind);
+            return ClrProviderManifest.TryGetPrimitiveTypeKind(clrType, out primitiveTypeKind);
         }
 
         /// <summary>

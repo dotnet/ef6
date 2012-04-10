@@ -54,7 +54,7 @@
                             // at this point there is already a Clr Type that is structurally matched to this CSpace type, we throw exception
                             EdmType previousOSpaceType = SessionData.CspaceToOspace[cspaceType];
                             SessionData.EdmItemErrors.Add(
-                                new EdmItemError(Strings.Validator_OSpace_Convention_AmbiguousClrType(cspaceType.Name, previousOSpaceType.ClrType.FullName, type.FullName), previousOSpaceType));
+                                new EdmItemError(Strings.Validator_OSpace_Convention_AmbiguousClrType(cspaceType.Name, previousOSpaceType.ClrType.FullName, type.FullName)));
                         }
                     }
                 }
@@ -90,7 +90,7 @@
                 else
                 {
                     Debug.Assert(pair.Value > 1, "how did we get a negative count of types in the dictionary?");
-                    SessionData.EdmItemErrors.Add(new EdmItemError(Strings.Validator_OSpace_Convention_MultipleTypesWithSameName(type.Name), pair.Key));
+                    SessionData.EdmItemErrors.Add(new EdmItemError(Strings.Validator_OSpace_Convention_MultipleTypesWithSameName(type.Name)));
                 }
             }
 
@@ -334,7 +334,7 @@
                     SessionData.LoadMessageLogger.CreateErrorMessageWithTypeSpecificLoadLogs(
                         Strings.Validator_OSpace_Convention_BaseTypeNotLoaded(type, baseCSpaceType), 
                         baseCSpaceType);
-                SessionData.EdmItemErrors.Add(new EdmItemError(message, ospaceType));
+                SessionData.EdmItemErrors.Add(new EdmItemError(message));
             }
 
             Debug.Assert(!foundValue || ospaceType is StructuralType, "Structural type expected (if found).");
@@ -490,7 +490,7 @@
                     SessionData.LoadMessageLogger.CreateErrorMessageWithTypeSpecificLoadLogs(
                         Strings.Validator_OSpace_Convention_MissingOSpaceType(cspaceProperty.TypeUsage.EdmType.FullName),
                         cspaceProperty.TypeUsage.EdmType);
-                SessionData.EdmItemErrors.Add(new EdmItemError(message, ospaceType));
+                SessionData.EdmItemErrors.Add(new EdmItemError(message));
             }
 
         }
@@ -531,12 +531,13 @@
                 Debug.Assert(foundTarget, "Since the relationship will only be created if it can find the types for both ends, we will never fail to find one of the ends");
 
                 NavigationProperty navigationProperty = new NavigationProperty(cspaceProperty.Name, TypeUsage.Create(targetType), clrProperty);
-                navigationProperty.RelationshipType = (RelationshipType)ospaceRelationship;
+                var relationshipType = (RelationshipType)ospaceRelationship;
+                navigationProperty.RelationshipType = relationshipType;
 
                 // we can use First because o-space relationships are created directly from 
                 // c-space relationship
-                navigationProperty.ToEndMember = (RelationshipEndMember)((RelationshipType)ospaceRelationship).Members.First(e => e.Name == cspaceProperty.ToEndMember.Name);
-                navigationProperty.FromEndMember = (RelationshipEndMember)((RelationshipType)ospaceRelationship).Members.First(e => e.Name == cspaceProperty.FromEndMember.Name);
+                navigationProperty.ToEndMember = (RelationshipEndMember)relationshipType.Members.First(e => e.Name == cspaceProperty.ToEndMember.Name);
+                navigationProperty.FromEndMember = (RelationshipEndMember)relationshipType.Members.First(e => e.Name == cspaceProperty.FromEndMember.Name);
                 ospaceType.AddMember(navigationProperty);
             }
             else
@@ -546,7 +547,7 @@
                     SessionData.LoadMessageLogger.CreateErrorMessageWithTypeSpecificLoadLogs(
                         Strings.Validator_OSpace_Convention_RelationshipNotLoaded(cspaceProperty.RelationshipType.FullName, missingType.FullName),
                         missingType);
-                SessionData.EdmItemErrors.Add(new EdmItemError(message, ospaceType));
+                SessionData.EdmItemErrors.Add(new EdmItemError(message));
             }
         }
 
@@ -643,7 +644,7 @@
                             Strings.Validator_OSpace_Convention_ScalarPropertyMissginGetterOrSetter(clrProperty.Name, type.FullName, type.Assembly.FullName),
                             cspaceProperty.TypeUsage.EdmType);
 
-                    SessionData.EdmItemErrors.Add(new EdmItemError(message, ospaceType));
+                    SessionData.EdmItemErrors.Add(new EdmItemError(message));
                 }
             }
             else
@@ -653,7 +654,7 @@
                         Strings.Validator_OSpace_Convention_MissingOSpaceType(cspaceProperty.TypeUsage.EdmType.FullName),
                         cspaceProperty.TypeUsage.EdmType);
 
-                SessionData.EdmItemErrors.Add(new EdmItemError(message, ospaceType));
+                SessionData.EdmItemErrors.Add(new EdmItemError(message));
             }
         }
 
@@ -728,7 +729,7 @@
             return type.Name == cspaceType.Name;
         }
 
-        private void AddScalarMember(Type type, PropertyInfo clrProperty, StructuralType ospaceType, EdmProperty cspaceProperty, EdmType propertyType)
+        private static void AddScalarMember(Type type, PropertyInfo clrProperty, StructuralType ospaceType, EdmProperty cspaceProperty, EdmType propertyType)
         {
             Debug.Assert(type != null, "type != null");
             Debug.Assert(clrProperty != null, "clrProperty != null");
@@ -771,7 +772,7 @@
             else
             {
                 // we were loading in convention mode, and ran into an assembly that can't be loaded by convention
-                sessionData.EdmItemErrors.Add(new EdmItemError(Strings.Validator_OSpace_Convention_AttributeAssemblyReferenced(assembly.FullName), null));
+                sessionData.EdmItemErrors.Add(new EdmItemError(Strings.Validator_OSpace_Convention_AttributeAssemblyReferenced(assembly.FullName)));
                 return new ObjectItemNoOpAssemblyLoader(assembly, sessionData);
             }
         }

@@ -187,7 +187,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             return translator.CreateCommand(commandTree);
         }
 
-        private DbModificationCommandTree RebuildCommandTree(DbModificationCommandTree originalTree, Dictionary<DbSetClause, DbSetClause> clauseMappings)
+        private static DbModificationCommandTree RebuildCommandTree(DbModificationCommandTree originalTree, Dictionary<DbSetClause, DbSetClause> clauseMappings)
         {
             if (clauseMappings.Count == 0)
             {
@@ -215,7 +215,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <summary>
         /// Creates a new list of modification clauses with the specified remapped clauses replaced.
         /// </summary>
-        private List<DbModificationClause> ReplaceClauses(IList<DbModificationClause> originalClauses, Dictionary<DbSetClause, DbSetClause> mappings)
+        private static List<DbModificationClause> ReplaceClauses(IList<DbModificationClause> originalClauses, Dictionary<DbSetClause, DbSetClause> mappings)
         {
             List<DbModificationClause> result = new List<DbModificationClause>(originalClauses.Count);
             for (int idx = 0; idx < originalClauses.Count; idx++)

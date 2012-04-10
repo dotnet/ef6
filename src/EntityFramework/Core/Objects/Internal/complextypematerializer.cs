@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                          Helper.IsComplexType(recordInfo.RecordType.EdmType),
                          "not EntityType or ComplexType");
 
-            Plan plan = GetPlan(record, recordInfo);
+            Plan plan = GetPlan(recordInfo);
             if (null == result)
             {
                 result = ((Func<object>)plan.ClrType)();
@@ -83,9 +83,8 @@ namespace System.Data.Entity.Core.Objects.Internal
             return CreateComplex(record, record.DataRecordInfo, existing);
         }
 
-        private Plan GetPlan(IExtendedDataRecord record, DataRecordInfo recordInfo)
+        private Plan GetPlan(DataRecordInfo recordInfo)
         {
-            Debug.Assert(null != record, "null IExtendedDataRecord");
             Debug.Assert(null != recordInfo, "null DataRecordInfo");
             Debug.Assert(null != recordInfo.RecordType, "null TypeUsage");
 

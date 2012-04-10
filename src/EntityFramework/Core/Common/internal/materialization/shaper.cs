@@ -9,6 +9,7 @@
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Core.Spatial;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
 
     /// <summary>
@@ -158,7 +159,7 @@
                     }
                     else
                     {
-                        Context.ObjectStateManager.PromoteKeyEntry(existingEntry, wrappedEntity, (IExtendedDataRecord)null, false, /*setIsLoaded*/ true, /*keyEntryInitialized*/ false, "HandleEntity");
+                        Context.ObjectStateManager.PromoteKeyEntry(existingEntry, wrappedEntity, false, /*setIsLoaded*/ true, /*keyEntryInitialized*/ false);
                     }
                 }
             }
@@ -216,7 +217,7 @@
                     }
                     else
                     {
-                        Context.ObjectStateManager.PromoteKeyEntry(existingEntry, result, (IExtendedDataRecord)null, false, /*setIsLoaded*/ true, /*keyEntryInitialized*/ false, "HandleEntity");
+                        Context.ObjectStateManager.PromoteKeyEntry(existingEntry, result, false, /*setIsLoaded*/ true, /*keyEntryInitialized*/ false);
                     }
                 }
             }
@@ -677,16 +678,14 @@
                     // part of the Container owning the EntitySet of the root entity.
                     // This can be done by comparing the EntitySet  of the row's entity to the relationships
                     // in the Container and their AssociationSetEnd's type
-                    CheckClearedEntryOnSpan(sourceKey, wrappedSource, targetMember);
+                    CheckClearedEntryOnSpan(sourceKey, targetMember);
                 }
             }
         }
 
-        private void CheckClearedEntryOnSpan(EntityKey sourceKey, IEntityWrapper wrappedSource, AssociationEndMember targetMember)
+        private void CheckClearedEntryOnSpan(EntityKey sourceKey, AssociationEndMember targetMember)
         {
             Debug.Assert(null != (object)sourceKey);
-            Debug.Assert(wrappedSource != null);
-            Debug.Assert(wrappedSource.Entity != null);
             Debug.Assert(targetMember != null);
             Debug.Assert(this.Context != null);
 
@@ -1116,6 +1115,7 @@
             }
         }
 
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public IEnumerator<T> GetEnumerator()
         {
             // we can use a simple enumerator if there are no nested results, no keys and no "has data"

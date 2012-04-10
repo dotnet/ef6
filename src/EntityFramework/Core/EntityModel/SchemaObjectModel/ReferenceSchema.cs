@@ -121,7 +121,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private void HandleNamespaceAttribute(XmlReader reader)
         {
             Debug.Assert(String.IsNullOrEmpty(NamespaceName), "Alias must be set only once");
-            ReturnValue<string> returnValue = HandleDottedNameAttribute(reader,NamespaceName, null);
+            ReturnValue<string> returnValue = HandleDottedNameAttribute(reader,NamespaceName);
             if ( returnValue.Succeeded )
                 NamespaceName = returnValue.Value;
         }

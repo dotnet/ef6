@@ -495,7 +495,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             EntityContainer defaultEntityContainer = this.TypeResolver.Perspective.GetDefaultContainer();
             ExpressionResolution defaultEntityContainerResolution;
-            if (defaultEntityContainer != null && TryResolveEntityContainerMemberAccess(defaultEntityContainer, name, errCtx, out defaultEntityContainerResolution))
+            if (defaultEntityContainer != null && TryResolveEntityContainerMemberAccess(defaultEntityContainer, name, out defaultEntityContainerResolution))
             {
                 return defaultEntityContainerResolution;
             }
@@ -534,7 +534,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 EntityContainer defaultEntityContainer = this.TypeResolver.Perspective.GetDefaultContainer();
                 ExpressionResolution defaultEntityContainerResolution;
                 if (defaultEntityContainer != null &&
-                    TryResolveEntityContainerMemberAccess(defaultEntityContainer, name, errCtx, out defaultEntityContainerResolution) &&
+                    TryResolveEntityContainerMemberAccess(defaultEntityContainer, name, out defaultEntityContainerResolution) &&
                     defaultEntityContainerResolution.ExpressionClass == ExpressionResolutionClass.MetadataMember)
                 {
                     resolution = (MetadataMember)defaultEntityContainerResolution;
@@ -579,7 +579,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         {
             DbExpression propertyExpr;
 
-            if (TryResolveAsPropertyAccess(valueExpr, name, errCtx, out propertyExpr))
+            if (TryResolveAsPropertyAccess(valueExpr, name, out propertyExpr))
             {
                 return new ValueExpression(propertyExpr);
             }
@@ -602,7 +602,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <summary>
         /// Try resolving <paramref name="name"/> as a property of the value returned by the <paramref name="valueExpr"/>.
         /// </summary>
-        private bool TryResolveAsPropertyAccess(DbExpression valueExpr, string name, ErrorContext errCtx, out DbExpression propertyExpr)
+        private bool TryResolveAsPropertyAccess(DbExpression valueExpr, string name, out DbExpression propertyExpr)
         {
             Debug.Assert(valueExpr != null, "valueExpr != null");
 
@@ -637,7 +637,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 DbExpression derefExpr = valueExpr.Deref();
                 TypeUsage derefExprType = derefExpr.ResultType;
 
-                if (TryResolveAsPropertyAccess(derefExpr, name, errCtx, out propertyExpr))
+                if (TryResolveAsPropertyAccess(derefExpr, name, out propertyExpr))
                 {
                     return true;
                 }
@@ -658,7 +658,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         internal ExpressionResolution ResolveEntityContainerMemberAccess(EntityContainer entityContainer, string name, ErrorContext errCtx)
         {
             ExpressionResolution resolution;
-            if (TryResolveEntityContainerMemberAccess(entityContainer, name, errCtx, out resolution))
+            if (TryResolveEntityContainerMemberAccess(entityContainer, name, out resolution))
             {
                 return resolution;
             }
@@ -668,7 +668,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
         }
 
-        private bool TryResolveEntityContainerMemberAccess(EntityContainer entityContainer, string name, ErrorContext errCtx, out ExpressionResolution resolution)
+        private bool TryResolveEntityContainerMemberAccess(EntityContainer entityContainer, string name, out ExpressionResolution resolution)
         {
             EntitySetBase entitySetBase;
             EdmFunction functionImport;

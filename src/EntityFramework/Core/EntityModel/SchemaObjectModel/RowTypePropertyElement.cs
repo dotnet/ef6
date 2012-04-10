@@ -143,7 +143,7 @@
         {
             builder.Append("Property(");
 
-            if (UnresolvedType != null && !UnresolvedType.Trim().Equals(String.Empty))
+            if (!string.IsNullOrWhiteSpace(UnresolvedType))
             {
                 if (_collectionKind != CollectionKind.None)
                 {

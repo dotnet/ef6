@@ -12,7 +12,7 @@ namespace System.Data.Entity.Core.EntityClient
     /// <summary>
     /// Class representing a provider factory for the entity client provider
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2302", Justification="We don't expect serviceType to be an Embedded Interop Types.")]
+    [SuppressMessage("Microsoft.Usage", "CA2302", Justification="We don't expect serviceType to be an Embedded Interop Types.")]
     public sealed class EntityProviderFactory : DbProviderFactory, IServiceProvider
     {
         /// <summary>

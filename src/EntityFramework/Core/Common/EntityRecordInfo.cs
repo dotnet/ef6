@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Common {
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// EntityRecordInfo class providing a simple way to access both the type information and the column information.
@@ -12,7 +13,6 @@ namespace System.Data.Entity.Core.Common {
     public class EntityRecordInfo : DataRecordInfo {
 
         private readonly EntityKey _entityKey;
-        private readonly EntitySet _entitySet;
 
         /// <summary>
         /// 
@@ -26,7 +26,6 @@ namespace System.Data.Entity.Core.Common {
             EntityUtil.CheckArgumentNull(entitySet, "entitySet");
 
             _entityKey = entityKey;
-            _entitySet = entitySet;
             ValidateEntityType(entitySet);
         }
 
@@ -35,12 +34,12 @@ namespace System.Data.Entity.Core.Common {
         /// </summary>
         /// <param name="metadata"></param>
         /// <param name="entityKey"></param>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "entitySet")]
         internal EntityRecordInfo(EntityType metadata, EntityKey entityKey, EntitySet entitySet)
             : base(TypeUsage.Create(metadata)) {
             EntityUtil.CheckArgumentNull<EntityKey>(entityKey, "entityKey");
 
             _entityKey = entityKey;
-            _entitySet = entitySet;
 #if DEBUG
             try
             {
@@ -58,11 +57,11 @@ namespace System.Data.Entity.Core.Common {
         /// Reusing TypeUsage and FieldMetadata from another EntityRecordInfo which has all the same info
         /// but with a different EntityKey instance.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "entitySet")]
         internal EntityRecordInfo(DataRecordInfo info, EntityKey entityKey, EntitySet entitySet)
             : base(info)
         {
             _entityKey = entityKey;
-            _entitySet = entitySet;
 #if DEBUG
             try
             {

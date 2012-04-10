@@ -11,6 +11,8 @@ using System.Xml;
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Represents the base item class for all the metadata
     /// </summary>
@@ -20,6 +22,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Static Constructor which initializes all the built in types and primitive types
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
         static MetadataItem()
         {
             ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -467,6 +470,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Returns the list of facet descriptions for a given type
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public static System.Collections.ObjectModel.ReadOnlyCollection<FacetDescription> GetGeneralFacetDescriptions()
         {
             return _generalFacetDescriptions;

@@ -12,12 +12,13 @@ using System.Reflection;
 namespace System.Data.Entity.Core.Objects
 {
     using System.Data.Entity.Resources;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///   This class implements strongly-typed queries at the object-layer through
     ///   Entity SQL text and query-building helper methods. 
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public partial class ObjectQuery<T> : ObjectQuery, IEnumerable<T>, IQueryable<T>, IOrderedQueryable<T>, IListSource
     {
         internal ObjectQuery(ObjectQueryState queryState)
@@ -62,6 +63,7 @@ namespace System.Data.Entity.Core.Objects
         ///   These methods are the "executors" for the query. They can be called
         ///   directly, or indirectly (by foreach'ing through the query, for example).
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             ObjectResult<T> disposableEnumerable = this.GetResults(null);
@@ -141,12 +143,14 @@ namespace System.Data.Entity.Core.Objects
         }
 
         // Intended for use only in the MethodCallExpression produced for inline queries.
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"), SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "mergeOption")]
         internal ObjectQuery<T> MergeAs(MergeOption mergeOption)
         {
             throw EntityUtil.InvalidOperation(Strings.ELinq_MethodNotDirectlyCallable);
         }
 
         // Intended for use only in the MethodCallExpression produced for inline queries.
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"), SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "span")]
         internal ObjectQuery<T> IncludeSpan(Span span)
         {
             throw EntityUtil.InvalidOperation(Strings.ELinq_MethodNotDirectlyCallable);

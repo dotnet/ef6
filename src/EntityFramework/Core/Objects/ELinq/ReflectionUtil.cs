@@ -6,6 +6,8 @@ using System.Text;
 using System.Globalization;
 namespace System.Data.Entity.Core.Objects.ELinq
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Static utility class for identifying methods in Queryable, Sequence, and IEnumerable
     /// and 
@@ -17,6 +19,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private static readonly Dictionary<SequenceMethod, MethodInfo> s_inverseMap;
 
         // Initialize method map
+        [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline"), SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode")]
         static ReflectionUtil()
         {
             // register known canonical method names

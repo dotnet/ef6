@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
     /// <summary>
@@ -74,7 +75,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         internal abstract string ToUserString();
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal static void ConstantsToUserString(StringBuilder builder, Set<Constant> constants)
         {
             bool isFirst = true;

@@ -107,6 +107,7 @@ namespace System.Data.Entity.Core.Mapping {
             this.m_properties.Add(prop);
         }
 
+#if DEBUG
         /// <summary>
         /// This method is primarily for debugging purposes.
         /// Will be removed shortly.
@@ -130,6 +131,8 @@ namespace System.Data.Entity.Core.Mapping {
                 propertyMapping.Print(index + 5);
             }
         }
+#endif
+
         #endregion
     }
 }

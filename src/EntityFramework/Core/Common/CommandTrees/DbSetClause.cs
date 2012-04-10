@@ -8,10 +8,11 @@ using System.Diagnostics;
 
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Specifies a clause in a modification operation setting the value of a property.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbSetClause : DbModificationClause
     {
         private DbExpression _prop;
@@ -68,6 +69,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             dumper.End("DbSetClause");
         }
 
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbSetClause"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Common.Utils.TreeNode.#ctor(System.String,System.Data.Entity.Core.Common.Utils.TreeNode[])")]
         internal override TreeNode Print(DbExpressionVisitor<TreeNode> visitor)
         {
             TreeNode node = new TreeNode("DbSetClause");

@@ -8,7 +8,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     /// <summary>
     /// Base attribute for schematized types
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
     public abstract class EdmTypeAttribute: System.Attribute
     {
         private string _typeName;

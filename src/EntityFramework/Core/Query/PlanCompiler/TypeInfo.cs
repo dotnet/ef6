@@ -25,6 +25,7 @@ using System.Data.Entity.Core.Query.InternalTrees;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// The kind of type-id in use
@@ -311,6 +312,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// Get the list of "key" properties (in the flattened type)
         /// </summary>
         /// <returns>the key property equivalents in the flattened type</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Non-EdmProperty"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal IEnumerable<PropertyRef> GetKeyPropertyRefs()
         {
             md.EntityTypeBase entityType = null;
@@ -427,6 +429,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// Constructor for a root type
         /// </summary>
         /// <param name="type"></param>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal RootTypeInfo(md.TypeUsage type, ExplicitDiscriminatorMap discriminatorMap)
             : base(type, null)
         {
@@ -445,7 +448,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         /// Kind of the typeid column (if any)
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal TypeIdKind TypeIdKind
         {
             get { return m_typeIdKind; }
@@ -576,6 +578,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="property">Complex property.</param>
         /// <returns>Offset.</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "TypeInfo"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal int GetNestedStructureOffset(PropertyRef property)
         {
             // m_propertyRefList contains every element of the flattened type
@@ -601,6 +604,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="throwIfMissing">throw if the property is not found</param>
         /// <param name="property">the corresponding property on the new type</param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal new bool TryGetNewProperty(PropertyRef propertyRef, bool throwIfMissing, out md.EdmProperty property)
         {
             bool result = m_propertyMap.TryGetValue(propertyRef, out property);

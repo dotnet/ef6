@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return GetAllDiscoverableAssemblies();
         }
 
-        internal Assembly ResolveAssembly(AssemblyName referenceName)
+        internal virtual Assembly ResolveAssembly(AssemblyName referenceName)
         {
             Assembly assembly = null;
 
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return assembly;
         }
 
-        private bool TryFindWildcardAssemblyMatch(AssemblyName referenceName, out Assembly assembly)
+        private static bool TryFindWildcardAssemblyMatch(AssemblyName referenceName, out Assembly assembly)
         {
             Debug.Assert(referenceName != null);
 

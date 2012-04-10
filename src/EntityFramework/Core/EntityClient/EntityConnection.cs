@@ -16,6 +16,7 @@ using System.Transactions;
 namespace System.Data.Entity.Core.EntityClient
 {
     using System.Data.Entity.Resources;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Class representing a connection for the conceptual layer. An entity connection may only
@@ -385,7 +386,7 @@ namespace System.Data.Entity.Core.EntityClient
             return GetMetadataWorkspace(true /* initializeAllCollections */);
         }
 
-        private bool ShouldRecalculateMetadataArtifactLoader(List<MetadataArtifactLoader> loaders)
+        private static bool ShouldRecalculateMetadataArtifactLoader(List<MetadataArtifactLoader> loaders)
         {
             if (loaders.Any(loader => loader.GetType() == typeof(MetadataArtifactLoaderCompositeFile)))
             {
@@ -444,7 +445,7 @@ namespace System.Data.Entity.Core.EntityClient
 
                     if (initializeAllCollections && !_metadataWorkspace.IsItemCollectionAlreadyRegistered(DataSpace.SSpace))
                     {
-                        LoadStoreItemCollections(_metadataWorkspace, _storeConnection, _providerFactory, _effectiveConnectionOptions, edmItemCollection, _artifactLoader);
+                        LoadStoreItemCollections(_metadataWorkspace, _storeConnection, _effectiveConnectionOptions, edmItemCollection, _artifactLoader);
                         _artifactLoader = null;
                         _initialized = true;
                     }
@@ -777,7 +778,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// Cleans up this connection object
         /// </summary>
         /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_currentTransaction")]
+        [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_currentTransaction")]
         [ResourceExposure(ResourceScope.None)] //We are not exposing any resource
         [ResourceConsumption(ResourceScope.Machine, ResourceScope.Machine)] //For ChangeConnectionString method call. But since the connection string we pass in is an Empty String,
                                                      //we consume the resource and do not expose it any further.
@@ -955,7 +956,6 @@ namespace System.Data.Entity.Core.EntityClient
 
         private static void LoadStoreItemCollections(MetadataWorkspace workspace,
                                                      DbConnection storeConnection,
-                                                     DbProviderFactory factory,
                                                      DbConnectionOptions connectionOptions,
                                                      EdmItemCollection edmItemCollection,
                                                      MetadataArtifactLoader artifactLoader)                                                     
@@ -1247,7 +1247,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         /// Returns the DbProviderFactory associated with specified provider string
         /// </summary>
-        private DbProviderFactory GetFactory(string providerString)
+        private static DbProviderFactory GetFactory(string providerString)
         {
             try
             {
@@ -1262,7 +1262,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         /// Uses DbProviderFactory to create a DbConnection
         /// </summary>
-        private DbConnection GetStoreConnection(DbProviderFactory factory)
+        private static DbConnection GetStoreConnection(DbProviderFactory factory)
         {
             DbConnection storeConnection = factory.CreateConnection();
             if (storeConnection == null)

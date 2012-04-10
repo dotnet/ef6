@@ -8,12 +8,13 @@ using System.Diagnostics;
 
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Aggregates are pseudo-expressions. They look and feel like expressions, but 
     /// are severely restricted in where they can appear - only in the aggregates clause
     /// of a group-by expression.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public abstract class DbAggregate
     {
         private readonly DbExpressionList _args;
@@ -46,7 +47,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// The aggregate type that corresponds to exposing the collection of elements that comprise a group
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbGroupAggregate : DbAggregate
     {
         internal DbGroupAggregate(TypeUsage resultType, DbExpressionList arguments)
@@ -58,7 +58,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// The aggregate type that corresponds to the invocation of an aggregate function.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public sealed class DbFunctionAggregate : DbAggregate
     {
         private bool _distinct;

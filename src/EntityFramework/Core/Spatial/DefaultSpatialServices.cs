@@ -4,6 +4,8 @@ using System.Data.Entity.Core.Spatial.Internal;
 
 namespace System.Data.Entity.Core.Spatial
 {
+    using System.Diagnostics.CodeAnalysis;
+
     [Serializable]
     internal sealed class DefaultSpatialServices : DbSpatialServices
     {
@@ -152,7 +154,7 @@ namespace System.Data.Entity.Core.Spatial
             throw SpatialServicesUnavailable();
         }
 
-         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "MultiPolygon", Justification = "Match MultiPoint, MultiLine")]
+         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "MultiPolygon", Justification = "Match MultiPoint, MultiLine")]
          public override DbGeography GeographyMultiPolygonFromBinary(byte[] geographyBinary, int spatialReferenceSystemId)
         {
             // Without a backing implementation, this method cannot enforce the requirement that the result be of the specified geometry type
@@ -213,7 +215,7 @@ namespace System.Data.Entity.Core.Spatial
             throw SpatialServicesUnavailable();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "MultiPolygon", Justification = "Match MultiPoint, MultiLine")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "MultiPolygon", Justification = "Match MultiPoint, MultiLine")]
         public override DbGeography GeographyMultiPolygonFromText(string geographyText, int spatialReferenceSystemId)
         {
             // Without a backing implementation, this method cannot enforce the requirement that the result be of the specified geometry type
@@ -506,7 +508,7 @@ namespace System.Data.Entity.Core.Spatial
             throw SpatialServicesUnavailable();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "MultiPolygon", Justification = "Match MultiPoint, MultiLine")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "MultiPolygon", Justification = "Match MultiPoint, MultiLine")]
         public override DbGeometry GeometryMultiPolygonFromBinary(byte[] geometryBinary, int spatialReferenceSystemId)
         {
             // Without a backing implementation, this method cannot enforce the requirement that the result be of the specified geometry type
@@ -567,7 +569,7 @@ namespace System.Data.Entity.Core.Spatial
             throw SpatialServicesUnavailable();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "MultiPolygon", Justification = "Match MultiPoint, MultiLine")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "MultiPolygon", Justification = "Match MultiPoint, MultiLine")]
         public override DbGeometry GeometryMultiPolygonFromText(string geometryText, int spatialReferenceSystemId)
         {
             // Without a backing implementation, this method cannot enforce the requirement that the result be of the specified geometry type

@@ -9,10 +9,11 @@ using System.Data.Entity.Core.Common.CommandTrees.Internal;
 
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Describes the different "kinds" (classes) of expressions
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public enum DbExpressionKind
     {
         /// <summary>
@@ -58,7 +59,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Dereference.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Deref")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Deref")]
         Deref = 8,
 
         /// <summary>
@@ -317,7 +318,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// The base type for all expressions
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public abstract class DbExpression
     {
         private readonly TypeUsage _type;
@@ -692,16 +692,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         #region Internal API
 
-        /// <summary>
-        /// Produces a text-based tree representation of the DbExpression tree rooted at this expression
-        /// </summary>
-        /// <returns>A string containing the text-based tree representation</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal string Print()
-        {
-            return new ExpressionPrinter().Print(this);
-        }
-               
         internal static void CheckExpressionKind(DbExpressionKind kind)
         {
             // Add new valid DbExpressionKind values to this method as well as the enum itself.
@@ -718,7 +708,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// The abstract base type for expressions that accept two expression operands.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public abstract class DbBinaryExpression : DbExpression
     {
         private readonly DbExpression _left;
@@ -748,7 +737,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// The abstract base type for expressions that accept a single expression operand
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
     public abstract class DbUnaryExpression : DbExpression
     {
         private readonly DbExpression _argument;

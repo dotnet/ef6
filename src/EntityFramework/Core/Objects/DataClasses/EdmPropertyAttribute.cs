@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
 #pragma warning disable 3015 // no accessible constructors which use only CLS-compliant types
 
@@ -9,7 +10,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     /// Implied default AttributeUsage properties Inherited=True, AllowMultiple=False,
     /// The metadata system expects this and will only look at the first of each of these attributes, even if there are more.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm")]
     [AttributeUsage(AttributeTargets.Property)]
     public abstract class EdmPropertyAttribute: System.Attribute
     {

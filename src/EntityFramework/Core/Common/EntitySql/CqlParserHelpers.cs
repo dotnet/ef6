@@ -22,8 +22,6 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         private uint _methodExprCounter;
         private Stack<uint> _methodExprCounterStack;
-        
-        private string _version = YYMAJOR.ToString(NumberFormatInfo.InvariantInfo) + '.' + YYMINOR.ToString(NumberFormatInfo.InvariantInfo);
 
         internal CqlParser(ParserOptions parserOptions, bool debug)
         {

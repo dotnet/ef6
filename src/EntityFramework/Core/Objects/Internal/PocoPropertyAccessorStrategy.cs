@@ -275,7 +275,7 @@
                     Type entityType = _entity.GetType();
                     string propName = relatedEnd.TargetAccessor.PropertyName;
                     Type navPropType = GetNavigationPropertyType(entityType, propName);
-                    relatedEnd.TargetAccessor.CollectionCreate = CreateCollectionCreateDelegate(entityType, navPropType, propName);
+                    relatedEnd.TargetAccessor.CollectionCreate = CreateCollectionCreateDelegate(navPropType, propName);
                 }
                 return relatedEnd.TargetAccessor.CollectionCreate();
 
@@ -286,7 +286,7 @@
         /// We only get here if a navigation property getter returns null.  In this case, we try to set the
         /// navigation property to some collection that will work.
         /// </summary>
-        private static Func<object> CreateCollectionCreateDelegate(Type entityType, Type navigationPropertyType, string propName)
+        private static Func<object> CreateCollectionCreateDelegate(Type navigationPropertyType, string propName)
         {
             var typeToInstantiate = EntityUtil.DetermineCollectionType(navigationPropertyType);
 

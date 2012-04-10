@@ -161,7 +161,7 @@
         /// function.
         /// </remarks>
         /// <returns>Row type.</returns>
-        internal TypeUsage GetExpectedTargetResultType(MetadataWorkspace workspace, int resultSetIndex)
+        internal TypeUsage GetExpectedTargetResultType(int resultSetIndex)
         {
             FunctionImportStructuralTypeMappingKB resultMapping = this.GetResultMapping(resultSetIndex);
             
@@ -210,7 +210,7 @@
                     // tools (there is no reliable way of determining this metadata automatically from SQL
                     // Server).
 
-                    TypeUsage type = TypeUsage.CreateStringTypeUsage(workspace.GetModelPrimitiveType(PrimitiveTypeKind.String), true, false);
+                    TypeUsage type = TypeUsage.CreateStringTypeUsage(MetadataWorkspace.GetModelPrimitiveType(PrimitiveTypeKind.String), true, false);
                     columns.Add(discriminatorColumn, type);
                 }
             }

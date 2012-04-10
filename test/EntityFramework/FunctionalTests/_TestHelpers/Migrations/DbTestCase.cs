@@ -123,8 +123,6 @@ namespace System.Data.Entity.Migrations
                         "System.Data.Entity.Migrations",
                         migration.GetType().Name);
 
-            //Console.WriteLine(generatedMigration.UserCode);
-
             return new DbMigrator(CreateMigrationsConfiguration<TContext>(scaffoldedMigrations: generatedMigration));
         }
 

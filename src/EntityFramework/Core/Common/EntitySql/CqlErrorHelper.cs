@@ -3,6 +3,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
     /// <summary>
@@ -53,6 +54,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <param name="aliasName"></param>
         /// <param name="errCtx"></param>
         /// <param name="contextMessage"></param>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.EntityUtil.EntitySqlError(System.Data.Entity.Core.Common.EntitySql.ErrorContext,System.String)")]
         internal static void ReportAliasAlreadyUsedError( string aliasName, ErrorContext errCtx, string contextMessage )
         {
             throw EntityUtil.EntitySqlError(errCtx, String.Format(CultureInfo.InvariantCulture, "{0} {1}", System.Data.Entity.Resources.Strings.AliasNameAlreadyUsed(aliasName), contextMessage));

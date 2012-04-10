@@ -22,10 +22,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private ISchemaElementLookUpTable<StructuredProperty> _properties = null;
         #endregion
 
-        #region Static Fields
-        private static readonly char[] NameSeparators = new char[] { '.' };
-        #endregion
-
         #region Public Properties
         /// <summary>
         /// 

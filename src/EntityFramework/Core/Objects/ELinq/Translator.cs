@@ -10,6 +10,7 @@
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -190,6 +191,7 @@
             private static bool s_vbPropertiesInitialized;
             private static readonly object s_vbInitializerLock = new object();
 
+            [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "System.Data.Entity.Core.Objects.ELinq.ExpressionConverter+MemberAccessTranslator.#.cctor()")]
             static MemberAccessTranslator()
             {
                 // initialize translators for specific properties
@@ -365,8 +367,8 @@
                             ExpressionConverter.EntityCollectionOwnerColumnName, instance));
                         collectionColumns.Add(new KeyValuePair<string, DbExpression>(
                             ExpressionConverter.EntityCollectionElementsColumnName, propertyExpression));
-                        propertyExpression = parent.CreateNewRowExpression(collectionColumns,
-                            InitializerMetadata.CreateEntityCollectionInitializer(parent.EdmItemCollection, ((PropertyInfo)clrMember).PropertyType, navProp));
+                        propertyExpression = CreateNewRowExpression(collectionColumns,
+                            InitializerMetadata.CreateEntityCollectionInitializer(parent.EdmItemCollection, propertyType, navProp));
                     }
                 }
                 return propertyExpression;
@@ -659,7 +661,7 @@
                 {
                     DbExpression argument = parent.TranslateExpression(call.Expression);
                     Debug.Assert(!TypeSemantics.IsCollectionType(argument.ResultType), "Did not expect collection type");
-                    return parent.CreateIsNullExpression(argument, call.Expression.Type).Not();
+                    return CreateIsNullExpression(argument, call.Expression.Type).Not();
                 }
             }
 
@@ -741,7 +743,7 @@
                 }
                 parent.ValidateInitializerMetadata(initializerMetadata);
 
-                DbNewInstanceExpression projection = parent.CreateNewRowExpression(recordColumns, initializerMetadata);
+                DbNewInstanceExpression projection = CreateNewRowExpression(recordColumns, initializerMetadata);
 
                 return projection;
             }
@@ -849,10 +851,10 @@
                 {
                     // Construct a new initializer type in metadata for this projection (provides the
                     // necessary context for the object materializer)
-                    initializerMetadata = InitializerMetadata.CreateProjectionInitializer(parent.EdmItemCollection, linq, members);
+                    initializerMetadata = InitializerMetadata.CreateProjectionInitializer(parent.EdmItemCollection, linq);
                 }
                 parent.ValidateInitializerMetadata(initializerMetadata);
-                DbNewInstanceExpression projection = parent.CreateNewRowExpression(recordColumns, initializerMetadata);
+                DbNewInstanceExpression projection = CreateNewRowExpression(recordColumns, initializerMetadata);
 
                 return projection;
             }
@@ -925,7 +927,7 @@
                 // CASE WHEN IsNull(left) THEN right ELSE left
 
                 // construct IsNull
-                DbExpression isNull = parent.CreateIsNullExpression(left, linq.Left.Type);
+                DbExpression isNull = CreateIsNullExpression(left, linq.Left.Type);
 
                 // construct case expression
                 List<DbExpression> whenExpressions = new List<DbExpression>(1);
@@ -1029,7 +1031,7 @@
                 DbExpression inputCqt = parent.TranslateExpression(input);
 
                 // create IsNull expression
-                return parent.CreateIsNullExpression(inputCqt, input.Type);
+                return ExpressionConverter.CreateIsNullExpression(inputCqt, input.Type);
             }
             private static bool ExpressionIsNullConstant(Expression expression)
             {
@@ -1074,7 +1076,7 @@
             {
                 DbExpression operand = parent.TranslateExpression(linq.Expression);
                 TypeUsage fromType = operand.ResultType;
-                TypeUsage toType = parent.GetIsOrAsTargetType(fromType, ExpressionType.TypeIs, linq.TypeOperand, linq.Expression.Type);
+                TypeUsage toType = parent.GetIsOrAsTargetType(ExpressionType.TypeIs, linq.TypeOperand, linq.Expression.Type);
                 return operand.IsOf(toType);
             }
         }
@@ -1272,7 +1274,7 @@
             protected override DbExpression TranslateUnary(ExpressionConverter parent, System.Linq.Expressions.UnaryExpression unary, DbExpression operand)
             {
                 TypeUsage fromType = operand.ResultType;
-                TypeUsage toType = parent.GetIsOrAsTargetType(fromType, ExpressionType.TypeAs, unary.Type, unary.Operand.Type);
+                TypeUsage toType = parent.GetIsOrAsTargetType(ExpressionType.TypeAs, unary.Type, unary.Operand.Type);
                 return operand.TreatAs(toType);
             }
         }

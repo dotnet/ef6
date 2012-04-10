@@ -22,6 +22,8 @@ using System.Data.Entity.Core.Query.InternalTrees;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// The Predicate class represents a condition (predicate) in CNF. 
     /// A predicate consists of a number of "simple" parts, and the parts are considered to be 
@@ -65,6 +67,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="command">current iqt command</param>
         /// <param name="andTree">the node tree</param>
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal Predicate(Command command, Node andTree)
             : this(command)
         {
