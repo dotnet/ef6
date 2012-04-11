@@ -84,7 +84,6 @@
     <Compile Include="StoreVersion.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Changes in .NET 4.0.txt" />
     <None Include="Resources\Common.ConceptualSchemaDefinition.csdl" />
     <None Include="Resources\Common.ProviderManifest.xsd" />
     <None Include="Resources\System.Data.Resources.CSDLSchema.xsd" />
@@ -95,10 +94,7 @@
     <EmbeddedResource Include="Resources\SampleProviderServices.StoreSchemaDefinition.ssdl" />
     <EmbeddedResource Include="Resources\SampleProviderServices.StoreSchemaMapping.msl" />
     <EmbeddedResource Include="Resources\SampleProviderServices.ProviderManifest.xml" />
-    <Content Include="Changes from Beta 1.txt" />
-    <Content Include="Changes from Beta 2.txt" />
-    <Content Include="Changes from Beta 3.txt" />
-    <Content Include="Changes from SP1 Beta.txt" />
+    <Content Include="Changelog.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

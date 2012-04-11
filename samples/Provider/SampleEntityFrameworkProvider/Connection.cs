@@ -30,5 +30,13 @@ namespace SampleEntityFrameworkProvider
                 return SampleFactory.Instance;
             }
         }
+
+        internal DbProviderFactory ProviderFactory
+        {
+            get 
+            { 
+                return DbProviderFactory;
+            }
+        }
     }
 }
