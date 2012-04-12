@@ -890,13 +890,13 @@
         {
         }
 
-        [Fact(Skip = @"
-        Ignored for now because even with Connection Timeout=1 the connection to a bad server
-        can still take over 20 seconds to fail. This is apparently because of the way timeouts work on
-        SqlConnection which is that the timeout specified is a minimum value and if the APIs being called
-        just take longer to fail than the timeout then so be it.
-        The code is left in place so it can be run manually to check this is working correctly anytime the
-        GetProviderManifestTokenChecked method is changed.")]
+        [Fact(Skip = @"DbConnection timeout issue.")]
+        // Ignored for now because even with Connection Timeout=1 the connection to a bad server
+        // can still take over 20 seconds to fail. This is apparently because of the way timeouts work on
+        // SqlConnection which is that the timeout specified is a minimum value and if the APIs being called
+        // just take longer to fail than the timeout then so be it.
+        // The code is left in place so it can be run manually to check this is working correctly anytime the
+        // GetProviderManifestTokenChecked method is changed.
         public void Useful_exception_is_thrown_if_model_creation_happens_with_bad_MVC4_connection_string()
         {
             var previousConnectionFactory = Database.DefaultConnectionFactory;
@@ -923,13 +923,13 @@
             }
         }
 
-        [Fact(Skip = @"
-        Ignored for now because even with Connection Timeout=1 the connection to a bad server
-        can still take over 20 seconds to fail. This is apparently because of the way timeouts work on
-        SqlConnection which is that the timeout specified is a minimum value and if the APIs being called
-        just take longer to fail than the timeout then so be it.
-        The code is left in place so it can be run manually to check this is working correctly anytime the
-        GetProviderManifestTokenChecked method is changed.")]
+        [Fact(Skip = @"DbConnection timeout issue.")]
+        // Ignored for now because even with Connection Timeout=1 the connection to a bad server
+        // can still take over 20 seconds to fail. This is apparently because of the way timeouts work on
+        // SqlConnection which is that the timeout specified is a minimum value and if the APIs being called
+        // just take longer to fail than the timeout then so be it.
+        // The code is left in place so it can be run manually to check this is working correctly anytime the
+        // GetProviderManifestTokenChecked method is changed.
         public void Useful_exception_is_thrown_if_model_creation_happens_with_general_bad_connection_string()
         {
             using (var context = new BadConnectionStringContext())

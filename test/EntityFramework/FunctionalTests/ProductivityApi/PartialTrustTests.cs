@@ -124,7 +124,7 @@
         }
 
         // Dev11 216491
-        [Fact(Skip = "Not fixed in Dev 11 beta. Dev11 347808")]
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void IsAspNetEnvironment_swallows_security_exception_when_System_Web_is_considered_non_APTCA()
         {
             var withReflectionPermission = (PartialTrustCode)PartialTrustHelpers

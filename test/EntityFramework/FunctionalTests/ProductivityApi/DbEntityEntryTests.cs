@@ -741,7 +741,7 @@ namespace ProductivityApiTests
 
         #region Removing demoted state entries from dangling FKs index (Dev11 322801)
 
-        [Fact(Skip = "Not fixed in Dev 11 beta. Dev11 347808")]
+        [Fact]
         public void State_entries_demoted_to_stubs_should_be_removed_from_dangling_foreign_keys_index()
         {
             using (var context = new MixedIAAndFKContext())
@@ -758,7 +758,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact(Skip = "Not fixed in Dev 11 beta. Dev11 347808")]
+        [Fact]
         public void State_entries_demoted_to_stub_and_then_detached_should_be_removed_from_dangling_foreign_keys_index()
         {
             using (var context = new MixedIAAndFKContext())
