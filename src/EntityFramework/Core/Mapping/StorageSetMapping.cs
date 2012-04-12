@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.Utils;
-using System.Diagnostics;
-using System.Linq;
-
 namespace System.Data.Entity.Core.Mapping
 {
-    using Triple = Pair<EntitySetBase, Pair<EntityTypeBase, bool>>;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+    using System.Linq;
+    using Triple = Common.Utils.Pair<Metadata.Edm.EntitySetBase, Common.Utils.Pair<Metadata.Edm.EntityTypeBase, bool>>;
 
     /// <summary>
     /// Represents the Mapping metadata for an Extent in CS space.

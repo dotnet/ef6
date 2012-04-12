@@ -365,7 +365,6 @@
     <Compile Include="Core\EntityResCategoryAttribute.cs" />
     <Compile Include="Core\EntityResDescriptionAttribute.cs" />
     <Compile Include="Core\EntitySqlException.cs" />
-    <Compile Include="Core\EntityState.cs" />
     <Compile Include="Core\IEntityAdapter.cs" />
     <Compile Include="Core\IEntityStateEntry.cs" />
     <Compile Include="Core\IEntityStateManager.cs" />
@@ -853,6 +852,7 @@
     <Compile Include="Core\UpdateException.cs" />
     <Compile Include="Edm\EdmEnumType.cs" />
     <Compile Include="Edm\EdmEnumTypeMember.cs" />
+    <Compile Include="EntityState.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Infrastructure\DbConnectionInfo.cs">
       <SubType>Code</SubType>

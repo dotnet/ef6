@@ -10,6 +10,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
+
 // for TypeHelpers
 
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]

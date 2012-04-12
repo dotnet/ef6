@@ -1,20 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity;
-using System.Data.Entity.Core.Mapping.ViewGeneration;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-
-// All methods prefixed with 'Serialized' have locked access through the shared Memoizer. Do not call it from outside the Memoizer's scope.
+﻿// All methods prefixed with 'Serialized' have locked access through the shared Memoizer. Do not call it from outside the Memoizer's scope.
 
 namespace System.Data.Entity.Core.Mapping
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Mapping.ViewGeneration;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
-    using OfTypeQVCacheKey = Pair<EntitySetBase, Pair<EntityTypeBase, bool>>;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Reflection;
+    using OfTypeQVCacheKey = System.Data.Entity.Core.Common.Utils.Pair<Metadata.Edm.EntitySetBase, Common.Utils.Pair<Metadata.Edm.EntityTypeBase, bool>>;
 
     public partial class StorageMappingItemCollection : MappingItemCollection
     {

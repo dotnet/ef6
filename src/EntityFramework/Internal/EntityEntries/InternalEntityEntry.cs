@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Data.Common;
-    using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.DataClasses;
