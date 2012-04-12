@@ -1,5 +1,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
+    using System.Data.Entity.Resources;
+
     /// <summary>
     /// Represents an ast node for namespace import (using nsABC;)
     /// </summary>
@@ -31,10 +33,10 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         {
             _namespaceAlias = null;
 
-            Identifier aliasId = bltInExpr.Arg1 as Identifier;
+            var aliasId = bltInExpr.Arg1 as Identifier;
             if (aliasId == null)
             {
-                throw EntityUtil.EntitySqlError(bltInExpr.Arg1.ErrCtx, System.Data.Entity.Resources.Strings.InvalidNamespaceAlias);
+                throw EntityUtil.EntitySqlError(bltInExpr.Arg1.ErrCtx, Strings.InvalidNamespaceAlias);
             }
 
             _namespaceAlias = aliasId;

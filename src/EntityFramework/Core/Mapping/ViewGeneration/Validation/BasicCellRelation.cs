@@ -1,24 +1,23 @@
-using System.Collections.Generic;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
-using System.Text;
-using System.Diagnostics;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity.Core.Metadata.Edm;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 {
-
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+    using System.Text;
     using BasicSchemaConstraints = SchemaConstraints<BasicKeyConstraint>;
 
     // This class represents a relation signature that lists all scalar
     // slots for the join tree in cell query (before projection)
     internal class BasicCellRelation : CellRelation
     {
-
         #region Constructor
+
         // effects: Creates a basic cell relation for query
-        internal BasicCellRelation(CellQuery cellQuery, ViewCellRelation viewCellRelation,
-                                   IEnumerable<MemberProjectedSlot> slots)
+        internal BasicCellRelation(
+            CellQuery cellQuery, ViewCellRelation viewCellRelation,
+            IEnumerable<MemberProjectedSlot> slots)
             : base(viewCellRelation.CellNumber)
         {
             m_cellQuery = cellQuery;
@@ -26,30 +25,37 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             Debug.Assert(m_slots.Count > 0, "Cell relation with not even an exent?");
             m_viewCellRelation = viewCellRelation;
         }
+
         #endregion
 
         #region Fields
-        private CellQuery m_cellQuery;
-        private List<MemberProjectedSlot> m_slots;
-        private ViewCellRelation m_viewCellRelation; // The viewcellrelation
+
+        private readonly CellQuery m_cellQuery;
+        private readonly List<MemberProjectedSlot> m_slots;
+        private readonly ViewCellRelation m_viewCellRelation; // The viewcellrelation
         // corresponding to this basiccellrelation
+
         #endregion
 
         #region Properties
+
         internal ViewCellRelation ViewCellRelation
         {
             get { return m_viewCellRelation; }
         }
+
         #endregion
 
         #region Key Constraints Methods
+
         // effects: Modifies constraints to contain the key constraints that
         // are present in this relation
         internal void PopulateKeyConstraints(BasicSchemaConstraints constraints)
         {
             Debug.Assert(this == m_cellQuery.BasicCellRelation, "Cellquery does not point to the correct BasicCellRelation?");
-            Debug.Assert(m_cellQuery.Extent is EntitySet || m_cellQuery.Extent is AssociationSet,
-                         "Top level extents handled is currently entityset or association set");
+            Debug.Assert(
+                m_cellQuery.Extent is EntitySet || m_cellQuery.Extent is AssociationSet,
+                "Top level extents handled is currently entityset or association set");
             if (m_cellQuery.Extent is EntitySet)
             {
                 PopulateKeyConstraintsForEntitySet(constraints);
@@ -64,11 +70,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         // effects: Adds any key constraints present in this to constraints
         private void PopulateKeyConstraintsForEntitySet(BasicSchemaConstraints constraints)
         {
-            MemberPath prefix = new MemberPath(m_cellQuery.Extent);
-            EntityType entityType = (EntityType)m_cellQuery.Extent.ElementType;
+            var prefix = new MemberPath(m_cellQuery.Extent);
+            var entityType = (EntityType)m_cellQuery.Extent.ElementType;
 
             // Get all the keys for the entity type and create the key constraints
-            List<ExtentKey> keys = ExtentKey.GetKeysForEntityType(prefix, entityType);
+            var keys = ExtentKey.GetKeysForEntityType(prefix, entityType);
             AddKeyConstraints(keys, constraints);
         }
 
@@ -77,7 +83,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         // constraints
         private void PopulateKeyConstraintsForRelationshipSet(BasicSchemaConstraints constraints)
         {
-            AssociationSet relationshipSet = m_cellQuery.Extent as AssociationSet;
+            var relationshipSet = m_cellQuery.Extent as AssociationSet;
             // Gather all members of all keys
             // CHANGE_ADYA_FEATURE_KEYS: assume that an Entity has exactly one key. Otherwise we
             // have to take a cross-product of all keys
@@ -85,18 +91,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             // Keep track of all the key members for the association in a set
             // so that if no end corresponds to a key, we use all the members
             // to form the key
-            Set<MemberPath> associationKeyMembers = new Set<MemberPath>(MemberPath.EqualityComparer);
-            bool hasAnEndThatFormsKey = false;
+            var associationKeyMembers = new Set<MemberPath>(MemberPath.EqualityComparer);
+            var hasAnEndThatFormsKey = false;
 
             // Determine the keys of each end. If the end forms a key, add it
             // as a key to the set
 
-            foreach (AssociationSetEnd end in relationshipSet.AssociationSetEnds)
+            foreach (var end in relationshipSet.AssociationSetEnds)
             {
-                AssociationEndMember endMember = end.CorrespondingAssociationEndMember;
+                var endMember = end.CorrespondingAssociationEndMember;
 
-                MemberPath prefix = new MemberPath(relationshipSet, endMember);
-                List<ExtentKey> keys = ExtentKey.GetKeysForEntityType(prefix, end.EntitySet.ElementType);
+                var prefix = new MemberPath(relationshipSet, endMember);
+                var keys = ExtentKey.GetKeysForEntityType(prefix, end.EntitySet.ElementType);
                 Debug.Assert(keys.Count > 0, "No keys for entity?");
                 Debug.Assert(keys.Count == 1, "Currently, we only support primary keys");
 
@@ -114,8 +120,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             {
                 // No end is a key -- take all the end members and make a key
                 // based on that
-                ExtentKey key = new ExtentKey(associationKeyMembers);
-                ExtentKey[] keys = new ExtentKey[] { key };
+                var key = new ExtentKey(associationKeyMembers);
+                var keys = new[] { key };
                 AddKeyConstraints(keys, constraints);
             }
         }
@@ -124,21 +130,23 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         // each key present in keys
         private void AddKeyConstraints(IEnumerable<ExtentKey> keys, BasicSchemaConstraints constraints)
         {
-            foreach (ExtentKey key in keys)
+            foreach (var key in keys)
             {
                 // If the key is being projected, only then do we add the key constraint
 
-                List<MemberProjectedSlot> keySlots = MemberProjectedSlot.GetSlots(m_slots, key.KeyFields);
+                var keySlots = MemberProjectedSlot.GetSlots(m_slots, key.KeyFields);
                 if (keySlots != null)
                 {
-                    BasicKeyConstraint keyConstraint = new BasicKeyConstraint(this, keySlots);
+                    var keyConstraint = new BasicKeyConstraint(this, keySlots);
                     constraints.Add(keyConstraint);
                 }
             }
         }
+
         #endregion
 
         #region Comparer/String Methods
+
         protected override int GetHash()
         {
             // Note: Using CLR-Hashcode
@@ -153,6 +161,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             // Just print the extent name from slot 0
             StringUtil.FormatStringBuilder(builder, "{0}", m_slots[0]);
         }
+
         #endregion
     }
 }

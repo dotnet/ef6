@@ -1,16 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Xml;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Xml;
+
     internal sealed class IntegerFacetDescriptionElement : FacetDescriptionElement
     {
         public IntegerFacetDescriptionElement(TypeElement type, string name)
-        :base(type, name)
+            : base(type, name)
         {
         }
 
@@ -28,7 +24,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader">xml reader currently positioned at Default attribute</param>
         protected override void HandleDefaultAttribute(XmlReader reader)
         {
-            int value = -1;
+            var value = -1;
             if (HandleIntAttribute(reader, ref value))
             {
                 DefaultValue = value;

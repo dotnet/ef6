@@ -1,6 +1,3 @@
-using System.Data.Entity.Core.Objects;
-using System.Reflection;
-
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
     using System.Diagnostics.CodeAnalysis;
@@ -30,7 +27,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="complexObjectMemberName">The name of the property that is changing on complexObject</param>
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "object")]
         void EntityComplexMemberChanging(string entityMemberName, object complexObject, string complexObjectMemberName);
-        
+
         /// <summary>
         /// Used to report that a complex property has been changed        
         /// </summary>
@@ -44,6 +41,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// Returns the EntityState from the change tracker, or EntityState.Detached if this
         /// entity is not being managed by a change tracker
         /// </summary>
-        EntityState EntityState { get;  }
+        EntityState EntityState { get; }
     }
 }

@@ -1,8 +1,7 @@
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-
 namespace System.Data.Entity.Core
 {
+    using System.Data.Common;
+
     /// <summary>
     /// The IEntityAdapter interface allows adapters to support updates of entities stored in an IEntityCache.
     /// </summary>

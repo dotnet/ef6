@@ -1,10 +1,10 @@
-namespace System.Data.Entity.Core.Objects {
-
+namespace System.Data.Entity.Core.Objects
+{
     /// <summary>
     /// 
     /// </summary>
-    public enum MergeOption {
-
+    public enum MergeOption
+    {
         /// <summary>
         /// Will only append new (top level-unique) rows.  This is the default behavior.
         /// </summary>
@@ -13,12 +13,12 @@ namespace System.Data.Entity.Core.Objects {
         /// <summary>
         /// Same behavior as LoadOption.OverwriteChanges.
         /// </summary>
-        OverwriteChanges      = LoadOption.OverwriteChanges,
+        OverwriteChanges = LoadOption.OverwriteChanges,
 
         /// <summary>
         /// Same behavior as LoadOption.PreserveChanges.
         /// </summary>
-        PreserveChanges       = LoadOption.PreserveChanges,
+        PreserveChanges = LoadOption.PreserveChanges,
 
         /// <summary>
         /// Will not modify cache.
@@ -26,4 +26,3 @@ namespace System.Data.Entity.Core.Objects {
         NoTracking = 3,
     }
 }
-

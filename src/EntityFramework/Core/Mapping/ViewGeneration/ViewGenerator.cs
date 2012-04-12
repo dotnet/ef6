@@ -1,38 +1,37 @@
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity.Core.Common.Utils.Boolean;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Validation;
-using System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Linq;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration
 {
-    using ViewSet = KeyToListMap<EntitySetBase, GeneratedView>;
-    using CellGroup = Set<Cell>;
-    using WrapperBoolExpr = BoolExpr<LeftCellWrapper>;
-    using WrapperTrueExpr = TrueExpr<LeftCellWrapper>;
-    using WrapperFalseExpr = FalseExpr<LeftCellWrapper>;
-    using WrapperNotExpr = NotExpr<LeftCellWrapper>;
-    using WrapperOrExpr = OrExpr<LeftCellWrapper>;
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.Validation;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Text;
+    using ViewSet = System.Data.Entity.Core.Common.Utils.KeyToListMap<Metadata.Edm.EntitySetBase, GeneratedView>;
+    using CellGroup = System.Data.Entity.Core.Common.Utils.Set<Structures.Cell>;
+    using WrapperBoolExpr = System.Data.Entity.Core.Common.Utils.Boolean.BoolExpr<Structures.LeftCellWrapper>;
+    using WrapperTrueExpr = System.Data.Entity.Core.Common.Utils.Boolean.TrueExpr<Structures.LeftCellWrapper>;
+    using WrapperFalseExpr = System.Data.Entity.Core.Common.Utils.Boolean.FalseExpr<Structures.LeftCellWrapper>;
+    using WrapperNotExpr = System.Data.Entity.Core.Common.Utils.Boolean.NotExpr<Structures.LeftCellWrapper>;
+    using WrapperOrExpr = System.Data.Entity.Core.Common.Utils.Boolean.OrExpr<Structures.LeftCellWrapper>;
 
     // This class is responsible for generating query or update mapping
     // views from the initial cells.
     internal class ViewGenerator : InternalBase
     {
         #region Fields
-        private CellGroup m_cellGroup; // The initial cells from which we produce views
-        private ConfigViewGenerator m_config; // Configuration variables
-        private MemberDomainMap m_queryDomainMap;
-        private MemberDomainMap m_updateDomainMap;
-        private Dictionary<EntitySetBase, QueryRewriter> m_queryRewriterCache;
-        private List<ForeignConstraint> m_foreignKeyConstraints;
-        private StorageEntityContainerMapping m_entityContainerMapping;
+
+        private readonly CellGroup m_cellGroup; // The initial cells from which we produce views
+        private readonly ConfigViewGenerator m_config; // Configuration variables
+        private readonly MemberDomainMap m_queryDomainMap;
+        private readonly MemberDomainMap m_updateDomainMap;
+        private readonly Dictionary<EntitySetBase, QueryRewriter> m_queryRewriterCache;
+        private readonly List<ForeignConstraint> m_foreignKeyConstraints;
+        private readonly StorageEntityContainerMapping m_entityContainerMapping;
+
         #endregion
 
         #region Internal API - Only Gatekeeper calls it
@@ -40,23 +39,28 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         // effects: Creates a ViewGenerator object that is capable of
         // producing query or update mapping views given the relevant schema
         // given the "cells"
-        internal ViewGenerator(CellGroup cellGroup, ConfigViewGenerator config,
-                              List<ForeignConstraint> foreignKeyConstraints,
-                              StorageEntityContainerMapping entityContainerMapping)
+        internal ViewGenerator(
+            CellGroup cellGroup, ConfigViewGenerator config,
+            List<ForeignConstraint> foreignKeyConstraints,
+            StorageEntityContainerMapping entityContainerMapping)
         {
-
             m_cellGroup = cellGroup;
             m_config = config;
             m_queryRewriterCache = new Dictionary<EntitySetBase, QueryRewriter>();
             m_foreignKeyConstraints = foreignKeyConstraints;
             m_entityContainerMapping = entityContainerMapping;
 
-            Dictionary<EntityType, Set<EntityType>> inheritanceGraph = MetadataHelper.BuildUndirectedGraphOfTypes(entityContainerMapping.StorageMappingItemCollection.EdmItemCollection);
+            var inheritanceGraph =
+                MetadataHelper.BuildUndirectedGraphOfTypes(entityContainerMapping.StorageMappingItemCollection.EdmItemCollection);
             SetConfiguration(entityContainerMapping);
 
             // We fix all the cells at this point
-            m_queryDomainMap = new MemberDomainMap(ViewTarget.QueryView, m_config.IsValidationEnabled, cellGroup, entityContainerMapping.StorageMappingItemCollection.EdmItemCollection, m_config, inheritanceGraph);
-            m_updateDomainMap = new MemberDomainMap(ViewTarget.UpdateView, m_config.IsValidationEnabled, cellGroup, entityContainerMapping.StorageMappingItemCollection.EdmItemCollection, m_config, inheritanceGraph);
+            m_queryDomainMap = new MemberDomainMap(
+                ViewTarget.QueryView, m_config.IsValidationEnabled, cellGroup,
+                entityContainerMapping.StorageMappingItemCollection.EdmItemCollection, m_config, inheritanceGraph);
+            m_updateDomainMap = new MemberDomainMap(
+                ViewTarget.UpdateView, m_config.IsValidationEnabled, cellGroup,
+                entityContainerMapping.StorageMappingItemCollection.EdmItemCollection, m_config, inheritanceGraph);
 
             // We now go and fix the queryDomain map so that it has all the
             // values from the S-side as well -- this is needed for domain
@@ -69,11 +73,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
             // We need to simplify cell queries, yet we don't want the conditions to disappear
             // So, add an extra value to the domain, temporarily
-            MemberDomainMap queryOpenDomain = m_queryDomainMap.GetOpenDomain();
-            MemberDomainMap updateOpenDomain = m_updateDomainMap.GetOpenDomain();
+            var queryOpenDomain = m_queryDomainMap.GetOpenDomain();
+            var updateOpenDomain = m_updateDomainMap.GetOpenDomain();
 
             // Make sure the WHERE clauses of the cells reflect the changes
-            foreach (Cell cell in cellGroup)
+            foreach (var cell in cellGroup)
             {
                 cell.CQuery.WhereClause.FixDomainMap(queryOpenDomain);
                 cell.SQuery.WhereClause.FixDomainMap(updateOpenDomain);
@@ -96,13 +100,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         // views in result
         internal ErrorLog GenerateAllBidirectionalViews(ViewSet views, CqlIdentifiers identifiers)
         {
-
             // Allow missing attributes for now to make entity splitting run through
             // we cannot do this for query views in general: need to obtain the exact enumerated domain
 
             if (m_config.IsNormalTracing)
             {
-                StringBuilder builder = new StringBuilder();
+                var builder = new StringBuilder();
                 Cell.CellsToBuilder(builder, m_cellGroup);
                 Helpers.StringTraceLine(builder.ToString());
             }
@@ -110,8 +113,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             m_config.SetTimeForFinishedActivity(PerfType.CellCreation);
             // Check if the cellgroup is consistent and all known S constraints are
             // satisified by the known C constraints
-            CellGroupValidator validator = new CellGroupValidator(m_cellGroup, m_config);
-            ErrorLog errorLog = validator.Validate();
+            var validator = new CellGroupValidator(m_cellGroup, m_config);
+            var errorLog = validator.Validate();
 
             if (errorLog.Count > 0)
             {
@@ -144,7 +147,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 errorLog.PrintTrace();
                 return errorLog; // If we have discovered errors here, do not generate query views
             }
-            
+
             // Query views - do not allow missing attributes
             // For the S-side, we add NOT ... for each scalar constant so
             // that if we have C, P in the mapping but the store has C, P, S,
@@ -156,21 +159,22 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return errorLog;
         }
 
-        internal ErrorLog GenerateQueryViewForSingleExtent(ViewSet views, CqlIdentifiers identifiers, EntitySetBase entity, EntityTypeBase type, ViewGenMode mode)
+        internal ErrorLog GenerateQueryViewForSingleExtent(
+            ViewSet views, CqlIdentifiers identifiers, EntitySetBase entity, EntityTypeBase type, ViewGenMode mode)
         {
             Debug.Assert(mode != ViewGenMode.GenerateAllViews);
 
             if (m_config.IsNormalTracing)
             {
-                StringBuilder builder = new StringBuilder();
+                var builder = new StringBuilder();
                 Cell.CellsToBuilder(builder, m_cellGroup);
                 Helpers.StringTraceLine(builder.ToString());
             }
 
             // Check if the cellgroup is consistent and all known S constraints are
             // satisified by the known C constraints
-            CellGroupValidator validator = new CellGroupValidator(m_cellGroup, m_config);
-            ErrorLog errorLog = validator.Validate();
+            var validator = new CellGroupValidator(m_cellGroup, m_config);
+            var errorLog = validator.Validate();
             if (errorLog.Count > 0)
             {
                 errorLog.PrintTrace();
@@ -193,8 +197,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             // that if we have C, P in the mapping but the store has C, P, S,
             // we can handle it in the query views
             m_updateDomainMap.ExpandDomainsToIncludeAllPossibleValues();
-            
-            foreach (Cell cell in m_cellGroup)
+
+            foreach (var cell in m_cellGroup)
             {
                 cell.SQuery.WhereClause.FixDomainMap(m_updateDomainMap);
             }
@@ -204,20 +208,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return errorLog;
         }
 
-
         #endregion
-
-
 
         #region Private Methods
 
         // effects: Given the extent cells and a map for the domains of all
         // variables in it, fixes the cell constant domains of the where
         // clauses in the left queries of cells (left is defined using viewTarget)
-        private static void UpdateWhereClauseForEachCell(IEnumerable<Cell> extentCells, MemberDomainMap queryDomainMap,
-                                                            MemberDomainMap updateDomainMap, ConfigViewGenerator config)
+        private static void UpdateWhereClauseForEachCell(
+            IEnumerable<Cell> extentCells, MemberDomainMap queryDomainMap,
+            MemberDomainMap updateDomainMap, ConfigViewGenerator config)
         {
-            foreach (Cell cell in extentCells)
+            foreach (var cell in extentCells)
             {
                 cell.CQuery.UpdateWhereClause(queryDomainMap);
                 cell.SQuery.UpdateWhereClause(updateDomainMap);
@@ -229,21 +231,22 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             updateDomainMap.ReduceEnumerableDomainToEnumeratedValues(config);
         }
 
-
-        private ErrorLog GenerateQueryViewForExtentAndType(CqlIdentifiers identifiers, ViewSet views, EntitySetBase entity, EntityTypeBase type, ViewGenMode mode)
+        private ErrorLog GenerateQueryViewForExtentAndType(
+            CqlIdentifiers identifiers, ViewSet views, EntitySetBase entity, EntityTypeBase type, ViewGenMode mode)
         {
             Debug.Assert(mode != ViewGenMode.GenerateAllViews);
 
             // Keep track of the mapping exceptions that we have generated
-            ErrorLog errorLog = new ErrorLog();
+            var errorLog = new ErrorLog();
 
             if (m_config.IsViewTracing)
             {
                 Helpers.StringTraceLine(String.Empty);
                 Helpers.StringTraceLine(String.Empty);
-                Helpers.FormatTraceLine("================= Generating {0} Query View for: {1} ===========================",
-                                    (mode == ViewGenMode.OfTypeViews) ? "OfType" : "OfTypeOnly",
-                                    entity.Name);
+                Helpers.FormatTraceLine(
+                    "================= Generating {0} Query View for: {1} ===========================",
+                    (mode == ViewGenMode.OfTypeViews) ? "OfType" : "OfTypeOnly",
+                    entity.Name);
                 Helpers.StringTraceLine(String.Empty);
                 Helpers.StringTraceLine(String.Empty);
             }
@@ -251,8 +254,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             try
             {
                 // (1) view generation (checks that extents are fully mapped)
-                ViewgenContext context = CreateViewgenContext(entity, ViewTarget.QueryView, identifiers);
-                QueryRewriter queryRewriter = GenerateViewsForExtentAndType(type, context, identifiers, views, mode);
+                var context = CreateViewgenContext(entity, ViewTarget.QueryView, identifiers);
+                var queryRewriter = GenerateViewsForExtentAndType(type, context, identifiers, views, mode);
             }
             catch (InternalMappingException exception)
             {
@@ -264,7 +267,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return errorLog;
         }
 
-
         // requires: schema refers to C-side or S-side schema for the cells
         // inside this. if schema.IsQueryView is true, the left side of cells refers
         // to the C side (and vice-versa for the right side)
@@ -275,79 +277,86 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         // extents specified by cells and the the schemaContext
         private ErrorLog GenerateDirectionalViews(ViewTarget viewTarget, CqlIdentifiers identifiers, ViewSet views)
         {
-            bool isQueryView = viewTarget == ViewTarget.QueryView;
+            var isQueryView = viewTarget == ViewTarget.QueryView;
 
             // Partition cells by extent.
-            KeyToListMap<EntitySetBase, Cell> extentCellMap = GroupCellsByExtent(m_cellGroup, viewTarget);
+            var extentCellMap = GroupCellsByExtent(m_cellGroup, viewTarget);
 
             // Keep track of the mapping exceptions that we have generated
-            ErrorLog errorLog = new ErrorLog();
+            var errorLog = new ErrorLog();
 
             // Generate views for each extent
-            foreach (EntitySetBase extent in extentCellMap.Keys)
+            foreach (var extent in extentCellMap.Keys)
             {
                 if (m_config.IsViewTracing)
                 {
                     Helpers.StringTraceLine(String.Empty);
                     Helpers.StringTraceLine(String.Empty);
-                    Helpers.FormatTraceLine("================= Generating {0} View for: {1} ===========================",
-                                     isQueryView ? "Query" : "Update", extent.Name);
+                    Helpers.FormatTraceLine(
+                        "================= Generating {0} View for: {1} ===========================",
+                        isQueryView ? "Query" : "Update", extent.Name);
                     Helpers.StringTraceLine(String.Empty);
                     Helpers.StringTraceLine(String.Empty);
                 }
                 try
                 {
                     // (1) view generation (checks that extents are fully mapped)
-                    QueryRewriter queryRewriter = GenerateDirectionalViewsForExtent(viewTarget, extent, identifiers, views);
+                    var queryRewriter = GenerateDirectionalViewsForExtent(viewTarget, extent, identifiers, views);
 
                     // (2) validation for update views
-                    if (viewTarget == ViewTarget.UpdateView &&
+                    if (viewTarget == ViewTarget.UpdateView
+                        &&
                         m_config.IsValidationEnabled)
                     {
                         if (m_config.IsViewTracing)
                         {
                             Helpers.StringTraceLine(String.Empty);
                             Helpers.StringTraceLine(String.Empty);
-                            Helpers.FormatTraceLine("----------------- Validation for generated update view for: {0} -----------------",
-                                             extent.Name);
+                            Helpers.FormatTraceLine(
+                                "----------------- Validation for generated update view for: {0} -----------------",
+                                extent.Name);
                             Helpers.StringTraceLine(String.Empty);
                             Helpers.StringTraceLine(String.Empty);
                         }
 
-                        RewritingValidator validator = new RewritingValidator(queryRewriter.ViewgenContext, queryRewriter.BasicView);
+                        var validator = new RewritingValidator(queryRewriter.ViewgenContext, queryRewriter.BasicView);
                         validator.Validate();
                     }
-
                 }
                 catch (InternalMappingException exception)
                 {
                     // All exceptions have mapping errors in them
-                    Debug.Assert(exception.ErrorLog.Count > 0,
-                                 "Incorrectly created mapping exception");
+                    Debug.Assert(
+                        exception.ErrorLog.Count > 0,
+                        "Incorrectly created mapping exception");
                     errorLog.Merge(exception.ErrorLog);
                 }
             }
             return errorLog;
         }
 
-
         // effects: Generates a view for an extent "extent" that belongs to
         // schema "schema". extentCells are the cells for this extent.
         // Adds the view corrsponding to the extent to "views"
-        private QueryRewriter GenerateDirectionalViewsForExtent(ViewTarget viewTarget, EntitySetBase extent, CqlIdentifiers identifiers, ViewSet views)
+        private QueryRewriter GenerateDirectionalViewsForExtent(
+            ViewTarget viewTarget, EntitySetBase extent, CqlIdentifiers identifiers, ViewSet views)
         {
-
             // First normalize the cells in terms of multiconstants, etc
             // and then generate the view for the extent
-            ViewgenContext context = CreateViewgenContext(extent, viewTarget, identifiers);
+            var context = CreateViewgenContext(extent, viewTarget, identifiers);
             QueryRewriter queryRewriter = null;
 
             if (m_config.GenerateViewsForEachType)
             {
                 // generate views for each OFTYPE(Extent, Type) combination
-                foreach (EdmType type in MetadataHelper.GetTypeAndSubtypesOf(extent.ElementType, m_entityContainerMapping.StorageMappingItemCollection.EdmItemCollection, false /*includeAbstractTypes*/))
+                foreach (
+                    var type in
+                        MetadataHelper.GetTypeAndSubtypesOf(
+                            extent.ElementType, m_entityContainerMapping.StorageMappingItemCollection.EdmItemCollection, false
+                            /*includeAbstractTypes*/))
                 {
-                    if (m_config.IsViewTracing && false == type.Equals(extent.ElementType))
+                    if (m_config.IsViewTracing
+                        && false == type.Equals(extent.ElementType))
                     {
                         Helpers.FormatTraceLine("CQL View for {0} and type {1}", extent.Name, type.Name);
                     }
@@ -381,8 +390,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             {
                 // collect the cells that belong to this extent (just a few of them since we segment the mapping first)
                 var cellsForExtent = m_cellGroup.Where(c => c.GetLeftQuery(viewTarget).Extent == extent);
-                
-                return new ViewgenContext(viewTarget, extent, cellsForExtent, identifiers, m_config, m_queryDomainMap, m_updateDomainMap, m_entityContainerMapping);
+
+                return new ViewgenContext(
+                    viewTarget, extent, cellsForExtent, identifiers, m_config, m_queryDomainMap, m_updateDomainMap, m_entityContainerMapping);
             }
             else
             {
@@ -390,17 +400,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             }
         }
 
-
-        private QueryRewriter GenerateViewsForExtentAndType(EdmType generatedType, ViewgenContext context, CqlIdentifiers identifiers, ViewSet views, ViewGenMode mode)
+        private QueryRewriter GenerateViewsForExtentAndType(
+            EdmType generatedType, ViewgenContext context, CqlIdentifiers identifiers, ViewSet views, ViewGenMode mode)
         {
-
             Debug.Assert(mode != ViewGenMode.GenerateAllViews, "By definition this method can not handle generating views for all extents");
 
-            QueryRewriter queryRewriter = new QueryRewriter(generatedType, context, mode);
+            var queryRewriter = new QueryRewriter(generatedType, context, mode);
             queryRewriter.GenerateViewComponents();
 
             // Get the basic view
-            CellTreeNode basicView = queryRewriter.BasicView;
+            var basicView = queryRewriter.BasicView;
 
             if (m_config.IsNormalTracing)
             {
@@ -408,7 +417,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 Helpers.StringTraceLine(basicView.ToString());
             }
 
-            CellTreeNode simplifiedView = GenerateSimplifiedView(basicView, queryRewriter.UsedCells);
+            var simplifiedView = GenerateSimplifiedView(basicView, queryRewriter.UsedCells);
 
             if (m_config.IsNormalTracing)
             {
@@ -417,15 +426,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 Helpers.StringTraceLine(simplifiedView.ToString());
             }
 
-            CqlGenerator cqlGen = new CqlGenerator(simplifiedView,
-                                                   queryRewriter.CaseStatements, 
-                                                   identifiers,
-                                                   context.MemberMaps.ProjectedSlotMap,
-                                                   queryRewriter.UsedCells.Count, 
-                                                   queryRewriter.TopLevelWhereClause,
-                                                   m_entityContainerMapping.StorageMappingItemCollection);
+            var cqlGen = new CqlGenerator(
+                simplifiedView,
+                queryRewriter.CaseStatements,
+                identifiers,
+                context.MemberMaps.ProjectedSlotMap,
+                queryRewriter.UsedCells.Count,
+                queryRewriter.TopLevelWhereClause,
+                m_entityContainerMapping.StorageMappingItemCollection);
 
-            string eSQLView ;
+            string eSQLView;
             DbQueryCommandTree commandTree;
             if (m_config.GenerateEsql)
             {
@@ -438,7 +448,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 commandTree = cqlGen.GenerateCqt();
             }
 
-            GeneratedView generatedView = GeneratedView.CreateGeneratedView(context.Extent, generatedType, commandTree, eSQLView, m_entityContainerMapping.StorageMappingItemCollection, m_config);
+            var generatedView = GeneratedView.CreateGeneratedView(
+                context.Extent, generatedType, commandTree, eSQLView, m_entityContainerMapping.StorageMappingItemCollection, m_config);
             views.Add(context.Extent, generatedView);
 
             return queryRewriter;
@@ -451,23 +462,23 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             // create 'joined' variables, one for each cell
             // We know (say) that out of the 10 cells that we were given, only 7 (say) were
             // needed to construct the view for this extent.
-            int numBoolVars = usedCells.Count;
+            var numBoolVars = usedCells.Count;
             // We need the boolean expressions in Simplify. Precisely ont boolean expression is set to
             // true in each cell query
 
-            for (int i = 0; i < numBoolVars; i++)
+            for (var i = 0; i < numBoolVars; i++)
             {
                 // In the ith cell, set its boolean to be true (i.e., ith boolean)
                 usedCells[i].RightCellQuery.InitializeBoolExpressions(numBoolVars, i);
             }
 
-            CellTreeNode simplifiedView = CellTreeSimplifier.MergeNodes(basicView);
+            var simplifiedView = CellTreeSimplifier.MergeNodes(basicView);
             return simplifiedView;
         }
 
         private void CheckForeignKeyConstraints(ErrorLog errorLog)
         {
-            foreach (ForeignConstraint constraint in m_foreignKeyConstraints)
+            foreach (var constraint in m_foreignKeyConstraints)
             {
                 QueryRewriter childRewriter = null;
                 QueryRewriter parentRewriter = null;
@@ -481,15 +492,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         // the left query's extent and returns a dictionary for it
         private static KeyToListMap<EntitySetBase, Cell> GroupCellsByExtent(IEnumerable<Cell> cells, ViewTarget viewTarget)
         {
-
             // Partition cells by extent -- extent is the top node in
             // the tree. Even for compositions for now? CHANGE_ADYA_FEATURE_COMPOSITION
-            KeyToListMap<EntitySetBase, Cell> extentCellMap =
+            var extentCellMap =
                 new KeyToListMap<EntitySetBase, Cell>(EqualityComparer<EntitySetBase>.Default);
-            foreach (Cell cell in cells)
+            foreach (var cell in cells)
             {
                 // Get the cell query and determine its extent
-                CellQuery cellQuery = cell.GetLeftQuery(viewTarget);
+                var cellQuery = cell.GetLeftQuery(viewTarget);
                 extentCellMap.Add(cellQuery.Extent, cell);
             }
             return extentCellMap;
@@ -498,13 +508,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         #endregion
 
         #region String Methods
+
         internal override void ToCompactString(StringBuilder builder)
         {
             Cell.CellsToBuilder(builder, m_cellGroup);
         }
+
         #endregion
-
-
     }
-
 }

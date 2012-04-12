@@ -1,8 +1,8 @@
 ﻿namespace System.Data.Entity.Core.Objects.Internal
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -16,7 +16,7 @@
     internal sealed class EntityProxyTypeInfo
     {
         private readonly Type _proxyType;
-        private readonly ClrEntityType _entityType;        // The OSpace entity type that created this proxy info
+        private readonly ClrEntityType _entityType; // The OSpace entity type that created this proxy info
 
         internal const string EntityWrapperFieldName = "_entityWrapper";
         private const string InitializeEntityCollectionsName = "InitializeEntityCollections";
@@ -36,7 +36,9 @@
         private readonly Dictionary<Tuple<string, string>, AssociationType> _navigationPropertyAssociationTypes;
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-        internal EntityProxyTypeInfo(Type proxyType, ClrEntityType ospaceEntityType, DynamicMethod initializeCollections, List<PropertyInfo> baseGetters, List<PropertyInfo> baseSetters)
+        internal EntityProxyTypeInfo(
+            Type proxyType, ClrEntityType ospaceEntityType, DynamicMethod initializeCollections, List<PropertyInfo> baseGetters,
+            List<PropertyInfo> baseSetters)
         {
             Debug.Assert(proxyType != null, "proxyType must be non-null");
 
@@ -46,7 +48,7 @@
             _initializeCollections = initializeCollections;
 
             _navigationPropertyAssociationTypes = new Dictionary<Tuple<string, string>, AssociationType>();
-            foreach (NavigationProperty navigationProperty in ospaceEntityType.NavigationProperties)
+            foreach (var navigationProperty in ospaceEntityType.NavigationProperties)
             {
                 _navigationPropertyAssociationTypes.Add(
                     new Tuple<string, string>(
@@ -54,7 +56,8 @@
                         navigationProperty.ToEndMember.Name),
                     (AssociationType)navigationProperty.RelationshipType);
 
-                if (navigationProperty.RelationshipType.Name != navigationProperty.RelationshipType.FullName)
+                if (navigationProperty.RelationshipType.Name
+                    != navigationProperty.RelationshipType.FullName)
                 {
                     // Sometimes there isn't enough metadata to have a container name
                     // Default codegen doesn't qualify names
@@ -66,44 +69,46 @@
                 }
             }
 
-            FieldInfo entityWrapperField = proxyType.GetField(EntityWrapperFieldName, BindingFlags.DeclaredOnly | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+            var entityWrapperField = proxyType.GetField(
+                EntityWrapperFieldName, BindingFlags.DeclaredOnly | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
 
-            ParameterExpression Object_Parameter = Expression.Parameter(typeof(object), "proxy");
-            ParameterExpression Value_Parameter = Expression.Parameter(typeof(object), "value");
+            var Object_Parameter = Expression.Parameter(typeof(object), "proxy");
+            var Value_Parameter = Expression.Parameter(typeof(object), "value");
 
-            Debug.Assert(entityWrapperField != null, "entityWrapperField does not exist");   
+            Debug.Assert(entityWrapperField != null, "entityWrapperField does not exist");
 
             // Create the Wrapper Getter
-            Expression<Func<object, object>> lambda = Expression.Lambda<Func<object, object>>(
-                    Expression.Field(
-                        Expression.Convert(Object_Parameter, entityWrapperField.DeclaringType), entityWrapperField),
-                        Object_Parameter);
-            Func<object, object> getEntityWrapperDelegate = lambda.Compile();
+            var lambda = Expression.Lambda<Func<object, object>>(
+                Expression.Field(
+                    Expression.Convert(Object_Parameter, entityWrapperField.DeclaringType), entityWrapperField),
+                Object_Parameter);
+            var getEntityWrapperDelegate = lambda.Compile();
             Proxy_GetEntityWrapper = (object proxy) =>
-            {
-                // This code validates that the wrapper points to the proxy that holds the wrapper.
-                // This guards against mischief by switching this wrapper out for another one obtained
-                // from a different object.
-                IEntityWrapper wrapper = ((IEntityWrapper)getEntityWrapperDelegate(proxy));
-                if (wrapper != null && !object.ReferenceEquals(wrapper.Entity, proxy))
-                {
-                    throw new InvalidOperationException(System.Data.Entity.Resources.Strings.EntityProxyTypeInfo_ProxyHasWrongWrapper);
-                }
-                return wrapper;
-            };
+                                         {
+                                             // This code validates that the wrapper points to the proxy that holds the wrapper.
+                                             // This guards against mischief by switching this wrapper out for another one obtained
+                                             // from a different object.
+                                             var wrapper = ((IEntityWrapper)getEntityWrapperDelegate(proxy));
+                                             if (wrapper != null
+                                                 && !ReferenceEquals(wrapper.Entity, proxy))
+                                             {
+                                                 throw new InvalidOperationException(Strings.EntityProxyTypeInfo_ProxyHasWrongWrapper);
+                                             }
+                                             return wrapper;
+                                         };
 
             // Create the Wrapper setter
             Proxy_SetEntityWrapper = Expression.Lambda<Func<object, object, object>>(
-                    Expression.Assign(
-                        Expression.Field(
-                            Expression.Convert(Object_Parameter, entityWrapperField.DeclaringType),
-                            entityWrapperField),
-                        Value_Parameter),
-                    Object_Parameter, Value_Parameter).Compile();
+                Expression.Assign(
+                    Expression.Field(
+                        Expression.Convert(Object_Parameter, entityWrapperField.DeclaringType),
+                        entityWrapperField),
+                    Value_Parameter),
+                Object_Parameter, Value_Parameter).Compile();
 
-
-            ParameterExpression PropertyName_Parameter = Expression.Parameter(typeof(string), "propertyName");
-            MethodInfo baseGetterMethod = proxyType.GetMethod("GetBasePropertyValue", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(string) }, null);
+            var PropertyName_Parameter = Expression.Parameter(typeof(string), "propertyName");
+            var baseGetterMethod = proxyType.GetMethod(
+                "GetBasePropertyValue", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(string) }, null);
             if (baseGetterMethod != null)
             {
                 _baseGetter = Expression.Lambda<Func<object, string, object>>(
@@ -111,13 +116,15 @@
                     Object_Parameter, PropertyName_Parameter).Compile();
             }
 
-            ParameterExpression PropertyValue_Parameter = Expression.Parameter(typeof(object), "propertyName");
-            MethodInfo baseSetterMethod = proxyType.GetMethod("SetBasePropertyValue", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(string), typeof(object) }, null);
+            var PropertyValue_Parameter = Expression.Parameter(typeof(object), "propertyName");
+            var baseSetterMethod = proxyType.GetMethod(
+                "SetBasePropertyValue", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(string), typeof(object) }, null);
             if (baseSetterMethod != null)
             {
                 _baseSetter = Expression.Lambda<Action<object, string, object>>(
-                        Expression.Call(Expression.Convert(Object_Parameter, proxyType), baseSetterMethod, PropertyName_Parameter, PropertyValue_Parameter),
-                        Object_Parameter, PropertyName_Parameter, PropertyValue_Parameter).Compile();
+                    Expression.Call(
+                        Expression.Convert(Object_Parameter, proxyType), baseSetterMethod, PropertyName_Parameter, PropertyValue_Parameter),
+                    Object_Parameter, PropertyName_Parameter, PropertyValue_Parameter).Compile();
             }
 
             _propertiesWithBaseGetter = new HashSet<string>(baseGetters.Select(p => p.Name));
@@ -161,14 +168,17 @@
             get { return _baseSetter; }
         }
 
-        public bool TryGetNavigationPropertyAssociationType(string relationshipName, string targetRoleName, out AssociationType associationType)
+        public bool TryGetNavigationPropertyAssociationType(
+            string relationshipName, string targetRoleName, out AssociationType associationType)
         {
-            return _navigationPropertyAssociationTypes.TryGetValue(new Tuple<string, string>(relationshipName, targetRoleName), out associationType);
+            return _navigationPropertyAssociationTypes.TryGetValue(
+                new Tuple<string, string>(relationshipName, targetRoleName), out associationType);
         }
 
         public void ValidateType(ClrEntityType ospaceEntityType)
         {
-            if (ospaceEntityType != _entityType && ospaceEntityType.HashedDescription != _entityType.HashedDescription)
+            if (ospaceEntityType != _entityType
+                && ospaceEntityType.HashedDescription != _entityType.HashedDescription)
             {
                 Debug.Assert(ospaceEntityType.ClrType == _entityType.ClrType);
                 throw EntityUtil.DuplicateTypeForProxyType(ospaceEntityType.ClrType);

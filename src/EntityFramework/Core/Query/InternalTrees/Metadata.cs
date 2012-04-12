@@ -1,23 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Globalization;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Query.PlanCompiler;
+    using System.Diagnostics;
+    using System.Globalization;
+
     /// <summary>
     /// Describes metadata about a table
     /// </summary>
     internal class TableMD
     {
-        private List<ColumnMD> m_columns;
-        private List<ColumnMD> m_keys;
+        private readonly List<ColumnMD> m_columns;
+        private readonly List<ColumnMD> m_keys;
 
-        private EntitySetBase m_extent; // null for transient tables
-        private bool m_flattened;
+        private readonly EntitySetBase m_extent; // null for transient tables
+        private readonly bool m_flattened;
 
         /// <summary>
         /// private initializer
@@ -42,7 +40,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             : this(extent)
         {
             m_columns.Add(new ColumnMD("element", type));
-            m_flattened = !PlanCompiler.TypeUtils.IsStructuredType(type);
+            m_flattened = !TypeUtils.IsStructuredType(type);
         }
 
         /// <summary>
@@ -58,20 +56,21 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="properties">prperties corresponding to columns of the table</param>
         /// <param name="keyProperties"></param>
         /// <param name="extent">entityset corresponding to the table (if any)</param>
-        internal TableMD(IEnumerable<EdmProperty> properties, IEnumerable<EdmMember> keyProperties,
+        internal TableMD(
+            IEnumerable<EdmProperty> properties, IEnumerable<EdmMember> keyProperties,
             EntitySetBase extent)
             : this(extent)
         {
-            Dictionary<string, ColumnMD> columnMap = new Dictionary<string, ColumnMD>();
+            var columnMap = new Dictionary<string, ColumnMD>();
             m_flattened = true;
 
-            foreach (EdmProperty p in properties)
+            foreach (var p in properties)
             {
-                ColumnMD newColumn = new ColumnMD(p);
+                var newColumn = new ColumnMD(p);
                 m_columns.Add(newColumn);
                 columnMap[p.Name] = newColumn;
             }
-            foreach (EdmMember p in keyProperties)
+            foreach (var p in keyProperties)
             {
                 ColumnMD keyColumn;
                 if (!columnMap.TryGetValue(p.Name, out keyColumn))
@@ -88,22 +87,34 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         /// The extent metadata (if any)
         /// </summary>
-        internal EntitySetBase Extent { get { return m_extent; } }
+        internal EntitySetBase Extent
+        {
+            get { return m_extent; }
+        }
 
         /// <summary>
         /// List of columns of this table
         /// </summary>
-        internal List<ColumnMD> Columns { get { return m_columns; } }
+        internal List<ColumnMD> Columns
+        {
+            get { return m_columns; }
+        }
 
         /// <summary>
         /// Keys for this table
         /// </summary>
-        internal List<ColumnMD> Keys { get { return m_keys; } }
+        internal List<ColumnMD> Keys
+        {
+            get { return m_keys; }
+        }
 
         /// <summary>
         /// Is this table a "flat" table?
         /// </summary>
-        internal bool Flattened { get { return m_flattened; } }
+        internal bool Flattened
+        {
+            get { return m_flattened; }
+        }
 
         /// <summary>
         /// String form - for debugging
@@ -120,9 +131,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     /// </summary>
     internal class ColumnMD
     {
-        private string m_name;
-        private TypeUsage m_type;
-        private EdmMember m_property;
+        private readonly string m_name;
+        private readonly TypeUsage m_type;
+        private readonly EdmMember m_property;
 
         /// <summary>
         /// Default constructor
@@ -148,22 +159,25 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         /// Column Name
         /// </summary>
-        internal string Name { get { return m_name; } }
+        internal string Name
+        {
+            get { return m_name; }
+        }
 
         /// <summary>
         /// Datatype of the column
         /// </summary>
-        internal TypeUsage Type { get { return m_type; } }
+        internal TypeUsage Type
+        {
+            get { return m_type; }
+        }
 
         /// <summary>
         /// Is this column nullable ?
         /// </summary>
-        internal bool IsNullable 
+        internal bool IsNullable
         {
-            get
-            {
-                return (m_property == null) || TypeSemantics.IsNullable(m_property);
-            }
+            get { return (m_property == null) || TypeSemantics.IsNullable(m_property); }
         }
 
         /// <summary>
@@ -181,12 +195,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     /// </summary>
     internal class Table
     {
-        private TableMD m_tableMetadata;
-        private VarList m_columns;
-        private VarVec m_referencedColumns;
-        private VarVec m_keys;
-        private VarVec m_nonnullableColumns;
-        private int m_tableId;
+        private readonly TableMD m_tableMetadata;
+        private readonly VarList m_columns;
+        private readonly VarVec m_referencedColumns;
+        private readonly VarVec m_keys;
+        private readonly VarVec m_nonnullableColumns;
+        private readonly int m_tableId;
 
         internal Table(Command command, TableMD tableMetadata, int tableId)
         {
@@ -196,10 +210,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             m_nonnullableColumns = command.CreateVarVec();
             m_tableId = tableId;
 
-            Dictionary<string, ColumnVar> columnVarMap = new Dictionary<string, ColumnVar>();
-            foreach (ColumnMD c in tableMetadata.Columns)
+            var columnVarMap = new Dictionary<string, ColumnVar>();
+            foreach (var c in tableMetadata.Columns)
             {
-                ColumnVar v = command.CreateColumnVar(this, c);
+                var v = command.CreateColumnVar(this, c);
                 columnVarMap[c.Name] = v;
                 if (!c.IsNullable)
                 {
@@ -207,9 +221,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                 }
             }
 
-            foreach (ColumnMD c in tableMetadata.Keys)
+            foreach (var c in tableMetadata.Keys)
             {
-                ColumnVar v = columnVarMap[c.Name];
+                var v = columnVarMap[c.Name];
                 m_keys.Set(v);
             }
 
@@ -219,12 +233,18 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         /// Metadata for the table instance
         /// </summary>
-        internal TableMD TableMetadata { get { return m_tableMetadata; } }
+        internal TableMD TableMetadata
+        {
+            get { return m_tableMetadata; }
+        }
 
         /// <summary>
         /// List of column references
         /// </summary>
-        internal VarList Columns { get { return m_columns; } }
+        internal VarList Columns
+        {
+            get { return m_columns; }
+        }
 
         /// <summary>
         /// Get the list of all referenced columns. 
@@ -237,17 +257,26 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         /// 
         /// </summary>
-        internal VarVec NonNullableColumns { get { return m_nonnullableColumns; } }
+        internal VarVec NonNullableColumns
+        {
+            get { return m_nonnullableColumns; }
+        }
 
         /// <summary>
         /// List of keys
         /// </summary>
-        internal VarVec Keys { get { return m_keys; } }
+        internal VarVec Keys
+        {
+            get { return m_keys; }
+        }
 
         /// <summary>
         /// (internal) id for this table instance
         /// </summary>
-        internal int TableId { get { return m_tableId; } }
+        internal int TableId
+        {
+            get { return m_tableId; }
+        }
 
         /// <summary>
         /// String form - for debugging
@@ -255,7 +284,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format(CultureInfo.InvariantCulture, "{0}::{1}", m_tableMetadata.ToString(), this.TableId); ;
+            return String.Format(CultureInfo.InvariantCulture, "{0}::{1}", m_tableMetadata, TableId);
+            ;
         }
     }
 }

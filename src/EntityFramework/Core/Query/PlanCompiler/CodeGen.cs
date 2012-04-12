@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
-
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
 // to prevent from simple mistakes during development (e.g. method argument validation 
 // in cases where it was you who created the variables or the variables had already been validated or 
@@ -15,12 +12,7 @@ using System.Collections.Generic;
 // or the tree was built/rewritten not the way we thought it was.
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
-
-using System.Globalization;
 using md = System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Query.InternalTrees;
-using System.Data.Entity.Core.Query.PlanCompiler;
 
 //
 // The CodeGen module is responsible for translating the ITree finally into a query
@@ -34,9 +26,13 @@ using System.Data.Entity.Core.Query.PlanCompiler;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Query.InternalTrees;
+
     internal class CodeGen
     {
         #region public methods
+
         /// <summary>
         /// This involves 
         ///   * Converting the ITree into a set of ProviderCommandInfo objects
@@ -47,19 +43,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="compilerState">current compiler state</param>
         /// <param name="childCommands">CQTs for each store command</param>
         /// <param name="resultColumnMap">column map to help in result assembly</param>
-        internal static void Process(PlanCompiler compilerState, out List<ProviderCommandInfo> childCommands, out ColumnMap resultColumnMap, out int columnCount)
+        internal static void Process(
+            PlanCompiler compilerState, out List<ProviderCommandInfo> childCommands, out ColumnMap resultColumnMap, out int columnCount)
         {
-            CodeGen codeGen = new CodeGen(compilerState);
+            var codeGen = new CodeGen(compilerState);
             codeGen.Process(out childCommands, out resultColumnMap, out columnCount);
         }
 
         #endregion
 
         #region constructors
+
         private CodeGen(PlanCompiler compilerState)
         {
-            m_compilerState = compilerState;           
+            m_compilerState = compilerState;
         }
+
         #endregion
 
         #region private methods
@@ -78,14 +77,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="resultColumnMap">column map for result assembly</param>
         private void Process(out List<ProviderCommandInfo> childCommands, out ColumnMap resultColumnMap, out int columnCount)
         {
-            PhysicalProjectOp projectOp = (PhysicalProjectOp)this.Command.Root.Op;
+            var projectOp = (PhysicalProjectOp)Command.Root.Op;
 
-            this.m_subCommands = new List<Node>(new Node[] { this.Command.Root });
-            childCommands = new List<ProviderCommandInfo>(new ProviderCommandInfo[] { 
-                ProviderCommandInfoUtils.Create(
-                this.Command,                       
-                this.Command.Root                  // input node
-            )});
+            m_subCommands = new List<Node>(new[] { Command.Root });
+            childCommands = new List<ProviderCommandInfo>(
+                new[]
+                    {
+                        ProviderCommandInfoUtils.Create(
+                            Command,
+                            Command.Root // input node
+                            )
+                    });
 
             // Build the final column map, and count the columns we expect for it.
             resultColumnMap = BuildResultColumnMap(projectOp);
@@ -97,8 +99,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             // convert the column map into a real column map
             // build up a dictionary mapping Vars to their real positions in the commands
-            Dictionary<Var, KeyValuePair<int, int>> varMap = BuildVarMap();
-            ColumnMap realColumnMap = ColumnMapTranslator.Translate(projectOp.ColumnMap, varMap);
+            var varMap = BuildVarMap();
+            var realColumnMap = ColumnMapTranslator.Translate(projectOp.ColumnMap, varMap);
 
             return realColumnMap;
         }
@@ -110,18 +112,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         private Dictionary<Var, KeyValuePair<int, int>> BuildVarMap()
         {
-            Dictionary<Var, KeyValuePair<int, int>> varMap =
+            var varMap =
                 new Dictionary<Var, KeyValuePair<int, int>>();
 
-            int commandId = 0;
-            foreach (Node subCommand in m_subCommands)
+            var commandId = 0;
+            foreach (var subCommand in m_subCommands)
             {
-                PhysicalProjectOp projectOp = (PhysicalProjectOp)subCommand.Op;
+                var projectOp = (PhysicalProjectOp)subCommand.Op;
 
-                int columnPos = 0;
-                foreach (Var v in projectOp.Outputs)
+                var columnPos = 0;
+                foreach (var v in projectOp.Outputs)
                 {
-                    KeyValuePair<int, int> varLocation = new KeyValuePair<int, int>(commandId, columnPos);
+                    var varLocation = new KeyValuePair<int, int>(commandId, columnPos);
                     varMap[v] = varLocation;
                     columnPos++;
                 }
@@ -130,11 +132,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             return varMap;
         }
+
         #endregion
 
         #region private state
-        private PlanCompiler m_compilerState;
-        private Command Command { get { return m_compilerState.Command; } }
+
+        private readonly PlanCompiler m_compilerState;
+
+        private Command Command
+        {
+            get { return m_compilerState.Command; }
+        }
+
         private List<Node> m_subCommands;
 
         #endregion

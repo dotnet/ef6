@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
-
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
 // to prevent from simple mistakes during development (e.g. method argument validation 
 // in cases where it was you who created the variables or the variables had already been validated or 
@@ -16,15 +13,14 @@ using System.Collections.Generic;
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
 
-using System.Globalization;
-
-using System.Data.Entity.Core.Query.InternalTrees;
-
 //
 // The KeyPullup module helps pull up keys from the leaves of a subtree. 
 //
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -35,17 +31,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal class KeyPullup : BasicOpVisitor
     {
         #region private state
-        private Command m_command;
+
+        private readonly Command m_command;
+
         #endregion
 
         #region constructors
+
         internal KeyPullup(Command command)
         {
             m_command = command;
         }
+
         #endregion
 
         #region public methods
+
         /// <summary>
         /// Pull up keys (if possible) for the given node
         /// </summary>
@@ -53,7 +54,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>Keys for the node</returns>
         internal KeyVec GetKeys(Node node)
         {
-            ExtendedNodeInfo nodeInfo = node.GetExtendedNodeInfo(m_command);
+            var nodeInfo = node.GetExtendedNodeInfo(m_command);
             if (nodeInfo.Keys.NoKeys)
             {
                 VisitNode(node);
@@ -68,6 +69,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Visitor Methods
 
         #region general helpers
+
         /// <summary>
         /// Default visitor for children. Simply visit all children, and 
         /// try to get keys for those nodes (relops, physicalOps) that 
@@ -76,14 +78,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="n">Current node</param>
         protected override void VisitChildren(Node n)
         {
-            foreach (Node chi in n.Children)
+            foreach (var chi in n.Children)
             {
-                if (chi.Op.IsRelOp || chi.Op.IsPhysicalOp)
+                if (chi.Op.IsRelOp
+                    || chi.Op.IsPhysicalOp)
                 {
                     GetKeys(chi);
                 }
             }
         }
+
         #endregion
 
         #region RelOp Visitors
@@ -127,14 +131,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             VisitChildren(n);
 
-            ExtendedNodeInfo childNodeInfo = n.Child0.GetExtendedNodeInfo(m_command);
+            var childNodeInfo = n.Child0.GetExtendedNodeInfo(m_command);
             if (!childNodeInfo.Keys.NoKeys)
             {
-                VarVec outputVars = m_command.CreateVarVec(op.Outputs);
+                var outputVars = m_command.CreateVarVec(op.Outputs);
                 // NOTE: This code appears in NodeInfoVisitor as well. Try to see if we
                 //       can share this somehow.
-                Dictionary<Var, Var> varRenameMap = NodeInfoVisitor.ComputeVarRemappings(n.Child1);
-                VarVec mappedKeyVec = childNodeInfo.Keys.KeyVars.Remap(varRenameMap);
+                var varRenameMap = NodeInfoVisitor.ComputeVarRemappings(n.Child1);
+                var mappedKeyVec = childNodeInfo.Keys.KeyVars.Remap(varRenameMap);
                 outputVars.Or(mappedKeyVec);
                 op.Outputs.InitFrom(outputVars);
             }
@@ -207,12 +211,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op">the UnionAllOp</param>
         /// <param name="n">current subtree</param>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override void Visit(UnionAllOp op, Node n)
         {
 #if DEBUG
-            string input = Dump.ToXml(n);
-#endif //DEBUG
+            var input = Dump.ToXml(n);
+#endif
+            //DEBUG
 
             // Ensure we have keys pulled up on each branch of the union all.
             VisitChildren(n);
@@ -224,13 +230,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             Var outputBranchDiscriminatorVar = m_command.CreateSetOpVar(m_command.IntegerType);
 
             // Now ensure that we're outputting the key vars from this op as well.
-            VarList allKeyVarsMissingFromOutput = Command.CreateVarList();
-            VarVec[] keyVarsMissingFromOutput = new VarVec[n.Children.Count];
+            var allKeyVarsMissingFromOutput = Command.CreateVarList();
+            var keyVarsMissingFromOutput = new VarVec[n.Children.Count];
 
-            for (int i = 0; i < n.Children.Count; i++)
+            for (var i = 0; i < n.Children.Count; i++)
             {
-                Node branchNode = n.Children[i];
-                ExtendedNodeInfo branchNodeInfo = m_command.GetExtendedNodeInfo(branchNode);
+                var branchNode = n.Children[i];
+                var branchNodeInfo = m_command.GetExtendedNodeInfo(branchNode);
 
                 // Identify keys that aren't in the output list of this operation. We
                 // determine these by remapping the keys that are found through the node's
@@ -238,7 +244,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // of the UnionAll, then we subtract out the outputs of this UnionAll op,
                 // leaving things that are not in the output vars.  Of course, if they're
                 // not in the output vars, then we didn't really remap.
-                VarVec existingKeyVars = branchNodeInfo.Keys.KeyVars.Remap(op.VarMap[i]);
+                var existingKeyVars = branchNodeInfo.Keys.KeyVars.Remap(op.VarMap[i]);
 
                 keyVarsMissingFromOutput[i] = m_command.CreateVarVec(existingKeyVars);
                 keyVarsMissingFromOutput[i].Minus(op.Outputs);
@@ -246,9 +252,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // Special Case: if the branch is a UnionAll, it will already have it's
                 // branch discriminator var added in the keys; we don't want to add that
                 // a second time...
-                if (OpType.UnionAll == branchNode.Op.OpType)
+                if (OpType.UnionAll
+                    == branchNode.Op.OpType)
                 {
-                    UnionAllOp branchUnionAllOp = (UnionAllOp)branchNode.Op;
+                    var branchUnionAllOp = (UnionAllOp)branchNode.Op;
 
                     keyVarsMissingFromOutput[i].Clear(branchUnionAllOp.BranchDiscriminator);
                 }
@@ -257,9 +264,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             // Construct the setOp vars we're going to map to output.
-            VarList allKeyVarsToAddToOutput = Command.CreateVarList();
+            var allKeyVarsToAddToOutput = Command.CreateVarList();
 
-            foreach (Var v in allKeyVarsMissingFromOutput)
+            foreach (var v in allKeyVarsMissingFromOutput)
             {
                 Var newKeyVar = m_command.CreateSetOpVar(v.Type);
                 allKeyVarsToAddToOutput.Add(newKeyVar);
@@ -268,20 +275,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Now that we've identified all the keys we need to add, ensure that each branch 
             // has both the branch discrimination var and the all the keys in them, even when 
             // the keys are just going to null (which we construct, as needed)
-            for (int i = 0; i < n.Children.Count; i++)
+            for (var i = 0; i < n.Children.Count; i++)
             {
-                Node branchNode = n.Children[i];
-                ExtendedNodeInfo branchNodeInfo = m_command.GetExtendedNodeInfo(branchNode);
+                var branchNode = n.Children[i];
+                var branchNodeInfo = m_command.GetExtendedNodeInfo(branchNode);
 
-                VarVec branchOutputVars = m_command.CreateVarVec();
-                List<Node> varDefNodes = new List<Node>();
+                var branchOutputVars = m_command.CreateVarVec();
+                var varDefNodes = new List<Node>();
 
                 // If the branch is a UnionAllOp that has a branch discriminator var then we can
                 // use it, otherwise we'll construct a new integer constant with the next value 
                 // of the branch discriminator value from the command object.
                 Var branchDiscriminatorVar;
 
-                if (OpType.UnionAll == branchNode.Op.OpType && null != ((UnionAllOp)branchNode.Op).BranchDiscriminator)
+                if (OpType.UnionAll == branchNode.Op.OpType
+                    && null != ((UnionAllOp)branchNode.Op).BranchDiscriminator)
                 {
                     branchDiscriminatorVar = ((UnionAllOp)branchNode.Op).BranchDiscriminator;
 
@@ -300,7 +308,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                         // two branches are outputting the branch discriminator var, because it can only
                         // be constructed in this method, and we wouldn't need it for any other purpose.
                         PlanCompiler.Assert(0 == i, "right branch has a discriminator var that the left branch doesn't have?");
-                        VarMap reverseVarMap = op.VarMap[i].GetReverseMap();
+                        var reverseVarMap = op.VarMap[i].GetReverseMap();
                         outputBranchDiscriminatorVar = reverseVarMap[branchDiscriminatorVar];
                     }
                 }
@@ -310,7 +318,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     varDefNodes.Add(
                         m_command.CreateVarDefNode(
                             m_command.CreateNode(
-                                m_command.CreateConstantOp(m_command.IntegerType, m_command.NextBranchDiscriminatorValue)), out branchDiscriminatorVar));
+                                m_command.CreateConstantOp(m_command.IntegerType, m_command.NextBranchDiscriminatorValue)),
+                            out branchDiscriminatorVar));
 
                     branchOutputVars.Set(branchDiscriminatorVar);
                     op.VarMap[i].Add(outputBranchDiscriminatorVar, branchDiscriminatorVar);
@@ -318,9 +327,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
                 // Append all the missing keys to the branch outputs.  If the missing key
                 // is not from this branch then create a null.
-                for (int j = 0; j < allKeyVarsMissingFromOutput.Count; j++)
+                for (var j = 0; j < allKeyVarsMissingFromOutput.Count; j++)
                 {
-                    Var keyVar = allKeyVarsMissingFromOutput[j];
+                    var keyVar = allKeyVarsMissingFromOutput[j];
 
                     if (!keyVarsMissingFromOutput[i].IsSet(keyVar))
                     {
@@ -351,21 +360,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     PlanCompiler.Assert(varDefNodes.Count != 0, "no new nodes?");
 
                     // Start by ensuring all the existing outputs from the branch are in the list.
-                    foreach (Var v in op.VarMap[i].Values)
+                    foreach (var v in op.VarMap[i].Values)
                     {
                         branchOutputVars.Set(v);
                     }
 
                     // Now construct a project op to project out everything we've added, and
                     // replace the branchNode with it in the flattened ladder.
-                    n.Children[i] = m_command.CreateNode(m_command.CreateProjectOp(branchOutputVars),
-                                                        branchNode,
-                                                        m_command.CreateNode(m_command.CreateVarDefListOp(), varDefNodes));
+                    n.Children[i] = m_command.CreateNode(
+                        m_command.CreateProjectOp(branchOutputVars),
+                        branchNode,
+                        m_command.CreateNode(m_command.CreateVarDefListOp(), varDefNodes));
 
                     // Finally, ensure that we update the Key info for the projectOp to include
                     // the original branch's keys, along with the branch discriminator var.
                     m_command.RecomputeNodeInfo(n.Children[i]);
-                    ExtendedNodeInfo projectNodeInfo = m_command.GetExtendedNodeInfo(n.Children[i]);
+                    var projectNodeInfo = m_command.GetExtendedNodeInfo(n.Children[i]);
                     projectNodeInfo.Keys.KeyVars.InitFrom(branchNodeInfo.Keys.KeyVars);
                     projectNodeInfo.Keys.KeyVars.Set(branchDiscriminatorVar);
                 }
@@ -381,12 +391,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
 #if DEBUG
             input = input.Trim();
-            string output = Dump.ToXml(n);
-#endif //DEBUG
+            var output = Dump.ToXml(n);
+#endif
+            //DEBUG
         }
+
         #endregion
 
         #endregion
+
         #endregion
     }
 }

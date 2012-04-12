@@ -1,11 +1,6 @@
-namespace System.Data.Entity.Core {
-    using System;
-    using System.IO;
-    using System.Data.Entity.Core.Common;
-    using System.Data.Common;
-    using System.Globalization;
+namespace System.Data.Entity.Core
+{
     using System.Runtime.Serialization;
-    using System.Security.Permissions;
 
     /// <summary>
     /// Represents a failure while trying to prepare or execute a CommandExecution
@@ -20,12 +15,13 @@ namespace System.Data.Entity.Core {
         private const int HResultCommandExecution = -2146232004;
 
         #region Constructors
+
         /// <summary>
         /// initializes a new instance of EntityCommandExecutionException, no message, no inner exception.  Probably shouldn't 
         /// exist, but it makes FxCop happy.
         /// </summary>
         public EntityCommandExecutionException()
-            : base() {
+        {
             HResult = HResultCommandExecution;
         }
 
@@ -34,7 +30,8 @@ namespace System.Data.Entity.Core {
         /// exist, but it makes FxCop happy.
         /// </summary>
         public EntityCommandExecutionException(string message)
-            : base(message) {
+            : base(message)
+        {
             HResult = HResultCommandExecution;
         }
 
@@ -44,7 +41,8 @@ namespace System.Data.Entity.Core {
         /// <param name="message"></param>
         /// <param name="innerException"></param>
         public EntityCommandExecutionException(string message, Exception innerException)
-            : base(message, innerException) {
+            : base(message, innerException)
+        {
             HResult = HResultCommandExecution;
         }
 
@@ -54,9 +52,11 @@ namespace System.Data.Entity.Core {
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
         private EntityCommandExecutionException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-            : base(serializationInfo, streamingContext) {
+            : base(serializationInfo, streamingContext)
+        {
             HResult = HResultCommandExecution;
         }
+
         #endregion
     }
 }

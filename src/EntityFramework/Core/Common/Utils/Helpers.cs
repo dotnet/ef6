@@ -1,39 +1,42 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using System.Globalization;
-using System.Diagnostics;
+namespace System.Data.Entity.Core.Common.Utils
+{
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Globalization;
 
-namespace System.Data.Entity.Core.Common.Utils {
-    
     // Miscellaneous helper routines
-    internal static class Helpers {
-
+    internal static class Helpers
+    {
         #region Trace methods
+
         // effects: Trace args according to the CLR format string with a new line
-        internal static void FormatTraceLine(string format, params object[] args) {
+        internal static void FormatTraceLine(string format, params object[] args)
+        {
             Trace.WriteLine(String.Format(CultureInfo.InvariantCulture, format, args));
         }
 
         // effects: Trace the string with a new line
-        internal static void StringTrace(string arg) {
+        internal static void StringTrace(string arg)
+        {
             Trace.Write(arg);
         }
 
         // effects: Trace the string without adding a new line
-        internal static void StringTraceLine(string arg) {
+        internal static void StringTraceLine(string arg)
+        {
             Trace.WriteLine(arg);
         }
+
         #endregion
 
         #region Misc Helpers
+
         // effects: compares two sets using the given comparer - removes
         // duplicates if they exist
         internal static bool IsSetEqual<Type>(IEnumerable<Type> list1, IEnumerable<Type> list2, IEqualityComparer<Type> comparer)
         {
-            Set<Type> set1 = new Set<Type>(list1, comparer);
-            Set<Type> set2 = new Set<Type>(list2, comparer);
+            var set1 = new Set<Type>(list1, comparer);
+            var set2 = new Set<Type>(list2, comparer);
 
             return set1.SetEquals(set2);
         }
@@ -42,8 +45,10 @@ namespace System.Data.Entity.Core.Common.Utils {
         // stream of values of type "SuperType" where SuperType is a
         // superclass/supertype of SubType
         internal static IEnumerable<SuperType> AsSuperTypeList<SubType, SuperType>(IEnumerable<SubType> values)
-            where SubType : SuperType {
-            foreach (SubType value in values) {
+            where SubType : SuperType
+        {
+            foreach (var value in values)
+            {
                 yield return value;
             }
         }
@@ -60,9 +65,9 @@ namespace System.Data.Entity.Core.Common.Utils {
         {
             Debug.Assert(args != null, "Ensure 'args' is non-null before calling Prepend");
 
-            TElement[] retVal = new TElement[args.Length + 1];
+            var retVal = new TElement[args.Length + 1];
             retVal[0] = arg;
-            for (int idx = 0; idx < args.Length; idx++)
+            for (var idx = 0; idx < args.Length; idx++)
             {
                 retVal[idx + 1] = args[idx];
             }
@@ -111,24 +116,24 @@ namespace System.Data.Entity.Core.Common.Utils {
             // When a single available leaf node remains, this node is the root of the
             // balanced binary tree and can be returned to the caller.
             //
-            int nodesToPair = nodes.Count;
+            var nodesToPair = nodes.Count;
             while (nodesToPair != 1)
             {
-                bool combineModulo = ((nodesToPair & 0x1) == 1);
+                var combineModulo = ((nodesToPair & 0x1) == 1);
                 if (combineModulo)
                 {
                     nodesToPair--;
                 }
 
-                int writePos = 0;
-                for (int readPos = 0; readPos < nodesToPair; readPos += 2)
+                var writePos = 0;
+                for (var readPos = 0; readPos < nodesToPair; readPos += 2)
                 {
                     nodes[writePos++] = combinator(nodes[readPos], nodes[readPos + 1]);
                 }
 
                 if (combineModulo)
                 {
-                    int updatePos = writePos - 1;
+                    var updatePos = writePos - 1;
                     nodes[updatePos] = combinator(nodes[updatePos], nodes[nodesToPair]);
                 }
 
@@ -146,25 +151,26 @@ namespace System.Data.Entity.Core.Common.Utils {
         /// <param name="isLeaf">A function that determines whether or not a given node should be considered a leaf node</param>
         /// <param name="getImmediateSubNodes">A function that traverses the tree by retrieving the <b>immediate</b> descendants of a (non-leaf) node.</param>
         /// <returns>An enumerable containing the leaf nodes (as determined by <paramref name="isLeaf"/>) retrieved by traversing the tree from <paramref name="root"/> using <paramref name="getImmediateSubNodes"/>.</returns>
-        internal static IEnumerable<TNode> GetLeafNodes<TNode>(TNode root, Func<TNode, bool> isLeaf, Func<TNode, IEnumerable<TNode>> getImmediateSubNodes)
+        internal static IEnumerable<TNode> GetLeafNodes<TNode>(
+            TNode root, Func<TNode, bool> isLeaf, Func<TNode, IEnumerable<TNode>> getImmediateSubNodes)
         {
             EntityUtil.CheckArgumentNull(isLeaf, "isLeaf");
             EntityUtil.CheckArgumentNull(getImmediateSubNodes, "getImmediateSubNodes");
 
-            Stack<TNode> nodes = new Stack<TNode>();
+            var nodes = new Stack<TNode>();
             nodes.Push(root);
 
             while (nodes.Count > 0)
             {
-                TNode current = nodes.Pop();
+                var current = nodes.Pop();
                 if (isLeaf(current))
                 {
                     yield return current;
                 }
                 else
                 {
-                    List<TNode> childNodes = new List<TNode>(getImmediateSubNodes(current));
-                    for (int idx = childNodes.Count - 1; idx > -1; idx--)
+                    var childNodes = new List<TNode>(getImmediateSubNodes(current));
+                    for (var idx = childNodes.Count - 1; idx > -1; idx--)
                     {
                         nodes.Push(childNodes[idx]);
                     }
@@ -175,4 +181,3 @@ namespace System.Data.Entity.Core.Common.Utils {
         #endregion
     }
 }
-    

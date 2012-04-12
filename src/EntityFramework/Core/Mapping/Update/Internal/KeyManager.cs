@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity;
-using System.Diagnostics;
-using NodeColor = System.Byte;
+﻿using NodeColor = System.Byte;
 
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Resources;
+    using System.Diagnostics;
 
     /// <summary>
     /// Manages interactions between keys in the update pipeline (e.g. via referential constraints)
@@ -14,30 +13,42 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     internal class KeyManager
     {
         #region Fields
-        private readonly Dictionary<Tuple<EntityKey, string, bool>, int> _foreignKeyIdentifiers = new Dictionary<Tuple<EntityKey, string, bool>, int>();
+
+        private readonly Dictionary<Tuple<EntityKey, string, bool>, int> _foreignKeyIdentifiers =
+            new Dictionary<Tuple<EntityKey, string, bool>, int>();
+
         private readonly Dictionary<EntityKey, EntityKey> _valueKeyToTempKey = new Dictionary<EntityKey, EntityKey>();
         private readonly Dictionary<EntityKey, int> _keyIdentifiers = new Dictionary<EntityKey, int>();
-        private readonly List<IdentifierInfo> _identifiers = new List<IdentifierInfo>() { new IdentifierInfo() };
+
+        private readonly List<IdentifierInfo> _identifiers = new List<IdentifierInfo>
+                                                                 {
+                                                                     new IdentifierInfo()
+                                                                 };
+
         private const NodeColor White = 0;
         private const NodeColor Black = 1;
         private const NodeColor Gray = 2;
+
         #endregion
 
         #region Constructors
+
         internal KeyManager(UpdateTranslator translator)
         {
             EntityUtil.CheckArgumentNull(translator, "translator");
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Given an identifier, returns the canonical identifier for the clique including all identifiers
         /// with the same value (via referential integrity constraints).
         /// </summary>
         internal int GetCliqueIdentifier(int identifier)
         {
-            Partition partition = _identifiers[identifier].Partition;
+            var partition = _identifiers[identifier].Partition;
             if (null != partition)
             {
                 return partition.PartitionId;
@@ -52,7 +63,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// </summary>
         internal void AddReferentialConstraint(IEntityStateEntry dependentStateEntry, int dependentIdentifier, int principalIdentifier)
         {
-            IdentifierInfo dependentInfo = _identifiers[dependentIdentifier];
+            var dependentInfo = _identifiers[dependentIdentifier];
 
             // A value is trivially constrained to be itself
             if (dependentIdentifier != principalIdentifier)
@@ -63,7 +74,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 // remember the constraint
                 LinkedList<int>.Add(ref dependentInfo.References, principalIdentifier);
-                IdentifierInfo principalInfo = _identifiers[principalIdentifier];
+                var principalInfo = _identifiers[principalIdentifier];
                 LinkedList<int>.Add(ref principalInfo.ReferencedBy, dependentIdentifier);
             }
 
@@ -76,8 +87,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// </summary>
         internal void RegisterIdentifierOwner(PropagatorResult owner)
         {
-            Debug.Assert(PropagatorResult.NullIdentifier != owner.Identifier, "invalid operation for a " +
-                "result without an identifier");
+            Debug.Assert(
+                PropagatorResult.NullIdentifier != owner.Identifier, "invalid operation for a " +
+                                                                     "result without an identifier");
 
             _identifiers[owner.Identifier].Owner = owner;
         }
@@ -103,7 +115,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             if (!_keyIdentifiers.TryGetValue(entityKey, out result))
             {
                 result = _identifiers.Count;
-                for (int i = 0; i < keyMemberCount; i++)
+                for (var i = 0; i < keyMemberCount; i++)
                 {
                     _identifiers.Add(new IdentifierInfo());
                 }
@@ -148,7 +160,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// </summary>
         internal object GetPrincipalValue(PropagatorResult result)
         {
-            int currentIdentifier = result.Identifier;
+            var currentIdentifier = result.Identifier;
 
             if (PropagatorResult.NullIdentifier == currentIdentifier)
             {
@@ -157,11 +169,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             // find principals for this value
-            bool first = true;
+            var first = true;
             object value = null;
-            foreach (int principal in GetPrincipals(currentIdentifier))
+            foreach (var principal in GetPrincipals(currentIdentifier))
             {
-                PropagatorResult ownerResult = _identifiers[principal].Owner;
+                var ownerResult = _identifiers[principal].Owner;
                 if (null != ownerResult)
                 {
                     if (first)
@@ -175,7 +187,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         // subsequent results are validated for consistency with the first
                         if (!ByValueEqualityComparer.Default.Equals(value, ownerResult.GetSimpleValue()))
                         {
-                            throw EntityUtil.Constraint(System.Data.Entity.Resources.Strings.Update_ReferentialConstraintIntegrityViolation);
+                            throw EntityUtil.Constraint(Strings.Update_ReferentialConstraintIntegrityViolation);
                         }
                     }
                 }
@@ -197,17 +209,16 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             return WalkGraph(identifier, (info) => info.References, true);
         }
 
-
         /// <summary>
         /// Gives all direct references of the given identifier
         /// </summary>
         internal IEnumerable<int> GetDirectReferences(int identifier)
         {
-            LinkedList<int> references = _identifiers[identifier].References;
-            foreach (int i in LinkedList<int>.Enumerate(references))
+            var references = _identifiers[identifier].References;
+            foreach (var i in LinkedList<int>.Enumerate(references))
             {
                 yield return i;
-            }                
+            }
         }
 
         /// <summary>
@@ -226,11 +237,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             // using a non-recursive implementation to avoid overhead of recursive yields
             while (stack.Count > 0)
             {
-                int currentIdentifier = stack.Pop();
-                LinkedList<int> successors = successorFunction(_identifiers[currentIdentifier]);
+                var currentIdentifier = stack.Pop();
+                var successors = successorFunction(_identifiers[currentIdentifier]);
                 if (null != successors)
                 {
-                    foreach (int successor in LinkedList<int>.Enumerate(successors))
+                    foreach (var successor in LinkedList<int>.Enumerate(successors))
                     {
                         stack.Push(successor);
                     }
@@ -294,17 +305,17 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             Debug.Assert(addedEntry.EntityKey.IsTemporary);
 
             // map temp key to 'value' key (if all values of the key are non null)
-            EntityKey tempKey = addedEntry.EntityKey;
+            var tempKey = addedEntry.EntityKey;
             EntityKey valueKey;
             var keyMembers = addedEntry.EntitySet.ElementType.KeyMembers;
             var currentValues = addedEntry.CurrentValues;
 
-            object[] keyValues = new object[keyMembers.Count];
-            bool hasNullValue = false;
+            var keyValues = new object[keyMembers.Count];
+            var hasNullValue = false;
 
             for (int i = 0, n = keyMembers.Count; i < n; i++)
             {
-                int ordinal = currentValues.GetOrdinal(keyMembers[i].Name);
+                var ordinal = currentValues.GetOrdinal(keyMembers[i].Name);
                 if (currentValues.IsDBNull(ordinal))
                 {
                     hasNullValue = true;
@@ -323,8 +334,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             else
             {
                 valueKey = keyValues.Length == 1
-                    ? new EntityKey(addedEntry.EntitySet, keyValues[0])
-                    : new EntityKey(addedEntry.EntitySet, keyValues);
+                               ? new EntityKey(addedEntry.EntitySet, keyValues[0])
+                               : new EntityKey(addedEntry.EntitySet, keyValues);
             }
 
             if (_valueKeyToTempKey.ContainsKey(valueKey))
@@ -354,7 +365,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             color[node] = Gray; // color the node to indicate we're visiting it
             LinkedList<int>.Add(ref parent, node);
-            foreach (int successor in LinkedList<int>.Enumerate(_identifiers[node].References))
+            foreach (var successor in LinkedList<int>.Enumerate(_identifiers[node].References))
             {
                 switch (color[successor])
                 {
@@ -366,10 +377,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         {
                             // recover all affected entities from the path (keep on walking
                             // until we hit the 'successor' again which bounds the cycle)
-                            List<IEntityStateEntry> stateEntriesInCycle = new List<IEntityStateEntry>();
-                            foreach (int identifierInCycle in LinkedList<int>.Enumerate(parent))
+                            var stateEntriesInCycle = new List<IEntityStateEntry>();
+                            foreach (var identifierInCycle in LinkedList<int>.Enumerate(parent))
                             {
-                                PropagatorResult owner = _identifiers[identifierInCycle].Owner;
+                                var owner = _identifiers[identifierInCycle].Owner;
                                 if (null != owner)
                                 {
                                     stateEntriesInCycle.Add(owner.StateEntry);
@@ -391,6 +402,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
             color[node] = Black; // color the node to indicate we're done visiting it
         }
+
         #endregion
 
         /// <summary>
@@ -403,10 +415,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 // A node is (trivially) associated with itself
                 return;
             }
-            Partition firstPartition = _identifiers[firstId].Partition;
+            var firstPartition = _identifiers[firstId].Partition;
             if (null != firstPartition)
             {
-                Partition secondPartition = _identifiers[secondId].Partition;
+                var secondPartition = _identifiers[secondId].Partition;
                 if (null != secondPartition)
                 {
                     // merge partitions
@@ -420,7 +432,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
             else
             {
-                Partition secondPartition = _identifiers[secondId].Partition;
+                var secondPartition = _identifiers[secondId].Partition;
                 if (null != secondPartition)
                 {
                     // add x to existing y partition
@@ -447,7 +459,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             internal static void CreatePartition(KeyManager manager, int firstId, int secondId)
             {
-                Partition partition = new Partition(firstId);
+                var partition = new Partition(firstId);
                 partition.AddNode(manager, firstId);
                 partition.AddNode(manager, secondId);
             }
@@ -461,11 +473,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             internal void Merge(KeyManager manager, Partition other)
             {
-                if (other.PartitionId == this.PartitionId)
+                if (other.PartitionId == PartitionId)
                 {
                     return;
                 }
-                foreach (int element in other._nodeIds)
+                foreach (var element in other._nodeIds)
                 {
                     // reparent the node
                     AddNode(manager, element);

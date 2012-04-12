@@ -1,13 +1,13 @@
-using System.Data.Entity.Core.Metadata.Edm; //for RelationshipMultiplicity
+ //for RelationshipMultiplicity
 
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
-    using System.Diagnostics.CodeAnalysis;
+    using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
     /// </summary>
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-    public sealed class EdmRelationshipAttribute : System.Attribute
+    public sealed class EdmRelationshipAttribute : Attribute
     {
         private readonly string _relationshipNamespaceName;
         private readonly string _relationshipName;
@@ -25,7 +25,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// attribute allows us access to this information even in O-Space when there is no context.
         /// There can be multiple attributes of this type in an assembly.
         /// </summary>
-        public EdmRelationshipAttribute(string relationshipNamespaceName,
+        public EdmRelationshipAttribute(
+            string relationshipNamespaceName,
             string relationshipName,
             string role1Name,
             RelationshipMultiplicity role1Multiplicity,
@@ -52,7 +53,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// attribute allows us access to this information even in O-Space when there is no context.
         /// There can be multiple attributes of this type in an assembly.
         /// </summary>
-        public EdmRelationshipAttribute(string relationshipNamespaceName,
+        public EdmRelationshipAttribute(
+            string relationshipNamespaceName,
             string relationshipName,
             string role1Name,
             RelationshipMultiplicity role1Multiplicity,
@@ -115,6 +117,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             get { return _role1Type; }
         }
+
         /// <summary>
         /// The name of the role
         /// </summary>

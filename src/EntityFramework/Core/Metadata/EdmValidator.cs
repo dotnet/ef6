@@ -1,8 +1,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System;
-    using System.Collections;
     using System.Collections.Generic;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
@@ -32,7 +31,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     internal class ValidationErrorEventArgs : EventArgs
     {
-        private EdmItemError _validationError;
+        private readonly EdmItemError _validationError;
 
         /// <summary>
         /// Construct the validation error event args with a validation error object
@@ -48,10 +47,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         public EdmItemError ValidationError
         {
-            get
-            {
-                return _validationError;
-            }
+            get { return _validationError; }
         }
     }
 
@@ -60,22 +56,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     internal class EdmValidator
     {
-        private bool _skipReadOnlyItems;
-
         /// <summary>
         /// Gets or Sets whether the validator should skip readonly items
         /// </summary>
-        internal bool SkipReadOnlyItems        
-        {
-            get
-            {
-                return _skipReadOnlyItems;
-            }
-            set
-            {
-                _skipReadOnlyItems = value;
-            }
-        }        
+        internal bool SkipReadOnlyItems { get; set; }
 
         /// <summary>
         /// Validate a collection of items in a batch
@@ -83,13 +67,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="items">A collection of items to validate</param>
         /// <param name="ospaceErrors">List of validation errors that were previously collected by the caller. if it encounters
         /// more errors, it adds them to this list of errors</param>
-        public void Validate<T>(IEnumerable<T> items, List<EdmItemError> ospaceErrors) 
+        public void Validate<T>(IEnumerable<T> items, List<EdmItemError> ospaceErrors)
             where T : EdmType // O-Space only supports EdmType
         {
             EntityUtil.CheckArgumentNull(items, "items");
             EntityUtil.CheckArgumentNull(items, "ospaceErrors");
 
-            HashSet<MetadataItem> validatedItems = new HashSet<MetadataItem>();
+            var validatedItems = new HashSet<MetadataItem>();
 
             foreach (MetadataItem item in items)
             {
@@ -116,7 +100,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // Create an event args object and call the event hook, the derived class may have changed
             // the validation error to some other object, in which case we add the validation error object
             // coming from the event args
-            ValidationErrorEventArgs e = new ValidationErrorEventArgs(newError);
+            var e = new ValidationErrorEventArgs(newError);
             OnValidationError(e);
             errors.Add(e.ValidationError);
         }
@@ -142,7 +126,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Debug.Assert(item != null, "InternalValidate is called with a null item, the caller should check for null first");
 
             // If the item has already been validated or we need to skip readonly items, then skip
-            if ( (item.IsReadOnly && SkipReadOnlyItems) || validatedItems.Contains(item) )
+            if ((item.IsReadOnly && SkipReadOnlyItems)
+                || validatedItems.Contains(item))
             {
                 return;
             }
@@ -154,7 +139,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // Check to make sure the item has an identity
             if (string.IsNullOrEmpty(item.Identity))
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_EmptyIdentity));
+                AddError(errors, new EdmItemError(Strings.Validator_EmptyIdentity));
             }
 
             switch (item.BuiltInTypeKind)
@@ -190,7 +175,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     ValidateTypeUsage((TypeUsage)item, errors, validatedItems);
                     break;
 
-                // Abstract classes
+                    // Abstract classes
                 case BuiltInTypeKind.EntityTypeBase:
                 case BuiltInTypeKind.EdmType:
                 case BuiltInTypeKind.MetadataItem:
@@ -199,7 +184,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 case BuiltInTypeKind.RelationshipType:
                 case BuiltInTypeKind.SimpleType:
                 case BuiltInTypeKind.StructuralType:
-                    Debug.Assert(false, "An instance with a built in type kind refering to the abstract type " + item.BuiltInTypeKind + " is encountered");
+                    Debug.Assert(
+                        false,
+                        "An instance with a built in type kind refering to the abstract type " + item.BuiltInTypeKind + " is encountered");
                     break;
 
                 default:
@@ -208,7 +195,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             // Performs other custom validation
-            IEnumerable<EdmItemError> customErrors = CustomValidate(item);
+            var customErrors = CustomValidate(item);
             if (customErrors != null)
             {
                 errors.AddRange(customErrors);
@@ -228,12 +215,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // Check that it doesn't have a base type
             if (item.BaseType != null)
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_CollectionTypesCannotHaveBaseType));
+                AddError(errors, new EdmItemError(Strings.Validator_CollectionTypesCannotHaveBaseType));
             }
 
             if (item.TypeUsage == null)
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_CollectionHasNoTypeUsage));
+                AddError(errors, new EdmItemError(Strings.Validator_CollectionHasNoTypeUsage));
             }
             else
             {
@@ -267,12 +254,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // Check that this type has a name and namespace
             if (string.IsNullOrEmpty(item.Name))
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_TypeHasNoName));
+                AddError(errors, new EdmItemError(Strings.Validator_TypeHasNoName));
             }
-            if (null == item.NamespaceName ||
+            if (null == item.NamespaceName
+                ||
                 item.DataSpace != DataSpace.OSpace && string.Empty == item.NamespaceName)
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_TypeHasNoNamespace));
+                AddError(errors, new EdmItemError(Strings.Validator_TypeHasNoNamespace));
             }
 
             // We don't need to verify that the base type chain eventually gets to null because
@@ -298,7 +286,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 // Check that there is at least one key member
                 if (item.KeyMembers.Count < 1)
                 {
-                    AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_NoKeyMembers(item.FullName)));
+                    AddError(errors, new EdmItemError(Strings.Validator_NoKeyMembers(item.FullName)));
                 }
                 else
                 {
@@ -306,7 +294,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     {
                         if (keyProperty.Nullable)
                         {
-                            AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_NullableEntityKeyProperty(keyProperty.Name, item.FullName)));
+                            AddError(errors, new EdmItemError(Strings.Validator_NullableEntityKeyProperty(keyProperty.Name, item.FullName)));
                         }
                     }
                 }
@@ -330,13 +318,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // Check that this facet has a name
             if (string.IsNullOrEmpty(item.Name))
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_FacetHasNoName));
+                AddError(errors, new EdmItemError(Strings.Validator_FacetHasNoName));
             }
 
             // Validate the type
             if (item.FacetType == null)
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_FacetTypeIsNull));
+                AddError(errors, new EdmItemError(Strings.Validator_FacetTypeIsNull));
             }
             else
             {
@@ -356,7 +344,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // normal MetadataProperties property. This avoids needless validation and infinite recursion
             if (item.RawMetadataProperties != null)
             {
-                foreach (MetadataProperty itemAttribute in item.MetadataProperties)
+                foreach (var itemAttribute in item.MetadataProperties)
                 {
                     InternalValidate(itemAttribute, errors, validatedItems);
                 }
@@ -376,12 +364,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // Check that this member has a name
             if (string.IsNullOrEmpty(item.Name))
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_MemberHasNoName));
+                AddError(errors, new EdmItemError(Strings.Validator_MemberHasNoName));
             }
 
             if (item.DeclaringType == null)
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_MemberHasNullDeclaringType));
+                AddError(errors, new EdmItemError(Strings.Validator_MemberHasNullDeclaringType));
             }
             else
             {
@@ -390,7 +378,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (item.TypeUsage == null)
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_MemberHasNullTypeUsage));
+                AddError(errors, new EdmItemError(Strings.Validator_MemberHasNullTypeUsage));
             }
             else
             {
@@ -407,19 +395,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private void ValidateMetadataProperty(MetadataProperty item, List<EdmItemError> errors, HashSet<MetadataItem> validatedItems)
         {
             // Validate only for user added item attributes, for system attributes, we can skip validation
-            if (item.PropertyKind == PropertyKind.Extended)
+            if (item.PropertyKind
+                == PropertyKind.Extended)
             {
                 ValidateItem(item, errors, validatedItems);
 
                 // Check that this member has a name
                 if (string.IsNullOrEmpty(item.Name))
                 {
-                    AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_MetadataPropertyHasNoName));
+                    AddError(errors, new EdmItemError(Strings.Validator_MetadataPropertyHasNoName));
                 }
 
                 if (item.TypeUsage == null)
                 {
-                    AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_ItemAttributeHasNullTypeUsage));
+                    AddError(errors, new EdmItemError(Strings.Validator_ItemAttributeHasNullTypeUsage));
                 }
                 else
                 {
@@ -475,13 +464,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // Check that it doesn't have a base type
             if (item.BaseType != null)
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_RefTypesCannotHaveBaseType));
+                AddError(errors, new EdmItemError(Strings.Validator_RefTypesCannotHaveBaseType));
             }
 
             // Just validate the element type, there is nothing on the collection itself to validate
             if (item.ElementType == null)
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_RefTypeHasNullEntityType));
+                AddError(errors, new EdmItemError(Strings.Validator_RefTypeHasNullEntityType));
             }
             else
             {
@@ -511,14 +500,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             ValidateEdmType(item, errors, validatedItems);
 
             // Just validate each member, the collection already guaranteed that there aren't any nulls in the collection
-            Dictionary<string, EdmMember> allMembers = new Dictionary<string, EdmMember>();
-            foreach (EdmMember member in item.Members)
+            var allMembers = new Dictionary<string, EdmMember>();
+            foreach (var member in item.Members)
             {
                 // Check if the base type already has a member of the same name
                 EdmMember baseMember = null;
                 if (allMembers.TryGetValue(member.Name, out baseMember))
-                {                    
-                    AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_BaseTypeHasMemberOfSameName));
+                {
+                    AddError(errors, new EdmItemError(Strings.Validator_BaseTypeHasMemberOfSameName));
                 }
                 else
                 {
@@ -541,14 +530,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (item.EdmType == null)
             {
-                AddError(errors, new EdmItemError(System.Data.Entity.Resources.Strings.Validator_TypeUsageHasNullEdmType));
+                AddError(errors, new EdmItemError(Strings.Validator_TypeUsageHasNullEdmType));
             }
             else
             {
                 InternalValidate(item.EdmType, errors, validatedItems);
             }
 
-            foreach (Facet facet in item.Facets)
+            foreach (var facet in item.Facets)
             {
                 InternalValidate(facet, errors, validatedItems);
             }

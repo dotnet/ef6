@@ -1,7 +1,6 @@
 ﻿namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
@@ -9,11 +8,13 @@
     using System.Xml;
     using Som = System.Data.Entity.Core.EntityModel.SchemaObjectModel;
 
-    class RowTypeElement : ModelFunctionTypeElement
+    internal class RowTypeElement : ModelFunctionTypeElement
     {
-        private readonly SchemaElementLookUpTable<RowTypePropertyElement> _properties = new SchemaElementLookUpTable<RowTypePropertyElement>();
+        private readonly SchemaElementLookUpTable<RowTypePropertyElement> _properties =
+            new SchemaElementLookUpTable<RowTypePropertyElement>();
 
         #region constructor
+
         /// <summary>
         /// 
         /// </summary>
@@ -23,10 +24,8 @@
         {
         }
 
-
         protected override bool HandleElement(XmlReader reader)
         {
-
             if (CanHandleElement(reader, XmlConstants.Property))
             {
                 HandlePropertyElement(reader);
@@ -53,26 +52,24 @@
 
         internal override void ResolveTopLevelNames()
         {
-
             foreach (var property in _properties)
             {
                 property.ResolveTopLevelNames();
             }
-
         }
 
         internal override void WriteIdentity(StringBuilder builder)
         {
             builder.Append("Row[");
 
-            bool first = true;
-            foreach (RowTypePropertyElement property in _properties)
+            var first = true;
+            foreach (var property in _properties)
             {
                 if (first)
                 {
                     first = !first;
                 }
-                else 
+                else
                 {
                     builder.Append(", ");
                 }
@@ -94,26 +91,30 @@
                     listOfProperties.Add(edmProperty);
                 }
 
-                RowType rowType = new RowType(listOfProperties);
-                if (Schema.DataModel == SchemaDataModelOption.EntityDataModel)
+                var rowType = new RowType(listOfProperties);
+                if (Schema.DataModel
+                    == SchemaDataModelOption.EntityDataModel)
                 {
                     rowType.DataSpace = DataSpace.CSpace;
                 }
                 else
                 {
-                    Debug.Assert(Schema.DataModel == SchemaDataModelOption.ProviderDataModel, "Only DataModel == SchemaDataModelOption.ProviderDataModel is expected");
+                    Debug.Assert(
+                        Schema.DataModel == SchemaDataModelOption.ProviderDataModel,
+                        "Only DataModel == SchemaDataModelOption.ProviderDataModel is expected");
                     rowType.DataSpace = DataSpace.SSpace;
                 }
 
-                rowType.AddMetadataProperties(this.OtherContent);
+                rowType.AddMetadataProperties(OtherContent);
                 _typeUsage = TypeUsage.Create(rowType);
             }
             return _typeUsage;
         }
 
-        internal override bool ResolveNameAndSetTypeUsage(Converter.ConversionCache convertedItemCache, Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
+        internal override bool ResolveNameAndSetTypeUsage(
+            Converter.ConversionCache convertedItemCache, Dictionary<SchemaElement, GlobalItem> newGlobalItems)
         {
-            bool result = true;
+            var result = true;
             if (_typeUsage == null)
             {
                 foreach (var property in _properties)

@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Globalization;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Text;
+
     /// <summary>
     /// Abstract base class for nodes in normal form expressions, e.g. Conjunctive Normal Form
     /// sentences.
@@ -16,18 +13,24 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     internal abstract class NormalFormNode<T_Identifier>
     {
         private readonly BoolExpr<T_Identifier> _expr;
-        
+
         /// <summary>
         /// Initialize a new normal form node representing the given expression. Caller must
         /// ensure the expression is logically equivalent to the node.
         /// </summary>
         /// <param name="expr">Expression logically equivalent to this node.</param>
-        protected NormalFormNode(BoolExpr<T_Identifier> expr) { _expr = expr.Simplify(); }
+        protected NormalFormNode(BoolExpr<T_Identifier> expr)
+        {
+            _expr = expr.Simplify();
+        }
 
         /// <summary>
         /// Gets an expression that is logically equivalent to this node.
         /// </summary>
-        internal BoolExpr<T_Identifier> Expr { get { return _expr; } }
+        internal BoolExpr<T_Identifier> Expr
+        {
+            get { return _expr; }
+        }
 
         /// <summary>
         /// Utility method for delegation that return the expression corresponding to a given
@@ -70,11 +73,11 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         // expressions using the given tree type.
         private static BoolExpr<T_Identifier> ConvertClausesToExpr(Set<T_Clause> clauses, ExprType treeType)
         {
-            bool isAnd = ExprType.And == treeType;
+            var isAnd = ExprType.And == treeType;
             Debug.Assert(isAnd || ExprType.Or == treeType);
 
-            IEnumerable<BoolExpr<T_Identifier>> clauseExpressions = 
-                clauses.Select(new Func<T_Clause, BoolExpr<T_Identifier>>(ExprSelector));
+            IEnumerable<BoolExpr<T_Identifier>> clauseExpressions =
+                clauses.Select(ExprSelector);
 
             if (isAnd)
             {
@@ -88,7 +91,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.Append("Sentence{");
             builder.Append(_clauses);
             return builder.Append("}").ToString();

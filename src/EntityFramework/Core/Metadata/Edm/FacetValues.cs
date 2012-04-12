@@ -1,12 +1,9 @@
-﻿using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Diagnostics;
-
-namespace System.Data.Entity.Core.Metadata.Edm
+﻿namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Core.Common;
+
     internal class FacetValues
     {
-
         private FacetValueContainer<bool?> _nullable;
         private FacetValueContainer<Int32?> _maxLength;
         private FacetValueContainer<bool?> _unicode;
@@ -46,7 +43,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal bool TryGetFacet(FacetDescription description, out Facet facet)
         {
-            if (description.FacetName == DbProviderManifest.NullableFacetName)
+            if (description.FacetName
+                == DbProviderManifest.NullableFacetName)
             {
                 if (_nullable.HasValue)
                 {
@@ -54,7 +52,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     return true;
                 }
             }
-            else if (description.FacetName == DbProviderManifest.MaxLengthFacetName)
+            else if (description.FacetName
+                     == DbProviderManifest.MaxLengthFacetName)
             {
                 if (_maxLength.HasValue)
                 {
@@ -62,7 +61,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     return true;
                 }
             }
-            else if (description.FacetName == DbProviderManifest.UnicodeFacetName)
+            else if (description.FacetName
+                     == DbProviderManifest.UnicodeFacetName)
             {
                 if (_unicode.HasValue)
                 {
@@ -70,7 +70,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     return true;
                 }
             }
-            else if (description.FacetName == DbProviderManifest.FixedLengthFacetName)
+            else if (description.FacetName
+                     == DbProviderManifest.FixedLengthFacetName)
             {
                 if (_fixedLength.HasValue)
                 {
@@ -78,7 +79,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     return true;
                 }
             }
-            else if (description.FacetName == DbProviderManifest.PrecisionFacetName)
+            else if (description.FacetName
+                     == DbProviderManifest.PrecisionFacetName)
             {
                 if (_precision.HasValue)
                 {
@@ -86,7 +88,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     return true;
                 }
             }
-            else if (description.FacetName == DbProviderManifest.ScaleFacetName)
+            else if (description.FacetName
+                     == DbProviderManifest.ScaleFacetName)
             {
                 if (_scale.HasValue)
                 {
@@ -103,16 +106,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get
             {
                 // null out everything except Nullable, and DefaultValue
-                FacetValues values = new FacetValues();
+                var values = new FacetValues();
                 values.FixedLength = (bool?)null;
                 values.MaxLength = (int?)null;
                 values.Precision = (byte?)null;
                 values.Scale = (byte?)null;
                 values.Unicode = (bool?)null;
-                
+
                 return values;
             }
         }
     }
-
 }

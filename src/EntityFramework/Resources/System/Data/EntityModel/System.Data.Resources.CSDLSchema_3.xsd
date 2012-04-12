@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:edm="http://schemas.microsoft.com/ado/2009/11/edm" targetNamespace="http://schemas.microsoft.com/ado/2009/11/edm">
   <xs:annotation>
     <xs:documentation xml:lang="en">
       Common Data Model Schema Definition Language.
-      Copyright (c) Microsoft Corp. All rights reserved.
     </xs:documentation>
   </xs:annotation>
   <xs:import namespace="http://schemas.microsoft.com/ado/2006/04/codegeneration" schemaLocation="System.Data.Resources.CodeGenerationSchema.xsd" />
@@ -104,7 +104,10 @@
     -->
   <xs:complexType name="TDocumentation">
     <xs:annotation>
-      <xs:documentation>The Documentation element is used to provide documentation of comments on the contents of the XML file.  It is valid under Schema, Type, Index and Relationship elements.</xs:documentation>
+      <xs:documentation>
+        The Documentation element is used to provide documentation of comments on the contents of the XML file.  It is valid
+        under Schema, Type, Index and Relationship elements.
+      </xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:element name="Summary" type="edm:TText" minOccurs="0" maxOccurs="1" />
@@ -120,7 +123,9 @@
   </xs:complexType>
   <xs:complexType name="TXmlOrText" mixed="true">
     <xs:annotation>
-      <xs:documentation>This type allows pretty much any content</xs:documentation>
+      <xs:documentation>
+        This type allows pretty much any content
+      </xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded" />
@@ -141,7 +146,7 @@
   <xs:complexType name="TAssociation">
     <xs:sequence>
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-      <xs:element name="End" type="edm:TAssociationEnd"  minOccurs="2" maxOccurs="2" />
+      <xs:element name="End" type="edm:TAssociationEnd" minOccurs="2" maxOccurs="2" />
       <xs:element name="ReferentialConstraint" type="edm:TConstraint" minOccurs="0" maxOccurs="1" />
       <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
@@ -273,7 +278,7 @@
     <xs:anyAttribute namespace="##other" processContents="lax" />
   </xs:complexType>
   <xs:complexType name="TCollectionType">
-    <xs:sequence minOccurs ="1" maxOccurs="1">
+    <xs:sequence minOccurs="1" maxOccurs="1">
       <xs:choice minOccurs="0" maxOccurs="1">
         <xs:element name="CollectionType" type="edm:TCollectionType" minOccurs="0" maxOccurs="1" />
         <xs:element name="ReferenceType" type="edm:TReferenceType" minOccurs="0" maxOccurs="1" />
@@ -487,7 +492,7 @@
   </xs:complexType>
   <xs:simpleType name="TGuidLiteral">
     <xs:restriction base="xs:string">
-      <xs:pattern value="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"/>
+      <xs:pattern value="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" />
     </xs:restriction>
   </xs:simpleType>
   <xs:complexType name="TDecimalConstantExpression">
@@ -576,7 +581,7 @@
   <xs:complexType name="TCollectionExpression">
     <xs:sequence>
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-      <xs:group ref="edm:GExpression" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:group ref="edm:GExpression" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:anyAttribute namespace="##other" processContents="lax" />
   </xs:complexType>
@@ -662,7 +667,7 @@
   <xs:complexType name="TPropertyReferenceExpression">
     <xs:sequence>
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-      <xs:group ref="edm:GExpression" minOccurs="1" maxOccurs="1"/>
+      <xs:group ref="edm:GExpression" minOccurs="1" maxOccurs="1" />
     </xs:sequence>
     <xs:attribute name="Property" type="edm:TSimpleIdentifier" use="required" />
     <xs:anyAttribute namespace="##other" processContents="lax" />
@@ -670,7 +675,7 @@
   <xs:complexType name="TValueTermReferenceExpression">
     <xs:sequence>
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-      <xs:group ref="edm:GExpression" minOccurs="1" maxOccurs="1"/>
+      <xs:group ref="edm:GExpression" minOccurs="1" maxOccurs="1" />
     </xs:sequence>
     <xs:attribute name="Term" type="edm:TQualifiedName" use="required" />
     <xs:attribute name="Qualifier" type="edm:TSimpleIdentifier" use="optional" />
@@ -847,14 +852,14 @@
           <xs:element name="FunctionImport">
             <xs:complexType>
               <xs:sequence>
-                  <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-                  <xs:choice minOccurs="0" maxOccurs="unbounded">
-                    <xs:element name="ReturnType" type="edm:TFunctionImportReturnType" minOccurs="0" maxOccurs="unbounded" />
-                    <xs:element name="Parameter" type="edm:TFunctionImportParameter" minOccurs="0" maxOccurs="unbounded" />
-                    <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" minOccurs="0" maxOccurs="unbounded" />
-                    <xs:element name="TypeAnnotation" type="edm:TTypeAnnotation" minOccurs="0" maxOccurs="unbounded" />
-                    <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
-                  </xs:choice>
+                <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                  <xs:element name="ReturnType" type="edm:TFunctionImportReturnType" minOccurs="0" maxOccurs="unbounded" />
+                  <xs:element name="Parameter" type="edm:TFunctionImportParameter" minOccurs="0" maxOccurs="unbounded" />
+                  <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" minOccurs="0" maxOccurs="unbounded" />
+                  <xs:element name="TypeAnnotation" type="edm:TTypeAnnotation" minOccurs="0" maxOccurs="unbounded" />
+                  <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+                </xs:choice>
               </xs:sequence>
               <xs:attributeGroup ref="edm:TFunctionImportAttributes" />
             </xs:complexType>
@@ -862,12 +867,12 @@
           <xs:element name="EntitySet">
             <xs:complexType>
               <xs:sequence>
-                  <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-                  <xs:choice minOccurs="0" maxOccurs="unbounded">
-                    <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" minOccurs="0" maxOccurs="unbounded" />
-                    <xs:element name="TypeAnnotation" type="edm:TTypeAnnotation" minOccurs="0" maxOccurs="unbounded" />
-                    <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
-                  </xs:choice>
+                <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                  <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" minOccurs="0" maxOccurs="unbounded" />
+                  <xs:element name="TypeAnnotation" type="edm:TTypeAnnotation" minOccurs="0" maxOccurs="unbounded" />
+                  <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+                </xs:choice>
               </xs:sequence>
               <xs:attributeGroup ref="edm:TEntitySetAttributes" />
               <xs:anyAttribute processContents="lax" namespace="##other" />
@@ -904,7 +909,7 @@
         <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
       <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
-      <xs:attribute name="Extends" type ="edm:TSimpleIdentifier" use="optional" />
+      <xs:attribute name="Extends" type="edm:TSimpleIdentifier" use="optional" />
       <xs:attribute ref="cg:TypeAccess" use="optional" />
       <xs:attribute ref="annotation:LazyLoadingEnabled" use="optional" />
       <xs:anyAttribute namespace="##other" processContents="lax" />

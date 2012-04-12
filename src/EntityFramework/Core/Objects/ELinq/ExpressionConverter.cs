@@ -1,14 +1,12 @@
 namespace System.Data.Entity.Core.Objects.ELinq
 {
-    using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common;
-    using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Common.EntitySql;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
@@ -26,6 +24,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     internal sealed partial class ExpressionConverter
     {
         #region Fields
+
         private readonly Funcletizer _funcletizer;
         private readonly Perspective _perspective;
         private readonly Expression _expression;
@@ -42,8 +41,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private readonly OrderByLifter _orderByLifter;
 
         #region Consts
+
         private const string s_visualBasicAssemblyFullName =
             "Microsoft.VisualBasic, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+
         private static readonly Dictionary<ExpressionType, Translator> s_translators = InitializeTranslators();
 
         internal const string s_entityCollectionCountPropertyName = "Count";
@@ -74,9 +75,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// The Edm namespace name, used for canonical functions
         /// </summary>
         internal const string EdmNamespaceName = "Edm";
+
         #endregion
 
         #region Canonical Function Names
+
         private const string Concat = "Concat";
         private const string IndexOf = "IndexOf";
         private const string Length = "Length";
@@ -102,15 +105,20 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private const string Minute = "Minute";
         private const string Second = "Second";
         private const string Millisecond = "Millisecond";
+
         #endregion
 
         #region Additional Entity function names
+
         private const string AsUnicode = "AsUnicode";
         private const string AsNonUnicode = "AsNonUnicode";
+
         #endregion
+
         #endregion
 
         #region Constructors and static initializors
+
         internal ExpressionConverter(Funcletizer funcletizer, Expression expression)
         {
             EntityUtil.CheckArgumentNull(funcletizer, "funcletizer");
@@ -122,7 +130,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             expression = funcletizer.Funcletize(expression, out _recompileRequired);
 
             // Normalize the expression (replace obfuscated parts of the tree with simpler nodes)
-            LinqExpressionNormalizer normalizer = new LinqExpressionNormalizer();
+            var normalizer = new LinqExpressionNormalizer();
             _expression = normalizer.Visit(expression);
 
             _perspective = funcletizer.RootContext.Perspective;
@@ -135,10 +143,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
         // for LINQ expression node types)
         private static Dictionary<ExpressionType, Translator> InitializeTranslators()
         {
-            Dictionary<ExpressionType, Translator> translators = new Dictionary<ExpressionType, Translator>();
-            foreach (Translator translator in GetTranslators())
+            var translators = new Dictionary<ExpressionType, Translator>();
+            foreach (var translator in GetTranslators())
             {
-                foreach (ExpressionType nodeType in translator.NodeTypes)
+                foreach (var nodeType in translator.NodeTypes)
                 {
                     translators.Add(nodeType, translator);
                 }
@@ -193,43 +201,72 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 ExpressionType.NewArrayBounds,
                 ExpressionType.Power);
         }
+
         #endregion
 
         #region Properties
+
         private EdmItemCollection EdmItemCollection
         {
-            get
-            {
-                return (EdmItemCollection)_funcletizer.RootContext.MetadataWorkspace.GetItemCollection(DataSpace.CSpace, true);
-            }
+            get { return (EdmItemCollection)_funcletizer.RootContext.MetadataWorkspace.GetItemCollection(DataSpace.CSpace, true); }
         }
+
         internal DbProviderManifest ProviderManifest
         {
             get
             {
-                return ((StoreItemCollection)_funcletizer.RootContext.MetadataWorkspace.GetItemCollection(DataSpace.SSpace)).StoreProviderManifest;
+                return
+                    ((StoreItemCollection)_funcletizer.RootContext.MetadataWorkspace.GetItemCollection(DataSpace.SSpace)).
+                        StoreProviderManifest;
             }
         }
-        internal System.Collections.ObjectModel.ReadOnlyCollection<KeyValuePair<ObjectParameter, QueryParameterExpression>> GetParameters()
+
+        internal ReadOnlyCollection<KeyValuePair<ObjectParameter, QueryParameterExpression>> GetParameters()
         {
-            if (null != _parameters) { return _parameters.AsReadOnly(); }
+            if (null != _parameters)
+            {
+                return _parameters.AsReadOnly();
+            }
             return null;
         }
-        internal MergeOption? PropagatedMergeOption { get { return _mergeOption; } }
-        internal Span PropagatedSpan { get { return _span; } }
-        internal Func<bool> RecompileRequired { get { return _recompileRequired; } }
-        internal int IgnoreInclude { get { return _ignoreInclude; } set { _ignoreInclude = value; } }
-        internal AliasGenerator AliasGenerator { get { return _aliasGenerator; } }
+
+        internal MergeOption? PropagatedMergeOption
+        {
+            get { return _mergeOption; }
+        }
+
+        internal Span PropagatedSpan
+        {
+            get { return _span; }
+        }
+
+        internal Func<bool> RecompileRequired
+        {
+            get { return _recompileRequired; }
+        }
+
+        internal int IgnoreInclude
+        {
+            get { return _ignoreInclude; }
+            set { _ignoreInclude = value; }
+        }
+
+        internal AliasGenerator AliasGenerator
+        {
+            get { return _aliasGenerator; }
+        }
+
         #endregion
 
         #region Internal methods
+
         // Convert the LINQ expression to a CQT expression and (optional) Span information.
         // Span information will only be present if ObjectQuery instances that specify Spans
         // are referenced from the LINQ expression in a manner consistent with the Span combination
         // rules, otherwise the Span for the CQT expression will be null.
         internal DbExpression Convert()
         {
-            DbExpression result = this.TranslateExpression(_expression);
+            var result = TranslateExpression(_expression);
             if (!TryGetSpan(result, out _span))
             {
                 _span = null;
@@ -246,15 +283,16 @@ namespace System.Data.Entity.Core.Objects.ELinq
         {
             return (_ignoreInclude == 0);
         }
+
         #endregion
 
         #region Private Methods
 
         private void NotifyMergeOption(MergeOption mergeOption)
         {
-            if (!this._mergeOption.HasValue)
+            if (!_mergeOption.HasValue)
             {
-                this._mergeOption = mergeOption;
+                _mergeOption = mergeOption;
             }
         }
 
@@ -284,13 +322,15 @@ namespace System.Data.Entity.Core.Objects.ELinq
         {
             Debug.Assert(null != metadata);
             InitializerMetadata existingMetadata;
-            if (_initializers != null && _initializers.TryGetValue(metadata.ClrType, out existingMetadata))
+            if (_initializers != null
+                && _initializers.TryGetValue(metadata.ClrType, out existingMetadata))
             {
                 // Verify the initializers are compatible.
                 if (!metadata.Equals(existingMetadata))
                 {
-                    throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnsupportedHeterogeneousInitializers(
-                        ExpressionConverter.DescribeClrType(metadata.ClrType)));
+                    throw EntityUtil.NotSupported(
+                        Strings.ELinq_UnsupportedHeterogeneousInitializers(
+                            DescribeClrType(metadata.ClrType)));
                 }
             }
             else
@@ -312,7 +352,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
             if (!_parameters.Select(p => p.Value).Contains(queryParameter))
             {
-                ObjectParameter parameter = new ObjectParameter(queryParameter.ParameterReference.ParameterName, queryParameter.Type);
+                var parameter = new ObjectParameter(queryParameter.ParameterReference.ParameterName, queryParameter.Type);
                 _parameters.Add(new KeyValuePair<ObjectParameter, QueryParameterExpression>(parameter, queryParameter));
             }
         }
@@ -323,7 +363,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // An expression is the query root if it was the expression used
             // when constructing this converter.
             //
-            return object.ReferenceEquals(_expression, Expression);
+            return ReferenceEquals(_expression, Expression);
         }
 
         #region Span Mapping maintenance methods
@@ -340,7 +380,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <returns>The original <paramref name="expression"/> argument, to allow <c>return AddSpanMapping(expression, span)</c> scenarios</returns>
         private DbExpression AddSpanMapping(DbExpression expression, Span span)
         {
-            if (span != null && this.CanIncludeSpanInfo())
+            if (span != null
+                && CanIncludeSpanInfo())
             {
                 if (null == _spanMappings)
                 {
@@ -349,7 +390,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 Span storedSpan = null;
                 if (_spanMappings.TryGetValue(expression, out storedSpan))
                 {
-                    foreach (Span.SpanPath sp in span.SpanList)
+                    foreach (var sp in span.SpanList)
                     {
                         storedSpan.AddSpanPath(sp);
                     }
@@ -419,9 +460,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
             Span leftSpan = null;
             Span rightSpan = null;
 
-            bool hasLeftSpan = TryGetSpan(left, out leftSpan);
-            bool hasRightSpan = TryGetSpan(right, out rightSpan);
-            if (!hasLeftSpan && !hasRightSpan)
+            var hasLeftSpan = TryGetSpan(left, out leftSpan);
+            var hasRightSpan = TryGetSpan(right, out rightSpan);
+            if (!hasLeftSpan
+                && !hasRightSpan)
             {
                 return;
             }
@@ -429,6 +471,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             Debug.Assert(leftSpan != null || rightSpan != null, "Span mappings contain null?");
             AddSpanMapping(to, Span.CopyUnion(leftSpan, rightSpan));
         }
+
         #endregion
 
         // The following methods correspond to query builder methods on ObjectQuery
@@ -440,52 +483,53 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         private DbDistinctExpression Distinct(DbExpression argument)
         {
-            DbDistinctExpression retExpr = argument.Distinct();
+            var retExpr = argument.Distinct();
             ApplySpanMapping(argument, retExpr);
             return retExpr;
         }
 
         private DbExceptExpression Except(DbExpression left, DbExpression right)
         {
-            DbExceptExpression retExpr = left.Except(right);
+            var retExpr = left.Except(right);
             ApplySpanMapping(left, retExpr);
             return retExpr;
         }
 
         private DbExpression Filter(DbExpressionBinding input, DbExpression predicate)
         {
-            DbExpression retExpr = _orderByLifter.Filter(input, predicate);
+            var retExpr = _orderByLifter.Filter(input, predicate);
             ApplySpanMapping(input.Expression, retExpr);
             return retExpr;
         }
 
         private DbIntersectExpression Intersect(DbExpression left, DbExpression right)
         {
-            DbIntersectExpression retExpr = left.Intersect(right);
+            var retExpr = left.Intersect(right);
             UnifySpanMappings(left, right, retExpr);
             return retExpr;
         }
 
         private DbExpression Limit(DbExpression argument, DbExpression limit)
         {
-            DbExpression retExpr = _orderByLifter.Limit(argument, limit);
+            var retExpr = _orderByLifter.Limit(argument, limit);
             ApplySpanMapping(argument, retExpr);
             return retExpr;
         }
 
         private DbExpression OfType(DbExpression argument, TypeUsage ofType)
         {
-            DbExpression retExpr = _orderByLifter.OfType(argument, ofType);
+            var retExpr = _orderByLifter.OfType(argument, ofType);
             ApplySpanMapping(argument, retExpr);
             return retExpr;
         }
 
         private DbExpression Project(DbExpressionBinding input, DbExpression projection)
         {
-            DbExpression retExpr = _orderByLifter.Project(input, projection);
+            var retExpr = _orderByLifter.Project(input, projection);
             // For identity projection only, the Span is preserved
-            if (projection.ExpressionKind == DbExpressionKind.VariableReference &&
-               ((DbVariableReferenceExpression)projection).VariableName.Equals(input.VariableName, StringComparison.Ordinal))
+            if (projection.ExpressionKind == DbExpressionKind.VariableReference
+                &&
+                ((DbVariableReferenceExpression)projection).VariableName.Equals(input.VariableName, StringComparison.Ordinal))
             {
                 ApplySpanMapping(input.Expression, retExpr);
             }
@@ -494,21 +538,21 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         private DbSortExpression Sort(DbExpressionBinding input, IList<DbSortClause> keys)
         {
-            DbSortExpression retExpr = input.Sort(keys);
+            var retExpr = input.Sort(keys);
             ApplySpanMapping(input.Expression, retExpr);
             return retExpr;
         }
 
         private DbExpression Skip(DbExpressionBinding input, DbExpression skipCount)
         {
-            DbExpression retExpr = _orderByLifter.Skip(input, skipCount);
+            var retExpr = _orderByLifter.Skip(input, skipCount);
             ApplySpanMapping(input.Expression, retExpr);
             return retExpr;
         }
 
         private DbUnionAllExpression UnionAll(DbExpression left, DbExpression right)
         {
-            DbUnionAllExpression retExpr = left.UnionAll(right);
+            var retExpr = left.UnionAll(right);
             UnifySpanMappings(left, right, retExpr);
             return retExpr;
         }
@@ -520,10 +564,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private TypeUsage GetCastTargetType(TypeUsage fromType, Type toClrType, Type fromClrType, bool preserveCastForDateTime)
         {
             // An inlined ObjectQuery or an IOrderedQueryable expression being cast to IQueryable for use in a sequence method is a no-op.
-            if(fromClrType != null &&
-                fromClrType.IsGenericType && toClrType.IsGenericType &&                
-                (fromClrType.GetGenericTypeDefinition() == typeof(ObjectQuery<>) || fromClrType.GetGenericTypeDefinition() == typeof(IOrderedQueryable<>)) &&
-                (toClrType.GetGenericTypeDefinition() == typeof(IQueryable<>) || toClrType.GetGenericTypeDefinition() == typeof(IOrderedQueryable<>)) &&
+            if (fromClrType != null &&
+                fromClrType.IsGenericType && toClrType.IsGenericType &&
+                (fromClrType.GetGenericTypeDefinition() == typeof(ObjectQuery<>)
+                 || fromClrType.GetGenericTypeDefinition() == typeof(IOrderedQueryable<>)) &&
+                (toClrType.GetGenericTypeDefinition() == typeof(IQueryable<>)
+                 || toClrType.GetGenericTypeDefinition() == typeof(IOrderedQueryable<>))
+                &&
                 fromClrType.GetGenericArguments()[0] == toClrType.GetGenericArguments()[0])
             {
                 return null;
@@ -532,7 +579,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // If the types are the same or the fromType is assignable to toType, return null
             // (indicating no cast is required)
             TypeUsage toType;
-            if (TryGetValueLayerType(toClrType, out toType) && CanOmitCast(fromType, toType, preserveCastForDateTime))
+            if (TryGetValueLayerType(toClrType, out toType)
+                && CanOmitCast(fromType, toType, preserveCastForDateTime))
             {
                 return null;
             }
@@ -550,13 +598,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private static TypeUsage ValidateAndAdjustCastTypes(TypeUsage toType, TypeUsage fromType, Type toClrType, Type fromClrType)
         {
             // only support primitives if real casting is involved
-            if (toType == null || !TypeSemantics.IsScalarType(toType) || !TypeSemantics.IsScalarType(fromType))
+            if (toType == null || !TypeSemantics.IsScalarType(toType)
+                || !TypeSemantics.IsScalarType(fromType))
             {
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnsupportedCast(DescribeClrType(fromClrType), DescribeClrType(toClrType)));
+                throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedCast(DescribeClrType(fromClrType), DescribeClrType(toClrType)));
             }
 
-            PrimitiveTypeKind fromTypeKind = Helper.AsPrimitive(fromType.EdmType).PrimitiveTypeKind;
-            PrimitiveTypeKind toTypeKind = Helper.AsPrimitive(toType.EdmType).PrimitiveTypeKind;
+            var fromTypeKind = Helper.AsPrimitive(fromType.EdmType).PrimitiveTypeKind;
+            var toTypeKind = Helper.AsPrimitive(toType.EdmType).PrimitiveTypeKind;
 
             if (toTypeKind == PrimitiveTypeKind.Decimal)
             {
@@ -572,7 +621,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         toType = TypeUsage.CreateDecimalTypeUsage((PrimitiveType)toType.EdmType, 19, 0);
                         break;
                     default:
-                        throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnsupportedCastToDecimal);
+                        throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedCastToDecimal);
                 }
             }
 
@@ -586,7 +635,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// </summary>
         private static bool CanOmitCast(TypeUsage fromType, TypeUsage toType, bool preserveCastForDateTime)
         {
-            bool isPrimitiveType = TypeSemantics.IsPrimitiveType(fromType);
+            var isPrimitiveType = TypeSemantics.IsPrimitiveType(fromType);
 
             //SQLBUDT #573573: This is to allow for a workaround on Katmai via explicit casting by the user.
             // The issue is that SqlServer's type Date maps to Edm.DateTime, same as SqlServer's DateTime and SmallDateTime.
@@ -594,7 +643,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             //Note: we could also call here TypeSemantics.IsPrimitiveType(TypeUsage type, PrimitiveTypeKind primitiveTypeKind),
             //  but that checks again whether the type is primitive
-            if (isPrimitiveType && preserveCastForDateTime && ((PrimitiveType)fromType.EdmType).PrimitiveTypeKind == PrimitiveTypeKind.DateTime)
+            if (isPrimitiveType && preserveCastForDateTime
+                && ((PrimitiveType)fromType.EdmType).PrimitiveTypeKind == PrimitiveTypeKind.DateTime)
             {
                 return false;
             }
@@ -625,12 +675,15 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             // Interpret all type information
             TypeUsage toType;
-            if (!this.TryGetValueLayerType(toClrType, out toType) ||
+            if (!TryGetValueLayerType(toClrType, out toType)
+                ||
                 (!TypeSemantics.IsEntityType(toType) &&
                  !TypeSemantics.IsComplexType(toType)))
             {
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnsupportedIsOrAs(operationType,
-                    DescribeClrType(fromClrType), DescribeClrType(toClrType)));
+                throw EntityUtil.NotSupported(
+                    Strings.ELinq_UnsupportedIsOrAs(
+                        operationType,
+                        DescribeClrType(fromClrType), DescribeClrType(toClrType)));
             }
 
             return toType;
@@ -644,9 +697,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
         // query's Span property.
         private DbExpression TranslateInlineQueryOfT(ObjectQuery inlineQuery)
         {
-            if (!object.ReferenceEquals(_funcletizer.RootContext, inlineQuery.QueryState.ObjectContext))
+            if (!ReferenceEquals(_funcletizer.RootContext, inlineQuery.QueryState.ObjectContext))
             {
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnsupportedDifferentContexts);
+                throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedDifferentContexts);
             }
 
             // Check if the inline query has been encountered so far. If so, we don't need to
@@ -657,11 +710,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
             {
                 _inlineEntitySqlQueries = new HashSet<ObjectQuery>();
             }
-            bool isNewInlineQuery = _inlineEntitySqlQueries.Add(inlineQuery);
-            
+            var isNewInlineQuery = _inlineEntitySqlQueries.Add(inlineQuery);
+
             // The ObjectQuery should be Entity-SQL-based at this point. All other query types are currently
             // inlined.
-            EntitySqlQueryState esqlState = (EntitySqlQueryState)inlineQuery.QueryState;
+            var esqlState = (EntitySqlQueryState)inlineQuery.QueryState;
 
             // We will produce the translated expression by parsing the Entity-SQL query text.
             DbExpression resultExpression = null;
@@ -669,9 +722,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // If we are not converting a compiled query, or the referenced Entity-SQL ObjectQuery
             // does not have parameters (and so no parameter references can be in the parsed tree)
             // then the Entity-SQL can be parsed directly using the conversion command tree.
-            ObjectParameterCollection objectParameters = inlineQuery.QueryState.Parameters;
+            var objectParameters = inlineQuery.QueryState.Parameters;
             if (!_funcletizer.IsCompiledQuery ||
-                objectParameters == null ||
+                objectParameters == null
+                ||
                 objectParameters.Count == 0)
             {
                 // Add parameters if they exist and we haven't yet encountered this inline query.
@@ -679,13 +733,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 {
                     // Copy the parameters into the aggregated parameter collection - this will result
                     // in an exception if any duplicate parameter names are encountered.
-                    if (this._parameters == null)
+                    if (_parameters == null)
                     {
-                        this._parameters = new List<KeyValuePair<ObjectParameter, QueryParameterExpression>>();
+                        _parameters = new List<KeyValuePair<ObjectParameter, QueryParameterExpression>>();
                     }
-                    foreach (ObjectParameter prm in inlineQuery.QueryState.Parameters)
+                    foreach (var prm in inlineQuery.QueryState.Parameters)
                     {
-                        this._parameters.Add(new KeyValuePair<ObjectParameter, QueryParameterExpression>(prm.ShallowCopy(), null));
+                        _parameters.Add(new KeyValuePair<ObjectParameter, QueryParameterExpression>(prm.ShallowCopy(), null));
                     }
                 }
 
@@ -709,33 +763,33 @@ namespace System.Data.Entity.Core.Objects.ELinq
         {
             internal static DbExpression RemoveParameterReferences(DbExpression expression, ObjectParameterCollection availableParameters)
             {
-                ParameterReferenceRemover remover = new ParameterReferenceRemover(availableParameters);
+                var remover = new ParameterReferenceRemover(availableParameters);
                 return remover.VisitExpression(expression);
             }
 
             private readonly ObjectParameterCollection objectParameters;
+
             private ParameterReferenceRemover(ObjectParameterCollection availableParams)
-                : base()
             {
                 Debug.Assert(availableParams != null, "Parameter collection cannot be null");
 
-                this.objectParameters = availableParams;
+                objectParameters = availableParams;
             }
 
             public override DbExpression Visit(DbParameterReferenceExpression expression)
             {
-                if (this.objectParameters.Contains(expression.ParameterName))
+                if (objectParameters.Contains(expression.ParameterName))
                 {
                     // A DbNullExpression is required for null values; DbConstantExpression otherwise.
-                    ObjectParameter objParam = objectParameters[expression.ParameterName];
+                    var objParam = objectParameters[expression.ParameterName];
                     if (null == objParam.Value)
                     {
-                        return DbExpressionBuilder.Null(expression.ResultType);
+                        return expression.ResultType.Null();
                     }
                     else
                     {
                         // This will throw if the value is incompatible with the result type.
-                        return DbExpressionBuilder.Constant(expression.ResultType, objParam.Value);
+                        return expression.ResultType.Constant(objParam.Value);
                     }
                 }
                 return expression;
@@ -746,8 +800,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private DbExpression CreateCastExpression(DbExpression source, Type toClrType, Type fromClrType)
         {
             // see if the source can be normalized as a set
-            DbExpression setSource = NormalizeSetSource(source);
-            if (!Object.ReferenceEquals(source, setSource))
+            var setSource = NormalizeSetSource(source);
+            if (!ReferenceEquals(source, setSource))
             {
                 // if the resulting cast is a no-op (no either kind is supported
                 // for set sources), yield the source
@@ -758,7 +812,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
 
             // try to find the appropriate target target for the cast
-            TypeUsage toType = GetCastTargetType(source.ResultType, toClrType, fromClrType, true);
+            var toType = GetCastTargetType(source.ResultType, toClrType, fromClrType, true);
             if (null == toType)
             {
                 // null indicates a no-op cast (from the perspective of the model)
@@ -782,7 +836,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         // Utility translator method for lambda expressions. Given a lambda expression and its translated
         // inputs, translates the lambda expression, assuming the input is a collection
-        private DbExpression TranslateLambda(LambdaExpression lambda, DbExpression input, string bindingName, out DbExpressionBinding binding)
+        private DbExpression TranslateLambda(
+            LambdaExpression lambda, DbExpression input, string bindingName, out DbExpressionBinding binding)
         {
             input = NormalizeSetSource(input);
 
@@ -799,7 +854,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             input = NormalizeSetSource(input);
 
             // create binding context for this lambda expression
-            string alias = _aliasGenerator.Next();
+            var alias = _aliasGenerator.Next();
             binding = input.GroupBindAs(alias, string.Format(CultureInfo.InvariantCulture, "Group{0}", alias));
 
             return TranslateLambda(lambda, binding.Variable);
@@ -809,17 +864,17 @@ namespace System.Data.Entity.Core.Objects.ELinq
         // inputs, translates the lambda expression
         private DbExpression TranslateLambda(LambdaExpression lambda, DbExpression input)
         {
-            Binding scopeBinding = new Binding(lambda.Parameters[0], input);
+            var scopeBinding = new Binding(lambda.Parameters[0], input);
 
             // push the binding scope
             _bindingContext.PushBindingScope(scopeBinding);
 
             // translate expression within this binding scope
 #if DEBUG
-            int preValue = _ignoreInclude;
+            var preValue = _ignoreInclude;
 #endif
             _ignoreInclude++;
-            DbExpression result = TranslateExpression(lambda.Body);
+            var result = TranslateExpression(lambda.Body);
             _ignoreInclude--;
 #if DEBUG
             Debug.Assert(preValue == _ignoreInclude);
@@ -841,10 +896,12 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // If input has span information attached to to it then leave it as is, otherwise 
             // span info will be lost.
             Span span;
-            if (input.ExpressionKind == DbExpressionKind.Project && !TryGetSpan(input, out span))
+            if (input.ExpressionKind == DbExpressionKind.Project
+                && !TryGetSpan(input, out span))
             {
                 var project = (DbProjectExpression)input;
-                if (project.Projection == project.Input.Variable)
+                if (project.Projection
+                    == project.Input.Variable)
                 {
                     input = project.Input.Expression;
                 }
@@ -854,15 +911,17 @@ namespace System.Data.Entity.Core.Objects.ELinq
             InitializerMetadata initializerMetadata;
             if (InitializerMetadata.TryGetInitializerMetadata(input.ResultType, out initializerMetadata))
             {
-                if (initializerMetadata.Kind == InitializerMetadataKind.Grouping)
+                if (initializerMetadata.Kind
+                    == InitializerMetadataKind.Grouping)
                 {
                     // for group by, redirect the binding to the group (rather than the property)
-                    input = input.Property(ExpressionConverter.GroupColumnName);
+                    input = input.Property(GroupColumnName);
                 }
-                else if (initializerMetadata.Kind == InitializerMetadataKind.EntityCollection)
+                else if (initializerMetadata.Kind
+                         == InitializerMetadataKind.EntityCollection)
                 {
                     // for entity collection, redirect the binding to the children
-                    input = input.Property(ExpressionConverter.EntityCollectionElementsColumnName);
+                    input = input.Property(EntityCollectionElementsColumnName);
                 }
             }
             return input;
@@ -872,17 +931,19 @@ namespace System.Data.Entity.Core.Objects.ELinq
         // necessary)
         private LambdaExpression GetLambdaExpression(MethodCallExpression callExpression, int argumentOrdinal)
         {
-            Expression argument = callExpression.Arguments[argumentOrdinal];
+            var argument = callExpression.Arguments[argumentOrdinal];
             return (LambdaExpression)GetLambdaExpression(argument);
         }
 
         private Expression GetLambdaExpression(Expression argument)
         {
-            if (ExpressionType.Lambda == argument.NodeType)
+            if (ExpressionType.Lambda
+                == argument.NodeType)
             {
                 return argument;
             }
-            else if (ExpressionType.Quote == argument.NodeType)
+            else if (ExpressionType.Quote
+                     == argument.NodeType)
             {
                 return GetLambdaExpression(((UnaryExpression)argument).Operand);
             }
@@ -912,7 +973,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
                 else
                 {
-                    throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.UnknownLinqNodeType, -1,
+                    throw EntityUtil.InternalError(
+                        EntityUtil.InternalErrorCode.UnknownLinqNodeType, -1,
                         linq.NodeType.ToString());
                 }
             }
@@ -923,7 +985,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private DbExpression AlignTypes(DbExpression cqt, Type toClrType)
         {
             Type fromClrType = null; // not used in this code path
-            TypeUsage toType = GetCastTargetType(cqt.ResultType, toClrType, fromClrType, false);
+            var toType = GetCastTargetType(cqt.ResultType, toClrType, fromClrType, false);
             if (null != toType)
             {
                 return cqt.CastTo(toType);
@@ -941,23 +1003,25 @@ namespace System.Data.Entity.Core.Objects.ELinq
             TypeUsage typeUsage;
             if (_funcletizer.RootContext.Perspective.TryGetType(type, out typeUsage))
             {
-                BuiltInTypeKind typeKind = typeUsage.EdmType.BuiltInTypeKind;
-                if (BuiltInTypeKind.EntityType == typeKind ||
+                var typeKind = typeUsage.EdmType.BuiltInTypeKind;
+                if (BuiltInTypeKind.EntityType == typeKind
+                    ||
                     BuiltInTypeKind.ComplexType == typeKind)
                 {
-                    throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnsupportedNominalType(
-                        typeUsage.EdmType.FullName));
+                    throw EntityUtil.NotSupported(
+                        Strings.ELinq_UnsupportedNominalType(
+                            typeUsage.EdmType.FullName));
                 }
             }
 
             // types implementing IEnumerable are not supported
             if (TypeSystem.IsSequenceType(type))
             {
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnsupportedEnumerableType(
-                    DescribeClrType(type)));
+                throw EntityUtil.NotSupported(
+                    Strings.ELinq_UnsupportedEnumerableType(
+                        DescribeClrType(type)));
             }
         }
-
 
         // requires: Left and right are non-null.
         // effects: Determines if the given types are equivalent, ignoring facets. In
@@ -970,10 +1034,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
         {
             Debug.Assert(null != left);
             Debug.Assert(null != right);
-            if (left.EdmType.EdmEquals(right.EdmType)) { return true; }
+            if (left.EdmType.EdmEquals(right.EdmType))
+            {
+                return true;
+            }
 
             // compare element types for collection
-            if (BuiltInTypeKind.CollectionType == left.EdmType.BuiltInTypeKind &&
+            if (BuiltInTypeKind.CollectionType == left.EdmType.BuiltInTypeKind
+                &&
                 BuiltInTypeKind.CollectionType == right.EdmType.BuiltInTypeKind)
             {
                 return TypeUsageEquals(
@@ -982,7 +1050,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
 
             // special case for primitive types
-            if (BuiltInTypeKind.PrimitiveType == left.EdmType.BuiltInTypeKind &&
+            if (BuiltInTypeKind.PrimitiveType == left.EdmType.BuiltInTypeKind
+                &&
                 BuiltInTypeKind.PrimitiveType == right.EdmType.BuiltInTypeKind)
             {
                 // since LINQ expressions cannot indicate model types directly, we must
@@ -1000,7 +1069,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             TypeUsage type;
             if (!TryGetValueLayerType(linqType, out type))
             {
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnsupportedType(linqType));
+                throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedType(linqType));
             }
             return type;
         }
@@ -1009,7 +1078,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private bool TryGetValueLayerType(Type linqType, out TypeUsage type)
         {
             // Remove nullable
-            Type nonNullableType = TypeSystem.GetNonNullableType(linqType);
+            var nonNullableType = TypeSystem.GetNonNullableType(linqType);
 
             // See if this is a primitive type
             PrimitiveTypeKind primitiveTypeKind;
@@ -1020,7 +1089,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
 
             // See if this is a collection type (if so, recursively resolve)
-            Type elementType = TypeSystem.GetElementType(nonNullableType);
+            var elementType = TypeSystem.GetElementType(nonNullableType);
             if (elementType != nonNullableType)
             {
                 TypeUsage elementTypeUsage;
@@ -1034,14 +1103,15 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // Ensure the metadata for this object type is loaded
             _perspective.MetadataWorkspace.ImplicitLoadAssemblyForType(linqType, null);
 
-            if(!_perspective.TryGetTypeByName(nonNullableType.FullName, false, out type))
+            if (!_perspective.TryGetTypeByName(nonNullableType.FullName, false, out type))
             {
                 // If the user is casting to a type that is not a model type or a primitive type it can be a cast to an enum that
                 // is not in the model. In that case we use the underlying enum type. 
                 // Note that if the underlying type is not any of the EF primitive types we will fail with and InvalidCastException.
                 // This is consistent with what we would do when seeing a cast to a primitive type that is not a EF valid primitive 
                 // type (e.g. ulong).
-                if(nonNullableType.IsEnum && ClrProviderManifest.TryGetPrimitiveTypeKind(nonNullableType.GetEnumUnderlyingType(), out primitiveTypeKind))
+                if (nonNullableType.IsEnum
+                    && ClrProviderManifest.TryGetPrimitiveTypeKind(nonNullableType.GetEnumUnderlyingType(), out primitiveTypeKind))
                 {
                     type = EdmProviderManifest.Instance.GetCanonicalModelTypeUsage(primitiveTypeKind);
                 }
@@ -1070,7 +1140,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     {
                         InitializerMetadata initializerMetadata;
                         if (!InitializerMetadata.TryGetInitializerMetadata(edmType, out initializerMetadata) ||
-                            initializerMetadata.Kind == InitializerMetadataKind.ProjectionInitializer ||
+                            initializerMetadata.Kind == InitializerMetadataKind.ProjectionInitializer
+                            ||
                             initializerMetadata.Kind == InitializerMetadataKind.ProjectionNew)
                         {
                             VerifyRowTypeSupportedForComparison(clrType, (RowType)edmType.EdmType, memberPath);
@@ -1088,8 +1159,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
             else
             {
                 // build up description of member path
-                StringBuilder memberPathDescription = new StringBuilder();
-                foreach (EdmMember member in memberPath)
+                var memberPathDescription = new StringBuilder();
+                foreach (var member in memberPath)
                 {
                     memberPathDescription.Append(Strings.ELinq_UnsupportedRowMemberComparison(member.Name));
                 }
@@ -1117,21 +1188,23 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// </summary>
         internal static string DescribeClrType(Type clrType)
         {
-            string clrTypeName = clrType.Name;
+            var clrTypeName = clrType.Name;
             // Yes, this is a heuristic... just a best effort way of getting
             // a reasonable exception message
-            if (IsCSharpGeneratedClass(clrTypeName, "DisplayClass") ||
+            if (IsCSharpGeneratedClass(clrTypeName, "DisplayClass")
+                ||
                 IsVBGeneratedClass(clrTypeName, "Closure"))
             {
                 return Strings.ELinq_ClosureType;
             }
-            if (IsCSharpGeneratedClass(clrTypeName, "AnonymousType") ||
+            if (IsCSharpGeneratedClass(clrTypeName, "AnonymousType")
+                ||
                 IsVBGeneratedClass(clrTypeName, "AnonymousType"))
             {
                 return Strings.ELinq_AnonymousType;
             }
 
-            string returnName = string.Empty;
+            var returnName = string.Empty;
             if (!String.IsNullOrEmpty(clrType.Namespace))
             {
                 returnName += clrType.Namespace + ".";
@@ -1163,49 +1236,61 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// Creates an implementation of equals using the given pattern. Throws exception when argument types
         /// are not supported for equals comparison.
         /// </summary>
-        private DbExpression CreateEqualsExpression(DbExpression left, DbExpression right, EqualsPattern pattern, Type leftClrType, Type rightClrType)
+        private DbExpression CreateEqualsExpression(
+            DbExpression left, DbExpression right, EqualsPattern pattern, Type leftClrType, Type rightClrType)
         {
             VerifyTypeSupportedForComparison(leftClrType, left.ResultType, null);
             VerifyTypeSupportedForComparison(rightClrType, right.ResultType, null);
 
             //For Ref Type comparison, check whether they refer to compatible Entity Types.
-            TypeUsage leftType = left.ResultType;
-            TypeUsage rightType = right.ResultType;
-            if (leftType.EdmType.BuiltInTypeKind == BuiltInTypeKind.RefType && rightType.EdmType.BuiltInTypeKind == BuiltInTypeKind.RefType)
+            var leftType = left.ResultType;
+            var rightType = right.ResultType;
+            if (leftType.EdmType.BuiltInTypeKind == BuiltInTypeKind.RefType
+                && rightType.EdmType.BuiltInTypeKind == BuiltInTypeKind.RefType)
             {
                 TypeUsage commonType;
                 if (!TypeSemantics.TryGetCommonType(leftType, rightType, out commonType))
                 {
-                    RefType leftRefType = left.ResultType.EdmType as RefType;
-                    RefType rightRefType = right.ResultType.EdmType as RefType;
-                    throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedRefComparison(leftRefType.ElementType.FullName, rightRefType.ElementType.FullName));
+                    var leftRefType = left.ResultType.EdmType as RefType;
+                    var rightRefType = right.ResultType.EdmType as RefType;
+                    throw EntityUtil.NotSupported(
+                        Strings.ELinq_UnsupportedRefComparison(leftRefType.ElementType.FullName, rightRefType.ElementType.FullName));
                 }
             }
 
             return RecursivelyRewriteEqualsExpression(left, right, pattern);
         }
+
         private DbExpression RecursivelyRewriteEqualsExpression(DbExpression left, DbExpression right, EqualsPattern pattern)
         {
             // check if either side is an initializer type
-            RowType leftType = left.ResultType.EdmType as RowType;
-            RowType rightType = left.ResultType.EdmType as RowType;
+            var leftType = left.ResultType.EdmType as RowType;
+            var rightType = left.ResultType.EdmType as RowType;
 
-            if (null != leftType || null != rightType)
+            if (null != leftType
+                || null != rightType)
             {
-                if ((null != leftType && null != rightType) && leftType.EdmEquals(rightType))
+                if ((null != leftType && null != rightType)
+                    && leftType.EdmEquals(rightType))
                 {
                     DbExpression shreddedEquals = null;
                     // if the types are the same, use struct equivalence semantics
-                    foreach (EdmProperty property in leftType.Properties)
+                    foreach (var property in leftType.Properties)
                     {
-                        DbPropertyExpression leftElement = left.Property(property);
-                        DbPropertyExpression rightElement = right.Property(property);
-                        DbExpression elementsEquals = RecursivelyRewriteEqualsExpression(
+                        var leftElement = left.Property(property);
+                        var rightElement = right.Property(property);
+                        var elementsEquals = RecursivelyRewriteEqualsExpression(
                             leftElement, rightElement, pattern);
 
                         // build up and expression
-                        if (null == shreddedEquals) { shreddedEquals = elementsEquals; }
-                        else { shreddedEquals = shreddedEquals.And(elementsEquals); }
+                        if (null == shreddedEquals)
+                        {
+                            shreddedEquals = elementsEquals;
+                        }
+                        else
+                        {
+                            shreddedEquals = shreddedEquals.And(elementsEquals);
+                        }
                     }
                     return shreddedEquals;
                 }
@@ -1244,7 +1329,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         case DbExpressionKind.Null: // null EQ constant --> false
                             return DbExpressionBuilder.False;
                         default:
-                            return ImplementEqualityConstantAndUnknown((System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression)left, right, pattern);
+                            return ImplementEqualityConstantAndUnknown((DbConstantExpression)left, right, pattern);
                     }
                 case DbExpressionKind.Null:
                     switch (right.ExpressionKind)
@@ -1260,7 +1345,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     switch (right.ExpressionKind)
                     {
                         case DbExpressionKind.Constant:
-                            return ImplementEqualityConstantAndUnknown((System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression)right, left, pattern);
+                            return ImplementEqualityConstantAndUnknown((DbConstantExpression)right, left, pattern);
                         case DbExpressionKind.Null: //  left EQ null --> left IS NULL
                             return left.IsNull();
                         default:
@@ -1271,7 +1356,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         // Generate an equality expression with one unknown operator and 
         private DbExpression ImplementEqualityConstantAndUnknown(
-            System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression constant, DbExpression unknown, EqualsPattern pattern)
+            DbConstantExpression constant, DbExpression unknown, EqualsPattern pattern)
         {
             switch (pattern)
             {
@@ -1283,7 +1368,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     {
                         return constant.Equal(unknown); // same as EqualsPattern.PositiveNullEqualityNonComposable
                     }
-                    return constant.Equal(unknown).And(unknown.IsNull().Not()); // add more logic to avoid undefined result for true clr semantics
+                    return constant.Equal(unknown).And(unknown.IsNull().Not());
+                        // add more logic to avoid undefined result for true clr semantics
                 default:
                     Debug.Fail("unknown pattern");
                     return null;
@@ -1321,6 +1407,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         #endregion
 
         #region Helper Methods Shared by Translators
+
         /// <summary>
         /// Helper method for String.StartsWith, String.EndsWith and String.Contains
         /// 
@@ -1338,37 +1425,42 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <param name="insertPercentAtEnd">Should '%' be inserted at the end of the pattern</param>
         /// <param name="defaultTranslator">The delegate that provides the default translation</param>
         /// <returns>The translation</returns>
-        private DbExpression TranslateFunctionIntoLike(MethodCallExpression call, bool insertPercentAtStart, bool insertPercentAtEnd, Func<ExpressionConverter, MethodCallExpression, DbExpression, DbExpression, DbExpression> defaultTranslator)
+        private DbExpression TranslateFunctionIntoLike(
+            MethodCallExpression call, bool insertPercentAtStart, bool insertPercentAtEnd,
+            Func<ExpressionConverter, MethodCallExpression, DbExpression, DbExpression, DbExpression> defaultTranslator)
         {
             char escapeChar;
-            bool providerSupportsEscapingLikeArgument = this.ProviderManifest.SupportsEscapingLikeArgument(out escapeChar);
-            bool useLikeTranslation = false;
-            bool specifyEscape = true;
+            var providerSupportsEscapingLikeArgument = ProviderManifest.SupportsEscapingLikeArgument(out escapeChar);
+            var useLikeTranslation = false;
+            var specifyEscape = true;
 
-            Expression patternExpression = call.Arguments[0];
-            Expression inputExpression = call.Object;
+            var patternExpression = call.Arguments[0];
+            var inputExpression = call.Object;
 
-            QueryParameterExpression queryParameterExpression = patternExpression as QueryParameterExpression;
+            var queryParameterExpression = patternExpression as QueryParameterExpression;
             if (providerSupportsEscapingLikeArgument && (queryParameterExpression != null))
             {
                 useLikeTranslation = true;
                 bool specifyEscapeDummy;
-                patternExpression = queryParameterExpression.EscapeParameterForLike(input => PreparePattern(input, insertPercentAtStart, insertPercentAtEnd, out specifyEscapeDummy));
+                patternExpression =
+                    queryParameterExpression.EscapeParameterForLike(
+                        input => PreparePattern(input, insertPercentAtStart, insertPercentAtEnd, out specifyEscapeDummy));
             }
 
-            DbExpression translatedPatternExpression = this.TranslateExpression(patternExpression);
-            DbExpression translatedInputExpression = this.TranslateExpression(inputExpression);
+            var translatedPatternExpression = TranslateExpression(patternExpression);
+            var translatedInputExpression = TranslateExpression(inputExpression);
 
             if (providerSupportsEscapingLikeArgument && translatedPatternExpression.ExpressionKind == DbExpressionKind.Constant)
             {
                 useLikeTranslation = true;
-                DbConstantExpression constantExpression = (DbConstantExpression)translatedPatternExpression;
+                var constantExpression = (DbConstantExpression)translatedPatternExpression;
 
-                string preparedValue = PreparePattern((string)constantExpression.Value, insertPercentAtStart, insertPercentAtEnd, out specifyEscape);
+                var preparedValue = PreparePattern(
+                    (string)constantExpression.Value, insertPercentAtStart, insertPercentAtEnd, out specifyEscape);
                 Debug.Assert(preparedValue != null, "The prepared value should not be null when the input is non-null");
-            
+
                 //Note: the result type needs to be taken from the original expression, as the user may have specified Unicode/Non-Unicode
-                translatedPatternExpression = DbExpressionBuilder.Constant(constantExpression.ResultType, preparedValue);
+                translatedPatternExpression = constantExpression.ResultType.Constant(preparedValue);
             }
 
             DbExpression result;
@@ -1377,12 +1469,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 if (specifyEscape)
                 {
                     //DevDiv #326720: The constant expression for the escape character should not have unicode set by default
-                    var escapeExpression = DbExpressionBuilder.Constant(EdmProviderManifest.Instance.GetCanonicalModelTypeUsage(PrimitiveTypeKind.String), new String(new char[] { escapeChar }));
-                    result = DbExpressionBuilder.Like(translatedInputExpression, translatedPatternExpression, escapeExpression);
+                    var escapeExpression =
+                        EdmProviderManifest.Instance.GetCanonicalModelTypeUsage(PrimitiveTypeKind.String).Constant(
+                            new String(new[] { escapeChar }));
+                    result = translatedInputExpression.Like(translatedPatternExpression, escapeExpression);
                 }
                 else
                 {
-                    result = DbExpressionBuilder.Like(translatedInputExpression, translatedPatternExpression);
+                    result = translatedInputExpression.Like(translatedPatternExpression);
                 }
             }
             else
@@ -1407,16 +1501,16 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 return null;
             }
 
-            string escapedPatternValue = this.ProviderManifest.EscapeLikeArgument(patternValue);
+            var escapedPatternValue = ProviderManifest.EscapeLikeArgument(patternValue);
 
             if (escapedPatternValue == null)
             {
-                throw EntityUtil.ProviderIncompatible(System.Data.Entity.Resources.Strings.ProviderEscapeLikeArgumentReturnedNull);
+                throw EntityUtil.ProviderIncompatible(Strings.ProviderEscapeLikeArgumentReturnedNull);
             }
 
             specifyEscape = patternValue != escapedPatternValue;
 
-            System.Text.StringBuilder patternBuilder = new System.Text.StringBuilder();
+            var patternBuilder = new StringBuilder();
             if (insertPercentAtStart)
             {
                 patternBuilder.Append("%");
@@ -1427,7 +1521,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 patternBuilder.Append("%");
             }
 
-            return  patternBuilder.ToString();
+            return patternBuilder.ToString();
         }
 
         /// <summary>
@@ -1438,10 +1532,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <param name="Expression">Passed only for error handling purposes</param>
         /// <param name="linqArguments"></param>
         /// <returns></returns>
-        private DbFunctionExpression TranslateIntoCanonicalFunction(string functionName, Expression Expression, params Expression[] linqArguments)
+        private DbFunctionExpression TranslateIntoCanonicalFunction(
+            string functionName, Expression Expression, params Expression[] linqArguments)
         {
-            DbExpression[] translatedArguments = new DbExpression[linqArguments.Length];
-            for (int i = 0; i < linqArguments.Length; i++)
+            var translatedArguments = new DbExpression[linqArguments.Length];
+            for (var i = 0; i < linqArguments.Length; i++)
             {
                 translatedArguments[i] = TranslateExpression(linqArguments[i]);
             }
@@ -1455,14 +1550,15 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <param name="Expression">Passed only for error handling purposes</param>
         /// <param name="translatedArguments"></param>
         /// <returns></returns>
-        private DbFunctionExpression CreateCanonicalFunction(string functionName, Expression Expression, params DbExpression[] translatedArguments)
+        private DbFunctionExpression CreateCanonicalFunction(
+            string functionName, Expression Expression, params DbExpression[] translatedArguments)
         {
-            List<TypeUsage> translatedArgumentTypes = new List<TypeUsage>(translatedArguments.Length);
-            foreach (DbExpression translatedArgument in translatedArguments)
+            var translatedArgumentTypes = new List<TypeUsage>(translatedArguments.Length);
+            foreach (var translatedArgument in translatedArguments)
             {
                 translatedArgumentTypes.Add(translatedArgument.ResultType);
             }
-            EdmFunction function = FindCanonicalFunction(functionName, translatedArgumentTypes, false /* isGroupAggregateFunction */, Expression);
+            var function = FindCanonicalFunction(functionName, translatedArgumentTypes, false /* isGroupAggregateFunction */, Expression);
             return function.Invoke(translatedArguments);
         }
 
@@ -1474,7 +1570,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <param name="isGroupAggregateFunction"></param>
         /// <param name="Expression"></param>
         /// <returns></returns>
-        private EdmFunction FindCanonicalFunction(string functionName, IList<TypeUsage> argumentTypes, bool isGroupAggregateFunction, Expression Expression)
+        private EdmFunction FindCanonicalFunction(
+            string functionName, IList<TypeUsage> argumentTypes, bool isGroupAggregateFunction, Expression Expression)
         {
             return FindFunction(EdmNamespaceName, functionName, argumentTypes, isGroupAggregateFunction, Expression);
         }
@@ -1488,7 +1585,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <param name="isGroupAggregateFunction"></param>
         /// <param name="Expression"></param>
         /// <returns></returns>
-        private EdmFunction FindFunction(string namespaceName, string functionName, IList<TypeUsage> argumentTypes, bool isGroupAggregateFunction, Expression Expression)
+        private EdmFunction FindFunction(
+            string namespaceName, string functionName, IList<TypeUsage> argumentTypes, bool isGroupAggregateFunction, Expression Expression)
         {
             // find the function
             IList<EdmFunction> candidateFunctions;
@@ -1500,7 +1598,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
             Debug.Assert(null != candidateFunctions && candidateFunctions.Count > 0, "provider functions must not be null or empty");
 
             bool isAmbiguous;
-            EdmFunction function = FunctionOverloadResolver.ResolveFunctionOverloads(candidateFunctions, argumentTypes, isGroupAggregateFunction, out isAmbiguous);
+            var function = FunctionOverloadResolver.ResolveFunctionOverloads(
+                candidateFunctions, argumentTypes, isGroupAggregateFunction, out isAmbiguous);
             if (isAmbiguous || null == function)
             {
                 ThrowUnresolvableFunctionOverload(Expression, isAmbiguous);
@@ -1514,19 +1613,21 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <param name="Expression"></param>
         private static void ThrowUnresolvableFunction(Expression Expression)
         {
-            if (Expression.NodeType == ExpressionType.Call)
+            if (Expression.NodeType
+                == ExpressionType.Call)
             {
-                MethodInfo methodInfo = ((MethodCallExpression)Expression).Method;
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnresolvableFunctionForMethod(methodInfo, methodInfo.DeclaringType));
+                var methodInfo = ((MethodCallExpression)Expression).Method;
+                throw EntityUtil.NotSupported(Strings.ELinq_UnresolvableFunctionForMethod(methodInfo, methodInfo.DeclaringType));
             }
-            else if (Expression.NodeType == ExpressionType.MemberAccess)
+            else if (Expression.NodeType
+                     == ExpressionType.MemberAccess)
             {
                 string memberName;
                 Type memberType;
-                MemberInfo memberInfo = TypeSystem.PropertyOrField(((MemberExpression)Expression).Member, out memberName, out memberType);
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnresolvableFunctionForMember(memberInfo, memberInfo.DeclaringType));
+                var memberInfo = TypeSystem.PropertyOrField(((MemberExpression)Expression).Member, out memberName, out memberType);
+                throw EntityUtil.NotSupported(Strings.ELinq_UnresolvableFunctionForMember(memberInfo, memberInfo.DeclaringType));
             }
-            throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnresolvableFunctionForExpression(Expression.NodeType));
+            throw EntityUtil.NotSupported(Strings.ELinq_UnresolvableFunctionForExpression(Expression.NodeType));
         }
 
         /// <summary>
@@ -1535,46 +1636,51 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <param name="Expression"></param>
         private static void ThrowUnresolvableFunctionOverload(Expression Expression, bool isAmbiguous)
         {
-            if (Expression.NodeType == ExpressionType.Call)
+            if (Expression.NodeType
+                == ExpressionType.Call)
             {
-                MethodInfo methodInfo = ((MethodCallExpression)Expression).Method;
+                var methodInfo = ((MethodCallExpression)Expression).Method;
                 if (isAmbiguous)
                 {
-                    throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnresolvableFunctionForMethodAmbiguousMatch(methodInfo, methodInfo.DeclaringType));
+                    throw EntityUtil.NotSupported(
+                        Strings.ELinq_UnresolvableFunctionForMethodAmbiguousMatch(methodInfo, methodInfo.DeclaringType));
                 }
                 else
                 {
-                    throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnresolvableFunctionForMethodNotFound(methodInfo, methodInfo.DeclaringType));
+                    throw EntityUtil.NotSupported(Strings.ELinq_UnresolvableFunctionForMethodNotFound(methodInfo, methodInfo.DeclaringType));
                 }
             }
-            else if (Expression.NodeType == ExpressionType.MemberAccess)
+            else if (Expression.NodeType
+                     == ExpressionType.MemberAccess)
             {
                 string memberName;
                 Type memberType;
-                MemberInfo memberInfo = TypeSystem.PropertyOrField(((MemberExpression)Expression).Member, out memberName, out memberType);
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnresolvableStoreFunctionForMember(memberInfo, memberInfo.DeclaringType));
+                var memberInfo = TypeSystem.PropertyOrField(((MemberExpression)Expression).Member, out memberName, out memberType);
+                throw EntityUtil.NotSupported(Strings.ELinq_UnresolvableStoreFunctionForMember(memberInfo, memberInfo.DeclaringType));
             }
-            throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnresolvableStoreFunctionForExpression(Expression.NodeType));
+            throw EntityUtil.NotSupported(Strings.ELinq_UnresolvableStoreFunctionForExpression(Expression.NodeType));
         }
 
-        private static DbNewInstanceExpression CreateNewRowExpression(List<KeyValuePair<string, DbExpression>> columns, InitializerMetadata initializerMetadata)
+        private static DbNewInstanceExpression CreateNewRowExpression(
+            List<KeyValuePair<string, DbExpression>> columns, InitializerMetadata initializerMetadata)
         {
-            List<DbExpression> propertyValues = new List<DbExpression>(columns.Count);
-            List<EdmProperty> properties = new List<EdmProperty>(columns.Count);
-            for (int i = 0; i < columns.Count; i++)
+            var propertyValues = new List<DbExpression>(columns.Count);
+            var properties = new List<EdmProperty>(columns.Count);
+            for (var i = 0; i < columns.Count; i++)
             {
                 var column = columns[i];
                 propertyValues.Add(column.Value);
                 properties.Add(new EdmProperty(column.Key, column.Value.ResultType));
             }
-            RowType rowType = new RowType(properties, initializerMetadata);
-            TypeUsage typeUsage = TypeUsage.Create(rowType);
+            var rowType = new RowType(properties, initializerMetadata);
+            var typeUsage = TypeUsage.Create(rowType);
             return typeUsage.New(propertyValues);
         }
 
         #endregion
-   
+
         #region Private enums
+
         // Describes different implementation pattern for equality comparisons.
         // For all patterns, if one side of the expression is a constant null, converts to an IS NULL
         // expression (or resolves to 'true' or 'false' if some constraint is known for the other side).
@@ -1596,9 +1702,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private enum EqualsPattern
         {
             Store, // defer to store
-            PositiveNullEqualityNonComposable, // simulate C# semantics in store, return "null" if left or right is null, but not both. Suitable for joins.
+            PositiveNullEqualityNonComposable,
+            // simulate C# semantics in store, return "null" if left or right is null, but not both. Suitable for joins.
             PositiveNullEqualityComposable, // simulate C# semantics in store, always return true or false
         }
+
         #endregion
     }
 }

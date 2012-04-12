@@ -1,15 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Reflection;
-using System.Text;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Class representing a collection of entity set objects
     /// </summary>
@@ -19,6 +11,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // is required to update the EntitySet's back-reference to the EntityContainer.
 
         #region Constructors
+
         /// <summary>
         /// Default constructor for constructing an empty collection
         /// </summary>
@@ -41,13 +34,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
             EntityUtil.GenericCheckArgumentNull(entityContainer, "entityContainer");
             _entityContainer = entityContainer;
         }
+
         #endregion
 
         #region Fields
+
         private readonly EntityContainer _entityContainer;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets an item from the collection with the given index
         /// </summary>
@@ -57,14 +54,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.InvalidOperationException">Always thrown on setter</exception>
         public override EntitySetBase this[int index]
         {
-            get
-            {
-                return base[index];
-            }
-            set
-            {
-                throw EntityUtil.OperationOnReadOnlyCollection();
-            }
+            get { return base[index]; }
+            set { throw EntityUtil.OperationOnReadOnlyCollection(); }
         }
 
         /// <summary>
@@ -77,18 +68,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.InvalidOperationException">Always thrown on setter</exception>
         public override EntitySetBase this[string identity]
         {
-            get
-            {
-                return base[identity];
-            }
-            set
-            {
-                throw EntityUtil.OperationOnReadOnlyCollection();
-            }
+            get { return base[identity]; }
+            set { throw EntityUtil.OperationOnReadOnlyCollection(); }
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Adds an item to the collection 
         /// </summary>
@@ -121,6 +108,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 throw EntityUtil.EntitySetInAnotherContainer(argumentName);
             }
         }
+
         #endregion
     }
 }

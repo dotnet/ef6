@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
-using System.Data.SqlClient;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees;
-
 namespace System.Data.Entity.Core.SqlClient.SqlGen
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Diagnostics;
+
     /// <summary>
     /// This class is like StringBuilder.  While traversing the tree for the first time, 
     /// we do not know all the strings that need to be appended e.g. things that need to be
@@ -18,6 +13,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
     internal class SqlBuilder : ISqlFragment
     {
         private List<object> _sqlFragments;
+
         private List<object> sqlFragments
         {
             get
@@ -29,7 +25,6 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 return _sqlFragments;
             }
         }
-
 
         /// <summary>
         /// Add an object to the list - we do not verify that it is a proper sql fragment
@@ -72,16 +67,16 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         {
             if (null != _sqlFragments)
             {
-                foreach (object o in _sqlFragments)
+                foreach (var o in _sqlFragments)
                 {
-                    string str = (o as String);
+                    var str = (o as String);
                     if (null != str)
                     {
                         writer.Write(str);
                     }
                     else
                     {
-                        ISqlFragment sqlFragment = (o as ISqlFragment);
+                        var sqlFragment = (o as ISqlFragment);
                         if (null != sqlFragment)
                         {
                             sqlFragment.WriteSql(writer, sqlGenerator);

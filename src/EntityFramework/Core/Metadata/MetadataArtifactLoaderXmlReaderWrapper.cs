@@ -1,13 +1,9 @@
-using System.Collections.Generic;
-using System.Collections;
-using System.Diagnostics;
-using System.Text;
-using System.Xml;
-using System.Security.Permissions;
-
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Xml;
+
     /// <summary>
     /// This class represents a wrapper around an XmlReader to be used to load metadata.
     /// Note that the XmlReader object isn't created here -- the wrapper simply stores
@@ -16,8 +12,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     internal class MetadataArtifactLoaderXmlReaderWrapper : MetadataArtifactLoader, IComparable
     {
-        private readonly XmlReader _reader = null;
-        private readonly string _resourceUri = null;
+        private readonly XmlReader _reader;
+        private readonly string _resourceUri;
 
         /// <summary>
         /// Constructor - saves off the XmlReader in a private data field
@@ -27,20 +23,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             _reader = xmlReader;
             _resourceUri = xmlReader.BaseURI;
-
         }
 
         public override string Path
         {
             get
             {
-                if (string.IsNullOrEmpty(this._resourceUri))
+                if (string.IsNullOrEmpty(_resourceUri))
                 {
                     return string.Empty;
                 }
                 else
                 {
-                    return this._resourceUri;
+                    return _resourceUri;
                 }
             }
         }
@@ -52,10 +47,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>0 if the loaders are "equal" (i.e., have the same _path value)</returns>
         public int CompareTo(object obj)
         {
-            MetadataArtifactLoaderXmlReaderWrapper loader = obj as MetadataArtifactLoaderXmlReaderWrapper;
+            var loader = obj as MetadataArtifactLoaderXmlReaderWrapper;
             if (loader != null)
             {
-                if (Object.ReferenceEquals(this._reader, loader._reader))
+                if (ReferenceEquals(_reader, loader._reader))
                 {
                     return 0;
                 }
@@ -76,7 +71,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>true if the objects have the same _path value</returns>
         public override bool Equals(object obj)
         {
-            return this.CompareTo(obj) == 0;
+            return CompareTo(obj) == 0;
         }
 
         /// <summary>
@@ -100,8 +95,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of strings identifying paths to all artifacts for a specific DataSpace</returns>
         public override List<string> GetPaths(DataSpace spaceToGet)
         {
-            List<string> list = new List<string>();
-            if (MetadataArtifactLoader.IsArtifactOfDataSpace(Path, spaceToGet))
+            var list = new List<string>();
+            if (IsArtifactOfDataSpace(Path, spaceToGet))
             {
                 list.Add(Path);
             }
@@ -114,7 +109,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of strings identifying paths to all resources</returns>
         public override List<string> GetPaths()
         {
-            return new List<string>(new string[] { Path });
+            return new List<string>(new[] { Path });
         }
 
         /// <summary>
@@ -123,9 +118,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of XmlReaders for all resources</returns>
         public override List<XmlReader> GetReaders(Dictionary<MetadataArtifactLoader, XmlReader> sourceDictionary)
         {
-            List<XmlReader> list = new List<XmlReader>();
+            var list = new List<XmlReader>();
 
-            list.Add(this._reader);
+            list.Add(_reader);
             if (sourceDictionary != null)
             {
                 sourceDictionary.Add(this, _reader);
@@ -142,9 +137,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of XmlReader objects</returns>
         public override List<XmlReader> CreateReaders(DataSpace spaceToGet)
         {
-            List<XmlReader> list = new List<XmlReader>();
+            var list = new List<XmlReader>();
 
-            if (MetadataArtifactLoader.IsArtifactOfDataSpace(Path, spaceToGet))
+            if (IsArtifactOfDataSpace(Path, spaceToGet))
             {
                 list.Add(_reader);
             }

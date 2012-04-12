@@ -1,10 +1,5 @@
-using System.Collections.Generic;
-using System.Data.Entity.Core.Metadata.Edm;
-
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     /// The expression visitor pattern abstract base class that should be implemented by visitors that do not return a result value.
     /// </summary>
@@ -51,7 +46,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </summary>
         /// <param name="expression">The DbComparisonExpression that is being visited.</param>
         public abstract void Visit(DbComparisonExpression expression);
-        
+
         /// <summary>
         /// Visitor pattern method for DbConstantExpression.
         /// </summary>
@@ -135,13 +130,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </summary>
         /// <param name="expression">The DbIsNullExpression that is being visited.</param>
         public abstract void Visit(DbIsNullExpression expression);
-        
+
         /// <summary>
         /// Visitor pattern method for DbIsOfExpression.
         /// </summary>
         /// <param name="expression">The DbIsOfExpression that is being visited.</param>
         public abstract void Visit(DbIsOfExpression expression);
-        
+
         /// <summary>
         /// Visitor pattern method for DbJoinExpression.
         /// </summary>
@@ -170,10 +165,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         public abstract void Visit(DbLimitExpression expression);
 
 #if METHOD_EXPRESSION
-        /// <summary>
-        /// Visitor pattern method for MethodExpression.
-        /// </summary>
-        /// <param name="expression">The MethodExpression that is being visited.</param>
+    /// <summary>
+    /// Visitor pattern method for MethodExpression.
+    /// </summary>
+    /// <param name="expression">The MethodExpression that is being visited.</param>
         public abstract void Visit(MethodExpression expression);
 #endif
 
@@ -212,7 +207,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </summary>
         /// <param name="expression">The DbParameterReferenceExpression that is being visited.</param>
         public abstract void Visit(DbParameterReferenceExpression expression);
-        
+
         /// <summary>
         /// Visitor pattern method for DbProjectExpression.
         /// </summary>
@@ -266,13 +261,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </summary>
         /// <param name="expression">The DbTreatExpression that is being visited.</param>
         public abstract void Visit(DbTreatExpression expression);
-        
+
         /// <summary>
         /// Visitor pattern method for DbUnionAllExpression.
         /// </summary>
         /// <param name="expression">The DbUnionAllExpression that is being visited.</param>
         public abstract void Visit(DbUnionAllExpression expression);
-        
+
         /// <summary>
         /// Visitor pattern method for DbVariableReferenceExpression.
         /// </summary>

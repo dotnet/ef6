@@ -2,10 +2,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
-    using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Spatial;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
 
     internal partial class Propagator
@@ -28,19 +28,20 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             #endregion
 
             #region Fields
-            
-            static private Dictionary<PrimitiveTypeKind, object> s_typeDefaultMap = InitializeTypeDefaultMap();
+
+            private static readonly Dictionary<PrimitiveTypeKind, object> s_typeDefaultMap = InitializeTypeDefaultMap();
 
             #endregion
 
             #region Methods
+
             /// <summary>
             /// Initializes a map from primitive scalar types in the C-Space to default values
             /// used within the placeholder.
             /// </summary>
             private static Dictionary<PrimitiveTypeKind, object> InitializeTypeDefaultMap()
             {
-                Dictionary<PrimitiveTypeKind, object> typeDefaultMap = new Dictionary<PrimitiveTypeKind, object>(
+                var typeDefaultMap = new Dictionary<PrimitiveTypeKind, object>(
                     EqualityComparer<PrimitiveTypeKind>.Default);
 
                 // Use CLR defaults for value types, arbitrary constants for reference types
@@ -63,8 +64,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 typeDefaultMap[PrimitiveTypeKind.Geometry] = DbGeometry.FromText("POINT EMPTY");
                 typeDefaultMap[PrimitiveTypeKind.GeometryPoint] = DbGeometry.FromText("POINT EMPTY");
-                typeDefaultMap[PrimitiveTypeKind.GeometryLineString] = DbGeometry.FromText("LINESTRING EMPTY"); 
-                typeDefaultMap[PrimitiveTypeKind.GeometryPolygon] = DbGeometry.FromText("POLYGON EMPTY"); 
+                typeDefaultMap[PrimitiveTypeKind.GeometryLineString] = DbGeometry.FromText("LINESTRING EMPTY");
+                typeDefaultMap[PrimitiveTypeKind.GeometryPolygon] = DbGeometry.FromText("POLYGON EMPTY");
                 typeDefaultMap[PrimitiveTypeKind.GeometryMultiPoint] = DbGeometry.FromText("MULTIPOINT EMPTY");
                 typeDefaultMap[PrimitiveTypeKind.GeometryMultiLineString] = DbGeometry.FromText("MULTILINESTRING EMPTY");
                 typeDefaultMap[PrimitiveTypeKind.GeometryMultiPolygon] = DbGeometry.FromText("MULTIPOLYGON EMPTY");
@@ -79,8 +80,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 typeDefaultMap[PrimitiveTypeKind.GeographyMultiPolygon] = DbGeography.FromText("MULTIPOLYGON EMPTY");
                 typeDefaultMap[PrimitiveTypeKind.GeographyCollection] = DbGeography.FromText("GEOMETRYCOLLECTION EMPTY");
 
-#if DEBUG                
-                foreach (object o in typeDefaultMap.Values)
+#if DEBUG
+                foreach (var o in typeDefaultMap.Values)
                 {
                     Debug.Assert(null != o, "DbConstantExpression instances do not support null values");
                 }
@@ -104,22 +105,23 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 EntityUtil.CheckArgumentNull(extent, "extent");
 
-                ExtentPlaceholderCreator creator = new ExtentPlaceholderCreator();
+                var creator = new ExtentPlaceholderCreator();
 
-                AssociationSet associationSet = extent as AssociationSet;
+                var associationSet = extent as AssociationSet;
                 if (null != associationSet)
                 {
                     return creator.CreateAssociationSetPlaceholder(associationSet);
                 }
 
-                EntitySet entitySet = extent as EntitySet;
+                var entitySet = extent as EntitySet;
                 if (null != entitySet)
                 {
                     return creator.CreateEntitySetPlaceholder(entitySet);
                 }
 
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.Update_UnsupportedExtentType(
-                    extent.Name, extent.GetType().Name));
+                throw EntityUtil.NotSupported(
+                    Strings.Update_UnsupportedExtentType(
+                        extent.Name, extent.GetType().Name));
             }
 
             /// <summary>
@@ -130,16 +132,16 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             private PropagatorResult CreateEntitySetPlaceholder(EntitySet entitySet)
             {
                 EntityUtil.CheckArgumentNull(entitySet, "entitySet");
-                ReadOnlyMetadataCollection<EdmProperty> members = entitySet.ElementType.Properties;
-                PropagatorResult[] memberValues = new PropagatorResult[members.Count];
+                var members = entitySet.ElementType.Properties;
+                var memberValues = new PropagatorResult[members.Count];
 
-                for (int ordinal = 0; ordinal < members.Count; ordinal++)
+                for (var ordinal = 0; ordinal < members.Count; ordinal++)
                 {
-                    PropagatorResult memberValue = CreateMemberPlaceholder(members[ordinal]);
+                    var memberValue = CreateMemberPlaceholder(members[ordinal]);
                     memberValues[ordinal] = memberValue;
                 }
 
-                PropagatorResult result = PropagatorResult.CreateStructuralValue(memberValues, entitySet.ElementType, false);
+                var result = PropagatorResult.CreateStructuralValue(memberValues, entitySet.ElementType, false);
 
                 return result;
             }
@@ -154,30 +156,30 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 Debug.Assert(null != associationSet, "Caller must verify parameters are not null");
 
                 var endMetadata = associationSet.ElementType.AssociationEndMembers;
-                PropagatorResult[] endReferenceValues = new PropagatorResult[endMetadata.Count];
+                var endReferenceValues = new PropagatorResult[endMetadata.Count];
 
                 // Create a reference expression for each end in the relationship
-                for (int endOrdinal = 0; endOrdinal < endMetadata.Count; endOrdinal++)
+                for (var endOrdinal = 0; endOrdinal < endMetadata.Count; endOrdinal++)
                 {
                     var end = endMetadata[endOrdinal];
-                    EntityType entityType = (EntityType)((RefType)end.TypeUsage.EdmType).ElementType;
+                    var entityType = (EntityType)((RefType)end.TypeUsage.EdmType).ElementType;
 
                     // Retrieve key values for this end
-                    PropagatorResult[] keyValues = new PropagatorResult[entityType.KeyMembers.Count];
-                    for (int memberOrdinal = 0; memberOrdinal < entityType.KeyMembers.Count; memberOrdinal++)
+                    var keyValues = new PropagatorResult[entityType.KeyMembers.Count];
+                    for (var memberOrdinal = 0; memberOrdinal < entityType.KeyMembers.Count; memberOrdinal++)
                     {
-                        EdmMember keyMember = entityType.KeyMembers[memberOrdinal];
-                        PropagatorResult keyValue = CreateMemberPlaceholder(keyMember);
+                        var keyMember = entityType.KeyMembers[memberOrdinal];
+                        var keyValue = CreateMemberPlaceholder(keyMember);
                         keyValues[memberOrdinal] = keyValue;
                     }
 
-                    RowType endType = entityType.GetKeyRowType();
-                    PropagatorResult refKeys = PropagatorResult.CreateStructuralValue(keyValues, endType, false);
+                    var endType = entityType.GetKeyRowType();
+                    var refKeys = PropagatorResult.CreateStructuralValue(keyValues, endType, false);
 
                     endReferenceValues[endOrdinal] = refKeys;
                 }
 
-                PropagatorResult result = PropagatorResult.CreateStructuralValue(endReferenceValues, associationSet.ElementType, false);
+                var result = PropagatorResult.CreateStructuralValue(endReferenceValues, associationSet.ElementType, false);
                 return result;
             }
 
@@ -194,6 +196,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             #region Visitor implementation
+
             /// <summary>
             /// Given default values for children members, produces a new default expression for the requested (parent) member.
             /// </summary>
@@ -202,7 +205,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             internal PropagatorResult Visit(EdmMember node)
             {
                 PropagatorResult result;
-                TypeUsage nodeType = Helper.GetModelTypeUsage(node);
+                var nodeType = Helper.GetModelTypeUsage(node);
 
                 if (Helper.IsScalarType(nodeType.EdmType))
                 {
@@ -211,12 +214,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 else
                 {
                     // Construct a new 'complex type' (really any structural type) member.
-                    StructuralType structuralType = (StructuralType)nodeType.EdmType;
-                    IBaseList<EdmMember> members = TypeHelpers.GetAllStructuralMembers(structuralType);
+                    var structuralType = (StructuralType)nodeType.EdmType;
+                    var members = TypeHelpers.GetAllStructuralMembers(structuralType);
 
-                    PropagatorResult[] args = new PropagatorResult[members.Count];
-                    for (int ordinal = 0; ordinal < members.Count; ordinal++)
-                    //                    foreach (EdmMember member in members)
+                    var args = new PropagatorResult[members.Count];
+                    for (var ordinal = 0; ordinal < members.Count; ordinal++)
+                        //                    foreach (EdmMember member in members)
                     {
                         args[ordinal] = Visit(members[ordinal]);
                     }
@@ -231,7 +234,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             private static void GetPropagatorResultForPrimitiveType(PrimitiveType primitiveType, out PropagatorResult result)
             {
                 object value;
-                PrimitiveTypeKind primitiveTypeKind = primitiveType.PrimitiveTypeKind;
+                var primitiveTypeKind = primitiveType.PrimitiveTypeKind;
                 if (!s_typeDefaultMap.TryGetValue(primitiveTypeKind, out value))
                 {
                     // If none exists, default to lowest common denominator for constants
@@ -245,6 +248,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             #endregion
+
             #endregion
         }
     }

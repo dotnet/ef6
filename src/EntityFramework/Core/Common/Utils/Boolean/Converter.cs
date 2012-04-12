@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Linq;
-
-namespace System.Data.Entity.Core.Common.Utils.Boolean
+﻿namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
+    using System.Linq;
 
     /// <summary>
     /// Handles conversion of expressions to different forms (decision diagram, etc)
@@ -109,9 +102,9 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
                 else
                 {
                     // construct clauses by walking the tree and constructing a clause for each sink
-                    Set<DnfClause<T_Identifier>> dnfClauses = new Set<DnfClause<T_Identifier>>();
-                    Set<CnfClause<T_Identifier>> cnfClauses = new Set<CnfClause<T_Identifier>>();
-                    Set<Literal<T_Identifier>> path = new Set<Literal<T_Identifier>>();
+                    var dnfClauses = new Set<DnfClause<T_Identifier>>();
+                    var cnfClauses = new Set<CnfClause<T_Identifier>>();
+                    var path = new Set<Literal<T_Identifier>>();
 
                     FindAllPaths(_vertex, cnfClauses, dnfClauses, path);
 
@@ -121,7 +114,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
             }
         }
 
-        private void FindAllPaths(Vertex vertex, Set<CnfClause<T_Identifier>> cnfClauses, Set<DnfClause<T_Identifier>> dnfClauses,
+        private void FindAllPaths(
+            Vertex vertex, Set<CnfClause<T_Identifier>> cnfClauses, Set<DnfClause<T_Identifier>> dnfClauses,
             Set<Literal<T_Identifier>> path)
         {
             if (vertex.IsOne())

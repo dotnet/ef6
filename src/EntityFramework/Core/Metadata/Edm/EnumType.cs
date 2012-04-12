@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// A collection of enumeration members for this enumeration type
         /// </summary>
-        private readonly ReadOnlyMetadataCollection<EnumMember> _members = 
+        private readonly ReadOnlyMetadataCollection<EnumMember> _members =
             new ReadOnlyMetadataCollection<EnumMember>(new MetadataCollection<EnumMember>());
 
         /// <summary>
@@ -31,6 +31,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #endregion
 
         #region Constructors
+
         /// <summary>
         /// Initializes a new instance of the EnumType class. This default constructor is used for bootstraping
         /// </summary>
@@ -53,7 +54,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <remarks>Note that enums live only in CSpace.</remarks>
         internal EnumType(string name, string namespaceName, PrimitiveType underlyingType, bool isFlags, DataSpace dataSpace)
             : base(name, namespaceName, dataSpace)
-        { 
+        {
             Debug.Assert(underlyingType != null, "underlyingType != null");
             Debug.Assert(Helper.IsSupportedEnumUnderlyingType(underlyingType.PrimitiveTypeKind), "Unsupported underlying type for enum.");
             Debug.Assert(dataSpace == DataSpace.CSpace || dataSpace == DataSpace.OSpace, "Enums can be only defined in CSpace or OSpace.");
@@ -75,8 +76,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// C# does not support this. In order to not expose this constructor to everyone internal is the
         /// only option.
         /// </remarks>
-        internal EnumType(Type clrType) :
-            base(clrType.Name, clrType.Namespace ?? string.Empty, DataSpace.OSpace)
+        internal EnumType(Type clrType)
+            :
+                base(clrType.Name, clrType.Namespace ?? string.Empty, DataSpace.OSpace)
         {
             Debug.Assert(clrType != null, "clrType != null");
             Debug.Assert(clrType.IsEnum, "enum type expected");
@@ -84,14 +86,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             ClrProviderManifest.Instance.TryGetPrimitiveType(clrType.GetEnumUnderlyingType(), out _underlyingType);
 
             Debug.Assert(_underlyingType != null, "only primitive types expected here.");
-            Debug.Assert(Helper.IsSupportedEnumUnderlyingType(_underlyingType.PrimitiveTypeKind), 
+            Debug.Assert(
+                Helper.IsSupportedEnumUnderlyingType(_underlyingType.PrimitiveTypeKind),
                 "unsupported CLR types should have been filtered out by .TryGetPrimitiveType() method.");
 
             _isFlags = clrType.GetCustomAttributes(typeof(FlagsAttribute), false).Any();
 
-            foreach (string name in Enum.GetNames(clrType))
+            foreach (var name in Enum.GetNames(clrType))
             {
-                this.AddMember(
+                AddMember(
                     new EnumMember(
                         name,
                         Convert.ChangeType(Enum.Parse(clrType, name), clrType.GetEnumUnderlyingType(), CultureInfo.InvariantCulture)));
@@ -105,7 +108,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Returns the kind of the type
         /// </summary>
-        public override BuiltInTypeKind BuiltInTypeKind { get { return BuiltInTypeKind.EnumType; } }
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
+            get { return BuiltInTypeKind.EnumType; }
+        }
 
         /// <summary>
         /// Gets a collection of enumeration members for this enumeration type.
@@ -119,7 +125,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Gets a value indicating whether the enum type is defined as flags (i.e. can be treated as a bit field)
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags"), MetadataProperty(PrimitiveTypeKind.Boolean, false)]
+        [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags")]
+        [MetadataProperty(PrimitiveTypeKind.Boolean, false)]
         public bool IsFlags
         {
             get { return _isFlags; }
@@ -146,7 +153,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             if (!IsReadOnly)
             {
                 base.SetReadOnly();
-                this.Members.Source.SetReadOnly();
+                Members.Source.SetReadOnly();
             }
         }
 
@@ -157,10 +164,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal void AddMember(EnumMember enumMember)
         {
             Debug.Assert(enumMember != null, "enumMember != null");
-            Debug.Assert(Helper.IsEnumMemberValueInRange(UnderlyingType.PrimitiveTypeKind, Convert.ToInt64(enumMember.Value, CultureInfo.InvariantCulture)));
+            Debug.Assert(
+                Helper.IsEnumMemberValueInRange(
+                    UnderlyingType.PrimitiveTypeKind, Convert.ToInt64(enumMember.Value, CultureInfo.InvariantCulture)));
             Debug.Assert(enumMember.Value.GetType() == UnderlyingType.ClrEquivalentType);
 
-            this.Members.Source.Add(enumMember);
+            Members.Source.Add(enumMember);
         }
 
         #endregion
@@ -173,7 +182,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     internal sealed class ClrEnumType : EnumType
     {
         /// <summary>cached CLR type handle, allowing the Type reference to be GC'd</summary>
-        private readonly System.RuntimeTypeHandle _type;
+        private readonly RuntimeTypeHandle _type;
 
         private readonly string _cspaceTypeName;
 
@@ -184,11 +193,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="cspaceNamespaceName">CSpace namespace name.</param>
         /// <param name="cspaceTypeName">CSpace type name.</param>
         internal ClrEnumType(Type clrType, string cspaceNamespaceName, string cspaceTypeName)
-            : base(clrType)  
+            : base(clrType)
         {
             Debug.Assert(clrType != null, "clrType != null");
             Debug.Assert(clrType.IsEnum, "enum type expected");
-            Debug.Assert(!String.IsNullOrEmpty(cspaceNamespaceName) && !String.IsNullOrEmpty(cspaceTypeName), "Mapping information must never be null");
+            Debug.Assert(
+                !String.IsNullOrEmpty(cspaceNamespaceName) && !String.IsNullOrEmpty(cspaceTypeName),
+                "Mapping information must never be null");
 
             _type = clrType.TypeHandle;
             _cspaceTypeName = cspaceNamespaceName + "." + cspaceTypeName;
@@ -197,7 +208,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Gets the clr type backing this enum type.
         /// </summary>
-        internal override System.Type ClrType
+        internal override Type ClrType
         {
             get { return Type.GetTypeFromHandle(_type); }
         }
@@ -205,12 +216,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Get the full CSpaceTypeName for this enum type.
         /// </summary>
-        internal string CSpaceTypeName 
-        { 
-            get 
-            { 
-                return _cspaceTypeName; 
-            } 
+        internal string CSpaceTypeName
+        {
+            get { return _cspaceTypeName; }
         }
     }
 }

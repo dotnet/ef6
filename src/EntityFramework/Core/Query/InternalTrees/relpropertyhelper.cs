@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Diagnostics;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Metadata.Edm;
-
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
 
     /// <summary>
     /// A "Rel" property is best thought of as a collocated reference (aka foreign key). 
@@ -25,35 +20,49 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     internal sealed class RelProperty
     {
         #region private state
+
         private readonly RelationshipType m_relationshipType;
         private readonly RelationshipEndMember m_fromEnd;
         private readonly RelationshipEndMember m_toEnd;
+
         #endregion
 
         #region constructors
+
         internal RelProperty(RelationshipType relationshipType, RelationshipEndMember fromEnd, RelationshipEndMember toEnd)
         {
             m_relationshipType = relationshipType;
             m_fromEnd = fromEnd;
             m_toEnd = toEnd;
         }
+
         #endregion
 
         #region public APIs
+
         /// <summary>
         /// The relationship
         /// </summary>
-        public RelationshipType Relationship { get { return m_relationshipType; } }
+        public RelationshipType Relationship
+        {
+            get { return m_relationshipType; }
+        }
 
         /// <summary>
         /// The source end of the relationship
         /// </summary>
-        public RelationshipEndMember FromEnd { get { return m_fromEnd; } }
+        public RelationshipEndMember FromEnd
+        {
+            get { return m_fromEnd; }
+        }
 
         /// <summary>
         /// the target end of the relationship
         /// </summary>
-        public RelationshipEndMember ToEnd { get { return m_toEnd; } }
+        public RelationshipEndMember ToEnd
+        {
+            get { return m_toEnd; }
+        }
 
         /// <summary>
         /// Our definition of equality
@@ -62,11 +71,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            RelProperty other = obj as RelProperty;
+            var other = obj as RelProperty;
             return (other != null &&
-                this.Relationship.EdmEquals(other.Relationship) &&
-                this.FromEnd.EdmEquals(other.FromEnd) &&
-                this.ToEnd.EdmEquals(other.ToEnd));
+                    Relationship.EdmEquals(other.Relationship) &&
+                    FromEnd.EdmEquals(other.FromEnd) &&
+                    ToEnd.EdmEquals(other.ToEnd));
         }
 
         /// <summary>
@@ -75,7 +84,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return this.ToEnd.Identity.GetHashCode();
+            return ToEnd.Identity.GetHashCode();
         }
 
         /// <summary>
@@ -85,9 +94,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         [DebuggerNonUserCode]
         public override string ToString()
         {
-            return m_relationshipType.ToString() + ":" +
-                m_fromEnd.ToString() + ":" +
-                m_toEnd.ToString();
+            return m_relationshipType + ":" +
+                   m_fromEnd + ":" +
+                   m_toEnd;
         }
 
         #endregion
@@ -99,11 +108,14 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     internal sealed class RelPropertyHelper
     {
         #region private state
-        private Dictionary<EntityTypeBase, List<RelProperty>> _relPropertyMap;
-        private HashSet<RelProperty> _interestingRelProperties;
+
+        private readonly Dictionary<EntityTypeBase, List<RelProperty>> _relPropertyMap;
+        private readonly HashSet<RelProperty> _interestingRelProperties;
+
         #endregion
 
         #region private methods
+
         /// <summary>
         /// Add the rel property induced by the specified relationship, (if the target
         /// end has a multiplicity of one)
@@ -112,21 +124,24 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="associationType">the association relationship</param>
         /// <param name="fromEnd">source end of the relationship traversal</param>
         /// <param name="toEnd">target end of the traversal</param>
-        private void AddRelProperty(AssociationType associationType,
+        private void AddRelProperty(
+            AssociationType associationType,
             AssociationEndMember fromEnd, AssociationEndMember toEnd)
         {
-            if (toEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many)
+            if (toEnd.RelationshipMultiplicity
+                == RelationshipMultiplicity.Many)
             {
                 return;
             }
-            RelProperty prop = new RelProperty(associationType, fromEnd, toEnd);
-            if (_interestingRelProperties == null ||
+            var prop = new RelProperty(associationType, fromEnd, toEnd);
+            if (_interestingRelProperties == null
+                ||
                 !_interestingRelProperties.Contains(prop))
             {
                 return;
             }
 
-            EntityTypeBase entityType = (EntityTypeBase)((RefType)fromEnd.TypeUsage.EdmType).ElementType;
+            var entityType = ((RefType)fromEnd.TypeUsage.EdmType).ElementType;
             List<RelProperty> propList;
             if (!_relPropertyMap.TryGetValue(entityType, out propList))
             {
@@ -142,7 +157,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="relationshipType">the relationship</param>
         private void ProcessRelationship(RelationshipType relationshipType)
         {
-            AssociationType associationType = relationshipType as AssociationType;
+            var associationType = relationshipType as AssociationType;
             if (associationType == null)
             {
                 return;
@@ -154,8 +169,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                 return;
             }
 
-            AssociationEndMember end0 = associationType.AssociationEndMembers[0];
-            AssociationEndMember end1 = associationType.AssociationEndMembers[1];
+            var end0 = associationType.AssociationEndMembers[0];
+            var end1 = associationType.AssociationEndMembers[1];
 
             AddRelProperty(associationType, end0, end1);
             AddRelProperty(associationType, end1, end0);
@@ -164,16 +179,18 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #endregion
 
         #region constructors
+
         internal RelPropertyHelper(MetadataWorkspace ws, HashSet<RelProperty> interestingRelProperties)
         {
             _relPropertyMap = new Dictionary<EntityTypeBase, List<RelProperty>>();
             _interestingRelProperties = interestingRelProperties;
 
-            foreach (RelationshipType relationshipType in ws.GetItems<RelationshipType>(DataSpace.CSpace))
+            foreach (var relationshipType in ws.GetItems<RelationshipType>(DataSpace.CSpace))
             {
                 ProcessRelationship(relationshipType);
             }
         }
+
         #endregion
 
         #region public APIs
@@ -188,7 +205,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             List<RelProperty> relProperties;
             if (_relPropertyMap.TryGetValue(entityType, out relProperties))
             {
-                foreach (RelProperty p in relProperties)
+                foreach (var p in relProperties)
                 {
                     yield return p;
                 }
@@ -205,20 +222,18 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             if (entityType.BaseType != null)
             {
-                foreach (RelProperty p in GetRelProperties(entityType.BaseType as EntityTypeBase))
+                foreach (var p in GetRelProperties(entityType.BaseType as EntityTypeBase))
                 {
                     yield return p;
                 }
             }
 
-            foreach (RelProperty p in GetDeclaredOnlyRelProperties(entityType))
+            foreach (var p in GetDeclaredOnlyRelProperties(entityType))
             {
                 yield return p;
             }
-
         }
 
         #endregion
     }
-
 }

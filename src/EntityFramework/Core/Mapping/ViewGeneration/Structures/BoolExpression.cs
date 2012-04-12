@@ -1,49 +1,51 @@
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity.Core.Common.Utils.Boolean;
-using System.Data.Entity;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Common.Utils.Boolean;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.CodeAnalysis;
-    using BoolDomainConstraint = DomainConstraint<BoolLiteral, Constant>;
-    using DomainAndExpr = AndExpr<DomainConstraint<BoolLiteral, Constant>>;
-    using DomainBoolExpr = BoolExpr<DomainConstraint<BoolLiteral, Constant>>;
-    using DomainFalseExpr = FalseExpr<DomainConstraint<BoolLiteral, Constant>>;
-    using DomainNotExpr = NotExpr<DomainConstraint<BoolLiteral, Constant>>;
-    using DomainOrExpr = OrExpr<DomainConstraint<BoolLiteral, Constant>>;
-    using DomainTermExpr = TermExpr<DomainConstraint<BoolLiteral, Constant>>;
-    using DomainTrueExpr = TrueExpr<DomainConstraint<BoolLiteral, Constant>>;
-
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Text;
+    using BoolDomainConstraint = System.Data.Entity.Core.Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>;
+    using DomainAndExpr = System.Data.Entity.Core.Common.Utils.Boolean.AndExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>
+        ;
+    using DomainBoolExpr =
+        System.Data.Entity.Core.Common.Utils.Boolean.BoolExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
+    using DomainFalseExpr =
+        System.Data.Entity.Core.Common.Utils.Boolean.FalseExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
+    using DomainNotExpr = System.Data.Entity.Core.Common.Utils.Boolean.NotExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>
+        ;
+    using DomainOrExpr = System.Data.Entity.Core.Common.Utils.Boolean.OrExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
+    using DomainTermExpr =
+        System.Data.Entity.Core.Common.Utils.Boolean.TermExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
+    using DomainTrueExpr =
+        System.Data.Entity.Core.Common.Utils.Boolean.TrueExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
 
     // This class represents an arbitrary boolean expression
     internal partial class BoolExpression : InternalBase
     {
-
         #region Constructors
+
         // effects: Create a boolean expression from a literal value
         internal static BoolExpression CreateLiteral(BoolLiteral literal, MemberDomainMap memberDomainMap)
         {
-            DomainBoolExpr expr = literal.GetDomainBoolExpression(memberDomainMap);
+            var expr = literal.GetDomainBoolExpression(memberDomainMap);
             return new BoolExpression(expr, memberDomainMap);
         }
 
         // effects: Creates a new boolean expression using the memberDomainMap of this expression
         internal BoolExpression Create(BoolLiteral literal)
         {
-            DomainBoolExpr expr = literal.GetDomainBoolExpression(m_memberDomainMap);
+            var expr = literal.GetDomainBoolExpression(m_memberDomainMap);
             return new BoolExpression(expr, m_memberDomainMap);
         }
 
         // effects: Create a boolean expression of the form "NOT expression"
         internal static BoolExpression CreateNot(BoolExpression expression)
         {
-            return new BoolExpression(ExprType.Not, new BoolExpression[] { expression });
+            return new BoolExpression(ExprType.Not, new[] { expression });
         }
 
         // effects: Create a boolean expression of the form "children[0] AND
@@ -89,10 +91,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // children, returns the corresponding bool expression
         private BoolExpression(ExprType opType, IEnumerable<BoolExpression> children)
         {
-            List<BoolExpression> childList = new List<BoolExpression>(children);
+            var childList = new List<BoolExpression>(children);
             Debug.Assert(childList.Count > 0);
             // If any child is other than true or false, it will have m_memberDomainMap set
-            foreach (BoolExpression child in children)
+            foreach (var child in children)
             {
                 if (child.m_memberDomainMap != null)
                 {
@@ -125,9 +127,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_tree = expr;
             m_memberDomainMap = memberDomainMap;
         }
+
         #endregion
 
         #region Fields
+
         private DomainBoolExpr m_tree; // The actual tree that has the expression
         // Domain map for various member paths - can be null
         private readonly MemberDomainMap m_memberDomainMap;
@@ -136,9 +140,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         internal static readonly IEqualityComparer<BoolExpression> EqualityComparer = new BoolComparer();
         internal static readonly BoolExpression True = new BoolExpression(true);
         internal static readonly BoolExpression False = new BoolExpression(false);
+
         #endregion
 
         #region Properties
+
         // requires: this is of the form "True", "Literal" or "Literal AND ... AND Literal".
         // effects: Yields the individual atoms in this (for True does not
         // yield anything)
@@ -148,8 +154,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             {
                 // Create the terms visitor and visit it to get atoms (it
                 // ensures that there are no ANDs or NOTs in the expression)
-                IEnumerable<DomainTermExpr> atoms = TermVisitor.GetTerms(m_tree, false);
-                foreach (DomainTermExpr atom in atoms)
+                var atoms = TermVisitor.GetTerms(m_tree, false);
+                foreach (var atom in atoms)
                 {
                     yield return new BoolExpression(atom, m_memberDomainMap);
                 }
@@ -162,9 +168,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get
             {
-                DomainTermExpr literal = m_tree as DomainTermExpr;
-                if (literal == null) { return null; }
-                BoolLiteral result = GetBoolLiteral(literal);
+                var literal = m_tree as DomainTermExpr;
+                if (literal == null)
+                {
+                    return null;
+                }
+                var result = GetBoolLiteral(literal);
                 return result;
             }
         }
@@ -172,27 +181,21 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // effects: Given a term expression, extracts the BoolLiteral from it
         internal static BoolLiteral GetBoolLiteral(DomainTermExpr term)
         {
-            DomainConstraint<BoolLiteral, Constant> domainConstraint = term.Identifier;
-            DomainVariable<BoolLiteral, Constant> variable = domainConstraint.Variable;
+            var domainConstraint = term.Identifier;
+            var variable = domainConstraint.Variable;
             return variable.Identifier;
         }
 
         // effects: Returns true iff this corresponds to the boolean literal "true" 
         internal bool IsTrue
         {
-            get
-            {
-                return m_tree.ExprType == ExprType.True;
-            }
+            get { return m_tree.ExprType == ExprType.True; }
         }
 
         // effects: Returns true iff this corresponds to the boolean literal "false" 
         internal bool IsFalse
         {
-            get
-            {
-                return m_tree.ExprType == ExprType.False;
-            }
+            get { return m_tree.ExprType == ExprType.False; }
         }
 
         // effects: Returns true if the expression always evaluates to true
@@ -238,9 +241,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get
             {
-                foreach (DomainVariable<BoolLiteral, Constant> var in Variables)
+                foreach (var var in Variables)
                 {
-                    MemberRestriction variableCondition = var.Identifier as MemberRestriction;
+                    var variableCondition = var.Identifier as MemberRestriction;
                     if (variableCondition != null)
                     {
                         yield return variableCondition;
@@ -257,35 +260,31 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // corresponding trees in it in the same order
         private IEnumerable<DomainBoolExpr> ToBoolExprList(IEnumerable<BoolExpression> nodes)
         {
-            foreach (BoolExpression node in nodes)
+            foreach (var node in nodes)
             {
                 yield return node.m_tree;
             }
         }
-
 
         /// <summary>
         /// Whether the boolean expression contains only OneOFTypeConst variables.
         /// </summary>
         internal bool RepresentsAllTypeConditions
         {
-            get
-            {
-                return this.MemberRestrictions.All(var => (var is TypeRestriction));
-            }
+            get { return MemberRestrictions.All(var => (var is TypeRestriction)); }
         }
-
 
         internal BoolExpression RemapLiterals(Dictionary<BoolLiteral, BoolLiteral> remap)
         {
             var rewriter = new BooleanExpressionTermRewriter<BoolDomainConstraint, BoolDomainConstraint>(
                 //                term => remap[BoolExpression.GetBoolLiteral(term)].GetDomainBoolExpression(m_memberDomainMap));
                 delegate(DomainTermExpr term)
-                {
-                    BoolLiteral newLiteral;
-                    return remap.TryGetValue(BoolExpression.GetBoolLiteral(term), out newLiteral) ?
-                        newLiteral.GetDomainBoolExpression(m_memberDomainMap) : term;
-                });
+                    {
+                        BoolLiteral newLiteral;
+                        return remap.TryGetValue(GetBoolLiteral(term), out newLiteral)
+                                   ? newLiteral.GetDomainBoolExpression(m_memberDomainMap)
+                                   : term;
+                    });
             return new BoolExpression(m_tree.Accept(rewriter), m_memberDomainMap);
         }
 
@@ -313,7 +312,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             return AsCqtVisitor.AsCqt(m_tree, row);
         }
-        
+
         internal StringBuilder AsUserString(StringBuilder builder, string blockAlias, bool writeRoundtrippingMessage)
         {
             if (writeRoundtrippingMessage)
@@ -337,22 +336,24 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // reference to a JoinTreeNode
         internal BoolExpression RemapBool(Dictionary<MemberPath, MemberPath> remap)
         {
-            DomainBoolExpr expr = RemapBoolVisitor.RemapExtentTreeNodes(m_tree, m_memberDomainMap, remap);
+            var expr = RemapBoolVisitor.RemapExtentTreeNodes(m_tree, m_memberDomainMap, remap);
             return new BoolExpression(expr, m_memberDomainMap);
         }
 
         // effects: Given a list of bools, returns a list of boolean expressions where each
         // boolean in bools has been ANDed with conjunct
         // CHANGE_ADYA_IMPROVE: replace with lambda pattern
-        internal static List<BoolExpression> AddConjunctionToBools(List<BoolExpression> bools,
-                                                                   BoolExpression conjunct)
+        internal static List<BoolExpression> AddConjunctionToBools(
+            List<BoolExpression> bools,
+            BoolExpression conjunct)
         {
-            List<BoolExpression> result = new List<BoolExpression>();
+            var result = new List<BoolExpression>();
             // Go through the list -- AND each non-null boolean with conjunct
-            foreach (BoolExpression b in bools)
+            foreach (var b in bools)
             {
                 if (null == b)
-                { // unused boolean -- leave as it is
+                {
+                    // unused boolean -- leave as it is
                     result.Add(null);
                 }
                 else
@@ -371,17 +372,22 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return;
             }
 
-            m_converter = new Converter<BoolDomainConstraint>(m_tree,
+            m_converter = new Converter<BoolDomainConstraint>(
+                m_tree,
                 IdentifierService<BoolDomainConstraint>.Instance.CreateConversionContext());
         }
 
         internal BoolExpression MakeCopy()
         {
-            BoolExpression copy = Create(m_tree.Accept(CopyVisitorInstance));
+            var copy = Create(m_tree.Accept(CopyVisitorInstance));
             return copy;
         }
-        static readonly CopyVisitor CopyVisitorInstance = new CopyVisitor();
-        private class CopyVisitor : BasicVisitor<BoolDomainConstraint> { }
+
+        private static readonly CopyVisitor CopyVisitorInstance = new CopyVisitor();
+
+        private class CopyVisitor : BasicVisitor<BoolDomainConstraint>
+        {
+        }
 
         internal void ExpensiveSimplify()
         {
@@ -414,21 +420,23 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #endregion
 
         #region Comparer class
+
         // This class compares boolean expressions
         private class BoolComparer : IEqualityComparer<BoolExpression>
         {
-
             #region IEqualityComparer<BoolExpression> Members
+
             public bool Equals(BoolExpression left, BoolExpression right)
             {
                 // Quick check with references
-                if (object.ReferenceEquals(left, right))
+                if (ReferenceEquals(left, right))
                 {
                     // Gets the Null and Undefined case as well
                     return true;
                 }
                 // One of them is non-null at least
-                if (left == null || right == null)
+                if (left == null
+                    || right == null)
                 {
                     return false;
                 }
@@ -440,8 +448,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             {
                 return expression.m_tree.GetHashCode();
             }
+
             #endregion
         }
+
         #endregion
     }
 }

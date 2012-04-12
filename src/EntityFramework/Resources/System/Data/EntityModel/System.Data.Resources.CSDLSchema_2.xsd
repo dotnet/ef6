@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:edm="http://schemas.microsoft.com/ado/2008/09/edm" targetNamespace="http://schemas.microsoft.com/ado/2008/09/edm">
   <xs:annotation>
     <xs:documentation xml:lang="en">
-            Common Data Model Schema Definition Language.
-            Copyright (c) Microsoft Corp. All rights reserved.
-        </xs:documentation>
+      Common Data Model Schema Definition Language.
+    </xs:documentation>
   </xs:annotation>
   <xs:import namespace="http://schemas.microsoft.com/ado/2006/04/codegeneration" schemaLocation="System.Data.Resources.CodeGenerationSchema.xsd" />
   <xs:import namespace="http://schemas.microsoft.com/ado/2009/02/edm/annotation" schemaLocation="System.Data.Resources.AnnotationSchema.xsd" />
@@ -77,7 +77,10 @@
     -->
   <xs:complexType name="TDocumentation">
     <xs:annotation>
-      <xs:documentation>The Documentation element is used to provide documentation of comments on the contents of the XML file.  It is valid under Schema, Type, Index and Relationship elements.</xs:documentation>
+      <xs:documentation>
+        The Documentation element is used to provide documentation of comments on the contents of the XML file.  It is valid
+        under Schema, Type, Index and Relationship elements.
+      </xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:element name="Summary" type="edm:TText" minOccurs="0" maxOccurs="1" />
@@ -93,7 +96,9 @@
   </xs:complexType>
   <xs:complexType name="TXmlOrText" mixed="true">
     <xs:annotation>
-      <xs:documentation>This type allows pretty much any content</xs:documentation>
+      <xs:documentation>
+        This type allows pretty much any content
+      </xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded" />
@@ -114,7 +119,7 @@
   <xs:complexType name="TAssociation">
     <xs:sequence>
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-      <xs:element name="End" type="edm:TAssociationEnd"  minOccurs="2" maxOccurs="2" />
+      <xs:element name="End" type="edm:TAssociationEnd" minOccurs="2" maxOccurs="2" />
       <xs:element name="ReferentialConstraint" type="edm:TConstraint" minOccurs="0" maxOccurs="1" />
       <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
@@ -174,32 +179,7 @@
     <xs:anyAttribute namespace="##other" processContents="lax" />
   </xs:complexType>
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
   <xs:complexType name="TFunction">
     <xs:sequence>
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
@@ -230,7 +210,7 @@
     <xs:anyAttribute namespace="##other" processContents="lax" />
   </xs:complexType>
   <xs:complexType name="TCollectionType">
-    <xs:sequence minOccurs ="1" maxOccurs="1">
+    <xs:sequence minOccurs="1" maxOccurs="1">
       <xs:choice minOccurs="0" maxOccurs="1">
         <xs:element name="CollectionType" type="edm:TCollectionType" minOccurs="0" maxOccurs="1" />
         <xs:element name="ReferenceType" type="edm:TReferenceType" minOccurs="0" maxOccurs="1" />
@@ -273,7 +253,7 @@
         <xs:element name="RowType" type="edm:TRowType" minOccurs="0" maxOccurs="1" />
       </xs:choice>
       <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
-      </xs:sequence>
+    </xs:sequence>
     <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
     <xs:attribute name="Type" type="edm:TWrappedFunctionType" use="optional" />
     <xs:attributeGroup ref="edm:TFacetAttributes" />
@@ -293,28 +273,7 @@
     <xs:anyAttribute namespace="##other" processContents="lax" />
   </xs:complexType>
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
   <xs:complexType name="TEntityKeyElement">
     <xs:sequence>
       <xs:element name="PropertyRef" type="edm:TPropertyRef" minOccurs="1" maxOccurs="unbounded" />
@@ -468,7 +427,7 @@
               <xs:sequence>
                 <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
                 <xs:element name="End" minOccurs="0" maxOccurs="2">
-                    <!-- 
+                  <!-- 
                        1. The number of Ends has to match with ones defined in AssociationType 
                        2. Value for attribute Name should match the defined ones and EntitySet should be of the 
                           defined Entity Type in AssociationType 
@@ -492,7 +451,7 @@
         <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
       <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
-      <xs:attribute name="Extends" type ="edm:TSimpleIdentifier" use="optional" />
+      <xs:attribute name="Extends" type="edm:TSimpleIdentifier" use="optional" />
       <xs:attribute ref="cg:TypeAccess" use="optional" />
       <xs:attribute ref="annotation:LazyLoadingEnabled" use="optional" />
       <xs:anyAttribute namespace="##other" processContents="lax" />

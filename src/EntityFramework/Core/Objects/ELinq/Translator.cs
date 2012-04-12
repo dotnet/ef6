@@ -1,11 +1,10 @@
 ﻿namespace System.Data.Entity.Core.Objects.ELinq
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
-    using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
@@ -23,62 +22,80 @@
         private abstract class Translator
         {
             private readonly ExpressionType[] _nodeTypes;
+
             protected Translator(params ExpressionType[] nodeTypes)
             {
                 _nodeTypes = nodeTypes;
             }
+
             // Gets LINQ node types this translator should be registed to process.
-            internal IEnumerable<ExpressionType> NodeTypes { get { return _nodeTypes; } }
+            internal IEnumerable<ExpressionType> NodeTypes
+            {
+                get { return _nodeTypes; }
+            }
+
             internal abstract DbExpression Translate(ExpressionConverter parent, Expression linq);
+
             public override string ToString()
             {
-                return this.GetType().Name;
+                return GetType().Name;
             }
         }
 
         #region Misc
+
         // Typed version of Translator
         private abstract class TypedTranslator<T_Linq> : Translator
             where T_Linq : Expression
         {
             protected TypedTranslator(params ExpressionType[] nodeTypes)
-                : base(nodeTypes) { }
+                : base(nodeTypes)
+            {
+            }
+
             internal override DbExpression Translate(ExpressionConverter parent, Expression linq)
             {
                 return TypedTranslate(parent, (T_Linq)linq);
             }
+
             protected abstract DbExpression TypedTranslate(ExpressionConverter parent, T_Linq linq);
         }
+
         private sealed class ConstantTranslator
-            : TypedTranslator<System.Linq.Expressions.ConstantExpression>
+            : TypedTranslator<ConstantExpression>
         {
             internal ConstantTranslator()
-                : base(ExpressionType.Constant) { }
+                : base(ExpressionType.Constant)
+            {
+            }
+
             protected override DbExpression TypedTranslate(ExpressionConverter parent, ConstantExpression linq)
             {
                 // Check to see if this constant corresponds to the compiled query context parameter (it
                 // gets turned into a constant during funcletization and has special error handling).
                 if (linq == parent._funcletizer.RootContextExpression)
                 {
-                    throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.ELinq_UnsupportedUseOfContextParameter(
-                        parent._funcletizer.RootContextParameter.Name));
+                    throw EntityUtil.InvalidOperation(
+                        Strings.ELinq_UnsupportedUseOfContextParameter(
+                            parent._funcletizer.RootContextParameter.Name));
                 }
 
-                ObjectQuery queryOfT = linq.Value as ObjectQuery;
+                var queryOfT = linq.Value as ObjectQuery;
                 if (null != queryOfT)
                 {
                     return parent.TranslateInlineQueryOfT(queryOfT);
                 }
 
                 // If it is something we can enumerate then we can evaluate locally and send to the server
-                var values = linq.Value as System.Collections.IEnumerable;
+                var values = linq.Value as IEnumerable;
                 if (values != null)
                 {
-                    Type elementType = TypeSystem.GetElementType(linq.Type);
-                    if ((elementType != null) && (elementType != linq.Type))
+                    var elementType = TypeSystem.GetElementType(linq.Type);
+                    if ((elementType != null)
+                        && (elementType != linq.Type))
                     {
                         var expressions = new List<Expression>();
-                        foreach (object o in values)
+                        foreach (var o in values)
                         {
                             expressions.Add(Expression.Constant(o, elementType));
                         }
@@ -91,18 +108,19 @@
                     }
                 }
 
-                bool isNullValue = null == linq.Value;
+                var isNullValue = null == linq.Value;
 
                 // Remove facet information: null instances do not constrain type facets (e.g. a null string does not restrict
                 // "length" in compatibility checks)
                 TypeUsage type;
-                bool typeSupported = false;
+                var typeSupported = false;
                 if (parent.TryGetValueLayerType(linq.Type, out type))
                 {
                     // For constant values, support only primitive and enum type (this is all that is supported by CQTs)
                     // For null types, also allow EntityType. Although other types claim to be supported, they
                     // don't work (e.g. complex type, see SQL BU 543956)
-                    if (Helper.IsScalarType(type.EdmType) ||
+                    if (Helper.IsScalarType(type.EdmType)
+                        ||
                         (isNullValue && Helper.IsEntityType(type.EdmType)))
                     {
                         typeSupported = true;
@@ -124,7 +142,7 @@
                 // create a constant or null expression depending on value
                 if (isNullValue)
                 {
-                    return DbExpressionBuilder.Null(type);
+                    return type.Null();
                 }
                 else
                 {
@@ -138,19 +156,24 @@
                         var nonNullableLinqType = TypeSystem.GetNonNullableType(linq.Type);
                         if (nonNullableLinqType.IsEnum)
                         {
-                            value = System.Convert.ChangeType(linq.Value, nonNullableLinqType.GetEnumUnderlyingType(), CultureInfo.InvariantCulture);
+                            value = System.Convert.ChangeType(
+                                linq.Value, nonNullableLinqType.GetEnumUnderlyingType(), CultureInfo.InvariantCulture);
                         }
                     }
 
-                    return DbExpressionBuilder.Constant(type, value);
+                    return type.Constant(value);
                 }
             }
         }
+
         private sealed partial class MemberAccessTranslator
             : TypedTranslator<MemberExpression>
         {
             internal MemberAccessTranslator()
-                : base(ExpressionType.MemberAccess) { }
+                : base(ExpressionType.MemberAccess)
+            {
+            }
+
             // attempt to translate the member access to a "regular" property, a navigation property, or a calculated
             // property
             protected override DbExpression TypedTranslate(ExpressionConverter parent, MemberExpression linq)
@@ -158,21 +181,23 @@
                 DbExpression propertyExpression;
                 string memberName;
                 Type memberType;
-                MemberInfo memberInfo = TypeSystem.PropertyOrField(linq.Member, out memberName, out memberType);
+                var memberInfo = TypeSystem.PropertyOrField(linq.Member, out memberName, out memberType);
 
                 // note: we check for "regular" properties last, since the other two flavors derive
                 // from this one
                 if (linq.Expression != null)
                 {
-                    DbExpression instance = parent.TranslateExpression(linq.Expression);
-                    if (TryResolveAsProperty(parent, memberInfo,
+                    var instance = parent.TranslateExpression(linq.Expression);
+                    if (TryResolveAsProperty(
+                        parent, memberInfo,
                         instance.ResultType, instance, out propertyExpression))
                     {
                         return propertyExpression;
                     }
                 }
 
-                if (memberInfo.MemberType == MemberTypes.Property)
+                if (memberInfo.MemberType
+                    == MemberTypes.Property)
                 {
                     // Check whether it is one of the special properties that we know how to translate
                     PropertyTranslator propertyTranslator;
@@ -183,22 +208,24 @@
                 }
 
                 // no other property types are supported by LINQ over entities
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnrecognizedMember(linq.Member.Name));
+                throw EntityUtil.NotSupported(Strings.ELinq_UnrecognizedMember(linq.Member.Name));
             }
 
             #region Static members and initializers
+
             private static readonly Dictionary<PropertyInfo, PropertyTranslator> s_propertyTranslators;
             private static bool s_vbPropertiesInitialized;
             private static readonly object s_vbInitializerLock = new object();
 
-            [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "System.Data.Entity.Core.Objects.ELinq.ExpressionConverter+MemberAccessTranslator.#.cctor()")]
+            [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member",
+                Target = "System.Data.Entity.Core.Objects.ELinq.ExpressionConverter+MemberAccessTranslator.#.cctor()")]
             static MemberAccessTranslator()
             {
                 // initialize translators for specific properties
                 s_propertyTranslators = new Dictionary<PropertyInfo, PropertyTranslator>();
-                foreach (PropertyTranslator translator in GetPropertyTranslators())
+                foreach (var translator in GetPropertyTranslators())
                 {
-                    foreach (PropertyInfo property in translator.Properties)
+                    foreach (var property in translator.Properties)
                     {
                         s_propertyTranslators.Add(property, translator);
                     }
@@ -216,18 +243,19 @@
             private static bool TryGetTranslator(PropertyInfo propertyInfo, out PropertyTranslator propertyTranslator)
             {
                 //If the type is generic, we try to match the generic property
-                PropertyInfo nonGenericPropertyInfo = propertyInfo;
+                var nonGenericPropertyInfo = propertyInfo;
                 if (propertyInfo.DeclaringType.IsGenericType)
                 {
                     try
                     {
-                        propertyInfo = propertyInfo.DeclaringType.GetGenericTypeDefinition().GetProperty(propertyInfo.Name, BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
+                        propertyInfo = propertyInfo.DeclaringType.GetGenericTypeDefinition().GetProperty(
+                            propertyInfo.Name, BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
                     }
                     catch (AmbiguousMatchException)
                     {
                         propertyTranslator = null;
                         return false;
-                    }                   
+                    }
                     if (propertyInfo == null)
                     {
                         propertyTranslator = null;
@@ -276,12 +304,13 @@
             }
 
             // Determines if the given property can be resolved as a standard or navigation property.
-            private static bool TryResolveAsProperty(ExpressionConverter parent,
+            private static bool TryResolveAsProperty(
+                ExpressionConverter parent,
                 MemberInfo clrMember, TypeUsage definingType, DbExpression instance, out DbExpression propertyExpression)
             {
                 // retrieve members directly from row types, which are not mapped between O and C
-                RowType rowType = definingType.EdmType as RowType;
-                string name = clrMember.Name;
+                var rowType = definingType.EdmType as RowType;
+                var name = clrMember.Name;
 
                 if (null != rowType)
                 {
@@ -297,7 +326,7 @@
                 }
 
                 // for non-row structural types, map from the O to the C layer using the perspective
-                StructuralType structuralType = definingType.EdmType as StructuralType;
+                var structuralType = definingType.EdmType as StructuralType;
                 if (null != structuralType)
                 {
                     EdmMember member = null;
@@ -305,9 +334,10 @@
                     {
                         if (null != member)
                         {
-                            if (member.BuiltInTypeKind == BuiltInTypeKind.NavigationProperty)
+                            if (member.BuiltInTypeKind
+                                == BuiltInTypeKind.NavigationProperty)
                             {
-                                NavigationProperty navProp = (NavigationProperty)member;
+                                var navProp = (NavigationProperty)member;
                                 propertyExpression = TranslateNavigationProperty(parent, clrMember, instance, navProp);
                                 return true;
                             }
@@ -316,27 +346,28 @@
                                 propertyExpression = instance.Property(name);
                                 return true;
                             }
-
                         }
                     }
                 }
 
                 // try to unwrap GroupBy "Key" member
-                if (name == ExpressionConverter.KeyColumnName)
+                if (name == KeyColumnName)
                 {
                     // see if we can "unwrap" the current instance
-                    if (DbExpressionKind.Property == instance.ExpressionKind)
+                    if (DbExpressionKind.Property
+                        == instance.ExpressionKind)
                     {
-                        DbPropertyExpression property = (DbPropertyExpression)instance;
+                        var property = (DbPropertyExpression)instance;
                         InitializerMetadata initializerMetadata;
 
                         // if we're dealing with the "Group" property of a GroupBy projection, we know how to unwrap
                         // it
-                        if (property.Property.Name == ExpressionConverter.GroupColumnName && // only know how to unwrap the group
-                            InitializerMetadata.TryGetInitializerMetadata(property.Instance.ResultType, out initializerMetadata) &&
+                        if (property.Property.Name == GroupColumnName && // only know how to unwrap the group
+                            InitializerMetadata.TryGetInitializerMetadata(property.Instance.ResultType, out initializerMetadata)
+                            &&
                             initializerMetadata.Kind == InitializerMetadataKind.Grouping)
                         {
-                            propertyExpression = property.Instance.Property(ExpressionConverter.KeyColumnName);
+                            propertyExpression = property.Instance.Property(KeyColumnName);
                             return true;
                         }
                     }
@@ -345,8 +376,9 @@
                 propertyExpression = null;
                 return false;
             }
-                        
-            private static DbExpression TranslateNavigationProperty(ExpressionConverter parent, MemberInfo clrMember, DbExpression instance, NavigationProperty navProp)
+
+            private static DbExpression TranslateNavigationProperty(
+                ExpressionConverter parent, MemberInfo clrMember, DbExpression instance, NavigationProperty navProp)
             {
                 DbExpression propertyExpression;
                 propertyExpression = instance.Property(navProp);
@@ -355,19 +387,24 @@
                 // entity and the group contains the child entities
                 // For non-EntityCollection navigations (e.g. from POCO entities), we just need the
                 // enumeration, not the grouping
-                if (BuiltInTypeKind.CollectionType == propertyExpression.ResultType.EdmType.BuiltInTypeKind)
+                if (BuiltInTypeKind.CollectionType
+                    == propertyExpression.ResultType.EdmType.BuiltInTypeKind)
                 {
                     Debug.Assert(clrMember is PropertyInfo, "Navigation property was not a property; should not be allowed by metadata.");
-                    Type propertyType = ((PropertyInfo)clrMember).PropertyType;
-                    if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(EntityCollection<>))
+                    var propertyType = ((PropertyInfo)clrMember).PropertyType;
+                    if (propertyType.IsGenericType
+                        && propertyType.GetGenericTypeDefinition() == typeof(EntityCollection<>))
                     {
-                        List<KeyValuePair<string, DbExpression>> collectionColumns =
+                        var collectionColumns =
                             new List<KeyValuePair<string, DbExpression>>(2);
-                        collectionColumns.Add(new KeyValuePair<string, DbExpression>(
-                            ExpressionConverter.EntityCollectionOwnerColumnName, instance));
-                        collectionColumns.Add(new KeyValuePair<string, DbExpression>(
-                            ExpressionConverter.EntityCollectionElementsColumnName, propertyExpression));
-                        propertyExpression = CreateNewRowExpression(collectionColumns,
+                        collectionColumns.Add(
+                            new KeyValuePair<string, DbExpression>(
+                                EntityCollectionOwnerColumnName, instance));
+                        collectionColumns.Add(
+                            new KeyValuePair<string, DbExpression>(
+                                EntityCollectionElementsColumnName, propertyExpression));
+                        propertyExpression = CreateNewRowExpression(
+                            collectionColumns,
                             InitializerMetadata.CreateEntityCollectionInitializer(parent.EdmItemCollection, propertyType, navProp));
                     }
                 }
@@ -389,9 +426,9 @@
             private static void InitializeVBProperties(Assembly vbAssembly)
             {
                 Debug.Assert(!s_vbPropertiesInitialized);
-                foreach (PropertyTranslator translator in GetVisualBasicPropertyTranslators(vbAssembly))
+                foreach (var translator in GetVisualBasicPropertyTranslators(vbAssembly))
                 {
-                    foreach (PropertyInfo property in translator.Properties)
+                    foreach (var property in translator.Properties)
                     {
                         s_propertyTranslators.Add(property, translator);
                     }
@@ -424,8 +461,9 @@
                 // handled by the query pipeline. ICollection<>.Count is the one exception to the rule
                 // (avoiding a breaking change)
                 return GenericICollectionTranslator.TryGetPropertyTranslator(propertyInfo, out propertyTranslator) ||
-                    !TryGetTranslator(propertyInfo, out propertyTranslator);
+                       !TryGetTranslator(propertyInfo, out propertyTranslator);
             }
+
             #endregion
 
             #region Dynamic Property Translators
@@ -434,7 +472,8 @@
             {
                 private readonly Type _elementType;
 
-                private GenericICollectionTranslator(Type elementType) : base(Enumerable.Empty<PropertyInfo>())
+                private GenericICollectionTranslator(Type elementType)
+                    : base(Enumerable.Empty<PropertyInfo>())
                 {
                     _elementType = elementType;
                 }
@@ -454,13 +493,14 @@
                     //
                     // Int32 Count
                     //
-                    if (propertyInfo.Name == "Count" &&
+                    if (propertyInfo.Name == "Count"
+                        &&
                         propertyInfo.PropertyType.Equals(typeof(int)))
                     {
-                        foreach (KeyValuePair<Type, Type> implementedCollectionInfo in GetImplementedICollections(propertyInfo.DeclaringType))
+                        foreach (var implementedCollectionInfo in GetImplementedICollections(propertyInfo.DeclaringType))
                         {
-                            Type implementedCollection = implementedCollectionInfo.Key;
-                            Type elementType = implementedCollectionInfo.Value;
+                            var implementedCollection = implementedCollectionInfo.Key;
+                            var elementType = implementedCollectionInfo.Value;
 
                             if (propertyInfo.IsImplementationOf(implementedCollection))
                             {
@@ -477,8 +517,9 @@
 
                 private static bool IsICollection(Type candidateType, out Type elementType)
                 {
-                    if (candidateType.IsGenericType &&
-                        candidateType.GetGenericTypeDefinition().Equals(typeof(System.Collections.Generic.ICollection<>)))
+                    if (candidateType.IsGenericType
+                        &&
+                        candidateType.GetGenericTypeDefinition().Equals(typeof(ICollection<>)))
                     {
                         elementType = candidateType.GetGenericArguments()[0];
                         return true;
@@ -496,7 +537,7 @@
                     }
                     else
                     {
-                        foreach (Type interfaceType in type.GetInterfaces())
+                        foreach (var interfaceType in type.GetInterfaces())
                         {
                             if (IsICollection(interfaceType, out collectionElementType))
                             {
@@ -510,13 +551,28 @@
             #endregion
 
             #region Signature-based Property Translators
+
             private abstract class PropertyTranslator
             {
                 private readonly IEnumerable<PropertyInfo> _properties;
-                protected PropertyTranslator(params PropertyInfo[] properties) { _properties = properties; }
-                protected PropertyTranslator(IEnumerable<PropertyInfo> properties) { _properties = properties; }
-                internal IEnumerable<PropertyInfo> Properties { get { return _properties; } }
+
+                protected PropertyTranslator(params PropertyInfo[] properties)
+                {
+                    _properties = properties;
+                }
+
+                protected PropertyTranslator(IEnumerable<PropertyInfo> properties)
+                {
+                    _properties = properties;
+                }
+
+                internal IEnumerable<PropertyInfo> Properties
+                {
+                    get { return _properties; }
+                }
+
                 internal abstract DbExpression Translate(ExpressionConverter parent, MemberExpression call);
+
                 public override string ToString()
                 {
                     return GetType().Name;
@@ -526,7 +582,9 @@
             private sealed class DefaultCanonicalFunctionPropertyTranslator : PropertyTranslator
             {
                 internal DefaultCanonicalFunctionPropertyTranslator()
-                    : base(GetProperties()) { }
+                    : base(GetProperties())
+                {
+                }
 
                 private static IEnumerable<PropertyInfo> GetProperties()
                 {
@@ -562,23 +620,27 @@
                 private static readonly Dictionary<PropertyInfo, string> s_propertyRenameMap = new Dictionary<PropertyInfo, string>(2);
 
                 internal RenameCanonicalFunctionPropertyTranslator()
-                    : base(GetProperties()) { }
+                    : base(GetProperties())
+                {
+                }
 
                 private static IEnumerable<PropertyInfo> GetProperties()
                 {
-                    yield return GetProperty(typeof(DateTime), "Now", BindingFlags.Public | BindingFlags.Static, ExpressionConverter.CurrentDateTime);
-                    yield return GetProperty(typeof(DateTime), "UtcNow", BindingFlags.Public | BindingFlags.Static, ExpressionConverter.CurrentUtcDateTime);
-                    yield return GetProperty(typeof(DateTimeOffset), "Now", BindingFlags.Public | BindingFlags.Static, ExpressionConverter.CurrentDateTimeOffset);
+                    yield return GetProperty(typeof(DateTime), "Now", BindingFlags.Public | BindingFlags.Static, CurrentDateTime);
+                    yield return GetProperty(typeof(DateTime), "UtcNow", BindingFlags.Public | BindingFlags.Static, CurrentUtcDateTime);
+                    yield return
+                        GetProperty(typeof(DateTimeOffset), "Now", BindingFlags.Public | BindingFlags.Static, CurrentDateTimeOffset);
 
-                    yield return GetProperty(typeof(TimeSpan), "Hours", BindingFlags.Public | BindingFlags.Instance, ExpressionConverter.Hour);
-                    yield return GetProperty(typeof(TimeSpan), "Minutes", BindingFlags.Public | BindingFlags.Instance, ExpressionConverter.Minute);
-                    yield return GetProperty(typeof(TimeSpan), "Seconds", BindingFlags.Public | BindingFlags.Instance, ExpressionConverter.Second);
-                    yield return GetProperty(typeof(TimeSpan), "Milliseconds", BindingFlags.Public | BindingFlags.Instance, ExpressionConverter.Millisecond);
+                    yield return GetProperty(typeof(TimeSpan), "Hours", BindingFlags.Public | BindingFlags.Instance, Hour);
+                    yield return GetProperty(typeof(TimeSpan), "Minutes", BindingFlags.Public | BindingFlags.Instance, Minute);
+                    yield return GetProperty(typeof(TimeSpan), "Seconds", BindingFlags.Public | BindingFlags.Instance, Second);
+                    yield return GetProperty(typeof(TimeSpan), "Milliseconds", BindingFlags.Public | BindingFlags.Instance, Millisecond);
                 }
 
-                private static PropertyInfo GetProperty(Type declaringType, string propertyName, BindingFlags bindingFlages, string canonicalFunctionName)
+                private static PropertyInfo GetProperty(
+                    Type declaringType, string propertyName, BindingFlags bindingFlages, string canonicalFunctionName)
                 {
-                    PropertyInfo propertyInfo = declaringType.GetProperty(propertyName, bindingFlages);
+                    var propertyInfo = declaringType.GetProperty(propertyName, bindingFlages);
                     s_propertyRenameMap.Add(propertyInfo, canonicalFunctionName);
                     return propertyInfo;
                 }
@@ -590,8 +652,8 @@
                 //      Type.PropertyName  -> CanonicalFunctionName()
                 internal override DbExpression Translate(ExpressionConverter parent, MemberExpression call)
                 {
-                    PropertyInfo property = (PropertyInfo)call.Member;
-                    String canonicalFunctionName = s_propertyRenameMap[property];
+                    var property = (PropertyInfo)call.Member;
+                    var canonicalFunctionName = s_propertyRenameMap[property];
                     DbExpression result;
                     if (call.Expression == null)
                     {
@@ -610,7 +672,9 @@
                 private const string s_dateAndTimeTypeFullName = "Microsoft.VisualBasic.DateAndTime";
 
                 internal VBDateAndTimeNowTranslator(Assembly vbAssembly)
-                    : base(GetProperty(vbAssembly)) { }
+                    : base(GetProperty(vbAssembly))
+                {
+                }
 
                 private static PropertyInfo GetProperty(Assembly vbAssembly)
                 {
@@ -621,18 +685,21 @@
                 //      Now -> GetDate()
                 internal override DbExpression Translate(ExpressionConverter parent, MemberExpression call)
                 {
-                    return parent.TranslateIntoCanonicalFunction(ExpressionConverter.CurrentDateTime, call);
+                    return parent.TranslateIntoCanonicalFunction(CurrentDateTime, call);
                 }
             }
 
             private sealed class EntityCollectionCountTranslator : PropertyTranslator
             {
                 internal EntityCollectionCountTranslator()
-                    : base(GetProperty()) { }
+                    : base(GetProperty())
+                {
+                }
 
                 private static PropertyInfo GetProperty()
                 {
-                    return typeof(EntityCollection<>).GetProperty(ExpressionConverter.s_entityCollectionCountPropertyName, BindingFlags.Public | BindingFlags.Instance);
+                    return typeof(EntityCollection<>).GetProperty(
+                        s_entityCollectionCountPropertyName, BindingFlags.Public | BindingFlags.Instance);
                 }
 
                 // Translation:
@@ -641,25 +708,27 @@
                 {
                     // retranslate as a Count() aggregate, since the name collision prevents us
                     // from calling the method directly in VB and C#
-                    return MemberAccessTranslator.TranslateCount(parent, call.Member.DeclaringType.GetGenericArguments()[0], call.Expression);
+                    return TranslateCount(parent, call.Member.DeclaringType.GetGenericArguments()[0], call.Expression);
                 }
             }
 
             private sealed class NullableHasValueTranslator : PropertyTranslator
             {
                 internal NullableHasValueTranslator()
-                    : base(GetProperty()) { }
+                    : base(GetProperty())
+                {
+                }
 
                 private static PropertyInfo GetProperty()
                 {
-                    return typeof(Nullable<>).GetProperty(ExpressionConverter.s_nullableHasValuePropertyName, BindingFlags.Public | BindingFlags.Instance);
+                    return typeof(Nullable<>).GetProperty(s_nullableHasValuePropertyName, BindingFlags.Public | BindingFlags.Instance);
                 }
 
                 // Translation:
                 //      Nullable<T>.HasValue -> Not(IsNull(arg))
                 internal override DbExpression Translate(ExpressionConverter parent, MemberExpression call)
                 {
-                    DbExpression argument = parent.TranslateExpression(call.Expression);
+                    var argument = parent.TranslateExpression(call.Expression);
                     Debug.Assert(!TypeSemantics.IsCollectionType(argument.ResultType), "Did not expect collection type");
                     return CreateIsNullExpression(argument, call.Expression.Type).Not();
                 }
@@ -668,62 +737,74 @@
             private sealed class NullableValueTranslator : PropertyTranslator
             {
                 internal NullableValueTranslator()
-                    : base(GetProperty()) { }
+                    : base(GetProperty())
+                {
+                }
 
                 private static PropertyInfo GetProperty()
                 {
-                    return typeof(Nullable<>).GetProperty(ExpressionConverter.s_nullableValuePropertyName, BindingFlags.Public | BindingFlags.Instance);
+                    return typeof(Nullable<>).GetProperty(s_nullableValuePropertyName, BindingFlags.Public | BindingFlags.Instance);
                 }
 
                 // Translation:
                 //      Nullable<T>.Value -> arg
                 internal override DbExpression Translate(ExpressionConverter parent, MemberExpression call)
                 {
-                    DbExpression argument = parent.TranslateExpression(call.Expression);
+                    var argument = parent.TranslateExpression(call.Expression);
                     Debug.Assert(!TypeSemantics.IsCollectionType(argument.ResultType), "Did not expect collection type");
                     return argument;
                 }
             }
+
             #endregion
         }
+
         private sealed class ParameterTranslator
             : TypedTranslator<ParameterExpression>
         {
             internal ParameterTranslator()
-                : base(ExpressionType.Parameter) { }
+                : base(ExpressionType.Parameter)
+            {
+            }
+
             protected override DbExpression TypedTranslate(ExpressionConverter parent, ParameterExpression linq)
             {
                 // Bindings should be intercepted before we get to this point (in ExpressionConverter.TranslateExpression)
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.ELinq_UnboundParameterExpression(linq.Name));
+                throw EntityUtil.InvalidOperation(Strings.ELinq_UnboundParameterExpression(linq.Name));
             }
         }
+
         private sealed class NewTranslator
             : TypedTranslator<NewExpression>
         {
             internal NewTranslator()
-                : base(ExpressionType.New) { }
+                : base(ExpressionType.New)
+            {
+            }
+
             protected override DbExpression TypedTranslate(ExpressionConverter parent, NewExpression linq)
             {
-                int memberCount = null == linq.Members ? 0 : linq.Members.Count;
+                var memberCount = null == linq.Members ? 0 : linq.Members.Count;
 
-                if (null == linq.Constructor ||
+                if (null == linq.Constructor
+                    ||
                     linq.Arguments.Count != memberCount)
                 {
-                    throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnsupportedConstructor);
+                    throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedConstructor);
                 }
 
                 parent.CheckInitializerType(linq.Type);
 
-                List<KeyValuePair<String, DbExpression>> recordColumns =
+                var recordColumns =
                     new List<KeyValuePair<string, DbExpression>>(memberCount + 1);
 
-                HashSet<string> memberNames = new HashSet<string>(StringComparer.Ordinal);
-                for (int i = 0; i < memberCount; i++)
+                var memberNames = new HashSet<string>(StringComparer.Ordinal);
+                for (var i = 0; i < memberCount; i++)
                 {
                     string memberName;
                     Type memberType;
-                    MemberInfo memberInfo = TypeSystem.PropertyOrField(linq.Members[i], out memberName, out memberType);
-                    DbExpression memberValue = parent.TranslateExpression(linq.Arguments[i]);
+                    var memberInfo = TypeSystem.PropertyOrField(linq.Members[i], out memberName, out memberType);
+                    var memberValue = parent.TranslateExpression(linq.Arguments[i]);
                     memberNames.Add(memberName);
                     recordColumns.Add(new KeyValuePair<string, DbExpression>(memberName, memberValue));
                 }
@@ -743,16 +824,20 @@
                 }
                 parent.ValidateInitializerMetadata(initializerMetadata);
 
-                DbNewInstanceExpression projection = CreateNewRowExpression(recordColumns, initializerMetadata);
+                var projection = CreateNewRowExpression(recordColumns, initializerMetadata);
 
                 return projection;
             }
         }
+
         private sealed class NewArrayInitTranslator
             : TypedTranslator<NewArrayExpression>
         {
             internal NewArrayInitTranslator()
-                : base(ExpressionType.NewArrayInit) { }
+                : base(ExpressionType.NewArrayInit)
+            {
+            }
+
             protected override DbExpression TypedTranslate(ExpressionConverter parent, NewArrayExpression linq)
             {
                 if (linq.Expressions.Count > 0)
@@ -761,79 +846,90 @@
                 }
 
                 TypeUsage typeUsage;
-                if (typeof(byte[]) == linq.Type)
+                if (typeof(byte[])
+                    == linq.Type)
                 {
                     TypeUsage type;
                     if (parent.TryGetValueLayerType(typeof(byte), out type))
                     {
                         typeUsage = TypeHelpers.CreateCollectionTypeUsage(type);
-                        return DbExpressionBuilder.NewEmptyCollection(typeUsage);
+                        return typeUsage.NewEmptyCollection();
                     }
                 }
                 else
                 {
                     if (parent.TryGetValueLayerType(linq.Type, out typeUsage))
                     {
-                        return DbExpressionBuilder.NewEmptyCollection(typeUsage);
+                        return typeUsage.NewEmptyCollection();
                     }
                 }
 
                 throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedType(DescribeClrType(linq.Type)));
             }
         }
+
         private sealed class ListInitTranslator
             : TypedTranslator<ListInitExpression>
         {
             internal ListInitTranslator()
-                : base(ExpressionType.ListInit ) { }
+                : base(ExpressionType.ListInit)
+            {
+            }
+
             protected override DbExpression TypedTranslate(ExpressionConverter parent, ListInitExpression linq)
             {
                 // Ensure requirements: one list initializer argument and a default constructor.
-                if ((linq.NewExpression.Constructor != null) && (linq.NewExpression.Constructor.GetParameters().Length != 0))
+                if ((linq.NewExpression.Constructor != null)
+                    && (linq.NewExpression.Constructor.GetParameters().Length != 0))
                 {
-                    throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnsupportedConstructor);
+                    throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedConstructor);
                 }
 
                 if (linq.Initializers.Any(i => i.Arguments.Count != 1))
                 {
-                    throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnsupportedInitializers);
+                    throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedInitializers);
                 }
 
                 return DbExpressionBuilder.NewCollection(linq.Initializers.Select(i => parent.TranslateExpression(i.Arguments[0])));
             }
         }
+
         private sealed class MemberInitTranslator
             : TypedTranslator<MemberInitExpression>
         {
             internal MemberInitTranslator()
-                : base(ExpressionType.MemberInit) { }
+                : base(ExpressionType.MemberInit)
+            {
+            }
+
             protected override DbExpression TypedTranslate(ExpressionConverter parent, MemberInitExpression linq)
             {
-                if (null == linq.NewExpression.Constructor ||
+                if (null == linq.NewExpression.Constructor
+                    ||
                     0 != linq.NewExpression.Constructor.GetParameters().Length)
                 {
-                    throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnsupportedConstructor);
+                    throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedConstructor);
                 }
 
                 parent.CheckInitializerType(linq.Type);
 
-                List<KeyValuePair<String, DbExpression>> recordColumns =
+                var recordColumns =
                     new List<KeyValuePair<string, DbExpression>>(linq.Bindings.Count + 1);
-                MemberInfo[] members = new MemberInfo[linq.Bindings.Count];
+                var members = new MemberInfo[linq.Bindings.Count];
 
-                HashSet<string> memberNames = new HashSet<string>(StringComparer.Ordinal);
-                for (int i = 0; i < linq.Bindings.Count; i++)
+                var memberNames = new HashSet<string>(StringComparer.Ordinal);
+                for (var i = 0; i < linq.Bindings.Count; i++)
                 {
-                    MemberAssignment binding = linq.Bindings[i] as MemberAssignment;
+                    var binding = linq.Bindings[i] as MemberAssignment;
                     if (null == binding)
                     {
-                        throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnsupportedBinding);
+                        throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedBinding);
                     }
                     string memberName;
                     Type memberType;
-                    MemberInfo memberInfo = TypeSystem.PropertyOrField(binding.Member, out memberName, out memberType);
+                    var memberInfo = TypeSystem.PropertyOrField(binding.Member, out memberName, out memberType);
 
-                    DbExpression memberValue = parent.TranslateExpression(binding.Expression);
+                    var memberValue = parent.TranslateExpression(binding.Expression);
                     memberNames.Add(memberName);
                     members[i] = memberInfo;
                     recordColumns.Add(new KeyValuePair<string, DbExpression>(memberName, memberValue));
@@ -854,210 +950,286 @@
                     initializerMetadata = InitializerMetadata.CreateProjectionInitializer(parent.EdmItemCollection, linq);
                 }
                 parent.ValidateInitializerMetadata(initializerMetadata);
-                DbNewInstanceExpression projection = CreateNewRowExpression(recordColumns, initializerMetadata);
+                var projection = CreateNewRowExpression(recordColumns, initializerMetadata);
 
                 return projection;
             }
         }
+
         private sealed class ConditionalTranslator : TypedTranslator<ConditionalExpression>
         {
             internal ConditionalTranslator()
-                : base(ExpressionType.Conditional) { }
+                : base(ExpressionType.Conditional)
+            {
+            }
+
             protected override DbExpression TypedTranslate(ExpressionConverter parent, ConditionalExpression linq)
             {
                 // translate Test ? IfTrue : IfFalse --> CASE WHEN Test THEN IfTrue ELSE IfFalse
-                List<DbExpression> whenExpressions = new List<DbExpression>(1);
+                var whenExpressions = new List<DbExpression>(1);
                 whenExpressions.Add(parent.TranslateExpression(linq.Test));
-                List<DbExpression> thenExpressions = new List<DbExpression>(1);
+                var thenExpressions = new List<DbExpression>(1);
                 thenExpressions.Add(parent.TranslateExpression(linq.IfTrue));
-                DbExpression elseExpression = parent.TranslateExpression(linq.IfFalse);
+                var elseExpression = parent.TranslateExpression(linq.IfFalse);
                 return DbExpressionBuilder.Case(whenExpressions, thenExpressions, elseExpression);
             }
         }
+
         private sealed class NotSupportedTranslator : Translator
         {
             internal NotSupportedTranslator(params ExpressionType[] nodeTypes)
                 : base(nodeTypes)
             {
             }
+
             internal override DbExpression Translate(ExpressionConverter parent, Expression linq)
             {
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnsupportedExpressionType(linq.NodeType));
+                throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedExpressionType(linq.NodeType));
             }
         }
+
         private sealed class ExtensionTranslator : Translator
         {
             internal ExtensionTranslator()
                 : base(EntityExpressionVisitor.CustomExpression)
             {
             }
+
             internal override DbExpression Translate(ExpressionConverter parent, Expression linq)
             {
-                QueryParameterExpression queryParameter = linq as QueryParameterExpression;
+                var queryParameter = linq as QueryParameterExpression;
                 if (null == queryParameter)
                 {
-                    throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnsupportedExpressionType(linq.NodeType));
+                    throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedExpressionType(linq.NodeType));
                 }
                 // otherwise add a new query parameter...
                 parent.AddParameter(queryParameter);
                 return queryParameter.ParameterReference;
             }
         }
+
         #endregion
 
         #region Binary expression translators
+
         private abstract class BinaryTranslator
-            : TypedTranslator<System.Linq.Expressions.BinaryExpression>
+            : TypedTranslator<BinaryExpression>
         {
             protected BinaryTranslator(params ExpressionType[] nodeTypes)
-                : base(nodeTypes) { }
-            protected override DbExpression TypedTranslate(ExpressionConverter parent, System.Linq.Expressions.BinaryExpression linq)
+                : base(nodeTypes)
+            {
+            }
+
+            protected override DbExpression TypedTranslate(ExpressionConverter parent, BinaryExpression linq)
             {
                 return TranslateBinary(parent, parent.TranslateExpression(linq.Left), parent.TranslateExpression(linq.Right), linq);
             }
-            protected abstract DbExpression TranslateBinary(ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq);
+
+            protected abstract DbExpression TranslateBinary(
+                ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq);
         }
+
         private sealed class CoalesceTranslator : BinaryTranslator
         {
             internal CoalesceTranslator()
-                : base(ExpressionType.Coalesce) { }
-            protected override DbExpression TranslateBinary(ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
+                : base(ExpressionType.Coalesce)
+            {
+            }
+
+            protected override DbExpression TranslateBinary(
+                ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
             {
                 // left ?? right gets translated to:
                 // CASE WHEN IsNull(left) THEN right ELSE left
 
                 // construct IsNull
-                DbExpression isNull = CreateIsNullExpression(left, linq.Left.Type);
+                var isNull = CreateIsNullExpression(left, linq.Left.Type);
 
                 // construct case expression
-                List<DbExpression> whenExpressions = new List<DbExpression>(1);
+                var whenExpressions = new List<DbExpression>(1);
                 whenExpressions.Add(isNull);
-                List<DbExpression> thenExpressions = new List<DbExpression>(1);
+                var thenExpressions = new List<DbExpression>(1);
                 thenExpressions.Add(right);
-                DbExpression caseExpression = DbExpressionBuilder.Case(whenExpressions,
+                DbExpression caseExpression = DbExpressionBuilder.Case(
+                    whenExpressions,
                     thenExpressions, left);
 
                 return caseExpression;
             }
         }
+
         private sealed class AndAlsoTranslator : BinaryTranslator
         {
             internal AndAlsoTranslator()
-                : base(ExpressionType.AndAlso) { }
-            protected override DbExpression TranslateBinary(ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
+                : base(ExpressionType.AndAlso)
+            {
+            }
+
+            protected override DbExpression TranslateBinary(
+                ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
             {
                 return left.And(right);
             }
         }
+
         private sealed class OrElseTranslator : BinaryTranslator
         {
             internal OrElseTranslator()
-                : base(ExpressionType.OrElse) { }
-            protected override DbExpression TranslateBinary(ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
+                : base(ExpressionType.OrElse)
+            {
+            }
+
+            protected override DbExpression TranslateBinary(
+                ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
             {
                 return left.Or(right);
             }
         }
+
         private sealed class LessThanTranslator : BinaryTranslator
         {
             internal LessThanTranslator()
-                : base(ExpressionType.LessThan) { }
-            protected override DbExpression TranslateBinary(ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
+                : base(ExpressionType.LessThan)
+            {
+            }
+
+            protected override DbExpression TranslateBinary(
+                ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
             {
                 return left.LessThan(right);
             }
         }
+
         private sealed class LessThanOrEqualsTranslator : BinaryTranslator
         {
             internal LessThanOrEqualsTranslator()
-                : base(ExpressionType.LessThanOrEqual) { }
-            protected override DbExpression TranslateBinary(ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
+                : base(ExpressionType.LessThanOrEqual)
+            {
+            }
+
+            protected override DbExpression TranslateBinary(
+                ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
             {
                 return left.LessThanOrEqual(right);
             }
         }
+
         private sealed class GreaterThanTranslator : BinaryTranslator
         {
             internal GreaterThanTranslator()
-                : base(ExpressionType.GreaterThan) { }
-            protected override DbExpression TranslateBinary(ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
+                : base(ExpressionType.GreaterThan)
+            {
+            }
+
+            protected override DbExpression TranslateBinary(
+                ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
             {
                 return left.GreaterThan(right);
             }
         }
+
         private sealed class GreaterThanOrEqualsTranslator : BinaryTranslator
         {
             internal GreaterThanOrEqualsTranslator()
-                : base(ExpressionType.GreaterThanOrEqual) { }
-            protected override DbExpression TranslateBinary(ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
+                : base(ExpressionType.GreaterThanOrEqual)
+            {
+            }
+
+            protected override DbExpression TranslateBinary(
+                ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
             {
                 return left.GreaterThanOrEqual(right);
             }
         }
-        private sealed class EqualsTranslator : TypedTranslator<System.Linq.Expressions.BinaryExpression>
+
+        private sealed class EqualsTranslator : TypedTranslator<BinaryExpression>
         {
             internal EqualsTranslator()
-                : base(ExpressionType.Equal) { }
-            protected override DbExpression TypedTranslate(ExpressionConverter parent, System.Linq.Expressions.BinaryExpression linq)
+                : base(ExpressionType.Equal)
             {
-                Expression linqLeft = linq.Left;
-                Expression linqRight = linq.Right;
+            }
 
-                bool leftIsNull = ExpressionIsNullConstant(linqLeft);
-                bool rightIsNull = ExpressionIsNullConstant(linqRight);
+            protected override DbExpression TypedTranslate(ExpressionConverter parent, BinaryExpression linq)
+            {
+                var linqLeft = linq.Left;
+                var linqRight = linq.Right;
+
+                var leftIsNull = ExpressionIsNullConstant(linqLeft);
+                var rightIsNull = ExpressionIsNullConstant(linqRight);
 
                 // if both values are null, short-circuit
-                if (leftIsNull && rightIsNull) { return DbExpressionBuilder.True; }
+                if (leftIsNull && rightIsNull)
+                {
+                    return DbExpressionBuilder.True;
+                }
 
                 // if only one side is null, produce an IsNull statement
-                if (leftIsNull) { return CreateIsNullExpression(parent, linqRight); }
-                if (rightIsNull) { return CreateIsNullExpression(parent, linqLeft); }
+                if (leftIsNull)
+                {
+                    return CreateIsNullExpression(parent, linqRight);
+                }
+                if (rightIsNull)
+                {
+                    return CreateIsNullExpression(parent, linqLeft);
+                }
 
                 // create a standard equals expression, calling utility method to compensate for null equality
-                DbExpression cqtLeft = parent.TranslateExpression(linqLeft);
-                DbExpression cqtRight = parent.TranslateExpression(linqRight);
-                EqualsPattern pattern = EqualsPattern.Store;
+                var cqtLeft = parent.TranslateExpression(linqLeft);
+                var cqtRight = parent.TranslateExpression(linqRight);
+                var pattern = EqualsPattern.Store;
                 if (parent._funcletizer.RootContext.ContextOptions.UseCSharpNullComparisonBehavior)
                 {
                     pattern = EqualsPattern.PositiveNullEqualityComposable;
                 }
                 return parent.CreateEqualsExpression(cqtLeft, cqtRight, pattern, linqLeft.Type, linqRight.Type);
             }
+
             private static DbExpression CreateIsNullExpression(ExpressionConverter parent, Expression input)
             {
                 input = UnwrapConvert(input);
 
                 // translate input
-                DbExpression inputCqt = parent.TranslateExpression(input);
+                var inputCqt = parent.TranslateExpression(input);
 
                 // create IsNull expression
                 return ExpressionConverter.CreateIsNullExpression(inputCqt, input.Type);
             }
+
             private static bool ExpressionIsNullConstant(Expression expression)
             {
                 // convert statements introduced by compiler should not affect nullness
                 expression = UnwrapConvert(expression);
 
                 // check if the unwrapped expression is a null constant
-                if (ExpressionType.Constant != expression.NodeType) { return false; }
-                System.Linq.Expressions.ConstantExpression constant = (System.Linq.Expressions.ConstantExpression)expression;
+                if (ExpressionType.Constant
+                    != expression.NodeType)
+                {
+                    return false;
+                }
+                var constant = (ConstantExpression)expression;
                 return null == constant.Value;
             }
+
             private static Expression UnwrapConvert(Expression input)
             {
                 // unwrap all converts
-                while (ExpressionType.Convert == input.NodeType)
+                while (ExpressionType.Convert
+                       == input.NodeType)
                 {
                     input = ((UnaryExpression)input).Operand;
                 }
                 return input;
             }
         }
-        private sealed class NotEqualsTranslator : TypedTranslator<System.Linq.Expressions.BinaryExpression>
+
+        private sealed class NotEqualsTranslator : TypedTranslator<BinaryExpression>
         {
             internal NotEqualsTranslator()
-                : base(ExpressionType.NotEqual) { }
-            protected override DbExpression TypedTranslate(ExpressionConverter parent, System.Linq.Expressions.BinaryExpression linq)
+                : base(ExpressionType.NotEqual)
+            {
+            }
+
+            protected override DbExpression TypedTranslate(ExpressionConverter parent, BinaryExpression linq)
             {
                 // rewrite as a not equals expression
                 Expression notLinq = Expression.Not(
@@ -1065,35 +1237,47 @@
                 return parent.TranslateExpression(notLinq);
             }
         }
+
         #endregion
 
         #region Type binary expression translator
+
         private sealed class IsTranslator : TypedTranslator<TypeBinaryExpression>
         {
             internal IsTranslator()
-                : base(ExpressionType.TypeIs) { }
+                : base(ExpressionType.TypeIs)
+            {
+            }
+
             protected override DbExpression TypedTranslate(ExpressionConverter parent, TypeBinaryExpression linq)
             {
-                DbExpression operand = parent.TranslateExpression(linq.Expression);
-                TypeUsage fromType = operand.ResultType;
-                TypeUsage toType = parent.GetIsOrAsTargetType(ExpressionType.TypeIs, linq.TypeOperand, linq.Expression.Type);
+                var operand = parent.TranslateExpression(linq.Expression);
+                var fromType = operand.ResultType;
+                var toType = parent.GetIsOrAsTargetType(ExpressionType.TypeIs, linq.TypeOperand, linq.Expression.Type);
                 return operand.IsOf(toType);
             }
         }
+
         #endregion
 
         #region Arithmetic expressions
+
         private sealed class AddTranslator : BinaryTranslator
         {
             internal AddTranslator()
-                : base(ExpressionType.Add, ExpressionType.AddChecked) { }
-            protected override DbExpression TranslateBinary(ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
+                : base(ExpressionType.Add, ExpressionType.AddChecked)
             {
-                if (TypeSemantics.IsPrimitiveType(left.ResultType, PrimitiveTypeKind.String) &&
-                   TypeSemantics.IsPrimitiveType(right.ResultType, PrimitiveTypeKind.String))
+            }
+
+            protected override DbExpression TranslateBinary(
+                ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
+            {
+                if (TypeSemantics.IsPrimitiveType(left.ResultType, PrimitiveTypeKind.String)
+                    &&
+                    TypeSemantics.IsPrimitiveType(right.ResultType, PrimitiveTypeKind.String))
                 {
                     // Add(string, string) => Concat(string, string)
-                    return parent.CreateCanonicalFunction(ExpressionConverter.Concat, linq, left, right);
+                    return parent.CreateCanonicalFunction(Concat, linq, left, right);
                 }
                 else
                 {
@@ -1101,65 +1285,95 @@
                 }
             }
         }
+
         private sealed class DivideTranslator : BinaryTranslator
         {
             internal DivideTranslator()
-                : base(ExpressionType.Divide) { }
-            protected override DbExpression TranslateBinary(ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
+                : base(ExpressionType.Divide)
+            {
+            }
+
+            protected override DbExpression TranslateBinary(
+                ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
             {
                 return left.Divide(right);
             }
         }
+
         private sealed class ModuloTranslator : BinaryTranslator
         {
             internal ModuloTranslator()
-                : base(ExpressionType.Modulo) { }
-            protected override DbExpression TranslateBinary(ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
+                : base(ExpressionType.Modulo)
+            {
+            }
+
+            protected override DbExpression TranslateBinary(
+                ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
             {
                 return left.Modulo(right);
             }
         }
+
         private sealed class MultiplyTranslator : BinaryTranslator
         {
             internal MultiplyTranslator()
-                : base(ExpressionType.Multiply, ExpressionType.MultiplyChecked) { }
-            protected override DbExpression TranslateBinary(ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
+                : base(ExpressionType.Multiply, ExpressionType.MultiplyChecked)
+            {
+            }
+
+            protected override DbExpression TranslateBinary(
+                ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
             {
                 return left.Multiply(right);
             }
         }
+
         private sealed class SubtractTranslator : BinaryTranslator
         {
             internal SubtractTranslator()
-                : base(ExpressionType.Subtract, ExpressionType.SubtractChecked) { }
-            protected override DbExpression TranslateBinary(ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
+                : base(ExpressionType.Subtract, ExpressionType.SubtractChecked)
+            {
+            }
+
+            protected override DbExpression TranslateBinary(
+                ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
             {
                 return left.Minus(right);
             }
         }
+
         private sealed class NegateTranslator : UnaryTranslator
         {
             internal NegateTranslator()
-                : base(ExpressionType.Negate, ExpressionType.NegateChecked) { }
-            protected override DbExpression TranslateUnary(ExpressionConverter parent, System.Linq.Expressions.UnaryExpression unary, DbExpression operand)
+                : base(ExpressionType.Negate, ExpressionType.NegateChecked)
+            {
+            }
+
+            protected override DbExpression TranslateUnary(ExpressionConverter parent, UnaryExpression unary, DbExpression operand)
             {
                 return operand.UnaryMinus();
             }
         }
+
         private sealed class UnaryPlusTranslator : UnaryTranslator
         {
             internal UnaryPlusTranslator()
-                : base(ExpressionType.UnaryPlus) { }
+                : base(ExpressionType.UnaryPlus)
+            {
+            }
+
             protected override DbExpression TranslateUnary(ExpressionConverter parent, UnaryExpression unary, DbExpression operand)
             {
                 // +x = x
                 return operand;
             }
         }
+
         #endregion
 
         #region Bitwise expressions
-        private abstract class BitwiseBinaryTranslator : TypedTranslator<System.Linq.Expressions.BinaryExpression>
+
+        private abstract class BitwiseBinaryTranslator : TypedTranslator<BinaryExpression>
         {
             private readonly string _canonicalFunctionName;
 
@@ -1169,10 +1383,10 @@
                 _canonicalFunctionName = canonicalFunctionName;
             }
 
-            protected override DbExpression TypedTranslate(ExpressionConverter parent, System.Linq.Expressions.BinaryExpression linq)
+            protected override DbExpression TypedTranslate(ExpressionConverter parent, BinaryExpression linq)
             {
-                DbExpression left = parent.TranslateExpression(linq.Left);
-                DbExpression right = parent.TranslateExpression(linq.Right);
+                var left = parent.TranslateExpression(linq.Left);
+                var right = parent.TranslateExpression(linq.Right);
 
                 //If the arguments are binary we translate into logic expressions
                 if (TypeSemantics.IsBooleanType(left.ResultType))
@@ -1183,31 +1397,48 @@
                 //Otherwise we translate into bitwise canonical functions
                 return parent.CreateCanonicalFunction(_canonicalFunctionName, linq, left, right);
             }
-            protected abstract DbExpression TranslateIntoLogicExpression(ExpressionConverter parent, System.Linq.Expressions.BinaryExpression linq, DbExpression left, DbExpression right);
+
+            protected abstract DbExpression TranslateIntoLogicExpression(
+                ExpressionConverter parent, BinaryExpression linq, DbExpression left, DbExpression right);
         }
+
         private sealed class AndTranslator : BitwiseBinaryTranslator
         {
             internal AndTranslator()
-                : base(ExpressionType.And, ExpressionConverter.BitwiseAnd) { }
-            protected override DbExpression TranslateIntoLogicExpression(ExpressionConverter parent, System.Linq.Expressions.BinaryExpression linq, DbExpression left, DbExpression right)
+                : base(ExpressionType.And, BitwiseAnd)
+            {
+            }
+
+            protected override DbExpression TranslateIntoLogicExpression(
+                ExpressionConverter parent, BinaryExpression linq, DbExpression left, DbExpression right)
             {
                 return left.And(right);
             }
         }
+
         private sealed class OrTranslator : BitwiseBinaryTranslator
         {
             internal OrTranslator()
-                : base(ExpressionType.Or, ExpressionConverter.BitwiseOr) { }
-            protected override DbExpression TranslateIntoLogicExpression(ExpressionConverter parent, System.Linq.Expressions.BinaryExpression linq, DbExpression left, DbExpression right)
+                : base(ExpressionType.Or, BitwiseOr)
+            {
+            }
+
+            protected override DbExpression TranslateIntoLogicExpression(
+                ExpressionConverter parent, BinaryExpression linq, DbExpression left, DbExpression right)
             {
                 return left.Or(right);
             }
         }
+
         private sealed class ExclusiveOrTranslator : BitwiseBinaryTranslator
         {
             internal ExclusiveOrTranslator()
-                : base(ExpressionType.ExclusiveOr, ExpressionConverter.BitwiseXor) { }
-            protected override DbExpression TranslateIntoLogicExpression(ExpressionConverter parent, System.Linq.Expressions.BinaryExpression linq, DbExpression left, DbExpression right)
+                : base(ExpressionType.ExclusiveOr, BitwiseXor)
+            {
+            }
+
+            protected override DbExpression TranslateIntoLogicExpression(
+                ExpressionConverter parent, BinaryExpression linq, DbExpression left, DbExpression right)
             {
                 //No direct translation, we translate into ((left && !right) || (!left && right))
                 DbExpression firstExpression = left.And(right.Not());
@@ -1216,68 +1447,91 @@
                 return result;
             }
         }
+
         private sealed class NotTranslator : TypedTranslator<UnaryExpression>
         {
             internal NotTranslator()
-                : base(ExpressionType.Not) { }
-            protected override DbExpression TypedTranslate(ExpressionConverter parent, System.Linq.Expressions.UnaryExpression linq)
+                : base(ExpressionType.Not)
             {
-                DbExpression operand = parent.TranslateExpression(linq.Operand);
+            }
+
+            protected override DbExpression TypedTranslate(ExpressionConverter parent, UnaryExpression linq)
+            {
+                var operand = parent.TranslateExpression(linq.Operand);
                 if (TypeSemantics.IsBooleanType(operand.ResultType))
                 {
                     return operand.Not();
                 }
-                return parent.CreateCanonicalFunction(ExpressionConverter.BitwiseNot, linq, operand);
+                return parent.CreateCanonicalFunction(BitwiseNot, linq, operand);
             }
         }
+
         #endregion
 
         #region Unary expression translators
+
         private abstract class UnaryTranslator
-            : TypedTranslator<System.Linq.Expressions.UnaryExpression>
+            : TypedTranslator<UnaryExpression>
         {
             protected UnaryTranslator(params ExpressionType[] nodeTypes)
-                : base(nodeTypes) { }
-            protected override DbExpression TypedTranslate(ExpressionConverter parent, System.Linq.Expressions.UnaryExpression linq)
+                : base(nodeTypes)
+            {
+            }
+
+            protected override DbExpression TypedTranslate(ExpressionConverter parent, UnaryExpression linq)
             {
                 return TranslateUnary(parent, linq, parent.TranslateExpression(linq.Operand));
             }
-            protected abstract DbExpression TranslateUnary(ExpressionConverter parent, System.Linq.Expressions.UnaryExpression unary, DbExpression operand);
+
+            protected abstract DbExpression TranslateUnary(ExpressionConverter parent, UnaryExpression unary, DbExpression operand);
         }
+
         private sealed class QuoteTranslator : UnaryTranslator
         {
             internal QuoteTranslator()
-                : base(ExpressionType.Quote) { }
-            protected override DbExpression TranslateUnary(ExpressionConverter parent, System.Linq.Expressions.UnaryExpression unary, DbExpression operand)
+                : base(ExpressionType.Quote)
+            {
+            }
+
+            protected override DbExpression TranslateUnary(ExpressionConverter parent, UnaryExpression unary, DbExpression operand)
             {
                 // simply return the operand: expressions compilations not cached for LINQ, so
                 // parameters are always bound properly
                 return operand;
             }
         }
+
         private sealed class ConvertTranslator : UnaryTranslator
         {
             internal ConvertTranslator()
-                : base(ExpressionType.Convert, ExpressionType.ConvertChecked) { }
-            protected override DbExpression TranslateUnary(ExpressionConverter parent, System.Linq.Expressions.UnaryExpression unary, DbExpression operand)
+                : base(ExpressionType.Convert, ExpressionType.ConvertChecked)
             {
-                Type toClrType = unary.Type;
-                Type fromClrType = unary.Operand.Type;
-                DbExpression cast = parent.CreateCastExpression(operand, toClrType, fromClrType);
+            }
+
+            protected override DbExpression TranslateUnary(ExpressionConverter parent, UnaryExpression unary, DbExpression operand)
+            {
+                var toClrType = unary.Type;
+                var fromClrType = unary.Operand.Type;
+                var cast = parent.CreateCastExpression(operand, toClrType, fromClrType);
                 return cast;
             }
         }
+
         private sealed class AsTranslator : UnaryTranslator
         {
             internal AsTranslator()
-                : base(ExpressionType.TypeAs) { }
-            protected override DbExpression TranslateUnary(ExpressionConverter parent, System.Linq.Expressions.UnaryExpression unary, DbExpression operand)
+                : base(ExpressionType.TypeAs)
             {
-                TypeUsage fromType = operand.ResultType;
-                TypeUsage toType = parent.GetIsOrAsTargetType(ExpressionType.TypeAs, unary.Type, unary.Operand.Type);
+            }
+
+            protected override DbExpression TranslateUnary(ExpressionConverter parent, UnaryExpression unary, DbExpression operand)
+            {
+                var fromType = operand.ResultType;
+                var toType = parent.GetIsOrAsTargetType(ExpressionType.TypeAs, unary.Type, unary.Operand.Type);
                 return operand.TreatAs(toType);
             }
         }
+
         #endregion
     }
 }

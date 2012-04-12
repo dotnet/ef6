@@ -1,11 +1,9 @@
-using System.Collections.Generic;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
-using System.Text;
-using System.Data.Entity.Core.Common.Utils;
-
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
+    using System.Text;
+
     /// <summary>
     /// Represents a relation signature that lists all projected
     /// slots of two cell queries in a cell after projection. So if
@@ -14,8 +12,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
     /// </summary>
     internal class ViewCellRelation : CellRelation
     {
-
         #region Constructor
+
         // effects: Creates a view cell relation for "cell" with the
         // projected slots given by slots -- cellNumber is the number of the
         // cell for debugging purposes
@@ -30,22 +28,27 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             m_cell.CQuery.CreateBasicCellRelation(this);
             m_cell.SQuery.CreateBasicCellRelation(this);
         }
+
         #endregion
 
         #region Fields
-        private Cell m_cell; // The cell for which this relation exists
-        private List<ViewCellSlot> m_slots; // Slots projected from both cell queries
+
+        private readonly Cell m_cell; // The cell for which this relation exists
+        private readonly List<ViewCellSlot> m_slots; // Slots projected from both cell queries
+
         #endregion
 
         #region Properties
+
         internal Cell Cell
         {
             get { return m_cell; }
         }
+
         #endregion
 
-
         #region Methods
+
         // requires: slot corresponds to a slot in the corresponding
         // BasicCellRelation
         // effects: Given a slot in the corresponding basicCellRelation,
@@ -54,10 +57,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         internal ViewCellSlot LookupViewSlot(MemberProjectedSlot slot)
         {
             // CHANGE_ADYA_IMPROVE: We could have a dictionary to speed this up
-            foreach (ViewCellSlot viewSlot in m_slots)
+            foreach (var viewSlot in m_slots)
             {
                 // If the left or right slots are equal, return the viewSlot
-                if (ProjectedSlot.EqualityComparer.Equals(slot, viewSlot.CSlot) ||
+                if (ProjectedSlot.EqualityComparer.Equals(slot, viewSlot.CSlot)
+                    ||
                     ProjectedSlot.EqualityComparer.Equals(slot, viewSlot.SSlot))
                 {
                     return viewSlot;
@@ -81,6 +85,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             // StringUtil.ToSeparatedStringSorted(builder, m_slots, ", ");
             builder.Append(']');
         }
+
         #endregion
     }
 }

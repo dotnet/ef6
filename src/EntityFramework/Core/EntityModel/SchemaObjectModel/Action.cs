@@ -1,11 +1,9 @@
-using System;
-
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     /// <summary>
     /// Valid actions in an On&lt;Operation&gt; element
     /// </summary>
-    enum Action
+    internal enum Action
     {
         /// <summary>
         /// no action
@@ -16,7 +14,5 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// Cascade to other ends
         /// </summary>
         Cascade,
-
     }
 }
-

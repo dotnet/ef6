@@ -1,8 +1,6 @@
 namespace System.Data.Entity.Core.Common.EntitySql
 {
-    using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
@@ -34,11 +32,19 @@ namespace System.Data.Entity.Core.Common.EntitySql
             Name = name;
         }
 
-        internal override string ExpressionClassName { get { return MetadataMemberExpressionClassName; } }
-        internal static string MetadataMemberExpressionClassName { get { return Strings.LocalizedMetadataMemberExpression; } }
+        internal override string ExpressionClassName
+        {
+            get { return MetadataMemberExpressionClassName; }
+        }
+
+        internal static string MetadataMemberExpressionClassName
+        {
+            get { return Strings.LocalizedMetadataMemberExpression; }
+        }
 
         internal readonly MetadataMemberClass MetadataMemberClass;
         internal readonly string Name;
+
         /// <summary>
         /// Return the name of the <see cref="MetadataMemberClass"/> for error messages.
         /// </summary>
@@ -77,10 +83,20 @@ namespace System.Data.Entity.Core.Common.EntitySql
     /// </summary>
     internal sealed class MetadataNamespace : MetadataMember
     {
-        internal MetadataNamespace(string name) : base(MetadataMemberClass.Namespace, name) { }
+        internal MetadataNamespace(string name)
+            : base(MetadataMemberClass.Namespace, name)
+        {
+        }
 
-        internal override string MetadataMemberClassName { get { return NamespaceClassName; } }
-        internal static string NamespaceClassName { get { return Strings.LocalizedNamespace; } }
+        internal override string MetadataMemberClassName
+        {
+            get { return NamespaceClassName; }
+        }
+
+        internal static string NamespaceClassName
+        {
+            get { return Strings.LocalizedNamespace; }
+        }
     }
 
     /// <summary>
@@ -95,8 +111,15 @@ namespace System.Data.Entity.Core.Common.EntitySql
             TypeUsage = typeUsage;
         }
 
-        internal override string MetadataMemberClassName { get { return TypeClassName; } }
-        internal static string TypeClassName { get { return Strings.LocalizedType; } }
+        internal override string MetadataMemberClassName
+        {
+            get { return TypeClassName; }
+        }
+
+        internal static string TypeClassName
+        {
+            get { return Strings.LocalizedType; }
+        }
 
         internal readonly TypeUsage TypeUsage;
     }
@@ -115,8 +138,15 @@ namespace System.Data.Entity.Core.Common.EntitySql
             EnumMember = enumMember;
         }
 
-        internal override string MetadataMemberClassName { get { return EnumMemberClassName; } }
-        internal static string EnumMemberClassName { get { return Strings.LocalizedEnumMember; } }
+        internal override string MetadataMemberClassName
+        {
+            get { return EnumMemberClassName; }
+        }
+
+        internal static string EnumMemberClassName
+        {
+            get { return Strings.LocalizedEnumMember; }
+        }
 
         internal readonly TypeUsage EnumType;
         internal readonly EnumMember EnumMember;
@@ -134,8 +164,15 @@ namespace System.Data.Entity.Core.Common.EntitySql
             FunctionMetadata = functionMetadata;
         }
 
-        internal override string MetadataMemberClassName { get { return FunctionGroupClassName; } }
-        internal static string FunctionGroupClassName { get { return Strings.LocalizedFunction; } }
+        internal override string MetadataMemberClassName
+        {
+            get { return FunctionGroupClassName; }
+        }
+
+        internal static string FunctionGroupClassName
+        {
+            get { return Strings.LocalizedFunction; }
+        }
 
         internal readonly IList<EdmFunction> FunctionMetadata;
     }
@@ -152,8 +189,15 @@ namespace System.Data.Entity.Core.Common.EntitySql
             FunctionMetadata = functionMetadata;
         }
 
-        internal override string MetadataMemberClassName { get { return InlineFunctionGroupClassName; } }
-        internal static string InlineFunctionGroupClassName { get { return Strings.LocalizedInlineFunction; } }
+        internal override string MetadataMemberClassName
+        {
+            get { return InlineFunctionGroupClassName; }
+        }
+
+        internal static string InlineFunctionGroupClassName
+        {
+            get { return Strings.LocalizedInlineFunction; }
+        }
 
         internal readonly IList<InlineFunctionInfo> FunctionMetadata;
     }
@@ -167,13 +211,15 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private readonly ParserOptions _parserOptions;
         private readonly Dictionary<string, MetadataNamespace> _aliasedNamespaces;
         private readonly HashSet<MetadataNamespace> _namespaces;
+
         /// <summary>
         /// name -> list(overload)
         /// </summary>
         private readonly Dictionary<string, List<InlineFunctionInfo>> _functionDefinitions;
+
         private bool _includeInlineFunctions;
         private bool _resolveLeftMostUnqualifiedNameAsNamespaceOnly;
-        
+
         /// <summary>
         /// Initializes TypeResolver instance
         /// </summary>
@@ -184,7 +230,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             _perspective = perspective;
             _parserOptions = parserOptions;
             _aliasedNamespaces = new Dictionary<string, MetadataNamespace>(parserOptions.NameComparer);
-            _namespaces = new HashSet<MetadataNamespace>(MetadataMember.CreateMetadataMemberNameEqualityComparer(parserOptions.NameComparer));
+            _namespaces = new HashSet<MetadataNamespace>(
+                MetadataMember.CreateMetadataMemberNameEqualityComparer(parserOptions.NameComparer));
             _functionDefinitions = new Dictionary<string, List<InlineFunctionInfo>>(parserOptions.NameComparer);
             _includeInlineFunctions = true;
             _resolveLeftMostUnqualifiedNameAsNamespaceOnly = false;
@@ -239,7 +286,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             {
                 throw EntityUtil.EntitySqlError(errCtx, Strings.NamespaceAliasAlreadyUsed(alias));
             }
-            
+
             _aliasedNamespaces.Add(alias, @namespace);
         }
 
@@ -257,6 +304,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         #region Inline function declarations
+
         /// <summary>
         /// Declares inline function in the query local metadata.
         /// </summary>
@@ -275,8 +323,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             // Check overload uniqueness.
             //
-            if (overloads.Exists(overload =>
-                overload.Parameters.Select(p => p.ResultType).SequenceEqual(functionInfo.Parameters.Select(p => p.ResultType), TypeUsageStructuralComparer.Instance)))
+            if (overloads.Exists(
+                overload =>
+                overload.Parameters.Select(p => p.ResultType).SequenceEqual(
+                    functionInfo.Parameters.Select(p => p.ResultType), TypeUsageStructuralComparer.Instance)))
             {
                 throw EntityUtil.EntitySqlError(functionInfo.FunctionDefAst.ErrCtx, Strings.DuplicatedInlineFunctionOverload(name));
             }
@@ -288,7 +338,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         {
             internal static readonly TypeUsageStructuralComparer Instance = new TypeUsageStructuralComparer();
 
-            private TypeUsageStructuralComparer() { }
+            private TypeUsageStructuralComparer()
+            {
+            }
 
             public bool Equals(TypeUsage x, TypeUsage y)
             {
@@ -301,24 +353,27 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 return 0;
             }
         }
+
         #endregion
 
         internal IDisposable EnterFunctionNameResolution(bool includeInlineFunctions)
         {
-            bool savedIncludeInlineFunctions = _includeInlineFunctions;
+            var savedIncludeInlineFunctions = _includeInlineFunctions;
             _includeInlineFunctions = includeInlineFunctions;
-            return new Disposer(delegate { this._includeInlineFunctions = savedIncludeInlineFunctions; });
+            return new Disposer(delegate { _includeInlineFunctions = savedIncludeInlineFunctions; });
         }
 
         internal IDisposable EnterBackwardCompatibilityResolution()
         {
             Debug.Assert(!_resolveLeftMostUnqualifiedNameAsNamespaceOnly, "EnterBackwardCompatibilityResolution() is not reentrant.");
             _resolveLeftMostUnqualifiedNameAsNamespaceOnly = true;
-            return new Disposer(delegate
-            {
-                Debug.Assert(this._resolveLeftMostUnqualifiedNameAsNamespaceOnly, "_resolveLeftMostUnqualifiedNameAsNamespaceOnly must be true.");
-                this._resolveLeftMostUnqualifiedNameAsNamespaceOnly = false;
-            });
+            return new Disposer(
+                delegate
+                    {
+                        Debug.Assert(
+                            _resolveLeftMostUnqualifiedNameAsNamespaceOnly, "_resolveLeftMostUnqualifiedNameAsNamespaceOnly must be true.");
+                        _resolveLeftMostUnqualifiedNameAsNamespaceOnly = false;
+                    });
         }
 
         internal MetadataMember ResolveMetadataMemberName(string[] name, ErrorContext errCtx)
@@ -341,8 +396,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         internal MetadataMember ResolveMetadataMemberAccess(MetadataMember qualifier, string name, ErrorContext errCtx)
         {
-            string fullName = GetFullName(qualifier.Name, name);
-            if (qualifier.MetadataMemberClass == MetadataMemberClass.Namespace)
+            var fullName = GetFullName(qualifier.Name, name);
+            if (qualifier.MetadataMemberClass
+                == MetadataMemberClass.Namespace)
             {
                 //
                 // Try resolving as a type.
@@ -367,16 +423,19 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
                 return new MetadataNamespace(fullName);
             }
-            else if (qualifier.MetadataMemberClass == MetadataMemberClass.Type)
+            else if (qualifier.MetadataMemberClass
+                     == MetadataMemberClass.Type)
             {
                 var type = (MetadataType)qualifier;
                 if (TypeSemantics.IsEnumerationType(type.TypeUsage))
                 {
                     EnumMember member;
-                    if (_perspective.TryGetEnumMember((EnumType)type.TypeUsage.EdmType, name, _parserOptions.NameComparisonCaseInsensitive /*ignoreCase*/, out member))
+                    if (_perspective.TryGetEnumMember(
+                        (EnumType)type.TypeUsage.EdmType, name, _parserOptions.NameComparisonCaseInsensitive /*ignoreCase*/, out member))
                     {
                         Debug.Assert(member != null, "member != null");
-                        Debug.Assert(_parserOptions.NameComparer.Equals(name, member.Name), "_parserOptions.NameComparer.Equals(name, member.Name)");
+                        Debug.Assert(
+                            _parserOptions.NameComparer.Equals(name, member.Name), "_parserOptions.NameComparer.Equals(name, member.Name)");
                         return new MetadataEnumMember(fullName, type.TypeUsage, member);
                     }
                     else
@@ -386,8 +445,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 }
             }
 
-            throw EntityUtil.EntitySqlError(errCtx, Strings.InvalidMetadataMemberClassResolution(
-                qualifier.Name, qualifier.MetadataMemberClassName, MetadataNamespace.NamespaceClassName));
+            throw EntityUtil.EntitySqlError(
+                errCtx, Strings.InvalidMetadataMemberClassResolution(
+                    qualifier.Name, qualifier.MetadataMemberClassName, MetadataNamespace.NamespaceClassName));
         }
 
         internal MetadataMember ResolveUnqualifiedName(string name, bool partOfQualifiedName, ErrorContext errCtx)
@@ -397,19 +457,20 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             // In the case of Name1.Name2...NameN and if backward compatibility mode is on, then resolve Name1 as namespace only, ignore any other possible resolutions.
             //
-            bool resolveAsNamespaceOnly = partOfQualifiedName && _resolveLeftMostUnqualifiedNameAsNamespaceOnly;
+            var resolveAsNamespaceOnly = partOfQualifiedName && _resolveLeftMostUnqualifiedNameAsNamespaceOnly;
 
             //
             // In the case of Name1.Name2...NameN, ignore functions while resolving Name1: functions don't have members.
             //
-            bool includeFunctions = !partOfQualifiedName;
+            var includeFunctions = !partOfQualifiedName;
 
             //
             // Try resolving as an inline function.
             //
             InlineFunctionGroup inlineFunctionGroup;
-            if (!resolveAsNamespaceOnly && 
-                includeFunctions && TryGetInlineFunction(name, out inlineFunctionGroup))
+            if (!resolveAsNamespaceOnly &&
+                includeFunctions
+                && TryGetInlineFunction(name, out inlineFunctionGroup))
             {
                 return inlineFunctionGroup;
             }
@@ -441,7 +502,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         // Escaped multipart identifiers usually appear in views: select [NS1.NS2.Product](...) from ...
                         //
                         var multipart = name.Split('.');
-                        if (multipart.Length > 1 && multipart.All(p => p.Length > 0))
+                        if (multipart.Length > 1
+                            && multipart.All(p => p.Length > 0))
                         {
                             var functionName = multipart[multipart.Length - 1];
                             var namespaceName = name.Substring(0, name.Length - functionName.Length - 1);
@@ -454,14 +516,15 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 // Try resolving as an imported member.
                 //
                 MetadataNamespace importedMemberNamespace = null;
-                foreach (MetadataNamespace namespaceImport in _namespaces)
+                foreach (var namespaceImport in _namespaces)
                 {
-                    string fullName = GetFullName(namespaceImport.Name, name);
+                    var fullName = GetFullName(namespaceImport.Name, name);
 
                     MetadataType importedType;
                     if (TryGetTypeFromMetadata(fullName, out importedType))
                     {
-                        if (type == null && functionGroup == null)
+                        if (type == null
+                            && functionGroup == null)
                         {
                             type = importedType;
                             importedMemberNamespace = namespaceImport;
@@ -475,7 +538,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     MetadataFunctionGroup importedFunctionGroup;
                     if (includeFunctions && TryGetFunctionFromMetadata(namespaceImport.Name, name, out importedFunctionGroup))
                     {
-                        if (type == null && functionGroup == null)
+                        if (type == null
+                            && functionGroup == null)
                         {
                             functionGroup = importedFunctionGroup;
                             importedMemberNamespace = namespaceImport;
@@ -525,7 +589,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             // Get R in N.R
             //
-            string rightName = name[length - 1];
+            var rightName = name[length - 1];
             Debug.Assert(!String.IsNullOrEmpty(rightName), "rightName must not be empty");
 
             //
@@ -563,7 +627,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         internal bool TryGetFunctionFromMetadata(string namespaceName, string functionName, out MetadataFunctionGroup functionGroup)
         {
             IList<EdmFunction> functionMetadata;
-            if (_perspective.TryGetFunctionByName(namespaceName, functionName, _parserOptions.NameComparisonCaseInsensitive /* ignore case */, out functionMetadata))
+            if (_perspective.TryGetFunctionByName(
+                namespaceName, functionName, _parserOptions.NameComparisonCaseInsensitive /* ignore case */, out functionMetadata))
             {
                 functionGroup = new MetadataFunctionGroup(GetFullName(namespaceName, functionName), functionMetadata);
                 return true;

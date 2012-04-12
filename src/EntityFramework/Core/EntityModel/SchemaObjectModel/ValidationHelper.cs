@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data.Entity.Core.EntityModel.SchemaObjectModel;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity;
-using System.Diagnostics;
-
-namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
+﻿namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Diagnostics;
 
     /// <summary>
     /// Helper methods used for Schema Object Model (validation) validation.
@@ -34,20 +27,23 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 {
                     typeUsageBuilder.ValidateEnumFacets(schemaEnumType);
                 }
-                else if(!(type is ScalarType) && typeUsageBuilder.HasUserDefinedFacets)
+                else if (!(type is ScalarType)
+                         && typeUsageBuilder.HasUserDefinedFacets)
                 {
                     Debug.Assert(!(type is SchemaEnumType), "Note that enums should have already been handled.");
 
                     // Non-scalar type should not have Facets. 
-                    element.AddError(ErrorCode.FacetOnNonScalarType, EdmSchemaErrorSeverity.Error, Strings.FacetsOnNonScalarType(type.FQName));
+                    element.AddError(
+                        ErrorCode.FacetOnNonScalarType, EdmSchemaErrorSeverity.Error, Strings.FacetsOnNonScalarType(type.FQName));
                 }
             }
             else
             {
-                if(typeUsageBuilder.HasUserDefinedFacets)
+                if (typeUsageBuilder.HasUserDefinedFacets)
                 {
                     // Type attribute not specified but facets exist.
-                    element.AddError(ErrorCode.IncorrectlyPlacedFacet, EdmSchemaErrorSeverity.Error, Strings.FacetDeclarationRequiresTypeAttribute);
+                    element.AddError(
+                        ErrorCode.IncorrectlyPlacedFacet, EdmSchemaErrorSeverity.Error, Strings.FacetDeclarationRequiresTypeAttribute);
                 }
             }
         }
@@ -66,16 +62,19 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(element != null);
 
-            if (type == null && typeSubElement == null)
+            if (type == null
+                && typeSubElement == null)
             {
                 //Type not declared as either attribute or subelement
                 element.AddError(ErrorCode.TypeNotDeclared, EdmSchemaErrorSeverity.Error, Strings.TypeMustBeDeclared);
             }
 
-            if (type != null && typeSubElement != null)
+            if (type != null
+                && typeSubElement != null)
             {
                 //Both attribute and sub-element declarations exist
-                element.AddError(ErrorCode.TypeDeclaredAsAttributeAndElement, EdmSchemaErrorSeverity.Error, Strings.TypeDeclaredAsAttributeAndElement);
+                element.AddError(
+                    ErrorCode.TypeDeclaredAsAttributeAndElement, EdmSchemaErrorSeverity.Error, Strings.TypeDeclaredAsAttributeAndElement);
             }
         }
 
@@ -88,10 +87,12 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(element != null);
 
-            if (type != null && !(type is SchemaEntityType))
+            if (type != null
+                && !(type is SchemaEntityType))
             {
                 // Ref type refers to non entity type.
-                element.AddError(ErrorCode.ReferenceToNonEntityType, EdmSchemaErrorSeverity.Error, Strings.ReferenceToNonEntityType(type.FQName));
+                element.AddError(
+                    ErrorCode.ReferenceToNonEntityType, EdmSchemaErrorSeverity.Error, Strings.ReferenceToNonEntityType(type.FQName));
             }
         }
     }

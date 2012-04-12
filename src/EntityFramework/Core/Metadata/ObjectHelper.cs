@@ -1,14 +1,10 @@
-using System.Data.Entity.Core.Mapping;
-using System.Diagnostics;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
-using System.Data.Entity.Core.Common.Utils;
-using System.IO;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Diagnostics;
+    using System.Text;
+
     /// <summary>
     /// Helper Class for EDM Metadata - this class contains all the helper methods
     /// which needs access to internal methods. The other partial class contains all 
@@ -20,16 +16,27 @@ namespace System.Data.Entity.Core.Metadata.Edm
     internal static partial class Helper
     {
         #region Fields
+
         // List of all the static empty list used all over the code
-        internal static readonly ReadOnlyCollection<KeyValuePair<string, object>> EmptyKeyValueStringObjectList = new ReadOnlyCollection<KeyValuePair<string, object>>(new KeyValuePair<string, object>[0]);
+        internal static readonly ReadOnlyCollection<KeyValuePair<string, object>> EmptyKeyValueStringObjectList =
+            new ReadOnlyCollection<KeyValuePair<string, object>>(new KeyValuePair<string, object>[0]);
+
         internal static readonly ReadOnlyCollection<string> EmptyStringList = new ReadOnlyCollection<string>(new string[0]);
-        internal static readonly ReadOnlyCollection<FacetDescription> EmptyFacetDescriptionEnumerable = new ReadOnlyCollection<FacetDescription>(new FacetDescription[0]);
-        internal static readonly ReadOnlyCollection<EdmFunction> EmptyEdmFunctionReadOnlyCollection = new ReadOnlyCollection<EdmFunction>(new EdmFunction[0]);
-        internal static readonly ReadOnlyCollection<PrimitiveType> EmptyPrimitiveTypeReadOnlyCollection = new ReadOnlyCollection<PrimitiveType>(new PrimitiveType[0]);
+
+        internal static readonly ReadOnlyCollection<FacetDescription> EmptyFacetDescriptionEnumerable =
+            new ReadOnlyCollection<FacetDescription>(new FacetDescription[0]);
+
+        internal static readonly ReadOnlyCollection<EdmFunction> EmptyEdmFunctionReadOnlyCollection =
+            new ReadOnlyCollection<EdmFunction>(new EdmFunction[0]);
+
+        internal static readonly ReadOnlyCollection<PrimitiveType> EmptyPrimitiveTypeReadOnlyCollection =
+            new ReadOnlyCollection<PrimitiveType>(new PrimitiveType[0]);
+
         internal static readonly KeyValuePair<string, object>[] EmptyKeyValueStringObjectArray = new KeyValuePair<string, object>[0];
 
         internal const char PeriodSymbol = '.';
         internal const char CommaSymbol = ',';
+
         #endregion
 
         #region Methods
@@ -39,22 +46,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="errors"></param>
         /// <returns></returns>
-        static internal string CombineErrorMessage(IEnumerable<System.Data.Entity.Core.Metadata.Edm.EdmSchemaError> errors)
+        internal static string CombineErrorMessage(IEnumerable<EdmSchemaError> errors)
         {
             Debug.Assert(errors != null);
-            StringBuilder sb = new StringBuilder(System.Environment.NewLine);
-            int count = 0;
-            foreach (System.Data.Entity.Core.Metadata.Edm.EdmSchemaError error in errors)
+            var sb = new StringBuilder(Environment.NewLine);
+            var count = 0;
+            foreach (var error in errors)
             {
                 //Don't append a new line at the beginning of the messages
                 if ((count++) != 0)
                 {
-                    sb.Append(System.Environment.NewLine);
+                    sb.Append(Environment.NewLine);
                 }
-                sb.Append(error.ToString());
-                
+                sb.Append(error);
             }
-            Debug.Assert(count!=0, "Empty Error List");
+            Debug.Assert(count != 0, "Empty Error List");
             return sb.ToString();
         }
 
@@ -63,16 +69,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="errors"></param>
         /// <returns></returns>
-        static internal string CombineErrorMessage(IEnumerable<EdmItemError> errors) {
-            StringBuilder sb = new StringBuilder(System.Environment.NewLine);
-            int count = 0;
-            foreach (EdmItemError error in errors) {
+        internal static string CombineErrorMessage(IEnumerable<EdmItemError> errors)
+        {
+            var sb = new StringBuilder(Environment.NewLine);
+            var count = 0;
+            foreach (var error in errors)
+            {
                 // Only add the new line if this is not the first error
                 if ((count++) != 0)
                 {
-                    sb.Append(System.Environment.NewLine);
-                }                
-                sb.Append(error.Message);                
+                    sb.Append(Environment.NewLine);
+                }
+                sb.Append(error.Message);
             }
 
             return sb.ToString();
@@ -82,10 +90,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // effects: returns paired enumeration values
         internal static IEnumerable<KeyValuePair<T, S>> PairEnumerations<T, S>(IBaseList<T> left, IEnumerable<S> right)
         {
-            IEnumerator leftEnumerator = left.GetEnumerator();
-            IEnumerator<S> rightEnumerator = right.GetEnumerator();
+            var leftEnumerator = left.GetEnumerator();
+            var rightEnumerator = right.GetEnumerator();
 
-            while (leftEnumerator.MoveNext() && rightEnumerator.MoveNext())
+            while (leftEnumerator.MoveNext()
+                   && rightEnumerator.MoveNext())
             {
                 yield return new KeyValuePair<T, S>((T)leftEnumerator.Current, rightEnumerator.Current);
             }
@@ -100,7 +109,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="typeUsage">typeusage</param>
         /// <returns>the respective Model (C-Space) typeusage</returns>
-        static internal TypeUsage GetModelTypeUsage(TypeUsage typeUsage)
+        internal static TypeUsage GetModelTypeUsage(TypeUsage typeUsage)
         {
             return typeUsage.GetModelTypeUsage();
         }
@@ -112,7 +121,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="member">EdmMember</param>
         /// <returns>the respective Model (C-Space) typeusage</returns>
-        static internal TypeUsage GetModelTypeUsage(EdmMember member)
+        internal static TypeUsage GetModelTypeUsage(EdmMember member)
         {
             return GetModelTypeUsage(member.TypeUsage);
         }
@@ -126,28 +135,32 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="columnProperty">edm property containing the sspace member type information</param>
         /// <param name="fileName">name of the mapping file from which this information was loaded from</param>
         /// <returns></returns>
-        internal static TypeUsage ValidateAndConvertTypeUsage(EdmProperty edmProperty, 
+        internal static TypeUsage ValidateAndConvertTypeUsage(
+            EdmProperty edmProperty,
             EdmProperty columnProperty)
         {
             Debug.Assert(edmProperty.TypeUsage.EdmType.DataSpace == DataSpace.CSpace, "cspace property must have a cspace type");
             Debug.Assert(columnProperty.TypeUsage.EdmType.DataSpace == DataSpace.SSpace, "sspace type usage must have a sspace type");
             Debug.Assert(
-                Helper.IsScalarType(edmProperty.TypeUsage.EdmType), 
+                IsScalarType(edmProperty.TypeUsage.EdmType),
                 "cspace property must be of a primitive or enumeration type");
-            Debug.Assert(Helper.IsPrimitiveType(columnProperty.TypeUsage.EdmType), "sspace property must contain a primitive type");
+            Debug.Assert(IsPrimitiveType(columnProperty.TypeUsage.EdmType), "sspace property must contain a primitive type");
 
-            TypeUsage mappedStoreType = ValidateAndConvertTypeUsage(edmProperty.TypeUsage,
-                                                                    columnProperty.TypeUsage);
+            var mappedStoreType = ValidateAndConvertTypeUsage(
+                edmProperty.TypeUsage,
+                columnProperty.TypeUsage);
 
             return mappedStoreType;
         }
 
-        internal static TypeUsage ValidateAndConvertTypeUsage(TypeUsage cspaceType,
-                                                                  TypeUsage sspaceType)
+        internal static TypeUsage ValidateAndConvertTypeUsage(
+            TypeUsage cspaceType,
+            TypeUsage sspaceType)
         {
             // if we are already C-Space, dont call the provider. this can happen for functions.
-            TypeUsage modelEquivalentSspace = sspaceType;
-            if (sspaceType.EdmType.DataSpace == DataSpace.SSpace)
+            var modelEquivalentSspace = sspaceType;
+            if (sspaceType.EdmType.DataSpace
+                == DataSpace.SSpace)
             {
                 modelEquivalentSspace = sspaceType.GetModelTypeUsage();
             }
@@ -159,6 +172,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             return null;
         }
+
         #endregion
 
         /// <summary>
@@ -183,19 +197,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Debug.Assert(cspaceType.EdmType.DataSpace == DataSpace.CSpace, "cspace property must have a cspace type");
             Debug.Assert(storeType.EdmType.DataSpace == DataSpace.CSpace, "storeType type usage must have a sspace type");
             Debug.Assert(
-                Helper.IsScalarType(cspaceType.EdmType),
+                IsScalarType(cspaceType.EdmType),
                 "cspace property must be of a primitive or enumeration type");
-            Debug.Assert(Helper.IsPrimitiveType(storeType.EdmType), "storeType property must be a primitive type");
+            Debug.Assert(IsPrimitiveType(storeType.EdmType), "storeType property must be a primitive type");
 
-            if (Helper.IsEnumType(cspaceType.EdmType))
+            if (IsEnumType(cspaceType.EdmType))
             {
                 // For enum cspace type check whether its underlying type is a subtype of the store type. Note that
                 // TypeSemantics.IsSubTypeOf uses only TypeUsage.EdmType for primitive types so there is no need to copy facets 
                 // from the enum type property to the underlying type TypeUsage created here since they wouldn't be used anyways.
-                return TypeSemantics.IsSubTypeOf(TypeUsage.Create(Helper.GetUnderlyingEdmTypeForEnumType(cspaceType.EdmType)), storeType); 
+                return TypeSemantics.IsSubTypeOf(TypeUsage.Create(GetUnderlyingEdmTypeForEnumType(cspaceType.EdmType)), storeType);
             }
 
             return TypeSemantics.IsSubTypeOf(cspaceType, storeType);
         }
-    }   
+    }
 }

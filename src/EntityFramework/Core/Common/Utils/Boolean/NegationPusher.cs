@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using System.Linq;
-
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
+    using System.Linq;
+
     // Top-down push-down of negation in Boolean expressions.
     // - !(A or B) iff. !A and !B
     // - !(A and B) iff. !A or !B
@@ -15,7 +11,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     // encounters NotExpr)
     internal static class NegationPusher
     {
-        internal static BoolExpr<DomainConstraint<T_Variable, T_Element>> EliminateNot<T_Variable, T_Element>(BoolExpr<DomainConstraint<T_Variable, T_Element>> expression)
+        internal static BoolExpr<DomainConstraint<T_Variable, T_Element>> EliminateNot<T_Variable, T_Element>(
+            BoolExpr<DomainConstraint<T_Variable, T_Element>> expression)
         {
             return expression.Accept(NonNegatedDomainConstraintTreeVisitor<T_Variable, T_Element>.Instance);
         }
@@ -64,7 +61,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
             internal override BoolExpr<T_Identifier> VisitAnd(AndExpr<T_Identifier> expression)
             {
-                return new OrExpr<T_Identifier>(expression.Children.Select(child => child.Accept(this)));                
+                return new OrExpr<T_Identifier>(expression.Children.Select(child => child.Accept(this)));
             }
 
             internal override BoolExpr<T_Identifier> VisitOr(OrExpr<T_Identifier> expression)
@@ -73,34 +70,41 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
             }
         }
 
-        private class NonNegatedDomainConstraintTreeVisitor<T_Variable, T_Element> : NonNegatedTreeVisitor<DomainConstraint<T_Variable, T_Element>>
+        private class NonNegatedDomainConstraintTreeVisitor<T_Variable, T_Element> :
+            NonNegatedTreeVisitor<DomainConstraint<T_Variable, T_Element>>
         {
-            internal new static readonly NonNegatedDomainConstraintTreeVisitor<T_Variable, T_Element> Instance = new NonNegatedDomainConstraintTreeVisitor<T_Variable, T_Element>();
+            internal new static readonly NonNegatedDomainConstraintTreeVisitor<T_Variable, T_Element> Instance =
+                new NonNegatedDomainConstraintTreeVisitor<T_Variable, T_Element>();
 
             private NonNegatedDomainConstraintTreeVisitor()
             {
             }
 
-            internal override BoolExpr<DomainConstraint<T_Variable, T_Element>> VisitNot(NotExpr<DomainConstraint<T_Variable, T_Element>> expression)
+            internal override BoolExpr<DomainConstraint<T_Variable, T_Element>> VisitNot(
+                NotExpr<DomainConstraint<T_Variable, T_Element>> expression)
             {
                 return expression.Child.Accept(NegatedDomainConstraintTreeVisitor<T_Variable, T_Element>.Instance);
             }
         }
 
-        private class NegatedDomainConstraintTreeVisitor<T_Variable, T_Element> : NegatedTreeVisitor<DomainConstraint<T_Variable, T_Element>>
+        private class NegatedDomainConstraintTreeVisitor<T_Variable, T_Element> :
+            NegatedTreeVisitor<DomainConstraint<T_Variable, T_Element>>
         {
-            internal new static readonly NegatedDomainConstraintTreeVisitor<T_Variable, T_Element> Instance = new NegatedDomainConstraintTreeVisitor<T_Variable, T_Element>();
+            internal new static readonly NegatedDomainConstraintTreeVisitor<T_Variable, T_Element> Instance =
+                new NegatedDomainConstraintTreeVisitor<T_Variable, T_Element>();
 
             private NegatedDomainConstraintTreeVisitor()
             {
             }
 
-            internal override BoolExpr<DomainConstraint<T_Variable, T_Element>> VisitNot(NotExpr<DomainConstraint<T_Variable, T_Element>> expression)
+            internal override BoolExpr<DomainConstraint<T_Variable, T_Element>> VisitNot(
+                NotExpr<DomainConstraint<T_Variable, T_Element>> expression)
             {
                 return expression.Child.Accept(NonNegatedDomainConstraintTreeVisitor<T_Variable, T_Element>.Instance);
             }
 
-            internal override BoolExpr<DomainConstraint<T_Variable, T_Element>> VisitTerm(TermExpr<DomainConstraint<T_Variable, T_Element>> expression)
+            internal override BoolExpr<DomainConstraint<T_Variable, T_Element>> VisitTerm(
+                TermExpr<DomainConstraint<T_Variable, T_Element>> expression)
             {
                 return new TermExpr<DomainConstraint<T_Variable, T_Element>>(expression.Identifier.InvertDomainConstraint());
             }

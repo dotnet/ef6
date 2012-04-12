@@ -1,8 +1,8 @@
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
 
     /// <summary>
@@ -11,12 +11,15 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     internal sealed class AliasResolver
     {
         #region Fields
-        private Dictionary<string, string> _aliasToNamespaceMap = new Dictionary<string, string>(StringComparer.Ordinal);
-        private List<UsingElement> _usingElementCollection = new List<UsingElement>();
-        private Schema _definingSchema;
+
+        private readonly Dictionary<string, string> _aliasToNamespaceMap = new Dictionary<string, string>(StringComparer.Ordinal);
+        private readonly List<UsingElement> _usingElementCollection = new List<UsingElement>();
+        private readonly Schema _definingSchema;
+
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Construct the LookUp table
         /// </summary>
@@ -40,8 +43,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(usingElement != null, "usingElement parameter is null");
 
-            string newNamespace = usingElement.NamespaceName;
-            string newAlias = usingElement.Alias;
+            var newNamespace = usingElement.NamespaceName;
+            var newAlias = usingElement.Alias;
 
             // Check whether the alias is a reserved keyword
             if (CheckForSystemNamespace(usingElement, newAlias, NameKind.Alias))
@@ -56,10 +59,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             }
 
             // see if the alias has already been used
-            if (newAlias != null && _aliasToNamespaceMap.ContainsKey(newAlias))
+            if (newAlias != null
+                && _aliasToNamespaceMap.ContainsKey(newAlias))
             {
                 // it has, issue an error and make sure we don't try to add it
-                usingElement.AddError(ErrorCode.AlreadyDefined, EdmSchemaErrorSeverity.Error, System.Data.Entity.Resources.Strings.AliasNameIsAlreadyDefined(newAlias)); 
+                usingElement.AddError(ErrorCode.AlreadyDefined, EdmSchemaErrorSeverity.Error, Strings.AliasNameIsAlreadyDefined(newAlias));
                 newAlias = null;
             }
 
@@ -89,12 +93,13 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         public void ResolveNamespaces()
         {
-            foreach (UsingElement usingElement in _usingElementCollection)
+            foreach (var usingElement in _usingElementCollection)
             {
                 if (!_definingSchema.SchemaManager.IsValidNamespaceName(usingElement.NamespaceName))
                 {
-                    usingElement.AddError(ErrorCode.InvalidNamespaceInUsing, EdmSchemaErrorSeverity.Error,
-                        System.Data.Entity.Resources.Strings.InvalidNamespaceInUsing(usingElement.NamespaceName));
+                    usingElement.AddError(
+                        ErrorCode.InvalidNamespaceInUsing, EdmSchemaErrorSeverity.Error,
+                        Strings.InvalidNamespaceInUsing(usingElement.NamespaceName));
                 }
             }
         }
@@ -112,28 +117,34 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns></returns>
         private bool CheckForSystemNamespace(UsingElement refSchema, string name, NameKind nameKind)
         {
-            Debug.Assert(_definingSchema.ProviderManifest != null, "Since we don't allow using elements in provider manifest, provider manifest can never be null");
+            Debug.Assert(
+                _definingSchema.ProviderManifest != null,
+                "Since we don't allow using elements in provider manifest, provider manifest can never be null");
 
             // We need to check for system namespace
             if (EdmItemCollection.IsSystemNamespace(_definingSchema.ProviderManifest, name))
             {
                 if (nameKind == NameKind.Alias)
                 {
-                    refSchema.AddError(ErrorCode.CannotUseSystemNamespaceAsAlias, EdmSchemaErrorSeverity.Error,
-                        System.Data.Entity.Resources.Strings.CannotUseSystemNamespaceAsAlias(name));
+                    refSchema.AddError(
+                        ErrorCode.CannotUseSystemNamespaceAsAlias, EdmSchemaErrorSeverity.Error,
+                        Strings.CannotUseSystemNamespaceAsAlias(name));
                 }
                 else
                 {
-                    refSchema.AddError(ErrorCode.NeedNotUseSystemNamespaceInUsing, EdmSchemaErrorSeverity.Error,
-                        System.Data.Entity.Resources.Strings.NeedNotUseSystemNamespaceInUsing(name));
+                    refSchema.AddError(
+                        ErrorCode.NeedNotUseSystemNamespaceInUsing, EdmSchemaErrorSeverity.Error,
+                        Strings.NeedNotUseSystemNamespaceInUsing(name));
                 }
                 return true;
             }
             return false;
         }
+
         #endregion
 
         #region Private Types
+
         /// <summary>
         /// Kind of Name
         /// </summary>
@@ -141,9 +152,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             /// <summary>It's an Alias</summary>
             Alias,
+
             /// <summary>It's a namespace</summary>
             Namespace,
         }
+
         #endregion
     }
 }

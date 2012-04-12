@@ -1,6 +1,6 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
-    using System;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
 
     /// <summary>
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
 
             if (String.IsNullOrEmpty(alias.Name))
             {
-                throw EntityUtil.EntitySqlError(alias.ErrCtx, System.Data.Entity.Resources.Strings.InvalidEmptyIdentifier);
+                throw EntityUtil.EntitySqlError(alias.ErrCtx, Strings.InvalidEmptyIdentifier);
             }
 
             _expr = expr;

@@ -1,23 +1,25 @@
-using System.Data.Entity.Core.Common.Utils;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Diagnostics;
+
     /// <summary>
     /// Represents a key composed of multiple parts.
     /// </summary>
     internal class CompositeKey
     {
         #region Fields
+
         /// <summary>
         /// Gets components of this composite key.
         /// </summary>
         internal readonly PropagatorResult[] KeyComponents;
+
         #endregion
 
         #region Constructors
+
         /// <summary>
         /// Initialize a new composite key using the given constant values. Order is important.
         /// </summary>
@@ -28,9 +30,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             KeyComponents = constants;
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Creates a key comparer operating in the context of the given translator.
         /// </summary>
@@ -46,14 +50,15 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns>Merged key.</returns>
         internal CompositeKey Merge(KeyManager keyManager, CompositeKey other)
         {
-            Debug.Assert(null != other && other.KeyComponents.Length == this.KeyComponents.Length, "expected a compatible CompositeKey");
-            PropagatorResult[] mergedKeyValues = new PropagatorResult[this.KeyComponents.Length];
-            for (int i = 0; i < this.KeyComponents.Length; i++)
+            Debug.Assert(null != other && other.KeyComponents.Length == KeyComponents.Length, "expected a compatible CompositeKey");
+            var mergedKeyValues = new PropagatorResult[KeyComponents.Length];
+            for (var i = 0; i < KeyComponents.Length; i++)
             {
-                mergedKeyValues[i] = this.KeyComponents[i].Merge(keyManager, other.KeyComponents[i]);
+                mergedKeyValues[i] = KeyComponents[i].Merge(keyManager, other.KeyComponents[i]);
             }
             return new CompositeKey(mergedKeyValues);
         }
+
         #endregion
 
         /// <summary>
@@ -72,28 +77,42 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             public bool Equals(CompositeKey left, CompositeKey right)
             {
                 // Short circuit the comparison if we know the other reference is equivalent
-                if (object.ReferenceEquals(left, right)) { return true; }
+                if (ReferenceEquals(left, right))
+                {
+                    return true;
+                }
 
                 // If either side is null, return false order (both can't be null because of
                 // the previous check)
-                if (null == left || null == right) { return false; }
+                if (null == left
+                    || null == right)
+                {
+                    return false;
+                }
 
-                Debug.Assert(null != left.KeyComponents && null != right.KeyComponents,
+                Debug.Assert(
+                    null != left.KeyComponents && null != right.KeyComponents,
                     "(Update/JoinPropagator) CompositeKey must be initialized");
 
-                if (left.KeyComponents.Length != right.KeyComponents.Length) { return false; }
-
-                for (int i = 0; i < left.KeyComponents.Length; i++)
+                if (left.KeyComponents.Length
+                    != right.KeyComponents.Length)
                 {
-                    PropagatorResult leftValue = left.KeyComponents[i];
-                    PropagatorResult rightValue = right.KeyComponents[i];
+                    return false;
+                }
+
+                for (var i = 0; i < left.KeyComponents.Length; i++)
+                {
+                    var leftValue = left.KeyComponents[i];
+                    var rightValue = right.KeyComponents[i];
 
                     // if both side are identifiers, check if they're the same or one is constrained by the
                     // other (if there is a dependent-principal relationship, they get fixed up to the same
                     // value)
-                    if (leftValue.Identifier != PropagatorResult.NullIdentifier)
+                    if (leftValue.Identifier
+                        != PropagatorResult.NullIdentifier)
                     {
-                        if (rightValue.Identifier == PropagatorResult.NullIdentifier ||
+                        if (rightValue.Identifier == PropagatorResult.NullIdentifier
+                            ||
                             _manager.GetCliqueIdentifier(leftValue.Identifier) != _manager.GetCliqueIdentifier(rightValue.Identifier))
                         {
                             return false;
@@ -101,7 +120,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     }
                     else
                     {
-                        if (rightValue.Identifier != PropagatorResult.NullIdentifier ||
+                        if (rightValue.Identifier != PropagatorResult.NullIdentifier
+                            ||
                             !ByValueEqualityComparer.Default.Equals(leftValue.GetSimpleValue(), rightValue.GetSimpleValue()))
                         {
                             return false;
@@ -117,8 +137,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 EntityUtil.CheckArgumentNull(key, "key");
 
-                int result = 0;
-                foreach (PropagatorResult keyComponent in key.KeyComponents)
+                var result = 0;
+                foreach (var keyComponent in key.KeyComponents)
                 {
                     result = (result << 5) ^ GetComponentHashCode(keyComponent);
                 }
@@ -129,11 +149,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             // Gets the value to use for hash code
             private int GetComponentHashCode(PropagatorResult keyComponent)
             {
-                if (keyComponent.Identifier == PropagatorResult.NullIdentifier)
+                if (keyComponent.Identifier
+                    == PropagatorResult.NullIdentifier)
                 {
                     // no identifier exists for this key component, so use the actual key
                     // value
-                    Debug.Assert(null != keyComponent && null != keyComponent,
+                    Debug.Assert(
+                        null != keyComponent && null != keyComponent,
                         "key value must not be null");
                     return ByValueEqualityComparer.Default.GetHashCode(keyComponent.GetSimpleValue());
                 }

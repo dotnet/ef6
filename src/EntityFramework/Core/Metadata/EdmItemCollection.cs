@@ -1,17 +1,15 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common;
-    using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity;
     using System.Data.Entity.Core.EntityModel.SchemaObjectModel;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Runtime.Versioning;
     using System.Text;
@@ -29,11 +27,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="xmlReaders">xmlReaders where the CDM schemas are loaded</param>
         /// <param name="filePaths">Paths (URIs)to the CSDL files or resources</param>
-        internal EdmItemCollection(IEnumerable<XmlReader> xmlReaders,
-                                   IEnumerable<string> filePaths)
+        internal EdmItemCollection(
+            IEnumerable<XmlReader> xmlReaders,
+            IEnumerable<string> filePaths)
             : base(DataSpace.CSpace)
         {
-            this.Init(xmlReaders, filePaths, true /*throwOnErrors*/);
+            Init(xmlReaders, filePaths, true /*throwOnErrors*/);
         }
 
         /// <summary>
@@ -46,12 +45,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             EntityUtil.CheckArgumentNull(xmlReaders, "xmlReaders");
             EntityUtil.CheckArgumentContainsNull(ref xmlReaders, "xmlReaders");
 
-            MetadataArtifactLoader composite = MetadataArtifactLoader.CreateCompositeFromXmlReaders(xmlReaders);
+            var composite = MetadataArtifactLoader.CreateCompositeFromXmlReaders(xmlReaders);
 
-            this.Init(composite.GetReaders(),
-                      composite.GetPaths(),
-                      true /*throwOnError*/);
-
+            Init(
+                composite.GetReaders(),
+                composite.GetPaths(),
+                true /*throwOnError*/);
         }
 
         /// <summary>
@@ -63,7 +62,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">thrown if paths argument is null</exception>
         /// <exception cref="System.Data.Entity.Core.MetadataException">For errors related to invalid schemas.</exception>
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file path names which are a Machine resource
-        [ResourceConsumption(ResourceScope.Machine)] //For MetadataArtifactLoader.CreateCompositeFromFilePaths method call but we do not create the file paths in this method 
+        [ResourceConsumption(ResourceScope.Machine)]
+        //For MetadataArtifactLoader.CreateCompositeFromFilePaths method call but we do not create the file paths in this method 
         public EdmItemCollection(params string[] filePaths)
             : base(DataSpace.CSpace)
         {
@@ -78,9 +78,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 composite = MetadataArtifactLoader.CreateCompositeFromFilePaths(filePaths, XmlConstants.CSpaceSchemaExtension);
                 readers = composite.CreateReaders(DataSpace.CSpace);
-                this.Init(readers,
-                          composite.GetPaths(DataSpace.CSpace),
-                          true /*throwOnError*/);
+                Init(
+                    readers,
+                    composite.GetPaths(DataSpace.CSpace),
+                    true /*throwOnError*/);
             }
             finally
             {
@@ -91,14 +92,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-
         // the most basic initialization
         private void Init()
         {
             // Load the EDM primitive types
             LoadEdmPrimitiveTypesAndFunctions();
         }
-
 
         /// <summary>
         /// Public constructor that loads the metadata files from the specified XmlReaders, and
@@ -107,16 +106,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="xmlReaders">XmlReader objects where the EDM schemas are loaded</param>
         /// <param name="filePaths">Paths (URIs) to the CSDL files or resources</param>
         /// <param name="throwOnError">A flag to indicate whether to throw if LoadItems returns errors</param>
-        private IList<EdmSchemaError> Init(IEnumerable<XmlReader> xmlReaders,
-                                           IEnumerable<string> filePaths,
-                                           bool throwOnError)
+        private IList<EdmSchemaError> Init(
+            IEnumerable<XmlReader> xmlReaders,
+            IEnumerable<string> filePaths,
+            bool throwOnError)
         {
             EntityUtil.CheckArgumentNull(xmlReaders, "xmlReaders");
 
             // do the basic initialization
             Init();
 
-            IList<EdmSchemaError> errors = LoadItems(xmlReaders, filePaths, SchemaDataModelOption.EntityDataModel,
+            var errors = LoadItems(
+                xmlReaders, filePaths, SchemaDataModelOption.EntityDataModel,
                 MetadataItem.EdmProviderManifest, this, throwOnError);
 
             return errors;
@@ -125,9 +126,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Fields
 
         // Cache for primitive type maps for Edm to provider
-        private CacheForPrimitiveTypes _primitiveTypeMaps = new CacheForPrimitiveTypes();
+        private readonly CacheForPrimitiveTypes _primitiveTypeMaps = new CacheForPrimitiveTypes();
 
         private Double _edmVersion = XmlConstants.UndefinedVersion;
+
         /// <summary>
         /// Gets canonical versions of InitializerMetadata instances. This avoids repeatedly
         /// compiling delegates for materialization.
@@ -138,12 +140,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Manages user defined function definitions.
         /// </summary>
         private Memoizer<EdmFunction, DbLambda> _getGeneratedFunctionDefinitionsMemoizer;
-        
-        private OcAssemblyCache _conventionalOcCache = new OcAssemblyCache();
+
+        private readonly OcAssemblyCache _conventionalOcCache = new OcAssemblyCache();
 
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Version of the EDM that this ItemCollection represents.
         /// </summary>
@@ -160,9 +163,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get { return _conventionalOcCache; }
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Given an InitializerMetadata instance, returns the canonical version of that instance.
         /// This allows us to avoid compiling materialization delegates repeatedly for the same
@@ -174,12 +179,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 // We memoize the identity function because the first evaluation of the function establishes
                 // the canonical 'reference' for the initializer metadata with a particular 'value'.
-                Interlocked.CompareExchange(ref _getCanonicalInitializerMetadataMemoizer, new Memoizer<InitializerMetadata, InitializerMetadata>(
-                    m => m, EqualityComparer<InitializerMetadata>.Default), null);
+                Interlocked.CompareExchange(
+                    ref _getCanonicalInitializerMetadataMemoizer, new Memoizer<InitializerMetadata, InitializerMetadata>(
+                        m => m, EqualityComparer<InitializerMetadata>.Default), null);
             }
 
             // check if an equivalent has already been registered
-            InitializerMetadata canonical = _getCanonicalInitializerMetadataMemoizer.Evaluate(metadata);
+            var canonical = _getCanonicalInitializerMetadataMemoizer.Evaluate(metadata);
             return canonical;
         }
 
@@ -217,24 +223,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// "filepaths" (which includes res:// URIs), instead of having this method create the collection.
         /// This distinction is made by setting the 'computeFilePaths' flags appropriately.
         /// </remarks>
-        internal static IList<EdmSchemaError> LoadItems(IEnumerable<XmlReader> xmlReaders,
-                                                       IEnumerable<string> sourceFilePaths,
-                                                       SchemaDataModelOption dataModelOption,
-                                                       DbProviderManifest providerManifest,
-                                                       ItemCollection itemCollection,
-                                                       bool throwOnError)
+        internal static IList<EdmSchemaError> LoadItems(
+            IEnumerable<XmlReader> xmlReaders,
+            IEnumerable<string> sourceFilePaths,
+            SchemaDataModelOption dataModelOption,
+            DbProviderManifest providerManifest,
+            ItemCollection itemCollection,
+            bool throwOnError)
         {
             IList<Schema> schemaCollection = null;
 
             // Parse and validate all the schemas - since we support using now,
             // we need to parse them as a group
-            var errorCollection = SchemaManager.ParseAndValidate(xmlReaders, sourceFilePaths,
+            var errorCollection = SchemaManager.ParseAndValidate(
+                xmlReaders, sourceFilePaths,
                 dataModelOption, providerManifest, out schemaCollection);
 
             // Try to initialize the metadata if there are no errors
             if (MetadataHelper.CheckIfAllErrorsAreWarnings(errorCollection))
             {
-                List<EdmSchemaError> errors = LoadItems(providerManifest, schemaCollection, itemCollection);
+                var errors = LoadItems(providerManifest, schemaCollection, itemCollection);
                 foreach (var error in errors)
                 {
                     errorCollection.Add(error);
@@ -249,28 +257,29 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return errorCollection;
         }
 
-        internal static List<EdmSchemaError> LoadItems(DbProviderManifest manifest, IList<Schema> somSchemas,
+        internal static List<EdmSchemaError> LoadItems(
+            DbProviderManifest manifest, IList<Schema> somSchemas,
             ItemCollection itemCollection)
         {
-
-            List<EdmSchemaError> errors = new List<EdmSchemaError>();
+            var errors = new List<EdmSchemaError>();
             // Convert the schema, if model schema, then we use the EDM provider manifest, otherwise use the
             // store provider manifest
-            IEnumerable<GlobalItem> newGlobalItems = LoadSomSchema(somSchemas, manifest, itemCollection);
-            List<String> tempCTypeFunctionIdentity = new List<string>();
+            var newGlobalItems = LoadSomSchema(somSchemas, manifest, itemCollection);
+            var tempCTypeFunctionIdentity = new List<string>();
 
             // No errors, so go ahead and add the types and make them readonly
-            foreach (GlobalItem globalItem in newGlobalItems)
+            foreach (var globalItem in newGlobalItems)
             {
                 // If multiple function parameter and return types expressed in SSpace map to the same
                 // CSpace type (e.g., SqlServer.decimal and SqlServer.numeric both map to Edm.Decimal),
                 // we need to guard against attempts to insert duplicate functions into the collection.
                 //
-                if (globalItem.BuiltInTypeKind == BuiltInTypeKind.EdmFunction && globalItem.DataSpace == DataSpace.SSpace)
+                if (globalItem.BuiltInTypeKind == BuiltInTypeKind.EdmFunction
+                    && globalItem.DataSpace == DataSpace.SSpace)
                 {
-                    EdmFunction function = (EdmFunction)globalItem;
+                    var function = (EdmFunction)globalItem;
 
-                    StringBuilder sb = new StringBuilder();
+                    var sb = new StringBuilder();
                     EdmFunction.BuildIdentity(
                         sb,
                         function.FullName,
@@ -278,15 +287,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         // convert function parameters to C-side types
                         (param) => MetadataHelper.ConvertStoreTypeUsageToEdmTypeUsage(param.TypeUsage),
                         (param) => param.Mode);
-                    string cTypeFunctionIdentity = sb.ToString();
+                    var cTypeFunctionIdentity = sb.ToString();
 
                     // Validate identity
                     if (tempCTypeFunctionIdentity.Contains(cTypeFunctionIdentity))
                     {
-
                         errors.Add(
                             new EdmSchemaError(
-                                Strings.DuplicatedFunctionoverloads(function.FullName, cTypeFunctionIdentity.Substring(function.FullName.Length)).Trim()/*parameters*/,
+                                Strings.DuplicatedFunctionoverloads(
+                                    function.FullName, cTypeFunctionIdentity.Substring(function.FullName.Length)).Trim() /*parameters*/,
                                 (int)ErrorCode.DuplicatedFunctionoverloads,
                                 EdmSchemaErrorSeverity.Error));
                         continue;
@@ -307,11 +316,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="providerManifest">The provider manifest used for loading the type</param>
         /// <param name="itemCollection">item collection in which primitive types are present</param>
         /// <returns>The newly created items</returns>
-        internal static IEnumerable<GlobalItem> LoadSomSchema(IList<Schema> somSchemas,
-                                                              DbProviderManifest providerManifest,
-                                                              ItemCollection itemCollection)
+        internal static IEnumerable<GlobalItem> LoadSomSchema(
+            IList<Schema> somSchemas,
+            DbProviderManifest providerManifest,
+            ItemCollection itemCollection)
         {
-            IEnumerable<GlobalItem> newGlobalItems = Converter.ConvertSchema(somSchemas,
+            var newGlobalItems = Converter.ConvertSchema(
+                somSchemas,
                 providerManifest, itemCollection);
             return newGlobalItems;
         }
@@ -320,7 +331,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Get the list of primitive types for the given space
         /// </summary>
         /// <returns></returns>
-        public System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType> GetPrimitiveTypes()
+        public ReadOnlyCollection<PrimitiveType> GetPrimitiveTypes()
         {
             return _primitiveTypeMaps.GetTypes();
         }
@@ -330,9 +341,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="edmVersion">The version of edm to use</param>
         /// <returns></returns>
-   	    public System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType> GetPrimitiveTypes(double edmVersion)
+        public ReadOnlyCollection<PrimitiveType> GetPrimitiveTypes(double edmVersion)
         {
-            if (edmVersion == XmlConstants.EdmVersionForV1 || edmVersion == XmlConstants.EdmVersionForV1_1 || edmVersion == XmlConstants.EdmVersionForV2)
+            if (edmVersion == XmlConstants.EdmVersionForV1 || edmVersion == XmlConstants.EdmVersionForV1_1
+                || edmVersion == XmlConstants.EdmVersionForV2)
             {
                 return _primitiveTypeMaps.GetTypes().Where(type => !Helper.IsSpatialType(type)).ToList().AsReadOnly();
             }
@@ -360,17 +372,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private void LoadEdmPrimitiveTypesAndFunctions()
         {
-            EdmProviderManifest providerManifest = EdmProviderManifest.Instance;
-            System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType> primitiveTypes = providerManifest.GetStoreTypes();
-            for (int i = 0; i < primitiveTypes.Count; i++)
+            var providerManifest = EdmProviderManifest.Instance;
+            var primitiveTypes = providerManifest.GetStoreTypes();
+            for (var i = 0; i < primitiveTypes.Count; i++)
             {
-                this.AddInternal(primitiveTypes[i]);
+                AddInternal(primitiveTypes[i]);
                 _primitiveTypeMaps.Add(primitiveTypes[i]);
             }
-            System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction> functions = providerManifest.GetStoreFunctions();
-            for (int i = 0; i < functions.Count; i++)
+            var functions = providerManifest.GetStoreFunctions();
+            for (var i = 0; i < functions.Count; i++)
             {
-                this.AddInternal(functions[i]);
+                AddInternal(functions[i]);
             }
         }
 
@@ -386,7 +398,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             if (null == _getGeneratedFunctionDefinitionsMemoizer)
             {
                 Interlocked.CompareExchange(
-                    ref _getGeneratedFunctionDefinitionsMemoizer, 
+                    ref _getGeneratedFunctionDefinitionsMemoizer,
                     new Memoizer<EdmFunction, DbLambda>(GenerateFunctionDefinition, null),
                     null);
             }
@@ -412,7 +424,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             DbLambda generatedDefinition;
 
             // Generate the body
-            generatedDefinition = Mapping.ViewGeneration.Utils.ExternalCalls.CompileFunctionDefinition(function.CommandTextAttribute,
+            generatedDefinition = ExternalCalls.CompileFunctionDefinition(
+                function.CommandTextAttribute,
                 function.Parameters,
                 this);
 
@@ -426,7 +439,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             return generatedDefinition;
         }
-        #endregion
-    }//---- ItemCollection
 
-}//---- 
+        #endregion
+    }
+
+//---- ItemCollection
+}
+
+//---- 

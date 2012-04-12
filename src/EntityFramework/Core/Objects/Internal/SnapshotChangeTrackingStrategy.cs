@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Data.Entity.Core.Objects.DataClasses;
-
-namespace System.Data.Entity.Core.Objects.Internal
+﻿namespace System.Data.Entity.Core.Objects.Internal
 {
+    using System.Data.Entity.Core.Objects.DataClasses;
+
     /// <summary>
     /// Implementation of the change tracking strategy for entities that require snapshot change tracking.
     /// These are typically entities that do not implement IEntityWithChangeTracker.
     /// </summary>
     internal sealed class SnapshotChangeTrackingStrategy : IChangeTrackingStrategy
     {
-        private static SnapshotChangeTrackingStrategy _instance = new SnapshotChangeTrackingStrategy();
+        private static readonly SnapshotChangeTrackingStrategy _instance = new SnapshotChangeTrackingStrategy();
 
         /// <summary>
         /// Returns the single static instance of this class; a single instance is all that is needed
@@ -19,10 +16,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// </summary>
         public static SnapshotChangeTrackingStrategy Instance
         {
-            get
-            {
-                return _instance;
-            }
+            get { return _instance; }
         }
 
         // Private constructor to help prevent additional instances being created.
@@ -51,7 +45,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             // If the target is the entity, then this is a change to a member on the entity itself rather than
             // a change to some complex type property defined on the entity.  In this case we can use the change tracking
             // API in the normal way.
-            if (Object.ReferenceEquals(target, entry.Entity))
+            if (ReferenceEquals(target, entry.Entity))
             {
                 // equivalent of EntityObject.ReportPropertyChanging()
                 ((IEntityChangeTracker)entry).EntityMemberChanging(member.CLayerName);
@@ -80,7 +74,8 @@ namespace System.Data.Entity.Core.Objects.Internal
                 // Note that this case only happens when the entity is POCO and complex types are set through the CurrentValues
                 // object.  This is probably not a very common pattern.
                 member.SetValue(target, value);
-                if (entry.State != EntityState.Added)
+                if (entry.State
+                    != EntityState.Added)
                 {
                     // Entry is not Detached - checked in ValidateState() in EntityEntry.SetCurrentEntityValue
                     entry.DetectChangesInProperties(true);

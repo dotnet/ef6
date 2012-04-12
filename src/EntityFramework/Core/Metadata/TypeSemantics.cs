@@ -1,13 +1,14 @@
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Linq;
-using System.Diagnostics;
 using objectModel = System.Collections.ObjectModel;
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using System.Threading;
 
     /// <summary>
     /// Provides type semantics service, type operations and type predicates for the EDM type system.
@@ -25,16 +26,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
     internal static class TypeSemantics
     {
         #region Fields
+
         //
         // cache commom super type closure
         //
         [SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional", MessageId = "Member")]
-        static private objectModel.ReadOnlyCollection<PrimitiveType>[,] _commonTypeClosure;
+        private static objectModel.ReadOnlyCollection<PrimitiveType>[,] _commonTypeClosure;
+
         #endregion
 
         //
         // 'Public' Interface
         //
+
         #region 'Public' Interface
 
         /// <summary>
@@ -103,7 +107,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return true;
             }
 
-            if (Helper.IsPrimitiveType(subType.EdmType) && Helper.IsPrimitiveType(superType.EdmType))
+            if (Helper.IsPrimitiveType(subType.EdmType)
+                && Helper.IsPrimitiveType(superType.EdmType))
             {
                 return IsPrimitiveTypeSubTypeOf(subType, superType);
             }
@@ -138,29 +143,38 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return true;
             }
 
-            if (Helper.IsPrimitiveType(fromType.EdmType) && Helper.IsPrimitiveType(toType.EdmType))
+            if (Helper.IsPrimitiveType(fromType.EdmType)
+                && Helper.IsPrimitiveType(toType.EdmType))
             {
-                return IsPrimitiveTypePromotableTo(fromType,
-                                                   toType);
+                return IsPrimitiveTypePromotableTo(
+                    fromType,
+                    toType);
             }
-            else if (Helper.IsCollectionType(fromType.EdmType) && Helper.IsCollectionType(toType.EdmType))
+            else if (Helper.IsCollectionType(fromType.EdmType)
+                     && Helper.IsCollectionType(toType.EdmType))
             {
-                return IsPromotableTo(TypeHelpers.GetElementTypeUsage(fromType),
-                                      TypeHelpers.GetElementTypeUsage(toType));
+                return IsPromotableTo(
+                    TypeHelpers.GetElementTypeUsage(fromType),
+                    TypeHelpers.GetElementTypeUsage(toType));
             }
-            else if (Helper.IsEntityTypeBase(fromType.EdmType) && Helper.IsEntityTypeBase(toType.EdmType))
+            else if (Helper.IsEntityTypeBase(fromType.EdmType)
+                     && Helper.IsEntityTypeBase(toType.EdmType))
             {
                 return fromType.EdmType.IsSubtypeOf(toType.EdmType);
             }
-            else if (Helper.IsRefType(fromType.EdmType) && Helper.IsRefType(toType.EdmType))
+            else if (Helper.IsRefType(fromType.EdmType)
+                     && Helper.IsRefType(toType.EdmType))
             {
-                return IsPromotableTo(TypeHelpers.GetElementTypeUsage(fromType),
-                                      TypeHelpers.GetElementTypeUsage(toType));
+                return IsPromotableTo(
+                    TypeHelpers.GetElementTypeUsage(fromType),
+                    TypeHelpers.GetElementTypeUsage(toType));
             }
-            else if (Helper.IsRowType(fromType.EdmType) && Helper.IsRowType(toType.EdmType))
+            else if (Helper.IsRowType(fromType.EdmType)
+                     && Helper.IsRowType(toType.EdmType))
             {
-                return IsPromotableTo((RowType)fromType.EdmType,
-                                      (RowType)toType.EdmType);
+                return IsPromotableTo(
+                    (RowType)fromType.EdmType,
+                    (RowType)toType.EdmType);
             }
 
             return false;
@@ -173,25 +187,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Func<TypeUsage, bool> isLeaf = t => !Helper.IsTransientType(t.EdmType);
 
-            Func<TypeUsage, IEnumerable<TypeUsage>> getImmediateSubNodes = 
+            Func<TypeUsage, IEnumerable<TypeUsage>> getImmediateSubNodes =
                 t =>
-                {
-                    if (Helper.IsCollectionType(t.EdmType) || Helper.IsRefType(t.EdmType))
                     {
-                        return new[] { TypeHelpers.GetElementTypeUsage(t) };
-                    }
-                    else if (Helper.IsRowType(t.EdmType))
-                    {
-                        return ((RowType)t.EdmType).Properties.Select(p => p.TypeUsage);
-                    }
-                    else
-                    {
-                        Debug.Fail("cannot enumerate subnodes of a leaf node");
-                        return new TypeUsage[] { };
-                    }
-                };
+                        if (Helper.IsCollectionType(t.EdmType)
+                            || Helper.IsRefType(t.EdmType))
+                        {
+                            return new[] { TypeHelpers.GetElementTypeUsage(t) };
+                        }
+                        else if (Helper.IsRowType(t.EdmType))
+                        {
+                            return ((RowType)t.EdmType).Properties.Select(p => p.TypeUsage);
+                        }
+                        else
+                        {
+                            Debug.Fail("cannot enumerate subnodes of a leaf node");
+                            return new TypeUsage[] { };
+                        }
+                    };
 
-            return Common.Utils.Helpers.GetLeafNodes<TypeUsage>(type, isLeaf, getImmediateSubNodes);
+            return Helpers.GetLeafNodes(type, isLeaf, getImmediateSubNodes);
         }
 
         /// <summary>
@@ -242,7 +257,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return true;
             }
 
-            if (Helper.IsPrimitiveType(type1.EdmType) && Helper.IsPrimitiveType(type2.EdmType))
+            if (Helper.IsPrimitiveType(type1.EdmType)
+                && Helper.IsPrimitiveType(type2.EdmType))
             {
                 return TryGetCommonPrimitiveType(type1, type2, out commonType);
             }
@@ -267,7 +283,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal static TypeUsage GetCommonType(TypeUsage type1, TypeUsage type2)
         {
             TypeUsage commonType = null;
-            if (TypeSemantics.TryGetCommonType(type1, type2, out commonType))
+            if (TryGetCommonType(type1, type2, out commonType))
             {
                 return commonType;
             }
@@ -293,7 +309,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns></returns>
         internal static bool IsValidPolymorphicCast(TypeUsage fromType, TypeUsage toType)
         {
-            if (!IsPolymorphicType(fromType) || !IsPolymorphicType(toType))
+            if (!IsPolymorphicType(fromType)
+                || !IsPolymorphicType(toType))
             {
                 return false;
             }
@@ -317,7 +334,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="type">Type to be checked.</param>
         /// <returns><c>true</c> if the <param ref="type" /> is a nominal type. <c>false</c> otherwise.</returns>
-        static internal bool IsNominalType(TypeUsage type)
+        internal static bool IsNominalType(TypeUsage type)
         {
             Debug.Assert(!IsEnumerationType(type), "Implicit cast/Softcast is not allowed for enums so we should never see enum type here.");
 
@@ -505,7 +522,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns></returns>
         internal static bool IsBooleanType(TypeUsage type)
         {
-            return TypeSemantics.IsPrimitiveType(type, PrimitiveTypeKind.Boolean);
+            return IsPrimitiveType(type, PrimitiveTypeKind.Boolean);
         }
 
         /// <summary>
@@ -617,7 +634,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal static bool IsNullable(TypeUsage type)
         {
             Facet nullableFacet;
-            if (type.Facets.TryGetValue(EdmProviderManifest.NullableFacetName, false, out nullableFacet))
+            if (type.Facets.TryGetValue(DbProviderManifest.NullableFacetName, false, out nullableFacet))
             {
                 return (bool)nullableFacet.Value;
             }
@@ -654,7 +671,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns><c>true</c> if type1 and type2 are equal-comparable, <c>false</c> otherwise</returns>
         internal static bool IsEqualComparableTo(TypeUsage type1, TypeUsage type2)
         {
-            if (IsEqualComparable(type1) && IsEqualComparable(type2))
+            if (IsEqualComparable(type1)
+                && IsEqualComparable(type2))
             {
                 return HasCommonType(type1, type2);
             }
@@ -681,7 +699,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns><c>true</c> if type1 and type2 are order-comparable, <c>false</c> otherwise</returns>
         internal static bool IsOrderComparableTo(TypeUsage type1, TypeUsage type2)
         {
-            if (IsOrderComparable(type1) && IsOrderComparable(type2))
+            if (IsOrderComparable(type1)
+                && IsOrderComparable(type2))
             {
                 return HasCommonType(type1, type2);
             }
@@ -702,20 +721,24 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return type;
         }
 
-        [System.Diagnostics.Conditional("DEBUG")]
-        static internal void AssertTypeInvariant(string message, Func<bool> assertPredicate)
+        [Conditional("DEBUG")]
+        internal static void AssertTypeInvariant(string message, Func<bool> assertPredicate)
         {
-            System.Diagnostics.Debug.Assert(assertPredicate(),
-                                            "Type invariant check FAILED\n" + message);
+            Debug.Assert(
+                assertPredicate(),
+                "Type invariant check FAILED\n" + message);
         }
+
         #endregion // Internal interface
 
         //
         // Private Interface
         //
+
         #region Private Interface
 
         #region Subtyping
+
         private static bool IsPrimitiveTypeSubTypeOf(TypeUsage fromType, TypeUsage toType)
         {
             Debug.Assert(fromType != null, "fromType must not be null");
@@ -733,7 +756,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private static bool IsSubTypeOf(PrimitiveType subPrimitiveType, PrimitiveType superPrimitiveType)
         {
-            if (object.ReferenceEquals(subPrimitiveType, superPrimitiveType))
+            if (ReferenceEquals(subPrimitiveType, superPrimitiveType))
             {
                 return true;
             }
@@ -743,7 +766,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return true;
             }
 
-            objectModel.ReadOnlyCollection<PrimitiveType> superTypes = EdmProviderManifest.Instance.GetPromotionTypes(subPrimitiveType);
+            var superTypes = EdmProviderManifest.Instance.GetPromotionTypes(subPrimitiveType);
 
             return (-1 != superTypes.IndexOf(superPrimitiveType));
         }
@@ -751,16 +774,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #endregion // Subtyping
 
         #region Promotability
+
         private static bool IsPromotableTo(RowType fromRowType, RowType toRowType)
         {
             Debug.Assert(fromRowType != null && toRowType != null);
 
-            if (fromRowType.Properties.Count != toRowType.Properties.Count)
+            if (fromRowType.Properties.Count
+                != toRowType.Properties.Count)
             {
                 return false;
             }
 
-            for (int i = 0; i < fromRowType.Properties.Count; i++)
+            for (var i = 0; i < fromRowType.Properties.Count; i++)
             {
                 if (!IsPromotableTo(fromRowType.Properties[i].TypeUsage, toRowType.Properties[i].TypeUsage))
                 {
@@ -789,6 +814,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #endregion // promotability
 
         #region Common Super-Type
+
         private static bool TryGetCommonType(EdmType edmType1, EdmType edmType2, out EdmType commonEdmType)
         {
             Debug.Assert(edmType1 != null && edmType2 != null);
@@ -799,39 +825,49 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return true;
             }
 
-            if (Helper.IsPrimitiveType(edmType1) && Helper.IsPrimitiveType(edmType2))
+            if (Helper.IsPrimitiveType(edmType1)
+                && Helper.IsPrimitiveType(edmType2))
             {
-                return TryGetCommonType((PrimitiveType)edmType1,
-                                                 (PrimitiveType)edmType2,
-                                                 out commonEdmType);
+                return TryGetCommonType(
+                    (PrimitiveType)edmType1,
+                    (PrimitiveType)edmType2,
+                    out commonEdmType);
             }
 
-            else if (Helper.IsCollectionType(edmType1) && Helper.IsCollectionType(edmType2))
+            else if (Helper.IsCollectionType(edmType1)
+                     && Helper.IsCollectionType(edmType2))
             {
-                return TryGetCommonType((CollectionType)edmType1,
-                                                  (CollectionType)edmType2,
-                                                  out commonEdmType);
+                return TryGetCommonType(
+                    (CollectionType)edmType1,
+                    (CollectionType)edmType2,
+                    out commonEdmType);
             }
 
-            else if (Helper.IsEntityTypeBase(edmType1) && Helper.IsEntityTypeBase(edmType2))
+            else if (Helper.IsEntityTypeBase(edmType1)
+                     && Helper.IsEntityTypeBase(edmType2))
             {
-                return TryGetCommonBaseType(edmType1,
-                                            edmType2,
-                                            out commonEdmType);
+                return TryGetCommonBaseType(
+                    edmType1,
+                    edmType2,
+                    out commonEdmType);
             }
 
-            else if (Helper.IsRefType(edmType1) && Helper.IsRefType(edmType2))
+            else if (Helper.IsRefType(edmType1)
+                     && Helper.IsRefType(edmType2))
             {
-                return TryGetCommonType((RefType)edmType1,
-                                           (RefType)edmType2,
-                                           out commonEdmType);
+                return TryGetCommonType(
+                    (RefType)edmType1,
+                    (RefType)edmType2,
+                    out commonEdmType);
             }
 
-            else if (Helper.IsRowType(edmType1) && Helper.IsRowType(edmType2))
+            else if (Helper.IsRowType(edmType1)
+                     && Helper.IsRowType(edmType2))
             {
-                return TryGetCommonType((RowType)edmType1,
-                                           (RowType)edmType2,
-                                           out commonEdmType);
+                return TryGetCommonType(
+                    (RowType)edmType1,
+                    (RowType)edmType2,
+                    out commonEdmType);
             }
             else
             {
@@ -861,8 +897,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return true;
             }
 
-            objectModel.ReadOnlyCollection<PrimitiveType> superTypes = GetPrimitiveCommonSuperTypes((PrimitiveType)type1.EdmType,
-                                                                                                    (PrimitiveType)type2.EdmType);
+            var superTypes = GetPrimitiveCommonSuperTypes(
+                (PrimitiveType)type1.EdmType,
+                (PrimitiveType)type2.EdmType);
             if (superTypes.Count == 0)
             {
                 return false;
@@ -888,7 +925,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return true;
             }
 
-            objectModel.ReadOnlyCollection<PrimitiveType> superTypes = GetPrimitiveCommonSuperTypes(primitiveType1, primitiveType2);
+            var superTypes = GetPrimitiveCommonSuperTypes(primitiveType1, primitiveType2);
             if (superTypes.Count > 0)
             {
                 commonType = superTypes[0];
@@ -926,7 +963,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private static bool TryGetCommonType(RowType rowType1, RowType rowType2, out EdmType commonRowType)
         {
-            if (rowType1.Properties.Count != rowType2.Properties.Count ||
+            if (rowType1.Properties.Count != rowType2.Properties.Count
+                ||
                 rowType1.InitializerMetadata != rowType2.InitializerMetadata)
             {
                 commonRowType = null;
@@ -934,8 +972,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             // find a common type for every property
-            List<EdmProperty> commonProperties = new List<EdmProperty>();
-            for (int i = 0; i < rowType1.Properties.Count; i++)
+            var commonProperties = new List<EdmProperty>();
+            for (var i = 0; i < rowType1.Properties.Count; i++)
             {
                 TypeUsage columnCommonTypeUsage;
                 if (!TryGetCommonType(rowType1.Properties[i].TypeUsage, rowType2.Properties[i].TypeUsage, out columnCommonTypeUsage))
@@ -954,17 +992,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private static bool TryGetCommonBaseType(EdmType type1, EdmType type2, out EdmType commonBaseType)
         {
             // put all the other base types in a dictionary
-            Dictionary<EdmType, byte> otherBaseTypes = new Dictionary<EdmType, byte>();
-            for (EdmType ancestor = type2; ancestor != null; ancestor = ancestor.BaseType)
+            var otherBaseTypes = new Dictionary<EdmType, byte>();
+            for (var ancestor = type2; ancestor != null; ancestor = ancestor.BaseType)
             {
                 otherBaseTypes.Add(ancestor, 0);
             }
 
             // walk up the ancestor chain, and see if any of them are 
             // common to the otherTypes ancestors
-            for (EdmType ancestor = type1; ancestor != null; ancestor = ancestor.BaseType)
+            for (var ancestor = type1; ancestor != null; ancestor = ancestor.BaseType)
             {
-
                 if (otherBaseTypes.ContainsKey(ancestor))
                 {
                     commonBaseType = ancestor;
@@ -980,9 +1017,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             return (null != TypeHelpers.GetCommonTypeUsage(type1, type2));
         }
+
         #endregion // common super-type helpers
 
         #region Comparability
+
         /// <summary>
         /// Determines if the given edmType is equal comparable. Consult "EntitySql Language Specification", 
         /// section 7 - Comparison and Dependent Operations for details.
@@ -991,14 +1030,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>true if edmType is equal-comparable, false otherwise</returns>
         private static bool IsEqualComparable(EdmType edmType)
         {
-            if (Helper.IsPrimitiveType(edmType) || Helper.IsRefType(edmType) || Helper.IsEntityType(edmType) || Helper.IsEnumType(edmType))
+            if (Helper.IsPrimitiveType(edmType) || Helper.IsRefType(edmType) || Helper.IsEntityType(edmType)
+                || Helper.IsEnumType(edmType))
             {
                 return true;
             }
             else if (Helper.IsRowType(edmType))
             {
-                RowType rowType = (RowType)edmType;
-                foreach (EdmProperty rowProperty in rowType.Properties)
+                var rowType = (RowType)edmType;
+                foreach (var rowProperty in rowType.Properties)
                 {
                     if (!IsEqualComparable(rowProperty.TypeUsage))
                     {
@@ -1021,6 +1061,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // may still fail during runtime depending on the provider specific behavior
             return Helper.IsScalarType(edmType);
         }
+
         #endregion
 
         #region Private Helpers
@@ -1030,12 +1071,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Debug.Assert(fromType != null && toType != null);
 
             // If the type usages are the same reference, they are equal.
-            if (object.ReferenceEquals(fromType, toType))
+            if (ReferenceEquals(fromType, toType))
             {
                 return true;
             }
 
-            if (fromType.EdmType.BuiltInTypeKind != toType.EdmType.BuiltInTypeKind)
+            if (fromType.EdmType.BuiltInTypeKind
+                != toType.EdmType.BuiltInTypeKind)
             {
                 return false;
             }
@@ -1043,38 +1085,44 @@ namespace System.Data.Entity.Core.Metadata.Edm
             //
             // Ensure structural evaluation for Collection, Ref and Row types
             //
-            if (fromType.EdmType.BuiltInTypeKind == BuiltInTypeKind.CollectionType)
+            if (fromType.EdmType.BuiltInTypeKind
+                == BuiltInTypeKind.CollectionType)
             {
                 // Collection Type: Just compare the Element types
-                return CompareTypes(((CollectionType)fromType.EdmType).TypeUsage,
-                                                ((CollectionType)toType.EdmType).TypeUsage,
-                                                equivalenceOnly);
+                return CompareTypes(
+                    ((CollectionType)fromType.EdmType).TypeUsage,
+                    ((CollectionType)toType.EdmType).TypeUsage,
+                    equivalenceOnly);
             }
-            else if (fromType.EdmType.BuiltInTypeKind == BuiltInTypeKind.RefType)
+            else if (fromType.EdmType.BuiltInTypeKind
+                     == BuiltInTypeKind.RefType)
             {
                 // Both are Reference Types, so compare the referenced Entity types
                 return ((RefType)fromType.EdmType).ElementType.EdmEquals(((RefType)toType.EdmType).ElementType);
             }
-            else if (fromType.EdmType.BuiltInTypeKind == BuiltInTypeKind.RowType)
+            else if (fromType.EdmType.BuiltInTypeKind
+                     == BuiltInTypeKind.RowType)
             {
                 // Row Types
-                RowType fromRow = (RowType)fromType.EdmType;
-                RowType toRow = (RowType)toType.EdmType;
+                var fromRow = (RowType)fromType.EdmType;
+                var toRow = (RowType)toType.EdmType;
                 // Both are RowTypes, so compare the structure.
                 // The number of properties must be the same.
-                if (fromRow.Properties.Count != toRow.Properties.Count)
+                if (fromRow.Properties.Count
+                    != toRow.Properties.Count)
                 {
                     return false;
                 }
 
                 // Compare properties. For an equivalence comparison, only
                 // property types must match, otherwise names and types must match.
-                for (int idx = 0; idx < fromRow.Properties.Count; idx++)
+                for (var idx = 0; idx < fromRow.Properties.Count; idx++)
                 {
-                    EdmProperty fromProp = fromRow.Properties[idx];
-                    EdmProperty toProp = toRow.Properties[idx];
+                    var fromProp = fromRow.Properties[idx];
+                    var toProp = toRow.Properties[idx];
 
-                    if (!equivalenceOnly && (fromProp.Name != toProp.Name))
+                    if (!equivalenceOnly
+                        && (fromProp.Name != toProp.Name))
                     {
                         return false;
                     }
@@ -1107,42 +1155,51 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return;
             }
 
-            objectModel.ReadOnlyCollection<PrimitiveType>[,] commonTypeClosure = new objectModel.ReadOnlyCollection<PrimitiveType>[EdmConstants.NumPrimitiveTypes, EdmConstants.NumPrimitiveTypes];
-            for (int i = 0; i < EdmConstants.NumPrimitiveTypes; i++)
+            var commonTypeClosure =
+                new objectModel.ReadOnlyCollection<PrimitiveType>[EdmConstants.NumPrimitiveTypes,EdmConstants.NumPrimitiveTypes];
+            for (var i = 0; i < EdmConstants.NumPrimitiveTypes; i++)
             {
                 commonTypeClosure[i, i] = Helper.EmptyPrimitiveTypeReadOnlyCollection;
             }
 
-            objectModel.ReadOnlyCollection<PrimitiveType> primitiveTypes = EdmProviderManifest.Instance.GetStoreTypes();
+            var primitiveTypes = EdmProviderManifest.Instance.GetStoreTypes();
 
-            for (int i = 0; i < EdmConstants.NumPrimitiveTypes; i++)
+            for (var i = 0; i < EdmConstants.NumPrimitiveTypes; i++)
             {
-                for (int j = 0; j < i; j++)
+                for (var j = 0; j < i; j++)
                 {
-                    commonTypeClosure[i, j] = Intersect(EdmProviderManifest.Instance.GetPromotionTypes(primitiveTypes[i]),
-                                                        EdmProviderManifest.Instance.GetPromotionTypes(primitiveTypes[j]));
+                    commonTypeClosure[i, j] = Intersect(
+                        EdmProviderManifest.Instance.GetPromotionTypes(primitiveTypes[i]),
+                        EdmProviderManifest.Instance.GetPromotionTypes(primitiveTypes[j]));
 
                     commonTypeClosure[j, i] = commonTypeClosure[i, j];
                 }
             }
 
-            TypeSemantics.AssertTypeInvariant("Common Type closure is incorrect",
-                                                delegate()
-                                                {
-                                                    for (int i = 0; i < EdmConstants.NumPrimitiveTypes; i++)
-                                                    {
-                                                        for (int j = 0; j < EdmConstants.NumPrimitiveTypes; j++)
-                                                        {
-                                                            if (commonTypeClosure[i, j] != commonTypeClosure[j, i])
-                                                                return false;
-                                                            if (i == j && commonTypeClosure[i, j].Count != 0)
-                                                                return false;
-                                                        }
-                                                    }
-                                                    return true;
-                                                });
+            AssertTypeInvariant(
+                "Common Type closure is incorrect",
+                delegate
+                    {
+                        for (var i = 0; i < EdmConstants.NumPrimitiveTypes; i++)
+                        {
+                            for (var j = 0; j < EdmConstants.NumPrimitiveTypes; j++)
+                            {
+                                if (commonTypeClosure[i, j]
+                                    != commonTypeClosure[j, i])
+                                {
+                                    return false;
+                                }
+                                if (i == j
+                                    && commonTypeClosure[i, j].Count != 0)
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+                        return true;
+                    });
 
-            System.Threading.Interlocked.CompareExchange<objectModel.ReadOnlyCollection<PrimitiveType>[,]>(ref _commonTypeClosure, commonTypeClosure, null);
+            Interlocked.CompareExchange(ref _commonTypeClosure, commonTypeClosure, null);
         }
 
         /// <summary>
@@ -1153,8 +1210,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns></returns>
         private static objectModel.ReadOnlyCollection<PrimitiveType> Intersect(IList<PrimitiveType> types1, IList<PrimitiveType> types2)
         {
-            List<PrimitiveType> commonTypes = new List<PrimitiveType>();
-            for (int i = 0; i < types1.Count; i++)
+            var commonTypes = new List<PrimitiveType>();
+            for (var i = 0; i < types1.Count; i++)
             {
                 if (types2.Contains(types1[i]))
                 {
@@ -1176,11 +1233,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="primitiveType1"></param>
         /// <param name="primitiveType2"></param>
         /// <returns></returns>
-        private static objectModel.ReadOnlyCollection<PrimitiveType> GetPrimitiveCommonSuperTypes(PrimitiveType primitiveType1, PrimitiveType primitiveType2)
+        private static objectModel.ReadOnlyCollection<PrimitiveType> GetPrimitiveCommonSuperTypes(
+            PrimitiveType primitiveType1, PrimitiveType primitiveType2)
         {
             ComputeCommonTypeClosure();
             return _commonTypeClosure[(int)primitiveType1.PrimitiveTypeKind, (int)primitiveType2.PrimitiveTypeKind];
         }
+
         #endregion // Private Helpers
 
         #endregion // Private interface

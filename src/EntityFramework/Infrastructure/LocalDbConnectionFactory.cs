@@ -1,6 +1,5 @@
 ﻿namespace System.Data.Entity.Infrastructure
 {
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -90,15 +89,17 @@
         public DbConnection CreateConnection(string nameOrConnectionString)
         {
             var attachDb = string.IsNullOrEmpty(AppDomain.CurrentDomain.GetData("DataDirectory") as string)
-                ? " "
-                : string.Format(CultureInfo.InvariantCulture, @" AttachDbFilename=|DataDirectory|{0}.mdf; ", nameOrConnectionString);
+                               ? " "
+                               : string.Format(
+                                   CultureInfo.InvariantCulture, @" AttachDbFilename=|DataDirectory|{0}.mdf; ", nameOrConnectionString);
 
-            return new SqlConnectionFactory(string.Format(
-                CultureInfo.InvariantCulture,
-                @"Data Source=(localdb)\{1};{0};{2}",
-                _baseConnectionString,
-                _localDbVersion,
-                attachDb)).CreateConnection(nameOrConnectionString);
+            return new SqlConnectionFactory(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    @"Data Source=(localdb)\{1};{0};{2}",
+                    _baseConnectionString,
+                    _localDbVersion,
+                    attachDb)).CreateConnection(nameOrConnectionString);
         }
 
         #endregion

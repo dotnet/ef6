@@ -1,10 +1,5 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
-    using System;
-    using System.Globalization;
-    using System.Collections;
-    using System.Collections.Generic;
-
     /// <summary>
     /// Represents GROUPPARTITION(expr) expression.
     /// </summary>

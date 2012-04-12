@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
-
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
 // to prevent from simple mistakes during development (e.g. method argument validation 
 // in cases where it was you who created the variables or the variables had already been validated or 
@@ -15,11 +12,6 @@ using System.Collections.Generic;
 // or the tree was built/rewritten not the way we thought it was.
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
-
-using System.Globalization;
-
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
 using md = System.Data.Entity.Core.Metadata.Edm;
 
 //
@@ -29,6 +21,9 @@ using md = System.Data.Entity.Core.Metadata.Edm;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common;
+
     /// <summary>
     /// This class is used as a Comparer for Types all through the PlanCompiler.
     /// It has a pretty strict definition of type equality - which pretty much devolves
@@ -43,24 +38,28 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     /// Again, this is different from other parts of  the query pipeline; and we're much stricter here
     /// 
     /// </summary>
-    sealed internal class TypeUsageEqualityComparer : IEqualityComparer<md.TypeUsage>
+    internal sealed class TypeUsageEqualityComparer : IEqualityComparer<md.TypeUsage>
     {
-        private TypeUsageEqualityComparer() { }
+        private TypeUsageEqualityComparer()
+        {
+        }
+
         internal static readonly TypeUsageEqualityComparer Instance = new TypeUsageEqualityComparer();
 
         #region IEqualityComparer<TypeUsage> Members
 
-        public bool Equals(System.Data.Entity.Core.Metadata.Edm.TypeUsage x, System.Data.Entity.Core.Metadata.Edm.TypeUsage y)
+        public bool Equals(md.TypeUsage x, md.TypeUsage y)
         {
-            if (x == null || y == null)
+            if (x == null
+                || y == null)
             {
                 return false;
             }
 
-            return TypeUsageEqualityComparer.Equals(x.EdmType, y.EdmType);
+            return Equals(x.EdmType, y.EdmType);
         }
 
-        public int GetHashCode(System.Data.Entity.Core.Metadata.Edm.TypeUsage obj)
+        public int GetHashCode(md.TypeUsage obj)
         {
             return obj.EdmType.Identity.GetHashCode();
         }

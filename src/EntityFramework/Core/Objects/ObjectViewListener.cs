@@ -1,11 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data.Entity.Core.Objects.DataClasses;
-using System.Diagnostics;
-
-// Dev notes -1
+ // Dev notes -1
 // why we need this class: in order to keep the view alive, we have to listen to evens from entities and
 // also EntityCollection/ObjectStateManager they exists in. listening to event will prevent the view to be 
 // disposed, hence GC'ed due to having a strong reference; and to avoid this situation we have to introduce 
@@ -20,11 +13,16 @@ using System.Diagnostics;
 
 namespace System.Data.Entity.Core.Objects
 {
+    using System.Collections;
+    using System.ComponentModel;
+    using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Diagnostics;
+
     internal sealed class ObjectViewListener
     {
-        private WeakReference _viewWeak;
-        private object _dataSource;
-        private IList _list;
+        private readonly WeakReference _viewWeak;
+        private readonly object _dataSource;
+        private readonly IList _list;
 
         internal ObjectViewListener(IObjectView view, IList list, object dataSource)
         {
@@ -44,7 +42,7 @@ namespace System.Data.Entity.Core.Objects
 
         private void RegisterCollectionEvents()
         {
-            ObjectStateManager cache = _dataSource as ObjectStateManager;
+            var cache = _dataSource as ObjectStateManager;
             if (cache != null)
             {
                 cache.EntityDeleted += CollectionChanged;
@@ -57,7 +55,7 @@ namespace System.Data.Entity.Core.Objects
 
         private void UnregisterCollectionEvents()
         {
-            ObjectStateManager cache = _dataSource as ObjectStateManager;
+            var cache = _dataSource as ObjectStateManager;
             if (cache != null)
             {
                 cache.EntityDeleted -= CollectionChanged;
@@ -71,20 +69,20 @@ namespace System.Data.Entity.Core.Objects
         internal void RegisterEntityEvents(object entity)
         {
             Debug.Assert(entity != null, "Entity should not be null");
-            INotifyPropertyChanged propChanged = entity as INotifyPropertyChanged;
+            var propChanged = entity as INotifyPropertyChanged;
             if (propChanged != null)
             {
                 propChanged.PropertyChanged += EntityPropertyChanged;
-            } 
+            }
         }
 
         private void RegisterEntityEvents()
         {
             if (null != _list)
             {
-                foreach (object entityObject in _list)
+                foreach (var entityObject in _list)
                 {
-                    INotifyPropertyChanged propChanged = entityObject as INotifyPropertyChanged;
+                    var propChanged = entityObject as INotifyPropertyChanged;
                     if (propChanged != null)
                     {
                         propChanged.PropertyChanged += EntityPropertyChanged;
@@ -96,20 +94,20 @@ namespace System.Data.Entity.Core.Objects
         internal void UnregisterEntityEvents(object entity)
         {
             Debug.Assert(entity != null, "entity should not be null");
-            INotifyPropertyChanged propChanged = entity as INotifyPropertyChanged;
+            var propChanged = entity as INotifyPropertyChanged;
             if (propChanged != null)
             {
                 propChanged.PropertyChanged -= EntityPropertyChanged;
-            } 
+            }
         }
 
         private void UnregisterEntityEvents()
         {
             if (null != _list)
             {
-                foreach (object entityObject in _list)
+                foreach (var entityObject in _list)
                 {
-                    INotifyPropertyChanged propChanged = entityObject as INotifyPropertyChanged;
+                    var propChanged = entityObject as INotifyPropertyChanged;
                     if (propChanged != null)
                     {
                         propChanged.PropertyChanged -= EntityPropertyChanged;
@@ -120,7 +118,7 @@ namespace System.Data.Entity.Core.Objects
 
         private void EntityPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            IObjectView view = (IObjectView)_viewWeak.Target;
+            var view = (IObjectView)_viewWeak.Target;
             if (view != null)
             {
                 view.EntityPropertyChanged(sender, e);
@@ -133,7 +131,7 @@ namespace System.Data.Entity.Core.Objects
 
         private void CollectionChanged(object sender, CollectionChangeEventArgs e)
         {
-            IObjectView view = (IObjectView)_viewWeak.Target;
+            var view = (IObjectView)_viewWeak.Target;
             if (view != null)
             {
                 view.CollectionChanged(sender, e);

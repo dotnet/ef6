@@ -9,14 +9,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// In parameter
         /// </summary>
         In = 0,
+
         /// <summary>
         /// Out parameter
         /// </summary>
         Out,
+
         /// <summary>
         /// Both in and out parameter
         /// </summary>
         InOut,
+
         /// <summary>
         /// Return Parameter
         /// </summary>

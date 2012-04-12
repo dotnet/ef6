@@ -1,6 +1,3 @@
-using System.Data.Entity.Core.Objects;
-using System.Reflection;
-
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
     /// <summary>

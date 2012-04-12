@@ -1,20 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified"
-           xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:edm="http://schemas.microsoft.com/ado/2009/11/edm/ssdl"
-           xmlns:gen="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator"
-           targetNamespace="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+
+<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:edm="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" xmlns:gen="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" targetNamespace="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
   <xs:annotation>
     <xs:documentation xml:lang="en">
       Common Data Model Schema Definition Language.
-      Copyright (c) Microsoft Corp. All rights reserved.
     </xs:documentation>
   </xs:annotation>
   <xs:import namespace="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" schemaLocation="System.Data.Resources.EntityStoreSchemaGenerator.xsd" />
-  <xs:element name="Schema" type="edm:TSchema"/>
+  <xs:element name="Schema" type="edm:TSchema" />
   <xs:complexType name="TSchema">
     <xs:sequence>
-      <xs:group ref="edm:GSchemaBodyElements" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:group ref="edm:GSchemaBodyElements" minOccurs="0" maxOccurs="unbounded" />
       <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attribute name="Namespace" type="edm:TQualifiedName" use="required" />
@@ -26,60 +22,60 @@
 
   <xs:group name="GSchemaBodyElements">
     <xs:choice>
-      <xs:element name="Association" type="edm:TAssociation" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="EntityType" type="edm:TEntityType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element ref="edm:EntityContainer" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Association" type="edm:TAssociation" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="EntityType" type="edm:TEntityType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element ref="edm:EntityContainer" minOccurs="1" maxOccurs="1" />
       <xs:element name="Function" type="edm:TFunction" minOccurs="0" maxOccurs="unbounded" />
     </xs:choice>
   </xs:group>
 
   <xs:simpleType name="TMax">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="Max"/>
+      <xs:enumeration value="Max" />
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="TVariable">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="Variable"/>
+      <xs:enumeration value="Variable" />
     </xs:restriction>
   </xs:simpleType>
 
   <!-- Facets for Primitive types -->
   <xs:simpleType name="TMaxLengthFacet">
-    <xs:union memberTypes="edm:TMax xs:nonNegativeInteger"/>
+    <xs:union memberTypes="edm:TMax xs:nonNegativeInteger" />
   </xs:simpleType>
-  
+
   <xs:simpleType name="TSridFacet">
-    <xs:union memberTypes="edm:TVariable xs:nonNegativeInteger"/>
+    <xs:union memberTypes="edm:TVariable xs:nonNegativeInteger" />
   </xs:simpleType>
 
   <xs:simpleType name="TIsFixedLengthFacet">
-    <xs:restriction base="xs:boolean"/>
+    <xs:restriction base="xs:boolean" />
   </xs:simpleType>
 
   <xs:simpleType name="TKindFacet">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="Utc"/>
-      <xs:enumeration value="Local"/>
-      <xs:enumeration value="Unspecified"/>
+      <xs:enumeration value="Utc" />
+      <xs:enumeration value="Local" />
+      <xs:enumeration value="Unspecified" />
     </xs:restriction>
   </xs:simpleType>
 
   <xs:simpleType name="TPrecisionFacet">
-    <xs:restriction base="xs:nonNegativeInteger"/>
+    <xs:restriction base="xs:nonNegativeInteger" />
   </xs:simpleType>
 
   <xs:simpleType name="TScaleFacet">
-    <xs:restriction base="xs:nonNegativeInteger"/>
+    <xs:restriction base="xs:nonNegativeInteger" />
   </xs:simpleType>
 
   <xs:simpleType name="TIsUnicodeFacet">
-    <xs:restriction base="xs:boolean"/>
+    <xs:restriction base="xs:boolean" />
   </xs:simpleType>
 
   <xs:simpleType name="TCollationFacet">
-    <xs:restriction base="xs:string"/>
+    <xs:restriction base="xs:string" />
   </xs:simpleType>
 
   <!-- 
@@ -88,7 +84,8 @@
   <xs:complexType name="TDocumentation">
     <xs:annotation>
       <xs:documentation>
-        The Documentation element is used to provide documentation of comments on the contents of the XML file. It is valid under Schema, Type, Index and Relationship elements.
+        The Documentation element is used to provide documentation of comments on the contents of the XML file. It is valid
+        under Schema, Type, Index and Relationship elements.
       </xs:documentation>
     </xs:annotation>
     <xs:sequence>
@@ -108,7 +105,7 @@
   <xs:complexType name="TAssociation">
     <xs:sequence>
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-      <xs:element name="End" type="edm:TAssociationEnd" minOccurs="2" maxOccurs="2"/>
+      <xs:element name="End" type="edm:TAssociationEnd" minOccurs="2" maxOccurs="2" />
       <xs:element name="ReferentialConstraint" type="edm:TConstraint" minOccurs="0" maxOccurs="1" />
       <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
@@ -124,7 +121,7 @@
       <xs:element name="Dependent" type="edm:TReferentialConstraintRoleElement" minOccurs="1" maxOccurs="1" />
       <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
-    <xs:anyAttribute namespace="##other" processContents="lax"/>
+    <xs:anyAttribute namespace="##other" processContents="lax" />
   </xs:complexType>
 
   <xs:complexType name="TReferentialConstraintRoleElement">
@@ -134,23 +131,23 @@
       <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attribute name="Role" type="edm:TSimpleIdentifier" use="required" />
-    <xs:anyAttribute namespace="##other" processContents="lax"/>
+    <xs:anyAttribute namespace="##other" processContents="lax" />
   </xs:complexType>
 
   <xs:complexType name="TEntityType">
     <xs:sequence>
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-      <xs:element name="Key" type="edm:TEntityKeyElement" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Key" type="edm:TEntityKeyElement" minOccurs="0" maxOccurs="1" />
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="Property" type="edm:TEntityProperty" minOccurs="0" maxOccurs="unbounded" />
       </xs:choice>
       <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attribute name="Name" type="edm:TUndottedIdentifier" use="required" />
-    <xs:anyAttribute namespace="##other" processContents="lax"/>
+    <xs:anyAttribute namespace="##other" processContents="lax" />
   </xs:complexType>
 
-  <xs:complexType name ="TEntityKeyElement">
+  <xs:complexType name="TEntityKeyElement">
     <xs:sequence>
       <xs:element name="PropertyRef" type="edm:TPropertyRef" minOccurs="1" maxOccurs="unbounded" />
       <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
@@ -207,7 +204,7 @@
 
   <xs:complexType name="TOnAction">
     <xs:sequence>
-      <xs:group ref="edm:GEmptyElementExtensibility" minOccurs="0" maxOccurs="1"/>
+      <xs:group ref="edm:GEmptyElementExtensibility" minOccurs="0" maxOccurs="1" />
     </xs:sequence>
     <xs:attribute name="Action" type="edm:TAction" use="required" />
     <xs:anyAttribute namespace="##other" processContents="lax" />
@@ -215,9 +212,9 @@
 
   <xs:complexType name="TEntityProperty">
     <xs:sequence>
-      <xs:group ref="edm:GEmptyElementExtensibility" minOccurs="0" maxOccurs="1"/>
+      <xs:group ref="edm:GEmptyElementExtensibility" minOccurs="0" maxOccurs="1" />
     </xs:sequence>
-    <xs:attributeGroup ref="edm:TCommonPropertyAttributes"/>
+    <xs:attributeGroup ref="edm:TCommonPropertyAttributes" />
     <xs:attribute name="StoreGeneratedPattern" type="edm:TStoreGeneratedPattern" use="optional" />
     <xs:anyAttribute namespace="##other" processContents="lax" />
   </xs:complexType>
@@ -256,16 +253,16 @@
             <xs:complexType>
               <xs:sequence>
                 <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-                <xs:element name="DefiningQuery" type="edm:TCommandText" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="DefiningQuery" type="edm:TCommandText" minOccurs="0" maxOccurs="1" />
                 <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
               </xs:sequence>
               <xs:attribute name="Name" type="edm:TUndottedIdentifier" use="required" />
               <xs:attribute name="EntityType" type="edm:TQualifiedName" use="required" />
               <xs:attribute name="Schema" type="edm:TSimpleIdentifier" use="optional" />
               <xs:attribute name="Table" type="edm:TSimpleIdentifier" use="optional" />
-              <xs:attribute ref="gen:Type" use="optional"/>
-              <xs:attribute ref="gen:Schema" use="optional"/>
-              <xs:attribute ref="gen:Name" use="optional"/>
+              <xs:attribute ref="gen:Type" use="optional" />
+              <xs:attribute ref="gen:Schema" use="optional" />
+              <xs:attribute ref="gen:Name" use="optional" />
               <xs:anyAttribute processContents="lax" namespace="##other" />
             </xs:complexType>
           </xs:element>
@@ -281,7 +278,7 @@
                                     -->
                   <xs:complexType>
                     <xs:sequence>
-                      <xs:group ref="edm:GEmptyElementExtensibility" minOccurs="0" maxOccurs="1"/>
+                      <xs:group ref="edm:GEmptyElementExtensibility" minOccurs="0" maxOccurs="1" />
                     </xs:sequence>
                     <xs:attribute name="Role" type="edm:TSimpleIdentifier" use="optional" />
                     <xs:attribute name="EntitySet" type="edm:TSimpleIdentifier" use="required" />
@@ -321,8 +318,8 @@
     <xs:attribute name="IsComposable" type="xs:boolean" use="optional" default="true" />
     <xs:attribute name="ParameterTypeSemantics" type="edm:TParameterTypeSemantics" use="optional" default="AllowImplicitConversion" />
     <xs:attribute name="Schema" type="edm:TSimpleIdentifier" use="optional" />
-    <xs:attribute ref="gen:Schema" use="optional"/>
-    <xs:attribute ref="gen:Name" use="optional"/>
+    <xs:attribute ref="gen:Schema" use="optional" />
+    <xs:attribute ref="gen:Name" use="optional" />
     <xs:anyAttribute namespace="##other" processContents="lax" />
   </xs:complexType>
 
@@ -355,12 +352,12 @@
 
   <xs:simpleType name="TCommandText">
     <xs:restriction base="xs:string">
-      <xs:whiteSpace value="preserve"/>
+      <xs:whiteSpace value="preserve" />
     </xs:restriction>
   </xs:simpleType>
 
   <xs:simpleType name="TQualifiedName">
-    <xs:restriction base="xs:string"/>
+    <xs:restriction base="xs:string" />
   </xs:simpleType>
 
   <xs:simpleType name="TUndottedIdentifier">
@@ -371,7 +368,7 @@
   </xs:simpleType>
 
   <xs:simpleType name="TSimpleIdentifier">
-    <xs:restriction base="xs:string"/>
+    <xs:restriction base="xs:string" />
   </xs:simpleType>
 
   <xs:simpleType name="TPropertyType">

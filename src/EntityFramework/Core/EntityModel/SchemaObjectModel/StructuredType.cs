@@ -1,7 +1,5 @@
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
-    using System;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
@@ -14,29 +12,21 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     internal abstract class StructuredType : SchemaType
     {
         #region Instance Fields
+
         private bool? _baseTypeResolveResult;
-        private string _unresolvedBaseType = null;
-        private StructuredType _baseType = null;
-        private bool _isAbstract = false;
-        private SchemaElementLookUpTable<SchemaElement> _namedMembers = null;
-        private ISchemaElementLookUpTable<StructuredProperty> _properties = null;
+        private string _unresolvedBaseType;
+        private bool _isAbstract;
+        private SchemaElementLookUpTable<SchemaElement> _namedMembers;
+        private ISchemaElementLookUpTable<StructuredProperty> _properties;
+
         #endregion
 
         #region Public Properties
+
         /// <summary>
         /// 
         /// </summary>
-        public StructuredType BaseType
-        {
-            get
-            {
-                return _baseType;
-            }
-            private set
-            {
-                _baseType = value;
-            }
-        }
+        public StructuredType BaseType { get; private set; }
 
         /// <summary>
         /// 
@@ -77,30 +67,28 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             get
             {
-                Debug.Assert((BaseType == null && _unresolvedBaseType == null) ||
-                             (BaseType != null && _unresolvedBaseType != null), "you are checking for the hierarchy root before the basetype has been set");
+                Debug.Assert(
+                    (BaseType == null && _unresolvedBaseType == null) ||
+                    (BaseType != null && _unresolvedBaseType != null),
+                    "you are checking for the hierarchy root before the basetype has been set");
 
                 // any type without a base is a base type
                 return BaseType == null;
             }
         }
 
-
         /// <summary>
         /// 
         /// </summary>
         public bool IsAbstract
         {
-            get
-            {
-                return _isAbstract;
-            }
+            get { return _isAbstract; }
         }
-
 
         #endregion
 
         #region More Public Methods
+
         /// <summary>
         /// Find a property by name in the type hierarchy
         /// </summary>
@@ -108,16 +96,19 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns>the StructuredProperty object if name exists, null otherwise</returns>
         public StructuredProperty FindProperty(string name)
         {
-            StructuredProperty property = Properties.LookUpEquivalentKey(name);
+            var property = Properties.LookUpEquivalentKey(name);
             if (property != null)
+            {
                 return property;
+            }
 
             if (IsTypeHierarchyRoot)
+            {
                 return null;
+            }
 
             return BaseType.FindProperty(name);
         }
-
 
         /// <summary>
         /// Determines whether this type is of the same type as baseType, 
@@ -127,18 +118,21 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns>true if this type is of the baseType, false otherwise</returns>
         public bool IsOfType(StructuredType baseType)
         {
-            StructuredType type = this;
+            var type = this;
 
-            while (type != null && type != baseType)
+            while (type != null
+                   && type != baseType)
             {
                 type = type.BaseType;
             }
 
             return (type == baseType);
         }
+
         #endregion
 
         #region Protected Methods
+
         /// <summary>
         /// 
         /// </summary>
@@ -148,9 +142,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
             TryResolveBaseType();
 
-            foreach (SchemaElement member in NamedMembers)
+            foreach (var member in NamedMembers)
+            {
                 member.ResolveTopLevelNames();
-
+            }
         }
 
         /// <summary>
@@ -161,19 +156,22 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             base.Validate();
 
-            foreach (SchemaElement member in NamedMembers)
+            foreach (var member in NamedMembers)
             {
                 if (BaseType != null)
                 {
                     StructuredType definingType;
                     SchemaElement definingMember;
                     string errorMessage = null;
-                    if(HowDefined.AsMember == BaseType.DefinesMemberName(member.Name, out definingType, out definingMember))
+                    if (HowDefined.AsMember
+                        == BaseType.DefinesMemberName(member.Name, out definingType, out definingMember))
                     {
-                        errorMessage = System.Data.Entity.Resources.Strings.DuplicateMemberName(member.Name, FQName, definingType.FQName);
+                        errorMessage = Strings.DuplicateMemberName(member.Name, FQName, definingType.FQName);
                     }
                     if (errorMessage != null)
+                    {
                         member.AddError(ErrorCode.AlreadyDefined, EdmSchemaErrorSeverity.Error, errorMessage);
+                    }
                 }
 
                 member.Validate();
@@ -203,16 +201,17 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 return;
             }
 
-            if (this.Schema.DataModel != SchemaDataModelOption.ProviderDataModel &&
-                 Utils.CompareNames(newMember.Name, Name) == 0)
+            if (Schema.DataModel != SchemaDataModelOption.ProviderDataModel
+                &&
+                Utils.CompareNames(newMember.Name, Name) == 0)
             {
-                newMember.AddError(ErrorCode.BadProperty, EdmSchemaErrorSeverity.Error,
-                    System.Data.Entity.Resources.Strings.InvalidMemberNameMatchesTypeName(newMember.Name, FQName));
+                newMember.AddError(
+                    ErrorCode.BadProperty, EdmSchemaErrorSeverity.Error,
+                    Strings.InvalidMemberNameMatchesTypeName(newMember.Name, FQName));
             }
 
             NamedMembers.Add(newMember, true, Strings.PropertyNameAlreadyDefinedDuplicate);
         }
-
 
         /// <summary>
         /// See if a name is a member in a type or any of its base types
@@ -242,22 +241,18 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
             return BaseType.DefinesMemberName(name, out definingType, out definingMember);
         }
+
         #endregion
 
         #region Protected Properties
+
         /// <summary>
         /// 
         /// </summary>
         protected string UnresolvedBaseType
         {
-            get
-            {
-                return _unresolvedBaseType;
-            }
-            set
-            {
-                _unresolvedBaseType = value;
-            }
+            get { return _unresolvedBaseType; }
+            set { _unresolvedBaseType = value; }
         }
 
         protected override bool HandleElement(XmlReader reader)
@@ -293,9 +288,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
             return false;
         }
+
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// 
         /// </summary>
@@ -328,8 +325,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             BaseType = element as StructuredType;
             if (BaseType == null)
             {
-                AddError(ErrorCode.InvalidBaseType, EdmSchemaErrorSeverity.Error,
-                    System.Data.Entity.Resources.Strings.InvalidBaseTypeForStructuredType(UnresolvedBaseType, FQName));
+                AddError(
+                    ErrorCode.InvalidBaseType, EdmSchemaErrorSeverity.Error,
+                    Strings.InvalidBaseTypeForStructuredType(UnresolvedBaseType, FQName));
                 _baseTypeResolveResult = false;
                 return _baseTypeResolveResult.Value;
             }
@@ -340,8 +338,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             {
                 BaseType = null;
 
-                AddError(ErrorCode.CycleInTypeHierarchy, EdmSchemaErrorSeverity.Error,
-                    System.Data.Entity.Resources.Strings.CycleInTypeHierarchy(FQName));
+                AddError(
+                    ErrorCode.CycleInTypeHierarchy, EdmSchemaErrorSeverity.Error,
+                    Strings.CycleInTypeHierarchy(FQName));
                 _baseTypeResolveResult = false;
                 return _baseTypeResolveResult.Value;
             }
@@ -359,8 +358,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             Debug.Assert(UnresolvedBaseType == null, string.Format(CultureInfo.CurrentCulture, "{0} is already defined", reader.Name));
 
             string baseType;
-            if (!Utils.GetDottedName(this.Schema, reader, out baseType))
+            if (!Utils.GetDottedName(Schema, reader, out baseType))
+            {
                 return;
+            }
 
             UnresolvedBaseType = baseType;
         }
@@ -380,7 +381,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"></param>
         private void HandlePropertyElement(XmlReader reader)
         {
-            StructuredProperty property = new StructuredProperty(this);
+            var property = new StructuredProperty(this);
 
             property.Parse(reader);
 
@@ -394,26 +395,32 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns>true if a cycle exists in the type hierarchy, false otherwise</returns>
         private bool CheckForInheritanceCycle()
         {
-            StructuredType baseType = BaseType;
+            var baseType = BaseType;
             Debug.Assert(baseType != null);
 
-            StructuredType ref1 = baseType;
-            StructuredType ref2 = baseType;
+            var ref1 = baseType;
+            var ref2 = baseType;
 
             do
             {
                 ref2 = ref2.BaseType;
 
-                if (Object.ReferenceEquals(ref1, ref2))
+                if (ReferenceEquals(ref1, ref2))
+                {
                     return true;
+                }
 
                 if (ref1 == null)
+                {
                     return false;
+                }
 
                 ref1 = ref1.BaseType;
 
                 if (ref2 != null)
+                {
                     ref2 = ref2.BaseType;
+                }
             }
             while (ref2 != null);
 
@@ -423,6 +430,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #endregion
 
         #region Private Properties
+
         #endregion
 
         private enum HowDefined

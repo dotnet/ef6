@@ -1,11 +1,7 @@
 namespace System.Data.Entity.Core.Objects
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Data;
-    using System.Data.Entity.Core;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Text;
@@ -18,7 +14,7 @@ namespace System.Data.Entity.Core.Objects
         // Note: There are NO public constructors for this class - it is for internal
         // ObjectQuery<T> use only, but must be public so that an instance thereof can be
         // a public property on ObjectQuery<T>.
-    
+
         #region Internal Constructors
 
         // ---------------------
@@ -34,10 +30,10 @@ namespace System.Data.Entity.Core.Objects
         internal ObjectParameterCollection(ClrPerspective perspective)
         {
             EntityUtil.CheckArgumentNull(perspective, "perspective");
- 
+
             // The perspective is required to do type-checking on parameters as they
             // are added to the collection.
-            this._perspective = perspective;
+            _perspective = perspective;
 
             // Create a new list to store the parameters.
             _parameters = new List<ObjectParameter>();
@@ -61,13 +57,13 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///   The internal storage for the query parameters in the collection.
         /// </summary>
-        private List<ObjectParameter> _parameters;
+        private readonly List<ObjectParameter> _parameters;
 
         /// <summary>
         ///   A CLR perspective necessary to do type-checking on parameters as they 
         ///   are added to the collection.
         /// </summary>
-        private ClrPerspective _perspective;
+        private readonly ClrPerspective _perspective;
 
         /// <summary>
         /// A string that can be used to represent the current state of this parameter collection in an ObjectQuery cache key.
@@ -87,10 +83,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         public int Count
         {
-            get
-            {
-                return this._parameters.Count;
-            }
+            get { return _parameters.Count; }
         }
 
         /// <summary>
@@ -101,10 +94,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         bool ICollection<ObjectParameter>.IsReadOnly
         {
-            get
-            {
-                return (this._locked);
-            }
+            get { return (_locked); }
         }
 
         #endregion
@@ -133,14 +123,14 @@ namespace System.Data.Entity.Core.Objects
         {
             get
             {
-                int index = this.IndexOf(name);
+                var index = IndexOf(name);
 
                 if (index == -1)
                 {
-                    throw EntityUtil.ArgumentOutOfRange(System.Data.Entity.Resources.Strings.ObjectParameterCollection_ParameterNameNotFound(name), "name");
+                    throw EntityUtil.ArgumentOutOfRange(Strings.ObjectParameterCollection_ParameterNameNotFound(name), "name");
                 }
 
-                return this._parameters[index];
+                return _parameters[index];
             }
         }
 
@@ -180,28 +170,28 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentOutOfRangeException">
         ///   If the type of the specified parameter is invalid. 
         /// </exception>
-        public void Add (ObjectParameter item)
+        public void Add(ObjectParameter item)
         {
             EntityUtil.CheckArgumentNull(item, "parameter");
             CheckUnlocked();
 
-            if (this.Contains(item))
+            if (Contains(item))
             {
-                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.ObjectParameterCollection_ParameterAlreadyExists(item.Name), "parameter");
+                throw EntityUtil.Argument(Strings.ObjectParameterCollection_ParameterAlreadyExists(item.Name), "parameter");
             }
 
-            if (this.Contains(item.Name))
+            if (Contains(item.Name))
             {
-                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.ObjectParameterCollection_DuplicateParameterName(item.Name), "parameter");
+                throw EntityUtil.Argument(Strings.ObjectParameterCollection_DuplicateParameterName(item.Name), "parameter");
             }
 
-            if (!item.ValidateParameterType(this._perspective))
+            if (!item.ValidateParameterType(_perspective))
             {
-                throw EntityUtil.ArgumentOutOfRange(System.Data.Entity.Resources.Strings.ObjectParameter_InvalidParameterType(item.ParameterType.FullName), "parameter");
+                throw EntityUtil.ArgumentOutOfRange(Strings.ObjectParameter_InvalidParameterType(item.ParameterType.FullName), "parameter");
             }
 
-            this._parameters.Add(item);
-            this._cacheKey = null;
+            _parameters.Add(item);
+            _cacheKey = null;
         }
 
         #endregion
@@ -215,8 +205,8 @@ namespace System.Data.Entity.Core.Objects
         public void Clear()
         {
             CheckUnlocked();
-            this._parameters.Clear();
-            this._cacheKey = null;
+            _parameters.Clear();
+            _cacheKey = null;
         }
 
         #endregion
@@ -239,11 +229,11 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentNullException">
         ///   If the value of the parameter argument is null.
         /// </exception>
-        public bool Contains (ObjectParameter item)
+        public bool Contains(ObjectParameter item)
         {
             EntityUtil.CheckArgumentNull(item, "item");
-            
-            return this._parameters.Contains(item);
+
+            return _parameters.Contains(item);
         }
 
         #endregion
@@ -264,11 +254,12 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentNullException">
         ///   If the value of the parameter argument is null.
         /// </exception>
-        public bool Contains (string name)
+        public bool Contains(string name)
         {
             EntityUtil.CheckArgumentNull(name, "name");
-            
-            if (this.IndexOf(name) != -1)
+
+            if (IndexOf(name)
+                != -1)
             {
                 return true;
             }
@@ -291,9 +282,9 @@ namespace System.Data.Entity.Core.Objects
         ///   The index in the array at which to start copying the parameters.
         /// </param>
         /// <returns></returns>
-        public void CopyTo (ObjectParameter[] array, int arrayIndex)
+        public void CopyTo(ObjectParameter[] array, int arrayIndex)
         {
-            this._parameters.CopyTo(array, arrayIndex);
+            _parameters.CopyTo(array, arrayIndex);
         }
 
         #endregion
@@ -318,12 +309,12 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentNullException">
         ///   If the value of the parameter argument is null.
         /// </exception>
-        public bool Remove (ObjectParameter item)
+        public bool Remove(ObjectParameter item)
         {
             EntityUtil.CheckArgumentNull(item, "item");
             CheckUnlocked();
-            
-            bool removed = this._parameters.Remove(item);
+
+            var removed = _parameters.Remove(item);
 
             // If the specified parameter was found in the collection and removed, 
             // clear out the cached string representation of this parameter collection
@@ -331,28 +322,28 @@ namespace System.Data.Entity.Core.Objects
             // the new state of this collection.
             if (removed)
             {
-                this._cacheKey = null;
+                _cacheKey = null;
             }
 
             return removed;
         }
 
         #endregion
-  
+
         #region GetEnumerator
 
         /// <summary>
         ///   These methods return enumerator instances, which allow the collection to
         ///   be iterated through and traversed.
         /// </summary>
-        IEnumerator<ObjectParameter> IEnumerable<ObjectParameter>.GetEnumerator() 
+        IEnumerator<ObjectParameter> IEnumerable<ObjectParameter>.GetEnumerator()
         {
-            return ((System.Collections.Generic.ICollection<ObjectParameter>)this._parameters).GetEnumerator();
+            return ((ICollection<ObjectParameter>)_parameters).GetEnumerator();
         }
-        
-        IEnumerator IEnumerable.GetEnumerator() 
+
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((System.Collections.ICollection)this._parameters).GetEnumerator();
+            return ((ICollection)_parameters).GetEnumerator();
         }
 
         #endregion
@@ -373,24 +364,24 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A string that may be used to represent this parameter collection in an ObjectQuery cache key.</returns>
         internal string GetCacheKey()
         {
-            if (null == this._cacheKey)
+            if (null == _cacheKey)
             {
-                if(this._parameters.Count > 0)
+                if (_parameters.Count > 0)
                 {
                     // Future Enhancement: If the separate branch for a single parameter does not have a measurable perf advantage, remove it.
-                    if (1 == this._parameters.Count)
+                    if (1 == _parameters.Count)
                     {
                         // if its one parameter only, there is no need to use stringbuilder
-                        ObjectParameter theParam = this._parameters[0];
-                        this._cacheKey = "@@1" + theParam.Name + ":" + theParam.ParameterType.FullName;
+                        var theParam = _parameters[0];
+                        _cacheKey = "@@1" + theParam.Name + ":" + theParam.ParameterType.FullName;
                     }
                     else
                     {
                         // Future Enhancement: Investigate whether precalculating the required size of the string builder is a better time/space tradeoff.
-                        StringBuilder keyBuilder = new StringBuilder(this._parameters.Count * 20);
+                        var keyBuilder = new StringBuilder(_parameters.Count * 20);
                         keyBuilder.Append("@@");
-                        keyBuilder.Append(this._parameters.Count);
-                        for (int idx = 0; idx < this._parameters.Count; idx++)
+                        keyBuilder.Append(_parameters.Count);
+                        for (var idx = 0; idx < _parameters.Count; idx++)
                         {
                             //
                             // CONSIDER adding other parameter properties
@@ -400,18 +391,18 @@ namespace System.Data.Entity.Core.Objects
                                 keyBuilder.Append(";");
                             }
 
-                            ObjectParameter thisParam = this._parameters[idx];
+                            var thisParam = _parameters[idx];
                             keyBuilder.Append(thisParam.Name);
                             keyBuilder.Append(":");
                             keyBuilder.Append(thisParam.ParameterType.FullName);
                         }
 
-                        this._cacheKey = keyBuilder.ToString();
+                        _cacheKey = keyBuilder.ToString();
                     }
                 }
             }
 
-            return this._cacheKey;
+            return _cacheKey;
         }
 
         /// <summary>
@@ -419,7 +410,10 @@ namespace System.Data.Entity.Core.Objects
         /// Calling this method consecutively with the same value has no effect but does not throw an exception.
         /// </summary>
         /// <param name="isReadOnly">If <c>true</c>, this parameter collection is now locked; otherwise it is unlocked</param>
-        internal void SetReadOnly(bool isReadOnly) { this._locked = isReadOnly; }
+        internal void SetReadOnly(bool isReadOnly)
+        {
+            _locked = isReadOnly;
+        }
 
         /// <summary>
         /// Creates a new copy of the specified parameter collection containing copies of its element <see cref="ObjectParameter"/>s.
@@ -434,8 +428,8 @@ namespace System.Data.Entity.Core.Objects
                 return null;
             }
 
-            ObjectParameterCollection retParams = new ObjectParameterCollection(copyParams._perspective);
-            foreach (ObjectParameter param in copyParams)
+            var retParams = new ObjectParameterCollection(copyParams._perspective);
+            foreach (var param in copyParams)
             {
                 retParams.Add(param.ShallowCopy());
             }
@@ -456,11 +450,11 @@ namespace System.Data.Entity.Core.Objects
         ///   by name by iterating through the list and comparing each parameter name 
         ///   to the specified name. This is a case-insensitive lookup.
         /// </summary>
-        private int IndexOf (string name)
+        private int IndexOf(string name)
         {
-            int index = 0;
+            var index = 0;
 
-            foreach (ObjectParameter parameter in this._parameters)
+            foreach (var parameter in _parameters)
             {
                 if (0 == String.Compare(name, parameter.Name, StringComparison.OrdinalIgnoreCase))
                 {
@@ -479,7 +473,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         private void CheckUnlocked()
         {
-            if (this._locked)
+            if (_locked)
             {
                 throw EntityUtil.InvalidOperation(Strings.ObjectParameterCollection_ParametersLocked);
             }

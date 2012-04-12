@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Data.Entity.Core.Query.InternalTrees;
-using System.Data.Entity.Core.Query.PlanCompiler;
-using System.Linq;
-//using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
+ //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
 
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
 // to prevent from simple mistakes during development (e.g. method argument validation 
@@ -20,9 +14,10 @@ using System.Linq;
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
 
-
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -47,13 +42,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     /// </summary>
     internal class ColumnMapTranslator : ColumnMapVisitorWithResults<ColumnMap, ColumnMapTranslatorTranslationDelegate>
     {
-
         #region Constructors
 
         /// <summary>
         /// Singleton instance for the "public" methods to use;
         /// </summary>
-        static private ColumnMapTranslator Instance = new ColumnMapTranslator();
+        private static readonly ColumnMapTranslator Instance = new ColumnMapTranslator();
 
         /// <summary>
         /// Constructor; no one should use this.
@@ -78,7 +72,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             // SQLBUDT #478509: Follow the chain of mapped vars, don't
             //                  just stop at the first one
-            Var replacementVar = originalVar;
+            var replacementVar = originalVar;
 
             while (replacementVarMap.TryGetValue(replacementVar, out originalVar))
             {
@@ -103,9 +97,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         internal static ColumnMap Translate(ColumnMap columnMap, ColumnMapTranslatorTranslationDelegate translationDelegate)
         {
-            return columnMap.Accept(ColumnMapTranslator.Instance, translationDelegate);
+            return columnMap.Accept(Instance, translationDelegate);
         }
-        
+
         /// <summary>
         /// Replace VarRefColumnMaps with the specified ColumnMap replacement
         /// </summary>
@@ -114,29 +108,31 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         internal static ColumnMap Translate(ColumnMap columnMapToTranslate, Dictionary<Var, ColumnMap> varToColumnMap)
         {
-            ColumnMap result = Translate(columnMapToTranslate,
-                                            delegate(ColumnMap columnMap)
-                                            {
-                                                VarRefColumnMap varRefColumnMap = columnMap as VarRefColumnMap;
-                                                if (null != varRefColumnMap)
-                                                {
-                                                    if (varToColumnMap.TryGetValue(varRefColumnMap.Var, out columnMap))
-                                                    {
-                                                        // perform fixups; only allow name changes when the replacement isn't
-                                                        // already named (and the original is named...)
-                                                        if (!columnMap.IsNamed && varRefColumnMap.IsNamed)
-                                                        {
-                                                            columnMap.Name = varRefColumnMap.Name;
-                                                        }
-                                                    }
-                                                    else 
-                                                    {
-                                                        columnMap = varRefColumnMap;
-                                                    }
-                                                }
-                                                return columnMap;
-                                            }
-                                            );
+            var result = Translate(
+                columnMapToTranslate,
+                delegate(ColumnMap columnMap)
+                    {
+                        var varRefColumnMap = columnMap as VarRefColumnMap;
+                        if (null != varRefColumnMap)
+                        {
+                            if (varToColumnMap.TryGetValue(varRefColumnMap.Var, out columnMap))
+                            {
+                                // perform fixups; only allow name changes when the replacement isn't
+                                // already named (and the original is named...)
+                                if (!columnMap.IsNamed
+                                    && varRefColumnMap.IsNamed)
+                                {
+                                    columnMap.Name = varRefColumnMap.Name;
+                                }
+                            }
+                            else
+                            {
+                                columnMap = varRefColumnMap;
+                            }
+                        }
+                        return columnMap;
+                    }
+                );
             return result;
         }
 
@@ -148,21 +144,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         internal static ColumnMap Translate(ColumnMap columnMapToTranslate, Dictionary<Var, Var> varToVarMap)
         {
-            ColumnMap result = Translate(columnMapToTranslate,
-                                            delegate(ColumnMap columnMap)
-                                            {
-                                                VarRefColumnMap varRefColumnMap = columnMap as VarRefColumnMap;
-                                                if (null != varRefColumnMap)
-                                                {
-                                                    Var replacementVar = GetReplacementVar(varRefColumnMap.Var, varToVarMap);
-                                                    if (varRefColumnMap.Var != replacementVar)
-                                                    {
-                                                        columnMap = new VarRefColumnMap(varRefColumnMap.Type, varRefColumnMap.Name, replacementVar);
-                                                    }
-                                                }
-                                                return columnMap;
-                                            }
-                                            );
+            var result = Translate(
+                columnMapToTranslate,
+                delegate(ColumnMap columnMap)
+                    {
+                        var varRefColumnMap = columnMap as VarRefColumnMap;
+                        if (null != varRefColumnMap)
+                        {
+                            var replacementVar = GetReplacementVar(varRefColumnMap.Var, varToVarMap);
+                            if (varRefColumnMap.Var != replacementVar)
+                            {
+                                columnMap = new VarRefColumnMap(varRefColumnMap.Type, varRefColumnMap.Name, replacementVar);
+                            }
+                        }
+                        return columnMap;
+                    }
+                );
 
             return result;
         }
@@ -175,31 +172,34 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         internal static ColumnMap Translate(ColumnMap columnMapToTranslate, Dictionary<Var, KeyValuePair<int, int>> varToCommandColumnMap)
         {
-            ColumnMap result = Translate(columnMapToTranslate,
-                                            delegate(ColumnMap columnMap)
-                                            {
-                                                VarRefColumnMap varRefColumnMap = columnMap as VarRefColumnMap;
-                                                if (null != varRefColumnMap)
-                                                {
-                                                    KeyValuePair<int, int> commandAndColumn;
+            var result = Translate(
+                columnMapToTranslate,
+                delegate(ColumnMap columnMap)
+                    {
+                        var varRefColumnMap = columnMap as VarRefColumnMap;
+                        if (null != varRefColumnMap)
+                        {
+                            KeyValuePair<int, int> commandAndColumn;
 
-                                                    if (!varToCommandColumnMap.TryGetValue(varRefColumnMap.Var, out commandAndColumn))
-                                                    {
-                                                        throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.UnknownVar, 1, varRefColumnMap.Var.Id); // shouldn't have gotten here without having a resolveable var
-                                                    }
-                                                    columnMap = new ScalarColumnMap(varRefColumnMap.Type, varRefColumnMap.Name, commandAndColumn.Key, commandAndColumn.Value);
-                                                }
+                            if (!varToCommandColumnMap.TryGetValue(varRefColumnMap.Var, out commandAndColumn))
+                            {
+                                throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.UnknownVar, 1, varRefColumnMap.Var.Id);
+                                    // shouldn't have gotten here without having a resolveable var
+                            }
+                            columnMap = new ScalarColumnMap(
+                                varRefColumnMap.Type, varRefColumnMap.Name, commandAndColumn.Key, commandAndColumn.Value);
+                        }
 
-                                                // While we're at it, we ensure that all columnMaps are named; we wait
-                                                // until this point, because we don't want to assign names until after
-                                                // we've gone through the transformations; 
-                                                if (!columnMap.IsNamed)
-                                                {
-                                                    columnMap.Name = ColumnMap.DefaultColumnName;
-                                                }
-                                                return columnMap;
-                                            }
-                                            );
+                        // While we're at it, we ensure that all columnMaps are named; we wait
+                        // until this point, because we don't want to assign names until after
+                        // we've gone through the transformations; 
+                        if (!columnMap.IsNamed)
+                        {
+                            columnMap.Name = ColumnMap.DefaultColumnName;
+                        }
+                        return columnMap;
+                    }
+                );
 
             return result;
         }
@@ -217,9 +217,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="tList"></param>
         /// <param name="translationDelegate"></param>
         private void VisitList<TResultType>(TResultType[] tList, ColumnMapTranslatorTranslationDelegate translationDelegate)
-                where TResultType : ColumnMap
+            where TResultType : ColumnMap
         {
-            for (int i = 0; i < tList.Length; i++)
+            for (var i = 0; i < tList.Length; i++)
             {
                 tList[i] = (TResultType)tList[i].Accept(this, translationDelegate);
             }
@@ -235,14 +235,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="entityIdentity"></param>
         /// <param name="translationDelegate"></param>
         /// <returns></returns>
-        protected override EntityIdentity VisitEntityIdentity(DiscriminatedEntityIdentity entityIdentity, ColumnMapTranslatorTranslationDelegate translationDelegate)
+        protected override EntityIdentity VisitEntityIdentity(
+            DiscriminatedEntityIdentity entityIdentity, ColumnMapTranslatorTranslationDelegate translationDelegate)
         {
-            ColumnMap newEntitySetColumnMap = entityIdentity.EntitySetColumnMap.Accept(this, translationDelegate);
+            var newEntitySetColumnMap = entityIdentity.EntitySetColumnMap.Accept(this, translationDelegate);
             VisitList(entityIdentity.Keys, translationDelegate);
 
             if (newEntitySetColumnMap != entityIdentity.EntitySetColumnMap)
             {
-                entityIdentity = new DiscriminatedEntityIdentity((SimpleColumnMap)newEntitySetColumnMap, entityIdentity.EntitySetMap, entityIdentity.Keys);
+                entityIdentity = new DiscriminatedEntityIdentity(
+                    (SimpleColumnMap)newEntitySetColumnMap, entityIdentity.EntitySetMap, entityIdentity.Keys);
             }
             return entityIdentity;
         }
@@ -253,7 +255,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="entityIdentity"></param>
         /// <param name="translationDelegate"></param>
         /// <returns></returns>
-        protected override EntityIdentity VisitEntityIdentity(SimpleEntityIdentity entityIdentity, ColumnMapTranslatorTranslationDelegate translationDelegate)
+        protected override EntityIdentity VisitEntityIdentity(
+            SimpleEntityIdentity entityIdentity, ColumnMapTranslatorTranslationDelegate translationDelegate)
         {
             VisitList(entityIdentity.Keys, translationDelegate);
             return entityIdentity;
@@ -269,8 +272,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         internal override ColumnMap Visit(ComplexTypeColumnMap columnMap, ColumnMapTranslatorTranslationDelegate translationDelegate)
         {
-            SimpleColumnMap newNullSentinel = columnMap.NullSentinel;
-            if (null != newNullSentinel) 
+            var newNullSentinel = columnMap.NullSentinel;
+            if (null != newNullSentinel)
             {
                 newNullSentinel = (SimpleColumnMap)translationDelegate(newNullSentinel);
             }
@@ -290,16 +293,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="columnMap"></param>
         /// <param name="translationDelegate"></param>
         /// <returns></returns>
-        internal override ColumnMap Visit(DiscriminatedCollectionColumnMap columnMap, ColumnMapTranslatorTranslationDelegate translationDelegate)
+        internal override ColumnMap Visit(
+            DiscriminatedCollectionColumnMap columnMap, ColumnMapTranslatorTranslationDelegate translationDelegate)
         {
-            ColumnMap newDiscriminator = columnMap.Discriminator.Accept(this, translationDelegate);
+            var newDiscriminator = columnMap.Discriminator.Accept(this, translationDelegate);
             VisitList(columnMap.ForeignKeys, translationDelegate);
             VisitList(columnMap.Keys, translationDelegate);
-            ColumnMap newElement = columnMap.Element.Accept(this, translationDelegate);
+            var newElement = columnMap.Element.Accept(this, translationDelegate);
 
-            if (newDiscriminator != columnMap.Discriminator || newElement != columnMap.Element)
+            if (newDiscriminator != columnMap.Discriminator
+                || newElement != columnMap.Element)
             {
-                columnMap = new DiscriminatedCollectionColumnMap(columnMap.Type, columnMap.Name, newElement, columnMap.Keys, columnMap.ForeignKeys,(SimpleColumnMap)newDiscriminator, columnMap.DiscriminatorValue);
+                columnMap = new DiscriminatedCollectionColumnMap(
+                    columnMap.Type, columnMap.Name, newElement, columnMap.Keys, columnMap.ForeignKeys, (SimpleColumnMap)newDiscriminator,
+                    columnMap.DiscriminatorValue);
             }
             return translationDelegate(columnMap);
         }
@@ -312,7 +319,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         internal override ColumnMap Visit(EntityColumnMap columnMap, ColumnMapTranslatorTranslationDelegate translationDelegate)
         {
-            EntityIdentity newEntityIdentity = VisitEntityIdentity(columnMap.EntityIdentity, translationDelegate);
+            var newEntityIdentity = VisitEntityIdentity(columnMap.EntityIdentity, translationDelegate);
             VisitList(columnMap.Properties, translationDelegate);
 
             if (newEntityIdentity != columnMap.EntityIdentity)
@@ -330,14 +337,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         internal override ColumnMap Visit(SimplePolymorphicColumnMap columnMap, ColumnMapTranslatorTranslationDelegate translationDelegate)
         {
-            ColumnMap newTypeDiscriminator = columnMap.TypeDiscriminator.Accept(this, translationDelegate);
+            var newTypeDiscriminator = columnMap.TypeDiscriminator.Accept(this, translationDelegate);
 
             // NOTE: we're using Copy-On-Write logic to avoid allocation if we don't 
             //       need to change things.
-            Dictionary<object, TypedColumnMap> newTypeChoices = columnMap.TypeChoices;
-            foreach (KeyValuePair<object, TypedColumnMap> kv in columnMap.TypeChoices)
+            var newTypeChoices = columnMap.TypeChoices;
+            foreach (var kv in columnMap.TypeChoices)
             {
-                TypedColumnMap newTypeChoice = (TypedColumnMap)kv.Value.Accept(this, translationDelegate);
+                var newTypeChoice = (TypedColumnMap)kv.Value.Accept(this, translationDelegate);
 
                 if (newTypeChoice != kv.Value)
                 {
@@ -350,9 +357,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             VisitList(columnMap.Properties, translationDelegate);
 
-            if (newTypeDiscriminator != columnMap.TypeDiscriminator || newTypeChoices != columnMap.TypeChoices) 
+            if (newTypeDiscriminator != columnMap.TypeDiscriminator
+                || newTypeChoices != columnMap.TypeChoices)
             {
-                columnMap = new SimplePolymorphicColumnMap(columnMap.Type, columnMap.Name, columnMap.Properties, (SimpleColumnMap)newTypeDiscriminator, newTypeChoices);
+                columnMap = new SimplePolymorphicColumnMap(
+                    columnMap.Type, columnMap.Name, columnMap.Properties, (SimpleColumnMap)newTypeDiscriminator, newTypeChoices);
             }
             return translationDelegate(columnMap);
         }
@@ -360,13 +369,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         /// MultipleDiscriminatorPolymorphicColumnMap
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ColumnMapTranslator"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "MultipleDiscriminatorPolymorphicColumnMap")]
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        internal override ColumnMap Visit(MultipleDiscriminatorPolymorphicColumnMap columnMap, ColumnMapTranslatorTranslationDelegate translationDelegate)
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ColumnMapTranslator")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly",
+            MessageId = "MultipleDiscriminatorPolymorphicColumnMap")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        internal override ColumnMap Visit(
+            MultipleDiscriminatorPolymorphicColumnMap columnMap, ColumnMapTranslatorTranslationDelegate translationDelegate)
         {
             // At this time, we shouldn't ever see this type here; it's for SPROCS which don't use
             // the plan compiler.
-            System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(false, "unexpected MultipleDiscriminatorPolymorphicColumnMap in ColumnMapTranslator");
+            PlanCompiler.Assert(false, "unexpected MultipleDiscriminatorPolymorphicColumnMap in ColumnMapTranslator");
             return null;
         }
 
@@ -378,8 +391,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         internal override ColumnMap Visit(RecordColumnMap columnMap, ColumnMapTranslatorTranslationDelegate translationDelegate)
         {
-            SimpleColumnMap newNullSentinel = columnMap.NullSentinel;
-            if (null != newNullSentinel) 
+            var newNullSentinel = columnMap.NullSentinel;
+            if (null != newNullSentinel)
             {
                 newNullSentinel = (SimpleColumnMap)translationDelegate(newNullSentinel);
             }
@@ -401,7 +414,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         internal override ColumnMap Visit(RefColumnMap columnMap, ColumnMapTranslatorTranslationDelegate translationDelegate)
         {
-            EntityIdentity newEntityIdentity = VisitEntityIdentity(columnMap.EntityIdentity, translationDelegate);
+            var newEntityIdentity = VisitEntityIdentity(columnMap.EntityIdentity, translationDelegate);
 
             if (newEntityIdentity != columnMap.EntityIdentity)
             {
@@ -431,7 +444,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             VisitList(columnMap.ForeignKeys, translationDelegate);
             VisitList(columnMap.Keys, translationDelegate);
-            ColumnMap newElement = columnMap.Element.Accept(this, translationDelegate);
+            var newElement = columnMap.Element.Accept(this, translationDelegate);
 
             if (newElement != columnMap.Element)
             {

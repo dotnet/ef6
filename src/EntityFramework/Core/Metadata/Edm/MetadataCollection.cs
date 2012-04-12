@@ -1,21 +1,17 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Reflection;
-using System.Text;
-using System.Diagnostics;
-using System.Threading;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Diagnostics;
+    using System.Threading;
+
     /// <summary>
     /// Class representing an actual implementaton of a collection of metadata objects
     /// </summary>
     /// <typeparam name="T">The type of items in this collection</typeparam>
-    internal class MetadataCollection<T> : IList<T> where T : MetadataItem
+    internal class MetadataCollection<T> : IList<T>
+        where T : MetadataItem
     {
         // The way the collection supports both case sensitive and insensitive search is that it maintains two lists: one list
         // for keep tracking of the order (the ordered list) and another list sorted case sensitively (the sorted list) by the
@@ -29,6 +25,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // have the public virtual method delegates to it.
 
         #region Constructors
+
         /// <summary>
         /// Default constructor for constructing an empty collection
         /// </summary>
@@ -46,7 +43,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _collectionData = new CollectionData();
             if (items != null)
             {
-                foreach (T item in items)
+                foreach (var item in items)
                 {
                     if (item == null)
                     {
@@ -57,14 +54,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     AddInternal(item);
                 }
             }
-
         }
+
         #endregion
 
         #region Fields
 
         /// <summary>structure to contain the indexes of items whose identity match by OrdinalIgnoreCase</summary>
-        private struct OrderedIndex {
+        private struct OrderedIndex
+        {
             /// <summary>the index of the item whose identity was used to create the initial dictionary entry</summary>
             internal readonly int ExactIndex;
 
@@ -80,32 +78,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private CollectionData _collectionData;
         private bool _readOnly;
-        
-#endregion
+
+        #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets whether the collection is a readonly collection
         /// </summary>
         public bool IsReadOnly
         {
-            get
-            {
-                return _readOnly;
-            }
+            get { return _readOnly; }
         }
 
         /// <summary>
         /// Returns the collection as a readonly collection
         /// </summary>
-        public virtual System.Collections.ObjectModel.ReadOnlyCollection<T> AsReadOnly
+        public virtual ReadOnlyCollection<T> AsReadOnly
         {
-            get
-            {
-                return _collectionData.OrderedList.AsReadOnly();
-            }
+            get { return _collectionData.OrderedList.AsReadOnly(); }
         }
-
 
         /// <summary>
         /// Returns the collection as a read-only metadata collection.
@@ -120,10 +112,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         public virtual int Count
         {
-            get
-            {
-                return _collectionData.OrderedList.Count;
-            }
+            get { return _collectionData.OrderedList.Count; }
         }
 
         /// <summary>
@@ -135,14 +124,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.InvalidOperationException">Always thrown on setter</exception>
         public virtual T this[int index]
         {
-            get
-            {
-                return _collectionData.OrderedList[index];
-            }
-            set
-            {
-                throw EntityUtil.OperationOnReadOnlyCollection();
-            }
+            get { return _collectionData.OrderedList[index]; }
+            set { throw EntityUtil.OperationOnReadOnlyCollection(); }
         }
 
         /// <summary>
@@ -155,18 +138,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.InvalidOperationException">Always thrown on setter</exception>
         public virtual T this[string identity]
         {
-            get
-            {
-                return GetValue(identity, false);
-            }
-            set
-            {
-                throw EntityUtil.OperationOnReadOnlyCollection();
-            }
+            get { return GetValue(identity, false); }
+            set { throw EntityUtil.OperationOnReadOnlyCollection(); }
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Gets an item from the collection with the given identity
         /// </summary>
@@ -177,7 +156,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the Collection does not have an item with the given identity</exception>
         public virtual T GetValue(string identity, bool ignoreCase)
         {
-            T item = InternalTryGetValue(identity, ignoreCase);
+            var item = InternalTryGetValue(identity, ignoreCase);
             if (null == item)
             {
                 throw EntityUtil.ItemInvalidIdentity(identity, "identity");
@@ -213,7 +192,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Debug.Assert(!String.IsNullOrEmpty(identity), "empty identity");
             int[] inexact = null;
             OrderedIndex orderIndex;
-            int exactIndex = index;
+            var exactIndex = index;
 
             // find the item(s) by OrdinalIgnoreCase
             if (collectionData.IdentityDictionary.TryGetValue(identity, out orderIndex))
@@ -232,7 +211,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     // search against the ExactIndex and all InexactIndexes
                     // identity was already tracking multiple items, verify its not a duplicate by exact name
-                    for(int i = 0; i < orderIndex.InexactIndexes.Length; ++i)
+                    for (var i = 0; i < orderIndex.InexactIndexes.Length; ++i)
                     {
                         if (EqualIdentity(collectionData.OrderedList, orderIndex.InexactIndexes[i], identity))
                         {
@@ -247,7 +226,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     // add another item for existing identity that already was tracking multiple items
                     inexact = new int[orderIndex.InexactIndexes.Length + 1];
                     orderIndex.InexactIndexes.CopyTo(inexact, 0);
-                    inexact[inexact.Length-1] = index;
+                    inexact[inexact.Length - 1] = index;
                 }
                 else
                 {
@@ -280,7 +259,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             AddInternalHelper(item, _collectionData, false);
         }
 
-
         // This magic number was determined by the performance test cases in SQLBU 489927.
         // It compared Dictionary (hashtable), SortedList (binary search) and linear searching.
         // Its the approximate (x86) point at which doing a OrdinalCaseInsenstive linear search on _orderedItems.
@@ -309,9 +287,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private static void AddInternalHelper(T item, CollectionData collectionData, bool updateIfFound)
         {
             Util.AssertItemHasIdentity(item, "item");
-            
+
             int index;
-            int listCount = collectionData.OrderedList.Count;
+            var listCount = collectionData.OrderedList.Count;
             if (null != collectionData.IdentityDictionary)
             {
                 index = AddToDictionary(collectionData, item.Identity, listCount, updateIfFound);
@@ -334,8 +312,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     // This is a new item to be inserted. Grow if we must before adding to ordered list.
                     if (UseSortedListCrossover <= listCount)
                     {
-                        collectionData.IdentityDictionary = new Dictionary<string, OrderedIndex>(collectionData.OrderedList.Count + 1, StringComparer.OrdinalIgnoreCase);
-                        for (int i = 0; i < collectionData.OrderedList.Count; ++i)
+                        collectionData.IdentityDictionary = new Dictionary<string, OrderedIndex>(
+                            collectionData.OrderedList.Count + 1, StringComparer.OrdinalIgnoreCase);
+                        for (var i = 0; i < collectionData.OrderedList.Count; ++i)
                         {
                             AddToDictionary(collectionData, collectionData.OrderedList[i].Identity, i, false);
                         }
@@ -346,13 +325,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             // Index will be listCount when AddToDictionary doesn't find
             // an existing match, and -1 if IndexOf doesn't find in ordered list.
-            if (0 <= index && index < listCount)
+            if (0 <= index
+                && index < listCount)
             {
                 collectionData.OrderedList[index] = item;
             }
             else
             {
-                System.Diagnostics.Debug.Assert(index == -1 || index == listCount);
+                Debug.Assert(index == -1 || index == listCount);
                 collectionData.OrderedList.Add(item);
             }
         }
@@ -368,16 +348,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>Whether the add was successful</returns>
         internal bool AtomicAddRange(List<T> items)
         {
-            CollectionData originalData = _collectionData;
-            CollectionData newData = new CollectionData(originalData, items.Count);
+            var originalData = _collectionData;
+            var newData = new CollectionData(originalData, items.Count);
 
             // Add the new items, this will also perform duplication check
-            foreach (T item in items)
+            foreach (var item in items)
             {
                 AddInternalHelper(item, newData, false);
             }
 
-            CollectionData swappedOutData = Interlocked.CompareExchange<CollectionData>(ref _collectionData, newData, originalData);
+            var swappedOutData = Interlocked.CompareExchange(ref _collectionData, newData, originalData);
 
             // Check if the exchange was done, if not, then someone must have changed the data in the meantime, so
             // return false
@@ -392,9 +372,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>Does Item at index have the same identity</summary>
         private static bool EqualIdentity(List<T> orderedList, int index, string identity)
         {
-            return ((string)orderedList[index].Identity == (string)identity);
+            return (orderedList[index].Identity == identity);
         }
-        
+
         /// <summary>
         /// Not supported, the collection is treated as read-only.
         /// </summary>
@@ -472,9 +452,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Debug.Assert(null != identity, "null identity");
 
-            int index = -1;
+            var index = -1;
             if (null != collectionData.IdentityDictionary)
-            {   // OrdinalIgnoreCase dictionary lookup
+            {
+                // OrdinalIgnoreCase dictionary lookup
                 OrderedIndex orderIndex;
                 if (collectionData.IdentityDictionary.TryGetValue(identity, out orderIndex))
                 {
@@ -482,9 +463,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     {
                         index = orderIndex.ExactIndex;
                     }
-                    //return this, only in case when ignore case is false
+                        //return this, only in case when ignore case is false
                     else if (EqualIdentity(collectionData.OrderedList, orderIndex.ExactIndex, identity))
-                    {   // fast return if exact match
+                    {
+                        // fast return if exact match
                         return orderIndex.ExactIndex;
                     }
 
@@ -492,11 +474,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     if (null != orderIndex.InexactIndexes)
                     {
                         if (ignoreCase)
-                        {   // the ignoreCase will throw,
+                        {
+                            // the ignoreCase will throw,
                             throw EntityUtil.MoreThanOneItemMatchesIdentity(identity);
                         }
                         // search for the exact match or throw if ignoreCase
-                        for (int i = 0; i < orderIndex.InexactIndexes.Length; ++i)
+                        for (var i = 0; i < orderIndex.InexactIndexes.Length; ++i)
                         {
                             if (EqualIdentity(collectionData.OrderedList, orderIndex.InexactIndexes[i], identity))
                             {
@@ -508,8 +491,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
             }
             else if (ignoreCase)
-            {   // OrdinalIgnoreCase linear search
-                for(int i = 0; i < collectionData.OrderedList.Count; ++i)
+            {
+                // OrdinalIgnoreCase linear search
+                for (var i = 0; i < collectionData.OrderedList.Count; ++i)
                 {
                     if (String.Equals(collectionData.OrderedList[i].Identity, identity, StringComparison.OrdinalIgnoreCase))
                     {
@@ -522,8 +506,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
             }
             else
-            {   // Ordinal linear search
-                for (int i = 0; i < collectionData.OrderedList.Count; ++i)
+            {
+                // Ordinal linear search
+                for (var i = 0; i < collectionData.OrderedList.Count; ++i)
                 {
                     if (EqualIdentity(collectionData.OrderedList, i, identity))
                     {
@@ -544,9 +529,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public virtual int IndexOf(T item)
         {
             Util.AssertItemHasIdentity(item, "item");
-            int index = IndexOf(_collectionData, item.Identity, false);
+            var index = IndexOf(_collectionData, item.Identity, false);
 
-            if (index != -1 && _collectionData.OrderedList[index] == item)
+            if (index != -1
+                && _collectionData.OrderedList[index] == item)
             {
                 return index;
             }
@@ -571,7 +557,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 throw EntityUtil.ArgumentOutOfRange("arrayIndex");
             }
 
-            if (_collectionData.OrderedList.Count > array.Length - arrayIndex)
+            if (_collectionData.OrderedList.Count
+                > array.Length - arrayIndex)
             {
                 throw EntityUtil.ArrayTooSmall("arrayIndex");
             }
@@ -594,7 +581,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns></returns>
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
 
         /// <summary>
@@ -603,7 +590,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns></returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
 
         /// <summary>
@@ -611,7 +598,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         public MetadataCollection<T> SetReadOnly()
         {
-            for (int i = 0; i < _collectionData.OrderedList.Count; i++)
+            for (var i = 0; i < _collectionData.OrderedList.Count; i++)
             {
                 _collectionData.OrderedList[i].SetReadOnly();
             }
@@ -642,10 +629,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>item else null</returns>
         private T InternalTryGetValue(string identity, bool ignoreCase)
         {
-            int index = IndexOf(_collectionData, EntityUtil.GenericCheckArgumentNull(identity, "identity"), ignoreCase);
-            Debug.Assert((index < 0) ||
-                        (ignoreCase && String.Equals(_collectionData.OrderedList[index].Identity, identity, StringComparison.OrdinalIgnoreCase)) ||
-                        EqualIdentity(_collectionData.OrderedList, index, identity), "different exact identity");
+            var index = IndexOf(_collectionData, EntityUtil.GenericCheckArgumentNull(identity, "identity"), ignoreCase);
+            Debug.Assert(
+                (index < 0) ||
+                (ignoreCase && String.Equals(_collectionData.OrderedList[index].Identity, identity, StringComparison.OrdinalIgnoreCase)) ||
+                EqualIdentity(_collectionData.OrderedList, index, identity), "different exact identity");
             return (0 <= index) ? _collectionData.OrderedList[index] : null;
         }
 
@@ -678,7 +666,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             /// entry.  See additional comments in AddInternal.
             /// </summary>
             internal Dictionary<string, OrderedIndex> IdentityDictionary;
-            internal List<T> OrderedList;
+
+            internal readonly List<T> OrderedList;
 
             internal CollectionData()
             {
@@ -687,34 +676,35 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             internal CollectionData(CollectionData original, int additionalCapacity)
             {
-                this.OrderedList = new List<T>(original.OrderedList.Count + additionalCapacity);
-                foreach (T item in original.OrderedList)
-                {   // using AddRange results in a temporary memory allocation
-                    this.OrderedList.Add(item);
+                OrderedList = new List<T>(original.OrderedList.Count + additionalCapacity);
+                foreach (var item in original.OrderedList)
+                {
+                    // using AddRange results in a temporary memory allocation
+                    OrderedList.Add(item);
                 }
 
-                if (UseSortedListCrossover <= this.OrderedList.Capacity)
+                if (UseSortedListCrossover <= OrderedList.Capacity)
                 {
-                    this.IdentityDictionary = new Dictionary<string, OrderedIndex>(this.OrderedList.Capacity, StringComparer.OrdinalIgnoreCase);
+                    IdentityDictionary = new Dictionary<string, OrderedIndex>(OrderedList.Capacity, StringComparer.OrdinalIgnoreCase);
 
                     if (null != original.IdentityDictionary)
                     {
-                        foreach (KeyValuePair<string, OrderedIndex> pair in original.IdentityDictionary)
+                        foreach (var pair in original.IdentityDictionary)
                         {
-                            this.IdentityDictionary.Add(pair.Key, pair.Value);
+                            IdentityDictionary.Add(pair.Key, pair.Value);
                         }
                     }
                     else
                     {
-                        for (int i = 0; i < this.OrderedList.Count; ++i)
+                        for (var i = 0; i < OrderedList.Count; ++i)
                         {
-                            AddToDictionary(this, this.OrderedList[i].Identity, i, false);
+                            AddToDictionary(this, OrderedList[i].Identity, i, false);
                         }
                     }
                 }
             }
         }
 
-        #endregion 
+        #endregion
     }
 }

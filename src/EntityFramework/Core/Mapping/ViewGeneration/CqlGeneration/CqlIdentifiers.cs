@@ -1,29 +1,32 @@
-using System.Data.Entity.Core.Common.Utils;
-using System.Text;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
+    using System.Text;
 
     // This class is responsible for ensuring unique aliases for _from0, etc
     // and block aliases T, T0, T1, etc
     internal class CqlIdentifiers : InternalBase
     {
-
         #region Constructor
+
         internal CqlIdentifiers()
         {
             m_identifiers = new Set<string>(StringComparer.Ordinal);
         }
+
         #endregion
 
         #region Fields
-        private Set<string> m_identifiers;
+
+        private readonly Set<string> m_identifiers;
+
         #endregion
 
         #region Methods
+
         // effects: Given a number, returns _from<num> if it does not clashes with
         // any identifier, else returns _from_<next>_<num> where <next> is the first number from 0
         // where there is no clash
@@ -59,7 +62,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             // Do a case sensitive search but return the string that uses the
             // original prefix
-            string result = number < 0 ? prefix : StringUtil.FormatInvariant("{0}{1}", prefix, number);
+            var result = number < 0 ? prefix : StringUtil.FormatInvariant("{0}{1}", prefix, number);
             // Check if the prefix exists or not
             if (m_identifiers.Contains(result.ToLower(CultureInfo.InvariantCulture)) == false)
             {
@@ -67,7 +70,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
 
             // Go through integers and find the first one that does not clash
-            for (int count = 0; count < int.MaxValue; count++)
+            for (var count = 0; count < int.MaxValue; count++)
             {
                 if (number < 0)
                 {

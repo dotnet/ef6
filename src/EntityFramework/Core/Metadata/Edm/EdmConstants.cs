@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal const string TransientNamespace = "Transient";
 
         // max number of primitive types
-        internal const int NumPrimitiveTypes = (int)System.Data.Entity.Core.Metadata.Edm.PrimitiveTypeKind.GeographyCollection + 1;
+        internal const int NumPrimitiveTypes = (int)Edm.PrimitiveTypeKind.GeographyCollection + 1;
 
         // max number of primitive types
         internal const int NumBuiltInTypes = (int)BuiltInTypeKind.TypeUsage + 1;
@@ -180,8 +180,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // Name of the additional system defined attributes on enum types
         internal const string EnumMembers = "EnumMembers";
 
-
-
         //
         // Provider Manifest EdmFunction Attributes
         //
@@ -204,21 +202,45 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal const string LongDescription = "LongDescription";
 
         internal static readonly Unbounded UnboundedValue = Unbounded.Instance;
+
         internal class Unbounded
         {
-            static readonly Unbounded _instance = new Unbounded();
-            private Unbounded() { }
-            static internal Unbounded Instance { get { return _instance; } }
-            public override string ToString() { return MaxMaxLength; }
+            private static readonly Unbounded _instance = new Unbounded();
+
+            private Unbounded()
+            {
+            }
+
+            internal static Unbounded Instance
+            {
+                get { return _instance; }
+            }
+
+            public override string ToString()
+            {
+                return MaxMaxLength;
+            }
         }
 
         internal static readonly Variable VariableValue = Variable.Instance;
+
         internal class Variable
         {
-            static readonly Variable _instance = new Variable();
-            private Variable() { }
-            static internal Variable Instance { get { return _instance; } }
-            public override string ToString() { return VariableSrid; }
+            private static readonly Variable _instance = new Variable();
+
+            private Variable()
+            {
+            }
+
+            internal static Variable Instance
+            {
+                get { return _instance; }
+            }
+
+            public override string ToString()
+            {
+                return VariableSrid;
+            }
         }
     }
 }

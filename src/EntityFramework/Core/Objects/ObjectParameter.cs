@@ -1,10 +1,9 @@
 namespace System.Data.Entity.Core.Objects
 {
-    using System;
-    using System.Data;
-    using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects.ELinq;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
 
     /// <summary> 
@@ -26,7 +25,7 @@ namespace System.Data.Entity.Core.Objects
         ///   specified parameter name is valid. Parameter names must start with a letter,
         ///   and may only contain letters (A-Z, a-z), numbers (0-9) and underscores (_).
         /// </summary>
-        internal static bool ValidateParameterName (string name)
+        internal static bool ValidateParameterName(string name)
         {
             // Note: Parameter names must begin with a letter, and may contain only
             // letters, numbers and underscores.
@@ -67,22 +66,22 @@ namespace System.Data.Entity.Core.Objects
         ///   with a letter and may only contain letters (A-Z, a-z), numbers (0-9) and 
         ///   underscores (_).
         /// </exception>
-        public ObjectParameter (string name, Type type)
+        public ObjectParameter(string name, Type type)
         {
             EntityUtil.CheckArgumentNull(name, "name");
             EntityUtil.CheckArgumentNull(type, "type");
 
-            if (!ObjectParameter.ValidateParameterName(name))
+            if (!ValidateParameterName(name))
             {
-                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.ObjectParameter_InvalidParameterName(name), "name");
+                throw EntityUtil.Argument(Strings.ObjectParameter_InvalidParameterName(name), "name");
             }
 
-            this._name  = name;
-            this._type  = type;
+            _name = name;
+            _type = type;
 
             // If the parameter type is Nullable<>, we need to extract out the underlying
             // Nullable<> type argument.
-            this._mappableType = System.Data.Entity.Core.Objects.ELinq.TypeSystem.GetNonNullableType(this._type);
+            _mappableType = TypeSystem.GetNonNullableType(_type);
         }
 
         #endregion
@@ -111,23 +110,23 @@ namespace System.Data.Entity.Core.Objects
         ///   with a letter and may only contain letters (A-Z, a-z), numbers (0-9) and 
         ///   underscores (_).
         /// </exception>
-        public ObjectParameter (string name, object value)
+        public ObjectParameter(string name, object value)
         {
             EntityUtil.CheckArgumentNull(name, "name");
             EntityUtil.CheckArgumentNull(value, "value");
 
-            if (!ObjectParameter.ValidateParameterName(name))
+            if (!ValidateParameterName(name))
             {
-                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.ObjectParameter_InvalidParameterName(name), "name");
+                throw EntityUtil.Argument(Strings.ObjectParameter_InvalidParameterName(name), "name");
             }
 
-            this._name  = name;
-            this._type  = value.GetType();
-            this._value = value;
+            _name = name;
+            _type = value.GetType();
+            _value = value;
 
             // If the parameter type is Nullable<>, we need to extract out the underlying
             // Nullable<> type argument.
-            this._mappableType = System.Data.Entity.Core.Objects.ELinq.TypeSystem.GetNonNullableType(this._type);
+            _mappableType = TypeSystem.GetNonNullableType(_type);
         }
 
         #endregion
@@ -154,13 +153,13 @@ namespace System.Data.Entity.Core.Objects
         {
             Debug.Assert(template != null, "Template ObjectParameter cannot be null");
 
-            this._name = template._name;
-            this._type = template._type;
-            this._mappableType = template._mappableType;
-            this._effectiveType = template._effectiveType;
-            this._value = template._value;
+            _name = template._name;
+            _type = template._type;
+            _mappableType = template._mappableType;
+            _effectiveType = template._effectiveType;
+            _value = template._value;
         }
-                
+
         #endregion
 
         #region Private Fields
@@ -172,12 +171,12 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///   The name of the parameter. Cannot be null and is immutable.
         /// </summary>
-        private string _name;
+        private readonly string _name;
 
         /// <summary>
         ///   The CLR type of the parameter. Cannot be null and is immutable.
         /// </summary>
-        private Type _type;
+        private readonly Type _type;
 
         /// <summary>
         ///   The mappable CLR type of the parameter. Unless the parameter type is
@@ -185,7 +184,7 @@ namespace System.Data.Entity.Core.Objects
         ///   Nullable parameters, this type is the underlying Nullable argument
         ///   type. Cannot be null and is immutable.
         /// </summary>
-        private Type _mappableType;
+        private readonly Type _mappableType;
 
         /// <summary>
         ///     Used to specify the exact metadata type of this parameter.
@@ -212,10 +211,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         public string Name
         {
-            get
-            {
-                return this._name;
-            }
+            get { return _name; }
         }
 
         /// <summary>
@@ -223,10 +219,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         public Type ParameterType
         {
-            get
-            {
-                return this._type;
-            }
+            get { return _type; }
         }
 
         /// <summary>
@@ -238,15 +231,9 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         public object Value
         {
-            get
-            {
-                return this._value;
-            }
+            get { return _value; }
 
-            set
-            {
-                this._value = value;
-            }
+            set { _value = value; }
         }
 
         #endregion
@@ -263,10 +250,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         internal TypeUsage TypeUsage
         {
-            get
-            {
-                return _effectiveType;
-            }
+            get { return _effectiveType; }
 
             set
             {
@@ -282,12 +266,9 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         internal Type MappableType
         {
-            get
-            {
-                return this._mappableType;
-            }
+            get { return _mappableType; }
         }
-        
+
         #endregion
 
         #region Internal Methods
@@ -304,18 +285,19 @@ namespace System.Data.Entity.Core.Objects
         {
             return new ObjectParameter(this);
         }
-                
+
         /// <summary>
         ///   This internal method ensures that the specified type is a scalar
         ///   type supported by the underlying provider by ensuring that scalar 
         ///   metadata for this type is retrievable.
         /// </summary>
-        internal bool ValidateParameterType (ClrPerspective perspective)
+        internal bool ValidateParameterType(ClrPerspective perspective)
         {
             TypeUsage type = null;
 
             // The parameter type metadata is only valid if it's scalar or enumeration type metadata.
-            if ((perspective.TryGetType(this._mappableType, out type)) && 
+            if ((perspective.TryGetType(_mappableType, out type))
+                &&
                 (TypeSemantics.IsScalarType(type)))
             {
                 return true;

@@ -1,19 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Diagnostics;
-using System.Data.Entity.Core.Mapping.ViewGeneration;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Validation;
-
-namespace System.Data.Entity.Core.Mapping {
+namespace System.Data.Entity.Core.Mapping
+{
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Mapping.ViewGeneration;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.Validation;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using CellGroup = Set<Cell>;
+    using System.Linq;
+    using System.Text;
+    using CellGroup = System.Data.Entity.Core.Common.Utils.Set<ViewGeneration.Structures.Cell>;
 
     /// <summary>
     /// Represents the Mapping metadata for the EntityContainer map in CS space.
@@ -34,8 +32,9 @@ namespace System.Data.Entity.Core.Mapping {
     /// </remarks>
     /// </summary>
     internal class StorageEntityContainerMapping : Map
- {
+    {
         #region Constructors
+
         /// <summary>
         /// Construct a new EntityContainer mapping object 
         /// passing in the C-space EntityContainer  and
@@ -43,48 +42,58 @@ namespace System.Data.Entity.Core.Mapping {
         /// </summary>
         /// <param name="entityContainer">Entity Continer type that is being mapped on the C-side</param>
         /// <param name="storageEntityContainer">Entity Continer type that is being mapped on the S-side</param>
-        internal StorageEntityContainerMapping(EntityContainer entityContainer, EntityContainer storageEntityContainer, StorageMappingItemCollection storageMappingItemCollection, bool validate, bool generateUpdateViews)
+        internal StorageEntityContainerMapping(
+            EntityContainer entityContainer, EntityContainer storageEntityContainer,
+            StorageMappingItemCollection storageMappingItemCollection, bool validate, bool generateUpdateViews)
         {
-            this.m_entityContainer = entityContainer;
-            this.m_storageEntityContainer = storageEntityContainer;
-            this.m_storageMappingItemCollection = storageMappingItemCollection;
-            this.m_memoizedCellGroupEvaluator = new Memoizer<InputForComputingCellGroups, OutputFromComputeCellGroups>(ComputeCellGroups, new InputForComputingCellGroups());
-            this.identity = entityContainer.Identity;
-            this.m_validate = validate;
-            this.m_generateUpdateViews = generateUpdateViews;
+            m_entityContainer = entityContainer;
+            m_storageEntityContainer = storageEntityContainer;
+            m_storageMappingItemCollection = storageMappingItemCollection;
+            m_memoizedCellGroupEvaluator = new Memoizer<InputForComputingCellGroups, OutputFromComputeCellGroups>(
+                ComputeCellGroups, new InputForComputingCellGroups());
+            identity = entityContainer.Identity;
+            m_validate = validate;
+            m_generateUpdateViews = generateUpdateViews;
         }
+
         #endregion
 
         #region Fields
-        private string identity;
-        private bool m_validate;
-        private bool m_generateUpdateViews;
-        private EntityContainer m_entityContainer;  //Entity Continer type that is being mapped on the C-side
-        private EntityContainer m_storageEntityContainer;  //Entity Continer type that the C-space container is being mapped to
-        private Dictionary<string, StorageSetMapping> m_entitySetMappings = new Dictionary<string, StorageSetMapping>(StringComparer.Ordinal);  //A collection of EntitySetMappings under this EntityContainer mapping
-        private Dictionary<string, StorageSetMapping> m_associationSetMappings = new Dictionary<string, StorageSetMapping>(StringComparer.Ordinal);  //A collection of AssociationSetMappings under this EntityContainer mapping        
-        private Dictionary<EdmFunction, FunctionImportMapping> m_functionImportMappings = new Dictionary<EdmFunction, FunctionImportMapping>();
-        private string m_sourceLocation; //Schema URI for the mapping
-        private int m_startLineNumber; //Line Number for EntityContainer Mapping element start tag
-        private int m_startLinePosition; //Line position for EntityContainer Mapping element start tag
+
+        private readonly string identity;
+        private readonly bool m_validate;
+        private readonly bool m_generateUpdateViews;
+        private readonly EntityContainer m_entityContainer; //Entity Continer type that is being mapped on the C-side
+        private readonly EntityContainer m_storageEntityContainer; //Entity Continer type that the C-space container is being mapped to
+
+        private readonly Dictionary<string, StorageSetMapping> m_entitySetMappings =
+            new Dictionary<string, StorageSetMapping>(StringComparer.Ordinal);
+                                                               //A collection of EntitySetMappings under this EntityContainer mapping
+
+        private readonly Dictionary<string, StorageSetMapping> m_associationSetMappings =
+            new Dictionary<string, StorageSetMapping>(StringComparer.Ordinal);
+                                                               //A collection of AssociationSetMappings under this EntityContainer mapping        
+
+        private readonly Dictionary<EdmFunction, FunctionImportMapping> m_functionImportMappings =
+            new Dictionary<EdmFunction, FunctionImportMapping>();
+
         private readonly StorageMappingItemCollection m_storageMappingItemCollection;
         private readonly Memoizer<InputForComputingCellGroups, OutputFromComputeCellGroups> m_memoizedCellGroupEvaluator;
 
         #endregion
 
         #region Properties
+
         public StorageMappingItemCollection StorageMappingItemCollection
         {
-            get
-            {
-                return m_storageMappingItemCollection;
-            }
+            get { return m_storageMappingItemCollection; }
         }
 
         /// <summary>
         /// Gets the type kind for this item
         /// </summary>
-        public override BuiltInTypeKind BuiltInTypeKind {
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
             get { return BuiltInTypeKind.MetadataItem; }
         }
 
@@ -92,16 +101,14 @@ namespace System.Data.Entity.Core.Mapping {
         /// The Entity Container Metadata object on the C-side
         /// for which the mapping is being represented.
         /// </summary>
-        internal override MetadataItem EdmItem {
-            get {
-                return this.m_entityContainer;
-            }
+        internal override MetadataItem EdmItem
+        {
+            get { return m_entityContainer; }
         }
 
-        internal override string Identity {
-            get {
-                return identity;
-            }
+        internal override string Identity
+        {
+            get { return identity; }
         }
 
         /// <summary>
@@ -113,7 +120,7 @@ namespace System.Data.Entity.Core.Mapping {
             get
             {
                 return ((m_entitySetMappings.Count == 0)
-                && (m_associationSetMappings.Count == 0));
+                        && (m_associationSetMappings.Count == 0));
             }
         }
 
@@ -126,34 +133,28 @@ namespace System.Data.Entity.Core.Mapping {
             get
             {
                 return HasMappingFragments()
-                    || AllSetMaps.Any((StorageSetMapping setMap) => setMap.QueryView != null);
+                       || AllSetMaps.Any((StorageSetMapping setMap) => setMap.QueryView != null);
             }
         }
 
+        internal string SourceLocation { get; set; }
 
-        internal string SourceLocation {
-            get { return m_sourceLocation; }
-            set { m_sourceLocation = value; }
+        /// <summary>
+        /// The Entity Container Metadata object on the C-side
+        /// for which the mapping is being represented.
+        /// </summary>
+        internal EntityContainer EdmEntityContainer
+        {
+            get { return m_entityContainer; }
         }
 
         /// <summary>
         /// The Entity Container Metadata object on the C-side
         /// for which the mapping is being represented.
         /// </summary>
-        internal EntityContainer EdmEntityContainer {
-            get {
-                return this.m_entityContainer;
-            }
-        }
-
-        /// <summary>
-        /// The Entity Container Metadata object on the C-side
-        /// for which the mapping is being represented.
-        /// </summary>
-        internal EntityContainer StorageEntityContainer {
-            get {
-                return this.m_storageEntityContainer;
-            }
+        internal EntityContainer StorageEntityContainer
+        {
+            get { return m_storageEntityContainer; }
         }
 
         /// <summary>
@@ -161,10 +162,9 @@ namespace System.Data.Entity.Core.Mapping {
         /// container. In CS mapping, the mapping is done
         /// at the extent level as opposed to the type level.
         /// </summary>
-        internal ReadOnlyCollection<StorageSetMapping> EntitySetMaps {
-            get {
-                return new List<StorageSetMapping>(this.m_entitySetMappings.Values).AsReadOnly();
-            }
+        internal ReadOnlyCollection<StorageSetMapping> EntitySetMaps
+        {
+            get { return new List<StorageSetMapping>(m_entitySetMappings.Values).AsReadOnly(); }
         }
 
         /// <summary>
@@ -178,10 +178,9 @@ namespace System.Data.Entity.Core.Mapping {
         /// The reason we have RelationshipSetMaps is to be consistent with CDM metadata
         /// which treats both associations and compositions as Relationships.
         /// </remarks>
-        internal ReadOnlyCollection<StorageSetMapping> RelationshipSetMaps {
-            get {
-                return new List<StorageSetMapping>(this.m_associationSetMappings.Values).AsReadOnly();
-            }
+        internal ReadOnlyCollection<StorageSetMapping> RelationshipSetMaps
+        {
+            get { return new List<StorageSetMapping>(m_associationSetMappings.Values).AsReadOnly(); }
         }
 
         /// <summary>
@@ -190,51 +189,25 @@ namespace System.Data.Entity.Core.Mapping {
         /// </summary>
         internal IEnumerable<StorageSetMapping> AllSetMaps
         {
-            get
-            {
-                return System.Linq.Enumerable.Concat(this.m_entitySetMappings.Values, this.m_associationSetMappings.Values);
-            }
+            get { return m_entitySetMappings.Values.Concat(m_associationSetMappings.Values); }
         }
 
         /// <summary>
         /// Line Number in MSL file where the EntityContainer Mapping Element's Start Tag is present.
         /// </summary>
-        internal int StartLineNumber
-        {
-            get
-            {
-                return m_startLineNumber;
-            }
-            set
-            {
-                m_startLineNumber = value;
-            }
-        }
+        internal int StartLineNumber { get; set; }
 
         /// <summary>
         /// Line Position in MSL file where the EntityContainer Mapping Element's Start Tag is present.
         /// </summary>
-        internal int StartLinePosition
-        {
-            get
-            {
-                return m_startLinePosition;
-            }
-            set
-            {
-                m_startLinePosition = value;
-            }
-        }
+        internal int StartLinePosition { get; set; }
 
         /// <summary>
         /// Indicates whether to validate the mapping or not.
         /// </summary>
         internal bool Validate
         {
-            get
-            {
-                return m_validate;
-            }
+            get { return m_validate; }
         }
 
         /// <summary>
@@ -242,19 +215,19 @@ namespace System.Data.Entity.Core.Mapping {
         /// </summary>
         internal bool GenerateUpdateViews
         {
-            get
-            {
-                return m_generateUpdateViews;
-            }
+            get { return m_generateUpdateViews; }
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// get an EntitySet mapping based upon the name of the entity set.
         /// </summary>
         /// /// <param name="entitySetName">the name of the entity set</param>
-        internal StorageSetMapping GetEntitySetMapping(String entitySetName) {
+        internal StorageSetMapping GetEntitySetMapping(String entitySetName)
+        {
             EntityUtil.CheckArgumentNull(entitySetName, "entitySetName");
             //Key for EntitySetMapping should be EntitySet name and Entoty type name
             StorageSetMapping setMapping = null;
@@ -267,7 +240,8 @@ namespace System.Data.Entity.Core.Mapping {
         /// </summary>
         /// <param name="relationshipSetName">the name of the relationship set</param>
         /// <returns>the mapping for the entity set if it exists, null if it does not exist</returns>
-        internal StorageSetMapping GetRelationshipSetMapping(string relationshipSetName) {
+        internal StorageSetMapping GetRelationshipSetMapping(string relationshipSetName)
+        {
             EntityUtil.CheckArgumentNull(relationshipSetName, "relationshipSetName");
             StorageSetMapping setMapping = null;
             m_associationSetMappings.TryGetValue(relationshipSetName, out setMapping);
@@ -278,15 +252,21 @@ namespace System.Data.Entity.Core.Mapping {
         /// Get a RelationShipSet mapping that has the passed in EntitySet as one of the ends and is mapped to the
         /// table.
         /// </summary>
-        internal IEnumerable<StorageAssociationSetMapping> GetRelationshipSetMappingsFor(EntitySetBase edmEntitySet, EntitySetBase storeEntitySet )
+        internal IEnumerable<StorageAssociationSetMapping> GetRelationshipSetMappingsFor(
+            EntitySetBase edmEntitySet, EntitySetBase storeEntitySet)
         {
             //First select the association set maps that are mapped to this table
-            IEnumerable<StorageAssociationSetMapping> associationSetMappings = m_associationSetMappings.Values.Cast<StorageAssociationSetMapping>().Where(w => ((w.StoreEntitySet != null) && (w.StoreEntitySet == storeEntitySet)));
+            var associationSetMappings =
+                m_associationSetMappings.Values.Cast<StorageAssociationSetMapping>().Where(
+                    w => ((w.StoreEntitySet != null) && (w.StoreEntitySet == storeEntitySet)));
             //From this again filter the ones that have the specified EntitySet on atleast one end
-            associationSetMappings = associationSetMappings.Where(associationSetMap => ((associationSetMap.Set as AssociationSet).AssociationSetEnds.Any(associationSetEnd => associationSetEnd.EntitySet == edmEntitySet)));
+            associationSetMappings =
+                associationSetMappings.Where(
+                    associationSetMap =>
+                    ((associationSetMap.Set as AssociationSet).AssociationSetEnds.Any(
+                        associationSetEnd => associationSetEnd.EntitySet == edmEntitySet)));
             return associationSetMappings;
         }
-
 
         /// <summary>
         /// Get a set mapping based upon the name of the set
@@ -295,7 +275,7 @@ namespace System.Data.Entity.Core.Mapping {
         /// <returns></returns>
         internal StorageSetMapping GetSetMapping(string setName)
         {
-            StorageSetMapping setMap = GetEntitySetMapping(setName);
+            var setMap = GetEntitySetMapping(setName);
             if (setMap == null)
             {
                 setMap = GetRelationshipSetMapping(setName);
@@ -303,15 +283,17 @@ namespace System.Data.Entity.Core.Mapping {
             return setMap;
         }
 
-
         /// <summary>
         /// Adds an entity set mapping to the list of EntitySetMaps
         /// under this entity container mapping. The method will be called
         /// by the Mapping loader.
         /// </summary>
-        internal void AddEntitySetMapping(StorageSetMapping setMapping) {
-            if (!this.m_entitySetMappings.ContainsKey(setMapping.Set.Name))
-                this.m_entitySetMappings.Add(setMapping.Set.Name, setMapping);
+        internal void AddEntitySetMapping(StorageSetMapping setMapping)
+        {
+            if (!m_entitySetMappings.ContainsKey(setMapping.Set.Name))
+            {
+                m_entitySetMappings.Add(setMapping.Set.Name, setMapping);
+            }
         }
 
         /// <summary>
@@ -319,8 +301,9 @@ namespace System.Data.Entity.Core.Mapping {
         /// under this entity container mapping. The method will be called
         /// by the Mapping loader.
         /// </summary>
-        internal void AddAssociationSetMapping(StorageSetMapping setMapping) {
-            this.m_associationSetMappings.Add(setMapping.Set.Name, setMapping);
+        internal void AddAssociationSetMapping(StorageSetMapping setMapping)
+        {
+            m_associationSetMappings.Add(setMapping.Set.Name, setMapping);
         }
 
         /// <summary>
@@ -329,8 +312,9 @@ namespace System.Data.Entity.Core.Mapping {
         /// </summary>
         /// <param name="associationSet"></param>
         /// <returns></returns>
-        internal bool ContainsAssociationSetMapping(AssociationSet associationSet) {
-            return this.m_associationSetMappings.ContainsKey(associationSet.Name);
+        internal bool ContainsAssociationSetMapping(AssociationSet associationSet)
+        {
+            return m_associationSetMappings.ContainsKey(associationSet.Name);
         }
 
         /// <summary>
@@ -339,8 +323,8 @@ namespace System.Data.Entity.Core.Mapping {
         /// <param name="setName"></param>
         /// <returns></returns>
         internal bool HasQueryViewForSetMap(string setName)
-        {            
-            StorageSetMapping set = GetSetMapping(setName);
+        {
+            var set = GetSetMapping(setName);
             if (set != null)
             {
                 return (set.QueryView != null);
@@ -350,7 +334,7 @@ namespace System.Data.Entity.Core.Mapping {
 
         internal bool HasMappingFragments()
         {
-            foreach (var extentMap in this.AllSetMaps)
+            foreach (var extentMap in AllSetMaps)
             {
                 foreach (var typeMap in extentMap.TypeMappings)
                 {
@@ -368,12 +352,13 @@ namespace System.Data.Entity.Core.Mapping {
         /// The method builds up the spaces required for pretty printing each 
         /// part of the mapping.
         ///</summary>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Console.Write(System.String)")]
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Console.WriteLine(System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Console.Write(System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Console.WriteLine(System.String)")]
         internal static string GetPrettyPrintString(ref int index)
         {
-
-            string spaces = "";
+            var spaces = "";
             spaces = spaces.PadLeft(index, ' ');
             Console.WriteLine(spaces + "|");
             Console.WriteLine(spaces + "|");
@@ -393,20 +378,23 @@ namespace System.Data.Entity.Core.Mapping {
         /// Will be removed shortly.
         /// </summary>
         /// <param name="index"></param>
-        internal void Print(int index) {
-            string spaces = "";
-            StringBuilder sb = new StringBuilder();
+        internal void Print(int index)
+        {
+            var spaces = "";
+            var sb = new StringBuilder();
             sb.Append(spaces);
             sb.Append("EntityContainerMapping");
             sb.Append("   ");
             sb.Append("Name:");
-            sb.Append(this.m_entityContainer.Name);
+            sb.Append(m_entityContainer.Name);
             sb.Append("   ");
             Console.WriteLine(sb.ToString());
-            foreach (StorageSetMapping extentMapping in m_entitySetMappings.Values) {
+            foreach (var extentMapping in m_entitySetMappings.Values)
+            {
                 extentMapping.Print(index + 5);
             }
-            foreach (StorageSetMapping extentMapping in m_associationSetMappings.Values) {
+            foreach (var extentMapping in m_associationSetMappings.Values)
+            {
                 extentMapping.Print(index + 5);
             }
         }
@@ -425,17 +413,17 @@ namespace System.Data.Entity.Core.Mapping {
         }
 
         internal OutputFromComputeCellGroups GetCellgroups(InputForComputingCellGroups args)
-        { 
-            Debug.Assert(object.ReferenceEquals(this, args.ContainerMapping));
+        {
+            Debug.Assert(ReferenceEquals(this, args.ContainerMapping));
             return m_memoizedCellGroupEvaluator.Evaluate(args);
         }
 
         private OutputFromComputeCellGroups ComputeCellGroups(InputForComputingCellGroups args)
         {
-            OutputFromComputeCellGroups result = new OutputFromComputeCellGroups();
+            var result = new OutputFromComputeCellGroups();
             result.Success = true;
 
-            CellCreator cellCreator = new CellCreator(args.ContainerMapping);
+            var cellCreator = new CellCreator(args.ContainerMapping);
             result.Cells = cellCreator.GenerateCells();
             result.Identifiers = cellCreator.Identifiers;
 
@@ -450,8 +438,8 @@ namespace System.Data.Entity.Core.Mapping {
             result.ForeignKeyConstraints = ForeignConstraint.GetForeignConstraints(args.ContainerMapping.StorageEntityContainer);
 
             // Go through each table and determine their foreign key constraints
-            CellPartitioner partitioner = new CellPartitioner(result.Cells, result.ForeignKeyConstraints);
-            List<CellGroup> cellGroups = partitioner.GroupRelatedCells();
+            var partitioner = new CellPartitioner(result.Cells, result.ForeignKeyConstraints);
+            var cellGroups = partitioner.GroupRelatedCells();
 
             //Clone cell groups- i.e, List<Set<Cell>> - upto cell before storing it in the cache because viewgen modified the Cell structure
             result.CellGroups = cellGroups.Select(setOfcells => new CellGroup(setOfcells.Select(cell => new Cell(cell)))).ToList();
@@ -469,8 +457,8 @@ namespace System.Data.Entity.Core.Mapping {
 
         internal InputForComputingCellGroups(StorageEntityContainerMapping containerMapping, ConfigViewGenerator config)
         {
-            this.ContainerMapping = containerMapping;
-            this.Config = config;
+            ContainerMapping = containerMapping;
+            Config = config;
         }
 
         public bool Equals(InputForComputingCellGroups other)
@@ -478,17 +466,18 @@ namespace System.Data.Entity.Core.Mapping {
             // Isn't this funny? We are not using Memoizer for function memoization. Args Entity and Config don't matter!
             // If I were to compare Entity this would not use the cache for cases when I supply different entity set. However,
             // the cell groups belong to ALL entity sets.
-            return (this.ContainerMapping.Equals(other.ContainerMapping) 
-                && this.Config.Equals(other.Config));
+            return (ContainerMapping.Equals(other.ContainerMapping)
+                    && Config.Equals(other.Config));
         }
 
         public bool Equals(InputForComputingCellGroups one, InputForComputingCellGroups two)
         {
-            if (object.ReferenceEquals(one, two))
+            if (ReferenceEquals(one, two))
             {
                 return true;
             }
-            if (object.ReferenceEquals(one, null) || object.ReferenceEquals(two, null))
+            if (ReferenceEquals(one, null)
+                || ReferenceEquals(two, null))
             {
                 return false;
             }
@@ -508,7 +497,7 @@ namespace System.Data.Entity.Core.Mapping {
 
         public override int GetHashCode()
         {
-            return this.ContainerMapping.GetHashCode();
+            return ContainerMapping.GetHashCode();
         }
 
         public override bool Equals(object obj)
@@ -525,7 +514,7 @@ namespace System.Data.Entity.Core.Mapping {
 
         public static bool operator ==(InputForComputingCellGroups input1, InputForComputingCellGroups input2)
         {
-            if (object.ReferenceEquals(input1, input2))
+            if (ReferenceEquals(input1, input2))
             {
                 return true;
             }
@@ -536,7 +525,6 @@ namespace System.Data.Entity.Core.Mapping {
         {
             return !(input1 == input2);
         }
-
     }
 
     internal struct OutputFromComputeCellGroups

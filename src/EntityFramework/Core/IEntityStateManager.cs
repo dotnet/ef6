@@ -1,17 +1,15 @@
-using System;
-using System.Data;
-using System.Data.Entity.Core.Objects;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Collections.Generic;
-
 namespace System.Data.Entity.Core
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
+
     /// <summary>
     /// Interface allowing an IEntityAdapter to analyze state/change tracking information maintained
     /// by a state manager in order to perform updates on a backing store (and push back the results
     /// of those updates).
     /// </summary>
-    internal interface IEntityStateManager {
+    internal interface IEntityStateManager
+    {
         IEnumerable<IEntityStateEntry> GetEntityStateEntries(EntityState state);
         IEnumerable<IEntityStateEntry> FindRelationshipsByKey(EntityKey key);
         IEntityStateEntry GetEntityStateEntry(EntityKey key);

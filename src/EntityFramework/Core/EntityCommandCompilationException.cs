@@ -1,11 +1,6 @@
-namespace System.Data.Entity.Core {
-    using System;
-    using System.IO;
-    using System.Data.Entity.Core.Common;
-    using System.Data.Common;
-    using System.Globalization;
+namespace System.Data.Entity.Core
+{
     using System.Runtime.Serialization;
-    using System.Security.Permissions;
 
     /// <summary>
     /// Represents a failure while trying to prepare or execute a CommandCompilation
@@ -15,17 +10,18 @@ namespace System.Data.Entity.Core {
     /// to execute statements.
     /// </summary>
     [Serializable]
-    public sealed class EntityCommandCompilationException : EntityException {
-
+    public sealed class EntityCommandCompilationException : EntityException
+    {
         private const int HResultCommandCompilation = -2146232005;
 
         #region Constructors
+
         /// <summary>
         /// initializes a new instance of EntityCommandCompilationException, no message, no inner exception.  Probably shouldn't 
         /// exist, but it makes FxCop happy.
         /// </summary>
         public EntityCommandCompilationException()
-            : base() {
+        {
             HResult = HResultCommandCompilation;
         }
 
@@ -34,7 +30,8 @@ namespace System.Data.Entity.Core {
         /// exist, but it makes FxCop happy.
         /// </summary>
         public EntityCommandCompilationException(string message)
-            : base(message) {
+            : base(message)
+        {
             HResult = HResultCommandCompilation;
         }
 
@@ -44,7 +41,8 @@ namespace System.Data.Entity.Core {
         /// <param name="message"></param>
         /// <param name="innerException"></param>
         public EntityCommandCompilationException(string message, Exception innerException)
-            : base(message, innerException) {
+            : base(message, innerException)
+        {
             HResult = HResultCommandCompilation;
         }
 
@@ -54,9 +52,11 @@ namespace System.Data.Entity.Core {
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
         private EntityCommandCompilationException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-            : base(serializationInfo, streamingContext) {
+            : base(serializationInfo, streamingContext)
+        {
             HResult = HResultCommandCompilation;
         }
+
         #endregion
     }
 }

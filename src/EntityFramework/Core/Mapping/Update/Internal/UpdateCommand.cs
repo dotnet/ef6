@@ -1,18 +1,12 @@
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using System.Globalization;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Objects;
-using System.Linq;
-using System.Data.Entity.Core.EntityClient;
-using System.Threading;
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+    using System.Threading;
+
     internal enum UpdateCommandKind
     {
         Dynamic,
@@ -54,29 +48,29 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// </summary>
         internal virtual EntitySet Table
         {
-            get
-            {
-                return null;
-            }
+            get { return null; }
         }
 
         /// <summary>
         /// Gets type of command.
         /// </summary>
-        internal abstract UpdateCommandKind Kind
-        {
-            get;
-        }
+        internal abstract UpdateCommandKind Kind { get; }
 
         /// <summary>
         /// Gets original values of row/entity handled by this command.
         /// </summary>
-        internal PropagatorResult OriginalValues { get { return m_originalValues; } }
+        internal PropagatorResult OriginalValues
+        {
+            get { return m_originalValues; }
+        }
 
         /// <summary>
         /// Gets current values of row/entity handled by this command.
         /// </summary>
-        internal PropagatorResult CurrentValues { get { return m_currentValues; } }
+        internal PropagatorResult CurrentValues
+        {
+            get { return m_currentValues; }
+        }
 
         /// <summary>
         /// Yields all state entries contributing to this command. Used for error reporting.
@@ -89,23 +83,26 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// Determines model level dependencies for the current command. Dependencies are based
         /// on the model operations performed by the command (adding or deleting entities or relationships).
         /// </summary>
-        internal void GetRequiredAndProducedEntities(UpdateTranslator translator,
+        internal void GetRequiredAndProducedEntities(
+            UpdateTranslator translator,
             KeyToListMap<EntityKey, UpdateCommand> addedEntities,
             KeyToListMap<EntityKey, UpdateCommand> deletedEntities,
             KeyToListMap<EntityKey, UpdateCommand> addedRelationships,
             KeyToListMap<EntityKey, UpdateCommand> deletedRelationships)
         {
-            IList<IEntityStateEntry> stateEntries = GetStateEntries(translator);
+            var stateEntries = GetStateEntries(translator);
 
-            foreach (IEntityStateEntry stateEntry in stateEntries)
+            foreach (var stateEntry in stateEntries)
             {
                 if (!stateEntry.IsRelationship)
                 {
-                    if (stateEntry.State == EntityState.Added)
+                    if (stateEntry.State
+                        == EntityState.Added)
                     {
                         addedEntities.Add(stateEntry.EntityKey, this);
                     }
-                    else if (stateEntry.State == EntityState.Deleted)
+                    else if (stateEntry.State
+                             == EntityState.Deleted)
                     {
                         deletedEntities.Add(stateEntry.EntityKey, this);
                     }
@@ -113,33 +110,33 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             // process foreign keys
-            if (null != this.OriginalValues)
+            if (null != OriginalValues)
             {
                 // if a foreign key being deleted, it 'frees' or 'produces' the referenced key
-                AddReferencedEntities(translator, this.OriginalValues, deletedRelationships);
+                AddReferencedEntities(translator, OriginalValues, deletedRelationships);
             }
-            if (null != this.CurrentValues)
+            if (null != CurrentValues)
             {
                 // if a foreign key is being added, if requires the referenced key
-                AddReferencedEntities(translator, this.CurrentValues, addedRelationships);
+                AddReferencedEntities(translator, CurrentValues, addedRelationships);
             }
 
             // process relationships
-            foreach (IEntityStateEntry stateEntry in stateEntries)
+            foreach (var stateEntry in stateEntries)
             {
                 if (stateEntry.IsRelationship)
                 {
                     // only worry about the relationship if it is being added or deleted
-                    bool isAdded = stateEntry.State == EntityState.Added;
+                    var isAdded = stateEntry.State == EntityState.Added;
                     if (isAdded || stateEntry.State == EntityState.Deleted)
                     {
-                        DbDataRecord record = isAdded ? (DbDataRecord)stateEntry.CurrentValues : stateEntry.OriginalValues;
+                        var record = isAdded ? stateEntry.CurrentValues : stateEntry.OriginalValues;
                         Debug.Assert(2 == record.FieldCount, "non-binary relationship?");
-                        EntityKey end1 = (EntityKey)record[0];
-                        EntityKey end2 = (EntityKey)record[1];
+                        var end1 = (EntityKey)record[0];
+                        var end2 = (EntityKey)record[1];
 
                         // relationships require the entity when they're added and free the entity when they're deleted...
-                        KeyToListMap<EntityKey, UpdateCommand> affected = isAdded ? addedRelationships : deletedRelationships;
+                        var affected = isAdded ? addedRelationships : deletedRelationships;
 
                         // both ends are being modified by the relationship
                         affected.Add(end1, this);
@@ -149,17 +146,20 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
         }
 
-        private void AddReferencedEntities(UpdateTranslator translator, PropagatorResult result, KeyToListMap<EntityKey, UpdateCommand> referencedEntities)
+        private void AddReferencedEntities(
+            UpdateTranslator translator, PropagatorResult result, KeyToListMap<EntityKey, UpdateCommand> referencedEntities)
         {
-            foreach (PropagatorResult property in result.GetMemberValues())
+            foreach (var property in result.GetMemberValues())
             {
-                if (property.IsSimple && property.Identifier != PropagatorResult.NullIdentifier &&
+                if (property.IsSimple && property.Identifier != PropagatorResult.NullIdentifier
+                    &&
                     (PropagatorFlags.ForeignKey == (property.PropagatorFlags & PropagatorFlags.ForeignKey)))
                 {
-                    foreach (int principal in translator.KeyManager.GetDirectReferences(property.Identifier))
+                    foreach (var principal in translator.KeyManager.GetDirectReferences(property.Identifier))
                     {
                         PropagatorResult owner;
-                        if (translator.KeyManager.TryGetIdentifierOwner(principal, out owner) &&
+                        if (translator.KeyManager.TryGetIdentifierOwner(principal, out owner)
+                            &&
                             null != owner.StateEntry)
                         {
                             Debug.Assert(!owner.StateEntry.IsRelationship, "owner must not be a relationship");
@@ -179,7 +179,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// OutputIdentifiers</param>
         /// <param name="generatedValues">Aggregator for server generated values.</param>
         /// <returns>Number of rows affected by the command.</returns>
-        internal abstract long Execute(UpdateTranslator translator, EntityConnection connection, Dictionary<int, object> identifierValues,
+        internal abstract long Execute(
+            UpdateTranslator translator, EntityConnection connection, Dictionary<int, object> identifierValues,
             List<KeyValuePair<PropagatorResult, object>> generatedValues);
 
         /// <summary>
@@ -207,32 +208,42 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             // If the commands are the same (by reference), return 0 immediately. Otherwise, we try to find (and eventually
             // force) an ordering between them by returning a value that is non-zero.
-            if (this.Equals(other)) { return 0; }
+            if (Equals(other))
+            {
+                return 0;
+            }
             Debug.Assert(null != other, "comparing to null UpdateCommand");
-            int result = (int)this.Kind - (int)other.Kind;
-            if (0 != result) { return result; }
+            var result = (int)Kind - (int)other.Kind;
+            if (0 != result)
+            {
+                return result;
+            }
 
             // defer to specific type for other comparisons...
             result = CompareToType(other);
-            if (0 != result) { return result; }
+            if (0 != result)
+            {
+                return result;
+            }
 
             // if the commands are indistinguishable, assign arbitrary identifiers to them to ensure consistent ordering
             unchecked
             {
-                if (this.m_orderingIdentifier == 0)
+                if (m_orderingIdentifier == 0)
                 {
-                    this.m_orderingIdentifier = Interlocked.Increment(ref s_orderingIdentifierCounter);
+                    m_orderingIdentifier = Interlocked.Increment(ref s_orderingIdentifierCounter);
                 }
                 if (other.m_orderingIdentifier == 0)
                 {
                     other.m_orderingIdentifier = Interlocked.Increment(ref s_orderingIdentifierCounter);
                 }
 
-                return this.m_orderingIdentifier - other.m_orderingIdentifier;
+                return m_orderingIdentifier - other.m_orderingIdentifier;
             }
         }
 
         #region IEquatable: note that we use reference equality
+
         public bool Equals(UpdateCommand other)
         {
             return base.Equals(other);
@@ -247,6 +258,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             return base.GetHashCode();
         }
+
         #endregion
     }
 }

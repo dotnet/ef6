@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Query.InternalTrees;
-
-namespace System.Data.Entity.Core.Query.PlanCompiler
+﻿namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Query.InternalTrees;
+
     /// <summary>
     /// Utility class for the methods shared among the classes comprising the plan compiler
     /// </summary>
@@ -26,7 +25,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         internal static bool IsRowTypeCaseOpWithNullability(CaseOp op, Node n, out bool thenClauseIsNull)
         {
-            thenClauseIsNull = false;  //any default value will do
+            thenClauseIsNull = false; //any default value will do
 
             if (!TypeSemantics.IsRowType(op.Type))
             {
@@ -38,18 +37,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             //All three types must be equal
-            if (!n.Child1.Op.Type.EdmEquals(op.Type) || !n.Child2.Op.Type.EdmEquals(op.Type))
+            if (!n.Child1.Op.Type.EdmEquals(op.Type)
+                || !n.Child2.Op.Type.EdmEquals(op.Type))
             {
                 return false;
             }
 
             //At least one of Child1 and Child2 needs to be a null
-            if (n.Child1.Op.OpType == OpType.Null)
+            if (n.Child1.Op.OpType
+                == OpType.Null)
             {
                 thenClauseIsNull = true;
                 return true;
             }
-            if (n.Child2.Op.OpType == OpType.Null)
+            if (n.Child2.Op.OpType
+                == OpType.Null)
             {
                 // thenClauseIsNull stays false
                 return true;
@@ -82,9 +84,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         internal static bool IsConstantBaseOp(OpType opType)
         {
             return opType == OpType.Constant ||
-                    opType == OpType.InternalConstant ||
-                    opType == OpType.Null ||
-                    opType == OpType.NullSentinel;
+                   opType == OpType.InternalConstant ||
+                   opType == OpType.Null ||
+                   opType == OpType.NullSentinel;
         }
 
         /// <summary>
@@ -103,15 +105,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         internal static Node CombinePredicates(Node predicate1, Node predicate2, Command command)
         {
-            IEnumerable<Node> andParts1 = BreakIntoAndParts(predicate1);
-            IEnumerable<Node> andParts2 = BreakIntoAndParts(predicate2);
+            var andParts1 = BreakIntoAndParts(predicate1);
+            var andParts2 = BreakIntoAndParts(predicate2);
 
-            Node result = predicate1;
+            var result = predicate1;
 
-            foreach (Node predicatePart2 in andParts2)
+            foreach (var predicatePart2 in andParts2)
             {
-                bool foundMatch = false;
-                foreach (Node predicatePart1 in andParts1)
+                var foundMatch = false;
+                foreach (var predicatePart1 in andParts1)
                 {
                     if (predicatePart1.IsEquivalent(predicatePart2))
                     {
@@ -139,9 +141,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="andParts"></param>
         private static IEnumerable<Node> BreakIntoAndParts(Node predicate)
         {
-            return Helpers.GetLeafNodes<Node>(predicate,
+            return Helpers.GetLeafNodes(
+                predicate,
                 node => (node.Op.OpType != OpType.And),
-                node => (new[] {node.Child0, node.Child1}));
+                node => (new[] { node.Child0, node.Child1 }));
         }
     }
 }

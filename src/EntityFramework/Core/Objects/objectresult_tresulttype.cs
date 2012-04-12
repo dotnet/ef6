@@ -1,23 +1,13 @@
 namespace System.Data.Entity.Core.Objects
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.ComponentModel;
-    using System.Data;
-    using System.Data.Entity.Core;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
-    using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Mapping;
-    using System.Data.Entity.Core.Objects.DataClasses;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq.Expressions;
     using System.Data.Entity.Core.Common.Internal.Materialization;
-        
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// This class implements IEnumerable of T and IDisposable. Instance of this class
     /// is returned from ObjectQuery&lt;T&gt;.Execute method.
@@ -44,7 +34,9 @@ namespace System.Data.Entity.Core.Objects
         {
         }
 
-        internal ObjectResult(Shaper<T> shaper, EntitySet singleEntitySet, TypeUsage resultItemType, bool readerOwned, NextResultGenerator nextResultGenerator, Action<object, EventArgs> onReaderDispose)
+        internal ObjectResult(
+            Shaper<T> shaper, EntitySet singleEntitySet, TypeUsage resultItemType, bool readerOwned, NextResultGenerator nextResultGenerator,
+            Action<object, EventArgs> onReaderDispose)
         {
             _shaper = shaper;
             _reader = _shaper.Reader;
@@ -71,9 +63,9 @@ namespace System.Data.Entity.Core.Objects
         {
             EnsureCanEnumerateResults();
 
-            Shaper<T> shaper = _shaper;
+            var shaper = _shaper;
             _shaper = null;
-            IEnumerator<T> result = shaper.GetEnumerator();
+            var result = shaper.GetEnumerator();
             return result;
         }
 
@@ -83,7 +75,7 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly")]
         public override void Dispose()
         {
-            DbDataReader reader = _reader;
+            var reader = _reader;
             _reader = null;
             _nextResultGenerator = null;
 
@@ -110,7 +102,7 @@ namespace System.Data.Entity.Core.Objects
 
         internal override IEnumerator GetEnumeratorInternal()
         {
-            return ((IEnumerable<T>)this).GetEnumerator();
+            return (this).GetEnumerator();
         }
 
         internal override IList GetIListSourceListInternal()
@@ -124,8 +116,9 @@ namespace System.Data.Entity.Core.Objects
             {
                 EnsureCanEnumerateResults();
 
-                bool forceReadOnly = this._shaper.MergeOption == MergeOption.NoTracking;
-                _cachedBindingList = ObjectViewFactory.CreateViewForQuery<T>(this._resultItemType, this, this._shaper.Context, forceReadOnly, this._singleEntitySet);
+                var forceReadOnly = _shaper.MergeOption == MergeOption.NoTracking;
+                _cachedBindingList = ObjectViewFactory.CreateViewForQuery(
+                    _resultItemType, this, _shaper.Context, forceReadOnly, _singleEntitySet);
             }
 
             return _cachedBindingList;

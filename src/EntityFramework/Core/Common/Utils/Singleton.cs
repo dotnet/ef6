@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Diagnostics;
-namespace System.Data.Entity.Core.Common.Utils
+﻿namespace System.Data.Entity.Core.Common.Utils
 {
+    using System.Threading;
+
     /// <summary>
     /// Allows for delayed creation of a singleton that can be used safely by multiple threads. 
     /// Instantiation of the singleton instance is not synchronized and may be invoked multiple times by different threads,
@@ -27,7 +26,7 @@ namespace System.Data.Entity.Core.Common.Utils
         internal Singleton(Func<TValue> function)
         {
             EntityUtil.CheckArgumentNull(function, "function");
-            this.valueProvider = function;
+            valueProvider = function;
         }
 
         /// <summary>
@@ -37,12 +36,12 @@ namespace System.Data.Entity.Core.Common.Utils
         {
             get
             {
-                TValue result = this.value; // reading of reference types is atomic.
+                var result = value; // reading of reference types is atomic.
                 if (result == null)
                 {
-                    TValue newValue = this.valueProvider();
-                    Interlocked.CompareExchange(ref this.value, newValue, null);
-                    result = this.value;
+                    var newValue = valueProvider();
+                    Interlocked.CompareExchange(ref value, newValue, null);
+                    result = value;
                 }
                 return result;
             }

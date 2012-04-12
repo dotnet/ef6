@@ -1,10 +1,5 @@
-using System;
-using System.Data;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     /// This class encapsulates the error information for a generic EDM error.
     /// </summary>
@@ -12,10 +7,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public abstract class EdmError
     {
         #region Instance Fields
-        private string _message = null;
+
+        private readonly string _message;
+
         #endregion
 
         #region Constructors
+
         /// <summary>
         /// Constructs a EdmSchemaError object.
         /// </summary>
@@ -27,20 +25,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
             EntityUtil.CheckStringArgument(message, "message");
             _message = message;
         }
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets the error message.
         /// </summary>
         public string Message
         {
-            get
-            {
-                return _message;
-            }
+            get { return _message; }
         }
-        #endregion
 
+        #endregion
     }
 }

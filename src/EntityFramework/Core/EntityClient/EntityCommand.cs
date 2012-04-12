@@ -2,9 +2,6 @@ namespace System.Data.Entity.Core.EntityClient
 {
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Data;
-    using System.Data.Entity.Core;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
@@ -12,6 +9,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.Common.QueryCache;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -22,13 +20,14 @@ namespace System.Data.Entity.Core.EntityClient
     public sealed class EntityCommand : DbCommand
     {
         #region Fields
+
         private const int InvalidCloseCount = -1;
 
         private bool _designTimeVisible;
         private string _esqlCommandText;
         private EntityConnection _connection;
         private DbCommandTree _preparedCommandTree;
-        private EntityParameterCollection _parameters;
+        private readonly EntityParameterCollection _parameters;
         private int? _commandTimeout;
         private CommandType _commandType;
         private EntityTransaction _transaction;
@@ -39,6 +38,7 @@ namespace System.Data.Entity.Core.EntityClient
         private DbDataReader _dataReader;
         private bool _enableQueryPlanCaching;
         private DbCommand _storeProviderCommand;
+
         #endregion
 
         /// <summary>
@@ -49,15 +49,15 @@ namespace System.Data.Entity.Core.EntityClient
             GC.SuppressFinalize(this);
 
             // Initalize the member field with proper default values
-            this._designTimeVisible = true;
-            this._commandType = CommandType.Text;
-            this._updatedRowSource = UpdateRowSource.Both;
-            this._parameters = new EntityParameterCollection();
+            _designTimeVisible = true;
+            _commandType = CommandType.Text;
+            _updatedRowSource = UpdateRowSource.Both;
+            _parameters = new EntityParameterCollection();
 
             // Future Enhancement: (See SQLPT #300004256) At some point it would be  
             // really nice to read defaults from a global configuration, but we're not 
             // doing that today.  
-            this._enableQueryPlanCaching = true;
+            _enableQueryPlanCaching = true;
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace System.Data.Entity.Core.EntityClient
             : this()
         {
             // Assign other member fields from the parameters
-            this._esqlCommandText = statement;
+            _esqlCommandText = statement;
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace System.Data.Entity.Core.EntityClient
             : this(statement)
         {
             // Assign other member fields from the parameters
-            this._connection = connection;
+            _connection = connection;
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace System.Data.Entity.Core.EntityClient
             : this(statement, connection)
         {
             // Assign other member fields from the parameters
-            this._transaction = transaction;
+            _transaction = transaction;
         }
 
         /// <summary>
@@ -104,21 +104,21 @@ namespace System.Data.Entity.Core.EntityClient
             : this()
         {
             // Assign other member fields from the parameters
-            this._commandDefinition = commandDefinition; 
-            this._parameters = new EntityParameterCollection();
+            _commandDefinition = commandDefinition;
+            _parameters = new EntityParameterCollection();
 
             // Make copies of the parameters
-            foreach (EntityParameter parameter in commandDefinition.Parameters)
+            foreach (var parameter in commandDefinition.Parameters)
             {
-                this._parameters.Add(parameter.Clone());
+                _parameters.Add(parameter.Clone());
             }
 
             // Reset the dirty flag that was set to true when the parameters were added so that it won't say
             // it's dirty to start with
-            this._parameters.ResetIsDirty();
+            _parameters.ResetIsDirty();
 
             // Track the fact that this command was created from and represents an already prepared command definition
-            this._isCommandDefinitionBased = true;
+            _isCommandDefinitionBased = true;
         }
 
         /// <summary>
@@ -127,10 +127,10 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <param name="connection">The connection against which this EntityCommand should execute</param>
         /// <param name="commandDefinition">The prepared command definition that can be executed using this EntityCommand</param>
-        internal EntityCommand(EntityConnection connection, EntityCommandDefinition entityCommandDefinition )
+        internal EntityCommand(EntityConnection connection, EntityCommandDefinition entityCommandDefinition)
             : this(entityCommandDefinition)
         {
-            this._connection = connection;
+            _connection = connection;
         }
 
         /// <summary>
@@ -138,22 +138,19 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public new EntityConnection Connection
         {
-            get
-            {
-                return this._connection;
-            }
+            get { return _connection; }
             set
             {
                 ThrowIfDataReaderIsOpen();
-                if (this._connection != value)
+                if (_connection != value)
                 {
-                    if (null != this._connection)
+                    if (null != _connection)
                     {
                         Unprepare();
                     }
-                    this._connection = value;
+                    _connection = value;
 
-                    this._transaction = null;
+                    _transaction = null;
                 }
             }
         }
@@ -163,14 +160,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         protected override DbConnection DbConnection
         {
-            get
-            {
-                return this.Connection;
-            }
-            set
-            {
-                this.Connection = (EntityConnection)value;
-            }
+            get { return Connection; }
+            set { Connection = (EntityConnection)value; }
         }
 
         /// <summary>
@@ -181,29 +172,33 @@ namespace System.Data.Entity.Core.EntityClient
             get
             {
                 // If the user set the command tree previously, then we cannot retrieve the command text
-                if (this._commandTreeSetByUser != null)
-                    throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.EntityClient_CannotGetCommandText);
+                if (_commandTreeSetByUser != null)
+                {
+                    throw EntityUtil.InvalidOperation(Strings.EntityClient_CannotGetCommandText);
+                }
 
-                return this._esqlCommandText ?? "";
+                return _esqlCommandText ?? "";
             }
             set
             {
                 ThrowIfDataReaderIsOpen();
 
                 // If the user set the command tree previously, then we cannot set the command text
-                if (this._commandTreeSetByUser != null)
-                    throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.EntityClient_CannotSetCommandText);
-
-                if (this._esqlCommandText != value)
+                if (_commandTreeSetByUser != null)
                 {
-                    this._esqlCommandText = value;
+                    throw EntityUtil.InvalidOperation(Strings.EntityClient_CannotSetCommandText);
+                }
+
+                if (_esqlCommandText != value)
+                {
+                    _esqlCommandText = value;
 
                     // Wipe out any preparation work we have done
                     Unprepare();
 
                     // If the user-defined command text or tree has been set (even to null or empty),
                     // then this command can no longer be considered command definition-based
-                    this._isCommandDefinitionBased = false;
+                    _isCommandDefinitionBased = false;
                 }
             }
         }
@@ -216,18 +211,22 @@ namespace System.Data.Entity.Core.EntityClient
             get
             {
                 // If the user set the command text previously, then we cannot retrieve the command tree
-                if (!string.IsNullOrEmpty(this._esqlCommandText))
-                    throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.EntityClient_CannotGetCommandTree);
+                if (!string.IsNullOrEmpty(_esqlCommandText))
+                {
+                    throw EntityUtil.InvalidOperation(Strings.EntityClient_CannotGetCommandTree);
+                }
 
-                return this._commandTreeSetByUser;
+                return _commandTreeSetByUser;
             }
             set
             {
                 ThrowIfDataReaderIsOpen();
 
                 // If the user set the command text previously, then we cannot set the command tree
-                if (!string.IsNullOrEmpty(this._esqlCommandText))
-                    throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.EntityClient_CannotSetCommandTree);
+                if (!string.IsNullOrEmpty(_esqlCommandText))
+                {
+                    throw EntityUtil.InvalidOperation(Strings.EntityClient_CannotSetCommandTree);
+                }
 
                 // If the command type is not Text, CommandTree cannot be set
                 if (CommandType.Text != CommandType)
@@ -235,16 +234,16 @@ namespace System.Data.Entity.Core.EntityClient
                     throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.CommandTreeOnStoredProcedureEntityCommand);
                 }
 
-                if (this._commandTreeSetByUser != value)
+                if (_commandTreeSetByUser != value)
                 {
-                    this._commandTreeSetByUser = value;
+                    _commandTreeSetByUser = value;
 
                     // Wipe out any preparation work we have done
                     Unprepare();
 
                     // If the user-defined command text or tree has been set (even to null or empty),
                     // then this command can no longer be considered command definition-based
-                    this._isCommandDefinitionBased = false;
+                    _isCommandDefinitionBased = false;
                 }
             }
         }
@@ -257,15 +256,16 @@ namespace System.Data.Entity.Core.EntityClient
             get
             {
                 // Returns the timeout value if it has been set
-                if (this._commandTimeout != null)
+                if (_commandTimeout != null)
                 {
-                    return this._commandTimeout.Value;
+                    return _commandTimeout.Value;
                 }
-                
+
                 // Create a provider command object just so we can ask the default timeout
-                if (this._connection != null && this._connection.StoreProviderFactory != null)
+                if (_connection != null
+                    && _connection.StoreProviderFactory != null)
                 {
-                    DbCommand storeCommand = this._connection.StoreProviderFactory.CreateCommand();
+                    var storeCommand = _connection.StoreProviderFactory.CreateCommand();
                     if (storeCommand != null)
                     {
                         return storeCommand.CommandTimeout;
@@ -277,7 +277,7 @@ namespace System.Data.Entity.Core.EntityClient
             set
             {
                 ThrowIfDataReaderIsOpen();
-                this._commandTimeout = value;
+                _commandTimeout = value;
             }
         }
 
@@ -286,21 +286,19 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override CommandType CommandType
         {
-            get
-            {
-                return this._commandType;
-            }
+            get { return _commandType; }
             set
             {
                 ThrowIfDataReaderIsOpen();
 
                 // For now, command type other than Text is not supported
-                if (value != CommandType.Text && value != CommandType.StoredProcedure)
+                if (value != CommandType.Text
+                    && value != CommandType.StoredProcedure)
                 {
-                    throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.EntityClient_UnsupportedCommandType);
+                    throw EntityUtil.NotSupported(Strings.EntityClient_UnsupportedCommandType);
                 }
 
-                this._commandType = value;
+                _commandType = value;
             }
         }
 
@@ -309,10 +307,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public new EntityParameterCollection Parameters
         {
-            get
-            {
-                return this._parameters;
-            }
+            get { return _parameters; }
         }
 
         /// <summary>
@@ -320,10 +315,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         protected override DbParameterCollection DbParameterCollection
         {
-            get
-            {
-                return this.Parameters;
-            }
+            get { return Parameters; }
         }
 
         /// <summary>
@@ -331,14 +323,12 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public new EntityTransaction Transaction
         {
-            get
-            {
-                return this._transaction;   // SQLBU 496829
+            get { return _transaction; // SQLBU 496829
             }
             set
             {
                 ThrowIfDataReaderIsOpen();
-                this._transaction = value;
+                _transaction = value;
             }
         }
 
@@ -347,14 +337,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         protected override DbTransaction DbTransaction
         {
-            get
-            {
-                return this.Transaction;
-            }
-            set
-            {
-                this.Transaction = (EntityTransaction)value;
-            }
+            get { return Transaction; }
+            set { Transaction = (EntityTransaction)value; }
         }
 
         /// <summary>
@@ -362,14 +346,11 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override UpdateRowSource UpdatedRowSource
         {
-            get
-            {
-                return this._updatedRowSource;
-            }
+            get { return _updatedRowSource; }
             set
             {
                 ThrowIfDataReaderIsOpen();
-                this._updatedRowSource = value;
+                _updatedRowSource = value;
             }
         }
 
@@ -378,14 +359,11 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override bool DesignTimeVisible
         {
-            get
-            {
-                return this._designTimeVisible;
-            }
+            get { return _designTimeVisible; }
             set
             {
                 ThrowIfDataReaderIsOpen();
-                this._designTimeVisible = value;
+                _designTimeVisible = value;
                 TypeDescriptor.Refresh(this);
             }
         }
@@ -395,15 +373,12 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public bool EnablePlanCaching
         {
-            get
-            {
-                return this._enableQueryPlanCaching;
-            }
+            get { return _enableQueryPlanCaching; }
 
             set
             {
                 ThrowIfDataReaderIsOpen();
-                this._enableQueryPlanCaching = value;
+                _enableQueryPlanCaching = value;
             }
         }
 
@@ -453,7 +428,7 @@ namespace System.Data.Entity.Core.EntityClient
         {
             Prepare(); // prepare the query first
 
-            EntityDataReader reader = new EntityDataReader(this, _commandDefinition.Execute(this, behavior), behavior);
+            var reader = new EntityDataReader(this, _commandDefinition.Execute(this, behavior), behavior);
             _dataReader = reader;
             return reader;
         }
@@ -474,12 +449,13 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>Number of rows affected</returns>
         public override int ExecuteNonQuery()
         {
-            return ExecuteScalar<int>(reader => 
-            {
-                // consume reader before checking records affected
-                CommandHelper.ConsumeReader(reader);
-                return reader.RecordsAffected;
-            });
+            return ExecuteScalar(
+                reader =>
+                    {
+                        // consume reader before checking records affected
+                        CommandHelper.ConsumeReader(reader);
+                        return reader.RecordsAffected;
+                    });
         }
 
         /// <summary>
@@ -488,13 +464,14 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The result in the first column in the first row</returns>
         public override object ExecuteScalar()
         {
-            return ExecuteScalar<object>(reader => 
-            {
-                object result = reader.Read() ? reader.GetValue(0) : null;
-                // consume reader before retrieving parameters
-                CommandHelper.ConsumeReader(reader);
-                return result;
-            });
+            return ExecuteScalar(
+                reader =>
+                    {
+                        var result = reader.Read() ? reader.GetValue(0) : null;
+                        // consume reader before retrieving parameters
+                        CommandHelper.ConsumeReader(reader);
+                        return result;
+                    });
         }
 
         /// <summary>
@@ -503,7 +480,7 @@ namespace System.Data.Entity.Core.EntityClient
         private T_Result ExecuteScalar<T_Result>(Func<DbDataReader, T_Result> resultSelector)
         {
             T_Result result;
-            using (EntityDataReader reader = ExecuteReader(CommandBehavior.SequentialAccess))
+            using (var reader = ExecuteReader(CommandBehavior.SequentialAccess))
             {
                 result = resultSelector(reader);
             }
@@ -515,11 +492,11 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         internal void Unprepare()
         {
-            this._commandDefinition = null;
-            this._preparedCommandTree = null;
+            _commandDefinition = null;
+            _preparedCommandTree = null;
 
             // Clear the dirty flag on the parameters and parameter collection
-            _parameters.ResetIsDirty();            
+            _parameters.ResetIsDirty();
         }
 
         /// <summary>
@@ -555,46 +532,45 @@ namespace System.Data.Entity.Core.EntityClient
         private void MakeCommandTree()
         {
             // We must have a connection before we come here
-            Debug.Assert(this._connection != null);
+            Debug.Assert(_connection != null);
 
             // Do the work only if we don't have a command tree yet
-            if (this._preparedCommandTree == null)
+            if (_preparedCommandTree == null)
             {
                 DbCommandTree resultTree = null;
-                if (this._commandTreeSetByUser != null)
+                if (_commandTreeSetByUser != null)
                 {
-                    resultTree = this._commandTreeSetByUser;
+                    resultTree = _commandTreeSetByUser;
                 }
-                else
-                if (CommandType.Text == CommandType)
+                else if (CommandType.Text == CommandType)
                 {
-                    if (!string.IsNullOrEmpty(this._esqlCommandText))
+                    if (!string.IsNullOrEmpty(_esqlCommandText))
                     {
                         // The perspective to be used for the query compilation
-                        Perspective perspective = (Perspective)new ModelPerspective(_connection.GetMetadataWorkspace());
+                        Perspective perspective = new ModelPerspective(_connection.GetMetadataWorkspace());
 
                         // get a dictionary of names and typeusage from entity parameter collection
-                        Dictionary<string, TypeUsage> queryParams = GetParameterTypeUsage();
+                        var queryParams = GetParameterTypeUsage();
 
                         resultTree = CqlQuery.Compile(
-                            this._esqlCommandText, 
-                            perspective, 
-                            null /*parser option - use default*/, 
+                            _esqlCommandText,
+                            perspective,
+                            null /*parser option - use default*/,
                             queryParams.Select(paramInfo => paramInfo.Value.Parameter(paramInfo.Key))).CommandTree;
                     }
                     else
                     {
                         // We have no command text, no command tree, so throw an exception
-                        if (this._isCommandDefinitionBased)
+                        if (_isCommandDefinitionBased)
                         {
                             // This command was based on a prepared command definition and has no command text,
                             // so reprepare is not possible. To create a new command with different parameters
                             // requires creating a new entity command definition and calling it's CreateCommand method.
-                            throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.EntityClient_CannotReprepareCommandDefinitionBasedCommand);
+                            throw EntityUtil.InvalidOperation(Strings.EntityClient_CannotReprepareCommandDefinitionBasedCommand);
                         }
                         else
                         {
-                            throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.EntityClient_NoCommandText);
+                            throw EntityUtil.InvalidOperation(Strings.EntityClient_NoCommandText);
                         }
                     }
                 }
@@ -602,12 +578,12 @@ namespace System.Data.Entity.Core.EntityClient
                 {
                     // get a dictionary of names and typeusage from entity parameter collection
                     IEnumerable<KeyValuePair<string, TypeUsage>> queryParams = GetParameterTypeUsage();
-                    EdmFunction function = DetermineFunctionImport();
-                    resultTree = new DbFunctionCommandTree(this.Connection.GetMetadataWorkspace(), DataSpace.CSpace, function, null, queryParams);
+                    var function = DetermineFunctionImport();
+                    resultTree = new DbFunctionCommandTree(Connection.GetMetadataWorkspace(), DataSpace.CSpace, function, null, queryParams);
                 }
 
                 // After everything is good and succeeded, assign the result to our field
-                this._preparedCommandTree = resultTree;
+                _preparedCommandTree = resultTree;
             }
         }
 
@@ -615,21 +591,22 @@ namespace System.Data.Entity.Core.EntityClient
         // effects: determines the EntityContainer function import referenced by this.CommandText
         private EdmFunction DetermineFunctionImport()
         {
-            Debug.Assert(CommandType.StoredProcedure == this.CommandType);
+            Debug.Assert(CommandType.StoredProcedure == CommandType);
 
-            if (string.IsNullOrEmpty(this.CommandText) ||
-                string.IsNullOrEmpty(this.CommandText.Trim()))
+            if (string.IsNullOrEmpty(CommandText)
+                ||
+                string.IsNullOrEmpty(CommandText.Trim()))
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.EntityClient_FunctionImportEmptyCommandText);
+                throw EntityUtil.InvalidOperation(Strings.EntityClient_FunctionImportEmptyCommandText);
             }
 
-            MetadataWorkspace workspace = _connection.GetMetadataWorkspace();
+            var workspace = _connection.GetMetadataWorkspace();
 
             // parse the command text
             string containerName;
             string functionImportName;
             string defaultContainerName = null; // no default container in EntityCommand
-            CommandHelper.ParseFunctionImportCommandText(this.CommandText, defaultContainerName, out containerName, out functionImportName);
+            CommandHelper.ParseFunctionImportCommandText(CommandText, defaultContainerName, out containerName, out functionImportName);
 
             return CommandHelper.FindFunctionImport(_connection.GetMetadataWorkspace(), containerName, functionImportName);
         }
@@ -641,7 +618,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>the command definition</returns>
         internal EntityCommandDefinition GetCommandDefinition()
         {
-            EntityCommandDefinition entityCommandDefinition = _commandDefinition;
+            var entityCommandDefinition = _commandDefinition;
 
             // Construct the command definition using no special options;
             if (null == entityCommandDefinition)
@@ -668,14 +645,14 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <returns></returns>
         [Browsable(false)]
-        public string ToTraceString() 
+        public string ToTraceString()
         {
             CheckConnectionPresent();
 
             InnerPrepare();
 
-            EntityCommandDefinition commandDefinition = _commandDefinition;
-            if (null != commandDefinition) 
+            var commandDefinition = _commandDefinition;
+            if (null != commandDefinition)
             {
                 return commandDefinition.ToTraceString();
             }
@@ -687,7 +664,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <param name="entityCommandDefinition">out param. returns the entitycommanddefinition for a given cache key</param>
         /// <returns>true if a match is found in cache, false otherwise</returns>
-        private bool TryGetEntityCommandDefinitionFromQueryCache( out EntityCommandDefinition entityCommandDefinition )
+        private bool TryGetEntityCommandDefinitionFromQueryCache(out EntityCommandDefinition entityCommandDefinition)
         {
             Debug.Assert(null != _connection, "Connection must not be null at this point");
             entityCommandDefinition = null;
@@ -695,7 +672,8 @@ namespace System.Data.Entity.Core.EntityClient
             //
             // if EnableQueryCaching is false, then just return to force the CommandDefinition to be created
             //
-            if (!this._enableQueryPlanCaching || string.IsNullOrEmpty(this._esqlCommandText))
+            if (!_enableQueryPlanCaching
+                || string.IsNullOrEmpty(_esqlCommandText))
             {
                 return false;
             }
@@ -703,13 +681,13 @@ namespace System.Data.Entity.Core.EntityClient
             //
             // Create cache key
             //
-            EntityClientCacheKey queryCacheKey = new EntityClientCacheKey(this);
+            var queryCacheKey = new EntityClientCacheKey(this);
 
             //
             // Try cache lookup
             //
-            QueryCacheManager queryCacheManager = _connection.GetMetadataWorkspace().GetQueryCacheManager();
-            Debug.Assert(null != queryCacheManager,"QuerycacheManager instance cannot be null");
+            var queryCacheManager = _connection.GetMetadataWorkspace().GetQueryCacheManager();
+            Debug.Assert(null != queryCacheManager, "QuerycacheManager instance cannot be null");
             if (!queryCacheManager.TryCacheLookup(queryCacheKey, out entityCommandDefinition))
             {
                 //
@@ -726,7 +704,7 @@ namespace System.Data.Entity.Core.EntityClient
                     entityCommandDefinition = (EntityCommandDefinition)outQueryCacheEntry.GetTarget();
                 }
             }
-            
+
             Debug.Assert(null != entityCommandDefinition, "out entityCommandDefinition must not be null");
 
             return true;
@@ -738,24 +716,24 @@ namespace System.Data.Entity.Core.EntityClient
         /// Note: This method must not be side-effecting of the command
         /// </summary>
         /// <returns>the command definition</returns>
-        private EntityCommandDefinition CreateCommandDefinition() 
+        private EntityCommandDefinition CreateCommandDefinition()
         {
             MakeCommandTree();
             // Always check the CQT metadata against the connection metadata (internally, CQT already
             // validates metadata consistency)
-            if (!_preparedCommandTree.MetadataWorkspace.IsMetadataWorkspaceCSCompatible(this.Connection.GetMetadataWorkspace()))
+            if (!_preparedCommandTree.MetadataWorkspace.IsMetadataWorkspaceCSCompatible(Connection.GetMetadataWorkspace()))
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.EntityClient_CommandTreeMetadataIncompatible);
+                throw EntityUtil.InvalidOperation(Strings.EntityClient_CommandTreeMetadataIncompatible);
             }
-            EntityCommandDefinition result = EntityProviderServices.CreateCommandDefinition(this._connection.StoreProviderFactory, this._preparedCommandTree);
+            var result = EntityProviderServices.CreateCommandDefinition(_connection.StoreProviderFactory, _preparedCommandTree);
             return result;
         }
 
         private void CheckConnectionPresent()
         {
-            if (this._connection == null)
+            if (_connection == null)
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.EntityClient_NoConnectionForCommand);
+                throw EntityUtil.InvalidOperation(Strings.EntityClient_NoConnectionForCommand);
             }
         }
 
@@ -767,18 +745,20 @@ namespace System.Data.Entity.Core.EntityClient
             // Check that we have a connection
             CheckConnectionPresent();
 
-            if (this._connection.StoreProviderFactory == null || this._connection.StoreConnection == null)
+            if (_connection.StoreProviderFactory == null
+                || _connection.StoreConnection == null)
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.EntityClient_ConnectionStringNeededBeforeOperation);
+                throw EntityUtil.InvalidOperation(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
             }
 
             // Make sure the connection is not closed or broken
-            if ((this._connection.State == ConnectionState.Closed) || (this._connection.State == ConnectionState.Broken))
+            if ((_connection.State == ConnectionState.Closed)
+                || (_connection.State == ConnectionState.Broken))
             {
-                string message = System.Data.Entity.Resources.Strings.EntityClient_ExecutingOnClosedConnection(
-                    this._connection.State == ConnectionState.Closed ?
-                    System.Data.Entity.Resources.Strings.EntityClient_ConnectionStateClosed :
-                    System.Data.Entity.Resources.Strings.EntityClient_ConnectionStateBroken);
+                var message = Strings.EntityClient_ExecutingOnClosedConnection(
+                    _connection.State == ConnectionState.Closed
+                        ? Strings.EntityClient_ConnectionStateClosed
+                        : Strings.EntityClient_ConnectionStateBroken);
                 throw EntityUtil.InvalidOperation(message);
             }
         }
@@ -788,9 +768,9 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         private void ThrowIfDataReaderIsOpen()
         {
-            if (this._dataReader != null)
+            if (_dataReader != null)
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.EntityClient_DataReaderIsStillOpen);
+                throw EntityUtil.InvalidOperation(Strings.EntityClient_DataReaderIsStillOpen);
             }
         }
 
@@ -803,28 +783,30 @@ namespace System.Data.Entity.Core.EntityClient
         {
             Debug.Assert(null != _parameters, "_parameters must not be null");
             // Extract type metadata objects from the parameters to be used by CqlQuery.Compile
-            Dictionary<string, TypeUsage> queryParams = new Dictionary<string, TypeUsage>(_parameters.Count);
-            foreach (EntityParameter parameter in this._parameters)
+            var queryParams = new Dictionary<string, TypeUsage>(_parameters.Count);
+            foreach (EntityParameter parameter in _parameters)
             {
                 // Validate that the parameter name has the format: A character followed by alphanumerics or
                 // underscores
-                string parameterName = parameter.ParameterName;
+                var parameterName = parameter.ParameterName;
                 if (string.IsNullOrEmpty(parameterName))
                 {
-                    throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.EntityClient_EmptyParameterName);
+                    throw EntityUtil.InvalidOperation(Strings.EntityClient_EmptyParameterName);
                 }
 
                 // Check each parameter to make sure it's an input parameter, currently EntityCommand doesn't support
                 // anything else
-                if (this.CommandType == CommandType.Text && parameter.Direction != ParameterDirection.Input)
+                if (CommandType == CommandType.Text
+                    && parameter.Direction != ParameterDirection.Input)
                 {
-                    throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.EntityClient_InvalidParameterDirection(parameter.ParameterName));
+                    throw EntityUtil.InvalidOperation(Strings.EntityClient_InvalidParameterDirection(parameter.ParameterName));
                 }
 
                 // Checking that we can deduce the type from the parameter if the type is not set
-                if (parameter.EdmType == null && parameter.DbType == DbType.Object && (parameter.Value == null || parameter.Value is DBNull))
+                if (parameter.EdmType == null && parameter.DbType == DbType.Object
+                    && (parameter.Value == null || parameter.Value is DBNull))
                 {
-                    throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.EntityClient_UnknownParameterType(parameterName));
+                    throw EntityUtil.InvalidOperation(Strings.EntityClient_UnknownParameterType(parameterName));
                 }
 
                 // Validate that the parameter has an appropriate type and value
@@ -839,10 +821,10 @@ namespace System.Data.Entity.Core.EntityClient
                 }
                 catch (ArgumentException e)
                 {
-                    throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.EntityClient_DuplicateParameterNames(parameter.ParameterName), e);
+                    throw EntityUtil.InvalidOperation(Strings.EntityClient_DuplicateParameterNames(parameter.ParameterName), e);
                 }
             }
-            
+
             return queryParams;
         }
 
@@ -852,16 +834,16 @@ namespace System.Data.Entity.Core.EntityClient
         internal void NotifyDataReaderClosing()
         {
             // Disassociating the data reader with this command
-            this._dataReader = null;
+            _dataReader = null;
 
             if (null != _storeProviderCommand)
             {
                 CommandHelper.SetEntityParameterValues(this, _storeProviderCommand, _connection);
                 _storeProviderCommand = null;
             }
-            if (null != this.OnDataReaderClosing)
+            if (null != OnDataReaderClosing)
             {
-                this.OnDataReaderClosing(this, new EventArgs());
+                OnDataReaderClosing(this, new EventArgs());
             }
         }
 

@@ -1,21 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using System.Diagnostics;
-
-namespace System.Data.Entity.Core.Metadata.Edm
+﻿namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics;
+
     internal sealed class KnownAssemblyEntry
     {
         private readonly AssemblyCacheEntry _cacheEntry;
-        private bool _referencedAssembliesAreLoaded;
-        private bool _seenWithEdmItemCollection;
 
         internal KnownAssemblyEntry(AssemblyCacheEntry cacheEntry, bool seenWithEdmItemCollection)
         {
             Debug.Assert(cacheEntry != null, "Found a null cacheEntry");
             _cacheEntry = cacheEntry;
-            _referencedAssembliesAreLoaded = false;
-            _seenWithEdmItemCollection = seenWithEdmItemCollection;
+            ReferencedAssembliesAreLoaded = false;
+            SeenWithEdmItemCollection = seenWithEdmItemCollection;
         }
 
         internal AssemblyCacheEntry CacheEntry
@@ -23,17 +19,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _cacheEntry; }
         }
 
-        public bool ReferencedAssembliesAreLoaded
-        {
-            get { return _referencedAssembliesAreLoaded; }
-            set { _referencedAssembliesAreLoaded = value; }
-        }
+        public bool ReferencedAssembliesAreLoaded { get; set; }
 
-        public bool SeenWithEdmItemCollection
-        {
-            get { return _seenWithEdmItemCollection; }
-            set { _seenWithEdmItemCollection = value; }
-        }
+        public bool SeenWithEdmItemCollection { get; set; }
 
         public bool HaveSeenInCompatibleContext(object loaderCookie, EdmItemCollection itemCollection)
         {

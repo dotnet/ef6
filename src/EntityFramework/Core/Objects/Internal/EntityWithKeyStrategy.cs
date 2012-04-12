@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Data;
-using System.Data.Entity.Core.Objects.DataClasses;
-using System.Diagnostics;
-
-namespace System.Data.Entity.Core.Objects.Internal
+﻿namespace System.Data.Entity.Core.Objects.Internal
 {
+    using System.Data.Entity.Core.Objects.DataClasses;
+
     /// <summary>
     /// Implementor of IEntityKeyStrategy for entities that implement IEntityWithKey.  Getting and setting
     /// the key is deferred to the entity itself.
     /// </summary>
     internal sealed class EntityWithKeyStrategy : IEntityKeyStrategy
     {
-        private IEntityWithKey _entity;
+        private readonly IEntityWithKey _entity;
 
         /// <summary>
         /// Creates a strategy object for the given entity.  Keys will be stored in the entity.

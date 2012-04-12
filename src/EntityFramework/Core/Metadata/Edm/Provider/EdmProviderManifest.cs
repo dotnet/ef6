@@ -1,13 +1,13 @@
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Spatial;
-using System.Diagnostics;
-using System.Threading;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Spatial;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Threading;
+    using System.Xml;
 
     internal class EdmProviderManifest : DbProviderManifest
     {
@@ -15,16 +15,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// The ConcurrencyMode Facet Name
         /// </summary>
         internal const string ConcurrencyModeFacetName = "ConcurrencyMode";
+
         /// <summary>
         /// The StoreGeneratedPattern Facet Name
         /// </summary>
         internal const string StoreGeneratedPatternFacetName = "StoreGeneratedPattern";
-        private Dictionary<PrimitiveType, System.Collections.ObjectModel.ReadOnlyCollection<FacetDescription>> _facetDescriptions;
-        private System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType> _primitiveTypes;
-        private System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction> _functions;
-        private static EdmProviderManifest _instance = new EdmProviderManifest();
-        private System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType>[] _promotionTypes;
-        static TypeUsage[] _canonicalModelTypes;
+
+        private Dictionary<PrimitiveType, ReadOnlyCollection<FacetDescription>> _facetDescriptions;
+        private ReadOnlyCollection<PrimitiveType> _primitiveTypes;
+        private ReadOnlyCollection<EdmFunction> _functions;
+        private static readonly EdmProviderManifest _instance = new EdmProviderManifest();
+        private ReadOnlyCollection<PrimitiveType>[] _promotionTypes;
+        private static TypeUsage[] _canonicalModelTypes;
 
         internal const byte MaximumDecimalPrecision = Byte.MaxValue;
         internal const byte MaximumDateTimePrecision = Byte.MaxValue;
@@ -41,10 +43,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal static EdmProviderManifest Instance
         {
-            get
-            {
-                return _instance;
-            }
+            get { return _instance; }
         }
 
         /// <summary>
@@ -68,7 +67,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Returns the list of all the canonical functions
         /// </summary>
         /// <returns></returns>
-        public override System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction> GetStoreFunctions()
+        public override ReadOnlyCollection<EdmFunction> GetStoreFunctions()
         {
             InitializeCanonicalFunctions();
             return _functions;
@@ -79,14 +78,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="type">the type to return FacetDescriptions for.</param>
         /// <returns>The FacetDescriptions for the type given.</returns>
-        public override System.Collections.ObjectModel.ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType type)
+        public override ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType type)
         {
             Debug.Assert(type is PrimitiveType, "EdmProviderManifest.GetFacetDescriptions(): Argument is not a PrimitiveType");
 
             InitializeFacetDescriptions();
 
             // Some types may not have facets, so just try to get them, if there aren't any, just return an empty list
-            System.Collections.ObjectModel.ReadOnlyCollection<FacetDescription> collection = null;
+            ReadOnlyCollection<FacetDescription> collection = null;
             if (_facetDescriptions.TryGetValue(type as PrimitiveType, out collection))
             {
                 return collection;
@@ -115,7 +114,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return;
             }
 
-            PrimitiveType[] primitiveTypes = new PrimitiveType[EdmConstants.NumPrimitiveTypes];
+            var primitiveTypes = new PrimitiveType[EdmConstants.NumPrimitiveTypes];
             primitiveTypes[(int)PrimitiveTypeKind.Binary] = new PrimitiveType();
             primitiveTypes[(int)PrimitiveTypeKind.Boolean] = new PrimitiveType();
             primitiveTypes[(int)PrimitiveTypeKind.Byte] = new PrimitiveType();
@@ -148,49 +147,93 @@ namespace System.Data.Entity.Core.Metadata.Edm
             primitiveTypes[(int)PrimitiveTypeKind.GeographyMultiPolygon] = new PrimitiveType();
             primitiveTypes[(int)PrimitiveTypeKind.GeographyCollection] = new PrimitiveType();
 
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.Binary], PrimitiveTypeKind.Binary, EdmConstants.Binary, typeof(Byte[]));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.Boolean], PrimitiveTypeKind.Boolean, EdmConstants.Boolean, typeof(Boolean));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.Binary], PrimitiveTypeKind.Binary, EdmConstants.Binary, typeof(Byte[]));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.Boolean], PrimitiveTypeKind.Boolean, EdmConstants.Boolean, typeof(Boolean));
             InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.Byte], PrimitiveTypeKind.Byte, EdmConstants.Byte, typeof(Byte));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.DateTime], PrimitiveTypeKind.DateTime, EdmConstants.DateTime, typeof(DateTime));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.Decimal], PrimitiveTypeKind.Decimal, EdmConstants.Decimal, typeof(Decimal));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.Double], PrimitiveTypeKind.Double, EdmConstants.Double, typeof(Double));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.Single], PrimitiveTypeKind.Single, EdmConstants.Single, typeof(Single));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.DateTime], PrimitiveTypeKind.DateTime, EdmConstants.DateTime, typeof(DateTime));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.Decimal], PrimitiveTypeKind.Decimal, EdmConstants.Decimal, typeof(Decimal));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.Double], PrimitiveTypeKind.Double, EdmConstants.Double, typeof(Double));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.Single], PrimitiveTypeKind.Single, EdmConstants.Single, typeof(Single));
             InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.Guid], PrimitiveTypeKind.Guid, EdmConstants.Guid, typeof(Guid));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.Int16], PrimitiveTypeKind.Int16, EdmConstants.Int16, typeof(Int16));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.Int32], PrimitiveTypeKind.Int32, EdmConstants.Int32, typeof(Int32));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.Int64], PrimitiveTypeKind.Int64, EdmConstants.Int64, typeof(Int64));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.SByte], PrimitiveTypeKind.SByte, EdmConstants.SByte, typeof(SByte));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.String], PrimitiveTypeKind.String, EdmConstants.String, typeof(String));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.Time], PrimitiveTypeKind.Time, EdmConstants.Time, typeof(TimeSpan));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.DateTimeOffset], PrimitiveTypeKind.DateTimeOffset, EdmConstants.DateTimeOffset, typeof(DateTimeOffset));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.Geography], PrimitiveTypeKind.Geography, EdmConstants.Geography, typeof(DbGeography));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.GeographyPoint], PrimitiveTypeKind.GeographyPoint, EdmConstants.GeographyPoint, typeof(DbGeography));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.GeographyLineString], PrimitiveTypeKind.GeographyLineString, EdmConstants.GeographyLineString, typeof(DbGeography));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.GeographyPolygon], PrimitiveTypeKind.GeographyPolygon, EdmConstants.GeographyPolygon, typeof(DbGeography));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.GeographyMultiPoint], PrimitiveTypeKind.GeographyMultiPoint, EdmConstants.GeographyMultiPoint, typeof(DbGeography));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.GeographyMultiLineString], PrimitiveTypeKind.GeographyMultiLineString, EdmConstants.GeographyMultiLineString, typeof(DbGeography));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.GeographyMultiPolygon], PrimitiveTypeKind.GeographyMultiPolygon, EdmConstants.GeographyMultiPolygon, typeof(DbGeography));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.GeographyCollection], PrimitiveTypeKind.GeographyCollection, EdmConstants.GeographyCollection, typeof(DbGeography));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.Geometry], PrimitiveTypeKind.Geometry, EdmConstants.Geometry, typeof(DbGeometry));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.GeometryPoint], PrimitiveTypeKind.GeometryPoint, EdmConstants.GeometryPoint, typeof(DbGeometry));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.GeometryLineString], PrimitiveTypeKind.GeometryLineString, EdmConstants.GeometryLineString, typeof(DbGeometry));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.GeometryPolygon], PrimitiveTypeKind.GeometryPolygon, EdmConstants.GeometryPolygon, typeof(DbGeometry));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.GeometryMultiPoint], PrimitiveTypeKind.GeometryMultiPoint, EdmConstants.GeometryMultiPoint, typeof(DbGeometry));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.GeometryMultiLineString], PrimitiveTypeKind.GeometryMultiLineString, EdmConstants.GeometryMultiLineString, typeof(DbGeometry));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.GeometryMultiPolygon], PrimitiveTypeKind.GeometryMultiPolygon, EdmConstants.GeometryMultiPolygon, typeof(DbGeometry));
-            InitializePrimitiveType(primitiveTypes[(int)PrimitiveTypeKind.GeometryCollection], PrimitiveTypeKind.GeometryCollection, EdmConstants.GeometryCollection, typeof(DbGeometry));
-           
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.Int16], PrimitiveTypeKind.Int16, EdmConstants.Int16, typeof(Int16));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.Int32], PrimitiveTypeKind.Int32, EdmConstants.Int32, typeof(Int32));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.Int64], PrimitiveTypeKind.Int64, EdmConstants.Int64, typeof(Int64));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.SByte], PrimitiveTypeKind.SByte, EdmConstants.SByte, typeof(SByte));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.String], PrimitiveTypeKind.String, EdmConstants.String, typeof(String));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.Time], PrimitiveTypeKind.Time, EdmConstants.Time, typeof(TimeSpan));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.DateTimeOffset], PrimitiveTypeKind.DateTimeOffset, EdmConstants.DateTimeOffset,
+                typeof(DateTimeOffset));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.Geography], PrimitiveTypeKind.Geography, EdmConstants.Geography, typeof(DbGeography));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.GeographyPoint], PrimitiveTypeKind.GeographyPoint, EdmConstants.GeographyPoint,
+                typeof(DbGeography));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.GeographyLineString], PrimitiveTypeKind.GeographyLineString,
+                EdmConstants.GeographyLineString, typeof(DbGeography));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.GeographyPolygon], PrimitiveTypeKind.GeographyPolygon, EdmConstants.GeographyPolygon,
+                typeof(DbGeography));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.GeographyMultiPoint], PrimitiveTypeKind.GeographyMultiPoint,
+                EdmConstants.GeographyMultiPoint, typeof(DbGeography));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.GeographyMultiLineString], PrimitiveTypeKind.GeographyMultiLineString,
+                EdmConstants.GeographyMultiLineString, typeof(DbGeography));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.GeographyMultiPolygon], PrimitiveTypeKind.GeographyMultiPolygon,
+                EdmConstants.GeographyMultiPolygon, typeof(DbGeography));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.GeographyCollection], PrimitiveTypeKind.GeographyCollection,
+                EdmConstants.GeographyCollection, typeof(DbGeography));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.Geometry], PrimitiveTypeKind.Geometry, EdmConstants.Geometry, typeof(DbGeometry));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.GeometryPoint], PrimitiveTypeKind.GeometryPoint, EdmConstants.GeometryPoint,
+                typeof(DbGeometry));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.GeometryLineString], PrimitiveTypeKind.GeometryLineString,
+                EdmConstants.GeometryLineString, typeof(DbGeometry));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.GeometryPolygon], PrimitiveTypeKind.GeometryPolygon, EdmConstants.GeometryPolygon,
+                typeof(DbGeometry));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.GeometryMultiPoint], PrimitiveTypeKind.GeometryMultiPoint,
+                EdmConstants.GeometryMultiPoint, typeof(DbGeometry));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.GeometryMultiLineString], PrimitiveTypeKind.GeometryMultiLineString,
+                EdmConstants.GeometryMultiLineString, typeof(DbGeometry));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.GeometryMultiPolygon], PrimitiveTypeKind.GeometryMultiPolygon,
+                EdmConstants.GeometryMultiPolygon, typeof(DbGeometry));
+            InitializePrimitiveType(
+                primitiveTypes[(int)PrimitiveTypeKind.GeometryCollection], PrimitiveTypeKind.GeometryCollection,
+                EdmConstants.GeometryCollection, typeof(DbGeometry));
+
             // Set all primitive types to be readonly
-            foreach (PrimitiveType primitiveType in primitiveTypes)
+            foreach (var primitiveType in primitiveTypes)
             {
                 primitiveType.ProviderManifest = this;
                 primitiveType.SetReadOnly();
             }
 
-            System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType> readOnlyTypes = new System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType>(primitiveTypes);
+            var readOnlyTypes = new ReadOnlyCollection<PrimitiveType>(primitiveTypes);
 
             // Set the result to _primitiveTypes at the end
-            Interlocked.CompareExchange<System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType>>(ref _primitiveTypes, readOnlyTypes, null);
+            Interlocked.CompareExchange(ref _primitiveTypes, readOnlyTypes, null);
         }
 
         /// <summary>
@@ -201,20 +244,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="name">name of the built in type</param>
         /// <param name="clrType">the CLR Type of that maps to the EDM PrimitiveType</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "clrType")]
-        private void InitializePrimitiveType(PrimitiveType primitiveType,
-                                             PrimitiveTypeKind primitiveTypeKind,
-                                             string name,
-                                             Type clrType)
+        private void InitializePrimitiveType(
+            PrimitiveType primitiveType,
+            PrimitiveTypeKind primitiveTypeKind,
+            string name,
+            Type clrType)
         {
             // Only null types are not abstract and they are sealed, all others are abstract and unsealed
-            EdmType.Initialize(primitiveType, name,
-                               EdmConstants.EdmNamespace,
-                               DataSpace.CSpace,
-                               true /* isabstract */,
-                               null /* baseType */);
-            PrimitiveType.Initialize(primitiveType,
-                                     primitiveTypeKind, // isDefault
-                                     this);
+            EdmType.Initialize(
+                primitiveType, name,
+                EdmConstants.EdmNamespace,
+                DataSpace.CSpace,
+                true /* isabstract */,
+                null /* baseType */);
+            PrimitiveType.Initialize(
+                primitiveType,
+                primitiveTypeKind, // isDefault
+                this);
             Debug.Assert(clrType == primitiveType.ClrEquivalentType, "ClrEquivalentType mismatch");
         }
 
@@ -232,108 +278,108 @@ namespace System.Data.Entity.Core.Metadata.Edm
             InitializePrimitiveTypes();
 
             // Create the dictionary of facet descriptions
-            Dictionary<PrimitiveType, System.Collections.ObjectModel.ReadOnlyCollection<FacetDescription>> facetDescriptions = new Dictionary<PrimitiveType, System.Collections.ObjectModel.ReadOnlyCollection<FacetDescription>>();
+            var facetDescriptions = new Dictionary<PrimitiveType, ReadOnlyCollection<FacetDescription>>();
 
             // String facets
-            FacetDescription[] list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.String);
-            PrimitiveType applicableType = _primitiveTypes[(int)PrimitiveTypeKind.String];
+            var list = GetInitialFacetDescriptions(PrimitiveTypeKind.String);
+            var applicableType = _primitiveTypes[(int)PrimitiveTypeKind.String];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
             // Binary facets
-            list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.Binary);
+            list = GetInitialFacetDescriptions(PrimitiveTypeKind.Binary);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.Binary];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
             // DateTime facets
-            list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.DateTime);
+            list = GetInitialFacetDescriptions(PrimitiveTypeKind.DateTime);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.DateTime];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
             // Time facets
-            list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.Time);
+            list = GetInitialFacetDescriptions(PrimitiveTypeKind.Time);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.Time];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
             // DateTimeOffset facets
-            list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.DateTimeOffset);
+            list = GetInitialFacetDescriptions(PrimitiveTypeKind.DateTimeOffset);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.DateTimeOffset];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
-
             // Decimal facets
-            list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.Decimal);
+            list = GetInitialFacetDescriptions(PrimitiveTypeKind.Decimal);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.Decimal];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
             // Spatial facets
-            list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.Geography);
+            list = GetInitialFacetDescriptions(PrimitiveTypeKind.Geography);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.Geography];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
-            list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.GeographyPoint);
+            list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeographyPoint);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeographyPoint];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
-            list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.GeographyLineString);
+            list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeographyLineString);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeographyLineString];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
-            list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.GeographyPolygon);
+            list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeographyPolygon);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeographyPolygon];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
-            list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.GeographyMultiPoint);
+            list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeographyMultiPoint);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeographyMultiPoint];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
-            list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.GeographyMultiLineString);
+            list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeographyMultiLineString);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeographyMultiLineString];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
-            list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.GeographyMultiPolygon);
+            list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeographyMultiPolygon);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeographyMultiPolygon];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
-            list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.GeographyCollection);
+            list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeographyCollection);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeographyCollection];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
-            list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.Geometry);
+            list = GetInitialFacetDescriptions(PrimitiveTypeKind.Geometry);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.Geometry];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
-            list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.GeometryPoint);
+            list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeometryPoint);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeometryPoint];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
-            list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.GeometryLineString);
+            list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeometryLineString);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeometryLineString];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
-            list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.GeometryPolygon);
+            list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeometryPolygon);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeometryPolygon];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
-            list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.GeometryMultiPoint);
+            list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeometryMultiPoint);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeometryMultiPoint];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
-            list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.GeometryMultiLineString);
+            list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeometryMultiLineString);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeometryMultiLineString];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
-            list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.GeometryMultiPolygon);
+            list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeometryMultiPolygon);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeometryMultiPolygon];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
-            list = EdmProviderManifest.GetInitialFacetDescriptions(PrimitiveTypeKind.GeometryCollection);
+            list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeometryCollection);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeometryCollection];
             facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
 
             // Set the result to _facetDescriptions at the end
-            Interlocked.CompareExchange<Dictionary<PrimitiveType, System.Collections.ObjectModel.ReadOnlyCollection<FacetDescription>>>(ref _facetDescriptions,
-                                                                                                         facetDescriptions,
-                                                                                                         null);
+            Interlocked.CompareExchange(
+                ref _facetDescriptions,
+                facetDescriptions,
+                null);
         }
 
         internal static FacetDescription[] GetInitialFacetDescriptions(PrimitiveTypeKind primitiveTypeKind)
@@ -346,21 +392,24 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     {
                         list = new FacetDescription[3];
 
-                        list[0] = (new FacetDescription(DbProviderManifest.MaxLengthFacetName,
-                                                      MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Int32),
-                                                      0,
-                                                      Int32.MaxValue, 
-                                                      null));
-                        list[1] = (new FacetDescription(DbProviderManifest.UnicodeFacetName,
-                                                      MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Boolean),
-                                                      null,
-                                                      null,
-                                                      null));
-                        list[2] = (new FacetDescription(DbProviderManifest.FixedLengthFacetName,
-                                                      MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Boolean),
-                                                      null,
-                                                      null,
-                                                      null));
+                        list[0] = (new FacetDescription(
+                            MaxLengthFacetName,
+                            MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Int32),
+                            0,
+                            Int32.MaxValue,
+                            null));
+                        list[1] = (new FacetDescription(
+                            UnicodeFacetName,
+                            MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Boolean),
+                            null,
+                            null,
+                            null));
+                        list[2] = (new FacetDescription(
+                            FixedLengthFacetName,
+                            MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Boolean),
+                            null,
+                            null,
+                            null));
 
                         return list;
                     }
@@ -369,16 +418,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     {
                         list = new FacetDescription[2];
 
-                        list[0] = (new FacetDescription(DbProviderManifest.MaxLengthFacetName,
-                                                      MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Int32),
-                                                      0,
-                                                      Int32.MaxValue, 
-                                                      null));
-                        list[1] = (new FacetDescription(DbProviderManifest.FixedLengthFacetName,
-                                                      MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Boolean),
-                                                      null,
-                                                      null,
-                                                      null));
+                        list[0] = (new FacetDescription(
+                            MaxLengthFacetName,
+                            MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Int32),
+                            0,
+                            Int32.MaxValue,
+                            null));
+                        list[1] = (new FacetDescription(
+                            FixedLengthFacetName,
+                            MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Boolean),
+                            null,
+                            null,
+                            null));
                         return list;
                     }
 
@@ -386,9 +437,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     {
                         list = new FacetDescription[1];
 
-                        list[0] = (new FacetDescription(DbProviderManifest.PrecisionFacetName,
-                              MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Byte),
-                              0, EdmProviderManifest.MaximumDateTimePrecision, null));
+                        list[0] = (new FacetDescription(
+                            PrecisionFacetName,
+                            MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Byte),
+                            0, MaximumDateTimePrecision, null));
 
                         return list;
                     }
@@ -396,18 +448,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     {
                         list = new FacetDescription[1];
 
-                        list[0] = (new FacetDescription(DbProviderManifest.PrecisionFacetName,
-                              MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Byte),
-                              0, EdmProviderManifest.MaximumDateTimePrecision, TypeUsage.DefaultDateTimePrecisionFacetValue));
+                        list[0] = (new FacetDescription(
+                            PrecisionFacetName,
+                            MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Byte),
+                            0, MaximumDateTimePrecision, TypeUsage.DefaultDateTimePrecisionFacetValue));
 
                         return list;
                     }
                 case PrimitiveTypeKind.DateTimeOffset:
                     {
                         list = new FacetDescription[1];
-                        list[0] = (new FacetDescription(DbProviderManifest.PrecisionFacetName,
-                              MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Byte),
-                              0, EdmProviderManifest.MaximumDateTimePrecision, TypeUsage.DefaultDateTimePrecisionFacetValue));
+                        list[0] = (new FacetDescription(
+                            PrecisionFacetName,
+                            MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Byte),
+                            0, MaximumDateTimePrecision, TypeUsage.DefaultDateTimePrecisionFacetValue));
 
                         return list;
                     }
@@ -415,16 +469,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     {
                         list = new FacetDescription[2];
 
-                        list[0] = (new FacetDescription(DbProviderManifest.PrecisionFacetName,
-                                                      MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Byte),
-                                                      1,
-                                                      EdmProviderManifest.MaximumDecimalPrecision,
-                                                      null));
-                        list[1] = (new FacetDescription(DbProviderManifest.ScaleFacetName,
-                                                      MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Byte),
-                                                      0,
-                                                      EdmProviderManifest.MaximumDecimalPrecision,
-                                                      null));
+                        list[0] = (new FacetDescription(
+                            PrecisionFacetName,
+                            MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Byte),
+                            1,
+                            MaximumDecimalPrecision,
+                            null));
+                        list[1] = (new FacetDescription(
+                            ScaleFacetName,
+                            MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Byte),
+                            0,
+                            MaximumDecimalPrecision,
+                            null));
                         return list;
                     }
                 case PrimitiveTypeKind.Geometry:
@@ -438,16 +494,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     {
                         list = new FacetDescription[2];
 
-                        list[0] = (new FacetDescription(DbProviderManifest.SridFacetName,
-                                                      MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Int32),
-                                                      0,
-                                                      Int32.MaxValue,
-                                                      DbGeometry.DefaultCoordinateSystemId));
-                        list[1] = (new FacetDescription(DbProviderManifest.IsStrictFacetName,
-                                                      MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Boolean),
-                                                      null,
-                                                      null,
-                                                      true));
+                        list[0] = (new FacetDescription(
+                            SridFacetName,
+                            MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Int32),
+                            0,
+                            Int32.MaxValue,
+                            DbGeometry.DefaultCoordinateSystemId));
+                        list[1] = (new FacetDescription(
+                            IsStrictFacetName,
+                            MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Boolean),
+                            null,
+                            null,
+                            true));
                         return list;
                     }
                 case PrimitiveTypeKind.Geography:
@@ -461,16 +519,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     {
                         list = new FacetDescription[2];
 
-                        list[0] = (new FacetDescription(DbProviderManifest.SridFacetName,
-                                                      MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Int32),
-                                                      0,
-                                                      Int32.MaxValue,
-                                                      DbGeography.DefaultCoordinateSystemId));
-                        list[1] = (new FacetDescription(DbProviderManifest.IsStrictFacetName,
-                                                      MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Boolean),
-                                                      null,
-                                                      null,
-                                                      true));
+                        list[0] = (new FacetDescription(
+                            SridFacetName,
+                            MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Int32),
+                            0,
+                            Int32.MaxValue,
+                            DbGeography.DefaultCoordinateSystemId));
+                        list[1] = (new FacetDescription(
+                            IsStrictFacetName,
+                            MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.Boolean),
+                            null,
+                            null,
+                            true));
                         return list;
                     }
                 default:
@@ -481,24 +541,27 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Boostrapping all the canonical functions for the EDM Provider Manifest
         /// </summary>
-        [SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode"), SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void InitializeCanonicalFunctions()
         {
             if (_functions != null)
             {
                 return;
             }
-                        
+
             // Ensure primitive types are available
             InitializePrimitiveTypes();
 
-            EdmProviderManifestFunctionBuilder functions = new EdmProviderManifestFunctionBuilder(_primitiveTypes);
+            var functions = new EdmProviderManifestFunctionBuilder(_primitiveTypes);
             PrimitiveTypeKind[] parameterTypes;
-            
+
             #region Aggregate Functions
 
             // Max, Min
-            parameterTypes = new[] { PrimitiveTypeKind.Byte,
+            parameterTypes = new[]
+                                 {
+                                     PrimitiveTypeKind.Byte,
                                      PrimitiveTypeKind.DateTime,
                                      PrimitiveTypeKind.Decimal,
                                      PrimitiveTypeKind.Double,
@@ -510,35 +573,48 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                      PrimitiveTypeKind.String,
                                      PrimitiveTypeKind.Binary,
                                      PrimitiveTypeKind.Time,
-                                     PrimitiveTypeKind.DateTimeOffset };
+                                     PrimitiveTypeKind.DateTimeOffset
+                                 };
 
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate("Max", type));
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate("Min", type));
 
             // Avg, Sum
-            parameterTypes = new[] { PrimitiveTypeKind.Decimal,
+            parameterTypes = new[]
+                                 {
+                                     PrimitiveTypeKind.Decimal,
                                      PrimitiveTypeKind.Double,
                                      PrimitiveTypeKind.Int32,
-                                     PrimitiveTypeKind.Int64 };
+                                     PrimitiveTypeKind.Int64
+                                 };
 
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate("Avg", type));
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate("Sum", type));
 
             // STDEV, STDEVP, VAR, VARP
-            parameterTypes = new[] { PrimitiveTypeKind.Decimal,
+            parameterTypes = new[]
+                                 {
+                                     PrimitiveTypeKind.Decimal,
                                      PrimitiveTypeKind.Double,
                                      PrimitiveTypeKind.Int32,
-                                     PrimitiveTypeKind.Int64};
+                                     PrimitiveTypeKind.Int64
+                                 };
 
-            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate(PrimitiveTypeKind.Double, "StDev", type));
-            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate(PrimitiveTypeKind.Double, "StDevP", type));
-            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate(PrimitiveTypeKind.Double, "Var", type));
-            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate(PrimitiveTypeKind.Double, "VarP", type));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                parameterTypes, type => functions.AddAggregate(PrimitiveTypeKind.Double, "StDev", type));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                parameterTypes, type => functions.AddAggregate(PrimitiveTypeKind.Double, "StDevP", type));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                parameterTypes, type => functions.AddAggregate(PrimitiveTypeKind.Double, "Var", type));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                parameterTypes, type => functions.AddAggregate(PrimitiveTypeKind.Double, "VarP", type));
 
             // Count and Big Count must be supported for all edm types, except the strong spatial types.
-            EdmProviderManifestFunctionBuilder.ForAllBasePrimitiveTypes(type => functions.AddAggregate(PrimitiveTypeKind.Int32, "Count", type));
-            EdmProviderManifestFunctionBuilder.ForAllBasePrimitiveTypes(type => functions.AddAggregate(PrimitiveTypeKind.Int64, "BigCount", type));
-            
+            EdmProviderManifestFunctionBuilder.ForAllBasePrimitiveTypes(
+                type => functions.AddAggregate(PrimitiveTypeKind.Int32, "Count", type));
+            EdmProviderManifestFunctionBuilder.ForAllBasePrimitiveTypes(
+                type => functions.AddAggregate(PrimitiveTypeKind.Int64, "BigCount", type));
+
             #endregion
 
             #region String Functions
@@ -546,142 +622,228 @@ namespace System.Data.Entity.Core.Metadata.Edm
             functions.AddFunction(PrimitiveTypeKind.String, "Trim", PrimitiveTypeKind.String, "stringArgument");
             functions.AddFunction(PrimitiveTypeKind.String, "RTrim", PrimitiveTypeKind.String, "stringArgument");
             functions.AddFunction(PrimitiveTypeKind.String, "LTrim", PrimitiveTypeKind.String, "stringArgument");
-            functions.AddFunction(PrimitiveTypeKind.String, "Concat", PrimitiveTypeKind.String, "string1", PrimitiveTypeKind.String, "string2");
+            functions.AddFunction(
+                PrimitiveTypeKind.String, "Concat", PrimitiveTypeKind.String, "string1", PrimitiveTypeKind.String, "string2");
             functions.AddFunction(PrimitiveTypeKind.Int32, "Length", PrimitiveTypeKind.String, "stringArgument");
 
             // Substring, Left, Right overloads 
-            parameterTypes = new[] { PrimitiveTypeKind.Byte,
+            parameterTypes = new[]
+                                 {
+                                     PrimitiveTypeKind.Byte,
                                      PrimitiveTypeKind.Int16,
                                      PrimitiveTypeKind.Int32,
                                      PrimitiveTypeKind.Int64,
-                                     PrimitiveTypeKind.SByte };
+                                     PrimitiveTypeKind.SByte
+                                 };
 
-            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(PrimitiveTypeKind.String, "Substring", PrimitiveTypeKind.String, "stringArgument", type, "start", type, "length"));
-            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(PrimitiveTypeKind.String, "Left", PrimitiveTypeKind.String, "stringArgument", type, "length"));
-            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(PrimitiveTypeKind.String, "Right", PrimitiveTypeKind.String, "stringArgument", type, "length"));
-            
-            functions.AddFunction(PrimitiveTypeKind.String,  "Replace", PrimitiveTypeKind.String, "stringArgument", PrimitiveTypeKind.String, "toReplace", PrimitiveTypeKind.String, "replacement");
-            functions.AddFunction(PrimitiveTypeKind.Int32,   "IndexOf", PrimitiveTypeKind.String, "searchString", PrimitiveTypeKind.String, "stringToFind");
-            functions.AddFunction(PrimitiveTypeKind.String,  "ToUpper", PrimitiveTypeKind.String, "stringArgument");
-            functions.AddFunction(PrimitiveTypeKind.String,  "ToLower", PrimitiveTypeKind.String, "stringArgument");
-            functions.AddFunction(PrimitiveTypeKind.String,  "Reverse", PrimitiveTypeKind.String, "stringArgument");
-            functions.AddFunction(PrimitiveTypeKind.Boolean, "Contains", PrimitiveTypeKind.String, "searchedString", PrimitiveTypeKind.String, "searchedForString");
-            functions.AddFunction(PrimitiveTypeKind.Boolean, "StartsWith", PrimitiveTypeKind.String, "stringArgument", PrimitiveTypeKind.String, "prefix");
-            functions.AddFunction(PrimitiveTypeKind.Boolean, "EndsWith", PrimitiveTypeKind.String, "stringArgument", PrimitiveTypeKind.String, "suffix");
-            
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                parameterTypes,
+                type =>
+                functions.AddFunction(
+                    PrimitiveTypeKind.String, "Substring", PrimitiveTypeKind.String, "stringArgument", type, "start", type, "length"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                parameterTypes,
+                type => functions.AddFunction(PrimitiveTypeKind.String, "Left", PrimitiveTypeKind.String, "stringArgument", type, "length"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                parameterTypes,
+                type => functions.AddFunction(PrimitiveTypeKind.String, "Right", PrimitiveTypeKind.String, "stringArgument", type, "length"));
+
+            functions.AddFunction(
+                PrimitiveTypeKind.String, "Replace", PrimitiveTypeKind.String, "stringArgument", PrimitiveTypeKind.String, "toReplace",
+                PrimitiveTypeKind.String, "replacement");
+            functions.AddFunction(
+                PrimitiveTypeKind.Int32, "IndexOf", PrimitiveTypeKind.String, "searchString", PrimitiveTypeKind.String, "stringToFind");
+            functions.AddFunction(PrimitiveTypeKind.String, "ToUpper", PrimitiveTypeKind.String, "stringArgument");
+            functions.AddFunction(PrimitiveTypeKind.String, "ToLower", PrimitiveTypeKind.String, "stringArgument");
+            functions.AddFunction(PrimitiveTypeKind.String, "Reverse", PrimitiveTypeKind.String, "stringArgument");
+            functions.AddFunction(
+                PrimitiveTypeKind.Boolean, "Contains", PrimitiveTypeKind.String, "searchedString", PrimitiveTypeKind.String,
+                "searchedForString");
+            functions.AddFunction(
+                PrimitiveTypeKind.Boolean, "StartsWith", PrimitiveTypeKind.String, "stringArgument", PrimitiveTypeKind.String, "prefix");
+            functions.AddFunction(
+                PrimitiveTypeKind.Boolean, "EndsWith", PrimitiveTypeKind.String, "stringArgument", PrimitiveTypeKind.String, "suffix");
+
             #endregion
 
             #region DateTime Functions
-            
-            PrimitiveTypeKind[] dateTimeParameterTypes = { PrimitiveTypeKind.DateTimeOffset,
-                                                           PrimitiveTypeKind.DateTime };
-            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Year", type, "dateValue"));
-            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Month", type, "dateValue"));
-            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Day", type, "dateValue"));
-            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DayOfYear", type, "dateValue"));
 
-            PrimitiveTypeKind[] timeParameterTypes = { PrimitiveTypeKind.DateTimeOffset,
-                                                       PrimitiveTypeKind.DateTime,
-                                                       PrimitiveTypeKind.Time };
-            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Hour", type, "timeValue"));
-            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Minute", type, "timeValue"));
-            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Second", type, "timeValue"));
-            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Millisecond", type, "timeValue"));
+            PrimitiveTypeKind[] dateTimeParameterTypes = {
+                                                             PrimitiveTypeKind.DateTimeOffset,
+                                                             PrimitiveTypeKind.DateTime
+                                                         };
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Year", type, "dateValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Month", type, "dateValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Day", type, "dateValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DayOfYear", type, "dateValue"));
+
+            PrimitiveTypeKind[] timeParameterTypes = {
+                                                         PrimitiveTypeKind.DateTimeOffset,
+                                                         PrimitiveTypeKind.DateTime,
+                                                         PrimitiveTypeKind.Time
+                                                     };
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Hour", type, "timeValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Minute", type, "timeValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Second", type, "timeValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Millisecond", type, "timeValue"));
 
             functions.AddFunction(PrimitiveTypeKind.DateTime, "CurrentDateTime");
             functions.AddFunction(PrimitiveTypeKind.DateTimeOffset, "CurrentDateTimeOffset");
-            functions.AddFunction(PrimitiveTypeKind.Int32, "GetTotalOffsetMinutes", PrimitiveTypeKind.DateTimeOffset, "dateTimeOffsetArgument");
+            functions.AddFunction(
+                PrimitiveTypeKind.Int32, "GetTotalOffsetMinutes", PrimitiveTypeKind.DateTimeOffset, "dateTimeOffsetArgument");
             functions.AddFunction(PrimitiveTypeKind.DateTime, "CurrentUtcDateTime");
-            
-            //TruncateTime
-            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(type, "TruncateTime", type, "dateValue"));
-            
-            //DateTime constructor
-            functions.AddFunction(PrimitiveTypeKind.DateTime, "CreateDateTime", PrimitiveTypeKind.Int32, "year",
-                                                                                PrimitiveTypeKind.Int32, "month",
-                                                                                PrimitiveTypeKind.Int32, "day",
-                                                                                PrimitiveTypeKind.Int32, "hour",
-                                                                                PrimitiveTypeKind.Int32, "minute",
-                                                                                PrimitiveTypeKind.Double, "second");
 
+            //TruncateTime
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                dateTimeParameterTypes, type => functions.AddFunction(type, "TruncateTime", type, "dateValue"));
+
+            //DateTime constructor
+            functions.AddFunction(
+                PrimitiveTypeKind.DateTime, "CreateDateTime", PrimitiveTypeKind.Int32, "year",
+                PrimitiveTypeKind.Int32, "month",
+                PrimitiveTypeKind.Int32, "day",
+                PrimitiveTypeKind.Int32, "hour",
+                PrimitiveTypeKind.Int32, "minute",
+                PrimitiveTypeKind.Double, "second");
 
             //DateTimeOffset constructor
-            functions.AddFunction(PrimitiveTypeKind.DateTimeOffset, "CreateDateTimeOffset", PrimitiveTypeKind.Int32, "year",
-                                                                                            PrimitiveTypeKind.Int32, "month",
-                                                                                            PrimitiveTypeKind.Int32, "day",
-                                                                                            PrimitiveTypeKind.Int32, "hour",
-                                                                                            PrimitiveTypeKind.Int32, "minute",
-                                                                                            PrimitiveTypeKind.Double, "second", 
-                                                                                            PrimitiveTypeKind.Int32, "timeZoneOffset");
+            functions.AddFunction(
+                PrimitiveTypeKind.DateTimeOffset, "CreateDateTimeOffset", PrimitiveTypeKind.Int32, "year",
+                PrimitiveTypeKind.Int32, "month",
+                PrimitiveTypeKind.Int32, "day",
+                PrimitiveTypeKind.Int32, "hour",
+                PrimitiveTypeKind.Int32, "minute",
+                PrimitiveTypeKind.Double, "second",
+                PrimitiveTypeKind.Int32, "timeZoneOffset");
 
             //Time constructor
-            functions.AddFunction(PrimitiveTypeKind.Time, "CreateTime", PrimitiveTypeKind.Int32, "hour", PrimitiveTypeKind.Int32, "minute", PrimitiveTypeKind.Double, "second");
+            functions.AddFunction(
+                PrimitiveTypeKind.Time, "CreateTime", PrimitiveTypeKind.Int32, "hour", PrimitiveTypeKind.Int32, "minute",
+                PrimitiveTypeKind.Double, "second");
 
             //Date and time addition functions
-            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(type, "AddYears", type, "dateValue", PrimitiveTypeKind.Int32, "addValue"));
-            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(type, "AddMonths", type, "dateValue", PrimitiveTypeKind.Int32, "addValue"));
-            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(type, "AddDays", type, "dateValue", PrimitiveTypeKind.Int32, "addValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                dateTimeParameterTypes,
+                type => functions.AddFunction(type, "AddYears", type, "dateValue", PrimitiveTypeKind.Int32, "addValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                dateTimeParameterTypes,
+                type => functions.AddFunction(type, "AddMonths", type, "dateValue", PrimitiveTypeKind.Int32, "addValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                dateTimeParameterTypes,
+                type => functions.AddFunction(type, "AddDays", type, "dateValue", PrimitiveTypeKind.Int32, "addValue"));
 
-            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(type, "AddHours", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
-            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(type, "AddMinutes", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
-            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(type, "AddSeconds", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
-            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(type, "AddMilliseconds", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
-            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(type, "AddMicroseconds", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
-            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(type, "AddNanoseconds", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
-            
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                timeParameterTypes, type => functions.AddFunction(type, "AddHours", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                timeParameterTypes,
+                type => functions.AddFunction(type, "AddMinutes", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                timeParameterTypes,
+                type => functions.AddFunction(type, "AddSeconds", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                timeParameterTypes,
+                type => functions.AddFunction(type, "AddMilliseconds", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                timeParameterTypes,
+                type => functions.AddFunction(type, "AddMicroseconds", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                timeParameterTypes,
+                type => functions.AddFunction(type, "AddNanoseconds", type, "timeValue", PrimitiveTypeKind.Int32, "addValue"));
+
             // Date and time diff functions
-            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffYears", type, "dateValue1", type, "dateValue2"));
-            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffMonths", type, "dateValue1", type, "dateValue2"));
-            EdmProviderManifestFunctionBuilder.ForTypes(dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffDays", type, "dateValue1", type, "dateValue2"));
-            
-            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffHours", type, "timeValue1", type, "timeValue2"));
-            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffMinutes", type, "timeValue1", type, "timeValue2"));
-            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffSeconds", type, "timeValue1", type, "timeValue2"));
-            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffMilliseconds", type, "timeValue1", type, "timeValue2"));
-            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffMicroseconds", type, "timeValue1", type, "timeValue2"));
-            EdmProviderManifestFunctionBuilder.ForTypes(timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffNanoseconds", type, "timeValue1", type, "timeValue2"));
-                        
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                dateTimeParameterTypes,
+                type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffYears", type, "dateValue1", type, "dateValue2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                dateTimeParameterTypes,
+                type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffMonths", type, "dateValue1", type, "dateValue2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                dateTimeParameterTypes,
+                type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffDays", type, "dateValue1", type, "dateValue2"));
+
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                timeParameterTypes,
+                type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffHours", type, "timeValue1", type, "timeValue2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                timeParameterTypes,
+                type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffMinutes", type, "timeValue1", type, "timeValue2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                timeParameterTypes,
+                type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffSeconds", type, "timeValue1", type, "timeValue2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                timeParameterTypes,
+                type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffMilliseconds", type, "timeValue1", type, "timeValue2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                timeParameterTypes,
+                type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffMicroseconds", type, "timeValue1", type, "timeValue2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                timeParameterTypes,
+                type => functions.AddFunction(PrimitiveTypeKind.Int32, "DiffNanoseconds", type, "timeValue1", type, "timeValue2"));
+
             #endregion // DateTime Functions
-            
+
             #region Math Functions
 
             // Overloads for ROUND, FLOOR, CEILING functions
-            parameterTypes = new[] { PrimitiveTypeKind.Single,
+            parameterTypes = new[]
+                                 {
+                                     PrimitiveTypeKind.Single,
                                      PrimitiveTypeKind.Double,
-                                     PrimitiveTypeKind.Decimal };
+                                     PrimitiveTypeKind.Decimal
+                                 };
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "Round", type, "value"));
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "Floor", type, "value"));
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "Ceiling", type, "value"));
 
             // Overloads for ROUND, TRUNCATE
-            parameterTypes = new [] { PrimitiveTypeKind.Double,
-                                      PrimitiveTypeKind.Decimal };
-            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "Round", type, "value", PrimitiveTypeKind.Int32, "digits"));
-            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "Truncate", type, "value", PrimitiveTypeKind.Int32, "digits"));
-            
+            parameterTypes = new[]
+                                 {
+                                     PrimitiveTypeKind.Double,
+                                     PrimitiveTypeKind.Decimal
+                                 };
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                parameterTypes, type => functions.AddFunction(type, "Round", type, "value", PrimitiveTypeKind.Int32, "digits"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                parameterTypes, type => functions.AddFunction(type, "Truncate", type, "value", PrimitiveTypeKind.Int32, "digits"));
+
             // Overloads for ABS functions
-            parameterTypes = new[] { PrimitiveTypeKind.Decimal,
+            parameterTypes = new[]
+                                 {
+                                     PrimitiveTypeKind.Decimal,
                                      PrimitiveTypeKind.Double,
                                      PrimitiveTypeKind.Int16,
                                      PrimitiveTypeKind.Int32,
                                      PrimitiveTypeKind.Int64,
                                      PrimitiveTypeKind.Byte,
-                                     PrimitiveTypeKind.Single };
+                                     PrimitiveTypeKind.Single
+                                 };
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "Abs", type, "value"));
-            
+
             // Overloads for POWER functions
-            PrimitiveTypeKind[] powerFirstParameterTypes = { PrimitiveTypeKind.Decimal,
-                                        PrimitiveTypeKind.Double,
-                                        PrimitiveTypeKind.Int32,
-                                        PrimitiveTypeKind.Int64};
+            PrimitiveTypeKind[] powerFirstParameterTypes = {
+                                                               PrimitiveTypeKind.Decimal,
+                                                               PrimitiveTypeKind.Double,
+                                                               PrimitiveTypeKind.Int32,
+                                                               PrimitiveTypeKind.Int64
+                                                           };
 
-            PrimitiveTypeKind[] powerSecondParameterTypes = { PrimitiveTypeKind.Decimal,
-                                        PrimitiveTypeKind.Double,
-                                        PrimitiveTypeKind.Int64 };
+            PrimitiveTypeKind[] powerSecondParameterTypes = {
+                                                                PrimitiveTypeKind.Decimal,
+                                                                PrimitiveTypeKind.Double,
+                                                                PrimitiveTypeKind.Int64
+                                                            };
 
-            foreach (PrimitiveTypeKind kind1 in powerFirstParameterTypes)
+            foreach (var kind1 in powerFirstParameterTypes)
             {
-                foreach (PrimitiveTypeKind kind2 in powerSecondParameterTypes)
+                foreach (var kind2 in powerSecondParameterTypes)
                 {
                     functions.AddFunction(kind1, "Power", kind1, "baseArgument", kind2, "exponent");
                 }
@@ -692,22 +854,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
             #region Bitwise Functions
 
             // Overloads for BitwiseAND, BitwiseNOT, BitwiseOR, BitwiseXOR functions
-            parameterTypes = new[] { PrimitiveTypeKind.Int16,
+            parameterTypes = new[]
+                                 {
+                                     PrimitiveTypeKind.Int16,
                                      PrimitiveTypeKind.Int32,
                                      PrimitiveTypeKind.Int64,
-                                     PrimitiveTypeKind.Byte };
+                                     PrimitiveTypeKind.Byte
+                                 };
 
-            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "BitwiseAnd", type, "value1", type, "value2"));
-            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "BitwiseOr", type, "value1", type, "value2"));
-            EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "BitwiseXor", type, "value1", type, "value2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                parameterTypes, type => functions.AddFunction(type, "BitwiseAnd", type, "value1", type, "value2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                parameterTypes, type => functions.AddFunction(type, "BitwiseOr", type, "value1", type, "value2"));
+            EdmProviderManifestFunctionBuilder.ForTypes(
+                parameterTypes, type => functions.AddFunction(type, "BitwiseXor", type, "value1", type, "value2"));
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "BitwiseNot", type, "value"));
-            
+
             #endregion
 
             #region Misc Functions
 
             functions.AddFunction(PrimitiveTypeKind.Guid, "NewGuid");
-            
+
             #endregion // Misc Functions
 
             #region Spatial Functions
@@ -716,18 +884,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             #endregion
 
-            System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction> readOnlyFunctions = functions.ToFunctionCollection();
+            var readOnlyFunctions = functions.ToFunctionCollection();
 
-            Interlocked.CompareExchange<System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction>>(ref _functions, readOnlyFunctions, null);
+            Interlocked.CompareExchange(ref _functions, readOnlyFunctions, null);
         }
-                
+
         #region Edm Provider Specific Functionality
+
         /// <summary>
         /// Returns the list of super-types for the given primitiveType
         /// </summary>
         /// <param name="primitiveType"></param>
         /// <returns></returns>
-        internal System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType> GetPromotionTypes(PrimitiveType primitiveType)
+        internal ReadOnlyCollection<PrimitiveType> GetPromotionTypes(PrimitiveType primitiveType)
         {
             InitializePromotableTypes();
 
@@ -744,96 +913,116 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return;
             }
 
-            System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType>[] promotionTypes = new System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType>[EdmConstants.NumPrimitiveTypes];
+            var promotionTypes = new ReadOnlyCollection<PrimitiveType>[EdmConstants.NumPrimitiveTypes];
 
-            for (int i = 0; i < EdmConstants.NumPrimitiveTypes; i++)
+            for (var i = 0; i < EdmConstants.NumPrimitiveTypes; i++)
             {
-                promotionTypes[i] = new System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType>(new PrimitiveType[] { _primitiveTypes[i] });
+                promotionTypes[i] = new ReadOnlyCollection<PrimitiveType>(new[] { _primitiveTypes[i] });
             }
 
             //
             // PrimitiveTypeKind.Byte
             //
-            promotionTypes[(int)PrimitiveTypeKind.Byte] = new System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType>(new PrimitiveType[] {
-                _primitiveTypes[(int)PrimitiveTypeKind.Byte],
-                _primitiveTypes[(int)PrimitiveTypeKind.Int16],
-                _primitiveTypes[(int)PrimitiveTypeKind.Int32],
-                _primitiveTypes[(int)PrimitiveTypeKind.Int64],
-                _primitiveTypes[(int)PrimitiveTypeKind.Decimal],
-                _primitiveTypes[(int)PrimitiveTypeKind.Single],
-                _primitiveTypes[(int)PrimitiveTypeKind.Double]
-            });
+            promotionTypes[(int)PrimitiveTypeKind.Byte] = new ReadOnlyCollection<PrimitiveType>(
+                new[]
+                    {
+                        _primitiveTypes[(int)PrimitiveTypeKind.Byte],
+                        _primitiveTypes[(int)PrimitiveTypeKind.Int16],
+                        _primitiveTypes[(int)PrimitiveTypeKind.Int32],
+                        _primitiveTypes[(int)PrimitiveTypeKind.Int64],
+                        _primitiveTypes[(int)PrimitiveTypeKind.Decimal],
+                        _primitiveTypes[(int)PrimitiveTypeKind.Single],
+                        _primitiveTypes[(int)PrimitiveTypeKind.Double]
+                    });
 
             //
             // PrimitiveTypeKind.Int16
             //
-            promotionTypes[(int)PrimitiveTypeKind.Int16] = new System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType>(new PrimitiveType[] {
-                _primitiveTypes[(int)PrimitiveTypeKind.Int16],
-                _primitiveTypes[(int)PrimitiveTypeKind.Int32],
-                _primitiveTypes[(int)PrimitiveTypeKind.Int64],
-                _primitiveTypes[(int)PrimitiveTypeKind.Decimal],
-                _primitiveTypes[(int)PrimitiveTypeKind.Single],
-                _primitiveTypes[(int)PrimitiveTypeKind.Double]
-            });
+            promotionTypes[(int)PrimitiveTypeKind.Int16] = new ReadOnlyCollection<PrimitiveType>(
+                new[]
+                    {
+                        _primitiveTypes[(int)PrimitiveTypeKind.Int16],
+                        _primitiveTypes[(int)PrimitiveTypeKind.Int32],
+                        _primitiveTypes[(int)PrimitiveTypeKind.Int64],
+                        _primitiveTypes[(int)PrimitiveTypeKind.Decimal],
+                        _primitiveTypes[(int)PrimitiveTypeKind.Single],
+                        _primitiveTypes[(int)PrimitiveTypeKind.Double]
+                    });
 
             //
             // PrimitiveTypeKind.Int32
             //
-            promotionTypes[(int)PrimitiveTypeKind.Int32] = new System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType>(new PrimitiveType[] {
-                _primitiveTypes[(int)PrimitiveTypeKind.Int32],
-                _primitiveTypes[(int)PrimitiveTypeKind.Int64],
-                _primitiveTypes[(int)PrimitiveTypeKind.Decimal],
-                _primitiveTypes[(int)PrimitiveTypeKind.Single],
-                _primitiveTypes[(int)PrimitiveTypeKind.Double]
-            });
+            promotionTypes[(int)PrimitiveTypeKind.Int32] = new ReadOnlyCollection<PrimitiveType>(
+                new[]
+                    {
+                        _primitiveTypes[(int)PrimitiveTypeKind.Int32],
+                        _primitiveTypes[(int)PrimitiveTypeKind.Int64],
+                        _primitiveTypes[(int)PrimitiveTypeKind.Decimal],
+                        _primitiveTypes[(int)PrimitiveTypeKind.Single],
+                        _primitiveTypes[(int)PrimitiveTypeKind.Double]
+                    });
 
             //
             // PrimitiveTypeKind.Int64
             //
-            promotionTypes[(int)PrimitiveTypeKind.Int64] = new System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType>(new PrimitiveType[] {
-                _primitiveTypes[(int)PrimitiveTypeKind.Int64],
-                _primitiveTypes[(int)PrimitiveTypeKind.Decimal],
-                _primitiveTypes[(int)PrimitiveTypeKind.Single],
-                _primitiveTypes[(int)PrimitiveTypeKind.Double]
-            });
+            promotionTypes[(int)PrimitiveTypeKind.Int64] = new ReadOnlyCollection<PrimitiveType>(
+                new[]
+                    {
+                        _primitiveTypes[(int)PrimitiveTypeKind.Int64],
+                        _primitiveTypes[(int)PrimitiveTypeKind.Decimal],
+                        _primitiveTypes[(int)PrimitiveTypeKind.Single],
+                        _primitiveTypes[(int)PrimitiveTypeKind.Double]
+                    });
 
             //
             // PrimitiveTypeKind.Single
             //
-            promotionTypes[(int)PrimitiveTypeKind.Single] = new System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType>(new PrimitiveType[] {
-                _primitiveTypes[(int)PrimitiveTypeKind.Single],
-                _primitiveTypes[(int)PrimitiveTypeKind.Double]
-            });
+            promotionTypes[(int)PrimitiveTypeKind.Single] = new ReadOnlyCollection<PrimitiveType>(
+                new[]
+                    {
+                        _primitiveTypes[(int)PrimitiveTypeKind.Single],
+                        _primitiveTypes[(int)PrimitiveTypeKind.Double]
+                    });
 
             InitializeSpatialPromotionGroup(
                 promotionTypes,
-                new PrimitiveTypeKind[] {
-                        PrimitiveTypeKind.GeographyPoint, PrimitiveTypeKind.GeographyLineString, PrimitiveTypeKind.GeographyPolygon, 
-                        PrimitiveTypeKind.GeographyMultiPoint, PrimitiveTypeKind.GeographyMultiLineString, PrimitiveTypeKind.GeographyMultiPolygon, 
-                        PrimitiveTypeKind.GeographyCollection},
+                new[]
+                    {
+                        PrimitiveTypeKind.GeographyPoint, PrimitiveTypeKind.GeographyLineString, PrimitiveTypeKind.GeographyPolygon,
+                        PrimitiveTypeKind.GeographyMultiPoint, PrimitiveTypeKind.GeographyMultiLineString,
+                        PrimitiveTypeKind.GeographyMultiPolygon,
+                        PrimitiveTypeKind.GeographyCollection
+                    },
                 PrimitiveTypeKind.Geography);
 
             InitializeSpatialPromotionGroup(
                 promotionTypes,
-                new PrimitiveTypeKind[] {
-                    PrimitiveTypeKind.GeometryPoint, PrimitiveTypeKind.GeometryLineString, PrimitiveTypeKind.GeometryPolygon, 
-                    PrimitiveTypeKind.GeometryMultiPoint, PrimitiveTypeKind.GeometryMultiLineString, PrimitiveTypeKind.GeometryMultiPolygon, 
-                    PrimitiveTypeKind.GeometryCollection},
+                new[]
+                    {
+                        PrimitiveTypeKind.GeometryPoint, PrimitiveTypeKind.GeometryLineString, PrimitiveTypeKind.GeometryPolygon,
+                        PrimitiveTypeKind.GeometryMultiPoint, PrimitiveTypeKind.GeometryMultiLineString,
+                        PrimitiveTypeKind.GeometryMultiPolygon,
+                        PrimitiveTypeKind.GeometryCollection
+                    },
                 PrimitiveTypeKind.Geometry);
 
-            Interlocked.CompareExchange<System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType>[]>(ref _promotionTypes,
-                                                                             promotionTypes,
-                                                                             null);
+            Interlocked.CompareExchange(
+                ref _promotionTypes,
+                promotionTypes,
+                null);
         }
 
-        private void InitializeSpatialPromotionGroup(System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType>[] promotionTypes, PrimitiveTypeKind[] promotableKinds, PrimitiveTypeKind baseKind)
+        private void InitializeSpatialPromotionGroup(
+            ReadOnlyCollection<PrimitiveType>[] promotionTypes, PrimitiveTypeKind[] promotableKinds, PrimitiveTypeKind baseKind)
         {
-            foreach (PrimitiveTypeKind promotableKind in promotableKinds)
+            foreach (var promotableKind in promotableKinds)
             {
-                promotionTypes[(int)promotableKind] = new System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType>(new PrimitiveType[] {
-                    _primitiveTypes[(int)promotableKind],
-                    _primitiveTypes[(int)baseKind]
-                });
+                promotionTypes[(int)promotableKind] = new ReadOnlyCollection<PrimitiveType>(
+                    new[]
+                        {
+                            _primitiveTypes[(int)promotableKind],
+                            _primitiveTypes[(int)baseKind]
+                        });
             }
         }
 
@@ -853,25 +1042,27 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             InitializePrimitiveTypes();
 
-            TypeUsage[] canonicalTypes = new TypeUsage[EdmConstants.NumPrimitiveTypes];
-            for (int primitiveTypeIndex = 0; primitiveTypeIndex < EdmConstants.NumPrimitiveTypes; primitiveTypeIndex++)
+            var canonicalTypes = new TypeUsage[EdmConstants.NumPrimitiveTypes];
+            for (var primitiveTypeIndex = 0; primitiveTypeIndex < EdmConstants.NumPrimitiveTypes; primitiveTypeIndex++)
             {
-                PrimitiveType primitiveType = _primitiveTypes[primitiveTypeIndex];
-                TypeUsage typeUsage = TypeUsage.CreateDefaultTypeUsage(primitiveType);
+                var primitiveType = _primitiveTypes[primitiveTypeIndex];
+                var typeUsage = TypeUsage.CreateDefaultTypeUsage(primitiveType);
                 Debug.Assert(null != typeUsage, "TypeUsage must not be null");
                 canonicalTypes[primitiveTypeIndex] = typeUsage;
             }
 
-            Interlocked.CompareExchange<TypeUsage[]>(ref _canonicalModelTypes, canonicalTypes, null);
+            Interlocked.CompareExchange(ref _canonicalModelTypes, canonicalTypes, null);
         }
+
         #endregion
 
         #region DbProviderManifest Interface
+
         /// <summary>
         /// Returns all the primitive types supported by the provider manifest
         /// </summary>
         /// <returns>A collection of primitive types</returns>
-        public override System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType> GetStoreTypes()
+        public override ReadOnlyCollection<PrimitiveType> GetStoreTypes()
         {
             InitializePrimitiveTypes();
             return _primitiveTypes;
@@ -889,7 +1080,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal TypeUsage ForgetScalarConstraints(TypeUsage type)
         {
-            PrimitiveType primitiveType = type.EdmType as PrimitiveType;
+            var primitiveType = type.EdmType as PrimitiveType;
             Debug.Assert(primitiveType != null, "type argument must be primitive in order to use this function");
             if (primitiveType != null)
             {
@@ -908,11 +1099,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="informationType">The name of the information to be retrieved.</param>
         /// <returns>An XmlReader at the begining of the information requested.</returns>
-        protected override System.Xml.XmlReader GetDbInformation(string informationType)
+        protected override XmlReader GetDbInformation(string informationType)
         {
             throw new NotImplementedException();
         }
-        #endregion
 
+        #endregion
     }
 }

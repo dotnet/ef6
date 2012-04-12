@@ -1,17 +1,17 @@
 ﻿namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Reflection;
 
     internal class CustomAssemblyResolver : MetadataArtifactAssemblyResolver
     {
-        private Func<AssemblyName, Assembly> _referenceResolver;
-        private Func<IEnumerable<Assembly>> _wildcardAssemblyEnumerator;
+        private readonly Func<AssemblyName, Assembly> _referenceResolver;
+        private readonly Func<IEnumerable<Assembly>> _wildcardAssemblyEnumerator;
 
-        internal CustomAssemblyResolver(Func<IEnumerable<Assembly>> wildcardAssemblyEnumerator, Func<AssemblyName, Assembly> referenceResolver)
+        internal CustomAssemblyResolver(
+            Func<IEnumerable<Assembly>> wildcardAssemblyEnumerator, Func<AssemblyName, Assembly> referenceResolver)
         {
             Debug.Assert(wildcardAssemblyEnumerator != null);
             Debug.Assert(referenceResolver != null);
@@ -27,13 +27,12 @@
 
         internal override IEnumerable<Assembly> GetWildcardAssemblies()
         {
-            IEnumerable<Assembly> wildcardAssemblies = _wildcardAssemblyEnumerator();
+            var wildcardAssemblies = _wildcardAssemblyEnumerator();
             if (wildcardAssemblies == null)
             {
                 throw EntityUtil.InvalidOperation(Strings.WildcardEnumeratorReturnedNull);
             }
             return wildcardAssemblies;
-
         }
     }
 }

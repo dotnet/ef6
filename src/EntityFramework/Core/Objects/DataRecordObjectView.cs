@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Metadata;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Reflection;
-
-namespace System.Data.Entity.Core.Objects
+﻿namespace System.Data.Entity.Core.Objects
 {
+    using System.Collections;
+    using System.ComponentModel;
+    using System.Data.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Reflection;
+
     /// <summary>
     /// ObjectView that provides binding to a list of data records.
     /// </summary>
@@ -22,14 +18,15 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         /// Cache of the property descriptors for the element type of the root list wrapped by ObjectView.
         /// </summary>
-        private PropertyDescriptorCollection _propertyDescriptorsCache;
+        private readonly PropertyDescriptorCollection _propertyDescriptorsCache;
 
         /// <summary>
         /// EDM RowType that describes the shape of record elements.
         /// </summary>
-        private RowType _rowType;
+        private readonly RowType _rowType;
 
-        internal DataRecordObjectView(IObjectViewData<DbDataRecord> viewData, object eventDataSource, RowType rowType, Type propertyComponentType)
+        internal DataRecordObjectView(
+            IObjectViewData<DbDataRecord> viewData, object eventDataSource, RowType rowType, Type propertyComponentType)
             : base(viewData, eventDataSource)
         {
             if (!typeof(IDataRecord).IsAssignableFrom(propertyComponentType))
@@ -65,14 +62,16 @@ namespace System.Data.Entity.Core.Objects
             PropertyInfo indexer = null;
 
             if (typeof(IList).IsAssignableFrom(type) ||
-                typeof(ITypedList).IsAssignableFrom(type) ||
+                typeof(ITypedList).IsAssignableFrom(type)
+                ||
                 typeof(IListSource).IsAssignableFrom(type))
             {
-                System.Reflection.PropertyInfo[] props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-                for (int idx = 0; idx < props.Length; idx++)
+                for (var idx = 0; idx < props.Length; idx++)
                 {
-                    if (props[idx].GetIndexParameters().Length > 0 && props[idx].PropertyType != typeof(object))
+                    if (props[idx].GetIndexParameters().Length > 0
+                        && props[idx].PropertyType != typeof(object))
                     {
                         indexer = props[idx];
                         //Prefer the standard indexer, if there is one
@@ -113,7 +112,7 @@ namespace System.Data.Entity.Core.Objects
             }
             else
             {
-                PropertyInfo typedIndexer = GetTypedIndexer(type);
+                var typedIndexer = GetTypedIndexer(type);
 
                 if (typedIndexer != null)
                 {
@@ -130,11 +129,12 @@ namespace System.Data.Entity.Core.Objects
 
         #region ITypedList Members
 
-        PropertyDescriptorCollection System.ComponentModel.ITypedList.GetItemProperties(PropertyDescriptor[] listAccessors)
+        PropertyDescriptorCollection ITypedList.GetItemProperties(PropertyDescriptor[] listAccessors)
         {
             PropertyDescriptorCollection propertyDescriptors;
 
-            if (listAccessors == null || listAccessors.Length == 0)
+            if (listAccessors == null
+                || listAccessors.Length == 0)
             {
                 // Caller is requesting property descriptors for the root element type.
                 propertyDescriptors = _propertyDescriptorsCache;
@@ -142,16 +142,19 @@ namespace System.Data.Entity.Core.Objects
             else
             {
                 // Use the last PropertyDescriptor in the array to build the collection of returned property descriptors.
-                PropertyDescriptor propertyDescriptor = listAccessors[listAccessors.Length - 1];
-                FieldDescriptor fieldDescriptor = propertyDescriptor as FieldDescriptor;
+                var propertyDescriptor = listAccessors[listAccessors.Length - 1];
+                var fieldDescriptor = propertyDescriptor as FieldDescriptor;
 
                 // If the property descriptor describes a data record with the EDM type of RowType,
                 // construct the collection of property descriptors from the property's EDM metadata.
                 // Otherwise use the CLR type of the property.
-                if (fieldDescriptor != null && fieldDescriptor.EdmProperty != null && fieldDescriptor.EdmProperty.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.RowType)
+                if (fieldDescriptor != null && fieldDescriptor.EdmProperty != null
+                    && fieldDescriptor.EdmProperty.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.RowType)
                 {
                     // Retrieve property descriptors from EDM metadata.
-                    propertyDescriptors = MaterializedDataRecord.CreatePropertyDescriptorCollection((RowType)fieldDescriptor.EdmProperty.TypeUsage.EdmType, typeof(IDataRecord), true);
+                    propertyDescriptors =
+                        MaterializedDataRecord.CreatePropertyDescriptorCollection(
+                            (RowType)fieldDescriptor.EdmProperty.TypeUsage.EdmType, typeof(IDataRecord), true);
                 }
                 else
                 {
@@ -163,7 +166,7 @@ namespace System.Data.Entity.Core.Objects
             return propertyDescriptors;
         }
 
-        string System.ComponentModel.ITypedList.GetListName(PropertyDescriptor[] listAccessors)
+        string ITypedList.GetListName(PropertyDescriptor[] listAccessors)
         {
             return _rowType.Name;
         }

@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics;
+
     /// <summary>
     /// Attribute used to mark up properties that should appear in the MetadataItem.MetadataProperties collection
     /// </summary>
@@ -60,11 +56,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Gets EDM type for values stored in property.
         /// </summary>
-        internal EdmType Type { get { return _type; } }
+        internal EdmType Type
+        {
+            get { return _type; }
+        }
 
         /// <summary>
         /// Gets bool indicating whether this is a collection type.
         /// </summary>
-        internal bool IsCollectionType { get { return _isCollectionType; } }
+        internal bool IsCollectionType
+        {
+            get { return _isCollectionType; }
+        }
     }
 }

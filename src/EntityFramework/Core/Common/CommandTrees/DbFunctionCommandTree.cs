@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees.Internal;
-using System.Linq;
-
-namespace System.Data.Entity.Core.Common.CommandTrees
+﻿namespace System.Data.Entity.Core.Common.CommandTrees
 {
-    using System.Diagnostics.CodeAnalysis;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Common.CommandTrees.Internal;
+    using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
     /// Represents a function invocation expressed as a canonical command tree
@@ -16,8 +12,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     {
         private readonly EdmFunction _edmFunction;
         private readonly TypeUsage _resultType;
-        private readonly System.Collections.ObjectModel.ReadOnlyCollection<string> _parameterNames;
-        private readonly System.Collections.ObjectModel.ReadOnlyCollection<TypeUsage> _parameterTypes;
+        private readonly ReadOnlyCollection<string> _parameterNames;
+        private readonly ReadOnlyCollection<TypeUsage> _parameterTypes;
 
         /// <summary>
         /// Constructs a new DbFunctionCommandTree that uses the specified metadata workspace, data space and function metadata
@@ -30,7 +26,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <exception cref="ArgumentNullException"><paramref name="metadata"/>, <paramref name="dataSpace"/> or <paramref name="edmFunction"/> is null</exception>
         /// <exception cref="ArgumentException"><paramref name="dataSpace"/> does not represent a valid data space or
         /// <paramref name="edmFunction">is a composable function</paramref></exception>
-        /*CQT_PUBLIC_API(*/internal/*)*/ DbFunctionCommandTree(MetadataWorkspace metadata, DataSpace dataSpace, EdmFunction edmFunction, TypeUsage resultType, IEnumerable<KeyValuePair<string, TypeUsage>> parameters)
+        /*CQT_PUBLIC_API(*/
+        internal /*)*/ DbFunctionCommandTree(
+            MetadataWorkspace metadata, DataSpace dataSpace, EdmFunction edmFunction, TypeUsage resultType,
+            IEnumerable<KeyValuePair<string, TypeUsage>> parameters)
             : base(metadata, dataSpace)
         {
             EntityUtil.CheckArgumentNull(edmFunction, "edmFunction");
@@ -38,11 +37,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             _edmFunction = edmFunction;
             _resultType = resultType;
 
-            List<string> paramNames = new List<string>();
-            List<TypeUsage> paramTypes = new List<TypeUsage>();
+            var paramNames = new List<string>();
+            var paramTypes = new List<TypeUsage>();
             if (parameters != null)
             {
-                foreach (KeyValuePair<string, TypeUsage> paramInfo in parameters)
+                foreach (var paramInfo in parameters)
                 {
                     paramNames.Add(paramInfo.Key);
                     paramTypes.Add(paramInfo.Value);
@@ -58,10 +57,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </summary>
         public EdmFunction EdmFunction
         {
-            get
-            {
-                return _edmFunction;
-            }
+            get { return _edmFunction; }
         }
 
         /// <summary>
@@ -71,10 +67,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </summary>
         public TypeUsage ResultType
         {
-            get
-            {
-                return _resultType;
-            }
+            get { return _resultType; }
         }
 
         internal override DbCommandTreeKind CommandTreeKind
@@ -84,17 +77,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         internal override IEnumerable<KeyValuePair<string, TypeUsage>> GetParameters()
         {
-            for (int idx = 0; idx < this._parameterNames.Count; idx++)
+            for (var idx = 0; idx < _parameterNames.Count; idx++)
             {
-                yield return new KeyValuePair<string, TypeUsage>(this._parameterNames[idx], this._parameterTypes[idx]);
+                yield return new KeyValuePair<string, TypeUsage>(_parameterNames[idx], _parameterTypes[idx]);
             }
         }
 
         internal override void DumpStructure(ExpressionDumper dumper)
         {
-            if (this.EdmFunction != null)
+            if (EdmFunction != null)
             {
-                dumper.Dump(this.EdmFunction);
+                dumper.Dump(EdmFunction);
             }
         }
 

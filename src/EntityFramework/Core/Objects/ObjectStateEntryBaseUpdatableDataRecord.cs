@@ -1,15 +1,8 @@
-using System;
-using System.ComponentModel;
-using System.Data;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Diagnostics;
-using System.Reflection;
-
 namespace System.Data.Entity.Core.Objects
 {
-    using System.Diagnostics.CodeAnalysis;
+    using System.Data.Common;
+    using System.Data.Entity.Core.Common;
+    using System.Diagnostics;
 
     /// <summary>
     /// 
@@ -28,15 +21,16 @@ namespace System.Data.Entity.Core.Objects
             _metadata = metadata;
         }
 
-        internal DbUpdatableDataRecord(ObjectStateEntry cacheEntry) :
-            this(cacheEntry, null, null)
+        internal DbUpdatableDataRecord(ObjectStateEntry cacheEntry)
+            :
+                this(cacheEntry, null, null)
         {
         }
 
         /// <summary>
         /// Returns the number of fields in the record.
         /// </summary>
-        override public int FieldCount
+        public override int FieldCount
         {
             get
             {
@@ -50,12 +44,9 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         /// <param name="i">The ordinal of the field</param>
         /// <returns>The field value</returns>
-        override public object this[int i]
+        public override object this[int i]
         {
-            get
-            {
-                return GetValue(i);
-            }
+            get { return GetValue(i); }
         }
 
         /// <summary>
@@ -63,12 +54,9 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         /// <param name="name">The name of the field</param>
         /// <returns>The field value</returns>
-        override public object this[string name]
+        public override object this[string name]
         {
-            get
-            {
-                return GetValue(GetOrdinal(name));
-            }
+            get { return GetValue(GetOrdinal(name)); }
         }
 
         /// <summary>
@@ -76,7 +64,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         /// <param name="i">The ordinal of the field</param>
         /// <returns>The field value as a boolean</returns>
-        override public bool GetBoolean(int i)
+        public override bool GetBoolean(int i)
         {
             return (bool)GetValue(i);
         }
@@ -86,7 +74,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         /// <param name="i">The ordinal of the field</param>
         /// <returns>The field value as a byte</returns>
-        override public byte GetByte(int i)
+        public override byte GetByte(int i)
         {
             return (byte)GetValue(i);
         }
@@ -100,7 +88,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="bufferIndex">The index in the destination buffer where copying will begin</param>
         /// <param name="length">The number of bytes to copy</param>
         /// <returns>The number of bytes copied</returns>
-        override public long GetBytes(int i, long dataIndex, byte[] buffer, int bufferIndex, int length)
+        public override long GetBytes(int i, long dataIndex, byte[] buffer, int bufferIndex, int length)
         {
             byte[] tempBuffer;
             tempBuffer = (byte[])GetValue(i);
@@ -109,13 +97,14 @@ namespace System.Data.Entity.Core.Objects
             {
                 return tempBuffer.Length;
             }
-            int srcIndex = (int)dataIndex;
-            int byteCount = Math.Min(tempBuffer.Length - srcIndex, length);
+            var srcIndex = (int)dataIndex;
+            var byteCount = Math.Min(tempBuffer.Length - srcIndex, length);
             if (srcIndex < 0)
             {
                 throw EntityUtil.InvalidSourceBufferIndex(tempBuffer.Length, srcIndex, "dataIndex");
             }
-            else if ((bufferIndex < 0) || (bufferIndex > 0 && bufferIndex >= buffer.Length))
+            else if ((bufferIndex < 0)
+                     || (bufferIndex > 0 && bufferIndex >= buffer.Length))
             {
                 throw EntityUtil.InvalidDestinationBufferIndex(buffer.Length, bufferIndex, "bufferIndex");
             }
@@ -140,7 +129,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         /// <param name="i">The ordinal of the field</param>
         /// <returns>The field value as a char</returns>
-        override public char GetChar(int i)
+        public override char GetChar(int i)
         {
             return (char)GetValue(i);
         }
@@ -154,7 +143,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="bufferIndex">The index in the destination buffer where copying will begin</param>
         /// <param name="length">The number of chars to copy</param>
         /// <returns>The number of chars copied</returns>
-        override public long GetChars(int i, long dataIndex, char[] buffer, int bufferIndex, int length)
+        public override long GetChars(int i, long dataIndex, char[] buffer, int bufferIndex, int length)
         {
             char[] tempBuffer;
             tempBuffer = (char[])GetValue(i);
@@ -164,13 +153,14 @@ namespace System.Data.Entity.Core.Objects
                 return tempBuffer.Length;
             }
 
-            int srcIndex = (int)dataIndex;
-            int charCount = Math.Min(tempBuffer.Length - srcIndex, length);
+            var srcIndex = (int)dataIndex;
+            var charCount = Math.Min(tempBuffer.Length - srcIndex, length);
             if (srcIndex < 0)
             {
                 throw EntityUtil.InvalidSourceBufferIndex(tempBuffer.Length, srcIndex, "dataIndex");
             }
-            else if ((bufferIndex < 0) || (bufferIndex > 0 && bufferIndex >= buffer.Length))
+            else if ((bufferIndex < 0)
+                     || (bufferIndex > 0 && bufferIndex >= buffer.Length))
             {
                 throw EntityUtil.InvalidDestinationBufferIndex(buffer.Length, bufferIndex, "bufferIndex");
             }
@@ -189,6 +179,7 @@ namespace System.Data.Entity.Core.Objects
             }
             return charCount;
         }
+
         IDataReader IDataRecord.GetData(int ordinal)
         {
             return GetDbDataReader(ordinal);
@@ -199,46 +190,51 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         /// <param name="i">The ordinal of the field</param>
         /// <returns></returns>
-        override protected DbDataReader GetDbDataReader(int i)
+        protected override DbDataReader GetDbDataReader(int i)
         {
             throw EntityUtil.NotSupported();
         }
+
         /// <summary>
         /// Retrieves the name of the field data type
         /// </summary>
         /// <param name="i">The ordinal of the field</param>
         /// <returns>The name of the field data type</returns>
-        override public string GetDataTypeName(int i)
+        public override string GetDataTypeName(int i)
         {
-            return ((Type)GetFieldType(i)).Name;
+            return (GetFieldType(i)).Name;
         }
+
         /// <summary>
         /// Retrieves the field value as a DateTime
         /// </summary>
         /// <param name="i">The ordinal of the field</param>
         /// <returns>The field value as a DateTime</returns>
-        override public DateTime GetDateTime(int i)
+        public override DateTime GetDateTime(int i)
         {
             return (DateTime)GetValue(i);
         }
+
         /// <summary>
         /// Retrieves the field value as a decimal
         /// </summary>
         /// <param name="i">The ordinal of the field</param>
         /// <returns>The field value as a decimal</returns>
-        override public Decimal GetDecimal(int i)
+        public override Decimal GetDecimal(int i)
         {
             return (Decimal)GetValue(i);
         }
+
         /// <summary>
         /// Retrieves the field value as a double
         /// </summary>
         /// <param name="i">The ordinal of the field</param>
         /// <returns>The field value as a double</returns>
-        override public double GetDouble(int i)
+        public override double GetDouble(int i)
         {
             return (double)GetValue(i);
         }
+
         /// <summary>
         /// Retrieves the type of a field
         /// </summary>
@@ -249,94 +245,104 @@ namespace System.Data.Entity.Core.Objects
             Debug.Assert(_cacheEntry != null, "CacheEntry is required.");
             return _cacheEntry.GetFieldType(i, _metadata);
         }
+
         /// <summary>
         /// Retrieves the field value as a float
         /// </summary>
         /// <param name="i">The ordinal of the field</param>
         /// <returns>The field value as a float</returns>
-        override public float GetFloat(int i)
+        public override float GetFloat(int i)
         {
             return (float)GetValue(i);
         }
+
         /// <summary>
         /// Retrieves the field value as a Guid
         /// </summary>
         /// <param name="i">The ordinal of the field</param>
         /// <returns>The field value as a Guid</returns>
-        override public Guid GetGuid(int i)
+        public override Guid GetGuid(int i)
         {
             return (Guid)GetValue(i);
         }
+
         /// <summary>
         /// Retrieves the field value as an Int16
         /// </summary>
         /// <param name="i">The ordinal of the field</param>
         /// <returns>The field value as an Int16</returns>
-        override public Int16 GetInt16(int i)
+        public override Int16 GetInt16(int i)
         {
             return (Int16)GetValue(i);
         }
+
         /// <summary>
         /// Retrieves the field value as an Int32
         /// </summary>
         /// <param name="i">The ordinal of the field</param>
         /// <returns>The field value as an Int32</returns>
-        override public Int32 GetInt32(int i)
+        public override Int32 GetInt32(int i)
         {
             return (Int32)GetValue(i);
         }
+
         /// <summary>
         /// Retrieves the field value as an Int64
         /// </summary>
         /// <param name="i">The ordinal of the field</param>
         /// <returns>The field value as an Int64</returns>
-        override public Int64 GetInt64(int i)
+        public override Int64 GetInt64(int i)
         {
             return (Int64)GetValue(i);
         }
+
         /// <summary>
         /// Retrieves the name of a field
         /// </summary>
         /// <param name="i">The ordinal of the field</param>
         /// <returns>The name of the field</returns>
-        override public string GetName(int i)
+        public override string GetName(int i)
         {
             Debug.Assert(_cacheEntry != null, "CacheEntry is required.");
             return _cacheEntry.GetCLayerName(i, _metadata);
         }
+
         /// <summary>
         /// Retrieves the ordinal of a field by name
         /// </summary>
         /// <param name="name">The name of the field</param>
         /// <returns>The ordinal of the field</returns>
-        override public int GetOrdinal(string name)
+        public override int GetOrdinal(string name)
         {
             Debug.Assert(_cacheEntry != null, "CacheEntry is required.");
-            int ordinal = _cacheEntry.GetOrdinalforCLayerName(name, _metadata);
+            var ordinal = _cacheEntry.GetOrdinalforCLayerName(name, _metadata);
             if (ordinal == -1)
             {
                 throw EntityUtil.ArgumentOutOfRange("name");
             }
-            return  ordinal;
+            return ordinal;
         }
+
         /// <summary>
         /// Retrieves the field value as a string
         /// </summary>
         /// <param name="i">The ordinal of the field</param>
         /// <returns>The field value as a string</returns>
-        override public string GetString(int i)
+        public override string GetString(int i)
         {
             return (string)GetValue(i);
         }
+
         /// <summary>
         /// Retrieves the value of a field
         /// </summary>
         /// <param name="i">The ordinal of the field</param>
         /// <returns>The field value</returns>
-        override public object GetValue(int i)
+        public override object GetValue(int i)
         {
             return GetRecordValue(i);
         }
+
         /// <summary>
         /// In derived classes, retrieves the record value for a field
         /// </summary>
@@ -349,28 +355,30 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         /// <param name="values">An array of objects to store the field values</param>
         /// <returns>The number of field values returned</returns>
-        override public int GetValues(object[] values)
+        public override int GetValues(object[] values)
         {
             if (values == null)
             {
                 throw EntityUtil.ArgumentNull("values");
             }
-            int minValue = Math.Min(values.Length, FieldCount);
-            for (int i = 0; i < minValue; i++)
+            var minValue = Math.Min(values.Length, FieldCount);
+            for (var i = 0; i < minValue; i++)
             {
                 values[i] = GetValue(i);
             }
             return minValue;
         }
+
         /// <summary>
         /// Determines if a field has a DBNull value
         /// </summary>
         /// <param name="i">The ordinal of the field</param>
         /// <returns>True if the field has a DBNull value</returns>
-        override public bool IsDBNull(int i)
+        public override bool IsDBNull(int i)
         {
             return (GetValue(i) == DBNull.Value);
         }
+
         /// <summary>
         /// Sets the value of a field in a record
         /// </summary>
@@ -380,6 +388,7 @@ namespace System.Data.Entity.Core.Objects
         {
             SetValue(ordinal, value);
         }
+
         /// <summary>
         /// Sets the value of a field in a record
         /// </summary>
@@ -389,6 +398,7 @@ namespace System.Data.Entity.Core.Objects
         {
             SetValue(ordinal, value);
         }
+
         /// <summary>
         /// Sets the value of a field in a record
         /// </summary>
@@ -398,6 +408,7 @@ namespace System.Data.Entity.Core.Objects
         {
             SetValue(ordinal, value);
         }
+
         /// <summary>
         /// Sets the value of a field in a record
         /// </summary>
@@ -407,6 +418,7 @@ namespace System.Data.Entity.Core.Objects
         {
             SetValue(ordinal, value);
         }
+
         /// <summary>
         /// Sets the value of a field in a record
         /// </summary>
@@ -416,6 +428,7 @@ namespace System.Data.Entity.Core.Objects
         {
             SetValue(ordinal, value);
         }
+
         /// <summary>
         /// Sets the value of a field in a record
         /// </summary>
@@ -425,6 +438,7 @@ namespace System.Data.Entity.Core.Objects
         {
             SetValue(ordinal, value);
         }
+
         /// <summary>
         /// Sets the value of a field in a record
         /// </summary>
@@ -434,6 +448,7 @@ namespace System.Data.Entity.Core.Objects
         {
             SetValue(ordinal, value);
         }
+
         /// <summary>
         /// Sets the value of a field in a record
         /// </summary>
@@ -443,6 +458,7 @@ namespace System.Data.Entity.Core.Objects
         {
             SetValue(ordinal, value);
         }
+
         /// <summary>
         /// Sets the value of a field in a record
         /// </summary>
@@ -452,6 +468,7 @@ namespace System.Data.Entity.Core.Objects
         {
             SetValue(ordinal, value);
         }
+
         /// <summary>
         /// Sets the value of a field in a record
         /// </summary>
@@ -461,6 +478,7 @@ namespace System.Data.Entity.Core.Objects
         {
             SetValue(ordinal, value);
         }
+
         /// <summary>
         /// Sets the value of a field in a record
         /// </summary>
@@ -470,6 +488,7 @@ namespace System.Data.Entity.Core.Objects
         {
             SetValue(ordinal, value);
         }
+
         /// <summary>
         /// Sets the value of a field in a record
         /// </summary>
@@ -479,6 +498,7 @@ namespace System.Data.Entity.Core.Objects
         {
             SetValue(ordinal, value);
         }
+
         /// <summary>
         /// Sets the value of a field in a record
         /// </summary>
@@ -488,6 +508,7 @@ namespace System.Data.Entity.Core.Objects
         {
             SetValue(ordinal, value);
         }
+
         /// <summary>
         /// Sets the value of a field in a record
         /// </summary>
@@ -497,6 +518,7 @@ namespace System.Data.Entity.Core.Objects
         {
             SetRecordValue(ordinal, value);
         }
+
         /// <summary>
         /// Sets field values in a record
         /// </summary>
@@ -504,13 +526,14 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of fields that were set</returns>
         public int SetValues(params Object[] values)
         {
-            int minValue = Math.Min(values.Length, FieldCount);
-            for (int i = 0; i < minValue; i++)
+            var minValue = Math.Min(values.Length, FieldCount);
+            for (var i = 0; i < minValue; i++)
             {
                 SetRecordValue(i, values[i]);
             }
             return minValue;
         }
+
         /// <summary>
         /// Sets a field to the DBNull value
         /// </summary>
@@ -519,6 +542,7 @@ namespace System.Data.Entity.Core.Objects
         {
             SetRecordValue(ordinal, DBNull.Value);
         }
+
         /// <summary>
         /// Retrieve data record information
         /// </summary>
@@ -534,6 +558,7 @@ namespace System.Data.Entity.Core.Objects
                 return _recordInfo;
             }
         }
+
         /// <summary>
         /// Retrieves a field value as a DbDataRecord
         /// </summary>
@@ -551,7 +576,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns></returns>
         public DbDataReader GetDataReader(int i)
         {
-            return this.GetDbDataReader(i);
+            return GetDbDataReader(i);
         }
 
         /// <summary>
@@ -564,21 +589,24 @@ namespace System.Data.Entity.Core.Objects
 
     public abstract class CurrentValueRecord : DbUpdatableDataRecord
     {
-        internal CurrentValueRecord(ObjectStateEntry cacheEntry, StateManagerTypeMetadata metadata, object userObject) :
-            base(cacheEntry, metadata, userObject)
+        internal CurrentValueRecord(ObjectStateEntry cacheEntry, StateManagerTypeMetadata metadata, object userObject)
+            :
+                base(cacheEntry, metadata, userObject)
         {
         }
 
-        internal CurrentValueRecord(ObjectStateEntry cacheEntry) :
-            base(cacheEntry)
+        internal CurrentValueRecord(ObjectStateEntry cacheEntry)
+            :
+                base(cacheEntry)
         {
         }
     }
 
     public abstract class OriginalValueRecord : DbUpdatableDataRecord
     {
-        internal OriginalValueRecord(ObjectStateEntry cacheEntry, StateManagerTypeMetadata metadata, object userObject) :
-            base(cacheEntry, metadata, userObject)
+        internal OriginalValueRecord(ObjectStateEntry cacheEntry, StateManagerTypeMetadata metadata, object userObject)
+            :
+                base(cacheEntry, metadata, userObject)
         {
         }
     }

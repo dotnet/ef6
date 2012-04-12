@@ -1,26 +1,27 @@
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
+    using System.Diagnostics;
 
     // This class manages the different maps used in the view generation
     // process. These maps keep track of indexes of memberpaths, domains of
     // member paths, etc
     internal class MemberMaps
     {
-
         #region Fields
-        private MemberProjectionIndex m_projectedSlotMap;
-        private MemberDomainMap m_queryDomainMap;
-        private MemberDomainMap m_updateDomainMap;
-        private ViewTarget m_viewTarget;
+
+        private readonly MemberProjectionIndex m_projectedSlotMap;
+        private readonly MemberDomainMap m_queryDomainMap;
+        private readonly MemberDomainMap m_updateDomainMap;
+        private readonly ViewTarget m_viewTarget;
+
         #endregion
 
         #region Constructors
-        internal MemberMaps(ViewTarget viewTarget, MemberProjectionIndex projectedSlotMap,
-                            MemberDomainMap queryDomainMap, MemberDomainMap updateDomainMap)
-        {
 
+        internal MemberMaps(
+            ViewTarget viewTarget, MemberProjectionIndex projectedSlotMap,
+            MemberDomainMap queryDomainMap, MemberDomainMap updateDomainMap)
+        {
             m_projectedSlotMap = projectedSlotMap;
             m_queryDomainMap = queryDomainMap;
             m_updateDomainMap = updateDomainMap;
@@ -30,8 +31,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             Debug.Assert(m_projectedSlotMap != null);
             m_viewTarget = viewTarget;
         }
-        #endregion
 
+        #endregion
 
         #region Properties
 
@@ -52,19 +53,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         internal MemberDomainMap RightDomainMap
         {
-            get
-            {
-                return m_viewTarget == ViewTarget.QueryView ? m_updateDomainMap : m_queryDomainMap;
-            }
+            get { return m_viewTarget == ViewTarget.QueryView ? m_updateDomainMap : m_queryDomainMap; }
         }
 
         internal MemberDomainMap LeftDomainMap
         {
-            get
-            {
-                return m_viewTarget == ViewTarget.QueryView ? m_queryDomainMap : m_updateDomainMap;
-            }
+            get { return m_viewTarget == ViewTarget.QueryView ? m_queryDomainMap : m_updateDomainMap; }
         }
+
         #endregion
     }
 }

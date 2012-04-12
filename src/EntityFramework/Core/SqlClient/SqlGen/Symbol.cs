@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
-using System.Data.SqlClient;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees;
-
 namespace System.Data.Entity.Core.SqlClient.SqlGen
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Globalization;
+
     /// <summary>
     /// <see cref="SymbolTable"/>
     /// This class represents an extent/nested select statement,
@@ -35,6 +30,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// in a Join Symbol.
         /// </summary>
         private Dictionary<string, Symbol> columns;
+
         internal Dictionary<string, Symbol> Columns
         {
             get
@@ -51,6 +47,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// Used to track the output columns of a SqlSelectStatement it represents
         /// </summary>
         private Dictionary<string, Symbol> outputColumns;
+
         internal Dictionary<string, Symbol> OutputColumns
         {
             get
@@ -63,45 +60,26 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             }
         }
 
-        private bool needsRenaming;
-        internal bool NeedsRenaming
-        {
-            get { return needsRenaming; }
-            set { needsRenaming = value; }
-        }
+        internal bool NeedsRenaming { get; set; }
 
-        private bool outputColumnsRenamed;
-        internal bool OutputColumnsRenamed
-        {
-            get { return outputColumnsRenamed; }
-            set { outputColumnsRenamed = value; }
-        }
+        internal bool OutputColumnsRenamed { get; set; }
 
-        private string name;
+        private readonly string name;
+
         public string Name
         {
             get { return name; }
         }
 
-        private string newName;
-        public string NewName
-        {
-            get { return newName; }
-            set { newName = value; }
-        }
+        public string NewName { get; set; }
 
-        private TypeUsage type;
-        internal TypeUsage Type
-        {
-            get { return type; }
-            set { type = value; }
-        }
+        internal TypeUsage Type { get; set; }
 
         public Symbol(string name, TypeUsage type)
         {
             this.name = name;
-            this.newName = name;
-            this.Type = type;
+            NewName = name;
+            Type = type;
         }
 
         /// <summary>
@@ -114,10 +92,10 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         public Symbol(string name, TypeUsage type, Dictionary<string, Symbol> outputColumns, bool outputColumnsRenamed)
         {
             this.name = name;
-            this.newName = name;
-            this.Type = type;
+            NewName = name;
+            Type = type;
             this.outputColumns = outputColumns;
-            this.OutputColumnsRenamed = outputColumnsRenamed;
+            OutputColumnsRenamed = outputColumnsRenamed;
         }
 
         #region ISqlFragment Members
@@ -132,32 +110,33 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="sqlGenerator"></param>
         public void WriteSql(SqlWriter writer, SqlGenerator sqlGenerator)
         {
-            if (this.NeedsRenaming)
+            if (NeedsRenaming)
             {
                 int i;
 
-                if (sqlGenerator.AllColumnNames.TryGetValue(this.NewName, out i))
+                if (sqlGenerator.AllColumnNames.TryGetValue(NewName, out i))
                 {
                     string newNameCandidate;
                     do
                     {
                         ++i;
-                        newNameCandidate = this.NewName + i.ToString(System.Globalization.CultureInfo.InvariantCulture);
-                    } while (sqlGenerator.AllColumnNames.ContainsKey(newNameCandidate));
+                        newNameCandidate = NewName + i.ToString(CultureInfo.InvariantCulture);
+                    }
+                    while (sqlGenerator.AllColumnNames.ContainsKey(newNameCandidate));
 
-                    sqlGenerator.AllColumnNames[this.NewName] = i;
+                    sqlGenerator.AllColumnNames[NewName] = i;
 
-                    this.NewName = newNameCandidate;
+                    NewName = newNameCandidate;
                 }
 
                 // Add this column name to list of known names so that there are no subsequent
                 // collisions
-                sqlGenerator.AllColumnNames[this.NewName] = 0;
+                sqlGenerator.AllColumnNames[NewName] = 0;
 
                 // Prevent it from being renamed repeatedly.
-                this.NeedsRenaming = false;
+                NeedsRenaming = false;
             }
-            writer.Write(SqlGenerator.QuoteIdentifier(this.NewName));
+            writer.Write(SqlGenerator.QuoteIdentifier(NewName));
         }
 
         #endregion

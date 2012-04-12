@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
+using ReadOnlyModificationClauses =
+    System.Collections.ObjectModel.ReadOnlyCollection<System.Data.Entity.Core.Common.CommandTrees.DbModificationClause>;
 
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees.Internal;
-using System.Data.Entity.Core.Common.Utils;
-using System.Diagnostics;
-using System.Collections.ObjectModel;
-using ReadOnlyModificationClauses = System.Collections.ObjectModel.ReadOnlyCollection<System.Data.Entity.Core.Common.CommandTrees.DbModificationClause>;  // System.Data.Common.ReadOnlyCollection conflicts
+// System.Data.Common.ReadOnlyCollection conflicts
 
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
-    using System.Diagnostics.CodeAnalysis;
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.CommandTrees.Internal;
+    using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
     /// Represents a single row insert operation expressed as a canonical command tree.
@@ -22,25 +19,24 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         private readonly ReadOnlyModificationClauses _setClauses;
         private readonly DbExpression _returning;
 
-        internal DbInsertCommandTree(MetadataWorkspace metadata, DataSpace dataSpace, DbExpressionBinding target, ReadOnlyModificationClauses setClauses, DbExpression returning)
+        internal DbInsertCommandTree(
+            MetadataWorkspace metadata, DataSpace dataSpace, DbExpressionBinding target, ReadOnlyModificationClauses setClauses,
+            DbExpression returning)
             : base(metadata, dataSpace, target)
         {
             EntityUtil.CheckArgumentNull(setClauses, "setClauses");
             // returning may be null
 
-            this._setClauses = setClauses;
-            this._returning = returning;
+            _setClauses = setClauses;
+            _returning = returning;
         }
 
         /// <summary>
         /// Gets set clauses determining values of columns in the inserted row.
         /// </summary>
-        public IList<DbModificationClause> SetClauses 
+        public IList<DbModificationClause> SetClauses
         {
-            get 
-            {
-                return _setClauses; 
-            }
+            get { return _setClauses; }
         }
 
         /// <summary>
@@ -56,10 +52,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </remarks>
         public DbExpression Returning
         {
-            get
-            {
-                return _returning;
-            }
+            get { return _returning; }
         }
 
         internal override DbCommandTreeKind CommandTreeKind
@@ -77,7 +70,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             base.DumpStructure(dumper);
 
             dumper.Begin("SetClauses");
-            foreach (DbModificationClause clause in this.SetClauses)
+            foreach (var clause in SetClauses)
             {
                 if (null != clause)
                 {
@@ -86,15 +79,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             dumper.End("SetClauses");
 
-            if (null != this.Returning)
+            if (null != Returning)
             {
-                dumper.Dump(this.Returning, "Returning");
+                dumper.Dump(Returning, "Returning");
             }
         }
 
         internal override string PrintTree(ExpressionPrinter printer)
         {
-            return printer.Print(this); 
+            return printer.Print(this);
         }
     }
 }

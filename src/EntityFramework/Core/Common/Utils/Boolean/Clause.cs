@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Globalization;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Text;
+
     /// <summary>
     /// Base class for clauses, which are (constrained) combinations of literals.
     /// </summary>
@@ -40,11 +36,11 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         // Given a collection of literals and a tree type, returns an expression of the given type.
         private static BoolExpr<T_Identifier> ConvertLiteralsToExpr(Set<Literal<T_Identifier>> literals, ExprType treeType)
         {
-            bool isAnd = ExprType.And == treeType;
+            var isAnd = ExprType.And == treeType;
             Debug.Assert(isAnd || ExprType.Or == treeType);
 
-            IEnumerable<BoolExpr<T_Identifier>> literalExpressions = literals.Select(
-                new Func<Literal<T_Identifier>, BoolExpr<T_Identifier>>(ConvertLiteralToExpression));
+            var literalExpressions = literals.Select(
+                ConvertLiteralToExpression);
 
             if (isAnd)
             {
@@ -64,7 +60,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.Append("Clause{");
             builder.Append(_literals);
             return builder.Append("}").ToString();
@@ -97,7 +93,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     /// </summary>
     /// <typeparam name="T_Identifier">Type of normal form literal.</typeparam>
     internal sealed class DnfClause<T_Identifier> : Clause<T_Identifier>,
-        IEquatable<DnfClause<T_Identifier>>
+                                                    IEquatable<DnfClause<T_Identifier>>
     {
         /// <summary>
         /// Initialize a DNF clause.
@@ -111,7 +107,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         public bool Equals(DnfClause<T_Identifier> other)
         {
             return null != other &&
-                other.Literals.SetEquals(Literals);
+                   other.Literals.SetEquals(Literals);
         }
     }
 
@@ -130,7 +126,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     /// </summary>
     /// <typeparam name="T_Identifier">Type of normal form literal.</typeparam>
     internal sealed class CnfClause<T_Identifier> : Clause<T_Identifier>,
-        IEquatable<CnfClause<T_Identifier>>
+                                                    IEquatable<CnfClause<T_Identifier>>
     {
         /// <summary>
         /// Initialize a CNF clause.
@@ -144,7 +140,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         public bool Equals(CnfClause<T_Identifier> other)
         {
             return null != other &&
-                other.Literals.SetEquals(Literals);
+                   other.Literals.SetEquals(Literals);
         }
     }
 }

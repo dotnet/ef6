@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Diagnostics;
-using System.Reflection;
-using System.Data.Entity.Core.Common.Utils;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Diagnostics;
+    using System.Reflection;
+
     /// <summary>
     /// Metadata collection class supporting delay-loading of system item attributes and
     /// extended attributes.
@@ -23,15 +20,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
         }
 
-        private readonly static Memoizer<Type, ItemTypeInformation> s_itemTypeMemoizer =
+        private static readonly Memoizer<Type, ItemTypeInformation> s_itemTypeMemoizer =
             new Memoizer<Type, ItemTypeInformation>(clrType => new ItemTypeInformation(clrType), null);
 
         // Given an item, returns all system type attributes for the item.
         private static IEnumerable<MetadataProperty> GetSystemMetadataProperties(MetadataItem item)
         {
             EntityUtil.CheckArgumentNull(item, "item");
-            Type type = item.GetType();
-            ItemTypeInformation itemTypeInformation = GetItemTypeInformation(type);
+            var type = item.GetType();
+            var itemTypeInformation = GetItemTypeInformation(type);
             return itemTypeInformation.GetItemAttributes(item);
         }
 
@@ -63,7 +60,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // Returns system item attributes for the given item.
             internal IEnumerable<MetadataProperty> GetItemAttributes(MetadataItem item)
             {
-                foreach (ItemPropertyInfo propertyInfo in _itemProperties)
+                foreach (var propertyInfo in _itemProperties)
                 {
                     yield return propertyInfo.GetMetadataProperty(item);
                 }
@@ -73,8 +70,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // available.
             private static List<ItemPropertyInfo> GetItemProperties(Type clrType)
             {
-                List<ItemPropertyInfo> result = new List<ItemPropertyInfo>();
-                foreach (PropertyInfo propertyInfo in clrType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                var result = new List<ItemPropertyInfo>();
+                foreach (var propertyInfo in clrType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 {
                     foreach (MetadataPropertyAttribute attribute in propertyInfo.GetCustomAttributes(
                         typeof(MetadataPropertyAttribute), false))
@@ -85,7 +82,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return result;
             }
         }
-
 
         /// <summary>
         /// Encapsulates information about a CLR property of an item class.
@@ -117,7 +113,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             /// <returns>Item attribute.</returns>
             internal MetadataProperty GetMetadataProperty(MetadataItem item)
             {
-                return new MetadataProperty(_propertyInfo.Name, _attribute.Type, _attribute.IsCollectionType,
+                return new MetadataProperty(
+                    _propertyInfo.Name, _attribute.Type, _attribute.IsCollectionType,
                     new MetadataPropertyValue(_propertyInfo, item));
             }
         }

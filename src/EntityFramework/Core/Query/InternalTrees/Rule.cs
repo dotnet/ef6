@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
+    using System.Diagnostics;
+
     /// <summary>
     /// A Rule - more specifically, a transformation rule - describes an action that is to
     /// be taken when a specific kind of subtree is found in the tree
@@ -26,11 +23,14 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal delegate bool ProcessNodeDelegate(RuleProcessingContext context, Node subTree, out Node newSubTree);
 
         #region private state
-        private ProcessNodeDelegate m_nodeDelegate;
-        private OpType m_opType;
+
+        private readonly ProcessNodeDelegate m_nodeDelegate;
+        private readonly OpType m_opType;
+
         #endregion
 
         #region Constructors
+
         /// <summary>
         /// Basic constructor
         /// </summary>
@@ -45,6 +45,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             m_opType = opType;
             m_nodeDelegate = nodeProcessDelegate;
         }
+
         #endregion
 
         #region protected methods
@@ -52,6 +53,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #endregion
 
         #region public methods
+
         /// <summary>
         /// Does the rule match the current node?
         /// </summary>
@@ -101,9 +103,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     internal sealed class SimpleRule : Rule
     {
         #region private state
+
         #endregion
 
         #region constructors
+
         /// <summary>
         /// Basic constructor.
         /// </summary>
@@ -113,13 +117,16 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             : base(opType, processDelegate)
         {
         }
+
         #endregion
 
         #region overriden methods
+
         internal override bool Match(Node node)
         {
-            return node.Op.OpType == this.RuleOpType;
+            return node.Op.OpType == RuleOpType;
         }
+
         #endregion
     }
 
@@ -127,13 +134,16 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     /// A PatternMatchRule allows for a pattern to be specified to identify interesting
     /// subtrees, rather than just an OpType
     /// </summary>
-    internal sealed class PatternMatchRule: Rule
+    internal sealed class PatternMatchRule : Rule
     {
         #region private state
-        private Node m_pattern;
+
+        private readonly Node m_pattern;
+
         #endregion
 
         #region constructors
+
         /// <summary>
         /// Basic constructor
         /// </summary>
@@ -146,29 +156,47 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             Debug.Assert(pattern.Op != null, "null pattern Op");
             m_pattern = pattern;
         }
+
         #endregion
 
         #region private methods
+
         private bool Match(Node pattern, Node original)
         {
-            if (pattern.Op.OpType == OpType.Leaf)
+            if (pattern.Op.OpType
+                == OpType.Leaf)
+            {
                 return true;
-            if (pattern.Op.OpType != original.Op.OpType)
+            }
+            if (pattern.Op.OpType
+                != original.Op.OpType)
+            {
                 return false;
-            if (pattern.Children.Count != original.Children.Count)
+            }
+            if (pattern.Children.Count
+                != original.Children.Count)
+            {
                 return false;
-            for (int i = 0; i < pattern.Children.Count; i++)
+            }
+            for (var i = 0; i < pattern.Children.Count; i++)
+            {
                 if (!Match(pattern.Children[i], original.Children[i]))
+                {
                     return false;
+                }
+            }
             return true;
         }
+
         #endregion
 
         #region overridden methods
+
         internal override bool Match(Node node)
         {
             return Match(m_pattern, node);
         }
+
         #endregion
     }
 }

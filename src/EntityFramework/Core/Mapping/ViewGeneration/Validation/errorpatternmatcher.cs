@@ -1,32 +1,30 @@
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity;
-using System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using CompositeCondition = Dictionary<MemberPath, Set<Constant>>;
-    delegate bool LCWComparer(FragmentQuery query1, FragmentQuery query2);
+    using System.Linq;
+    using System.Text;
+    using CompositeCondition = System.Collections.Generic.Dictionary<Structures.MemberPath, Common.Utils.Set<Structures.Constant>>;
+
+    internal delegate bool LCWComparer(FragmentQuery query1, FragmentQuery query2);
 
     internal class ErrorPatternMatcher
     {
-
-        private ViewgenContext m_viewgenContext;
-        private MemberDomainMap m_domainMap;
-        private ErrorLog m_errorLog;
-        private int m_originalErrorCount;
+        private readonly ViewgenContext m_viewgenContext;
+        private readonly MemberDomainMap m_domainMap;
+        private readonly ErrorLog m_errorLog;
+        private readonly int m_originalErrorCount;
         private const int NUM_PARTITION_ERR_TO_FIND = 5;
 
-
         #region Constructor
+
         private ErrorPatternMatcher(ViewgenContext context, MemberDomainMap domainMap, ErrorLog errorLog)
         {
             m_viewgenContext = context;
@@ -41,56 +39,64 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             //Can't get here if Update Views have validation disabled
             Debug.Assert(context.ViewTarget == ViewTarget.QueryView || context.Config.IsValidationEnabled);
 
-            if (context.ViewTarget == ViewTarget.QueryView && !context.Config.IsValidationEnabled)
+            if (context.ViewTarget == ViewTarget.QueryView
+                && !context.Config.IsValidationEnabled)
             {
                 return false; // Rules for QV under no validation are different
             }
 
-            ErrorPatternMatcher matcher = new ErrorPatternMatcher(context, domainMap, errorLog);
+            var matcher = new ErrorPatternMatcher(context, domainMap, errorLog);
 
             matcher.MatchMissingMappingErrors();
             matcher.MatchConditionErrors();
             matcher.MatchSplitErrors();
 
-            if (matcher.m_errorLog.Count == matcher.m_originalErrorCount)
-            {   //this will generate redundant errors if one of the above routine finds an error
+            if (matcher.m_errorLog.Count
+                == matcher.m_originalErrorCount)
+            {
+                //this will generate redundant errors if one of the above routine finds an error
                 // so execute it only when we dont have any other errors
                 matcher.MatchPartitionErrors();
             }
 
-            if (matcher.m_errorLog.Count > matcher.m_originalErrorCount)
+            if (matcher.m_errorLog.Count
+                > matcher.m_originalErrorCount)
             {
                 ExceptionHelpers.ThrowMappingException(matcher.m_errorLog, matcher.m_viewgenContext.Config);
             }
 
             return false;
         }
+
         #endregion
 
         #region Error Matching Routines
-
 
         /// <summary>
         /// Finds Types (possibly without any members) that have no mapping specified
         /// </summary>
         private void MatchMissingMappingErrors()
         {
-            if (m_viewgenContext.ViewTarget == ViewTarget.QueryView)
+            if (m_viewgenContext.ViewTarget
+                == ViewTarget.QueryView)
             {
                 //Find all types for the given EntitySet
-                Set<EdmType> unmapepdTypesInExtent = new Set<EdmType>(MetadataHelper.GetTypeAndSubtypesOf(m_viewgenContext.Extent.ElementType, m_viewgenContext.EdmItemCollection, false /*isAbstract*/));
+                var unmapepdTypesInExtent =
+                    new Set<EdmType>(
+                        MetadataHelper.GetTypeAndSubtypesOf(
+                            m_viewgenContext.Extent.ElementType, m_viewgenContext.EdmItemCollection, false /*isAbstract*/));
 
                 //Figure out which type has no Cell mapped to it
                 foreach (var fragment in m_viewgenContext.AllWrappersForExtent)
                 {
-                    foreach (Cell cell in fragment.Cells)
+                    foreach (var cell in fragment.Cells)
                     {
                         foreach (var restriction in cell.CQuery.Conditions)
                         {
                             foreach (var cellConst in restriction.Domain.Values)
                             {
                                 //if there is a mapping to this type...
-                                TypeConstant typeConst = cellConst as TypeConstant;
+                                var typeConst = cellConst as TypeConstant;
                                 if (typeConst != null)
                                 {
                                     unmapepdTypesInExtent.Remove(typeConst.EdmType);
@@ -104,15 +110,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 if (unmapepdTypesInExtent.Count > 0)
                 {
                     //error unmapped type
-                    m_errorLog.AddEntry(new ErrorLog.Record(ViewGenErrorCode.ErrorPatternMissingMappingError,
-                            Strings.ViewGen_Missing_Type_Mapping(BuildCommaSeparatedErrorString(unmapepdTypesInExtent)), m_viewgenContext.AllWrappersForExtent, ""));
+                    m_errorLog.AddEntry(
+                        new ErrorLog.Record(
+                            ViewGenErrorCode.ErrorPatternMissingMappingError,
+                            Strings.ViewGen_Missing_Type_Mapping(BuildCommaSeparatedErrorString(unmapepdTypesInExtent)),
+                            m_viewgenContext.AllWrappersForExtent, ""));
                 }
             }
         }
 
         private static bool HasNotNullCondition(CellQuery cellQuery, MemberPath member)
         {
-            foreach (MemberRestriction condition in cellQuery.GetConjunctsFromWhereClause())
+            foreach (var condition in cellQuery.GetConjunctsFromWhereClause())
             {
                 if (condition.RestrictedMemberSlot.MemberPath.Equals(member))
                 {
@@ -122,7 +131,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                     }
 
                     //Not Null may have been optimized into NOT(1, 2, NULL). SO look into negated cell constants
-                    foreach (NegatedConstant negatedConst in condition.Domain.Values.Select(cellConstant => cellConstant as NegatedConstant).Where(negated => negated != null))
+                    foreach (
+                        var negatedConst in
+                            condition.Domain.Values.Select(cellConstant => cellConstant as NegatedConstant).Where(
+                                negated => negated != null))
                     {
                         if (negatedConst.Elements.Contains(Constant.Null))
                         {
@@ -134,12 +146,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             return false;
         }
 
-        private static bool IsMemberPartOfNotNullCondition(IEnumerable<LeftCellWrapper> wrappers, MemberPath leftMember, ViewTarget viewTarget)
+        private static bool IsMemberPartOfNotNullCondition(
+            IEnumerable<LeftCellWrapper> wrappers, MemberPath leftMember, ViewTarget viewTarget)
         {
-
             foreach (var leftCellWrapper in wrappers)
             {
-                CellQuery leftCellQuery = leftCellWrapper.OnlyInputCell.GetLeftQuery(viewTarget);
+                var leftCellQuery = leftCellWrapper.OnlyInputCell.GetLeftQuery(viewTarget);
 
                 if (HasNotNullCondition(leftCellQuery, leftMember))
                 {
@@ -147,20 +159,19 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 }
 
                 //Now figure out corresponding right side MemberPath
-                CellQuery rightCellQuery = leftCellWrapper.OnlyInputCell.GetRightQuery(viewTarget);
-                int indexOfMemberInProjection = leftCellQuery.GetProjectedMembers().TakeWhile(path => !path.Equals(leftMember)).Count();
+                var rightCellQuery = leftCellWrapper.OnlyInputCell.GetRightQuery(viewTarget);
+                var indexOfMemberInProjection = leftCellQuery.GetProjectedMembers().TakeWhile(path => !path.Equals(leftMember)).Count();
 
                 //Member with condition is projected, so check opposite CellQuery's condition
                 if (indexOfMemberInProjection < leftCellQuery.GetProjectedMembers().Count())
                 {
-                    MemberPath rightmember = ((MemberProjectedSlot)rightCellQuery.ProjectedSlotAt(indexOfMemberInProjection)).MemberPath;
+                    var rightmember = ((MemberProjectedSlot)rightCellQuery.ProjectedSlotAt(indexOfMemberInProjection)).MemberPath;
 
                     if (HasNotNullCondition(rightCellQuery, rightmember))
                     {
                         return true;
                     }
                 }
-
             }
             return false;
         }
@@ -172,35 +183,36 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         /// </summary>
         private void MatchConditionErrors()
         {
-            List<LeftCellWrapper> leftCellWrappers = m_viewgenContext.AllWrappersForExtent;
+            var leftCellWrappers = m_viewgenContext.AllWrappersForExtent;
 
             //Stores violating Discriminator (condition member) so that we dont repeat the same error
-            Set<MemberPath> mappedConditionMembers = new Set<MemberPath>();
+            var mappedConditionMembers = new Set<MemberPath>();
 
             //Both of these data-structs help in finding duplicate conditions
-            Set<CompositeCondition> setOfconditions = new Set<CompositeCondition>(new ConditionComparer());
-            Dictionary<CompositeCondition, LeftCellWrapper> firstLCWForCondition = new Dictionary<CompositeCondition, LeftCellWrapper>(new ConditionComparer());
+            var setOfconditions = new Set<CompositeCondition>(new ConditionComparer());
+            var firstLCWForCondition = new Dictionary<CompositeCondition, LeftCellWrapper>(new ConditionComparer());
 
             foreach (var leftCellWrapper in leftCellWrappers)
             {
-                CompositeCondition condMembersValues = new CompositeCondition();
+                var condMembersValues = new CompositeCondition();
 
-                CellQuery cellQuery = leftCellWrapper.OnlyInputCell.GetLeftQuery(m_viewgenContext.ViewTarget);
+                var cellQuery = leftCellWrapper.OnlyInputCell.GetLeftQuery(m_viewgenContext.ViewTarget);
 
-                foreach (MemberRestriction condition in cellQuery.GetConjunctsFromWhereClause())
+                foreach (var condition in cellQuery.GetConjunctsFromWhereClause())
                 {
-                    MemberPath memberPath = condition.RestrictedMemberSlot.MemberPath;
+                    var memberPath = condition.RestrictedMemberSlot.MemberPath;
 
                     if (!m_domainMap.IsConditionMember(memberPath))
                     {
                         continue;
                     }
 
-                    ScalarRestriction scalarCond = condition as ScalarRestriction;
+                    var scalarCond = condition as ScalarRestriction;
                     //Check for mapping of Scalar member condition, ignore type conditions
                     if (scalarCond != null &&
                         !mappedConditionMembers.Contains(memberPath) && /* prevents duplicate errors */
-                        !leftCellWrapper.OnlyInputCell.CQuery.WhereClause.Equals(leftCellWrapper.OnlyInputCell.SQuery.WhereClause) && /* projection allowed when both conditions are equal */
+                        !leftCellWrapper.OnlyInputCell.CQuery.WhereClause.Equals(leftCellWrapper.OnlyInputCell.SQuery.WhereClause)
+                        && /* projection allowed when both conditions are equal */
                         !IsMemberPartOfNotNullCondition(leftCellWrappers, memberPath, m_viewgenContext.ViewTarget))
                     {
                         //This member should not be mapped
@@ -211,18 +223,23 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                     //check that the property it is mapped to in the fragment is non-nullable,
                     //unless there is a not null condition on the property that is being mapped it self.
                     //Otherwise return an error.
-                    if (m_viewgenContext.ViewTarget == ViewTarget.UpdateView)
+                    if (m_viewgenContext.ViewTarget
+                        == ViewTarget.UpdateView)
                     {
                         if (scalarCond != null &&
-                            memberPath.IsNullable && IsMemberPartOfNotNullCondition(new LeftCellWrapper[] { leftCellWrapper }, memberPath, m_viewgenContext.ViewTarget))                        
+                            memberPath.IsNullable
+                            && IsMemberPartOfNotNullCondition(new[] { leftCellWrapper }, memberPath, m_viewgenContext.ViewTarget))
                         {
-                            MemberPath rightMemberPath = GetRightMemberPath(memberPath, leftCellWrapper);
-                            if (rightMemberPath != null && rightMemberPath.IsNullable &&
-                                !IsMemberPartOfNotNullCondition(new LeftCellWrapper[] { leftCellWrapper }, rightMemberPath, m_viewgenContext.ViewTarget))
+                            var rightMemberPath = GetRightMemberPath(memberPath, leftCellWrapper);
+                            if (rightMemberPath != null && rightMemberPath.IsNullable
+                                &&
+                                !IsMemberPartOfNotNullCondition(new[] { leftCellWrapper }, rightMemberPath, m_viewgenContext.ViewTarget))
                             {
-                                m_errorLog.AddEntry(new ErrorLog.Record(ViewGenErrorCode.ErrorPatternConditionError,
+                                m_errorLog.AddEntry(
+                                    new ErrorLog.Record(
+                                        ViewGenErrorCode.ErrorPatternConditionError,
                                         Strings.Viewgen_ErrorPattern_NotNullConditionMappedToNullableMember(
-                                                memberPath, rightMemberPath
+                                            memberPath, rightMemberPath
                                             ), leftCellWrapper.OnlyInputCell, ""));
                             }
                         }
@@ -241,7 +258,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                         }
                         values.Add(element);
                     }
-
                 } //foreach condition
 
                 if (condMembersValues.Count > 0) //it is possible that there are no condition members
@@ -253,9 +269,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                         if (!RightSideEqual(firstLCWForCondition[condMembersValues], leftCellWrapper))
                         {
                             //error duplicate conditions
-                            m_errorLog.AddEntry(new ErrorLog.Record(ViewGenErrorCode.ErrorPatternConditionError,
+                            m_errorLog.AddEntry(
+                                new ErrorLog.Record(
+                                    ViewGenErrorCode.ErrorPatternConditionError,
                                     Strings.Viewgen_ErrorPattern_DuplicateConditionValue(
-                                            BuildCommaSeparatedErrorString(condMembersValues.Keys)
+                                        BuildCommaSeparatedErrorString(condMembersValues.Keys)
                                         ),
                                     ToIEnum(firstLCWForCondition[condMembersValues].OnlyInputCell, leftCellWrapper.OnlyInputCell), ""));
                         }
@@ -269,12 +287,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                     }
                 }
             } //foreach fragment related to the Extent we are working on
-
         }
 
-        private static MemberPath GetRightMemberPath(MemberPath conditionMember,LeftCellWrapper leftCellWrapper)
+        private static MemberPath GetRightMemberPath(MemberPath conditionMember, LeftCellWrapper leftCellWrapper)
         {
-            CellQuery rightCellQuery = leftCellWrapper.OnlyInputCell.GetRightQuery(ViewTarget.QueryView);
+            var rightCellQuery = leftCellWrapper.OnlyInputCell.GetRightQuery(ViewTarget.QueryView);
             var projectPositions = rightCellQuery.GetProjectedPositions(conditionMember);
             //Make the case simple. If the member is mapped more than once in the same cell wrapper
             //we are not going try and guess the pattern
@@ -282,8 +299,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             {
                 return null;
             }
-            int firstProjectedPosition = projectPositions.First();
-            CellQuery leftCellQuery = leftCellWrapper.OnlyInputCell.GetLeftQuery(ViewTarget.QueryView);
+            var firstProjectedPosition = projectPositions.First();
+            var leftCellQuery = leftCellWrapper.OnlyInputCell.GetLeftQuery(ViewTarget.QueryView);
             return ((MemberProjectedSlot)leftCellQuery.ProjectedSlotAt(firstProjectedPosition)).MemberPath;
         }
 
@@ -293,15 +310,17 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         /// </summary>
         private void MatchSplitErrors()
         {
-            List<LeftCellWrapper> leftCellWrappers = m_viewgenContext.AllWrappersForExtent;
+            var leftCellWrappers = m_viewgenContext.AllWrappersForExtent;
 
             //Check that the given Table is mapped to only one EntitySet (avoid AssociationSets)
-            var nonAssociationWrappers = leftCellWrappers.Where(r => !(r.LeftExtent is AssociationSet) && !(r.RightCellQuery.Extent is AssociationSet));
+            var nonAssociationWrappers =
+                leftCellWrappers.Where(r => !(r.LeftExtent is AssociationSet) && !(r.RightCellQuery.Extent is AssociationSet));
 
-            if (m_viewgenContext.ViewTarget == ViewTarget.UpdateView && nonAssociationWrappers.Any())
+            if (m_viewgenContext.ViewTarget == ViewTarget.UpdateView
+                && nonAssociationWrappers.Any())
             {
-                LeftCellWrapper firstLeftCWrapper = nonAssociationWrappers.First();
-                EntitySetBase rightExtent = firstLeftCWrapper.RightCellQuery.Extent;
+                var firstLeftCWrapper = nonAssociationWrappers.First();
+                var rightExtent = firstLeftCWrapper.RightCellQuery.Extent;
 
                 foreach (var leftCellWrapper in nonAssociationWrappers)
                 {
@@ -312,9 +331,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                         if (!RightSideEqual(leftCellWrapper, firstLeftCWrapper))
                         {
                             //Report Error
-                            m_errorLog.AddEntry(new ErrorLog.Record(ViewGenErrorCode.ErrorPatternSplittingError,
-                                Strings.Viewgen_ErrorPattern_TableMappedToMultipleES(leftCellWrapper.LeftExtent.ToString(), leftCellWrapper.RightCellQuery.Extent.ToString(), rightExtent.ToString()),
-                                leftCellWrapper.Cells.First(), ""));
+                            m_errorLog.AddEntry(
+                                new ErrorLog.Record(
+                                    ViewGenErrorCode.ErrorPatternSplittingError,
+                                    Strings.Viewgen_ErrorPattern_TableMappedToMultipleES(
+                                        leftCellWrapper.LeftExtent.ToString(), leftCellWrapper.RightCellQuery.Extent.ToString(),
+                                        rightExtent.ToString()),
+                                    leftCellWrapper.Cells.First(), ""));
                         }
                     }
                 }
@@ -330,19 +353,21 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void MatchPartitionErrors()
         {
-            List<LeftCellWrapper> mappingFragments = m_viewgenContext.AllWrappersForExtent;
+            var mappingFragments = m_viewgenContext.AllWrappersForExtent;
 
             //for every 2-combination nC2  (n choose 2) 
-            int i = 0;
+            var i = 0;
             foreach (var fragment1 in mappingFragments)
             {
                 foreach (var fragment2 in mappingFragments.Skip(++i))
                 {
-                    FragmentQuery rightFragmentQuery1 = CreateRightFragmentQuery(fragment1);
-                    FragmentQuery rightFragmentQuery2 = CreateRightFragmentQuery(fragment2);
+                    var rightFragmentQuery1 = CreateRightFragmentQuery(fragment1);
+                    var rightFragmentQuery2 = CreateRightFragmentQuery(fragment2);
 
-                    bool isSDisjoint = CompareS(ComparisonOP.IsDisjointFrom, m_viewgenContext, fragment1, fragment2, rightFragmentQuery1, rightFragmentQuery2);
-                    bool isCDisjoint = CompareC(ComparisonOP.IsDisjointFrom, m_viewgenContext, fragment1, fragment2, rightFragmentQuery1, rightFragmentQuery2);
+                    var isSDisjoint = CompareS(
+                        ComparisonOP.IsDisjointFrom, m_viewgenContext, fragment1, fragment2, rightFragmentQuery1, rightFragmentQuery2);
+                    var isCDisjoint = CompareC(
+                        ComparisonOP.IsDisjointFrom, m_viewgenContext, fragment1, fragment2, rightFragmentQuery1, rightFragmentQuery2);
 
                     bool is1SubsetOf2_C;
                     bool is2SubsetOf1_C;
@@ -360,11 +385,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                         else
                         {
                             //Figure out more info for accurate message
-                            is1SubsetOf2_C = CompareC(ComparisonOP.IsContainedIn, m_viewgenContext, fragment1, fragment2, rightFragmentQuery1, rightFragmentQuery2);
-                            is2SubsetOf1_C = CompareC(ComparisonOP.IsContainedIn, m_viewgenContext, fragment2, fragment1, rightFragmentQuery2, rightFragmentQuery1);
+                            is1SubsetOf2_C = CompareC(
+                                ComparisonOP.IsContainedIn, m_viewgenContext, fragment1, fragment2, rightFragmentQuery1, rightFragmentQuery2);
+                            is2SubsetOf1_C = CompareC(
+                                ComparisonOP.IsContainedIn, m_viewgenContext, fragment2, fragment1, rightFragmentQuery2, rightFragmentQuery1);
                             isCEqual = is1SubsetOf2_C && is2SubsetOf1_C;
 
-                            StringBuilder errorString = new StringBuilder();
+                            var errorString = new StringBuilder();
                             //error
                             if (isCEqual) //equal
                             {
@@ -406,7 +433,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                                 errorString.Append(Strings.Viewgen_ErrorPattern_Partition_Disj_Unk);
                             }
 
-                            m_errorLog.AddEntry(new ErrorLog.Record(ViewGenErrorCode.ErrorPatternInvalidPartitionError, errorString.ToString(), ToIEnum(fragment1.OnlyInputCell, fragment2.OnlyInputCell), ""));
+                            m_errorLog.AddEntry(
+                                new ErrorLog.Record(
+                                    ViewGenErrorCode.ErrorPatternInvalidPartitionError, errorString.ToString(),
+                                    ToIEnum(fragment1.OnlyInputCell, fragment2.OnlyInputCell), ""));
 
                             if (FoundTooManyErrors())
                             {
@@ -416,15 +446,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                     }
                     else
                     {
-                        is1SubsetOf2_C = CompareC(ComparisonOP.IsContainedIn, m_viewgenContext, fragment1, fragment2, rightFragmentQuery1, rightFragmentQuery2);
-                        is2SubsetOf1_C = CompareC(ComparisonOP.IsContainedIn, m_viewgenContext, fragment2, fragment1, rightFragmentQuery2, rightFragmentQuery1);
+                        is1SubsetOf2_C = CompareC(
+                            ComparisonOP.IsContainedIn, m_viewgenContext, fragment1, fragment2, rightFragmentQuery1, rightFragmentQuery2);
+                        is2SubsetOf1_C = CompareC(
+                            ComparisonOP.IsContainedIn, m_viewgenContext, fragment2, fragment1, rightFragmentQuery2, rightFragmentQuery1);
                     }
-                    is1SubsetOf2_S = CompareS(ComparisonOP.IsContainedIn, m_viewgenContext, fragment1, fragment2, rightFragmentQuery1, rightFragmentQuery2);
-                    is2SubsetOf1_S = CompareS(ComparisonOP.IsContainedIn, m_viewgenContext, fragment2, fragment1, rightFragmentQuery2, rightFragmentQuery1);
+                    is1SubsetOf2_S = CompareS(
+                        ComparisonOP.IsContainedIn, m_viewgenContext, fragment1, fragment2, rightFragmentQuery1, rightFragmentQuery2);
+                    is2SubsetOf1_S = CompareS(
+                        ComparisonOP.IsContainedIn, m_viewgenContext, fragment2, fragment1, rightFragmentQuery2, rightFragmentQuery1);
 
                     isCEqual = is1SubsetOf2_C && is2SubsetOf1_C;
                     isSEqual = is1SubsetOf2_S && is2SubsetOf1_S;
-
 
                     if (isSEqual)
                     {
@@ -435,7 +468,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                         else
                         {
                             //error
-                            StringBuilder errorString = new StringBuilder();
+                            var errorString = new StringBuilder();
 
                             if (isCDisjoint)
                             {
@@ -472,20 +505,31 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                                         List<EdmType> edmTypesForFirstCellWrapper;
                                         bool secondCellWrapperHasCondition;
                                         List<EdmType> edmTypesForSecondCellWrapper;
-                                        GetTypesAndConditionForWrapper(fragment1, out firstCellWrapperHasCondition, out edmTypesForFirstCellWrapper);
-                                        GetTypesAndConditionForWrapper(fragment2, out secondCellWrapperHasCondition, out edmTypesForSecondCellWrapper);
-                                        if (!firstCellWrapperHasCondition && !secondCellWrapperHasCondition)
+                                        GetTypesAndConditionForWrapper(
+                                            fragment1, out firstCellWrapperHasCondition, out edmTypesForFirstCellWrapper);
+                                        GetTypesAndConditionForWrapper(
+                                            fragment2, out secondCellWrapperHasCondition, out edmTypesForSecondCellWrapper);
+                                        if (!firstCellWrapperHasCondition
+                                            && !secondCellWrapperHasCondition)
                                         {
-                                            if (((edmTypesForFirstCellWrapper.Except(edmTypesForSecondCellWrapper)).Count() != 0 )
-                                                || ((edmTypesForSecondCellWrapper.Except(edmTypesForFirstCellWrapper)).Count() != 0 ))
+                                            if (((edmTypesForFirstCellWrapper.Except(edmTypesForSecondCellWrapper)).Count() != 0)
+                                                || ((edmTypesForSecondCellWrapper.Except(edmTypesForFirstCellWrapper)).Count() != 0))
                                             {
-                                                if (!CheckForStoreConditions(fragment1) || !CheckForStoreConditions(fragment2))
+                                                if (!CheckForStoreConditions(fragment1)
+                                                    || !CheckForStoreConditions(fragment2))
                                                 {
-                                                    IEnumerable<string> edmTypesForErrorString = edmTypesForFirstCellWrapper.Select(it => it.FullName).Union(edmTypesForSecondCellWrapper.Select(it => it.FullName));
-                                                    m_errorLog.AddEntry(new ErrorLog.Record(ViewGenErrorCode.ErrorPatternConditionError,
-                                                Strings.Viewgen_ErrorPattern_Partition_MultipleTypesMappedToSameTable_WithoutCondition(
-                                                        StringUtil.ToCommaSeparatedString(edmTypesForErrorString), fragment1.LeftExtent
-                                                    ), ToIEnum(fragment1.OnlyInputCell, fragment2.OnlyInputCell), ""));
+                                                    var edmTypesForErrorString =
+                                                        edmTypesForFirstCellWrapper.Select(it => it.FullName).Union(
+                                                            edmTypesForSecondCellWrapper.Select(it => it.FullName));
+                                                    m_errorLog.AddEntry(
+                                                        new ErrorLog.Record(
+                                                            ViewGenErrorCode.ErrorPatternConditionError,
+                                                            Strings.
+                                                                Viewgen_ErrorPattern_Partition_MultipleTypesMappedToSameTable_WithoutCondition
+                                                                (
+                                                                    StringUtil.ToCommaSeparatedString(edmTypesForErrorString),
+                                                                    fragment1.LeftExtent
+                                                                ), ToIEnum(fragment1.OnlyInputCell, fragment2.OnlyInputCell), ""));
                                                     return;
                                                 }
                                             }
@@ -498,7 +542,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                             else //unknown
                             {
                                 //S-side equal, C-side Unknown
-                                if (!IsQueryView() &&
+                                if (!IsQueryView()
+                                    &&
                                     (fragment1.OnlyInputCell.CQuery.Extent is AssociationSet ||
                                      fragment2.OnlyInputCell.CQuery.Extent is AssociationSet))
                                 {
@@ -507,7 +552,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                                 }
                                 else
                                 {
-
                                     //MSG:  These two fragments are equal on the S-side but not so on the C-side. 
                                     //      Try adding an Association with Referntial Integrity constraint if they are
                                     //      mapped to different EntitySets in order to make theme equal on the C-side.
@@ -516,7 +560,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                                 }
                             }
 
-                            m_errorLog.AddEntry(new ErrorLog.Record(ViewGenErrorCode.ErrorPatternInvalidPartitionError, errorString.ToString(), ToIEnum(fragment1.OnlyInputCell, fragment2.OnlyInputCell), ""));
+                            m_errorLog.AddEntry(
+                                new ErrorLog.Record(
+                                    ViewGenErrorCode.ErrorPatternInvalidPartitionError, errorString.ToString(),
+                                    ToIEnum(fragment1.OnlyInputCell, fragment2.OnlyInputCell), ""));
 
                             if (FoundTooManyErrors())
                             {
@@ -527,14 +574,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                     else if (is1SubsetOf2_S || is2SubsetOf1_S) //proper subset - note: else if ensures inverse need not be checked
                     {
                         //C-side proper subset (c side must not be equal)
-                        if ((is1SubsetOf2_S && is1SubsetOf2_C == true && !(is2SubsetOf1_C == true)) || (is2SubsetOf1_S && is2SubsetOf1_C == true && !(is1SubsetOf2_C == true)))
+                        if ((is1SubsetOf2_S && is1SubsetOf2_C && !is2SubsetOf1_C)
+                            || (is2SubsetOf1_S && is2SubsetOf1_C && !is1SubsetOf2_C))
                         {
                             continue;
                         }
                         else
-                        {   //error
+                        {
+                            //error
 
-                            StringBuilder errorString = new StringBuilder();
+                            var errorString = new StringBuilder();
 
                             if (isCDisjoint)
                             {
@@ -549,7 +598,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                                 //MSG:  One of the fragments is a subset of the other on the S-side but they are equal on the C-side.
                                 //      If you intended overlap on the S-side ensure they have similar relationship on teh C-side.
                                 //TestCase (10)
-
 
                                 if (CSideHasDifferentEntitySets(fragment1, fragment2))
                                 {
@@ -566,14 +614,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                                 }
                             }
                             else
-                            {   //unknown
+                            {
+                                //unknown
                                 //MSG:  One of the fragments is a subset of the other on the S-side but they are disjoint on the C-side.
                                 //      If you intended overlap on the S-side ensure they have similar relationship on teh C-side.
                                 //TestCase (no need, Table mapped to multiple ES tests cover this scenario)
                                 errorString.Append(Strings.Viewgen_ErrorPattern_Partition_Sub_Unk);
                             }
 
-                            m_errorLog.AddEntry(new ErrorLog.Record(ViewGenErrorCode.ErrorPatternInvalidPartitionError, errorString.ToString(), ToIEnum(fragment1.OnlyInputCell, fragment2.OnlyInputCell), ""));
+                            m_errorLog.AddEntry(
+                                new ErrorLog.Record(
+                                    ViewGenErrorCode.ErrorPatternInvalidPartitionError, errorString.ToString(),
+                                    ToIEnum(fragment1.OnlyInputCell, fragment2.OnlyInputCell), ""));
 
                             if (FoundTooManyErrors())
                             {
@@ -583,7 +635,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                     }
                     //else unknown relationship on the S-side
                 }
-            }   //end looping over every 2-combination of fragment
+            } //end looping over every 2-combination of fragment
         }
 
         /// <summary>
@@ -595,14 +647,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             hasCondition = false;
             edmTypes = new List<EdmType>();
             //Figure out which type has no Cell mapped to it
-            foreach (Cell cell in wrapper.Cells)
+            foreach (var cell in wrapper.Cells)
             {
                 foreach (var restriction in cell.CQuery.Conditions)
                 {
                     foreach (var cellConst in restriction.Domain.Values)
                     {
                         //if there is a mapping to this type...
-                        TypeConstant typeConst = cellConst as TypeConstant;
+                        var typeConst = cellConst as TypeConstant;
                         if (typeConst != null)
                         {
                             edmTypes.Add(typeConst.EdmType);
@@ -626,21 +678,23 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             return wrapper.Cells.SelectMany(c => c.SQuery.Conditions).Any();
         }
 
-
-        private void CheckThatConditionMemberIsNotMapped(MemberPath conditionMember, List<LeftCellWrapper> mappingFragments, Set<MemberPath> mappedConditionMembers)
+        private void CheckThatConditionMemberIsNotMapped(
+            MemberPath conditionMember, List<LeftCellWrapper> mappingFragments, Set<MemberPath> mappedConditionMembers)
         {
-
             //Make sure memberPath is not mapped (in any other cells)
             foreach (var anotherFragment in mappingFragments)
             {
                 foreach (var anotherCell in anotherFragment.Cells)
                 {
-                    CellQuery anotherCellQuery = anotherCell.GetLeftQuery(m_viewgenContext.ViewTarget);
+                    var anotherCellQuery = anotherCell.GetLeftQuery(m_viewgenContext.ViewTarget);
                     if (anotherCellQuery.GetProjectedMembers().Contains(conditionMember))
                     {
                         mappedConditionMembers.Add(conditionMember);
                         //error condition memer is projected somewhere
-                        m_errorLog.AddEntry(new ErrorLog.Record(ViewGenErrorCode.ErrorPatternConditionError, Strings.Viewgen_ErrorPattern_ConditionMemberIsMapped(conditionMember.ToString()), anotherCell, ""));
+                        m_errorLog.AddEntry(
+                            new ErrorLog.Record(
+                                ViewGenErrorCode.ErrorPatternConditionError,
+                                Strings.Viewgen_ErrorPattern_ConditionMemberIsMapped(conditionMember.ToString()), anotherCell, ""));
                     }
                 }
             }
@@ -657,7 +711,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
         private static string BuildCommaSeparatedErrorString<T>(IEnumerable<T> members)
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
 
             var firstMember = members.First();
             foreach (var member in members)
@@ -666,7 +720,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 {
                     builder.Append(", ");
                 }
-                builder.Append("'" + member.ToString() + "'");
+                builder.Append("'" + member + "'");
             }
             return builder.ToString();
         }
@@ -683,21 +737,28 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             }
         }
 
-        private bool CompareC(ComparisonOP op, ViewgenContext context, LeftCellWrapper leftWrapper1, LeftCellWrapper leftWrapper2, FragmentQuery rightQuery1, FragmentQuery rightQuery2)
+        private bool CompareC(
+            ComparisonOP op, ViewgenContext context, LeftCellWrapper leftWrapper1, LeftCellWrapper leftWrapper2, FragmentQuery rightQuery1,
+            FragmentQuery rightQuery2)
         {
             return Compare(true /*lookingForCSide*/, op, context, leftWrapper1, leftWrapper2, rightQuery1, rightQuery2);
         }
 
-        private bool CompareS(ComparisonOP op, ViewgenContext context, LeftCellWrapper leftWrapper1, LeftCellWrapper leftWrapper2, FragmentQuery rightQuery1, FragmentQuery rightQuery2)
+        private bool CompareS(
+            ComparisonOP op, ViewgenContext context, LeftCellWrapper leftWrapper1, LeftCellWrapper leftWrapper2, FragmentQuery rightQuery1,
+            FragmentQuery rightQuery2)
         {
-            return Compare(false/*lookingForCSide*/, op, context, leftWrapper1, leftWrapper2, rightQuery1, rightQuery2);
+            return Compare(false /*lookingForCSide*/, op, context, leftWrapper1, leftWrapper2, rightQuery1, rightQuery2);
         }
 
-        private bool Compare(bool lookingForC, ComparisonOP op, ViewgenContext context, LeftCellWrapper leftWrapper1, LeftCellWrapper leftWrapper2, FragmentQuery rightQuery1, FragmentQuery rightQuery2)
+        private bool Compare(
+            bool lookingForC, ComparisonOP op, ViewgenContext context, LeftCellWrapper leftWrapper1, LeftCellWrapper leftWrapper2,
+            FragmentQuery rightQuery1, FragmentQuery rightQuery2)
         {
             LCWComparer comparer;
 
-            if ((lookingForC && IsQueryView()) || (!lookingForC && !IsQueryView()))
+            if ((lookingForC && IsQueryView())
+                || (!lookingForC && !IsQueryView()))
             {
                 if (op == ComparisonOP.IsContainedIn)
                 {
@@ -737,20 +798,22 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
         private bool RightSideEqual(LeftCellWrapper wrapper1, LeftCellWrapper wrapper2)
         {
-            FragmentQuery rightFragmentQuery1 = CreateRightFragmentQuery(wrapper1);
-            FragmentQuery rightFragmentQuery2 = CreateRightFragmentQuery(wrapper2);
+            var rightFragmentQuery1 = CreateRightFragmentQuery(wrapper1);
+            var rightFragmentQuery2 = CreateRightFragmentQuery(wrapper2);
 
             return m_viewgenContext.RightFragmentQP.IsEquivalentTo(rightFragmentQuery1, rightFragmentQuery2);
         }
 
         private FragmentQuery CreateRightFragmentQuery(LeftCellWrapper wrapper)
         {
-            return FragmentQuery.Create(wrapper.OnlyInputCell.CellLabel.ToString(), wrapper.CreateRoleBoolean(), wrapper.OnlyInputCell.GetRightQuery(m_viewgenContext.ViewTarget));
+            return FragmentQuery.Create(
+                wrapper.OnlyInputCell.CellLabel.ToString(), wrapper.CreateRoleBoolean(),
+                wrapper.OnlyInputCell.GetRightQuery(m_viewgenContext.ViewTarget));
         }
 
         private static IEnumerable<Cell> ToIEnum(Cell one, Cell two)
         {
-            List<Cell> cells = new List<Cell>();
+            var cells = new List<Cell>();
             cells.Add(one);
             cells.Add(two);
             return cells;
@@ -763,19 +826,19 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
         #endregion
 
-        enum ComparisonOP
+        private enum ComparisonOP
         {
             IsContainedIn,
             IsDisjointFrom
         }
     }
 
-    class ConditionComparer : IEqualityComparer<Dictionary<MemberPath, Set<Constant>>>
+    internal class ConditionComparer : IEqualityComparer<Dictionary<MemberPath, Set<Constant>>>
     {
         public bool Equals(Dictionary<MemberPath, Set<Constant>> one, Dictionary<MemberPath, Set<Constant>> two)
         {
-            Set<MemberPath> keysOfOne = new Set<MemberPath>(one.Keys, MemberPath.EqualityComparer);
-            Set<MemberPath> keysOfTwo = new Set<MemberPath>(two.Keys, MemberPath.EqualityComparer);
+            var keysOfOne = new Set<MemberPath>(one.Keys, MemberPath.EqualityComparer);
+            var keysOfTwo = new Set<MemberPath>(two.Keys, MemberPath.EqualityComparer);
 
             if (!keysOfOne.SetEquals(keysOfTwo))
             {
@@ -784,8 +847,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
             foreach (var member in keysOfOne)
             {
-                Set<Constant> constantsOfOne = one[member];
-                Set<Constant> constantsOfTwo = two[member];
+                var constantsOfOne = one[member];
+                var constantsOfTwo = two[member];
 
                 if (!constantsOfOne.SetEquals(constantsOfTwo))
                 {
@@ -797,14 +860,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
         public int GetHashCode(Dictionary<MemberPath, Set<Constant>> obj)
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             foreach (var key in obj.Keys)
             {
-                builder.Append(key.ToString());
+                builder.Append(key);
             }
 
             return builder.ToString().GetHashCode();
         }
-
     }
 }

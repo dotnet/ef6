@@ -6,8 +6,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
     /// <summary>
@@ -16,18 +16,22 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     internal abstract class Constant : InternalBase
     {
         #region Fields
+
         internal static readonly IEqualityComparer<Constant> EqualityComparer = new CellConstantComparer();
         internal static readonly Constant Null = NullConstant.Instance;
-        internal static readonly Constant NotNull = new NegatedConstant( new Constant[] { NullConstant.Instance });
+        internal static readonly Constant NotNull = new NegatedConstant(new[] { NullConstant.Instance });
         internal static readonly Constant Undefined = UndefinedConstant.Instance;
+
         /// <summary>
         /// Represents scalar constants within a finite set that are not specified explicitly in the domain.
         /// Currently only used as a Sentinel node to prevent expression optimization
         /// </summary>
         internal static readonly Constant AllOtherConstants = AllOtherConstantsConstant.Instance;
+
         #endregion
 
         #region Methods
+
         internal abstract bool IsNull();
 
         internal abstract bool IsNotNull();
@@ -55,7 +59,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         public override bool Equals(object obj)
         {
-            Constant cellConst = obj as Constant;
+            var cellConst = obj as Constant;
             if (cellConst == null)
             {
                 return false;
@@ -77,34 +81,37 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         internal static void ConstantsToUserString(StringBuilder builder, Set<Constant> constants)
         {
-            bool isFirst = true;
-            foreach (Constant constant in constants)
+            var isFirst = true;
+            foreach (var constant in constants)
             {
                 if (isFirst == false)
                 {
-                    builder.Append(System.Data.Entity.Resources.Strings.ViewGen_CommaBlank);
+                    builder.Append(Strings.ViewGen_CommaBlank);
                 }
                 isFirst = false;
-                string constrStr = constant.ToUserString();
+                var constrStr = constant.ToUserString();
                 builder.Append(constrStr);
             }
         }
+
         #endregion
 
         #region Comparer class
+
         private class CellConstantComparer : IEqualityComparer<Constant>
         {
             public bool Equals(Constant left, Constant right)
             {
                 // Quick check with references
-                if (object.ReferenceEquals(left, right))
+                if (ReferenceEquals(left, right))
                 {
                     // Gets the Null and Undefined case as well
                     return true;
                 }
                 // One of them is non-null at least. So if the other one is
                 // null, we cannot be equal
-                if (left == null || right == null)
+                if (left == null
+                    || right == null)
                 {
                     return false;
                 }
@@ -118,16 +125,21 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return key.GetHashCode();
             }
         }
+
         #endregion
 
         #region Special constant classes (NullConstant, UndefinedConstant, AllOtherConstants)
+
         private sealed class NullConstant : Constant
         {
             internal static readonly Constant Instance = new NullConstant();
 
-            private NullConstant() { }
+            private NullConstant()
+            {
+            }
 
             #region Methods
+
             internal override bool IsNull()
             {
                 return true;
@@ -151,7 +163,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             internal override StringBuilder AsEsql(StringBuilder builder, MemberPath outputMember, string blockAlias)
             {
                 Debug.Assert(outputMember.LeafEdmMember != null, "Constant can't correspond to an empty member path.");
-                EdmType constType = Helper.GetModelTypeUsage(outputMember.LeafEdmMember).EdmType;
+                var constType = Helper.GetModelTypeUsage(outputMember.LeafEdmMember).EdmType;
 
                 builder.Append("CAST(NULL AS ");
                 CqlWriter.AppendEscapedTypeName(builder, constType);
@@ -162,7 +174,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             internal override DbExpression AsCqt(DbExpression row, MemberPath outputMember)
             {
                 Debug.Assert(outputMember.LeafEdmMember != null, "Constant can't correspond to an empty path.");
-                EdmType constType = Helper.GetModelTypeUsage(outputMember.LeafEdmMember).EdmType;
+                var constType = Helper.GetModelTypeUsage(outputMember.LeafEdmMember).EdmType;
 
                 return TypeUsage.Create(constType).Null();
             }
@@ -174,28 +186,33 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
             protected override bool IsEqualTo(Constant right)
             {
-                Debug.Assert(Object.ReferenceEquals(this, Instance), "this must be == Instance for NullConstant");
-                return Object.ReferenceEquals(this, right);
+                Debug.Assert(ReferenceEquals(this, Instance), "this must be == Instance for NullConstant");
+                return ReferenceEquals(this, right);
             }
 
             internal override string ToUserString()
             {
-                return System.Data.Entity.Resources.Strings.ViewGen_Null;
+                return Strings.ViewGen_Null;
             }
 
             internal override void ToCompactString(StringBuilder builder)
             {
                 builder.Append("NULL");
             }
+
             #endregion
         }
+
         private sealed class UndefinedConstant : Constant
         {
             internal static readonly Constant Instance = new UndefinedConstant();
 
-            private UndefinedConstant() { }
+            private UndefinedConstant()
+            {
+            }
 
             #region Methods
+
             internal override bool IsNull()
             {
                 return false;
@@ -241,8 +258,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
             protected override bool IsEqualTo(Constant right)
             {
-                Debug.Assert(Object.ReferenceEquals(this, Instance), "this must be == Instance for NullConstant");
-                return Object.ReferenceEquals(this, right);
+                Debug.Assert(ReferenceEquals(this, Instance), "this must be == Instance for NullConstant");
+                return ReferenceEquals(this, right);
             }
 
             /// <summary>
@@ -258,15 +275,20 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             {
                 builder.Append("?");
             }
+
             #endregion
         }
+
         private sealed class AllOtherConstantsConstant : Constant
         {
             internal static readonly Constant Instance = new AllOtherConstantsConstant();
 
-            private AllOtherConstantsConstant() { }
+            private AllOtherConstantsConstant()
+            {
+            }
 
             #region Methods
+
             internal override bool IsNull()
             {
                 return false;
@@ -312,8 +334,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
             protected override bool IsEqualTo(Constant right)
             {
-                Debug.Assert(Object.ReferenceEquals(this, Instance), "this must be == Instance for NullConstant");
-                return Object.ReferenceEquals(this, right);
+                Debug.Assert(ReferenceEquals(this, Instance), "this must be == Instance for NullConstant");
+                return ReferenceEquals(this, right);
             }
 
             /// <summary>
@@ -329,8 +351,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             {
                 builder.Append("AllOtherConstants");
             }
+
             #endregion
         }
+
         #endregion
     }
 }

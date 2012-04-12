@@ -1,9 +1,6 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<xs:schema id="AnnotationSchema"
-                  targetNamespace="http://schemas.microsoft.com/ado/2009/02/edm/annotation"
-                  elementFormDefault="unqualified"
-                  xmlns="http://schemas.microsoft.com/ado/2009/02/edm/annotation"
-                  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<xs:schema id="AnnotationSchema" targetNamespace="http://schemas.microsoft.com/ado/2009/02/edm/annotation" elementFormDefault="unqualified" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
   <xs:attribute name="StoreGeneratedPattern" type="TStoreGeneratedPattern" />
   <xs:simpleType name="TStoreGeneratedPattern">
@@ -17,6 +14,6 @@
   <xs:attribute name="LazyLoadingEnabled" type="xs:boolean" />
   
   <!-- Allow future support of a strongly typed heirarchy of types for spatial values -->
-  <xs:attribute name="UseStrongSpatialTypes" type="xs:boolean" default="true"/>
+  <xs:attribute name="UseStrongSpatialTypes" type="xs:boolean" default="true" />
 
 </xs:schema>

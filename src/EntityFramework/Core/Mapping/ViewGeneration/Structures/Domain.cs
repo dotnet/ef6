@@ -1,16 +1,14 @@
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
-    using CellConstantSet = Set<Constant>;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Text;
+    using CellConstantSet = System.Data.Entity.Core.Common.Utils.Set<Constant>;
 
     // A set of cell constants -- to keep track of a cell constant's domain
     // values. It encapsulates the notions of NULL, NOT NULL and can be
@@ -20,19 +18,21 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     // (nullable) System.Int32 property is {Null, NotNull}.
     internal class Domain : InternalBase
     {
-
         #region Constructors
+
         // effects: Creates an "fully-done" set with no values -- possibleDiscreteValues are the values
         // that this domain can take
-        internal Domain(Constant value, IEnumerable<Constant> possibleDiscreteValues) :
-            this(new Constant[] { value }, possibleDiscreteValues)
+        internal Domain(Constant value, IEnumerable<Constant> possibleDiscreteValues)
+            :
+                this(new[] { value }, possibleDiscreteValues)
         {
         }
 
         // effects: Creates a domain populated using values -- possibleValues
         // are all possible values that this can take
-        internal Domain(IEnumerable<Constant> values,
-                                    IEnumerable<Constant> possibleDiscreteValues)
+        internal Domain(
+            IEnumerable<Constant> values,
+            IEnumerable<Constant> possibleDiscreteValues)
         {
             // Note that the values can contain both null and not null
             Debug.Assert(values != null);
@@ -63,17 +63,21 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_possibleValues = new Set<Constant>(domain.m_possibleValues, Constant.EqualityComparer);
             AssertInvariant();
         }
+
         #endregion
 
         #region Fields
+
         // The set of values in the cell constant domain
-        private CellConstantSet m_domain; // e.g., 1, 2, NULL, NOT(1, 2, NULL)
-        private CellConstantSet m_possibleValues; // e.g., 1, 2, NULL, Undefined
+        private readonly CellConstantSet m_domain; // e.g., 1, 2, NULL, NOT(1, 2, NULL)
+        private readonly CellConstantSet m_possibleValues; // e.g., 1, 2, NULL, Undefined
         // Invariant: m_domain is a subset of m_possibleValues except for a
         // negated constant
+
         #endregion
 
         #region Properties
+
         // effects: Returns all the possible values that this can contain (including the negated constants)
         internal IEnumerable<Constant> AllPossibleValues
         {
@@ -85,7 +89,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get
             {
-                NegatedConstant negatedPossibleValue = new NegatedConstant(m_possibleValues);
+                var negatedPossibleValue = new NegatedConstant(m_possibleValues);
                 return m_possibleValues.Union(new Constant[] { negatedPossibleValue });
             }
         }
@@ -103,13 +107,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get { return m_domain; }
         }
+
         #endregion
 
         #region Static Helper Methods to create cell constant sets from metadata
+
         // effects: Given a member, determines all possible values that can be created from Metadata
-        internal static CellConstantSet DeriveDomainFromMemberPath(MemberPath memberPath, EdmItemCollection edmItemCollection, bool leaveDomainUnbounded)
+        internal static CellConstantSet DeriveDomainFromMemberPath(
+            MemberPath memberPath, EdmItemCollection edmItemCollection, bool leaveDomainUnbounded)
         {
-            CellConstantSet domain = DeriveDomainFromType(memberPath.EdmType, edmItemCollection, leaveDomainUnbounded);
+            var domain = DeriveDomainFromType(memberPath.EdmType, edmItemCollection, leaveDomainUnbounded);
             if (memberPath.IsNullable)
             {
                 domain.Add(Constant.Null);
@@ -117,18 +124,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return domain;
         }
 
-
         // effects: Given a type, determines all possible values that can be created from Metadata
         private static CellConstantSet DeriveDomainFromType(EdmType type, EdmItemCollection edmItemCollection, bool leaveDomainUnbounded)
         {
             CellConstantSet domain = null;
 
             if (Helper.IsScalarType(type))
-            {                
+            {
                 // Get the domain for scalars -- for booleans, we special case. 
                 if (MetadataHelper.HasDiscreteDomain(type))
                 {
-                    Debug.Assert(Helper.AsPrimitive(type).PrimitiveTypeKind == PrimitiveTypeKind.Boolean, "Only boolean type has discrete domain.");
+                    Debug.Assert(
+                        Helper.AsPrimitive(type).PrimitiveTypeKind == PrimitiveTypeKind.Boolean, "Only boolean type has discrete domain.");
 
                     // Closed domain
                     domain = new Set<Constant>(CreateList(true, false), Constant.EqualityComparer);
@@ -145,7 +152,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
             else //Type Constants - Domain is all possible concrete subtypes
             {
-                Debug.Assert(Helper.IsEntityType(type) || Helper.IsComplexType(type) || Helper.IsRefType(type) || Helper.IsAssociationType(type));
+                Debug.Assert(
+                    Helper.IsEntityType(type) || Helper.IsComplexType(type) || Helper.IsRefType(type) || Helper.IsAssociationType(type));
 
                 // Treat ref types as their referenced entity types
                 if (Helper.IsRefType(type))
@@ -153,10 +161,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                     type = ((RefType)type).ElementType;
                 }
 
-                List<Constant> types = new List<Constant>();
-                foreach (EdmType derivedType in MetadataHelper.GetTypeAndSubtypesOf(type, edmItemCollection, false /*includeAbstractTypes*/))
+                var types = new List<Constant>();
+                foreach (var derivedType in MetadataHelper.GetTypeAndSubtypesOf(type, edmItemCollection, false /*includeAbstractTypes*/))
                 {
-                    TypeConstant derivedTypeConstant = new TypeConstant(derivedType);
+                    var derivedTypeConstant = new TypeConstant(derivedType);
                     types.Add(derivedTypeConstant);
                 }
                 domain = new Set<Constant>(types, Constant.EqualityComparer);
@@ -172,28 +180,30 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // CHANGE_ADYA_FEATURE_DEFAULT_VALUES: return the right default once metadata supports it
         internal static bool TryGetDefaultValueForMemberPath(MemberPath memberPath, out Constant defaultConstant)
         {
-            object defaultValue = memberPath.DefaultValue;
+            var defaultValue = memberPath.DefaultValue;
             defaultConstant = Constant.Null;
             if (defaultValue != null)
             {
                 defaultConstant = new ScalarConstant(defaultValue);
                 return true;
             }
-            else if (memberPath.IsNullable || memberPath.IsComputed)
+            else if (memberPath.IsNullable
+                     || memberPath.IsComputed)
             {
                 return true;
             }
             return false;
         }
 
-        internal static Constant GetDefaultValueForMemberPath(MemberPath memberPath, IEnumerable<LeftCellWrapper> wrappersForErrorReporting,
-                                                                  ConfigViewGenerator config)
+        internal static Constant GetDefaultValueForMemberPath(
+            MemberPath memberPath, IEnumerable<LeftCellWrapper> wrappersForErrorReporting,
+            ConfigViewGenerator config)
         {
             Constant defaultValue = null;
-            if (!Domain.TryGetDefaultValueForMemberPath(memberPath, out defaultValue))
+            if (!TryGetDefaultValueForMemberPath(memberPath, out defaultValue))
             {
-                string message = Strings.ViewGen_No_Default_Value(memberPath.Extent.Name, memberPath.PathToString(false));
-                ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.NoDefaultValue, message, wrappersForErrorReporting, String.Empty);
+                var message = Strings.ViewGen_No_Default_Value(memberPath.Extent.Name, memberPath.PathToString(false));
+                var record = new ErrorLog.Record(ViewGenErrorCode.NoDefaultValue, message, wrappersForErrorReporting, String.Empty);
                 ExceptionHelpers.ThrowMappingException(record, config);
             }
             return defaultValue;
@@ -202,10 +212,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #endregion
 
         #region External methods
+
         internal int GetHash()
         {
-            int result = 0;
-            foreach (Constant constant in m_domain)
+            var result = 0;
+            foreach (var constant in m_domain)
             {
                 result ^= Constant.EqualityComparer.GetHashCode(constant);
             }
@@ -224,7 +235,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // effects: Returns true iff this contains NOT(NULL OR ....)
         internal bool ContainsNotNull()
         {
-            NegatedConstant negated = GetNegatedConstant(m_domain);
+            var negated = GetNegatedConstant(m_domain);
             return negated != null && negated.Contains(Constant.Null);
         }
 
@@ -244,9 +255,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // this case, we return "1, 2, 3, NOT(1, 2, 3)"
         internal static CellConstantSet ExpandNegationsInDomain(IEnumerable<Constant> domain, IEnumerable<Constant> otherPossibleValues)
         {
-
             //Finds all constants referenced in (domain UNION extraValues) e.g: 1, NOT(2) =>  1, 2
-            CellConstantSet possibleValues = DeterminePossibleValues(domain, otherPossibleValues);
+            var possibleValues = DeterminePossibleValues(domain, otherPossibleValues);
 
             // For NOT --> Add all constants into d that are present in p but
             // not in the NOT
@@ -256,18 +266,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
             // NotNull works naturally now. If possibleValues has (1, 2, NULL)
             // and values has NOT(NULL), add 1, 2 to m_domain
-            CellConstantSet result = new Set<Constant>(Constant.EqualityComparer);
+            var result = new Set<Constant>(Constant.EqualityComparer);
 
-            foreach (Constant constant in domain)
+            foreach (var constant in domain)
             {
-                NegatedConstant negated = constant as NegatedConstant;
+                var negated = constant as NegatedConstant;
                 if (negated != null)
                 {
                     result.Add(new NegatedConstant(possibleValues));
                     // Compute all elements in possibleValues that are not present in negated. E.g., if
                     // negated is NOT(1, 2, 3) and possibleValues is 1, 2, 3,
                     // 4, we need to add 4 to result
-                    CellConstantSet remainingElements = possibleValues.Difference(negated.Elements);
+                    var remainingElements = possibleValues.Difference(negated.Elements);
                     result.AddRange(remainingElements);
                 }
                 else
@@ -276,7 +286,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 }
             }
             return result;
-
         }
 
         internal static CellConstantSet ExpandNegationsInDomain(IEnumerable<Constant> domain)
@@ -284,30 +293,27 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return ExpandNegationsInDomain(domain, domain);
         }
 
-
         // effects: Given a set of values in domain
         // Returns all possible values that are present in domain. 
-        static CellConstantSet DeterminePossibleValues(IEnumerable<Constant> domain)
+        private static CellConstantSet DeterminePossibleValues(IEnumerable<Constant> domain)
         {
-
             // E.g., if we have 1, 2, NOT(1) --> Result = 1, 2
             // 1, NOT(1, 2) --> Result = 1, 2
             // 1, 2, NOT(NULL) --> Result = 1, 2, NULL
             // 1, 2, NOT(2), NOT(3, 4) --> Result = 1, 2, 3, 4
 
-            CellConstantSet result = new CellConstantSet(Constant.EqualityComparer);
+            var result = new CellConstantSet(Constant.EqualityComparer);
 
-            foreach (Constant constant in domain)
+            foreach (var constant in domain)
             {
-                NegatedConstant negated = constant as NegatedConstant;
+                var negated = constant as NegatedConstant;
 
                 if (negated != null)
                 {
-
                     // Go through all the constants in negated and add them to domain
                     // We add them to possible values also even if (say) Null is not allowed because we want the complete 
                     // partitioning of the space, e.g., if the values specified by the caller are 1, NotNull -> we want 1, Null
-                    foreach (Constant constElement in negated.Elements)
+                    foreach (var constElement in negated.Elements)
                     {
                         Debug.Assert(constElement as NegatedConstant == null, "Negated cell constant inside NegatedCellConstant");
                         result.Add(constElement);
@@ -321,33 +327,35 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
             return result;
         }
+
         #endregion
 
         #region Helper methods for determining domains from cells
+
         // effects: Given a set of cells, returns all the different values
         // that each memberPath in cells can take
         internal static Dictionary<MemberPath, CellConstantSet>
-            ComputeConstantDomainSetsForSlotsInQueryViews(IEnumerable<Cell> cells, EdmItemCollection edmItemCollection, bool isValidationEnabled)
+            ComputeConstantDomainSetsForSlotsInQueryViews(
+            IEnumerable<Cell> cells, EdmItemCollection edmItemCollection, bool isValidationEnabled)
         {
-
-            Dictionary<MemberPath, CellConstantSet> cDomainMap =
+            var cDomainMap =
                 new Dictionary<MemberPath, CellConstantSet>(MemberPath.EqualityComparer);
 
-            foreach (Cell cell in cells)
+            foreach (var cell in cells)
             {
-                CellQuery cQuery = cell.CQuery;
+                var cQuery = cell.CQuery;
                 // Go through the conjuncts to get the constants (e.g., we
                 // just don't want to NULL, NOT(NULL). We want to say that
                 // the possible values are NULL, 4, NOT(NULL, 4)
-                foreach (MemberRestriction restriction in cQuery.GetConjunctsFromWhereClause())
+                foreach (var restriction in cQuery.GetConjunctsFromWhereClause())
                 {
-                    MemberProjectedSlot slot = restriction.RestrictedMemberSlot;
-                    CellConstantSet cDomain = DeriveDomainFromMemberPath(slot.MemberPath, edmItemCollection, isValidationEnabled);
+                    var slot = restriction.RestrictedMemberSlot;
+                    var cDomain = DeriveDomainFromMemberPath(slot.MemberPath, edmItemCollection, isValidationEnabled);
                     // Now we add the domain of oneConst into this
                     //Isnull=true and Isnull=false conditions should not contribute to a member's domain
                     cDomain.AddRange(restriction.Domain.Values.Where(c => !(c.Equals(Constant.Null) || c.Equals(Constant.NotNull))));
                     CellConstantSet values;
-                    bool found = cDomainMap.TryGetValue(slot.MemberPath, out values);
+                    var found = cDomainMap.TryGetValue(slot.MemberPath, out values);
                     if (!found)
                     {
                         cDomainMap[slot.MemberPath] = cDomain;
@@ -362,14 +370,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         //True = domain is restricted, False = domain is not restricted (because there is no condition)
-        private static bool GetRestrictedOrUnrestrictedDomain(MemberProjectedSlot slot, CellQuery cellQuery, EdmItemCollection edmItemCollection, out CellConstantSet domain)
+        private static bool GetRestrictedOrUnrestrictedDomain(
+            MemberProjectedSlot slot, CellQuery cellQuery, EdmItemCollection edmItemCollection, out CellConstantSet domain)
         {
-            CellConstantSet domainValues = DeriveDomainFromMemberPath(slot.MemberPath, edmItemCollection, true /* leaveDomainUnbounded */);
+            var domainValues = DeriveDomainFromMemberPath(slot.MemberPath, edmItemCollection, true /* leaveDomainUnbounded */);
 
             //Note, out domain is set even in the case where method call returns false
             return TryGetDomainRestrictedByWhereClause(domainValues, slot, cellQuery, out domain);
         }
-
 
         // effects: returns a dictionary that maps each S-side slot whose domain can be restricted to such an enumerated domain
         // The resulting domain is a union of
@@ -380,23 +388,19 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         internal static Dictionary<MemberPath, CellConstantSet>
             ComputeConstantDomainSetsForSlotsInUpdateViews(IEnumerable<Cell> cells, EdmItemCollection edmItemCollection)
         {
+            var updateDomainMap = new Dictionary<MemberPath, CellConstantSet>(MemberPath.EqualityComparer);
 
-            Dictionary<MemberPath, CellConstantSet> updateDomainMap = new Dictionary<MemberPath, CellConstantSet>(MemberPath.EqualityComparer);
-
-            foreach (Cell cell in cells)
+            foreach (var cell in cells)
             {
+                var cQuery = cell.CQuery;
+                var sQuery = cell.SQuery;
 
-                CellQuery cQuery = cell.CQuery;
-                CellQuery sQuery = cell.SQuery;
-
-                foreach (MemberProjectedSlot sSlot in sQuery.GetConjunctsFromWhereClause().Select(oneOfConst => oneOfConst.RestrictedMemberSlot))
+                foreach (var sSlot in sQuery.GetConjunctsFromWhereClause().Select(oneOfConst => oneOfConst.RestrictedMemberSlot))
                 {
-
                     // obtain initial slot domain and restrict it if the slot has conditions
 
-
                     CellConstantSet restrictedDomain;
-                    bool wasDomainRestricted = GetRestrictedOrUnrestrictedDomain(sSlot, sQuery, edmItemCollection, out restrictedDomain);
+                    var wasDomainRestricted = GetRestrictedOrUnrestrictedDomain(sSlot, sQuery, edmItemCollection, out restrictedDomain);
 
                     // Suppose that we have a cell: 
                     //      Proj(ID, A) WHERE(A=5) FROM E   =   Proj(ID, B) FROM T
@@ -409,11 +413,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                     // if no restriction on the S-side and the slot is projected then take the domain from the C-side
                     if (!wasDomainRestricted)
                     {
-                        int projectedPosition = sQuery.GetProjectedPosition(sSlot);
+                        var projectedPosition = sQuery.GetProjectedPosition(sSlot);
                         if (projectedPosition >= 0)
                         {
                             // get the domain of the respective C-side slot
-                            MemberProjectedSlot cSlot = cQuery.ProjectedSlotAt(projectedPosition) as MemberProjectedSlot;
+                            var cSlot = cQuery.ProjectedSlotAt(projectedPosition) as MemberProjectedSlot;
                             Debug.Assert(cSlot != null, "Assuming constants are not projected");
 
                             wasDomainRestricted = GetRestrictedOrUnrestrictedDomain(cSlot, cQuery, edmItemCollection, out restrictedDomain);
@@ -426,7 +430,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                     }
 
                     // Add the default value to the domain
-                    MemberPath sSlotMemberPath = sSlot.MemberPath;
+                    var sSlotMemberPath = sSlot.MemberPath;
                     Constant defaultValue;
                     if (TryGetDefaultValueForMemberPath(sSlotMemberPath, out defaultValue))
                     {
@@ -454,12 +458,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // "OneOfConst AND ... AND OneOfConst"
         // slot must present in cellQuery and incomingDomain is the domain for it
         // effects: Returns the set of values that slot can take as restricted by cellQuery's whereClause
-        private static bool TryGetDomainRestrictedByWhereClause(IEnumerable<Constant> domain, MemberProjectedSlot slot, CellQuery cellQuery, out CellConstantSet result)
+        private static bool TryGetDomainRestrictedByWhereClause(
+            IEnumerable<Constant> domain, MemberProjectedSlot slot, CellQuery cellQuery, out CellConstantSet result)
         {
-
             var conditionsForSlot = cellQuery.GetConjunctsFromWhereClause()
-                                  .Where(restriction => MemberPath.EqualityComparer.Equals(restriction.RestrictedMemberSlot.MemberPath, slot.MemberPath))
-                                  .Select(restriction => new CellConstantSet(restriction.Domain.Values, Constant.EqualityComparer));
+                .Where(restriction => MemberPath.EqualityComparer.Equals(restriction.RestrictedMemberSlot.MemberPath, slot.MemberPath))
+                .Select(restriction => new CellConstantSet(restriction.Domain.Values, Constant.EqualityComparer));
 
             //Debug.Assert(!conditionsForSlot.Skip(1).Any(), "More than one Clause with the same path");
 
@@ -470,12 +474,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return false;
             }
 
-
-
             // Now get all the possible values from domain and conditionValues
-            CellConstantSet possibleValues = DeterminePossibleValues(conditionsForSlot.SelectMany(m => m.Select(c => c)), domain);
+            var possibleValues = DeterminePossibleValues(conditionsForSlot.SelectMany(m => m.Select(c => c)), domain);
 
-            Domain restrictedDomain = new Domain(domain, possibleValues);
+            var restrictedDomain = new Domain(domain, possibleValues);
             foreach (var conditionValues in conditionsForSlot)
             {
                 // Domain derived from Edm-Type INTERSECTED with Conditions
@@ -485,15 +487,17 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             result = new CellConstantSet(restrictedDomain.Values, Constant.EqualityComparer);
             return !domain.SequenceEqual(result);
         }
+
         #endregion
 
         #region Private helper methods
+
         // effects: Intersects the values in second with this domain and
         // returns the result
         private Domain Intersect(Domain second)
         {
             CheckTwoDomainInvariants(this, second);
-            Domain result = new Domain(this);
+            var result = new Domain(this);
             result.m_domain.Intersect(second.m_domain);
             return result;
         }
@@ -504,9 +508,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         private static NegatedConstant GetNegatedConstant(IEnumerable<Constant> constants)
         {
             NegatedConstant result = null;
-            foreach (Constant constant in constants)
+            foreach (var constant in constants)
             {
-                NegatedConstant negated = constant as NegatedConstant;
+                var negated = constant as NegatedConstant;
                 if (negated != null)
                 {
                     Debug.Assert(result == null, "Multiple negated cell constants?");
@@ -520,8 +524,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // Returns all possible positive values that are present in domain1 and domain2
         private static CellConstantSet DeterminePossibleValues(IEnumerable<Constant> domain1, IEnumerable<Constant> domain2)
         {
-            CellConstantSet union = new CellConstantSet(domain1, Constant.EqualityComparer).Union(domain2);
-            CellConstantSet result = DeterminePossibleValues(union);
+            var union = new CellConstantSet(domain1, Constant.EqualityComparer).Union(domain2);
+            var result = DeterminePossibleValues(union);
             return result;
         }
 
@@ -550,23 +554,26 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             // Make sure m_domain has at most one negatedCellConstant
             //  m_possibleValues has none
-            NegatedConstant negated = GetNegatedConstant(m_domain); // Can be null or not-null
+            var negated = GetNegatedConstant(m_domain); // Can be null or not-null
 
             negated = GetNegatedConstant(m_possibleValues);
             Debug.Assert(negated == null, "m_possibleValues cannot contain negated constant");
 
-            Debug.Assert(m_domain.IsSubsetOf(AllPossibleValuesInternal),
-                         "All domain values must be contained in possibleValues");
+            Debug.Assert(
+                m_domain.IsSubsetOf(AllPossibleValuesInternal),
+                "All domain values must be contained in possibleValues");
         }
+
         #endregion
 
         #region String methods
+
         // effects: Returns a user-friendly string that can be reported to an end-user
         internal string ToUserString()
         {
-            StringBuilder builder = new StringBuilder();
-            bool isFirst = true;
-            foreach (Constant constant in m_domain)
+            var builder = new StringBuilder();
+            var isFirst = true;
+            foreach (var constant in m_domain)
             {
                 if (isFirst == false)
                 {
@@ -582,7 +589,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             builder.Append(ToUserString());
         }
-        #endregion
 
+        #endregion
     }
 }

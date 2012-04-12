@@ -1,5 +1,3 @@
-using System;
-
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     /// <summary>

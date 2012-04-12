@@ -1,15 +1,15 @@
-using System.Linq;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using System.Data.Entity.Core.Common.Utils;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
-using System.Collections.ObjectModel;
-using System.Text;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Text;
+
     /// <summary>
     /// A class that holds an expression of the form "(SELECT .. FROM .. WHERE) AS alias".
     /// Essentially, it allows generating Cql query in a localized manner, i.e., all global decisions about nulls, constants,
@@ -21,7 +21,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         /// Initializes a <see cref="CqlBlock"/> with the SELECT (<paramref name="slotInfos"/>), FROM (<paramref name="children"/>), 
         /// WHERE (<paramref name="whereClause"/>), AS (<paramref name="blockAliasNum"/>).
         /// </summary>
-        protected CqlBlock(SlotInfo[] slotInfos, List<CqlBlock> children, BoolExpression whereClause, CqlIdentifiers identifiers, int blockAliasNum)
+        protected CqlBlock(
+            SlotInfo[] slotInfos, List<CqlBlock> children, BoolExpression whereClause, CqlIdentifiers identifiers, int blockAliasNum)
         {
             m_slots = new ReadOnlyCollection<SlotInfo>(slotInfos);
             m_children = new ReadOnlyCollection<CqlBlock>(children);
@@ -30,29 +31,36 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         }
 
         #region Fields
+
         /// <summary>
         /// Essentially, SELECT. May be replaced with another collection after block construction.
         /// </summary>
         private ReadOnlyCollection<SlotInfo> m_slots;
+
         /// <summary>
         /// FROM inputs.
         /// </summary>
         private readonly ReadOnlyCollection<CqlBlock> m_children;
+
         /// <summary>
         /// WHERER.
         /// </summary>
         private readonly BoolExpression m_whereClause;
+
         /// <summary>
         /// Alias of the whole block for cql generation.
         /// </summary>
         private readonly string m_blockAlias;
+
         /// <summary>
         /// See <see cref="JoinTreeContext"/> for more info.
         /// </summary>
         private JoinTreeContext m_joinTreeContext;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns all the slots for this block (SELECT).
         /// </summary>
@@ -85,9 +93,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         {
             get { return m_blockAlias; }
         }
+
         #endregion
 
         #region Abstract Methods
+
         /// <summary>
         /// Returns a string corresponding to the eSQL representation of this block (and its children below).
         /// </summary>
@@ -97,16 +107,20 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         /// Returns a string corresponding to the CQT representation of this block (and its children below).
         /// </summary>
         internal abstract DbExpression AsCqt(bool isTopLevel);
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// For the given <paramref name="slotNum"/> creates a <see cref="QualifiedSlot"/> qualified with <see cref="CqlAlias"/> of the current block:
         /// "<see cref="CqlAlias"/>.slot_alias"
         /// </summary>
         internal QualifiedSlot QualifySlotWithBlockAlias(int slotNum)
         {
-            Debug.Assert(this.IsProjected(slotNum), StringUtil.FormatInvariant("Slot {0} that is to be qualified with the block alias is not projected in this block", slotNum));
+            Debug.Assert(
+                IsProjected(slotNum),
+                StringUtil.FormatInvariant("Slot {0} that is to be qualified with the block alias is not projected in this block", slotNum));
             var slotInfo = m_slots[slotNum];
             return new QualifiedSlot(this, slotInfo.SlotValue);
         }
@@ -135,10 +149,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         /// <summary>
         /// Generates "A, B, C, ..." for all the slots in the block.
         /// </summary>
-        protected void GenerateProjectionEsql(StringBuilder builder, string blockAlias, bool addNewLineAfterEachSlot, int indentLevel, bool isTopLevel)
+        protected void GenerateProjectionEsql(
+            StringBuilder builder, string blockAlias, bool addNewLineAfterEachSlot, int indentLevel, bool isTopLevel)
         {
-            bool isFirst = true;
-            foreach (SlotInfo slotInfo in Slots)
+            var isFirst = true;
+            foreach (var slotInfo in Slots)
             {
                 if (false == slotInfo.IsRequiredByParent)
                 {
@@ -160,10 +175,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
                 // Print the field alias for complex expressions that don't produce default alias.
                 // Don't print alias for qualified fields as they reproduce their alias.
                 // Don't print alias if it's a top level query using SELECT VALUE.
-                if (!isTopLevel && (!(slotInfo.SlotValue is QualifiedSlot) || slotInfo.IsEnforcedNotNull))
+                if (!isTopLevel
+                    && (!(slotInfo.SlotValue is QualifiedSlot) || slotInfo.IsEnforcedNotNull))
                 {
                     builder.Append(" AS ")
-                           .Append(slotInfo.CqlFieldAlias);
+                        .Append(slotInfo.CqlFieldAlias);
                 }
                 isFirst = false;
             }
@@ -181,13 +197,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         {
             if (isTopLevel)
             {
-                Debug.Assert(this.Slots.Where(slot => slot.IsRequiredByParent).Count() == 1, "Top level projection must project only one slot.");
-                return this.Slots.Where(slot => slot.IsRequiredByParent).Single().AsCqt(row);
+                Debug.Assert(Slots.Where(slot => slot.IsRequiredByParent).Count() == 1, "Top level projection must project only one slot.");
+                return Slots.Where(slot => slot.IsRequiredByParent).Single().AsCqt(row);
             }
             else
             {
                 return DbExpressionBuilder.NewRow(
-                    this.Slots.Where(slot => slot.IsRequiredByParent).Select(slot => new KeyValuePair<string, DbExpression>(slot.CqlFieldAlias, slot.AsCqt(row))));
+                    Slots.Where(slot => slot.IsRequiredByParent).Select(
+                        slot => new KeyValuePair<string, DbExpression>(slot.CqlFieldAlias, slot.AsCqt(row))));
             }
         }
 
@@ -214,7 +231,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
 
         internal override void ToCompactString(StringBuilder builder)
         {
-            for (int i = 0; i < m_slots.Count; i++)
+            for (var i = 0; i < m_slots.Count; i++)
             {
                 StringUtil.FormatStringBuilder(builder, "{0}: ", i);
                 m_slots[i].ToCompactString(builder);
@@ -222,9 +239,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             }
             m_whereClause.ToCompactString(builder);
         }
+
         #endregion
 
         #region JoinTreeContext
+
         /// <summary>
         /// The class represents a position of a <see cref="CqlBlock"/> in a join tree.
         /// It is expected that the join tree is left-recursive (not balanced) and looks like this:
@@ -269,14 +288,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
 
             internal DbExpression FindInput(DbExpression row)
             {
-                DbExpression cqt = row;
-                for (int i = m_parentQualifiers.Count - 1; i >= m_indexInParentQualifiers; --i)
+                var cqt = row;
+                for (var i = m_parentQualifiers.Count - 1; i >= m_indexInParentQualifiers; --i)
                 {
                     cqt = cqt.Property(m_parentQualifiers[i]);
                 }
                 return cqt.Property(m_leafQualifier);
             }
         }
+
         #endregion
     }
 }

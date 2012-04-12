@@ -1,14 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Diagnostics;
-using System.Text;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     /// Class for representing a entity set
     /// </summary>
@@ -29,6 +20,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         //----------------------------------------------------------------------------------------------
 
         #region Constructors
+
         /// <summary>
         /// The constructor for constructing the EntitySet with a given name and an entity type
         /// </summary>
@@ -55,60 +47,52 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _table = table;
 
             //---- the Provider specific query to use to retrieve the EntitySet data
-            _definingQuery = definingQuery;
-            
-            this.ElementType = entityType;
+            DefiningQuery = definingQuery;
+
+            ElementType = entityType;
         }
+
         #endregion
 
         #region Fields
+
         private EntityContainer _entityContainer;
-        private string _name;
+        private readonly string _name;
         private EntityTypeBase _elementType;
-        private string _table;
-        private string _schema;
-        private string _definingQuery;
-        private string _cachedProviderSql;
+        private readonly string _table;
+        private readonly string _schema;
 
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the kind of the type
         /// </summary>
-        public override BuiltInTypeKind BuiltInTypeKind { get { return BuiltInTypeKind.EntitySetBase; } }
-
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
+            get { return BuiltInTypeKind.EntitySetBase; }
+        }
 
         /// <summary>
         /// Gets the identity for this item as a string
         /// </summary>
         internal override string Identity
         {
-            get
-            {
-                return this.Name;
-            }
+            get { return Name; }
         }
 
         /// <summary>
         /// Gets or sets escaped SQL describing this entity set.
         /// </summary>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
-        internal string DefiningQuery
-        {
-            get { return _definingQuery; }
-            set { _definingQuery = value; }
-        }
+        internal string DefiningQuery { get; set; }
 
         /// <summary>
         /// Get and set by the provider only as a convientent place to 
         /// store the created sql fragment that represetnts this entity set
         /// </summary>
-        internal string CachedProviderSql
-        {
-            get { return _cachedProviderSql; }
-            set { _cachedProviderSql = value; }
-        }
+        internal string CachedProviderSql { get; set; }
 
         /// <summary>
         /// Gets/Sets the name of this entity set
@@ -118,10 +102,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public String Name
         {
-            get
-            {
-                return _name;
-            }
+            get { return _name; }
         }
 
         /// <summary>
@@ -131,10 +112,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when the EntitySetBase instance or the EntityContainer passed into the setter is in ReadOnly state</exception>
         public EntityContainer EntityContainer
         {
-            get
-            {
-                return _entityContainer;
-            }
+            get { return _entityContainer; }
         }
 
         /// <summary>
@@ -145,10 +123,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.EntityTypeBase, false)]
         public EntityTypeBase ElementType
         {
-            get
-            {
-                return _elementType;
-            }
+            get { return _elementType; }
             internal set
             {
                 EntityUtil.GenericCheckArgumentNull(value, "value");
@@ -160,23 +135,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         internal string Table
         {
-            get
-            {
-                return _table;
-            }
+            get { return _table; }
         }
 
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         internal string Schema
         {
-            get
-            {
-                return _schema;
-            }
+            get { return _schema; }
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Overriding System.Object.ToString to provide better String representation 
         /// for this type.
@@ -191,11 +162,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal override void SetReadOnly()
         {
-            if (!this.IsReadOnly)
+            if (!IsReadOnly)
             {
                 base.SetReadOnly();
 
-                EntityTypeBase elementType = ElementType;
+                var elementType = ElementType;
                 if (elementType != null)
                 {
                     elementType.SetReadOnly();
@@ -210,6 +181,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             _entityContainer = newEntityContainer;
         }
+
         #endregion
     }
 }

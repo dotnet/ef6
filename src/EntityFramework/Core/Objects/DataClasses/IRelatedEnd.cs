@@ -1,14 +1,7 @@
-using System.Data;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Data.Entity.Core.Metadata.Edm;
-
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
+    using System.Collections;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -24,7 +17,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         /// IsLoaded returns true if and only if Load was called.
         /// </summary>
-        bool IsLoaded { get;}
+        bool IsLoaded { get; }
 
         /// <summary>
         /// Name of the relationship in which this IRelatedEnd is participating        
@@ -155,5 +148,3 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         IEnumerator GetEnumerator();
     }
 }
-
-

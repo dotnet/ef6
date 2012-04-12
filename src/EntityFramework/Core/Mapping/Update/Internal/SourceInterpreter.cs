@@ -1,10 +1,10 @@
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Data.Entity.Core.Objects;
-using System.Data.Entity.Core.Metadata.Edm;
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+
     /// <summary>
     /// This class determines the state entries contributing to an expression
     /// propagated through an update mapping view (values in propagated expressions
@@ -30,14 +30,15 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="translator">Translator containing session information.</param>
         /// <param name="sourceTable">Table from which the exception was thrown (must not be null).</param>
         /// <returns>Markup.</returns>
-        internal static ReadOnlyCollection<IEntityStateEntry> GetAllStateEntries(PropagatorResult source, UpdateTranslator translator,
+        internal static ReadOnlyCollection<IEntityStateEntry> GetAllStateEntries(
+            PropagatorResult source, UpdateTranslator translator,
             EntitySet sourceTable)
         {
             Debug.Assert(null != source);
             Debug.Assert(null != translator);
             Debug.Assert(null != sourceTable);
 
-            SourceInterpreter interpreter = new SourceInterpreter(translator, sourceTable);
+            var interpreter = new SourceInterpreter(translator, sourceTable);
             interpreter.RetrieveResultMarkup(source);
 
             return new ReadOnlyCollection<IEntityStateEntry>(interpreter.m_stateEntries);
@@ -47,7 +48,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             Debug.Assert(null != source);
 
-            if (source.Identifier != PropagatorResult.NullIdentifier)
+            if (source.Identifier
+                != PropagatorResult.NullIdentifier)
             {
                 // state entries travel with identifiers. several state entries may be merged
                 // into a single identifier result via joins in the update mapping view
@@ -56,13 +58,15 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     if (null != source.StateEntry)
                     {
                         m_stateEntries.Add(source.StateEntry);
-                        if (source.Identifier != PropagatorResult.NullIdentifier)
+                        if (source.Identifier
+                            != PropagatorResult.NullIdentifier)
                         {
                             // if this is an identifier, it may also be registered with an "owner".
                             // Return the owner as well if the owner is also mapped to this table.
                             PropagatorResult owner;
                             if (m_translator.KeyManager.TryGetIdentifierOwner(source.Identifier, out owner) &&
-                                null != owner.StateEntry &&
+                                null != owner.StateEntry
+                                &&
                                 ExtentInScope(owner.StateEntry.EntitySet))
                             {
                                 m_stateEntries.Add(owner.StateEntry);
@@ -71,7 +75,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             // Check if are any referential constraints. If so, the entity key
                             // implies that the dependent relationship instance is also being
                             // handled in this result.
-                            foreach (IEntityStateEntry stateEntry in m_translator.KeyManager.GetDependentStateEntries(source.Identifier))
+                            foreach (var stateEntry in m_translator.KeyManager.GetDependentStateEntries(source.Identifier))
                             {
                                 m_stateEntries.Add(stateEntry);
                             }
@@ -81,10 +85,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 }
                 while (null != source);
             }
-            else if (!source.IsSimple && !source.IsNull)
+            else if (!source.IsSimple
+                     && !source.IsNull)
             {
                 // walk children
-                foreach (PropagatorResult child in source.GetMemberValues())
+                foreach (var child in source.GetMemberValues())
                 {
                     RetrieveResultMarkup(child);
                 }

@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees;
-
 namespace System.Data.Entity.Core.Objects.Internal
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+
     /// <summary>
     /// An index containing information about how the query was spanned
     /// This helps to determine how to materialize the query result
@@ -20,16 +15,20 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <summary>
         /// Helper class to compare two RowTypes using EdmEquals instead of reference equality.
         /// </summary>
-        sealed private class RowTypeEqualityComparer : IEqualityComparer<RowType>
+        private sealed class RowTypeEqualityComparer : IEqualityComparer<RowType>
         {
-            private RowTypeEqualityComparer() { }
+            private RowTypeEqualityComparer()
+            {
+            }
+
             internal static readonly RowTypeEqualityComparer Instance = new RowTypeEqualityComparer();
 
             #region IEqualityComparer<RowType> Members
 
             public bool Equals(RowType x, RowType y)
             {
-                if (x == null || y == null)
+                if (x == null
+                    || y == null)
                 {
                     return false;
                 }
@@ -44,6 +43,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             #endregion
         }
+
         #endregion
 
         // When a query is spanned, the result is always a RowType
@@ -54,10 +54,6 @@ namespace System.Data.Entity.Core.Objects.Internal
         // A map from a spanned RowType (or parent RowType) to the original TypeUsage prior
         // to the query being rewritten
         private Dictionary<RowType, TypeUsage> _rowMap;
-
-        internal SpanIndex()
-        {
-        }
 
         internal void AddSpannedRowType(RowType spannedRowType, TypeUsage originalRowType)
         {
@@ -76,7 +72,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         internal TypeUsage GetSpannedRowType(RowType spannedRowType)
         {
             TypeUsage retType;
-            if (_rowMap != null && _rowMap.TryGetValue(spannedRowType, out retType))
+            if (_rowMap != null
+                && _rowMap.TryGetValue(spannedRowType, out retType))
             {
                 return retType;
             }
@@ -110,7 +107,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         internal Dictionary<int, AssociationEndMember> GetSpanMap(RowType rowType)
         {
             Dictionary<int, AssociationEndMember> retMap = null;
-            if (_spanMap != null && _spanMap.TryGetValue(rowType, out retMap))
+            if (_spanMap != null
+                && _spanMap.TryGetValue(rowType, out retMap))
             {
                 return retMap;
             }

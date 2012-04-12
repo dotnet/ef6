@@ -1,33 +1,35 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System.Collections.Generic;
-    using System.Globalization;
-
     /// <summary>
     /// Internal helper class for query
     /// </summary>
     internal class TargetPerspective : Perspective
     {
         #region Constructors
+
         /// <summary>
         /// Creates a new instance of perspective class so that query can work
         /// ignorant of all spaces
         /// </summary>
         /// <param name="metadataWorkspace">runtime metadata container</param>
         internal TargetPerspective(MetadataWorkspace metadataWorkspace)
-            : base(metadataWorkspace, TargetPerspective.TargetPerspectiveDataSpace)
+            : base(metadataWorkspace, TargetPerspectiveDataSpace)
         {
             _modelPerspective = new ModelPerspective(metadataWorkspace);
         }
+
         #endregion
 
         #region Fields
+
         internal const DataSpace TargetPerspectiveDataSpace = DataSpace.SSpace;
         // TargetPerspective uses a ModelPerspective for a second lookup in type lookup
-        private ModelPerspective _modelPerspective;
+        private readonly ModelPerspective _modelPerspective;
+
         #endregion
 
         #region Methods 
+
         /// <summary>
         /// Look up a type in the target data space based upon the fullName
         /// </summary>
@@ -38,9 +40,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal override bool TryGetTypeByName(string fullName, bool ignoreCase, out TypeUsage usage)
         {
             EntityUtil.CheckStringArgument(fullName, "fullName");
-            
+
             EdmType edmType = null;
-            if (this.MetadataWorkspace.TryGetItem<EdmType>(fullName, ignoreCase, this.TargetDataspace, out edmType))
+            if (MetadataWorkspace.TryGetItem(fullName, ignoreCase, TargetDataspace, out edmType))
             {
                 usage = TypeUsage.Create(edmType);
                 usage = Helper.GetModelTypeUsage(usage);
@@ -66,6 +68,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             return true;
         }
+
         #endregion
     }
 }

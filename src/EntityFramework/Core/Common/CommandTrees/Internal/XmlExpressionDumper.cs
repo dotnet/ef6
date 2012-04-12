@@ -1,30 +1,30 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
-using System.Xml;
-
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees;
-
 namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 {
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Text;
+    using System.Xml;
+
     /// <summary>
     /// An implementation of ExpressionDumper that produces an XML string.
     /// </summary>
     internal class XmlExpressionDumper : ExpressionDumper
     {
-        internal static Encoding DefaultEncoding { get { return Encoding.UTF8; } }
+        internal static Encoding DefaultEncoding
+        {
+            get { return Encoding.UTF8; }
+        }
 
-        private XmlWriter _writer;
+        private readonly XmlWriter _writer;
 
         internal XmlExpressionDumper(Stream stream)
-            : this(stream, XmlExpressionDumper.DefaultEncoding) {}
-        
-        internal XmlExpressionDumper(Stream stream, Encoding encoding) : base()
+            : this(stream, DefaultEncoding)
         {
-            XmlWriterSettings settings = new XmlWriterSettings();
+        }
+
+        internal XmlExpressionDumper(Stream stream, Encoding encoding)
+        {
+            var settings = new XmlWriterSettings();
             settings.CheckCharacters = false;
             settings.Indent = true;
             settings.Encoding = encoding;
@@ -44,12 +44,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             _writer.WriteStartElement(name);
             if (attrs != null)
             {
-                foreach (KeyValuePair<string, object> attr in attrs)
+                foreach (var attr in attrs)
                 {
-
                     _writer.WriteAttributeString(attr.Key, (null == attr.Value ? "" : attr.Value.ToString()));
                 }
-            }  
+            }
         }
 
         internal override void End(string name)

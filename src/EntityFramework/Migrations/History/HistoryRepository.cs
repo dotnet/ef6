@@ -1,9 +1,9 @@
 namespace System.Data.Entity.Migrations.History
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Core;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
+    using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Edm;
@@ -12,7 +12,6 @@ namespace System.Data.Entity.Migrations.History
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;

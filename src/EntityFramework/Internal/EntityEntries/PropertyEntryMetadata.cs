@@ -1,7 +1,7 @@
 ﻿namespace System.Data.Entity.Internal
 {
-    using System.Data.Entity.Resources;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics.Contracts;
 
     /// <summary>

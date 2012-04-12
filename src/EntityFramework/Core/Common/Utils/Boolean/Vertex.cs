@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace System.Data.Entity.Core.Common.Utils.Boolean
+﻿namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -17,27 +14,29 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     /// All creation of vertices is mediated by the Solver class which ensures
     /// each vertex is unique. Otherwise, the graph is not 'Reduced'.
     /// </summary>
-    sealed class Vertex : IEquatable<Vertex>
+    internal sealed class Vertex : IEquatable<Vertex>
     {
         /// <summary>
         /// Initializes a sink BDD node (zero or one)
         /// </summary>
         private Vertex()
         {
-            this.Variable = int.MaxValue;
-            this.Children = new Vertex[] { };
+            Variable = int.MaxValue;
+            Children = new Vertex[] { };
         }
 
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.EntityUtil.BoolExprAssert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.EntityUtil.BoolExprAssert(System.Boolean,System.String)")]
         internal Vertex(int variable, Vertex[] children)
         {
-            EntityUtil.BoolExprAssert(variable < int.MaxValue,
+            EntityUtil.BoolExprAssert(
+                variable < int.MaxValue,
                 "exceeded number of supported variables");
 
             AssertConstructorArgumentsValid(variable, children);
-           
-            this.Variable = variable;
-            this.Children = children;
+
+            Variable = variable;
+            Children = children;
         }
 
         [Conditional("DEBUG")]
@@ -46,7 +45,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
             Debug.Assert(null != children, "internal vertices must define children");
             Debug.Assert(2 <= children.Length, "internal vertices must have at least two children");
             Debug.Assert(0 < variable, "internal vertices must have 0 < variable");
-            foreach (Vertex child in children)
+            foreach (var child in children)
             {
                 Debug.Assert(variable < child.Variable, "children must have greater variable");
             }
@@ -82,7 +81,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// </summary>
         internal bool IsOne()
         {
-            return object.ReferenceEquals(Vertex.One, this);
+            return ReferenceEquals(One, this);
         }
 
         /// <summary>
@@ -90,7 +89,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// </summary>
         internal bool IsZero()
         {
-            return object.ReferenceEquals(Vertex.Zero, this);
+            return ReferenceEquals(Zero, this);
         }
 
         /// <summary>
@@ -103,7 +102,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         public bool Equals(Vertex other)
         {
-            return object.ReferenceEquals(this, other);
+            return ReferenceEquals(this, other);
         }
 
         public override bool Equals(object obj)

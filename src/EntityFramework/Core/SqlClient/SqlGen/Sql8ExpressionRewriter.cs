@@ -1,18 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Common.CommandTrees.Internal;
-
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-
 namespace System.Data.Entity.Core.SqlClient.SqlGen
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+    using System.Data.Entity.Core.Common.CommandTrees.Internal;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+    using System.Globalization;
+
     /// <summary>
     /// Rewrites an expression tree to make it suitable for translation to SQL appropriate for SQL Server 2000
     /// In particular, it replaces expressions that are not directly supported on SQL Server 2000
@@ -29,6 +25,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
     internal class Sql8ExpressionRewriter : DbExpressionRebinder
     {
         #region Entry Point
+
         /// <summary>
         /// The only entry point. 
         /// Rewrites the given tree by replacing expressions that are not directly supported on SQL Server 2000
@@ -39,24 +36,28 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         internal static DbQueryCommandTree Rewrite(DbQueryCommandTree originalTree)
         {
             Debug.Assert(originalTree != null, "OriginalTree is null");
-            Sql8ExpressionRewriter rewriter = new Sql8ExpressionRewriter(originalTree.MetadataWorkspace);
-            DbExpression newQuery = rewriter.VisitExpression(originalTree.Query);
+            var rewriter = new Sql8ExpressionRewriter(originalTree.MetadataWorkspace);
+            var newQuery = rewriter.VisitExpression(originalTree.Query);
             return DbQueryCommandTree.FromValidExpression(originalTree.MetadataWorkspace, originalTree.DataSpace, newQuery);
         }
+
         #endregion
 
         #region Constructor
+
         /// <summary>
         /// Private Constructor.
         /// </summary>
         /// <param name="metadata"></param>
         private Sql8ExpressionRewriter(MetadataWorkspace metadata)
-            :base(metadata)
+            : base(metadata)
         {
         }
+
         #endregion
 
         #region DbExpressionVisitor<DbExpression> Members
+
         /// <summary>
         /// <see cref="TransformIntersectOrExcept(DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList<DbPropertyExpression> sortExpressionsOverLeft, string sortExpressionsBindingVariableName)"/>
         /// </summary>
@@ -66,7 +67,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         {
             return TransformIntersectOrExcept(VisitExpression(e.Left), VisitExpression(e.Right), DbExpressionKind.Except);
         }
-        
+
         /// <summary>
         /// <see cref="TransformIntersectOrExcept(DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList<DbPropertyExpression> sortExpressionsOverLeft, string sortExpressionsBindingVariableName)"/>
         /// </summary>
@@ -76,7 +77,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         {
             return TransformIntersectOrExcept(VisitExpression(e.Left), VisitExpression(e.Right), DbExpressionKind.Intersect);
         }
-        
+
         /// <summary>
         /// Logicaly, <see cref="DbSkipExpression"/> translates to:  
         /// SELECT Y.x1, Y.x2, ..., Y.xn
@@ -121,27 +122,30 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             DbExpression rightInput = VisitExpressionBinding(e.Input).Sort(VisitSortOrder(e.SortOrder)).Limit(VisitExpression(e.Count));
 
             //Build the left input for the except
-            DbExpression leftInput = VisitExpression(e.Input.Expression); //Another copy of the input
+            var leftInput = VisitExpression(e.Input.Expression); //Another copy of the input
 
-            IList<DbSortClause> sortOrder = VisitSortOrder(e.SortOrder); //Another copy of the sort order
-            
+            var sortOrder = VisitSortOrder(e.SortOrder); //Another copy of the sort order
+
             // Create a list of the sort expressions to be used for translating except
             IList<DbPropertyExpression> sortExpressions = new List<DbPropertyExpression>(e.SortOrder.Count);
-            foreach (DbSortClause sortClause in sortOrder)
+            foreach (var sortClause in sortOrder)
             {
                 //We only care about property expressions, not about constants
-                if (sortClause.Expression.ExpressionKind == DbExpressionKind.Property)
+                if (sortClause.Expression.ExpressionKind
+                    == DbExpressionKind.Property)
                 {
                     sortExpressions.Add((DbPropertyExpression)sortClause.Expression);
                 }
             }
 
-            DbExpression exceptExpression = TransformIntersectOrExcept(leftInput, rightInput, DbExpressionKind.Skip, sortExpressions, e.Input.VariableName);
+            var exceptExpression = TransformIntersectOrExcept(
+                leftInput, rightInput, DbExpressionKind.Skip, sortExpressions, e.Input.VariableName);
 
-            DbExpression result = exceptExpression.BindAs(e.Input.VariableName).Sort(sortOrder);  
+            DbExpression result = exceptExpression.BindAs(e.Input.VariableName).Sort(sortOrder);
 
             return result;
         }
+
         #endregion
 
         #region DbExpressionVisitor<DbExpression> Member Helpers
@@ -156,7 +160,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         private DbExpression TransformIntersectOrExcept(DbExpression left, DbExpression right, DbExpressionKind expressionKind)
         {
-            return TransformIntersectOrExcept( left,  right,  expressionKind, null, null);
+            return TransformIntersectOrExcept(left, right, expressionKind, null, null);
         }
 
         /// <summary>
@@ -197,13 +201,15 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="sortExpressionsOverLeft">note that this list gets destroyed by this method</param>
         /// <param name="sortExpressionsBindingVariableName"></param>
         /// <returns></returns>
-        private DbExpression TransformIntersectOrExcept(DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList<DbPropertyExpression> sortExpressionsOverLeft, string sortExpressionsBindingVariableName)
+        private DbExpression TransformIntersectOrExcept(
+            DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList<DbPropertyExpression> sortExpressionsOverLeft,
+            string sortExpressionsBindingVariableName)
         {
-            bool negate = (expressionKind == DbExpressionKind.Except) || (expressionKind == DbExpressionKind.Skip);
-            bool distinct = (expressionKind == DbExpressionKind.Except) || (expressionKind == DbExpressionKind.Intersect);
+            var negate = (expressionKind == DbExpressionKind.Except) || (expressionKind == DbExpressionKind.Skip);
+            var distinct = (expressionKind == DbExpressionKind.Except) || (expressionKind == DbExpressionKind.Intersect);
 
-            DbExpressionBinding leftInputBinding = left.Bind();
-            DbExpressionBinding rightInputBinding = right.Bind();
+            var leftInputBinding = left.Bind();
+            var rightInputBinding = right.Bind();
 
             IList<DbPropertyExpression> leftFlattenedProperties = new List<DbPropertyExpression>();
             IList<DbPropertyExpression> rightFlattenedProperties = new List<DbPropertyExpression>();
@@ -217,13 +223,17 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             // are non equal comparable, SQL Server 2000 throws.
             if (expressionKind == DbExpressionKind.Skip)
             {
-                if (RemoveNonSortProperties(leftFlattenedProperties, rightFlattenedProperties, sortExpressionsOverLeft, leftInputBinding.VariableName, sortExpressionsBindingVariableName))
+                if (RemoveNonSortProperties(
+                    leftFlattenedProperties, rightFlattenedProperties, sortExpressionsOverLeft, leftInputBinding.VariableName,
+                    sortExpressionsBindingVariableName))
                 {
-                   rightInputBinding = CapWithProject(rightInputBinding, rightFlattenedProperties);
+                    rightInputBinding = CapWithProject(rightInputBinding, rightFlattenedProperties);
                 }
             }
 
-            Debug.Assert(leftFlattenedProperties.Count == rightFlattenedProperties.Count, "The left and the right input to INTERSECT or EXCEPT have a different number of properties");
+            Debug.Assert(
+                leftFlattenedProperties.Count == rightFlattenedProperties.Count,
+                "The left and the right input to INTERSECT or EXCEPT have a different number of properties");
             Debug.Assert(leftFlattenedProperties.Count != 0, "The inputs to INTERSECT or EXCEPT have no properties");
 
             //Build the predicate for the quantifier:
@@ -233,7 +243,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             //      AND (B.bn = A.an or (B.bn is null and A.an is null)))
             DbExpression existsPredicate = null;
 
-            for (int i = 0; i < leftFlattenedProperties.Count; i++)
+            for (var i = 0; i < leftFlattenedProperties.Count; i++)
             {
                 //A.ai == B.bi
                 DbExpression equalsExpression = leftFlattenedProperties[i].Equal(rightFlattenedProperties[i]);
@@ -292,25 +302,25 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             IList<EdmProperty> properties = TypeHelpers.GetProperties(input.ResultType);
             Debug.Assert(properties.Count != 0, "No nested properties when FlattenProperties called?");
 
-            for (int i = 0; i < properties.Count; i++)
+            for (var i = 0; i < properties.Count; i++)
             {
-                DbExpression propertyInput = input;
+                var propertyInput = input;
 
-                DbPropertyExpression propertyExpression = propertyInput.Property(properties[i]);
+                var propertyExpression = propertyInput.Property(properties[i]);
                 if (TypeSemantics.IsPrimitiveType(properties[i].TypeUsage))
                 {
                     flattenedProperties.Add(propertyExpression);
                 }
                 else
                 {
-                    Debug.Assert(TypeSemantics.IsEntityType(properties[i].TypeUsage) || TypeSemantics.IsRowType(properties[i].TypeUsage),
+                    Debug.Assert(
+                        TypeSemantics.IsEntityType(properties[i].TypeUsage) || TypeSemantics.IsRowType(properties[i].TypeUsage),
                         "The input to FlattenProperties is not of EntityType or RowType?");
 
                     FlattenProperties(propertyExpression, flattenedProperties);
                 }
             }
         }
-
 
         /// <summary>
         /// Helper method for <see cref="TransformIntersectOrExcept(DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList<DbPropertyExpression> sortExpressionsOverLeft, string sortExpressionsBindingVariableName)"/>
@@ -326,10 +336,12 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="list1BindingVariableName"></param>
         /// <param name="sortExpressionsBindingVariableName"></param>
         /// <returns></returns>
-        private static bool RemoveNonSortProperties(IList<DbPropertyExpression> list1, IList<DbPropertyExpression> list2, IList<DbPropertyExpression> sortList, string list1BindingVariableName, string sortExpressionsBindingVariableName)
+        private static bool RemoveNonSortProperties(
+            IList<DbPropertyExpression> list1, IList<DbPropertyExpression> list2, IList<DbPropertyExpression> sortList,
+            string list1BindingVariableName, string sortExpressionsBindingVariableName)
         {
-            bool result = false;
-            for (int i = list1.Count - 1; i >= 0; i--)
+            var result = false;
+            for (var i = list1.Count - 1; i >= 0; i--)
             {
                 if (!HasMatchInList(list1[i], sortList, list1BindingVariableName, sortExpressionsBindingVariableName))
                 {
@@ -351,9 +363,11 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="exprBindingVariableName"></param>
         /// <param name="sortExpressionsBindingVariableName"></param>
         /// <returns></returns>
-        private static bool HasMatchInList(DbPropertyExpression expr, IList<DbPropertyExpression> list, string exprBindingVariableName, string listExpressionsBindingVariableName)
+        private static bool HasMatchInList(
+            DbPropertyExpression expr, IList<DbPropertyExpression> list, string exprBindingVariableName,
+            string listExpressionsBindingVariableName)
         {
-            for (int i=0; i<list.Count; i++)
+            for (var i = 0; i < list.Count; i++)
             {
                 if (AreMatching(expr, list[i], exprBindingVariableName, listExpressionsBindingVariableName))
                 {
@@ -379,28 +393,34 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="expr1BindingVariableName"></param>
         /// <param name="expr2BindingVariableName"></param>
         /// <returns></returns>
-        private static bool AreMatching(DbPropertyExpression expr1, DbPropertyExpression expr2, string expr1BindingVariableName, string expr2BindingVariableName)
+        private static bool AreMatching(
+            DbPropertyExpression expr1, DbPropertyExpression expr2, string expr1BindingVariableName, string expr2BindingVariableName)
         {
-            if (expr1.Property.Name != expr2.Property.Name)
+            if (expr1.Property.Name
+                != expr2.Property.Name)
             {
                 return false;
             }
 
-            if (expr1.Instance.ExpressionKind != expr2.Instance.ExpressionKind)
+            if (expr1.Instance.ExpressionKind
+                != expr2.Instance.ExpressionKind)
             {
                 return false;
             }
 
-            if (expr1.Instance.ExpressionKind == DbExpressionKind.Property)
+            if (expr1.Instance.ExpressionKind
+                == DbExpressionKind.Property)
             {
-                return AreMatching((DbPropertyExpression)expr1.Instance, (DbPropertyExpression)expr2.Instance, expr1BindingVariableName, expr2BindingVariableName);
+                return AreMatching(
+                    (DbPropertyExpression)expr1.Instance, (DbPropertyExpression)expr2.Instance, expr1BindingVariableName,
+                    expr2BindingVariableName);
             }
 
-            DbVariableReferenceExpression instance1 =  (DbVariableReferenceExpression)expr1.Instance;
-            DbVariableReferenceExpression instance2 =  (DbVariableReferenceExpression)expr2.Instance;
+            var instance1 = (DbVariableReferenceExpression)expr1.Instance;
+            var instance2 = (DbVariableReferenceExpression)expr2.Instance;
 
-            return (String.Equals(instance1.VariableName, expr1BindingVariableName, StringComparison.Ordinal) 
-                && String.Equals(instance2.VariableName, expr2BindingVariableName, StringComparison.Ordinal));
+            return (String.Equals(instance1.VariableName, expr1BindingVariableName, StringComparison.Ordinal)
+                    && String.Equals(instance2.VariableName, expr2BindingVariableName, StringComparison.Ordinal));
         }
 
         /// <summary>
@@ -413,15 +433,15 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns>An <see cref="DbExpressionBinding"/> over the newly created <see cref="DbProjectExpression"/></returns>
         private static DbExpressionBinding CapWithProject(DbExpressionBinding inputBinding, IList<DbPropertyExpression> flattenedProperties)
         {
-            List<KeyValuePair<string, DbExpression>> projectColumns = new List<KeyValuePair<string, DbExpression>>(flattenedProperties.Count);
+            var projectColumns = new List<KeyValuePair<string, DbExpression>>(flattenedProperties.Count);
 
             //List of all the columnNames used in the projection.
-            Dictionary<string, int> columnNames = new Dictionary<string, int>(flattenedProperties.Count);
+            var columnNames = new Dictionary<string, int>(flattenedProperties.Count);
 
-            foreach (DbPropertyExpression pe in flattenedProperties)
+            foreach (var pe in flattenedProperties)
             {
                 //There may be conflicting property names, thus we may need to rename.
-                string name = pe.Property.Name;
+                var name = pe.Property.Name;
                 int i;
                 if (columnNames.TryGetValue(name, out i))
                 {
@@ -429,8 +449,9 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                     do
                     {
                         ++i;
-                        newName = name + i.ToString(System.Globalization.CultureInfo.InvariantCulture);
-                    } while (columnNames.ContainsKey(newName));
+                        newName = name + i.ToString(CultureInfo.InvariantCulture);
+                    }
+                    while (columnNames.ContainsKey(newName));
 
                     columnNames[name] = i;
                     name = newName;
@@ -444,18 +465,18 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
             //Build the project
             DbExpression rowExpr = DbExpressionBuilder.NewRow(projectColumns);
-            DbProjectExpression projectExpression = inputBinding.Project(rowExpr);
+            var projectExpression = inputBinding.Project(rowExpr);
 
             //Create the new inputBinding
-            DbExpressionBinding resultBinding = projectExpression.Bind();
+            var resultBinding = projectExpression.Bind();
 
             //Create the list of flattenedProperties over the new project
             flattenedProperties.Clear();
-            RowType rowExprType = (RowType)rowExpr.ResultType.EdmType;
+            var rowExprType = (RowType)rowExpr.ResultType.EdmType;
 
-            foreach (KeyValuePair<string, DbExpression> column in projectColumns)
+            foreach (var column in projectColumns)
             {
-                EdmProperty prop = rowExprType.Properties[column.Key];
+                var prop = rowExprType.Properties[column.Key];
                 flattenedProperties.Add(resultBinding.Variable.Property(prop));
             }
             return resultBinding;

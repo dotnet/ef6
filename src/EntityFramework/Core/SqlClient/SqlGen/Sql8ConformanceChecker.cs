@@ -1,8 +1,8 @@
 namespace System.Data.Entity.Core.SqlClient.SqlGen
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Resources;
 
     /// <summary>
     /// The Sql8ConformanceChecker walks a DbExpression tree and determines whether 
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
     /// <item>The tree contains <see cref="DbApplyExpression"/></item>
     /// <item>The tree contains <see cref="DbLimitExpression"/> with property Limit of type <see cref="DbParameterReferenceExpression"/></item>    
     /// <item>The tree contains <see cref="DbSkipExpression"/> with property Count of type <see cref="DbParameterReferenceExpression"/></item>
-     /// </list>
+    /// </list>
     /// 
     /// The visitor only checks for expressions for which the support differs between SQL Server 2000 and SQL Server 2005,
     /// but does not check/throw for expressions that are not supported for both providers.
@@ -32,8 +32,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
     /// </summary>
     internal class Sql8ConformanceChecker : DbExpressionVisitor<bool>
     {
-
         #region 'Public' API
+
         /// <summary>
         /// The entry point
         /// </summary>
@@ -41,18 +41,21 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns>True if the tree needs to be rewriten, false otherwise</returns>
         internal static bool NeedsRewrite(DbExpression expr)
         {
-            Sql8ConformanceChecker checker = new Sql8ConformanceChecker();
+            var checker = new Sql8ConformanceChecker();
             return expr.Accept(checker);
         }
+
         #endregion
 
         #region Constructor
+
         /// <summary>
         /// Default Constructor
         /// </summary>
         private Sql8ConformanceChecker()
         {
         }
+
         #endregion
 
         #region Visitor Helpers
@@ -74,8 +77,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         private bool VisitBinaryExpression(DbBinaryExpression expr)
         {
-            bool leftNeedsRewrite = VisitExpression(expr.Left);
-            bool rightNeedsRewrite = VisitExpression(expr.Right);
+            var leftNeedsRewrite = VisitExpression(expr.Left);
+            var rightNeedsRewrite = VisitExpression(expr.Right);
             return leftNeedsRewrite || rightNeedsRewrite;
         }
 
@@ -140,11 +143,11 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         private static bool VisitList<TElementType>(ListElementHandler<TElementType> handler, IList<TElementType> list)
         {
-            bool result = false;
+            var result = false;
 
-            foreach (TElementType element in list)
+            foreach (var element in list)
             {
-                bool localResult = handler(element);
+                var localResult = handler(element);
                 result = result || localResult;
             }
             return result;
@@ -157,7 +160,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         private bool VisitAggregateList(IList<DbAggregate> list)
         {
-            return VisitList<DbAggregate>(VisitAggregate, list);
+            return VisitList(VisitAggregate, list);
         }
 
         /// <summary>
@@ -167,7 +170,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         private bool VisitExpressionBindingList(IList<DbExpressionBinding> list)
         {
-            return VisitList<DbExpressionBinding>(VisitExpressionBinding, list);
+            return VisitList(VisitExpressionBinding, list);
         }
 
         /// <summary>
@@ -177,7 +180,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         private bool VisitExpressionList(IList<DbExpression> list)
         {
-            return VisitList<DbExpression>(VisitExpression, list);
+            return VisitList(VisitExpression, list);
         }
 
         /// <summary>
@@ -187,8 +190,9 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         private bool VisitSortClauseList(IList<DbSortClause> list)
         {
-            return VisitList<DbSortClause>(VisitSortClause, list);
+            return VisitList(VisitSortClause, list);
         }
+
         #endregion
 
         #region DbExpressionVisitor Members
@@ -201,7 +205,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <exception cref="NotSupportedException">Always thrown if this method is called, since it indicates that <paramref name="expression"/> is of an unsupported type</exception>
         public override bool Visit(DbExpression expression)
         {
-            throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.Cqt_General_UnsupportedExpression(expression.GetType().FullName));
+            throw EntityUtil.NotSupported(Strings.Cqt_General_UnsupportedExpression(expression.GetType().FullName));
         }
 
         /// <summary>
@@ -221,7 +225,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <exception cref="NotSupportedException">Always</exception>
         public override bool Visit(DbApplyExpression expression)
         {
-            throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.SqlGen_ApplyNotSupportedOnSql8);
+            throw EntityUtil.NotSupported(Strings.SqlGen_ApplyNotSupportedOnSql8);
         }
 
         /// <summary>
@@ -241,9 +245,9 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         public override bool Visit(DbCaseExpression expression)
         {
-            bool whenNeedsRewrite = VisitExpressionList(expression.When);
-            bool thenNeedsRewrite = VisitExpressionList(expression.Then);
-            bool elseNeedsRewrite = VisitExpression(expression.Else);
+            var whenNeedsRewrite = VisitExpressionList(expression.When);
+            var thenNeedsRewrite = VisitExpressionList(expression.Then);
+            var elseNeedsRewrite = VisitExpression(expression.Else);
             return whenNeedsRewrite || thenNeedsRewrite || elseNeedsRewrite;
         }
 
@@ -347,8 +351,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         public override bool Visit(DbFilterExpression expression)
         {
-            bool inputNeedsRewrite = VisitExpressionBinding(expression.Input);
-            bool predicateNeedsRewrite = VisitExpression(expression.Predicate);
+            var inputNeedsRewrite = VisitExpressionBinding(expression.Input);
+            var predicateNeedsRewrite = VisitExpression(expression.Predicate);
             return inputNeedsRewrite || predicateNeedsRewrite;
         }
 
@@ -369,8 +373,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         public override bool Visit(DbLambdaExpression expression)
         {
-            bool argumentsNeedRewrite = VisitExpressionList(expression.Arguments);
-            bool bodyNeedsRewrite = VisitExpression(expression.Lambda.Body);
+            var argumentsNeedRewrite = VisitExpressionList(expression.Arguments);
+            var bodyNeedsRewrite = VisitExpression(expression.Lambda.Body);
 
             return argumentsNeedRewrite || bodyNeedsRewrite;
         }
@@ -382,9 +386,9 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         public override bool Visit(DbGroupByExpression expression)
         {
-            bool inputNeedsRewrite = VisitExpression(expression.Input.Expression);
-            bool keysNeedRewrite = VisitExpressionList(expression.Keys);
-            bool aggregatesNeedRewrite = VisitAggregateList(expression.Aggregates);
+            var inputNeedsRewrite = VisitExpression(expression.Input.Expression);
+            var keysNeedRewrite = VisitExpressionList(expression.Keys);
+            var aggregatesNeedRewrite = VisitAggregateList(expression.Aggregates);
 
             return inputNeedsRewrite || keysNeedRewrite || aggregatesNeedRewrite;
         }
@@ -439,9 +443,9 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         public override bool Visit(DbJoinExpression expression)
         {
-            bool leftNeedsRewrite = VisitExpressionBinding(expression.Left);
-            bool rightNeedsRewrite = VisitExpressionBinding(expression.Right);
-            bool conditionNeedsRewrite = VisitExpression(expression.JoinCondition);
+            var leftNeedsRewrite = VisitExpressionBinding(expression.Left);
+            var rightNeedsRewrite = VisitExpressionBinding(expression.Right);
+            var conditionNeedsRewrite = VisitExpression(expression.JoinCondition);
             return leftNeedsRewrite || rightNeedsRewrite || conditionNeedsRewrite;
         }
 
@@ -452,9 +456,9 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         public override bool Visit(DbLikeExpression expression)
         {
-            bool argumentNeedsRewrite = VisitExpression(expression.Argument);
-            bool patternNeedsRewrite = VisitExpression(expression.Pattern);
-            bool excapeNeedsRewrite = VisitExpression(expression.Escape);
+            var argumentNeedsRewrite = VisitExpression(expression.Argument);
+            var patternNeedsRewrite = VisitExpression(expression.Pattern);
+            var excapeNeedsRewrite = VisitExpression(expression.Escape);
             return argumentNeedsRewrite || patternNeedsRewrite || excapeNeedsRewrite;
         }
 
@@ -468,19 +472,18 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         {
             if (expression.Limit is DbParameterReferenceExpression)
             {
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.SqlGen_ParameterForLimitNotSupportedOnSql8);
+                throw EntityUtil.NotSupported(Strings.SqlGen_ParameterForLimitNotSupportedOnSql8);
             }
 
             return VisitExpression(expression.Argument);
         }
 
-
 #if METHOD_EXPRESSION
-        /// <summary>
-        /// Visitor pattern method for <see cref="MethodExpression"/>.
-        /// </summary>
-        /// <param name="expression">The MethodExpression that is being visited.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="expression"/> is null</exception>
+    /// <summary>
+    /// Visitor pattern method for <see cref="MethodExpression"/>.
+    /// </summary>
+    /// <param name="expression">The MethodExpression that is being visited.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="expression"/> is null</exception>
         public override bool Visit(MethodExpression expression)
         {
             bool result = VisitExpressionList(expression.Arguments);
@@ -561,8 +564,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         public override bool Visit(DbProjectExpression expression)
         {
-            bool inputNeedsRewrite = VisitExpressionBinding(expression.Input);
-            bool projectionNeedsRewrite = VisitExpression(expression.Projection);
+            var inputNeedsRewrite = VisitExpressionBinding(expression.Input);
+            var projectionNeedsRewrite = VisitExpression(expression.Projection);
             return inputNeedsRewrite || projectionNeedsRewrite;
         }
 
@@ -583,8 +586,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         public override bool Visit(DbQuantifierExpression expression)
         {
-            bool inputNeedsRewrite = VisitExpressionBinding(expression.Input);
-            bool predicateNeedsRewrite = VisitExpression(expression.Predicate);
+            var inputNeedsRewrite = VisitExpressionBinding(expression.Input);
+            var predicateNeedsRewrite = VisitExpression(expression.Predicate);
             return inputNeedsRewrite || predicateNeedsRewrite;
         }
 
@@ -638,7 +641,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         {
             if (expression.Count is DbParameterReferenceExpression)
             {
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.SqlGen_ParameterForSkipNotSupportedOnSql8);
+                throw EntityUtil.NotSupported(Strings.SqlGen_ParameterForSkipNotSupportedOnSql8);
             }
 
             //Walk the structure in case a non-supported construct is encountered 
@@ -656,8 +659,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         public override bool Visit(DbSortExpression expression)
         {
-            bool inputNeedsRewrite = VisitExpressionBinding(expression.Input);
-            bool sortClauseNeedsRewrite = VisitSortClauseList(expression.SortOrder);
+            var inputNeedsRewrite = VisitExpressionBinding(expression.Input);
+            var sortClauseNeedsRewrite = VisitSortClauseList(expression.SortOrder);
             return inputNeedsRewrite || sortClauseNeedsRewrite;
         }
 
@@ -690,7 +693,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         {
             return false;
         }
-                
+
         #endregion
     }
 }

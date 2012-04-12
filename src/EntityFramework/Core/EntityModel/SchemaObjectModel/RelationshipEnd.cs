@@ -2,6 +2,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Xml;
 
@@ -12,7 +13,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     {
         private string _unresolvedType;
         private RelationshipMultiplicity? _multiplicity;
-        private SchemaEntityType _type;
         private List<OnOperation> _operations;
 
         /// <summary>
@@ -27,31 +27,15 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <summary>
         /// Type of the End
         /// </summary>
-        public SchemaEntityType Type
-        {
-            get
-            {
-                return _type;
-            }
-            private set
-            {
-                _type = value;
-            }
-        }
+        public SchemaEntityType Type { get; private set; }
 
         /// <summary>
         /// Multiplicity of the End
         /// </summary>
         public RelationshipMultiplicity? Multiplicity
         {
-            get
-            {
-                return _multiplicity;
-            }
-            set
-            {
-                _multiplicity = value;
-            }
+            get { return _multiplicity; }
+            set { _multiplicity = value; }
         }
 
         /// <summary>
@@ -62,7 +46,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             get
             {
                 if (_operations == null)
+                {
                     _operations = new List<OnOperation>();
+                }
                 return _operations;
             }
         }
@@ -74,7 +60,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             base.ResolveTopLevelNames();
 
-            if (Type == null && _unresolvedType != null)
+            if (Type == null
+                && _unresolvedType != null)
             {
                 SchemaType element;
                 if (!Schema.ResolveTypeName(this, _unresolvedType, out element))
@@ -85,8 +72,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 Type = element as SchemaEntityType;
                 if (Type == null)
                 {
-                    AddError(ErrorCode.InvalidRelationshipEndType, EdmSchemaErrorSeverity.Error,
-                        System.Data.Entity.Resources.Strings.InvalidRelationshipEndType(ParentElement.Name, element.FQName));
+                    AddError(
+                        ErrorCode.InvalidRelationshipEndType, EdmSchemaErrorSeverity.Error,
+                        Strings.InvalidRelationshipEndType(ParentElement.Name, element.FQName));
                 }
             }
         }
@@ -96,22 +84,23 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             base.Validate();
 
             // Check if the end has multiplicity as many, it cannot have any operation behaviour
-            if (Multiplicity == RelationshipMultiplicity.Many && Operations.Count != 0)
+            if (Multiplicity == RelationshipMultiplicity.Many
+                && Operations.Count != 0)
             {
-                AddError(ErrorCode.EndWithManyMultiplicityCannotHaveOperationsSpecified,
-                         EdmSchemaErrorSeverity.Error,
-                         System.Data.Entity.Resources.Strings.EndWithManyMultiplicityCannotHaveOperationsSpecified(this.Name, ParentElement.FQName));
-
-                
-                
+                AddError(
+                    ErrorCode.EndWithManyMultiplicityCannotHaveOperationsSpecified,
+                    EdmSchemaErrorSeverity.Error,
+                    Strings.EndWithManyMultiplicityCannotHaveOperationsSpecified(Name, ParentElement.FQName));
             }
-            
+
             // if there is no RefConstraint in Association and multiplicity is null
-            if (this.ParentElement.Constraints.Count == 0 && Multiplicity == null)
+            if (ParentElement.Constraints.Count == 0
+                && Multiplicity == null)
             {
-                AddError(ErrorCode.EndWithoutMultiplicity,
-                         EdmSchemaErrorSeverity.Error,
-                         System.Data.Entity.Resources.Strings.EndWithoutMultiplicity(this.Name, ParentElement.FQName));
+                AddError(
+                    ErrorCode.EndWithoutMultiplicity,
+                    EdmSchemaErrorSeverity.Error,
+                    Strings.EndWithoutMultiplicity(Name, ParentElement.FQName));
             }
         }
 
@@ -121,12 +110,15 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         protected override void HandleAttributesComplete()
         {
             // set up the default name in before validating anythig that might want to display it in an error message;
-            if (Name == null && _unresolvedType != null)
+            if (Name == null
+                && _unresolvedType != null)
+            {
                 Name = Utils.ExtractTypeName(_unresolvedType);
+            }
 
             base.HandleAttributesComplete();
         }
-        
+
         protected override bool ProhibitAttribute(string namespaceUri, string localName)
         {
             if (base.ProhibitAttribute(namespaceUri, localName))
@@ -134,12 +126,14 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 return true;
             }
 
-            if (namespaceUri == null && localName == XmlConstants.Name)
+            if (namespaceUri == null
+                && localName == XmlConstants.Name)
             {
                 return false;
             }
             return false;
         }
+
         protected override bool HandleAttribute(XmlReader reader)
         {
             if (base.HandleAttribute(reader))
@@ -188,8 +182,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             Debug.Assert(reader != null);
 
             string type;
-            if (!Utils.GetDottedName(this.Schema, reader, out type))
+            if (!Utils.GetDottedName(Schema, reader, out type))
+            {
                 return;
+            }
 
             _unresolvedType = type;
         }
@@ -204,7 +200,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             RelationshipMultiplicity multiplicity;
             if (!TryParseMultiplicity(reader.Value, out multiplicity))
             {
-                AddError(ErrorCode.InvalidMultiplicity, EdmSchemaErrorSeverity.Error, reader, System.Data.Entity.Resources.Strings.InvalidRelationshipEndMultiplicity(ParentElement.Name, reader.Value));
+                AddError(
+                    ErrorCode.InvalidMultiplicity, EdmSchemaErrorSeverity.Error, reader,
+                    Strings.InvalidRelationshipEndMultiplicity(ParentElement.Name, reader.Value));
             }
             _multiplicity = multiplicity;
         }
@@ -227,28 +225,25 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(reader != null);
 
-            foreach (OnOperation other in Operations)
+            foreach (var other in Operations)
             {
                 if (other.Operation == operation)
-                    AddError(ErrorCode.InvalidOperation, EdmSchemaErrorSeverity.Error, reader, System.Data.Entity.Resources.Strings.DuplicationOperation(reader.Name));
+                {
+                    AddError(ErrorCode.InvalidOperation, EdmSchemaErrorSeverity.Error, reader, Strings.DuplicationOperation(reader.Name));
+                }
             }
 
-            OnOperation onOperation = new OnOperation(this, operation);
+            var onOperation = new OnOperation(this, operation);
             onOperation.Parse(reader);
             _operations.Add(onOperation);
         }
-
-
 
         /// <summary>
         /// The parent element as an IRelationship
         /// </summary>
         internal new IRelationship ParentElement
         {
-            get
-            {
-                return (IRelationship)(base.ParentElement);
-            }
+            get { return (IRelationship)(base.ParentElement); }
         }
 
         /// <summary>

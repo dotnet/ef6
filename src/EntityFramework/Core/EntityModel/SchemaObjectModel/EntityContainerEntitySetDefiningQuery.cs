@@ -1,7 +1,7 @@
 ﻿namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
-    using System;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Xml;
 
     /// <summary>
@@ -16,7 +16,7 @@
         /// </summary>
         /// <param name="parentElement">Reference to the schema element.</param>
         public EntityContainerEntitySetDefiningQuery(EntityContainerEntitySet parentElement)
-            : base( parentElement )
+            : base(parentElement)
         {
         }
 
@@ -35,11 +35,12 @@
         {
             base.Validate();
 
-            if(String.IsNullOrEmpty(_query))
+            if (String.IsNullOrEmpty(_query))
             {
-                AddError(ErrorCode.EmptyDefiningQuery, EdmSchemaErrorSeverity.Error,
-                    System.Data.Entity.Resources.Strings.EmptyDefiningQuery);
+                AddError(
+                    ErrorCode.EmptyDefiningQuery, EdmSchemaErrorSeverity.Error,
+                    Strings.EmptyDefiningQuery);
             }
         }
-   }
+    }
 }

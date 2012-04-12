@@ -1,14 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
-using System.Data.SqlClient;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees;
-
 namespace System.Data.Entity.Core.SqlClient.SqlGen
 {
+    using System.Data.Entity.Core.Common.CommandTrees;
+
     /// <summary>
     /// Represents the sql fragment for any node in the query tree.
     /// </summary>
@@ -20,7 +13,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
     /// <item>A raw string.</item>
     /// </list>
     /// We have this interface to allow for a common return type for the methods
-    /// in the expression visitor <see cref="DbExpressionVisitor{T}"/>
+    /// in the expression visitor <see cref="DbExpressionVisitor{TResultType}"/>
     /// 
     /// Add the endd of translation, the sql fragments are converted into real strings.
     /// </remarks>

@@ -1,10 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Xml;
-using System.Data;
-
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     /// <summary>
@@ -13,17 +6,14 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     internal abstract class SchemaType : SchemaElement
     {
         #region Public Properties
-        
+
         /// <summary>
         /// Gets the Namespace that this type is in.
         /// </summary>
         /// <value></value>
         public string Namespace
         {
-            get
-            {
-                return Schema.Namespace;
-            }
+            get { return Schema.Namespace; }
         }
 
         /// <summary>
@@ -31,10 +21,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         public override string Identity
         {
-            get
-            {
-                return Namespace + "." + Name;
-            }
+            get { return Namespace + "." + Name; }
         }
 
         /// <summary>
@@ -42,26 +29,22 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         public override string FQName
         {
-            get
-            {
-                return Namespace + "." + Name;
-            }
+            get { return Namespace + "." + Name; }
         }
+
         #endregion
 
         #region Protected Methods
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="parentElement"></param>
         internal SchemaType(Schema parentElement)
-        :   base(parentElement)
+            : base(parentElement)
         {
         }
 
-
         #endregion
-
-
     }
 }

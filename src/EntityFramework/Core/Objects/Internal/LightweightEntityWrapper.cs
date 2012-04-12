@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Data.Entity.Core.Objects.DataClasses;
-using System.Diagnostics;
-using System.Reflection;
-using System.Data.Entity.Core.Metadata.Edm;
-
-namespace System.Data.Entity.Core.Objects.Internal
+﻿namespace System.Data.Entity.Core.Objects.Internal
 {
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Diagnostics;
+
     /// <summary>
     /// Implementation of IEntityWrapper for any entity that implements IEntityWithChangeTracker, IEntityWithRelationships, 
     /// and IEntityWithKey and is not a proxy.  This is a lightweight wrapper that delegates functionality to those iterfaces.
@@ -13,7 +11,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     /// </summary>
     /// <typeparam name="TEntity">The type of entity wrapped</typeparam>
     internal sealed class LightweightEntityWrapper<TEntity> : BaseEntityWrapper<TEntity>
-             where TEntity : IEntityWithRelationships, IEntityWithKey, IEntityWithChangeTracker
+        where TEntity : IEntityWithRelationships, IEntityWithKey, IEntityWithChangeTracker
     {
         private readonly TEntity _entity;
 
@@ -23,12 +21,17 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// </summary>
         /// <param name="entity">The entity to wrap</param>
         internal LightweightEntityWrapper(TEntity entity)
-        : base(entity, entity.RelationshipManager)
+            : base(entity, entity.RelationshipManager)
         {
-            Debug.Assert(entity is IEntityWithChangeTracker, "LightweightEntityWrapper only works with entities that implement IEntityWithChangeTracker");
-            Debug.Assert(entity is IEntityWithRelationships, "LightweightEntityWrapper only works with entities that implement IEntityWithRelationships");
+            Debug.Assert(
+                entity is IEntityWithChangeTracker,
+                "LightweightEntityWrapper only works with entities that implement IEntityWithChangeTracker");
+            Debug.Assert(
+                entity is IEntityWithRelationships,
+                "LightweightEntityWrapper only works with entities that implement IEntityWithRelationships");
             Debug.Assert(entity is IEntityWithKey, "LightweightEntityWrapper only works with entities that implement IEntityWithKey");
-            Debug.Assert(!EntityProxyFactory.IsProxyType(entity.GetType()), "LightweightEntityWrapper only works with entities that are not proxies");
+            Debug.Assert(
+                !EntityProxyFactory.IsProxyType(entity.GetType()), "LightweightEntityWrapper only works with entities that are not proxies");
             _entity = entity;
         }
 
@@ -45,13 +48,19 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <param name="context">The context to which the entity should be attached</param>
         /// <param name="mergeOption">NoTracking for non-tracked entities, AppendOnly otherwise</param>
         /// <param name="identityType">The type of the entity ignoring any possible proxy type</param>
-        internal LightweightEntityWrapper(TEntity entity, EntityKey key, EntitySet entitySet, ObjectContext context, MergeOption mergeOption, Type identityType)
+        internal LightweightEntityWrapper(
+            TEntity entity, EntityKey key, EntitySet entitySet, ObjectContext context, MergeOption mergeOption, Type identityType)
             : base(entity, entity.RelationshipManager, entitySet, context, mergeOption, identityType)
         {
-            Debug.Assert(entity is IEntityWithChangeTracker, "LightweightEntityWrapper only works with entities that implement IEntityWithChangeTracker");
-            Debug.Assert(entity is IEntityWithRelationships, "LightweightEntityWrapper only works with entities that implement IEntityWithRelationships");
+            Debug.Assert(
+                entity is IEntityWithChangeTracker,
+                "LightweightEntityWrapper only works with entities that implement IEntityWithChangeTracker");
+            Debug.Assert(
+                entity is IEntityWithRelationships,
+                "LightweightEntityWrapper only works with entities that implement IEntityWithRelationships");
             Debug.Assert(entity is IEntityWithKey, "LightweightEntityWrapper only works with entities that implement IEntityWithKey");
-            Debug.Assert(!EntityProxyFactory.IsProxyType(entity.GetType()), "LightweightEntityWrapper only works with entities that are not proxies");
+            Debug.Assert(
+                !EntityProxyFactory.IsProxyType(entity.GetType()), "LightweightEntityWrapper only works with entities that are not proxies");
             _entity = entity;
             _entity.EntityKey = key;
         }
@@ -75,14 +84,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         // See IEntityWrapper documentation
         public override EntityKey EntityKey
         {
-            get
-            {
-                return _entity.EntityKey;
-            }
-            set
-            {
-                _entity.EntityKey = value;
-            }
+            get { return _entity.EntityKey; }
+            set { _entity.EntityKey = value; }
         }
 
         public override bool OwnsRelationshipManager
@@ -106,7 +109,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             return false;
         }
-        
+
         // See IEntityWrapper documentation
         public override void SetNavigationPropertyValue(RelatedEnd relatedEnd, object value)
         {

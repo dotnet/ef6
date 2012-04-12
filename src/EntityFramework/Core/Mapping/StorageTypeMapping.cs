@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
-using System.Data.Entity.Core.Metadata.Edm;
+namespace System.Data.Entity.Core.Mapping
+{
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Metadata.Edm;
 
-namespace System.Data.Entity.Core.Mapping {
     /// <summary>
     /// Represents the Mapping metadata for a type map in CS space.
     /// </summary>
@@ -38,70 +37,73 @@ namespace System.Data.Entity.Core.Mapping {
     /// above example namely EntityTypeMapping, AssociationTypeMapping and CompositionTypeMapping.
     /// The TypeMapping elements contain TableMappingFragments which in turn contain the property maps.
     /// </example>
-    internal abstract class StorageTypeMapping {
+    internal abstract class StorageTypeMapping
+    {
         #region Constructors
+
         /// <summary>
         /// Construct the new StorageTypeMapping object.
         /// </summary>
         /// <param name="setMapping">SetMapping that contains this type mapping </param>
-        internal StorageTypeMapping(StorageSetMapping setMapping) {
-            this.m_fragments = new List<StorageMappingFragment>();
-            this.m_setMapping = setMapping;
+        internal StorageTypeMapping(StorageSetMapping setMapping)
+        {
+            m_fragments = new List<StorageMappingFragment>();
+            m_setMapping = setMapping;
         }
+
         #endregion
 
         #region Fields
+
         /// <summary>
         /// ExtentMap that contains this type mapping.
         /// </summary>
-        StorageSetMapping m_setMapping;
+        private readonly StorageSetMapping m_setMapping;
+
         /// <summary>
         /// Set of fragments that make up the type Mapping.
         /// </summary>
-        List<StorageMappingFragment> m_fragments;
+        private readonly List<StorageMappingFragment> m_fragments;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Mapping fragments that make up this set type
         /// </summary>
         internal ReadOnlyCollection<StorageMappingFragment> MappingFragments
         {
-            get
-            {
-                return this.m_fragments.AsReadOnly();
-            }
+            get { return m_fragments.AsReadOnly(); }
         }
 
-        internal StorageSetMapping SetMapping 
+        internal StorageSetMapping SetMapping
         {
-            get 
-            {
-                return m_setMapping;
-            }
+            get { return m_setMapping; }
         }
-
 
         /// <summary>
         /// a list of TypeMetadata that this mapping holds true for.
         /// </summary>
-        internal abstract ReadOnlyCollection<EdmType> Types { get;}
+        internal abstract ReadOnlyCollection<EdmType> Types { get; }
 
         /// <summary>
         /// a list of TypeMetadatas for which the mapping holds true for
         /// not only the type specified but the sub-types of that type as well.        
         /// </summary>
-        internal abstract ReadOnlyCollection<EdmType> IsOfTypes { get;}
+        internal abstract ReadOnlyCollection<EdmType> IsOfTypes { get; }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Add a fragment mapping as child of this type mapping
         /// </summary>
         /// <param name="fragment"></param>
         internal void AddFragment(StorageMappingFragment fragment)
         {
-            this.m_fragments.Add(fragment);
+            m_fragments.Add(fragment);
         }
 
 #if DEBUG

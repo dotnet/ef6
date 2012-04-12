@@ -1,19 +1,9 @@
 namespace System.Data.Entity.Core.Objects.Internal
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity.Core.Common;
-    using System.Data.Common;
-    using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Data.Entity.Core.Common.EntitySql;
-    using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Objects;
-    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Diagnostics;
-    using System.Globalization;
+    using System.Linq.Expressions;
     using System.Reflection;
-    using System.Data.Entity.Core.Objects.ELinq;
     using System.Runtime.CompilerServices;
 
     /// <summary>
@@ -22,7 +12,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     ///   Linq to Entities, or compiled Linq to Entities query.
     /// </summary>
     internal abstract class ObjectQueryState
-    {       
+    {
         /// <summary>
         ///   The <see cref="MergeOption"/> that should be used in the absence of an explicitly specified
         ///   or user-specified merge option or a merge option inferred from the query definition itself.
@@ -43,11 +33,11 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///   The collection of parameters associated with the ObjectQuery
         /// </summary>
         private ObjectParameterCollection _parameters;
-                
+
         /// <summary>
         ///   The full-span specification
         /// </summary>
-        private Span _span;
+        private readonly Span _span;
 
         /// <summary>
         ///   The user-specified default merge option 
@@ -63,8 +53,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///   Optionally used by derived classes to record the most recently used <see cref="ObjectQueryExecutionPlan"/>.
         /// </summary>
         protected ObjectQueryExecutionPlan _cachedPlan;
-        
-               
+
         /// <summary>
         ///   Constructs a new <see cref="ObjectQueryState"/> instance that uses the specified context and parameters collection.
         /// </summary>
@@ -78,13 +67,13 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             // Validate the context
             EntityUtil.CheckArgumentNull(context, "context");
-            
+
             // Parameters and Span are specifically allowed to be null
 
-            this._elementType = elementType;
-            this._context = context;
-            this._span = span;
-            this._parameters = parameters;
+            _elementType = elementType;
+            _context = context;
+            _span = span;
+            _parameters = parameters;
         }
 
         /// <summary>
@@ -96,18 +85,24 @@ namespace System.Data.Entity.Core.Objects.Internal
         protected ObjectQueryState(Type elementType, ObjectQuery query)
             : this(elementType, query.Context, null, null)
         {
-            this._cachingEnabled = query.EnablePlanCaching;
+            _cachingEnabled = query.EnablePlanCaching;
         }
 
         /// <summary>
         ///   Gets the element type - the type of each result item - for this query as a CLR type instance.
         /// </summary>
-        internal Type ElementType { get { return _elementType; } }
+        internal Type ElementType
+        {
+            get { return _elementType; }
+        }
 
         /// <summary>
         ///   Gets the ObjectContext with which the implemented ObjectQuery is associated
         /// </summary>
-        internal ObjectContext ObjectContext { get { return _context; } }
+        internal ObjectContext ObjectContext
+        {
+            get { return _context; }
+        }
 
         /// <summary>
         ///   Gets the collection of parameters associated with the implemented ObjectQuery. May be null.
@@ -123,7 +118,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             if (_parameters == null)
             {
                 _parameters = new ObjectParameterCollection(ObjectContext.Perspective);
-                if (this._cachedPlan != null)
+                if (_cachedPlan != null)
                 {
                     _parameters.SetReadOnly(true);
                 }
@@ -131,7 +126,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             return _parameters;
         }
-                
+
         /// <summary>
         ///   Gets the Span specification associated with the implemented ObjectQuery. May be null.
         /// </summary>
@@ -153,13 +148,13 @@ namespace System.Data.Entity.Core.Objects.Internal
                     return _userMergeOption.Value;
                 }
 
-                ObjectQueryExecutionPlan plan = this._cachedPlan;
+                var plan = _cachedPlan;
                 if (plan != null)
                 {
                     return plan.MergeOption;
                 }
 
-                return ObjectQueryState.DefaultMergeOption;
+                return DefaultMergeOption;
             }
         }
 
@@ -190,14 +185,14 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             get
             {
-                ObjectQueryExecutionPlan plan = this._cachedPlan;
+                var plan = _cachedPlan;
                 if (plan != null)
                 {
                     return plan.ResultType;
                 }
                 else
                 {
-                    return this.GetResultType();
+                    return GetResultType();
                 }
             }
         }
@@ -209,13 +204,13 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <param name="other">The query state to which this instances settings should be applied.</param>
         internal void ApplySettingsTo(ObjectQueryState other)
         {
-            other.PlanCachingEnabled = this.PlanCachingEnabled;
-            other.UserSpecifiedMergeOption = this.UserSpecifiedMergeOption;
-                                    
+            other.PlanCachingEnabled = PlanCachingEnabled;
+            other.UserSpecifiedMergeOption = UserSpecifiedMergeOption;
+
             // _cachedPlan is intentionally not copied over - since the parameters of 'other' would have to be locked as
             // soon as its execution plan was set, and that may not be appropriate at the time ApplySettingsTo is called. 
         }
-                
+
         /// <summary>
         ///   Must return <c>true</c> and set <paramref name="commandText"/> to a valid value
         ///   if command text is available for this query; must return <c>false</c> otherwise.
@@ -232,7 +227,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// </summary>
         /// <param name="expression">The LINQ Expression that defines this query, if available.</param>
         /// <returns><c>true</c> if an Expression is available for this query and was successfully retrieved; otherwise <c>false</c>.</returns>
-        internal abstract bool TryGetExpression(out System.Linq.Expressions.Expression expression);
+        internal abstract bool TryGetExpression(out Expression expression);
 
         /// <summary>
         ///   Retrieves an <see cref="ObjectQueryExecutionPlan"/> that can be used to retrieve the results of this query using the specified merge option.
@@ -268,7 +263,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <returns>the first non-null merge option; or the default merge option if the value of all <paramref name="preferredMergeOptions"/> is null</returns>
         protected static MergeOption EnsureMergeOption(params MergeOption?[] preferredMergeOptions)
         {
-            foreach (MergeOption? preferred in preferredMergeOptions)
+            foreach (var preferred in preferredMergeOptions)
             {
                 if (preferred.HasValue)
                 {
@@ -276,7 +271,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 }
             }
 
-            return ObjectQueryState.DefaultMergeOption;
+            return DefaultMergeOption;
         }
 
         /// <summary>
@@ -286,7 +281,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <returns>the first non-null merge option; or <c>null</c> if the value of all <paramref name="preferredMergeOptions"/> is null</returns>
         protected static MergeOption? GetMergeOption(params MergeOption?[] preferredMergeOptions)
         {
-            foreach (MergeOption? preferred in preferredMergeOptions)
+            foreach (var preferred in preferredMergeOptions)
             {
                 if (preferred.HasValue)
                 {
@@ -304,11 +299,11 @@ namespace System.Data.Entity.Core.Objects.Internal
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         internal ObjectQuery CreateQuery()
         {
-            MethodInfo createMethod = typeof(ObjectQueryState).GetMethod("CreateObjectQuery", BindingFlags.Static | BindingFlags.Public);
+            var createMethod = typeof(ObjectQueryState).GetMethod("CreateObjectQuery", BindingFlags.Static | BindingFlags.Public);
             Debug.Assert(createMethod != null, "Unable to retrieve ObjectQueryState.CreateObjectQuery<> method?");
 
-            createMethod = createMethod.MakeGenericMethod(this._elementType);
-            return (ObjectQuery)createMethod.Invoke(null, new object[] { this } );
+            createMethod = createMethod.MakeGenericMethod(_elementType);
+            return (ObjectQuery)createMethod.Invoke(null, new object[] { this });
         }
 
         /// <summary>
@@ -325,5 +320,5 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             return new ObjectQuery<TResultType>(queryState);
         }
-    }    
+    }
 }

@@ -1,26 +1,28 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Diagnostics;
+
     #region RuleProcessor
+
     /// <summary>
     /// The RuleProcessor helps apply a set of rules to a query tree
     /// </summary>
     internal class RuleProcessor
     {
         #region private state
+
         /// <summary>
         /// A lookup table for rules.
         /// The lookup table is an array indexed by OpType and each entry has a list of rules.
         /// </summary>
-        private Dictionary<SubTreeId, SubTreeId> m_processedNodeMap;
+        private readonly Dictionary<SubTreeId, SubTreeId> m_processedNodeMap;
+
         #endregion
 
         #region constructors
+
         /// <summary>
         /// Initializes a new RuleProcessor
         /// </summary>
@@ -29,18 +31,20 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             // Build up the accelerator tables
             m_processedNodeMap = new Dictionary<SubTreeId, SubTreeId>();
         }
+
         #endregion
 
         #region private methods
 
-        private static bool ApplyRulesToNode(RuleProcessingContext context, ReadOnlyCollection<ReadOnlyCollection<InternalTrees.Rule>> rules, Node currentNode, out Node newNode)
+        private static bool ApplyRulesToNode(
+            RuleProcessingContext context, ReadOnlyCollection<ReadOnlyCollection<Rule>> rules, Node currentNode, out Node newNode)
         {
             newNode = currentNode;
 
             // Apply any pre-rule delegates
             context.PreProcess(currentNode);
 
-            foreach (Rule r in rules[(int)currentNode.Op.OpType])
+            foreach (var r in rules[(int)currentNode.Op.OpType])
             {
                 if (!r.Match(currentNode))
                 {
@@ -73,12 +77,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="parent">Parent node</param>
         /// <param name="childIndexInParent">Index of this child within the parent</param>
         /// <returns>the result of the transformation</returns>
-        private Node ApplyRulesToSubtree(RuleProcessingContext context, 
-            ReadOnlyCollection<ReadOnlyCollection<InternalTrees.Rule>> rules,
+        private Node ApplyRulesToSubtree(
+            RuleProcessingContext context,
+            ReadOnlyCollection<ReadOnlyCollection<Rule>> rules,
             Node subTreeRoot, Node parent, int childIndexInParent)
         {
-            int loopCount = 0;
-            Dictionary<SubTreeId, SubTreeId> localProcessedMap = new Dictionary<SubTreeId, SubTreeId>();
+            var loopCount = 0;
+            var localProcessedMap = new Dictionary<SubTreeId, SubTreeId>();
             SubTreeId subTreeId;
 
             while (true)
@@ -94,7 +99,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                 //
                 context.PreProcessSubTree(subTreeRoot);
                 subTreeId = new SubTreeId(context, subTreeRoot, parent, childIndexInParent);
-   
+
                 // Have I seen this subtree already? Just return, if so
                 if (m_processedNodeMap.ContainsKey(subTreeId))
                 {
@@ -112,7 +117,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                 localProcessedMap[subTreeId] = subTreeId;
 
                 // Walk my children
-                for (int i = 0; i < subTreeRoot.Children.Count; i++)
+                for (var i = 0; i < subTreeRoot.Children.Count; i++)
                 {
                     subTreeRoot.Children[i] = ApplyRulesToSubtree(context, rules, subTreeRoot.Children[i], subTreeRoot, i);
                 }
@@ -134,35 +139,43 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             context.PostProcessSubTree(subTreeRoot);
             return subTreeRoot;
         }
+
         #endregion
 
         #region public methods
+
         /// <summary>
         /// Apply a set of rules to the subtree
         /// </summary>
         /// <param name="context">Rule processing context</param>
         /// <param name="subTreeRoot">current subtree</param>
         /// <returns>transformed subtree</returns>
-        internal Node ApplyRulesToSubtree(RuleProcessingContext context, ReadOnlyCollection<ReadOnlyCollection<InternalTrees.Rule>> rules, Node subTreeRoot)
+        internal Node ApplyRulesToSubtree(
+            RuleProcessingContext context, ReadOnlyCollection<ReadOnlyCollection<Rule>> rules, Node subTreeRoot)
         {
             return ApplyRulesToSubtree(context, rules, subTreeRoot, null, 0);
         }
 
         #endregion
     }
+
     #endregion
 
     #region SubTreeId
+
     internal class SubTreeId
     {
         #region private state
+
         public Node m_subTreeRoot;
-        private int m_hashCode;
-        private Node m_parent;
-        private int m_childIndex;
+        private readonly int m_hashCode;
+        private readonly Node m_parent;
+        private readonly int m_childIndex;
+
         #endregion
 
         #region constructors
+
         internal SubTreeId(RuleProcessingContext context, Node node, Node parent, int childIndex)
         {
             m_subTreeRoot = node;
@@ -170,22 +183,27 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             m_childIndex = childIndex;
             m_hashCode = context.GetHashCode(node);
         }
+
         #endregion
 
         #region public surface
+
         public override int GetHashCode()
         {
             return m_hashCode;
         }
+
         public override bool Equals(object obj)
         {
-            SubTreeId other = obj as SubTreeId;
+            var other = obj as SubTreeId;
             return ((other != null) && (m_hashCode == other.m_hashCode) &&
-                ((other.m_subTreeRoot == this.m_subTreeRoot) ||
-                  ((other.m_parent == this.m_parent) && (other.m_childIndex == this.m_childIndex))));
+                    ((other.m_subTreeRoot == m_subTreeRoot) ||
+                     ((other.m_parent == m_parent) && (other.m_childIndex == m_childIndex))));
         }
+
         #endregion
     }
+
     #endregion
 
     #region RuleProcessingContext
@@ -204,6 +222,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     internal abstract class RuleProcessingContext
     {
         #region public surface
+
         internal Command Command
         {
             get { return m_command; }
@@ -215,7 +234,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="node">the node</param>
         internal virtual void PreProcess(Node node)
         {
-
         }
 
         /// <summary>
@@ -255,18 +273,24 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return node.GetHashCode();
         }
+
         #endregion
 
         #region constructors
+
         internal RuleProcessingContext(Command command)
         {
             m_command = command;
         }
+
         #endregion
 
         #region private state
-        private Command m_command;
+
+        private readonly Command m_command;
+
         #endregion
     }
+
     #endregion
 }

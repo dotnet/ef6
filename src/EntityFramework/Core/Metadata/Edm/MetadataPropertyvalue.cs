@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Diagnostics;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics;
+    using System.Reflection;
+    using System.Runtime.CompilerServices;
+
     /// <summary>
     /// Class representing a metadata property on an item. Supports
     /// redirection from MetadataProperty instance to item property value.
@@ -22,8 +18,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _item = item;
         }
 
-        private PropertyInfo _propertyInfo;
-        private MetadataItem _item;
+        private readonly PropertyInfo _propertyInfo;
+        private readonly MetadataItem _item;
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         internal object GetValue()

@@ -1,11 +1,9 @@
 namespace System.Data.Entity.Core
 {
-    using System;
-    using System.Runtime.Serialization;
-    using System.Security.Permissions;
-    using System.Data.Entity.Core.Objects;
-    using System.Collections.ObjectModel;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Objects;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// Exception during save changes to store
@@ -14,15 +12,14 @@ namespace System.Data.Entity.Core
     public class UpdateException : DataException
     {
         [NonSerialized]
-        private ReadOnlyCollection<ObjectStateEntry> _stateEntries;
-            
-    
+        private readonly ReadOnlyCollection<ObjectStateEntry> _stateEntries;
+
         #region constructors
+
         /// <summary>
         /// Default constructor
         /// </summary>
-        public UpdateException() 
-            : base() 
+        public UpdateException()
         {
         }
 
@@ -30,8 +27,8 @@ namespace System.Data.Entity.Core
         /// Constructor that takes a message
         /// </summary>
         /// <param name="message"></param>
-        public UpdateException(string message) 
-            : base(message) 
+        public UpdateException(string message)
+            : base(message)
         {
         }
 
@@ -40,8 +37,8 @@ namespace System.Data.Entity.Core
         /// </summary>
         /// <param name="message"></param>
         /// <param name="innerException"></param>
-        public UpdateException(string message, Exception innerException) 
-            : base(message, innerException) 
+        public UpdateException(string message, Exception innerException)
+            : base(message, innerException)
         {
         }
 
@@ -54,14 +51,17 @@ namespace System.Data.Entity.Core
         public UpdateException(string message, Exception innerException, IEnumerable<ObjectStateEntry> stateEntries)
             : base(message, innerException)
         {
-            List<ObjectStateEntry> list = new List<ObjectStateEntry>(stateEntries); 
+            var list = new List<ObjectStateEntry>(stateEntries);
             _stateEntries = list.AsReadOnly();
         }
 
         /// <summary>
         /// Gets state entries implicated in the error.
         /// </summary>
-        public ReadOnlyCollection<ObjectStateEntry> StateEntries { get { return _stateEntries; } }
+        public ReadOnlyCollection<ObjectStateEntry> StateEntries
+        {
+            get { return _stateEntries; }
+        }
 
         /// <summary>
         /// The protected constructor for serialization
@@ -69,10 +69,10 @@ namespace System.Data.Entity.Core
         /// <param name="info"></param>
         /// <param name="context"></param>
         protected UpdateException(SerializationInfo info, StreamingContext context)
-            : base(info, context) 
+            : base(info, context)
         {
         }
 
         #endregion
-     }
+    }
 }

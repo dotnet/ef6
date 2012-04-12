@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
-
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
 // to prevent from simple mistakes during development (e.g. method argument validation 
 // in cases where it was you who created the variables or the variables had already been validated or 
@@ -16,12 +13,10 @@ using System.Collections.Generic;
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
 
-using System.Globalization;
-
-using System.Data.Entity.Core.Query.InternalTrees;
-
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -47,11 +42,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal class Predicate
     {
         #region private state
-        private Command m_command;
-        private List<Node> m_parts;
+
+        private readonly Command m_command;
+        private readonly List<Node> m_parts;
+
         #endregion
 
         #region constructors
+
         /// <summary>
         /// Create an empty predicate
         /// </summary>
@@ -67,18 +65,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="command">current iqt command</param>
         /// <param name="andTree">the node tree</param>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal Predicate(Command command, Node andTree)
             : this(command)
         {
             PlanCompiler.Assert(andTree != null, "null node passed to Predicate() constructor");
             InitFromAndTree(andTree);
         }
+
         #endregion
 
         #region public surface
 
         #region construction APIs
+
         /// <summary>
         /// Add a new "part" (simple predicate) to the current list of predicate parts
         /// </summary>
@@ -87,9 +88,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             m_parts.Add(n);
         }
+
         #endregion
 
         #region Reconstruction (of node tree)
+
         /// <summary>
         /// Build up an AND tree based on the current parts. 
         /// Specifically, if I have parts (p1, p2, ..., pn), we build up a tree that looks like
@@ -102,7 +105,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         internal Node BuildAndTree()
         {
             Node andNode = null;
-            foreach (Node n in m_parts)
+            foreach (var n in m_parts)
             {
                 if (andNode == null)
                 {
@@ -110,12 +113,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
                 else
                 {
-                    andNode = m_command.CreateNode(m_command.CreateConditionalOp(OpType.And),
+                    andNode = m_command.CreateNode(
+                        m_command.CreateConditionalOp(OpType.And),
                         andNode, n);
                 }
             }
             return andNode;
         }
+
         #endregion
 
         #region SingleTable (Filter) Predicates
@@ -127,18 +132,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="tableDefinitions">current columns defined by the table</param>
         /// <param name="otherPredicates">non-single-table predicates</param>
         /// <returns>single-table-predicates</returns>
-        internal Predicate GetSingleTablePredicates(VarVec tableDefinitions, 
+        internal Predicate GetSingleTablePredicates(
+            VarVec tableDefinitions,
             out Predicate otherPredicates)
         {
-            List<VarVec> tableDefinitionList = new List<VarVec>();
+            var tableDefinitionList = new List<VarVec>();
             tableDefinitionList.Add(tableDefinitions);
             List<Predicate> singleTablePredicateList;
             GetSingleTablePredicates(tableDefinitionList, out singleTablePredicateList, out otherPredicates);
             return singleTablePredicateList[0];
         }
+
         #endregion
 
         #region EquiJoins
+
         /// <summary>
         /// Get the set of equi-join columns from this predicate
         /// </summary>
@@ -147,14 +155,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="leftTableEquiJoinColumns"></param>
         /// <param name="rightTableEquiJoinColumns"></param>
         /// <param name="otherPredicates"></param>
-        internal void GetEquiJoinPredicates(VarVec leftTableDefinitions, VarVec rightTableDefinitions,
+        internal void GetEquiJoinPredicates(
+            VarVec leftTableDefinitions, VarVec rightTableDefinitions,
             out List<Var> leftTableEquiJoinColumns, out List<Var> rightTableEquiJoinColumns,
             out Predicate otherPredicates)
         {
             otherPredicates = new Predicate(m_command);
             leftTableEquiJoinColumns = new List<Var>();
             rightTableEquiJoinColumns = new List<Var>();
-            foreach (Node part in m_parts)
+            foreach (var part in m_parts)
             {
                 Var leftTableVar;
                 Var rightTableVar;
@@ -171,18 +180,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
-        internal Predicate GetJoinPredicates(VarVec leftTableDefinitions, VarVec rightTableDefinitions,
+        internal Predicate GetJoinPredicates(
+            VarVec leftTableDefinitions, VarVec rightTableDefinitions,
             out Predicate otherPredicates)
         {
-            Predicate joinPredicate = new Predicate(m_command);
+            var joinPredicate = new Predicate(m_command);
             otherPredicates = new Predicate(m_command);
 
-            foreach (Node part in m_parts)
+            foreach (var part in m_parts)
             {
                 Var leftTableVar;
                 Var rightTableVar;
 
-                if (Predicate.IsEquiJoinPredicate(part, leftTableDefinitions, rightTableDefinitions, out leftTableVar, out rightTableVar))
+                if (IsEquiJoinPredicate(part, leftTableDefinitions, rightTableDefinitions, out leftTableVar, out rightTableVar))
                 {
                     joinPredicate.AddPart(part);
                 }
@@ -193,9 +203,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             return joinPredicate;
         }
+
         #endregion
 
         #region Keys
+
         /// <summary>
         /// Is the current predicate a "key-satisfying" predicate? 
         /// </summary>
@@ -206,10 +218,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             if (keyVars.Count > 0)
             {
-                VarVec missingKeys = keyVars.Clone();
-                foreach (Node part in m_parts)
+                var missingKeys = keyVars.Clone();
+                foreach (var part in m_parts)
                 {
-                    if (part.Op.OpType != OpType.EQ)
+                    if (part.Op.OpType
+                        != OpType.EQ)
                     {
                         continue;
                     }
@@ -228,9 +241,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             return false;
         }
+
         #endregion
 
         #region Nulls
+
         /// <summary>
         /// Does this predicate preserve nulls for the table columns? 
         /// 
@@ -250,7 +265,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             // If at least one part does not preserve nulls, then we simply return false
-            foreach (Node part in m_parts)
+            foreach (var part in m_parts)
             {
                 if (!PreservesNulls(part, tableColumns))
                 {
@@ -259,15 +274,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             return true;
         }
+
         #endregion
 
         #endregion
 
         #region private methods
+
         #region construction
+
         private void InitFromAndTree(Node andTree)
         {
-            if (andTree.Op.OpType == OpType.And)
+            if (andTree.Op.OpType
+                == OpType.And)
             {
                 InitFromAndTree(andTree.Child0);
                 InitFromAndTree(andTree.Child1);
@@ -277,29 +296,31 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 m_parts.Add(andTree);
             }
         }
+
         #endregion
 
         #region Single Table Predicates
 
-        private void GetSingleTablePredicates(List<VarVec> tableDefinitions,
+        private void GetSingleTablePredicates(
+            List<VarVec> tableDefinitions,
             out List<Predicate> singleTablePredicates, out Predicate otherPredicates)
         {
             singleTablePredicates = new List<Predicate>();
-            foreach (VarVec vec in tableDefinitions)
+            foreach (var vec in tableDefinitions)
             {
                 singleTablePredicates.Add(new Predicate(m_command));
             }
             otherPredicates = new Predicate(m_command);
-            VarVec externalRefs = m_command.CreateVarVec();
+            var externalRefs = m_command.CreateVarVec();
 
-            foreach (Node part in m_parts)
+            foreach (var part in m_parts)
             {
-                NodeInfo nodeInfo = m_command.GetNodeInfo(part);
+                var nodeInfo = m_command.GetNodeInfo(part);
 
-                bool singleTablePart = false;
-                for (int i = 0; i < tableDefinitions.Count; i++)
+                var singleTablePart = false;
+                for (var i = 0; i < tableDefinitions.Count; i++)
                 {
-                    VarVec tableColumns = tableDefinitions[i];
+                    var tableColumns = tableDefinitions[i];
                     if (tableColumns != null)
                     {
                         externalRefs.InitFrom(nodeInfo.ExternalReferences);
@@ -322,6 +343,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #region EquiJoins
+
         /// <summary>
         /// Is this "simple" predicate an equi-join predicate? 
         ///   (ie) is it of the form "var1 = var2" 
@@ -335,17 +357,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             leftVar = null;
             rightVar = null;
-            if (simplePredicateNode.Op.OpType != OpType.EQ)
+            if (simplePredicateNode.Op.OpType
+                != OpType.EQ)
             {
                 return false;
             }
 
-            VarRefOp leftVarOp = simplePredicateNode.Child0.Op as VarRefOp;
+            var leftVarOp = simplePredicateNode.Child0.Op as VarRefOp;
             if (leftVarOp == null)
             {
                 return false;
             }
-            VarRefOp rightVarOp = simplePredicateNode.Child1.Op as VarRefOp;
+            var rightVarOp = simplePredicateNode.Child1.Op as VarRefOp;
             if (rightVarOp == null)
             {
                 return false;
@@ -368,7 +391,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="leftVar">join column of the left table</param>
         /// <param name="rightVar">join column of the right table</param>
         /// <returns>true, if this is an equijoin predicate involving columns from the 2 tables</returns>
-        private static bool IsEquiJoinPredicate(Node simplePredicateNode,
+        private static bool IsEquiJoinPredicate(
+            Node simplePredicateNode,
             VarVec leftTableDefinitions, VarVec rightTableDefinitions,
             out Var leftVar, out Var rightVar)
         {
@@ -377,18 +401,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             leftVar = null;
             rightVar = null;
-            if (!Predicate.IsEquiJoinPredicate(simplePredicateNode, out tempLeftVar, out tempRightVar))
+            if (!IsEquiJoinPredicate(simplePredicateNode, out tempLeftVar, out tempRightVar))
             {
                 return false;
             }
 
-            if (leftTableDefinitions.IsSet(tempLeftVar) &&
+            if (leftTableDefinitions.IsSet(tempLeftVar)
+                &&
                 rightTableDefinitions.IsSet(tempRightVar))
             {
                 leftVar = tempLeftVar;
                 rightVar = tempRightVar;
             }
-            else if (leftTableDefinitions.IsSet(tempRightVar) &&
+            else if (leftTableDefinitions.IsSet(tempRightVar)
+                     &&
                      rightTableDefinitions.IsSet(tempLeftVar))
             {
                 leftVar = tempRightVar;
@@ -401,9 +427,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             return true;
         }
+
         #endregion
 
         #region Nulls
+
         /// <summary>
         /// Does this predicate preserve nulls on the specified columns of the table?
         /// If any of the columns participates in a comparison predicate, or in a 
@@ -425,19 +453,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 case OpType.LT:
                 case OpType.LE:
                     varRefOp = simplePredNode.Child0.Op as VarRefOp;
-                    if (varRefOp != null && tableColumns.IsSet(varRefOp.Var))
+                    if (varRefOp != null
+                        && tableColumns.IsSet(varRefOp.Var))
                     {
                         return false;
                     }
                     varRefOp = simplePredNode.Child1.Op as VarRefOp;
-                    if (varRefOp != null && tableColumns.IsSet(varRefOp.Var))
+                    if (varRefOp != null
+                        && tableColumns.IsSet(varRefOp.Var))
                     {
                         return false;
                     }
                     return true;
 
                 case OpType.Not:
-                    if (simplePredNode.Child0.Op.OpType != OpType.IsNull)
+                    if (simplePredNode.Child0.Op.OpType
+                        != OpType.IsNull)
                     {
                         return true;
                     }
@@ -447,13 +478,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 case OpType.Like:
                     // If the predicate is "column LIKE constant ...", then the
                     // predicate does not preserve nulls
-                    ConstantBaseOp constantOp = simplePredNode.Child1.Op as ConstantBaseOp;
-                    if (constantOp == null || (constantOp.OpType == OpType.Null))
+                    var constantOp = simplePredNode.Child1.Op as ConstantBaseOp;
+                    if (constantOp == null
+                        || (constantOp.OpType == OpType.Null))
                     {
                         return true;
                     }
                     varRefOp = simplePredNode.Child0.Op as VarRefOp;
-                    if (varRefOp != null && tableColumns.IsSet(varRefOp.Var))
+                    if (varRefOp != null
+                        && tableColumns.IsSet(varRefOp.Var))
                     {
                         return false;
                     }
@@ -463,19 +496,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     return true;
             }
         }
+
         #endregion
 
         #region Keys
+
         private bool IsKeyPredicate(Node left, Node right, VarVec keyVars, VarVec definitions, out Var keyVar)
         {
             keyVar = null;
 
             // If the left-side is not a Var, then return false
-            if (left.Op.OpType != OpType.VarRef)
+            if (left.Op.OpType
+                != OpType.VarRef)
             {
                 return false;
             }
-            VarRefOp varRefOp = (VarRefOp)left.Op;
+            var varRefOp = (VarRefOp)left.Op;
             keyVar = varRefOp.Var;
 
             // Not a key of this table?
@@ -486,11 +522,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // Make sure that the other side is either a constant, or has no
             // references at all to us
-            NodeInfo otherNodeInfo = m_command.GetNodeInfo(right);
-            VarVec otherVarExternalReferences = otherNodeInfo.ExternalReferences.Clone();
+            var otherNodeInfo = m_command.GetNodeInfo(right);
+            var otherVarExternalReferences = otherNodeInfo.ExternalReferences.Clone();
             otherVarExternalReferences.And(definitions);
             return otherVarExternalReferences.IsEmpty;
         }
+
         #endregion
 
         #endregion

@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Core.Objects.ELinq
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Linq;
     using System.Linq.Expressions;
@@ -14,20 +15,25 @@ namespace System.Data.Entity.Core.Objects.ELinq
     {
         private static readonly MethodInfo s_getDefaultMethod = typeof(TypeSystem).GetMethod(
             "GetDefault", BindingFlags.Static | BindingFlags.NonPublic);
-        private static T GetDefault<T>() { return default(T); }
+
+        private static T GetDefault<T>()
+        {
+            return default(T);
+        }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         internal static object GetDefaultValue(Type type)
         {
             // null is always the default for non value types and Nullable<>
-            if (!type.IsValueType ||
+            if (!type.IsValueType
+                ||
                 (type.IsGenericType &&
                  typeof(Nullable<>) == type.GetGenericTypeDefinition()))
             {
                 return null;
             }
-            MethodInfo getDefaultMethod = s_getDefaultMethod.MakeGenericMethod(type);
-            object defaultValue = getDefaultMethod.Invoke(null, new object[] { });
+            var getDefaultMethod = s_getDefaultMethod.MakeGenericMethod(type);
+            var defaultValue = getDefaultMethod.Invoke(null, new object[] { });
             return defaultValue;
         }
 
@@ -42,10 +48,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             // Determine Func<> type (generic args are the input parameter types plus the return type)
             inputTypes = inputTypes ?? Enumerable.Empty<Type>();
-            int argCount = inputTypes.Count();
-            Type[] typeArgs = new Type[argCount + 1];
-            int i = 0;
-            foreach (Type typeArg in inputTypes)
+            var argCount = inputTypes.Count();
+            var typeArgs = new Type[argCount + 1];
+            var i = 0;
+            foreach (var typeArg in inputTypes)
             {
                 typeArgs[i++] = typeArg;
             }
@@ -55,23 +61,58 @@ namespace System.Data.Entity.Core.Objects.ELinq
             Type delegateType;
             switch (argCount)
             {
-                case 0: delegateType = typeof(Func<>); break;
-                case 1: delegateType = typeof(Func<,>); break;
-                case 2: delegateType = typeof(Func<,,>); break;
-                case 3: delegateType = typeof(Func<,,,>); break;
-                case 4: delegateType = typeof(Func<,,,,>); break;
-                case 5: delegateType = typeof(Func<,,,,,>); break;
-                case 6: delegateType = typeof(Func<,,,,,,>); break;
-                case 7: delegateType = typeof(Func<,,,,,,,>); break;
-                case 8: delegateType = typeof(Func<,,,,,,,,>); break;
-                case 9: delegateType = typeof(Func<,,,,,,,,,>); break;
-                case 10: delegateType = typeof(Func<,,,,,,,,,,>); break;
-                case 11: delegateType = typeof(Func<,,,,,,,,,,,>); break;
-                case 12: delegateType = typeof(Func<,,,,,,,,,,,,>); break;
-                case 13: delegateType = typeof(Func<,,,,,,,,,,,,,>); break;
-                case 14: delegateType = typeof(Func<,,,,,,,,,,,,,,>); break;
-                case 15: delegateType = typeof(Func<,,,,,,,,,,,,,,,>); break;
-                default: Debug.Fail("unexpected argument count"); delegateType = null; break;
+                case 0:
+                    delegateType = typeof(Func<>);
+                    break;
+                case 1:
+                    delegateType = typeof(Func<,>);
+                    break;
+                case 2:
+                    delegateType = typeof(Func<,,>);
+                    break;
+                case 3:
+                    delegateType = typeof(Func<,,,>);
+                    break;
+                case 4:
+                    delegateType = typeof(Func<,,,,>);
+                    break;
+                case 5:
+                    delegateType = typeof(Func<,,,,,>);
+                    break;
+                case 6:
+                    delegateType = typeof(Func<,,,,,,>);
+                    break;
+                case 7:
+                    delegateType = typeof(Func<,,,,,,,>);
+                    break;
+                case 8:
+                    delegateType = typeof(Func<,,,,,,,,>);
+                    break;
+                case 9:
+                    delegateType = typeof(Func<,,,,,,,,,>);
+                    break;
+                case 10:
+                    delegateType = typeof(Func<,,,,,,,,,,>);
+                    break;
+                case 11:
+                    delegateType = typeof(Func<,,,,,,,,,,,>);
+                    break;
+                case 12:
+                    delegateType = typeof(Func<,,,,,,,,,,,,>);
+                    break;
+                case 13:
+                    delegateType = typeof(Func<,,,,,,,,,,,,,>);
+                    break;
+                case 14:
+                    delegateType = typeof(Func<,,,,,,,,,,,,,,>);
+                    break;
+                case 15:
+                    delegateType = typeof(Func<,,,,,,,,,,,,,,,>);
+                    break;
+                default:
+                    Debug.Fail("unexpected argument count");
+                    delegateType = null;
+                    break;
             }
             delegateType = delegateType.MakeGenericType(typeArgs);
 
@@ -101,90 +142,110 @@ namespace System.Data.Entity.Core.Objects.ELinq
             name = null;
             type = null;
 
-            if (member.MemberType == MemberTypes.Field)
+            if (member.MemberType
+                == MemberTypes.Field)
             {
-                FieldInfo field = (FieldInfo)member;
+                var field = (FieldInfo)member;
                 name = field.Name;
                 type = field.FieldType;
                 return field;
             }
-            else if (member.MemberType == MemberTypes.Property)
+            else if (member.MemberType
+                     == MemberTypes.Property)
             {
-                PropertyInfo property = (PropertyInfo)member;
+                var property = (PropertyInfo)member;
                 if (0 != property.GetIndexParameters().Length)
                 {
                     // don't support indexed properties
-                    throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_PropertyIndexNotSupported);
+                    throw EntityUtil.NotSupported(Strings.ELinq_PropertyIndexNotSupported);
                 }
                 name = property.Name;
                 type = property.PropertyType;
                 return property;
             }
-            else if (member.MemberType == MemberTypes.Method)
+            else if (member.MemberType
+                     == MemberTypes.Method)
             {
                 // this may be a property accessor in disguise (if it's a RuntimeMethodHandle)
-                MethodInfo method = (MethodInfo)member;
+                var method = (MethodInfo)member;
                 if (method.IsSpecialName) // property accessor methods must set IsSpecialName
                 {
                     // try to find a property with the given getter
-                    foreach (PropertyInfo property in method.DeclaringType.GetProperties(
+                    foreach (var property in method.DeclaringType.GetProperties(
                         BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                     {
-                        if (property.CanRead && (property.GetGetMethod(true) == method))
+                        if (property.CanRead
+                            && (property.GetGetMethod(true) == method))
                         {
                             return PropertyOrField(property, out name, out type);
                         }
                     }
                 }
             }
-            throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_NotPropertyOrField(member.Name));
+            throw EntityUtil.NotSupported(Strings.ELinq_NotPropertyOrField(member.Name));
         }
-                
+
         private static Type FindIEnumerable(Type seqType)
         {
             // Ignores "terminal" primitive types in the EDM although they may implement IEnumerable<>
-            if (seqType == null || seqType == typeof(string) || seqType == typeof(byte[]))
+            if (seqType == null || seqType == typeof(string)
+                || seqType == typeof(byte[]))
+            {
                 return null;
+            }
             if (seqType.IsArray)
+            {
                 return typeof(IEnumerable<>).MakeGenericType(seqType.GetElementType());
+            }
             if (seqType.IsGenericType)
             {
-                foreach (Type arg in seqType.GetGenericArguments())
+                foreach (var arg in seqType.GetGenericArguments())
                 {
-                    Type ienum = typeof(IEnumerable<>).MakeGenericType(arg);
+                    var ienum = typeof(IEnumerable<>).MakeGenericType(arg);
                     if (ienum.IsAssignableFrom(seqType))
                     {
                         return ienum;
                     }
                 }
             }
-            Type[] ifaces = seqType.GetInterfaces();
-            if (ifaces != null && ifaces.Length > 0)
+            var ifaces = seqType.GetInterfaces();
+            if (ifaces != null
+                && ifaces.Length > 0)
             {
-                foreach (Type iface in ifaces)
+                foreach (var iface in ifaces)
                 {
-                    Type ienum = FindIEnumerable(iface);
-                    if (ienum != null) return ienum;
+                    var ienum = FindIEnumerable(iface);
+                    if (ienum != null)
+                    {
+                        return ienum;
+                    }
                 }
             }
-            if (seqType.BaseType != null && seqType.BaseType != typeof(object))
+            if (seqType.BaseType != null
+                && seqType.BaseType != typeof(object))
             {
                 return FindIEnumerable(seqType.BaseType);
             }
             return null;
         }
+
         internal static Type GetElementType(Type seqType)
         {
-            Type ienum = FindIEnumerable(seqType);
-            if (ienum == null) return seqType;
+            var ienum = FindIEnumerable(seqType);
+            if (ienum == null)
+            {
+                return seqType;
+            }
             return ienum.GetGenericArguments()[0];
         }
+
         internal static bool IsNullableType(Type type)
         {
             var nonNullableType = GetNonNullableType(type);
 
             return nonNullableType != null && nonNullableType != type;
         }
+
         internal static Type GetNonNullableType(Type type)
         {
             if (type != null)
@@ -200,21 +261,24 @@ namespace System.Data.Entity.Core.Objects.ELinq
             genericTypeArguments = null;
 
             // check requirements for a match
-            if (null == test || null == match || !match.IsInterface || !match.IsGenericTypeDefinition || null == test.DeclaringType)
+            if (null == test || null == match || !match.IsInterface || !match.IsGenericTypeDefinition
+                || null == test.DeclaringType)
             {
                 return false;
             }
 
             // we might be looking at the interface implementation directly
-            if (test.DeclaringType.IsInterface && test.DeclaringType.IsGenericType && test.DeclaringType.GetGenericTypeDefinition() == match)
+            if (test.DeclaringType.IsInterface && test.DeclaringType.IsGenericType
+                && test.DeclaringType.GetGenericTypeDefinition() == match)
             {
                 return true;
             }
 
             // figure out if we implement the interface
-            foreach (Type testInterface in test.DeclaringType.GetInterfaces())
+            foreach (var testInterface in test.DeclaringType.GetInterfaces())
             {
-                if (testInterface.IsGenericType && testInterface.GetGenericTypeDefinition() == match)
+                if (testInterface.IsGenericType
+                    && testInterface.GetGenericTypeDefinition() == match)
                 {
                     // check if the method aligns
                     var map = test.DeclaringType.GetInterfaceMap(testInterface);
@@ -232,9 +296,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
         internal static bool IsImplementationOf(this PropertyInfo propertyInfo, Type interfaceType)
         {
             Debug.Assert(interfaceType.IsInterface, "Ensure interfaceType is an interface before calling IsImplementationOf");
-            
+
             // Find the property with the corresponding name on the interface, if present
-            PropertyInfo interfaceProp = interfaceType.GetProperty(propertyInfo.Name, BindingFlags.Public | BindingFlags.Instance);
+            var interfaceProp = interfaceType.GetProperty(propertyInfo.Name, BindingFlags.Public | BindingFlags.Instance);
             if (null == interfaceProp)
             {
                 return false;
@@ -246,27 +310,30 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 return interfaceProp.Equals(propertyInfo);
             }
 
-            Debug.Assert(Enumerable.Contains(propertyInfo.DeclaringType.GetInterfaces(), interfaceType), "Ensure propertyInfo.DeclaringType implements interfaceType before calling IsImplementationOf");
+            Debug.Assert(
+                propertyInfo.DeclaringType.GetInterfaces().Contains(interfaceType),
+                "Ensure propertyInfo.DeclaringType implements interfaceType before calling IsImplementationOf");
 
-            bool result = false;
+            var result = false;
 
             // Get the get_<Property> method from the interface property.
-            MethodInfo getInterfaceProp = interfaceProp.GetGetMethod();
+            var getInterfaceProp = interfaceProp.GetGetMethod();
 
             // Retrieve the interface mapping for the interface on the candidate property's declaring type.
-            InterfaceMapping interfaceMap = propertyInfo.DeclaringType.GetInterfaceMap(interfaceType);
-                        
+            var interfaceMap = propertyInfo.DeclaringType.GetInterfaceMap(interfaceType);
+
             // Find the index of the interface's get_<Property> method in the interface methods of the interface map
-            int propIndex = Array.IndexOf(interfaceMap.InterfaceMethods, getInterfaceProp);
-            
+            var propIndex = Array.IndexOf(interfaceMap.InterfaceMethods, getInterfaceProp);
+
             // Find the method on the property's declaring type that is the target of the interface's get_<Property> method.
             // This method will be at the same index in the interface mapping's target methods as the get_<Property> interface method index.
-            MethodInfo[] targetMethods = interfaceMap.TargetMethods;
-            if (propIndex > -1 && propIndex < targetMethods.Length)
+            var targetMethods = interfaceMap.TargetMethods;
+            if (propIndex > -1
+                && propIndex < targetMethods.Length)
             {
                 // If the get method of the referenced property is the target of the get_<Property> method in this interface mapping,
                 // then the property is the implementation of the interface's corresponding property.
-                MethodInfo getPropertyMethod = propertyInfo.GetGetMethod();
+                var getPropertyMethod = propertyInfo.GetGetMethod();
                 if (getPropertyMethod != null)
                 {
                     result = getPropertyMethod.Equals(targetMethods[propIndex]);

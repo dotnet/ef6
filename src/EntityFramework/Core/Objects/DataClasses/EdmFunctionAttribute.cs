@@ -1,7 +1,5 @@
 ﻿namespace System.Data.Entity.Core.Objects.DataClasses
 {
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     /// Indicates that the given method is a proxy for an EDM function.
     /// </summary>
@@ -25,11 +23,17 @@
         /// <summary>
         /// The namespace name of the EDM function represented by the attributed method
         /// </summary>
-        public string NamespaceName { get { return _namespaceName; } }
-        
+        public string NamespaceName
+        {
+            get { return _namespaceName; }
+        }
+
         /// <summary>
         /// The function name of the EDM function represented by the attributed method
         /// </summary>
-        public string FunctionName { get { return _functionName; } }
+        public string FunctionName
+        {
+            get { return _functionName; }
+        }
     }
 }

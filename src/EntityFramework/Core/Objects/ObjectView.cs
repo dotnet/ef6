@@ -1,17 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Metadata;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Objects.DataClasses;
-using System.Diagnostics;
-using System.Reflection;
-
 namespace System.Data.Entity.Core.Objects
 {
+    using System.Collections;
+    using System.ComponentModel;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -40,16 +31,16 @@ namespace System.Data.Entity.Core.Objects
         /// <b>True</b> to prevent events from being fired from this IBindingList; 
         /// otherwise <b>false</b> to allow events to propogate.
         /// </summary>
-        private bool _suspendEvent; 
-       
+        private bool _suspendEvent;
+
         // Delegate for IBindingList.ListChanged event.
         private ListChangedEventHandler onListChanged;
-       
+
         /// <summary>
         /// Object that listens for underlying collection or individual bound item changes,
         /// and notifies this object when they occur.
         /// </summary>
-        private ObjectViewListener _listener;
+        private readonly ObjectViewListener _listener;
 
         /// <summary>
         /// Index of last item added via a call to IBindingList.AddNew.
@@ -60,7 +51,7 @@ namespace System.Data.Entity.Core.Objects
         /// Object that maintains the underlying bound list, 
         /// and specifies the operations allowed on that list.
         /// </summary>
-        private IObjectViewData<TElement> _viewData;
+        private readonly IObjectViewData<TElement> _viewData;
 
         /// <summary>
         /// Construct a new instance of ObjectView using the supplied IObjectViewData and event data source.
@@ -100,12 +91,13 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="itemIndex">Index of item to be removed as a result of the cancellation of a previous addition.</param>
         void ICancelAddNew.CancelNew(int itemIndex)
         {
-            if (_addNewIndex >= 0 && itemIndex == _addNewIndex)
+            if (_addNewIndex >= 0
+                && itemIndex == _addNewIndex)
             {
-                TElement item = _viewData.List[_addNewIndex];
+                var item = _viewData.List[_addNewIndex];
                 _listener.UnregisterEntityEvents(item);
 
-                int oldIndex = _addNewIndex;
+                var oldIndex = _addNewIndex;
 
                 // Reset the addNewIndex here so that the IObjectView.CollectionChanged method 
                 // will not attempt to examine the item being removed.
@@ -137,14 +129,15 @@ namespace System.Data.Entity.Core.Objects
         /// </param>
         void ICancelAddNew.EndNew(int itemIndex)
         {
-            if (_addNewIndex >= 0 && itemIndex == _addNewIndex)
+            if (_addNewIndex >= 0
+                && itemIndex == _addNewIndex)
             {
                 _viewData.CommitItemAt(_addNewIndex);
                 _addNewIndex = -1;
             }
         }
-        #endregion
 
+        #endregion
 
         #region IBindingList implementation
 
@@ -171,13 +164,13 @@ namespace System.Data.Entity.Core.Objects
 
             ((ICancelAddNew)this).EndNew(_addNewIndex);
 
-            TElement newItem = (TElement)Activator.CreateInstance(typeof(TElement));
+            var newItem = (TElement)Activator.CreateInstance(typeof(TElement));
 
             _addNewIndex = _viewData.Add(newItem, true);
 
             _listener.RegisterEntityEvents(newItem);
             OnListChanged(ListChangedType.ItemAdded, _addNewIndex /* newIndex*/, -1 /*oldIndex*/);
-            
+
             return newItem;
         }
 
@@ -216,16 +209,10 @@ namespace System.Data.Entity.Core.Objects
             get { throw EntityUtil.NotSupported(); }
         }
 
-        public event System.ComponentModel.ListChangedEventHandler ListChanged
+        public event ListChangedEventHandler ListChanged
         {
-            add
-            {
-                onListChanged += value;
-            }
-            remove
-            {
-                onListChanged -= value;
-            }
+            add { onListChanged += value; }
+            remove { onListChanged -= value; }
         }
 
         void IBindingList.AddIndex(PropertyDescriptor property)
@@ -270,10 +257,7 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "index")]
         public TElement this[int index]
         {
-            get
-            {
-                return _viewData.List[index];
-            }
+            get { return _viewData.List[index]; }
             set
             {
                 // this represents a ROW basically whole entity, we should not allow any setting
@@ -285,10 +269,7 @@ namespace System.Data.Entity.Core.Objects
 
         object IList.this[int index]
         {
-            get
-            {
-                return _viewData.List[index];
-            }
+            get { return _viewData.List[index]; }
             set
             {
                 // this represents a ROW basically whole entity, we should not allow any setting
@@ -298,10 +279,7 @@ namespace System.Data.Entity.Core.Objects
 
         bool IList.IsReadOnly
         {
-            get 
-            {
-                return !(_viewData.AllowNew || _viewData.AllowRemove);
-            }
+            get { return !(_viewData.AllowNew || _viewData.AllowRemove); }
         }
 
         bool IList.IsFixedSize
@@ -322,7 +300,7 @@ namespace System.Data.Entity.Core.Objects
 
             ((ICancelAddNew)this).EndNew(_addNewIndex);
 
-            int index = ((IList)this).IndexOf(value);
+            var index = ((IList)this).IndexOf(value);
 
             // Add the item if it doesn't already exist in the binding list.
             if (index == -1)
@@ -333,7 +311,7 @@ namespace System.Data.Entity.Core.Objects
                 if (!_viewData.FiresEventOnAdd)
                 {
                     _listener.RegisterEntityEvents(value);
-                    OnListChanged(ListChangedType.ItemAdded, index /*newIndex*/, -1/* oldIndex*/);
+                    OnListChanged(ListChangedType.ItemAdded, index /*newIndex*/, -1 /* oldIndex*/);
                 }
             }
 
@@ -358,7 +336,7 @@ namespace System.Data.Entity.Core.Objects
                     // Suspend list changed events during the clear, since the IObjectViewData declared that it wouldn't fire an event.
                     // It's possible the IObjectViewData could implement Clear by repeatedly calling Remove, 
                     // and we don't want these events to percolate during the Clear operation.
-                    _suspendEvent = true; 
+                    _suspendEvent = true;
                     _viewData.Clear();
                 }
                 finally
@@ -366,7 +344,7 @@ namespace System.Data.Entity.Core.Objects
                     _suspendEvent = false;
                 }
 
-                OnListChanged(ListChangedType.Reset, -1 /*newIndex*/, -1/* oldIndex*/); // Indexes not used for reset event.
+                OnListChanged(ListChangedType.Reset, -1 /*newIndex*/, -1 /* oldIndex*/); // Indexes not used for reset event.
             }
         }
 
@@ -417,15 +395,15 @@ namespace System.Data.Entity.Core.Objects
             {
                 throw EntityUtil.IncompatibleArgument();
             }
-            
+
             Debug.Assert(((IList)this).Contains(value), "Value does not exist in view.");
 
             ((ICancelAddNew)this).EndNew(_addNewIndex);
 
-            TElement item = (TElement)value;
+            var item = (TElement)value;
 
-            int index = _viewData.List.IndexOf(item);
-            bool removed = _viewData.Remove(item, false);
+            var index = _viewData.List.IndexOf(item);
+            var removed = _viewData.Remove(item, false);
 
             // Only fire a change event if the IObjectView data doesn't implicitly fire an event itself.
             if (removed && !_viewData.FiresEventOnRemove)
@@ -453,7 +431,7 @@ namespace System.Data.Entity.Core.Objects
         {
             ((IList)_viewData.List).CopyTo(array, index);
         }
-   
+
         object ICollection.SyncRoot
         {
             get { return this; }
@@ -473,27 +451,28 @@ namespace System.Data.Entity.Core.Objects
 
         private void OnListChanged(ListChangedType listchangedType, int newIndex, int oldIndex)
         {
-            ListChangedEventArgs changeArgs = new ListChangedEventArgs(listchangedType, newIndex, oldIndex);
+            var changeArgs = new ListChangedEventArgs(listchangedType, newIndex, oldIndex);
             OnListChanged(changeArgs);
         }
 
         private void OnListChanged(ListChangedEventArgs changeArgs)
         {
             // Only fire the event if someone listens to it and it is not suspended.
-            if (onListChanged != null && !_suspendEvent)
+            if (onListChanged != null
+                && !_suspendEvent)
             {
                 onListChanged(this, changeArgs);
             }
         }
-        
-        void IObjectView.EntityPropertyChanged(object sender, PropertyChangedEventArgs e) 
+
+        void IObjectView.EntityPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             Debug.Assert(sender is TElement, "Entity should be of type TElement");
-            
-            int index = ((IList)this).IndexOf((TElement)sender);
-            OnListChanged(ListChangedType.ItemChanged, index /*newIndex*/, index/*oldIndex*/);
+
+            var index = ((IList)this).IndexOf((TElement)sender);
+            OnListChanged(ListChangedType.ItemChanged, index /*newIndex*/, index /*oldIndex*/);
         }
-        
+
         /// <summary>
         /// Handle a change in the underlying collection bound by this ObjectView.
         /// </summary>
@@ -501,7 +480,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="e">
         /// Event arguments that specify the type of modification and the associated item.
         /// </param>
-        void IObjectView.CollectionChanged(object sender, CollectionChangeEventArgs e) 
+        void IObjectView.CollectionChanged(object sender, CollectionChangeEventArgs e)
         {
             // If there is a pending edit of a new item in the bound list (indicated by _addNewIndex >= 0)
             // and the collection membership changed due to an operation external to this ObjectView,
@@ -509,18 +488,18 @@ namespace System.Data.Entity.Core.Objects
             //
             // If the modification was made through this ObjectView, the pending edit would have been implicitly committed,
             // and there would be no need to examine it here.
-            TElement addNew = default(TElement);
-            
+            var addNew = default(TElement);
+
             if (_addNewIndex >= 0)
             {
                 addNew = this[_addNewIndex];
             }
 
-            ListChangedEventArgs changeArgs = _viewData.OnCollectionChanged(sender, e, _listener);
+            var changeArgs = _viewData.OnCollectionChanged(sender, e, _listener);
 
             if (_addNewIndex >= 0)
             {
-                if (_addNewIndex >= this.Count)
+                if (_addNewIndex >= Count)
                 {
                     _addNewIndex = ((IList)this).IndexOf(addNew);
                 }

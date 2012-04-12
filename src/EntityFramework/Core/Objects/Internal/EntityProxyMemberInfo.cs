@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Diagnostics;
-using System.Reflection;
-
-namespace System.Data.Entity.Core.Objects.Internal
+﻿namespace System.Data.Entity.Core.Objects.Internal
 {
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+
     /// <summary>
     /// Specifies information about a proxied class member.
     /// The member must be a Property for the current implementation, 

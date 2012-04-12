@@ -1,14 +1,15 @@
-using System.Collections.Generic;
-using System.Threading;
 namespace System.Data.Entity.Core.Common.Utils
 {
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Threading;
 
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
     internal sealed class ThreadSafeList<T> : IList<T>
     {
         private readonly ReaderWriterLockSlim _lock;
-        private List<T> _list;
+        private readonly List<T> _list;
 
         internal ThreadSafeList()
         {
@@ -24,7 +25,7 @@ namespace System.Data.Entity.Core.Common.Utils
                 int count;
                 try
                 {
-                     count = _list.Count;
+                    count = _list.Count;
                 }
                 finally
                 {
@@ -80,10 +81,7 @@ namespace System.Data.Entity.Core.Common.Utils
 
         public bool IsReadOnly
         {
-            get
-            {
-                return false; 
-            }
+            get { return false; }
         }
 
         public int IndexOf(T item)
@@ -188,7 +186,7 @@ namespace System.Data.Entity.Core.Common.Utils
             _lock.EnterReadLock();
             try
             {
-                foreach (T value in _list)
+                foreach (var value in _list)
                 {
                     yield return value;
                 }
@@ -199,12 +197,9 @@ namespace System.Data.Entity.Core.Common.Utils
             }
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
     }
-
-
-  
 }

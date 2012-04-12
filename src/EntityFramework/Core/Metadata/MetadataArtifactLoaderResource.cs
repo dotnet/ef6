@@ -2,6 +2,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.EntityModel.SchemaObjectModel;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.IO;
     using System.Reflection;
@@ -12,7 +13,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     internal class MetadataArtifactLoaderResource : MetadataArtifactLoader, IComparable
     {
-        private readonly bool _alreadyLoaded = false;
+        private readonly bool _alreadyLoaded;
         private readonly Assembly _assembly;
         private readonly string _resourceName;
 
@@ -29,7 +30,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _assembly = assembly;
             _resourceName = resourceName;
 
-            string tempPath = MetadataArtifactLoaderCompositeResource.CreateResPath(_assembly, _resourceName);
+            var tempPath = MetadataArtifactLoaderCompositeResource.CreateResPath(_assembly, _resourceName);
             _alreadyLoaded = uriRegistry.Contains(tempPath);
             if (!_alreadyLoaded)
             {
@@ -44,10 +45,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         public override string Path
         {
-            get 
-            {
-                return MetadataArtifactLoaderCompositeResource.CreateResPath(_assembly, _resourceName);
-            }
+            get { return MetadataArtifactLoaderCompositeResource.CreateResPath(_assembly, _resourceName); }
         }
 
         /// <summary>
@@ -57,7 +55,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>0 if the loaders are "equal" (i.e., have the same _path value)</returns>
         public int CompareTo(object obj)
         {
-            MetadataArtifactLoaderResource loader = obj as MetadataArtifactLoaderResource;
+            var loader = obj as MetadataArtifactLoaderResource;
             if (loader != null)
             {
                 return string.Compare(Path, loader.Path, StringComparison.OrdinalIgnoreCase);
@@ -74,7 +72,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>true if the objects have the same _path value</returns>
         public override bool Equals(object obj)
         {
-            return this.CompareTo(obj) == 0;
+            return CompareTo(obj) == 0;
         }
 
         /// <summary>
@@ -98,8 +96,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of strings identifying paths to all artifacts for a specific DataSpace</returns>
         public override List<string> GetPaths(DataSpace spaceToGet)
         {
-            List<string> list = new List<string>();
-            if (!_alreadyLoaded && MetadataArtifactLoader.IsArtifactOfDataSpace(Path, spaceToGet))
+            var list = new List<string>();
+            if (!_alreadyLoaded
+                && IsArtifactOfDataSpace(Path, spaceToGet))
             {
                 list.Add(Path);
             }
@@ -112,7 +111,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of strings identifying paths to all resources</returns>
         public override List<string> GetPaths()
         {
-            List<string> list = new List<string>();
+            var list = new List<string>();
             if (!_alreadyLoaded)
             {
                 list.Add(Path);
@@ -126,11 +125,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of XmlReaders for all resources</returns>
         public override List<XmlReader> GetReaders(Dictionary<MetadataArtifactLoader, XmlReader> sourceDictionary)
         {
-            List<XmlReader> list = new List<XmlReader>();
+            var list = new List<XmlReader>();
             if (!_alreadyLoaded)
             {
-
-                XmlReader reader = CreateReader();
+                var reader = CreateReader();
                 list.Add(reader);
 
                 if (sourceDictionary != null)
@@ -143,17 +141,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private XmlReader CreateReader()
         {
+            var stream = LoadResource();
 
-            Stream stream = LoadResource();
-
-            XmlReaderSettings readerSettings = Schema.CreateEdmStandardXmlReaderSettings();
+            var readerSettings = Schema.CreateEdmStandardXmlReaderSettings();
             // close the stream when the xmlreader is closed
             // now the reader owns the stream
             readerSettings.CloseInput = true;
 
             // we know that we aren't reading a fragment
             readerSettings.ConformanceLevel = ConformanceLevel.Document;
-            XmlReader reader = XmlReader.Create(stream, readerSettings);
+            var reader = XmlReader.Create(stream, readerSettings);
             // cannot set the base URI because res:// URIs cause the schema parser
             // to choke
 
@@ -168,12 +165,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of XmlReader objects</returns>
         public override List<XmlReader> CreateReaders(DataSpace spaceToGet)
         {
-            List<XmlReader> list = new List<XmlReader>();
+            var list = new List<XmlReader>();
             if (!_alreadyLoaded)
             {
-                if (MetadataArtifactLoader.IsArtifactOfDataSpace(Path, spaceToGet))
+                if (IsArtifactOfDataSpace(Path, spaceToGet))
                 {
-                    XmlReader reader = CreateReader();
+                    var reader = CreateReader();
                     list.Add(reader);
                 }
             }
@@ -191,7 +188,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 return resourceStream;
             }
-            throw EntityUtil.Metadata(System.Data.Entity.Resources.Strings.UnableToLoadResource);
+            throw EntityUtil.Metadata(Strings.UnableToLoadResource);
         }
 
         private bool TryCreateResourceStream(out Stream resourceStream)

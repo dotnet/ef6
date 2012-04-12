@@ -1,9 +1,7 @@
-using System.Diagnostics;
-using System.Linq;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Internal helper class for query
@@ -11,25 +9,30 @@ namespace System.Data.Entity.Core.Metadata.Edm
     internal abstract class Perspective
     {
         #region Constructors
+
         /// <summary>
         /// Creates a new instance of perspective class so that query can work
         /// ignorant of all spaces
         /// </summary>
         /// <param name="metadataWorkspace">runtime metadata container</param>
         /// <param name="targetDataspace">target dataspace for the perspective</param>
-        internal Perspective(MetadataWorkspace metadataWorkspace,
-                             DataSpace targetDataspace)
+        internal Perspective(
+            MetadataWorkspace metadataWorkspace,
+            DataSpace targetDataspace)
         {
             EntityUtil.CheckArgumentNull(metadataWorkspace, "metadataWorkspace");
 
             m_metadataWorkspace = metadataWorkspace;
             m_targetDataspace = targetDataspace;
         }
+
         #endregion
 
         #region Fields
-        private MetadataWorkspace m_metadataWorkspace;
-        private DataSpace m_targetDataspace;
+
+        private readonly MetadataWorkspace m_metadataWorkspace;
+        private readonly DataSpace m_targetDataspace;
+
         #endregion
 
         #region Methods
@@ -52,6 +55,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             outMember = null;
             return type.Members.TryGetValue(memberName, ignoreCase, out outMember);
         }
+
         internal virtual bool TryGetEnumMember(EnumType type, String memberName, bool ignoreCase, out EnumMember outMember)
         {
             EntityUtil.CheckArgumentNull(type, "type");
@@ -78,14 +82,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Returns the function import in the target space, for the given entity container.
         /// </summary>
-        internal virtual bool TryGetFunctionImport(EntityContainer entityContainer, String functionImportName, bool ignoreCase, out EdmFunction functionImport)
+        internal virtual bool TryGetFunctionImport(
+            EntityContainer entityContainer, String functionImportName, bool ignoreCase, out EdmFunction functionImport)
         {
             // There are no entity containers in the OSpace. So there is no mapping involved.
             // Hence the name should be a valid name in the CSpace.
             functionImport = null;
             if (ignoreCase)
             {
-                functionImport = entityContainer.FunctionImports.Where(fi => String.Equals(fi.Name, functionImportName, StringComparison.OrdinalIgnoreCase)).SingleOrDefault();
+                functionImport =
+                    entityContainer.FunctionImports.Where(
+                        fi => String.Equals(fi.Name, functionImportName, StringComparison.OrdinalIgnoreCase)).SingleOrDefault();
             }
             else
             {
@@ -134,7 +141,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="ignoreCase">true for case-insensitive lookup</param>
         /// <param name="functionOverloads">function overloads</param>
         /// <returns>returns true if a match was found, otherwise false</returns>
-        internal bool TryGetFunctionByName(string namespaceName, string functionName, bool ignoreCase, out IList<EdmFunction> functionOverloads)
+        internal bool TryGetFunctionByName(
+            string namespaceName, string functionName, bool ignoreCase, out IList<EdmFunction> functionOverloads)
         {
             EntityUtil.CheckStringArgument(namespaceName, "namespaceName");
             EntityUtil.CheckStringArgument(functionName, "functionName");
@@ -142,30 +150,32 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var fullName = namespaceName + "." + functionName;
 
             // First look for a model-defined function in the target space.
-            ItemCollection itemCollection = m_metadataWorkspace.GetItemCollection(m_targetDataspace);
+            var itemCollection = m_metadataWorkspace.GetItemCollection(m_targetDataspace);
             IList<EdmFunction> overloads =
-                m_targetDataspace == DataSpace.SSpace ?
-                ((StoreItemCollection)itemCollection).GetCTypeFunctions(fullName, ignoreCase) :
-                itemCollection.GetFunctions(fullName, ignoreCase);
+                m_targetDataspace == DataSpace.SSpace
+                    ? ((StoreItemCollection)itemCollection).GetCTypeFunctions(fullName, ignoreCase)
+                    : itemCollection.GetFunctions(fullName, ignoreCase);
 
             if (m_targetDataspace == DataSpace.CSpace)
             {
                 // Then look for a function import.
-                if (overloads == null || overloads.Count == 0)
+                if (overloads == null
+                    || overloads.Count == 0)
                 {
                     EntityContainer entityContainer;
-                    if (this.TryGetEntityContainer(namespaceName, /*ignoreCase:*/ false, out entityContainer))
+                    if (TryGetEntityContainer(namespaceName, /*ignoreCase:*/ false, out entityContainer))
                     {
                         EdmFunction functionImport;
-                        if (this.TryGetFunctionImport(entityContainer, functionName, /*ignoreCase:*/ false, out functionImport))
+                        if (TryGetFunctionImport(entityContainer, functionName, /*ignoreCase:*/ false, out functionImport))
                         {
-                            overloads = new EdmFunction[] { functionImport };
+                            overloads = new[] { functionImport };
                         }
                     }
                 }
 
                 // Last, look in SSpace.
-                if (overloads == null || overloads.Count == 0)
+                if (overloads == null
+                    || overloads.Count == 0)
                 {
                     ItemCollection storeItemCollection;
                     if (m_metadataWorkspace.TryGetItemCollection(DataSpace.SSpace, out storeItemCollection))
@@ -184,10 +194,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal MetadataWorkspace MetadataWorkspace
         {
-            get
-            {
-                return m_metadataWorkspace;
-            }
+            get { return m_metadataWorkspace; }
         }
 
         /// <summary>
@@ -211,11 +218,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal DataSpace TargetDataspace
         {
-            get
-            {
-                return m_targetDataspace;
-            }
+            get { return m_targetDataspace; }
         }
+
         #endregion
     }
 }

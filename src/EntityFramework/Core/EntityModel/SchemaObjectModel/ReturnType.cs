@@ -1,8 +1,8 @@
 ﻿namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
@@ -10,16 +10,17 @@
     using System.Xml;
     using Som = System.Data.Entity.Core.EntityModel.SchemaObjectModel;
 
-    class ReturnType : ModelFunctionTypeElement
+    internal class ReturnType : ModelFunctionTypeElement
     {
         private CollectionKind _collectionKind = CollectionKind.None;
         private bool _isRefType;
-        private string _unresolvedEntitySet = null;
-        private bool _entitySetPathDefined = false;
-        private ModelFunctionTypeElement _typeSubElement = null;
-        private EntityContainerEntitySet _entitySet = null;
+        private string _unresolvedEntitySet;
+        private bool _entitySetPathDefined;
+        private ModelFunctionTypeElement _typeSubElement;
+        private EntityContainerEntitySet _entitySet;
 
         #region constructor
+
         /// <summary>
         /// 
         /// </summary>
@@ -29,6 +30,7 @@
         {
             _typeUsageBuilder = new TypeUsageBuilder(this);
         }
+
         #endregion
 
         #region Properties
@@ -89,14 +91,14 @@
 
         internal override SchemaElement Clone(SchemaElement parentElement)
         {
-            ReturnType parameter = new ReturnType((Function)parentElement);
+            var parameter = new ReturnType((Function)parentElement);
             parameter._type = _type;
-            parameter.Name = this.Name;
-            parameter._typeUsageBuilder = this._typeUsageBuilder;
-            parameter._unresolvedType = this._unresolvedType;
-            parameter._unresolvedEntitySet = this._unresolvedEntitySet;
-            parameter._entitySetPathDefined = this._entitySetPathDefined;
-            parameter._entitySet = this._entitySet;
+            parameter.Name = Name;
+            parameter._typeUsageBuilder = _typeUsageBuilder;
+            parameter._unresolvedType = _unresolvedType;
+            parameter._unresolvedEntitySet = _unresolvedEntitySet;
+            parameter._entitySetPathDefined = _entitySetPathDefined;
+            parameter._entitySet = _entitySet;
             return parameter;
         }
 
@@ -129,7 +131,8 @@
             return false;
         }
 
-        internal bool ResolveNestedTypeNames(Converter.ConversionCache convertedItemCache, Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
+        internal bool ResolveNestedTypeNames(
+            Converter.ConversionCache convertedItemCache, Dictionary<SchemaElement, GlobalItem> newGlobalItems)
         {
             Debug.Assert(_typeSubElement != null, "Nested type expected.");
             return _typeSubElement.ResolveNameAndSetTypeUsage(convertedItemCache, newGlobalItems);
@@ -148,9 +151,11 @@
 
             string type;
             if (!Utils.GetString(Schema, reader, out type))
+            {
                 return;
+            }
             TypeModifier typeModifier;
-            
+
             Function.RemoveTypeModifier(ref type, out typeModifier, out _isRefType);
 
             switch (typeModifier)
@@ -159,12 +164,19 @@
                     _collectionKind = CollectionKind.Bag;
                     break;
                 default:
-                    Debug.Assert(typeModifier == TypeModifier.None, string.Format(CultureInfo.CurrentCulture, "Type is not valid for property {0}: {1}. The modifier for the type cannot be used in this context.", FQName, reader.Value));
+                    Debug.Assert(
+                        typeModifier == TypeModifier.None,
+                        string.Format(
+                            CultureInfo.CurrentCulture,
+                            "Type is not valid for property {0}: {1}. The modifier for the type cannot be used in this context.", FQName,
+                            reader.Value));
                     break;
             }
 
             if (!Utils.ValidateDottedName(Schema, reader, type))
+            {
                 return;
+            }
 
             UnresolvedType = type;
         }
@@ -269,13 +281,16 @@
             // If type was defined as a subelement: <ReturnType><CollectionType>...</CollectionType></ReturnType>
             if (_typeSubElement != null)
             {
-                Debug.Assert(!this.ParentElement.IsFunctionImport, "FunctionImports can't have sub elements in their return types, so we should NEVER see them here");
+                Debug.Assert(
+                    !ParentElement.IsFunctionImport,
+                    "FunctionImports can't have sub elements in their return types, so we should NEVER see them here");
                 _typeSubElement.ResolveTopLevelNames();
             }
 
-            if (this.ParentElement.IsFunctionImport && _unresolvedEntitySet != null)
+            if (ParentElement.IsFunctionImport
+                && _unresolvedEntitySet != null)
             {
-                ((FunctionImportElement)this.ParentElement).ResolveEntitySet(this, _unresolvedEntitySet, ref _entitySet);
+                ((FunctionImportElement)ParentElement).ResolveEntitySet(this, _unresolvedEntitySet, ref _entitySet);
             }
         }
 
@@ -290,18 +305,22 @@
                 ValidationHelper.ValidateRefType(this, _type);
             }
 
-            if (Schema.DataModel != SchemaDataModelOption.EntityDataModel)
+            if (Schema.DataModel
+                != SchemaDataModelOption.EntityDataModel)
             {
-                Debug.Assert(Schema.DataModel == SchemaDataModelOption.ProviderDataModel ||
-                             Schema.DataModel == SchemaDataModelOption.ProviderManifestModel, "Unexpected data model");
+                Debug.Assert(
+                    Schema.DataModel == SchemaDataModelOption.ProviderDataModel ||
+                    Schema.DataModel == SchemaDataModelOption.ProviderManifestModel, "Unexpected data model");
 
-                if (Schema.DataModel == SchemaDataModelOption.ProviderManifestModel)
+                if (Schema.DataModel
+                    == SchemaDataModelOption.ProviderManifestModel)
                 {
                     // Only scalar return type is allowed for functions in provider manifest.
-                    if (_type != null && (_type is ScalarType == false || _collectionKind != CollectionKind.None) ||
+                    if (_type != null && (_type is ScalarType == false || _collectionKind != CollectionKind.None)
+                        ||
                         _typeSubElement != null && _typeSubElement.Type is ScalarType == false)
                     {
-                        string typeName = "";
+                        var typeName = "";
                         if (_type != null)
                         {
                             typeName = Function.GetTypeNameForErrorMessage(_type, _collectionKind, _isRefType);
@@ -310,10 +329,11 @@
                         {
                             typeName = _typeSubElement.FQName;
                         }
-                        AddError(ErrorCode.FunctionWithNonEdmTypeNotSupported,
-                                 EdmSchemaErrorSeverity.Error,
-                                 this,
-                                 System.Data.Entity.Resources.Strings.FunctionWithNonEdmPrimitiveTypeNotSupported(typeName, this.ParentElement.FQName));
+                        AddError(
+                            ErrorCode.FunctionWithNonEdmTypeNotSupported,
+                            EdmSchemaErrorSeverity.Error,
+                            this,
+                            Strings.FunctionWithNonEdmPrimitiveTypeNotSupported(typeName, ParentElement.FQName));
                     }
                 }
                 else // SchemaDataModelOption.ProviderDataModel
@@ -324,25 +344,30 @@
                     if (_type != null)
                     {
                         // It is not possible to define a collection of rows via a type attribute, hence any collection is not allowed.
-                        if (_type is ScalarType == false || _collectionKind != CollectionKind.None)
+                        if (_type is ScalarType == false
+                            || _collectionKind != CollectionKind.None)
                         {
-                            AddError(ErrorCode.FunctionWithNonPrimitiveTypeNotSupported,
-                                     EdmSchemaErrorSeverity.Error,
-                                     this,
-                                     System.Data.Entity.Resources.Strings.FunctionWithNonPrimitiveTypeNotSupported(_isRefType ? _unresolvedType : _type.FQName, this.ParentElement.FQName));
+                            AddError(
+                                ErrorCode.FunctionWithNonPrimitiveTypeNotSupported,
+                                EdmSchemaErrorSeverity.Error,
+                                this,
+                                Strings.FunctionWithNonPrimitiveTypeNotSupported(
+                                    _isRefType ? _unresolvedType : _type.FQName, ParentElement.FQName));
                         }
                     }
                     else if (_typeSubElement != null)
                     {
                         if (_typeSubElement.Type is ScalarType == false)
                         {
-                            if (Schema.SchemaVersion < XmlConstants.StoreVersionForV3)
+                            if (Schema.SchemaVersion
+                                < XmlConstants.StoreVersionForV3)
                             {
                                 // Before V3 provider model functions only supported scalar return types.
-                                AddError(ErrorCode.FunctionWithNonPrimitiveTypeNotSupported,
-                                         EdmSchemaErrorSeverity.Error,
-                                         this,
-                                         System.Data.Entity.Resources.Strings.FunctionWithNonPrimitiveTypeNotSupported(_typeSubElement.FQName, this.ParentElement.FQName));
+                                AddError(
+                                    ErrorCode.FunctionWithNonPrimitiveTypeNotSupported,
+                                    EdmSchemaErrorSeverity.Error,
+                                    this,
+                                    Strings.FunctionWithNonPrimitiveTypeNotSupported(_typeSubElement.FQName, ParentElement.FQName));
                             }
                             else
                             {
@@ -359,15 +384,15 @@
                                     {
                                         if (row.Properties.Any(p => !p.ValidateIsScalar()))
                                         {
-                                            AddError(ErrorCode.TVFReturnTypeRowHasNonScalarProperty,
-                                                     EdmSchemaErrorSeverity.Error,
-                                                     this,
-                                                     System.Data.Entity.Resources.Strings.TVFReturnTypeRowHasNonScalarProperty);
+                                            AddError(
+                                                ErrorCode.TVFReturnTypeRowHasNonScalarProperty,
+                                                EdmSchemaErrorSeverity.Error,
+                                                this,
+                                                Strings.TVFReturnTypeRowHasNonScalarProperty);
                                         }
                                     }
                                 }
                             }
-
                         }
                         // else type is ScalarType which is supported in all version
                     }
@@ -380,16 +405,20 @@
             }
         }
 
-        internal override void WriteIdentity(StringBuilder builder) { }
+        internal override void WriteIdentity(StringBuilder builder)
+        {
+        }
 
         internal override TypeUsage GetTypeUsage()
         {
             return TypeUsage;
         }
 
-        internal override bool ResolveNameAndSetTypeUsage(Converter.ConversionCache convertedItemCache, Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
+        internal override bool ResolveNameAndSetTypeUsage(
+            Converter.ConversionCache convertedItemCache, Dictionary<SchemaElement, GlobalItem> newGlobalItems)
         {
-            Debug.Fail("This method was not called from anywhere in the code before. If you got here you need to update this method and possibly ResolveNestedTypeNames()"); 
+            Debug.Fail(
+                "This method was not called from anywhere in the code before. If you got here you need to update this method and possibly ResolveNestedTypeNames()");
 
             return false;
         }

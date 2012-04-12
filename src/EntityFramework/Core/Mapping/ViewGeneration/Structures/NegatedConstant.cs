@@ -4,7 +4,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Linq;
@@ -16,6 +15,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     internal sealed class NegatedConstant : Constant
     {
         #region Constructors
+
         /// <summary>
         /// Creates a negated constant with the <paramref name="values"/> in it.
         /// </summary>
@@ -23,25 +23,31 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         internal NegatedConstant(IEnumerable<Constant> values)
         {
             Debug.Assert(!values.Any(v => v is NegatedConstant), "Negated constant values must not contain another negated constant.");
-            m_negatedDomain = new Set<Constant>(values, Constant.EqualityComparer);
+            m_negatedDomain = new Set<Constant>(values, EqualityComparer);
         }
+
         #endregion
 
         #region Fields
+
         /// <summary>
         /// e.g., NOT(1, 2, Undefined)
         /// </summary>
         private readonly Set<Constant> m_negatedDomain;
+
         #endregion
 
         #region Properties
+
         internal IEnumerable<Constant> Elements
         {
             get { return m_negatedDomain; }
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Returns true if the negated constant contains <paramref name="constant"/>.
         /// </summary>
@@ -57,13 +63,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         internal override bool IsNotNull()
         {
-            if (object.ReferenceEquals(this, Constant.NotNull))
+            if (ReferenceEquals(this, NotNull))
             {
                 return true;
             }
             else
             {
-                return m_negatedDomain.Count == 1 && m_negatedDomain.Contains(Constant.Null);
+                return m_negatedDomain.Count == 1 && m_negatedDomain.Contains(Null);
             }
         }
 
@@ -77,22 +83,22 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// </summary>
         internal override bool HasNotNull()
         {
-            return m_negatedDomain.Contains(Constant.Null);
+            return m_negatedDomain.Contains(Null);
         }
 
         public override int GetHashCode()
         {
-            int result = 0;
-            foreach (Constant constant in m_negatedDomain)
+            var result = 0;
+            foreach (var constant in m_negatedDomain)
             {
-                result ^= Constant.EqualityComparer.GetHashCode(constant);
+                result ^= EqualityComparer.GetHashCode(constant);
             }
             return result;
         }
 
         protected override bool IsEqualTo(Constant right)
         {
-            NegatedConstant rightNegatedConstant = right as NegatedConstant;
+            var rightNegatedConstant = right as NegatedConstant;
             if (rightNegatedConstant == null)
             {
                 return false;
@@ -119,7 +125,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return null; // To keep the compiler happy
         }
 
-        internal StringBuilder AsEsql(StringBuilder builder, string blockAlias, IEnumerable<Constant> constants, MemberPath outputMember, bool skipIsNotNull)
+        internal StringBuilder AsEsql(
+            StringBuilder builder, string blockAlias, IEnumerable<Constant> constants, MemberPath outputMember, bool skipIsNotNull)
         {
             return ToStringHelper(builder, blockAlias, constants, outputMember, skipIsNotNull, false);
         }
@@ -135,23 +142,24 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 () => cqt = outputMember.AsCqt(row).IsNull().Not(),
                 // varNotEqualsTo action
                 (constant) =>
-                {
-                    DbExpression notEqualsExpr = outputMember.AsCqt(row).NotEqual(constant.AsCqt(row, outputMember));
-                    if (cqt != null)
                     {
-                        cqt = cqt.And(notEqualsExpr);
-                    }
-                    else
-                    {
-                        cqt = notEqualsExpr;
-                    }
-                },
+                        DbExpression notEqualsExpr = outputMember.AsCqt(row).NotEqual(constant.AsCqt(row, outputMember));
+                        if (cqt != null)
+                        {
+                            cqt = cqt.And(notEqualsExpr);
+                        }
+                        else
+                        {
+                            cqt = notEqualsExpr;
+                        }
+                    },
                 constants, outputMember, skipIsNotNull);
 
             return cqt;
         }
 
-        internal StringBuilder AsUserString(StringBuilder builder, string blockAlias, IEnumerable<Constant> constants, MemberPath outputMember, bool skipIsNotNull)
+        internal StringBuilder AsUserString(
+            StringBuilder builder, string blockAlias, IEnumerable<Constant> constants, MemberPath outputMember, bool skipIsNotNull)
         {
             return ToStringHelper(builder, blockAlias, constants, outputMember, skipIsNotNull, true);
         }
@@ -162,14 +170,19 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         ///     - 7, NOT(7, NULL) means NOT(NULL)
         ///     - 7, 8, NOT(7, 8, 9, 10) means NOT(9, 10)
         /// </summary>
-        private void AsCql(Action trueLiteral, Action varIsNotNull, Action<Constant> varNotEqualsTo, IEnumerable<Constant> constants, MemberPath outputMember, bool skipIsNotNull)
+        private void AsCql(
+            Action trueLiteral, Action varIsNotNull, Action<Constant> varNotEqualsTo, IEnumerable<Constant> constants,
+            MemberPath outputMember, bool skipIsNotNull)
         {
-            bool isNullable = outputMember.IsNullable;
+            var isNullable = outputMember.IsNullable;
             // Remove all the constants from negated and then print "x <> C1 .. AND x <> C2 .. AND x <> C3 ..."
-            Set<Constant> negatedConstants = new Set<Constant>(this.Elements, Constant.EqualityComparer);
-            foreach (Constant constant in constants)
+            var negatedConstants = new Set<Constant>(Elements, EqualityComparer);
+            foreach (var constant in constants)
             {
-                if (constant.Equals(this)) { continue; }
+                if (constant.Equals(this))
+                {
+                    continue;
+                }
                 Debug.Assert(negatedConstants.Contains(constant), "Negated constant must contain all positive constants");
                 negatedConstants.Remove(constant);
             }
@@ -181,67 +194,69 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
             else
             {
-                bool hasNull = negatedConstants.Contains(Constant.Null);
-                negatedConstants.Remove(Constant.Null);
+                var hasNull = negatedConstants.Contains(Null);
+                negatedConstants.Remove(Null);
 
                 // We always add IS NOT NULL if the property is nullable (and we cannot skip IS NOT NULL).
                 // Also, if the domain contains NOT NULL, we must add it.
-                
+
                 if (hasNull || (isNullable && !skipIsNotNull))
                 {
                     varIsNotNull();
                 }
 
-                foreach (Constant constant in negatedConstants)
+                foreach (var constant in negatedConstants)
                 {
                     varNotEqualsTo(constant);
                 }
             }
         }
 
-        private StringBuilder ToStringHelper(StringBuilder builder, string blockAlias, IEnumerable<Constant> constants, MemberPath outputMember, bool skipIsNotNull, bool userString)
+        private StringBuilder ToStringHelper(
+            StringBuilder builder, string blockAlias, IEnumerable<Constant> constants, MemberPath outputMember, bool skipIsNotNull,
+            bool userString)
         {
-            bool anyAdded = false;
+            var anyAdded = false;
             AsCql(
                 // trueLiteral action
                 () => builder.Append("true"),
                 // varIsNotNull action
                 () =>
-                {
-                    if (userString)
                     {
-                        outputMember.ToCompactString(builder, blockAlias);
-                        builder.Append(" is not NULL");
-                    }
-                    else
-                    {
-                        outputMember.AsEsql(builder, blockAlias);
-                        builder.Append(" IS NOT NULL");
-                    }
-                    anyAdded = true;
-                },
+                        if (userString)
+                        {
+                            outputMember.ToCompactString(builder, blockAlias);
+                            builder.Append(" is not NULL");
+                        }
+                        else
+                        {
+                            outputMember.AsEsql(builder, blockAlias);
+                            builder.Append(" IS NOT NULL");
+                        }
+                        anyAdded = true;
+                    },
                 // varNotEqualsTo action
                 (constant) =>
-                {
-                    if (anyAdded)
                     {
-                        builder.Append(" AND ");
-                    }
-                    anyAdded = true;
+                        if (anyAdded)
+                        {
+                            builder.Append(" AND ");
+                        }
+                        anyAdded = true;
 
-                    if (userString)
-                    {
-                        outputMember.ToCompactString(builder, blockAlias);
-                        builder.Append(" <>");
-                        constant.ToCompactString(builder);
-                    }
-                    else
-                    {
-                        outputMember.AsEsql(builder, blockAlias);
-                        builder.Append(" <>");
-                        constant.AsEsql(builder, outputMember, blockAlias);
-                    }
-                },
+                        if (userString)
+                        {
+                            outputMember.ToCompactString(builder, blockAlias);
+                            builder.Append(" <>");
+                            constant.ToCompactString(builder);
+                        }
+                        else
+                        {
+                            outputMember.AsEsql(builder, blockAlias);
+                            builder.Append(" <>");
+                            constant.AsEsql(builder, outputMember, blockAlias);
+                        }
+                    },
                 constants, outputMember, skipIsNotNull);
             return builder;
         }
@@ -250,27 +265,28 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             if (IsNotNull())
             {
-                return System.Data.Entity.Resources.Strings.ViewGen_NotNull;
+                return Strings.ViewGen_NotNull;
             }
             else
             {
-                StringBuilder builder = new StringBuilder();
-                bool isFirst = true;
-                foreach (Constant constant in m_negatedDomain)
+                var builder = new StringBuilder();
+                var isFirst = true;
+                foreach (var constant in m_negatedDomain)
                 {
                     // Skip printing out Null if m_negatedDomain has other values
-                    if (m_negatedDomain.Count > 1 && constant.IsNull())
+                    if (m_negatedDomain.Count > 1
+                        && constant.IsNull())
                     {
                         continue;
                     }
                     if (isFirst == false)
                     {
-                        builder.Append(System.Data.Entity.Resources.Strings.ViewGen_CommaBlank);
+                        builder.Append(Strings.ViewGen_CommaBlank);
                     }
                     isFirst = false;
                     builder.Append(constant.ToUserString());
                 }
-                StringBuilder result = new StringBuilder();
+                var result = new StringBuilder();
                 result.Append(Strings.ViewGen_NegatedCellConstant(builder.ToString()));
                 return result.ToString();
             }
@@ -289,6 +305,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 builder.Append(")");
             }
         }
+
         #endregion
     }
 }

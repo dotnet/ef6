@@ -1,40 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.Utils;
-using System.Xml;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-
-namespace System.Data.Entity.Core.Mapping
+﻿namespace System.Data.Entity.Core.Mapping
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Xml;
+
     internal abstract class FunctionImportStructuralTypeMapping
     {
         internal readonly LineInfo LineInfo;
         internal readonly Collection<FunctionImportReturnTypePropertyMapping> ColumnsRenameList;
 
-        internal FunctionImportStructuralTypeMapping(Collection<FunctionImportReturnTypePropertyMapping> columnsRenameList, LineInfo lineInfo)
+        internal FunctionImportStructuralTypeMapping(
+            Collection<FunctionImportReturnTypePropertyMapping> columnsRenameList, LineInfo lineInfo)
         {
-            this.ColumnsRenameList = columnsRenameList;
-            this.LineInfo = lineInfo;
+            ColumnsRenameList = columnsRenameList;
+            LineInfo = lineInfo;
         }
     }
 
     internal sealed class FunctionImportEntityTypeMapping : FunctionImportStructuralTypeMapping
     {
-        internal FunctionImportEntityTypeMapping(IEnumerable<EntityType> isOfTypeEntityTypes,
+        internal FunctionImportEntityTypeMapping(
+            IEnumerable<EntityType> isOfTypeEntityTypes,
             IEnumerable<EntityType> entityTypes, IEnumerable<FunctionImportEntityTypeMappingCondition> conditions,
             Collection<FunctionImportReturnTypePropertyMapping> columnsRenameList,
             LineInfo lineInfo)
             : base(columnsRenameList, lineInfo)
         {
-            this.IsOfTypeEntityTypes = new ReadOnlyCollection<EntityType>(
+            IsOfTypeEntityTypes = new ReadOnlyCollection<EntityType>(
                 EntityUtil.CheckArgumentNull(isOfTypeEntityTypes, "isOfTypeEntityTypes").ToList());
-            this.EntityTypes = new ReadOnlyCollection<EntityType>(
+            EntityTypes = new ReadOnlyCollection<EntityType>(
                 EntityUtil.CheckArgumentNull(entityTypes, "entityTypes").ToList());
-            this.Conditions = new ReadOnlyCollection<FunctionImportEntityTypeMappingCondition>(
+            Conditions = new ReadOnlyCollection<FunctionImportEntityTypeMappingCondition>(
                 EntityUtil.CheckArgumentNull(conditions, "conditions").ToList());
         }
 
@@ -48,15 +48,16 @@ namespace System.Data.Entity.Core.Mapping
         internal IEnumerable<EntityType> GetMappedEntityTypes(ItemCollection itemCollection)
         {
             const bool includeAbstractTypes = false;
-            return this.EntityTypes.Concat(
-                this.IsOfTypeEntityTypes.SelectMany(entityType =>
+            return EntityTypes.Concat(
+                IsOfTypeEntityTypes.SelectMany(
+                    entityType =>
                     MetadataHelper.GetTypeAndSubtypesOf(entityType, itemCollection, includeAbstractTypes)
-                    .Cast<EntityType>()));
+                        .Cast<EntityType>()));
         }
 
         internal IEnumerable<String> GetDiscriminatorColumns()
         {
-            return this.Conditions.Select(condition => condition.ColumnName);
+            return Conditions.Select(condition => condition.ColumnName);
         }
     }
 
@@ -64,10 +65,11 @@ namespace System.Data.Entity.Core.Mapping
     {
         internal readonly ComplexType ReturnType;
 
-        internal FunctionImportComplexTypeMapping(ComplexType returnType, Collection<FunctionImportReturnTypePropertyMapping> columnsRenameList, LineInfo lineInfo)
+        internal FunctionImportComplexTypeMapping(
+            ComplexType returnType, Collection<FunctionImportReturnTypePropertyMapping> columnsRenameList, LineInfo lineInfo)
             : base(columnsRenameList, lineInfo)
         {
-            this.ReturnType = returnType;
+            ReturnType = returnType;
         }
     }
 
@@ -79,9 +81,9 @@ namespace System.Data.Entity.Core.Mapping
 
         internal FunctionImportReturnTypePropertyMapping(string cMember, string sColumn, LineInfo lineInfo)
         {
-            this.CMember = cMember;
-            this.SColumn = sColumn;
-            this.LineInfo = lineInfo;
+            CMember = cMember;
+            SColumn = sColumn;
+            LineInfo = lineInfo;
         }
     }
 
@@ -89,7 +91,7 @@ namespace System.Data.Entity.Core.Mapping
     {
         internal FunctionImportReturnTypeScalarPropertyMapping(string cMember, string sColumn, LineInfo lineInfo)
             : base(cMember, sColumn, lineInfo)
-        { 
+        {
         }
     }
 
@@ -110,19 +112,19 @@ namespace System.Data.Entity.Core.Mapping
             EntityUtil.CheckArgumentNull(isOfTypeEntityTypeColumnsRenameMapping, "isOfTypeEntityTypeColumnsRenameMapping");
             EntityUtil.CheckArgumentNull(entityTypeColumnsRenameMapping, "entityTypeColumnsRenameMapping");
 
-            this.ColumnRenameMapping = new Dictionary<string, FunctionImportReturnTypeStructuralTypeColumnRenameMapping>();
+            ColumnRenameMapping = new Dictionary<string, FunctionImportReturnTypeStructuralTypeColumnRenameMapping>();
 
             // Assign the columns renameMapping to the result dictionary.
-            foreach (EntityType entityType in isOfTypeEntityTypeColumnsRenameMapping.Keys)
+            foreach (var entityType in isOfTypeEntityTypeColumnsRenameMapping.Keys)
             {
-                this.SetStructuralTypeColumnsRename(
-                    entityType, isOfTypeEntityTypeColumnsRenameMapping[entityType], true/*isTypeOf*/);
+                SetStructuralTypeColumnsRename(
+                    entityType, isOfTypeEntityTypeColumnsRenameMapping[entityType], true /*isTypeOf*/);
             }
 
-            foreach (EntityType entityType in entityTypeColumnsRenameMapping.Keys)
+            foreach (var entityType in entityTypeColumnsRenameMapping.Keys)
             {
-                this.SetStructuralTypeColumnsRename(
-                    entityType, entityTypeColumnsRenameMapping[entityType], false/*isTypeOf*/);
+                SetStructuralTypeColumnsRename(
+                    entityType, entityTypeColumnsRenameMapping[entityType], false /*isTypeOf*/);
             }
         }
 
@@ -130,7 +132,7 @@ namespace System.Data.Entity.Core.Mapping
         /// Set the column mappings for each defaultMemberName.
         /// </summary>
         private void SetStructuralTypeColumnsRename(
-            EntityType entityType, 
+            EntityType entityType,
             Collection<FunctionImportReturnTypePropertyMapping> columnsRenameMapping,
             bool isTypeOf)
         {
@@ -139,11 +141,12 @@ namespace System.Data.Entity.Core.Mapping
 
             foreach (var mapping in columnsRenameMapping)
             {
-                if (!this.ColumnRenameMapping.Keys.Contains(mapping.CMember))
+                if (!ColumnRenameMapping.Keys.Contains(mapping.CMember))
                 {
-                    this.ColumnRenameMapping[mapping.CMember] = new FunctionImportReturnTypeStructuralTypeColumnRenameMapping(mapping.CMember);
+                    ColumnRenameMapping[mapping.CMember] = new FunctionImportReturnTypeStructuralTypeColumnRenameMapping(mapping.CMember);
                 }
-                this.ColumnRenameMapping[mapping.CMember].AddRename(new FunctionImportReturnTypeStructuralTypeColumn(mapping.SColumn, entityType, isTypeOf, mapping.LineInfo));
+                ColumnRenameMapping[mapping.CMember].AddRename(
+                    new FunctionImportReturnTypeStructuralTypeColumn(mapping.SColumn, entityType, isTypeOf, mapping.LineInfo));
             }
         }
     }
@@ -154,35 +157,37 @@ namespace System.Data.Entity.Core.Mapping
         internal readonly bool IsTypeOf;
         internal readonly string ColumnName;
         internal readonly LineInfo LineInfo;
-        
+
         internal FunctionImportReturnTypeStructuralTypeColumn(string columnName, StructuralType type, bool isTypeOf, LineInfo lineInfo)
         {
-            this.ColumnName = columnName;
-            this.IsTypeOf = isTypeOf;
-            this.Type = type;
-            this.LineInfo = lineInfo;
+            ColumnName = columnName;
+            IsTypeOf = isTypeOf;
+            Type = type;
+            LineInfo = lineInfo;
         }
     }
 
     internal class FunctionImportReturnTypeStructuralTypeColumnRenameMapping
     {
-        private Collection<FunctionImportReturnTypeStructuralTypeColumn> _columnListForType;
-        private Collection<FunctionImportReturnTypeStructuralTypeColumn> _columnListForIsTypeOfType;
+        private readonly Collection<FunctionImportReturnTypeStructuralTypeColumn> _columnListForType;
+        private readonly Collection<FunctionImportReturnTypeStructuralTypeColumn> _columnListForIsTypeOfType;
+
         /// <summary>
         /// Null if default mapping is not allowed.
         /// </summary>
         private readonly string _defaultMemberName;
-        private Memoizer<StructuralType, FunctionImportReturnTypeStructuralTypeColumn> _renameCache;
+
+        private readonly Memoizer<StructuralType, FunctionImportReturnTypeStructuralTypeColumn> _renameCache;
 
         internal FunctionImportReturnTypeStructuralTypeColumnRenameMapping(string defaultMemberName)
         {
-            this._defaultMemberName = defaultMemberName;
-            this._columnListForType = new Collection<FunctionImportReturnTypeStructuralTypeColumn>();
-            this._columnListForIsTypeOfType = new Collection<FunctionImportReturnTypeStructuralTypeColumn>();
-            this._renameCache = new Memoizer<StructuralType, FunctionImportReturnTypeStructuralTypeColumn>(
-                    this.GetRename, EqualityComparer<StructuralType>.Default);
+            _defaultMemberName = defaultMemberName;
+            _columnListForType = new Collection<FunctionImportReturnTypeStructuralTypeColumn>();
+            _columnListForIsTypeOfType = new Collection<FunctionImportReturnTypeStructuralTypeColumn>();
+            _renameCache = new Memoizer<StructuralType, FunctionImportReturnTypeStructuralTypeColumn>(
+                GetRename, EqualityComparer<StructuralType>.Default);
         }
-        
+
         /// <summary>
         /// <see cref="GetRename(EdmType, out IXmlLineInfo)"/> for more info.
         /// </summary>
@@ -205,21 +210,21 @@ namespace System.Data.Entity.Core.Mapping
             Debug.Assert(type is StructuralType, "we can only rename structural type");
             EntityUtil.CheckArgumentNull(type, "type");
 
-            var rename = this._renameCache.Evaluate(type as StructuralType);
+            var rename = _renameCache.Evaluate(type as StructuralType);
             lineInfo = rename.LineInfo;
             return rename.ColumnName;
         }
 
         private FunctionImportReturnTypeStructuralTypeColumn GetRename(StructuralType typeForRename)
         {
-            FunctionImportReturnTypeStructuralTypeColumn ofTypecolumn = _columnListForType.FirstOrDefault(t => t.Type == typeForRename);
+            var ofTypecolumn = _columnListForType.FirstOrDefault(t => t.Type == typeForRename);
             if (null != ofTypecolumn)
             {
                 return ofTypecolumn;
             }
 
             // if there are duplicate istypeof mapping defined rename for the same column, the last one wins
-            FunctionImportReturnTypeStructuralTypeColumn isOfTypeColumn = _columnListForIsTypeOfType.Where(t => t.Type == typeForRename).LastOrDefault();
+            var isOfTypeColumn = _columnListForIsTypeOfType.Where(t => t.Type == typeForRename).LastOrDefault();
 
             if (null != isOfTypeColumn)
             {
@@ -228,13 +233,13 @@ namespace System.Data.Entity.Core.Mapping
             else
             {
                 // find out all the tyes that is isparent type of this lookup type
-                IEnumerable<FunctionImportReturnTypeStructuralTypeColumn> nodesInBaseHierachy =
+                var nodesInBaseHierachy =
                     _columnListForIsTypeOfType.Where(t => t.Type.IsAssignableFrom(typeForRename));
 
                 if (nodesInBaseHierachy.Count() == 0)
                 {
                     // non of its parent is renamed, so it will take the default one
-                    return new FunctionImportReturnTypeStructuralTypeColumn(this._defaultMemberName, typeForRename, false, null);
+                    return new FunctionImportReturnTypeStructuralTypeColumn(_defaultMemberName, typeForRename, false, null);
                 }
                 else
                 {
@@ -245,7 +250,8 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        private static FunctionImportReturnTypeStructuralTypeColumn GetLowestParentInHierachy(IEnumerable<FunctionImportReturnTypeStructuralTypeColumn> nodesInHierachy)
+        private static FunctionImportReturnTypeStructuralTypeColumn GetLowestParentInHierachy(
+            IEnumerable<FunctionImportReturnTypeStructuralTypeColumn> nodesInHierachy)
         {
             FunctionImportReturnTypeStructuralTypeColumn lowestParent = null;
             foreach (var node in nodesInHierachy)
@@ -256,7 +262,7 @@ namespace System.Data.Entity.Core.Mapping
                 }
                 else if (lowestParent.Type.IsAssignableFrom(node.Type))
                 {
-                    lowestParent = node; 
+                    lowestParent = node;
                 }
             }
             Debug.Assert(null != lowestParent, "We should have the lowest parent");
@@ -270,7 +276,7 @@ namespace System.Data.Entity.Core.Mapping
             if (!renamedColumn.IsTypeOf)
             {
                 // add to collection if the mapping is for specific type
-                this._columnListForType.Add(renamedColumn);
+                _columnListForType.Add(renamedColumn);
             }
             else
             {

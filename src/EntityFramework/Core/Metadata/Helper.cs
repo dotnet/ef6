@@ -2,6 +2,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections;
     using System.Collections.Generic;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
@@ -19,11 +20,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
     internal static partial class Helper
     {
         #region Fields
+
         internal static readonly EdmMember[] EmptyArrayEdmProperty = new EdmMember[0];
 
         #endregion
 
         #region Methods
+
         /// <summary>
         /// The method wraps the GetAttribute method on XPathNavigator.
         /// The problem with using the method directly is that the 
@@ -37,8 +40,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="nav"></param>
         /// <param name="attributeName">name of the attribute</param>
         /// <returns></returns>
-        static internal string GetAttributeValue(XPathNavigator nav, 
-                                                 string attributeName)
+        internal static string GetAttributeValue(
+            XPathNavigator nav,
+            string attributeName)
         {
             //Clone the navigator so that there wont be any sideeffects on the passed in Navigator
             nav = nav.Clone();
@@ -58,9 +62,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="attributeName"></param>
         /// <param name="clrType"></param>
         /// <returns></returns>
-        internal static object GetTypedAttributeValue(XPathNavigator nav, 
-                                                     string attributeName,
-                                                     Type clrType) 
+        internal static object GetTypedAttributeValue(
+            XPathNavigator nav,
+            string attributeName,
+            Type clrType)
         {
             //Clone the navigator so that there wont be any sideeffects on the passed in Navigator
             nav = nav.Clone();
@@ -71,7 +76,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             return attributeValue;
         }
-        
+
         /// <summary>
         /// Searches for Facet Description with the name specified. 
         /// </summary>
@@ -80,7 +85,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns></returns>
         internal static FacetDescription GetFacet(IEnumerable<FacetDescription> facetCollection, string facetName)
         {
-            foreach (FacetDescription facetDescription in facetCollection)
+            foreach (var facetDescription in facetCollection)
             {
                 if (facetDescription.FacetName == facetName)
                 {
@@ -116,10 +121,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             // walk up my type hierarchy list
-            for (EdmType t = firstType.BaseType; t != null; t = t.BaseType)
+            for (var t = firstType.BaseType; t != null; t = t.BaseType)
             {
                 if (t == secondType)
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -145,24 +152,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             //For 1:* and 1:0..1 associations, the end other than 1 i.e. either * or 0..1 ends need to be 
             //mapped to key columns
-            if (associationType.AssociationEndMembers.Any( it =>
+            if (associationType.AssociationEndMembers.Any(
+                it =>
                 it.RelationshipMultiplicity.Equals(RelationshipMultiplicity.One)))
             {
                 {
-                    return associationType.AssociationEndMembers.SingleOrDefault(it =>
+                    return associationType.AssociationEndMembers.SingleOrDefault(
+                        it =>
                         ((it.RelationshipMultiplicity.Equals(RelationshipMultiplicity.Many))
                          || (it.RelationshipMultiplicity.Equals(RelationshipMultiplicity.ZeroOrOne))));
                 }
             }
-            //For 0..1:* associations, * end must be mapped to key.
-            else if (associationType.AssociationEndMembers.Any(it => 
+                //For 0..1:* associations, * end must be mapped to key.
+            else if (associationType.AssociationEndMembers.Any(
+                it =>
                 (it.RelationshipMultiplicity.Equals(RelationshipMultiplicity.ZeroOrOne))))
             {
                 {
-                    return associationType.AssociationEndMembers.SingleOrDefault(it =>
+                    return associationType.AssociationEndMembers.SingleOrDefault(
+                        it =>
                         ((it.RelationshipMultiplicity.Equals(RelationshipMultiplicity.Many))));
                 }
-            }                
+            }
             return null;
         }
 
@@ -173,10 +184,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns></returns>
         internal static String GetCommaDelimitedString(IEnumerable<string> stringList)
         {
-            Debug.Assert(stringList != null , "Expecting a non null list");
-            StringBuilder sb = new StringBuilder();
-            bool first = true;
-            foreach (string part in stringList)
+            Debug.Assert(stringList != null, "Expecting a non null list");
+            var sb = new StringBuilder();
+            var first = true;
+            foreach (var part in stringList)
             {
                 if (!first)
                 {
@@ -186,21 +197,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     first = false;
                 }
-                
+
                 sb.Append(part);
             }
             return sb.ToString();
         }
 
-        
         // effects: concatenates all given enumerations
         internal static IEnumerable<T> Concat<T>(params IEnumerable<T>[] sources)
         {
-            foreach (IEnumerable<T> source in sources)
+            foreach (var source in sources)
             {
                 if (null != source)
                 {
-                    foreach (T element in source)
+                    foreach (var element in source)
                     {
                         yield return element;
                     }
@@ -212,13 +222,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Debug.Assert(xmlReaders != null);
 
-            foreach (XmlReader xmlReader in xmlReaders)
+            foreach (var xmlReader in xmlReaders)
             {
                 ((IDisposable)xmlReader).Dispose();
             }
         }
 
         #region IsXXXType Methods
+
         internal static bool IsStructuralType(EdmType type)
         {
             return (IsComplexType(type) || IsEntityType(type) || IsRelationshipType(type) || IsRowType(type));
@@ -286,15 +297,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal static bool IsEntityTypeBase(EdmType edmType)
         {
-            return Helper.IsEntityType(edmType) ||
-                   Helper.IsRelationshipType(edmType);
+            return IsEntityType(edmType) ||
+                   IsRelationshipType(edmType);
         }
 
         internal static bool IsTransientType(EdmType edmType)
         {
-            return Helper.IsCollectionType(edmType) ||
-                   Helper.IsRefType(edmType) ||
-                   Helper.IsRowType(edmType);
+            return IsCollectionType(edmType) ||
+                   IsRefType(edmType) ||
+                   IsRowType(edmType);
         }
 
         internal static bool IsEntitySet(EntitySetBase entitySetBase)
@@ -316,18 +327,24 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             return BuiltInTypeKind.EdmFunction == item.BuiltInTypeKind;
         }
-               
+
         internal static string GetFileNameFromUri(Uri uri)
         {
-            if ( uri == null )
+            if (uri == null)
+            {
                 throw new ArgumentNullException("uri");
-            if ( uri.IsFile )
+            }
+            if (uri.IsFile)
+            {
                 return uri.LocalPath;
+            }
 
-            if ( uri.IsAbsoluteUri )
+            if (uri.IsAbsoluteUri)
+            {
                 return uri.AbsolutePath;
+            }
 
-            throw new ArgumentException(System.Data.Entity.Resources.Strings.UnacceptableUri(uri),"uri");
+            throw new ArgumentException(Strings.UnacceptableUri(uri), "uri");
         }
 
         internal static bool IsEnumType(EdmType edmType)
@@ -338,12 +355,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal static bool IsUnboundedFacetValue(Facet facet)
         {
-            return object.ReferenceEquals(facet.Value, EdmConstants.UnboundedValue);
+            return ReferenceEquals(facet.Value, EdmConstants.UnboundedValue);
         }
 
         internal static bool IsVariableFacetValue(Facet facet)
         {
-            return object.ReferenceEquals(facet.Value, EdmConstants.VariableValue);
+            return ReferenceEquals(facet.Value, EdmConstants.VariableValue);
         }
 
         internal static bool IsScalarType(EdmType edmType)
@@ -358,7 +375,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal static bool IsSpatialType(EdmType type, out bool isGeographic)
         {
-            PrimitiveType pt = type as PrimitiveType;
+            var pt = type as PrimitiveType;
             if (pt == null)
             {
                 isGeographic = false;
@@ -379,13 +396,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal static bool AreSameSpatialUnionType(PrimitiveType firstType, PrimitiveType secondType)
         {
             // for the purposes of type checking all geographic types should be treated as if they were the Geography union type.
-            if (Helper.IsGeographicTypeKind(firstType.PrimitiveTypeKind) && Helper.IsGeographicTypeKind(secondType.PrimitiveTypeKind))
+            if (IsGeographicTypeKind(firstType.PrimitiveTypeKind)
+                && IsGeographicTypeKind(secondType.PrimitiveTypeKind))
             {
                 return true;
             }
 
             // for the purposes of type checking all geometric types should be treated as if they were the Geometry union type.
-            if (Helper.IsGeometricTypeKind(firstType.PrimitiveTypeKind) && Helper.IsGeometricTypeKind(secondType.PrimitiveTypeKind))
+            if (IsGeometricTypeKind(firstType.PrimitiveTypeKind)
+                && IsGeometricTypeKind(secondType.PrimitiveTypeKind))
             {
                 return true;
             }
@@ -413,12 +432,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return IsStrongGeometricTypeKind(kind) || IsStrongGeographicTypeKind(kind);
         }
 
-        static bool IsStrongGeometricTypeKind(PrimitiveTypeKind kind)
+        private static bool IsStrongGeometricTypeKind(PrimitiveTypeKind kind)
         {
             return kind >= PrimitiveTypeKind.GeometryPoint && kind <= PrimitiveTypeKind.GeometryCollection;
         }
 
-        static bool IsStrongGeographicTypeKind(PrimitiveTypeKind kind)
+        private static bool IsStrongGeographicTypeKind(PrimitiveTypeKind kind)
         {
             return kind >= PrimitiveTypeKind.GeographyPoint && kind <= PrimitiveTypeKind.GeographyCollection;
         }
@@ -430,10 +449,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal static bool IsSpatialType(TypeUsage type, out PrimitiveTypeKind spatialType)
         {
-            if (type.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType)
+            if (type.EdmType.BuiltInTypeKind
+                == BuiltInTypeKind.PrimitiveType)
             {
-                PrimitiveType primitiveType = (PrimitiveType)type.EdmType;
-                if (IsGeographicTypeKind(primitiveType.PrimitiveTypeKind) || IsGeometricTypeKind(primitiveType.PrimitiveTypeKind))
+                var primitiveType = (PrimitiveType)type.EdmType;
+                if (IsGeographicTypeKind(primitiveType.PrimitiveTypeKind)
+                    || IsGeometricTypeKind(primitiveType.PrimitiveTypeKind))
                 {
                     spatialType = primitiveType.PrimitiveTypeKind;
                     return true;
@@ -447,7 +468,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #endregion /// IsXXXType region
 
         /// <remarks>Performance of Enum.ToString() is slow and we use this value in building Identity</remarks>
-        internal static string ToString(System.Data.ParameterDirection value)
+        internal static string ToString(ParameterDirection value)
         {
             switch (value)
             {
@@ -466,7 +487,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <remarks>Performance of Enum.ToString() is slow and we use this value in building Identity</remarks>
-        internal static string ToString(System.Data.Entity.Core.Metadata.Edm.ParameterMode value)
+        internal static string ToString(ParameterMode value)
         {
             switch (value)
             {
@@ -504,13 +525,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private static readonly Dictionary<PrimitiveTypeKind, long[]> _enumUnderlyingTypeRanges =
             new Dictionary<PrimitiveTypeKind, long[]>
-            {
-                { PrimitiveTypeKind.Byte,  new long[] { Byte.MinValue,  Byte.MaxValue  } },
-                { PrimitiveTypeKind.SByte, new long[] { SByte.MinValue, SByte.MaxValue } },
-                { PrimitiveTypeKind.Int16, new long[] { Int16.MinValue, Int16.MaxValue } },
-                { PrimitiveTypeKind.Int32, new long[] { Int32.MinValue, Int32.MaxValue } },
-                { PrimitiveTypeKind.Int64, new long[] { Int64.MinValue, Int64.MaxValue } },
-            };
+                {
+                    { PrimitiveTypeKind.Byte, new long[] { Byte.MinValue, Byte.MaxValue } },
+                    { PrimitiveTypeKind.SByte, new long[] { SByte.MinValue, SByte.MaxValue } },
+                    { PrimitiveTypeKind.Int16, new long[] { Int16.MinValue, Int16.MaxValue } },
+                    { PrimitiveTypeKind.Int32, new long[] { Int32.MinValue, Int32.MaxValue } },
+                    { PrimitiveTypeKind.Int64, new[] { Int64.MinValue, Int64.MaxValue } },
+                };
 
         /// <summary>
         /// Verifies whether a value of a member of an enumeration type is in range according to underlying type of the enumeration type.
@@ -539,9 +560,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Debug.Assert(type != null, "type != null");
             Debug.Assert(IsScalarType(type), "This method must not be called for types that are neither primitive nor enums.");
 
-            return Helper.IsEnumType(type) ?
-                GetUnderlyingEdmTypeForEnumType(type) : 
-                (PrimitiveType)type;
+            return IsEnumType(type)
+                       ? GetUnderlyingEdmTypeForEnumType(type)
+                       : (PrimitiveType)type;
         }
 
         /// <summary>
@@ -561,17 +582,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Debug.Assert(type != null, "type != null");
             Debug.Assert(IsPrimitiveType(type), "This method can be called only for enums.");
-            PrimitiveType primitiveType = (PrimitiveType)type;
+            var primitiveType = (PrimitiveType)type;
 
-            if (IsGeographicType(primitiveType) && primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.Geography)
+            if (IsGeographicType(primitiveType)
+                && primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.Geography)
             {
                 return PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Geography);
             }
-            else if (IsGeometricType(primitiveType) && primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.Geometry)
+            else if (IsGeometricType(primitiveType)
+                     && primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.Geometry)
             {
                 return PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Geometry);
             }
-            else 
+            else
             {
                 return primitiveType;
             }

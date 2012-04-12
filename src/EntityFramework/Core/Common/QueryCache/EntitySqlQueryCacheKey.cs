@@ -1,6 +1,5 @@
 namespace System.Data.Entity.Core.Common.QueryCache
 {
-    using System;
     using System.Data.Entity.Core.Objects;
     using System.Diagnostics;
 
@@ -18,7 +17,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// The name of the default container in effect when the Entity-SQL text was parsed
         /// (affects whether or not the text can be successfully parsed)
         /// </summary>
-        private string _defaultContainer;
+        private readonly string _defaultContainer;
 
         /// <summary>
         /// Entity Sql statement
@@ -59,14 +58,14 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// <param name="parametersToken">A string representation of the parameters to the query (may be null)</param>
         /// <param name="includePathsToken">A string representation of the Include span paths in effect (may be null)</param>
         /// <param name="mergeOption">The merge option in effect. Required for result assembly.</param>
-        internal EntitySqlQueryCacheKey(string defaultContainerName,
-                                     string eSqlStatement,
-                                     int parameterCount,
-                                     string parametersToken,
-                                     string includePathsToken,
-                                     MergeOption mergeOption,
-                                     Type resultType)
-            : base()
+        internal EntitySqlQueryCacheKey(
+            string defaultContainerName,
+            string eSqlStatement,
+            int parameterCount,
+            string parametersToken,
+            string includePathsToken,
+            MergeOption mergeOption,
+            Type resultType)
         {
             Debug.Assert(null != eSqlStatement, "eSqlStatement must not be null");
 
@@ -78,7 +77,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
             _mergeOption = mergeOption;
             _resultType = resultType;
 
-            int combinedHash = _eSqlStatement.GetHashCode() ^
+            var combinedHash = _eSqlStatement.GetHashCode() ^
                                _mergeOption.GetHashCode();
 
             if (_parametersToken != null)
@@ -107,21 +106,22 @@ namespace System.Data.Entity.Core.Common.QueryCache
         public override bool Equals(object otherObject)
         {
             Debug.Assert(null != otherObject, "otherObject must not be null");
-            if (typeof(EntitySqlQueryCacheKey) != otherObject.GetType())
+            if (typeof(EntitySqlQueryCacheKey)
+                != otherObject.GetType())
             {
                 return false;
             }
 
-            EntitySqlQueryCacheKey otherObjectQueryCacheKey = (EntitySqlQueryCacheKey)otherObject;
+            var otherObjectQueryCacheKey = (EntitySqlQueryCacheKey)otherObject;
 
             // also use result type...
             return (_parameterCount == otherObjectQueryCacheKey._parameterCount) &&
                    (_mergeOption == otherObjectQueryCacheKey._mergeOption) &&
-                    Equals(otherObjectQueryCacheKey._defaultContainer, _defaultContainer) &&
-                    Equals(otherObjectQueryCacheKey._eSqlStatement, _eSqlStatement) &&
-                    Equals(otherObjectQueryCacheKey._includePathsToken, _includePathsToken) &&
-                    Equals(otherObjectQueryCacheKey._parametersToken, _parametersToken) &&
-                    Equals(otherObjectQueryCacheKey._resultType, _resultType);
+                   Equals(otherObjectQueryCacheKey._defaultContainer, _defaultContainer) &&
+                   Equals(otherObjectQueryCacheKey._eSqlStatement, _eSqlStatement) &&
+                   Equals(otherObjectQueryCacheKey._includePathsToken, _includePathsToken) &&
+                   Equals(otherObjectQueryCacheKey._parametersToken, _parametersToken) &&
+                   Equals(otherObjectQueryCacheKey._resultType, _resultType);
         }
 
         /// <summary>
@@ -142,8 +142,13 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// </returns>
         public override string ToString()
         {
-            return String.Join("|", new string[] { _defaultContainer, _eSqlStatement, _parametersToken, _includePathsToken, Enum.GetName(typeof(MergeOption), _mergeOption) });
+            return String.Join(
+                "|",
+                new[]
+                    {
+                        _defaultContainer, _eSqlStatement, _parametersToken, _includePathsToken,
+                        Enum.GetName(typeof(MergeOption), _mergeOption)
+                    });
         }
-
     }
 }

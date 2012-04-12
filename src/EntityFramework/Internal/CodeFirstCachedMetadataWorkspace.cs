@@ -1,8 +1,8 @@
 namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -10,7 +10,6 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;

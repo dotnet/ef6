@@ -1,9 +1,6 @@
-using System;
-using System.Globalization;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
 using md = System.Data.Entity.Core.Metadata.Edm;
 using cqt = System.Data.Entity.Core.Common.CommandTrees;
+
 //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
 
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
@@ -20,12 +17,13 @@ using cqt = System.Data.Entity.Core.Common.CommandTrees;
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
 
-
 //
 // A CommandPlan represents the plan for a query.
 //
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+
     #region CommandInfo
 
     /// <summary>
@@ -42,9 +40,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             get { return _commandTree; }
         }
+
         #endregion
 
         #region private state
+
         private readonly cqt.DbCommandTree _commandTree;
 
         #endregion
@@ -59,6 +59,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             _commandTree = commandTree;
         }
+
         #endregion
     }
 

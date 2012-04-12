@@ -3,10 +3,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Common.Utils.Boolean;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting;
     using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
     using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Globalization;
@@ -19,12 +19,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
     /// </summary>
     internal class RewritingValidator
     {
-
-        private ViewgenContext _viewgenContext;
-        private MemberDomainMap _domainMap;
-        private CellTreeNode _basicView;
-        private IEnumerable<MemberPath> _keyAttributes;
-        private ErrorLog _errorLog;
+        private readonly ViewgenContext _viewgenContext;
+        private readonly MemberDomainMap _domainMap;
+        private readonly CellTreeNode _basicView;
+        private readonly IEnumerable<MemberPath> _keyAttributes;
+        private readonly ErrorLog _errorLog;
 
         internal RewritingValidator(ViewgenContext context, CellTreeNode basicView)
         {
@@ -41,24 +40,24 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         {
             // turn rewritings into cell trees
             // plain: according to rewritings for case statements
-            Dictionary<MemberValueBinding, CellTreeNode> plainMemberValueTrees = CreateMemberValueTrees(false);
+            var plainMemberValueTrees = CreateMemberValueTrees(false);
             // complement: uses complement rewriting for the last WHEN ... THEN
             // This is how the final case statement will be generated in update views
-            Dictionary<MemberValueBinding, CellTreeNode> complementMemberValueTrees = CreateMemberValueTrees(true);
+            var complementMemberValueTrees = CreateMemberValueTrees(true);
 
-            WhereClauseVisitor plainWhereClauseVisitor = new WhereClauseVisitor(_basicView, plainMemberValueTrees);
-            WhereClauseVisitor complementWhereClauseVisitor = new WhereClauseVisitor(_basicView, complementMemberValueTrees);
+            var plainWhereClauseVisitor = new WhereClauseVisitor(_basicView, plainMemberValueTrees);
+            var complementWhereClauseVisitor = new WhereClauseVisitor(_basicView, complementMemberValueTrees);
 
             // produce CellTree for each SQuery
-            foreach (LeftCellWrapper wrapper in _viewgenContext.AllWrappersForExtent)
+            foreach (var wrapper in _viewgenContext.AllWrappersForExtent)
             {
-                Cell cell = wrapper.OnlyInputCell;
+                var cell = wrapper.OnlyInputCell;
                 // construct cell tree for CQuery
                 CellTreeNode cQueryTree = new LeafCellTreeNode(_viewgenContext, wrapper);
                 // sQueryTree: unfolded update view inside S-side of the cell
                 CellTreeNode sQueryTree;
                 // construct cell tree for SQuery (will be used for domain constraint checking)
-                CellTreeNode complementSQueryTreeForCondition = complementWhereClauseVisitor.GetCellTreeNode(cell.SQuery.WhereClause);
+                var complementSQueryTreeForCondition = complementWhereClauseVisitor.GetCellTreeNode(cell.SQuery.WhereClause);
                 Debug.Assert(complementSQueryTreeForCondition != null, "Rewriting for S-side query is unsatisfiable");
                 if (complementSQueryTreeForCondition == null)
                 {
@@ -76,25 +75,27 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
                 // Append in-set or in-end condition to both queries to produce more concise errors
                 // Otherwise, the errors are of the form "if there exists an entity in extent, then violation". We don't care about empty extents
-                BoolExpression inExtentCondition = BoolExpression.CreateLiteral(wrapper.CreateRoleBoolean(), _viewgenContext.MemberMaps.QueryDomainMap);
+                var inExtentCondition = BoolExpression.CreateLiteral(wrapper.CreateRoleBoolean(), _viewgenContext.MemberMaps.QueryDomainMap);
 
                 BoolExpression unsatisfiedConstraint;
-                if (!CheckEquivalence(cQueryTree.RightFragmentQuery, sQueryTree.RightFragmentQuery, inExtentCondition,
-                                      out unsatisfiedConstraint))
+                if (!CheckEquivalence(
+                    cQueryTree.RightFragmentQuery, sQueryTree.RightFragmentQuery, inExtentCondition,
+                    out unsatisfiedConstraint))
                 {
-                    string extentName = StringUtil.FormatInvariant("{0}", _viewgenContext.Extent);
+                    var extentName = StringUtil.FormatInvariant("{0}", _viewgenContext.Extent);
 
                     // Simplify to produce more readable error messages
                     cQueryTree.RightFragmentQuery.Condition.ExpensiveSimplify();
                     sQueryTree.RightFragmentQuery.Condition.ExpensiveSimplify();
 
-                    String message = Strings.ViewGen_CQ_PartitionConstraint(extentName);
+                    var message = Strings.ViewGen_CQ_PartitionConstraint(extentName);
 
-                    ReportConstraintViolation(message, unsatisfiedConstraint, ViewGenErrorCode.PartitionConstraintViolation,
-                                              cQueryTree.GetLeaves().Concat(sQueryTree.GetLeaves()));
+                    ReportConstraintViolation(
+                        message, unsatisfiedConstraint, ViewGenErrorCode.PartitionConstraintViolation,
+                        cQueryTree.GetLeaves().Concat(sQueryTree.GetLeaves()));
                 }
 
-                CellTreeNode plainSQueryTreeForCondition = plainWhereClauseVisitor.GetCellTreeNode(cell.SQuery.WhereClause);
+                var plainSQueryTreeForCondition = plainWhereClauseVisitor.GetCellTreeNode(cell.SQuery.WhereClause);
                 Debug.Assert(plainSQueryTreeForCondition != null, "Rewriting for S-side query is unsatisfiable");
                 if (plainSQueryTreeForCondition != null)
                 {
@@ -120,24 +121,24 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             {
                 ExceptionHelpers.ThrowMappingException(_errorLog, _viewgenContext.Config);
             }
-
         }
 
         // Checks equivalence of two C-side queries
         // inExtentConstraint holds a role variable that effectively denotes that some extent is non-empty
-        private bool CheckEquivalence(FragmentQuery cQuery, FragmentQuery sQuery, BoolExpression inExtentCondition,
-                                      out BoolExpression unsatisfiedConstraint)
+        private bool CheckEquivalence(
+            FragmentQuery cQuery, FragmentQuery sQuery, BoolExpression inExtentCondition,
+            out BoolExpression unsatisfiedConstraint)
         {
-            FragmentQuery cMinusSx = _viewgenContext.RightFragmentQP.Difference(cQuery, sQuery);
-            FragmentQuery sMinusCx = _viewgenContext.RightFragmentQP.Difference(sQuery, cQuery);
+            var cMinusSx = _viewgenContext.RightFragmentQP.Difference(cQuery, sQuery);
+            var sMinusCx = _viewgenContext.RightFragmentQP.Difference(sQuery, cQuery);
 
             // add in-extent condition
-            FragmentQuery cMinusS = FragmentQuery.Create(BoolExpression.CreateAnd(cMinusSx.Condition, inExtentCondition));
-            FragmentQuery sMinusC = FragmentQuery.Create(BoolExpression.CreateAnd(sMinusCx.Condition, inExtentCondition));
+            var cMinusS = FragmentQuery.Create(BoolExpression.CreateAnd(cMinusSx.Condition, inExtentCondition));
+            var sMinusC = FragmentQuery.Create(BoolExpression.CreateAnd(sMinusCx.Condition, inExtentCondition));
 
             unsatisfiedConstraint = null;
-            bool forwardInclusion = true;
-            bool backwardInclusion = true;
+            var forwardInclusion = true;
+            var backwardInclusion = true;
 
             if (_viewgenContext.RightFragmentQP.IsSatisfiable(cMinusS))
             {
@@ -160,7 +161,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             }
         }
 
-        private void ReportConstraintViolation(string message, BoolExpression extraConstraint, ViewGenErrorCode errorCode, IEnumerable<LeftCellWrapper> relevantWrappers)
+        private void ReportConstraintViolation(
+            string message, BoolExpression extraConstraint, ViewGenErrorCode errorCode, IEnumerable<LeftCellWrapper> relevantWrappers)
         {
             if (ErrorPatternMatcher.FindMappingErrors(_viewgenContext, _domainMap, _errorLog))
             {
@@ -169,11 +171,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
             extraConstraint.ExpensiveSimplify();
             // gather all relevant cell wrappers and sort them in the original input order
-            HashSet<LeftCellWrapper> relevantCellWrappers = new HashSet<LeftCellWrapper>(relevantWrappers);
-            List<LeftCellWrapper> relevantWrapperList = new List<LeftCellWrapper>(relevantCellWrappers);
+            var relevantCellWrappers = new HashSet<LeftCellWrapper>(relevantWrappers);
+            var relevantWrapperList = new List<LeftCellWrapper>(relevantCellWrappers);
             relevantWrapperList.Sort(LeftCellWrapper.OriginalCellIdComparer);
 
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.AppendLine(message);
             EntityConfigurationToUserString(extraConstraint, builder);
             _errorLog.AddEntry(new ErrorLog.Record(errorCode, builder.ToString(), relevantCellWrappers, ""));
@@ -182,24 +184,24 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         // according to case statements, where WHEN ... THEN was replaced by ELSE
         private Dictionary<MemberValueBinding, CellTreeNode> CreateMemberValueTrees(bool complementElse)
         {
-            Dictionary<MemberValueBinding, CellTreeNode> memberValueTrees = new Dictionary<MemberValueBinding, CellTreeNode>();
+            var memberValueTrees = new Dictionary<MemberValueBinding, CellTreeNode>();
 
-            foreach (MemberPath column in _domainMap.ConditionMembers(_viewgenContext.Extent))
+            foreach (var column in _domainMap.ConditionMembers(_viewgenContext.Extent))
             {
-                List<Constant> domain = new List<Constant>(_domainMap.GetDomain(column));
+                var domain = new List<Constant>(_domainMap.GetDomain(column));
 
                 // all domain members but the last
-                OpCellTreeNode memberCover = new OpCellTreeNode(_viewgenContext, CellTreeOpType.Union);
-                for (int i = 0; i < domain.Count; i++)
+                var memberCover = new OpCellTreeNode(_viewgenContext, CellTreeOpType.Union);
+                for (var i = 0; i < domain.Count; i++)
                 {
-                    Constant domainValue = domain[i];
-                    MemberValueBinding memberValue = new MemberValueBinding(column, domainValue);
-                    FragmentQuery memberConditionQuery = QueryRewriter.CreateMemberConditionQuery(column, domainValue, _keyAttributes, _domainMap);
+                    var domainValue = domain[i];
+                    var memberValue = new MemberValueBinding(column, domainValue);
+                    var memberConditionQuery = QueryRewriter.CreateMemberConditionQuery(column, domainValue, _keyAttributes, _domainMap);
                     Tile<FragmentQuery> rewriting;
                     if (_viewgenContext.TryGetCachedRewriting(memberConditionQuery, out rewriting))
                     {
                         // turn rewriting into a cell tree
-                        CellTreeNode cellTreeNode = QueryRewriter.TileToCellTree(rewriting, _viewgenContext);
+                        var cellTreeNode = QueryRewriter.TileToCellTree(rewriting, _viewgenContext);
                         memberValueTrees[memberValue] = cellTreeNode;
                         // collect a union of all domain constants but the last
                         if (i < domain.Count - 1)
@@ -215,8 +217,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
                 if (complementElse && domain.Count > 1)
                 {
-                    Constant lastDomainValue = domain[domain.Count - 1];
-                    MemberValueBinding lastMemberValue = new MemberValueBinding(column, lastDomainValue);
+                    var lastDomainValue = domain[domain.Count - 1];
+                    var lastMemberValue = new MemberValueBinding(column, lastDomainValue);
                     memberValueTrees[lastMemberValue] = new OpCellTreeNode(_viewgenContext, CellTreeOpType.LASJ, _basicView, memberCover);
                 }
             }
@@ -228,37 +230,43 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
         #region Checking constraints on projected condition members
 
-        private void CheckConstraintsOnProjectedConditionMembers(Dictionary<MemberValueBinding, CellTreeNode> memberValueTrees, LeftCellWrapper wrapper, CellTreeNode sQueryTree, BoolExpression inExtentCondition)
+        private void CheckConstraintsOnProjectedConditionMembers(
+            Dictionary<MemberValueBinding, CellTreeNode> memberValueTrees, LeftCellWrapper wrapper, CellTreeNode sQueryTree,
+            BoolExpression inExtentCondition)
         {
             // for S-side condition members that are projected,
             // add condition <member=value> on both sides of the mapping constraint, and check key equivalence
             // applies to columns that are (1) projected and (2) conditional
-            foreach (MemberPath column in _domainMap.ConditionMembers(_viewgenContext.Extent))
+            foreach (var column in _domainMap.ConditionMembers(_viewgenContext.Extent))
             {
                 // Get the slot on the C side and see if it is projected
-                int index = _viewgenContext.MemberMaps.ProjectedSlotMap.IndexOf(column);
-                MemberProjectedSlot slot = wrapper.RightCellQuery.ProjectedSlotAt(index) as MemberProjectedSlot;
+                var index = _viewgenContext.MemberMaps.ProjectedSlotMap.IndexOf(column);
+                var slot = wrapper.RightCellQuery.ProjectedSlotAt(index) as MemberProjectedSlot;
                 if (slot != null)
                 {
-                    foreach (Constant domainValue in _domainMap.GetDomain(column))
+                    foreach (var domainValue in _domainMap.GetDomain(column))
                     {
                         CellTreeNode sQueryTreeForDomainValue;
                         if (memberValueTrees.TryGetValue(new MemberValueBinding(column, domainValue), out sQueryTreeForDomainValue))
                         {
-                            BoolExpression cWhereClause = PropagateCellConstantsToWhereClause(wrapper, wrapper.RightCellQuery.WhereClause,
+                            var cWhereClause = PropagateCellConstantsToWhereClause(
+                                wrapper, wrapper.RightCellQuery.WhereClause,
                                 domainValue, column, _viewgenContext.MemberMaps);
-                            FragmentQuery cCombinedQuery = FragmentQuery.Create(cWhereClause);
-                            CellTreeNode sCombinedTree = (sQueryTree == _basicView) ?
-                               sQueryTreeForDomainValue :
-                               new OpCellTreeNode(_viewgenContext, CellTreeOpType.IJ, sQueryTreeForDomainValue, sQueryTree);
+                            var cCombinedQuery = FragmentQuery.Create(cWhereClause);
+                            var sCombinedTree = (sQueryTree == _basicView)
+                                                    ? sQueryTreeForDomainValue
+                                                    : new OpCellTreeNode(
+                                                          _viewgenContext, CellTreeOpType.IJ, sQueryTreeForDomainValue, sQueryTree);
 
                             BoolExpression unsatisfiedConstraint;
-                            if (!CheckEquivalence(cCombinedQuery, sCombinedTree.RightFragmentQuery, inExtentCondition,
-                                                  out unsatisfiedConstraint))
+                            if (!CheckEquivalence(
+                                cCombinedQuery, sCombinedTree.RightFragmentQuery, inExtentCondition,
+                                out unsatisfiedConstraint))
                             {
-                                string memberLossMessage = Strings.ViewGen_CQ_DomainConstraint(slot.ToUserString());
-                                ReportConstraintViolation(memberLossMessage, unsatisfiedConstraint, ViewGenErrorCode.DomainConstraintViolation,
-                                                          sCombinedTree.GetLeaves().Concat(new LeftCellWrapper[] { wrapper }));
+                                var memberLossMessage = Strings.ViewGen_CQ_DomainConstraint(slot.ToUserString());
+                                ReportConstraintViolation(
+                                    memberLossMessage, unsatisfiedConstraint, ViewGenErrorCode.DomainConstraintViolation,
+                                    sCombinedTree.GetLeaves().Concat(new[] { wrapper }));
                             }
                         }
                     }
@@ -266,17 +274,17 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             }
         }
 
-
         // effects: Given a sequence of constants that need to be propagated
         // to the C-side and the current boolean expression, generates a new
         // expression of the form "expression AND C-side Member in constants"
         // expression" and returns it. Each constant is propagated only if member
         // is projected -- if member is not projected, returns "expression"
-        internal static BoolExpression PropagateCellConstantsToWhereClause(LeftCellWrapper wrapper, BoolExpression expression,
-                                                                          Constant constant, MemberPath member,
-                                                                          MemberMaps memberMaps)
+        internal static BoolExpression PropagateCellConstantsToWhereClause(
+            LeftCellWrapper wrapper, BoolExpression expression,
+            Constant constant, MemberPath member,
+            MemberMaps memberMaps)
         {
-            MemberProjectedSlot joinSlot = wrapper.GetCSideMappedSlotForSMember(member);
+            var joinSlot = wrapper.GetCSideMappedSlotForSMember(member);
             if (joinSlot == null)
             {
                 return expression;
@@ -291,10 +299,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
             // We want the possible values for joinSlot.MemberPath which is a
             // C-side element -- so we use the queryDomainMap
-            IEnumerable<Constant> possibleValues = memberMaps.QueryDomainMap.GetDomain(joinSlot.MemberPath);
+            var possibleValues = memberMaps.QueryDomainMap.GetDomain(joinSlot.MemberPath);
             // Note: the values in constaints can be null or not null as
             // well (i.e., just not scalarConstants)
-            Set<Constant> allowedValues = new Set<Constant>(Constant.EqualityComparer);
+            var allowedValues = new Set<Constant>(Constant.EqualityComparer);
             if (negatedConstant != null)
             {
                 // select all values from the c-side domain that are not in the negated set
@@ -307,11 +315,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             }
             MemberRestriction restriction = new ScalarRestriction(joinSlot.MemberPath, allowedValues, possibleValues);
 
-            BoolExpression result = BoolExpression.CreateAnd(expression, BoolExpression.CreateLiteral(restriction, memberMaps.QueryDomainMap));
+            var result = BoolExpression.CreateAnd(expression, BoolExpression.CreateLiteral(restriction, memberMaps.QueryDomainMap));
             return result;
         }
-        #endregion
 
+        #endregion
 
         /// <summary>
         /// Given a LeftCellWrapper for the S-side fragment and a non-nullable colum m, return a CQuery with nullability condition
@@ -319,20 +327,21 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         /// </summary>
         private static FragmentQuery AddNullConditionOnCSideFragment(LeftCellWrapper wrapper, MemberPath member, MemberMaps memberMaps)
         {
-            MemberProjectedSlot projectedSlot = wrapper.GetCSideMappedSlotForSMember(member);
-            if (projectedSlot == null || !projectedSlot.MemberPath.IsNullable) //don't bother checking further fore non nullable C-side member
+            var projectedSlot = wrapper.GetCSideMappedSlotForSMember(member);
+            if (projectedSlot == null
+                || !projectedSlot.MemberPath.IsNullable) //don't bother checking further fore non nullable C-side member
             {
                 return null;
             }
-            BoolExpression expression = wrapper.RightCellQuery.WhereClause;
+            var expression = wrapper.RightCellQuery.WhereClause;
 
-            IEnumerable<Constant> possibleValues = memberMaps.QueryDomainMap.GetDomain(projectedSlot.MemberPath);
-            Set<Constant> allowedValues = new Set<Constant>(Constant.EqualityComparer);
+            var possibleValues = memberMaps.QueryDomainMap.GetDomain(projectedSlot.MemberPath);
+            var allowedValues = new Set<Constant>(Constant.EqualityComparer);
             allowedValues.Add(Constant.Null);
 
             //Create a condition as conjunction of originalCondition and slot IS NULL
             MemberRestriction restriction = new ScalarRestriction(projectedSlot.MemberPath, allowedValues, possibleValues);
-            BoolExpression resultingExpr = BoolExpression.CreateAnd(expression, BoolExpression.CreateLiteral(restriction, memberMaps.QueryDomainMap));
+            var resultingExpr = BoolExpression.CreateAnd(expression, BoolExpression.CreateLiteral(restriction, memberMaps.QueryDomainMap));
 
             return FragmentQuery.Create(resultingExpr);
         }
@@ -344,24 +353,26 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         private void CheckConstraintsOnNonNullableMembers(LeftCellWrapper wrapper)
         {
             //For each non-condition member that has non-nullability constraint
-            foreach (MemberPath column in _domainMap.NonConditionMembers(_viewgenContext.Extent))
+            foreach (var column in _domainMap.NonConditionMembers(_viewgenContext.Extent))
             {
-                bool isColumnSimpleType = (column.EdmType as System.Data.Entity.Core.Metadata.Edm.SimpleType) != null;
+                var isColumnSimpleType = (column.EdmType as SimpleType) != null;
 
                 if (!column.IsNullable && isColumnSimpleType)
                 {
-                    FragmentQuery cFragment = AddNullConditionOnCSideFragment(wrapper, column, _viewgenContext.MemberMaps);
+                    var cFragment = AddNullConditionOnCSideFragment(wrapper, column, _viewgenContext.MemberMaps);
 
-                    if (cFragment != null && _viewgenContext.RightFragmentQP.IsSatisfiable(cFragment))
+                    if (cFragment != null
+                        && _viewgenContext.RightFragmentQP.IsSatisfiable(cFragment))
                     {
-                        _errorLog.AddEntry(new ErrorLog.Record(ViewGenErrorCode.NullableMappingForNonNullableColumn, Strings.Viewgen_NullableMappingForNonNullableColumn(wrapper.LeftExtent.ToString(), column.ToFullString()), wrapper.Cells, ""));
+                        _errorLog.AddEntry(
+                            new ErrorLog.Record(
+                                ViewGenErrorCode.NullableMappingForNonNullableColumn,
+                                Strings.Viewgen_NullableMappingForNonNullableColumn(wrapper.LeftExtent.ToString(), column.ToFullString()),
+                                wrapper.Cells, ""));
                     }
                 }
             }
-
         }
-
-
 
         #region Methods for turning a boolean condition into user string
 
@@ -370,18 +381,22 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             //By default write the Round tripping message
             EntityConfigurationToUserString(condition, builder, true);
         }
-        internal static void EntityConfigurationToUserString(BoolExpression condition, StringBuilder builder, bool writeRoundTrippingMessage)
+
+        internal static void EntityConfigurationToUserString(
+            BoolExpression condition, StringBuilder builder, bool writeRoundTrippingMessage)
         {
             condition.AsUserString(builder, "PK", writeRoundTrippingMessage);
         }
+
         #endregion
 
         #region WhereClauseVisitor: turns WHERE clause into CellTreeNode
+
         private class WhereClauseVisitor : Visitor<DomainConstraint<BoolLiteral, Constant>, CellTreeNode>
         {
-            ViewgenContext _viewgenContext;
-            CellTreeNode _topLevelTree;
-            Dictionary<MemberValueBinding, CellTreeNode> _memberValueTrees;
+            private readonly ViewgenContext _viewgenContext;
+            private readonly CellTreeNode _topLevelTree;
+            private readonly Dictionary<MemberValueBinding, CellTreeNode> _memberValueTrees;
 
             internal WhereClauseVisitor(CellTreeNode topLevelTree, Dictionary<MemberValueBinding, CellTreeNode> memberValueTrees)
             {
@@ -398,9 +413,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
             internal override CellTreeNode VisitAnd(AndExpr<DomainConstraint<BoolLiteral, Constant>> expression)
             {
-                IEnumerable<CellTreeNode> childrenTrees = AcceptChildren(expression.Children);
-                OpCellTreeNode node = new OpCellTreeNode(_viewgenContext, CellTreeOpType.IJ);
-                foreach (CellTreeNode childNode in childrenTrees)
+                var childrenTrees = AcceptChildren(expression.Children);
+                var node = new OpCellTreeNode(_viewgenContext, CellTreeOpType.IJ);
+                foreach (var childNode in childrenTrees)
                 {
                     if (childNode == null)
                     {
@@ -421,13 +436,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
             internal override CellTreeNode VisitTerm(TermExpr<DomainConstraint<BoolLiteral, Constant>> expression)
             {
-                MemberRestriction oneOf = (MemberRestriction)expression.Identifier.Variable.Identifier;
-                Set<Constant> range = expression.Identifier.Range;
+                var oneOf = (MemberRestriction)expression.Identifier.Variable.Identifier;
+                var range = expression.Identifier.Range;
 
                 // create a disjunction
-                OpCellTreeNode disjunctionNode = new OpCellTreeNode(_viewgenContext, CellTreeOpType.Union);
+                var disjunctionNode = new OpCellTreeNode(_viewgenContext, CellTreeOpType.Union);
                 CellTreeNode singleNode = null;
-                foreach (Constant value in range)
+                foreach (var value in range)
                 {
                     if (TryGetCellTreeNode(oneOf.RestrictedMemberSlot.MemberPath, value, out singleNode))
                     {
@@ -439,8 +454,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 {
                     case 0:
                         return null; // empty rewriting
-                    case 1: return singleNode;
-                    default: return disjunctionNode;
+                    case 1:
+                        return singleNode;
+                    default:
+                        return disjunctionNode;
                 }
             }
 
@@ -448,10 +465,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             {
                 throw new NotImplementedException();
             }
+
             internal override CellTreeNode VisitNot(NotExpr<DomainConstraint<BoolLiteral, Constant>> expression)
             {
                 throw new NotImplementedException();
             }
+
             internal override CellTreeNode VisitOr(OrExpr<DomainConstraint<BoolLiteral, Constant>> expression)
             {
                 throw new NotImplementedException();
@@ -464,18 +483,22 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
             private IEnumerable<CellTreeNode> AcceptChildren(IEnumerable<BoolExpr<DomainConstraint<BoolLiteral, Constant>>> children)
             {
-                foreach (BoolExpr<DomainConstraint<BoolLiteral, Constant>> child in children) { yield return child.Accept(this); }
+                foreach (var child in children)
+                {
+                    yield return child.Accept(this);
+                }
             }
-
         }
+
         #endregion
 
         #region DomainConstraintVisitor: checks domain constraints
+
         internal class DomainConstraintVisitor : CellTreeNode.SimpleCellTreeVisitor<bool, bool>
         {
-            LeftCellWrapper m_wrapper;
-            ViewgenContext m_viewgenContext;
-            ErrorLog m_errorLog;
+            private readonly LeftCellWrapper m_wrapper;
+            private readonly ViewgenContext m_viewgenContext;
+            private readonly ErrorLog m_errorLog;
 
             private DomainConstraintVisitor(LeftCellWrapper wrapper, ViewgenContext context, ErrorLog errorLog)
             {
@@ -484,30 +507,31 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 m_errorLog = errorLog;
             }
 
-            internal static void CheckConstraints(CellTreeNode node, LeftCellWrapper wrapper,
-                                                      ViewgenContext context, ErrorLog errorLog)
+            internal static void CheckConstraints(
+                CellTreeNode node, LeftCellWrapper wrapper,
+                ViewgenContext context, ErrorLog errorLog)
             {
-                DomainConstraintVisitor visitor = new DomainConstraintVisitor(wrapper, context, errorLog);
-                node.Accept<bool, bool>(visitor, true);
+                var visitor = new DomainConstraintVisitor(wrapper, context, errorLog);
+                node.Accept(visitor, true);
             }
 
             internal override bool VisitLeaf(LeafCellTreeNode node, bool dummy)
             {
                 // make sure all projected attributes in wrapper correspond exactly to those in node
-                CellQuery thisQuery = m_wrapper.RightCellQuery;
-                CellQuery thatQuery = node.LeftCellWrapper.RightCellQuery;
-                List<MemberPath> collidingColumns = new List<MemberPath>();
+                var thisQuery = m_wrapper.RightCellQuery;
+                var thatQuery = node.LeftCellWrapper.RightCellQuery;
+                var collidingColumns = new List<MemberPath>();
                 if (thisQuery != thatQuery)
                 {
-                    for (int i = 0; i < thisQuery.NumProjectedSlots; i++)
+                    for (var i = 0; i < thisQuery.NumProjectedSlots; i++)
                     {
-                        MemberProjectedSlot thisSlot = thisQuery.ProjectedSlotAt(i) as MemberProjectedSlot;
+                        var thisSlot = thisQuery.ProjectedSlotAt(i) as MemberProjectedSlot;
                         if (thisSlot != null)
                         {
-                            MemberProjectedSlot thatSlot = thatQuery.ProjectedSlotAt(i) as MemberProjectedSlot;
+                            var thatSlot = thatQuery.ProjectedSlotAt(i) as MemberProjectedSlot;
                             if (thatSlot != null)
                             {
-                                MemberPath tableMember = m_viewgenContext.MemberMaps.ProjectedSlotMap[i];
+                                var tableMember = m_viewgenContext.MemberMaps.ProjectedSlotMap[i];
                                 if (!tableMember.IsPartOfKey)
                                 {
                                     if (!MemberPath.EqualityComparer.Equals(thisSlot.MemberPath, thatSlot.MemberPath))
@@ -521,10 +545,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 }
                 if (collidingColumns.Count > 0)
                 {
-                    string columnsString = MemberPath.PropertiesToUserString(collidingColumns, false);
-                    string message = Strings.ViewGen_NonKeyProjectedWithOverlappingPartitions(columnsString);
-                    ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.NonKeyProjectedWithOverlappingPartitions, message,
-                                                                 new LeftCellWrapper[] { m_wrapper, node.LeftCellWrapper }, String.Empty);
+                    var columnsString = MemberPath.PropertiesToUserString(collidingColumns, false);
+                    var message = Strings.ViewGen_NonKeyProjectedWithOverlappingPartitions(columnsString);
+                    var record = new ErrorLog.Record(
+                        ViewGenErrorCode.NonKeyProjectedWithOverlappingPartitions, message,
+                        new[] { m_wrapper, node.LeftCellWrapper }, String.Empty);
                     m_errorLog.AddEntry(record);
                 }
                 return true;
@@ -532,24 +557,27 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
             internal override bool VisitOpNode(OpCellTreeNode node, bool dummy)
             {
-                if (node.OpType == CellTreeOpType.LASJ)
+                if (node.OpType
+                    == CellTreeOpType.LASJ)
                 {
                     // add conditions only on the positive node
-                    node.Children[0].Accept<bool, bool>(this, dummy);
+                    node.Children[0].Accept(this, dummy);
                 }
                 else
                 {
-                    foreach (CellTreeNode child in node.Children)
+                    foreach (var child in node.Children)
                     {
-                        child.Accept<bool, bool>(this, dummy);
+                        child.Accept(this, dummy);
                     }
                 }
                 return true;
             }
         }
+
         #endregion
 
         #region MemberValueBinding struct: (MemberPath, CellConstant) pair
+
         private struct MemberValueBinding : IEquatable<MemberValueBinding>
         {
             internal readonly MemberPath Member;
@@ -576,6 +604,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
             #endregion
         }
+
         #endregion
     }
 }

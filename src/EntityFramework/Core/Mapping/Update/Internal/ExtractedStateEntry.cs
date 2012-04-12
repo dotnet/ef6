@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Diagnostics;
-using System.Linq;
-namespace System.Data.Entity.Core.Mapping.Update.Internal
+﻿namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
+    using System.Diagnostics;
+
     /// <summary>
     /// Represents the data contained in a StateEntry using internal data structures
     /// of the UpdatePipeline.
@@ -19,37 +16,37 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         internal ExtractedStateEntry(UpdateTranslator translator, IEntityStateEntry stateEntry)
         {
             Debug.Assert(null != stateEntry, "stateEntry must not be null");
-            this.State = stateEntry.State;
-            this.Source = stateEntry;
+            State = stateEntry.State;
+            Source = stateEntry;
 
             switch (stateEntry.State)
             {
                 case EntityState.Deleted:
-                    this.Original = translator.RecordConverter.ConvertOriginalValuesToPropagatorResult(
+                    Original = translator.RecordConverter.ConvertOriginalValuesToPropagatorResult(
                         stateEntry, ModifiedPropertiesBehavior.AllModified);
-                    this.Current = null;
+                    Current = null;
                     break;
                 case EntityState.Unchanged:
-                    this.Original = translator.RecordConverter.ConvertOriginalValuesToPropagatorResult(
+                    Original = translator.RecordConverter.ConvertOriginalValuesToPropagatorResult(
                         stateEntry, ModifiedPropertiesBehavior.NoneModified);
-                    this.Current = translator.RecordConverter.ConvertCurrentValuesToPropagatorResult(
+                    Current = translator.RecordConverter.ConvertCurrentValuesToPropagatorResult(
                         stateEntry, ModifiedPropertiesBehavior.NoneModified);
                     break;
                 case EntityState.Modified:
-                    this.Original = translator.RecordConverter.ConvertOriginalValuesToPropagatorResult(
+                    Original = translator.RecordConverter.ConvertOriginalValuesToPropagatorResult(
                         stateEntry, ModifiedPropertiesBehavior.SomeModified);
-                    this.Current = translator.RecordConverter.ConvertCurrentValuesToPropagatorResult(
+                    Current = translator.RecordConverter.ConvertCurrentValuesToPropagatorResult(
                         stateEntry, ModifiedPropertiesBehavior.SomeModified);
                     break;
                 case EntityState.Added:
-                    this.Original = null;
-                    this.Current = translator.RecordConverter.ConvertCurrentValuesToPropagatorResult(
+                    Original = null;
+                    Current = translator.RecordConverter.ConvertCurrentValuesToPropagatorResult(
                         stateEntry, ModifiedPropertiesBehavior.AllModified);
                     break;
                 default:
                     Debug.Fail("unexpected IEntityStateEntry.State for entity " + stateEntry.State);
-                    this.Original = null;
-                    this.Current = null;
+                    Original = null;
+                    Current = null;
                     break;
             }
         }

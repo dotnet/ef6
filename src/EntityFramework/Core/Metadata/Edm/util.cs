@@ -1,18 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Diagnostics;
-using System.Text;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics;
+
     /// <summary>
     /// Class holding utility functions for metadata
     /// </summary>
     internal static class Util
     {
         #region Methods
+
         /// <summary>
         /// Throws an appropriate exception if the given item is a readonly, used when an attempt is made to change
         /// a property
@@ -38,6 +34,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Debug.Assert(!string.IsNullOrEmpty(item.Identity), "Item has empty identity.");
             EntityUtil.GenericCheckArgumentNull(item, argumentName);
         }
+
         #endregion
     }
 }

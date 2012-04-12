@@ -2,8 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Data.Entity.Core.Common.EntitySql;
-    using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
 
@@ -20,7 +18,7 @@
         internal EntitySqlParser(Perspective perspective)
         {
             Debug.Assert(null != perspective, "null perspective?");
-            _perspective = perspective;                
+            _perspective = perspective;
         }
 
         /// <summary>
@@ -54,7 +52,8 @@
                 EntityUtil.CheckArgumentContainsNull(ref varsEnum, "variables");
             }
 
-            DbLambda result = CqlQuery.CompileQueryCommandLambda(query, _perspective, null /* parser options - use default */, null /* parameters */, variables);
+            var result = CqlQuery.CompileQueryCommandLambda(
+                query, _perspective, null /* parser options - use default */, null /* parameters */, variables);
 
             return result;
         }

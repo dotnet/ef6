@@ -1,11 +1,10 @@
-using System.Data.Entity.Core.Common.Utils;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using System.Globalization;
-using System.Linq;
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+    using System.Text;
+
     /// <summary>
     /// A directed graph class.
     /// </summary>
@@ -21,6 +20,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     internal class Graph<TVertex>
     {
         #region Constructors
+
         /// <summary>
         /// Initialize a new graph
         /// </summary>
@@ -35,9 +35,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             m_predecessorCounts = new Dictionary<TVertex, int>(comparer);
             m_vertices = new HashSet<TVertex>(comparer);
         }
+
         #endregion
 
         #region Fields
+
         /// <summary>
         /// Gets successors of the node (outgoing edges).
         /// </summary>
@@ -52,17 +54,19 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// Gets the vertices that exist in the graph.
         /// </summary>
         private readonly HashSet<TVertex> m_vertices;
+
         private readonly IEqualityComparer<TVertex> m_comparer;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the vertices of the graph.
         /// </summary>
         internal IEnumerable<TVertex> Vertices
         {
             get { return m_vertices; }
-                
         }
 
         /// <summary>
@@ -72,19 +76,20 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             get
             {
-                foreach (KeyValuePair<TVertex, HashSet<TVertex>> successors in m_successorMap)
+                foreach (var successors in m_successorMap)
                 {
-                    foreach (TVertex vertex in successors.Value)
+                    foreach (var vertex in successors.Value)
                     {
                         yield return new KeyValuePair<TVertex, TVertex>(successors.Key, vertex);
                     }
                 }
             }
-                
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Adds a new node to the graph. Does nothing if the vertex already exists.
         /// </summary>
@@ -102,7 +107,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         internal void AddEdge(TVertex from, TVertex to)
         {
             // Add only edges relevant to the current graph vertices
-            if (m_vertices.Contains(from) && m_vertices.Contains(to))
+            if (m_vertices.Contains(from)
+                && m_vertices.Contains(to))
             {
                 HashSet<TVertex> successors;
                 if (!m_successorMap.TryGetValue(from, out successors))
@@ -138,32 +144,33 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             // populate all predecessor-less nodes to root queue
             var rootsPriorityQueue = new SortedSet<TVertex>(Comparer<TVertex>.Default);
 
-            foreach (TVertex vertex in m_vertices)
+            foreach (var vertex in m_vertices)
             {
                 int predecessorCount;
-                if (!m_predecessorCounts.TryGetValue(vertex, out predecessorCount) || 0 == predecessorCount)
+                if (!m_predecessorCounts.TryGetValue(vertex, out predecessorCount)
+                    || 0 == predecessorCount)
                 {
                     rootsPriorityQueue.Add(vertex);
                 }
             }
 
             var result = new TVertex[m_vertices.Count];
-            int resultCount = 0;
+            var resultCount = 0;
 
             // perform sort
             while (0 < rootsPriorityQueue.Count)
             {
                 // get the vertex that is next in line in the secondary ordering
-                TVertex from = rootsPriorityQueue.Min;
+                var from = rootsPriorityQueue.Min;
                 rootsPriorityQueue.Remove(from);
 
                 // remove all outgoing edges (free all vertices that depend on 'from')
                 HashSet<TVertex> toSet;
                 if (m_successorMap.TryGetValue(from, out toSet))
                 {
-                    foreach (TVertex to in toSet)
+                    foreach (var to in toSet)
                     {
-                        int predecessorCount = m_predecessorCounts[to] - 1;
+                        var predecessorCount = m_predecessorCounts[to] - 1;
                         m_predecessorCounts[to] = predecessorCount;
                         if (predecessorCount == 0)
                         {
@@ -203,26 +210,33 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns></returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
-            foreach (KeyValuePair<TVertex, HashSet<TVertex>> outgoingEdge in m_successorMap)
+            foreach (var outgoingEdge in m_successorMap)
             {
-                bool first = true;
+                var first = true;
 
                 sb.AppendFormat(CultureInfo.InvariantCulture, "[{0}] --> ", outgoingEdge.Key);
-            
-                foreach (TVertex vertex in outgoingEdge.Value)
+
+                foreach (var vertex in outgoingEdge.Value)
                 {
-                    if (first) { first = false; }
-                    else { sb.Append(", "); }
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        sb.Append(", ");
+                    }
                     sb.AppendFormat(CultureInfo.InvariantCulture, "[{0}]", vertex);
                 }
 
                 sb.Append("; ");
             }
-            
+
             return sb.ToString();
         }
+
         #endregion
     }
 }

@@ -1,7 +1,7 @@
 namespace System.Data.Entity.Core.Mapping
 {
-    using System;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
 
     /// <summary>
     /// Class for representing a collection of mapping items in Edm space.
@@ -12,7 +12,8 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         /// The default constructor for ItemCollection
         /// </summary>
-        internal MappingItemCollection(DataSpace dataSpace) : base(dataSpace)
+        internal MappingItemCollection(DataSpace dataSpace)
+            : base(dataSpace)
         {
         }
 
@@ -26,7 +27,7 @@ namespace System.Data.Entity.Core.Mapping
         internal virtual bool TryGetMap(string identity, DataSpace typeSpace, out Map map)
         {
             //will only be implemented by Mapping Item Collections
-            throw System.Data.Entity.Resources.Error.NotSupported();
+            throw Error.NotSupported();
         }
 
         /// <summary>
@@ -36,7 +37,7 @@ namespace System.Data.Entity.Core.Mapping
         internal virtual Map GetMap(GlobalItem item)
         {
             //will only be implemented by Mapping Item Collections
-            throw System.Data.Entity.Resources.Error.NotSupported();
+            throw Error.NotSupported();
         }
 
         /// <summary>
@@ -48,7 +49,7 @@ namespace System.Data.Entity.Core.Mapping
         internal virtual bool TryGetMap(GlobalItem item, out Map map)
         {
             //will only be implemented by Mapping Item Collections
-            throw System.Data.Entity.Resources.Error.NotSupported();
+            throw Error.NotSupported();
         }
 
         /// <summary>
@@ -61,7 +62,7 @@ namespace System.Data.Entity.Core.Mapping
         internal virtual Map GetMap(string identity, DataSpace typeSpace, bool ignoreCase)
         {
             //will only be implemented by Mapping Item Collections
-            throw System.Data.Entity.Resources.Error.NotSupported();
+            throw Error.NotSupported();
         }
 
         /// <summary>
@@ -75,7 +76,7 @@ namespace System.Data.Entity.Core.Mapping
         internal virtual bool TryGetMap(string identity, DataSpace typeSpace, bool ignoreCase, out Map map)
         {
             //will only be implemented by Mapping Item Collections
-            throw System.Data.Entity.Resources.Error.NotSupported();
+            throw Error.NotSupported();
         }
 
         /// <summary>
@@ -87,8 +88,11 @@ namespace System.Data.Entity.Core.Mapping
         internal virtual Map GetMap(string identity, DataSpace typeSpace)
         {
             //will only be implemented by Mapping Item Collections
-            throw System.Data.Entity.Resources.Error.NotSupported();
+            throw Error.NotSupported();
         }
-    }//---- ItemCollection
+    }
 
-}//---- 
+//---- ItemCollection
+}
+
+//---- 

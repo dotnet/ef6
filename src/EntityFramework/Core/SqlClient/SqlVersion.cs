@@ -1,10 +1,8 @@
 namespace System.Data.Entity.Core.SqlClient
 {
-    using System.Data.Entity.Core;
-    using System.Data;
-    using System.Data.Entity;
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
+    using System.Diagnostics;
     using System.Globalization;
 
     /// <summary>
@@ -44,9 +42,9 @@ namespace System.Data.Entity.Core.SqlClient
         /// <returns>Sql Version for the current connection</returns>
         internal static SqlVersion GetSqlVersion(SqlConnection connection)
         {
-            System.Diagnostics.Debug.Assert(connection.State == ConnectionState.Open, "Expected an open connection");
-            int majorVersion = Int32.Parse(connection.ServerVersion.Substring(0, 2), CultureInfo.InvariantCulture);
-            if (majorVersion >= 10) 
+            Debug.Assert(connection.State == ConnectionState.Open, "Expected an open connection");
+            var majorVersion = Int32.Parse(connection.ServerVersion.Substring(0, 2), CultureInfo.InvariantCulture);
+            if (majorVersion >= 10)
             {
                 return SqlVersion.Sql10;
             }
@@ -56,14 +54,14 @@ namespace System.Data.Entity.Core.SqlClient
             }
             else
             {
-                System.Diagnostics.Debug.Assert(majorVersion == 8, "not version 8");
+                Debug.Assert(majorVersion == 8, "not version 8");
                 return SqlVersion.Sql8;
             }
         }
 
         internal static string GetVersionHint(SqlVersion version)
         {
-            switch(version)
+            switch (version)
             {
                 case SqlVersion.Sql8:
                     return SqlProviderManifest.TokenSql8;
@@ -95,7 +93,7 @@ namespace System.Data.Entity.Core.SqlClient
                         return SqlVersion.Sql10;
                 }
             }
-            
+
             throw EntityUtil.Argument(Strings.UnableToDetermineStoreVersion);
         }
 

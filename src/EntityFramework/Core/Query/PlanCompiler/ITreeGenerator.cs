@@ -1,15 +1,11 @@
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
-    using System;
     using System.Collections.Generic;
-    using System.Data;
-    using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common;
-    using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity;
+    using System.Data.Entity.Core.Mapping.ViewGeneration;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Resources;
@@ -20,6 +16,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal class ITreeGenerator : DbExpressionVisitor<Node>
     {
         #region Nested Types
+
         /// <summary>
         /// Abstract base class for both DbExpressionBinding and LambdaFunction scopes
         /// </summary>
@@ -27,6 +24,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             internal abstract bool Contains(string varName);
             internal abstract Node this[string varName] { get; }
+
             /// <summary>
             /// Returns true if it is a lambda variable representing a predicate expression.
             /// </summary>
@@ -38,9 +36,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         private class ExpressionBindingScope : CqtVariableScope
         {
-            private Command _tree;
-            private string _varName;
-            private Var _var;
+            private readonly Command _tree;
+            private readonly string _varName;
+            private readonly Var _var;
 
             internal ExpressionBindingScope(Command iqtTree, string name, Var iqtVar)
             {
@@ -49,22 +47,31 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 _var = iqtVar;
             }
 
-            internal override bool Contains(string name) { return (_varName == name); }
-            [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+            internal override bool Contains(string name)
+            {
+                return (_varName == name);
+            }
+
+            [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+                MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
             internal override Node this[string name]
             {
                 get
                 {
-                    PlanCompiler.Assert(name == _varName,"huh?");
+                    PlanCompiler.Assert(name == _varName, "huh?");
                     return _tree.CreateNode(_tree.CreateVarRefOp(_var));
                 }
             }
+
             internal override bool IsPredicate(string varName)
             {
                 return false;
             }
 
-            internal Var ScopeVar { get { return _var; } }
+            internal Var ScopeVar
+            {
+                get { return _var; }
+            }
         }
 
         /// <summary>
@@ -74,10 +81,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             private readonly ITreeGenerator _treeGen;
             private readonly Command _command;
+
             /// <summary>
             /// varName : [node, IsPredicate]
             /// </summary>
             private readonly Dictionary<string, Tuple<Node, bool>> _arguments;
+
             private readonly Dictionary<Node, bool> _referencedArgs;
 
             internal LambdaScope(ITreeGenerator treeGen, Command command, Dictionary<string, Tuple<Node, bool>> args)
@@ -88,16 +97,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 _referencedArgs = new Dictionary<Node, bool>(_arguments.Count);
             }
 
-            internal override bool Contains(string name) { return (_arguments.ContainsKey(name)); }
+            internal override bool Contains(string name)
+            {
+                return (_arguments.ContainsKey(name));
+            }
+
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "LambdaScope")]
-            [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+            [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+                MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
             internal override Node this[string name]
             {
                 get
                 {
                     PlanCompiler.Assert(_arguments.ContainsKey(name), "LambdaScope indexer called for invalid Var");
-                    
-                    Node argNode = _arguments[name].Item1;
+
+                    var argNode = _arguments[name].Item1;
                     if (_referencedArgs.ContainsKey(argNode))
                     {
                         // The specified argument has already been substituted into the
@@ -105,16 +119,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                         VarMap mappedVars = null;
 
                         // This is a 'deep copy' operation that clones the entire subtree rooted at the node.
-                        Node argCopy = OpCopier.Copy(_command, argNode, out mappedVars);
+                        var argCopy = OpCopier.Copy(_command, argNode, out mappedVars);
 
                         // If any Nodes in the copy of the argument produce Vars then the
                         // Node --> Var map must be updated to include them.
                         if (mappedVars.Count > 0)
                         {
-                            List<Node> sources = new List<Node>(1);
+                            var sources = new List<Node>(1);
                             sources.Add(argNode);
 
-                            List<Node> copies = new List<Node>(1);
+                            var copies = new List<Node>(1);
                             copies.Add(argCopy);
 
                             MapCopiedNodeVars(sources, copies, mappedVars);
@@ -134,14 +148,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
             }
 
-            [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "LambdaScope"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+            [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "LambdaScope")]
+            [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+                MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
             internal override bool IsPredicate(string name)
             {
                 PlanCompiler.Assert(_arguments.ContainsKey(name), "LambdaScope indexer called for invalid Var");
                 return _arguments[name].Item2;
             }
 
-            [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "OpCopier"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+            [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "OpCopier")]
+            [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+                MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
             private void MapCopiedNodeVars(IList<Node> sources, IList<Node> copies, Dictionary<Var, Var> varMappings)
             {
                 PlanCompiler.Assert(sources.Count == copies.Count, "Source/Copy Node count mismatch");
@@ -154,10 +172,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 //   add an entry to the Node --> Var map that maps the Copy Node to the
                 //   new Var.
                 //
-                for (int idx = 0; idx < sources.Count; idx++)
+                for (var idx = 0; idx < sources.Count; idx++)
                 {
-                    Node sourceNode = sources[idx];
-                    Node copyNode = copies[idx];
+                    var sourceNode = sources[idx];
+                    var copyNode = copies[idx];
 
                     if (sourceNode.Children.Count > 0)
                     {
@@ -168,19 +186,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     if (_treeGen.VarMap.TryGetValue(sourceNode, out sourceVar))
                     {
                         PlanCompiler.Assert(varMappings.ContainsKey(sourceVar), "No mapping found for Var in Var to Var map from OpCopier");
-                        this._treeGen.VarMap[copyNode] = varMappings[sourceVar];
+                        _treeGen.VarMap[copyNode] = varMappings[sourceVar];
                     }
                 }
             }
         }
+
         #endregion
 
-        private static Dictionary<DbExpressionKind, OpType> s_opMap = InitializeExpressionKindToOpTypeMap();
+        private static readonly Dictionary<DbExpressionKind, OpType> s_opMap = InitializeExpressionKindToOpTypeMap();
 
         private readonly Command _iqtCommand;
         private readonly Stack<CqtVariableScope> _varScopes = new Stack<CqtVariableScope>();
         private readonly Dictionary<Node, Var> _varMap = new Dictionary<Node, Var>();
         private readonly Stack<EdmFunction> _functionExpansions = new Stack<EdmFunction>();
+
         /// <summary>
         /// Maintained for lambda and model-defined function applications (DbLambdaExpression and DbFunctionExpression).
         /// </summary>
@@ -191,16 +211,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private readonly HashSet<DbTreatExpression> _fakeTreats = new HashSet<DbTreatExpression>();
 
         // leverage discriminator metadata in the top-level project when translating query mapping views...
-        private readonly System.Data.Entity.Core.Mapping.ViewGeneration.DiscriminatorMap _discriminatorMap;
+        private readonly DiscriminatorMap _discriminatorMap;
         private readonly DbProjectExpression _discriminatedViewTopProject;
-
 
         /// <summary>
         /// Initialize the DbExpressionKind --> OpType mappings for DbComparisonExpression and DbArithmeticExpression
         /// </summary>
         private static Dictionary<DbExpressionKind, OpType> InitializeExpressionKindToOpTypeMap()
         {
-            Dictionary<DbExpressionKind, OpType> opMap = new Dictionary<DbExpressionKind, OpType>(12);
+            var opMap = new Dictionary<DbExpressionKind, OpType>(12);
 
             //
             // Arithmetic operators
@@ -225,7 +244,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return opMap;
         }
 
-        internal Dictionary<Node, Var> VarMap { get { return _varMap; } }
+        internal Dictionary<Node, Var> VarMap
+        {
+            get { return _varMap; }
+        }
 
         public static Command Generate(DbQueryCommandTree ctree)
         {
@@ -235,14 +257,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         /// Generate an IQT given a query command tree and discriminator metadata (available for certain query mapping views)
         /// </summary>
-        internal static Command Generate(DbQueryCommandTree ctree, System.Data.Entity.Core.Mapping.ViewGeneration.DiscriminatorMap discriminatorMap)
+        internal static Command Generate(DbQueryCommandTree ctree, DiscriminatorMap discriminatorMap)
         {
-            ITreeGenerator treeGenerator = new ITreeGenerator(ctree, discriminatorMap);
+            var treeGenerator = new ITreeGenerator(ctree, discriminatorMap);
             return treeGenerator._iqtCommand;
         }
 
-        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        private ITreeGenerator(DbQueryCommandTree ctree, System.Data.Entity.Core.Mapping.ViewGeneration.DiscriminatorMap discriminatorMap)
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        private ITreeGenerator(DbQueryCommandTree ctree, DiscriminatorMap discriminatorMap)
         {
             //
             // Create a new IQT Command instance that uses the same metadata workspace as the incoming command tree
@@ -257,7 +281,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 _discriminatorMap = discriminatorMap;
                 // see System.Data.Entity.Core.Mapping.ViewGeneration.DiscriminatorMap
-                PlanCompiler.Assert(ctree.Query.ExpressionKind == DbExpressionKind.Project, 
+                PlanCompiler.Assert(
+                    ctree.Query.ExpressionKind == DbExpressionKind.Project,
                     "top level QMV expression must be project to match discriminator pattern");
                 _discriminatedViewTopProject = (DbProjectExpression)ctree.Query;
             }
@@ -266,11 +291,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // For each Parameter declared by the command tree, add a ParameterVar to the set of parameter vars maintained by the conversion visitor.
             // Each ParameterVar has the same name and type as the corresponding parameter on the command tree.
             //
-            foreach (KeyValuePair<string, TypeUsage> paramInfo in ctree.Parameters)
+            foreach (var paramInfo in ctree.Parameters)
             {
                 if (!ValidateParameterType(paramInfo.Value))
                 {
-                    throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ParameterTypeNotSupported(paramInfo.Key, paramInfo.Value.ToString()));
+                    throw EntityUtil.NotSupported(Strings.ParameterTypeNotSupported(paramInfo.Key, paramInfo.Value.ToString()));
                 }
                 _iqtCommand.CreateParameterVar(paramInfo.Key, paramInfo.Value);
             }
@@ -285,25 +310,23 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             if (!_iqtCommand.Root.Op.IsRelOp)
             {
-                Node scalarExpr = ConvertToScalarOpTree(_iqtCommand.Root, ctree.Query);
-                Node singletonTableNode = _iqtCommand.CreateNode(_iqtCommand.CreateSingleRowTableOp());
+                var scalarExpr = ConvertToScalarOpTree(_iqtCommand.Root, ctree.Query);
+                var singletonTableNode = _iqtCommand.CreateNode(_iqtCommand.CreateSingleRowTableOp());
                 Var newVar;
-                Node varDefListNode = _iqtCommand.CreateVarDefListNode(scalarExpr, out newVar);
-                ProjectOp projectOp = _iqtCommand.CreateProjectOp(newVar);
+                var varDefListNode = _iqtCommand.CreateVarDefListNode(scalarExpr, out newVar);
+                var projectOp = _iqtCommand.CreateProjectOp(newVar);
 
-
-                Node newRoot = _iqtCommand.CreateNode(projectOp, singletonTableNode, varDefListNode);
+                var newRoot = _iqtCommand.CreateNode(projectOp, singletonTableNode, varDefListNode);
 
                 if (TypeSemantics.IsCollectionType(_iqtCommand.Root.Op.Type))
                 {
-                    UnnestOp unnestOp = _iqtCommand.CreateUnnestOp(newVar);
+                    var unnestOp = _iqtCommand.CreateUnnestOp(newVar);
                     newRoot = _iqtCommand.CreateNode(unnestOp, varDefListNode.Child0);
                     newVar = unnestOp.Table.Columns[0];
                 }
 
                 _iqtCommand.Root = newRoot;
                 _varMap[_iqtCommand.Root] = newVar;
-
             }
 
             //
@@ -316,7 +339,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private static bool ValidateParameterType(TypeUsage paramType)
         {
             return (paramType != null && paramType.EdmType != null &&
-                (TypeSemantics.IsPrimitiveType(paramType) || paramType.EdmType is EnumType));
+                    (TypeSemantics.IsPrimitiveType(paramType) || paramType.EdmType is EnumType));
         }
 
         #region DbExpressionVisitor Helpers
@@ -330,7 +353,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private static bool IsCollectionOfRecord(TypeUsage typeUsage)
         {
             CollectionType collectionType;
-            return (TypeHelpers.TryGetEdmType<CollectionType>(typeUsage, out collectionType) &&
+            return (TypeHelpers.TryGetEdmType(typeUsage, out collectionType) &&
                     collectionType != null &&
                     TypeSemantics.IsRowType(collectionType.TypeUsage));
         }
@@ -341,7 +364,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="expr">expr to check</param>
         /// <returns>true, if the expression is a predicate</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IsPredicate"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IsPredicate")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private bool IsPredicate(DbExpression expr)
         {
             if (TypeSemantics.IsPrimitiveType(expr.ResultType, PrimitiveTypeKind.Boolean))
@@ -387,7 +412,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     case DbExpressionKind.Function:
                         {
                             // BUG TFS 471778: DefiningExpression for a MDF does not allow comparison or logical operator
-                            EdmFunction edmFunction = ((DbFunctionExpression)expr).Function;
+                            var edmFunction = ((DbFunctionExpression)expr).Function;
                             if (edmFunction.HasUserDefinedBody)
                             {
                                 bool isPredicateFunction;
@@ -433,7 +458,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             else
             {
-                return e.Accept<Node>(this);
+                return e.Accept(this);
             }
         }
 
@@ -449,7 +474,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 return null;
             }
 
-            Node node = VisitExpr(expr); // the real work
+            var node = VisitExpr(expr); // the real work
             node = ConvertToScalarOpTree(node, expr);
             return node;
         }
@@ -470,13 +495,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 node = ConvertRelOpToScalarOpTree(node, expr.ResultType);
             }
-            //
-            // If the current expression is a boolean, and it is really a predicate, then
-            // scalarize the predicate (ie) convert it into a "case when <predicate> then 'true' else 'false' end" expression
-            // SQLBUDT #431406: handle 3-valued logic for all predicates except IsNull
-            // Convert boolean predicate p into
-            //    case when p then true when not(p) then false else null end
-            //
+                //
+                // If the current expression is a boolean, and it is really a predicate, then
+                // scalarize the predicate (ie) convert it into a "case when <predicate> then 'true' else 'false' end" expression
+                // SQLBUDT #431406: handle 3-valued logic for all predicates except IsNull
+                // Convert boolean predicate p into
+                //    case when p then true when not(p) then false else null end
+                //
             else if (IsPredicate(expr))
             {
                 node = ConvertPredicateToScalarOpTree(node, expr);
@@ -491,16 +516,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="node"></param>
         /// <param name="resultType"></param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "RelOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "RelOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node ConvertRelOpToScalarOpTree(Node node, TypeUsage resultType)
         {
             PlanCompiler.Assert(TypeSemantics.IsCollectionType(resultType), "RelOp with non-Collection result type");
-            CollectOp collectOp = _iqtCommand.CreateCollectOp(resultType);
+            var collectOp = _iqtCommand.CreateCollectOp(resultType);
             //
             // I'm not thrilled about having to build a PhysicalProjectOp here - this
             // is definitely something I will need to revisit soon
             //
-            Node projectNode = CapWithPhysicalProject(node);
+            var projectNode = CapWithPhysicalProject(node);
             node = _iqtCommand.CreateNode(collectOp, projectNode);
 
             return node;
@@ -511,10 +538,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         private Node ConvertPredicateToScalarOpTree(Node node, DbExpression expr)
         {
-            CaseOp caseOp = _iqtCommand.CreateCaseOp(_iqtCommand.BooleanType);
+            var caseOp = _iqtCommand.CreateCaseOp(_iqtCommand.BooleanType);
 
             //For 2-valued logic there are 3 arguments, for 3-valued there are 5
-            List<Node> arguments = new List<Node>((expr.ExpressionKind == DbExpressionKind.IsNull) ? 3 : 5);
+            var arguments = new List<Node>((expr.ExpressionKind == DbExpressionKind.IsNull) ? 3 : 5);
 
             //Add the original as the first when
             arguments.Add(node);
@@ -523,9 +550,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             arguments.Add(_iqtCommand.CreateNode(_iqtCommand.CreateInternalConstantOp(_iqtCommand.BooleanType, true)));
 
             //If the expression has 3-valued logic, add a second when
-            if (expr.ExpressionKind != DbExpressionKind.IsNull)
+            if (expr.ExpressionKind
+                != DbExpressionKind.IsNull)
             {
-                Node predCopy = VisitExpr(expr);
+                var predCopy = VisitExpr(expr);
                 arguments.Add(_iqtCommand.CreateNode(_iqtCommand.CreateConditionalOp(OpType.Not), predCopy));
             }
 
@@ -533,7 +561,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             arguments.Add(_iqtCommand.CreateNode(_iqtCommand.CreateInternalConstantOp(_iqtCommand.BooleanType, false)));
 
             //The null node, it is the else-clause for 3-valued logic
-            if (expr.ExpressionKind != DbExpressionKind.IsNull)
+            if (expr.ExpressionKind
+                != DbExpressionKind.IsNull)
             {
                 arguments.Add(_iqtCommand.CreateNode(_iqtCommand.CreateNullOp(_iqtCommand.BooleanType)));
             }
@@ -547,7 +576,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="expr">the expression to process</param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "relOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "relOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node VisitExprAsPredicate(DbExpression expr)
         {
             if (expr == null)
@@ -555,7 +586,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 return null;
             }
 
-            Node node = VisitExpr(expr);
+            var node = VisitExpr(expr);
 
             //
             // If the current expression is not a predicate, then we need to make it one, by
@@ -563,8 +594,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             if (!IsPredicate(expr))
             {
-                ComparisonOp comparisonOp = _iqtCommand.CreateComparisonOp(OpType.EQ);
-                Node trueNode = _iqtCommand.CreateNode(_iqtCommand.CreateInternalConstantOp(_iqtCommand.BooleanType, true));
+                var comparisonOp = _iqtCommand.CreateComparisonOp(OpType.EQ);
+                var trueNode = _iqtCommand.CreateNode(_iqtCommand.CreateInternalConstantOp(_iqtCommand.BooleanType, true));
                 node = _iqtCommand.CreateNode(comparisonOp, node, trueNode);
             }
             else
@@ -583,8 +614,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>a list of IQT expressions</returns>
         private static IList<Node> VisitExpr(IList<DbExpression> exprs, VisitExprDelegate exprDelegate)
         {
-            List<Node> nodeList = new List<Node>();
-            for(int idx = 0; idx < exprs.Count; idx++)
+            var nodeList = new List<Node>();
+            for (var idx = 0; idx < exprs.Count; idx++)
             {
                 nodeList.Add(exprDelegate(exprs[idx]));
             }
@@ -610,19 +641,26 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             return _iqtCommand.CreateNode(op, exprDelegate(e.Left), exprDelegate(e.Right));
         }
-        
+
         /// <summary>
         /// Ensures that an input op is a RelOp. If the specified Node's Op is not a RelOp then it is wrapped in an Unnest to create a synthetic RelOp. This is only possible if the input Op produces a collection.
         /// </summary>
         /// <param name="inputNode">The input Node/Op pair</param>
         /// <returns>A Node with an Op that is guaranteed to be a RelOp (this may be the original Node or a new Node created to perform the Unnest)</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScalarOp"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "PhysicalProjectOp"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "CollectOp"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "RelOp"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-ScalarOp"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-RelOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScalarOp")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "PhysicalProjectOp")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "CollectOp")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "RelOp")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-ScalarOp")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-RelOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node EnsureRelOp(Node inputNode)
         {
             //
             // Input node = N1
             //
-            Op inputOp = inputNode.Op;
+            var inputOp = inputNode.Op;
 
             //
             // If the Op is already a RelOp then simply return its Node
@@ -635,21 +673,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Assert that the input is a ScalarOp (CQT expressions should only ever produce RelOps or ScalarOps)
             //
-            ScalarOp scalar = inputOp as ScalarOp;
+            var scalar = inputOp as ScalarOp;
             PlanCompiler.Assert(scalar != null, "An expression in a CQT produced a non-ScalarOp and non-RelOp output Op");
-            
+
             //
             // Assert that the ScalarOp has a collection result type. EnsureRelOp is called to ensure that arguments to
             // RelOps are either also RelOps or are ScalarOps that produce a collection, which can be wrapped in an
             // unnest to produce a RelOp.
             //
-            PlanCompiler.Assert(TypeSemantics.IsCollectionType(scalar.Type), "An expression used as a RelOp argument was neither a RelOp or a collection");
+            PlanCompiler.Assert(
+                TypeSemantics.IsCollectionType(scalar.Type), "An expression used as a RelOp argument was neither a RelOp or a collection");
 
             //
             // If the ScalarOp represents the nesting of an existing RelOp, simply return that RelOp instead.
             // CollectOp(PhysicalProjectOp(x)) => x
             //
-            CollectOp collect = inputOp as CollectOp;
+            var collect = inputOp as CollectOp;
             if (collect != null)
             {
                 PlanCompiler.Assert(inputNode.HasChild0, "CollectOp without argument");
@@ -671,20 +710,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // varDefNode = N2
             //
             Var inputCollectionVar;
-            Node varDefNode = _iqtCommand.CreateVarDefNode(inputNode, out inputCollectionVar);
+            var varDefNode = _iqtCommand.CreateVarDefNode(inputNode, out inputCollectionVar);
 
             //
             // Create an UnnestOp that references the computed var created above. The VarDefOp that defines the var
             // using the original input Node/Op pair becomes a child of the UnnestOp.
             //
-            UnnestOp unnest = _iqtCommand.CreateUnnestOp(inputCollectionVar);
-            PlanCompiler.Assert(unnest.Table.Columns.Count == 1, "Un-nest of collection ScalarOp produced unexpected number of columns (1 expected)");
+            var unnest = _iqtCommand.CreateUnnestOp(inputCollectionVar);
+            PlanCompiler.Assert(
+                unnest.Table.Columns.Count == 1, "Un-nest of collection ScalarOp produced unexpected number of columns (1 expected)");
 
             //
             // Create the unnest node, N3
             // The UnnestOp produces a new Var, the single ColumnVar produced by the table that results from the Unnest.
             //
-            Node unnestNode = _iqtCommand.CreateNode(unnest, varDefNode);
+            var unnestNode = _iqtCommand.CreateNode(unnest, varDefNode);
             _varMap[unnestNode] = unnest.Table.Columns[0];
 
             //
@@ -694,14 +734,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // which we return.
             //
             Var projectVar;
-            Node varRefNode = _iqtCommand.CreateNode(_iqtCommand.CreateVarRefOp(unnest.Table.Columns[0]));
-            Node varDefListNode = _iqtCommand.CreateVarDefListNode(varRefNode, out projectVar);
+            var varRefNode = _iqtCommand.CreateNode(_iqtCommand.CreateVarRefOp(unnest.Table.Columns[0]));
+            var varDefListNode = _iqtCommand.CreateVarDefListNode(varRefNode, out projectVar);
 
-            ProjectOp projectOp = _iqtCommand.CreateProjectOp(projectVar);
-            Node projectNode = _iqtCommand.CreateNode(projectOp, unnestNode, varDefListNode);
-            
+            var projectOp = _iqtCommand.CreateProjectOp(projectVar);
+            var projectNode = _iqtCommand.CreateNode(projectOp, unnestNode, varDefListNode);
+
             _varMap[projectNode] = projectVar;
-            
+
             return projectNode;
         }
 
@@ -711,20 +751,24 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="input">the input relop tree</param>
         /// <returns>the relop tree with a projectNode at the root</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-RelOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-RelOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node CapWithProject(Node input)
         {
             PlanCompiler.Assert(input.Op.IsRelOp, "unexpected non-RelOp?");
-            if (input.Op.OpType == OpType.Project)
+            if (input.Op.OpType
+                == OpType.Project)
             {
                 return input;
             }
 
             // Get the Var from the input; and build up a Project above it
-            Var inputVar = _varMap[input];
-            ProjectOp projectOp = _iqtCommand.CreateProjectOp(inputVar);
-            Node projectNode = _iqtCommand.CreateNode(projectOp, input,
-               _iqtCommand.CreateNode(_iqtCommand.CreateVarDefListOp()));
+            var inputVar = _varMap[input];
+            var projectOp = _iqtCommand.CreateProjectOp(inputVar);
+            var projectNode = _iqtCommand.CreateNode(
+                projectOp, input,
+                _iqtCommand.CreateNode(_iqtCommand.CreateVarDefListOp()));
             _varMap[projectNode] = inputVar;
 
             return projectNode;
@@ -736,15 +780,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="input">the input relop tree</param>
         /// <returns>relop tree capped by a PhysicalProjectOp</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-RelOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-RelOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node CapWithPhysicalProject(Node input)
         {
-            PlanCompiler.Assert(input.Op.IsRelOp, "unexpected non-RelOp?");            
+            PlanCompiler.Assert(input.Op.IsRelOp, "unexpected non-RelOp?");
 
             // Get the Var from the input; and build up a Project above it
-            Var inputVar = _varMap[input];
-            PhysicalProjectOp projectOp = _iqtCommand.CreatePhysicalProjectOp(inputVar);
-            Node projectNode = _iqtCommand.CreateNode(projectOp, input);
+            var inputVar = _varMap[input];
+            var projectOp = _iqtCommand.CreatePhysicalProjectOp(inputVar);
+            var projectNode = _iqtCommand.CreateNode(projectOp, input);
 
             return projectNode;
         }
@@ -779,7 +825,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private Node VisitBoundExpressionPushBindingScope(DbExpression boundExpression, string bindingName)
         {
             Var boundVar;
-            Node inputNode = VisitBoundExpression(boundExpression, out boundVar);
+            var inputNode = VisitBoundExpression(boundExpression, out boundVar);
             PushBindingScope(boundVar, bindingName);
             return inputNode;
         }
@@ -790,13 +836,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="boundExpression">The DbExpression that defines the binding</param>
         /// <param name="boundVar">Var representing the RelOp produced for the <paramref name="boundExpression"/></param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbExpressionBinding"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbExpressionBinding")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node VisitBoundExpression(DbExpression boundExpression, out Var boundVar)
         {
             //
             // Visit the expression binding's DbExpression to convert it to a Node/Op pair
             //
-            Node inputNode = VisitExpr(boundExpression);
+            var inputNode = VisitExpr(boundExpression);
             PlanCompiler.Assert(inputNode != null, "DbExpressionBinding.Expression produced null conversion");
 
             //
@@ -832,13 +880,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// Removes a variable scope created based on a DbExpressionBinding from the top of the variable scope stack, verifying that it is in fact an ExpressionBindingScope.
         /// </summary>
         /// <returns>The removed ExpressionBindingScope</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ExpressionBindingScope"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ExitExpressionBinding"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ExpressionBindingScope")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ExitExpressionBinding")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private ExpressionBindingScope ExitExpressionBinding()
         {
             //
             // Pop the scope from the variable scope stack, assert that it is a DbExpressionBinding scope, and return it.
             //
-            ExpressionBindingScope retScope = _varScopes.Pop() as ExpressionBindingScope;
+            var retScope = _varScopes.Pop() as ExpressionBindingScope;
             PlanCompiler.Assert(retScope != null, "ExitExpressionBinding called without ExpressionBindingScope on top of scope stack");
             return retScope;
         }
@@ -854,10 +905,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// 5.     Visit e.Aggregates
         /// 6. ExitGroupExpressionBinding
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ExitGroupExpressionBinding"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ExpressionBindingScope"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ExitGroupExpressionBinding")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ExpressionBindingScope")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void ExitGroupExpressionBinding()
         {
-            ExpressionBindingScope retScope = _varScopes.Pop() as ExpressionBindingScope;
+            var retScope = _varScopes.Pop() as ExpressionBindingScope;
             PlanCompiler.Assert(retScope != null, "ExitGroupExpressionBinding called without ExpressionBindingScope on top of scope stack");
         }
 
@@ -869,10 +923,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="expandingEdmFunction">an edm function for which the current lambda represents the generated body, otherwise null</param>
         private void EnterLambdaFunction(DbLambda lambda, List<Tuple<Node, bool>> argumentValues, EdmFunction expandingEdmFunction)
         {
-            IList<DbVariableReferenceExpression> lambdaParams = lambda.Variables;
+            var lambdaParams = lambda.Variables;
 
             var args = new Dictionary<string, Tuple<Node, bool>>();
-            int idx = 0;
+            var idx = 0;
             foreach (var argumentValue in argumentValues)
             {
                 args.Add(lambdaParams[idx].VariableName, argumentValue);
@@ -889,7 +943,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 //
                 if (_functionExpansions.Contains(expandingEdmFunction))
                 {
-                    throw EntityUtil.CommandCompilation(Strings.Cqt_UDF_FunctionDefinitionWithCircularReference(expandingEdmFunction.FullName), null);
+                    throw EntityUtil.CommandCompilation(
+                        Strings.Cqt_UDF_FunctionDefinitionWithCircularReference(expandingEdmFunction.FullName), null);
                 }
                 //
                 // Push the function before processing its body
@@ -904,13 +959,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// Removes a variable scope created based on a Lambda function from the top of the variable scope stack, verifying that it is in fact a LambdaScope.
         /// </summary>
         /// <param name="expandingEdmFunction">an edm function for which the current lambda represents the generated body, otherwise null</param>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "LambdaScope"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ExitLambdaFunction"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "LambdaScope")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ExitLambdaFunction")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private LambdaScope ExitLambdaFunction(EdmFunction expandingEdmFunction)
         {
             //
             // Pop the scope from the variable scope stack, assert that it is a Lambda scope, and return it.
             //
-            LambdaScope retScope = _varScopes.Pop() as LambdaScope;
+            var retScope = _varScopes.Pop() as LambdaScope;
             PlanCompiler.Assert(retScope != null, "ExitLambdaFunction called without LambdaScope on top of scope stack");
 
             //
@@ -918,8 +976,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             if (expandingEdmFunction != null)
             {
-                EdmFunction edmFunction = _functionExpansions.Pop();
-                PlanCompiler.Assert(edmFunction == expandingEdmFunction, "Function expansion stack corruption: unexpected function at the top of the stack");
+                var edmFunction = _functionExpansions.Pop();
+                PlanCompiler.Assert(
+                    edmFunction == expandingEdmFunction, "Function expansion stack corruption: unexpected function at the top of the stack");
             }
 
             return retScope;
@@ -937,8 +996,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Create a list of VarRefOp Nodes that provide the column values for the new record
             //
-            List<Node> recordColumns = new List<Node>();
-            foreach (Var colVar in colVars)
+            var recordColumns = new List<Node>();
+            foreach (var colVar in colVars)
             {
                 recordColumns.Add(_iqtCommand.CreateNode(_iqtCommand.CreateVarRefOp(colVar)));
             }
@@ -946,30 +1005,31 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Create the NewRecordOp Node using the record column nodes as its child nodes
             //
-            Node newRecordNode = _iqtCommand.CreateNode(_iqtCommand.CreateNewRecordOp(recType), recordColumns);
+            var newRecordNode = _iqtCommand.CreateNode(_iqtCommand.CreateNewRecordOp(recType), recordColumns);
 
             //
             // Create a new ComputedVar and a VarDefOp that uses the NewRecordOp Node to define it
             //
             Var newRecordVar;
-            Node varDefNode = _iqtCommand.CreateVarDefListNode(newRecordNode, out newRecordVar);
+            var varDefNode = _iqtCommand.CreateVarDefListNode(newRecordNode, out newRecordVar);
 
             //
             // Create a ProjectOp with the single Computed Var defined by the new record construction
             //
-            ProjectOp projection = _iqtCommand.CreateProjectOp(newRecordVar);
-            Node projectionNode = _iqtCommand.CreateNode(projection, inputNode, varDefNode);
+            var projection = _iqtCommand.CreateProjectOp(newRecordVar);
+            var projectionNode = _iqtCommand.CreateNode(projection, inputNode, varDefNode);
             _varMap[projectionNode] = newRecordVar;
 
             return projectionNode;
         }
+
         #endregion
 
         #region DbExpressionVisitor<Node> Members
 
         public override Node Visit(DbExpression e)
         {
-            throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.Cqt_General_UnsupportedExpression(e.GetType().FullName));
+            throw EntityUtil.NotSupported(Strings.Cqt_General_UnsupportedExpression(e.GetType().FullName));
         }
 
         public override Node Visit(DbConstantExpression e)
@@ -980,30 +1040,32 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // constant value directly because any immutable values (byte[])
             // will be cloned as the result expression is built in CTreeGenerator,
             // during the call to DbExpressionBuilder.Constant in VisitConstantOp.
-            ConstantBaseOp op = _iqtCommand.CreateConstantOp(e.ResultType, e.GetValue());
+            var op = _iqtCommand.CreateConstantOp(e.ResultType, e.GetValue());
             return _iqtCommand.CreateNode(op);
         }
 
         public override Node Visit(DbNullExpression e)
         {
-            NullOp op = _iqtCommand.CreateNullOp(e.ResultType);
+            var op = _iqtCommand.CreateNullOp(e.ResultType);
             return _iqtCommand.CreateNode(op);
         }
 
         public override Node Visit(DbVariableReferenceExpression e)
         {
-            Node varNode = ResolveScope(e)[e.VariableName];
+            var varNode = ResolveScope(e)[e.VariableName];
             return varNode;
         }
 
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarRef"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarRef")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private CqtVariableScope ResolveScope(DbVariableReferenceExpression e)
         {
             //
             // Search the stack of variables scopes, top-down,
             // until the first one is found that defines a variable with the specified name.
             //
-            foreach (CqtVariableScope scope in _varScopes)
+            foreach (var scope in _varScopes)
             {
                 if (scope.Contains(e.VariableName))
                 {
@@ -1047,7 +1109,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 {
                     if (EntityUtil.IsCatchableExceptionType(exception))
                     {
-                        throw EntityUtil.CommandCompilation(Strings.Cqt_UDF_FunctionDefinitionGenerationFailed(e.Function.FullName), exception);
+                        throw EntityUtil.CommandCompilation(
+                            Strings.Cqt_UDF_FunctionDefinitionGenerationFailed(e.Function.FullName), exception);
                     }
                     throw;
                 }
@@ -1058,8 +1121,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             else // a provider-manifest-defined or store function call - no expansion needed 
             {
-                List<Node> argNodes = new List<Node>(e.Arguments.Count);
-                for (int idx = 0; idx < e.Arguments.Count; idx++)
+                var argNodes = new List<Node>(e.Arguments.Count);
+                for (var idx = 0; idx < e.Arguments.Count; idx++)
                 {
                     // Ensure that any argument with a result type that does not exactly match the type of
                     // the corresponding function parameter is enclosed in a SoftCastOp.
@@ -1068,7 +1131,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
                 retNode = _iqtCommand.CreateNode(_iqtCommand.CreateFunctionOp(e.Function), argNodes);
             }
-            
+
             return retNode;
         }
 
@@ -1077,12 +1140,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return VisitLambdaExpression(e.Lambda, e.Arguments, e, null);
         }
 
-        private Node VisitLambdaExpression(DbLambda lambda, IList<DbExpression> arguments, DbExpression applicationExpr, EdmFunction expandingEdmFunction)
+        private Node VisitLambdaExpression(
+            DbLambda lambda, IList<DbExpression> arguments, DbExpression applicationExpr, EdmFunction expandingEdmFunction)
         {
             Node retNode = null;
 
             var argNodes = new List<Tuple<Node, bool>>(arguments.Count);
-            foreach (DbExpression argExpr in arguments)
+            foreach (var argExpr in arguments)
             {
                 // #484709: Lambda function parameters should not have enclosing SoftCastOps.
                 argNodes.Add(Tuple.Create(VisitExpr(argExpr), IsPredicate(argExpr)));
@@ -1105,7 +1169,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             throw EntityUtil.NotSupported();
         }
 #endif
+
         #region SoftCast Helpers
+
         /// <summary>
         /// This method builds a "soft"Cast operator over the input node (if necessary) to (soft)
         /// cast it to the desired type (targetType)
@@ -1121,7 +1187,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="node">the expression to soft-cast</param>
         /// <param name="targetType">the desired type to cast to</param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node BuildSoftCast(Node node, TypeUsage targetType)
         {
             //
@@ -1132,10 +1199,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // 
             if (node.Op.IsRelOp)
             {
-                CollectionType targetCollectionType = TypeHelpers.GetEdmType<CollectionType>(targetType);
+                var targetCollectionType = TypeHelpers.GetEdmType<CollectionType>(targetType);
                 targetType = targetCollectionType.TypeUsage;
 
-                Var nodeVar = _varMap[node];
+                var nodeVar = _varMap[node];
                 // Do we need a cast at all?
                 if (Command.EqualTypes(targetType, nodeVar.Type))
                 {
@@ -1144,12 +1211,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
                 // Build up the projectOp
                 Var projectVar;
-                Node varRefNode = _iqtCommand.CreateNode(_iqtCommand.CreateVarRefOp(nodeVar));
-                Node castNode = _iqtCommand.CreateNode(_iqtCommand.CreateSoftCastOp(targetType), varRefNode);
-                Node varDefListNode = _iqtCommand.CreateVarDefListNode(castNode, out projectVar);
+                var varRefNode = _iqtCommand.CreateNode(_iqtCommand.CreateVarRefOp(nodeVar));
+                var castNode = _iqtCommand.CreateNode(_iqtCommand.CreateSoftCastOp(targetType), varRefNode);
+                var varDefListNode = _iqtCommand.CreateVarDefListNode(castNode, out projectVar);
 
-                ProjectOp projectOp = _iqtCommand.CreateProjectOp(projectVar);
-                Node projectNode = _iqtCommand.CreateNode(projectOp, node, varDefListNode);
+                var projectOp = _iqtCommand.CreateProjectOp(projectVar);
+                var projectNode = _iqtCommand.CreateNode(projectOp, node, varDefListNode);
 
                 _varMap[projectNode] = projectVar;
                 return projectNode;
@@ -1163,7 +1230,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
                 else
                 {
-                    SoftCastOp castOp = _iqtCommand.CreateSoftCastOp(targetType);
+                    var castOp = _iqtCommand.CreateSoftCastOp(targetType);
                     return _iqtCommand.CreateNode(castOp, node);
                 }
             }
@@ -1183,8 +1250,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         private Node BuildEntityRef(Node arg, TypeUsage entityType)
         {
-            TypeUsage refType = TypeHelpers.CreateReferenceTypeUsage((EntityType)entityType.EdmType);
-            return _iqtCommand.CreateNode(_iqtCommand.CreateGetEntityRefOp(refType), arg);      
+            var refType = TypeHelpers.CreateReferenceTypeUsage((EntityType)entityType.EdmType);
+            return _iqtCommand.CreateNode(_iqtCommand.CreateGetEntityRefOp(refType), arg);
         }
 
         #endregion
@@ -1206,23 +1273,26 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             // if we're accessing a key member of a navigation, collapse the structured instance
             // to the key reference.
-            if (propertyExpression.Instance.ExpressionKind == DbExpressionKind.Property &&
+            if (propertyExpression.Instance.ExpressionKind == DbExpressionKind.Property
+                &&
                 Helper.IsEntityType(propertyExpression.Instance.ResultType.EdmType))
             {
-                EntityType instanceType = (EntityType)propertyExpression.Instance.ResultType.EdmType;
-                DbPropertyExpression instanceExpression = (DbPropertyExpression)propertyExpression.Instance;
-                if (Helper.IsNavigationProperty(instanceExpression.Property) &&
+                var instanceType = (EntityType)propertyExpression.Instance.ResultType.EdmType;
+                var instanceExpression = (DbPropertyExpression)propertyExpression.Instance;
+                if (Helper.IsNavigationProperty(instanceExpression.Property)
+                    &&
                     instanceType.KeyMembers.Contains(propertyExpression.Property))
                 {
                     // modify the property expression so that it merely retrieves the reference
                     // not the entire entity
-                    NavigationProperty navigationProperty = (NavigationProperty)instanceExpression.Property;
+                    var navigationProperty = (NavigationProperty)instanceExpression.Property;
 
                     DbExpression navigationSource = instanceExpression.Instance.GetEntityRef();
-                    DbExpression navigationExpression = navigationSource.Navigate(navigationProperty.FromEndMember, navigationProperty.ToEndMember);
+                    DbExpression navigationExpression = navigationSource.Navigate(
+                        navigationProperty.FromEndMember, navigationProperty.ToEndMember);
                     rewritten = navigationExpression.GetRefKey();
                     rewritten = rewritten.Property(propertyExpression.Property.Name);
-                    
+
                     return true;
                 }
             }
@@ -1231,28 +1301,30 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return false;
         }
 
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(DbPropertyExpression e)
         {
             // Only Properties, Relationship End and NavigationProperty members are supported.
             if (BuiltInTypeKind.EdmProperty != e.Property.BuiltInTypeKind &&
-                BuiltInTypeKind.AssociationEndMember != e.Property.BuiltInTypeKind &&
+                BuiltInTypeKind.AssociationEndMember != e.Property.BuiltInTypeKind
+                &&
                 BuiltInTypeKind.NavigationProperty != e.Property.BuiltInTypeKind)
             {
                 throw EntityUtil.NotSupported();
             }
 
             PlanCompiler.Assert(e.Instance != null, "Static properties are not supported");
-            
+
             Node retNode = null;
             DbExpression rewritten;
             if (TryRewriteKeyPropertyAccess(e, out rewritten))
             {
-                retNode = this.VisitExpr(rewritten);
+                retNode = VisitExpr(rewritten);
             }
             else
             {
-                Node instance = VisitExpr(e.Instance);
+                var instance = VisitExpr(e.Instance);
 
                 //
                 // Retrieving a property from a new instance constructor can be
@@ -1260,18 +1332,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // For example, Property(Row(A = x, B = y), 'A') => x
                 // All structured types (including association types) are considered.
                 //
-                if (e.Instance.ExpressionKind == DbExpressionKind.NewInstance &&
+                if (e.Instance.ExpressionKind == DbExpressionKind.NewInstance
+                    &&
                     Helper.IsStructuralType(e.Instance.ResultType.EdmType))
                 {
                     // Retrieve the 'structural' members of the instance's type.
                     // For Association types this should be only Association End members,
                     // while for Complex, Entity or Row types is should be only Properties.
-                    System.Collections.IList propertyOrEndMembers = Helper.GetAllStructuralMembers(e.Instance.ResultType.EdmType);
+                    var propertyOrEndMembers = Helper.GetAllStructuralMembers(e.Instance.ResultType.EdmType);
 
                     // Find the position of the member with the same name as the retrieved
                     // member in the list of structural members. 
-                    int memberIdx = -1;
-                    for (int idx = 0; idx < propertyOrEndMembers.Count; idx++)
+                    var memberIdx = -1;
+                    for (var idx = 0; idx < propertyOrEndMembers.Count; idx++)
                     {
                         if (string.Equals(e.Property.Name, ((EdmMember)propertyOrEndMembers[idx]).Name, StringComparison.Ordinal))
                         {
@@ -1307,19 +1380,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             Op op = _iqtCommand.CreateComparisonOp(s_opMap[e.ExpressionKind]);
 
-            Node leftArg = VisitExprAsScalar(e.Left);
-            Node rightArg = VisitExprAsScalar(e.Right);
+            var leftArg = VisitExprAsScalar(e.Left);
+            var rightArg = VisitExprAsScalar(e.Right);
 
-            TypeUsage commonType = TypeHelpers.GetCommonTypeUsage(e.Left.ResultType, e.Right.ResultType);
+            var commonType = TypeHelpers.GetCommonTypeUsage(e.Left.ResultType, e.Right.ResultType);
 
             // Make sure that the inputs have been cast to the right types
             if (!Command.EqualTypes(e.Left.ResultType, e.Right.ResultType))
-            {    
+            {
                 leftArg = BuildSoftCast(leftArg, commonType);
                 rightArg = BuildSoftCast(rightArg, commonType);
             }
 
-            if (TypeSemantics.IsEntityType(commonType) &&
+            if (TypeSemantics.IsEntityType(commonType)
+                &&
                 (e.ExpressionKind == DbExpressionKind.Equals || e.ExpressionKind == DbExpressionKind.NotEquals))
             {
                 // Entity (in)equality is implemented as ref (in)equality
@@ -1337,7 +1411,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 VisitExpr(e.Argument),
                 VisitExpr(e.Pattern),
                 VisitExpr(e.Escape)
-            );
+                );
         }
 
         private Node CreateLimitNode(Node inputNode, Node limitNode, bool withTies)
@@ -1346,7 +1420,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Limit(Skip(x)) - which becomes ConstrainedSortOp - and Limit(Sort(x)) are special cases
             //
             Node retNode = null;
-            if (OpType.ConstrainedSort == inputNode.Op.OpType &&
+            if (OpType.ConstrainedSort == inputNode.Op.OpType
+                &&
                 OpType.Null == inputNode.Child2.Op.OpType)
             {
                 //
@@ -1367,7 +1442,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
                 retNode = inputNode;
             }
-            else if (OpType.Sort == inputNode.Op.OpType)
+            else if (OpType.Sort
+                     == inputNode.Op.OpType)
             {
                 //
                 // This DbLimitExpression is applying a limit to a DbSortExpression.
@@ -1386,7 +1462,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                         inputNode.Child0,
                         _iqtCommand.CreateNode(_iqtCommand.CreateNullOp(_iqtCommand.IntegerType)),
                         limitNode
-                    );
+                        );
             }
             else
             {
@@ -1404,7 +1480,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                         inputNode,
                         _iqtCommand.CreateNode(_iqtCommand.CreateNullOp(_iqtCommand.IntegerType)),
                         limitNode
-                    );
+                        );
             }
 
             return retNode;
@@ -1415,16 +1491,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Visit the Argument and retrieve its Var
             //
-            Node inputNode = EnsureRelOp(VisitExpr(expression.Argument));
-            Var inputVar = _varMap[inputNode];
+            var inputNode = EnsureRelOp(VisitExpr(expression.Argument));
+            var inputVar = _varMap[inputNode];
 
             //
             // Visit the Limit ensuring that it is a scalar
             //
-            Node limitNode = VisitExprAsScalar(expression.Limit);
+            var limitNode = VisitExprAsScalar(expression.Limit);
 
             Node retNode;
-            if(OpType.Project == inputNode.Op.OpType)
+            if (OpType.Project
+                == inputNode.Op.OpType)
             {
                 //
                 // If the input to the DbLimitExpression is a projection, then apply the Limit operation to the
@@ -1450,11 +1527,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // or because the input was a ConstrainedSortOp that was simply updated with the Limit value)
             // then the Node -> Var map does not need to be updated.
             //
-            if(!object.ReferenceEquals(retNode, inputNode))
+            if (!ReferenceEquals(retNode, inputNode))
             {
                 _varMap[retNode] = inputVar;
             }
-            
+
             return retNode;
         }
 
@@ -1463,16 +1540,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // SQLBUDT #484294: We need to recognize and simplify IsNull - IsNull and IsNull - Not - IsNull
             // This is the latest point where such patterns can be easily recognized. 
             // After this the input predicate would get translated into a case statement.
-            bool isAlwaysFalse = false;  //true if IsNull - IsNull and IsNull - Not - IsNull is recognized
+            var isAlwaysFalse = false; //true if IsNull - IsNull and IsNull - Not - IsNull is recognized
 
-            if (e.Argument.ExpressionKind == DbExpressionKind.IsNull)
+            if (e.Argument.ExpressionKind
+                == DbExpressionKind.IsNull)
             {
                 isAlwaysFalse = true;
             }
-            else if (e.Argument.ExpressionKind == DbExpressionKind.Not)
+            else if (e.Argument.ExpressionKind
+                     == DbExpressionKind.Not)
             {
-                DbNotExpression notExpression = (DbNotExpression)e.Argument;
-                if (notExpression.Argument.ExpressionKind == DbExpressionKind.IsNull)
+                var notExpression = (DbNotExpression)e.Argument;
+                if (notExpression.Argument.ExpressionKind
+                    == DbExpressionKind.IsNull)
                 {
                     isAlwaysFalse = true;
                 }
@@ -1484,10 +1564,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //This gets further simplified by transformation rules.
             if (isAlwaysFalse)
             {
-                return _iqtCommand.CreateNode(op, _iqtCommand.CreateNode(_iqtCommand.CreateInternalConstantOp(_iqtCommand.BooleanType, true)));
+                return _iqtCommand.CreateNode(
+                    op, _iqtCommand.CreateNode(_iqtCommand.CreateInternalConstantOp(_iqtCommand.BooleanType, true)));
             }
 
-            Node argNode = VisitExprAsScalar(e.Argument);
+            var argNode = VisitExprAsScalar(e.Argument);
             if (TypeSemantics.IsEntityType(e.Argument.ResultType))
             {
                 argNode = BuildEntityRef(argNode, e.Argument.ResultType);
@@ -1501,10 +1582,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             Op op = _iqtCommand.CreateArithmeticOp(s_opMap[e.ExpressionKind], e.ResultType);
             // Make sure that the inputs have been "cast" to the result type
             // Assumption: The input type must be the same as the result type. Is this always true?
-            List<Node> children = new List<Node>();
-            foreach (DbExpression arg in e.Arguments)
+            var children = new List<Node>();
+            foreach (var arg in e.Arguments)
             {
-                Node child = VisitExprAsScalar(arg);
+                var child = VisitExprAsScalar(arg);
                 children.Add(BuildSoftCast(child, e.ResultType));
             }
             return _iqtCommand.CreateNode(op, children);
@@ -1530,10 +1611,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbDistinctExpression e)
         {
-            Node inputSetNode = EnsureRelOp(VisitExpr(e.Argument));
-            Var inputVar = _varMap[inputSetNode];
+            var inputSetNode = EnsureRelOp(VisitExpr(e.Argument));
+            var inputVar = _varMap[inputSetNode];
             Op distinctOp = _iqtCommand.CreateDistinctOp(inputVar);
-            Node distinctNode = _iqtCommand.CreateNode(distinctOp, inputSetNode);
+            var distinctNode = _iqtCommand.CreateNode(distinctOp, inputSetNode);
             _varMap[distinctNode] = inputVar;
             return distinctNode;
         }
@@ -1541,12 +1622,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override Node Visit(DbElementExpression e)
         {
             Op elementOp = _iqtCommand.CreateElementOp(e.ResultType);
-            Node inputSetNode = EnsureRelOp(VisitExpr(e.Argument));
-            
+            var inputSetNode = EnsureRelOp(VisitExpr(e.Argument));
+
             // Add a soft cast if needed
             inputSetNode = BuildSoftCast(inputSetNode, TypeHelpers.CreateCollectionTypeUsage(e.ResultType));
-            
-            Var inputVar = _varMap[inputSetNode];
+
+            var inputVar = _varMap[inputSetNode];
 
             //
             // Add a singleRowOp enforcer, as we are not guaranteed that the input
@@ -1566,33 +1647,40 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // IsEmpty(input set) --> Not(Exists(input set))
             //
             Op existsOp = _iqtCommand.CreateExistsOp();
-            Node inputSetNode = EnsureRelOp(VisitExpr(e.Argument));
+            var inputSetNode = EnsureRelOp(VisitExpr(e.Argument));
 
             return _iqtCommand.CreateNode(
                 _iqtCommand.CreateConditionalOp(OpType.Not),
                 _iqtCommand.CreateNode(existsOp, inputSetNode)
-            );
+                );
         }
-        
+
         /// <summary>
         /// Encapsulates the logic required to convert a SetOp (Except, Intersect, UnionAll) expression
         /// into an IQT Node/Op pair.
         /// </summary>
         /// <param name="expression">The DbExceptExpression, DbIntersectExpression or DbUnionAllExpression to convert, as an instance of DbBinaryExpression</param>
         /// <returns>A new IQT Node that references the ExceptOp, IntersectOp or UnionAllOp created based on the expression</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SetOp"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Non-SetOp"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VisitSetOpExpression"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbExpression"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SetOp")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Non-SetOp")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VisitSetOpExpression")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbExpression")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node VisitSetOpExpression(DbBinaryExpression expression)
         {
-            PlanCompiler.Assert(DbExpressionKind.Except == expression.ExpressionKind ||
-                         DbExpressionKind.Intersect == expression.ExpressionKind ||
-                         DbExpressionKind.UnionAll == expression.ExpressionKind,
-                         "Non-SetOp DbExpression used as argument to VisitSetOpExpression");
+            PlanCompiler.Assert(
+                DbExpressionKind.Except == expression.ExpressionKind ||
+                DbExpressionKind.Intersect == expression.ExpressionKind ||
+                DbExpressionKind.UnionAll == expression.ExpressionKind,
+                "Non-SetOp DbExpression used as argument to VisitSetOpExpression");
 
-            PlanCompiler.Assert(TypeSemantics.IsCollectionType(expression.ResultType), "SetOp DbExpression does not have collection result type?");
+            PlanCompiler.Assert(
+                TypeSemantics.IsCollectionType(expression.ResultType), "SetOp DbExpression does not have collection result type?");
 
             // Visit the left and right collection arguments
-            Node leftNode = EnsureRelOp(VisitExpr(expression.Left));
-            Node rightNode = EnsureRelOp(VisitExpr(expression.Right));
+            var leftNode = EnsureRelOp(VisitExpr(expression.Left));
+            var rightNode = EnsureRelOp(VisitExpr(expression.Right));
 
             //
             // Now the hard part. "Normalize" the left and right sides to
@@ -1605,15 +1693,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             Var outputVar = _iqtCommand.CreateSetOpVar(TypeHelpers.GetEdmType<CollectionType>(expression.ResultType).TypeUsage);
 
             // Create VarMaps for the left and right arguments that map the output Var to the Var produced by the corresponding argument
-            VarMap leftMap = new VarMap();
+            var leftMap = new VarMap();
             leftMap.Add(outputVar, _varMap[leftNode]);
 
-            VarMap rightMap = new VarMap();
+            var rightMap = new VarMap();
             rightMap.Add(outputVar, _varMap[rightNode]);
 
             // Create a SetOp that corresponds to the operation specified by the expression's DbExpressionKind
             Op setOp = null;
-            switch(expression.ExpressionKind)
+            switch (expression.ExpressionKind)
             {
                 case DbExpressionKind.Except:
                     setOp = _iqtCommand.CreateExceptOp(leftMap, rightMap);
@@ -1629,7 +1717,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             // Create a new Node that references the SetOp
-            Node setOpNode = _iqtCommand.CreateNode(setOp, leftNode, rightNode);
+            var setOpNode = _iqtCommand.CreateNode(setOp, leftNode, rightNode);
 
             // Update the Node => Var map with an entry that maps the new Node to the output Var
             _varMap[setOpNode] = outputVar;
@@ -1670,7 +1758,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override Node Visit(DbIsOfExpression e)
         {
             Op op = null;
-            if (DbExpressionKind.IsOfOnly == e.ExpressionKind)
+            if (DbExpressionKind.IsOfOnly
+                == e.ExpressionKind)
             {
                 op = _iqtCommand.CreateIsOfOnlyOp(e.OfType);
             }
@@ -1689,8 +1778,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbCaseExpression e)
         {
-            List<Node> childNodes = new List<Node>();
-            for (int idx = 0; idx < e.When.Count; idx++)
+            var childNodes = new List<Node>();
+            for (var idx = 0; idx < e.When.Count; idx++)
             {
                 childNodes.Add(VisitExprAsPredicate(e.When[idx]));
                 // Make sure that each then-clause is the same type as the result
@@ -1701,7 +1790,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             childNodes.Add(BuildSoftCast(VisitExprAsScalar(e.Else), e.ResultType));
             return _iqtCommand.CreateNode(_iqtCommand.CreateCaseOp(e.ResultType), childNodes);
         }
-            
+
         /// <summary>
         /// Represents one or more type filters that should be AND'd together to produce an aggregate IsOf filter expression
         /// </summary>
@@ -1725,20 +1814,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             internal IsOfFilter(DbIsOfExpression template)
             {
-                this.requiredType = template.OfType;
-                this.isExact = (template.ExpressionKind == DbExpressionKind.IsOfOnly);
+                requiredType = template.OfType;
+                isExact = (template.ExpressionKind == DbExpressionKind.IsOfOnly);
             }
 
             internal IsOfFilter(DbOfTypeExpression template)
             {
-                this.requiredType = template.OfType;
-                this.isExact = (template.ExpressionKind == DbExpressionKind.OfTypeOnly);
+                requiredType = template.OfType;
+                isExact = (template.ExpressionKind == DbExpressionKind.OfTypeOnly);
             }
 
             private IsOfFilter(TypeUsage required, bool exact)
             {
-                this.requiredType = required;
-                this.isExact = exact;
+                requiredType = required;
+                isExact = exact;
             }
 
             private IsOfFilter Merge(TypeUsage otherRequiredType, bool otherIsExact)
@@ -1746,34 +1835,35 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // Can the two type filters be merged? In general, a more specific
                 // type filter can replace a less specific type filter.
                 IsOfFilter result;
-                bool typesEqual = this.requiredType.EdmEquals(otherRequiredType);
+                var typesEqual = requiredType.EdmEquals(otherRequiredType);
 
                 // The simplest case - the filters are equivalent
-                if (typesEqual && this.isExact == otherIsExact)
+                if (typesEqual && isExact == otherIsExact)
                 {
                     result = this;
                 }
 
-                // Next simplest - two IsOfOnly filters can never be merged if the types are different
-                // (and if the types were equal the above condition would have been satisfied).
-                // SC_CONSIDER: Replace this contradiction with 'CASE WHEN <input> IS NULL THEN NULL ELSE FALSE' ?
-                else if (this.isExact && otherIsExact)
+                    // Next simplest - two IsOfOnly filters can never be merged if the types are different
+                    // (and if the types were equal the above condition would have been satisfied).
+                    // SC_CONSIDER: Replace this contradiction with 'CASE WHEN <input> IS NULL THEN NULL ELSE FALSE' ?
+                else if (isExact && otherIsExact)
                 {
                     result = new IsOfFilter(otherRequiredType, otherIsExact);
                     result.next = this;
                 }
 
-                // Two IsOf filters can potentially be adjusted - the more specific type filter should be kept, if present
-                else if (!this.isExact && !otherIsExact)
+                    // Two IsOf filters can potentially be adjusted - the more specific type filter should be kept, if present
+                else if (!isExact
+                         && !otherIsExact)
                 {
                     // At this point the types cannot be equal. If one filter specifies a type that is a subtype of the other,
                     // then the subtype filter is the one that should remain
-                    if (otherRequiredType.IsSubtypeOf(this.requiredType))
+                    if (otherRequiredType.IsSubtypeOf(requiredType))
                     {
                         result = new IsOfFilter(otherRequiredType, false);
-                        result.next = this.next;
+                        result.next = next;
                     }
-                    else if (this.requiredType.IsSubtypeOf(otherRequiredType))
+                    else if (requiredType.IsSubtypeOf(otherRequiredType))
                     {
                         result = this;
                     }
@@ -1787,34 +1877,34 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     }
                 }
 
-                // One filter is an IsOf filter while the other is an IsOfOnly filter
+                    // One filter is an IsOf filter while the other is an IsOfOnly filter
                 else
                 {
                     // For IsOf(T) AND IsOfOnly(T), the IsOf filter can be dropped
                     if (typesEqual)
                     {
                         result = new IsOfFilter(otherRequiredType, true);
-                        result.next = this.next;
+                        result.next = next;
                     }
                     else
                     {
                         // Decide which is the 'IsOfOnly' type and which is the 'IsOf' type
-                        TypeUsage isOfOnlyType = (this.isExact ? this.requiredType : otherRequiredType);
-                        TypeUsage isOfType = (this.isExact ? otherRequiredType : this.requiredType);
+                        var isOfOnlyType = (isExact ? requiredType : otherRequiredType);
+                        var isOfType = (isExact ? otherRequiredType : requiredType);
 
                         // IsOf(Super) && IsOfOnly(Sub) => IsOfOnly(Sub)
                         // In all other cases, both filters remain - even though the IsOfOnly(Super) and IsOf(Sub) is obviously a contradiction.
                         // SC_CONSIDER: Replace this contradiction with 'CASE WHEN <input> IS NULL THEN NULL ELSE FALSE' ?
                         if (isOfOnlyType.IsSubtypeOf(isOfType))
                         {
-                            if (object.ReferenceEquals(isOfOnlyType, this.requiredType) && this.isExact)
+                            if (ReferenceEquals(isOfOnlyType, requiredType) && isExact)
                             {
                                 result = this;
                             }
                             else
                             {
                                 result = new IsOfFilter(isOfOnlyType, true);
-                                result.next = this.next;
+                                result.next = next;
                             }
                         }
                         else
@@ -1840,7 +1930,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             internal IEnumerable<KeyValuePair<TypeUsage, bool>> ToEnumerable()
             {
-                IsOfFilter currentFilter = this;
+                var currentFilter = this;
                 while (currentFilter != null)
                 {
                     yield return new KeyValuePair<TypeUsage, bool>(currentFilter.requiredType, currentFilter.isExact);
@@ -1852,12 +1942,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private DbFilterExpression CreateIsOfFilterExpression(DbExpression input, IsOfFilter typeFilter)
         {
             // Create a filter expression based on the IsOf/IsOfOnly operations specified by typeFilter
-            DbExpressionBinding resultBinding = input.Bind();
-            List<DbExpression> predicates = new List<DbExpression>(
-                typeFilter.ToEnumerable().Select(tf => tf.Value ? resultBinding.Variable.IsOfOnly(tf.Key) : resultBinding.Variable.IsOf(tf.Key)).ToList()
-            );
-            DbExpression predicate = Helpers.BuildBalancedTreeInPlace(predicates, (left, right) => left.And(right));
-            DbFilterExpression result = resultBinding.Filter(predicate);
+            var resultBinding = input.Bind();
+            var predicates = new List<DbExpression>(
+                typeFilter.ToEnumerable().Select(
+                    tf => tf.Value ? resultBinding.Variable.IsOfOnly(tf.Key) : resultBinding.Variable.IsOf(tf.Key)).ToList()
+                );
+            var predicate = Helpers.BuildBalancedTreeInPlace(predicates, (left, right) => left.And(right));
+            var result = resultBinding.Filter(predicate);
 
             // Track the fact that this IsOfFilter was created by the ITreeGenerator itself and should
             // simply be converted to an ITree Node when it is encountered again by the visitor pass.
@@ -1867,15 +1958,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         private static bool IsIsOfFilter(DbFilterExpression filter)
         {
-            if(filter.Predicate.ExpressionKind != DbExpressionKind.IsOf &&
-               filter.Predicate.ExpressionKind != DbExpressionKind.IsOfOnly)
+            if (filter.Predicate.ExpressionKind != DbExpressionKind.IsOf
+                &&
+                filter.Predicate.ExpressionKind != DbExpressionKind.IsOfOnly)
             {
                 return false;
             }
-            
-            DbExpression isOfArgument = ((DbIsOfExpression)filter.Predicate).Argument;
+
+            var isOfArgument = ((DbIsOfExpression)filter.Predicate).Argument;
             return (isOfArgument.ExpressionKind == DbExpressionKind.VariableReference &&
-                   ((DbVariableReferenceExpression)isOfArgument).VariableName == filter.Input.VariableName);
+                    ((DbVariableReferenceExpression)isOfArgument).VariableName == filter.Input.VariableName);
         }
 
         private DbExpression ApplyIsOfFilter(DbExpression current, IsOfFilter typeFilter)
@@ -1896,7 +1988,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // pushed down through.
             //
             DbExpression result;
-            switch(current.ExpressionKind)
+            switch (current.ExpressionKind)
             {
                 case DbExpressionKind.Distinct:
                     {
@@ -1906,43 +1998,44 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
                 case DbExpressionKind.Filter:
                     {
-                        DbFilterExpression filter = (DbFilterExpression)current;
+                        var filter = (DbFilterExpression)current;
                         if (IsIsOfFilter(filter))
                         {
                             // If this is an IsOf filter, examine the interaction with the current filter we are trying to apply
-                            DbIsOfExpression isOfExp = (DbIsOfExpression)filter.Predicate;
+                            var isOfExp = (DbIsOfExpression)filter.Predicate;
                             typeFilter = typeFilter.Merge(isOfExp);
                             result = ApplyIsOfFilter(filter.Input.Expression, typeFilter);
                         }
                         else
                         {
                             // Otherwise, push the current IsOf filter under this filter
-                            DbExpression rewritten = ApplyIsOfFilter(filter.Input.Expression, typeFilter);
+                            var rewritten = ApplyIsOfFilter(filter.Input.Expression, typeFilter);
                             result = rewritten.BindAs(filter.Input.VariableName).Filter(filter.Predicate);
                         }
                     }
                     break;
-                                    
+
                 case DbExpressionKind.OfType:
                 case DbExpressionKind.OfTypeOnly:
                     {
                         // Examine the interaction of this nested OfType filter with the OfType filter we are trying to apply
                         // and construct an aggregated type filter (where possible)
-                        DbOfTypeExpression ofTypeExp = (DbOfTypeExpression)current;
+                        var ofTypeExp = (DbOfTypeExpression)current;
                         typeFilter = typeFilter.Merge(ofTypeExp);
-                        DbExpression rewrittenIsOf = ApplyIsOfFilter(ofTypeExp.Argument, typeFilter);
-                        DbExpressionBinding treatBinding = rewrittenIsOf.Bind();
-                        DbTreatExpression treatProjection = treatBinding.Variable.TreatAs(ofTypeExp.OfType);
+                        var rewrittenIsOf = ApplyIsOfFilter(ofTypeExp.Argument, typeFilter);
+                        var treatBinding = rewrittenIsOf.Bind();
+                        var treatProjection = treatBinding.Variable.TreatAs(ofTypeExp.OfType);
                         _fakeTreats.Add(treatProjection);
-                        result = treatBinding.Project(treatProjection);                        
+                        result = treatBinding.Project(treatProjection);
                     }
                     break;
 
                 case DbExpressionKind.Project:
                     {
-                        DbProjectExpression project = (DbProjectExpression)current;
-                        if(project.Projection.ExpressionKind == DbExpressionKind.VariableReference &&
-                           ((DbVariableReferenceExpression)project.Projection).VariableName == project.Input.VariableName)
+                        var project = (DbProjectExpression)current;
+                        if (project.Projection.ExpressionKind == DbExpressionKind.VariableReference
+                            &&
+                            ((DbVariableReferenceExpression)project.Projection).VariableName == project.Input.VariableName)
                         {
                             // If this is an identity-project, remove it by visiting the input expression
                             result = ApplyIsOfFilter(project.Input.Expression, typeFilter);
@@ -1954,16 +2047,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                         }
                     }
                     break;
-                                    
+
                 case DbExpressionKind.Sort:
                     {
                         // The IsOf filter is applied to the Sort input, then the sort keys are reapplied to create a new Sort expression.
-                        DbSortExpression sort = (DbSortExpression)current;
-                        DbExpression sortInput = ApplyIsOfFilter(sort.Input.Expression, typeFilter);
+                        var sort = (DbSortExpression)current;
+                        var sortInput = ApplyIsOfFilter(sort.Input.Expression, typeFilter);
                         result = sortInput.BindAs(sort.Input.VariableName).Sort(sort.SortOrder);
                     }
                     break;
-                               
+
                 default:
                     {
                         // This is not a recognized case, so simply apply the type filter to the expression.
@@ -1973,7 +2066,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             return result;
         }
-                
+
         /// <summary>
         /// Build the equivalent of an OfTypeExpression over the input (ie) produce the set of values from the
         /// input that are of the desired type (exactly of the desired type, if the "includeSubtypes" parameter is false).
@@ -1991,7 +2084,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <param name="includeSubtypes">do we include subtypes of the desired element type</param>
         // <param name="resultNode">the result subtree</param>
         // <param name="resultVar">the single Var produced by the result subtree</param>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbOfTypeExpression"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbOfTypeExpression")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(DbOfTypeExpression e)
         {
             //
@@ -1999,17 +2094,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             PlanCompiler.Assert(TypeSemantics.IsCollectionType(e.Argument.ResultType), "Non-Collection Type Argument in DbOfTypeExpression");
 
-            DbExpression rewrittenIsOfFilter = ApplyIsOfFilter(e.Argument, new IsOfFilter(e));
+            var rewrittenIsOfFilter = ApplyIsOfFilter(e.Argument, new IsOfFilter(e));
 
             //
             // Visit the collection argument and ensure that it is a RelOp suitable for subsequent use in the Filter/Project used to convert OfType.
             //
-            Node inputNode = EnsureRelOp(VisitExpr(rewrittenIsOfFilter));
+            var inputNode = EnsureRelOp(VisitExpr(rewrittenIsOfFilter));
 
             //
             // Retrieve the Var produced by the RelOp input.
             //
-            Var inputVar = _varMap[inputNode];
+            var inputVar = _varMap[inputNode];
 
             //
             // Build the Treat part of the OfType expression tree - note that this is a 'fake'
@@ -2017,7 +2112,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // plan compiler is concerned).
             //
             Var resultVar;
-            Node resultNode = _iqtCommand.BuildFakeTreatProject(inputNode, inputVar, e.OfType, out resultVar);
+            var resultNode = _iqtCommand.BuildFakeTreatProject(inputNode, inputVar, e.OfType, out resultVar);
 
             //
             // Add the node-var mapping, and return
@@ -2040,15 +2135,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             else if (TypeSemantics.IsEntityType(e.ResultType))
             {
-                List<RelProperty> relPropertyList = new List<RelProperty>();
+                var relPropertyList = new List<RelProperty>();
                 relPropertyExprs = new List<Node>();
                 if (e.HasRelatedEntityReferences)
                 {
-                    foreach (DbRelatedEntityRef targetRef in e.RelatedEntityReferences)
+                    foreach (var targetRef in e.RelatedEntityReferences)
                     {
-                        RelProperty relProperty = new RelProperty((RelationshipType)targetRef.TargetEnd.DeclaringType, targetRef.SourceEnd, targetRef.TargetEnd);
+                        var relProperty = new RelProperty(
+                            (RelationshipType)targetRef.TargetEnd.DeclaringType, targetRef.SourceEnd, targetRef.TargetEnd);
                         relPropertyList.Add(relProperty);
-                        Node relPropertyNode = VisitExprAsScalar(targetRef.TargetEntityReference);
+                        var relPropertyNode = VisitExprAsScalar(targetRef.TargetEntityReference);
                         relPropertyExprs.Add(relPropertyNode);
                     }
                 }
@@ -2063,25 +2159,25 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Build up the list of arguments. Make sure that they match 
             // the expected types (and add "soft" casts, if needed)
             //
-            List<Node> newArgs = new List<Node>();
+            var newArgs = new List<Node>();
             if (TypeSemantics.IsStructuralType(e.ResultType))
             {
-                StructuralType resultType = TypeHelpers.GetEdmType<StructuralType>(e.ResultType);
-                int i = 0;
+                var resultType = TypeHelpers.GetEdmType<StructuralType>(e.ResultType);
+                var i = 0;
                 foreach (EdmMember m in TypeHelpers.GetAllStructuralMembers(resultType))
                 {
-                    Node newArg = BuildSoftCast(VisitExprAsScalar(e.Arguments[i]), Helper.GetModelTypeUsage(m));
+                    var newArg = BuildSoftCast(VisitExprAsScalar(e.Arguments[i]), Helper.GetModelTypeUsage(m));
                     newArgs.Add(newArg);
                     i++;
                 }
             }
             else
             {
-                CollectionType resultType = TypeHelpers.GetEdmType<CollectionType>(e.ResultType);
-                TypeUsage elementTypeUsage = resultType.TypeUsage;
-                foreach (DbExpression arg in e.Arguments)
+                var resultType = TypeHelpers.GetEdmType<CollectionType>(e.ResultType);
+                var elementTypeUsage = resultType.TypeUsage;
+                foreach (var arg in e.Arguments)
                 {
-                    Node newArg = BuildSoftCast(VisitExprAsScalar(arg), elementTypeUsage);
+                    var newArg = BuildSoftCast(VisitExprAsScalar(arg), elementTypeUsage);
                     newArgs.Add(newArg);
                 }
             }
@@ -2090,7 +2186,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 newArgs.AddRange(relPropertyExprs);
             }
-            Node node = _iqtCommand.CreateNode(newInstOp, newArgs);
+            var node = _iqtCommand.CreateNode(newInstOp, newArgs);
 
             return node;
         }
@@ -2104,15 +2200,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // order to determine whether or not the SoftCastOp should be applied.
             //
             Op op = _iqtCommand.CreateRefOp(e.EntitySet, e.ResultType);
-            Node newArg = BuildSoftCast(VisitExprAsScalar(e.Argument), TypeHelpers.CreateKeyRowType(e.EntitySet.ElementType)); 
+            var newArg = BuildSoftCast(VisitExprAsScalar(e.Argument), TypeHelpers.CreateKeyRowType(e.EntitySet.ElementType));
             return _iqtCommand.CreateNode(op, newArg);
         }
 
         public override Node Visit(DbRelationshipNavigationExpression e)
         {
-            RelProperty relProperty = new RelProperty(e.Relationship, e.NavigateFrom, e.NavigateTo);
+            var relProperty = new RelProperty(e.Relationship, e.NavigateFrom, e.NavigateTo);
             Op op = _iqtCommand.CreateNavigateOp(e.ResultType, relProperty);
-            Node arg = VisitExprAsScalar(e.NavigationSource);
+            var arg = VisitExprAsScalar(e.NavigationSource);
             return _iqtCommand.CreateNode(op, arg);
         }
 
@@ -2137,14 +2233,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override Node Visit(DbScanExpression e)
         {
             // Create a new table definition
-            TableMD tableMetadata = Command.CreateTableDefinition(e.Target);
-            
+            var tableMetadata = Command.CreateTableDefinition(e.Target);
+
             // Create a scan table operator
-            ScanTableOp op = _iqtCommand.CreateScanTableOp(tableMetadata);
+            var op = _iqtCommand.CreateScanTableOp(tableMetadata);
 
             // Map the ScanTableOp to the ColumnVar of the Table's single column of the Extent's element type
-            Node node = _iqtCommand.CreateNode(op);
-            Var singleColumn = op.Table.Columns[0];
+            var node = _iqtCommand.CreateNode(op);
+            var singleColumn = op.Table.Columns[0];
             _varMap[node] = singleColumn;
 
             return node;
@@ -2152,35 +2248,36 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbFilterExpression e)
         {
-            if (!IsIsOfFilter(e) || _processedIsOfFilters.Contains(e))
+            if (!IsIsOfFilter(e)
+                || _processedIsOfFilters.Contains(e))
             {
                 //
                 // Visit the Predicate with the Input binding's variable in scope
                 //
-                Node inputSetNode = EnterExpressionBinding(e.Input);
-                Node predicateNode = VisitExprAsPredicate(e.Predicate);
+                var inputSetNode = EnterExpressionBinding(e.Input);
+                var predicateNode = VisitExprAsPredicate(e.Predicate);
                 ExitExpressionBinding();
 
                 Op filtOp = _iqtCommand.CreateFilterOp();
 
                 // Update the Node --> Var mapping. Filter maps to the same Var as its input.
-                Node filtNode = _iqtCommand.CreateNode(filtOp, inputSetNode, predicateNode);
+                var filtNode = _iqtCommand.CreateNode(filtOp, inputSetNode, predicateNode);
                 _varMap[filtNode] = _varMap[inputSetNode];
 
                 return filtNode;
             }
             else
             {
-                DbIsOfExpression isOfPredicate = (DbIsOfExpression)e.Predicate;
-                DbExpression processed = ApplyIsOfFilter(e.Input.Expression, new IsOfFilter(isOfPredicate));
-                return this.VisitExpr(processed);
+                var isOfPredicate = (DbIsOfExpression)e.Predicate;
+                var processed = ApplyIsOfFilter(e.Input.Expression, new IsOfFilter(isOfPredicate));
+                return VisitExpr(processed);
             }
         }
 
         public override Node Visit(DbProjectExpression e)
         {
             // check if this is the discriminated projection for a query mapping view
-            if (e == this._discriminatedViewTopProject)
+            if (e == _discriminatedViewTopProject)
             {
                 return GenerateDiscriminatedProject(e);
             }
@@ -2190,46 +2287,49 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node GenerateDiscriminatedProject(DbProjectExpression e)
         {
-            PlanCompiler.Assert(null != _discriminatedViewTopProject, "if a project matches the pattern, there must be a corresponding discriminator map");
+            PlanCompiler.Assert(
+                null != _discriminatedViewTopProject, "if a project matches the pattern, there must be a corresponding discriminator map");
 
             // convert the input to the top level projection
-            Node source = EnterExpressionBinding(e.Input);
+            var source = EnterExpressionBinding(e.Input);
 
-            List<RelProperty> relPropertyList = new List<RelProperty>();
-            List<Node> relPropertyExprs = new List<Node>();
-            foreach (KeyValuePair<RelProperty, DbExpression> kv in _discriminatorMap.RelPropertyMap)
+            var relPropertyList = new List<RelProperty>();
+            var relPropertyExprs = new List<Node>();
+            foreach (var kv in _discriminatorMap.RelPropertyMap)
             {
                 relPropertyList.Add(kv.Key);
                 relPropertyExprs.Add(VisitExprAsScalar(kv.Value));
             }
 
             // construct a DiscriminatedNewInstanceOp
-            DiscriminatedNewEntityOp newInstOp = _iqtCommand.CreateDiscriminatedNewEntityOp(e.Projection.ResultType,
+            var newInstOp = _iqtCommand.CreateDiscriminatedNewEntityOp(
+                e.Projection.ResultType,
                 new ExplicitDiscriminatorMap(_discriminatorMap), _discriminatorMap.EntitySet, relPropertyList);
 
             // args include all projected properties and discriminator and the relProperties
-            List<Node> newArgs = new List<Node>(_discriminatorMap.PropertyMap.Count + 1);
+            var newArgs = new List<Node>(_discriminatorMap.PropertyMap.Count + 1);
             newArgs.Add(CreateNewInstanceArgument(_discriminatorMap.Discriminator.Property, _discriminatorMap.Discriminator));
             foreach (var propertyMap in _discriminatorMap.PropertyMap)
             {
-                DbExpression value = propertyMap.Value;
-                EdmProperty property = propertyMap.Key;
-                Node newArg = CreateNewInstanceArgument(property, value);
+                var value = propertyMap.Value;
+                var property = propertyMap.Key;
+                var newArg = CreateNewInstanceArgument(property, value);
                 newArgs.Add(newArg);
             }
             newArgs.AddRange(relPropertyExprs);
 
-            Node newInstNode = _iqtCommand.CreateNode(newInstOp, newArgs);
+            var newInstNode = _iqtCommand.CreateNode(newInstOp, newArgs);
             ExitExpressionBinding();
 
             Var sourceVar;
-            Node varDefListNode = _iqtCommand.CreateVarDefListNode(newInstNode, out sourceVar);
+            var varDefListNode = _iqtCommand.CreateVarDefListNode(newInstNode, out sourceVar);
 
-            ProjectOp projOp = _iqtCommand.CreateProjectOp(sourceVar);
-            Node projNode = _iqtCommand.CreateNode(projOp, source, varDefListNode);
+            var projOp = _iqtCommand.CreateProjectOp(sourceVar);
+            var projNode = _iqtCommand.CreateNode(projOp, source, varDefListNode);
             _varMap[projNode] = sourceVar;
 
             return projNode;
@@ -2237,21 +2337,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         private Node CreateNewInstanceArgument(EdmMember property, DbExpression value)
         {
-            Node newArg = BuildSoftCast(VisitExprAsScalar(value), Helper.GetModelTypeUsage(property));
+            var newArg = BuildSoftCast(VisitExprAsScalar(value), Helper.GetModelTypeUsage(property));
             return newArg;
         }
 
         private Node GenerateStandardProject(DbProjectExpression e)
         {
-            Node projectedSetNode = EnterExpressionBinding(e.Input);
-            Node projectionNode = VisitExprAsScalar(e.Projection);
+            var projectedSetNode = EnterExpressionBinding(e.Input);
+            var projectionNode = VisitExprAsScalar(e.Projection);
             ExitExpressionBinding();
 
             Var projectionVar;
-            Node varDefListNode = _iqtCommand.CreateVarDefListNode(projectionNode, out projectionVar);
+            var varDefListNode = _iqtCommand.CreateVarDefListNode(projectionNode, out projectionVar);
 
-            ProjectOp projOp = _iqtCommand.CreateProjectOp(projectionVar);
-            Node projNode = _iqtCommand.CreateNode(projOp, projectedSetNode, varDefListNode);
+            var projOp = _iqtCommand.CreateProjectOp(projectionVar);
+            var projNode = _iqtCommand.CreateNode(projOp, projectedSetNode, varDefListNode);
             _varMap[projNode] = projectionVar;
 
             return projNode;
@@ -2264,25 +2364,31 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbJoinExpression e)
         {
-            List<DbExpressionBinding> inputs = new List<DbExpressionBinding>();
+            var inputs = new List<DbExpressionBinding>();
             inputs.Add(e.Left);
             inputs.Add(e.Right);
 
             return VisitJoin(e, inputs, e.JoinCondition);
         }
 
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "CrossJoinOps"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "JoinOp"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbJoinExpression"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "JoinType"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "CrossJoinOps")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "JoinOp")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbJoinExpression")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "JoinType")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node VisitJoin(DbExpression e, IList<DbExpressionBinding> inputs, DbExpression joinCond)
         {
             //
             // Assert that the JoinType is covered. If JoinTypes are added to CQT then the
             // switch statement that constructs the JoinOp must be updated, along with this assert.
             //
-            PlanCompiler.Assert(DbExpressionKind.CrossJoin == e.ExpressionKind ||
-                            DbExpressionKind.InnerJoin == e.ExpressionKind ||
-                            DbExpressionKind.LeftOuterJoin == e.ExpressionKind ||
-                            DbExpressionKind.FullOuterJoin == e.ExpressionKind,
-                            "Unrecognized JoinType specified in DbJoinExpression");
+            PlanCompiler.Assert(
+                DbExpressionKind.CrossJoin == e.ExpressionKind ||
+                DbExpressionKind.InnerJoin == e.ExpressionKind ||
+                DbExpressionKind.LeftOuterJoin == e.ExpressionKind ||
+                DbExpressionKind.FullOuterJoin == e.ExpressionKind,
+                "Unrecognized JoinType specified in DbJoinExpression");
 
 #if DEBUG
             //
@@ -2294,12 +2400,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Visit Join inputs, track their nodes and vars.
             //
-            List<Node> inputNodes = new List<Node>();
-            List<Var> inputVars = new List<Var>();
-            for(int idx = 0; idx < inputs.Count; idx++)
+            var inputNodes = new List<Node>();
+            var inputVars = new List<Var>();
+            for (var idx = 0; idx < inputs.Count; idx++)
             {
                 Var boundVar;
-                Node inputNode = VisitBoundExpression(inputs[idx].Expression, out boundVar);
+                var inputNode = VisitBoundExpression(inputs[idx].Expression, out boundVar);
                 inputNodes.Add(inputNode);
                 inputVars.Add(boundVar);
             }
@@ -2307,7 +2413,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Bring the variables for the Join inputs into scope.
             //
-            for (int scopeCount = 0; scopeCount < inputNodes.Count; scopeCount++)
+            for (var scopeCount = 0; scopeCount < inputNodes.Count; scopeCount++)
             {
                 PushBindingScope(inputVars[scopeCount], inputs[scopeCount].VariableName);
             }
@@ -2315,12 +2421,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Visit join condition, if present.
             //
-            Node joinCondNode = VisitExprAsPredicate(joinCond);
+            var joinCondNode = VisitExprAsPredicate(joinCond);
 
             //
             // Remove the input variables from scope after visiting the Join condition.
             //
-            for (int scopeCount = 0; scopeCount < inputNodes.Count; scopeCount++)
+            for (var scopeCount = 0; scopeCount < inputNodes.Count; scopeCount++)
             {
                 ExitExpressionBinding();
             }
@@ -2364,7 +2470,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // If the Join condition was present then add its converted form to the list of child nodes for the new Join node.
             //
-            if (e.ExpressionKind != DbExpressionKind.CrossJoin)
+            if (e.ExpressionKind
+                != DbExpressionKind.CrossJoin)
             {
                 PlanCompiler.Assert(joinCondNode != null, "Non CrossJoinOps must specify a join condition");
                 inputNodes.Add(joinCondNode);
@@ -2377,10 +2484,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 _iqtCommand.CreateNode(joinOp, inputNodes),
                 ExtractElementRowType(e.ResultType),
                 inputVars
-            );
+                );
         }
 
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbApplyExpression"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbExpressionKind"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbApplyExpression")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbExpressionKind")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(DbApplyExpression e)
         {
 #if DEBUG
@@ -2393,7 +2503,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Bring the Input set's variable into scope
             //
-            Node inputNode = EnterExpressionBinding(e.Input);
+            var inputNode = EnterExpressionBinding(e.Input);
 
             //
             // Visit the Apply expression with the Input's variable in scope.
@@ -2401,7 +2511,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // it will only bring the Apply variable into scope *after* visiting the Apply expression
             // (which means that the Apply expression cannot validly reference its own binding variable)
             //
-            Node applyNode = EnterExpressionBinding(e.Apply);
+            var applyNode = EnterExpressionBinding(e.Apply);
 
             //
             // Remove the Apply and Input variables from scope
@@ -2412,13 +2522,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // The ApplyType should only be either CrossApply or OuterApply.
             //
-            PlanCompiler.Assert(DbExpressionKind.CrossApply == e.ExpressionKind || DbExpressionKind.OuterApply == e.ExpressionKind, "Unrecognized DbExpressionKind specified in DbApplyExpression");
+            PlanCompiler.Assert(
+                DbExpressionKind.CrossApply == e.ExpressionKind || DbExpressionKind.OuterApply == e.ExpressionKind,
+                "Unrecognized DbExpressionKind specified in DbApplyExpression");
 
             //
             // Create a new Node with the correct ApplyOp as its Op and the input and apply nodes as its child nodes.
             //
             ApplyBaseOp applyOp = null;
-            if (DbExpressionKind.CrossApply == e.ExpressionKind)
+            if (DbExpressionKind.CrossApply
+                == e.ExpressionKind)
             {
                 applyOp = _iqtCommand.CreateCrossApplyOp();
             }
@@ -2427,7 +2540,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 applyOp = _iqtCommand.CreateOuterApplyOp();
             }
 
-            Node retNode = _iqtCommand.CreateNode(applyOp, inputNode, applyNode);
+            var retNode = _iqtCommand.CreateNode(applyOp, inputNode, applyNode);
 
             //
             // Create and return a new projection that unifies the vars produced by the input and apply columns into a single record constructor.
@@ -2435,11 +2548,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return ProjectNewRecord(
                 retNode,
                 ExtractElementRowType(e.ResultType),
-                new Var[] { _varMap[inputNode], _varMap[applyNode] }
-            );
+                new[] { _varMap[inputNode], _varMap[applyNode] }
+                );
         }
 
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbAggregate"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbGroupByExpression"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbAggregate")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbGroupByExpression")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(DbGroupByExpression e)
         {
 #if DEBUG
@@ -2450,18 +2566,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Process the input and the keys
             //
-            VarVec keyVarSet = _iqtCommand.CreateVarVec();
-            VarVec outputVarSet = _iqtCommand.CreateVarVec();
+            var keyVarSet = _iqtCommand.CreateVarVec();
+            var outputVarSet = _iqtCommand.CreateVarVec();
             Node inputNode;
             List<Node> keyVarDefNodes;
             ExpressionBindingScope scope;
             ExtractKeys(e, keyVarSet, outputVarSet, out inputNode, out keyVarDefNodes, out scope);
 
             // Get the index of the group aggregate if any
-            int groupAggregateIndex = -1;
-            for (int i = 0; i < e.Aggregates.Count; i++)
+            var groupAggregateIndex = -1;
+            for (var i = 0; i < e.Aggregates.Count; i++)
             {
-                if (e.Aggregates[i].GetType() == typeof(DbGroupAggregate))
+                if (e.Aggregates[i].GetType()
+                    == typeof(DbGroupAggregate))
                 {
                     groupAggregateIndex = i;
                     break;
@@ -2473,8 +2590,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             Node copyOfInput = null;
             List<Node> copyOfKeyVarDefNodes = null;
-            VarVec copyOutputVarSet = _iqtCommand.CreateVarVec();
-            VarVec copyKeyVarSet = _iqtCommand.CreateVarVec();
+            var copyOutputVarSet = _iqtCommand.CreateVarVec();
+            var copyKeyVarSet = _iqtCommand.CreateVarVec();
             if (groupAggregateIndex >= 0)
             {
                 ExpressionBindingScope copyOfScope; //not needed
@@ -2492,34 +2609,35 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // The converted Node is then used as the child node of a VarDefOp Node that is added to a list of Aggregate VarDefs or Group Aggregate VarDefs correspondingly.
             // The Var defined by the converted DbAggregate is added only to the overall list of Vars produced by the GroupBy (not the list of Keys).
             //
-            List<Node> aggVarDefNodes = new List<Node>();
+            var aggVarDefNodes = new List<Node>();
             Node groupAggDefNode = null;
-            for(int idx = 0; idx < e.Aggregates.Count; idx++)
+            for (var idx = 0; idx < e.Aggregates.Count; idx++)
             {
-                DbAggregate agg = e.Aggregates[idx];
+                var agg = e.Aggregates[idx];
                 Var aggVar;
 
                 //
                 // Produce the converted form of the Arguments to the aggregate
                 //
-                IList<Node> argNodes = VisitExprAsScalar(agg.Arguments);
-              
+                var argNodes = VisitExprAsScalar(agg.Arguments);
+
                 //
                 // Handle if it is DbFunctionAggregate
                 //
                 if (idx != groupAggregateIndex)
                 {
-                    DbFunctionAggregate funcAgg = agg as DbFunctionAggregate;
+                    var funcAgg = agg as DbFunctionAggregate;
                     PlanCompiler.Assert(funcAgg != null, "Unrecognized DbAggregate used in DbGroupByExpression");
 
                     aggVarDefNodes.Add(ProcessFunctionAggregate(funcAgg, argNodes, out aggVar));
                 }
-                //
-                // Handle if it is DbGroupAggregate
-                //
+                    //
+                    // Handle if it is DbGroupAggregate
+                    //
                 else
                 {
-                    groupAggDefNode = ProcessGroupAggregate(keyVarDefNodes, copyOfInput, copyOfKeyVarDefNodes, copyKeyVarSet, e.Input.Expression.ResultType, out aggVar);
+                    groupAggDefNode = ProcessGroupAggregate(
+                        keyVarDefNodes, copyOfInput, copyOfKeyVarDefNodes, copyKeyVarSet, e.Input.Expression.ResultType, out aggVar);
                 }
 
                 outputVarSet.Set(aggVar);
@@ -2537,35 +2655,38 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // 3. A VarDefListOp Node that uses the Aggregate VarDefs to define the Aggregate Vars (created above)
             // 4. For a GroupByIntoOp a verDefLIstOp Node with a single var def node that defines the group aggregate
             //
-            List<Node> groupByChildren = new List<Node>();
-            groupByChildren.Add(inputNode);  // The Node produced from the Input set
-            groupByChildren.Add(        // The Key VarDefs
+            var groupByChildren = new List<Node>();
+            groupByChildren.Add(inputNode); // The Node produced from the Input set
+            groupByChildren.Add(
+                // The Key VarDefs
                 _iqtCommand.CreateNode(
                     _iqtCommand.CreateVarDefListOp(),
                     keyVarDefNodes
-                ));
-            groupByChildren.Add(        // The Aggregate VarDefs
+                    ));
+            groupByChildren.Add(
+                // The Aggregate VarDefs
                 _iqtCommand.CreateNode(
                     _iqtCommand.CreateVarDefListOp(),
                     aggVarDefNodes
-                ));
+                    ));
 
             GroupByBaseOp op;
             if (groupAggregateIndex >= 0)
             {
-                groupByChildren.Add(    // The GroupAggregate VarDef
+                groupByChildren.Add(
+                    // The GroupAggregate VarDef
                     _iqtCommand.CreateNode(
                         _iqtCommand.CreateVarDefListOp(),
                         groupAggDefNode
-                    ));
-                op = _iqtCommand.CreateGroupByIntoOp(keyVarSet, this._iqtCommand.CreateVarVec(_varMap[inputNode]), outputVarSet);
+                        ));
+                op = _iqtCommand.CreateGroupByIntoOp(keyVarSet, _iqtCommand.CreateVarVec(_varMap[inputNode]), outputVarSet);
             }
             else
             {
                 op = _iqtCommand.CreateGroupByOp(keyVarSet, outputVarSet);
             }
-                
-            Node groupByNode = _iqtCommand.CreateNode(
+
+            var groupByNode = _iqtCommand.CreateNode(
                 op, groupByChildren);
 
             //
@@ -2574,12 +2695,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return ProjectNewRecord(
                 groupByNode,
                 ExtractElementRowType(e.ResultType),
-                outputVarSet     //todo: it is not correct to pass a varvec where an ordered list is expected
-            );
+                outputVarSet //todo: it is not correct to pass a varvec where an ordered list is expected
+                );
         }
 
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GroupBy"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScalarOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        private void ExtractKeys(DbGroupByExpression e, VarVec keyVarSet, VarVec outputVarSet, out Node inputNode, out List<Node> keyVarDefNodes, out ExpressionBindingScope scope)
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GroupBy")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScalarOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        private void ExtractKeys(
+            DbGroupByExpression e, VarVec keyVarSet, VarVec outputVarSet, out Node inputNode, out List<Node> keyVarDefNodes,
+            out ExpressionBindingScope scope)
         {
             inputNode = EnterGroupExpressionBinding(e.Input);
 
@@ -2590,12 +2716,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // is added to both the overall list of Vars produced by the GroupBy and the list of Key vars produced by the GroupBy.
             //
             keyVarDefNodes = new List<Node>();
-            for (int idx = 0; idx < e.Keys.Count; idx++)
+            for (var idx = 0; idx < e.Keys.Count; idx++)
             {
-                DbExpression keyExpr = e.Keys[idx];
+                var keyExpr = e.Keys[idx];
 
-                Node keyNode = VisitExprAsScalar(keyExpr);
-                ScalarOp keyOp = keyNode.Op as ScalarOp;
+                var keyNode = VisitExprAsScalar(keyExpr);
+                var keyOp = keyNode.Op as ScalarOp;
 
                 //
                 // In a valid CQT, each group key expressions will result in a ScalarOp since they
@@ -2624,13 +2750,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             scope = ExitExpressionBinding();
         }
-        
+
         private Node ProcessFunctionAggregate(DbFunctionAggregate funcAgg, IList<Node> argNodes, out Var aggVar)
         {
-            Node aggNode = _iqtCommand.CreateNode(
+            var aggNode = _iqtCommand.CreateNode(
                 _iqtCommand.CreateAggregateOp(funcAgg.Function, funcAgg.Distinct),
                 argNodes
-            );
+                );
 
             //
             // Create a VarDefOp that uses the converted form of the DbAggregate to define the ComputedVar
@@ -2667,36 +2793,40 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="inputResultType"></param>
         /// <param name="groupAggVar"></param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        private Node ProcessGroupAggregate(List<Node> keyVarDefNodes, Node copyOfInput, List<Node> copyOfkeyVarDefNodes, VarVec copyKeyVarSet, TypeUsage inputResultType, out Var groupAggVar)
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        private Node ProcessGroupAggregate(
+            List<Node> keyVarDefNodes, Node copyOfInput, List<Node> copyOfkeyVarDefNodes, VarVec copyKeyVarSet, TypeUsage inputResultType,
+            out Var groupAggVar)
         {
-            Var inputVar = this._varMap[copyOfInput];
-            Node groupDefNode = copyOfInput;
+            var inputVar = _varMap[copyOfInput];
+            var groupDefNode = copyOfInput;
 
             if (keyVarDefNodes.Count > 0)
             {
-                VarVec projectOutpus = _iqtCommand.CreateVarVec();
+                var projectOutpus = _iqtCommand.CreateVarVec();
                 projectOutpus.Set(inputVar);
                 projectOutpus.Or(copyKeyVarSet);
 
-                Node projectNodeWithKeys = _iqtCommand.CreateNode(
+                var projectNodeWithKeys = _iqtCommand.CreateNode(
                     _iqtCommand.CreateProjectOp(projectOutpus),
-                    groupDefNode,                   //the input
-                    _iqtCommand.CreateNode(         //the key var defs
+                    groupDefNode, //the input
+                    _iqtCommand.CreateNode(
+                        //the key var defs
                         _iqtCommand.CreateVarDefListOp(),
                         copyOfkeyVarDefNodes
-                    ));
+                        ));
 
-                List<Node> flattentedKeys = new List<Node>();
-                List<Node> copyFlattenedKeys = new List<Node>();
+                var flattentedKeys = new List<Node>();
+                var copyFlattenedKeys = new List<Node>();
 
-                for (int i = 0; i < keyVarDefNodes.Count; i++)
+                for (var i = 0; i < keyVarDefNodes.Count; i++)
                 {
-                    Node keyVarDef = keyVarDefNodes[i];
-                    Node copyOfKeyVarDef = copyOfkeyVarDefNodes[i];
+                    var keyVarDef = keyVarDefNodes[i];
+                    var copyOfKeyVarDef = copyOfkeyVarDefNodes[i];
 
-                    Var keyVar = ((VarDefOp)keyVarDef.Op).Var;
-                    Var copyOfKeyVar = ((VarDefOp)copyOfKeyVarDef.Op).Var;
+                    var keyVar = ((VarDefOp)keyVarDef.Op).Var;
+                    var copyOfKeyVar = ((VarDefOp)copyOfKeyVarDef.Op).Var;
 
                     //
                     // The keys of type row need to be flattened, because grouping by a row means grouping by its individual 
@@ -2708,32 +2838,33 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     FlattenProperties(_iqtCommand.CreateNode(_iqtCommand.CreateVarRefOp(copyOfKeyVar)), copyFlattenedKeys);
                 }
 
-                PlanCompiler.Assert(flattentedKeys.Count == copyFlattenedKeys.Count, "The flattened keys lists should have the same number of elements");
-                
+                PlanCompiler.Assert(
+                    flattentedKeys.Count == copyFlattenedKeys.Count, "The flattened keys lists should have the same number of elements");
+
                 Node filterPredicateNode = null;
 
-                for(int j = 0; j< flattentedKeys.Count; j++)
+                for (var j = 0; j < flattentedKeys.Count; j++)
                 {
-                    Node keyNode = flattentedKeys[j];
-                    Node copyKeyNode = copyFlattenedKeys[j];
+                    var keyNode = flattentedKeys[j];
+                    var copyKeyNode = copyFlattenedKeys[j];
 
                     //
                     // Create the predicate for a single key
                     // keyVar = copyOfKeyVar or keyVar is null and copyOfKeyVar is null
                     // 
-                    Node predicate = _iqtCommand.CreateNode(
-                                _iqtCommand.CreateConditionalOp(OpType.Or),
-                                _iqtCommand.CreateNode(
-                                    _iqtCommand.CreateComparisonOp(OpType.EQ), keyNode, copyKeyNode),
-                                _iqtCommand.CreateNode(
-                                    _iqtCommand.CreateConditionalOp(OpType.And),
-                                        _iqtCommand.CreateNode(
-                                            _iqtCommand.CreateConditionalOp(OpType.IsNull),
-                                            OpCopier.Copy(_iqtCommand, keyNode)),
-                                        _iqtCommand.CreateNode(
-                                            _iqtCommand.CreateConditionalOp(OpType.IsNull),
-                                            OpCopier.Copy(_iqtCommand, copyKeyNode))));
-                    
+                    var predicate = _iqtCommand.CreateNode(
+                        _iqtCommand.CreateConditionalOp(OpType.Or),
+                        _iqtCommand.CreateNode(
+                            _iqtCommand.CreateComparisonOp(OpType.EQ), keyNode, copyKeyNode),
+                        _iqtCommand.CreateNode(
+                            _iqtCommand.CreateConditionalOp(OpType.And),
+                            _iqtCommand.CreateNode(
+                                _iqtCommand.CreateConditionalOp(OpType.IsNull),
+                                OpCopier.Copy(_iqtCommand, keyNode)),
+                            _iqtCommand.CreateNode(
+                                _iqtCommand.CreateConditionalOp(OpType.IsNull),
+                                OpCopier.Copy(_iqtCommand, copyKeyNode))));
+
                     if (filterPredicateNode == null)
                     {
                         filterPredicateNode = predicate;
@@ -2741,13 +2872,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     else
                     {
                         filterPredicateNode = _iqtCommand.CreateNode(
-                                _iqtCommand.CreateConditionalOp(OpType.And),
-                                filterPredicateNode, predicate);
+                            _iqtCommand.CreateConditionalOp(OpType.And),
+                            filterPredicateNode, predicate);
                     }
                 }
 
-                Node filterNode = _iqtCommand.CreateNode(
-                                    _iqtCommand.CreateFilterOp(), projectNodeWithKeys, filterPredicateNode);
+                var filterNode = _iqtCommand.CreateNode(
+                    _iqtCommand.CreateFilterOp(), projectNodeWithKeys, filterPredicateNode);
 
                 groupDefNode = filterNode;
             }
@@ -2756,7 +2887,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             _varMap[groupDefNode] = inputVar;
             groupDefNode = ConvertRelOpToScalarOpTree(groupDefNode, inputResultType);
 
-            Node result = _iqtCommand.CreateVarDefNode(groupDefNode, out groupAggVar);
+            var result = _iqtCommand.CreateVarDefNode(groupDefNode, out groupAggVar);
             return result;
         }
 
@@ -2766,17 +2897,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="input"></param>
         /// <param name="flattenedProperties"></param>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "RowType"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "RowType")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void FlattenProperties(Node input, IList<Node> flattenedProperties)
         {
-            if (input.Op.Type.EdmType.BuiltInTypeKind == BuiltInTypeKind.RowType)
+            if (input.Op.Type.EdmType.BuiltInTypeKind
+                == BuiltInTypeKind.RowType)
             {
                 IList<EdmProperty> properties = TypeHelpers.GetProperties(input.Op.Type);
                 PlanCompiler.Assert(properties.Count != 0, "No nested properties for RowType");
 
-                for (int i = 0; i < properties.Count; i++)
+                for (var i = 0; i < properties.Count; i++)
                 {
-                    Node newInput = (i == 0) ? input : OpCopier.Copy(_iqtCommand, input);
+                    var newInput = (i == 0) ? input : OpCopier.Copy(_iqtCommand, input);
                     FlattenProperties(_iqtCommand.CreateNode(_iqtCommand.CreatePropertyOp(properties[i]), newInput), flattenedProperties);
                 }
             }
@@ -2798,7 +2932,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     The converted form of the input to the DbSkipExpression or DbSortExpression, capped by a 
         ///     ProjectOp that defines and Vars referenced by the SortKeys.
         /// </returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbSortClause"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-ScalarOp"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SortKey"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SortClauses"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbSortClause")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-ScalarOp")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SortKey")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SortClauses")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node VisitSortArguments(DbExpressionBinding input, IList<DbSortClause> sortOrder, List<SortKey> sortKeys, out Var inputVar)
         {
             //
@@ -2809,36 +2948,36 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // (specifically the PreProcessor).
             // The new ProjectOp projects the output Var of the input along with any Vars referenced
             // by the SortKeys, and its VarDefList child defines those Vars.
-            
+
             //
             // Bring the variable defined by the DbSortExpression's input set into scope
             // and retrieve it from the Node => Var map for later use.
             //
-            Node inputNode = EnterExpressionBinding(input);
+            var inputNode = EnterExpressionBinding(input);
             inputVar = _varMap[inputNode];
 
             //
             // Convert the SortClauses, building a new VarDefOp Node for each one.
             //
-            VarVec projectedVars = _iqtCommand.CreateVarVec();
+            var projectedVars = _iqtCommand.CreateVarVec();
             projectedVars.Set(inputVar);
 
-            List<Node> sortVarDefs = new List<Node>();
+            var sortVarDefs = new List<Node>();
             PlanCompiler.Assert(sortKeys.Count == 0, "Non-empty SortKey list before adding converted SortClauses");
-            for (int idx = 0; idx < sortOrder.Count; idx++)
+            for (var idx = 0; idx < sortOrder.Count; idx++)
             {
-                DbSortClause clause = sortOrder[idx];
+                var clause = sortOrder[idx];
 
                 //
                 // Convert the DbSortClause DbExpression to a Node/Op pair
                 //
-                Node exprNode = VisitExprAsScalar(clause.Expression);
+                var exprNode = VisitExprAsScalar(clause.Expression);
 
                 //
                 // In a valid CQT, DbSortClause expressions must have a result of an OrderComparable Type,
                 // and such expressions will always convert to ScalarOps.
                 //
-                ScalarOp specOp = exprNode.Op as ScalarOp;
+                var specOp = exprNode.Op as ScalarOp;
                 PlanCompiler.Assert(specOp != null, "DbSortClause Expression converted to non-ScalarOp");
 
                 //
@@ -2885,8 +3024,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     _iqtCommand.CreateNode(
                         _iqtCommand.CreateVarDefListOp(),
                         sortVarDefs
-                    )
-                );
+                        )
+                    );
 
             return inputNode;
         }
@@ -2897,13 +3036,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Invoke common processing of Skip/DbSortExpression arguments.
             //
             Var inputVar;
-            List<SortKey> sortKeys = new List<SortKey>();
-            Node inputNode = VisitSortArguments(expression.Input, expression.SortOrder, sortKeys, out inputVar);
+            var sortKeys = new List<SortKey>();
+            var inputNode = VisitSortArguments(expression.Input, expression.SortOrder, sortKeys, out inputVar);
 
             //
             // Visit the Skip Count
             //
-            Node countNode = VisitExprAsScalar(expression.Count);
+            var countNode = VisitExprAsScalar(expression.Count);
 
             //
             // Create a new Node that has a new ConstrainedSortOp based on the SortKeys as its Op
@@ -2912,13 +3051,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // - The converted form of the skip count
             // - A NullOp of type Int64 to indicate that no limit operation is applied
             //
-            Node skipNode = 
+            var skipNode =
                 _iqtCommand.CreateNode(
                     _iqtCommand.CreateConstrainedSortOp(sortKeys),
                     inputNode,
                     countNode,
                     _iqtCommand.CreateNode(_iqtCommand.CreateNullOp(_iqtCommand.IntegerType))
-                );
+                    );
 
             // Update the Node --> Var mapping for the new ConstrainedSort Node.
             // ConstrainedSortOp maps to the same Op that its RelOp input maps to.
@@ -2933,18 +3072,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Invoke common processing of Skip/DbSortExpression arguments.
             //
             Var inputVar;
-            List<SortKey> sortKeys = new List<SortKey>();
-            Node inputNode = VisitSortArguments(e.Input, e.SortOrder, sortKeys, out inputVar);
+            var sortKeys = new List<SortKey>();
+            var inputNode = VisitSortArguments(e.Input, e.SortOrder, sortKeys, out inputVar);
 
             //
             // Create a new SortOp that uses the constructed SortKeys.
             //
-            SortOp newSortOp = _iqtCommand.CreateSortOp(sortKeys);
+            var newSortOp = _iqtCommand.CreateSortOp(sortKeys);
 
             //
             // Create a new SortOp Node that has the new SortOp as its Op the Key-defining ProjectOp Node as its only child.
             //
-            Node newSortNode = _iqtCommand.CreateNode(newSortOp, inputNode);
+            var newSortNode = _iqtCommand.CreateNode(newSortOp, inputNode);
 
             // Update the Node --> Var mapping for the new Sort Node.
             // SortOp maps to the same Op that its RelOp input maps to.
@@ -2953,7 +3092,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return newSortNode;
         }
 
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbQuantifierExpression"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbExpressionKind"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbQuantifierExpression")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbExpressionKind")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(DbQuantifierExpression e)
         {
             Node retNode = null;
@@ -2962,17 +3104,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Any converts to Exists(Filter(Input, Predicate))
             // All converts to Not(Exists(Filter(Input, Or(Not(Predicate), IsNull(Predicate)))))
             //
-            PlanCompiler.Assert(DbExpressionKind.Any == e.ExpressionKind || DbExpressionKind.All == e.ExpressionKind, "Invalid DbExpressionKind in DbQuantifierExpression");
+            PlanCompiler.Assert(
+                DbExpressionKind.Any == e.ExpressionKind || DbExpressionKind.All == e.ExpressionKind,
+                "Invalid DbExpressionKind in DbQuantifierExpression");
 
             //
             // Bring the input's variable into scope
             //
-            Node inputNode = EnterExpressionBinding(e.Input);
+            var inputNode = EnterExpressionBinding(e.Input);
 
             //
             // Convert the predicate
             //
-            Node predicateNode = VisitExprAsPredicate(e.Predicate);
+            var predicateNode = VisitExprAsPredicate(e.Predicate);
 
             //
             // If the quantifier is All then the predicate must become 'Not(Predicate) Or IsNull(Predicate)',
@@ -2981,41 +3125,42 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // for which that negated predicate evaluates to null, possibly resulting in an erroneous empty result set
             // and causing the quantifier to produce a false positive result.
             //
-            if (DbExpressionKind.All == e.ExpressionKind)
+            if (DbExpressionKind.All
+                == e.ExpressionKind)
             {
                 // Create the 'Not(Predicate)' branch of the Or.
                 predicateNode = _iqtCommand.CreateNode(
                     _iqtCommand.CreateConditionalOp(OpType.Not),
                     predicateNode
-                );
+                    );
 
                 // Visit the original predicate for use in the 'IsNull(Predicate)' branch of the Or.
                 // Note that this is treated as a scalar value rather than a Boolean predicate.
-                Node predicateCopy = VisitExprAsScalar(e.Predicate);
+                var predicateCopy = VisitExprAsScalar(e.Predicate);
 
                 // Create the 'IsNull(Predicate)' branch of the Or.
                 predicateCopy = _iqtCommand.CreateNode(
                     _iqtCommand.CreateConditionalOp(OpType.IsNull),
                     predicateCopy
-                );
+                    );
 
                 // Finally, combine the branches with a Boolean 'Or' Op to create the updated predicate node.
                 predicateNode = _iqtCommand.CreateNode(
                     _iqtCommand.CreateConditionalOp(OpType.Or),
                     predicateNode,
                     predicateCopy
-                );
+                    );
             }
 
             //
             // Remove the input's variable from scope
             //
             ExitExpressionBinding();
-            
+
             //
             // Create a FilterOp around the original input set and map the FilterOp to the Var produced by the original input set.
             //
-            Var inputVar = _varMap[inputNode];
+            var inputVar = _varMap[inputNode];
             inputNode = _iqtCommand.CreateNode(_iqtCommand.CreateFilterOp(), inputNode, predicateNode);
             _varMap[inputNode] = inputVar;
 
@@ -3027,7 +3172,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // For All, the exists operation as currently built must now be negated.
             //
-            if (DbExpressionKind.All == e.ExpressionKind)
+            if (DbExpressionKind.All
+                == e.ExpressionKind)
             {
                 retNode = _iqtCommand.CreateNode(_iqtCommand.CreateConditionalOp(OpType.Not), retNode);
             }

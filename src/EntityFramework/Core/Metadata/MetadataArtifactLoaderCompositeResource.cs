@@ -2,7 +2,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Data.Entity;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Globalization;
@@ -20,8 +19,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// The list of metadata artifacts encapsulated by the composite.
         /// </summary>
         private readonly ReadOnlyCollection<MetadataArtifactLoaderResource> _children;
+
         private readonly string _originalPath;
-        
+
         /// <summary>
         /// This constructor expects to get the paths that have potential to turn into multiple 
         /// artifacts like
@@ -33,7 +33,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="path">The path to the (collection of) resources</param>
         /// <param name="uriRegistry">The global registry of URIs</param>
         /// <param name="resolveAssembly"></param>
-        internal MetadataArtifactLoaderCompositeResource(string originalPath, string assemblyName, string resourceName, ICollection<string> uriRegistry, MetadataArtifactAssemblyResolver resolver)
+        internal MetadataArtifactLoaderCompositeResource(
+            string originalPath, string assemblyName, string resourceName, ICollection<string> uriRegistry,
+            MetadataArtifactAssemblyResolver resolver)
         {
             Debug.Assert(resolver != null);
 
@@ -48,10 +50,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         public override bool IsComposite
         {
-            get
-            {
-                return true;
-            }
+            get { return true; }
         }
 
         public override void CollectFilePermissionPaths(List<string> paths, DataSpace spaceToGet)
@@ -82,9 +81,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of strings identifying paths to all artifacts for a specific DataSpace</returns>
         public override List<string> GetPaths(DataSpace spaceToGet)
         {
-            List<string> list = new List<string>();
+            var list = new List<string>();
 
-            foreach (MetadataArtifactLoaderResource resource in _children)
+            foreach (var resource in _children)
             {
                 list.AddRange(resource.GetPaths(spaceToGet));
             }
@@ -98,9 +97,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of strings identifying paths to all resources</returns>
         public override List<string> GetPaths()
         {
-            List<string> list = new List<string>();
+            var list = new List<string>();
 
-            foreach (MetadataArtifactLoaderResource resource in _children)
+            foreach (var resource in _children)
             {
                 list.AddRange(resource.GetPaths());
             }
@@ -114,9 +113,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of XmlReader objects; cannot be null</returns>
         public override List<XmlReader> GetReaders(Dictionary<MetadataArtifactLoader, XmlReader> sourceDictionary)
         {
-            List<XmlReader> list = new List<XmlReader>();
+            var list = new List<XmlReader>();
 
-            foreach (MetadataArtifactLoaderResource resource in _children)
+            foreach (var resource in _children)
             {
                 list.AddRange(resource.GetReaders(sourceDictionary));
             }
@@ -131,9 +130,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of XmlReader objects</returns>
         public override List<XmlReader> CreateReaders(DataSpace spaceToGet)
         {
-            List<XmlReader> list = new List<XmlReader>();
+            var list = new List<XmlReader>();
 
-            foreach (MetadataArtifactLoaderResource resource in _children)
+            foreach (var resource in _children)
             {
                 list.AddRange(resource.CreateReaders(spaceToGet));
             }
@@ -147,34 +146,35 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="uriRegistry">The global registry of URIs</param>
         /// <param name="resolveAssembly"></param>
         /// <returns></returns>
-        private static List<MetadataArtifactLoaderResource> LoadResources(string assemblyName, string resourceName, ICollection<string> uriRegistry, MetadataArtifactAssemblyResolver resolver)
+        private static List<MetadataArtifactLoaderResource> LoadResources(
+            string assemblyName, string resourceName, ICollection<string> uriRegistry, MetadataArtifactAssemblyResolver resolver)
         {
             Debug.Assert(resolver != null);
 
-            List<MetadataArtifactLoaderResource> loaders = new List<MetadataArtifactLoaderResource>();
+            var loaders = new List<MetadataArtifactLoaderResource>();
             Debug.Assert(!string.IsNullOrEmpty(assemblyName));
 
-            if (assemblyName == MetadataArtifactLoader.wildcard)
+            if (assemblyName == wildcard)
             {
-                foreach (Assembly assembly in resolver.GetWildcardAssemblies())
+                foreach (var assembly in resolver.GetWildcardAssemblies())
                 {
                     if (AssemblyContainsResource(assembly, ref resourceName))
                     {
                         LoadResourcesFromAssembly(assembly, resourceName, uriRegistry, loaders);
                     }
                 }
-
             }
             else
             {
-                Assembly assembly = ResolveAssemblyName(assemblyName, resolver);
+                var assembly = ResolveAssemblyName(assemblyName, resolver);
                 LoadResourcesFromAssembly(assembly, resourceName, uriRegistry, loaders);
             }
 
-            if (resourceName != null && loaders.Count == 0)
+            if (resourceName != null
+                && loaders.Count == 0)
             {
                 // they were asking for a specific resource name, and we didn't find it
-                throw EntityUtil.Metadata(System.Data.Entity.Resources.Strings.UnableToLoadResource);
+                throw EntityUtil.Metadata(Strings.UnableToLoadResource);
             }
 
             return loaders;
@@ -187,8 +187,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return true;
             }
 
-            string[] allresources = GetManifestResourceNamesForAssembly(assembly);
-            foreach (string current in allresources)
+            var allresources = GetManifestResourceNamesForAssembly(assembly);
+            foreach (var current in allresources)
             {
                 if (string.Equals(resourceName, current, StringComparison.OrdinalIgnoreCase))
                 {
@@ -198,10 +198,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             return false;
-
         }
 
-        private static void LoadResourcesFromAssembly(Assembly assembly, string resourceName, ICollection<string> uriRegistry, List<MetadataArtifactLoaderResource> loaders)
+        private static void LoadResourcesFromAssembly(
+            Assembly assembly, string resourceName, ICollection<string> uriRegistry, List<MetadataArtifactLoaderResource> loaders)
         {
             if (resourceName == null)
             {
@@ -213,27 +213,29 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             else
             {
-                throw EntityUtil.Metadata(System.Data.Entity.Resources.Strings.UnableToLoadResource);
+                throw EntityUtil.Metadata(Strings.UnableToLoadResource);
             }
         }
 
-        private static void LoadAllResourcesFromAssembly(Assembly assembly, ICollection<string> uriRegistry, List<MetadataArtifactLoaderResource> loaders)
+        private static void LoadAllResourcesFromAssembly(
+            Assembly assembly, ICollection<string> uriRegistry, List<MetadataArtifactLoaderResource> loaders)
         {
             Debug.Assert(assembly != null);
-            string[] allresources = GetManifestResourceNamesForAssembly(assembly);
+            var allresources = GetManifestResourceNamesForAssembly(assembly);
 
-            foreach (string resourceName in allresources)
+            foreach (var resourceName in allresources)
             {
                 CreateAndAddSingleResourceLoader(assembly, resourceName, uriRegistry, loaders);
             }
         }
 
-        private static void CreateAndAddSingleResourceLoader(Assembly assembly, string resourceName, ICollection<string> uriRegistry, List<MetadataArtifactLoaderResource> loaders)
+        private static void CreateAndAddSingleResourceLoader(
+            Assembly assembly, string resourceName, ICollection<string> uriRegistry, List<MetadataArtifactLoaderResource> loaders)
         {
             Debug.Assert(resourceName != null);
             Debug.Assert(assembly != null);
 
-            string resourceUri = CreateResPath(assembly, resourceName);
+            var resourceUri = CreateResPath(assembly, resourceName);
             if (!uriRegistry.Contains(resourceUri))
             {
                 loaders.Add(new MetadataArtifactLoaderResource(assembly, resourceName, uriRegistry));
@@ -242,12 +244,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal static string CreateResPath(Assembly assembly, string resourceName)
         {
-            string resourceUri = string.Format(CultureInfo.InvariantCulture,
-                                               "{0}{1}{2}{3}",
-                                               resPathPrefix,
-                                               assembly.FullName,
-                                               resPathSeparator,
-                                               resourceName);
+            var resourceUri = string.Format(
+                CultureInfo.InvariantCulture,
+                "{0}{1}{2}{3}",
+                resPathPrefix,
+                assembly.FullName,
+                resPathSeparator,
+                resourceName);
 
             return resourceUri;
         }
@@ -270,9 +273,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Debug.Assert(resolver != null);
 
-            AssemblyName referenceName = new AssemblyName(assemblyName);
+            var referenceName = new AssemblyName(assemblyName);
             Assembly assembly;
-            if(!resolver.TryResolveAssemblyReference(referenceName, out assembly))
+            if (!resolver.TryResolveAssemblyReference(referenceName, out assembly))
             {
                 throw new FileNotFoundException(Strings.UnableToResolveAssembly(assemblyName));
             }
@@ -280,18 +283,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return assembly;
         }
 
-
-        internal static MetadataArtifactLoader CreateResourceLoader(string path, ExtensionCheck extensionCheck, string validExtension, ICollection<string> uriRegistry, MetadataArtifactAssemblyResolver resolver)
+        internal static MetadataArtifactLoader CreateResourceLoader(
+            string path, ExtensionCheck extensionCheck, string validExtension, ICollection<string> uriRegistry,
+            MetadataArtifactAssemblyResolver resolver)
         {
             Debug.Assert(path != null);
-            Debug.Assert(MetadataArtifactLoader.PathStartsWithResPrefix(path));
+            Debug.Assert(PathStartsWithResPrefix(path));
 
             // if the supplied path ends with a separator, or contains only one
             // segment (i.e., the name of an assembly, or the wildcard character),
             // create a composite loader that can extract resources from one or 
             // more assemblies
             //
-            bool createCompositeResLoader = false;
+            var createCompositeResLoader = false;
             string assemblyName = null;
             string resourceName = null;
             ParseResourcePath(path, out assemblyName, out resourceName);
@@ -305,7 +309,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             Debug.Assert(!string.IsNullOrEmpty(resourceName), "we should not get here is the resourceName is null");
-            Assembly assembly = ResolveAssemblyName(assemblyName, resolver);
+            var assembly = ResolveAssemblyName(assemblyName, resolver);
             return new MetadataArtifactLoaderResource(assembly, resourceName, uriRegistry);
         }
 
@@ -321,11 +325,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             switch (extensionCheck)
             {
                 case ExtensionCheck.Specific:
-                    MetadataArtifactLoader.CheckArtifactExtension(resourceName, validExtension);
+                    CheckArtifactExtension(resourceName, validExtension);
                     break;
 
                 case ExtensionCheck.All:
-                    if (!MetadataArtifactLoader.IsValidArtifact(resourceName))
+                    if (!IsValidArtifact(resourceName))
                     {
                         throw EntityUtil.Metadata(Strings.InvalidMetadataPath);
                     }
@@ -343,17 +347,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private static void ParseResourcePath(string path, out string assemblyName, out string resourceName)
         {
             // Extract the components from the path
-            int prefixLength = MetadataArtifactLoader.resPathPrefix.Length;
+            var prefixLength = resPathPrefix.Length;
 
-            string[] result = path.Substring(prefixLength).Split(
-                                                new string[] { 
-                                                    MetadataArtifactLoader.resPathSeparator,
-                                                    MetadataArtifactLoader.altPathSeparator 
-                                                },
-                                                StringSplitOptions.RemoveEmptyEntries
-                                            );
+            var result = path.Substring(prefixLength).Split(
+                new[]
+                    {
+                        resPathSeparator,
+                        altPathSeparator
+                    },
+                StringSplitOptions.RemoveEmptyEntries
+                );
 
-            if (result.Length == 0 || result.Length > 2)
+            if (result.Length == 0
+                || result.Length > 2)
             {
                 throw EntityUtil.Metadata(Strings.InvalidMetadataPath);
             }
@@ -375,7 +381,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 resourceName = null;
             }
-
         }
     }
 }

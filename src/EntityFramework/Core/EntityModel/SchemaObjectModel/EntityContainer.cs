@@ -1,18 +1,17 @@
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Globalization;
     using System.Xml;
 
     /// <summary>
     /// Represents an EntityContainer element.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("Name={Name}")]
+    [DebuggerDisplay("Name={Name}")]
     internal sealed class EntityContainer : SchemaType
     {
         #region Instance Fields
@@ -37,8 +36,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         public EntityContainer(Schema parentElement)
             : base(parentElement)
         {
-            if(Schema.DataModel == SchemaDataModelOption.EntityDataModel)
+            if (Schema.DataModel
+                == SchemaDataModelOption.EntityDataModel)
+            {
                 OtherContent.Add(Schema.SchemaSource);
+            }
         }
 
         #endregion
@@ -48,7 +50,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <summary>
         /// 
         /// </summary>
-        SchemaElementLookUpTable<SchemaElement> Members
+        private SchemaElementLookUpTable<SchemaElement> Members
         {
             get
             {
@@ -110,10 +112,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         public EntityContainer ExtendingEntityContainer
         {
-            get
-            {
-                return _entityContainerGettingExtended;
-            }
+            get { return _entityContainerGettingExtended; }
         }
 
         protected override bool HandleAttribute(XmlReader reader)
@@ -152,7 +151,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 HandleFunctionImport(reader);
                 return true;
             }
-            else if (Schema.DataModel == SchemaDataModelOption.EntityDataModel)
+            else if (Schema.DataModel
+                     == SchemaDataModelOption.EntityDataModel)
             {
                 if (CanHandleElement(reader, XmlConstants.ValueAnnotation))
                 {
@@ -174,7 +174,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private void HandleEntitySetElement(XmlReader reader)
         {
             Debug.Assert(reader != null);
-            EntityContainerEntitySet set = new EntityContainerEntitySet(this);
+            var set = new EntityContainerEntitySet(this);
             set.Parse(reader);
             Members.Add(set, true, Strings.DuplicateEntityContainerMemberName);
         }
@@ -182,7 +182,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private void HandleAssociationSetElement(XmlReader reader)
         {
             Debug.Assert(reader != null);
-            EntityContainerAssociationSet set = new EntityContainerAssociationSet(this);
+            var set = new EntityContainerAssociationSet(this);
             set.Parse(reader);
             Members.Add(set, true, Strings.DuplicateEntityContainerMemberName);
         }
@@ -190,7 +190,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private void HandleFunctionImport(XmlReader reader)
         {
             Debug.Assert(null != reader);
-            FunctionImportElement functionImport = new FunctionImportElement(this);
+            var functionImport = new FunctionImportElement(this);
             functionImport.Parse(reader);
             Members.Add(functionImport, true, Strings.DuplicateEntityContainerMemberName);
         }
@@ -217,15 +217,17 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 // If this entity container extends some other entity container, we should validate the entity container name.
                 if (!String.IsNullOrEmpty(_unresolvedExtendedEntityContainerName))
                 {
-                    if (_unresolvedExtendedEntityContainerName == this.Name)
+                    if (_unresolvedExtendedEntityContainerName == Name)
                     {
-                        AddError(ErrorCode.EntityContainerCannotExtendItself, EdmSchemaErrorSeverity.Error,
-                            System.Data.Entity.Resources.Strings.EntityContainerCannotExtendItself(this.Name));
+                        AddError(
+                            ErrorCode.EntityContainerCannotExtendItself, EdmSchemaErrorSeverity.Error,
+                            Strings.EntityContainerCannotExtendItself(Name));
                     }
                     else if (!Schema.SchemaManager.TryResolveType(null, _unresolvedExtendedEntityContainerName, out extendingEntityContainer))
                     {
-                        AddError(ErrorCode.InvalidEntityContainerNameInExtends, EdmSchemaErrorSeverity.Error,
-                                System.Data.Entity.Resources.Strings.InvalidEntityContainerNameInExtends(_unresolvedExtendedEntityContainerName));
+                        AddError(
+                            ErrorCode.InvalidEntityContainerNameInExtends, EdmSchemaErrorSeverity.Error,
+                            Strings.InvalidEntityContainerNameInExtends(_unresolvedExtendedEntityContainerName));
                     }
                     else
                     {
@@ -239,7 +241,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                     }
                 }
 
-                foreach (SchemaElement element in Members)
+                foreach (var element in Members)
                 {
                     element.ResolveTopLevelNames();
                 }
@@ -252,7 +254,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             base.ResolveSecondLevelNames();
 
-            foreach (SchemaElement element in Members)
+            foreach (var element in Members)
             {
                 element.ResolveSecondLevelNames();
             }
@@ -273,25 +275,26 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
                 // If this entity container extends some other entity container, then we should add all the 
                 // sets and function imports from that entity container to this entity container
-                if (this.ExtendingEntityContainer != null)
+                if (ExtendingEntityContainer != null)
                 {
                     // Call Validate on the entity container that is getting extended, so that its entity set
                     // is populated
-                    this.ExtendingEntityContainer.Validate();
+                    ExtendingEntityContainer.Validate();
 
-                    foreach (SchemaElement element in this.ExtendingEntityContainer.Members)
+                    foreach (var element in ExtendingEntityContainer.Members)
                     {
-                        AddErrorKind error = this.Members.TryAdd(element.Clone(this));
+                        var error = Members.TryAdd(element.Clone(this));
                         DuplicateOrEquivalentMemberNameWhileExtendingEntityContainer(element, error);
                     }
                 }
 
-                HashSet<string> tableKeys = new HashSet<string>();
-                
-                foreach (SchemaElement element in Members)
+                var tableKeys = new HashSet<string>();
+
+                foreach (var element in Members)
                 {
-                    EntityContainerEntitySet entitySet = element as EntityContainerEntitySet;
-                    if (entitySet != null && Schema.DataModel == SchemaDataModelOption.ProviderDataModel)
+                    var entitySet = element as EntityContainerEntitySet;
+                    if (entitySet != null
+                        && Schema.DataModel == SchemaDataModelOption.ProviderDataModel)
                     {
                         CheckForDuplicateTableMapping(tableKeys, entitySet);
                     }
@@ -315,10 +318,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns>The EntityContainerProperty it found or null if it fails to find it</returns>
         internal EntityContainerEntitySet FindEntitySet(string name)
         {
-            EntityContainer current = this;
-            while(current != null)
+            var current = this;
+            while (current != null)
             {
-                foreach (EntityContainerEntitySet set in current.EntitySets)
+                foreach (var set in current.EntitySets)
                 {
                     if (Utils.CompareNames(set.Name, name) == 0)
                     {
@@ -332,29 +335,33 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             return null;
         }
 
-        private void DuplicateOrEquivalentMemberNameWhileExtendingEntityContainer(SchemaElement schemaElement,
+        private void DuplicateOrEquivalentMemberNameWhileExtendingEntityContainer(
+            SchemaElement schemaElement,
             AddErrorKind error)
         {
-            Debug.Assert(error != AddErrorKind.MissingNameError, "Since entity container members are already resolved, name must never be empty");
-            Debug.Assert(this.ExtendingEntityContainer != null, "ExtendingEntityContainer must not be null");
+            Debug.Assert(
+                error != AddErrorKind.MissingNameError, "Since entity container members are already resolved, name must never be empty");
+            Debug.Assert(ExtendingEntityContainer != null, "ExtendingEntityContainer must not be null");
 
             if (error != AddErrorKind.Succeeded)
             {
                 Debug.Assert(error == AddErrorKind.DuplicateNameError, "Error must be duplicate name error");
-                schemaElement.AddError(ErrorCode.AlreadyDefined, EdmSchemaErrorSeverity.Error,
-                            System.Data.Entity.Resources.Strings.DuplicateMemberNameInExtendedEntityContainer(
-                                schemaElement.Name, ExtendingEntityContainer.Name, this.Name));
+                schemaElement.AddError(
+                    ErrorCode.AlreadyDefined, EdmSchemaErrorSeverity.Error,
+                    Strings.DuplicateMemberNameInExtendedEntityContainer(
+                        schemaElement.Name, ExtendingEntityContainer.Name, Name));
             }
         }
 
         private void ValidateOnlyBaseEntitySetTypeDefinesConcurrency()
         {
             // collect all the base entitySet types
-            Dictionary<SchemaEntityType, EntityContainerEntitySet> baseEntitySetTypes = new Dictionary<SchemaEntityType, EntityContainerEntitySet>();
-            foreach (SchemaElement element in Members)
+            var baseEntitySetTypes = new Dictionary<SchemaEntityType, EntityContainerEntitySet>();
+            foreach (var element in Members)
             {
-                EntityContainerEntitySet entitySet = element as EntityContainerEntitySet;
-                if (entitySet != null && !baseEntitySetTypes.ContainsKey(entitySet.EntityType))
+                var entitySet = element as EntityContainerEntitySet;
+                if (entitySet != null
+                    && !baseEntitySetTypes.ContainsKey(entitySet.EntityType))
                 {
                     baseEntitySetTypes.Add(entitySet.EntityType, entitySet);
                 }
@@ -362,22 +369,23 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
             // look through each type in this schema and see if it is derived from a base
             // type if it is then see if it has some "new" Concurrency fields
-            foreach (SchemaType type in Schema.SchemaTypes)
+            foreach (var type in Schema.SchemaTypes)
             {
-                SchemaEntityType itemType = type as SchemaEntityType;
+                var itemType = type as SchemaEntityType;
                 if (itemType != null)
                 {
                     EntityContainerEntitySet set;
-                    if (TypeIsSubTypeOf(itemType, baseEntitySetTypes, out set) &&
-                       TypeDefinesNewConcurrencyProperties(itemType))
+                    if (TypeIsSubTypeOf(itemType, baseEntitySetTypes, out set)
+                        &&
+                        TypeDefinesNewConcurrencyProperties(itemType))
                     {
-                        AddError(ErrorCode.ConcurrencyRedefinedOnSubTypeOfEntitySetType,
+                        AddError(
+                            ErrorCode.ConcurrencyRedefinedOnSubTypeOfEntitySetType,
                             EdmSchemaErrorSeverity.Error,
-                            System.Data.Entity.Resources.Strings.ConcurrencyRedefinedOnSubTypeOfEntitySetType(itemType.FQName, set.EntityType.FQName, set.FQName));
+                            Strings.ConcurrencyRedefinedOnSubTypeOfEntitySetType(itemType.FQName, set.EntityType.FQName, set.FQName));
                     }
                 }
             }
-
         }
 
         /// <summary>
@@ -387,22 +395,24 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private void ValidateRelationshipSetHaveUniqueEnds()
         {
             // Contains the list of ends that have been visited and validated
-            List<EntityContainerRelationshipSetEnd> alreadyValidatedEnds = new List<EntityContainerRelationshipSetEnd>();
-            bool error = true;
+            var alreadyValidatedEnds = new List<EntityContainerRelationshipSetEnd>();
+            var error = true;
 
-            foreach (EntityContainerRelationshipSet currentSet in this.RelationshipSets)
+            foreach (var currentSet in RelationshipSets)
             {
-                foreach (EntityContainerRelationshipSetEnd currentSetEnd in currentSet.Ends)
+                foreach (var currentSetEnd in currentSet.Ends)
                 {
                     error = false;
-                    foreach (EntityContainerRelationshipSetEnd alreadyValidatedEnd in alreadyValidatedEnds)
+                    foreach (var alreadyValidatedEnd in alreadyValidatedEnds)
                     {
                         if (AreRelationshipEndsEqual(alreadyValidatedEnd, currentSetEnd))
                         {
-                            AddError(ErrorCode.SimilarRelationshipEnd,
-                                     EdmSchemaErrorSeverity.Error,
-                                     System.Data.Entity.Resources.Strings.SimilarRelationshipEnd(alreadyValidatedEnd.Name, alreadyValidatedEnd.ParentElement.Name,
-                                                         currentSetEnd.ParentElement.Name, alreadyValidatedEnd.EntitySet.Name, this.FQName));
+                            AddError(
+                                ErrorCode.SimilarRelationshipEnd,
+                                EdmSchemaErrorSeverity.Error,
+                                Strings.SimilarRelationshipEnd(
+                                    alreadyValidatedEnd.Name, alreadyValidatedEnd.ParentElement.Name,
+                                    currentSetEnd.ParentElement.Name, alreadyValidatedEnd.EntitySet.Name, FQName));
                             error = true;
                             break;
                         }
@@ -415,7 +425,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             }
         }
 
-        private static bool TypeIsSubTypeOf(SchemaEntityType itemType, Dictionary<SchemaEntityType, EntityContainerEntitySet> baseEntitySetTypes, out EntityContainerEntitySet set)
+        private static bool TypeIsSubTypeOf(
+            SchemaEntityType itemType, Dictionary<SchemaEntityType, EntityContainerEntitySet> baseEntitySetTypes,
+            out EntityContainerEntitySet set)
         {
             if (itemType.IsTypeHierarchyRoot)
             {
@@ -425,7 +437,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             }
 
             // walk up the hierarchy looking for a base that is the base type of an entityset
-            for (SchemaEntityType baseType = itemType.BaseType as SchemaEntityType; baseType != null; baseType = baseType.BaseType as SchemaEntityType)
+            for (var baseType = itemType.BaseType as SchemaEntityType; baseType != null; baseType = baseType.BaseType as SchemaEntityType)
             {
                 if (baseEntitySetTypes.ContainsKey(baseType))
                 {
@@ -440,9 +452,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         private static bool TypeDefinesNewConcurrencyProperties(SchemaEntityType itemType)
         {
-            foreach (StructuredProperty property in itemType.Properties)
+            foreach (var property in itemType.Properties)
             {
-                if (property.Type is ScalarType && MetadataHelper.GetConcurrencyMode(property.TypeUsage) != ConcurrencyMode.None)
+                if (property.Type is ScalarType
+                    && MetadataHelper.GetConcurrencyMode(property.TypeUsage) != ConcurrencyMode.None)
                 {
                     return true;
                 }
@@ -457,10 +470,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         public override string FQName
         {
-            get
-            {
-                return this.Name;
-            }
+            get { return Name; }
         }
 
         /// <summary>
@@ -468,10 +478,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         public override string Identity
         {
-            get
-            {
-                return Name;
-            }
+            get { return Name; }
         }
 
         /// <summary>
@@ -486,13 +493,12 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             if (String.IsNullOrEmpty(entitySet.DbSchema))
             {
                 // if there is no specified DbSchema, use the parent EntityContainer's name
-                schema = this.Name;
+                schema = Name;
             }
             else
             {
                 schema = entitySet.DbSchema;
             }
-
 
             if (String.IsNullOrEmpty(entitySet.Table))
             {
@@ -505,7 +511,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             }
 
             // create a key using the DbSchema and Table
-            string tableKey = String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}.{1}", schema, table);
+            var tableKey = String.Format(CultureInfo.InvariantCulture, "{0}.{1}", schema, table);
             if (entitySet.DefiningQuery != null)
             {
                 // don't consider the schema name for defining queries, because
@@ -523,10 +529,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 tableKey = entitySet.Name;
             }
 
-            bool alreadyExisted = !tableKeys.Add(tableKey);
+            var alreadyExisted = !tableKeys.Add(tableKey);
             if (alreadyExisted)
             {
-                entitySet.AddError(ErrorCode.AlreadyDefined, EdmSchemaErrorSeverity.Error, System.Data.Entity.Resources.Strings.DuplicateEntitySetTable(entitySet.Name, schema, table));
+                entitySet.AddError(
+                    ErrorCode.AlreadyDefined, EdmSchemaErrorSeverity.Error, Strings.DuplicateEntitySetTable(entitySet.Name, schema, table));
             }
         }
 
@@ -539,10 +546,12 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns></returns>
         private static bool AreRelationshipEndsEqual(EntityContainerRelationshipSetEnd left, EntityContainerRelationshipSetEnd right)
         {
-            Debug.Assert(left.ParentElement.ParentElement == right.ParentElement.ParentElement, "both end should belong to the same entity container");
+            Debug.Assert(
+                left.ParentElement.ParentElement == right.ParentElement.ParentElement, "both end should belong to the same entity container");
 
-            if (object.ReferenceEquals(left.EntitySet, right.EntitySet) &&
-                object.ReferenceEquals(left.ParentElement.Relationship, right.ParentElement.Relationship) &&
+            if (ReferenceEquals(left.EntitySet, right.EntitySet) &&
+                ReferenceEquals(left.ParentElement.Relationship, right.ParentElement.Relationship)
+                &&
                 left.Name == right.Name)
             {
                 return true;
@@ -550,7 +559,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
             return false;
         }
+
         #endregion
     }
-
 }

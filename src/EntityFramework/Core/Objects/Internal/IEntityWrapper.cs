@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Data.Entity.Core.Objects.DataClasses;
-using System.Runtime.CompilerServices;
-using System.Data.Entity.Core.Metadata.Edm;
-
 namespace System.Data.Entity.Core.Objects.Internal
 {
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects.DataClasses;
+
     /// <summary>
     /// Internally, entities are wrapped in some implementation of this
     /// interface.  This allows the RelationshipManager and other classes

@@ -1,10 +1,5 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
-    using System;
-    using System.Globalization;
-    using System.Collections;
-    using System.Collections.Generic;
-
     /// <summary>
     /// Represents select kind (value,row).
     /// </summary>
@@ -76,12 +71,13 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// <param name="groupByClause">optional group by clause</param>
         /// <param name="havingClause">optional having clause</param>
         /// <param name="orderByClause">optional order by clause</param>
-        internal QueryExpr(SelectClause selectClause,
-                           FromClause fromClause,
-                           Node whereClause,
-                           GroupByClause groupByClause,
-                           HavingClause havingClause,
-                           OrderByClause orderByClause)
+        internal QueryExpr(
+            SelectClause selectClause,
+            FromClause fromClause,
+            Node whereClause,
+            GroupByClause groupByClause,
+            HavingClause havingClause,
+            OrderByClause orderByClause)
         {
             _selectClause = selectClause;
             _fromClause = fromClause;
@@ -167,7 +163,8 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// <summary>
         /// Initialize SelectKind.SelectRow clause.
         /// </summary>
-        internal SelectClause(NodeList<AliasedExpr> items, SelectKind selectKind, DistinctKind distinctKind, Node topExpr, uint methodCallCount)
+        internal SelectClause(
+            NodeList<AliasedExpr> items, SelectKind selectKind, DistinctKind distinctKind, Node topExpr, uint methodCallCount)
         {
             _selectKind = selectKind;
             _selectClauseItems = items;
@@ -475,7 +472,6 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
     {
         private readonly FromClauseItem _joinLeft;
         private readonly FromClauseItem _joinRight;
-        private JoinKind _joinKind;
         private readonly Node _onExpr;
 
         /// <summary>
@@ -493,7 +489,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         {
             _joinLeft = joinLeft;
             _joinRight = joinRight;
-            _joinKind = joinKind;
+            JoinKind = joinKind;
             _onExpr = onExpr;
         }
 
@@ -516,11 +512,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// <summary>
         /// Join kind (cross, inner, full, left outer,right outer).
         /// </summary>
-        internal JoinKind JoinKind
-        {
-            get { return _joinKind; }
-            set { _joinKind = value; }
-        }
+        internal JoinKind JoinKind { get; set; }
 
         /// <summary>
         /// Returns join on expression.

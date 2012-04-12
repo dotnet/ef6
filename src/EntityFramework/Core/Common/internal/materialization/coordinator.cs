@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Globalization;
-using System.Data.Entity.Core.Objects.Internal;
-
-namespace System.Data.Entity.Core.Common.Internal.Materialization
+﻿namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Objects.Internal;
+    using System.Diagnostics;
+    using System.Linq;
 
     /// <summary>
     /// A coordinator is responsible for tracking state and processing result in a root or nested query
@@ -37,12 +34,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// NOTE:: this cannot be readonly because we can't know both the parent and the child
         /// at initialization time; we set the Child in the parent's constructor.
         /// </summary>
-        public Coordinator Child
-        {
-            get { return _child; }
-            protected set { _child = value; }
-        }
-        private Coordinator _child;
+        public Coordinator Child { get; protected set; }
 
         /// <summary>
         /// Next coordinator at this depth. Once we're done consuming results for this reader,
@@ -54,12 +46,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// Indicates whether data has been read for the collection being aggregated or yielded
         /// by this coordinator.
         /// </summary> 
-        public bool IsEntered
-        {
-            get { return _isEntered; }
-            protected set { _isEntered = value; }
-        }
-        private bool _isEntered;
+        public bool IsEntered { get; protected set; }
 
         /// <summary>
         /// Indicates whether this is the top level coordinator for a query.
@@ -75,9 +62,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         protected Coordinator(CoordinatorFactory coordinatorFactory, Coordinator parent, Coordinator next)
         {
-            this.CoordinatorFactory = coordinatorFactory;
-            this.Parent = parent;
-            this.Next = next;
+            CoordinatorFactory = coordinatorFactory;
+            Parent = parent;
+            Next = next;
         }
 
         #endregion
@@ -93,15 +80,15 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             // Add this coordinator to the appropriate state slot in the 
             // shaper so that it is available to materialization delegates.
-            shaper.State[this.CoordinatorFactory.StateSlot] = this;
-            
-            if (null != this.Child)
+            shaper.State[CoordinatorFactory.StateSlot] = this;
+
+            if (null != Child)
             {
-                this.Child.Initialize(shaper);
+                Child.Initialize(shaper);
             }
-            if (null != this.Next)
+            if (null != Next)
             {
-                this.Next.Initialize(shaper);
+                Next.Initialize(shaper);
             }
         }
 
@@ -110,8 +97,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// </summary>
         internal int MaxDistanceToLeaf()
         {
-            int maxDistance = 0;
-            Coordinator child = this.Child;
+            var maxDistance = 0;
+            var child = Child;
             while (null != child)
             {
                 maxDistance = Math.Max(maxDistance, child.MaxDistanceToLeaf() + 1);
@@ -134,13 +121,14 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         internal bool HasNextElement(Shaper shaper)
         {
             // check if this row contains a new element for this coordinator
-            bool result = false;
-            
-            if (!this.IsEntered || !this.CoordinatorFactory.CheckKeys(shaper))
+            var result = false;
+
+            if (!IsEntered
+                || !CoordinatorFactory.CheckKeys(shaper))
             {
                 // remember initial keys values
-                this.CoordinatorFactory.SetKeys(shaper);
-                this.IsEntered = true;
+                CoordinatorFactory.SetKeys(shaper);
+                IsEntered = true;
                 result = true;
             }
 
@@ -172,6 +160,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         {
             get { return _current; }
         }
+
         private T _current;
 
         /// <summary>
@@ -204,18 +193,18 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         internal Coordinator(CoordinatorFactory<T> coordinator, Coordinator parent, Coordinator next)
             : base(coordinator, parent, next)
         {
-            this.TypedCoordinatorFactory = coordinator;
+            TypedCoordinatorFactory = coordinator;
 
             // generate all children
             Coordinator nextChild = null;
             foreach (var nestedCoordinator in coordinator.NestedCoordinators.Reverse())
             {
                 // last child processed is first child...
-                this.Child = nestedCoordinator.CreateCoordinator(this, nextChild);
-                nextChild = this.Child;
+                Child = nestedCoordinator.CreateCoordinator(this, nextChild);
+                nextChild = Child;
             }
 
-            this.IsUsingElementCollection = (!this.IsRoot && typeof(T) != typeof(RecordState));
+            IsUsingElementCollection = (!IsRoot && typeof(T) != typeof(RecordState));
         }
 
         #endregion
@@ -233,21 +222,21 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             // Reset is entered for this collection.
-            this.IsEntered = false;
+            IsEntered = false;
 
             if (IsUsingElementCollection)
             {
-                _elements = this.TypedCoordinatorFactory.InitializeCollection(shaper);
+                _elements = TypedCoordinatorFactory.InitializeCollection(shaper);
                 _wrappedElements = new List<IEntityWrapper>();
             }
 
-            if (null != this.Child)
+            if (null != Child)
             {
-                this.Child.ResetCollection(shaper);
+                Child.ResetCollection(shaper);
             }
-            if (null != this.Next)
+            if (null != Next)
             {
-                this.Next.ResetCollection(shaper);
+                Next.ResetCollection(shaper);
             }
         }
 
@@ -257,13 +246,13 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             IEntityWrapper wrappedElement = null;
             try
             {
-                if (this.TypedCoordinatorFactory.WrappedElement == null)
+                if (TypedCoordinatorFactory.WrappedElement == null)
                 {
-                    element = this.TypedCoordinatorFactory.Element(shaper);
+                    element = TypedCoordinatorFactory.Element(shaper);
                 }
                 else
                 {
-                    wrappedElement = this.TypedCoordinatorFactory.WrappedElement(shaper);
+                    wrappedElement = TypedCoordinatorFactory.WrappedElement(shaper);
                     // This cast may throw, in which case it will be immediately caught
                     // and the error handling expression will be used to get the appropriate error message.
                     element = (T)wrappedElement.Entity;
@@ -279,7 +268,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     ResetCollection(shaper);
                     // call a variation of the "Element" delegate with more detailed
                     // error handling (to produce a better exception message)
-                    element = this.TypedCoordinatorFactory.ElementWithErrorHandling(shaper);
+                    element = TypedCoordinatorFactory.ElementWithErrorHandling(shaper);
                 }
 
                 // rethrow
@@ -320,7 +309,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         #endregion
 
         #region runtime callable code
-        
+
         // Code in this section is called from the delegates produced by the Translator.  It may  
         // not show up if you search using Find All References
 

@@ -1,26 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using System.Data;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Metadata.Edm;
-
 namespace System.Data.Entity.Core.EntityClient
 {
+    using System.Data.Common;
+
     /// <summary>
     /// Class representing a parameter collection used in EntityCommand
     /// </summary>
     public sealed partial class EntityParameterCollection : DbParameterCollection
     {
-        private static Type ItemType = typeof(EntityParameter);
+        private static readonly Type ItemType = typeof(EntityParameter);
         private bool _isDirty;
 
         /// <summary>
         /// Constructs the EntityParameterCollection object
         /// </summary>
         internal EntityParameterCollection()
-            : base()
         {
         }
 
@@ -31,14 +24,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The parameter at the index</returns>
         public new EntityParameter this[int index]
         {
-            get
-            {
-                return (EntityParameter)this.GetParameter(index);
-            }
-            set
-            {
-                this.SetParameter(index, value);
-            }
+            get { return (EntityParameter)GetParameter(index); }
+            set { SetParameter(index, value); }
         }
 
         /// <summary>
@@ -48,14 +35,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The parameter with the given name</returns>
         public new EntityParameter this[string parameterName]
         {
-            get
-            {
-                return (EntityParameter)this.GetParameter(parameterName);
-            }
-            set
-            {
-                this.SetParameter(parameterName, value);
-            }
+            get { return (EntityParameter)GetParameter(parameterName); }
+            set { SetParameter(parameterName, value); }
         }
 
         /// <summary>
@@ -82,7 +63,7 @@ namespace System.Data.Entity.Core.EntityClient
                 return false;
             }
         }
-       
+
         /// <summary>
         /// Add a EntityParameter to the collection
         /// </summary>
@@ -90,7 +71,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The index of the new parameter within the collection</returns>
         public EntityParameter Add(EntityParameter value)
         {
-            this.Add((object)value);
+            Add((object)value);
             return value;
         }
 
@@ -102,10 +83,10 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The index of the new parameter within the collection</returns>
         public EntityParameter AddWithValue(string parameterName, object value)
         {
-            EntityParameter param = new EntityParameter();
+            var param = new EntityParameter();
             param.ParameterName = parameterName;
             param.Value = value;
-            return this.Add(param);
+            return Add(param);
         }
 
         /// <summary>
@@ -116,7 +97,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The index of the new parameter within the collection</returns>
         public EntityParameter Add(string parameterName, DbType dbType)
         {
-            return this.Add(new EntityParameter(parameterName, dbType));
+            return Add(new EntityParameter(parameterName, dbType));
         }
 
         /// <summary>
@@ -128,7 +109,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The index of the new parameter within the collection</returns>
         public EntityParameter Add(string parameterName, DbType dbType, int size)
         {
-            return this.Add(new EntityParameter(parameterName, dbType, size));
+            return Add(new EntityParameter(parameterName, dbType, size));
         }
 
         /// <summary>
@@ -137,7 +118,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <param name="values">The arary of EntityParameter objects to add</param>
         public void AddRange(EntityParameter[] values)
         {
-            this.AddRange((Array)values);
+            AddRange((Array)values);
         }
 
         /// <summary>
@@ -147,7 +128,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>True if the collection has a parameter with the given name</returns>
         public override bool Contains(string parameterName)
         {
-            return this.IndexOf(parameterName) != -1;
+            return IndexOf(parameterName) != -1;
         }
 
         /// <summary>
@@ -157,7 +138,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <param name="index">The index in the array where the copy starts</param>
         public void CopyTo(EntityParameter[] array, int index)
         {
-            this.CopyTo((Array)array, index);
+            CopyTo((Array)array, index);
         }
 
         /// <summary>
@@ -177,7 +158,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <param name="value">The value of the parameter</param>
         public void Insert(int index, EntityParameter value)
         {
-            this.Insert(index, (object)value);
+            Insert(index, (object)value);
         }
 
         /// <summary>
@@ -194,8 +175,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// <param name="value">The parameter to remove</param>
         public void Remove(EntityParameter value)
         {
-            this.Remove((object)value);
-        }    
+            Remove((object)value);
+        }
 
         /// <summary>
         /// Reset the dirty flag on the collection

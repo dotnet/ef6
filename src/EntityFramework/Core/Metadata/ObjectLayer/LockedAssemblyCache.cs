@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
-using System.Threading;
-
-namespace System.Data.Entity.Core.Metadata.Edm
+﻿namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Reflection;
+    using System.Threading;
+
     internal class LockedAssemblyCache : IDisposable
     {
         private object _lockObject;
         private Dictionary<Assembly, ImmutableAssemblyCacheEntry> _globalAssemblyCache;
+
         internal LockedAssemblyCache(object lockObject, Dictionary<Assembly, ImmutableAssemblyCacheEntry> globalAssemblyCache)
         {
             _lockObject = lockObject;
@@ -33,7 +34,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Conditional("DEBUG")]
         private void AssertLockedByThisThread()
         {
-            bool entered = false;
+            var entered = false;
             Monitor.TryEnter(_lockObject, ref entered);
             if (entered)
             {

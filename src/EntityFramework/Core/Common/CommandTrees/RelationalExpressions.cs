@@ -1,16 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Diagnostics;
-
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees.Internal;
-
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
-    using System.Diagnostics.CodeAnalysis;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Common.CommandTrees.Internal;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
 
     /// <summary>
     /// Represents an apply operation, which is the invocation of the specified functor for each element in the specified input set.
@@ -20,12 +14,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         private readonly DbExpressionBinding _input;
         private readonly DbExpressionBinding _apply;
 
-        internal DbApplyExpression(DbExpressionKind applyKind, TypeUsage resultRowCollectionTypeUsage, DbExpressionBinding input, DbExpressionBinding apply)
+        internal DbApplyExpression(
+            DbExpressionKind applyKind, TypeUsage resultRowCollectionTypeUsage, DbExpressionBinding input, DbExpressionBinding apply)
             : base(applyKind, resultRowCollectionTypeUsage)
         {
             Debug.Assert(input != null, "DbApplyExpression input cannot be null");
             Debug.Assert(input != null, "DbApplyExpression apply cannot be null");
-            Debug.Assert(DbExpressionKind.CrossApply == applyKind || DbExpressionKind.OuterApply == applyKind, "Invalid DbExpressionKind for DbApplyExpression");
+            Debug.Assert(
+                DbExpressionKind.CrossApply == applyKind || DbExpressionKind.OuterApply == applyKind,
+                "Invalid DbExpressionKind for DbApplyExpression");
 
             _input = input;
             _apply = apply;
@@ -34,19 +31,35 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets the <see cref="DbExpressionBinding"/> that specifies the functor that is invoked for each element in the input set.
         /// </summary>
-        public DbExpressionBinding Apply { get { return _apply;  } }
+        public DbExpressionBinding Apply
+        {
+            get { return _apply; }
+        }
 
         /// <summary>
         /// Gets the <see cref="DbExpressionBinding"/> that specifies the input set.
         /// </summary>
-        public DbExpressionBinding Input { get { return _input; } }
+        public DbExpressionBinding Input
+        {
+            get { return _input; }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that do not produce a result value.
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -55,7 +68,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
 
     /// <summary>
@@ -70,7 +93,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbDistinctExpression(TypeUsage resultType, DbExpression argument)
             : base(DbExpressionKind.Distinct, resultType, argument)
         {
-            Debug.Assert(TypeSemantics.IsCollectionType(argument.ResultType), "DbDistinctExpression argument must have a collection result type");
+            Debug.Assert(
+                TypeSemantics.IsCollectionType(argument.ResultType), "DbDistinctExpression argument must have a collection result type");
         }
 
         /// <summary>
@@ -78,7 +102,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -87,7 +121,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
 
     /// <summary>
@@ -99,32 +143,45 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// </remarks>
     public sealed class DbElementExpression : DbUnaryExpression
     {
-        private bool _singlePropertyUnwrapped;
+        private readonly bool _singlePropertyUnwrapped;
 
         internal DbElementExpression(TypeUsage resultType, DbExpression argument)
             : base(DbExpressionKind.Element, resultType, argument)
         {
-            this._singlePropertyUnwrapped = false;
+            _singlePropertyUnwrapped = false;
         }
 
         internal DbElementExpression(TypeUsage resultType, DbExpression argument, bool unwrapSingleProperty)
             : base(DbExpressionKind.Element, resultType, argument)
         {
-            this._singlePropertyUnwrapped = unwrapSingleProperty;
+            _singlePropertyUnwrapped = unwrapSingleProperty;
         }
 
         /// <summary>
         /// Is the result type of the element equal to the result type of the single property 
         /// of the element of its operand?
         /// </summary>
-        internal bool IsSinglePropertyUnwrapped { get { return _singlePropertyUnwrapped; } }
+        internal bool IsSinglePropertyUnwrapped
+        {
+            get { return _singlePropertyUnwrapped; }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that do not produce a result value.
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -133,7 +190,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
 
     /// <summary>
@@ -147,7 +214,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbExceptExpression(TypeUsage resultType, DbExpression left, DbExpression right)
             : base(DbExpressionKind.Except, resultType, left, right)
         {
-            Debug.Assert(object.ReferenceEquals(resultType, left.ResultType), "DbExceptExpression result type should be result type of left argument");
+            Debug.Assert(
+                ReferenceEquals(resultType, left.ResultType), "DbExceptExpression result type should be result type of left argument");
         }
 
         /// <summary>
@@ -155,7 +223,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -164,7 +242,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
 
     /// <summary>
@@ -180,8 +268,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             Debug.Assert(input != null, "DbFilterExpression input cannot be null");
             Debug.Assert(predicate != null, "DbBFilterExpression predicate cannot be null");
-            Debug.Assert(TypeSemantics.IsPrimitiveType(predicate.ResultType, PrimitiveTypeKind.Boolean), "DbFilterExpression predicate must have a Boolean result type");
-            
+            Debug.Assert(
+                TypeSemantics.IsPrimitiveType(predicate.ResultType, PrimitiveTypeKind.Boolean),
+                "DbFilterExpression predicate must have a Boolean result type");
+
             _input = input;
             _predicate = predicate;
         }
@@ -189,19 +279,35 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets the <see cref="DbExpressionBinding"/> that specifies the input set.
         /// </summary>
-        public DbExpressionBinding Input { get { return _input; } }
-        
+        public DbExpressionBinding Input
+        {
+            get { return _input; }
+        }
+
         /// <summary>
         /// Gets the <see cref="DbExpression"/> that specifies the predicate used to filter the input set.
         /// </summary>
-        public DbExpression Predicate { get { return _predicate; } }
+        public DbExpression Predicate
+        {
+            get { return _predicate; }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that do not produce a result value.
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -210,7 +316,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
 
     /// <summary>
@@ -220,12 +336,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     {
         private readonly DbGroupExpressionBinding _input;
         private readonly DbExpressionList _keys;
-        private readonly System.Collections.ObjectModel.ReadOnlyCollection<DbAggregate> _aggregates;
+        private readonly ReadOnlyCollection<DbAggregate> _aggregates;
 
-        internal DbGroupByExpression(TypeUsage collectionOfRowResultType,
-                                     DbGroupExpressionBinding input,
-                                     DbExpressionList groupKeys,
-                                     System.Collections.ObjectModel.ReadOnlyCollection<DbAggregate> aggregates)
+        internal DbGroupByExpression(
+            TypeUsage collectionOfRowResultType,
+            DbGroupExpressionBinding input,
+            DbExpressionList groupKeys,
+            ReadOnlyCollection<DbAggregate> aggregates)
             : base(DbExpressionKind.GroupBy, collectionOfRowResultType)
         {
             Debug.Assert(input != null, "DbGroupExpression input cannot be null");
@@ -241,24 +358,43 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets the <see cref="DbGroupExpressionBinding"/> that specifies the input set and provides access to the set element and group element variables.
         /// </summary>
-        public DbGroupExpressionBinding Input { get { return _input; } }
+        public DbGroupExpressionBinding Input
+        {
+            get { return _input; }
+        }
 
         /// <summary>
         /// Gets an <see cref="DbExpression"/> list that provides grouping keys.
         /// </summary>
-        public IList<DbExpression> Keys { get { return _keys; } }
+        public IList<DbExpression> Keys
+        {
+            get { return _keys; }
+        }
 
         /// <summary>
         /// Gets an <see cref="DbAggregate"/> list that provides the aggregates to apply.
         /// </summary>
-        public IList<DbAggregate> Aggregates { get { return _aggregates; } }
+        public IList<DbAggregate> Aggregates
+        {
+            get { return _aggregates; }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that do not produce a result value.
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -267,7 +403,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
 
     /// <summary>
@@ -288,7 +434,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -297,36 +453,59 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
-    
+
     /// <summary>
     /// Represents an unconditional join operation between the given collection arguments
     /// </summary>
     public sealed class DbCrossJoinExpression : DbExpression
     {
-        private readonly System.Collections.ObjectModel.ReadOnlyCollection<DbExpressionBinding> _inputs;
+        private readonly ReadOnlyCollection<DbExpressionBinding> _inputs;
 
-        internal DbCrossJoinExpression(TypeUsage collectionOfRowResultType, System.Collections.ObjectModel.ReadOnlyCollection<DbExpressionBinding> inputs)
+        internal DbCrossJoinExpression(TypeUsage collectionOfRowResultType, ReadOnlyCollection<DbExpressionBinding> inputs)
             : base(DbExpressionKind.CrossJoin, collectionOfRowResultType)
-       {
-           Debug.Assert(inputs != null, "DbCrossJoin inputs cannot be null");
-           Debug.Assert(inputs.Count >= 2, "DbCrossJoin requires at least two inputs");
+        {
+            Debug.Assert(inputs != null, "DbCrossJoin inputs cannot be null");
+            Debug.Assert(inputs.Count >= 2, "DbCrossJoin requires at least two inputs");
 
-           _inputs = inputs;
+            _inputs = inputs;
         }
-        
+
         /// <summary>
         /// Gets an <see cref="DbExpressionBinding"/> list that provide the input sets to the join.
         /// </summary>
-        public IList<DbExpressionBinding> Inputs { get { return _inputs; } }
+        public IList<DbExpressionBinding> Inputs
+        {
+            get { return _inputs; }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that do not produce a result value.
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -335,9 +514,19 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
-   
+
     /// <summary>
     /// Represents an inner, left outer or full outer join operation between the given collection arguments on the specified join condition.
     /// </summary>
@@ -347,43 +536,65 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         private readonly DbExpressionBinding _right;
         private readonly DbExpression _condition;
 
-        internal DbJoinExpression(DbExpressionKind joinKind, TypeUsage collectionOfRowResultType, DbExpressionBinding left, DbExpressionBinding right, DbExpression condition)
+        internal DbJoinExpression(
+            DbExpressionKind joinKind, TypeUsage collectionOfRowResultType, DbExpressionBinding left, DbExpressionBinding right,
+            DbExpression condition)
             : base(joinKind, collectionOfRowResultType)
         {
             Debug.Assert(left != null, "DbJoinExpression left cannot be null");
             Debug.Assert(right != null, "DbJoinExpression right cannot be null");
             Debug.Assert(condition != null, "DbJoinExpression condition cannot be null");
-            Debug.Assert(DbExpressionKind.InnerJoin == joinKind ||
-                         DbExpressionKind.LeftOuterJoin == joinKind ||
-                         DbExpressionKind.FullOuterJoin == joinKind,
-                         "Invalid DbExpressionKind specified for DbJoinExpression");
+            Debug.Assert(
+                DbExpressionKind.InnerJoin == joinKind ||
+                DbExpressionKind.LeftOuterJoin == joinKind ||
+                DbExpressionKind.FullOuterJoin == joinKind,
+                "Invalid DbExpressionKind specified for DbJoinExpression");
 
             _left = left;
             _right = right;
             _condition = condition;
         }
-        
+
         /// <summary>
         /// Gets the <see cref="DbExpressionBinding"/> provides the left input.
         /// </summary>
-        public DbExpressionBinding Left { get { return _left; } }
+        public DbExpressionBinding Left
+        {
+            get { return _left; }
+        }
 
         /// <summary>
         /// Gets the <see cref="DbExpressionBinding"/> provides the right input.
         /// </summary>
-        public DbExpressionBinding Right { get { return _right; } }
-                
+        public DbExpressionBinding Right
+        {
+            get { return _right; }
+        }
+
         /// <summary>
         /// Gets the <see cref="DbExpression"/> that defines the join condition to apply.
         /// </summary>
-        public DbExpression JoinCondition { get { return _condition; } }
-        
+        public DbExpression JoinCondition
+        {
+            get { return _condition; }
+        }
+
         /// <summary>
         /// The visitor pattern method for expression visitors that do not produce a result value.
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -392,7 +603,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
 
     /// <summary>
@@ -409,34 +630,54 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             Debug.Assert(argument != null, "DbLimitExpression argument cannot be null");
             Debug.Assert(limit != null, "DbLimitExpression limit cannot be null");
-            Debug.Assert(object.ReferenceEquals(resultType, argument.ResultType), "DbLimitExpression result type must be the result type of the argument");
-                        
-            this._argument = argument;
-            this._limit = limit;
-            this._withTies = withTies;
+            Debug.Assert(
+                ReferenceEquals(resultType, argument.ResultType), "DbLimitExpression result type must be the result type of the argument");
+
+            _argument = argument;
+            _limit = limit;
+            _withTies = withTies;
         }
 
         /// <summary>
         /// Gets the expression that specifies the input collection.
         /// </summary>
-        public DbExpression Argument { get { return this._argument; } }
-        
+        public DbExpression Argument
+        {
+            get { return _argument; }
+        }
+
         /// <summary>
         /// Gets the expression that specifies the limit on the number of elements returned from the input collection.
         /// </summary>
-        public DbExpression Limit { get { return this._limit; } }
-        
+        public DbExpression Limit
+        {
+            get { return _limit; }
+        }
+
         /// <summary>
         /// Gets whether the limit operation will include tied results, which could produce more results than specifed by the Limit value if ties are present.
         /// </summary>
-        public bool WithTies { get { return _withTies; } }
+        public bool WithTies
+        {
+            get { return _withTies; }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that do not produce a result value.
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -445,7 +686,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
 
     /// <summary>
@@ -462,26 +713,42 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             Debug.Assert(input != null, "DbProjectExpression input cannot be null");
             Debug.Assert(projection != null, "DbProjectExpression projection cannot be null");
 
-            this._input = input;
-            this._projection = projection;
+            _input = input;
+            _projection = projection;
         }
 
         /// <summary>
         /// Gets the <see cref="DbExpressionBinding"/> that specifies the input set.
         /// </summary>
-        public DbExpressionBinding Input { get { return _input; } }
-        
+        public DbExpressionBinding Input
+        {
+            get { return _input; }
+        }
+
         /// <summary>
         /// Gets the <see cref="DbExpression"/> that defines the projection.
         /// </summary>
-        public DbExpression Projection { get { return _projection; } }
+        public DbExpression Projection
+        {
+            get { return _projection; }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that do not produce a result value.
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -490,7 +757,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
 
     /// <summary>
@@ -501,34 +778,55 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         private readonly DbExpressionBinding _input;
         private readonly DbExpression _predicate;
 
-        internal DbQuantifierExpression(DbExpressionKind kind, TypeUsage booleanResultType, DbExpressionBinding input, DbExpression predicate)
+        internal DbQuantifierExpression(
+            DbExpressionKind kind, TypeUsage booleanResultType, DbExpressionBinding input, DbExpression predicate)
             : base(kind, booleanResultType)
         {
             Debug.Assert(input != null, "DbQuantifierExpression input cannot be null");
             Debug.Assert(predicate != null, "DbQuantifierExpression predicate cannot be null");
-            Debug.Assert(TypeSemantics.IsPrimitiveType(booleanResultType, PrimitiveTypeKind.Boolean), "DbQuantifierExpression must have a Boolean result type");
-            Debug.Assert(TypeSemantics.IsPrimitiveType(predicate.ResultType, PrimitiveTypeKind.Boolean), "DbQuantifierExpression predicate must have a Boolean result type");
+            Debug.Assert(
+                TypeSemantics.IsPrimitiveType(booleanResultType, PrimitiveTypeKind.Boolean),
+                "DbQuantifierExpression must have a Boolean result type");
+            Debug.Assert(
+                TypeSemantics.IsPrimitiveType(predicate.ResultType, PrimitiveTypeKind.Boolean),
+                "DbQuantifierExpression predicate must have a Boolean result type");
 
-            this._input = input;
-            this._predicate = predicate;
+            _input = input;
+            _predicate = predicate;
         }
 
         /// <summary>
         /// Gets the <see cref="DbExpressionBinding"/> that specifies the input set.
         /// </summary>
-        public DbExpressionBinding Input { get { return _input; } }
+        public DbExpressionBinding Input
+        {
+            get { return _input; }
+        }
 
         /// <summary>
         /// Gets the Boolean predicate that should be evaluated for each element in the input set.
         /// </summary>
-        public DbExpression Predicate { get { return _predicate; } }
+        public DbExpression Predicate
+        {
+            get { return _predicate; }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that do not produce a result value.
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -537,7 +835,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
 
     /// <summary>
@@ -552,8 +860,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbSortClause(DbExpression key, bool asc, string collation)
         {
             Debug.Assert(key != null, "DbSortClause key cannot be null");
-                        
-            _expr = key;            
+
+            _expr = key;
             _asc = asc;
             _coll = collation;
         }
@@ -561,17 +869,26 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets a Boolean value indicating whether or not this sort key is sorted ascending.
         /// </summary>
-        public bool Ascending { get { return _asc; } }
-        
+        public bool Ascending
+        {
+            get { return _asc; }
+        }
+
         /// <summary>
         /// Gets a string value that specifies the collation for this sort key.
         /// </summary>
-        public string Collation { get { return _coll; } }
+        public string Collation
+        {
+            get { return _coll; }
+        }
 
         /// <summary>
         /// Gets the <see cref="DbExpression"/> that provides the value for this sort key.
         /// </summary>
-        public DbExpression Expression { get { return _expr; } }
+        public DbExpression Expression
+        {
+            get { return _expr; }
+        }
     }
 
     /// <summary>
@@ -580,10 +897,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     public sealed class DbSkipExpression : DbExpression
     {
         private readonly DbExpressionBinding _input;
-        private readonly System.Collections.ObjectModel.ReadOnlyCollection<DbSortClause> _keys;
+        private readonly ReadOnlyCollection<DbSortClause> _keys;
         private readonly DbExpression _count;
 
-        internal DbSkipExpression(TypeUsage resultType, DbExpressionBinding input, System.Collections.ObjectModel.ReadOnlyCollection<DbSortClause> sortOrder, DbExpression count)
+        internal DbSkipExpression(
+            TypeUsage resultType, DbExpressionBinding input, ReadOnlyCollection<DbSortClause> sortOrder, DbExpression count)
             : base(DbExpressionKind.Skip, resultType)
         {
             Debug.Assert(input != null, "DbSkipExpression input cannot be null");
@@ -591,27 +909,33 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             Debug.Assert(count != null, "DbSkipExpression count cannot be null");
             Debug.Assert(TypeSemantics.IsCollectionType(resultType), "DbSkipExpression requires a collection result type");
 
-            this._input = input;
-            this._keys = sortOrder;
-            this._count = count;
+            _input = input;
+            _keys = sortOrder;
+            _count = count;
         }
 
         /// <summary>
         /// Gets the <see cref="DbExpressionBinding"/> that specifies the input set.
         /// </summary>
-        public DbExpressionBinding Input { get { return _input; } }
+        public DbExpressionBinding Input
+        {
+            get { return _input; }
+        }
 
         /// <summary>
         /// Gets a <see cref="DbSortClause"/> list that defines the sort order.
         /// </summary>
-        public IList<DbSortClause> SortOrder { get { return _keys; } }
+        public IList<DbSortClause> SortOrder
+        {
+            get { return _keys; }
+        }
 
         /// <summary>
         /// Gets the expression that specifies the number of elements from the input collection to skip.
         /// </summary>
         public DbExpression Count
         {
-            get { return _count; } 
+            get { return _count; }
         }
 
         /// <summary>
@@ -619,7 +943,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -628,7 +962,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
 
     /// <summary>
@@ -637,35 +981,51 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     public sealed class DbSortExpression : DbExpression
     {
         private readonly DbExpressionBinding _input;
-        private readonly System.Collections.ObjectModel.ReadOnlyCollection<DbSortClause> _keys;
+        private readonly ReadOnlyCollection<DbSortClause> _keys;
 
-        internal DbSortExpression(TypeUsage resultType, DbExpressionBinding input, System.Collections.ObjectModel.ReadOnlyCollection<DbSortClause> sortOrder)
+        internal DbSortExpression(TypeUsage resultType, DbExpressionBinding input, ReadOnlyCollection<DbSortClause> sortOrder)
             : base(DbExpressionKind.Sort, resultType)
         {
             Debug.Assert(input != null, "DbSortExpression input cannot be null");
             Debug.Assert(sortOrder != null, "DbSortExpression sort order cannot be null");
             Debug.Assert(TypeSemantics.IsCollectionType(resultType), "DbSkipExpression requires a collection result type");
 
-            this._input = input;
-            this._keys = sortOrder;
+            _input = input;
+            _keys = sortOrder;
         }
 
         /// <summary>
         /// Gets the <see cref="DbExpressionBinding"/> that specifies the input set.
         /// </summary>
-        public DbExpressionBinding Input { get { return _input; } }
+        public DbExpressionBinding Input
+        {
+            get { return _input; }
+        }
 
         /// <summary>
         /// Gets a <see cref="DbSortClause"/> list that defines the sort order.
         /// </summary>
-        public IList<DbSortClause> SortOrder { get { return _keys; } }
+        public IList<DbSortClause> SortOrder
+        {
+            get { return _keys; }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that do not produce a result value.
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -674,9 +1034,19 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
-             
+
     /// <summary>
     /// Represents the set union (without duplicate removal) operation between the left and right operands.
     /// </summary>
@@ -695,7 +1065,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -704,6 +1084,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
-    }     
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
+    }
 }

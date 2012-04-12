@@ -1,9 +1,9 @@
 namespace System.Data.Entity.Migrations.Builders
 {
     using System.ComponentModel;
-    using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Spatial;
+    using System.Data.Entity.Migrations.Model;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>

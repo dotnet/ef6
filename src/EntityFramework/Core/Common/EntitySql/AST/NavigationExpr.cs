@@ -1,10 +1,5 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
-    using System;
-    using System.Globalization;
-    using System.Collections;
-    using System.Collections.Generic;
-
     /// <summary>
     /// Represents a relationship navigation operator NAVIGATE(sourceRefExpr, Relationship-Type-Name [,ToEndName [,FromEndName]]).
     /// Also used in WITH RELATIONSHIP clause as RELATIONSHIP(targetRefExpr, Relationship-Type-Name [,FromEndName [,ToEndName]]).

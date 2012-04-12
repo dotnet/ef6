@@ -1,14 +1,10 @@
-using System.Data;
-using System.Diagnostics;
-using System.Globalization;
-using System.Reflection;
-using System.ComponentModel;
-using System.Runtime.Serialization;
-using System.Data.Entity.Core.Common.Utils;
-
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
+    using System.ComponentModel;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Spatial;
     using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// This class contains the common methods need for an date object.
@@ -70,6 +66,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         public event PropertyChangingEventHandler PropertyChanging;
 
         #endregion
+
         #region Protected Overrideable
 
         /// <summary>
@@ -103,6 +100,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         #endregion
+
         #region Protected Helper
 
         /// <summary>
@@ -180,10 +178,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The new value of the complex type property
         /// </returns>
-        protected internal T GetValidValue<T>(T currentValue, string property, bool isNullable, bool isInitialized) where T : ComplexObject, new()
+        protected internal T GetValidValue<T>(T currentValue, string property, bool isNullable, bool isInitialized)
+            where T : ComplexObject, new()
         {
             // If we support complex type inheritance we will also need to check if T is abstract            
-            if (!isNullable && !isInitialized)
+            if (!isNullable
+                && !isInitialized)
             {
                 currentValue = SetValidValue(currentValue, new T(), property);
             }
@@ -241,12 +241,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </returns>
         protected internal static bool BinaryEquals(byte[] first, byte[] second)
         {
-            if (object.ReferenceEquals(first, second))
+            if (ReferenceEquals(first, second))
             {
                 return true;
             }
 
-            if (first == null || second == null)
+            if (first == null
+                || second == null)
             {
                 return false;
             }
@@ -372,7 +373,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// The Boolean value.
         /// </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
-        protected internal static Nullable<bool> SetValidValue(Nullable<bool> value, string propertyName)
+        protected internal static bool? SetValidValue(bool? value, string propertyName)
         {
             // no checks yet
             return value;
@@ -387,7 +388,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The Boolean value.
         /// </returns>
-        protected internal static Nullable<bool> SetValidValue(Nullable<bool> value)
+        protected internal static bool? SetValidValue(bool? value)
         {
             // no checks yet
             return value;
@@ -440,7 +441,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// The Byte value.
         /// </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
-        protected internal static Nullable<byte> SetValidValue(Nullable<byte> value, string propertyName)
+        protected internal static byte? SetValidValue(byte? value, string propertyName)
         {
             // no checks yet
             return value;
@@ -455,7 +456,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The Byte value.
         /// </returns>
-        protected internal static Nullable<byte> SetValidValue(Nullable<byte> value)
+        protected internal static byte? SetValidValue(byte? value)
         {
             // no checks yet
             return value;
@@ -473,14 +474,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The sbyte value.
         /// </returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName"), CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
+        [CLSCompliant(false)]
         protected internal static sbyte SetValidValue(sbyte value, string propertyName)
         {
             // no checks yet
             return value;
         }
 
- 
         /// <summary>
         /// Makes sure the sbyte value being set for a property is valid.
         /// </summary>
@@ -509,13 +510,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The sbyte value.
         /// </returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName"), CLSCompliant(false)]
-        protected internal static Nullable<sbyte> SetValidValue(Nullable<sbyte> value, string propertyName)
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
+        [CLSCompliant(false)]
+        protected internal static sbyte? SetValidValue(sbyte? value, string propertyName)
         {
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the sbyte value being set for a property is valid.
@@ -527,7 +528,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// The sbyte value.
         /// </returns>
         [CLSCompliant(false)]
-        protected internal static Nullable<sbyte> SetValidValue(Nullable<sbyte> value)
+        protected internal static sbyte? SetValidValue(sbyte? value)
         {
             // no checks yet
             return value;
@@ -551,7 +552,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the datetime value being set for a property is valid.
@@ -581,12 +581,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// The datetime value.
         /// </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
-        protected internal static Nullable<DateTime> SetValidValue(Nullable<DateTime> value, string propertyName)
+        protected internal static DateTime? SetValidValue(DateTime? value, string propertyName)
         {
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the datetime value being set for a property is valid.
@@ -597,7 +596,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The datetime value.
         /// </returns>
-        protected internal static Nullable<DateTime> SetValidValue(Nullable<DateTime> value)
+        protected internal static DateTime? SetValidValue(DateTime? value)
         {
             // no checks yet
             return value;
@@ -621,7 +620,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the timespan value being set for a property is valid.
@@ -651,12 +649,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// The timespan value.
         /// </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
-        protected internal static Nullable<TimeSpan> SetValidValue(Nullable<TimeSpan> value, string propertyName)
+        protected internal static TimeSpan? SetValidValue(TimeSpan? value, string propertyName)
         {
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the TimeSpan value being set for a property is valid.
@@ -667,7 +664,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The timespan value.
         /// </returns>
-        protected internal static Nullable<TimeSpan> SetValidValue(Nullable<TimeSpan> value)
+        protected internal static TimeSpan? SetValidValue(TimeSpan? value)
         {
             // no checks yet
             return value;
@@ -691,7 +688,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the datetimeoffset value being set for a property is valid.
@@ -721,12 +717,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// The datetimeoffset value.
         /// </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
-        protected internal static Nullable<DateTimeOffset> SetValidValue(Nullable<DateTimeOffset> value, string propertyName)
+        protected internal static DateTimeOffset? SetValidValue(DateTimeOffset? value, string propertyName)
         {
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the datetimeoffset value being set for a property is valid.
@@ -737,7 +732,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The datetimeoffset value.
         /// </returns>
-        protected internal static Nullable<DateTimeOffset> SetValidValue(Nullable<DateTimeOffset> value)
+        protected internal static DateTimeOffset? SetValidValue(DateTimeOffset? value)
         {
             // no checks yet
             return value;
@@ -761,7 +756,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Ensure that the input is a valid decimal value
@@ -789,12 +783,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// The decimal value.
         /// </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
-        protected internal static Nullable<Decimal> SetValidValue(Nullable<Decimal> value, string propertyName)
+        protected internal static decimal? SetValidValue(decimal? value, string propertyName)
         {
             // no checks yet
             return value;
         }
-        
 
         /// <summary>
         /// Ensure that the input is a valid decimal value
@@ -805,7 +798,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The decimal value.
         /// </returns>
-        protected internal static Nullable<Decimal> SetValidValue(Nullable<Decimal> value)
+        protected internal static decimal? SetValidValue(decimal? value)
         {
             // no checks yet
             return value;
@@ -830,7 +823,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return value;
         }
 
-        
         /// <summary>
         /// Makes sure the double value being set for a property is valid.
         /// </summary>
@@ -859,12 +851,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// the double value
         /// </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
-        protected internal static Nullable<double> SetValidValue(Nullable<double> value, string propertyName)
+        protected internal static double? SetValidValue(double? value, string propertyName)
         {
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the double value being set for a property is valid.
@@ -875,7 +866,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// the double value
         /// </returns>
-        protected internal static Nullable<double> SetValidValue(Nullable<double> value)
+        protected internal static double? SetValidValue(double? value)
         {
             // no checks yet
             return value;
@@ -899,7 +890,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the Single value being set for a property is valid.
@@ -929,12 +919,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// the nullable Single value
         /// </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
-        protected internal static Nullable<Single> SetValidValue(Nullable<Single> value, string propertyName)
+        protected internal static float? SetValidValue(float? value, string propertyName)
         {
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the Single value being set for a property is valid.
@@ -945,7 +934,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// the nullable Single value
         /// </returns>
-        protected internal static Nullable<Single> SetValidValue(Nullable<Single> value)
+        protected internal static float? SetValidValue(float? value)
         {
             // no checks yet
             return value;
@@ -969,7 +958,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the Guid value being set for a property is valid.
@@ -999,12 +987,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// The nullable Guid value
         /// </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
-        protected internal static Nullable<Guid> SetValidValue(Nullable<Guid> value, string propertyName)
+        protected internal static Guid? SetValidValue(Guid? value, string propertyName)
         {
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the Guid value being set for a property is valid.
@@ -1015,7 +1002,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The nullable Guid value
         /// </returns>
-        protected internal static Nullable<Guid> SetValidValue(Nullable<Guid> value)
+        protected internal static Guid? SetValidValue(Guid? value)
         {
             // no checks yet
             return value;
@@ -1039,7 +1026,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the Int16 value being set for a property is valid.
@@ -1069,12 +1055,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// The Int16 value
         /// </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
-        protected internal static Nullable<Int16> SetValidValue(Nullable<Int16> value, string propertyName)
+        protected internal static short? SetValidValue(short? value, string propertyName)
         {
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the Int16 value being set for a property is valid.
@@ -1085,7 +1070,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The Int16 value
         /// </returns>
-        protected internal static Nullable<Int16> SetValidValue(Nullable<Int16> value)
+        protected internal static short? SetValidValue(short? value)
         {
             // no checks yet
             return value;
@@ -1109,7 +1094,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the Int32 value being set for a property is valid.
@@ -1138,12 +1122,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The nullable Int32</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
-        protected internal static Nullable<Int32> SetValidValue(Nullable<Int32> value, string propertyName)
+        protected internal static int? SetValidValue(int? value, string propertyName)
         {
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the Int32 value being set for a property is valid.
@@ -1153,7 +1136,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </param>
         /// <returns>
         /// The nullable Int32</returns>
-        protected internal static Nullable<Int32> SetValidValue(Nullable<Int32> value)
+        protected internal static int? SetValidValue(int? value)
         {
             // no checks yet
             return value;
@@ -1177,7 +1160,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the Int64 value being set for a property is valid.
@@ -1207,12 +1189,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// The nullable Int64 value
         /// </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
-        protected internal static Nullable<Int64> SetValidValue(Nullable<Int64> value, string propertyName)
+        protected internal static long? SetValidValue(long? value, string propertyName)
         {
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the Int64 value being set for a property is valid.
@@ -1223,7 +1204,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The nullable Int64 value
         /// </returns>
-        protected internal static Nullable<Int64> SetValidValue(Nullable<Int64> value)
+        protected internal static long? SetValidValue(long? value)
         {
             // no checks yet
             return value;
@@ -1241,13 +1222,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The UInt16 value
         /// </returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName"), CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
+        [CLSCompliant(false)]
         protected internal static UInt16 SetValidValue(UInt16 value, string propertyName)
         {
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the UInt16 value being set for a property is valid.
@@ -1277,13 +1258,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The nullable UInt16 value
         /// </returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName"), CLSCompliant(false)]
-        protected internal static Nullable<UInt16> SetValidValue(Nullable<UInt16> value, string propertyName)
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
+        [CLSCompliant(false)]
+        protected internal static ushort? SetValidValue(ushort? value, string propertyName)
         {
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the UInt16 value being set for a property is valid.
@@ -1295,7 +1276,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// The nullable UInt16 value
         /// </returns>
         [CLSCompliant(false)]
-        protected internal static Nullable<UInt16> SetValidValue(Nullable<UInt16> value)
+        protected internal static ushort? SetValidValue(ushort? value)
         {
             // no checks yet
             return value;
@@ -1313,13 +1294,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The UInt32 value
         /// </returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName"), CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
+        [CLSCompliant(false)]
         protected internal static UInt32 SetValidValue(UInt32 value, string propertyName)
         {
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the UInt32 value being set for a property is valid.
@@ -1349,13 +1330,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The nullable UInt32 value
         /// </returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName"), CLSCompliant(false)]
-        protected internal static Nullable<UInt32> SetValidValue(Nullable<UInt32> value, string propertyName)
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
+        [CLSCompliant(false)]
+        protected internal static uint? SetValidValue(uint? value, string propertyName)
         {
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the UInt32 value being set for a property is valid.
@@ -1367,7 +1348,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// The nullable UInt32 value
         /// </returns>
         [CLSCompliant(false)]
-        protected internal static Nullable<UInt32> SetValidValue(Nullable<UInt32> value)
+        protected internal static uint? SetValidValue(uint? value)
         {
             // no checks yet
             return value;
@@ -1385,13 +1366,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The UInt64 value
         /// </returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName"), CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
+        [CLSCompliant(false)]
         protected internal static UInt64 SetValidValue(UInt64 value, string propertyName)
         {
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the UInt64 value being set for a property is valid.
@@ -1421,13 +1402,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         /// The nullable UInt64 value
         /// </returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName"), CLSCompliant(false)]
-        protected internal static Nullable<UInt64> SetValidValue(Nullable<UInt64> value, string propertyName)
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
+        [CLSCompliant(false)]
+        protected internal static ulong? SetValidValue(ulong? value, string propertyName)
         {
             // no checks yet
             return value;
         }
-
 
         /// <summary>
         /// Makes sure the UInt64 value being set for a property is valid.
@@ -1439,7 +1420,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// The nullable UInt64 value
         /// </returns>
         [CLSCompliant(false)]
-        protected internal static Nullable<UInt64> SetValidValue(Nullable<UInt64> value)
+        protected internal static ulong? SetValidValue(ulong? value)
         {
             // no checks yet
             return value;
@@ -1471,7 +1452,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
             return value;
         }
-
 
         /// <summary>
         /// Validates that the property is not longer than allowed, and throws if it is
@@ -1505,7 +1485,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <exception cref="System.Data.ConstraintException">
         /// The value is null for a non-nullable property
         /// </exception>
-        protected internal static System.Data.Entity.Core.Spatial.DbGeography SetValidValue(System.Data.Entity.Core.Spatial.DbGeography value, bool isNullable, string propertyName)
+        protected internal static DbGeography SetValidValue(DbGeography value, bool isNullable, string propertyName)
         {
             if (value == null)
             {
@@ -1516,7 +1496,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
             return value;
         }
-
 
         /// <summary>
         /// Validates that the property is not null, and throws if it is
@@ -1530,7 +1509,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <exception cref="System.Data.ConstraintException">
         /// The value is null for a non-nullable property
         /// </exception>
-        protected internal static System.Data.Entity.Core.Spatial.DbGeography SetValidValue(System.Data.Entity.Core.Spatial.DbGeography value, bool isNullable)
+        protected internal static DbGeography SetValidValue(DbGeography value, bool isNullable)
         {
             return SetValidValue(value, isNullable, null);
         }
@@ -1550,7 +1529,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <exception cref="System.Data.ConstraintException">
         /// The value is null for a non-nullable property
         /// </exception>
-        protected internal static System.Data.Entity.Core.Spatial.DbGeometry SetValidValue(System.Data.Entity.Core.Spatial.DbGeometry value, bool isNullable, string propertyName)
+        protected internal static DbGeometry SetValidValue(DbGeometry value, bool isNullable, string propertyName)
         {
             if (value == null)
             {
@@ -1561,7 +1540,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
             return value;
         }
-
 
         /// <summary>
         /// Validates that the property is not null, and throws if it is
@@ -1575,7 +1553,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <exception cref="System.Data.ConstraintException">
         /// The value is null for a non-nullable property
         /// </exception>
-        protected internal static System.Data.Entity.Core.Spatial.DbGeometry SetValidValue(System.Data.Entity.Core.Spatial.DbGeometry value, bool isNullable)
+        protected internal static DbGeometry SetValidValue(DbGeometry value, bool isNullable)
         {
             return SetValidValue(value, isNullable, null);
         }
@@ -1615,8 +1593,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             if (newValue != null)
             {
                 newValue.AttachToParent(this, property);
-            }    
-            
+            }
+
             return newValue;
         }
 
@@ -1627,7 +1605,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="complexObject">Complex object being verified</param>
         /// <param name="propertyName">Property name associated with this complex object</param>
         /// <returns>the same complex object that was passed in, if an exception didn't occur</returns>
-        protected internal static TComplex VerifyComplexObjectIsNotNull<TComplex>(TComplex complexObject, string propertyName) where TComplex : ComplexObject
+        protected internal static TComplex VerifyComplexObjectIsNotNull<TComplex>(TComplex complexObject, string propertyName)
+            where TComplex : ComplexObject
         {
             if (complexObject == null)
             {
@@ -1635,6 +1614,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
             return complexObject;
         }
+
         #endregion
     }
 }

@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
-
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
 // to prevent from simple mistakes during development (e.g. method argument validation 
 // in cases where it was you who created the variables or the variables had already been validated or 
@@ -15,11 +12,6 @@ using System.Collections.Generic;
 // or the tree was built/rewritten not the way we thought it was.
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
-
-using System.Globalization;
-
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
 using md = System.Data.Entity.Core.Metadata.Edm;
 
 //
@@ -37,8 +29,11 @@ using md = System.Data.Entity.Core.Metadata.Edm;
 // properties, and can be attached to a node/var to indicate that these were the
 // only desired properties.
 //
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -53,11 +48,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     /// </summary>
     internal abstract class PropertyRef
     {
-        /// <summary>
-        /// trivial constructor
-        /// </summary>
-        internal PropertyRef() { }
-
         /// <summary>
         /// Create a nested property ref, with "p" as the prefix.
         /// The best way to think of this function as follows.
@@ -89,11 +79,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="p">the rel-property</param>
         /// <returns>a nested property ref</returns>
-        internal PropertyRef CreateNestedPropertyRef(InternalTrees.RelProperty p)
+        internal PropertyRef CreateNestedPropertyRef(RelProperty p)
         {
             return CreateNestedPropertyRef(new RelPropertyRef(p));
         }
-       
+
         /// <summary>
         /// The tostring method for easy debuggability
         /// </summary>
@@ -109,7 +99,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     /// </summary>
     internal class SimplePropertyRef : PropertyRef
     {
-        private md.EdmMember m_property;
+        private readonly md.EdmMember m_property;
 
         /// <summary>
         /// Simple constructor
@@ -123,7 +113,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         /// Gets the property metadata
         /// </summary>
-        internal md.EdmMember Property { get { return m_property; } }
+        internal md.EdmMember Property
+        {
+            get { return m_property; }
+        }
 
         /// <summary>
         /// Overrides the default equality function. Two SimplePropertyRefs are
@@ -133,10 +126,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            SimplePropertyRef other = obj as SimplePropertyRef;
+            var other = obj as SimplePropertyRef;
             return (other != null &&
-                InternalTrees.Command.EqualTypes(m_property.DeclaringType, other.m_property.DeclaringType) &&
-                other.m_property.Name.Equals(this.m_property.Name));
+                    Command.EqualTypes(m_property.DeclaringType, other.m_property.DeclaringType) &&
+                    other.m_property.Name.Equals(m_property.Name));
         }
 
         /// <summary>
@@ -148,6 +141,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             return m_property.Name.GetHashCode();
         }
+
         /// <summary>
         ///
         /// </summary>
@@ -164,7 +158,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     /// </summary>
     internal class TypeIdPropertyRef : PropertyRef
     {
-        private TypeIdPropertyRef() : base() { }
+        private TypeIdPropertyRef()
+        {
+        }
 
         /// <summary>
         /// Gets the default instance of this type
@@ -178,7 +174,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             return "TYPEID";
         }
-        
     }
 
     /// <summary>
@@ -188,8 +183,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     /// </summary>
     internal class NullSentinelPropertyRef : PropertyRef
     {
-        private static NullSentinelPropertyRef s_singleton = new NullSentinelPropertyRef();
-        private NullSentinelPropertyRef() : base() { }
+        private static readonly NullSentinelPropertyRef s_singleton = new NullSentinelPropertyRef();
+
+        private NullSentinelPropertyRef()
+        {
+        }
 
         /// <summary>
         /// Gets the singleton instance
@@ -198,6 +196,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             get { return s_singleton; }
         }
+
         /// <summary>
         ///
         /// </summary>
@@ -206,7 +205,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             return "NULLSENTINEL";
         }
-
     }
 
     /// <summary>
@@ -216,7 +214,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     /// </summary>
     internal class EntitySetIdPropertyRef : PropertyRef
     {
-        private EntitySetIdPropertyRef() : base() { }
+        private EntitySetIdPropertyRef()
+        {
+        }
 
         /// <summary>
         /// Gets the singleton instance
@@ -231,7 +231,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             return "ENTITYSETID";
         }
-
     }
 
     /// <summary>
@@ -248,10 +247,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="innerProperty">the inner property</param>
         /// <param name="outerProperty">the outer property</param>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "NestedPropertyRef"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "innerProperty"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "NestedPropertyRef")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "innerProperty")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal NestedPropertyRef(PropertyRef innerProperty, PropertyRef outerProperty)
         {
-            PlanCompiler.Assert(!(innerProperty is NestedPropertyRef), "innerProperty cannot be a NestedPropertyRef"); 
+            PlanCompiler.Assert(!(innerProperty is NestedPropertyRef), "innerProperty cannot be a NestedPropertyRef");
             m_inner = innerProperty;
             m_outer = outerProperty;
         }
@@ -259,12 +261,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         /// the nested property
         /// </summary>
-        internal PropertyRef OuterProperty { get { return m_outer; } }
+        internal PropertyRef OuterProperty
+        {
+            get { return m_outer; }
+        }
 
         /// <summary>
         /// the parent property
         /// </summary>
-        internal PropertyRef InnerProperty { get { return m_inner; } }
+        internal PropertyRef InnerProperty
+        {
+            get { return m_inner; }
+        }
 
         /// <summary>
         /// Overrides the default equality function. Two NestedPropertyRefs are
@@ -274,10 +282,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            NestedPropertyRef other = obj as NestedPropertyRef;
+            var other = obj as NestedPropertyRef;
             return (other != null &&
-                m_inner.Equals(other.m_inner) &&
-                m_outer.Equals(other.m_outer));
+                    m_inner.Equals(other.m_inner) &&
+                    m_outer.Equals(other.m_outer));
         }
 
         /// <summary>
@@ -289,6 +297,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             return m_inner.GetHashCode() ^ m_outer.GetHashCode();
         }
+
         /// <summary>
         ///
         /// </summary>
@@ -304,7 +313,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     /// </summary>
     internal class AllPropertyRef : PropertyRef
     {
-        private AllPropertyRef() : base() { }
+        private AllPropertyRef()
+        {
+        }
 
         /// <summary>
         /// Get the singleton instance
@@ -320,6 +331,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             return p;
         }
+
         /// <summary>
         ///
         /// </summary>
@@ -335,26 +347,34 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     /// </summary>
     internal class RelPropertyRef : PropertyRef
     {
-#region private state
-        private InternalTrees.RelProperty m_property;
-#endregion
+        #region private state
+
+        private readonly RelProperty m_property;
+
+        #endregion
 
         #region constructor
+
         /// <summary>
         /// Simple constructor
         /// </summary>
         /// <param name="property">the property metadata</param>
-        internal RelPropertyRef(InternalTrees.RelProperty property)
+        internal RelPropertyRef(RelProperty property)
         {
             m_property = property;
         }
+
         #endregion
 
         #region public apis
+
         /// <summary>
         /// Gets the property metadata
         /// </summary>
-        internal InternalTrees.RelProperty Property { get { return m_property; } }
+        internal RelProperty Property
+        {
+            get { return m_property; }
+        }
 
         /// <summary>
         /// Overrides the default equality function. Two RelPropertyRefs are
@@ -364,9 +384,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>true, if the objects are equal</returns>
         public override bool Equals(object obj)
         {
-            RelPropertyRef other = obj as RelPropertyRef;
+            var other = obj as RelPropertyRef;
             return (other != null &&
-                m_property.Equals(other.m_property));
+                    m_property.Equals(other.m_property));
         }
 
         /// <summary>
@@ -387,6 +407,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             return m_property.ToString();
         }
+
         #endregion
     }
 
@@ -395,7 +416,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     /// </summary>
     internal class PropertyRefList
     {
-        private Dictionary<PropertyRef, PropertyRef> m_propertyReferences;
+        private readonly Dictionary<PropertyRef, PropertyRef> m_propertyReferences;
         private bool m_allProperties;
 
         /// <summary>
@@ -406,17 +427,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         /// Trivial constructor
         /// </summary>
-        internal PropertyRefList() : this(false) {}
+        internal PropertyRefList()
+            : this(false)
+        {
+        }
 
         private PropertyRefList(bool allProps)
         {
-            this.m_propertyReferences = new Dictionary<PropertyRef, PropertyRef>();
+            m_propertyReferences = new Dictionary<PropertyRef, PropertyRef>();
 
             if (allProps)
             {
                 MakeAllProperties();
             }
         }
+
         private void MakeAllProperties()
         {
             m_allProperties = true;
@@ -431,12 +456,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         internal void Add(PropertyRef property)
         {
             if (m_allProperties)
+            {
                 return;
+            }
             else if (property is AllPropertyRef)
+            {
                 MakeAllProperties();
+            }
             else
+            {
                 m_propertyReferences[property] = property;
+            }
         }
+
         /// <summary>
         /// Append an existing list of property references to myself
         /// </summary>
@@ -444,17 +476,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         internal void Append(PropertyRefList propertyRefs)
         {
             if (m_allProperties)
-                return;
-            foreach (PropertyRef p in propertyRefs.m_propertyReferences.Keys)
             {
-                this.Add(p);
+                return;
+            }
+            foreach (var p in propertyRefs.m_propertyReferences.Keys)
+            {
+                Add(p);
             }
         }
 
         /// <summary>
         /// Do I contain "all" properties?
         /// </summary>
-        internal bool AllProperties { get { return m_allProperties; } }
+        internal bool AllProperties
+        {
+            get { return m_allProperties; }
+        }
 
         /// <summary>
         /// Create a clone of myself
@@ -462,9 +499,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>a clone of myself</returns>
         internal PropertyRefList Clone()
         {
-            PropertyRefList newProps = new PropertyRefList(m_allProperties);
-            foreach (PropertyRef p in this.m_propertyReferences.Keys)
+            var newProps = new PropertyRefList(m_allProperties);
+            foreach (var p in m_propertyReferences.Keys)
+            {
                 newProps.Add(p);
+            }
             return newProps;
         }
 
@@ -492,9 +531,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         public override string ToString()
         {
-            string x = "{";
-            foreach (PropertyRef p in m_propertyReferences.Keys)
-                x += p.ToString() + ",";
+            var x = "{";
+            foreach (var p in m_propertyReferences.Keys)
+            {
+                x += p + ",";
+            }
             x += "}";
             return x;
         }

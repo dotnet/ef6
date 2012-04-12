@@ -4,9 +4,12 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Data.Common;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common;
-    using System.Data.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal.Linq;
     using System.Data.Entity.Internal.MockingProxies;
@@ -18,9 +21,6 @@
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Validation;
-    using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Objects;
-    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;

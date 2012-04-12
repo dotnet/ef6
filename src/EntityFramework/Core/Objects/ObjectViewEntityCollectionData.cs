@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data.Entity.Core.Objects.DataClasses;
-using System.Data.Entity.Core.Objects.Internal;
-using System.Diagnostics;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-
-namespace System.Data.Entity.Core.Objects
+﻿namespace System.Data.Entity.Core.Objects
 {
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Data.Entity.Core.Objects.DataClasses;
+
     /// <summary>
     /// Manages a binding list constructed from an EntityCollection.
     /// </summary>
@@ -27,9 +22,9 @@ namespace System.Data.Entity.Core.Objects
         where TItemElement : class
         where TViewElement : TItemElement
     {
-        private List<TViewElement> _bindingList;
+        private readonly List<TViewElement> _bindingList;
 
-        private EntityCollection<TItemElement> _entityCollection;
+        private readonly EntityCollection<TItemElement> _entityCollection;
 
         private readonly bool _canEditItems;
 
@@ -122,7 +117,7 @@ namespace System.Data.Entity.Core.Objects
 
         public void CommitItemAt(int index)
         {
-            TViewElement item = _bindingList[index];
+            var item = _bindingList[index];
 
             try
             {
@@ -135,14 +130,13 @@ namespace System.Data.Entity.Core.Objects
             {
                 _itemCommitPending = false;
             }
-
         }
 
         public void Clear()
         {
             if (0 < _bindingList.Count)
             {
-                List<object> _deletionList = new List<object>();
+                var _deletionList = new List<object>();
 
                 foreach (object item in _bindingList)
                 {
@@ -182,9 +176,9 @@ namespace System.Data.Entity.Core.Objects
                     // An Entity is being removed from entity collection, remove it from list.
                     if (e.Element is TViewElement)
                     {
-                        TViewElement removedItem = (TViewElement)e.Element;
+                        var removedItem = (TViewElement)e.Element;
 
-                        int oldIndex = _bindingList.IndexOf(removedItem);
+                        var oldIndex = _bindingList.IndexOf(removedItem);
                         if (oldIndex != -1)
                         {
                             _bindingList.Remove(removedItem);
@@ -204,34 +198,35 @@ namespace System.Data.Entity.Core.Objects
                         // Do not process Add events that fire as a result of committing an item to the entity collection.
                         if (!_itemCommitPending)
                         {
-                            TViewElement addedItem = (TViewElement)e.Element;
+                            var addedItem = (TViewElement)e.Element;
 
                             _bindingList.Add(addedItem);
 
                             // Register to its events.
                             listener.RegisterEntityEvents(addedItem);
 
-                            changeArgs = new ListChangedEventArgs(ListChangedType.ItemAdded, _bindingList.Count - 1 /* newIndex*/, -1 /* oldIndex*/);
+                            changeArgs = new ListChangedEventArgs(
+                                ListChangedType.ItemAdded, _bindingList.Count - 1 /* newIndex*/, -1 /* oldIndex*/);
                         }
                     }
                     break;
 
                 case CollectionChangeAction.Refresh:
-                    foreach (TViewElement entity in _bindingList)
+                    foreach (var entity in _bindingList)
                     {
                         listener.UnregisterEntityEvents(entity);
                     }
 
                     _bindingList.Clear();
 
-                    foreach(TViewElement entity in _entityCollection.GetInternalEnumerable())
+                    foreach (TViewElement entity in _entityCollection.GetInternalEnumerable())
                     {
                         _bindingList.Add(entity);
 
                         listener.RegisterEntityEvents(entity);
                     }
 
-                    changeArgs = new ListChangedEventArgs(ListChangedType.Reset, -1 /*newIndex*/, -1/*oldIndex*/);
+                    changeArgs = new ListChangedEventArgs(ListChangedType.Reset, -1 /*newIndex*/, -1 /*oldIndex*/);
                     break;
             }
 

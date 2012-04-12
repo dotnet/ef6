@@ -1,8 +1,9 @@
-﻿using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Mapping;
-namespace System.Data.Entity.Core.Common.Internal.Materialization
+﻿namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
-    static class Util
+    using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Metadata.Edm;
+
+    internal static class Util
     {
         /// <summary>
         /// Retrieves a mapping to CLR type for the given EDM type. Assumes the MetadataWorkspace has no    
@@ -23,7 +24,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 // If its a case of EntityDataReader with no context, the typeUsage which is passed in must contain
                 // a cspace type. We need to look up an OSpace type in the ospace item collection and then create
                 // ocMapping
-                if (type.DataSpace == DataSpace.CSpace)
+                if (type.DataSpace
+                    == DataSpace.CSpace)
                 {
                     // if its a primitive type, then the names will be different for CSpace type and OSpace type
                     if (Helper.IsPrimitiveType(type))
@@ -48,7 +50,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
                 // This condition must be hit only when someone is trying to materialize a legacy data reader and we
                 // don't have the CSpace metadata.
-                if (!Helper.IsPrimitiveType(ospaceType) && !Helper.IsEntityType(ospaceType) && !Helper.IsComplexType(ospaceType))
+                if (!Helper.IsPrimitiveType(ospaceType) && !Helper.IsEntityType(ospaceType)
+                    && !Helper.IsComplexType(ospaceType))
                 {
                     throw EntityUtil.MaterializerUnsupportedType();
                 }

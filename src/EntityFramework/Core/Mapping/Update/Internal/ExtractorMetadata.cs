@@ -1,9 +1,7 @@
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Data.Entity.Core.Common;
-    using System.Data.Common;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
@@ -18,10 +16,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// modified complex type sub-records.
         /// </summary>
         AllModified,
+
         /// <summary>
         /// Indicates that no properties are modified. Used for unmodified complex type sub-records.
         /// </summary>
         NoneModified,
+
         /// <summary>
         /// Indicates that some properties are modified. Used for modified entities.
         /// </summary>
@@ -55,8 +55,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 case BuiltInTypeKind.EntityType:
                     entityType = (EntityType)type;
                     keyMembers = new Set<EdmMember>(entityType.KeyMembers).MakeReadOnly();
-                    foreignKeyMembers = new Set<EdmMember>(((EntitySet)entitySetBase).ForeignKeyDependents
-                        .SelectMany(fk => fk.Item2.ToProperties)).MakeReadOnly();
+                    foreignKeyMembers = new Set<EdmMember>(
+                        ((EntitySet)entitySetBase).ForeignKeyDependents
+                            .SelectMany(fk => fk.Item2.ToProperties)).MakeReadOnly();
                     break;
                 default:
                     keyMembers = Set<EdmMember>.Empty;
@@ -64,16 +65,16 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     break;
             }
 
-            IBaseList<EdmMember> members = TypeHelpers.GetAllStructuralMembers(type);
+            var members = TypeHelpers.GetAllStructuralMembers(type);
             m_memberMap = new MemberInformation[members.Count];
             // for each member, cache expensive to compute metadata information
-            for (int ordinal = 0; ordinal < members.Count; ordinal++)
+            for (var ordinal = 0; ordinal < members.Count; ordinal++)
             {
-                EdmMember member = members[ordinal];
+                var member = members[ordinal];
                 // figure out flags for this member
-                PropagatorFlags flags = PropagatorFlags.NoFlags;
-                int? entityKeyOrdinal = default(int?);
-                
+                var flags = PropagatorFlags.NoFlags;
+                var entityKeyOrdinal = default(int?);
+
                 if (keyMembers.Contains(member))
                 {
                     flags |= PropagatorFlags.Key;
@@ -87,21 +88,23 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     flags |= PropagatorFlags.ForeignKey;
                 }
 
-
-                if (MetadataHelper.GetConcurrencyMode(member) == ConcurrencyMode.Fixed)
+                if (MetadataHelper.GetConcurrencyMode(member)
+                    == ConcurrencyMode.Fixed)
                 {
                     flags |= PropagatorFlags.ConcurrencyValue;
                 }
 
                 // figure out whether this member is mapped to any server generated
                 // columns in the store
-                bool isServerGenerated = m_translator.ViewLoader.IsServerGen(entitySetBase, m_translator.MetadataWorkspace, member);
+                var isServerGenerated = m_translator.ViewLoader.IsServerGen(entitySetBase, m_translator.MetadataWorkspace, member);
 
                 // figure out whether member nullability is used as a condition in mapping
-                bool isNullConditionMember = m_translator.ViewLoader.IsNullConditionMember(entitySetBase, m_translator.MetadataWorkspace, member);
+                var isNullConditionMember = m_translator.ViewLoader.IsNullConditionMember(
+                    entitySetBase, m_translator.MetadataWorkspace, member);
 
                 // add information about this member
-                m_memberMap[ordinal] = new MemberInformation(ordinal, entityKeyOrdinal, flags, member, isServerGenerated, isNullConditionMember);
+                m_memberMap[ordinal] = new MemberInformation(
+                    ordinal, entityKeyOrdinal, flags, member, isServerGenerated, isNullConditionMember);
             }
         }
 
@@ -124,19 +127,21 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// modified (must be ordinally aligned with the type). Null indicates all members are modified.</param>
         /// <param name="modifiedPropertiesBehavior">Indicates how to determine whether a property is modified.</param>
         /// <returns>Propagator result describing this member value.</returns>
-        internal PropagatorResult RetrieveMember(IEntityStateEntry stateEntry, IExtendedDataRecord record, bool useCurrentValues,
+        internal PropagatorResult RetrieveMember(
+            IEntityStateEntry stateEntry, IExtendedDataRecord record, bool useCurrentValues,
             EntityKey key, int ordinal, ModifiedPropertiesBehavior modifiedPropertiesBehavior)
         {
-            MemberInformation memberInformation = m_memberMap[ordinal];
+            var memberInformation = m_memberMap[ordinal];
 
             // get identifier value
             int identifier;
             if (memberInformation.IsKeyMember)
             {
                 // retrieve identifier for this key member
-                Debug.Assert(null != (object)key, "entities must have keys, and only entity members are marked IsKeyMember by " +
-                    "the metadata wrapper");
-                int keyOrdinal = memberInformation.EntityKeyOrdinal.Value;
+                Debug.Assert(
+                    null != (object)key, "entities must have keys, and only entity members are marked IsKeyMember by " +
+                                         "the metadata wrapper");
+                var keyOrdinal = memberInformation.EntityKeyOrdinal.Value;
                 identifier = m_translator.KeyManager.GetKeyIdentifierForMemberOffset(key, keyOrdinal, ((EntityType)m_type).KeyMembers.Count);
             }
             else if (memberInformation.IsForeignKeyMember)
@@ -149,39 +154,41 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             // determine if the member is modified
-            bool isModified = modifiedPropertiesBehavior == ModifiedPropertiesBehavior.AllModified ||
-                (modifiedPropertiesBehavior == ModifiedPropertiesBehavior.SomeModified && 
-                 stateEntry.ModifiedProperties != null &&
-                 stateEntry.ModifiedProperties[memberInformation.Ordinal]);
+            var isModified = modifiedPropertiesBehavior == ModifiedPropertiesBehavior.AllModified ||
+                             (modifiedPropertiesBehavior == ModifiedPropertiesBehavior.SomeModified &&
+                              stateEntry.ModifiedProperties != null &&
+                              stateEntry.ModifiedProperties[memberInformation.Ordinal]);
 
             // determine member value
             Debug.Assert(record.GetName(ordinal) == memberInformation.Member.Name, "expect record to present properties in metadata order");
-            if (memberInformation.CheckIsNotNull && record.IsDBNull(ordinal))
+            if (memberInformation.CheckIsNotNull
+                && record.IsDBNull(ordinal))
             {
                 throw EntityUtil.Update(Strings.Update_NullValue(record.GetName(ordinal)), null, stateEntry);
             }
-            object value = record.GetValue(ordinal);
+            var value = record.GetValue(ordinal);
 
             // determine what kind of member this is
 
             // entityKey (association end)
-            EntityKey entityKey = value as EntityKey;
+            var entityKey = value as EntityKey;
             if (null != (object)entityKey)
             {
                 return CreateEntityKeyResult(stateEntry, entityKey);
             }
 
             // record (nested complex type)
-            IExtendedDataRecord nestedRecord = value as IExtendedDataRecord;
+            var nestedRecord = value as IExtendedDataRecord;
             if (null != nestedRecord)
             {
                 // for structural types, we track whether the entire complex type value is modified or not
                 var nestedModifiedPropertiesBehavior = isModified
-                    ? ModifiedPropertiesBehavior.AllModified
-                    : ModifiedPropertiesBehavior.NoneModified;
-                UpdateTranslator translator = m_translator;
+                                                           ? ModifiedPropertiesBehavior.AllModified
+                                                           : ModifiedPropertiesBehavior.NoneModified;
+                var translator = m_translator;
 
-                return ExtractResultFromRecord(stateEntry, isModified, nestedRecord, useCurrentValues, translator, nestedModifiedPropertiesBehavior);
+                return ExtractResultFromRecord(
+                    stateEntry, isModified, nestedRecord, useCurrentValues, translator, nestedModifiedPropertiesBehavior);
             }
 
             // simple value (column/property value)
@@ -192,28 +199,29 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private PropagatorResult CreateEntityKeyResult(IEntityStateEntry stateEntry, EntityKey entityKey)
         {
             // get metadata for key
-            EntityType entityType = entityKey.GetEntitySet(m_translator.MetadataWorkspace).ElementType;
-            RowType keyRowType = entityType.GetKeyRowType();
+            var entityType = entityKey.GetEntitySet(m_translator.MetadataWorkspace).ElementType;
+            var keyRowType = entityType.GetKeyRowType();
 
-            ExtractorMetadata keyMetadata = m_translator.GetExtractorMetadata(stateEntry.EntitySet, keyRowType);
-            int keyMemberCount = keyRowType.Properties.Count;
-            PropagatorResult[] keyValues = new PropagatorResult[keyMemberCount];
+            var keyMetadata = m_translator.GetExtractorMetadata(stateEntry.EntitySet, keyRowType);
+            var keyMemberCount = keyRowType.Properties.Count;
+            var keyValues = new PropagatorResult[keyMemberCount];
 
-            for (int ordinal = 0; ordinal < keyRowType.Properties.Count; ordinal++)
+            for (var ordinal = 0; ordinal < keyRowType.Properties.Count; ordinal++)
             {
                 EdmMember keyMember = keyRowType.Properties[ordinal];
                 // retrieve information about this key value
-                MemberInformation keyMemberInformation = keyMetadata.m_memberMap[ordinal];
+                var keyMemberInformation = keyMetadata.m_memberMap[ordinal];
 
-                int keyIdentifier = m_translator.KeyManager.GetKeyIdentifierForMemberOffset(entityKey, ordinal, keyRowType.Properties.Count);
+                var keyIdentifier = m_translator.KeyManager.GetKeyIdentifierForMemberOffset(entityKey, ordinal, keyRowType.Properties.Count);
 
                 object keyValue = null;
                 if (entityKey.IsTemporary)
                 {
                     // If the EntityKey is temporary, we need to retrieve the appropriate
                     // key value from the entity itself (or in this case, the IEntityStateEntry).
-                    IEntityStateEntry entityEntry = stateEntry.StateManager.GetEntityStateEntry(entityKey);
-                    Debug.Assert(entityEntry.State == EntityState.Added,
+                    var entityEntry = stateEntry.StateManager.GetEntityStateEntry(entityKey);
+                    Debug.Assert(
+                        entityEntry.State == EntityState.Added,
                         "The corresponding entry for a temp EntityKey should be in the Added State.");
                     keyValue = entityEntry.CurrentValues[keyMember.Name];
                 }
@@ -237,19 +245,24 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             return PropagatorResult.CreateStructuralValue(keyValues, keyMetadata.m_type, false);
         }
 
-        private PropagatorResult CreateSimpleResult(IEntityStateEntry stateEntry, IExtendedDataRecord record, MemberInformation memberInformation, 
+        private PropagatorResult CreateSimpleResult(
+            IEntityStateEntry stateEntry, IExtendedDataRecord record, MemberInformation memberInformation,
             int identifier, bool isModified, int recordOrdinal, object value)
         {
-            CurrentValueRecord updatableRecord = record as CurrentValueRecord;
+            var updatableRecord = record as CurrentValueRecord;
 
             // construct flags for the value, which is needed for complex type and simple members
-            PropagatorFlags flags = memberInformation.Flags;
-            if (!isModified) { flags |= PropagatorFlags.Preserve; }
+            var flags = memberInformation.Flags;
+            if (!isModified)
+            {
+                flags |= PropagatorFlags.Preserve;
+            }
             if (PropagatorResult.NullIdentifier != identifier)
             {
                 // construct a key member
                 PropagatorResult result;
-                if ((memberInformation.IsServerGenerated || memberInformation.IsForeignKeyMember) && null != updatableRecord)
+                if ((memberInformation.IsServerGenerated || memberInformation.IsForeignKeyMember)
+                    && null != updatableRecord)
                 {
                     result = PropagatorResult.CreateServerGenKeyValue(flags, value, stateEntry, identifier, recordOrdinal);
                 }
@@ -268,7 +281,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
             else
             {
-                if ((memberInformation.IsServerGenerated || memberInformation.IsForeignKeyMember) && null != updatableRecord)
+                if ((memberInformation.IsServerGenerated || memberInformation.IsForeignKeyMember)
+                    && null != updatableRecord)
                 {
                     // note: we only produce a server gen result when 
                     return PropagatorResult.CreateServerGenSimpleValue(flags, value, updatableRecord, recordOrdinal);
@@ -291,17 +305,19 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// exists</param>
         /// <param name="modifiedPropertiesBehavior">Indicates how to determine whether a property is modified.</param>
         /// <returns>Result corresponding to the given record</returns>
-        internal static PropagatorResult ExtractResultFromRecord(IEntityStateEntry stateEntry, bool isModified, IExtendedDataRecord record, 
+        internal static PropagatorResult ExtractResultFromRecord(
+            IEntityStateEntry stateEntry, bool isModified, IExtendedDataRecord record,
             bool useCurrentValues, UpdateTranslator translator, ModifiedPropertiesBehavior modifiedPropertiesBehavior)
         {
-            StructuralType structuralType = (StructuralType)record.DataRecordInfo.RecordType.EdmType;
-            ExtractorMetadata metadata = translator.GetExtractorMetadata(stateEntry.EntitySet, structuralType);
-            EntityKey key = stateEntry.EntityKey;
+            var structuralType = (StructuralType)record.DataRecordInfo.RecordType.EdmType;
+            var metadata = translator.GetExtractorMetadata(stateEntry.EntitySet, structuralType);
+            var key = stateEntry.EntityKey;
 
-            PropagatorResult[] nestedValues = new PropagatorResult[record.FieldCount];
-            for (int ordinal = 0; ordinal < nestedValues.Length; ordinal++)
+            var nestedValues = new PropagatorResult[record.FieldCount];
+            for (var ordinal = 0; ordinal < nestedValues.Length; ordinal++)
             {
-                nestedValues[ordinal] = metadata.RetrieveMember(stateEntry, record, useCurrentValues, key,
+                nestedValues[ordinal] = metadata.RetrieveMember(
+                    stateEntry, record, useCurrentValues, key,
                     ordinal, modifiedPropertiesBehavior);
             }
 
@@ -331,10 +347,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// </summary>
             internal bool IsKeyMember
             {
-                get
-                {
-                    return PropagatorFlags.Key == (Flags & PropagatorFlags.Key);
-                }
+                get { return PropagatorFlags.Key == (Flags & PropagatorFlags.Key); }
             }
 
             /// <summary>
@@ -342,10 +355,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// </summary>
             internal bool IsForeignKeyMember
             {
-                get
-                {
-                    return PropagatorFlags.ForeignKey == (Flags & PropagatorFlags.ForeignKey);
-                }
+                get { return PropagatorFlags.ForeignKey == (Flags & PropagatorFlags.ForeignKey); }
             }
 
             /// <summary>
@@ -364,23 +374,27 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
             internal readonly EdmMember Member;
 
-            internal MemberInformation(int ordinal, int? entityKeyOrdinal, PropagatorFlags flags, EdmMember member, bool isServerGenerated, bool isNullConditionMember)
+            internal MemberInformation(
+                int ordinal, int? entityKeyOrdinal, PropagatorFlags flags, EdmMember member, bool isServerGenerated,
+                bool isNullConditionMember)
             {
-                Debug.Assert(entityKeyOrdinal.HasValue == 
-                    (member.DeclaringType.BuiltInTypeKind == BuiltInTypeKind.EntityType && (flags & PropagatorFlags.Key) == PropagatorFlags.Key),
+                Debug.Assert(
+                    entityKeyOrdinal.HasValue ==
+                    (member.DeclaringType.BuiltInTypeKind == BuiltInTypeKind.EntityType
+                     && (flags & PropagatorFlags.Key) == PropagatorFlags.Key),
                     "key ordinal should only be provided if this is an entity key property");
 
-                this.Ordinal = ordinal;
-                this.EntityKeyOrdinal = entityKeyOrdinal;
-                this.Flags = flags;
-                this.Member = member;
-                this.IsServerGenerated = isServerGenerated;
+                Ordinal = ordinal;
+                EntityKeyOrdinal = entityKeyOrdinal;
+                Flags = flags;
+                Member = member;
+                IsServerGenerated = isServerGenerated;
                 // in two cases, we must check that a member value is not null:
                 // - where the type participates in an isnull condition, nullability constraints must be honored
                 // - for complex types, mapping relies on nullability constraint
                 // - in other cases, nullability does not impact round trippability so we don't check
-                this.CheckIsNotNull = !TypeSemantics.IsNullable(member) &&
-                    (isNullConditionMember || member.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.ComplexType);
+                CheckIsNotNull = !TypeSemantics.IsNullable(member) &&
+                                 (isNullConditionMember || member.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.ComplexType);
             }
         }
     }

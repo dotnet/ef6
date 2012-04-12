@@ -1,5 +1,3 @@
-using System;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     /// <summary>

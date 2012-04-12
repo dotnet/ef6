@@ -1,18 +1,17 @@
-using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
+    using System.Diagnostics;
+    using System.Text;
+
     /// <summary>
     /// A constant that can be projected in a cell query.
     /// </summary>
     internal sealed class ConstantProjectedSlot : ProjectedSlot
     {
         #region Constructors
+
         /// <summary>
         /// Creates a slot with constant value being <paramref name="value"/>.
         /// </summary>
@@ -22,9 +21,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             Debug.Assert(value.IsNotNull() == false, "Cannot store NotNull in a slot - NotNull is only for conditions");
             m_constant = value;
         }
+
         #endregion
 
         #region Fields
+
         /// <summary>
         /// The actual value.
         /// </summary>
@@ -33,6 +34,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the value stored in this constant.
         /// </summary>
@@ -44,6 +46,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #endregion
 
         #region Methods
+
         internal override ProjectedSlot DeepQualify(CqlBlock block)
         {
             return this; // Nothing to create
@@ -61,7 +64,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         protected override bool IsEqualTo(ProjectedSlot right)
         {
-            ConstantProjectedSlot rightSlot = right as ConstantProjectedSlot;
+            var rightSlot = right as ConstantProjectedSlot;
             if (rightSlot == null)
             {
                 return false;
@@ -78,6 +81,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             m_constant.ToCompactString(builder);
         }
+
         #endregion
     }
 }

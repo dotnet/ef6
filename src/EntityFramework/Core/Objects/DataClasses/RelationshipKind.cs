@@ -1,5 +1,3 @@
-using System;
-
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
     /// <summary>

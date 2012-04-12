@@ -1,11 +1,8 @@
-using System.Data;
-using System.Diagnostics;
-using System.Reflection;
-using System.ComponentModel;
-using System.Runtime.Serialization;
-
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
+    using System.Diagnostics;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// This is the interface that represent the minimum interface required
     /// to be an entity in ADO.NET.
@@ -18,8 +15,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // a breaking change.  This includes changing the field type or field name of existing
         // serialized fields. If you need to make this kind of change, it may be possible, but it
         // will require some custom serialization/deserialization code.
-        private StructuralObject _parent;     // Object that contains this ComplexObject (can be Entity or ComplexObject)
-        private string _parentPropertyName;   // Property name for this type on the containing object
+        private StructuralObject _parent; // Object that contains this ComplexObject (can be Entity or ComplexObject)
+        private string _parentPropertyName; // Property name for this type on the containing object
 
         /// <summary>
         /// Associate the ComplexType with an Entity or another ComplexObject
@@ -65,7 +62,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// to the containing object and then continues default change
         /// reporting behavior.
         /// </summary>
-        protected sealed override void ReportPropertyChanging(
+        protected override sealed void ReportPropertyChanging(
             string property)
         {
             EntityUtil.CheckStringArgument(property, "property");
@@ -73,7 +70,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             base.ReportPropertyChanging(property);
 
             // Since we are a ComplexObject, all changes (scalar or complex) are considered complex property changes            
-            ReportComplexPropertyChanging(null, this, property);            
+            ReportComplexPropertyChanging(null, this, property);
         }
 
         /// <summary>
@@ -81,24 +78,20 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// to the containing object and then continues default change
         /// reporting behavior.
         /// </summary>
-        protected sealed override void ReportPropertyChanged(
+        protected override sealed void ReportPropertyChanged(
             string property)
         {
             EntityUtil.CheckStringArgument(property, "property");
 
             // Since we are a ComplexObject, all changes (scalar or complex) are considered complex property changes
             ReportComplexPropertyChanged(null, this, property);
-            
+
             base.ReportPropertyChanged(property);
         }
 
-
-        internal sealed override bool IsChangeTracked
+        internal override sealed bool IsChangeTracked
         {
-            get
-            {
-                return _parent == null ? false : _parent.IsChangeTracked;                
-            }
+            get { return _parent == null ? false : _parent.IsChangeTracked; }
         }
 
         /// <summary>
@@ -116,7 +109,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="complexMemberName">
         /// The name of the changing property on complexObject.
         /// </param>
-        internal sealed override void ReportComplexPropertyChanging(
+        internal override sealed void ReportComplexPropertyChanging(
             string entityMemberName, ComplexObject complexObject, string complexMemberName)
         {
             // entityMemberName is unused here because we just keep passing the current parent name up the hierarchy
@@ -124,7 +117,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             Debug.Assert(complexObject != null, "invalid complexObject");
             Debug.Assert(!String.IsNullOrEmpty(complexMemberName), "invalid complexMemberName");
-            
+
             if (null != _parent)
             {
                 _parent.ReportComplexPropertyChanging(_parentPropertyName, complexObject, complexMemberName);
@@ -146,7 +139,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="complexMemberName">
         /// The name of the changing property on complexObject.
         /// </param>
-        internal sealed override void ReportComplexPropertyChanged(
+        internal override sealed void ReportComplexPropertyChanged(
             string entityMemberName, ComplexObject complexObject, string complexMemberName)
         {
             // entityMemberName is unused here because we just keep passing the current parent name up the hierarchy

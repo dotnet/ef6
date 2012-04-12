@@ -1,6 +1,5 @@
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
     using System.Xml;
@@ -10,15 +9,16 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     /// </summary>
     internal sealed class ModelFunction : Function
     {
-        private TypeUsageBuilder _typeUsageBuilder;
+        private readonly TypeUsageBuilder _typeUsageBuilder;
 
         #region Public Methods
+
         /// <summary>
         /// ctor for a schema function
         /// </summary>
         public ModelFunction(Schema parentElement)
             :
-            base(parentElement)
+                base(parentElement)
         {
             _isComposable = true;
             _typeUsageBuilder = new TypeUsageBuilder(this);
@@ -28,10 +28,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         public override SchemaType Type
         {
-            get
-            {
-                return this._type;
-            }
+            get { return _type; }
         }
 
         internal TypeUsage TypeUsage
@@ -64,6 +61,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         #region Protected Properties
+
         protected override bool HandleElement(XmlReader reader)
         {
             if (base.HandleElement(reader))
@@ -115,27 +113,29 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                         _typeUsageBuilder.ValidateAndSetTypeUsage(_type as ScalarType, false);
                     }
                 }
-
             }
 
-            foreach (Parameter parameter in this.Parameters)
+            foreach (var parameter in Parameters)
             {
                 parameter.ResolveTopLevelNames();
             }
 
             if (ReturnTypeList != null)
             {
-                Debug.Assert(ReturnTypeList.Count == 1, "returnTypeList should always be non-empty.  Multiple ReturnTypes are only possible on FunctionImports.");
+                Debug.Assert(
+                    ReturnTypeList.Count == 1,
+                    "returnTypeList should always be non-empty.  Multiple ReturnTypes are only possible on FunctionImports.");
                 ReturnTypeList[0].ResolveTopLevelNames();
             }
         }
+
         #endregion
 
         private void HandleDefiningExpressionElment(XmlReader reader)
         {
             Debug.Assert(reader != null);
 
-            FunctionCommandText commandText = new FunctionCommandText(this);
+            var commandText = new FunctionCommandText(this);
             commandText.Parse(reader);
             _commandText = commandText;
         }

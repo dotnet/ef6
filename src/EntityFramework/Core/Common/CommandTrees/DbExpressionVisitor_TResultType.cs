@@ -1,10 +1,5 @@
-using System.Collections.Generic;
-using System.Data.Entity.Core.Metadata.Edm;
-
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     /// The expression visitor pattern abstract base class that should be implemented by visitors that return a result value of a specific type.
     /// </summary>
@@ -93,7 +88,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression">The DbElementExpression that is being visited.</param>
         /// <returns>An instance of TResultType.</returns>
         public abstract TResultType Visit(DbElementExpression expression);
-        
+
         /// <summary>
         /// Typed visitor pattern method for DbExceptExpression.
         /// </summary>
@@ -196,11 +191,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         public abstract TResultType Visit(DbLimitExpression expression);
 
 #if METHOD_EXPRESSION
-        /// <summary>
-        /// Typed visitor pattern method for MethodExpression.
-        /// </summary>
-        /// <param name="expression">The Expression that is being visited.</param>
-        /// <returns>An instance of TResultType.</returns>
+    /// <summary>
+    /// Typed visitor pattern method for MethodExpression.
+    /// </summary>
+    /// <param name="expression">The Expression that is being visited.</param>
+    /// <returns>An instance of TResultType.</returns>
         public abstract TResultType Visit(MethodExpression expression);
 #endif
 

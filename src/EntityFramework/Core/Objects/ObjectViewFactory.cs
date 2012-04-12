@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Metadata;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Objects.DataClasses;
-using System.Data.Entity.Core.Objects.Internal;
-using System.Diagnostics;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-
-namespace System.Data.Entity.Core.Objects
+﻿namespace System.Data.Entity.Core.Objects
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Data.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.Reflection;
+    using System.Runtime.CompilerServices;
+
     /// <summary>
     /// Creates instances of ObjectView that provide a binding list for ObjectQuery results and EntityCollections.
     /// </summary>
@@ -66,13 +63,15 @@ namespace System.Data.Entity.Core.Objects
         /// <see cref="IBindingList"/> that is suitable for data binding.
         /// </returns>
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        internal static IBindingList CreateViewForQuery<TElement>(TypeUsage elementEdmTypeUsage, IEnumerable<TElement> queryResults, ObjectContext objectContext, bool forceReadOnly, EntitySet singleEntitySet)
+        internal static IBindingList CreateViewForQuery<TElement>(
+            TypeUsage elementEdmTypeUsage, IEnumerable<TElement> queryResults, ObjectContext objectContext, bool forceReadOnly,
+            EntitySet singleEntitySet)
         {
             EntityUtil.CheckArgumentNull(queryResults, "queryResults");
             EntityUtil.CheckArgumentNull(objectContext, "objectContext");
 
             Type clrElementType = null;
-            TypeUsage ospaceElementTypeUsage = GetOSpaceTypeUsage(elementEdmTypeUsage, objectContext);
+            var ospaceElementTypeUsage = GetOSpaceTypeUsage(elementEdmTypeUsage, objectContext);
 
             // Map the O-Space EDM type to a CLR type.
             // If the mapping is unsuccessful, fallback to TElement type.
@@ -91,13 +90,13 @@ namespace System.Data.Entity.Core.Objects
             // by avoiding a reflection-based instantiation.
             if (clrElementType == typeof(TElement))
             {
-                ObjectViewQueryResultData<TElement> viewData = new ObjectViewQueryResultData<TElement>((IEnumerable)queryResults, objectContext, forceReadOnly, singleEntitySet);
+                var viewData = new ObjectViewQueryResultData<TElement>(queryResults, objectContext, forceReadOnly, singleEntitySet);
 
                 objectView = new ObjectView<TElement>(viewData, eventDataSource);
             }
             else if (clrElementType == null)
             {
-                ObjectViewQueryResultData<DbDataRecord> viewData = new ObjectViewQueryResultData<DbDataRecord>((IEnumerable)queryResults, objectContext, true, null);
+                var viewData = new ObjectViewQueryResultData<DbDataRecord>(queryResults, objectContext, true, null);
                 objectView = new DataRecordObjectView(viewData, eventDataSource, (RowType)ospaceElementTypeUsage.EdmType, typeof(TElement));
             }
             else
@@ -110,17 +109,20 @@ namespace System.Data.Entity.Core.Objects
                 // Use reflection to create an instance of the generic ObjectView and ObjectViewQueryResultData classes, 
                 // using clrElementType as the value of TElement generic type parameter for both classes.
 
-                Type objectViewDataType = genericObjectViewQueryResultDataType.MakeGenericType(clrElementType);
+                var objectViewDataType = genericObjectViewQueryResultDataType.MakeGenericType(clrElementType);
 
-                ConstructorInfo viewDataConstructor = objectViewDataType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic,
-                                                                                        null,
-                                                                                        new Type[] { typeof(IEnumerable), typeof(ObjectContext), typeof(bool), typeof(EntitySet) },
-                                                                                        null);
+                var viewDataConstructor = objectViewDataType.GetConstructor(
+                    BindingFlags.Instance | BindingFlags.NonPublic,
+                    null,
+                    new[] { typeof(IEnumerable), typeof(ObjectContext), typeof(bool), typeof(EntitySet) },
+                    null);
 
-                Debug.Assert(viewDataConstructor != null, "ObjectViewQueryResultData constructor not found. Please ensure constructor signature is correct.");
+                Debug.Assert(
+                    viewDataConstructor != null,
+                    "ObjectViewQueryResultData constructor not found. Please ensure constructor signature is correct.");
 
                 // Create ObjectViewQueryResultData instance
-                object viewData = viewDataConstructor.Invoke(new object[] { queryResults, objectContext, forceReadOnly, singleEntitySet });
+                var viewData = viewDataConstructor.Invoke(new object[] { queryResults, objectContext, forceReadOnly, singleEntitySet });
 
                 // Create ObjectView instance
                 objectView = CreateObjectView(clrElementType, objectViewDataType, viewData, eventDataSource);
@@ -147,12 +149,13 @@ namespace System.Data.Entity.Core.Objects
         /// <see cref="IBindingList"/> that is suitable for data binding.
         /// </returns>
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        internal static IBindingList CreateViewForEntityCollection<TElement>(EntityType entityType, EntityCollection<TElement> entityCollection)
+        internal static IBindingList CreateViewForEntityCollection<TElement>(
+            EntityType entityType, EntityCollection<TElement> entityCollection)
             where TElement : class
         {
             Type clrElementType = null;
-            TypeUsage entityTypeUsage = entityType == null ? null : TypeUsage.Create(entityType);
-            TypeUsage ospaceElementTypeUsage = GetOSpaceTypeUsage(entityTypeUsage, entityCollection.ObjectContext);
+            var entityTypeUsage = entityType == null ? null : TypeUsage.Create(entityType);
+            var ospaceElementTypeUsage = GetOSpaceTypeUsage(entityTypeUsage, entityCollection.ObjectContext);
 
             // Map the O-Space EDM type to a CLR type.
             // If the mapping is unsuccessful, fallback to TElement type.
@@ -180,7 +183,7 @@ namespace System.Data.Entity.Core.Objects
             // by avoiding a reflection-based instantiation.
             if (clrElementType == typeof(TElement))
             {
-                ObjectViewEntityCollectionData<TElement, TElement> viewData = new ObjectViewEntityCollectionData<TElement, TElement>(entityCollection);
+                var viewData = new ObjectViewEntityCollectionData<TElement, TElement>(entityCollection);
                 objectView = new ObjectView<TElement>(viewData, entityCollection);
             }
             else
@@ -193,17 +196,20 @@ namespace System.Data.Entity.Core.Objects
                 // Use reflection to create an instance of the generic ObjectView and ObjectViewEntityCollectionData classes, 
                 // using clrElementType as the value of TElement generic type parameter for both classes.
 
-                Type objectViewDataType = genericObjectViewEntityCollectionDataType.MakeGenericType(clrElementType, typeof(TElement));
+                var objectViewDataType = genericObjectViewEntityCollectionDataType.MakeGenericType(clrElementType, typeof(TElement));
 
-                ConstructorInfo viewDataConstructor = objectViewDataType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic,
-                                                                                        null,
-                                                                                        new Type[] { typeof(EntityCollection<TElement>) },
-                                                                                        null);
+                var viewDataConstructor = objectViewDataType.GetConstructor(
+                    BindingFlags.Instance | BindingFlags.NonPublic,
+                    null,
+                    new[] { typeof(EntityCollection<TElement>) },
+                    null);
 
-                Debug.Assert(viewDataConstructor != null, "ObjectViewEntityCollectionData constructor not found. Please ensure constructor signature is correct.");
+                Debug.Assert(
+                    viewDataConstructor != null,
+                    "ObjectViewEntityCollectionData constructor not found. Please ensure constructor signature is correct.");
 
                 // Create ObjectViewEntityCollectionData instance
-                object viewData = viewDataConstructor.Invoke(new object[] { entityCollection });
+                var viewData = viewDataConstructor.Invoke(new object[] { entityCollection });
 
                 // Create ObjectView instance
                 objectView = CreateObjectView(clrElementType, objectViewDataType, viewData, entityCollection);
@@ -223,20 +229,24 @@ namespace System.Data.Entity.Core.Objects
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private static IBindingList CreateObjectView(Type clrElementType, Type objectViewDataType, object viewData, object eventDataSource)
         {
-            Type objectViewType = genericObjectViewType.MakeGenericType(clrElementType);
+            var objectViewType = genericObjectViewType.MakeGenericType(clrElementType);
 
-            Type[] viewDataInterfaces = objectViewDataType.FindInterfaces((Type type, object unusedFilter) => type.Name == genericObjectViewDataInterfaceType.Name, null);
-            Debug.Assert(viewDataInterfaces.Length == 1, "Could not find IObjectViewData<T> interface definition for ObjectViewQueryResultData<T>.");
+            var viewDataInterfaces =
+                objectViewDataType.FindInterfaces(
+                    (Type type, object unusedFilter) => type.Name == genericObjectViewDataInterfaceType.Name, null);
+            Debug.Assert(
+                viewDataInterfaces.Length == 1, "Could not find IObjectViewData<T> interface definition for ObjectViewQueryResultData<T>.");
 
-            ConstructorInfo viewConstructor = objectViewType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic,
-                                                                            null,
-                                                                            new Type[] { viewDataInterfaces[0], typeof(object) },
-                                                                            null);
+            var viewConstructor = objectViewType.GetConstructor(
+                BindingFlags.Instance | BindingFlags.NonPublic,
+                null,
+                new[] { viewDataInterfaces[0], typeof(object) },
+                null);
 
             Debug.Assert(viewConstructor != null, "ObjectView constructor not found. Please ensure constructor signature is correct.");
 
             // Create ObjectView instance
-            return (IBindingList)viewConstructor.Invoke(new object[] { viewData, eventDataSource });
+            return (IBindingList)viewConstructor.Invoke(new[] { viewData, eventDataSource });
         }
 
         /// <summary>
@@ -253,19 +263,25 @@ namespace System.Data.Entity.Core.Objects
         {
             TypeUsage ospaceTypeUsage;
 
-            if (typeUsage == null || typeUsage.EdmType == null)
+            if (typeUsage == null
+                || typeUsage.EdmType == null)
             {
                 ospaceTypeUsage = null;
             }
             else
             {
-                if (typeUsage.EdmType.DataSpace == DataSpace.OSpace)
+                if (typeUsage.EdmType.DataSpace
+                    == DataSpace.OSpace)
                 {
                     ospaceTypeUsage = typeUsage;
                 }
                 else
                 {
-                    Debug.Assert(typeUsage.EdmType.DataSpace == DataSpace.CSpace, String.Format(System.Globalization.CultureInfo.InvariantCulture, "Expected EdmType.DataSpace to be C-Space, but instead it is {0}.", typeUsage.EdmType.DataSpace.ToString()));
+                    Debug.Assert(
+                        typeUsage.EdmType.DataSpace == DataSpace.CSpace,
+                        String.Format(
+                            CultureInfo.InvariantCulture, "Expected EdmType.DataSpace to be C-Space, but instead it is {0}.",
+                            typeUsage.EdmType.DataSpace.ToString()));
 
                     // The ObjectContext is needed to map the EDM TypeUsage from C-Space to O-Space.
                     if (objectContext == null)
@@ -310,11 +326,13 @@ namespace System.Data.Entity.Core.Objects
             //
             // However, if the RowType has InitializerMetadata with a non-null CLR Type, 
             // that CLR type should be used to determine the properties available for binding.
-            if (ospaceEdmType.BuiltInTypeKind == BuiltInTypeKind.RowType)
+            if (ospaceEdmType.BuiltInTypeKind
+                == BuiltInTypeKind.RowType)
             {
-                RowType itemRowType = (RowType)ospaceEdmType;
+                var itemRowType = (RowType)ospaceEdmType;
 
-                if (itemRowType.InitializerMetadata != null && itemRowType.InitializerMetadata.ClrType != null)
+                if (itemRowType.InitializerMetadata != null
+                    && itemRowType.InitializerMetadata.ClrType != null)
                 {
                     clrType = itemRowType.InitializerMetadata.ClrType;
                 }
@@ -322,9 +340,10 @@ namespace System.Data.Entity.Core.Objects
                 {
                     // If the generic parameter TElement is not exactly a data record type or object type,
                     // use it as the CLR type.
-                    Type elementType = typeof(TElement);
+                    var elementType = typeof(TElement);
 
-                    if (typeof(IDataRecord).IsAssignableFrom(elementType) || elementType == typeof(object))
+                    if (typeof(IDataRecord).IsAssignableFrom(elementType)
+                        || elementType == typeof(object))
                     {
                         // No CLR type mapping exists for this RowType.
                         clrType = null;

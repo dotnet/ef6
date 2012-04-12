@@ -7,7 +7,9 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Common.QueryCache;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Linq.Expressions;
 
     /// <summary>
     /// ObjectQueryState based on Entity-SQL query text.
@@ -52,10 +54,12 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="mergeOption">
         ///     The merge option to use when retrieving results if an explicit merge option is not specified
         /// </param>
-        internal EntitySqlQueryState(Type elementType, string commandText, bool allowsLimit, ObjectContext context, ObjectParameterCollection parameters, Span span)
+        internal EntitySqlQueryState(
+            Type elementType, string commandText, bool allowsLimit, ObjectContext context, ObjectParameterCollection parameters, Span span)
             : this(elementType, commandText, /*expression*/ null, allowsLimit, context, parameters, span)
-        { }
-        
+        {
+        }
+
         /// <summary>
         /// Initializes a new query EntitySqlQueryState instance.
         /// </summary>
@@ -73,13 +77,15 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="mergeOption">
         ///     The merge option to use when retrieving results if an explicit merge option is not specified
         /// </param>
-        internal EntitySqlQueryState(Type elementType, string commandText, DbExpression expression, bool allowsLimit, ObjectContext context, ObjectParameterCollection parameters, Span span)
+        internal EntitySqlQueryState(
+            Type elementType, string commandText, DbExpression expression, bool allowsLimit, ObjectContext context,
+            ObjectParameterCollection parameters, Span span)
             : base(elementType, context, parameters, span)
         {
             EntityUtil.CheckArgumentNull(commandText, "commandText");
             if (string.IsNullOrEmpty(commandText))
             {
-                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.ObjectQuery_InvalidEmptyQuery, "commandText");
+                throw EntityUtil.Argument(Strings.ObjectQuery_InvalidEmptyQuery, "commandText");
             }
 
             _queryText = commandText;
@@ -95,7 +101,10 @@ namespace System.Data.Entity.Core.Objects
         ///     <c>True</c> if the current query is a Skip or Sort expression, or a
         ///     Project expression with a Skip or Sort expression input.
         /// </returns>
-        internal bool AllowsLimitSubclause { get { return _allowsLimit; } }
+        internal bool AllowsLimitSubclause
+        {
+            get { return _allowsLimit; }
+        }
 
         /// <summary>
         /// Always returns the Entity-SQL text of the implemented ObjectQuery.
@@ -104,11 +113,11 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>Always returns <c>true</c>.</returns>
         internal override bool TryGetCommandText(out string commandText)
         {
-            commandText = this._queryText;
+            commandText = _queryText;
             return true;
         }
 
-        internal override bool TryGetExpression(out System.Linq.Expressions.Expression expression)
+        internal override bool TryGetExpression(out Expression expression)
         {
             expression = null;
             return false;
@@ -116,32 +125,34 @@ namespace System.Data.Entity.Core.Objects
 
         protected override TypeUsage GetResultType()
         {
-            DbExpression query = this.Parse();
+            var query = Parse();
             return query.ResultType;
         }
 
         internal override ObjectQueryState Include<TElementType>(ObjectQuery<TElementType> sourceQuery, string includePath)
         {
-            ObjectQueryState retState = new EntitySqlQueryState(this.ElementType, _queryText, _queryExpression, _allowsLimit, this.ObjectContext, ObjectParameterCollection.DeepCopy(this.Parameters), Span.IncludeIn(this.Span, includePath));
-            this.ApplySettingsTo(retState);
+            ObjectQueryState retState = new EntitySqlQueryState(
+                ElementType, _queryText, _queryExpression, _allowsLimit, ObjectContext, ObjectParameterCollection.DeepCopy(Parameters),
+                Span.IncludeIn(Span, includePath));
+            ApplySettingsTo(retState);
             return retState;
         }
 
         internal override ObjectQueryExecutionPlan GetExecutionPlan(MergeOption? forMergeOption)
         {
             // Metadata is required to generate the execution plan or to retrieve it from the cache.
-            this.ObjectContext.EnsureMetadata();
+            ObjectContext.EnsureMetadata();
 
             // Determine the required merge option, with the following precedence:
             // 1. The merge option specified to Execute(MergeOption) as forMergeOption.
             // 2. The merge option set via ObjectQuery.MergeOption.
             // 3. The global default merge option.
-            MergeOption mergeOption = EnsureMergeOption(forMergeOption, this.UserSpecifiedMergeOption);
+            var mergeOption = EnsureMergeOption(forMergeOption, UserSpecifiedMergeOption);
 
             // If a cached plan is present, then it can be reused if it has the required merge option
             // (since span and parameters cannot change between executions). However, if the cached
             // plan does not have the required merge option we proceed as if it were not present.
-            ObjectQueryExecutionPlan plan = this._cachedPlan;
+            var plan = _cachedPlan;
             if (plan != null)
             {
                 if (plan.MergeOption == mergeOption)
@@ -158,20 +169,20 @@ namespace System.Data.Entity.Core.Objects
             // the global query cache (if plan caching is enabled) or rebuilt for the required merge option.
             QueryCacheManager cacheManager = null;
             EntitySqlQueryCacheKey cacheKey = null;
-            if (this.PlanCachingEnabled)
+            if (PlanCachingEnabled)
             {
                 // Create a new cache key that reflects the current state of the Parameters collection
                 // and the Span object (if any), and uses the specified merge option.
                 cacheKey = new EntitySqlQueryCacheKey(
-                                   this.ObjectContext.DefaultContainerName,
-                                   _queryText,
-                                   (null == this.Parameters ? 0 : this.Parameters.Count),
-                                   (null == this.Parameters ? null : this.Parameters.GetCacheKey()),
-                                   (null == this.Span ? null : this.Span.GetCacheKey()),
-                                   mergeOption,
-                                   this.ElementType);
+                    ObjectContext.DefaultContainerName,
+                    _queryText,
+                    (null == Parameters ? 0 : Parameters.Count),
+                    (null == Parameters ? null : Parameters.GetCacheKey()),
+                    (null == Span ? null : Span.GetCacheKey()),
+                    mergeOption,
+                    ElementType);
 
-                cacheManager = this.ObjectContext.MetadataWorkspace.GetQueryCacheManager();
+                cacheManager = ObjectContext.MetadataWorkspace.GetQueryCacheManager();
                 ObjectQueryExecutionPlan executionPlan = null;
                 if (cacheManager.TryCacheLookup(cacheKey, out executionPlan))
                 {
@@ -182,10 +193,11 @@ namespace System.Data.Entity.Core.Objects
             if (plan == null)
             {
                 // Either caching is not enabled or the execution plan was not found in the cache
-                DbExpression queryExpression = this.Parse();
+                var queryExpression = Parse();
                 Debug.Assert(queryExpression != null, "EntitySqlQueryState.Parse returned null expression?");
-                DbQueryCommandTree tree = DbQueryCommandTree.FromValidExpression(this.ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression);
-                plan = ObjectQueryExecutionPlan.Prepare(this.ObjectContext, tree, this.ElementType, mergeOption, this.Span, null, DbExpressionBuilder.AliasGenerator);
+                var tree = DbQueryCommandTree.FromValidExpression(ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression);
+                plan = ObjectQueryExecutionPlan.Prepare(
+                    ObjectContext, tree, ElementType, mergeOption, Span, null, DbExpressionBuilder.AliasGenerator);
 
                 // If caching is enabled then update the cache now.
                 // Note: the logic is the same as in ELinqQueryState.
@@ -202,13 +214,13 @@ namespace System.Data.Entity.Core.Objects
                 }
             }
 
-            if (this.Parameters != null)
+            if (Parameters != null)
             {
-                this.Parameters.SetReadOnly(true);
+                Parameters.SetReadOnly(true);
             }
 
             // Update the cached plan with the newly retrieved/prepared plan
-            this._cachedPlan = plan;
+            _cachedPlan = plan;
 
             // Return the execution plan
             return plan;
@@ -222,37 +234,37 @@ namespace System.Data.Entity.Core.Objects
             }
 
             List<DbParameterReferenceExpression> parameters = null;
-            if (this.Parameters != null)
+            if (Parameters != null)
             {
-                parameters = new List<DbParameterReferenceExpression>(this.Parameters.Count);
-                foreach (ObjectParameter parameter in this.Parameters)
+                parameters = new List<DbParameterReferenceExpression>(Parameters.Count);
+                foreach (var parameter in Parameters)
                 {
-                    TypeUsage typeUsage = parameter.TypeUsage;
+                    var typeUsage = parameter.TypeUsage;
                     if (null == typeUsage)
                     {
                         // Since ObjectParameters do not allow users to specify 'facets', make 
                         // sure that the parameter TypeUsage is not populated with the provider
                         // default facet values.
-                        this.ObjectContext.Perspective.TryGetTypeByName(
-                                        parameter.MappableType.FullName,
-                                        false /* bIgnoreCase */,
-                                        out typeUsage);
+                        ObjectContext.Perspective.TryGetTypeByName(
+                            parameter.MappableType.FullName,
+                            false /* bIgnoreCase */,
+                            out typeUsage);
                     }
 
                     Debug.Assert(typeUsage != null, "typeUsage != null");
-                    
+
                     parameters.Add(typeUsage.Parameter(parameter.Name));
                 }
             }
 
-            DbLambda lambda =
+            var lambda =
                 CqlQuery.CompileQueryCommandLambda(
-                    _queryText,                     // Command Text
-                    this.ObjectContext.Perspective, // Perspective
-                    null,                           // Parser options - null indicates 'use default'
-                    parameters,                     // Parameters
-                    null                            // Variables
-                );
+                    _queryText, // Command Text
+                    ObjectContext.Perspective, // Perspective
+                    null, // Parser options - null indicates 'use default'
+                    parameters, // Parameters
+                    null // Variables
+                    );
 
             Debug.Assert(lambda.Variables == null || lambda.Variables.Count == 0, "lambda.Variables must be empty");
 

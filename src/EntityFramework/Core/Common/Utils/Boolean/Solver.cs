@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace System.Data.Entity.Core.Common.Utils.Boolean
+﻿namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
-    using System.Diagnostics.CodeAnalysis;
-    using IfThenElseKey = Triple<Vertex, Vertex, Vertex>;
+    using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using IfThenElseKey = Triple<Vertex, Vertex, Vertex>;
 
     /// <summary>
     /// Supports construction of canonical Boolean expressions as Reduced Ordered
@@ -23,16 +21,21 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     internal sealed class Solver
     {
         #region Fields
-        readonly Dictionary<IfThenElseKey, Vertex> _computedIfThenElseValues =
+
+        private readonly Dictionary<IfThenElseKey, Vertex> _computedIfThenElseValues =
             new Dictionary<IfThenElseKey, Vertex>();
-        readonly Dictionary<Vertex, Vertex> _knownVertices =
+
+        private readonly Dictionary<Vertex, Vertex> _knownVertices =
             new Dictionary<Vertex, Vertex>(VertexValueComparer.Instance);
-        int _variableCount;
+
+        private int _variableCount;
         // a standard Boolean variable has children '1' and '0'
-        internal readonly static Vertex[] BooleanVariableChildren = new Vertex[] { Vertex.One, Vertex.Zero };
+        internal static readonly Vertex[] BooleanVariableChildren = new[] { Vertex.One, Vertex.Zero };
+
         #endregion
 
         #region Expression factory methods
+
         internal int CreateVariable()
         {
             return ++_variableCount;
@@ -103,9 +106,11 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
             return GetUniqueVertex(variable, children);
         }
+
         #endregion
 
         #region Private helper methods
+
         /// <summary>
         /// Returns a Vertex with the given configuration. If this configuration
         /// is known, returns the existing vertex. Otherwise, a new
@@ -116,7 +121,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         {
             AssertVerticesValid(children);
 
-            Vertex result = new Vertex(variable, children);
+            var result = new Vertex(variable, children);
 
             // see if we know this vertex already
             Vertex canonicalResult;
@@ -151,7 +156,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
                 // if '0' then 'then' else '@else' iff. '@else'
                 return @else;
             }
-            if (then.IsOne() && @else.IsZero())
+            if (then.IsOne()
+                && @else.IsZero())
             {
                 // if 'condition' then '1' else '0' iff. condition
                 return condition;
@@ -163,7 +169,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
             }
 
             Vertex result;
-            IfThenElseKey key = new IfThenElseKey(condition, then, @else);
+            var key = new IfThenElseKey(condition, then, @else);
 
             // check if we've already computed this result
             if (_computedIfThenElseValues.TryGetValue(key, out result))
@@ -172,16 +178,16 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
             }
 
             int topVariableDomainCount;
-            int topVariable = DetermineTopVariable(condition, then, @else, out topVariableDomainCount);
+            var topVariable = DetermineTopVariable(condition, then, @else, out topVariableDomainCount);
 
             // Recursively compute the new BDD node
             // Note that we preserve the 'ordered' invariant since the child nodes
             // cannot contain references to variables < topVariable, and
             // the topVariable is eliminated from the children through 
             // the call to EvaluateFor.
-            Vertex[] resultCases = new Vertex[topVariableDomainCount];
-            bool allResultsEqual = true;
-            for (int i = 0; i < topVariableDomainCount; i++)
+            var resultCases = new Vertex[topVariableDomainCount];
+            var allResultsEqual = true;
+            for (var i = 0; i < topVariableDomainCount; i++)
             {
                 resultCases[i] = IfThenElse(
                     EvaluateFor(condition, topVariable, i),
@@ -189,7 +195,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
                     EvaluateFor(@else, topVariable, i));
 
                 if (i > 0 && // first vertex is equivalent to itself
-                    allResultsEqual && // we've already found a mismatch
+                    allResultsEqual
+                    && // we've already found a mismatch
                     !resultCases[i].Equals(resultCases[0]))
                 {
                     allResultsEqual = false;
@@ -218,7 +225,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         private static int DetermineTopVariable(Vertex condition, Vertex then, Vertex @else, out int topVariableDomainCount)
         {
             int topVariable;
-            if (condition.Variable < then.Variable)
+            if (condition.Variable
+                < then.Variable)
             {
                 topVariable = condition.Variable;
                 topVariableDomainCount = condition.Children.Length;
@@ -249,7 +257,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
                 // to that variable. Binding the variable is therefore a no-op.
                 return vertex;
             }
-            Debug.Assert(variable == vertex.Variable,
+            Debug.Assert(
+                variable == vertex.Variable,
                 "variable must be less than or equal to vertex.Variable");
 
             // If the 'vertex' is conditioned on the given 'variable', the children
@@ -262,11 +271,12 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// <summary>
         /// Checks requirements for vertices. 
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"), Conditional("DEBUG")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        [Conditional("DEBUG")]
         private void AssertVerticesValid(IEnumerable<Vertex> vertices)
         {
             Debug.Assert(null != vertices);
-            foreach (Vertex vertex in vertices)
+            foreach (var vertex in vertices)
             {
                 AssertVertexValid(vertex);
             }
@@ -276,7 +286,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// Checks requirements for a vertex argument (must not be null, and must be in scope
         /// for this solver)
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"), Conditional("DEBUG")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        [Conditional("DEBUG")]
         private void AssertVertexValid(Vertex vertex)
         {
             Debug.Assert(vertex != null, "vertex must not be null");
@@ -286,10 +297,12 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
             {
                 // so are vertices created by this solver
                 Vertex comparisonVertex;
-                Debug.Assert(_knownVertices.TryGetValue(vertex, out comparisonVertex) &&
+                Debug.Assert(
+                    _knownVertices.TryGetValue(vertex, out comparisonVertex) &&
                     comparisonVertex.Equals(vertex), "vertex not created by this solver");
             }
         }
+
         #endregion
 
         /// <summary>
@@ -299,7 +312,9 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// </summary>
         private class VertexValueComparer : IEqualityComparer<Vertex>
         {
-            private VertexValueComparer() { }
+            private VertexValueComparer()
+            {
+            }
 
             internal static readonly VertexValueComparer Instance = new VertexValueComparer();
 
@@ -311,12 +326,13 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
                     return x.Equals(y);
                 }
 
-                if (x.Variable != y.Variable ||
+                if (x.Variable != y.Variable
+                    ||
                     x.Children.Length != y.Children.Length)
                 {
                     return false;
                 }
-                for (int i = 0; i < x.Children.Length; i++)
+                for (var i = 0; i < x.Children.Length; i++)
                 {
                     // use reference comparison for the children (they must be
                     // canonical already)
@@ -348,20 +364,20 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     /// <summary>
     /// Record structure containing three values.
     /// </summary>
-    struct Triple<T1, T2, T3> : IEquatable<Triple<T1, T2, T3>>
+    internal struct Triple<T1, T2, T3> : IEquatable<Triple<T1, T2, T3>>
         where T1 : IEquatable<T1>
         where T2 : IEquatable<T2>
         where T3 : IEquatable<T3>
     {
-        readonly T1 _value1;
-        readonly T2 _value2;
-        readonly T3 _value3;
+        private readonly T1 _value1;
+        private readonly T2 _value2;
+        private readonly T3 _value3;
 
         internal Triple(T1 value1, T2 value2, T3 value3)
         {
-            Debug.Assert(null != (object)value1, "null key element");
-            Debug.Assert(null != (object)value2, "null key element");
-            Debug.Assert(null != (object)value3, "null key element");
+            Debug.Assert(null != value1, "null key element");
+            Debug.Assert(null != value2, "null key element");
+            Debug.Assert(null != value3, "null key element");
             _value1 = value1;
             _value2 = value2;
             _value3 = value3;
@@ -370,8 +386,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         public bool Equals(Triple<T1, T2, T3> other)
         {
             return _value1.Equals(other._value1) &&
-                _value2.Equals(other._value2) &&
-                _value3.Equals(other._value3);
+                   _value2.Equals(other._value2) &&
+                   _value3.Equals(other._value3);
         }
 
         public override bool Equals(object obj)
@@ -383,8 +399,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         public override int GetHashCode()
         {
             return _value1.GetHashCode() ^
-                _value2.GetHashCode() ^
-                _value3.GetHashCode();
+                   _value2.GetHashCode() ^
+                   _value3.GetHashCode();
         }
     }
 }

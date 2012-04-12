@@ -1,14 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
-using System.Data.SqlClient;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees;
-
 namespace System.Data.Entity.Core.SqlClient.SqlGen
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.CommandTrees;
+
     /// <summary>
     /// The symbol table is quite primitive - it is a stack with a new entry for
     /// each scope.  Lookups search from the top of the stack to the bottom, until
@@ -26,7 +20,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
     /// </summary>
     internal sealed class SymbolTable
     {
-        private List<Dictionary<string, Symbol>> symbols = new List<Dictionary<string, Symbol>>();
+        private readonly List<Dictionary<string, Symbol>> symbols = new List<Dictionary<string, Symbol>>();
 
         internal void EnterScope()
         {
@@ -45,7 +39,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
         internal Symbol Lookup(string name)
         {
-            for (int i = symbols.Count - 1; i >= 0; --i)
+            for (var i = symbols.Count - 1; i >= 0; --i)
             {
                 if (symbols[i].ContainsKey(name))
                 {

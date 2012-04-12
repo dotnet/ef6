@@ -1,22 +1,20 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Data.Entity.Core.Metadata.Edm;
-
-
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
+    using System.Diagnostics;
+
     /// <summary>
     /// Represents PropertyRef Element for Entity keys and referential constraints
     /// </summary>
     internal sealed class PropertyRefElement : SchemaElement
     {
         #region Instance Fields
-        private StructuredProperty _property = null;
+
+        private StructuredProperty _property;
+
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// construct a KeyProperty object
         /// </summary>
@@ -25,19 +23,19 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             : base(parentElement)
         {
         }
+
         #endregion
 
         #region Public Properties
+
         /// <summary>
         /// property chain from KeyedType to Leaf property
         /// </summary>
         public StructuredProperty Property
         {
-            get
-            {
-                return _property;
-            }
+            get { return _property; }
         }
+
         #endregion
 
         #region Private Methods
@@ -56,14 +54,14 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns></returns>
         internal bool ResolveNames(SchemaEntityType entityType)
         {
-            if (string.IsNullOrEmpty(this.Name))
+            if (string.IsNullOrEmpty(Name))
             {
                 // Don't flag this error. This must already must have flaged as error, while handling name attribute
                 return true;
             }
 
             // Make sure there is a property by this name
-            _property = entityType.FindProperty(this.Name);
+            _property = entityType.FindProperty(Name);
 
             return (_property != null);
         }

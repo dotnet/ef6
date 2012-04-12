@@ -3,9 +3,9 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
-    using System.Data.Common;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Linq;
     using OM = System.Collections.ObjectModel;
@@ -29,25 +29,28 @@
 
             if (structuralTypeMappingsList.Count == 0)
             {
-                this.ResultMappings = new OM.ReadOnlyCollection<FunctionImportStructuralTypeMappingKB>(
-                    new FunctionImportStructuralTypeMappingKB[] { 
-                        new FunctionImportStructuralTypeMappingKB(new List<FunctionImportStructuralTypeMapping>(), itemCollection) });
-                this.noExplicitResultMappings = true;
+                ResultMappings = new OM.ReadOnlyCollection<FunctionImportStructuralTypeMappingKB>(
+                    new[]
+                        {
+                            new FunctionImportStructuralTypeMappingKB(new List<FunctionImportStructuralTypeMapping>(), itemCollection)
+                        });
+                noExplicitResultMappings = true;
             }
             else
             {
                 Debug.Assert(functionImport.ReturnParameters.Count == structuralTypeMappingsList.Count);
-                this.ResultMappings = new OM.ReadOnlyCollection<FunctionImportStructuralTypeMappingKB>(
+                ResultMappings = new OM.ReadOnlyCollection<FunctionImportStructuralTypeMappingKB>(
                     EntityUtil.CheckArgumentNull(structuralTypeMappingsList, "structuralTypeMappingsList")
-                        .Select((structuralTypeMappings) => new FunctionImportStructuralTypeMappingKB(
-                            EntityUtil.CheckArgumentNull(structuralTypeMappings, "structuralTypeMappings"),
-                            itemCollection))
+                        .Select(
+                            (structuralTypeMappings) => new FunctionImportStructuralTypeMappingKB(
+                                                            EntityUtil.CheckArgumentNull(structuralTypeMappings, "structuralTypeMappings"),
+                                                            itemCollection))
                         .ToArray());
-                this.noExplicitResultMappings = false;
+                noExplicitResultMappings = false;
             }
         }
 
-        private bool noExplicitResultMappings;
+        private readonly bool noExplicitResultMappings;
 
         /// <summary>
         /// Gets function import return type mapping knowledge bases.
@@ -61,10 +64,10 @@
         internal FunctionImportStructuralTypeMappingKB GetResultMapping(int resultSetIndex)
         {
             Debug.Assert(resultSetIndex >= 0, "resultSetIndex >= 0");
-            if (this.noExplicitResultMappings)
+            if (noExplicitResultMappings)
             {
-                Debug.Assert(this.ResultMappings.Count == 1, "this.ResultMappings.Count == 1");
-                return this.ResultMappings[0];
+                Debug.Assert(ResultMappings.Count == 1, "this.ResultMappings.Count == 1");
+                return ResultMappings[0];
             }
             else
             {
@@ -72,7 +75,7 @@
                 {
                     EntityUtil.ThrowArgumentOutOfRangeException("resultSetIndex");
                 }
-                return this.ResultMappings[resultSetIndex];
+                return ResultMappings[resultSetIndex];
             }
         }
 
@@ -81,7 +84,7 @@
         /// </summary>
         internal IList<string> GetDiscriminatorColumns(int resultSetIndex)
         {
-            FunctionImportStructuralTypeMappingKB resultMapping = this.GetResultMapping(resultSetIndex);
+            var resultMapping = GetResultMapping(resultSetIndex);
             return resultMapping.DiscriminatorColumns;
         }
 
@@ -91,20 +94,21 @@
         /// </summary>
         internal EntityType Discriminate(object[] discriminatorValues, int resultSetIndex)
         {
-            FunctionImportStructuralTypeMappingKB resultMapping = this.GetResultMapping(resultSetIndex);
-            Debug.Assert (resultMapping != null);
+            var resultMapping = GetResultMapping(resultSetIndex);
+            Debug.Assert(resultMapping != null);
 
             // initialize matching types bit map
-            BitArray typeCandidates = new BitArray(resultMapping.MappedEntityTypes.Count, true);
+            var typeCandidates = new BitArray(resultMapping.MappedEntityTypes.Count, true);
 
             foreach (var typeMapping in resultMapping.NormalizedEntityTypeMappings)
             {
                 // check if this type mapping is matched
-                bool matches = true;
+                var matches = true;
                 var columnConditions = typeMapping.ColumnConditions;
-                for (int i = 0; i < columnConditions.Count; i++)
+                for (var i = 0; i < columnConditions.Count; i++)
                 {
-                    if (null != columnConditions[i] && // this discriminator doesn't matter for the given condition
+                    if (null != columnConditions[i]
+                        && // this discriminator doesn't matter for the given condition
                         !columnConditions[i].ColumnValueMatchesCondition(discriminatorValues[i]))
                     {
                         matches = false;
@@ -128,13 +132,13 @@
 
             // find matching type condition
             EntityType entityType = null;
-            for (int i = 0; i < typeCandidates.Length; i++)
+            for (var i = 0; i < typeCandidates.Length; i++)
             {
                 if (typeCandidates[i])
                 {
                     if (null != entityType)
                     {
-                        throw EntityUtil.CommandExecution(System.Data.Entity.Resources.Strings.ADP_InvalidDataReaderUnableToDetermineType);
+                        throw EntityUtil.CommandExecution(Strings.ADP_InvalidDataReaderUnableToDetermineType);
                     }
                     entityType = resultMapping.MappedEntityTypes[i];
                 }
@@ -143,7 +147,7 @@
             // if there is no match, raise an exception
             if (null == entityType)
             {
-                throw EntityUtil.CommandExecution(System.Data.Entity.Resources.Strings.ADP_InvalidDataReaderUnableToDetermineType);
+                throw EntityUtil.CommandExecution(Strings.ADP_InvalidDataReaderUnableToDetermineType);
             }
 
             return entityType;
@@ -163,10 +167,10 @@
         /// <returns>Row type.</returns>
         internal TypeUsage GetExpectedTargetResultType(int resultSetIndex)
         {
-            FunctionImportStructuralTypeMappingKB resultMapping = this.GetResultMapping(resultSetIndex);
-            
+            var resultMapping = GetResultMapping(resultSetIndex);
+
             // Collect all columns as name-type pairs.
-            Dictionary<string, TypeUsage> columns = new Dictionary<string, TypeUsage>();
+            var columns = new Dictionary<string, TypeUsage>();
 
             // Figure out which entity types we expect to yield from the function.
             IEnumerable<StructuralType> structuralTypes;
@@ -174,9 +178,9 @@
             {
                 // No explicit type mappings; just use the type specified in the ReturnType attribute on the function.
                 StructuralType structuralType;
-                MetadataHelper.TryGetFunctionImportReturnType<StructuralType>(this.FunctionImport, resultSetIndex, out structuralType);
+                MetadataHelper.TryGetFunctionImportReturnType(FunctionImport, resultSetIndex, out structuralType);
                 Debug.Assert(null != structuralType, "this method must be called only for entity/complextype reader function imports");
-                structuralTypes = new StructuralType[] { structuralType };
+                structuralTypes = new[] { structuralType };
             }
             else
             {
@@ -185,7 +189,7 @@
             }
 
             // Gather columns corresponding to all properties.
-            foreach (StructuralType structuralType in structuralTypes)
+            foreach (var structuralType in structuralTypes)
             {
                 foreach (EdmProperty property in TypeHelpers.GetAllStructuralMembers(structuralType))
                 {
@@ -199,7 +203,7 @@
             }
 
             // Gather discriminator columns.
-            foreach (string discriminatorColumn in this.GetDiscriminatorColumns(resultSetIndex))
+            foreach (var discriminatorColumn in GetDiscriminatorColumns(resultSetIndex))
             {
                 if (!columns.ContainsKey(discriminatorColumn))
                 {
@@ -210,14 +214,15 @@
                     // tools (there is no reliable way of determining this metadata automatically from SQL
                     // Server).
 
-                    TypeUsage type = TypeUsage.CreateStringTypeUsage(MetadataWorkspace.GetModelPrimitiveType(PrimitiveTypeKind.String), true, false);
+                    var type = TypeUsage.CreateStringTypeUsage(
+                        MetadataWorkspace.GetModelPrimitiveType(PrimitiveTypeKind.String), true, false);
                     columns.Add(discriminatorColumn, type);
                 }
             }
 
             // Expected type is a collection of rows
-            RowType rowType = new RowType(columns.Select(c => new EdmProperty(c.Key, c.Value)));
-            TypeUsage result = TypeUsage.Create(new CollectionType(TypeUsage.Create(rowType)));
+            var rowType = new RowType(columns.Select(c => new EdmProperty(c.Key, c.Value)));
+            var result = TypeUsage.Create(new CollectionType(TypeUsage.Create(rowType)));
             return result;
         }
     }

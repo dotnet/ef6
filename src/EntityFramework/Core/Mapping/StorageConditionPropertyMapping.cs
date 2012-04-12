@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using System.Data.Entity.Core.Metadata.Edm;
+namespace System.Data.Entity.Core.Mapping
+{
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+    using System.Text;
 
-namespace System.Data.Entity.Core.Mapping {
     /// <summary>
     /// Mapping metadata for Conditional property mapping on a type.
     /// Condition Property Mapping specifies a Condition either on the C side property or S side property.
@@ -40,8 +39,10 @@ namespace System.Data.Entity.Core.Mapping {
     /// This class represents the metadata for all the condition property map elements in the 
     /// above example.
     /// </example>
-    internal class StorageConditionPropertyMapping : StoragePropertyMapping {
+    internal class StorageConditionPropertyMapping : StoragePropertyMapping
+    {
         #region Constructors
+
         /// <summary>
         /// Construct a new condition Property mapping object
         /// </summary>
@@ -49,58 +50,66 @@ namespace System.Data.Entity.Core.Mapping {
         /// <param name="columnMember"></param>
         /// <param name="value"></param>
         /// <param name="isNull"></param>
-        internal StorageConditionPropertyMapping(EdmProperty cdmMember, EdmProperty columnMember
-            , object value, Nullable<bool> isNull) : base(cdmMember) {
-            Debug.Assert((cdmMember != null) || (columnMember != null), "Both CDM and Column Members can not be specified for Condition Mapping");
-            Debug.Assert((cdmMember == null) || (columnMember == null), "Either CDM or Column Members has to be specified for Condition Mapping");
+        internal StorageConditionPropertyMapping(
+            EdmProperty cdmMember, EdmProperty columnMember
+            , object value, bool? isNull)
+            : base(cdmMember)
+        {
+            Debug.Assert(
+                (cdmMember != null) || (columnMember != null), "Both CDM and Column Members can not be specified for Condition Mapping");
+            Debug.Assert(
+                (cdmMember == null) || (columnMember == null), "Either CDM or Column Members has to be specified for Condition Mapping");
             Debug.Assert((isNull.HasValue) || (value != null), "Both Value and IsNull can not be specified on Condition Mapping");
             Debug.Assert(!(isNull.HasValue) || (value == null), "Either Value or IsNull has to be specified on Condition Mapping");
-            this.m_columnMember = columnMember;
-            this.m_value = value;
-            this.m_isNull = isNull;
+            m_columnMember = columnMember;
+            m_value = value;
+            m_isNull = isNull;
         }
+
         #endregion
 
         #region Fields
+
         /// <summary>
         /// Column EdmMember for which the condition is specified.
         /// </summary>
-        EdmProperty m_columnMember;
+        private readonly EdmProperty m_columnMember;
+
         /// <summary>
         /// Value for the condition thats being mapped.
         /// </summary>
-        object m_value;
-        bool? m_isNull;
+        private readonly object m_value;
+
+        private readonly bool? m_isNull;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Value for the condition
         /// </summary>
-        internal object Value {
-            get {
-                return this.m_value;
-            }
+        internal object Value
+        {
+            get { return m_value; }
         }
 
         /// <summary>
         /// Whether the property is being mapped to Null or NotNull
         /// </summary>
-        internal Nullable<bool> IsNull {
-            get {
-                return this.m_isNull;
-            }
+        internal bool? IsNull
+        {
+            get { return m_isNull; }
         }
-
 
         /// <summary>
         /// ColumnMember for which the Condition Map is being specified
         /// </summary>
-        internal EdmProperty ColumnProperty {
-            get {
-                return this.m_columnMember;
-            }
+        internal EdmProperty ColumnProperty
+        {
+            get { return m_columnMember; }
         }
+
         #endregion
 
         #region Methods
@@ -111,22 +120,26 @@ namespace System.Data.Entity.Core.Mapping {
         /// Will be removed shortly.
         /// </summary>
         /// <param name="index"></param>
-        internal override void Print(int index) {
+        internal override void Print(int index)
+        {
             StorageEntityContainerMapping.GetPrettyPrintString(ref index);
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("ConditionPropertyMapping");
             sb.Append("   ");
-            if (this.EdmProperty != null) {
+            if (EdmProperty != null)
+            {
                 sb.Append("Name:");
-                sb.Append(this.EdmProperty.Name);
+                sb.Append(EdmProperty.Name);
                 sb.Append("   ");
             }
-            if (this.ColumnProperty != null) {
+            if (ColumnProperty != null)
+            {
                 sb.Append("Column Name:");
-                sb.Append(this.ColumnProperty.Name);
+                sb.Append(ColumnProperty.Name);
                 sb.Append("   ");
             }
-            if (this.Value != null) {
+            if (Value != null)
+            {
                 sb.Append("Value:");
                 sb.Append("'" + Value + "'");
                 sb.Append("   ");
@@ -135,15 +148,16 @@ namespace System.Data.Entity.Core.Mapping {
                 sb.Append("   ");
             }
             sb.Append("Value TypeMetadata:");
-            EdmType memberType = (ColumnProperty != null) ? ColumnProperty.TypeUsage.EdmType : null;
+            var memberType = (ColumnProperty != null) ? ColumnProperty.TypeUsage.EdmType : null;
             if (memberType != null)
             {
                 sb.Append("'" + memberType.FullName + "'");
                 sb.Append("   ");
             }
-            if (this.IsNull.HasValue) {
+            if (IsNull.HasValue)
+            {
                 sb.Append("IsNull:");
-                sb.Append(this.IsNull);
+                sb.Append(IsNull);
                 sb.Append("   ");
             }
             Console.WriteLine(sb.ToString());

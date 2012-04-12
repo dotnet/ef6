@@ -3,7 +3,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
@@ -46,6 +45,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private class Evaluator : UpdateExpressionVisitor<PropagatorResult>
         {
             #region Constructors
+
             /// <summary>
             /// Constructs an evaluator for evaluating expressions for the given row.
             /// </summary>
@@ -58,21 +58,27 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 m_row = row;
             }
+
             #endregion
 
             #region Fields
-            private PropagatorResult m_row;
+
+            private readonly PropagatorResult m_row;
             private static readonly string s_visitorName = typeof(Evaluator).FullName;
+
             #endregion
 
             #region Properties
-            override protected string VisitorName
+
+            protected override string VisitorName
             {
                 get { return s_visitorName; }
             }
+
             #endregion
 
             #region Methods
+
             /// <summary>
             /// Utility method filtering out a set of rows given a predicate.
             /// </summary>
@@ -80,9 +86,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <param name="rows">Input rows.</param>
             /// <param name="parent">Propagator context</param>
             /// <returns>Input rows matching criteria.</returns>
-            internal static IEnumerable<PropagatorResult> Filter(DbExpression predicate, IEnumerable<PropagatorResult> rows, Propagator parent)
+            internal static IEnumerable<PropagatorResult> Filter(
+                DbExpression predicate, IEnumerable<PropagatorResult> rows, Propagator parent)
             {
-                foreach (PropagatorResult row in rows)
+                foreach (var row in rows)
                 {
                     if (EvaluatePredicate(predicate, row, parent))
                     {
@@ -103,10 +110,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns><c>true</c> if the row matches the criteria; <c>false</c> otherwise</returns>
             internal static bool EvaluatePredicate(DbExpression predicate, PropagatorResult row, Propagator parent)
             {
-                Evaluator evaluator = new Evaluator(row, parent);
-                PropagatorResult expressionResult = predicate.Accept(evaluator);
+                var evaluator = new Evaluator(row, parent);
+                var expressionResult = predicate.Accept(evaluator);
 
-                bool? result = ConvertResultToBool(expressionResult);
+                var result = ConvertResultToBool(expressionResult);
 
                 // unknown --> false at base of predicate
                 return result ?? false;
@@ -119,7 +126,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <param name="row">Row to evaluate.</param>
             /// <param name="parent">Propagator context.</param>
             /// <returns>Scalar result.</returns>
-            static internal PropagatorResult Evaluate(DbExpression node, PropagatorResult row, Propagator parent)
+            internal static PropagatorResult Evaluate(DbExpression node, PropagatorResult row, Propagator parent)
             {
                 DbExpressionVisitor<PropagatorResult> evaluator = new Evaluator(row, parent);
                 return node.Accept(evaluator);
@@ -157,17 +164,19 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 object result;
                 if (booleanValue.HasValue)
                 {
-                    result = booleanValue.Value; ;
+                    result = booleanValue.Value;
+                    ;
                 }
                 else
                 {
                     result = null;
                 }
-                PropagatorFlags flags = PropagateUnknownAndPreserveFlags(null, inputs);
+                var flags = PropagateUnknownAndPreserveFlags(null, inputs);
                 return PropagatorResult.CreateSimpleValue(flags, result);
             }
 
             #region DbExpressionVisitor implementation
+
             /// <summary>
             /// Determines whether the argument being evaluated has a given type (declared in the IsOfOnly predicate).
             /// </summary>
@@ -177,12 +186,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 EntityUtil.CheckArgumentNull(predicate, "predicate");
 
-                if (DbExpressionKind.IsOfOnly != predicate.ExpressionKind)
+                if (DbExpressionKind.IsOfOnly
+                    != predicate.ExpressionKind)
                 {
                     throw ConstructNotSupportedException(predicate);
                 }
 
-                PropagatorResult childResult = Visit(predicate.Argument);
+                var childResult = Visit(predicate.Argument);
                 bool result;
                 if (childResult.IsNull)
                 {
@@ -206,22 +216,24 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 EntityUtil.CheckArgumentNull(predicate, "predicate");
 
-                if (DbExpressionKind.Equals == predicate.ExpressionKind)
+                if (DbExpressionKind.Equals
+                    == predicate.ExpressionKind)
                 {
                     // Retrieve the left and right hand sides of the equality predicate.
-                    PropagatorResult leftResult = Visit(predicate.Left);
-                    PropagatorResult rightResult = Visit(predicate.Right);
+                    var leftResult = Visit(predicate.Left);
+                    var rightResult = Visit(predicate.Right);
 
                     bool? result;
 
-                    if (leftResult.IsNull || rightResult.IsNull)
+                    if (leftResult.IsNull
+                        || rightResult.IsNull)
                     {
                         result = null; // unknown
                     }
                     else
                     {
-                        object left = leftResult.GetSimpleValue();
-                        object right = rightResult.GetSimpleValue();
+                        var left = leftResult.GetSimpleValue();
+                        var right = rightResult.GetSimpleValue();
 
                         // Perform a comparison between the sides of the equality predicate using invariant culture.
                         // See assumptions outlined in the documentation for this class for additional information.
@@ -245,15 +257,16 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 EntityUtil.CheckArgumentNull(predicate, "predicate");
 
-                PropagatorResult left = Visit(predicate.Left);
-                PropagatorResult right = Visit(predicate.Right);
-                bool? leftResult = ConvertResultToBool(left);
-                bool? rightResult = ConvertResultToBool(right);
+                var left = Visit(predicate.Left);
+                var right = Visit(predicate.Right);
+                var leftResult = ConvertResultToBool(left);
+                var rightResult = ConvertResultToBool(right);
                 bool? result;
 
                 // Optimization: if either argument is false, preserved and known, return a
                 // result that is false, preserved and known.
-                if ((leftResult.HasValue && !leftResult.Value && PreservedAndKnown(left)) ||
+                if ((leftResult.HasValue && !leftResult.Value && PreservedAndKnown(left))
+                    ||
                     (rightResult.HasValue && !rightResult.Value && PreservedAndKnown(right)))
                 {
                     return CreatePerservedAndKnownResult(false);
@@ -273,15 +286,16 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 EntityUtil.CheckArgumentNull(predicate, "predicate");
 
-                PropagatorResult left = Visit(predicate.Left);
-                PropagatorResult right = Visit(predicate.Right);
-                bool? leftResult = ConvertResultToBool(left);
-                bool? rightResult = ConvertResultToBool(right);
+                var left = Visit(predicate.Left);
+                var right = Visit(predicate.Right);
+                var leftResult = ConvertResultToBool(left);
+                var rightResult = ConvertResultToBool(right);
                 bool? result;
 
                 // Optimization: if either argument is true, preserved and known, return a
                 // result that is true, preserved and known.
-                if ((leftResult.HasValue && leftResult.Value && PreservedAndKnown(left)) ||
+                if ((leftResult.HasValue && leftResult.Value && PreservedAndKnown(left))
+                    ||
                     (rightResult.HasValue && rightResult.Value && PreservedAndKnown(right)))
                 {
                     return CreatePerservedAndKnownResult(true);
@@ -313,10 +327,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 EntityUtil.CheckArgumentNull(predicate, "predicate");
 
-                PropagatorResult child = Visit(predicate.Argument);
-                bool? childResult = ConvertResultToBool(child);
+                var child = Visit(predicate.Argument);
+                var childResult = ConvertResultToBool(child);
 
-                bool? result = EntityUtil.ThreeValuedNot(childResult);
+                var result = EntityUtil.ThreeValuedNot(childResult);
 
                 return ConvertBoolToResult(result, child);
             }
@@ -330,17 +344,17 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 Debug.Assert(null != node, "node is not visited when null");
 
-                int match = -1;
-                int statementOrdinal = 0;
+                var match = -1;
+                var statementOrdinal = 0;
 
-                List<PropagatorResult> inputs = new List<PropagatorResult>();
+                var inputs = new List<PropagatorResult>();
 
-                foreach (DbExpression when in node.When)
+                foreach (var when in node.When)
                 {
-                    PropagatorResult whenResult = Visit(when);
+                    var whenResult = Visit(when);
                     inputs.Add(whenResult);
 
-                    bool matches = ConvertResultToBool(whenResult) ?? false; // ternary logic resolution
+                    var matches = ConvertResultToBool(whenResult) ?? false; // ternary logic resolution
 
                     if (matches)
                     {
@@ -352,13 +366,20 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 }
 
                 PropagatorResult matchResult;
-                if (-1 == match) { matchResult = Visit(node.Else); } else { matchResult = Visit(node.Then[match]); }
+                if (-1 == match)
+                {
+                    matchResult = Visit(node.Else);
+                }
+                else
+                {
+                    matchResult = Visit(node.Then[match]);
+                }
                 inputs.Add(matchResult);
 
                 // Clone the result to avoid modifying expressions that may be used elsewhere
                 // (design invariant: only set markup for expressions you create)
-                PropagatorFlags resultFlags = PropagateUnknownAndPreserveFlags(matchResult, inputs);
-                PropagatorResult result = matchResult.ReplicateResultWithNewFlags(resultFlags);
+                var resultFlags = PropagateUnknownAndPreserveFlags(matchResult, inputs);
+                var result = matchResult.ReplicateResultWithNewFlags(resultFlags);
 
                 return result;
             }
@@ -387,7 +408,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 Debug.Assert(null != node, "node is not visited when null");
 
                 // Retrieve the result of evaluating the instance for the property.
-                PropagatorResult instance = Visit(node.Instance);
+                var instance = Visit(node.Instance);
                 PropagatorResult result;
 
                 if (instance.IsNull)
@@ -415,7 +436,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 Debug.Assert(null != node, "node is not visited when null");
 
                 // Flag the expression as 'preserve', since constants (by definition) cannot vary
-                PropagatorResult result = PropagatorResult.CreateSimpleValue(PropagatorFlags.Preserve, node.Value);
+                var result = PropagatorResult.CreateSimpleValue(PropagatorFlags.Preserve, node.Value);
 
                 return result;
             }
@@ -430,7 +451,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 Debug.Assert(null != node, "node is not visited when null");
 
                 // Retrieve the result of evaluating the child argument.
-                PropagatorResult argument = Visit(node.Argument);
+                var argument = Visit(node.Argument);
 
                 // Return the argument directly (propagator results treat refs as standard structures)
                 return argument;
@@ -446,7 +467,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 Debug.Assert(null != node, "node is not visited when null");
 
                 // Flag the expression as 'preserve', since nulls (by definition) cannot vary
-                PropagatorResult result = PropagatorResult.CreateSimpleValue(PropagatorFlags.Preserve, null);
+                var result = PropagatorResult.CreateSimpleValue(PropagatorFlags.Preserve, null);
 
                 return result;
             }
@@ -460,8 +481,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 Debug.Assert(null != node, "node is not visited when null");
 
-                PropagatorResult childResult = Visit(node.Argument);
-                TypeUsage nodeType = node.ResultType;
+                var childResult = Visit(node.Argument);
+                var nodeType = node.ResultType;
 
                 if (MetadataHelper.IsSuperTypeOf(nodeType.EdmType, childResult.StructuralType))
                 {
@@ -470,10 +491,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     // are appended)
                     return childResult;
                 }
-                    
+
                 // "Treat" where the result does not implement the given type results in a null
                 // result
-                PropagatorResult result = PropagatorResult.CreateSimpleValue(childResult.PropagatorFlags, null);
+                var result = PropagatorResult.CreateSimpleValue(childResult.PropagatorFlags, null);
                 return result;
             }
 
@@ -486,10 +507,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 Debug.Assert(null != node, "node is not visited when null");
 
-                PropagatorResult childResult = Visit(node.Argument);
-                TypeUsage nodeType = node.ResultType;
+                var childResult = Visit(node.Argument);
+                var nodeType = node.ResultType;
 
-                if (!childResult.IsSimple || BuiltInTypeKind.PrimitiveType != nodeType.EdmType.BuiltInTypeKind)
+                if (!childResult.IsSimple
+                    || BuiltInTypeKind.PrimitiveType != nodeType.EdmType.BuiltInTypeKind)
                 {
                     throw EntityUtil.NotSupported(Strings.Update_UnsupportedCastArgument(nodeType.EdmType.Name));
                 }
@@ -513,7 +535,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     }
                 }
 
-                PropagatorResult result = childResult.ReplicateResultWithNewValue(resultValue);
+                var result = childResult.ReplicateResultWithNewValue(resultValue);
                 return result;
             }
 
@@ -527,14 +549,16 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 IFormatProvider formatProvider = CultureInfo.InvariantCulture;
 
-                if (null == value || value == DBNull.Value || value.GetType() == clrPrimitiveType)
+                if (null == value || value == DBNull.Value
+                    || value.GetType() == clrPrimitiveType)
                 {
                     return value;
                 }
                 else
                 {
                     //Convert is not handling DateTime to DateTimeOffset conversion
-                    if ( (value is DateTime) && (clrPrimitiveType == typeof(DateTimeOffset)))
+                    if ((value is DateTime)
+                        && (clrPrimitiveType == typeof(DateTimeOffset)))
                     {
                         return new DateTimeOffset(((DateTime)value).Ticks, TimeSpan.Zero);
                     }
@@ -554,12 +578,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 Debug.Assert(null != node, "node is not visited when null");
 
-                PropagatorResult argumentResult = Visit(node.Argument);
-                bool result = argumentResult.IsNull;
+                var argumentResult = Visit(node.Argument);
+                var result = argumentResult.IsNull;
 
                 return ConvertBoolToResult(result, argumentResult);
             }
+
             #endregion
+
             /// <summary>
             /// Supports propagation of preserve and unknown values when evaluating expressions. If any input 
             /// to an expression is marked as unknown, the same is true of the result of evaluating
@@ -571,30 +597,35 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns>Marked up result.</returns>
             private static PropagatorFlags PropagateUnknownAndPreserveFlags(PropagatorResult result, IEnumerable<PropagatorResult> inputs)
             {
-                bool unknown = false;
-                bool preserve = true;
-                bool noInputs = true;
+                var unknown = false;
+                var preserve = true;
+                var noInputs = true;
 
                 // aggregate all flags on the inputs
-                foreach (PropagatorResult input in inputs)
+                foreach (var input in inputs)
                 {
                     noInputs = false;
-                    PropagatorFlags inputFlags = input.PropagatorFlags;
-                    if (PropagatorFlags.NoFlags != (PropagatorFlags.Unknown & inputFlags))
+                    var inputFlags = input.PropagatorFlags;
+                    if (PropagatorFlags.NoFlags
+                        != (PropagatorFlags.Unknown & inputFlags))
                     {
                         unknown = true;
                     }
-                    if (PropagatorFlags.NoFlags == (PropagatorFlags.Preserve & inputFlags))
+                    if (PropagatorFlags.NoFlags
+                        == (PropagatorFlags.Preserve & inputFlags))
                     {
                         preserve = false;
                     }
                 }
-                if (noInputs) { preserve = false; }
+                if (noInputs)
+                {
+                    preserve = false;
+                }
 
                 if (null != result)
                 {
                     // Merge with existing flags
-                    PropagatorFlags flags = result.PropagatorFlags;
+                    var flags = result.PropagatorFlags;
                     if (unknown)
                     {
                         flags |= PropagatorFlags.Unknown;
@@ -609,7 +640,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 else
                 {
                     // if there is no input result, create new markup from scratch
-                    PropagatorFlags flags = PropagatorFlags.NoFlags;
+                    var flags = PropagatorFlags.NoFlags;
                     if (unknown)
                     {
                         flags |= PropagatorFlags.Unknown;
@@ -621,6 +652,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     return flags;
                 }
             }
+
             #endregion
         }
     }

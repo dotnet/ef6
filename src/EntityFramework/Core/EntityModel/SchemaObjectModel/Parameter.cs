@@ -1,11 +1,8 @@
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
-    using System;
     using System.Collections.Generic;
-    using System.Data;
-    using System.Data.Entity.Core;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Globalization;
     using System.Text;
@@ -18,13 +15,16 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     internal class Parameter : FacetEnabledSchemaElement
     {
         #region Instance Fields
+
         private ParameterDirection _parameterDirection = ParameterDirection.Input;
         private CollectionKind _collectionKind = CollectionKind.None;
-        private ModelFunctionTypeElement _typeSubElement = null;
-        private bool _isRefType = false;
+        private ModelFunctionTypeElement _typeSubElement;
+        private bool _isRefType;
+
         #endregion
 
         #region constructor
+
         /// <summary>
         /// 
         /// </summary>
@@ -41,22 +41,13 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         internal ParameterDirection ParameterDirection
         {
-            get
-            {
-                return _parameterDirection;
-            }
+            get { return _parameterDirection; }
         }
 
         internal CollectionKind CollectionKind
         {
-            get
-            {
-                return _collectionKind;
-            }
-            set
-            {
-                _collectionKind = value;
-            }
+            get { return _collectionKind; }
+            set { _collectionKind = value; }
         }
 
         internal bool IsRefType
@@ -66,7 +57,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         internal override TypeUsage TypeUsage
         {
-            get 
+            get
             {
                 if (_typeSubElement != null)
                 {
@@ -89,14 +80,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         #endregion
 
-        new internal SchemaType Type
+        internal new SchemaType Type
         {
-            get
-            {
-                return _type;
-            }
+            get { return _type; }
         }
-
 
         internal void WriteIdentity(StringBuilder builder)
         {
@@ -116,7 +103,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                     builder.Append(UnresolvedType);
                 }
             }
-            else if (_typeSubElement!=null)
+            else if (_typeSubElement != null)
             {
                 _typeSubElement.WriteIdentity(builder);
             }
@@ -125,16 +112,17 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         internal override SchemaElement Clone(SchemaElement parentElement)
         {
-            Parameter parameter = new Parameter((Function)parentElement);
+            var parameter = new Parameter((Function)parentElement);
             parameter._collectionKind = _collectionKind;
             parameter._parameterDirection = _parameterDirection;
             parameter._type = _type;
-            parameter.Name = this.Name;
-            parameter._typeUsageBuilder = this._typeUsageBuilder;
+            parameter.Name = Name;
+            parameter._typeUsageBuilder = _typeUsageBuilder;
             return parameter;
         }
 
-        internal bool ResolveNestedTypeNames(Converter.ConversionCache convertedItemCache, Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
+        internal bool ResolveNestedTypeNames(
+            Converter.ConversionCache convertedItemCache, Dictionary<SchemaElement, GlobalItem> newGlobalItems)
         {
             if (_typeSubElement == null)
             {
@@ -142,7 +130,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             }
             return _typeSubElement.ResolveNameAndSetTypeUsage(convertedItemCache, newGlobalItems);
         }
-
 
         protected override bool HandleAttribute(XmlReader reader)
         {
@@ -177,7 +164,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
             string type;
             if (!Utils.GetString(Schema, reader, out type))
+            {
                 return;
+            }
 
             TypeModifier typeModifier;
 
@@ -189,12 +178,19 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                     CollectionKind = CollectionKind.Bag;
                     break;
                 default:
-                    Debug.Assert(typeModifier == TypeModifier.None, string.Format(CultureInfo.CurrentCulture, "Type is not valid for property {0}: {1}. The modifier for the type cannot be used in this context.", FQName, reader.Value));
+                    Debug.Assert(
+                        typeModifier == TypeModifier.None,
+                        string.Format(
+                            CultureInfo.CurrentCulture,
+                            "Type is not valid for property {0}: {1}. The modifier for the type cannot be used in this context.", FQName,
+                            reader.Value));
                     break;
             }
 
             if (!Utils.ValidateDottedName(Schema, reader, type))
+            {
                 return;
+            }
 
             UnresolvedType = type;
         }
@@ -203,7 +199,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(reader != null);
 
-            string value = reader.Value;
+            var value = reader.Value;
 
             if (String.IsNullOrEmpty(value))
             {
@@ -221,21 +217,23 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                         break;
                     case XmlConstants.Out:
                         _parameterDirection = ParameterDirection.Output;
-                        if (this.ParentElement.IsComposable && this.ParentElement.IsFunctionImport) 
+                        if (ParentElement.IsComposable
+                            && ParentElement.IsFunctionImport)
                         {
-                            AddErrorBadParameterDirection(value, reader, System.Data.Entity.Resources.Strings.BadParameterDirectionForComposableFunctions);
+                            AddErrorBadParameterDirection(value, reader, Strings.BadParameterDirectionForComposableFunctions);
                         }
                         break;
                     case XmlConstants.InOut:
                         _parameterDirection = ParameterDirection.InputOutput;
-                        if (this.ParentElement.IsComposable && this.ParentElement.IsFunctionImport)
+                        if (ParentElement.IsComposable
+                            && ParentElement.IsFunctionImport)
                         {
-                            AddErrorBadParameterDirection(value, reader, System.Data.Entity.Resources.Strings.BadParameterDirectionForComposableFunctions);
+                            AddErrorBadParameterDirection(value, reader, Strings.BadParameterDirectionForComposableFunctions);
                         }
                         break;
                     default:
-                        {                           
-                            AddErrorBadParameterDirection(value, reader, System.Data.Entity.Resources.Strings.BadParameterDirection);
+                        {
+                            AddErrorBadParameterDirection(value, reader, Strings.BadParameterDirection);
                         }
                         break;
                 }
@@ -247,12 +245,13 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             // don't try to identify the parameter by any of the attributes
             // because we are still parsing attributes, and we don't know which ones
             // have been parsed yet.
-            AddError(ErrorCode.BadParameterDirection, EdmSchemaErrorSeverity.Error, reader,
-                       errorFunc(
-                                this.ParentElement.Parameters.Count, // indexed at 0 to be similar to the old exception
-                                this.ParentElement.Name,
-                                this.ParentElement.ParentElement.FQName,
-                                value));
+            AddError(
+                ErrorCode.BadParameterDirection, EdmSchemaErrorSeverity.Error, reader,
+                errorFunc(
+                    ParentElement.Parameters.Count, // indexed at 0 to be similar to the old exception
+                    ParentElement.Name,
+                    ParentElement.ParentElement.FQName,
+                    value));
         }
 
         protected override bool HandleElement(XmlReader reader)
@@ -281,7 +280,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 HandleRowTypeElement(reader);
                 return true;
             }
-            else if (Schema.DataModel == SchemaDataModelOption.EntityDataModel)
+            else if (Schema.DataModel
+                     == SchemaDataModelOption.EntityDataModel)
             {
                 if (CanHandleElement(reader, XmlConstants.ValueAnnotation))
                 {
@@ -299,7 +299,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
             return false;
         }
-
 
         protected void HandleCollectionTypeElement(XmlReader reader)
         {
@@ -360,18 +359,21 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
             ValidationHelper.ValidateTypeDeclaration(this, _type, _typeSubElement);
 
-            if (Schema.DataModel != SchemaDataModelOption.EntityDataModel)
+            if (Schema.DataModel
+                != SchemaDataModelOption.EntityDataModel)
             {
-                Debug.Assert(Schema.DataModel == SchemaDataModelOption.ProviderDataModel ||
-                             Schema.DataModel == SchemaDataModelOption.ProviderManifestModel, "Unexpected data model");
+                Debug.Assert(
+                    Schema.DataModel == SchemaDataModelOption.ProviderDataModel ||
+                    Schema.DataModel == SchemaDataModelOption.ProviderManifestModel, "Unexpected data model");
 
-                bool collectionAllowed = this.ParentElement.IsAggregate;
+                var collectionAllowed = ParentElement.IsAggregate;
 
                 // Only scalar parameters are allowed for functions in s-space.
                 Debug.Assert(_typeSubElement == null, "Unexpected type subelement inside <Parameter> element.");
-                if (_type != null && (_type is ScalarType == false || (!collectionAllowed && _collectionKind != CollectionKind.None)))
+                if (_type != null
+                    && (_type is ScalarType == false || (!collectionAllowed && _collectionKind != CollectionKind.None)))
                 {
-                    string typeName = "";
+                    var typeName = "";
                     if (_type != null)
                     {
                         typeName = Function.GetTypeNameForErrorMessage(_type, _collectionKind, _isRefType);
@@ -380,31 +382,33 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                     {
                         typeName = _typeSubElement.FQName;
                     }
-                    if (Schema.DataModel == SchemaDataModelOption.ProviderManifestModel)
+                    if (Schema.DataModel
+                        == SchemaDataModelOption.ProviderManifestModel)
                     {
-                        AddError(ErrorCode.FunctionWithNonEdmTypeNotSupported,
-                                 EdmSchemaErrorSeverity.Error,
-                                 this,
-                                 System.Data.Entity.Resources.Strings.FunctionWithNonEdmPrimitiveTypeNotSupported(typeName, this.ParentElement.FQName));
+                        AddError(
+                            ErrorCode.FunctionWithNonEdmTypeNotSupported,
+                            EdmSchemaErrorSeverity.Error,
+                            this,
+                            Strings.FunctionWithNonEdmPrimitiveTypeNotSupported(typeName, ParentElement.FQName));
                     }
                     else
                     {
-                        AddError(ErrorCode.FunctionWithNonPrimitiveTypeNotSupported,
-                                 EdmSchemaErrorSeverity.Error,
-                                 this,
-                                 System.Data.Entity.Resources.Strings.FunctionWithNonPrimitiveTypeNotSupported(typeName, this.ParentElement.FQName));
+                        AddError(
+                            ErrorCode.FunctionWithNonPrimitiveTypeNotSupported,
+                            EdmSchemaErrorSeverity.Error,
+                            this,
+                            Strings.FunctionWithNonPrimitiveTypeNotSupported(typeName, ParentElement.FQName));
                     }
                     return;
                 }
             }
 
             ValidationHelper.ValidateFacets(this, _type, _typeUsageBuilder);
-            
+
             if (_isRefType)
             {
                 ValidationHelper.ValidateRefType(this, _type);
             }
-            
 
             if (_typeSubElement != null)
             {

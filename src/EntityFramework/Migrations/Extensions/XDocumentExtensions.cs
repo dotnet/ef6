@@ -1,8 +1,8 @@
 ﻿namespace System.Data.Entity.Migrations.Extensions
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Edm;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Xml.Linq;

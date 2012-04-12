@@ -1,19 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Diagnostics;
-using System.Runtime.Serialization;
-using Edm = System.Data.Entity.Core.Metadata.Edm;
-
 namespace System.Data.Entity.Core
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.EntityModel.SchemaObjectModel;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
+    using System.Reflection;
+    using System.Runtime.Serialization;
+    using System.Text;
 
     /// <summary>
     /// An identifier for an entity.
@@ -41,10 +42,10 @@ namespace System.Data.Entity.Core
         // will require some custom serialization/deserialization code.
         private string _entitySetName;
         private string _entityContainerName;
-        private object _singletonKeyValue;      // non-null for singleton keys
-        private object[] _compositeKeyValues;   // non-null for composite keys
-        private string[] _keyNames;             // key names that correspond to the key values
-        private bool _isLocked;                 // determines if this key is lock from writing
+        private object _singletonKeyValue; // non-null for singleton keys
+        private object[] _compositeKeyValues; // non-null for composite keys
+        private string[] _keyNames; // key names that correspond to the key values
+        private readonly bool _isLocked; // determines if this key is lock from writing
 
         // Determines whether the key includes a byte[].
         // Not serialized for backwards compatibility.
@@ -57,8 +58,7 @@ namespace System.Data.Entity.Core
 
         // The hash code is not serialized since it can be computed differently on the deserialized system.
         [NonSerialized]
-        private int _hashCode;                  // computed as needed
-
+        private int _hashCode; // computed as needed
 
         // Names for constant EntityKeys
         private const string s_NoEntitySetKey = "NoEntitySetKey.NoEntitySetKey";
@@ -79,7 +79,7 @@ namespace System.Data.Entity.Core
         /// <summary>
         /// A dictionary of names so that singleton instances of names can be used
         /// </summary>
-        private static Dictionary<string, string> _nameLookup = new Dictionary<string, string>();
+        private static readonly Dictionary<string, string> _nameLookup = new Dictionary<string, string>();
 
         #region Public Constructors
 
@@ -156,7 +156,7 @@ namespace System.Data.Entity.Core
             Debug.Assert(entitySet.EntityContainer != null, "entitySet.EntityContainer is null");
             Debug.Assert(entitySet.EntityContainer.Name != null, "entitySet.EntityContainer.Name is null");
             Debug.Assert(record != null, "record is null");
-            
+
             _entitySetName = entitySet.Name;
             _entityContainerName = entitySet.EntityContainer.Name;
 
@@ -241,16 +241,13 @@ namespace System.Data.Entity.Core
         [DataMember]
         public string EntitySetName
         {
-            get
-            {
-                return _entitySetName;
-            }
+            get { return _entitySetName; }
             set
             {
                 ValidateWritable(_entitySetName);
                 lock (_nameLookup)
                 {
-                    _entitySetName = EntityKey.LookupSingletonName(value);
+                    _entitySetName = LookupSingletonName(value);
                 }
             }
         }
@@ -261,20 +258,16 @@ namespace System.Data.Entity.Core
         [DataMember]
         public string EntityContainerName
         {
-            get
-            {
-                return _entityContainerName;
-            }
+            get { return _entityContainerName; }
             set
             {
                 ValidateWritable(_entityContainerName);
                 lock (_nameLookup)
                 {
-                    _entityContainerName = EntityKey.LookupSingletonName(value);
+                    _entityContainerName = LookupSingletonName(value);
                 }
             }
         }
-
 
         /// <summary>
         /// Gets the key values that identify the entity.
@@ -290,13 +283,15 @@ namespace System.Data.Entity.Core
                     EntityKeyMember[] keyValues;
                     if (_singletonKeyValue != null)
                     {
-                        keyValues = new EntityKeyMember[] { 
-                                new EntityKeyMember(_keyNames[0], _singletonKeyValue) };
+                        keyValues = new[]
+                                        {
+                                            new EntityKeyMember(_keyNames[0], _singletonKeyValue)
+                                        };
                     }
                     else
                     {
                         keyValues = new EntityKeyMember[_compositeKeyValues.Length];
-                        for (int i = 0; i < _compositeKeyValues.Length; ++i)
+                        for (var i = 0; i < _compositeKeyValues.Length; ++i)
                         {
                             keyValues[i] = new EntityKeyMember(_keyNames[i], _compositeKeyValues[i]);
                         }
@@ -313,7 +308,9 @@ namespace System.Data.Entity.Core
                 ValidateWritable(_keyNames);
                 if (value != null)
                 {
-                    if (!CheckKeyValues(new KeyValueReader(value), true, true, out _keyNames, out _singletonKeyValue, out _compositeKeyValues))
+                    if (
+                        !CheckKeyValues(
+                            new KeyValueReader(value), true, true, out _keyNames, out _singletonKeyValue, out _compositeKeyValues))
                     {
                         // If we did not retrieve values from the setter (i.e. encoded settings), we need to keep track of the 
                         // array instance because the array members will be set next.
@@ -328,10 +325,7 @@ namespace System.Data.Entity.Core
         /// </summary>
         public bool IsTemporary
         {
-            get
-            {
-                return (SingletonKeyValue == null) && (CompositeKeyValues == null);
-            }
+            get { return (SingletonKeyValue == null) && (CompositeKeyValues == null); }
         }
 
         private object SingletonKeyValue
@@ -368,7 +362,8 @@ namespace System.Data.Entity.Core
         public EntitySet GetEntitySet(MetadataWorkspace metadataWorkspace)
         {
             EntityUtil.CheckArgumentNull(metadataWorkspace, "metadataWorkspace");
-            if (String.IsNullOrEmpty(_entityContainerName) || String.IsNullOrEmpty(_entitySetName))
+            if (String.IsNullOrEmpty(_entityContainerName)
+                || String.IsNullOrEmpty(_entitySetName))
             {
                 throw EntityUtil.MissingQualifiedEntitySetName();
             }
@@ -412,7 +407,7 @@ namespace System.Data.Entity.Core
         /// <returns>the hash value of this EntityKey</returns>
         public override int GetHashCode()
         {
-            int hashCode = _hashCode;
+            var hashCode = _hashCode;
             if (0 == hashCode)
             {
                 _containsByteArray = false;
@@ -462,7 +457,7 @@ namespace System.Data.Entity.Core
 
         private int AddHashValue(int hashCode, object keyValue)
         {
-            byte[] byteArrayValue = keyValue as byte[];
+            var byteArrayValue = keyValue as byte[];
             if (null != byteArrayValue)
             {
                 hashCode ^= ByValueEqualityComparer.ComputeBinaryHashCode(byteArrayValue);
@@ -484,12 +479,13 @@ namespace System.Data.Entity.Core
         public static bool operator ==(EntityKey key1, EntityKey key2)
         {
 #if DEBUG
-            if (((object)NoEntitySetKey == (object)key1) || ((object)EntityNotValidKey == (object)key1) ||
-                ((object)NoEntitySetKey == (object)key2) || ((object)EntityNotValidKey == (object)key1)
-                // || (null==(object)key1) || (null==(object)key2)) //To check for internal use of null==key
+            if (ReferenceEquals(NoEntitySetKey, key1) || ReferenceEquals(EntityNotValidKey, key1) ||
+                ReferenceEquals(NoEntitySetKey, key2) || ReferenceEquals(EntityNotValidKey, key1)
                 )
             {
-                Debug.Assert(typeof(EntityKey).Assembly != System.Reflection.Assembly.GetCallingAssembly(), "When comparing an EntityKey to one of the predefined types (EntityKey.NoEntitySetKey or EntityKey.EntityNotValidKey), use Object.ReferenceEquals()");
+                Debug.Assert(
+                    typeof(EntityKey).Assembly != Assembly.GetCallingAssembly(),
+                    "When comparing an EntityKey to one of the predefined types (EntityKey.NoEntitySetKey or EntityKey.EntityNotValidKey), use Object.ReferenceEquals()");
             }
 #endif
             return InternalEquals(key1, key2, compareEntitySets: true);
@@ -504,11 +500,12 @@ namespace System.Data.Entity.Core
         public static bool operator !=(EntityKey key1, EntityKey key2)
         {
 #if DEBUG
-            if (((object)NoEntitySetKey == (object)key1) || ((object)EntityNotValidKey == (object)key1) ||
-                ((object)NoEntitySetKey == (object)key2) || ((object)EntityNotValidKey == (object)key1))
-            // || (null==(object)key1) || (null==(object)key2)) //To check for internal use of null==key
+            if (ReferenceEquals(NoEntitySetKey, key1) || ReferenceEquals(EntityNotValidKey, key1) ||
+                ReferenceEquals(NoEntitySetKey, key2) || ReferenceEquals(EntityNotValidKey, key1))
             {
-                Debug.Assert(typeof(EntityKey).Assembly != System.Reflection.Assembly.GetCallingAssembly(), "When comparing an EntityKey to one of the predefined types (EntityKey.NoEntitySetKey or EntityKey.EntityNotValidKey), use Object.ReferenceEquals()");
+                Debug.Assert(
+                    typeof(EntityKey).Assembly != Assembly.GetCallingAssembly(),
+                    "When comparing an EntityKey to one of the predefined types (EntityKey.NoEntitySetKey or EntityKey.EntityNotValidKey), use Object.ReferenceEquals()");
             }
 #endif
             return !InternalEquals(key1, key2, compareEntitySets: true);
@@ -524,13 +521,14 @@ namespace System.Data.Entity.Core
         internal static bool InternalEquals(EntityKey key1, EntityKey key2, bool compareEntitySets)
         {
             // If both are null or refer to the same object, they're equal.
-            if (object.ReferenceEquals(key1, key2))
+            if (ReferenceEquals(key1, key2))
             {
                 return true;
             }
 
             // If exactly one is null (avoid calling EntityKey == operator overload), they're not equal.
-            if (object.ReferenceEquals(key1, null) || object.ReferenceEquals(key2, null))
+            if (ReferenceEquals(key1, null)
+                || ReferenceEquals(key2, null))
             {
                 return false;
             }
@@ -542,7 +540,8 @@ namespace System.Data.Entity.Core
 
             // The primary caller is Dictionary<EntityKey,ObjectStateEntry>
             // at which point Equals is only called after HashCode was determined to be equal
-            if ((key1.GetHashCode() != key2.GetHashCode() && compareEntitySets) ||
+            if ((key1.GetHashCode() != key2.GetHashCode() && compareEntitySets)
+                ||
                 key1._containsByteArray != key2._containsByteArray)
             {
                 return false;
@@ -585,7 +584,8 @@ namespace System.Data.Entity.Core
                 // temporary keys are compared by CLR reference, and we've already
                 // checked reference equality.
                 // If the first key is a composite key and the second one isn't, they're not equal.
-                if (null != key1._compositeKeyValues && null != key2._compositeKeyValues && key1._compositeKeyValues.Length == key2._compositeKeyValues.Length)
+                if (null != key1._compositeKeyValues && null != key2._compositeKeyValues
+                    && key1._compositeKeyValues.Length == key2._compositeKeyValues.Length)
                 {
                     if (key1._containsByteArray)
                     {
@@ -611,7 +611,8 @@ namespace System.Data.Entity.Core
             if (compareEntitySets)
             {
                 // Check metadata.
-                if (!String.Equals(key1._entitySetName, key2._entitySetName) ||
+                if (!String.Equals(key1._entitySetName, key2._entitySetName)
+                    ||
                     !String.Equals(key1._entityContainerName, key2._entityContainerName))
                 {
                     return false;
@@ -623,7 +624,7 @@ namespace System.Data.Entity.Core
 
         internal static bool CompositeValuesWithBinaryEqual(EntityKey key1, EntityKey key2)
         {
-            for (int i = 0; i < key1._compositeKeyValues.Length; ++i)
+            for (var i = 0; i < key1._compositeKeyValues.Length; ++i)
             {
                 if (key1._keyNames[i].Equals(key2._keyNames[i]))
                 {
@@ -632,8 +633,8 @@ namespace System.Data.Entity.Core
                         return false;
                     }
                 }
-                // Key names might not be in the same order so try a slower approach that matches
-                // key names between the keys.
+                    // Key names might not be in the same order so try a slower approach that matches
+                    // key names between the keys.
                 else if (!ValuesWithBinaryEqual(key1._keyNames[i], key1._compositeKeyValues[i], key2))
                 {
                     return false;
@@ -644,7 +645,7 @@ namespace System.Data.Entity.Core
 
         private static bool ValuesWithBinaryEqual(string keyName, object keyValue, EntityKey key2)
         {
-            for (int i = 0; i < key2._keyNames.Length; i++)
+            for (var i = 0; i < key2._keyNames.Length; i++)
             {
                 if (String.Equals(keyName, key2._keyNames[i]))
                 {
@@ -656,17 +657,17 @@ namespace System.Data.Entity.Core
 
         private static bool CompositeValuesEqual(EntityKey key1, EntityKey key2)
         {
-            for (int i = 0; i < key1._compositeKeyValues.Length; ++i)
+            for (var i = 0; i < key1._compositeKeyValues.Length; ++i)
             {
                 if (key1._keyNames[i].Equals(key2._keyNames[i]))
                 {
-                    if (!Object.Equals(key1._compositeKeyValues[i], key2._compositeKeyValues[i]))
+                    if (!Equals(key1._compositeKeyValues[i], key2._compositeKeyValues[i]))
                     {
                         return false;
                     }
                 }
-                // Key names might not be in the same order so try a slower approach that matches
-                // key names between the keys.
+                    // Key names might not be in the same order so try a slower approach that matches
+                    // key names between the keys.
                 else if (!ValuesEqual(key1._keyNames[i], key1._compositeKeyValues[i], key2))
                 {
                     return false;
@@ -677,18 +678,17 @@ namespace System.Data.Entity.Core
 
         private static bool ValuesEqual(string keyName, object keyValue, EntityKey key2)
         {
-            for (int i = 0; i < key2._keyNames.Length; i++)
+            for (var i = 0; i < key2._keyNames.Length; i++)
             {
                 if (String.Equals(keyName, key2._keyNames[i]))
                 {
-                    return Object.Equals(keyValue, key2._compositeKeyValues[i]);
+                    return Equals(keyValue, key2._compositeKeyValues[i]);
                 }
             }
             return false;
         }
 
         #endregion
-
 
         /// <summary>
         /// Returns an array of string/<see cref="DbExpression"/> pairs, one for each key value in this EntityKey,
@@ -703,7 +703,7 @@ namespace System.Data.Entity.Core
             Debug.Assert(!IsTemporary, "GetKeyValueExpressions doesn't make sense for temporary keys - they have no values.");
             Debug.Assert(entitySet != null, "GetEntitySet should not return null.");
             Debug.Assert(entitySet.Name == _entitySetName, "EntitySet returned from GetEntitySet has incorrect name.");
-            int numKeyMembers = 0;
+            var numKeyMembers = 0;
             if (!IsTemporary)
             {
                 if (_singletonKeyValue != null)
@@ -735,23 +735,25 @@ namespace System.Data.Entity.Core
             KeyValuePair<string, DbExpression>[] keyColumns;
             if (_singletonKeyValue != null)
             {
-                EdmMember singletonKeyMember = ((EntitySetBase)entitySet).ElementType.KeyMembers[0];
+                var singletonKeyMember = ((EntitySetBase)entitySet).ElementType.KeyMembers[0];
                 Debug.Assert(singletonKeyMember != null, "Metadata for singleton key member shouldn't be null.");
                 keyColumns =
-                    new[] { DbExpressionBuilder.Constant(Helper.GetModelTypeUsage(singletonKeyMember), _singletonKeyValue)
-                            .As(singletonKeyMember.Name) };
-
+                    new[]
+                        {
+                            Helper.GetModelTypeUsage(singletonKeyMember).Constant(_singletonKeyValue)
+                                .As(singletonKeyMember.Name)
+                        };
             }
             else
             {
                 keyColumns = new KeyValuePair<string, DbExpression>[_compositeKeyValues.Length];
-                for (int i = 0; i < _compositeKeyValues.Length; ++i)
+                for (var i = 0; i < _compositeKeyValues.Length; ++i)
                 {
                     Debug.Assert(_compositeKeyValues[i] != null, "Values within key-value pairs cannot be null.");
 
-                    EdmMember keyMember = ((EntitySetBase)entitySet).ElementType.KeyMembers[i];
+                    var keyMember = ((EntitySetBase)entitySet).ElementType.KeyMembers[i];
                     Debug.Assert(keyMember != null, "Metadata for key members shouldn't be null.");
-                    keyColumns[i] = DbExpressionBuilder.Constant(Helper.GetModelTypeUsage(keyMember), _compositeKeyValues[i]).As(keyMember.Name);
+                    keyColumns[i] = Helper.GetModelTypeUsage(keyMember).Constant(_compositeKeyValues[i]).As(keyMember.Name);
                 }
             }
 
@@ -765,16 +767,15 @@ namespace System.Data.Entity.Core
         /// </summary>
         internal string ConcatKeyValue()
         {
-            System.Text.StringBuilder builder = new System.Text.StringBuilder();
+            var builder = new StringBuilder();
             builder.Append("EntitySet=").Append(_entitySetName);
             if (!IsTemporary)
             {
-                foreach (EntityKeyMember pair in EntityKeyValues)
+                foreach (var pair in EntityKeyValues)
                 {
                     builder.Append(';');
                     builder.Append(pair.Key).Append("=").Append(pair.Value);
                 }
-
             }
             return builder.ToString();
         }
@@ -792,8 +793,8 @@ namespace System.Data.Entity.Core
             }
             else
             {
-                object[] compositeKeyValues = CompositeKeyValues;
-                for (int i = 0; i < compositeKeyValues.Length; i++)
+                var compositeKeyValues = CompositeKeyValues;
+                for (var i = 0; i < compositeKeyValues.Length; i++)
                 {
                     if (keyName == _keyNames[i])
                     {
@@ -804,13 +805,13 @@ namespace System.Data.Entity.Core
             }
         }
 
-        internal static void GetEntitySetName(string qualifiedEntitySetName, out  string entitySet, out string container)
+        internal static void GetEntitySetName(string qualifiedEntitySetName, out string entitySet, out string container)
         {
             entitySet = null;
             container = null;
             EntityUtil.CheckStringArgument(qualifiedEntitySetName, "qualifiedEntitySetName");
 
-            string[] result = qualifiedEntitySetName.Split('.');
+            var result = qualifiedEntitySetName.Split('.');
             if (result.Length != 2)
             {
                 throw EntityUtil.InvalidQualifiedEntitySetName();
@@ -821,7 +822,8 @@ namespace System.Data.Entity.Core
 
             // both parts must be non-empty
             if (container == null || container.Length == 0 ||
-                entitySet == null || entitySet.Length == 0)
+                entitySet == null
+                || entitySet.Length == 0)
             {
                 throw EntityUtil.InvalidQualifiedEntitySetName();
             }
@@ -832,7 +834,7 @@ namespace System.Data.Entity.Core
 
         internal static void ValidateName(string name)
         {
-            if (!System.Data.Entity.Core.EntityModel.SchemaObjectModel.Utils.ValidUndottedName(name))
+            if (!Utils.ValidUndottedName(name))
             {
                 throw EntityUtil.EntityKeyInvalidName(name);
             }
@@ -840,26 +842,28 @@ namespace System.Data.Entity.Core
 
         #region Key Value Assignment and Validation
 
-        private static bool CheckKeyValues(IEnumerable<KeyValuePair<string, object>> entityKeyValues,
+        private static bool CheckKeyValues(
+            IEnumerable<KeyValuePair<string, object>> entityKeyValues,
             out string[] keyNames, out object singletonKeyValue, out object[] compositeKeyValues)
         {
             return CheckKeyValues(entityKeyValues, false, false, out keyNames, out singletonKeyValue, out compositeKeyValues);
         }
 
-        private static bool CheckKeyValues(IEnumerable<KeyValuePair<string, object>> entityKeyValues, bool allowNullKeys, bool tokenizeStrings,
+        private static bool CheckKeyValues(
+            IEnumerable<KeyValuePair<string, object>> entityKeyValues, bool allowNullKeys, bool tokenizeStrings,
             out string[] keyNames, out object singletonKeyValue, out object[] compositeKeyValues)
         {
             EntityUtil.CheckArgumentNull(entityKeyValues, "entityKeyValues");
 
             int numExpectedKeyValues;
-            int numActualKeyValues = 0;
+            var numActualKeyValues = 0;
 
             keyNames = null;
             singletonKeyValue = null;
             compositeKeyValues = null;
 
             // Determine if we're a single or composite key.
-            foreach (KeyValuePair<string, object> value in entityKeyValues)
+            foreach (var value in entityKeyValues)
             {
                 numActualKeyValues++;
             }
@@ -880,14 +884,15 @@ namespace System.Data.Entity.Core
                 {
                     lock (_nameLookup)
                     {
-                        foreach (KeyValuePair<string, object> keyValuePair in entityKeyValues)
+                        foreach (var keyValuePair in entityKeyValues)
                         {
-                            if (EntityUtil.IsNull(keyValuePair.Value) || String.IsNullOrEmpty(keyValuePair.Key))
+                            if (EntityUtil.IsNull(keyValuePair.Value)
+                                || String.IsNullOrEmpty(keyValuePair.Key))
                             {
                                 throw EntityUtil.NoNullsAllowedInKeyValuePairs("entityKeyValues");
                             }
                             ValidateName(keyValuePair.Key);
-                            keyNames[0] = tokenizeStrings ? EntityKey.LookupSingletonName(keyValuePair.Key) : keyValuePair.Key;
+                            keyNames[0] = tokenizeStrings ? LookupSingletonName(keyValuePair.Key) : keyValuePair.Key;
                             singletonKeyValue = keyValuePair.Value;
                         }
                     }
@@ -896,18 +901,19 @@ namespace System.Data.Entity.Core
                 {
                     compositeKeyValues = new object[numExpectedKeyValues];
 
-                    int i = 0;
+                    var i = 0;
                     lock (_nameLookup)
                     {
-                        foreach (KeyValuePair<string, object> keyValuePair in entityKeyValues)
+                        foreach (var keyValuePair in entityKeyValues)
                         {
-                            if (EntityUtil.IsNull(keyValuePair.Value) || String.IsNullOrEmpty(keyValuePair.Key))
+                            if (EntityUtil.IsNull(keyValuePair.Value)
+                                || String.IsNullOrEmpty(keyValuePair.Key))
                             {
                                 throw EntityUtil.NoNullsAllowedInKeyValuePairs("entityKeyValues");
                             }
                             Debug.Assert(null == keyNames[i], "shouldn't have a name yet");
                             ValidateName(keyValuePair.Key);
-                            keyNames[i] = tokenizeStrings ? EntityKey.LookupSingletonName(keyValuePair.Key) : keyValuePair.Key;
+                            keyNames[i] = tokenizeStrings ? LookupSingletonName(keyValuePair.Key) : keyValuePair.Key;
                             compositeKeyValues[i] = keyValuePair.Value;
                             i++;
                         }
@@ -928,16 +934,17 @@ namespace System.Data.Entity.Core
         /// <param name="argumentName">the name of the argument to use in exception messages</param>
         /// <param name="workspace">MetadataWorkspace used to resolve and validate enum keys.</param>
         /// <returns>the validated value(s) (for a composite key, an object array is returned)</returns>
-        private static void GetKeyValues(EntitySet entitySet, IExtendedDataRecord record, 
+        private static void GetKeyValues(
+            EntitySet entitySet, IExtendedDataRecord record,
             out string[] keyNames, out object singletonKeyValue, out object[] compositeKeyValues)
         {
             singletonKeyValue = null;
             compositeKeyValues = null;
 
-            int numExpectedKeyValues = ((EntitySetBase)entitySet).ElementType.KeyMembers.Count;
+            var numExpectedKeyValues = ((EntitySetBase)entitySet).ElementType.KeyMembers.Count;
             keyNames = ((EntitySetBase)entitySet).ElementType.KeyMemberNames;
 
-            EntityType entityType = record.DataRecordInfo.RecordType.EdmType as EntityType;
+            var entityType = record.DataRecordInfo.RecordType.EdmType as EntityType;
             Debug.Assert(entityType != null, "Data record must be an entity.");
 
             // assert the type contained by this entity set matches the type contained by the data record
@@ -948,7 +955,7 @@ namespace System.Data.Entity.Core
             {
                 // Optimize for a singleton key.
 
-                EdmMember member = entityType.KeyMembers[0];
+                var member = entityType.KeyMembers[0];
                 singletonKeyValue = record[member.Name];
                 if (EntityUtil.IsNull(singletonKeyValue))
                 {
@@ -959,9 +966,9 @@ namespace System.Data.Entity.Core
             {
                 compositeKeyValues = new object[numExpectedKeyValues];
                 // grab each key-field from the data record
-                for (int i = 0; i < numExpectedKeyValues; ++i)
+                for (var i = 0; i < numExpectedKeyValues; ++i)
                 {
-                    EdmMember member = entityType.KeyMembers[i];
+                    var member = entityType.KeyMembers[i];
                     compositeKeyValues[i] = record[member.Name];
                     if (EntityUtil.IsNull(compositeKeyValues[i]))
                     {
@@ -983,6 +990,7 @@ namespace System.Data.Entity.Core
         {
             ValidateEntityKey(workspace, entitySet, false, null);
         }
+
         /// <summary>
         /// Verify that the types of the objects passed in to be used as keys actually match the types from the model.
         /// This error is also caught when the entity is materialized and when the key value is set, at which time it
@@ -997,7 +1005,7 @@ namespace System.Data.Entity.Core
         {
             if (entitySet != null)
             {
-                ReadOnlyMetadataCollection<EdmMember> keyMembers = ((EntitySetBase)entitySet).ElementType.KeyMembers;
+                var keyMembers = ((EntitySetBase)entitySet).ElementType.KeyMembers;
                 if (_singletonKeyValue != null)
                 {
                     // 1. Validate number of keys
@@ -1005,11 +1013,13 @@ namespace System.Data.Entity.Core
                     {
                         if (isArgumentException)
                         {
-                            throw EntityUtil.IncorrectNumberOfKeyValuePairs(argumentName, entitySet.ElementType.FullName, keyMembers.Count, 1);
+                            throw EntityUtil.IncorrectNumberOfKeyValuePairs(
+                                argumentName, entitySet.ElementType.FullName, keyMembers.Count, 1);
                         }
                         else
                         {
-                            throw EntityUtil.IncorrectNumberOfKeyValuePairsInvalidOperation(entitySet.ElementType.FullName, keyMembers.Count, 1);
+                            throw EntityUtil.IncorrectNumberOfKeyValuePairsInvalidOperation(
+                                entitySet.ElementType.FullName, keyMembers.Count, 1);
                         }
                     }
 
@@ -1017,7 +1027,8 @@ namespace System.Data.Entity.Core
                     ValidateTypeOfKeyValue(workspace, keyMembers[0], _singletonKeyValue, isArgumentException, argumentName);
 
                     // 3. Validate key names
-                    if (_keyNames[0] != keyMembers[0].Name)
+                    if (_keyNames[0]
+                        != keyMembers[0].Name)
                     {
                         if (isArgumentException)
                         {
@@ -1032,25 +1043,29 @@ namespace System.Data.Entity.Core
                 else if (null != _compositeKeyValues)
                 {
                     // 1. Validate number of keys
-                    if (keyMembers.Count != _compositeKeyValues.Length)
+                    if (keyMembers.Count
+                        != _compositeKeyValues.Length)
                     {
                         if (isArgumentException)
                         {
-                            throw EntityUtil.IncorrectNumberOfKeyValuePairs(argumentName, entitySet.ElementType.FullName, keyMembers.Count, _compositeKeyValues.Length);
+                            throw EntityUtil.IncorrectNumberOfKeyValuePairs(
+                                argumentName, entitySet.ElementType.FullName, keyMembers.Count, _compositeKeyValues.Length);
                         }
                         else
                         {
-                            throw EntityUtil.IncorrectNumberOfKeyValuePairsInvalidOperation(entitySet.ElementType.FullName, keyMembers.Count, _compositeKeyValues.Length);
+                            throw EntityUtil.IncorrectNumberOfKeyValuePairsInvalidOperation(
+                                entitySet.ElementType.FullName, keyMembers.Count, _compositeKeyValues.Length);
                         }
                     }
 
-                    for (int i = 0; i < _compositeKeyValues.Length; ++i)
+                    for (var i = 0; i < _compositeKeyValues.Length; ++i)
                     {
-                        EdmMember keyField = ((EntitySetBase)entitySet).ElementType.KeyMembers[i];
-                        bool foundMember = false;
-                        for (int j = 0; j < _compositeKeyValues.Length; ++j)
+                        var keyField = ((EntitySetBase)entitySet).ElementType.KeyMembers[i];
+                        var foundMember = false;
+                        for (var j = 0; j < _compositeKeyValues.Length; ++j)
                         {
-                            if (keyField.Name == _keyNames[j])
+                            if (keyField.Name
+                                == _keyNames[j])
                             {
                                 // 2. Validate type of key values
                                 ValidateTypeOfKeyValue(workspace, keyField, _compositeKeyValues[j], isArgumentException, argumentName);
@@ -1084,27 +1099,30 @@ namespace System.Data.Entity.Core
         /// <param name="keyValue">The value of the key.</param>
         /// <param name="isArgumentException">Whether to throw ArgumentException or InvalidOperation exception if validation fails.</param>
         /// <param name="argumentName">Name of the argument to be used for ArgumentExceptions.</param>
-        private static void ValidateTypeOfKeyValue(MetadataWorkspace workspace, EdmMember keyMember, object keyValue, bool isArgumentException, string argumentName)
+        private static void ValidateTypeOfKeyValue(
+            MetadataWorkspace workspace, EdmMember keyMember, object keyValue, bool isArgumentException, string argumentName)
         {
             Debug.Assert(workspace != null, "workspace != null");
             Debug.Assert(keyMember != null, "keyMember != null");
             Debug.Assert(keyValue != null, "keyValue != null");
             Debug.Assert(Helper.IsScalarType(keyMember.TypeUsage.EdmType), "key member must be of a scalar type");
 
-            EdmType keyMemberEdmType = keyMember.TypeUsage.EdmType;
+            var keyMemberEdmType = keyMember.TypeUsage.EdmType;
 
             if (Helper.IsPrimitiveType(keyMemberEdmType))
             {
-                Type entitySetKeyType = ((PrimitiveType)keyMemberEdmType).ClrEquivalentType;
+                var entitySetKeyType = ((PrimitiveType)keyMemberEdmType).ClrEquivalentType;
                 if (entitySetKeyType != keyValue.GetType())
                 {
                     if (isArgumentException)
                     {
-                        throw EntityUtil.IncorrectValueType(argumentName, keyMember.Name, entitySetKeyType.FullName, keyValue.GetType().FullName);
+                        throw EntityUtil.IncorrectValueType(
+                            argumentName, keyMember.Name, entitySetKeyType.FullName, keyValue.GetType().FullName);
                     }
                     else
                     {
-                        throw EntityUtil.IncorrectValueTypeInvalidOperation(keyMember.Name, entitySetKeyType.FullName, keyValue.GetType().FullName);
+                        throw EntityUtil.IncorrectValueTypeInvalidOperation(
+                            keyMember.Name, entitySetKeyType.FullName, keyValue.GetType().FullName);
                     }
                 }
             }
@@ -1115,16 +1133,18 @@ namespace System.Data.Entity.Core
                 EnumType expectedEnumType;
                 if (workspace.TryGetObjectSpaceType((EnumType)keyMemberEdmType, out expectedEnumType))
                 {
-                    var expectedClrEnumType = ((ClrEnumType)expectedEnumType).ClrType;
+                    var expectedClrEnumType = (expectedEnumType).ClrType;
                     if (expectedClrEnumType != keyValue.GetType())
                     {
                         if (isArgumentException)
                         {
-                            throw EntityUtil.IncorrectValueType(argumentName, keyMember.Name, expectedClrEnumType.FullName, keyValue.GetType().FullName);
+                            throw EntityUtil.IncorrectValueType(
+                                argumentName, keyMember.Name, expectedClrEnumType.FullName, keyValue.GetType().FullName);
                         }
                         else
                         {
-                            throw EntityUtil.IncorrectValueTypeInvalidOperation(keyMember.Name, expectedClrEnumType.FullName, keyValue.GetType().FullName);
+                            throw EntityUtil.IncorrectValueTypeInvalidOperation(
+                                keyMember.Name, expectedClrEnumType.FullName, keyValue.GetType().FullName);
                         }
                     }
                 }
@@ -1153,10 +1173,12 @@ namespace System.Data.Entity.Core
             if (_singletonKeyValue != null)
             {
                 Debug.Assert(!isTemporary, "Singleton keys should not be expected to be temporary.");
-                Debug.Assert(_compositeKeyValues == null, "The EntityKey is marked as both a singleton key and a composite key - this is illegal.");
+                Debug.Assert(
+                    _compositeKeyValues == null, "The EntityKey is marked as both a singleton key and a composite key - this is illegal.");
                 if (entitySet != null)
                 {
-                    Debug.Assert(entitySet.ElementType.KeyMembers.Count == 1, "For a singleton key, the number of key fields must be exactly 1.");
+                    Debug.Assert(
+                        entitySet.ElementType.KeyMembers.Count == 1, "For a singleton key, the number of key fields must be exactly 1.");
                 }
             }
             else if (_compositeKeyValues != null)
@@ -1164,10 +1186,14 @@ namespace System.Data.Entity.Core
                 Debug.Assert(!isTemporary, "Composite keys should not be expected to be temporary.");
                 if (entitySet != null)
                 {
-                    Debug.Assert(entitySet.ElementType.KeyMembers.Count > 1, "For a composite key, the number of key fields should be greater than 1.");
-                    Debug.Assert(entitySet.ElementType.KeyMembers.Count == _compositeKeyValues.Length, "Incorrect number of values specified to composite key.");
+                    Debug.Assert(
+                        entitySet.ElementType.KeyMembers.Count > 1,
+                        "For a composite key, the number of key fields should be greater than 1.");
+                    Debug.Assert(
+                        entitySet.ElementType.KeyMembers.Count == _compositeKeyValues.Length,
+                        "Incorrect number of values specified to composite key.");
                 }
-                for (int i = 0; i < _compositeKeyValues.Length; ++i)
+                for (var i = 0; i < _compositeKeyValues.Length; ++i)
                 {
                     Debug.Assert(_compositeKeyValues[i] != null, "Values passed to a composite EntityKey cannot be null.");
                 }
@@ -1176,15 +1202,18 @@ namespace System.Data.Entity.Core
             {
                 // one of our static keys
                 Debug.Assert(!isTemporary, "Static keys should not be expected to be temporary.");
-                Debug.Assert(this.EntityKeyValues == null, "The EntityKeyValues property for Static EntityKeys must return null.");
-                Debug.Assert(this.EntityContainerName == null, "The EntityContainerName property for Static EntityKeys must return null.");
-                Debug.Assert(this.EntitySetName != null, "The EntitySetName property for Static EntityKeys must not return null.");
+                Debug.Assert(EntityKeyValues == null, "The EntityKeyValues property for Static EntityKeys must return null.");
+                Debug.Assert(EntityContainerName == null, "The EntityContainerName property for Static EntityKeys must return null.");
+                Debug.Assert(EntitySetName != null, "The EntitySetName property for Static EntityKeys must not return null.");
             }
             else
             {
-                Debug.Assert(isTemporary, "The EntityKey is marked as neither a singleton or composite.  Therefore, it should be expected to be temporary.");
-                Debug.Assert(this.IsTemporary, "The EntityKey is marked as neither a singleton or composite.  Therefore it must be marked as temporary.");
-                Debug.Assert(this.EntityKeyValues == null, "The EntityKeyValues property for temporary EntityKeys must return null.");
+                Debug.Assert(
+                    isTemporary,
+                    "The EntityKey is marked as neither a singleton or composite.  Therefore, it should be expected to be temporary.");
+                Debug.Assert(
+                    IsTemporary, "The EntityKey is marked as neither a singleton or composite.  Therefore it must be marked as temporary.");
+                Debug.Assert(EntityKeyValues == null, "The EntityKeyValues property for temporary EntityKeys must return null.");
             }
         }
 
@@ -1224,7 +1253,7 @@ namespace System.Data.Entity.Core
                 _entityContainerName = LookupSingletonName(_entityContainerName);
                 if (_keyNames != null)
                 {
-                    for (int i = 0; i < _keyNames.Length; i++)
+                    for (var i = 0; i < _keyNames.Length; i++)
                     {
                         _keyNames[i] = LookupSingletonName(_keyNames[i]);
                     }
@@ -1266,7 +1295,8 @@ namespace System.Data.Entity.Core
 
         private void DeserializeMembers()
         {
-            if (CheckKeyValues(new KeyValueReader(_deserializedMembers), true, true, out _keyNames, out _singletonKeyValue, out _compositeKeyValues))
+            if (CheckKeyValues(
+                new KeyValueReader(_deserializedMembers), true, true, out _keyNames, out _singletonKeyValue, out _compositeKeyValues))
             {
                 // If we received values from the _deserializedMembers, then we do not need to track these any more
                 _deserializedMembers = null;
@@ -1277,7 +1307,7 @@ namespace System.Data.Entity.Core
 
         private class KeyValueReader : IEnumerable<KeyValuePair<string, object>>
         {
-            IEnumerable<EntityKeyMember> _enumerator;
+            private readonly IEnumerable<EntityKeyMember> _enumerator;
 
             public KeyValueReader(IEnumerable<EntityKeyMember> enumerator)
             {
@@ -1288,7 +1318,7 @@ namespace System.Data.Entity.Core
 
             public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
             {
-                foreach (EntityKeyMember pair in _enumerator)
+                foreach (var pair in _enumerator)
                 {
                     if (pair != null)
                     {
@@ -1303,7 +1333,7 @@ namespace System.Data.Entity.Core
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return this.GetEnumerator();
+                return GetEnumerator();
             }
 
             #endregion
@@ -1347,10 +1377,7 @@ namespace System.Data.Entity.Core
         [DataMember]
         public string Key
         {
-            get
-            {
-                return _keyName;
-            }
+            get { return _keyName; }
             set
             {
                 ValidateWritable(_keyName);
@@ -1365,10 +1392,7 @@ namespace System.Data.Entity.Core
         [DataMember]
         public object Value
         {
-            get
-            {
-                return _keyValue;
-            }
+            get { return _keyValue; }
             set
             {
                 ValidateWritable(_keyValue);
@@ -1383,7 +1407,7 @@ namespace System.Data.Entity.Core
         /// <returns>A string representation of the EntityKeyMember</returns>
         public override string ToString()
         {
-            return String.Format(System.Globalization.CultureInfo.CurrentCulture, "[{0}, {1}]", _keyName, _keyValue);
+            return String.Format(CultureInfo.CurrentCulture, "[{0}, {1}]", _keyName, _keyValue);
         }
 
         /// <summary>
@@ -1398,4 +1422,3 @@ namespace System.Data.Entity.Core
         }
     }
 }
-

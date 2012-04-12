@@ -1,18 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Text;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics;
+
     /// <summary>
     /// Represents the Structural Type
     /// </summary>
     public abstract class StructuralType : EdmType
     {
         #region Constructors
+
         /// <summary>
         /// Internal parameterless constructor for bootstrapping edmtypes
         /// </summary>
@@ -36,11 +32,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _members = new MemberCollection(this);
             _readOnlyMembers = _members.AsReadOnlyMetadataCollection();
         }
+
         #endregion
 
         #region Fields
+
         private readonly MemberCollection _members;
         private readonly ReadOnlyMetadataCollection<EdmMember> _readOnlyMembers;
+
         #endregion
 
         #region Properties
@@ -51,11 +50,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.EdmMember, true)]
         public ReadOnlyMetadataCollection<EdmMember> Members
         {
-            get
-            {
-                return _readOnlyMembers;
-            }
+            get { return _readOnlyMembers; }
         }
+
         #endregion
 
         #region Methods
@@ -77,7 +74,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             if (!IsReadOnly)
             {
                 base.SetReadOnly();
-                this.Members.Source.SetReadOnly();
+                Members.Source.SetReadOnly();
             }
         }
 
@@ -97,26 +94,30 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             EntityUtil.GenericCheckArgumentNull(member, "member");
             Util.ThrowIfReadOnly(this);
-            Debug.Assert(this.DataSpace == member.TypeUsage.EdmType.DataSpace || this.BuiltInTypeKind == BuiltInTypeKind.RowType, "Wrong member type getting added in structural type");
+            Debug.Assert(
+                DataSpace == member.TypeUsage.EdmType.DataSpace || BuiltInTypeKind == BuiltInTypeKind.RowType,
+                "Wrong member type getting added in structural type");
 
             //Since we set the DataSpace of the RowType to be -1 in the constructor, we need to initialize it
             //as and when we add members to it
-            if (BuiltInTypeKind.RowType == this.BuiltInTypeKind)
+            if (BuiltInTypeKind.RowType == BuiltInTypeKind)
             {
                 // Do this only when you are adding the first member
                 if (_members.Count == 0)
                 {
-                    this.DataSpace = member.TypeUsage.EdmType.DataSpace;
+                    DataSpace = member.TypeUsage.EdmType.DataSpace;
                 }
-                // We need to build types that span across more than one space. For such row types, we set the 
-                // DataSpace to -1
-                else if (this.DataSpace != (DataSpace)(-1) && member.TypeUsage.EdmType.DataSpace != this.DataSpace)
+                    // We need to build types that span across more than one space. For such row types, we set the 
+                    // DataSpace to -1
+                else if (DataSpace != (DataSpace)(-1)
+                         && member.TypeUsage.EdmType.DataSpace != DataSpace)
                 {
-                    this.DataSpace = (DataSpace)(-1);
+                    DataSpace = (DataSpace)(-1);
                 }
             }
-            this._members.Add(member);
+            _members.Add(member);
         }
+
         #endregion
     }
 }

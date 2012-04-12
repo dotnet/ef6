@@ -2,6 +2,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
 
     /// <summary>
@@ -20,15 +21,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         internal EnumerableValidator(IEnumerable<TElementIn> argument, string argumentName)
         {
             this.argumentName = argumentName;
-            this.target = argument;
+            target = argument;
         }
 
-        private bool allowEmpty;
         private int expectedElementCount = -1;
-        private Func<TElementIn, int, TElementOut> map;
-        private Func<List<TElementOut>, TResult> collect;
-        private Func<TElementIn, int, string> deriveName;
-        
+
         /// <summary>
         /// Gets or sets a value that determines whether an exception is thrown if the enumerable argument is empty.
         /// </summary>
@@ -37,32 +34,36 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         /// If ExpectedElementCount is set to zero, an empty collection will not cause an exception to be thrown,
         /// even if AllowEmpty is set to <c>false</c>.
         /// </remarks>
-        public bool AllowEmpty { get { return this.allowEmpty; } set { this.allowEmpty = value; } }
+        public bool AllowEmpty { get; set; }
 
         /// <summary>
         /// Gets or set a value that determines the number of elements expected in the enumerable argument.
         /// A value of <c>-1</c> indicates that any number of elements is permitted, including zero.
         /// Use <see cref="AllowEmpty"/> to disallow an empty list when ExpectedElementCount is set to -1.
         /// </summary>
-        public int ExpectedElementCount { get { return this.expectedElementCount; } set { this.expectedElementCount = value; } }
-        
+        public int ExpectedElementCount
+        {
+            get { return expectedElementCount; }
+            set { expectedElementCount = value; }
+        }
+
         /// <summary>
         /// Gets or sets the function used to convert an element from the enumerable argument into an instance of
         /// the desired output element type. The position of the input element is also specified as an argument to this function.
         /// </summary>
-        public Func<TElementIn, int, TElementOut> ConvertElement { get { return this.map; } set { this.map = value; } }
+        public Func<TElementIn, int, TElementOut> ConvertElement { get; set; }
 
         /// <summary>
         /// Gets or sets the function used to create the output collection from a list of converted enumerable elements.
         /// </summary>
-        public Func<List<TElementOut>, TResult> CreateResult { get { return this.collect; } set { this.collect = value; } }
+        public Func<List<TElementOut>, TResult> CreateResult { get; set; }
 
         /// <summary>
         /// Gets or sets an optional function that can retrieve the name of an element from the enumerable argument.
         /// If this function is set, duplicate input element names will result in an exception. Null or empty names will
         /// not result in an exception. If specified, this function will be called after <see cref="ConvertElement"/>.
         /// </summary>
-        public Func<TElementIn, int, string> GetName { get { return this.deriveName; } set { this.deriveName = value; } }
+        public Func<TElementIn, int, string> GetName { get; set; }
 
         /// <summary>
         /// Validates the input enumerable, converting each input element and producing the final instance of <typeparamref name="TResult"/> as a result.
@@ -77,44 +78,46 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         /// <remarks>Other exceptions may be thrown by the <see cref="ConvertElement"/> and <see cref="CreateResult"/> functions, and by the <see cref="GetName"/> function, if specified.</remarks>
         internal TResult Validate()
         {
-            return EnumerableValidator<TElementIn, TElementOut, TResult>.Validate(this.target,
-                                                                                  this.argumentName,
-                                                                                  this.ExpectedElementCount,
-                                                                                  this.AllowEmpty,
-                                                                                  this.ConvertElement,
-                                                                                  this.CreateResult,
-                                                                                  this.GetName);
+            return Validate(
+                target,
+                argumentName,
+                ExpectedElementCount,
+                AllowEmpty,
+                ConvertElement,
+                CreateResult,
+                GetName);
         }
 
-        private static TResult Validate(IEnumerable<TElementIn> argument,
-                                        string argumentName,
-                                        int expectedElementCount,
-                                        bool allowEmpty,
-                                        Func<TElementIn, int, TElementOut> map,
-                                        Func<List<TElementOut>, TResult> collect,
-                                        Func<TElementIn, int, string> deriveName)
+        private static TResult Validate(
+            IEnumerable<TElementIn> argument,
+            string argumentName,
+            int expectedElementCount,
+            bool allowEmpty,
+            Func<TElementIn, int, TElementOut> map,
+            Func<List<TElementOut>, TResult> collect,
+            Func<TElementIn, int, string> deriveName)
         {
             Debug.Assert(map != null, "Set EnumerableValidator.ConvertElement before calling validate");
             Debug.Assert(collect != null, "Set EnumerableValidator.CreateResult before calling validate");
 
             EntityUtil.CheckArgumentNull(argument, argumentName);
 
-            bool checkNull = (default(TElementIn) == null);
-            bool checkCount = (expectedElementCount != -1);
+            var checkNull = (default(TElementIn) == null);
+            var checkCount = (expectedElementCount != -1);
             Dictionary<string, int> nameIndex = null;
             if (deriveName != null)
             {
                 nameIndex = new Dictionary<string, int>();
             }
 
-            int pos = 0;
-            List<TElementOut> validatedElements = new List<TElementOut>();
-            foreach (TElementIn elementIn in argument)
+            var pos = 0;
+            var validatedElements = new List<TElementOut>();
+            foreach (var elementIn in argument)
             {
                 // More elements in 'arguments' than expected?
                 if (checkCount && pos == expectedElementCount)
                 {
-                    throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.Cqt_ExpressionList_IncorrectElementCount, argumentName);
+                    throw EntityUtil.Argument(Strings.Cqt_ExpressionList_IncorrectElementCount, argumentName);
                 }
 
                 if (checkNull && elementIn == null)
@@ -123,20 +126,20 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                     throw EntityUtil.ArgumentNull(StringUtil.FormatIndex(argumentName, pos));
                 }
 
-                TElementOut elementOut = map(elementIn, pos);
+                var elementOut = map(elementIn, pos);
                 validatedElements.Add(elementOut);
 
                 if (deriveName != null)
                 {
-                    string name = deriveName(elementIn, pos);
+                    var name = deriveName(elementIn, pos);
                     Debug.Assert(name != null, "GetName should not produce null");
-                    int foundIndex = -1;
+                    var foundIndex = -1;
                     if (nameIndex.TryGetValue(name, out foundIndex))
                     {
                         throw EntityUtil.Argument(
-                            System.Data.Entity.Resources.Strings.Cqt_Util_CheckListDuplicateName(foundIndex, pos, name),
+                            Strings.Cqt_Util_CheckListDuplicateName(foundIndex, pos, name),
                             StringUtil.FormatIndex(argumentName, pos)
-                        );
+                            );
                     }
                     nameIndex[name] = pos;
                 }
@@ -149,15 +152,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             {
                 if (pos != expectedElementCount)
                 {
-                    throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.Cqt_ExpressionList_IncorrectElementCount, argumentName);
+                    throw EntityUtil.Argument(Strings.Cqt_ExpressionList_IncorrectElementCount, argumentName);
                 }
             }
             else
             {
                 // No expected count was specified, simply verify empty vs. non-empty.
-                if (0 == pos && !allowEmpty)
+                if (0 == pos
+                    && !allowEmpty)
                 {
-                    throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.Cqt_Util_CheckListEmptyInvalid, argumentName);
+                    throw EntityUtil.Argument(Strings.Cqt_Util_CheckListEmptyInvalid, argumentName);
                 }
             }
 

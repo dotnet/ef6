@@ -1,6 +1,6 @@
 namespace System.Data.Entity.Core
 {
-    using System;
+    using System.Data.Entity.Resources;
     using System.Runtime.Serialization;
 
     /// <summary>
@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core
         /// constructor with default message
         /// </summary>
         public MappingException() // required ctor
-            : base(System.Data.Entity.Resources.Strings.Mapping_General_Error)
+            : base(Strings.Mapping_General_Error)
         {
         }
 
@@ -34,7 +34,8 @@ namespace System.Data.Entity.Core
         /// <param name="message">localized error message</param>
         /// <param name="innerException">inner exception</param>
         public MappingException(string message, Exception innerException) // required ctor
-            : base(message, innerException) {
+            : base(message, innerException)
+        {
         }
 
         /// <summary>
@@ -46,6 +47,5 @@ namespace System.Data.Entity.Core
             : base(info, context)
         {
         }
-
     }
 }

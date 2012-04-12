@@ -1,10 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
-using System.Data.Entity.Core.Metadata.Edm;
+namespace System.Data.Entity.Core.Mapping
+{
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Text;
 
-namespace System.Data.Entity.Core.Mapping {
     /// <summary>
     /// Represents the Mapping metadata for an association type map in CS space.
     /// </summary>
@@ -39,35 +39,40 @@ namespace System.Data.Entity.Core.Mapping {
     /// above example. Users can access the table mapping fragments under the 
     /// association type mapping through this class.
     /// </example>
-    internal class StorageAssociationTypeMapping : StorageTypeMapping {
+    internal class StorageAssociationTypeMapping : StorageTypeMapping
+    {
         #region Constructors
+
         /// <summary>
         /// Construct the new AssociationTypeMapping object.
         /// </summary>
         /// <param name="relation">Represents the Association Type metadata object</param>
         /// <param name="setMapping">Set Mapping that contains this Type mapping </param>
         internal StorageAssociationTypeMapping(AssociationType relation, StorageSetMapping setMapping)
-            : base(setMapping) {
-            this.m_relation = relation;
+            : base(setMapping)
+        {
+            m_relation = relation;
         }
+
         #endregion
 
         #region Fields
+
         /// <summary>
         /// Type for which the mapping is represented.
         /// </summary>
-        AssociationType m_relation;
+        private readonly AssociationType m_relation;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// The AssociationTypeType Metadata object for which the mapping is represented.
         /// </summary>
         internal AssociationType AssociationType
         {
-            get {
-                return this.m_relation;
-            }
+            get { return m_relation; }
         }
 
         /// <summary>
@@ -75,10 +80,9 @@ namespace System.Data.Entity.Core.Mapping {
         /// Since Association types dont participate in Inheritance, This can only
         /// be one type.
         /// </summary>
-        internal override ReadOnlyCollection<EdmType> Types {
-            get {
-                return new ReadOnlyCollection<EdmType>(new AssociationType[] { m_relation });
-            }
+        internal override ReadOnlyCollection<EdmType> Types
+        {
+            get { return new ReadOnlyCollection<EdmType>(new[] { m_relation }); }
         }
 
         /// <summary>
@@ -87,11 +91,11 @@ namespace System.Data.Entity.Core.Mapping {
         /// Since Association types dont participate in Inheritance, an Empty list 
         /// is returned here.
         /// </summary>
-        internal override ReadOnlyCollection<EdmType> IsOfTypes {
-            get {
-                return new List<EdmType>().AsReadOnly();
-            }
+        internal override ReadOnlyCollection<EdmType> IsOfTypes
+        {
+            get { return new List<EdmType>().AsReadOnly(); }
         }
+
         #endregion
 
         #region Methods
@@ -102,16 +106,18 @@ namespace System.Data.Entity.Core.Mapping {
         /// Will be removed shortly.
         /// </summary>
         /// <param name="index"></param>
-        internal override void Print(int index) {
+        internal override void Print(int index)
+        {
             StorageEntityContainerMapping.GetPrettyPrintString(ref index);
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("AssociationTypeMapping");
             sb.Append("   ");
             sb.Append("Type Name:");
-            sb.Append(this.m_relation.Name);
+            sb.Append(m_relation.Name);
             sb.Append("   ");
             Console.WriteLine(sb.ToString());
-            foreach (StorageMappingFragment fragment in MappingFragments) {
+            foreach (var fragment in MappingFragments)
+            {
                 fragment.Print(index + 5);
             }
         }

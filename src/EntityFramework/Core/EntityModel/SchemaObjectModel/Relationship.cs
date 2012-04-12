@@ -3,6 +3,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Xml;
 
@@ -11,7 +12,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     /// </summary>
     internal sealed class Relationship : SchemaType, IRelationship
     {
-        private RelationshipKind _relationshipKind;
         private RelationshipEndCollection _ends;
         private List<ReferentialConstraint> _constraints;
         private bool _isForeignKey;
@@ -22,21 +22,22 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="parent">the parent</param>
         /// <param name="kind">the kind of relationship</param>
         public Relationship(Schema parent, RelationshipKind kind)
-        : base(parent)
+            : base(parent)
         {
             RelationshipKind = kind;
 
-            if (Schema.DataModel == SchemaDataModelOption.EntityDataModel)
+            if (Schema.DataModel
+                == SchemaDataModelOption.EntityDataModel)
             {
                 _isForeignKey = false;
                 OtherContent.Add(Schema.SchemaSource);
             }
-            else if (Schema.DataModel == SchemaDataModelOption.ProviderDataModel)
+            else if (Schema.DataModel
+                     == SchemaDataModelOption.ProviderDataModel)
             {
                 _isForeignKey = true;
             }
         }
-
 
         /// <summary>
         /// List of Ends defined for this Association
@@ -45,8 +46,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             get
             {
-                if ( _ends == null )
+                if (_ends == null)
+                {
                     _ends = new RelationshipEndCollection();
+                }
                 return _ends;
             }
         }
@@ -66,26 +69,15 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             }
         }
 
-        public bool TryGetEnd( string roleName, out IRelationshipEnd end )
+        public bool TryGetEnd(string roleName, out IRelationshipEnd end)
         {
-            return _ends.TryGetEnd( roleName, out end );
+            return _ends.TryGetEnd(roleName, out end);
         }
-
 
         /// <summary>
         /// Is this an Association
         /// </summary>
-        public RelationshipKind RelationshipKind
-        {
-            get
-            {
-                return _relationshipKind;
-            }
-            private set
-            {
-                _relationshipKind = value;
-            }
-        }
+        public RelationshipKind RelationshipKind { get; private set; }
 
         /// <summary>
         /// Is this a foreign key (aka foreign key) relationship?
@@ -103,16 +95,19 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             base.Validate();
 
-            bool foundOperations = false;
-            foreach ( RelationshipEnd end in Ends )
+            var foundOperations = false;
+            foreach (RelationshipEnd end in Ends)
             {
                 end.Validate();
-                if ( RelationshipKind == RelationshipKind.Association )
+                if (RelationshipKind == RelationshipKind.Association)
                 {
-                    if ( end.Operations.Count > 0 )
+                    if (end.Operations.Count > 0)
                     {
-                        if ( foundOperations )
-                            end.AddError( ErrorCode.InvalidOperation, EdmSchemaErrorSeverity.Error, System.Data.Entity.Resources.Strings.InvalidOperationMultipleEndsInAssociation);
+                        if (foundOperations)
+                        {
+                            end.AddError(
+                                ErrorCode.InvalidOperation, EdmSchemaErrorSeverity.Error, Strings.InvalidOperationMultipleEndsInAssociation);
+                        }
                         foundOperations = true;
                     }
                 }
@@ -120,16 +115,18 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
             if (Constraints.Count == 0)
             {
-                if (this.Schema.DataModel == SchemaDataModelOption.ProviderDataModel)
+                if (Schema.DataModel
+                    == SchemaDataModelOption.ProviderDataModel)
                 {
-                    AddError(ErrorCode.MissingConstraintOnRelationshipType,
-                             EdmSchemaErrorSeverity.Error,
-                             System.Data.Entity.Resources.Strings.MissingConstraintOnRelationshipType(FQName));
+                    AddError(
+                        ErrorCode.MissingConstraintOnRelationshipType,
+                        EdmSchemaErrorSeverity.Error,
+                        Strings.MissingConstraintOnRelationshipType(FQName));
                 }
             }
             else
             {
-                foreach (ReferentialConstraint constraint in Constraints)
+                foreach (var constraint in Constraints)
                 {
                     constraint.Validate();
                 }
@@ -143,10 +140,12 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             base.ResolveTopLevelNames();
 
-            foreach ( RelationshipEnd end in Ends )
+            foreach (RelationshipEnd end in Ends)
+            {
                 end.ResolveTopLevelNames();
+            }
 
-            foreach (ReferentialConstraint referentialConstraint in Constraints)
+            foreach (var referentialConstraint in Constraints)
             {
                 referentialConstraint.ResolveTopLevelNames();
             }
@@ -178,12 +177,12 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private void HandleEndElement(XmlReader reader)
         {
             Debug.Assert(reader != null);
-            RelationshipEnd end = new RelationshipEnd(this);
+            var end = new RelationshipEnd(this);
             end.Parse(reader);
 
             if (Ends.Count == 2)
             {
-                AddError( ErrorCode.InvalidAssociation, EdmSchemaErrorSeverity.Error, System.Data.Entity.Resources.Strings.TooManyAssociationEnds(FQName ) );
+                AddError(ErrorCode.InvalidAssociation, EdmSchemaErrorSeverity.Error, Strings.TooManyAssociationEnds(FQName));
                 return;
             }
 
@@ -198,16 +197,16 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(reader != null);
 
-            ReferentialConstraint constraint = new ReferentialConstraint(this);
+            var constraint = new ReferentialConstraint(this);
             constraint.Parse(reader);
-            this.Constraints.Add(constraint);
+            Constraints.Add(constraint);
 
-            if (this.Schema.DataModel == SchemaDataModelOption.EntityDataModel && this.Schema.SchemaVersion >= XmlConstants.EdmVersionForV2)
+            if (Schema.DataModel == SchemaDataModelOption.EntityDataModel
+                && Schema.SchemaVersion >= XmlConstants.EdmVersionForV2)
             {
                 // in V2, referential constraint implies foreign key
                 _isForeignKey = true;
             }
         }
-
     }
 }

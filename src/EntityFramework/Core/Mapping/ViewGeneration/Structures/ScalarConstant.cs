@@ -1,22 +1,21 @@
-using System.Text;
-using System.Diagnostics;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
-using System.Data.Entity.Core.Metadata.Edm;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+    using System.Text;
+
     /// <summary>
     /// A class that denotes a constant value that can be stored in a multiconstant or in a projected slot of a <see cref="CellQuery"/>.
     /// </summary>
     internal sealed class ScalarConstant : Constant
     {
         #region Constructor
+
         /// <summary>
         /// Creates a scalar constant corresponding to the <paramref name="value"/>.
         /// </summary>
@@ -25,23 +24,29 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             Debug.Assert(value != null, "Scalar const value must not be null.");
             m_scalar = value;
         }
+
         #endregion
 
         #region Fields
+
         /// <summary>
         /// The actual value of the scalar.
         /// </summary>
         private readonly object m_scalar;
+
         #endregion
 
         #region Properties
+
         internal object Value
         {
             get { return m_scalar; }
         }
+
         #endregion
 
         #region Methods
+
         internal override bool IsNull()
         {
             return false;
@@ -65,18 +70,19 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         internal override StringBuilder AsEsql(StringBuilder builder, MemberPath outputMember, string blockAlias)
         {
             Debug.Assert(outputMember.LeafEdmMember != null, "Constant can't correspond to an empty member path.");
-            TypeUsage modelTypeUsage = Helper.GetModelTypeUsage(outputMember.LeafEdmMember);
-            EdmType modelType = modelTypeUsage.EdmType;
+            var modelTypeUsage = Helper.GetModelTypeUsage(outputMember.LeafEdmMember);
+            var modelType = modelTypeUsage.EdmType;
 
             // Some built-in constants
-            if (BuiltInTypeKind.PrimitiveType == modelType.BuiltInTypeKind)
+            if (BuiltInTypeKind.PrimitiveType
+                == modelType.BuiltInTypeKind)
             {
-                PrimitiveTypeKind primitiveTypeKind = ((PrimitiveType)modelType).PrimitiveTypeKind;
+                var primitiveTypeKind = ((PrimitiveType)modelType).PrimitiveTypeKind;
                 if (primitiveTypeKind == PrimitiveTypeKind.Boolean)
                 {
                     // This better be a boolean. Else we crash!
-                    bool val = (bool)m_scalar;
-                    string value = StringUtil.FormatInvariant("{0}", val);
+                    var val = (bool)m_scalar;
+                    var value = StringUtil.FormatInvariant("{0}", val);
                     builder.Append(value);
                     return builder;
                 }
@@ -98,10 +104,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                     return builder;
                 }
             }
-            else if (BuiltInTypeKind.EnumType == modelType.BuiltInTypeKind)
+            else if (BuiltInTypeKind.EnumType
+                     == modelType.BuiltInTypeKind)
             {
                 // Enumerated type - we should be able to cast it
-                EnumMember enumMember = (EnumMember)m_scalar;
+                var enumMember = (EnumMember)m_scalar;
 
                 builder.Append(enumMember.Name);
                 return builder;
@@ -118,7 +125,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         private StringBuilder AppendEscapedScalar(StringBuilder builder)
         {
-            string value = StringUtil.FormatInvariant("{0}", m_scalar);
+            var value = StringUtil.FormatInvariant("{0}", m_scalar);
             if (value.Contains("'"))
             {
                 // Deal with strings with ' by doubling it
@@ -131,13 +138,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         internal override DbExpression AsCqt(DbExpression row, MemberPath outputMember)
         {
             Debug.Assert(outputMember.LeafEdmMember != null, "Constant can't correspond to an empty member path.");
-            TypeUsage modelTypeUsage = Helper.GetModelTypeUsage(outputMember.LeafEdmMember);
+            var modelTypeUsage = Helper.GetModelTypeUsage(outputMember.LeafEdmMember);
             return modelTypeUsage.Constant(m_scalar);
         }
 
         protected override bool IsEqualTo(Constant right)
         {
-            ScalarConstant rightScalarConstant = right as ScalarConstant;
+            var rightScalarConstant = right as ScalarConstant;
             if (rightScalarConstant == null)
             {
                 return false;
@@ -153,14 +160,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         internal override string ToUserString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             ToCompactString(builder);
             return builder.ToString();
         }
 
         internal override void ToCompactString(StringBuilder builder)
         {
-            EnumMember enumMember = m_scalar as EnumMember;
+            var enumMember = m_scalar as EnumMember;
             if (enumMember != null)
             {
                 builder.Append(enumMember.Name);
@@ -170,6 +177,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 builder.Append(StringUtil.FormatInvariant("'{0}'", m_scalar));
             }
         }
+
         #endregion
     }
 }

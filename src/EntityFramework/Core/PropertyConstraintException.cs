@@ -1,13 +1,8 @@
 ﻿namespace System.Data.Entity.Core
 {
-    using System;
-    using System.Data;
-    using System.Data.Entity.Core;
     using System.Runtime.Serialization;
     using System.Security;
     using System.Security.Permissions;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
 
     /// <summary>
     /// Property constraint exception class. Note that this class has state - so if you change even
@@ -17,13 +12,12 @@
     [Serializable]
     public sealed class PropertyConstraintException : ConstraintException
     {
-        private string _propertyName;
+        private readonly string _propertyName;
 
         /// <summary>
         /// constructor with default message
         /// </summary>
         public PropertyConstraintException() // required ctor
-            : base()
         {
         }
 
@@ -31,7 +25,7 @@
         /// costructor with supplied message
         /// </summary>
         /// <param name="message">localized error message</param>
-        public PropertyConstraintException(string message)  // required ctor
+        public PropertyConstraintException(string message) // required ctor
             : base(message)
         {
         }
@@ -41,7 +35,7 @@
         /// </summary>
         /// <param name="message">localized error message</param>
         /// <param name="innerException">inner exception</param>
-        public PropertyConstraintException(string message, Exception innerException)  // required ctor
+        public PropertyConstraintException(string message, Exception innerException) // required ctor
             : base(message, innerException)
         {
         }

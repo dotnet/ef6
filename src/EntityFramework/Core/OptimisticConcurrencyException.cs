@@ -1,26 +1,22 @@
 namespace System.Data.Entity.Core
 {
-    using System;
-    using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Security.Permissions;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Objects;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// This exception is thrown when a update operation violates the concurrency constraint.
     /// </summary>
     [Serializable]
     public sealed class OptimisticConcurrencyException : UpdateException
-    {       
+    {
         /// <summary>
         /// new OptimisticConcurrencyException object
         /// </summary> 
         public OptimisticConcurrencyException()
-            : base()
         {
         }
-        
+
         /// <summary>
         /// Initializes a new instance of OptimisticConcurrencyException
         /// </summary>
@@ -62,5 +58,3 @@ namespace System.Data.Entity.Core
         }
     }
 }
-
-

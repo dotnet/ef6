@@ -2,7 +2,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
@@ -14,19 +13,23 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
     internal class ErrorLog : InternalBase
     {
-
         #region Constructors
+
         internal ErrorLog()
         {
             m_log = new List<Record>();
         }
+
         #endregion
 
         #region Fields
-        private List<Record> m_log;
+
+        private readonly List<Record> m_log;
+
         #endregion
 
         #region Properties
+
         internal int Count
         {
             get { return m_log.Count; }
@@ -36,15 +39,17 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get
             {
-                foreach (Record record in m_log)
+                foreach (var record in m_log)
                 {
                     yield return record.Error;
                 }
             }
         }
+
         #endregion
 
         #region Methods
+
         internal void AddEntry(Record record)
         {
             EntityUtil.CheckArgumentNull(record, "record");
@@ -53,7 +58,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         internal void Merge(ErrorLog log)
         {
-            foreach (Record record in log.m_log)
+            foreach (var record in log.m_log)
             {
                 m_log.Add(record);
             }
@@ -61,14 +66,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         internal void PrintTrace()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             ToCompactString(builder);
             Helpers.StringTraceLine(builder.ToString());
         }
 
         internal override void ToCompactString(StringBuilder builder)
         {
-            foreach (Record record in m_log)
+            foreach (var record in m_log)
             {
                 record.ToCompactString(builder);
             }
@@ -76,38 +81,43 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         internal string ToUserString()
         {
-            StringBuilder builder = new StringBuilder();
-            foreach (Record record in m_log)
+            var builder = new StringBuilder();
+            foreach (var record in m_log)
             {
-                string recordString = record.ToUserString();
+                var recordString = record.ToUserString();
                 builder.AppendLine(recordString);
             }
             return builder.ToString();
         }
+
         #endregion
 
         #region Nested classes/struct
+
         internal class Record : InternalBase
         {
             #region Constructor
+
             // effects: Creates an error record for wrappers, a debug message
             // and an error message given by "message". Note: wrappers cannot
             // be null
-            internal Record(ViewGenErrorCode errorCode, string message,
-                            IEnumerable<LeftCellWrapper> wrappers, string debugMessage)
+            internal Record(
+                ViewGenErrorCode errorCode, string message,
+                IEnumerable<LeftCellWrapper> wrappers, string debugMessage)
             {
                 Debug.Assert(wrappers != null);
-                IEnumerable<Cell> cells = LeftCellWrapper.GetInputCellsForWrappers(wrappers);
+                var cells = LeftCellWrapper.GetInputCellsForWrappers(wrappers);
                 Init(errorCode, message, cells, debugMessage);
             }
 
             internal Record(ViewGenErrorCode errorCode, string message, Cell sourceCell, string debugMessage)
             {
-                Init(errorCode, message, new Cell[] { sourceCell }, debugMessage);
+                Init(errorCode, message, new[] { sourceCell }, debugMessage);
             }
 
-            internal Record(ViewGenErrorCode errorCode, string message, IEnumerable<Cell> sourceCells,
-                            string debugMessage)
+            internal Record(
+                ViewGenErrorCode errorCode, string message, IEnumerable<Cell> sourceCells,
+                string debugMessage)
             {
                 Init(errorCode, message, sourceCells, debugMessage);
             }
@@ -120,42 +130,50 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 m_mappingError = error;
             }
 
-
-            private void Init(ViewGenErrorCode errorCode, string message,
-                              IEnumerable<Cell> sourceCells, string debugMessage)
+            private void Init(
+                ViewGenErrorCode errorCode, string message,
+                IEnumerable<Cell> sourceCells, string debugMessage)
             {
                 m_sourceCells = new List<Cell>(sourceCells);
 
                 Debug.Assert(m_sourceCells.Count > 0, "Error record must have at least one cell");
 
                 // For certain foreign key messages, we may need the SSDL line numbers and file names
-                CellLabel label = m_sourceCells[0].CellLabel;
-                string sourceLocation = label.SourceLocation;
-                int lineNumber = label.StartLineNumber;
-                int columnNumber = label.StartLinePosition;
+                var label = m_sourceCells[0].CellLabel;
+                var sourceLocation = label.SourceLocation;
+                var lineNumber = label.StartLineNumber;
+                var columnNumber = label.StartLinePosition;
 
-                string userMessage = InternalToString(message, debugMessage, m_sourceCells, errorCode, false);
+                var userMessage = InternalToString(message, debugMessage, m_sourceCells, errorCode, false);
                 m_debugMessage = InternalToString(message, debugMessage, m_sourceCells, errorCode, true);
-                m_mappingError = new EdmSchemaError(userMessage, (int)errorCode, EdmSchemaErrorSeverity.Error, sourceLocation,
-                                                      lineNumber, columnNumber);
+                m_mappingError = new EdmSchemaError(
+                    userMessage, (int)errorCode, EdmSchemaErrorSeverity.Error, sourceLocation,
+                    lineNumber, columnNumber);
             }
+
             #endregion
 
             #region Fields
+
             private EdmSchemaError m_mappingError;
             private List<Cell> m_sourceCells;
             private string m_debugMessage;
+
             #endregion
 
             #region Properties
-            [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")] // referenced (indirectly) by System.Data.Entity.Design.dll
-            internal EdmSchemaError Error
+
+            [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+            // referenced (indirectly) by System.Data.Entity.Design.dll
+                internal EdmSchemaError Error
             {
                 get { return m_mappingError; }
             }
+
             #endregion
 
             #region Methods
+
             internal override void ToCompactString(StringBuilder builder)
             {
                 builder.Append(m_debugMessage);
@@ -164,11 +182,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             // effects: adds a comma-separated list of line numbers to the string builder
             private static void GetUserLinesFromCells(IEnumerable<Cell> sourceCells, StringBuilder lineBuilder, bool isInvariant)
             {
-                var orderedCells = sourceCells.OrderBy<Cell, int>(cell => cell.CellLabel.StartLineNumber, Comparer<int>.Default);
+                var orderedCells = sourceCells.OrderBy(cell => cell.CellLabel.StartLineNumber, Comparer<int>.Default);
 
-                bool isFirst = true;
+                var isFirst = true;
                 // Get the line numbers
-                foreach (Cell cell in orderedCells)
+                foreach (var cell in orderedCells)
                 {
                     if (isFirst == false)
                     {
@@ -183,31 +201,34 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             // effects: Converts the message/debugMessage to a user-readable
             // message using resources (if isInvariant is false) or a test
             // message (if isInvariant is true)
-            static private string InternalToString(string message, string debugMessage,
-                                                   List<Cell> sourceCells, ViewGenErrorCode errorCode, bool isInvariant)
+            private static string InternalToString(
+                string message, string debugMessage,
+                List<Cell> sourceCells, ViewGenErrorCode errorCode, bool isInvariant)
             {
-                StringBuilder builder = new StringBuilder();
+                var builder = new StringBuilder();
 
                 if (isInvariant)
                 {
                     builder.AppendLine(debugMessage);
 
-                    builder.Append(isInvariant ? "ERROR" : System.Data.Entity.Resources.Strings.ViewGen_Error);
+                    builder.Append(isInvariant ? "ERROR" : Strings.ViewGen_Error);
                     StringUtil.FormatStringBuilder(builder, " ({0}): ", (int)errorCode);
                 }
 
-                StringBuilder lineBuilder = new StringBuilder();
+                var lineBuilder = new StringBuilder();
                 GetUserLinesFromCells(sourceCells, lineBuilder, isInvariant);
 
                 if (isInvariant)
                 {
                     if (sourceCells.Count > 1)
                     {
-                        StringUtil.FormatStringBuilder(builder, "Problem in Mapping Fragments starting at lines {0}: ", lineBuilder.ToString());
+                        StringUtil.FormatStringBuilder(
+                            builder, "Problem in Mapping Fragments starting at lines {0}: ", lineBuilder.ToString());
                     }
                     else
                     {
-                        StringUtil.FormatStringBuilder(builder, "Problem in Mapping Fragment starting at line {0}: ", lineBuilder.ToString());
+                        StringUtil.FormatStringBuilder(
+                            builder, "Problem in Mapping Fragment starting at line {0}: ", lineBuilder.ToString());
                     }
                 }
                 else
@@ -229,8 +250,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             {
                 return m_mappingError.ToString();
             }
+
             #endregion
         }
+
         #endregion
     }
 }

@@ -1,19 +1,18 @@
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Diagnostics;
-using System.Linq;
-
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     // We use CompositeKey on both sides of the dictionary because it is used both to identify rows that should be 
     // joined (the Key part) and to carry context about the rows being joined (e.g. which components of the row 
     // correspond to the join key).
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using JoinDictionary = Dictionary<CompositeKey, Tuple<CompositeKey, PropagatorResult>>;
+    using System.Linq;
+    using JoinDictionary = System.Collections.Generic.Dictionary<CompositeKey, Tuple<CompositeKey, PropagatorResult>>;
+
     internal partial class Propagator
     {
         /// <summary>
@@ -35,6 +34,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private partial class JoinPropagator
         {
             #region Constructors
+
             /// <summary>
             /// Constructs a join propagator.
             /// </summary>
@@ -54,10 +54,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 m_joinExpression = node;
                 m_parent = parent;
 
-                Debug.Assert(DbExpressionKind.LeftOuterJoin == node.ExpressionKind || DbExpressionKind.InnerJoin == node.ExpressionKind, "(Update/JoinPropagagtor/JoinEvaluator) " +
+                Debug.Assert(
+                    DbExpressionKind.LeftOuterJoin == node.ExpressionKind || DbExpressionKind.InnerJoin == node.ExpressionKind,
+                    "(Update/JoinPropagagtor/JoinEvaluator) " +
                     "caller must ensure only left outer and inner joins are requested");
                 // Retrieve propagation rules for the join type of the expression.
-                if (DbExpressionKind.InnerJoin == m_joinExpression.ExpressionKind)
+                if (DbExpressionKind.InnerJoin
+                    == m_joinExpression.ExpressionKind)
                 {
                     m_insertRules = s_innerJoinInsertRules;
                     m_deleteRules = s_innerJoinDeleteRules;
@@ -75,10 +78,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 m_leftPlaceholderKey = ExtractKey(m_left.Placeholder, m_leftKeySelectors, m_parent);
                 m_rightPlaceholderKey = ExtractKey(m_right.Placeholder, m_rightKeySelectors, m_parent);
             }
+
             #endregion
 
             #region Fields
+
             #region Propagation rules
+
             /**
              * These static dictionaries are initialized by the static constructor for this class.
              * They describe for each combination of input elements (the key) propagation rules, which
@@ -88,6 +94,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             private static readonly Dictionary<Ops, Ops> s_innerJoinDeleteRules;
             private static readonly Dictionary<Ops, Ops> s_leftOuterJoinInsertRules;
             private static readonly Dictionary<Ops, Ops> s_leftOuterJoinDeleteRules;
+
             #endregion
 
             private readonly DbJoinExpression m_joinExpression;
@@ -100,116 +107,135 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             private readonly ChangeNode m_right;
             private readonly CompositeKey m_leftPlaceholderKey;
             private readonly CompositeKey m_rightPlaceholderKey;
+
             #endregion
 
             #region Methods
+
             /// <summary>
             /// Initialize rules.
             /// </summary>
             [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
             static JoinPropagator()
             {
-                s_innerJoinInsertRules = new Dictionary<Ops,Ops>(EqualityComparer<Ops>.Default);
+                s_innerJoinInsertRules = new Dictionary<Ops, Ops>(EqualityComparer<Ops>.Default);
                 s_innerJoinDeleteRules = new Dictionary<Ops, Ops>(EqualityComparer<Ops>.Default);
                 s_leftOuterJoinInsertRules = new Dictionary<Ops, Ops>(EqualityComparer<Ops>.Default);
                 s_leftOuterJoinDeleteRules = new Dictionary<Ops, Ops>(EqualityComparer<Ops>.Default);
 
                 #region Initialize propagation rules
+
                 // These rules are taken from the mapping.update.design.doc, Section 3.5.1.3
                 // <Input, 
                 //  Inner join insert rule, 
                 //  Inner join delete rule, 
                 //  Left outer join insert rule, 
                 //  Left outer join delete rule>
-                InitializeRule(Ops.LeftUpdate | Ops.RightUpdate, 
-                    Ops.LeftInsertJoinRightInsert, 
+                InitializeRule(
+                    Ops.LeftUpdate | Ops.RightUpdate,
+                    Ops.LeftInsertJoinRightInsert,
                     Ops.LeftDeleteJoinRightDelete,
-                    Ops.LeftInsertJoinRightInsert, 
+                    Ops.LeftInsertJoinRightInsert,
                     Ops.LeftDeleteJoinRightDelete);
 
-                InitializeRule(Ops.LeftDelete | Ops.RightDelete, 
+                InitializeRule(
+                    Ops.LeftDelete | Ops.RightDelete,
                     Ops.Nothing,
                     Ops.LeftDeleteJoinRightDelete,
                     Ops.Nothing,
                     Ops.LeftDeleteJoinRightDelete);
 
-                InitializeRule(Ops.LeftInsert | Ops.RightInsert, 
-                    Ops.LeftInsertJoinRightInsert, 
+                InitializeRule(
+                    Ops.LeftInsert | Ops.RightInsert,
+                    Ops.LeftInsertJoinRightInsert,
                     Ops.Nothing,
-                    Ops.LeftInsertJoinRightInsert, 
+                    Ops.LeftInsertJoinRightInsert,
                     Ops.Nothing);
 
-                InitializeRule(Ops.LeftUpdate, 
-                    Ops.LeftInsertUnknownExtended, 
+                InitializeRule(
+                    Ops.LeftUpdate,
+                    Ops.LeftInsertUnknownExtended,
                     Ops.LeftDeleteUnknownExtended,
-                    Ops.LeftInsertUnknownExtended, 
+                    Ops.LeftInsertUnknownExtended,
                     Ops.LeftDeleteUnknownExtended);
 
-                InitializeRule(Ops.RightUpdate, 
-                    Ops.RightInsertUnknownExtended, 
+                InitializeRule(
+                    Ops.RightUpdate,
+                    Ops.RightInsertUnknownExtended,
                     Ops.RightDeleteUnknownExtended,
-                    Ops.RightInsertUnknownExtended, 
+                    Ops.RightInsertUnknownExtended,
                     Ops.RightDeleteUnknownExtended);
 
-                InitializeRule(Ops.LeftUpdate | Ops.RightDelete, 
+                InitializeRule(
+                    Ops.LeftUpdate | Ops.RightDelete,
                     Ops.Unsupported,
-                    Ops.Unsupported, 
-                    Ops.LeftInsertNullModifiedExtended, 
+                    Ops.Unsupported,
+                    Ops.LeftInsertNullModifiedExtended,
                     Ops.LeftDeleteJoinRightDelete);
 
-                InitializeRule(Ops.LeftUpdate | Ops.RightInsert, 
-                    Ops.Unsupported, 
+                InitializeRule(
+                    Ops.LeftUpdate | Ops.RightInsert,
                     Ops.Unsupported,
-                    Ops.LeftInsertJoinRightInsert, 
+                    Ops.Unsupported,
+                    Ops.LeftInsertJoinRightInsert,
                     Ops.LeftDeleteNullModifiedExtended);
 
-                InitializeRule(Ops.LeftDelete, 
-                    Ops.Unsupported, 
+                InitializeRule(
+                    Ops.LeftDelete,
                     Ops.Unsupported,
-                    Ops.Nothing, 
+                    Ops.Unsupported,
+                    Ops.Nothing,
                     Ops.LeftDeleteNullPreserveExtended);
 
-                InitializeRule(Ops.LeftInsert, 
-                    Ops.Unsupported, 
+                InitializeRule(
+                    Ops.LeftInsert,
                     Ops.Unsupported,
-                    Ops.LeftInsertNullModifiedExtended, 
+                    Ops.Unsupported,
+                    Ops.LeftInsertNullModifiedExtended,
                     Ops.Nothing);
 
-                InitializeRule(Ops.RightDelete, 
-                    Ops.Unsupported, 
+                InitializeRule(
+                    Ops.RightDelete,
                     Ops.Unsupported,
-                    Ops.LeftUnknownNullModifiedExtended, 
+                    Ops.Unsupported,
+                    Ops.LeftUnknownNullModifiedExtended,
                     Ops.RightDeleteUnknownExtended);
 
-                InitializeRule(Ops.RightInsert, 
-                    Ops.Unsupported, 
+                InitializeRule(
+                    Ops.RightInsert,
                     Ops.Unsupported,
-                    Ops.RightInsertUnknownExtended, 
+                    Ops.Unsupported,
+                    Ops.RightInsertUnknownExtended,
                     Ops.LeftUnknownNullModifiedExtended);
 
-                InitializeRule(Ops.LeftDelete | Ops.RightUpdate, 
-                    Ops.Unsupported, 
-                    Ops.Unsupported,
-                    Ops.Unsupported, 
-                    Ops.Unsupported);
-
-                InitializeRule(Ops.LeftDelete | Ops.RightInsert,
+                InitializeRule(
+                    Ops.LeftDelete | Ops.RightUpdate,
                     Ops.Unsupported,
                     Ops.Unsupported,
                     Ops.Unsupported,
                     Ops.Unsupported);
 
-                InitializeRule(Ops.LeftInsert | Ops.RightUpdate,
+                InitializeRule(
+                    Ops.LeftDelete | Ops.RightInsert,
                     Ops.Unsupported,
                     Ops.Unsupported,
                     Ops.Unsupported,
                     Ops.Unsupported);
 
-                InitializeRule(Ops.LeftInsert | Ops.RightDelete,
+                InitializeRule(
+                    Ops.LeftInsert | Ops.RightUpdate,
                     Ops.Unsupported,
                     Ops.Unsupported,
                     Ops.Unsupported,
                     Ops.Unsupported);
+
+                InitializeRule(
+                    Ops.LeftInsert | Ops.RightDelete,
+                    Ops.Unsupported,
+                    Ops.Unsupported,
+                    Ops.Unsupported,
+                    Ops.Unsupported);
+
                 #endregion
             }
 
@@ -230,12 +256,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 // Ensure that the right hand side of each rule contains no requests for specific row values
                 // that are not also in the input.
-                Debug.Assert((((joinInsert | joinDelete | lojInsert | lojDelete) &
-                    (Ops.LeftInsert | Ops.LeftDelete | Ops.RightInsert | Ops.RightDelete)) & (~input)) == Ops.Nothing,
+                Debug.Assert(
+                    (((joinInsert | joinDelete | lojInsert | lojDelete) &
+                      (Ops.LeftInsert | Ops.LeftDelete | Ops.RightInsert | Ops.RightDelete)) & (~input)) == Ops.Nothing,
                     "(Update/JoinPropagator/Initialization) Rules can't use unavailable data");
 
                 // An unknown value can appear in both the delete and insert rule result or neither.
-                Debug.Assert(((joinInsert ^ joinDelete) & (Ops.LeftUnknown | Ops.RightUnknown)) == Ops.Nothing &&
+                Debug.Assert(
+                    ((joinInsert ^ joinDelete) & (Ops.LeftUnknown | Ops.RightUnknown)) == Ops.Nothing &&
                     ((lojInsert ^ lojDelete) & (Ops.LeftUnknown | Ops.RightUnknown)) == Ops.Nothing,
                     "(Update/JoinPropagator/Initialization) Unknowns must appear in both delete and insert rules " +
                     "or in neither (in other words, for updates only)");
@@ -248,13 +276,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             internal ChangeNode Propagate()
             {
                 // Construct an empty change node for the result
-                ChangeNode result = Propagator.BuildChangeNode(m_joinExpression);
+                var result = BuildChangeNode(m_joinExpression);
 
                 // Gather all keys involved in the join
-                JoinDictionary leftDeletes = ProcessKeys(m_left.Deleted, m_leftKeySelectors);
-                JoinDictionary leftInserts = ProcessKeys(m_left.Inserted, m_leftKeySelectors);
-                JoinDictionary rightDeletes = ProcessKeys(m_right.Deleted, m_rightKeySelectors);
-                JoinDictionary rightInserts = ProcessKeys(m_right.Inserted, m_rightKeySelectors);
+                var leftDeletes = ProcessKeys(m_left.Deleted, m_leftKeySelectors);
+                var leftInserts = ProcessKeys(m_left.Inserted, m_leftKeySelectors);
+                var rightDeletes = ProcessKeys(m_right.Deleted, m_rightKeySelectors);
+                var rightInserts = ProcessKeys(m_right.Inserted, m_rightKeySelectors);
                 var allKeys = leftDeletes.Keys
                     .Concat(leftInserts.Keys)
                     .Concat(rightDeletes.Keys)
@@ -262,13 +290,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     .Distinct(m_parent.UpdateTranslator.KeyComparer);
 
                 // Perform propagation one key at a time
-                foreach (CompositeKey key in allKeys)
+                foreach (var key in allKeys)
                 {
                     Propagate(key, result, leftDeletes, leftInserts, rightDeletes, rightInserts);
                 }
 
                 // Construct a new placeholder (see ChangeNode.Placeholder) for the join result node.
-                result.Placeholder = CreateResultTuple(Tuple.Create((CompositeKey)null, m_left.Placeholder), Tuple.Create((CompositeKey)null, m_right.Placeholder), result);
+                result.Placeholder = CreateResultTuple(
+                    Tuple.Create((CompositeKey)null, m_left.Placeholder), Tuple.Create((CompositeKey)null, m_right.Placeholder), result);
 
                 return result;
             }
@@ -278,7 +307,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// </summary>
             /// <param name="key">Key.</param>
             /// <param name="result">Resulting changes are added to this result.</param>
-            private void Propagate(CompositeKey key, ChangeNode result, JoinDictionary leftDeletes, JoinDictionary leftInserts,
+            private void Propagate(
+                CompositeKey key, ChangeNode result, JoinDictionary leftDeletes, JoinDictionary leftInserts,
                 JoinDictionary rightDeletes, JoinDictionary rightInserts)
             {
                 // Retrieve changes associates with this join key
@@ -287,18 +317,31 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 Tuple<CompositeKey, PropagatorResult> rightInsert = null;
                 Tuple<CompositeKey, PropagatorResult> rightDelete = null;
 
-                Ops input = Ops.Nothing;
+                var input = Ops.Nothing;
 
-                if (leftInserts.TryGetValue(key, out leftInsert)) { input |= Ops.LeftInsert; }
-                if (leftDeletes.TryGetValue(key, out leftDelete)) { input |= Ops.LeftDelete; }
-                if (rightInserts.TryGetValue(key, out rightInsert)) { input |= Ops.RightInsert; } 
-                if (rightDeletes.TryGetValue(key, out rightDelete)) { input |= Ops.RightDelete; }
+                if (leftInserts.TryGetValue(key, out leftInsert))
+                {
+                    input |= Ops.LeftInsert;
+                }
+                if (leftDeletes.TryGetValue(key, out leftDelete))
+                {
+                    input |= Ops.LeftDelete;
+                }
+                if (rightInserts.TryGetValue(key, out rightInsert))
+                {
+                    input |= Ops.RightInsert;
+                }
+                if (rightDeletes.TryGetValue(key, out rightDelete))
+                {
+                    input |= Ops.RightDelete;
+                }
 
                 // Get propagation rules for the changes
-                Ops insertRule = m_insertRules[input];
-                Ops deleteRule = m_deleteRules[input];
+                var insertRule = m_insertRules[input];
+                var deleteRule = m_deleteRules[input];
 
-                if (Ops.Unsupported == insertRule || Ops.Unsupported == deleteRule)
+                if (Ops.Unsupported == insertRule
+                    || Ops.Unsupported == deleteRule)
                 {
                     // If no propagation rules are defined, it suggests an invalid workload (e.g.
                     // a required entity or relationship is missing). In general, such exceptions
@@ -307,15 +350,17 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     // implied a stronger constraint that cannot be checked by RelationshipConstraintValidator.
 
                     // First gather state entries contributing to the problem
-                    List<IEntityStateEntry> stateEntries = new List<IEntityStateEntry>();
+                    var stateEntries = new List<IEntityStateEntry>();
                     Action<Tuple<CompositeKey, PropagatorResult>> addStateEntries = (r) =>
-                        {
-                            if (r != null)
-                            {
-                                stateEntries.AddRange(SourceInterpreter.GetAllStateEntries(r.Item2, this.m_parent.m_updateTranslator,
-                                    this.m_parent.m_table));
-                            }
-                        };
+                                                                                        {
+                                                                                            if (r != null)
+                                                                                            {
+                                                                                                stateEntries.AddRange(
+                                                                                                    SourceInterpreter.GetAllStateEntries(
+                                                                                                        r.Item2, m_parent.m_updateTranslator,
+                                                                                                        m_parent.m_table));
+                                                                                            }
+                                                                                        };
                     addStateEntries(leftInsert);
                     addStateEntries(leftDelete);
                     addStateEntries(rightInsert);
@@ -337,38 +382,40 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 {
                     leftDelete = Tuple.Create(key, LeftPlaceholder(key, PopulateMode.Unknown));
                 }
-                if (0 != (Ops.RightNullModified & insertRule)) 
+                if (0 != (Ops.RightNullModified & insertRule))
                 {
                     rightInsert = Tuple.Create(key, RightPlaceholder(key, PopulateMode.NullModified));
                 }
-                else if (0 != (Ops.RightNullPreserve & insertRule)) 
+                else if (0 != (Ops.RightNullPreserve & insertRule))
                 {
                     rightInsert = Tuple.Create(key, RightPlaceholder(key, PopulateMode.NullPreserve));
                 }
-                else if (0 != (Ops.RightUnknown & insertRule)) 
-                { 
-                    rightInsert = Tuple.Create(key, RightPlaceholder(key, PopulateMode.Unknown)); 
+                else if (0 != (Ops.RightUnknown & insertRule))
+                {
+                    rightInsert = Tuple.Create(key, RightPlaceholder(key, PopulateMode.Unknown));
                 }
 
-                if (0 != (Ops.RightNullModified & deleteRule)) 
+                if (0 != (Ops.RightNullModified & deleteRule))
                 {
                     rightDelete = Tuple.Create(key, RightPlaceholder(key, PopulateMode.NullModified));
                 }
-                else if (0 != (Ops.RightNullPreserve & deleteRule)) 
+                else if (0 != (Ops.RightNullPreserve & deleteRule))
                 {
                     rightDelete = Tuple.Create(key, RightPlaceholder(key, PopulateMode.NullPreserve));
                 }
-                else if (0 != (Ops.RightUnknown & deleteRule)) 
+                else if (0 != (Ops.RightUnknown & deleteRule))
                 {
                     rightDelete = Tuple.Create(key, RightPlaceholder(key, PopulateMode.Unknown));
                 }
 
                 // Populate elements in join output
-                if (null != leftInsert && null != rightInsert)
+                if (null != leftInsert
+                    && null != rightInsert)
                 {
                     result.Inserted.Add(CreateResultTuple(leftInsert, rightInsert, result));
                 }
-                if (null != leftDelete && null != rightDelete)
+                if (null != leftDelete
+                    && null != rightDelete)
                 {
                     result.Deleted.Add(CreateResultTuple(leftDelete, rightDelete, result));
                 }
@@ -383,33 +430,35 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <param name="rightKey">Key used to join right element.</param>
             /// <param name="result">Result change node; used for type information.</param>
             /// <returns>Result of joining the input rows.</returns>
-            private PropagatorResult CreateResultTuple(Tuple<CompositeKey, PropagatorResult> left, Tuple<CompositeKey, PropagatorResult> right, ChangeNode result)
+            private PropagatorResult CreateResultTuple(
+                Tuple<CompositeKey, PropagatorResult> left, Tuple<CompositeKey, PropagatorResult> right, ChangeNode result)
             {
                 // using ref compare to avoid triggering value based
-                CompositeKey leftKey = left.Item1;
-                CompositeKey rightKey = right.Item1;
+                var leftKey = left.Item1;
+                var rightKey = right.Item1;
                 Dictionary<PropagatorResult, PropagatorResult> map = null;
-                if (!object.ReferenceEquals(null, leftKey) &&
-                    !object.ReferenceEquals(null, rightKey) &&
-                    !object.ReferenceEquals(leftKey, rightKey))
+                if (!ReferenceEquals(null, leftKey) &&
+                    !ReferenceEquals(null, rightKey)
+                    &&
+                    !ReferenceEquals(leftKey, rightKey))
                 {
                     // Merge key values from the left and the right (since they're equal, there's a possibility we'll
                     // project values only from the left or the right hand side and lose important context.)
-                    CompositeKey mergedKey = leftKey.Merge(m_parent.m_updateTranslator.KeyManager, rightKey);
+                    var mergedKey = leftKey.Merge(m_parent.m_updateTranslator.KeyManager, rightKey);
                     // create a dictionary so that we can replace key values with merged key values (carrying context
                     // from both sides)
                     map = new Dictionary<PropagatorResult, PropagatorResult>();
-                    for (int i = 0; i < leftKey.KeyComponents.Length; i++)
+                    for (var i = 0; i < leftKey.KeyComponents.Length; i++)
                     {
                         map[leftKey.KeyComponents[i]] = mergedKey.KeyComponents[i];
                         map[rightKey.KeyComponents[i]] = mergedKey.KeyComponents[i];
                     }
                 }
 
-                PropagatorResult[] joinRecordValues = new PropagatorResult[2];
+                var joinRecordValues = new PropagatorResult[2];
                 joinRecordValues[0] = left.Item2;
                 joinRecordValues[1] = right.Item2;
-                PropagatorResult join = PropagatorResult.CreateStructuralValue(joinRecordValues, (StructuralType)result.ElementType.EdmType, false);
+                var join = PropagatorResult.CreateStructuralValue(joinRecordValues, (StructuralType)result.ElementType.EdmType, false);
 
                 // replace with merged key values as appropriate
                 if (null != map)
@@ -443,7 +492,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns></returns>
             private PropagatorResult RightPlaceholder(CompositeKey key, PopulateMode mode)
             {
-
                 return PlaceholderPopulator.Populate(m_right.Placeholder, key, m_rightPlaceholderKey, mode, m_parent.UpdateTranslator);
             }
 
@@ -461,9 +509,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 // state manager).
                 var hash = new JoinDictionary(m_parent.UpdateTranslator.KeyComparer);
 
-                foreach (PropagatorResult instance in instances)
+                foreach (var instance in instances)
                 {
-                    CompositeKey key = ExtractKey(instance, keySelectors, m_parent);
+                    var key = ExtractKey(instance, keySelectors, m_parent);
                     hash[key] = Tuple.Create(key, instance);
                 }
 
@@ -471,26 +519,29 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             // extracts key values from row expression
-            private static CompositeKey ExtractKey(PropagatorResult change, ReadOnlyCollection<DbExpression> keySelectors, Propagator parent)
+            private static CompositeKey ExtractKey(
+                PropagatorResult change, ReadOnlyCollection<DbExpression> keySelectors, Propagator parent)
             {
                 Debug.Assert(null != change && null != keySelectors && null != parent);
-                PropagatorResult[] keyValues = new PropagatorResult[keySelectors.Count];
-                for (int i = 0; i < keySelectors.Count; i++)
+                var keyValues = new PropagatorResult[keySelectors.Count];
+                for (var i = 0; i < keySelectors.Count; i++)
                 {
-                    PropagatorResult constant = Evaluator.Evaluate(keySelectors[i], change, parent);
+                    var constant = Evaluator.Evaluate(keySelectors[i], change, parent);
                     keyValues[i] = constant;
                 }
                 return new CompositeKey(keyValues);
             }
+
             #endregion
 
             #region Nested types
+
             /// <summary>
             /// Flags indicating which change elements are available (0-4) and propagation
             /// rules (0, 5-512)
             /// </summary>
             [Flags]
-            enum Ops : uint
+            private enum Ops : uint
             {
                 Nothing = 0,
                 LeftInsert = 1,
@@ -504,7 +555,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 LeftUpdate = LeftInsert | LeftDelete,
                 RightUpdate = RightInsert | RightDelete,
                 Unsupported = 4096,
+
                 #region Propagation rule descriptions
+
                 LeftInsertJoinRightInsert = LeftInsert | RightInsert,
                 LeftDeleteJoinRightDelete = LeftDelete | RightDelete,
                 LeftInsertNullModifiedExtended = LeftInsert | RightNullModified,
@@ -517,8 +570,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 LeftUnknownNullPreserveExtended = LeftUnknown | RightNullPreserve,
                 RightInsertUnknownExtended = LeftUnknown | RightInsert,
                 RightDeleteUnknownExtended = LeftUnknown | RightDelete,
+
                 #endregion
             }
+
             #endregion
         }
     }

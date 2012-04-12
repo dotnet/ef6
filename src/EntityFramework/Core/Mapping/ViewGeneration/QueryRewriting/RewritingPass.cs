@@ -1,13 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-
-namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
+﻿namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     // Goal: use the next view to get rewritingSoFar to be closer to the goal
-    internal class RewritingPass<T_Tile> where T_Tile : class
+    internal class RewritingPass<T_Tile>
+        where T_Tile : class
     {
         // region that rewriting needs to cover
         private readonly T_Tile m_toFill;
@@ -25,9 +23,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             m_qp = qp;
         }
 
-        public static bool RewriteQuery(T_Tile toFill, T_Tile toAvoid, out T_Tile rewriting, List<T_Tile> views, RewritingProcessor<T_Tile> qp)
+        public static bool RewriteQuery(
+            T_Tile toFill, T_Tile toAvoid, out T_Tile rewriting, List<T_Tile> views, RewritingProcessor<T_Tile> qp)
         {
-            RewritingPass<T_Tile> rewritingPass = new RewritingPass<T_Tile>(toFill, toAvoid, views, qp);
+            var rewritingPass = new RewritingPass<T_Tile>(toFill, toAvoid, views, qp);
             if (rewritingPass.RewriteQuery(out rewriting))
             {
                 RewritingSimplifier<T_Tile>.TrySimplifyUnionRewriting(ref rewriting, toFill, toAvoid, qp);
@@ -36,24 +35,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             return false;
         }
 
-        private static bool RewriteQueryInternal(T_Tile toFill, T_Tile toAvoid, out T_Tile rewriting, List<T_Tile> views, HashSet<T_Tile> recentlyUsedViews, RewritingProcessor<T_Tile> qp)
+        private static bool RewriteQueryInternal(
+            T_Tile toFill, T_Tile toAvoid, out T_Tile rewriting, List<T_Tile> views,
+            RewritingProcessor<T_Tile> qp)
         {
-            if (qp.REORDER_VIEWS && recentlyUsedViews.Count > 0)
-            {
-                // move recently used views toward the end
-                List<T_Tile> reorderedViews = new List<T_Tile>();
-                foreach (T_Tile view in views)
-                {
-                    if (false == recentlyUsedViews.Contains(view))
-                    {
-                        reorderedViews.Add(view);
-                    }
-                }
-                reorderedViews.AddRange(recentlyUsedViews);
-                views = reorderedViews;
-            }
-
-            RewritingPass<T_Tile> rewritingPass = new RewritingPass<T_Tile>(toFill, toAvoid, views, qp);
+            var rewritingPass = new RewritingPass<T_Tile>(toFill, toAvoid, views, qp);
             return rewritingPass.RewriteQuery(out rewriting);
         }
 
@@ -70,12 +56,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
                 }
             }
 
-            bool hasExtraTuples = !m_qp.IsDisjointFrom(rewritingSoFar, m_toAvoid);
+            var hasExtraTuples = !m_qp.IsDisjointFrom(rewritingSoFar, m_toAvoid);
 
             // try to cut off extra tuples using joins
             if (hasExtraTuples)
             {
-                foreach (T_Tile view in AvailableViews)
+                foreach (var view in AvailableViews)
                 {
                     if (TryJoin(view, ref rewritingSoFar))
                     {
@@ -88,7 +74,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             // try to cut off extra tuples using anti-semijoins
             if (hasExtraTuples)
             {
-                foreach (T_Tile view in AvailableViews)
+                foreach (var view in AvailableViews)
                 {
                     if (TryAntiSemiJoin(view, ref rewritingSoFar))
                     {
@@ -107,11 +93,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             RewritingSimplifier<T_Tile>.TrySimplifyJoinRewriting(ref rewritingSoFar, m_toAvoid, m_usedViews, m_qp);
 
             // find rewriting for missing tuples, if any
-            T_Tile missingTuples = m_qp.AntiSemiJoin(m_toFill, rewritingSoFar);
+            var missingTuples = m_qp.AntiSemiJoin(m_toFill, rewritingSoFar);
             if (!m_qp.IsEmpty(missingTuples))
             {
                 T_Tile rewritingForMissingTuples;
-                if (false == RewritingPass<T_Tile>.RewriteQueryInternal(missingTuples, m_toAvoid, out rewritingForMissingTuples, m_views, new HashSet<T_Tile>(m_usedViews.Keys), m_qp))
+                if (false
+                    ==
+                    RewriteQueryInternal(
+                        missingTuples, m_toAvoid, out rewritingForMissingTuples, m_views, m_qp))
                 {
                     rewriting = rewritingForMissingTuples;
                     return false; // failure
@@ -139,7 +128,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         // returns true if no more extra tuples are left
         private bool TryJoin(T_Tile view, ref T_Tile rewriting)
         {
-            T_Tile newRewriting = m_qp.Join(rewriting, view);
+            var newRewriting = m_qp.Join(rewriting, view);
             if (!m_qp.IsEmpty(newRewriting))
             {
                 m_usedViews[view] = TileOpKind.Join;
@@ -152,7 +141,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         // returns true if no more extra tuples are left
         private bool TryAntiSemiJoin(T_Tile view, ref T_Tile rewriting)
         {
-            T_Tile newRewriting = m_qp.AntiSemiJoin(rewriting, view);
+            var newRewriting = m_qp.AntiSemiJoin(rewriting, view);
             if (!m_qp.IsEmpty(newRewriting))
             {
                 m_usedViews[view] = TileOpKind.AntiSemiJoin;
@@ -168,7 +157,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         {
             // intersect all views in which m_toFill is contained
             rewritingSoFar = null;
-            foreach (T_Tile view in AvailableViews)
+            foreach (var view in AvailableViews)
             {
                 if (m_qp.IsContainedIn(m_toFill, view)) // query <= view
                 {
@@ -179,7 +168,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
                     }
                     else
                     {
-                        T_Tile newRewriting = m_qp.Join(rewritingSoFar, view);
+                        var newRewriting = m_qp.Join(rewritingSoFar, view);
                         if (!m_qp.IsContainedIn(rewritingSoFar, newRewriting))
                         {
                             rewritingSoFar = newRewriting;
@@ -199,7 +188,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             // subtract all views that are disjoint from m_toFill
             if (rewritingSoFar != null)
             {
-                foreach (T_Tile view in AvailableViews)
+                foreach (var view in AvailableViews)
                 {
                     if (m_qp.IsDisjointFrom(m_toFill, view)) // query ^ view = {}
                     {
@@ -221,7 +210,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         private bool FindContributingView(out T_Tile rewriting)
         {
             // find some view that helps reduce toFill
-            foreach (T_Tile view in AvailableViews)
+            foreach (var view in AvailableViews)
             {
                 if (false == m_qp.IsDisjointFrom(view, m_toFill))
                 {

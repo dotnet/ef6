@@ -1,16 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Data.SqlTypes;
-using System.Diagnostics;
-using System.Globalization;
-using System.Xml;
-using System.Data.Entity.Core.Metadata.Edm;
-
-
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Globalization;
+    using System.Text.RegularExpressions;
+
     /// <summary>
     /// This is an adapter to make PrimitiveTypeKindData fit in the Schema Object Model tree
     /// </summary>
@@ -19,10 +12,12 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         internal const string DateTimeFormat = @"yyyy-MM-dd HH\:mm\:ss.fffZ";
         internal const string TimeFormat = @"HH\:mm\:ss.fffffffZ";
         internal const string DateTimeOffsetFormat = @"yyyy-MM-dd HH\:mm\:ss.fffffffz";
-        private readonly static System.Text.RegularExpressions.Regex _BinaryValueValidator = new System.Text.RegularExpressions.Regex("^0[xX][0-9a-fA-F]+$", System.Text.RegularExpressions.RegexOptions.Compiled);
-        private readonly static System.Text.RegularExpressions.Regex _GuidValueValidator = new System.Text.RegularExpressions.Regex("[0-9a-fA-F]{8,8}(-[0-9a-fA-F]{4,4}){3,3}-[0-9a-fA-F]{12,12}", System.Text.RegularExpressions.RegexOptions.Compiled);        
-        
-        private PrimitiveType _primitiveType = null;
+        private static readonly Regex _BinaryValueValidator = new Regex("^0[xX][0-9a-fA-F]+$", RegexOptions.Compiled);
+
+        private static readonly Regex _GuidValueValidator = new Regex(
+            "[0-9a-fA-F]{8,8}(-[0-9a-fA-F]{4,4}){3,3}-[0-9a-fA-F]{12,12}", RegexOptions.Compiled);
+
+        private readonly PrimitiveType _primitiveType;
 
         /// <summary>
         /// Construct an internal (not from schema) CDM scalar type
@@ -31,7 +26,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="typeName">the naem of the type</param>
         /// <param name="primitiveType">the PrimitiveTypeKind of the type</param>
         internal ScalarType(Schema parentElement, string typeName, PrimitiveType primitiveType)
-        : base(parentElement)
+            : base(parentElement)
         {
             Name = typeName;
             _primitiveType = primitiveType;
@@ -45,7 +40,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns>true if the value is a valid value, false otherwise</returns>
         public bool TryParse(string text, out object value)
         {
-            switch(_primitiveType.PrimitiveTypeKind)
+            switch (_primitiveType.PrimitiveTypeKind)
             {
                 case PrimitiveTypeKind.Binary:
                     return TryParseBinary(text, out value);
@@ -87,10 +82,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         public PrimitiveTypeKind TypeKind
         {
-            get
-            {
-                return _primitiveType.PrimitiveTypeKind;
-            }
+            get { return _primitiveType.PrimitiveTypeKind; }
         }
 
         /// <summary>
@@ -98,10 +90,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         public PrimitiveType Type
         {
-            get
-            {
-                return _primitiveType;
-            }
+            get { return _primitiveType; }
         }
 
         private static bool TryParseBoolean(string text, out object value)
@@ -115,11 +104,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             value = temp;
             return true;
         }
-        
+
         private static bool TryParseByte(string text, out object value)
         {
             Byte temp;
-            if (!Byte.TryParse(text, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out temp))
+            if (!Byte.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out temp))
             {
                 value = null;
                 return false;
@@ -131,7 +120,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private static bool TryParseSByte(string text, out object value)
         {
             SByte temp;
-            if (!SByte.TryParse(text, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out temp))
+            if (!SByte.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out temp))
             {
                 value = null;
                 return false;
@@ -139,11 +128,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             value = temp;
             return true;
         }
-        
+
         private static bool TryParseInt16(string text, out object value)
         {
             Int16 temp;
-            if (!Int16.TryParse(text, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out temp))
+            if (!Int16.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out temp))
             {
                 value = null;
                 return false;
@@ -151,11 +140,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             value = temp;
             return true;
         }
-        
+
         private static bool TryParseInt32(string text, out object value)
         {
             Int32 temp;
-            if (!Int32.TryParse(text, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out temp))
+            if (!Int32.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out temp))
             {
                 value = null;
                 return false;
@@ -163,11 +152,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             value = temp;
             return true;
         }
-        
+
         private static bool TryParseInt64(string text, out object value)
         {
             Int64 temp;
-            if (!Int64.TryParse(text, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out temp))
+            if (!Int64.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out temp))
             {
                 value = null;
                 return false;
@@ -179,7 +168,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private static bool TryParseDouble(string text, out object value)
         {
             Double temp;
-            if (!Double.TryParse(text, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out temp))
+            if (!Double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out temp))
             {
                 value = null;
                 return false;
@@ -187,11 +176,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             value = temp;
             return true;
         }
-        
+
         private static bool TryParseDecimal(string text, out object value)
         {
             Decimal temp;
-            if (!Decimal.TryParse(text, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out temp))
+            if (!Decimal.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out temp))
             {
                 value = null;
                 return false;
@@ -203,7 +192,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private static bool TryParseDateTime(string text, out object value)
         {
             DateTime temp;
-            if (!DateTime.TryParseExact(text, DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out temp))
+            if (
+                !DateTime.TryParseExact(
+                    text, DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
+                    out temp))
             {
                 value = null;
                 return false;
@@ -223,7 +215,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private static bool TryParseTime(string text, out object value)
         {
             DateTime temp;
-            if (!DateTime.TryParseExact(text, TimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal | DateTimeStyles.NoCurrentDateDefault, out temp))
+            if (
+                !DateTime.TryParseExact(
+                    text, TimeFormat, CultureInfo.InvariantCulture,
+                    DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal | DateTimeStyles.NoCurrentDateDefault, out temp))
             {
                 value = null;
                 return false;
@@ -243,8 +238,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             value = temp;
             return true;
         }
-
-
 
         private static bool TryParseGuid(string text, out object value)
         {
@@ -273,7 +266,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             }
 
             // strip off the 0x
-            string binaryPart = text.Substring(2);
+            var binaryPart = text.Substring(2);
 
             value = ConvertToByteArray(binaryPart);
 
@@ -282,8 +275,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         internal static byte[] ConvertToByteArray(string text)
         {
-            int inc = 2;
-            int numBytes = (text.Length) / 2;
+            var inc = 2;
+            var numBytes = (text.Length) / 2;
 
             // adjust for case where we have 1F7 instead of 01F7
             if (text.Length % 2 == 1)
@@ -292,18 +285,18 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 numBytes++;
             }
 
-            byte[] bytes = new byte[numBytes];
+            var bytes = new byte[numBytes];
             for (int index = 0, iByte = 0; index < text.Length; index += inc, inc = 2, ++iByte)
             {
-                bytes[iByte] = byte.Parse(text.Substring(index, inc), System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture);
+                bytes[iByte] = byte.Parse(text.Substring(index, inc), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
             }
             return bytes;
         }
-        
+
         private static bool TryParseSingle(string text, out object value)
         {
             Single temp;
-            if (!Single.TryParse(text, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out temp))
+            if (!Single.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out temp))
             {
                 value = null;
                 return false;
@@ -311,6 +304,5 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             value = temp;
             return true;
         }
-
     }
 }

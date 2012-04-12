@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Security;
-using System.Security.Permissions;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Objects.DataClasses;
-using System.Collections;
-
-namespace System.Data.Entity.Core.Objects.Internal
+﻿namespace System.Data.Entity.Core.Objects.Internal
 {
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+
     /// <summary>
     /// Defines and injects behavior into proxy class Type definitions
     /// to allow navigation properties to lazily load their references or collection elements.
@@ -40,17 +30,19 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// Expression tree that encapsulates lazy loading behavior for the supplied member,
         /// or null if the expression tree could not be constructed.
         /// </returns>
-        internal static Func<TProxy, TItem, bool> GetInterceptorDelegate<TProxy, TItem>(EdmMember member, Func<object, object> getEntityWrapperDelegate) 
+        internal static Func<TProxy, TItem, bool> GetInterceptorDelegate<TProxy, TItem>(
+            EdmMember member, Func<object, object> getEntityWrapperDelegate)
             where TProxy : class
-            where TItem : class 
+            where TItem : class
         {
             Func<TProxy, TItem, bool> interceptorDelegate = (proxy, item) => true;
 
             Debug.Assert(member.BuiltInTypeKind == BuiltInTypeKind.NavigationProperty, "member should represent a navigation property");
-            if (member.BuiltInTypeKind == BuiltInTypeKind.NavigationProperty)
+            if (member.BuiltInTypeKind
+                == BuiltInTypeKind.NavigationProperty)
             {
-                NavigationProperty navProperty = (NavigationProperty)member;
-                RelationshipMultiplicity multiplicity = navProperty.ToEndMember.RelationshipMultiplicity;
+                var navProperty = (NavigationProperty)member;
+                var multiplicity = navProperty.ToEndMember.RelationshipMultiplicity;
 
                 // Given the proxy and item parameters, construct one of the following expressions:
                 //
@@ -65,19 +57,21 @@ namespace System.Data.Entity.Core.Objects.Internal
 
                 if (multiplicity == RelationshipMultiplicity.Many)
                 {
-                    interceptorDelegate = (proxy, item) => LoadProperty<TItem>(item,
-                                                                               navProperty.RelationshipType.Identity,
-                                                                               navProperty.ToEndMember.Identity,
-                                                                               false,
-                                                                               getEntityWrapperDelegate(proxy));
+                    interceptorDelegate = (proxy, item) => LoadProperty(
+                        item,
+                        navProperty.RelationshipType.Identity,
+                        navProperty.ToEndMember.Identity,
+                        false,
+                        getEntityWrapperDelegate(proxy));
                 }
                 else
                 {
-                    interceptorDelegate = (proxy, item) => LoadProperty<TItem>(item,
-                                                                               navProperty.RelationshipType.Identity,
-                                                                               navProperty.ToEndMember.Identity,
-                                                                               true,
-                                                                               getEntityWrapperDelegate(proxy));
+                    interceptorDelegate = (proxy, item) => LoadProperty(
+                        item,
+                        navProperty.RelationshipType.Identity,
+                        navProperty.ToEndMember.Identity,
+                        true,
+                        getEntityWrapperDelegate(proxy));
                 }
             }
 
@@ -107,23 +101,25 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             Debug.Assert(ospaceEntityType.DataSpace == DataSpace.OSpace, "ospaceEntityType.DataSpace must be OSpace");
 
-            bool isCandidate = false;
+            var isCandidate = false;
 
-            if (member.BuiltInTypeKind == BuiltInTypeKind.NavigationProperty)
+            if (member.BuiltInTypeKind
+                == BuiltInTypeKind.NavigationProperty)
             {
-                NavigationProperty navProperty = (NavigationProperty)member;
-                RelationshipMultiplicity multiplicity = navProperty.ToEndMember.RelationshipMultiplicity;
+                var navProperty = (NavigationProperty)member;
+                var multiplicity = navProperty.ToEndMember.RelationshipMultiplicity;
 
-                PropertyInfo propertyInfo = EntityUtil.GetTopProperty(ospaceEntityType.ClrType, member.Name);
+                var propertyInfo = EntityUtil.GetTopProperty(ospaceEntityType.ClrType, member.Name);
                 Debug.Assert(propertyInfo != null, "Should have found lazy loading property");
-                Type propertyValueType = propertyInfo.PropertyType;
+                var propertyValueType = propertyInfo.PropertyType;
 
                 if (multiplicity == RelationshipMultiplicity.Many)
                 {
                     Type elementType;
                     isCandidate = EntityUtil.TryGetICollectionElementType(propertyValueType, out elementType);
                 }
-                else if (multiplicity == RelationshipMultiplicity.One || multiplicity == RelationshipMultiplicity.ZeroOrOne)
+                else if (multiplicity == RelationshipMultiplicity.One
+                         || multiplicity == RelationshipMultiplicity.ZeroOrOne)
                 {
                     // This is an EntityReference property.
                     isCandidate = true;
@@ -145,7 +141,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// True if the value instance was mutated and can be returned
         /// False if the class should refetch the value because the instance has changed
         /// </returns>
-        private static bool LoadProperty<TItem>(TItem propertyValue, string relationshipName, string targetRoleName, bool mustBeNull, object wrapperObject) where TItem : class
+        private static bool LoadProperty<TItem>(
+            TItem propertyValue, string relationshipName, string targetRoleName, bool mustBeNull, object wrapperObject) where TItem : class
         {
             // Only attempt to load collection if:
             //
@@ -155,15 +152,17 @@ namespace System.Data.Entity.Core.Objects.Internal
             // 4. The EntityCollection is not already loaded.
 
             Debug.Assert(wrapperObject == null || wrapperObject is IEntityWrapper, "wrapperObject must be an IEntityWrapper");
-            IEntityWrapper wrapper = (IEntityWrapper)wrapperObject; // We want an exception if the cast fails.
+            var wrapper = (IEntityWrapper)wrapperObject; // We want an exception if the cast fails.
 
-            if (wrapper != null && wrapper.Context != null)
+            if (wrapper != null
+                && wrapper.Context != null)
             {
-                RelationshipManager relationshipManager = wrapper.RelationshipManager;
+                var relationshipManager = wrapper.RelationshipManager;
                 Debug.Assert(relationshipManager != null, "relationshipManager should be non-null");
-                if (relationshipManager != null && (!mustBeNull || propertyValue == null))
+                if (relationshipManager != null
+                    && (!mustBeNull || propertyValue == null))
                 {
-                    RelatedEnd relatedEnd = relationshipManager.GetRelatedEndInternal(relationshipName, targetRoleName);
+                    var relatedEnd = relationshipManager.GetRelatedEndInternal(relationshipName, targetRoleName);
                     relatedEnd.DeferredLoad();
                 }
             }

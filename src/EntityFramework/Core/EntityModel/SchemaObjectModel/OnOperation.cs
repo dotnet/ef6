@@ -1,7 +1,7 @@
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Xml;
 
@@ -10,15 +10,13 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     /// </summary>
     internal sealed class OnOperation : SchemaElement
     {
-        private Operation _Operation;
-        private Action _Action;
         /// <summary>
         /// 
         /// </summary>
         /// <param name="parentElement"></param>
         /// <param name="operation"></param>
         public OnOperation(RelationshipEnd parentElement, Operation operation)
-        : base(parentElement)
+            : base(parentElement)
         {
             Operation = operation;
         }
@@ -26,32 +24,12 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <summary>
         /// The operation
         /// </summary>
-        public Operation Operation
-        {
-            get
-            {
-                return _Operation;
-            }
-            private set
-            {
-                _Operation = value;
-            }
-        }
+        public Operation Operation { get; private set; }
 
         /// <summary>
         /// The action
         /// </summary>
-        public Action Action
-        {
-            get
-            {
-                return _Action;
-            }
-            private set
-            {
-                _Action = value;
-            }
-        }
+        public Action Action { get; private set; }
 
         protected override bool ProhibitAttribute(string namespaceUri, string localName)
         {
@@ -60,12 +38,12 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 return true;
             }
 
-            if (namespaceUri == null && localName == XmlConstants.Name)
+            if (namespaceUri == null
+                && localName == XmlConstants.Name)
             {
                 return false;
             }
             return false;
-
         }
 
         protected override bool HandleAttribute(XmlReader reader)
@@ -91,9 +69,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(reader != null);
 
-            RelationshipKind relationshipKind = ParentElement.ParentElement.RelationshipKind;
+            var relationshipKind = ParentElement.ParentElement.RelationshipKind;
 
-            switch ( reader.Value.Trim() )
+            switch (reader.Value.Trim())
             {
                 case "None":
                     Action = Action.None;
@@ -102,20 +80,19 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                     Action = Action.Cascade;
                     break;
                 default:
-                    AddError( ErrorCode.InvalidAction, EdmSchemaErrorSeverity.Error, reader, System.Data.Entity.Resources.Strings.InvalidAction(reader.Value, ParentElement.FQName ) );
+                    AddError(
+                        ErrorCode.InvalidAction, EdmSchemaErrorSeverity.Error, reader,
+                        Strings.InvalidAction(reader.Value, ParentElement.FQName));
                     break;
             }
         }
 
         /// <summary>
         /// the parent element.
-            /// </summary>
+        /// </summary>
         private new RelationshipEnd ParentElement
         {
-            get
-            {
-                return (RelationshipEnd)base.ParentElement;
-            }
+            get { return (RelationshipEnd)base.ParentElement; }
         }
     }
 }

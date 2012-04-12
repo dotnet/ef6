@@ -1,11 +1,7 @@
-﻿using System;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Text;
-
-namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
+﻿namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 {
-    using System.Diagnostics.CodeAnalysis;
+    using System.Collections.Generic;
+    using System.Diagnostics;
 
     internal abstract class TileProcessor<T_Tile>
     {
@@ -19,12 +15,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         internal abstract TileOpKind GetOpKind(T_Tile tile);
     }
 
-    internal class RewritingProcessor<T_Tile> : TileProcessor<T_Tile> where T_Tile : class
+    internal class RewritingProcessor<T_Tile> : TileProcessor<T_Tile>
+        where T_Tile : class
     {
-        public double PERMUTE_FRACTION = 0.0;
-        public int MIN_PERMUTATIONS = 0;
-        public int MAX_PERMUTATIONS = 0;
-        public bool REORDER_VIEWS = false;
+        public const double PermuteFraction = 0.0;
+        public const int MinPermutations = 0;
+        public const int MaxPermutations = 0;
 
         private int m_numSATChecks;
         private int m_numIntersection;
@@ -33,7 +29,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 
         private int m_numErrors;
 
-        private TileProcessor<T_Tile> m_tileProcessor;
+        private readonly TileProcessor<T_Tile> m_tileProcessor;
 
         public RewritingProcessor(TileProcessor<T_Tile> tileProcessor)
         {
@@ -82,14 +78,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 
         internal bool IsContainedIn(T_Tile a, T_Tile b)
         {
-            T_Tile difference = AntiSemiJoin(a, b);
+            var difference = AntiSemiJoin(a, b);
             return IsEmpty(difference);
         }
 
         internal bool IsEquivalentTo(T_Tile a, T_Tile b)
         {
-            bool aInB = IsContainedIn(a, b);
-            bool bInA = IsContainedIn(b, a);
+            var aInB = IsContainedIn(a, b);
+            var bInA = IsContainedIn(b, a);
             return aInB && bInA;
         }
 
@@ -122,10 +118,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 
         public int CountOperators(T_Tile query)
         {
-            int count = 0;
+            var count = 0;
             if (query != null)
             {
-                if (GetOpKind(query) != TileOpKind.Named)
+                if (GetOpKind(query)
+                    != TileOpKind.Named)
                 {
                     count++;
                     count += CountOperators(GetArg1(query));
@@ -137,7 +134,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 
         public int CountViews(T_Tile query)
         {
-            HashSet<T_Tile> views = new HashSet<T_Tile>();
+            var views = new HashSet<T_Tile>();
             GatherViews(query, views);
             return views.Count;
         }
@@ -146,7 +143,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         {
             if (rewriting != null)
             {
-                if (GetOpKind(rewriting) == TileOpKind.Named)
+                if (GetOpKind(rewriting)
+                    == TileOpKind.Named)
                 {
                     views.Add(rewriting);
                 }
@@ -160,8 +158,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 
         public static IEnumerable<T> AllButOne<T>(IEnumerable<T> list, int toSkipPosition)
         {
-            int valuePosition = 0;
-            foreach (T value in list)
+            var valuePosition = 0;
+            foreach (var value in list)
             {
                 if (valuePosition++ != toSkipPosition)
                 {
@@ -173,7 +171,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         public static IEnumerable<T> Concat<T>(T value, IEnumerable<T> rest)
         {
             yield return value;
-            foreach (T restValue in rest)
+            foreach (var restValue in rest)
             {
                 yield return restValue;
             }
@@ -182,13 +180,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         public static IEnumerable<IEnumerable<T>> Permute<T>(IEnumerable<T> list)
         {
             IEnumerable<T> rest = null;
-            int valuePosition = 0;
-            foreach (T value in list)
+            var valuePosition = 0;
+            foreach (var value in list)
             {
-                rest = AllButOne<T>(list, valuePosition++);
-                foreach (IEnumerable<T> restPermutation in Permute<T>(rest))
+                rest = AllButOne(list, valuePosition++);
+                foreach (var restPermutation in Permute(rest))
                 {
-                    yield return Concat<T>(value, restPermutation);
+                    yield return Concat(value, restPermutation);
                 }
             }
             if (rest == null)
@@ -197,14 +195,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             }
         }
 
-        static Random rnd = new Random(1507);
+        private static Random rnd = new Random(1507);
+
         public static List<T> RandomPermutation<T>(IEnumerable<T> input)
         {
-            List<T> output = new List<T>(input);
-            for (int i = 0; i < output.Count; i++)
+            var output = new List<T>(input);
+            for (var i = 0; i < output.Count; i++)
             {
-                int j = rnd.Next(output.Count);
-                T tmp = output[i];
+                var j = rnd.Next(output.Count);
+                var tmp = output[i];
                 output[i] = output[j];
                 output[j] = tmp;
             }
@@ -213,9 +212,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 
         public static IEnumerable<T> Reverse<T>(IEnumerable<T> input, HashSet<T> filter)
         {
-            List<T> output = new List<T>(input);
+            var output = new List<T>(input);
             output.Reverse();
-            foreach (T t in output)
+            foreach (var t in output)
             {
                 if (filter.Contains(t))
                 {
@@ -228,14 +227,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         {
             if (RewriteQueryOnce(toFill, toAvoid, views, out rewriting))
             {
-                HashSet<T_Tile> usedViews = new HashSet<T_Tile>();
+                var usedViews = new HashSet<T_Tile>();
                 GatherViews(rewriting, usedViews);
-                int opCount = CountOperators(rewriting);
+                var opCount = CountOperators(rewriting);
 
                 // try several permutations of views, pick one with fewer operators
                 T_Tile newRewriting;
-                int permuteTries = 0;
-                int numPermutations = Math.Min(MAX_PERMUTATIONS, Math.Max(MIN_PERMUTATIONS, (int)(usedViews.Count * PERMUTE_FRACTION)));
+                var permuteTries = 0;
+                var numPermutations = Math.Min(MaxPermutations, Math.Max(MinPermutations, (int)(usedViews.Count * PermuteFraction)));
                 while (permuteTries++ < numPermutations)
                 {
                     IEnumerable<T_Tile> permutedViews;
@@ -247,15 +246,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
                     {
                         permutedViews = RandomPermutation(usedViews); // Tradeoff: views vs. usedViews!
                     }
-                    bool succeeded = RewriteQueryOnce(toFill, toAvoid, permutedViews, out newRewriting);
+                    var succeeded = RewriteQueryOnce(toFill, toAvoid, permutedViews, out newRewriting);
                     Debug.Assert(succeeded);
-                    int newOpCount = CountOperators(newRewriting);
+                    var newOpCount = CountOperators(newRewriting);
                     if (newOpCount < opCount)
                     {
                         opCount = newOpCount;
                         rewriting = newRewriting;
                     }
-                    HashSet<T_Tile> newUsedViews = new HashSet<T_Tile>();
+                    var newUsedViews = new HashSet<T_Tile>();
                     GatherViews(newRewriting, newUsedViews);
                     usedViews = newUsedViews; // can only be fewer!
                 }
@@ -266,7 +265,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 
         public bool RewriteQueryOnce(T_Tile toFill, T_Tile toAvoid, IEnumerable<T_Tile> views, out T_Tile rewriting)
         {
-            List<T_Tile> viewList = new List<T_Tile>(views);
+            var viewList = new List<T_Tile>(views);
             return RewritingPass<T_Tile>.RewriteQuery(toFill, toAvoid, out rewriting, viewList, this);
         }
     }

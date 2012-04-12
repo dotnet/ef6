@@ -1,8 +1,6 @@
 ﻿namespace System.Data.Entity.Core.Spatial.Internal
 {
-    using System;
-    using System.Data.Entity.Core;
-    using System.Data;
+    using System.Data.Entity.Resources;
 
     internal static class SpatialExceptions
     {
@@ -15,7 +13,7 @@
         internal static Exception ProviderValueNotCompatibleWithSpatialServices()
         {
             // TODO_SPATIAL: Remove this dependency on System.Data.Entity when moving to the System.Data.Spatial assembly
-            return EntityUtil.Argument(System.Data.Entity.Resources.Strings.Spatial_ProviderValueNotCompatibleWithSpatialServices, "providerValue");
+            return EntityUtil.Argument(Strings.Spatial_ProviderValueNotCompatibleWithSpatialServices, "providerValue");
         }
 
         /// <summary>
@@ -25,7 +23,7 @@
         internal static InvalidOperationException WellKnownValueSerializationPropertyNotDirectlySettable()
         {
             // TODO_SPATIAL: Remove this dependency on System.Data.Entity when moving to the System.Data.Spatial assembly
-            return EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.Spatial_WellKnownValueSerializationPropertyNotDirectlySettable);
+            return EntityUtil.InvalidOperation(Strings.Spatial_WellKnownValueSerializationPropertyNotDirectlySettable);
         }
 
         #region Geography-specific exceptions
@@ -33,25 +31,25 @@
         internal static Exception GeographyValueNotCompatibleWithSpatialServices(string argumentName)
         {
             // TODO_SPATIAL: Remove this dependency when moving to the System.Data.Spatial assembly
-            return EntityUtil.Argument(System.Data.Entity.Resources.Strings.Spatial_GeographyValueNotCompatibleWithSpatialServices, argumentName);
+            return EntityUtil.Argument(Strings.Spatial_GeographyValueNotCompatibleWithSpatialServices, argumentName);
         }
 
         internal static Exception WellKnownGeographyValueNotValid(string argumentName)
         {
             // TODO_SPATIAL: Remove this dependency on System.Data.Entity when moving to System.Data.Spatial
-            return EntityUtil.Argument(System.Data.Entity.Resources.Strings.Spatial_WellKnownGeographyValueNotValid, argumentName);
+            return EntityUtil.Argument(Strings.Spatial_WellKnownGeographyValueNotValid, argumentName);
         }
 
         internal static Exception CouldNotCreateWellKnownGeographyValueNoSrid(string argumentName)
         {
             // TODO_SPATIAL: Remove this dependency when moving to the System.Data.Spatial assembly
-            return EntityUtil.Argument(System.Data.Entity.Resources.Strings.SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoSrid, argumentName);
+            return EntityUtil.Argument(Strings.SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoSrid, argumentName);
         }
 
         internal static Exception CouldNotCreateWellKnownGeographyValueNoWkbOrWkt(string argumentName)
         {
             // TODO_SPATIAL: Remove this dependency when moving to the System.Data.Spatial assembly
-            return EntityUtil.Argument(System.Data.Entity.Resources.Strings.SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoWkbOrWkt, argumentName);
+            return EntityUtil.Argument(Strings.SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoWkbOrWkt, argumentName);
         }
 
         #endregion
@@ -61,36 +59,37 @@
         internal static Exception GeometryValueNotCompatibleWithSpatialServices(string argumentName)
         {
             // TODO_SPATIAL: Remove this dependency when moving to the System.Data.Spatial assembly
-            return EntityUtil.Argument(System.Data.Entity.Resources.Strings.Spatial_GeometryValueNotCompatibleWithSpatialServices, argumentName);
+            return EntityUtil.Argument(Strings.Spatial_GeometryValueNotCompatibleWithSpatialServices, argumentName);
         }
 
         internal static Exception WellKnownGeometryValueNotValid(string argumentName)
         {
             // TODO_SPATIAL: Remove this dependency on System.Data.Entity when moving to System.Data.Spatial
-            throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.Spatial_WellKnownGeometryValueNotValid, argumentName);
+            throw EntityUtil.Argument(Strings.Spatial_WellKnownGeometryValueNotValid, argumentName);
         }
 
         internal static Exception CouldNotCreateWellKnownGeometryValueNoSrid(String argumentName)
         {
             // TODO_SPATIAL: Remove this dependency when moving to the System.Data.Spatial assembly
-            return EntityUtil.Argument(System.Data.Entity.Resources.Strings.SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoSrid, argumentName);
+            return EntityUtil.Argument(Strings.SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoSrid, argumentName);
         }
 
         internal static Exception CouldNotCreateWellKnownGeometryValueNoWkbOrWkt(String argumentName)
         {
             // TODO_SPATIAL: Remove this dependency when moving to the System.Data.Spatial assembly
-            return EntityUtil.Argument(System.Data.Entity.Resources.Strings.SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoWkbOrWkt, argumentName);
+            return EntityUtil.Argument(Strings.SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoWkbOrWkt, argumentName);
         }
-               
+
         #endregion
 
         #region SqlSpatialServices-specific Exceptions
 
         internal static Exception SqlSpatialServices_ProviderValueNotSqlType(Type requiredType)
         {
-            return EntityUtil.Argument(System.Data.Entity.Resources.Strings.SqlSpatialServices_ProviderValueNotSqlType(requiredType.AssemblyQualifiedName), "providerValue");
+            return EntityUtil.Argument(
+                Strings.SqlSpatialServices_ProviderValueNotSqlType(requiredType.AssemblyQualifiedName), "providerValue");
         }
-                
+
         #endregion
     }
 }

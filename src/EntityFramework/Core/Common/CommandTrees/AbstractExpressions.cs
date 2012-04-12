@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data.Entity.Core.Spatial;
-using System.Diagnostics;
-using System.Globalization;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees.Internal;
-
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
+    using System.ComponentModel;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Spatial;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
 
     /// <summary>
     /// Describes the different "kinds" (classes) of expressions
@@ -86,7 +83,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// Equality
         /// </summary>
         Equals = 13,
-        
+
         /// <summary>
         /// Set subtraction
         /// </summary>
@@ -106,7 +103,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// Invocation of a stand-alone function
         /// </summary>
         Function = 17,
-                
+
         /// <summary>
         /// Greater than.
         /// </summary>
@@ -116,12 +113,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// Greater than or equal.
         /// </summary>
         GreaterThanOrEquals = 19,
-        
+
         /// <summary>
         /// Grouping.
         /// </summary>
         GroupBy = 20,
-        
+
         /// <summary>
         /// Inner join
         /// </summary>
@@ -131,7 +128,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// Set intersection.
         /// </summary>
         Intersect = 22,
-        
+
         /// <summary>
         /// Empty set determination.
         /// </summary>
@@ -141,12 +138,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// Null determination.
         /// </summary>
         IsNull = 24,
-        
+
         /// <summary>
         /// Type comparison (specified Type or Subtype).
         /// </summary>
         IsOf = 25,
-        
+
         /// <summary>
         /// Type comparison (specified Type only).
         /// </summary>
@@ -166,7 +163,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// Less than.
         /// </summary>
         LessThan = 28,
-        
+
         /// <summary>
         /// Less than or equal.
         /// </summary>
@@ -183,9 +180,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         Limit = 31,
 
 #if METHOD_EXPRESSION
-        /// <summary>
-        /// Invocation of a static or instance method.
-        /// </summary>
+    /// <summary>
+    /// Invocation of a static or instance method.
+    /// </summary>
         Method,
 #endif
 
@@ -208,12 +205,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// Instance, row, and set construction.
         /// </summary>
         NewInstance = 35,
-        
+
         /// <summary>
         /// Logical Not.
         /// </summary>
         Not = 36,
-        
+
         /// <summary>
         /// Inequality.
         /// </summary>
@@ -223,7 +220,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// Null.
         /// </summary>
         Null = 38,
-        
+
         /// <summary>
         /// Set members by type (or subtype).
         /// </summary>
@@ -238,7 +235,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// Logical Or.
         /// </summary>
         Or = 41,
-        
+
         /// <summary>
         /// Outer apply.
         /// </summary>
@@ -248,17 +245,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// A reference to a parameter.
         /// </summary>
         ParameterReference = 43,
-        
+
         /// <summary>
         /// Addition.
         /// </summary>
         Plus = 44,
-        
+
         /// <summary>
         /// Projection.
         /// </summary>
         Project = 45,
-        
+
         /// <summary>
         /// Retrieval of a static or instance property.
         /// </summary>
@@ -298,12 +295,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// Type conversion.
         /// </summary>
         Treat = 53,
-        
+
         /// <summary>
         /// Negation.
         /// </summary>
-        UnaryMinus = 54,  
-        
+        UnaryMinus = 54,
+
         /// <summary>
         /// Set union (with duplicates).
         /// </summary>
@@ -328,25 +325,36 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             CheckExpressionKind(kind);
             _kind = kind;
 
-            Debug.Assert(type != null, string.Format(CultureInfo.InvariantCulture, "{0}.Type is null in DbExpression constructor", this.GetType().Name));
+            Debug.Assert(
+                type != null, string.Format(CultureInfo.InvariantCulture, "{0}.Type is null in DbExpression constructor", GetType().Name));
             if (!TypeSemantics.IsNullable(type))
             {
-                type = type.ShallowCopy(new FacetValues { Nullable = true });
-            }            
+                type = type.ShallowCopy(
+                    new FacetValues
+                        {
+                            Nullable = true
+                        });
+            }
             Debug.Assert(type.IsReadOnly, "Editable type metadata specified for DbExpression.Type");
-            this._type = type;
+            _type = type;
         }
 
         /// <summary>
         /// Gets the type metadata for the result type of the expression.
         /// </summary>
-        public TypeUsage ResultType { get { return _type; } }
-       
+        public TypeUsage ResultType
+        {
+            get { return _type; }
+        }
+
         /// <summary>
         /// Gets the kind of the expression, which indicates the operation of this expression.
         /// </summary>
-        public DbExpressionKind ExpressionKind { get { return _kind; } }
-                
+        public DbExpressionKind ExpressionKind
+        {
+            get { return _kind; }
+        }
+
         /// <summary>
         /// The visitor pattern interface method for expression visitors that do not produce a result value.
         /// </summary>
@@ -395,14 +403,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             if (null == value)
             {
-                return ExpressionBuilder.DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Binary);
+                return DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Binary);
             }
-            return ExpressionBuilder.DbExpressionBuilder.Constant(value);
+            return DbExpressionBuilder.Constant(value);
         }
 
         public static implicit operator DbExpression(byte[] value)
         {
-            return DbExpression.FromBinary(value);
+            return FromBinary(value);
         }
 
         /// <summary>
@@ -414,14 +422,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             if (!value.HasValue)
             {
-                return ExpressionBuilder.DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Boolean);
+                return DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Boolean);
             }
-            return (value.Value ? ExpressionBuilder.DbExpressionBuilder.True : ExpressionBuilder.DbExpressionBuilder.False);
+            return (value.Value ? DbExpressionBuilder.True : DbExpressionBuilder.False);
         }
 
         public static implicit operator DbExpression(bool? value)
         {
-            return DbExpression.FromBoolean(value);
+            return FromBoolean(value);
         }
 
         /// <summary>
@@ -433,14 +441,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             if (!value.HasValue)
             {
-                return ExpressionBuilder.DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Byte);
+                return DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Byte);
             }
-            return ExpressionBuilder.DbExpressionBuilder.Constant(value.Value);
+            return DbExpressionBuilder.Constant(value.Value);
         }
 
         public static implicit operator DbExpression(byte? value)
         {
-            return DbExpression.FromByte(value);
+            return FromByte(value);
         }
 
         /// <summary>
@@ -452,14 +460,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             if (!value.HasValue)
             {
-                return ExpressionBuilder.DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.DateTime);
+                return DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.DateTime);
             }
-            return ExpressionBuilder.DbExpressionBuilder.Constant(value.Value);
+            return DbExpressionBuilder.Constant(value.Value);
         }
 
         public static implicit operator DbExpression(DateTime? value)
         {
-            return DbExpression.FromDateTime(value);
+            return FromDateTime(value);
         }
 
         /// <summary>
@@ -471,14 +479,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             if (!value.HasValue)
             {
-                return ExpressionBuilder.DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.DateTimeOffset);
+                return DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.DateTimeOffset);
             }
-            return ExpressionBuilder.DbExpressionBuilder.Constant(value.Value);
+            return DbExpressionBuilder.Constant(value.Value);
         }
 
         public static implicit operator DbExpression(DateTimeOffset? value)
         {
-            return DbExpression.FromDateTimeOffset(value);
+            return FromDateTimeOffset(value);
         }
 
         /// <summary>
@@ -490,14 +498,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             if (!value.HasValue)
             {
-                return ExpressionBuilder.DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Decimal);
+                return DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Decimal);
             }
-            return ExpressionBuilder.DbExpressionBuilder.Constant(value.Value);
+            return DbExpressionBuilder.Constant(value.Value);
         }
 
         public static implicit operator DbExpression(decimal? value)
         {
-            return DbExpression.FromDecimal(value);
+            return FromDecimal(value);
         }
 
         /// <summary>
@@ -509,14 +517,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             if (!value.HasValue)
             {
-                return ExpressionBuilder.DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Double);
+                return DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Double);
             }
-            return ExpressionBuilder.DbExpressionBuilder.Constant(value.Value);
+            return DbExpressionBuilder.Constant(value.Value);
         }
 
         public static implicit operator DbExpression(double? value)
         {
-            return DbExpression.FromDouble(value);
+            return FromDouble(value);
         }
 
         /// <summary>
@@ -528,14 +536,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             if (value == null)
             {
-                return ExpressionBuilder.DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Geography);
+                return DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Geography);
             }
-            return ExpressionBuilder.DbExpressionBuilder.Constant(value);
+            return DbExpressionBuilder.Constant(value);
         }
 
         public static implicit operator DbExpression(DbGeography value)
         {
-            return DbExpression.FromGeography(value);
+            return FromGeography(value);
         }
 
         /// <summary>
@@ -547,14 +555,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             if (value == null)
             {
-                return ExpressionBuilder.DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Geometry);
+                return DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Geometry);
             }
-            return ExpressionBuilder.DbExpressionBuilder.Constant(value);
+            return DbExpressionBuilder.Constant(value);
         }
 
         public static implicit operator DbExpression(DbGeometry value)
         {
-            return DbExpression.FromGeometry(value);
+            return FromGeometry(value);
         }
 
         /// <summary>
@@ -566,16 +574,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             if (!value.HasValue)
             {
-                return ExpressionBuilder.DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Guid);
+                return DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Guid);
             }
-            return ExpressionBuilder.DbExpressionBuilder.Constant(value.Value);
+            return DbExpressionBuilder.Constant(value.Value);
         }
 
         public static implicit operator DbExpression(Guid? value)
         {
-            return DbExpression.FromGuid(value);
+            return FromGuid(value);
         }
-               
+
         /// <summary>
         /// Creates a <see cref="DbExpression"/> that represents the specified (nullable) Int16 value
         /// </summary>
@@ -585,14 +593,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             if (!value.HasValue)
             {
-                return ExpressionBuilder.DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Int16);
+                return DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Int16);
             }
-            return ExpressionBuilder.DbExpressionBuilder.Constant(value.Value);
+            return DbExpressionBuilder.Constant(value.Value);
         }
 
         public static implicit operator DbExpression(short? value)
         {
-            return DbExpression.FromInt16(value);
+            return FromInt16(value);
         }
 
         /// <summary>
@@ -604,14 +612,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             if (!value.HasValue)
             {
-                return ExpressionBuilder.DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Int32);
+                return DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Int32);
             }
-            return ExpressionBuilder.DbExpressionBuilder.Constant(value.Value);
+            return DbExpressionBuilder.Constant(value.Value);
         }
 
         public static implicit operator DbExpression(int? value)
         {
-            return DbExpression.FromInt32(value);
+            return FromInt32(value);
         }
 
         /// <summary>
@@ -623,14 +631,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             if (!value.HasValue)
             {
-                return ExpressionBuilder.DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Int64);
+                return DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Int64);
             }
-            return ExpressionBuilder.DbExpressionBuilder.Constant(value.Value);
+            return DbExpressionBuilder.Constant(value.Value);
         }
 
         public static implicit operator DbExpression(long? value)
         {
-            return DbExpression.FromInt64(value);
+            return FromInt64(value);
         }
 
         //// TODO: SByte is not CLS-compliant
@@ -657,14 +665,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             if (!value.HasValue)
             {
-                return ExpressionBuilder.DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Single);
+                return DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.Single);
             }
-            return ExpressionBuilder.DbExpressionBuilder.Constant(value.Value);
+            return DbExpressionBuilder.Constant(value.Value);
         }
 
         public static implicit operator DbExpression(float? value)
         {
-            return DbExpression.FromSingle(value);
+            return FromSingle(value);
         }
 
         /// <summary>
@@ -676,18 +684,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             if (null == value)
             {
-                return ExpressionBuilder.DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.String);
+                return DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.String);
             }
-            return ExpressionBuilder.DbExpressionBuilder.Constant(value);
+            return DbExpressionBuilder.Constant(value);
         }
 
         public static implicit operator DbExpression(string value)
         {
-            return DbExpression.FromString(value);
+            return FromString(value);
         }
 
         // TODO: TimeSpan for Time?
-                
+
         #endregion
 
         #region Internal API
@@ -696,7 +704,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             // Add new valid DbExpressionKind values to this method as well as the enum itself.
             // DbExpressionKind is a contiguous enum from All = 0 through View            
-            if ((kind < DbExpressionKind.All) || (DbExpressionKind.Lambda < kind))
+            if ((kind < DbExpressionKind.All)
+                || (DbExpressionKind.Lambda < kind))
             {
                 throw EntityUtil.InvalidEnumerationValue(typeof(DbExpressionKind), (int)kind);
             }
@@ -719,21 +728,27 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             Debug.Assert(left != null, "DbBinaryExpression.Left cannot be null");
             Debug.Assert(right != null, "DbBinaryExpression.Right cannot be null");
 
-            this._left = left;
-            this._right = right;
+            _left = left;
+            _right = right;
         }
 
         /// <summary>
         /// Gets the <see cref="DbExpression"/> that defines the left argument.
         /// </summary>
-        public DbExpression Left { get { return _left; } }
+        public DbExpression Left
+        {
+            get { return _left; }
+        }
 
         /// <summary>
         /// Gets the <see cref="DbExpression"/> that defines the right argument.
         /// </summary>
-        public DbExpression Right { get { return _right; } }
+        public DbExpression Right
+        {
+            get { return _right; }
+        }
     }
-        
+
     /// <summary>
     /// The abstract base type for expressions that accept a single expression operand
     /// </summary>
@@ -746,12 +761,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             Debug.Assert(argument != null, "DbUnaryExpression.Argument cannot be null");
 
-            this._argument = argument;
+            _argument = argument;
         }
 
         /// <summary>
         /// Gets the <see cref="DbExpression"/> that defines the argument.
         /// </summary>
-        public DbExpression Argument { get { return this._argument; } }
+        public DbExpression Argument
+        {
+            get { return _argument; }
+        }
     }
 }

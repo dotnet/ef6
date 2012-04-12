@@ -1,14 +1,14 @@
-using System.Collections.Generic;
-using System.Data.Entity.Core.Mapping;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Objects.ELinq;
-using System.Diagnostics;
-using System.Linq;
-using System.Security.Cryptography;
-
 namespace System.Data.Entity.Core.Common.Utils
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects.ELinq;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using System.Reflection;
+    using System.Security.Cryptography;
 
     // Helper functions to get metadata information
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -18,10 +18,11 @@ namespace System.Data.Entity.Core.Common.Utils
         /// Returns an element type of the collection returned by the function import.
         /// Returns false, if element type cannot be determined.
         /// </summary>
-        internal static bool TryGetFunctionImportReturnType<T>(EdmFunction functionImport, int resultSetIndex, out T returnType) where T : EdmType
+        internal static bool TryGetFunctionImportReturnType<T>(EdmFunction functionImport, int resultSetIndex, out T returnType)
+            where T : EdmType
         {
             T resultType;
-            if (TryGetWrappedReturnEdmTypeFromFunctionImport<T>(functionImport, resultSetIndex, out resultType))
+            if (TryGetWrappedReturnEdmTypeFromFunctionImport(functionImport, resultSetIndex, out resultType))
             {
                 if (typeof(EntityType).Equals(typeof(T)) && resultType is EntityType
                     || typeof(ComplexType).Equals(typeof(T)) && resultType is ComplexType
@@ -36,7 +37,8 @@ namespace System.Data.Entity.Core.Common.Utils
             return false;
         }
 
-        private static bool TryGetWrappedReturnEdmTypeFromFunctionImport<T>(EdmFunction functionImport, int resultSetIndex, out T resultType) where T : EdmType
+        private static bool TryGetWrappedReturnEdmTypeFromFunctionImport<T>(
+            EdmFunction functionImport, int resultSetIndex, out T resultType) where T : EdmType
         {
             resultType = null;
 
@@ -52,9 +54,10 @@ namespace System.Data.Entity.Core.Common.Utils
         /// <summary>
         /// effects: determines if the given function import returns collection type, and if so returns the type
         /// </summary>
-        internal static bool TryGetFunctionImportReturnCollectionType(EdmFunction functionImport, int resultSetIndex, out CollectionType collectionType)
+        internal static bool TryGetFunctionImportReturnCollectionType(
+            EdmFunction functionImport, int resultSetIndex, out CollectionType collectionType)
         {
-            FunctionParameter returnParameter = GetReturnParameter(functionImport, resultSetIndex);
+            var returnParameter = GetReturnParameter(functionImport, resultSetIndex);
             if (returnParameter != null
                 && returnParameter.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.CollectionType)
             {
@@ -63,7 +66,6 @@ namespace System.Data.Entity.Core.Common.Utils
             }
             collectionType = null;
             return false;
-
         }
 
         /// <summary>
@@ -72,8 +74,8 @@ namespace System.Data.Entity.Core.Common.Utils
         internal static FunctionParameter GetReturnParameter(EdmFunction functionImport, int resultSetIndex)
         {
             return functionImport.ReturnParameters.Count > resultSetIndex
-                ? functionImport.ReturnParameters[resultSetIndex]
-                : null;
+                       ? functionImport.ReturnParameters[resultSetIndex]
+                       : null;
         }
 
         internal static EdmFunction GetFunctionImport(
@@ -82,7 +84,8 @@ namespace System.Data.Entity.Core.Common.Utils
         {
             // find FunctionImport
 
-            CommandHelper.ParseFunctionImportCommandText(functionName, defaultContainerName,
+            CommandHelper.ParseFunctionImportCommandText(
+                functionName, defaultContainerName,
                 out containerName, out functionImportName);
             return CommandHelper.FindFunctionImport(workspace, containerName, functionImportName);
         }
@@ -90,10 +93,11 @@ namespace System.Data.Entity.Core.Common.Utils
         /// <summary>
         /// Gets the resultSetIndexth result edm type, and ensure that it is consistent with EntityType.
         /// </summary>
-        internal static EdmType GetAndCheckFunctionImportReturnType<TElement>(EdmFunction functionImport, int resultSetIndex, MetadataWorkspace workspace)
+        internal static EdmType GetAndCheckFunctionImportReturnType<TElement>(
+            EdmFunction functionImport, int resultSetIndex, MetadataWorkspace workspace)
         {
             EdmType expectedEdmType;
-            if (!MetadataHelper.TryGetFunctionImportReturnType<EdmType>(functionImport, resultSetIndex, out expectedEdmType))
+            if (!TryGetFunctionImportReturnType(functionImport, resultSetIndex, out expectedEdmType))
             {
                 throw EntityUtil.ExecuteFunctionCalledWithNonReaderFunction(functionImport);
             }
@@ -110,14 +114,16 @@ namespace System.Data.Entity.Core.Common.Utils
             // currently there are only two possible spatial O-space types, but 16 C-space types.   
             // Normalize the C-space type to the base type before we check to see if it matches the O-space type.
             bool isGeographic;
-            EdmType spatialNormalizedEdmType = expectedEdmType;
+            var spatialNormalizedEdmType = expectedEdmType;
             if (Helper.IsSpatialType(expectedEdmType, out isGeographic))
             {
-                spatialNormalizedEdmType = PrimitiveType.GetEdmPrimitiveType(isGeographic ? PrimitiveTypeKind.Geography : PrimitiveTypeKind.Geometry);
+                spatialNormalizedEdmType =
+                    PrimitiveType.GetEdmPrimitiveType(isGeographic ? PrimitiveTypeKind.Geography : PrimitiveTypeKind.Geometry);
             }
 
             EdmType modelEdmType;
-            if (!MetadataHelper.TryDetermineCSpaceModelType<TElement>(workspace, out modelEdmType)||
+            if (!TryDetermineCSpaceModelType<TElement>(workspace, out modelEdmType)
+                ||
                 !modelEdmType.EdmEquals(spatialNormalizedEdmType))
             {
                 throw EntityUtil.ExecuteFunctionTypeMismatch(typeof(TElement), expectedEdmType);
@@ -157,17 +163,17 @@ namespace System.Data.Entity.Core.Common.Utils
         internal static bool TryDetermineCSpaceModelType(Type type, MetadataWorkspace workspace, out EdmType modelEdmType)
         {
             Debug.Assert(null != workspace);
-            Type nonNullabelType = TypeSystem.GetNonNullableType(type);
+            var nonNullabelType = TypeSystem.GetNonNullableType(type);
             // make sure the workspace knows about T
-            workspace.ImplicitLoadAssemblyForType(nonNullabelType, System.Reflection.Assembly.GetCallingAssembly());
-            ObjectItemCollection objectItemCollection = (ObjectItemCollection)workspace.GetItemCollection(DataSpace.OSpace);
+            workspace.ImplicitLoadAssemblyForType(nonNullabelType, Assembly.GetCallingAssembly());
+            var objectItemCollection = (ObjectItemCollection)workspace.GetItemCollection(DataSpace.OSpace);
             EdmType objectEdmType;
-            if (objectItemCollection.TryGetItem<EdmType>(nonNullabelType.FullName, out objectEdmType))
+            if (objectItemCollection.TryGetItem(nonNullabelType.FullName, out objectEdmType))
             {
                 Map map;
                 if (workspace.TryGetMap(objectEdmType, DataSpace.OCSpace, out map))
                 {
-                    ObjectTypeMapping objectMapping = (ObjectTypeMapping)map;
+                    var objectMapping = (ObjectTypeMapping)map;
                     modelEdmType = objectMapping.EdmType;
                     return true;
                 }
@@ -179,7 +185,7 @@ namespace System.Data.Entity.Core.Common.Utils
         // effects: Returns true iff member is present in type.Members
         internal static bool DoesMemberExist(StructuralType type, EdmMember member)
         {
-            foreach (EdmMember child in type.Members)
+            foreach (var child in type.Members)
             {
                 if (child.Equals(member))
                 {
@@ -195,7 +201,7 @@ namespace System.Data.Entity.Core.Common.Utils
         internal static bool IsNonRefSimpleMember(EdmMember member)
         {
             return member.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType ||
-                member.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.EnumType;
+                   member.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.EnumType;
         }
 
         // effects: Returns true if member's type has a discrete domain (i.e. is bolean type)
@@ -212,19 +218,21 @@ namespace System.Data.Entity.Core.Common.Utils
         internal static EntityType GetEntityTypeForEnd(AssociationEndMember end)
         {
             Debug.Assert(null != end);
-            Debug.Assert(end.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.RefType,
+            Debug.Assert(
+                end.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.RefType,
                 "type of association end member must be ref");
-            RefType refType = (RefType)end.TypeUsage.EdmType;
-            EntityTypeBase endType = refType.ElementType;
-            Debug.Assert(endType.BuiltInTypeKind == BuiltInTypeKind.EntityType,
+            var refType = (RefType)end.TypeUsage.EdmType;
+            var endType = refType.ElementType;
+            Debug.Assert(
+                endType.BuiltInTypeKind == BuiltInTypeKind.EntityType,
                 "type of association end reference element must be entity type");
             return (EntityType)endType;
         }
 
-
         // effects: Returns the entity set at the end corresponding to endMember
-        internal static EntitySet GetEntitySetAtEnd(AssociationSet associationSet,
-                                                    AssociationEndMember endMember)
+        internal static EntitySet GetEntitySetAtEnd(
+            AssociationSet associationSet,
+            AssociationEndMember endMember)
         {
             return associationSet.AssociationSetEnds[endMember.Name].EntitySet;
         }
@@ -232,13 +240,13 @@ namespace System.Data.Entity.Core.Common.Utils
         // effects: Returns the AssociationEndMember at the other end of the parent association (first found)
         internal static AssociationEndMember GetOtherAssociationEnd(AssociationEndMember endMember)
         {
-            ReadOnlyMetadataCollection<EdmMember> members = endMember.DeclaringType.Members;
+            var members = endMember.DeclaringType.Members;
             Debug.Assert(members.Count == 2, "only expecting two end members");
 
-            EdmMember otherMember = members[0];
-            if (!Object.ReferenceEquals(endMember, otherMember))
+            var otherMember = members[0];
+            if (!ReferenceEquals(endMember, otherMember))
             {
-                Debug.Assert(Object.ReferenceEquals(endMember, members[1]), "didn't match other member");
+                Debug.Assert(ReferenceEquals(endMember, members[1]), "didn't match other member");
                 return (AssociationEndMember)otherMember;
             }
             return (AssociationEndMember)members[1];
@@ -246,13 +254,15 @@ namespace System.Data.Entity.Core.Common.Utils
 
         // effects: Returns true iff every end other than "endPropery" has a lower
         // multiplicity of at least one
-        internal static bool IsEveryOtherEndAtLeastOne(AssociationSet associationSet,
-                                                       AssociationEndMember member)
+        internal static bool IsEveryOtherEndAtLeastOne(
+            AssociationSet associationSet,
+            AssociationEndMember member)
         {
-            foreach (AssociationSetEnd end in associationSet.AssociationSetEnds)
+            foreach (var end in associationSet.AssociationSetEnds)
             {
-                AssociationEndMember endMember = end.CorrespondingAssociationEndMember;
-                if (endMember.Equals(member) == false &&
+                var endMember = end.CorrespondingAssociationEndMember;
+                if (endMember.Equals(member) == false
+                    &&
                     GetLowerBoundOfMultiplicity(endMember.RelationshipMultiplicity) == 0)
                 {
                     return false;
@@ -269,8 +279,8 @@ namespace System.Data.Entity.Core.Common.Utils
             Debug.Assert(null != type);
 
             // get the opposite end which includes the relevant type information
-            AssociationSetEnd fromEnd = GetOppositeEnd(toEnd);
-            EntityType fromType = GetEntityTypeForEnd(fromEnd.CorrespondingAssociationEndMember);
+            var fromEnd = GetOppositeEnd(toEnd);
+            var fromType = GetEntityTypeForEnd(fromEnd.CorrespondingAssociationEndMember);
             return (fromType.IsAssignableFrom(type));
         }
 
@@ -280,7 +290,7 @@ namespace System.Data.Entity.Core.Common.Utils
         {
             Debug.Assert(null != end);
             // there must be exactly one ("Single") other end that isn't ("Filter") this end
-            AssociationSetEnd otherEnd = end.ParentAssociationSet.AssociationSetEnds.Where(
+            var otherEnd = end.ParentAssociationSet.AssociationSetEnds.Where(
                 e => !e.EdmEquals(end)).Single();
             return otherEnd;
         }
@@ -294,7 +304,8 @@ namespace System.Data.Entity.Core.Common.Utils
             if (function.MetadataProperties.TryGetValue("IsComposableAttribute", false, out isComposableProperty))
             {
                 return (bool)isComposableProperty.Value;
-            } else
+            }
+            else
             {
                 return !function.IsFunctionImport;
             }
@@ -322,20 +333,21 @@ namespace System.Data.Entity.Core.Common.Utils
 
             ItemCollection itemCollection = null;
             workspace.TryGetItemCollection(DataSpace.CSSpace, out itemCollection);
-            StorageEntityContainerMapping containerMapping = MappingMetadataHelper.GetEntityContainerMap((StorageMappingItemCollection)itemCollection, table.EntityContainer);
+            var containerMapping = MappingMetadataHelper.GetEntityContainerMap(
+                (StorageMappingItemCollection)itemCollection, table.EntityContainer);
 
             //find EntitySetMappings where one of the mapping fragment maps some type to the given table
             return containerMapping.EntitySetMaps
-                    .Where(
-                        map => map.TypeMappings.Any(
-                            typeMap => typeMap.MappingFragments.Any(
-                                mappingFrag => mappingFrag.TableSet.EdmEquals(table)
-                            )
-                        )
-                     )
-                     .Select(m => m.Set)
-                     .Cast<EntitySet>()
-                     .Distinct();
+                .Where(
+                    map => map.TypeMappings.Any(
+                        typeMap => typeMap.MappingFragments.Any(
+                            mappingFrag => mappingFrag.TableSet.EdmEquals(table)
+                                       )
+                               )
+                )
+                .Select(m => m.Set)
+                .Cast<EntitySet>()
+                .Distinct();
         }
 
         // effects: Returns this type and its sub types - for refs, gets the
@@ -359,42 +371,41 @@ namespace System.Data.Entity.Core.Common.Utils
             }
 
             // Get entity sub-types
-            foreach (EdmType subType in GetTypeAndSubtypesOf<EntityType>(type, itemCollection, includeAbstractTypes))
+            foreach (var subType in GetTypeAndSubtypesOf<EntityType>(type, itemCollection, includeAbstractTypes))
             {
                 yield return subType;
             }
 
             // Get complex sub-types
-            foreach (EdmType subType in GetTypeAndSubtypesOf<ComplexType>(type, itemCollection, includeAbstractTypes))
+            foreach (var subType in GetTypeAndSubtypesOf<ComplexType>(type, itemCollection, includeAbstractTypes))
             {
                 yield return subType;
             }
         }
 
-        private static IEnumerable<EdmType> GetTypeAndSubtypesOf<T_EdmType>(EdmType type, ItemCollection itemCollection, bool includeAbstractTypes)
+        private static IEnumerable<EdmType> GetTypeAndSubtypesOf<T_EdmType>(
+            EdmType type, ItemCollection itemCollection, bool includeAbstractTypes)
             where T_EdmType : EdmType
         {
             // Get the subtypes of the type from the WorkSpace
-            T_EdmType specificType = type as T_EdmType;
+            var specificType = type as T_EdmType;
             if (specificType != null)
             {
-
                 IEnumerable<T_EdmType> typesInWorkSpace = itemCollection.GetItems<T_EdmType>();
-                foreach (T_EdmType typeInWorkSpace in typesInWorkSpace)
+                foreach (var typeInWorkSpace in typesInWorkSpace)
                 {
-                    if (specificType.Equals(typeInWorkSpace) == false && Helper.IsSubtypeOf(typeInWorkSpace, specificType))
+                    if (specificType.Equals(typeInWorkSpace) == false
+                        && Helper.IsSubtypeOf(typeInWorkSpace, specificType))
                     {
                         if (includeAbstractTypes || !typeInWorkSpace.Abstract)
                         {
                             yield return typeInWorkSpace;
                         }
-
                     }
                 }
             }
             yield break;
         }
-
 
         internal static IEnumerable<EdmType> GetTypeAndParentTypesOf(EdmType type, bool includeAbstractTypes)
         {
@@ -404,7 +415,7 @@ namespace System.Data.Entity.Core.Common.Utils
                 type = ((RefType)type).ElementType;
             }
 
-            EdmType specificType = type;
+            var specificType = type;
             while (specificType != null)
             {
                 if (includeAbstractTypes || !specificType.Abstract)
@@ -412,9 +423,9 @@ namespace System.Data.Entity.Core.Common.Utils
                     yield return specificType;
                 }
 
-                specificType = specificType.BaseType as EntityType; //The cast is guaranteed to work. See use of GetItems<T_EdmType> in GetTypesAndSubTypesOf()
+                specificType = specificType.BaseType as EntityType;
+                    //The cast is guaranteed to work. See use of GetItems<T_EdmType> in GetTypesAndSubTypesOf()
             }
-
         }
 
         /// <summary>
@@ -425,17 +436,17 @@ namespace System.Data.Entity.Core.Common.Utils
         /// <returns>A dictionary of type t -> set of types {s}, such that there is an edge between t and elem(s) iff t and s are related DIRECTLY via inheritance (child or parent type) </returns>
         internal static Dictionary<EntityType, Set<EntityType>> BuildUndirectedGraphOfTypes(EdmItemCollection edmItemCollection)
         {
-            Dictionary<EntityType, Set<EntityType>> graph = new Dictionary<EntityType, Set<EntityType>>();
+            var graph = new Dictionary<EntityType, Set<EntityType>>();
 
             IEnumerable<EntityType> typesInWorkSpace = edmItemCollection.GetItems<EntityType>();
-            foreach (EntityType childType in typesInWorkSpace)
+            foreach (var childType in typesInWorkSpace)
             {
                 if (childType.BaseType == null) //root type
                 {
                     continue;
                 }
 
-                EntityType parentType = childType.BaseType as EntityType;
+                var parentType = childType.BaseType as EntityType;
                 Debug.Assert(parentType != null, "Parent type not Entity Type ??");
 
                 AddDirectedEdgeBetweenEntityTypes(graph, childType, parentType);
@@ -450,7 +461,7 @@ namespace System.Data.Entity.Core.Common.Utils
         /// </summary>
         internal static bool IsParentOf(EntityType a, EntityType b)
         {
-            EntityType parent = b.BaseType as EntityType;
+            var parent = b.BaseType as EntityType;
 
             while (parent != null)
             {
@@ -488,36 +499,36 @@ namespace System.Data.Entity.Core.Common.Utils
             references.Add(b);
         }
 
-
-
         /// <summary>
         /// Checks wither the given AssociationEnd's keys are sufficient for identifying a unique tuple in the AssociationSet.
         /// This is possible because refconstraints make certain Keys redundant. We subtract such redundant key sof "other" ends
         /// and see if what is left is contributed only from the given end's keys.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCode", Justification = "Based on Bug VSTS Pioneer #433188: IsVisibleOutsideAssembly is wrong on generic instantiations.")]
-        internal static bool DoesEndKeySubsumeAssociationSetKey(AssociationSet assocSet, AssociationEndMember thisEnd, HashSet<Pair<EdmMember, EntityType>> associationkeys)
+        [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCode",
+            Justification = "Based on Bug VSTS Pioneer #433188: IsVisibleOutsideAssembly is wrong on generic instantiations.")]
+        internal static bool DoesEndKeySubsumeAssociationSetKey(
+            AssociationSet assocSet, AssociationEndMember thisEnd, HashSet<Pair<EdmMember, EntityType>> associationkeys)
         {
-            AssociationType assocType = assocSet.ElementType;
-            EntityType thisEndsEntityType = (EntityType)((RefType)thisEnd.TypeUsage.EdmType).ElementType;
+            var assocType = assocSet.ElementType;
+            var thisEndsEntityType = (EntityType)((RefType)thisEnd.TypeUsage.EdmType).ElementType;
 
-            HashSet<Pair<EdmMember, EntityType>> thisEndKeys = new HashSet<Pair<EdmMember, EntityType>>(
+            var thisEndKeys = new HashSet<Pair<EdmMember, EntityType>>(
                 thisEndsEntityType.KeyMembers.Select(edmMember => new Pair<EdmMember, EntityType>(edmMember, thisEndsEntityType)));
 
-            foreach (ReferentialConstraint constraint in assocType.ReferentialConstraints)
+            foreach (var constraint in assocType.ReferentialConstraints)
             {
                 IEnumerable<EdmMember> otherEndProperties;
                 EntityType otherEndType;
 
-                if (thisEnd.Equals((AssociationEndMember)constraint.ToRole))
+                if (thisEnd.Equals(constraint.ToRole))
                 {
                     otherEndProperties = Helpers.AsSuperTypeList<EdmProperty, EdmMember>(constraint.FromProperties);
-                    otherEndType = (EntityType)((RefType)((AssociationEndMember)constraint.FromRole).TypeUsage.EdmType).ElementType;
+                    otherEndType = (EntityType)((RefType)(constraint.FromRole).TypeUsage.EdmType).ElementType;
                 }
-                else if (thisEnd.Equals((AssociationEndMember)constraint.FromRole))
+                else if (thisEnd.Equals(constraint.FromRole))
                 {
                     otherEndProperties = Helpers.AsSuperTypeList<EdmProperty, EdmMember>(constraint.ToProperties);
-                    otherEndType = (EntityType)((RefType)((AssociationEndMember)constraint.ToRole).TypeUsage.EdmType).ElementType;
+                    otherEndType = (EntityType)((RefType)(constraint.ToRole).TypeUsage.EdmType).ElementType;
                 }
                 else
                 {
@@ -526,7 +537,7 @@ namespace System.Data.Entity.Core.Common.Utils
                 }
 
                 //Essentially ref constraints is an equality condition, so remove redundant members from entity set key
-                foreach (EdmMember member in otherEndProperties)
+                foreach (var member in otherEndProperties)
                 {
                     associationkeys.Remove(new Pair<EdmMember, EntityType>(member, otherEndType));
                 }
@@ -536,14 +547,14 @@ namespace System.Data.Entity.Core.Common.Utils
             return associationkeys.IsSubsetOf(thisEndKeys);
         }
 
-
         // effects: Returns true if end forms a key in relationshipSet
         internal static bool DoesEndFormKey(AssociationSet associationSet, AssociationEndMember end)
         {
             // Look at all other ends. if their multiplicities are at most 1, return true
             foreach (AssociationEndMember endMember in associationSet.ElementType.Members)
             {
-                if (endMember.Equals(end) == false &&
+                if (endMember.Equals(end) == false
+                    &&
                     endMember.RelationshipMultiplicity == RelationshipMultiplicity.Many) // some other end has multiplicity 0..*
                 {
                     return false;
@@ -557,7 +568,7 @@ namespace System.Data.Entity.Core.Common.Utils
         {
             if (Helper.IsEntitySet(extent))
             {
-                return GetSomeEndForEntitySet(relationshipSet, (EntitySet)extent) != null;
+                return GetSomeEndForEntitySet(relationshipSet, extent) != null;
             }
             return false;
         }
@@ -566,7 +577,7 @@ namespace System.Data.Entity.Core.Common.Utils
         // association set. If no such end exists, return null
         internal static AssociationEndMember GetSomeEndForEntitySet(AssociationSet associationSet, EntitySetBase entitySet)
         {
-            foreach (AssociationSetEnd associationEnd in associationSet.AssociationSetEnds)
+            foreach (var associationEnd in associationSet.AssociationSetEnds)
             {
                 if (associationEnd.EntitySet.Equals(entitySet))
                 {
@@ -576,8 +587,6 @@ namespace System.Data.Entity.Core.Common.Utils
             return null;
         }
 
-
-
         // requires: entitySet1 and entitySet2 belong to the same container
         // effects: Returns the associations that occur between entitySet1
         // and entitySet2. If none is found, returns an empty set
@@ -585,16 +594,18 @@ namespace System.Data.Entity.Core.Common.Utils
         {
             Debug.Assert(entitySet1 != null);
             Debug.Assert(entitySet2 != null);
-            Debug.Assert(entitySet1.EntityContainer == entitySet2.EntityContainer, "EntityContainer must be the same for both the entity sets");
+            Debug.Assert(
+                entitySet1.EntityContainer == entitySet2.EntityContainer, "EntityContainer must be the same for both the entity sets");
 
-            List<AssociationSet> result = new List<AssociationSet>();
+            var result = new List<AssociationSet>();
 
-            foreach (EntitySetBase extent in entitySet1.EntityContainer.BaseEntitySets)
+            foreach (var extent in entitySet1.EntityContainer.BaseEntitySets)
             {
                 if (Helper.IsRelationshipSet(extent))
                 {
-                    AssociationSet assocSet = (AssociationSet)extent;
-                    if (IsExtentAtSomeRelationshipEnd(assocSet, entitySet1) &&
+                    var assocSet = (AssociationSet)extent;
+                    if (IsExtentAtSomeRelationshipEnd(assocSet, entitySet1)
+                        &&
                         IsExtentAtSomeRelationshipEnd(assocSet, entitySet2))
                     {
                         result.Add(assocSet);
@@ -607,24 +618,26 @@ namespace System.Data.Entity.Core.Common.Utils
         // requires: entitySet and associationType
         // effects: Returns the associations that refer to associationType and refer to entitySet in one of its end.
         // If none is found, returns an empty set
-        internal static AssociationSet GetAssociationsForEntitySetAndAssociationType(EntityContainer entityContainer, string entitySetName,
+        internal static AssociationSet GetAssociationsForEntitySetAndAssociationType(
+            EntityContainer entityContainer, string entitySetName,
             AssociationType associationType, string endName, out EntitySet entitySet)
         {
             Debug.Assert(associationType.Members.Contains(endName), "EndName should be a valid name");
             entitySet = null;
             AssociationSet retValue = null;
-            ReadOnlyMetadataCollection<EntitySetBase> baseEntitySets = entityContainer.BaseEntitySets;
-            int count = baseEntitySets.Count;
-            for (int i = 0; i < count; ++i)
+            var baseEntitySets = entityContainer.BaseEntitySets;
+            var count = baseEntitySets.Count;
+            for (var i = 0; i < count; ++i)
             {
-                EntitySetBase extent = baseEntitySets[i];
-                if (Object.ReferenceEquals(extent.ElementType, associationType))
+                var extent = baseEntitySets[i];
+                if (ReferenceEquals(extent.ElementType, associationType))
                 {
-                    AssociationSet assocSet = (AssociationSet)extent;
-                    EntitySet es = assocSet.AssociationSetEnds[endName].EntitySet;
+                    var assocSet = (AssociationSet)extent;
+                    var es = assocSet.AssociationSetEnds[endName].EntitySet;
                     if (es.Name == entitySetName)
                     {
-                        Debug.Assert(retValue == null, "There should be only one AssociationSet, given an assocationtype, end name and entity set");
+                        Debug.Assert(
+                            retValue == null, "There should be only one AssociationSet, given an assocationtype, end name and entity set");
                         retValue = assocSet;
                         entitySet = es;
 #if !DEBUG
@@ -643,13 +656,13 @@ namespace System.Data.Entity.Core.Common.Utils
         {
             Debug.Assert(entitySet != null);
 
-            List<AssociationSet> result = new List<AssociationSet>();
+            var result = new List<AssociationSet>();
 
-            foreach (EntitySetBase extent in entitySet.EntityContainer.BaseEntitySets)
+            foreach (var extent in entitySet.EntityContainer.BaseEntitySets)
             {
                 if (Helper.IsRelationshipSet(extent))
                 {
-                    AssociationSet assocSet = (AssociationSet)extent;
+                    var assocSet = (AssociationSet)extent;
                     if (IsExtentAtSomeRelationshipEnd(assocSet, entitySet))
                     {
                         result.Add(assocSet);
@@ -663,7 +676,7 @@ namespace System.Data.Entity.Core.Common.Utils
         // the type hierarchy or superType and subType are the same
         internal static bool IsSuperTypeOf(EdmType superType, EdmType subType)
         {
-            EdmType currentType = subType;
+            var currentType = subType;
             while (currentType != null)
             {
                 if (currentType.Equals(superType))
@@ -678,9 +691,10 @@ namespace System.Data.Entity.Core.Common.Utils
         // requires: typeUsage wraps a primitive type
         internal static PrimitiveTypeKind GetPrimitiveTypeKind(TypeUsage typeUsage)
         {
-            Debug.Assert(null != typeUsage && null != typeUsage.EdmType && typeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType);
+            Debug.Assert(
+                null != typeUsage && null != typeUsage.EdmType && typeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType);
 
-            PrimitiveType primitiveType = (PrimitiveType)typeUsage.EdmType;
+            var primitiveType = (PrimitiveType)typeUsage.EdmType;
 
             return primitiveType.PrimitiveTypeKind;
         }
@@ -688,7 +702,8 @@ namespace System.Data.Entity.Core.Common.Utils
         // determines whether the given member is a key of an entity set
         internal static bool IsPartOfEntityTypeKey(EdmMember member)
         {
-            if (Helper.IsEntityType(member.DeclaringType) &&
+            if (Helper.IsEntityType(member.DeclaringType)
+                &&
                 Helper.IsEdmProperty(member))
             {
                 return ((EntityType)member.DeclaringType).KeyMembers.Contains(member);
@@ -700,9 +715,10 @@ namespace System.Data.Entity.Core.Common.Utils
         // Given a type usage, returns the element type (unwraps collections) 
         internal static TypeUsage GetElementType(TypeUsage typeUsage)
         {
-            if (BuiltInTypeKind.CollectionType == typeUsage.EdmType.BuiltInTypeKind)
+            if (BuiltInTypeKind.CollectionType
+                == typeUsage.EdmType.BuiltInTypeKind)
             {
-                TypeUsage elementType = ((CollectionType)typeUsage.EdmType).TypeUsage;
+                var elementType = ((CollectionType)typeUsage.EdmType).TypeUsage;
                 // recursively unwrap
                 return GetElementType(elementType);
             }
@@ -711,7 +727,8 @@ namespace System.Data.Entity.Core.Common.Utils
 
         internal static int GetLowerBoundOfMultiplicity(RelationshipMultiplicity multiplicity)
         {
-            if (multiplicity == RelationshipMultiplicity.Many ||
+            if (multiplicity == RelationshipMultiplicity.Many
+                ||
                 multiplicity == RelationshipMultiplicity.ZeroOrOne)
             {
                 return 0;
@@ -724,7 +741,8 @@ namespace System.Data.Entity.Core.Common.Utils
 
         internal static int? GetUpperBoundOfMultiplicity(RelationshipMultiplicity multiplicity)
         {
-            if (multiplicity == RelationshipMultiplicity.One ||
+            if (multiplicity == RelationshipMultiplicity.One
+                ||
                 multiplicity == RelationshipMultiplicity.ZeroOrOne)
             {
                 return 1;
@@ -738,16 +756,15 @@ namespace System.Data.Entity.Core.Common.Utils
         // effects: Returns all the concurrency token members in superType and its subtypes
         internal static Set<EdmMember> GetConcurrencyMembersForTypeHierarchy(EntityTypeBase superType, EdmItemCollection edmItemCollection)
         {
-            Set<EdmMember> result = new Set<EdmMember>();
-            foreach (StructuralType type in GetTypeAndSubtypesOf(superType, edmItemCollection, true /*includeAbstractTypes */ ))
+            var result = new Set<EdmMember>();
+            foreach (StructuralType type in GetTypeAndSubtypesOf(superType, edmItemCollection, true /*includeAbstractTypes */))
             {
-
                 // Go through all the members -- Can call Members instead of AllMembers since we are
                 // running through the whole hierarchy
-                foreach (EdmMember member in type.Members)
+                foreach (var member in type.Members)
                 {
                     // check for the concurrency facet
-                    ConcurrencyMode concurrencyMode = GetConcurrencyMode(member);
+                    var concurrencyMode = GetConcurrencyMode(member);
                     if (concurrencyMode == ConcurrencyMode.Fixed)
                     {
                         result.Add(member);
@@ -767,10 +784,11 @@ namespace System.Data.Entity.Core.Common.Utils
         internal static ConcurrencyMode GetConcurrencyMode(TypeUsage typeUsage)
         {
             Facet concurrencyFacet;
-            if (typeUsage.Facets.TryGetValue(EdmProviderManifest.ConcurrencyModeFacetName, false, out concurrencyFacet) &&
+            if (typeUsage.Facets.TryGetValue(EdmProviderManifest.ConcurrencyModeFacetName, false, out concurrencyFacet)
+                &&
                 concurrencyFacet.Value != null)
             {
-                ConcurrencyMode concurrencyMode = (ConcurrencyMode)concurrencyFacet.Value;
+                var concurrencyMode = (ConcurrencyMode)concurrencyFacet.Value;
                 return concurrencyMode;
             }
             return ConcurrencyMode.None;
@@ -780,10 +798,11 @@ namespace System.Data.Entity.Core.Common.Utils
         internal static StoreGeneratedPattern GetStoreGeneratedPattern(EdmMember member)
         {
             Facet storeGeneratedFacet;
-            if (member.TypeUsage.Facets.TryGetValue(EdmProviderManifest.StoreGeneratedPatternFacetName, false, out storeGeneratedFacet) &&
+            if (member.TypeUsage.Facets.TryGetValue(EdmProviderManifest.StoreGeneratedPatternFacetName, false, out storeGeneratedFacet)
+                &&
                 storeGeneratedFacet.Value != null)
             {
-                StoreGeneratedPattern pattern = (StoreGeneratedPattern)storeGeneratedFacet.Value;
+                var pattern = (StoreGeneratedPattern)storeGeneratedFacet.Value;
                 return pattern;
             }
             return StoreGeneratedPattern.None;
@@ -796,11 +815,12 @@ namespace System.Data.Entity.Core.Common.Utils
         /// <returns></returns>
         internal static bool CheckIfAllErrorsAreWarnings(IList<EdmSchemaError> schemaErrors)
         {
-            int length = schemaErrors.Count;
-            for (int i = 0; i < length; ++i)
+            var length = schemaErrors.Count;
+            for (var i = 0; i < length; ++i)
             {
-                EdmSchemaError error = schemaErrors[i];
-                if (error.Severity != EdmSchemaErrorSeverity.Warning)
+                var error = schemaErrors[i];
+                if (error.Severity
+                    != EdmSchemaErrorSeverity.Warning)
                 {
                     return false;
                 }
@@ -813,7 +833,8 @@ namespace System.Data.Entity.Core.Common.Utils
         /// </summary>
         /// <param name="dictionaryExtentViews"></param>
         /// <returns></returns>
-        internal static string GenerateHashForAllExtentViewsContent(double schemaVersion, IEnumerable<KeyValuePair<string, string>> extentViews)
+        internal static string GenerateHashForAllExtentViewsContent(
+            double schemaVersion, IEnumerable<KeyValuePair<string, string>> extentViews)
         {
             using (var metadataHashAlgorithm = CreateMetadataHashAlgorithm(schemaVersion))
             {
@@ -827,8 +848,10 @@ namespace System.Data.Entity.Core.Common.Utils
             }
         }
 
-        [SuppressMessage("Microsoft.Cryptographic.Standard", "CA5350:Microsoft.Cryptographic.Standard", 
-            Justification = "MD5CryptoServiceProvider is not used for cryptography/security purposes and we do it only for v1 and v1.1 for compatibility reasons.")]
+        [SuppressMessage("Microsoft.Cryptographic.Standard", "CA5350:Microsoft.Cryptographic.Standard",
+            Justification =
+                "MD5CryptoServiceProvider is not used for cryptography/security purposes and we do it only for v1 and v1.1 for compatibility reasons."
+            )]
         internal static HashAlgorithm CreateMetadataHashAlgorithm(double schemaVersion)
         {
             HashAlgorithm hashAlgorithm;
@@ -867,12 +890,11 @@ namespace System.Data.Entity.Core.Common.Utils
 
         internal static TypeUsage ConvertStoreTypeUsageToEdmTypeUsage(TypeUsage storeTypeUsage)
         {
-            TypeUsage edmTypeUsage = storeTypeUsage.GetModelTypeUsage().ShallowCopy(FacetValues.NullFacetValues);
+            var edmTypeUsage = storeTypeUsage.GetModelTypeUsage().ShallowCopy(FacetValues.NullFacetValues);
 
             // we don't reason the facets during the function resolution any more
 
             return edmTypeUsage;
-
         }
 
         internal static byte GetPrecision(this TypeUsage type)
@@ -894,15 +916,21 @@ namespace System.Data.Entity.Core.Common.Utils
         {
             return (T)type.Facets[facetName].Value;
         }
+
         #region NavigationPropertyAccessor Helpers
 
-        internal static NavigationPropertyAccessor GetNavigationPropertyAccessor(EntityType sourceEntityType, AssociationEndMember sourceMember, AssociationEndMember targetMember)
+        internal static NavigationPropertyAccessor GetNavigationPropertyAccessor(
+            EntityType sourceEntityType, AssociationEndMember sourceMember, AssociationEndMember targetMember)
         {
-            Debug.Assert(sourceEntityType.DataSpace == DataSpace.OSpace && sourceEntityType.ClrType != null, "sourceEntityType must contain an ospace type");
-            return GetNavigationPropertyAccessor(sourceEntityType, sourceMember.DeclaringType.FullName, sourceMember.Name, targetMember.Name);
+            Debug.Assert(
+                sourceEntityType.DataSpace == DataSpace.OSpace && sourceEntityType.ClrType != null,
+                "sourceEntityType must contain an ospace type");
+            return GetNavigationPropertyAccessor(
+                sourceEntityType, sourceMember.DeclaringType.FullName, sourceMember.Name, targetMember.Name);
         }
 
-        internal static NavigationPropertyAccessor GetNavigationPropertyAccessor(EntityType entityType, string relationshipType, string fromName, string toName)
+        internal static NavigationPropertyAccessor GetNavigationPropertyAccessor(
+            EntityType entityType, string relationshipType, string fromName, string toName)
         {
             NavigationProperty navigationProperty;
             if (entityType.TryGetNavigationProperty(relationshipType, fromName, toName, out navigationProperty))
@@ -916,6 +944,5 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         #endregion
-
     }
 }

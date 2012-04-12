@@ -1,8 +1,6 @@
 namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 {
-    using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
@@ -13,7 +11,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         private readonly DataSpace requiredSpace;
         private readonly DataSpace[] allowedMetadataSpaces;
         private readonly DataSpace[] allowedFunctionSpaces;
-        private readonly Dictionary<string, DbParameterReferenceExpression> paramMappings = new Dictionary<string, DbParameterReferenceExpression>();
+
+        private readonly Dictionary<string, DbParameterReferenceExpression> paramMappings =
+            new Dictionary<string, DbParameterReferenceExpression>();
+
         private readonly Stack<Dictionary<string, TypeUsage>> variableScopes = new Stack<Dictionary<string, TypeUsage>>();
 
         private string expressionArgumentName;
@@ -21,85 +22,89 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         internal DbExpressionValidator(MetadataWorkspace metadata, DataSpace expectedDataSpace)
             : base(metadata)
         {
-            this.requiredSpace = expectedDataSpace;
-            this.allowedFunctionSpaces = new[] { DataSpace.CSpace, DataSpace.SSpace };
+            requiredSpace = expectedDataSpace;
+            allowedFunctionSpaces = new[] { DataSpace.CSpace, DataSpace.SSpace };
             if (expectedDataSpace == DataSpace.SSpace)
             {
-                this.allowedMetadataSpaces = new[] { DataSpace.SSpace, DataSpace.CSpace };
+                allowedMetadataSpaces = new[] { DataSpace.SSpace, DataSpace.CSpace };
             }
             else
             {
-                this.allowedMetadataSpaces = new[] { DataSpace.CSpace };   
+                allowedMetadataSpaces = new[] { DataSpace.CSpace };
             }
         }
 
-        internal Dictionary<string, DbParameterReferenceExpression> Parameters { get { return this.paramMappings; } }
+        internal Dictionary<string, DbParameterReferenceExpression> Parameters
+        {
+            get { return paramMappings; }
+        }
 
         internal void ValidateExpression(DbExpression expression, string argumentName)
         {
             Debug.Assert(expression != null, "Ensure expression is non-null before calling ValidateExpression");
-            this.expressionArgumentName = argumentName;
-            this.VisitExpression(expression);
-            this.expressionArgumentName = null;
-            Debug.Assert(this.variableScopes.Count == 0, "Variable scope stack left in inconsistent state");
+            expressionArgumentName = argumentName;
+            VisitExpression(expression);
+            expressionArgumentName = null;
+            Debug.Assert(variableScopes.Count == 0, "Variable scope stack left in inconsistent state");
         }
 
         protected override EntitySetBase VisitEntitySet(EntitySetBase entitySet)
         {
-            return ValidateMetadata(entitySet, base.VisitEntitySet, es => es.EntityContainer.DataSpace, this.allowedMetadataSpaces);
+            return ValidateMetadata(entitySet, base.VisitEntitySet, es => es.EntityContainer.DataSpace, allowedMetadataSpaces);
         }
 
         protected override EdmFunction VisitFunction(EdmFunction function)
         {
             // Functions from the current space and S-Space are allowed
-            return ValidateMetadata(function, base.VisitFunction, func => func.DataSpace, this.allowedFunctionSpaces);
+            return ValidateMetadata(function, base.VisitFunction, func => func.DataSpace, allowedFunctionSpaces);
         }
 
         protected override EdmType VisitType(EdmType type)
         {
-            return ValidateMetadata(type, base.VisitType, et => et.DataSpace, this.allowedMetadataSpaces);
+            return ValidateMetadata(type, base.VisitType, et => et.DataSpace, allowedMetadataSpaces);
         }
 
         protected override TypeUsage VisitTypeUsage(TypeUsage type)
         {
-            return ValidateMetadata(type, base.VisitTypeUsage, tu => tu.EdmType.DataSpace, this.allowedMetadataSpaces);
+            return ValidateMetadata(type, base.VisitTypeUsage, tu => tu.EdmType.DataSpace, allowedMetadataSpaces);
         }
 
         protected override void OnEnterScope(IEnumerable<DbVariableReferenceExpression> scopeVariables)
         {
             var newScope = scopeVariables.ToDictionary(var => var.VariableName, var => var.ResultType, StringComparer.Ordinal);
-            this.variableScopes.Push(newScope);
+            variableScopes.Push(newScope);
         }
 
         protected override void OnExitScope()
         {
-            this.variableScopes.Pop();
+            variableScopes.Pop();
         }
 
         public override DbExpression Visit(DbVariableReferenceExpression expression)
         {
-            DbExpression result = base.Visit(expression);
-            if(result.ExpressionKind == DbExpressionKind.VariableReference)
+            var result = base.Visit(expression);
+            if (result.ExpressionKind
+                == DbExpressionKind.VariableReference)
             {
-                DbVariableReferenceExpression varRef = (DbVariableReferenceExpression)result;
+                var varRef = (DbVariableReferenceExpression)result;
                 TypeUsage foundType = null;
-                foreach(Dictionary<string, TypeUsage> scope in this.variableScopes)
+                foreach (var scope in variableScopes)
                 {
-                    if(scope.TryGetValue(varRef.VariableName, out foundType))
+                    if (scope.TryGetValue(varRef.VariableName, out foundType))
                     {
                         break;
                     }
                 }
-                
-                if(foundType == null)
+
+                if (foundType == null)
                 {
-                    ThrowInvalid(System.Data.Entity.Resources.Strings.Cqt_Validator_VarRefInvalid(varRef.VariableName));
+                    ThrowInvalid(Strings.Cqt_Validator_VarRefInvalid(varRef.VariableName));
                 }
-                                
+
                 // SQLBUDT#545720: Equivalence is not a sufficient check (consider row types) - equality is required.
                 if (!TypeSemantics.IsEqual(varRef.ResultType, foundType))
                 {
-                    ThrowInvalid(System.Data.Entity.Resources.Strings.Cqt_Validator_VarRefTypeMismatch(varRef.VariableName));
+                    ThrowInvalid(Strings.Cqt_Validator_VarRefTypeMismatch(varRef.VariableName));
                 }
             }
 
@@ -108,13 +113,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override DbExpression Visit(DbParameterReferenceExpression expression)
         {
-            DbExpression result = base.Visit(expression);
-            if (result.ExpressionKind == DbExpressionKind.ParameterReference)
+            var result = base.Visit(expression);
+            if (result.ExpressionKind
+                == DbExpressionKind.ParameterReference)
             {
-                DbParameterReferenceExpression paramRef = result as DbParameterReferenceExpression;
+                var paramRef = result as DbParameterReferenceExpression;
 
                 DbParameterReferenceExpression foundParam;
-                if (this.paramMappings.TryGetValue(paramRef.ParameterName, out foundParam))
+                if (paramMappings.TryGetValue(paramRef.ParameterName, out foundParam))
                 {
                     // SQLBUDT#545720: Equivalence is not a sufficient check (consider row types for TVPs) - equality is required.
                     if (!TypeSemantics.IsEqual(paramRef.ResultType, foundParam.ResultType))
@@ -124,28 +130,29 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
                 }
                 else
                 {
-                    this.paramMappings.Add(paramRef.ParameterName, paramRef);
+                    paramMappings.Add(paramRef.ParameterName, paramRef);
                 }
             }
             return result;
         }
 
-        private TMetadata ValidateMetadata<TMetadata>(TMetadata metadata, Func<TMetadata, TMetadata> map, Func<TMetadata, DataSpace> getDataSpace, DataSpace[] allowedSpaces)
+        private TMetadata ValidateMetadata<TMetadata>(
+            TMetadata metadata, Func<TMetadata, TMetadata> map, Func<TMetadata, DataSpace> getDataSpace, DataSpace[] allowedSpaces)
         {
-            TMetadata result = map(metadata);
-            if (!object.ReferenceEquals(metadata, result))
+            var result = map(metadata);
+            if (!ReferenceEquals(metadata, result))
             {
                 ThrowInvalidMetadata<TMetadata>();
             }
 
-            DataSpace resultSpace = getDataSpace(result);
+            var resultSpace = getDataSpace(result);
             if (!allowedSpaces.Any(ds => ds == resultSpace))
             {
                 ThrowInvalidSpace<TMetadata>();
             }
             return result;
         }
-                
+
         private void ThrowInvalidMetadata<TMetadata>()
         {
             ThrowInvalid(Strings.Cqt_Validator_InvalidOtherWorkspaceMetadata(typeof(TMetadata).Name));
@@ -153,12 +160,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         private void ThrowInvalidSpace<TMetadata>()
         {
-            ThrowInvalid(Strings.Cqt_Validator_InvalidIncorrectDataSpaceMetadata(typeof(TMetadata).Name, Enum.GetName(typeof(DataSpace), this.requiredSpace)));
+            ThrowInvalid(
+                Strings.Cqt_Validator_InvalidIncorrectDataSpaceMetadata(
+                    typeof(TMetadata).Name, Enum.GetName(typeof(DataSpace), requiredSpace)));
         }
 
         private void ThrowInvalid(string message)
         {
-            throw EntityUtil.Argument(message, this.expressionArgumentName);
+            throw EntityUtil.Argument(message, expressionArgumentName);
         }
     }
 }

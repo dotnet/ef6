@@ -1,11 +1,8 @@
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Threading;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Threading;
 
     /// <summary>
     /// Represent the Edm Complex Type
@@ -13,6 +10,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public class ComplexType : StructuralType
     {
         #region Constructors
+
         /// <summary>
         /// Initializes a new instance of Complex Type with the given properties
         /// </summary>
@@ -35,20 +33,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // of item attributes
         }
 
-
         #endregion
 
         #region Fields
+
         private ReadOnlyMetadataCollection<EdmProperty> _properties;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the kind of the type
         /// </summary>
-        public override BuiltInTypeKind BuiltInTypeKind { get { return BuiltInTypeKind.ComplexType; } }
-
-
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
+            get { return BuiltInTypeKind.ComplexType; }
+        }
 
         /// <summary>
         /// Returns just the properties from the collection
@@ -58,16 +59,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                Debug.Assert(IsReadOnly, "this is a wrapper around this.Members, don't call it during metadata loading, only call it after the metadata is set to readonly");
+                Debug.Assert(
+                    IsReadOnly,
+                    "this is a wrapper around this.Members, don't call it during metadata loading, only call it after the metadata is set to readonly");
                 if (null == _properties)
                 {
-                    Interlocked.CompareExchange(ref _properties,
+                    Interlocked.CompareExchange(
+                        ref _properties,
                         new FilteredReadOnlyMetadataCollection<EdmProperty, EdmMember>(
-                            this.Members, Helper.IsEdmProperty), null);
+                            Members, Helper.IsEdmProperty), null);
                 }
                 return _properties;
             }
         }
+
         #endregion
 
         #region Methods
@@ -81,9 +86,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the member is not a EdmProperty</exception>
         internal override void ValidateMemberForAdd(EdmMember member)
         {
-            Debug.Assert(Helper.IsEdmProperty(member) || Helper.IsNavigationProperty(member),
+            Debug.Assert(
+                Helper.IsEdmProperty(member) || Helper.IsNavigationProperty(member),
                 "Only members of type Property may be added to ComplexType.");
         }
+
         #endregion
     }
 
@@ -91,7 +98,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     internal sealed class ClrComplexType : ComplexType
     {
         /// <summary>cached CLR type handle, allowing the Type reference to be GC'd</summary>
-        private readonly System.RuntimeTypeHandle _type;
+        private readonly RuntimeTypeHandle _type;
 
         /// <summary>cached dynamic method to construct a CLR instance</summary>
         private Delegate _constructor;
@@ -103,21 +110,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="clrType">The CLR type to construct from</param>
         internal ClrComplexType(Type clrType, string cspaceNamespaceName, string cspaceTypeName)
-            : base(EntityUtil.GenericCheckArgumentNull(clrType, "clrType").Name, clrType.Namespace ?? string.Empty, 
-                   DataSpace.OSpace)
+            : base(EntityUtil.GenericCheckArgumentNull(clrType, "clrType").Name, clrType.Namespace ?? string.Empty,
+                DataSpace.OSpace)
         {
-            System.Diagnostics.Debug.Assert(!String.IsNullOrEmpty(cspaceNamespaceName) &&
+            Debug.Assert(
+                !String.IsNullOrEmpty(cspaceNamespaceName) &&
                 !String.IsNullOrEmpty(cspaceTypeName), "Mapping information must never be null");
 
             _type = clrType.TypeHandle;
             _cspaceTypeName = cspaceNamespaceName + "." + cspaceTypeName;
-            this.Abstract = clrType.IsAbstract;
+            Abstract = clrType.IsAbstract;
         }
+
         internal static ClrComplexType CreateReadonlyClrComplexType(Type clrType, string cspaceNamespaceName, string cspaceTypeName)
         {
-            ClrComplexType type = new ClrComplexType(clrType, cspaceNamespaceName, cspaceTypeName);
+            var type = new ClrComplexType(clrType, cspaceNamespaceName, cspaceTypeName);
             type.SetReadOnly();
-            
+
             return type;
         }
 
@@ -134,11 +143,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>
         /// </summary>
-        internal override System.Type ClrType
+        internal override Type ClrType
         {
             get { return Type.GetTypeFromHandle(_type); }
         }
 
-        internal string CSpaceTypeName { get { return _cspaceTypeName; } }
+        internal string CSpaceTypeName
+        {
+            get { return _cspaceTypeName; }
+        }
     }
 }

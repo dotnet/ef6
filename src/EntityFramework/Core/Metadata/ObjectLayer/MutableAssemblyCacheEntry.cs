@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-
-namespace System.Data.Entity.Core.Metadata.Edm
+﻿namespace System.Data.Entity.Core.Metadata.Edm
 {
-    internal partial class MutableAssemblyCacheEntry : AssemblyCacheEntry
+    using System.Collections.Generic;
+    using System.Reflection;
+
+    internal class MutableAssemblyCacheEntry : AssemblyCacheEntry
     {
         // types in "this" assembly
         private readonly List<EdmType> _typesInAssembly = new List<EdmType>();
@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get { return _typesInAssembly; }
         }
-        
+
         internal override IList<Assembly> ClosureAssemblies
         {
             get { return _closureAssemblies; }

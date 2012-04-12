@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees;
-
 namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
 
     /// <summary>
     /// Writes a description of a given expression, in a format determined by the specific implementation of a derived type
@@ -18,7 +13,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     internal abstract class ExpressionDumper : DbExpressionVisitor
     {
         #region Constructors
-        internal ExpressionDumper() { }
+
         #endregion
 
         #region (Pseudo) Public API
@@ -27,22 +22,25 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         /// Begins a new Dump block with the specified name
         /// </summary>
         /// <param name="name">The name of the block</param>
-        internal void Begin(string name) { Begin(name, (Dictionary<string, object>)null); }
-        
+        internal void Begin(string name)
+        {
+            Begin(name, null);
+        }
+
         /// <summary>
         /// Begins a new Dump block with the specified name and specified attributes
         /// </summary>
         /// <param name="name">The name of the block</param>
         /// <param name="attrs">The named attributes of the block. May be null</param>
-        internal abstract void  Begin(string name, Dictionary<string, object> attrs);
-        
+        internal abstract void Begin(string name, Dictionary<string, object> attrs);
+
         /// <summary>
         /// Ends the Dump block with the specified name. 
         /// The caller should not assumer that this name will be verified
         /// against the last name used in a Begin call.
         /// </summary>
         /// <param name="name">The name of the block</param>
-        internal abstract void  End(string name);
+        internal abstract void End(string name);
 
         /// <summary>
         /// Dumps a DbExpression by visiting it.
@@ -88,7 +86,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             Dump(binding.Expression);
             End("Expression");
             End("DbExpressionBinding");
-            
         }
 
         /// <summary>
@@ -128,10 +125,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         {
             Begin(pluralName);
 
-            foreach (DbExpression expr in exprs)
+            foreach (var expr in exprs)
             {
                 Begin(singularName);
-                this.Dump(expr);
+                Dump(expr);
                 End(singularName);
             }
 
@@ -147,7 +144,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         internal void Dump(IEnumerable<FunctionParameter> paramList)
         {
             Begin("Parameters");
-            foreach (FunctionParameter param in paramList)
+            foreach (var param in paramList)
             {
                 Begin("Parameter", "Name", param.Name);
                 Dump(param.TypeUsage, "ParameterType");
@@ -174,14 +171,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         /// <param name="type">The Type metadata to dump</param>
         internal void Dump(TypeUsage type)
         {
-            Dictionary<string, object> facetInfo = new Dictionary<string, object>();
-            foreach (Facet facet in type.Facets)
+            var facetInfo = new Dictionary<string, object>();
+            foreach (var facet in type.Facets)
             {
                 facetInfo.Add(facet.Name, facet.Value);
             }
 
             Begin("TypeUsage", facetInfo);
-            Dump(type.EdmType);   
+            Dump(type.EdmType);
             End("TypeUsage");
         }
 
@@ -203,10 +200,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         /// <param name="type">The type metadata to dump</param>
         internal void Dump(EdmType type)
         {
-            Begin("EdmType",
-                    "BuiltInTypeKind", Enum.GetName(typeof(BuiltInTypeKind), type.BuiltInTypeKind),
-                    "Namespace", type.NamespaceName,
-                    "Name", type.Name);
+            Begin(
+                "EdmType",
+                "BuiltInTypeKind", Enum.GetName(typeof(BuiltInTypeKind), type.BuiltInTypeKind),
+                "Namespace", type.NamespaceName,
+                "Name", type.Name);
             End("EdmType");
         }
 
@@ -233,7 +231,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
                 "Namespace", type.NamespaceName,
                 "Name",
                 type.Name
-            );
+                );
             End("RelationshipType");
         }
 
@@ -286,7 +284,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
                 "Name", end.Name,
                 //"IsParent", end.IsParent,
                 "RelationshipMultiplicity", Enum.GetName(typeof(RelationshipMultiplicity), end.RelationshipMultiplicity)
-            );
+                );
             Dump(end.DeclaringType, "DeclaringRelation");
             Dump(end.TypeUsage, "EndType");
             End("RelationshipEndMember");
@@ -307,7 +305,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
                 //"IsParent", end.IsParent,
                 "RelationshipTypeName", navProp.RelationshipType.FullName,
                 "ToEndMemberName", navProp.ToEndMember.Name
-            );
+                );
             Dump(navProp.DeclaringType, "DeclaringType");
             Dump(navProp.TypeUsage, "PropertyType");
             End("NavigationProperty");
@@ -315,10 +313,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
 #if METHOD_EXPRESSION
-        /// <summary>
-        /// Dumps the specified Method metadata instance
-        /// </summary>
-        /// <param name="meth">The Method metadata to dump</param>
+    /// <summary>
+    /// Dumps the specified Method metadata instance
+    /// </summary>
+    /// <param name="meth">The Method metadata to dump</param>
         internal void Dump(MethodMetadata meth)
         {
             Begin("MethodMetadata", "Name", meth.Name, "IsStatic", meth.IsStatic);
@@ -336,7 +334,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         internal void Dump(DbLambda lambda)
         {
             Begin("DbLambda");
-            Dump(System.Linq.Enumerable.Cast<DbExpression>(lambda.Variables), "Variables", "Variable");
+            Dump(Enumerable.Cast<DbExpression>(lambda.Variables), "Variables", "Variable");
             Dump(lambda.Body, "Body");
             End("DbLambda");
         }
@@ -344,13 +342,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         #endregion
 
         #region Private Implementation
+
         private void Begin(DbExpression expr)
         {
             Begin(expr, new Dictionary<string, object>());
         }
 
         private void Begin(DbExpression expr, Dictionary<string, object> attrs)
-        {            
+        {
             attrs.Add("DbExpressionKind", Enum.GetName(typeof(DbExpressionKind), expr.ExpressionKind));
             Begin(expr.GetType().Name, attrs);
             Dump(expr.ResultType, "ResultType");
@@ -358,39 +357,41 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         private void Begin(DbExpression expr, string attributeName, object attributeValue)
         {
-            Dictionary<string, object> attrs = new Dictionary<string, object>();
+            var attrs = new Dictionary<string, object>();
             attrs.Add(attributeName, attributeValue);
             Begin(expr, attrs);
         }
 
         private void Begin(string expr, string attributeName, object attributeValue)
         {
-            Dictionary<string, object> attrs = new Dictionary<string, object>();
+            var attrs = new Dictionary<string, object>();
             attrs.Add(attributeName, attributeValue);
             Begin(expr, attrs);
         }
-                
-        private void Begin(string expr,
-                           string attributeName1,
-                           object attributeValue1,
-                           string attributeName2,
-                           object attributeValue2)
+
+        private void Begin(
+            string expr,
+            string attributeName1,
+            object attributeValue1,
+            string attributeName2,
+            object attributeValue2)
         {
-            Dictionary<string, object> attrs = new Dictionary<string, object>();
+            var attrs = new Dictionary<string, object>();
             attrs.Add(attributeName1, attributeValue1);
             attrs.Add(attributeName2, attributeValue2);
             Begin(expr, attrs);
         }
-                
-        private void Begin(string expr,
-                           string attributeName1,
-                           object attributeValue1,
-                           string attributeName2,
-                           object attributeValue2,
-                           string attributeName3,
-                           object attributeValue3)
+
+        private void Begin(
+            string expr,
+            string attributeName1,
+            object attributeValue1,
+            string attributeName2,
+            object attributeValue2,
+            string attributeName3,
+            object attributeValue3)
         {
-            Dictionary<string, object> attrs = new Dictionary<string, object>();
+            var attrs = new Dictionary<string, object>();
             attrs.Add(attributeName1, attributeValue1);
             attrs.Add(attributeName2, attributeValue2);
             attrs.Add(attributeName3, attributeValue3);
@@ -420,6 +421,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             Dump(e.Right);
             End("Right");
         }
+
         #endregion
 
         #region DbExpressionVisitor<DbExpression> Members
@@ -432,7 +434,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbConstantExpression e)
         {
-            Dictionary<string, object> attrs = new Dictionary<string,object>();
+            var attrs = new Dictionary<string, object>();
             attrs.Add("Value", e.Value);
             Begin(e, attrs);
             End(e);
@@ -446,7 +448,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbVariableReferenceExpression e)
         {
-            Dictionary<string, object> attrs = new Dictionary<string, object>();
+            var attrs = new Dictionary<string, object>();
             attrs.Add("VariableName", e.VariableName);
             Begin(e, attrs);
             End(e);
@@ -454,7 +456,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbParameterReferenceExpression e)
         {
-            Dictionary<string, object> attrs = new Dictionary<string, object>();
+            var attrs = new Dictionary<string, object>();
             attrs.Add("ParameterName", e.ParameterName);
             Begin(e, attrs);
             End(e);
@@ -499,7 +501,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             // - NavigationProperty
             //
             Begin(e);
-            RelationshipEndMember end = e.Property as RelationshipEndMember;
+            var end = e.Property as RelationshipEndMember;
             if (end != null)
             {
                 Dump(end, "Property");
@@ -512,7 +514,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             {
                 Dump((EdmProperty)e.Property);
             }
-                        
+
             if (e.Instance != null)
             {
                 Dump(e.Instance, "Instance");
@@ -619,7 +621,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         public override void Visit(DbIsOfExpression e)
         {
             BeginUnary(e);
-            Dump(e.OfType, "OfType") ;
+            Dump(e.OfType, "OfType");
             End(e);
         }
 
@@ -651,7 +653,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             if (e.HasRelatedEntityReferences)
             {
                 Begin("RelatedEntityReferences");
-                foreach (DbRelatedEntityRef relatedRef in e.RelatedEntityReferences)
+                foreach (var relatedRef in e.RelatedEntityReferences)
                 {
                     Begin("DbRelatedEntityRef");
                     Dump(relatedRef.SourceEnd, "SourceEnd");
@@ -706,7 +708,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             End("Target");
             End(e);
         }
-                
+
         public override void Visit(DbFilterExpression e)
         {
             Begin(e);
@@ -727,14 +729,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         {
             Begin(e);
             Begin("Inputs");
-            foreach (DbExpressionBinding binding in e.Inputs)
+            foreach (var binding in e.Inputs)
             {
                 Dump(binding, "Input");
             }
             End("Inputs");
             End(e);
         }
-        
+
         public override void Visit(DbJoinExpression e)
         {
             Begin(e);
@@ -758,20 +760,20 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             Dump(e.Input, "Input");
             Dump(e.Keys, "Keys", "Key");
             Begin("Aggregates");
-            foreach (DbAggregate agg in e.Aggregates)
+            foreach (var agg in e.Aggregates)
             {
-                DbFunctionAggregate funcAgg = agg as DbFunctionAggregate;
+                var funcAgg = agg as DbFunctionAggregate;
 
                 if (funcAgg != null)
                 {
                     Begin("DbFunctionAggregate");
                     Dump(funcAgg.Function);
                     Dump(funcAgg.Arguments, "Arguments", "Argument");
-                    End("DbFunctionAggregate"); 
+                    End("DbFunctionAggregate");
                 }
                 else
                 {
-                    DbGroupAggregate groupAgg = agg as DbGroupAggregate;
+                    var groupAgg = agg as DbGroupAggregate;
                     Debug.Assert(groupAgg != null, "Invalid DbAggregate");
                     Begin("DbGroupAggregate");
                     Dump(groupAgg.Arguments, "Arguments", "Argument");
@@ -785,9 +787,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         protected virtual void Dump(IList<DbSortClause> sortOrder)
         {
             Begin("SortOrder");
-            foreach (DbSortClause clause in sortOrder)
+            foreach (var clause in sortOrder)
             {
-                string collStr = clause.Collation;
+                var collStr = clause.Collation;
                 if (null == collStr)
                 {
                     collStr = "";

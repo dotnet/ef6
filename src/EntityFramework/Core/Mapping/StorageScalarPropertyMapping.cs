@@ -1,11 +1,9 @@
-using System;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Text;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
+namespace System.Data.Entity.Core.Mapping
+{
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+    using System.Text;
 
-namespace System.Data.Entity.Core.Mapping {
     /// <summary>
     /// Mapping metadata for scalar properties.
     /// </summary>
@@ -38,42 +36,49 @@ namespace System.Data.Entity.Core.Mapping {
     /// This class represents the metadata for all the scalar property map elements in the 
     /// above example.
     /// </example>
-    internal class StorageScalarPropertyMapping : StoragePropertyMapping {
+    internal class StorageScalarPropertyMapping : StoragePropertyMapping
+    {
         #region Constructors
+
         /// <summary>
         /// Construct a new Scalar EdmProperty mapping object
         /// </summary>
         /// <param name="member"></param>
         /// <param name="columnMember"></param>
         internal StorageScalarPropertyMapping(EdmProperty member, EdmProperty columnMember)
-            : base(member) {
+            : base(member)
+        {
             Debug.Assert(columnMember != null);
             Debug.Assert(
-                Helper.IsScalarType(member.TypeUsage.EdmType), 
+                Helper.IsScalarType(member.TypeUsage.EdmType),
                 "StorageScalarPropertyMapping must only map primitive or enum types");
-            Debug.Assert(Helper.IsPrimitiveType(columnMember.TypeUsage.EdmType), "StorageScalarPropertyMapping must only map primitive types");
-            this.m_columnMember = columnMember;
+            Debug.Assert(
+                Helper.IsPrimitiveType(columnMember.TypeUsage.EdmType), "StorageScalarPropertyMapping must only map primitive types");
+            m_columnMember = columnMember;
         }
+
         #endregion
 
         #region Fields
+
         /// <summary>
         /// S-side member for which the scalar property is being mapped.
         /// This will be interpreted by the view generation algorithm based on the context.
         /// </summary>
-        EdmProperty m_columnMember;
+        private readonly EdmProperty m_columnMember;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// column name from which the sclar property is being mapped
         /// </summary>
         internal EdmProperty ColumnProperty
         {
-            get {
-                return this.m_columnMember;
-            }
+            get { return m_columnMember; }
         }
+
         #endregion
 
         #region Methods
@@ -84,19 +89,22 @@ namespace System.Data.Entity.Core.Mapping {
         /// Will be removed shortly.
         /// </summary>
         /// <param name="index"></param>
-        internal override void Print(int index) {
+        internal override void Print(int index)
+        {
             StorageEntityContainerMapping.GetPrettyPrintString(ref index);
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("ScalarPropertyMapping");
             sb.Append("   ");
-            if (this.EdmProperty != null) {
+            if (EdmProperty != null)
+            {
                 sb.Append("Name:");
-                sb.Append(this.EdmProperty.Name);
+                sb.Append(EdmProperty.Name);
                 sb.Append("   ");
             }
-            if (this.ColumnProperty != null) {
+            if (ColumnProperty != null)
+            {
                 sb.Append("Column Name:");
-                sb.Append(this.ColumnProperty.Name);
+                sb.Append(ColumnProperty.Name);
             }
             Console.WriteLine(sb.ToString());
         }
@@ -104,5 +112,4 @@ namespace System.Data.Entity.Core.Mapping {
 
         #endregion
     }
-
 }

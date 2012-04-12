@@ -1,24 +1,20 @@
-﻿using System.Data.Entity.Core.Objects.DataClasses;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Diagnostics;
-using System.ComponentModel;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Linq.Expressions;
-using System.Security.Permissions;
-using System.Threading;
-using System.Data.Entity.Core.Common.Utils;
-using System.Runtime.CompilerServices;
-
-namespace System.Data.Entity.Core.Objects.Internal
+﻿namespace System.Data.Entity.Core.Objects.Internal
 {
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Diagnostics;
+    using System.Reflection;
+    using System.Runtime.CompilerServices;
+
     /// <summary>
     /// Factory class for creating IEntityWrapper instances.
     /// </summary>
     internal static class EntityWrapperFactory
     {
         // A cache of functions used to create IEntityWrapper instances for a given type
-        private static readonly Memoizer<Type, Func<object, IEntityWrapper>> _delegateCache = new Memoizer<Type, Func<object, IEntityWrapper>>(CreateWrapperDelegate, null);
+        private static readonly Memoizer<Type, Func<object, IEntityWrapper>> _delegateCache =
+            new Memoizer<Type, Func<object, IEntityWrapper>>(CreateWrapperDelegate, null);
 
         /// <summary>
         /// The single instance of the NullEntityWrapper.
@@ -47,11 +43,12 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
             // We used a cache of functions based on the actual type of entity that we need to wrap.
             // Creatung these functions is slow, but once they are created they are relatively fast.
-            IEntityWrapper wrappedEntity = _delegateCache.Evaluate(entity.GetType())(entity);
+            var wrappedEntity = _delegateCache.Evaluate(entity.GetType())(entity);
             wrappedEntity.RelationshipManager.SetWrappedOwner(wrappedEntity, entity);
             // We cast to object here to avoid calling the overridden != operator on EntityKey.
             // This creates a very small perf gain, which is none-the-less significant for lean no-tracking cases.
-            if ((object)key != null && (object)wrappedEntity.EntityKey == null)
+            if ((object)key != null
+                && (object)wrappedEntity.EntityKey == null)
             {
                 wrappedEntity.EntityKey = key;
             }
@@ -74,24 +71,28 @@ namespace System.Data.Entity.Core.Objects.Internal
             // For entities that implement all our interfaces we create a special lightweight wrapper that is both
             // smaller and faster than the strategy-based wrapper.
             // Otherwise, the wrapper is provided with different delegates depending on which interfaces are implemented.
-            bool isIEntityWithRelationships = typeof(IEntityWithRelationships).IsAssignableFrom(entityType);
-            bool isIEntityWithChangeTracker = typeof(IEntityWithChangeTracker).IsAssignableFrom(entityType);
-            bool isIEntityWithKey = typeof(IEntityWithKey).IsAssignableFrom(entityType);
-            bool isProxy = EntityProxyFactory.IsProxyType(entityType);
+            var isIEntityWithRelationships = typeof(IEntityWithRelationships).IsAssignableFrom(entityType);
+            var isIEntityWithChangeTracker = typeof(IEntityWithChangeTracker).IsAssignableFrom(entityType);
+            var isIEntityWithKey = typeof(IEntityWithKey).IsAssignableFrom(entityType);
+            var isProxy = EntityProxyFactory.IsProxyType(entityType);
             MethodInfo createDelegate;
-            if (isIEntityWithRelationships && isIEntityWithChangeTracker && isIEntityWithKey && !isProxy)
+            if (isIEntityWithRelationships && isIEntityWithChangeTracker && isIEntityWithKey
+                && !isProxy)
             {
-                createDelegate = typeof(EntityWrapperFactory).GetMethod("CreateWrapperDelegateTypedLightweight", BindingFlags.NonPublic | BindingFlags.Static);
+                createDelegate = typeof(EntityWrapperFactory).GetMethod(
+                    "CreateWrapperDelegateTypedLightweight", BindingFlags.NonPublic | BindingFlags.Static);
             }
             else if (isIEntityWithRelationships)
             {
                 // This type of strategy wrapper is used when the entity implements IEntityWithRelationships
                 // In this case it is important that the entity itself is used to create the RelationshipManager
-                createDelegate = typeof(EntityWrapperFactory).GetMethod("CreateWrapperDelegateTypedWithRelationships", BindingFlags.NonPublic | BindingFlags.Static);
+                createDelegate = typeof(EntityWrapperFactory).GetMethod(
+                    "CreateWrapperDelegateTypedWithRelationships", BindingFlags.NonPublic | BindingFlags.Static);
             }
             else
             {
-                createDelegate = typeof(EntityWrapperFactory).GetMethod("CreateWrapperDelegateTypedWithoutRelationships", BindingFlags.NonPublic | BindingFlags.Static);
+                createDelegate = typeof(EntityWrapperFactory).GetMethod(
+                    "CreateWrapperDelegateTypedWithoutRelationships", BindingFlags.NonPublic | BindingFlags.Static);
             }
             createDelegate = createDelegate.MakeGenericMethod(entityType);
             return (Func<object, IEntityWrapper>)createDelegate.Invoke(null, new object[0]);
@@ -99,7 +100,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         // Returns a delegate that creates the fast LightweightEntityWrapper
         private static Func<object, IEntityWrapper> CreateWrapperDelegateTypedLightweight<TEntity>()
-             where TEntity : IEntityWithRelationships, IEntityWithKey, IEntityWithChangeTracker
+            where TEntity : IEntityWithRelationships, IEntityWithKey, IEntityWithChangeTracker
         {
             return (entity) => new LightweightEntityWrapper<TEntity>((TEntity)entity);
         }
@@ -112,8 +113,10 @@ namespace System.Data.Entity.Core.Objects.Internal
             Func<object, IEntityKeyStrategy> keyStrategy;
             Func<object, IChangeTrackingStrategy> changeTrackingStrategy;
             CreateStrategies<TEntity>(out propertyAccessorStrategy, out changeTrackingStrategy, out keyStrategy);
-            
-            return (entity) => new EntityWrapperWithRelationships<TEntity>((TEntity)entity, propertyAccessorStrategy, changeTrackingStrategy, keyStrategy);
+
+            return
+                (entity) =>
+                new EntityWrapperWithRelationships<TEntity>((TEntity)entity, propertyAccessorStrategy, changeTrackingStrategy, keyStrategy);
         }
 
         // Returns a delegate that creates a strategy-based wrapper for entities that do not implement IEntityWithRelationships
@@ -124,19 +127,23 @@ namespace System.Data.Entity.Core.Objects.Internal
             Func<object, IChangeTrackingStrategy> changeTrackingStrategy;
             CreateStrategies<TEntity>(out propertyAccessorStrategy, out changeTrackingStrategy, out keyStrategy);
 
-            return (entity) => new EntityWrapperWithoutRelationships<TEntity>((TEntity)entity, propertyAccessorStrategy, changeTrackingStrategy, keyStrategy);
+            return
+                (entity) =>
+                new EntityWrapperWithoutRelationships<TEntity>(
+                    (TEntity)entity, propertyAccessorStrategy, changeTrackingStrategy, keyStrategy);
         }
 
         // Creates delegates that create strategy objects appropriate for the type of entity.
-        private static void CreateStrategies<TEntity>(out Func<object, IPropertyAccessorStrategy> createPropertyAccessorStrategy,
-                                                      out Func<object, IChangeTrackingStrategy> createChangeTrackingStrategy,
-                                                      out Func<object, IEntityKeyStrategy> createKeyStrategy)
+        private static void CreateStrategies<TEntity>(
+            out Func<object, IPropertyAccessorStrategy> createPropertyAccessorStrategy,
+            out Func<object, IChangeTrackingStrategy> createChangeTrackingStrategy,
+            out Func<object, IEntityKeyStrategy> createKeyStrategy)
         {
-            Type entityType = typeof(TEntity);
-            bool isIEntityWithRelationships = typeof(IEntityWithRelationships).IsAssignableFrom(entityType);
-            bool isIEntityWithChangeTracker = typeof(IEntityWithChangeTracker).IsAssignableFrom(entityType);
-            bool isIEntityWithKey = typeof(IEntityWithKey).IsAssignableFrom(entityType);
-            bool isProxy = EntityProxyFactory.IsProxyType(entityType);
+            var entityType = typeof(TEntity);
+            var isIEntityWithRelationships = typeof(IEntityWithRelationships).IsAssignableFrom(entityType);
+            var isIEntityWithChangeTracker = typeof(IEntityWithChangeTracker).IsAssignableFrom(entityType);
+            var isIEntityWithKey = typeof(IEntityWithKey).IsAssignableFrom(entityType);
+            var isProxy = EntityProxyFactory.IsProxyType(entityType);
 
             if (!isIEntityWithRelationships || isProxy)
             {
@@ -187,7 +194,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <param name="context">The context in which the entity may exist, or null</param>
         /// <param name="existingEntry">Set to the existing state entry if one is found, else null</param>
         /// <returns>a new or existing wrapper</returns>
-        internal static IEntityWrapper WrapEntityUsingContextGettingEntry(object entity, ObjectContext context, out EntityEntry existingEntry)
+        internal static IEntityWrapper WrapEntityUsingContextGettingEntry(
+            object entity, ObjectContext context, out EntityEntry existingEntry)
         {
             return WrapEntityUsingStateManagerGettingEntry(entity, context == null ? null : context.ObjectStateManager, out existingEntry);
         }
@@ -215,7 +223,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <param name="context">The state manager  in which the entity may exist, or null</param>
         /// <param name="existingEntry">The existing state entry for the given entity if one exists, otherwise null</param>
         /// <returns>A new or existing wrapper</returns>
-        internal static IEntityWrapper WrapEntityUsingStateManagerGettingEntry(object entity, ObjectStateManager stateManager, out EntityEntry existingEntry)
+        internal static IEntityWrapper WrapEntityUsingStateManagerGettingEntry(
+            object entity, ObjectStateManager stateManager, out EntityEntry existingEntry)
         {
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
             IEntityWrapper wrapper = null;
@@ -243,16 +252,16 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
             // If no entity was found in the OSM, then check if one exists on an associated
             // RelationshipManager.  This only works where the entity implements IEntityWithRelationshops.
-            IEntityWithRelationships entityWithRelationships = entity as IEntityWithRelationships;
+            var entityWithRelationships = entity as IEntityWithRelationships;
             if (entityWithRelationships != null)
             {
-                RelationshipManager relManager = entityWithRelationships.RelationshipManager;
+                var relManager = entityWithRelationships.RelationshipManager;
                 if (relManager == null)
                 {
                     throw EntityUtil.UnexpectedNullRelationshipManager();
                 }
-                IEntityWrapper wrappedEntity = relManager.WrappedOwner;
-                if (!Object.ReferenceEquals(wrappedEntity.Entity, entity))
+                var wrappedEntity = relManager.WrappedOwner;
+                if (!ReferenceEquals(wrappedEntity.Entity, entity))
                 {
                     // This means that the owner of the RelationshipManager must have been set
                     // incorrectly in the call to RelationshipManager.Create().
@@ -269,10 +278,11 @@ namespace System.Data.Entity.Core.Objects.Internal
             // If we could not find an existing wrapper, then go create a new one
             if (wrapper == null)
             {
-                IEntityWithKey withKey = entity as IEntityWithKey;
+                var withKey = entity as IEntityWithKey;
                 wrapper = CreateNewWrapper(entity, withKey == null ? null : withKey.EntityKey);
             }
-            if (stateManager != null && stateManager.TransactionManager.TrackProcessedEntities)
+            if (stateManager != null
+                && stateManager.TransactionManager.TrackProcessedEntities)
             {
                 stateManager.TransactionManager.WrappedEntities.Add(entity, wrapper);
             }

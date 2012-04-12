@@ -1,11 +1,10 @@
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
-    using System;
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Common;
-    using System.Data.Common;
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.CommandTrees.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
@@ -22,24 +21,28 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             Debug.Assert(value != null, "DbConstantExpression value cannot be null");
             Debug.Assert(TypeSemantics.IsScalarType(resultType), "DbConstantExpression must have a primitive or enum value");
-            Debug.Assert(!value.GetType().IsEnum || TypeSemantics.IsEnumerationType(resultType), "value is an enum while the result type is not of enum type.");
-            Debug.Assert(Helper.AsPrimitive(resultType.EdmType).ClrEquivalentType == (value.GetType().IsEnum ? value.GetType().GetEnumUnderlyingType() : value.GetType()), 
+            Debug.Assert(
+                !value.GetType().IsEnum || TypeSemantics.IsEnumerationType(resultType),
+                "value is an enum while the result type is not of enum type.");
+            Debug.Assert(
+                Helper.AsPrimitive(resultType.EdmType).ClrEquivalentType
+                == (value.GetType().IsEnum ? value.GetType().GetEnumUnderlyingType() : value.GetType()),
                 "the type of the value has to match the result type (for enum types only underlying types are compared).");
 
             // binary values should be cloned before use
             PrimitiveType primitiveType;
-            this._shouldCloneValue = TypeHelpers.TryGetEdmType<PrimitiveType>(resultType, out primitiveType)
-                && primitiveType.PrimitiveTypeKind == PrimitiveTypeKind.Binary;
+            _shouldCloneValue = TypeHelpers.TryGetEdmType(resultType, out primitiveType)
+                                && primitiveType.PrimitiveTypeKind == PrimitiveTypeKind.Binary;
 
-            if (this._shouldCloneValue)
+            if (_shouldCloneValue)
             {
                 // DevDiv#480416: DbConstantExpression with a binary value is not fully immutable
                 // CONSIDER: Adding an immutable Binary type or using System.Data.Linq.Binary
-                this._value = ((byte[])value).Clone();
+                _value = ((byte[])value).Clone();
             }
             else
             {
-                this._value = value;
+                _value = value;
             }
         }
 
@@ -49,7 +52,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <returns>The object value contained by this constant expression, not a copy.</returns>
         internal object GetValue()
         {
-            return this._value;
+            return _value;
         }
 
         /// <summary>
@@ -61,7 +64,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             {
                 // DevDiv#480416: DbConstantExpression with a binary value is not fully immutable
                 // CONSIDER: Adding an immutable Binary type or using System.Data.Linq.Binary
-                if (this._shouldCloneValue)
+                if (_shouldCloneValue)
                 {
                     return ((byte[])_value).Clone();
                 }
@@ -77,7 +80,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -86,7 +99,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
 
     /// <summary>
@@ -104,7 +127,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -113,7 +146,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
 
     /// <summary>
@@ -127,21 +170,34 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             : base(DbExpressionKind.VariableReference, type)
         {
             Debug.Assert(name != null, "DbVariableReferenceExpression Name cannot be null");
-            
-            this._name = name;
+
+            _name = name;
         }
 
         /// <summary>
         /// Gets the name of the referenced variable.
         /// </summary>
-        public string VariableName { get { return _name; } }
+        public string VariableName
+        {
+            get { return _name; }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that do not produce a result value.
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -150,7 +206,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
 
     /// <summary>
@@ -165,20 +231,33 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             Debug.Assert(DbCommandTree.IsValidParameterName(name), "DbParameterReferenceExpression name should be valid");
 
-            this._name = name;
+            _name = name;
         }
 
         /// <summary>
         /// Gets the name of the referenced parameter.
         /// </summary>
-        public string ParameterName { get { return _name; } }
+        public string ParameterName
+        {
+            get { return _name; }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that do not produce a result value.
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -187,7 +266,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
 
     /// <summary>
@@ -203,30 +292,47 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             Debug.Assert(property != null, "DbPropertyExpression property cannot be null");
             Debug.Assert(instance != null, "DbPropertyExpression instance cannot be null");
-            Debug.Assert(Helper.IsEdmProperty(property) ||
-                         Helper.IsRelationshipEndMember(property) ||
-                         Helper.IsNavigationProperty(property), "DbExpression property must be a property, navigation property, or relationship end");
+            Debug.Assert(
+                Helper.IsEdmProperty(property) ||
+                Helper.IsRelationshipEndMember(property) ||
+                Helper.IsNavigationProperty(property), "DbExpression property must be a property, navigation property, or relationship end");
 
-            this._property = property;
-            this._instance = instance;
+            _property = property;
+            _instance = instance;
         }
-        
+
         /// <summary>
         /// Gets the property metadata for the property to retrieve.
         /// </summary>
-        public EdmMember Property { get { return _property; } }
-        
+        public EdmMember Property
+        {
+            get { return _property; }
+        }
+
         /// <summary>
         /// Gets the <see cref="DbExpression"/> that defines the instance from which the property should be retrieved.
         /// </summary>
-        public DbExpression Instance { get { return _instance; } }
-        
+        public DbExpression Instance
+        {
+            get { return _instance; }
+        }
+
         /// <summary>
         /// The visitor pattern method for expression visitors that do not produce a result value.
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -235,7 +341,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// Creates a new KeyValuePair&lt;string, DbExpression&gt; based on this property expression.
@@ -244,7 +360,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <returns>A new KeyValuePair&lt;string, DbExpression&gt; with key and value derived from the DbPropertyExpression</returns>
         public KeyValuePair<string, DbExpression> ToKeyValuePair()
         {
-            return new KeyValuePair<string, DbExpression>(this.Property.Name, this);
+            return new KeyValuePair<string, DbExpression>(Property.Name, this);
         }
 
         public static implicit operator KeyValuePair<string, DbExpression>(DbPropertyExpression value)
@@ -267,28 +383,46 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             Debug.Assert(function != null, "DbFunctionExpression function cannot be null");
             Debug.Assert(arguments != null, "DbFunctionExpression arguments cannot be null");
-            Debug.Assert(object.ReferenceEquals(resultType, function.ReturnParameter.TypeUsage), "DbFunctionExpression result type must be function return type");
+            Debug.Assert(
+                ReferenceEquals(resultType, function.ReturnParameter.TypeUsage),
+                "DbFunctionExpression result type must be function return type");
 
-            this._functionInfo = function;
-            this._arguments = arguments;
+            _functionInfo = function;
+            _arguments = arguments;
         }
 
         /// <summary>
         /// Gets the metadata for the function to invoke.
         /// </summary>
-        public EdmFunction Function { get { return _functionInfo; } }
+        public EdmFunction Function
+        {
+            get { return _functionInfo; }
+        }
 
         /// <summary>
         /// Gets an <see cref="DbExpression"/> list that provides the arguments to the function.
         /// </summary>
-        public IList<DbExpression> Arguments { get { return this._arguments; } }
+        public IList<DbExpression> Arguments
+        {
+            get { return _arguments; }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that do not produce a result value.
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -297,7 +431,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
 
     /// <summary>
@@ -313,29 +457,46 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             Debug.Assert(lambda != null, "DbLambdaExpression lambda cannot be null");
             Debug.Assert(args != null, "DbLambdaExpression arguments cannot be null");
-            Debug.Assert(object.ReferenceEquals(resultType, lambda.Body.ResultType), "DbLambdaExpression result type must be Lambda body result type");
+            Debug.Assert(
+                ReferenceEquals(resultType, lambda.Body.ResultType), "DbLambdaExpression result type must be Lambda body result type");
             Debug.Assert(lambda.Variables.Count == args.Count, "DbLambdaExpression argument count does not match Lambda parameter count");
 
-            this._lambda = lambda;
-            this._arguments = args;
+            _lambda = lambda;
+            _arguments = args;
         }
 
         /// <summary>
         /// Gets the <see cref="DbLambda"/> representing the Lambda function applied by this expression.
         /// </summary>
-        public DbLambda Lambda { get { return _lambda; } }
+        public DbLambda Lambda
+        {
+            get { return _lambda; }
+        }
 
         /// <summary>
         /// Gets a <see cref="DbExpression"/> list that provides the arguments to which the Lambda function should be applied.
         /// </summary>
-        public IList<DbExpression> Arguments { get { return this._arguments; } }
+        public IList<DbExpression> Arguments
+        {
+            get { return _arguments; }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that do not produce a result value.
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -344,7 +505,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
 
 #if METHOD_EXPRESSION
@@ -484,39 +655,61 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             Debug.Assert(fromEnd != null, "DbRelationshipNavigationExpression 'from' end cannot be null");
             Debug.Assert(toEnd != null, "DbRelationshipNavigationExpression 'to' end cannot be null");
             Debug.Assert(navigateFrom != null, "DbRelationshipNavigationExpression navigation source cannot be null");
-                        
-            this._relation = relType;
-            this._fromRole = fromEnd;
-            this._toRole = toEnd;
-            this._from = navigateFrom;
+
+            _relation = relType;
+            _fromRole = fromEnd;
+            _toRole = toEnd;
+            _from = navigateFrom;
         }
-                
+
         /// <summary>
         /// Gets the metadata for the relationship over which navigation occurs
         /// </summary>
-        public RelationshipType Relationship { get { return _relation; } }
+        public RelationshipType Relationship
+        {
+            get { return _relation; }
+        }
 
         /// <summary>
         /// Gets the metadata for the relationship end to navigate from
         /// </summary>
-        public RelationshipEndMember NavigateFrom { get { return _fromRole; } }
+        public RelationshipEndMember NavigateFrom
+        {
+            get { return _fromRole; }
+        }
 
         /// <summary>
         /// Gets the metadata for the relationship end to navigate to
         /// </summary>
-        public RelationshipEndMember NavigateTo { get { return _toRole; } }
+        public RelationshipEndMember NavigateTo
+        {
+            get { return _toRole; }
+        }
 
         /// <summary>
         /// Gets the <see cref="DbExpression"/> that specifies the instance of the 'from' relationship end from which navigation should occur.
         /// </summary>
-        public DbExpression NavigationSource { get { return _from; } }
+        public DbExpression NavigationSource
+        {
+            get { return _from; }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that do not produce a result value.
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -525,7 +718,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }       
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
 
     /// <summary>
@@ -553,41 +756,43 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             // Validate that the specified target entity ref is:
             // 1. Non-null
             EntityUtil.CheckArgumentNull(targetEntityRef, "targetEntityRef");
-                        
+
             // Validate that the specified source and target ends are:
             // 1. Declared by the same relationship type
-            if (!object.ReferenceEquals(sourceEnd.DeclaringType, targetEnd.DeclaringType))
+            if (!ReferenceEquals(sourceEnd.DeclaringType, targetEnd.DeclaringType))
             {
-                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.Cqt_RelatedEntityRef_TargetEndFromDifferentRelationship, "targetEnd");
+                throw EntityUtil.Argument(Strings.Cqt_RelatedEntityRef_TargetEndFromDifferentRelationship, "targetEnd");
             }
             // 2. Not the same end
-            if (object.ReferenceEquals(sourceEnd, targetEnd))
+            if (ReferenceEquals(sourceEnd, targetEnd))
             {
-                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.Cqt_RelatedEntityRef_TargetEndSameAsSourceEnd, "targetEnd");
+                throw EntityUtil.Argument(Strings.Cqt_RelatedEntityRef_TargetEndSameAsSourceEnd, "targetEnd");
             }
 
             // Validate that the specified target end has multiplicity of at most one
-            if (targetEnd.RelationshipMultiplicity != RelationshipMultiplicity.One &&
+            if (targetEnd.RelationshipMultiplicity != RelationshipMultiplicity.One
+                &&
                 targetEnd.RelationshipMultiplicity != RelationshipMultiplicity.ZeroOrOne)
             {
-                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.Cqt_RelatedEntityRef_TargetEndMustBeAtMostOne, "targetEnd");
+                throw EntityUtil.Argument(Strings.Cqt_RelatedEntityRef_TargetEndMustBeAtMostOne, "targetEnd");
             }
-            
+
             // Validate that the specified target entity ref actually has a ref result type
             if (!TypeSemantics.IsReferenceType(targetEntityRef.ResultType))
             {
-                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.Cqt_RelatedEntityRef_TargetEntityNotRef, "targetEntityRef");
+                throw EntityUtil.Argument(Strings.Cqt_RelatedEntityRef_TargetEntityNotRef, "targetEntityRef");
             }
 
             // Validate that the specified target entity is of a type that can be reached by navigating to the specified relationship end
-            EntityTypeBase endType = TypeHelpers.GetEdmType<RefType>(targetEnd.TypeUsage).ElementType;
-            EntityTypeBase targetType = TypeHelpers.GetEdmType<RefType>(targetEntityRef.ResultType).ElementType;
+            var endType = TypeHelpers.GetEdmType<RefType>(targetEnd.TypeUsage).ElementType;
+            var targetType = TypeHelpers.GetEdmType<RefType>(targetEntityRef.ResultType).ElementType;
             // TODO: EdmEquals does not ensure both types are from the same metadataworkspace
-            if (!endType.EdmEquals(targetType) && !TypeSemantics.IsSubTypeOf(targetType, endType))
+            if (!endType.EdmEquals(targetType)
+                && !TypeSemantics.IsSubTypeOf(targetType, endType))
             {
-                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.Cqt_RelatedEntityRef_TargetEntityNotCompatible, "targetEntityRef");
+                throw EntityUtil.Argument(Strings.Cqt_RelatedEntityRef_TargetEntityNotCompatible, "targetEntityRef");
             }
-            
+
             // Validation succeeded, initialize state
             _targetEntityRef = targetEntityRef;
             _targetEnd = targetEnd;
@@ -597,17 +802,26 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Retrieves the 'source' end of the relationship navigation satisfied by this related entity Ref
         /// </summary>
-        internal RelationshipEndMember SourceEnd { get { return _sourceEnd; } }
+        internal RelationshipEndMember SourceEnd
+        {
+            get { return _sourceEnd; }
+        }
 
         /// <summary>
         /// Retrieves the 'target' end of the relationship navigation satisfied by this related entity Ref
         /// </summary>
-        internal RelationshipEndMember TargetEnd { get { return _targetEnd; } }
+        internal RelationshipEndMember TargetEnd
+        {
+            get { return _targetEnd; }
+        }
 
         /// <summary>
         /// Retrieves the entity Ref that is the result of navigating from the source to the target end of this related entity Ref
         /// </summary>
-        internal DbExpression TargetEntityReference { get { return _targetEntityRef; } }
+        internal DbExpression TargetEntityReference
+        {
+            get { return _targetEntityRef; }
+        }
     }
 
     /// <summary>
@@ -616,37 +830,54 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     public sealed class DbNewInstanceExpression : DbExpression
     {
         private readonly DbExpressionList _elements;
-        private readonly System.Collections.ObjectModel.ReadOnlyCollection<DbRelatedEntityRef> _relatedEntityRefs;
+        private readonly ReadOnlyCollection<DbRelatedEntityRef> _relatedEntityRefs;
 
         internal DbNewInstanceExpression(TypeUsage type, DbExpressionList args)
-            : base(DbExpressionKind.NewInstance, type) 
+            : base(DbExpressionKind.NewInstance, type)
         {
             Debug.Assert(args != null, "DbNewInstanceExpression arguments cannot be null");
-            Debug.Assert(args.Count > 0 || TypeSemantics.IsCollectionType(type), "DbNewInstanceExpression requires at least one argument when not creating an empty collection");
+            Debug.Assert(
+                args.Count > 0 || TypeSemantics.IsCollectionType(type),
+                "DbNewInstanceExpression requires at least one argument when not creating an empty collection");
 
-            this._elements = args;
+            _elements = args;
         }
 
-        internal DbNewInstanceExpression(TypeUsage resultType, DbExpressionList attributeValues, System.Collections.ObjectModel.ReadOnlyCollection<DbRelatedEntityRef> relationships)
+        internal DbNewInstanceExpression(
+            TypeUsage resultType, DbExpressionList attributeValues, ReadOnlyCollection<DbRelatedEntityRef> relationships)
             : this(resultType, attributeValues)
         {
-            Debug.Assert(TypeSemantics.IsEntityType(resultType), "An entity type is required to create a NewEntityWithRelationships expression");
+            Debug.Assert(
+                TypeSemantics.IsEntityType(resultType), "An entity type is required to create a NewEntityWithRelationships expression");
             Debug.Assert(relationships != null, "Related entity ref collection cannot be null");
 
-            this._relatedEntityRefs = (relationships.Count > 0 ? relationships : null);
+            _relatedEntityRefs = (relationships.Count > 0 ? relationships : null);
         }
 
         /// <summary>
         /// Gets an <see cref="DbExpression"/> list that provides the property/column values or set elements for the new instance.
         /// </summary>
-        public IList<DbExpression> Arguments { get { return _elements; } }
+        public IList<DbExpression> Arguments
+        {
+            get { return _elements; }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that do not produce a result value.
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -655,16 +886,31 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
+        internal bool HasRelatedEntityReferences
+        {
+            get { return (_relatedEntityRefs != null); }
+        }
 
-        internal bool HasRelatedEntityReferences { get { return (_relatedEntityRefs != null); } }
-        
         /// <summary>
         /// Gets the related entity references (if any) for an entity constructor. 
         /// May be null if no related entities were specified - use the <see cref="HasRelatedEntityReferences"/> property to determine this.
         /// </summary>
-        internal System.Collections.ObjectModel.ReadOnlyCollection<DbRelatedEntityRef> RelatedEntityReferences { get { return _relatedEntityRefs; } }
+        internal ReadOnlyCollection<DbRelatedEntityRef> RelatedEntityReferences
+        {
+            get { return _relatedEntityRefs; }
+        }
     }
 
     /// <summary>
@@ -679,20 +925,33 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             Debug.Assert(TypeSemantics.IsReferenceType(refResultType), "DbRefExpression requires a reference result type");
 
-            this._entitySet = entitySet;
+            _entitySet = entitySet;
         }
 
         /// <summary>
         /// Gets the metadata for the entity set that contains the instance.
         /// </summary>
-        public EntitySet EntitySet { get { return _entitySet; } }
-        
+        public EntitySet EntitySet
+        {
+            get { return _entitySet; }
+        }
+
         /// <summary>
         /// The visitor pattern method for expression visitors that do not produce a result value.
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -701,7 +960,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
 
     /// <summary>
@@ -721,7 +990,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -730,7 +1009,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
 
     /// <summary>
@@ -744,21 +1033,34 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             : base(DbExpressionKind.Scan, collectionOfEntityType)
         {
             Debug.Assert(entitySet != null, "DbScanExpression entity set cannot be null");
-            
-            this._targetSet = entitySet;
+
+            _targetSet = entitySet;
         }
 
         /// <summary>
         /// Gets the metadata for the referenced entity or relationship set.
         /// </summary>
-        public EntitySetBase Target { get { return _targetSet; } }
+        public EntitySetBase Target
+        {
+            get { return _targetSet; }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that do not produce a result value.
         /// </summary>
         /// <param name="visitor">An instance of DbExpressionVisitor.</param>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
-        public override void Accept(DbExpressionVisitor visitor) { if (visitor != null) { visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override void Accept(DbExpressionVisitor visitor)
+        {
+            if (visitor != null)
+            {
+                visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
 
         /// <summary>
         /// The visitor pattern method for expression visitors that produce a result value of a specific type.
@@ -767,6 +1069,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <typeparam name="TResultType">The type of the result produced by <paramref name="visitor"/></typeparam>
         /// <exception cref="ArgumentNullException"><paramref name="visitor"/> is null</exception>
         /// <returns>An instance of <typeparamref name="TResultType"/>.</returns>
-        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor) { if (visitor != null) { return visitor.Visit(this); } else { throw EntityUtil.ArgumentNull("visitor"); } }
+        public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
+        {
+            if (visitor != null)
+            {
+                return visitor.Visit(this);
+            }
+            else
+            {
+                throw EntityUtil.ArgumentNull("visitor");
+            }
+        }
     }
 }

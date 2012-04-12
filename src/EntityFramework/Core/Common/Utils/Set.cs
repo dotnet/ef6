@@ -1,21 +1,21 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using System.Linq;
-
-namespace System.Data.Entity.Core.Common.Utils {
+namespace System.Data.Entity.Core.Common.Utils
+{
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using System.Text;
 
     // An interface for a set abstraction
     internal class Set<TElement> : InternalBase, IEnumerable<TElement>
     {
         #region Fields
+
         /// <summary>
         /// Instance of set value comparer.
         /// </summary>
-        internal static readonly IEqualityComparer<Set<TElement>> ValueComparer = 
+        internal static readonly IEqualityComparer<Set<TElement>> ValueComparer =
             new SetValueComparer();
 
         /// <summary>
@@ -25,9 +25,11 @@ namespace System.Data.Entity.Core.Common.Utils {
 
         private readonly HashSet<TElement> _values;
         private bool _isReadOnly;
+
         #endregion
 
         #region Constructors
+
         /// <summary>
         /// Initialize set with the same values and comparer as other set.
         /// </summary>
@@ -69,18 +71,17 @@ namespace System.Data.Entity.Core.Common.Utils {
                 elements ?? Enumerable.Empty<TElement>(),
                 comparer ?? EqualityComparer<TElement>.Default);
         }
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets the number of elements in this set.
         /// </summary>
-        internal int Count 
-        { 
-            get 
-            { 
-                return _values.Count; 
-            } 
+        internal int Count
+        {
+            get { return _values.Count; }
         }
 
         /// <summary>
@@ -88,20 +89,19 @@ namespace System.Data.Entity.Core.Common.Utils {
         /// </summary>
         internal IEqualityComparer<TElement> Comparer
         {
-            get
-            {
-                return _values.Comparer;
-            }
+            get { return _values.Comparer; }
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Determines whether the given element exists in the set.
         /// </summary>
-        internal bool Contains(TElement element) 
-        { 
-            return _values.Contains(element); 
+        internal bool Contains(TElement element)
+        {
+            return _values.Contains(element);
         }
 
         /// <summary>
@@ -109,10 +109,10 @@ namespace System.Data.Entity.Core.Common.Utils {
         /// Adds given element to the set. If the set already contains
         /// the element, does nothing.
         /// </summary>
-        internal void Add(TElement element) 
+        internal void Add(TElement element)
         {
             AssertReadWrite();
-            _values.Add(element); 
+            _values.Add(element);
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace System.Data.Entity.Core.Common.Utils {
         internal void AddRange(IEnumerable<TElement> elements)
         {
             AssertReadWrite();
-            foreach (TElement element in elements)
+            foreach (var element in elements)
             {
                 Add(element);
             }
@@ -166,7 +166,7 @@ namespace System.Data.Entity.Core.Common.Utils {
         {
             AssertSetCompatible(other);
             return _values.Count == other._values.Count
-                && _values.IsSubsetOf(other._values);
+                   && _values.IsSubsetOf(other._values);
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace System.Data.Entity.Core.Common.Utils {
         /// </summary>
         internal Set<TElement> Difference(IEnumerable<TElement> other)
         {
-            Set<TElement> copy = new Set<TElement>(this);
+            var copy = new Set<TElement>(this);
             copy.Subtract(other);
             return copy;
         }
@@ -228,7 +228,7 @@ namespace System.Data.Entity.Core.Common.Utils {
         /// </summary>
         internal Set<TElement> Union(IEnumerable<TElement> other)
         {
-            Set<TElement> copy = new Set<TElement>(this);
+            var copy = new Set<TElement>(this);
             copy.Unite(other);
             return copy;
         }
@@ -255,7 +255,7 @@ namespace System.Data.Entity.Core.Common.Utils {
                 // once it's readonly, it's always readonly
                 return this;
             }
-            Set<TElement> copy = new Set<TElement>(this);
+            var copy = new Set<TElement>(this);
             copy._isReadOnly = true;
             return copy;
         }
@@ -274,8 +274,8 @@ namespace System.Data.Entity.Core.Common.Utils {
         /// </summary>
         internal int GetElementsHashCode()
         {
-            int hashCode = 0;
-            foreach (TElement element in this)
+            var hashCode = 0;
+            foreach (var element in this)
             {
                 hashCode ^= Comparer.GetHashCode(element);
             }
@@ -286,23 +286,26 @@ namespace System.Data.Entity.Core.Common.Utils {
         /// Returns typed enumerator over elements of the set. 
         /// Uses HashSet&lt;TElement&gt;.Enumerator to avoid boxing struct.
         /// </summary>
-        public HashSet<TElement>.Enumerator GetEnumerator() 
-        { 
-            return _values.GetEnumerator(); 
+        public HashSet<TElement>.Enumerator GetEnumerator()
+        {
+            return _values.GetEnumerator();
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"), Conditional("DEBUG")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        [Conditional("DEBUG")]
         private void AssertReadWrite()
         {
             Debug.Assert(!_isReadOnly, "attempting to modify readonly collection");
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"), Conditional("DEBUG")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        [Conditional("DEBUG")]
         private void AssertSetCompatible(Set<TElement> other)
         {
             Debug.Assert(other != null, "other set null");
-            Debug.Assert(other.Comparer.GetType().Equals(this.Comparer.GetType()));
+            Debug.Assert(other.Comparer.GetType().Equals(Comparer.GetType()));
         }
+
         #endregion
 
         #region IEnumerable<TElement> Members
@@ -316,44 +319,63 @@ namespace System.Data.Entity.Core.Common.Utils {
                 this.keys = keys;
             }
 
-            public TElement Current { get { return keys.Current; } }
+            public TElement Current
+            {
+                get { return keys.Current; }
+            }
 
-            public void Dispose() { keys.Dispose(); }
+            public void Dispose()
+            {
+                keys.Dispose();
+            }
 
-            object IEnumerator.Current { get { return ((IEnumerator)keys).Current; } }
+            object IEnumerator.Current
+            {
+                get { return ((IEnumerator)keys).Current; }
+            }
 
-            public bool MoveNext() { return keys.MoveNext(); }
+            public bool MoveNext()
+            {
+                return keys.MoveNext();
+            }
 
-            void System.Collections.IEnumerator.Reset() { ((System.Collections.IEnumerator)keys).Reset(); }
+            void IEnumerator.Reset()
+            {
+                ((IEnumerator)keys).Reset();
+            }
         }
 
         IEnumerator<TElement> IEnumerable<TElement>.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
 
         #endregion
 
         #region IEnumerable Members
+
         /// <summary>
         /// Returns an untyped enumeration of elements in the set.
         /// </summary>
         /// <returns>Enumeration of set members.</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
 
         #endregion
 
         #region InternalBase
+
         internal override void ToCompactString(StringBuilder builder)
         {
             StringUtil.ToCommaSeparatedStringSorted(builder, this);
         }
+
         #endregion
 
         #region Nested types
+
         private class SetValueComparer : IEqualityComparer<Set<TElement>>
         {
             bool IEqualityComparer<Set<TElement>>.Equals(Set<TElement> x, Set<TElement> y)
@@ -368,6 +390,7 @@ namespace System.Data.Entity.Core.Common.Utils {
                 return obj.GetElementsHashCode();
             }
         }
+
         #endregion
     }
 }

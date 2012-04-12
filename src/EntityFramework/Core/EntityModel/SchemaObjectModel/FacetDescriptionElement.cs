@@ -1,24 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Xml;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+    using System.Xml;
+
     internal abstract class FacetDescriptionElement : SchemaElement
     {
-        int? _minValue;
-        int? _maxValue;
-        object _defaultValue;
-        bool _isConstant;
+        private int? _minValue;
+        private int? _maxValue;
+        private bool _isConstant;
 
         // won't be populated till you call CreateAndValidate
-        FacetDescription _facetDescription;
+        private FacetDescription _facetDescription;
 
         public FacetDescriptionElement(TypeElement type, string name)
-        : base(type, name)
+            : base(type, name)
         {
         }
 
@@ -29,12 +25,12 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 return true;
             }
 
-            if (namespaceUri == null && localName == XmlConstants.Name)
+            if (namespaceUri == null
+                && localName == XmlConstants.Name)
             {
                 return false;
             }
             return false;
-
         }
 
         protected override bool HandleAttribute(XmlReader reader)
@@ -43,7 +39,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             {
                 return true;
             }
-            else if (CanHandleAttribute(reader,  XmlConstants.MinimumAttribute))
+            else if (CanHandleAttribute(reader, XmlConstants.MinimumAttribute))
             {
                 HandleMinimumAttribute(reader);
                 return true;
@@ -76,7 +72,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader">xml reader currently positioned at Minimum attribute</param>
         protected void HandleMinimumAttribute(XmlReader reader)
         {
-            int value = -1;
+            var value = -1;
             if (HandleIntAttribute(reader, ref value))
             {
                 _minValue = value;
@@ -89,7 +85,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader">xml reader currently positioned at Maximum attribute</param>
         protected void HandleMaximumAttribute(XmlReader reader)
         {
-            int value = -1;
+            var value = -1;
             if (HandleIntAttribute(reader, ref value))
             {
                 _maxValue = value;
@@ -108,30 +104,26 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader">xml reader currently positioned at Constant attribute</param>
         protected void HandleConstantAttribute(XmlReader reader)
         {
-            bool value = false;
+            var value = false;
             if (HandleBoolAttribute(reader, ref value))
             {
                 _isConstant = value;
             }
         }
 
-        public abstract EdmType FacetType{ get; }
-        
+        public abstract EdmType FacetType { get; }
+
         public int? MinValue
         {
             get { return _minValue; }
         }
-        
+
         public int? MaxValue
         {
             get { return _maxValue; }
         }
-        
-        public object DefaultValue
-        {
-            get { return _defaultValue; }
-            set { _defaultValue = value; }
-        }
+
+        public object DefaultValue { get; set; }
 
         public FacetDescription FacetDescription
         {

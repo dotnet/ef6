@@ -1,4 +1,3 @@
-using System;
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
     using System.Diagnostics.CodeAnalysis;
@@ -8,7 +7,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1019:DefineAccessorsForAttributeArguments")]
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class, AllowMultiple = true)]
-    public sealed class EdmSchemaAttribute : System.Attribute
+    public sealed class EdmSchemaAttribute : Attribute
     {
         /// <summary>
         /// Constructor for EdmSchemaAttribute
@@ -16,6 +15,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         public EdmSchemaAttribute()
         {
         }
+
         /// <summary>
         /// Setting this parameter to a unique value for each model file in a Visual Basic
         /// assembly will prevent the following error: 
@@ -25,9 +25,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             if (null == assemblyGuid)
             {
-                throw new System.ArgumentNullException("assemblyGuid");
+                throw new ArgumentNullException("assemblyGuid");
             }
         }
     }
 }
-

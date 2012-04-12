@@ -1,10 +1,9 @@
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Threading;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System.Diagnostics.CodeAnalysis;
+    using System.Data.Entity.Core.Common;
+    using System.Diagnostics;
+    using System.Reflection;
+    using System.Threading;
 
     /// <summary>
     /// Represent the edm property class
@@ -12,6 +11,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public sealed class EdmProperty : EdmMember
     {
         #region Constructors
+
         /// <summary>
         /// Initializes a new instance of the property class
         /// </summary>
@@ -25,23 +25,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
             EntityUtil.CheckStringArgument(name, "name");
             EntityUtil.GenericCheckArgumentNull(typeUsage, "typeUsage");
         }
+
         #endregion
 
         #region Fields
-        /// <summary>Store the handle, allowing the PropertyInfo/MethodInfo/Type references to be GC'd</summary>
-        internal readonly System.RuntimeMethodHandle PropertyGetterHandle;
 
         /// <summary>Store the handle, allowing the PropertyInfo/MethodInfo/Type references to be GC'd</summary>
-        internal readonly System.RuntimeMethodHandle PropertySetterHandle;
+        internal readonly RuntimeMethodHandle PropertyGetterHandle;
 
         /// <summary>Store the handle, allowing the PropertyInfo/MethodInfo/Type references to be GC'd</summary>
-        internal readonly System.RuntimeTypeHandle EntityDeclaringType;
+        internal readonly RuntimeMethodHandle PropertySetterHandle;
+
+        /// <summary>Store the handle, allowing the PropertyInfo/MethodInfo/Type references to be GC'd</summary>
+        internal readonly RuntimeTypeHandle EntityDeclaringType;
 
         /// <summary>cached dynamic method to get the property value from a CLR instance</summary> 
-        private Func<object,object> _memberGetter;
+        private Func<object, object> _memberGetter;
 
         /// <summary>cached dynamic method to set a CLR property value on a CLR instance</summary> 
-        private Action<object,object> _memberSetter;
+        private Action<object, object> _memberSetter;
+
         #endregion
 
         /// <summary>
@@ -51,19 +54,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="typeUsage">TypeUsage object containing the property type and its facets</param>
         /// <param name="propertyInfo">for the property</param>
         /// <param name="entityDeclaringType">The declaring type of the entity containing the property</param>
-        internal EdmProperty(string name, TypeUsage typeUsage, System.Reflection.PropertyInfo propertyInfo, RuntimeTypeHandle entityDeclaringType)
+        internal EdmProperty(string name, TypeUsage typeUsage, PropertyInfo propertyInfo, RuntimeTypeHandle entityDeclaringType)
             : this(name, typeUsage)
         {
-            System.Diagnostics.Debug.Assert(name == propertyInfo.Name, "different PropertyName");
+            Debug.Assert(name == propertyInfo.Name, "different PropertyName");
             if (null != propertyInfo)
             {
-                System.Reflection.MethodInfo method;
+                MethodInfo method;
 
                 method = propertyInfo.GetGetMethod(true); // return public or non-public getter
-                PropertyGetterHandle = ((null != method) ? method.MethodHandle : default(System.RuntimeMethodHandle));
+                PropertyGetterHandle = ((null != method) ? method.MethodHandle : default(RuntimeMethodHandle));
 
                 method = propertyInfo.GetSetMethod(true); // return public or non-public getter
-                PropertySetterHandle = ((null != method) ? method.MethodHandle : default(System.RuntimeMethodHandle));
+                PropertySetterHandle = ((null != method) ? method.MethodHandle : default(RuntimeMethodHandle));
 
                 EntityDeclaringType = entityDeclaringType;
             }
@@ -72,7 +75,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Returns the kind of the type
         /// </summary>
-        public override BuiltInTypeKind BuiltInTypeKind { get { return BuiltInTypeKind.EdmProperty; } }
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
+            get { return BuiltInTypeKind.EdmProperty; }
+        }
 
         /// <summary>
         /// Returns true if this property is nullable.
@@ -97,10 +103,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when the EdmProperty instance is in ReadOnly state</exception>
         public bool Nullable
         {
-            get
-            {
-                return (bool)TypeUsage.Facets[DbProviderManifest.NullableFacetName].Value;
-            }
+            get { return (bool)TypeUsage.Facets[DbProviderManifest.NullableFacetName].Value; }
         }
 
         /// <summary>
@@ -109,30 +112,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when the EdmProperty instance is in ReadOnly state</exception>
         public Object DefaultValue
         {
-            get
-            {
-                return TypeUsage.Facets[DbProviderManifest.DefaultValueFacetName].Value;
-            }
+            get { return TypeUsage.Facets[DbProviderManifest.DefaultValueFacetName].Value; }
         }
 
         /// <summary>cached dynamic method to get the property value from a CLR instance</summary> 
-        internal Func<object,object> ValueGetter {
+        internal Func<object, object> ValueGetter
+        {
             get { return _memberGetter; }
             set
             {
-                System.Diagnostics.Debug.Assert(null != value, "clearing ValueGetter");
+                Debug.Assert(null != value, "clearing ValueGetter");
                 // It doesn't matter which delegate wins, but only one should be jitted
                 Interlocked.CompareExchange(ref _memberGetter, value, null);
             }
         }
 
         /// <summary>cached dynamic method to set a CLR property value on a CLR instance</summary> 
-        internal Action<object,object> ValueSetter
+        internal Action<object, object> ValueSetter
         {
             get { return _memberSetter; }
             set
             {
-                System.Diagnostics.Debug.Assert(null != value, "clearing ValueSetter");
+                Debug.Assert(null != value, "clearing ValueSetter");
                 // It doesn't matter which delegate wins, but only one should be jitted
                 Interlocked.CompareExchange(ref _memberSetter, value, null);
             }

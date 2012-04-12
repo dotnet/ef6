@@ -1,18 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Text;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics;
+
     /// <summary>
     /// Class for representing an entity container
     /// </summary>
     public sealed class EntityContainer : GlobalItem
     {
         #region Constructors
+
         /// <summary>
         /// The constructor for constructing the EntityContainer object with the name, namespaceName, and version.
         /// </summary>
@@ -25,33 +21,37 @@ namespace System.Data.Entity.Core.Metadata.Edm
             EntityUtil.CheckStringArgument(name, "name");
 
             _name = name;
-            this.DataSpace = dataSpace;
+            DataSpace = dataSpace;
             _baseEntitySets = new ReadOnlyMetadataCollection<EntitySetBase>(new EntitySetBaseCollection(this));
             _functionImports = new ReadOnlyMetadataCollection<EdmFunction>(new MetadataCollection<EdmFunction>());
         }
+
         #endregion
 
         #region Fields
+
         private readonly string _name;
         private readonly ReadOnlyMetadataCollection<EntitySetBase> _baseEntitySets;
         private readonly ReadOnlyMetadataCollection<EdmFunction> _functionImports;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the kind of the type
         /// </summary>
-        public override BuiltInTypeKind BuiltInTypeKind { get { return BuiltInTypeKind.EntityContainer; } }
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
+            get { return BuiltInTypeKind.EntityContainer; }
+        }
 
         /// <summary>
         /// Gets the identity for this item as a string
         /// </summary>
         internal override string Identity
         {
-            get
-            {
-                return this.Name;
-            }
+            get { return Name; }
         }
 
         /// <summary>
@@ -60,10 +60,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public String Name
         {
-            get
-            {
-                return _name;
-            }
+            get { return _name; }
         }
 
         /// <summary>
@@ -72,10 +69,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.EntitySetBase, true)]
         public ReadOnlyMetadataCollection<EntitySetBase> BaseEntitySets
         {
-            get
-            {
-                return _baseEntitySets;
-            }
+            get { return _baseEntitySets; }
         }
 
         /// <summary>
@@ -84,14 +78,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.EdmFunction, true)]
         public ReadOnlyMetadataCollection<EdmFunction> FunctionImports
         {
-            get
-            {
-                return _functionImports;
-            }
+            get { return _functionImports; }
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Sets this item to be readonly, once this is set, the item will never be writable again.
         /// </summary>
@@ -100,8 +93,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             if (!IsReadOnly)
             {
                 base.SetReadOnly();
-                this.BaseEntitySets.Source.SetReadOnly();
-                this.FunctionImports.Source.SetReadOnly();
+                BaseEntitySets.Source.SetReadOnly();
+                FunctionImports.Source.SetReadOnly();
             }
         }
 
@@ -113,7 +106,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns></returns>
         public EntitySet GetEntitySetByName(string name, bool ignoreCase)
         {
-            EntitySet entitySet = (BaseEntitySets.GetValue(name, ignoreCase) as EntitySet);
+            var entitySet = (BaseEntitySets.GetValue(name, ignoreCase) as EntitySet);
             if (null != entitySet)
             {
                 return entitySet;
@@ -134,7 +127,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             EntityUtil.CheckArgumentNull(name, "name");
             EntitySetBase baseEntitySet = null;
             entitySet = null;
-            if (this.BaseEntitySets.TryGetValue(name, ignoreCase, out baseEntitySet))
+            if (BaseEntitySets.TryGetValue(name, ignoreCase, out baseEntitySet))
             {
                 if (Helper.IsEntitySet(baseEntitySet))
                 {
@@ -154,12 +147,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public RelationshipSet GetRelationshipSetByName(string name, bool ignoreCase)
         {
             RelationshipSet relationshipSet;
-            if (!this.TryGetRelationshipSetByName(name, ignoreCase, out relationshipSet))
+            if (!TryGetRelationshipSetByName(name, ignoreCase, out relationshipSet))
             {
                 throw EntityUtil.InvalidRelationshipSetName(name);
             }
             return relationshipSet;
-
         }
 
         /// <summary>
@@ -175,7 +167,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             EntityUtil.CheckArgumentNull(name, "name");
             EntitySetBase baseEntitySet = null;
             relationshipSet = null;
-            if (this.BaseEntitySets.TryGetValue(name, ignoreCase, out baseEntitySet))
+            if (BaseEntitySets.TryGetValue(name, ignoreCase, out baseEntitySet))
             {
                 if (Helper.IsRelationshipSet(baseEntitySet))
                 {
@@ -206,6 +198,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Debug.Assert(function.IsFunctionImport, "function.IsFunctionImport");
             _functionImports.Source.Add(function);
         }
+
         #endregion
     }
 }

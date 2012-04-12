@@ -1,60 +1,63 @@
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity;
-using System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using System.Text;
 
     // An abstraction that captures a foreign key constraint:
     // <child, columns> --> <parent, columns>
     internal class ForeignConstraint : InternalBase
     {
-
         #region Constructor
+
         // effects: Creates a foreign key constraint of the form:
         // <i_childTable, i_childColumns> --> <i_parentTable, i_childColumns>
         // i_fkeySet is the name of the constraint
-        internal ForeignConstraint(AssociationSet i_fkeySet, EntitySet i_parentTable, EntitySet i_childTable,
-                                   ReadOnlyMetadataCollection<EdmProperty> i_parentColumns, ReadOnlyMetadataCollection<EdmProperty> i_childColumns)
+        internal ForeignConstraint(
+            AssociationSet i_fkeySet, EntitySet i_parentTable, EntitySet i_childTable,
+            ReadOnlyMetadataCollection<EdmProperty> i_parentColumns, ReadOnlyMetadataCollection<EdmProperty> i_childColumns)
         {
             m_fKeySet = i_fkeySet;
             m_parentTable = i_parentTable;
             m_childTable = i_childTable;
             m_childColumns = new List<MemberPath>();
             // Create parent and child paths using the table names
-            foreach (EdmProperty property in i_childColumns)
+            foreach (var property in i_childColumns)
             {
-                MemberPath path = new MemberPath(m_childTable, property);
+                var path = new MemberPath(m_childTable, property);
                 m_childColumns.Add(path);
             }
 
             m_parentColumns = new List<MemberPath>();
-            foreach (EdmProperty property in i_parentColumns)
+            foreach (var property in i_parentColumns)
             {
-                MemberPath path = new MemberPath(m_parentTable, property);
+                var path = new MemberPath(m_parentTable, property);
                 m_parentColumns.Add(path);
             }
         }
+
         #endregion
 
         #region Fields
-        private AssociationSet m_fKeySet; // Just for debugging
-        private EntitySet m_parentTable;
-        private EntitySet m_childTable;
-        private List<MemberPath> m_parentColumns;
-        private List<MemberPath> m_childColumns;
+
+        private readonly AssociationSet m_fKeySet; // Just for debugging
+        private readonly EntitySet m_parentTable;
+        private readonly EntitySet m_childTable;
+        private readonly List<MemberPath> m_parentColumns;
+        private readonly List<MemberPath> m_childColumns;
+
         #endregion
 
         #region Properties
+
         internal EntitySet ParentTable
         {
             get { return m_parentTable; }
@@ -74,46 +77,51 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         {
             get { return m_parentColumns; }
         }
+
         #endregion
 
         #region Externally available Methods
+
         // effects: Given a store-side container, returns all the foreign key
         // constraints specified for different tables
         internal static List<ForeignConstraint> GetForeignConstraints(EntityContainer container)
         {
-            List<ForeignConstraint> foreignKeyConstraints = new List<ForeignConstraint>();
+            var foreignKeyConstraints = new List<ForeignConstraint>();
 
             // Go through all the extents and get the associations
-            foreach (EntitySetBase extent in container.BaseEntitySets)
+            foreach (var extent in container.BaseEntitySets)
             {
-                AssociationSet relationSet = extent as AssociationSet;
+                var relationSet = extent as AssociationSet;
 
-                if (relationSet == null) continue;
+                if (relationSet == null)
+                {
+                    continue;
+                }
                 // Keep track of the end to EntitySet mapping
-                Dictionary<string, EntitySet> endToExtents = new Dictionary<string, EntitySet>();
+                var endToExtents = new Dictionary<string, EntitySet>();
 
-                foreach (AssociationSetEnd end in relationSet.AssociationSetEnds)
+                foreach (var end in relationSet.AssociationSetEnds)
                 {
                     endToExtents.Add(end.Name, end.EntitySet);
                 }
 
-                AssociationType relationType = relationSet.ElementType;
+                var relationType = relationSet.ElementType;
                 // Go through each referential constraint, determine the name
                 // of the tables that the constraint refers to and then
                 // create the foreign key constraint between the tables
                 // Wow! We go to great lengths to make it cumbersome for a
                 // programmer to deal with foreign keys
-                foreach (ReferentialConstraint constraint in relationType.ReferentialConstraints)
+                foreach (var constraint in relationType.ReferentialConstraints)
                 {
                     // Note: We are correlating the constraint's roles with
                     // the ends above using the role names, i.e.,
                     // FromRole.Name and ToRole.Name here and end.Role above
-                    EntitySet parentExtent = endToExtents[constraint.FromRole.Name];
-                    EntitySet childExtent = endToExtents[constraint.ToRole.Name];
-                    ForeignConstraint foreignKeyConstraint = new ForeignConstraint(relationSet, parentExtent, childExtent,
-                                                                       constraint.FromProperties, constraint.ToProperties);
+                    var parentExtent = endToExtents[constraint.FromRole.Name];
+                    var childExtent = endToExtents[constraint.ToRole.Name];
+                    var foreignKeyConstraint = new ForeignConstraint(
+                        relationSet, parentExtent, childExtent,
+                        constraint.FromProperties, constraint.ToProperties);
                     foreignKeyConstraints.Add(foreignKeyConstraint);
-
                 }
             }
             return foreignKeyConstraints;
@@ -122,8 +130,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         // effects: Checks that this foreign key constraints for all the
         // tables are being ensured on the C-side as well. If not, adds 
         // errors to the errorLog
-        internal void CheckConstraint(Set<Cell> cells, QueryRewriter childRewriter, QueryRewriter parentRewriter,
-                                      ErrorLog errorLog, ConfigViewGenerator config)
+        internal void CheckConstraint(
+            Set<Cell> cells, QueryRewriter childRewriter, QueryRewriter parentRewriter,
+            ErrorLog errorLog, ConfigViewGenerator config)
         {
             if (IsConstraintRelevantForCells(cells) == false)
             {
@@ -139,7 +148,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 Trace.WriteLine(this);
             }
 
-            if (childRewriter == null && parentRewriter == null)
+            if (childRewriter == null
+                && parentRewriter == null)
             {
                 // Neither table is mapped - so we are fine
                 return;
@@ -154,20 +164,22 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
             if (childRewriter == null)
             {
-                string message = System.Data.Entity.Resources.Strings.ViewGen_Foreign_Key_Missing_Table_Mapping(
-                                               ToUserString(), ChildTable.Name);
+                var message = Strings.ViewGen_Foreign_Key_Missing_Table_Mapping(
+                    ToUserString(), ChildTable.Name);
                 // Get the cells from the parent table
-                ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.ForeignKeyMissingTableMapping, message, parentRewriter.UsedCells, String.Empty);
+                var record = new ErrorLog.Record(
+                    ViewGenErrorCode.ForeignKeyMissingTableMapping, message, parentRewriter.UsedCells, String.Empty);
                 errorLog.AddEntry(record);
                 return;
             }
 
             if (parentRewriter == null)
             {
-                string message = System.Data.Entity.Resources.Strings.ViewGen_Foreign_Key_Missing_Table_Mapping(
-                                               ToUserString(), ParentTable.Name);
+                var message = Strings.ViewGen_Foreign_Key_Missing_Table_Mapping(
+                    ToUserString(), ParentTable.Name);
                 // Get the cells from the child table
-                ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.ForeignKeyMissingTableMapping, message, childRewriter.UsedCells, String.Empty);
+                var record = new ErrorLog.Record(
+                    ViewGenErrorCode.ForeignKeyMissingTableMapping, message, childRewriter.UsedCells, String.Empty);
                 errorLog.AddEntry(record);
                 return;
             }
@@ -188,7 +200,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             // that the foreign key is also the primary key for this table -- so we can propagate the queries upto C-Space
             // rather than doing the cell check
 
-            int initialErrorLogSize = errorLog.Count;
+            var initialErrorLogSize = errorLog.Count;
             if (IsForeignKeySuperSetOfPrimaryKeyInChildTable())
             {
                 GuaranteeForeignKeyConstraintInCSpace(childRewriter, parentRewriter, errorLog);
@@ -207,33 +219,36 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 CheckForeignKeyColumnOrder(cells, errorLog);
             }
         }
+
         #endregion
 
         #region Methods (mostly) for Query Containment Check via Keys
+
         // requires: constraint.ChildColumns form a key in
         // constraint.ChildTable (actually they should subsume the primary key)
-        private void GuaranteeForeignKeyConstraintInCSpace(QueryRewriter childRewriter, QueryRewriter parentRewriter,
-                                                           ErrorLog errorLog)
+        private void GuaranteeForeignKeyConstraintInCSpace(
+            QueryRewriter childRewriter, QueryRewriter parentRewriter,
+            ErrorLog errorLog)
         {
-            ViewgenContext childContext = childRewriter.ViewgenContext;
-            ViewgenContext parentContext = parentRewriter.ViewgenContext;
-            CellTreeNode cNode = childRewriter.BasicView;
-            CellTreeNode pNode = parentRewriter.BasicView;
+            var childContext = childRewriter.ViewgenContext;
+            var parentContext = parentRewriter.ViewgenContext;
+            var cNode = childRewriter.BasicView;
+            var pNode = parentRewriter.BasicView;
 
-            FragmentQueryProcessor qp = FragmentQueryProcessor.Merge(childContext.RightFragmentQP, parentContext.RightFragmentQP);
-            bool cImpliesP = qp.IsContainedIn(cNode.RightFragmentQuery, pNode.RightFragmentQuery);
+            var qp = FragmentQueryProcessor.Merge(childContext.RightFragmentQP, parentContext.RightFragmentQP);
+            var cImpliesP = qp.IsContainedIn(cNode.RightFragmentQuery, pNode.RightFragmentQuery);
 
             if (false == cImpliesP)
             {
                 // Foreign key constraint not being ensured in C-space
-                string childExtents = LeftCellWrapper.GetExtentListAsUserString(cNode.GetLeaves());
-                string parentExtents = LeftCellWrapper.GetExtentListAsUserString(pNode.GetLeaves());
-                string message = System.Data.Entity.Resources.Strings.ViewGen_Foreign_Key_Not_Guaranteed_InCSpace(
-                                               ToUserString());
+                var childExtents = LeftCellWrapper.GetExtentListAsUserString(cNode.GetLeaves());
+                var parentExtents = LeftCellWrapper.GetExtentListAsUserString(pNode.GetLeaves());
+                var message = Strings.ViewGen_Foreign_Key_Not_Guaranteed_InCSpace(
+                    ToUserString());
                 // Add all wrappers into allWrappers
-                Set<LeftCellWrapper> allWrappers = new Set<LeftCellWrapper>(pNode.GetLeaves());
+                var allWrappers = new Set<LeftCellWrapper>(pNode.GetLeaves());
                 allWrappers.AddRange(cNode.GetLeaves());
-                ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.ForeignKeyNotGuaranteedInCSpace, message, allWrappers, String.Empty);
+                var record = new ErrorLog.Record(ViewGenErrorCode.ForeignKeyNotGuaranteedInCSpace, message, allWrappers, String.Empty);
                 errorLog.AddEntry(record);
             }
         }
@@ -244,23 +259,23 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
         // effects: Ensures that there is a relationship mapped into the C-space for some cell in m_cellGroup. Else
         // adds an error to errorLog
-        private void GuaranteeMappedRelationshipForForeignKey(QueryRewriter childRewriter, QueryRewriter parentRewriter,
-                                                              IEnumerable<Cell> cells,
-                                                              ErrorLog errorLog, ConfigViewGenerator config)
+        private void GuaranteeMappedRelationshipForForeignKey(
+            QueryRewriter childRewriter, QueryRewriter parentRewriter,
+            IEnumerable<Cell> cells,
+            ErrorLog errorLog, ConfigViewGenerator config)
         {
-
-            ViewgenContext childContext = childRewriter.ViewgenContext;
-            ViewgenContext parentContext = parentRewriter.ViewgenContext;
+            var childContext = childRewriter.ViewgenContext;
+            var parentContext = parentRewriter.ViewgenContext;
 
             // Find a cell where this foreign key is mapped as a relationship
-            MemberPath prefix = new MemberPath(ChildTable);
-            ExtentKey primaryKey = ExtentKey.GetPrimaryKeyForEntityType(prefix, ChildTable.ElementType);
-            IEnumerable<MemberPath> primaryKeyFields = primaryKey.KeyFields;
-            bool foundCell = false;
+            var prefix = new MemberPath(ChildTable);
+            var primaryKey = ExtentKey.GetPrimaryKeyForEntityType(prefix, ChildTable.ElementType);
+            var primaryKeyFields = primaryKey.KeyFields;
+            var foundCell = false;
 
-            bool foundValidParentColumnsForForeignKey = false; //we need to find only one, dont error on any one check being false
+            var foundValidParentColumnsForForeignKey = false; //we need to find only one, dont error on any one check being false
             List<ErrorLog.Record> errorListForInvalidParentColumnsForForeignKey = null;
-            foreach (Cell cell in cells)
+            foreach (var cell in cells)
             {
                 if (cell.SQuery.Extent.Equals(ChildTable) == false)
                 {
@@ -271,8 +286,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 // Check that all the columns of the foreign key and the primary key in the child table are mapped to some
                 // property in the C-space
 
-                AssociationEndMember parentEnd = GetRelationEndForColumns(cell, ChildColumns);
-                if (parentEnd != null && CheckParentColumnsForForeignKey(cell, cells, parentEnd, ref errorListForInvalidParentColumnsForForeignKey) == false)
+                var parentEnd = GetRelationEndForColumns(cell, ChildColumns);
+                if (parentEnd != null
+                    && CheckParentColumnsForForeignKey(cell, cells, parentEnd, ref errorListForInvalidParentColumnsForForeignKey) == false)
                 {
                     // Not an error unless we find no valid case
                     continue;
@@ -282,13 +298,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                     foundValidParentColumnsForForeignKey = true;
                 }
 
-                AssociationEndMember childEnd = GetRelationEndForColumns(cell, primaryKeyFields);
-                Debug.Assert(childEnd == null || parentEnd != childEnd,
-                             "Ends are same => PKey and child columns are same - code should gone to other method");
+                var childEnd = GetRelationEndForColumns(cell, primaryKeyFields);
+                Debug.Assert(
+                    childEnd == null || parentEnd != childEnd,
+                    "Ends are same => PKey and child columns are same - code should gone to other method");
                 // Note: If both of them are not-null, they are mapped to the
                 // same association set -- since we checked that particular cell
 
-                if (childEnd != null && parentEnd != null &&
+                if (childEnd != null && parentEnd != null
+                    &&
                     FindEntitySetForColumnsMappedToEntityKeys(cells, primaryKeyFields) != null)
                 {
                     foundCell = true;
@@ -298,8 +316,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 else if (parentEnd != null)
                 {
                     // At this point, we know cell corresponds to an association set
-                    AssociationSet assocSet = (AssociationSet)cell.CQuery.Extent;
-                    EntitySet parentSet = MetadataHelper.GetEntitySetAtEnd(assocSet, parentEnd);
+                    var assocSet = (AssociationSet)cell.CQuery.Extent;
+                    var parentSet = MetadataHelper.GetEntitySetAtEnd(assocSet, parentEnd);
                     foundCell = CheckConstraintWhenOnlyParentMapped(assocSet, parentEnd, childRewriter, parentRewriter);
                     if (foundCell)
                     {
@@ -311,7 +329,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             //CheckParentColumnsForForeignKey has returned no matches, Error.
             if (!foundValidParentColumnsForForeignKey)
             {
-                Debug.Assert(errorListForInvalidParentColumnsForForeignKey != null && errorListForInvalidParentColumnsForForeignKey.Count > 0);
+                Debug.Assert(
+                    errorListForInvalidParentColumnsForForeignKey != null && errorListForInvalidParentColumnsForForeignKey.Count > 0);
                 foreach (var errorRecord in errorListForInvalidParentColumnsForForeignKey)
                 {
                     errorLog.AddEntry(errorRecord);
@@ -322,53 +341,60 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             if (foundCell == false)
             {
                 // No cell found -- Declare error
-                string message = System.Data.Entity.Resources.Strings.ViewGen_Foreign_Key_Missing_Relationship_Mapping(ToUserString());
+                var message = Strings.ViewGen_Foreign_Key_Missing_Relationship_Mapping(ToUserString());
 
                 IEnumerable<LeftCellWrapper> parentWrappers = GetWrappersFromContext(parentContext, ParentTable);
                 IEnumerable<LeftCellWrapper> childWrappers = GetWrappersFromContext(childContext, ChildTable);
-                Set<LeftCellWrapper> bothExtentWrappers =
+                var bothExtentWrappers =
                     new Set<LeftCellWrapper>(parentWrappers);
                 bothExtentWrappers.AddRange(childWrappers);
-                ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.ForeignKeyMissingRelationshipMapping, message, bothExtentWrappers, String.Empty);
+                var record = new ErrorLog.Record(
+                    ViewGenErrorCode.ForeignKeyMissingRelationshipMapping, message, bothExtentWrappers, String.Empty);
                 errorLog.AddEntry(record);
             }
         }
 
-        private bool CheckIfConstraintMappedToForeignKeyAssociation(QueryRewriter childRewriter, QueryRewriter parentRewriter,
-                                                              Set<Cell> cells)
+        private bool CheckIfConstraintMappedToForeignKeyAssociation(
+            QueryRewriter childRewriter, QueryRewriter parentRewriter,
+            Set<Cell> cells)
         {
-            ViewgenContext childContext = childRewriter.ViewgenContext;
-            ViewgenContext parentContext = parentRewriter.ViewgenContext;
+            var childContext = childRewriter.ViewgenContext;
+            var parentContext = parentRewriter.ViewgenContext;
 
             //First collect the sets of properties that the principal and dependant ends of this FK
             //are mapped to in the Edm side.
             var childPropertiesSet = new List<Set<EdmProperty>>();
             var parentPropertiesSet = new List<Set<EdmProperty>>();
-            foreach (Cell cell in cells)
+            foreach (var cell in cells)
             {
-                if (cell.CQuery.Extent.BuiltInTypeKind != BuiltInTypeKind.AssociationSet)
+                if (cell.CQuery.Extent.BuiltInTypeKind
+                    != BuiltInTypeKind.AssociationSet)
                 {
                     var childProperties = cell.GetCSlotsForTableColumns(ChildColumns);
-                    if ( (childProperties != null) && (childProperties.Count != 0))
+                    if ((childProperties != null)
+                        && (childProperties.Count != 0))
                     {
                         childPropertiesSet.Add(childProperties);
                     }
                     var parentProperties = cell.GetCSlotsForTableColumns(ParentColumns);
-                    if ((parentProperties != null) && (parentProperties.Count != 0))
+                    if ((parentProperties != null)
+                        && (parentProperties.Count != 0))
                     {
                         parentPropertiesSet.Add(parentProperties);
                     }
-
                 }
             }
 
             //Now Check if the properties on the Edm side are connected via an FK relationship.
-            if ((childPropertiesSet.Count != 0) && (parentPropertiesSet.Count != 0))
+            if ((childPropertiesSet.Count != 0)
+                && (parentPropertiesSet.Count != 0))
             {
-                var foreignKeyAssociations = childContext.EntityContainerMapping.EdmEntityContainer.BaseEntitySets.OfType<AssociationSet>().Where(it => it.ElementType.IsForeignKey).Select(it => it.ElementType);                
-                foreach (AssociationType association in foreignKeyAssociations)
+                var foreignKeyAssociations =
+                    childContext.EntityContainerMapping.EdmEntityContainer.BaseEntitySets.OfType<AssociationSet>().Where(
+                        it => it.ElementType.IsForeignKey).Select(it => it.ElementType);
+                foreach (var association in foreignKeyAssociations)
                 {
-                    ReferentialConstraint refConstraint = association.ReferentialConstraints.FirstOrDefault();
+                    var refConstraint = association.ReferentialConstraints.FirstOrDefault();
                     //We need to check to see if the dependent properties that were mapped from S side are present as
                     //dependant properties of this ref constraint on the Edm side. We need to do the same for principal side but
                     //we can not enforce equality since the order of the properties participating in the constraint on the S side and
@@ -376,17 +402,19 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                     //condition since it will allow invalid mapping where FK columns could have been flipped when mapping to the Edm side. So
                     //we make sure that the index of the properties in the principal and dependant are same on the Edm side even if they are in
                     //different order for ref constraints for Edm and store side.
-                    var childRefPropertiesCollection = childPropertiesSet.Where(it => it.SetEquals(new Set<EdmProperty>(refConstraint.ToProperties)));
-                    var parentRefPropertiesCollection = parentPropertiesSet.Where(it => it.SetEquals(new Set<EdmProperty>(refConstraint.FromProperties)));
+                    var childRefPropertiesCollection =
+                        childPropertiesSet.Where(it => it.SetEquals(new Set<EdmProperty>(refConstraint.ToProperties)));
+                    var parentRefPropertiesCollection =
+                        parentPropertiesSet.Where(it => it.SetEquals(new Set<EdmProperty>(refConstraint.FromProperties)));
                     if ((childRefPropertiesCollection.Count() != 0 && parentRefPropertiesCollection.Count() != 0))
                     {
-                        foreach (var parentRefProperties in parentRefPropertiesCollection)                        
+                        foreach (var parentRefProperties in parentRefPropertiesCollection)
                         {
                             var parentIndexes = GetPropertyIndexes(parentRefProperties, refConstraint.FromProperties);
                             foreach (var childRefProperties in childRefPropertiesCollection)
                             {
                                 var childIndexes = GetPropertyIndexes(childRefProperties, refConstraint.ToProperties);
-                                
+
                                 if (childIndexes.SequenceEqual(parentIndexes))
                                 {
                                     return true;
@@ -400,7 +428,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         }
 
         //Return a set of integers that represent the indexes of first set of properties in the second set
-        private static Set<int> GetPropertyIndexes(IEnumerable<EdmProperty> properties1, ReadOnlyMetadataCollection<EdmProperty> properties2)
+        private static Set<int> GetPropertyIndexes(
+            IEnumerable<EdmProperty> properties1, ReadOnlyMetadataCollection<EdmProperty> properties2)
         {
             var propertyIndexes = new Set<int>();
             foreach (var prop in properties1)
@@ -417,57 +446,62 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         // effects: Checks if the constraint is correctly maintained in
         // C-space via an association set (being a subset of the
         // corresponding entitySet)
-        private static bool CheckConstraintWhenOnlyParentMapped(AssociationSet assocSet, AssociationEndMember endMember,
-                                                         QueryRewriter childRewriter, QueryRewriter parentRewriter)
+        private static bool CheckConstraintWhenOnlyParentMapped(
+            AssociationSet assocSet, AssociationEndMember endMember,
+            QueryRewriter childRewriter, QueryRewriter parentRewriter)
         {
+            var childContext = childRewriter.ViewgenContext;
+            var parentContext = parentRewriter.ViewgenContext;
 
-            ViewgenContext childContext = childRewriter.ViewgenContext;
-            ViewgenContext parentContext = parentRewriter.ViewgenContext;
-
-            CellTreeNode pNode = parentRewriter.BasicView;
+            var pNode = parentRewriter.BasicView;
             Debug.Assert(pNode != null);
 
-            RoleBoolean endRoleBoolean = new RoleBoolean(assocSet.AssociationSetEnds[endMember.Name]);
+            var endRoleBoolean = new RoleBoolean(assocSet.AssociationSetEnds[endMember.Name]);
             // use query in pNode as a factory to create a bool expression for the endRoleBoolean
-            BoolExpression endCondition = pNode.RightFragmentQuery.Condition.Create(endRoleBoolean);
-            FragmentQuery cNodeQuery = FragmentQuery.Create(pNode.RightFragmentQuery.Attributes, endCondition);
+            var endCondition = pNode.RightFragmentQuery.Condition.Create(endRoleBoolean);
+            var cNodeQuery = FragmentQuery.Create(pNode.RightFragmentQuery.Attributes, endCondition);
 
-            FragmentQueryProcessor qp = FragmentQueryProcessor.Merge(childContext.RightFragmentQP, parentContext.RightFragmentQP);
-            bool cImpliesP = qp.IsContainedIn(cNodeQuery, pNode.RightFragmentQuery);
+            var qp = FragmentQueryProcessor.Merge(childContext.RightFragmentQP, parentContext.RightFragmentQP);
+            var cImpliesP = qp.IsContainedIn(cNodeQuery, pNode.RightFragmentQuery);
             return cImpliesP;
         }
 
         // requires: IsForeignKeySuperSetOfPrimaryKeyInChildTable() is false
         // effects: Given that both the ChildColumns in this and the
         // primaryKey of ChildTable are mapped. Return true iff no error occurred
-        private bool CheckConstraintWhenParentChildMapped(Cell cell, ErrorLog errorLog,
-                                                          AssociationEndMember parentEnd, ConfigViewGenerator config)
+        private bool CheckConstraintWhenParentChildMapped(
+            Cell cell, ErrorLog errorLog,
+            AssociationEndMember parentEnd, ConfigViewGenerator config)
         {
-            bool ok = true;
+            var ok = true;
 
             // The foreign key constraint has been mapped to a
             // relationship. Check if the multiplicities are consistent
             // If all columns in the child table (corresponding to
             // the constraint) are nullable, the parent end can be
             // 0..1 or 1..1. Else if must be 1..1
-            if (parentEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many)
+            if (parentEnd.RelationshipMultiplicity
+                == RelationshipMultiplicity.Many)
             {
                 // Parent should at most one since we are talking
                 // about foreign keys here
-                string message = System.Data.Entity.Resources.Strings.ViewGen_Foreign_Key_UpperBound_MustBeOne(ToUserString(),
-                                               cell.CQuery.Extent.Name, parentEnd.Name);
-                ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.ForeignKeyUpperBoundMustBeOne, message, cell, String.Empty);
+                var message = Strings.ViewGen_Foreign_Key_UpperBound_MustBeOne(
+                    ToUserString(),
+                    cell.CQuery.Extent.Name, parentEnd.Name);
+                var record = new ErrorLog.Record(ViewGenErrorCode.ForeignKeyUpperBoundMustBeOne, message, cell, String.Empty);
                 errorLog.AddEntry(record);
                 ok = false;
             }
 
-            if (MemberPath.AreAllMembersNullable(ChildColumns) == false && parentEnd.RelationshipMultiplicity != RelationshipMultiplicity.One)
+            if (MemberPath.AreAllMembersNullable(ChildColumns) == false
+                && parentEnd.RelationshipMultiplicity != RelationshipMultiplicity.One)
             {
                 // Some column in the constraint in the child table
                 // is non-nullable and lower bound is not 1
-                string message = System.Data.Entity.Resources.Strings.ViewGen_Foreign_Key_LowerBound_MustBeOne(ToUserString(),
-                                               cell.CQuery.Extent.Name, parentEnd.Name);
-                ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.ForeignKeyLowerBoundMustBeOne, message, cell, String.Empty);
+                var message = Strings.ViewGen_Foreign_Key_LowerBound_MustBeOne(
+                    ToUserString(),
+                    cell.CQuery.Extent.Name, parentEnd.Name);
+                var record = new ErrorLog.Record(ViewGenErrorCode.ForeignKeyLowerBoundMustBeOne, message, cell, String.Empty);
                 errorLog.AddEntry(record);
                 ok = false;
             }
@@ -483,20 +517,21 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         // constraint.ParentColumns are mapped to the entity set E'e keys in
         // C-space where E corresponds to the entity set corresponding to end
         // Returns true iff such a mapping exists in cell
-        private bool CheckParentColumnsForForeignKey(Cell cell, IEnumerable<Cell> cells, AssociationEndMember parentEnd, ref List<ErrorLog.Record> errorList)
+        private bool CheckParentColumnsForForeignKey(
+            Cell cell, IEnumerable<Cell> cells, AssociationEndMember parentEnd, ref List<ErrorLog.Record> errorList)
         {
             // The child columns are mapped to some end of cell.CQuery.Extent. ParentColumns
             // must correspond to the EntitySet for this end
-            AssociationSet relationSet = (AssociationSet)cell.CQuery.Extent;
-            EntitySet endSet = MetadataHelper.GetEntitySetAtEnd(relationSet, parentEnd);
+            var relationSet = (AssociationSet)cell.CQuery.Extent;
+            var endSet = MetadataHelper.GetEntitySetAtEnd(relationSet, parentEnd);
 
             // Check if the ParentColumns are mapped to endSet's keys
 
             // Find the entity set that they map to - if any
-            EntitySet entitySet = FindEntitySetForColumnsMappedToEntityKeys(cells, ParentColumns);
-            if (entitySet == null || endSet.Equals(entitySet) == false)
+            var entitySet = FindEntitySetForColumnsMappedToEntityKeys(cells, ParentColumns);
+            if (entitySet == null
+                || endSet.Equals(entitySet) == false)
             {
-
                 if (errorList == null) //lazily initialize only if there is an error
                 {
                     errorList = new List<ErrorLog.Record>();
@@ -504,32 +539,34 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
                 // childColumns are mapped to parentEnd but ParentColumns are not mapped to the end
                 // corresponding to the parentEnd -- this is an error
-                string message = System.Data.Entity.Resources.Strings.ViewGen_Foreign_Key_ParentTable_NotMappedToEnd(
-                                               ToUserString(), ChildTable.Name,
-                                               cell.CQuery.Extent.Name, parentEnd.Name, ParentTable.Name, endSet.Name);
-                ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.ForeignKeyParentTableNotMappedToEnd, message, cell, String.Empty);
+                var message = Strings.ViewGen_Foreign_Key_ParentTable_NotMappedToEnd(
+                    ToUserString(), ChildTable.Name,
+                    cell.CQuery.Extent.Name, parentEnd.Name, ParentTable.Name, endSet.Name);
+                var record = new ErrorLog.Record(ViewGenErrorCode.ForeignKeyParentTableNotMappedToEnd, message, cell, String.Empty);
                 errorList.Add(record);
                 return false;
             }
             return true;
         }
+
         #endregion
 
         #region Static Helper Methods
+
         // effects: Returns the entity set to which tableFields are mapped
         // and if the mapped fields correspond precisely to the entity set's
         // keys. Else returns null
         private static EntitySet FindEntitySetForColumnsMappedToEntityKeys(IEnumerable<Cell> cells, IEnumerable<MemberPath> tableColumns)
         {
-            foreach (Cell cell in cells)
+            foreach (var cell in cells)
             {
-                CellQuery cQuery = cell.CQuery;
+                var cQuery = cell.CQuery;
                 if (cQuery.Extent is AssociationSet)
                 {
                     continue;
                 }
 
-                Set<EdmProperty> cSideMembers = cell.GetCSlotsForTableColumns(tableColumns);
+                var cSideMembers = cell.GetCSlotsForTableColumns(tableColumns);
                 if (cSideMembers == null)
                 {
                     continue;
@@ -537,16 +574,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 // Now check if these fields correspond to the key fields of
                 // the entity set
 
-                EntitySet entitySet = cQuery.Extent as EntitySet;
+                var entitySet = cQuery.Extent as EntitySet;
 
                 // Construct a List<EdmMember>
-                List<EdmProperty> propertyList = new List<EdmProperty>();
+                var propertyList = new List<EdmProperty>();
                 foreach (EdmProperty property in entitySet.ElementType.KeyMembers)
                 {
                     propertyList.Add(property);
                 }
 
-                Set<EdmProperty> keyMembers = new Set<EdmProperty>(propertyList).MakeReadOnly();
+                var keyMembers = new Set<EdmProperty>(propertyList).MakeReadOnly();
                 if (keyMembers.SetEquals(cSideMembers))
                 {
                     return entitySet;
@@ -566,29 +603,28 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 return null;
             }
 
-            AssociationSet relationSet = (AssociationSet)cell.CQuery.Extent;
+            var relationSet = (AssociationSet)cell.CQuery.Extent;
 
             // Go through all the ends and see if they are mapped in this cell
-            foreach (AssociationSetEnd relationEnd in relationSet.AssociationSetEnds)
+            foreach (var relationEnd in relationSet.AssociationSetEnds)
             {
-
-                AssociationEndMember endMember = relationEnd.CorrespondingAssociationEndMember;
-                MemberPath prefix = new MemberPath(relationSet, endMember);
+                var endMember = relationEnd.CorrespondingAssociationEndMember;
+                var prefix = new MemberPath(relationSet, endMember);
                 // Note: primaryKey is the key for the entity set but
                 // prefixed with the relationship's path - we are trying to
                 // check if the entity's keys are mapped in this cell as an end
-                ExtentKey primaryKey = ExtentKey.GetPrimaryKeyForEntityType(prefix, relationEnd.EntitySet.ElementType);
+                var primaryKey = ExtentKey.GetPrimaryKeyForEntityType(prefix, relationEnd.EntitySet.ElementType);
 
                 // Check if this end is mapped in this cell -- we are
                 // checking on the C-side -- we get all the indexes of the
                 // end's keyfields
-                List<int> endIndexes = cell.CQuery.GetProjectedPositions(primaryKey.KeyFields);
+                var endIndexes = cell.CQuery.GetProjectedPositions(primaryKey.KeyFields);
                 if (endIndexes != null)
                 {
                     // Get all the slots corresponding to the columns
                     // But stick to the slots with in these ends since the same column might be 
                     //projected twice in different ends
-                    List<int> columnIndexes = cell.SQuery.GetProjectedPositions(columns, endIndexes);
+                    var columnIndexes = cell.SQuery.GetProjectedPositions(columns, endIndexes);
                     if (columnIndexes == null)
                     {
                         continue; // columns are not projected with in this end
@@ -621,9 +657,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             }
             return wrappers;
         }
+
         #endregion
 
         #region Regular Helper Methods
+
         // requires: all columns in constraint.ParentColumns and
         // constraint.ChildColumns must have been mapped in some cell in m_cellGroup
         // effects: Given the foreign key constraint, checks if the
@@ -637,10 +675,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             // Then for each cell pair (parent, child) make sure that the
             // projected foreign keys columns in C-space are aligned
 
-            List<Cell> parentCells = new List<Cell>();
-            List<Cell> childCells = new List<Cell>();
+            var parentCells = new List<Cell>();
+            var childCells = new List<Cell>();
 
-            foreach (Cell cell in cells)
+            foreach (var cell in cells)
             {
                 if (cell.SQuery.Extent.Equals(ChildTable))
                 {
@@ -658,15 +696,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             // on the S-side. Then get the corresponding fields on the
             // C-side. The fields on the C-side should match
 
-            bool foundParentCell = false;
-            bool foundChildCell = false;
+            var foundParentCell = false;
+            var foundChildCell = false;
 
-            foreach (Cell childCell in childCells)
+            foreach (var childCell in childCells)
             {
-                List<List<int>> allChildSlotNums = GetSlotNumsForColumns(childCell, ChildColumns);
+                var allChildSlotNums = GetSlotNumsForColumns(childCell, ChildColumns);
 
                 if (allChildSlotNums.Count == 0)
-                { // slots in present in S-side, ignore
+                {
+                    // slots in present in S-side, ignore
                     continue;
                 }
 
@@ -674,23 +713,23 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 List<MemberPath> parentPaths = null;
                 Cell errorParentCell = null;
 
-                foreach (List<int> childSlotNums in allChildSlotNums)
+                foreach (var childSlotNums in allChildSlotNums)
                 {
                     foundChildCell = true;
 
                     // Get the fields on the C-side
                     childPaths = new List<MemberPath>(childSlotNums.Count);
-                    foreach (int childSlotNum in childSlotNums)
+                    foreach (var childSlotNum in childSlotNums)
                     {
                         // Initial slots only have JoinTreeSlots
-                        MemberProjectedSlot childSlot = (MemberProjectedSlot)childCell.CQuery.ProjectedSlotAt(childSlotNum);
+                        var childSlot = (MemberProjectedSlot)childCell.CQuery.ProjectedSlotAt(childSlotNum);
                         Debug.Assert(childSlot != null);
                         childPaths.Add(childSlot.MemberPath);
                     }
 
-                    foreach (Cell parentCell in parentCells)
+                    foreach (var parentCell in parentCells)
                     {
-                        List<List<int>> allParentSlotNums = GetSlotNumsForColumns(parentCell, ParentColumns);
+                        var allParentSlotNums = GetSlotNumsForColumns(parentCell, ParentColumns);
                         if (allParentSlotNums.Count == 0)
                         {
                             // * Parent and child cell are the same - we do not
@@ -699,14 +738,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                             // * Some slots not in present in S-side, ignore
                             continue;
                         }
-                        foreach (List<int> parentSlotNums in allParentSlotNums)
+                        foreach (var parentSlotNums in allParentSlotNums)
                         {
                             foundParentCell = true;
 
                             parentPaths = new List<MemberPath>(parentSlotNums.Count);
-                            foreach (int parentSlotNum in parentSlotNums)
+                            foreach (var parentSlotNum in parentSlotNums)
                             {
-                                MemberProjectedSlot parentSlot = (MemberProjectedSlot)parentCell.CQuery.ProjectedSlotAt(parentSlotNum);
+                                var parentSlot = (MemberProjectedSlot)parentCell.CQuery.ProjectedSlotAt(parentSlotNum);
                                 Debug.Assert(parentSlot != null);
                                 parentPaths.Add(parentSlot.MemberPath);
                             }
@@ -717,13 +756,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                             // be a regular scenario where aid is mapped to PersonAddress and Address - there
                             // is no ref constraint. So when projected into C-Space, we will get Address.aid
                             // and PersonAddress.Address.aid
-                            if (childPaths.Count == parentPaths.Count)
+                            if (childPaths.Count
+                                == parentPaths.Count)
                             {
-                                bool notAllPathsMatched = false;
-                                for (int i = 0; i < childPaths.Count && !notAllPathsMatched; i++)
+                                var notAllPathsMatched = false;
+                                for (var i = 0; i < childPaths.Count && !notAllPathsMatched; i++)
                                 {
-                                    MemberPath parentPath = parentPaths[i];
-                                    MemberPath childPath = childPaths[i];
+                                    var parentPath = parentPaths[i];
+                                    var childPath = childPaths[i];
 
                                     if (!parentPath.LeafEdmMember.Equals(childPath.LeafEdmMember)) //Child path did not match
                                     {
@@ -753,7 +793,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                             }
                         }
                     } //foreach parentCell
-
                 }
 
                 //If execution is at this point, no parent cell's end has matched (otherwise it would have returned true)
@@ -762,39 +801,41 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 Debug.Assert(parentPaths != null, "parent paths should be set");
                 Debug.Assert(errorParentCell != null, "errorParentCell should be set");
                 // using EntityRes. instead of Strings. because the generated method includes 6 instead of 9 parameters
-                string message = EntityRes.GetString(EntityRes.ViewGen_Foreign_Key_ColumnOrder_Incorrect,
-                                               ToUserString(),
-                                               MemberPath.PropertiesToUserString(ChildColumns, false),
-                                               ChildTable.Name,
-                                               MemberPath.PropertiesToUserString(childPaths, false),
-                                               childCell.CQuery.Extent.Name,
-                                               MemberPath.PropertiesToUserString(ParentColumns, false),
-                                               ParentTable.Name,
-                                               MemberPath.PropertiesToUserString(parentPaths, false),
-                                               errorParentCell.CQuery.Extent.Name);
-                ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.ForeignKeyColumnOrderIncorrect, message, new Cell[] { errorParentCell, childCell }, String.Empty);
+                var message = EntityRes.GetString(
+                    EntityRes.ViewGen_Foreign_Key_ColumnOrder_Incorrect,
+                    ToUserString(),
+                    MemberPath.PropertiesToUserString(ChildColumns, false),
+                    ChildTable.Name,
+                    MemberPath.PropertiesToUserString(childPaths, false),
+                    childCell.CQuery.Extent.Name,
+                    MemberPath.PropertiesToUserString(ParentColumns, false),
+                    ParentTable.Name,
+                    MemberPath.PropertiesToUserString(parentPaths, false),
+                    errorParentCell.CQuery.Extent.Name);
+                var record = new ErrorLog.Record(
+                    ViewGenErrorCode.ForeignKeyColumnOrderIncorrect, message, new[] { errorParentCell, childCell }, String.Empty);
                 errorLog.AddEntry(record);
                 return false;
-
             }
-            Debug.Assert(foundParentCell == true, "Some cell that mapped the parent's key must be present!");
-            Debug.Assert(foundChildCell == true, "Some cell that mapped the child's foreign key must be present according to the requires clause!");
+            Debug.Assert(foundParentCell, "Some cell that mapped the parent's key must be present!");
+            Debug.Assert(
+                foundChildCell == true, "Some cell that mapped the child's foreign key must be present according to the requires clause!");
             return true;
         }
 
         private static List<List<int>> GetSlotNumsForColumns(Cell cell, IEnumerable<MemberPath> columns)
         {
-            List<List<int>> slotNums = new List<List<int>>();
-            AssociationSet set = cell.CQuery.Extent as AssociationSet;
+            var slotNums = new List<List<int>>();
+            var set = cell.CQuery.Extent as AssociationSet;
             //If it is an association set, the columns could be projected
             //in either end so get the slotNums from both the ends
             if (set != null)
             {
-                foreach (AssociationSetEnd setEnd in set.AssociationSetEnds)
+                foreach (var setEnd in set.AssociationSetEnds)
                 {
-                    List<int> endSlots = cell.CQuery.GetAssociationEndSlots(setEnd.CorrespondingAssociationEndMember);
+                    var endSlots = cell.CQuery.GetAssociationEndSlots(setEnd.CorrespondingAssociationEndMember);
                     Debug.Assert(endSlots.Count > 0);
-                    List<int> localslotNums = cell.SQuery.GetProjectedPositions(columns, endSlots);
+                    var localslotNums = cell.SQuery.GetProjectedPositions(columns, endSlots);
                     if (localslotNums != null)
                     {
                         slotNums.Add(localslotNums);
@@ -803,7 +844,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             }
             else
             {
-                List<int> localslotNums = cell.SQuery.GetProjectedPositions(columns);
+                var localslotNums = cell.SQuery.GetProjectedPositions(columns);
                 if (localslotNums != null)
                 {
                     slotNums.Add(localslotNums);
@@ -817,12 +858,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         // of the child table)
         private bool IsForeignKeySuperSetOfPrimaryKeyInChildTable()
         {
-            bool isForeignKeySuperSet = true;
+            var isForeignKeySuperSet = true;
             foreach (EdmProperty keyMember in m_childTable.ElementType.KeyMembers)
             {
                 // Look for this member in the foreign key members
-                bool memberFound = false;
-                foreach (MemberPath foreignKeyMember in m_childColumns)
+                var memberFound = false;
+                foreach (var foreignKeyMember in m_childColumns)
                 {
                     // Getting the last member is good enough since it
                     // effectively captures the path (we are not comparing
@@ -848,11 +889,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         {
             // if the constraint does not deal with any cell in this group,
             // return false
-            bool found = false;
-            foreach (Cell cell in cells)
+            var found = false;
+            foreach (var cell in cells)
             {
-                EntitySetBase table = cell.SQuery.Extent;
-                if (table.Equals(m_parentTable) || table.Equals(m_childTable))
+                var table = cell.SQuery.Extent;
+                if (table.Equals(m_parentTable)
+                    || table.Equals(m_childTable))
                 {
                     found = true;
                     break;
@@ -860,15 +902,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             }
             return found;
         }
+
         #endregion
 
         #region String methods
+
         internal string ToUserString()
         {
-            string childColsString = MemberPath.PropertiesToUserString(m_childColumns, false);
-            string parentColsString = MemberPath.PropertiesToUserString(m_parentColumns, false);
-            string result = System.Data.Entity.Resources.Strings.ViewGen_Foreign_Key(m_fKeySet.Name,
-                                          m_childTable.Name, childColsString, m_parentTable.Name, parentColsString);
+            var childColsString = MemberPath.PropertiesToUserString(m_childColumns, false);
+            var parentColsString = MemberPath.PropertiesToUserString(m_parentColumns, false);
+            var result = Strings.ViewGen_Foreign_Key(
+                m_fKeySet.Name,
+                m_childTable.Name, childColsString, m_parentTable.Name, parentColsString);
             return result;
         }
 
@@ -877,6 +922,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             builder.Append(m_fKeySet.Name + ": ");
             builder.Append(ToUserString());
         }
+
         #endregion
     }
 }

@@ -1,10 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
-using System.Data.Entity.Core.Metadata.Edm;
+namespace System.Data.Entity.Core.Mapping
+{
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Text;
 
-namespace System.Data.Entity.Core.Mapping {
     /// <summary>
     /// Mapping metadata for Entity type.
     /// If an EntitySet represents entities of more than one type, than we will have
@@ -42,67 +42,78 @@ namespace System.Data.Entity.Core.Mapping {
     /// above example. Users can access the table mapping fragments under the 
     /// entity type mapping through this class.
     /// </example>
-
-    internal class StorageEntityTypeMapping : StorageTypeMapping {
+    internal class StorageEntityTypeMapping : StorageTypeMapping
+    {
         #region Constructors
+
         /// <summary>
         /// Construct the new EntityTypeMapping object.
         /// </summary>
         /// <param name="setMapping">Set Mapping that contains this Type mapping </param>
         internal StorageEntityTypeMapping(StorageSetMapping setMapping)
-            : base(setMapping) {
+            : base(setMapping)
+        {
         }
+
         #endregion
 
         #region Fields
+
         /// <summary>
         /// Types for which the mapping holds true for.
         /// </summary>
-        private Dictionary<string, EdmType> m_entityTypes = new Dictionary<string, EdmType>(StringComparer.Ordinal);
+        private readonly Dictionary<string, EdmType> m_entityTypes = new Dictionary<string, EdmType>(StringComparer.Ordinal);
+
         /// <summary>
         /// Types for which the mapping holds true for not only the type specified but the sub-types of that type as well.
         /// </summary>
-        private Dictionary<string, EdmType> m_isOfEntityTypes = new Dictionary<string, EdmType>(StringComparer.Ordinal);
+        private readonly Dictionary<string, EdmType> m_isOfEntityTypes = new Dictionary<string, EdmType>(StringComparer.Ordinal);
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// a list of TypeMetadata that this mapping holds true for.
         /// </summary>
-        internal override ReadOnlyCollection<EdmType> Types {
-            get {
-                return new List<EdmType>(m_entityTypes.Values).AsReadOnly();
-            }
+        internal override ReadOnlyCollection<EdmType> Types
+        {
+            get { return new List<EdmType>(m_entityTypes.Values).AsReadOnly(); }
         }
 
         /// <summary>
         /// a list of TypeMetadatas for which the mapping holds true for
         /// not only the type specified but the sub-types of that type as well.        
         /// </summary>
-        internal override ReadOnlyCollection<EdmType> IsOfTypes {
-            get {
-                return new List<EdmType>(m_isOfEntityTypes.Values).AsReadOnly();
-            }
+        internal override ReadOnlyCollection<EdmType> IsOfTypes
+        {
+            get { return new List<EdmType>(m_isOfEntityTypes.Values).AsReadOnly(); }
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Add a Type to the list of types that this mapping is valid for
         /// </summary>
-        internal void AddType(EdmType type) {
-            this.m_entityTypes.Add(type.FullName, type);
+        internal void AddType(EdmType type)
+        {
+            m_entityTypes.Add(type.FullName, type);
         }
 
         /// <summary>
         /// Add a Type to the list of Is-Of types that this mapping is valid for
         /// </summary>
-        internal void AddIsOfType(EdmType type) {
-            this.m_isOfEntityTypes.Add(type.FullName, type);
+        internal void AddIsOfType(EdmType type)
+        {
+            m_isOfEntityTypes.Add(type.FullName, type);
         }
 
-        internal EntityType GetContainerType(string memberName) {
-            foreach (EntityType type in m_entityTypes.Values) {
+        internal EntityType GetContainerType(string memberName)
+        {
+            foreach (EntityType type in m_entityTypes.Values)
+            {
                 if (type.Properties.Contains(memberName))
                 {
                     return type;
@@ -125,24 +136,28 @@ namespace System.Data.Entity.Core.Mapping {
         /// Will be removed shortly.
         /// </summary>
         /// <param name="index"></param>
-        internal override void Print(int index) {
+        internal override void Print(int index)
+        {
             StorageEntityContainerMapping.GetPrettyPrintString(ref index);
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("EntityTypeMapping");
             sb.Append("   ");
-            foreach (EdmType type in m_entityTypes.Values) {
+            foreach (var type in m_entityTypes.Values)
+            {
                 sb.Append("Types:");
                 sb.Append(type.FullName);
                 sb.Append("   ");
             }
-            foreach (EdmType type in m_isOfEntityTypes.Values) {
+            foreach (var type in m_isOfEntityTypes.Values)
+            {
                 sb.Append("Is-Of Types:");
                 sb.Append(type.FullName);
                 sb.Append("   ");
             }
 
             Console.WriteLine(sb.ToString());
-            foreach (StorageMappingFragment fragment in MappingFragments) {
+            foreach (var fragment in MappingFragments)
+            {
                 fragment.Print(index + 5);
             }
         }

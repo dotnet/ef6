@@ -1,20 +1,16 @@
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Validation;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
-    using System.Data.Entity;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.Validation;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.CodeAnalysis;
-    using AttributeSet = Set<MemberPath>;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Text;
+    using AttributeSet = System.Data.Entity.Core.Common.Utils.Set<MemberPath>;
 
     /// <summary>
     /// This class stores the C or S query. For example, 
@@ -31,6 +27,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     internal class CellQuery : InternalBase
     {
         #region Fields
+
         /// <summary>
         /// Whether query has a 'SELECT DISTINCT' on top.
         /// </summary>
@@ -45,19 +42,21 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         private List<BoolExpression> m_boolExprs;
         // The fields including the key fields
         // May contain NULLs - means 'not in the projection'
-        private ProjectedSlot[] m_projectedSlots;
+        private readonly ProjectedSlot[] m_projectedSlots;
         // where clause: An expression formed using the boolExprs
         private BoolExpression m_whereClause;
-        private BoolExpression m_originalWhereClause; // m_originalWhereClause is not changed
-        
-        private SelectDistinct m_selectDistinct;
+        private readonly BoolExpression m_originalWhereClause; // m_originalWhereClause is not changed
+
+        private readonly SelectDistinct m_selectDistinct;
         // The from part of the query
-        private MemberPath m_extentMemberPath;
+        private readonly MemberPath m_extentMemberPath;
         // The basic cell relation for all slots in this
         private BasicCellRelation m_basicCellRelation;
+
         #endregion
 
         #region Constructors
+
         // effects: Creates a cell query with the given projection (slots),
         // from part (joinTreeRoot) and the predicate (whereClause)
         // Used for cell creation
@@ -66,15 +65,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
         }
 
-
-
         // effects: Given all the fields, just sets them. 
-        internal CellQuery(ProjectedSlot[] projectedSlots,
-                          BoolExpression whereClause,
-                          List<BoolExpression> boolExprs,
-                          SelectDistinct elimDupl, MemberPath rootMember)
+        internal CellQuery(
+            ProjectedSlot[] projectedSlots,
+            BoolExpression whereClause,
+            List<BoolExpression> boolExprs,
+            SelectDistinct elimDupl, MemberPath rootMember)
         {
-            
             m_boolExprs = boolExprs;
             m_projectedSlots = projectedSlots;
             m_whereClause = whereClause;
@@ -88,22 +85,24 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// </summary>
         internal CellQuery(CellQuery source)
         {
-            this.m_basicCellRelation = source.m_basicCellRelation;
-            this.m_boolExprs = source.m_boolExprs;
-            this.m_selectDistinct = source.m_selectDistinct;
-            this.m_extentMemberPath = source.m_extentMemberPath;
-            this.m_originalWhereClause = source.m_originalWhereClause;
-            this.m_projectedSlots = source.m_projectedSlots;
-            this.m_whereClause = source.m_whereClause;
+            m_basicCellRelation = source.m_basicCellRelation;
+            m_boolExprs = source.m_boolExprs;
+            m_selectDistinct = source.m_selectDistinct;
+            m_extentMemberPath = source.m_extentMemberPath;
+            m_originalWhereClause = source.m_originalWhereClause;
+            m_projectedSlots = source.m_projectedSlots;
+            m_whereClause = source.m_whereClause;
         }
 
         // effects: Given an existing cellquery, makes a new one based on it
         // but uses the slots as specified with newSlots
-        private CellQuery(CellQuery existing, ProjectedSlot[] newSlots) :
-            this(newSlots, existing.m_whereClause, existing.m_boolExprs,
-                 existing.m_selectDistinct, existing.m_extentMemberPath)
+        private CellQuery(CellQuery existing, ProjectedSlot[] newSlots)
+            :
+                this(newSlots, existing.m_whereClause, existing.m_boolExprs,
+                    existing.m_selectDistinct, existing.m_extentMemberPath)
         {
         }
+
         #endregion
 
         #region Properties
@@ -118,7 +117,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get
             {
-                EntitySetBase extent = m_extentMemberPath.Extent as EntitySetBase;
+                var extent = m_extentMemberPath.Extent;
                 Debug.Assert(extent != null, "JoinTreeRoot in cellquery must be an extent");
                 return extent;
             }
@@ -183,6 +182,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #endregion
 
         #region ProjectedSlots related methods
+
         // effects: Returns the slotnum projected slot
         internal ProjectedSlot ProjectedSlotAt(int slotNum)
         {
@@ -200,17 +200,17 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             // slotMap stores the slots on the S-side and the
             // C-side properties that it maps to
-            KeyToListMap<MemberProjectedSlot, int> slotMap = new KeyToListMap<MemberProjectedSlot, int>(ProjectedSlot.EqualityComparer);
+            var slotMap = new KeyToListMap<MemberProjectedSlot, int>(ProjectedSlot.EqualityComparer);
 
             // Note that this does work for self-association. In the manager
             // employee example, ManagerId and EmployeeId from the SEmployee
             // table map to the two ends -- Manager.ManagerId and
             // Employee.EmployeeId in the C Space
 
-            for (int i = 0; i < m_projectedSlots.Length; i++)
+            for (var i = 0; i < m_projectedSlots.Length; i++)
             {
-                ProjectedSlot projectedSlot = m_projectedSlots[i];
-                MemberProjectedSlot slot = projectedSlot as MemberProjectedSlot;
+                var projectedSlot = m_projectedSlots[i];
+                var slot = projectedSlot as MemberProjectedSlot;
                 Debug.Assert(slot != null, "All slots for this method must be JoinTreeSlots");
                 slotMap.Add(slot, i);
             }
@@ -218,14 +218,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             StringBuilder builder = null;
 
             // Now determine the entries that have more than one integer per slot
-            bool isErrorSituation = false;
+            var isErrorSituation = false;
 
-            foreach (MemberProjectedSlot slot in slotMap.Keys)
+            foreach (var slot in slotMap.Keys)
             {
-                ReadOnlyCollection<int> indexes = slotMap.ListForKey(slot);
+                var indexes = slotMap.ListForKey(slot);
                 Debug.Assert(indexes.Count >= 1, "Each slot must have one index at least");
 
-                if (indexes.Count > 1 &&
+                if (indexes.Count > 1
+                    &&
                     cQuery.AreSlotsEquivalentViaRefConstraints(indexes) == false)
                 {
                     // The column is mapped to more than one property and it
@@ -235,19 +236,19 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                     isErrorSituation = true;
                     if (builder == null)
                     {
-                        builder = new StringBuilder(System.Data.Entity.Resources.Strings.ViewGen_Duplicate_CProperties(Extent.Name));
+                        builder = new StringBuilder(Strings.ViewGen_Duplicate_CProperties(Extent.Name));
                         builder.AppendLine();
                     }
-                    StringBuilder tmpBuilder = new StringBuilder();
-                    for (int i = 0; i < indexes.Count; i++)
+                    var tmpBuilder = new StringBuilder();
+                    for (var i = 0; i < indexes.Count; i++)
                     {
-                        int index = indexes[i];
+                        var index = indexes[i];
                         if (i != 0)
                         {
                             tmpBuilder.Append(", ");
                         }
                         // The slot must be a JoinTreeSlot. If it isn't it is an internal error
-                        MemberProjectedSlot cSlot = (MemberProjectedSlot)cQuery.m_projectedSlots[index];
+                        var cSlot = (MemberProjectedSlot)cQuery.m_projectedSlots[index];
                         tmpBuilder.Append(cSlot.ToUserString());
                     }
                     builder.AppendLine(Strings.ViewGen_Duplicate_CProperties_IsMapped(slot.ToUserString(), tmpBuilder.ToString()));
@@ -259,7 +260,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return null;
             }
 
-            ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.DuplicateCPropertiesMapped, builder.ToString(), sourceCell, String.Empty);
+            var record = new ErrorLog.Record(ViewGenErrorCode.DuplicateCPropertiesMapped, builder.ToString(), sourceCell, String.Empty);
             return record;
         }
 
@@ -280,9 +281,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // kept equal via an RI constraint
         private bool AreSlotsEquivalentViaRefConstraints(ReadOnlyCollection<int> cSideSlotIndexes)
         {
-
             // Check (a): Must be an association
-            AssociationSet assocSet = Extent as AssociationSet;
+            var assocSet = Extent as AssociationSet;
             if (assocSet == null)
             {
                 return false;
@@ -297,8 +297,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
 
             // They better be join tree slots (if they are mapped!) and map to opposite ends 
-            MemberProjectedSlot slot0 = (MemberProjectedSlot)m_projectedSlots[cSideSlotIndexes[0]];
-            MemberProjectedSlot slot1 = (MemberProjectedSlot)m_projectedSlots[cSideSlotIndexes[1]];
+            var slot0 = (MemberProjectedSlot)m_projectedSlots[cSideSlotIndexes[0]];
+            var slot1 = (MemberProjectedSlot)m_projectedSlots[cSideSlotIndexes[1]];
 
             return slot0.MemberPath.IsEquivalentViaRefConstraint(slot1.MemberPath);
         }
@@ -309,34 +309,45 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // projected, returns null. Else returns an error record
         internal ErrorLog.Record CheckForProjectedNotNullSlots(Cell sourceCell, IEnumerable<Cell> associationSets)
         {
-            StringBuilder builder = new StringBuilder();
-            bool foundError = false;
+            var builder = new StringBuilder();
+            var foundError = false;
 
-            foreach (MemberRestriction restriction in Conditions)
+            foreach (var restriction in Conditions)
             {
                 if (restriction.Domain.ContainsNotNull())
                 {
-                    MemberProjectedSlot slot = MemberProjectedSlot.GetSlotForMember(m_projectedSlots, restriction.RestrictedMemberSlot.MemberPath);
+                    var slot = MemberProjectedSlot.GetSlotForMember(m_projectedSlots, restriction.RestrictedMemberSlot.MemberPath);
                     if (slot == null) //member with not null condition is not mapped in this extent
                     {
-                        bool missingMapping = true;
-                        if(Extent is EntitySet)
+                        var missingMapping = true;
+                        if (Extent is EntitySet)
                         {
-                            bool isCQuery = sourceCell.CQuery == this;
-                            ViewTarget target = isCQuery ? ViewTarget.QueryView : ViewTarget.UpdateView;
-                            CellQuery rightCellQuery = isCQuery? sourceCell.SQuery : sourceCell.CQuery;
-                            
+                            var isCQuery = sourceCell.CQuery == this;
+                            var target = isCQuery ? ViewTarget.QueryView : ViewTarget.UpdateView;
+                            var rightCellQuery = isCQuery ? sourceCell.SQuery : sourceCell.CQuery;
+
                             //Find out if there is an association mapping but only if the current Not Null condition is on an EntitySet
-                            EntitySet rightExtent = rightCellQuery.Extent as EntitySet;
+                            var rightExtent = rightCellQuery.Extent as EntitySet;
                             if (rightExtent != null)
                             {
-                                List<AssociationSet> associations = MetadataHelper.GetAssociationsForEntitySet(rightCellQuery.Extent as EntitySet);
-                                foreach (var association in associations.Where(association => association.AssociationSetEnds.Any(end => ( end.CorrespondingAssociationEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One && 
-                                    (MetadataHelper.GetOppositeEnd(end).EntitySet.EdmEquals(rightExtent))))))
+                                var associations = MetadataHelper.GetAssociationsForEntitySet(rightCellQuery.Extent as EntitySet);
+                                foreach (
+                                    var association in
+                                        associations.Where(
+                                            association =>
+                                            association.AssociationSetEnds.Any(
+                                                end =>
+                                                (end.CorrespondingAssociationEndMember.RelationshipMultiplicity
+                                                 == RelationshipMultiplicity.One &&
+                                                 (MetadataHelper.GetOppositeEnd(end).EntitySet.EdmEquals(rightExtent))))))
                                 {
-                                    foreach (var associationCell in associationSets.Where(c => c.GetRightQuery(target).Extent.EdmEquals(association)))
+                                    foreach (
+                                        var associationCell in
+                                            associationSets.Where(c => c.GetRightQuery(target).Extent.EdmEquals(association)))
                                     {
-                                        if (MemberProjectedSlot.GetSlotForMember(associationCell.GetLeftQuery(target).ProjectedSlots, restriction.RestrictedMemberSlot.MemberPath) != null)
+                                        if (MemberProjectedSlot.GetSlotForMember(
+                                            associationCell.GetLeftQuery(target).ProjectedSlots, restriction.RestrictedMemberSlot.MemberPath)
+                                            != null)
                                         {
                                             missingMapping = false;
                                         }
@@ -348,8 +359,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                         if (missingMapping)
                         {
                             // condition of NotNull and slot not being projected
-                            builder.AppendLine(System.Data.Entity.Resources.Strings.ViewGen_NotNull_No_Projected_Slot(
-                                               restriction.RestrictedMemberSlot.MemberPath.PathToString(false)));
+                            builder.AppendLine(
+                                Strings.ViewGen_NotNull_No_Projected_Slot(
+                                    restriction.RestrictedMemberSlot.MemberPath.PathToString(false)));
                             foundError = true;
                         }
                     }
@@ -359,7 +371,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             {
                 return null;
             }
-            ErrorLog.Record record = new ErrorLog.Record(ViewGenErrorCode.NotNullNoProjectedSlot, builder.ToString(), sourceCell, String.Empty);
+            var record = new ErrorLog.Record(ViewGenErrorCode.NotNullNoProjectedSlot, builder.ToString(), sourceCell, String.Empty);
             return record;
         }
 
@@ -382,24 +394,23 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         //            projectedSlotMap: A -> 0, B -> 1, C -> 2
         //   output:  Proj[A,B,null] = Proj[F,"7",null]
         //            Proj[null,B,C] = Proj[null,I,H]
-        internal void CreateFieldAlignedCellQueries(CellQuery otherQuery, MemberProjectionIndex projectedSlotMap,
-                                                    out CellQuery newMainQuery, out CellQuery newOtherQuery)
+        internal void CreateFieldAlignedCellQueries(
+            CellQuery otherQuery, MemberProjectionIndex projectedSlotMap,
+            out CellQuery newMainQuery, out CellQuery newOtherQuery)
         {
-
             // mainSlots and otherSlots hold the new slots for two queries
-            int numAlignedSlots = projectedSlotMap.Count;
-            ProjectedSlot[] mainSlots = new ProjectedSlot[numAlignedSlots];
-            ProjectedSlot[] otherSlots = new ProjectedSlot[numAlignedSlots];
+            var numAlignedSlots = projectedSlotMap.Count;
+            var mainSlots = new ProjectedSlot[numAlignedSlots];
+            var otherSlots = new ProjectedSlot[numAlignedSlots];
 
             // Go through the slots for this query and find the new slot for them
-            for (int i = 0; i < m_projectedSlots.Length; i++)
+            for (var i = 0; i < m_projectedSlots.Length; i++)
             {
-
-                MemberProjectedSlot slot = m_projectedSlots[i] as MemberProjectedSlot;
+                var slot = m_projectedSlots[i] as MemberProjectedSlot;
                 Debug.Assert(slot != null, "All slots during cell normalization must field slots");
                 // Get the the ith slot's variable and then get the
                 // new slot number from the field map
-                int newSlotNum = projectedSlotMap.IndexOf(slot.MemberPath);
+                var newSlotNum = projectedSlotMap.IndexOf(slot.MemberPath);
                 Debug.Assert(newSlotNum >= 0, "Field projected but not in projectedSlotMap");
                 mainSlots[newSlotNum] = m_projectedSlots[i];
                 otherSlots[newSlotNum] = otherQuery.m_projectedSlots[i];
@@ -430,13 +441,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // effects: Returns the non-null slots of this
         internal AttributeSet GetNonNullSlots()
         {
-            AttributeSet attributes = new AttributeSet(MemberPath.EqualityComparer);
-            foreach (ProjectedSlot projectedSlot in m_projectedSlots)
+            var attributes = new AttributeSet(MemberPath.EqualityComparer);
+            foreach (var projectedSlot in m_projectedSlots)
             {
                 // null means 'unused' slot -- we ignore those
                 if (projectedSlot != null)
                 {
-                    MemberProjectedSlot projectedVar = projectedSlot as MemberProjectedSlot;
+                    var projectedVar = projectedSlot as MemberProjectedSlot;
                     Debug.Assert(projectedVar != null, "Projected slot must not be a constant");
                     attributes.Add(projectedVar.MemberPath);
                 }
@@ -448,63 +459,64 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // present in the projected slots of this query. Returns null
         // otherwise. ownerCell indicates the cell that owns this and
         // resourceString is a resource used for error messages
-        internal ErrorLog.Record VerifyKeysPresent(Cell ownerCell, Func<object, object, string> formatEntitySetMessage,
+        internal ErrorLog.Record VerifyKeysPresent(
+            Cell ownerCell, Func<object, object, string> formatEntitySetMessage,
             Func<object, object, object, string> formatAssociationSetMessage, ViewGenErrorCode errorCode)
         {
-            List<MemberPath> prefixes = new List<MemberPath>(1);
+            var prefixes = new List<MemberPath>(1);
             // Keep track of the key corresponding to each prefix
-            List<ExtentKey> keys = new List<ExtentKey>(1);
+            var keys = new List<ExtentKey>(1);
 
             if (Extent is EntitySet)
             {
                 // For entity set just get the full path of the key properties
-                MemberPath prefix = new MemberPath(Extent);
+                var prefix = new MemberPath(Extent);
                 prefixes.Add(prefix);
-                EntityType entityType = (EntityType)Extent.ElementType;
-                List<ExtentKey> entitySetKeys = ExtentKey.GetKeysForEntityType(prefix, entityType);
+                var entityType = (EntityType)Extent.ElementType;
+                var entitySetKeys = ExtentKey.GetKeysForEntityType(prefix, entityType);
                 Debug.Assert(entitySetKeys.Count == 1, "Currently, we only support primary keys");
                 keys.Add(entitySetKeys[0]);
-
             }
             else
             {
-                AssociationSet relationshipSet = (AssociationSet)Extent;
+                var relationshipSet = (AssociationSet)Extent;
                 // For association set, get the full path of the key
                 // properties of each end
 
-                foreach (AssociationSetEnd relationEnd in relationshipSet.AssociationSetEnds)
+                foreach (var relationEnd in relationshipSet.AssociationSetEnds)
                 {
-                    AssociationEndMember assocEndMember = relationEnd.CorrespondingAssociationEndMember;
-                    MemberPath prefix = new MemberPath(relationshipSet, assocEndMember);
+                    var assocEndMember = relationEnd.CorrespondingAssociationEndMember;
+                    var prefix = new MemberPath(relationshipSet, assocEndMember);
                     prefixes.Add(prefix);
-                    List<ExtentKey> endKeys = ExtentKey.GetKeysForEntityType(prefix,
-                                                                             MetadataHelper.GetEntityTypeForEnd(assocEndMember));
+                    var endKeys = ExtentKey.GetKeysForEntityType(
+                        prefix,
+                        MetadataHelper.GetEntityTypeForEnd(assocEndMember));
                     Debug.Assert(endKeys.Count == 1, "Currently, we only support primary keys");
                     keys.Add(endKeys[0]);
                 }
             }
 
-            for (int i = 0; i < prefixes.Count; i++)
+            for (var i = 0; i < prefixes.Count; i++)
             {
-                MemberPath prefix = prefixes[i];
+                var prefix = prefixes[i];
                 // Get all or none key slots that are being projected in this cell query
-                List<MemberProjectedSlot> keySlots = MemberProjectedSlot.GetKeySlots(GetMemberProjectedSlots(), prefix);
+                var keySlots = MemberProjectedSlot.GetKeySlots(GetMemberProjectedSlots(), prefix);
                 if (keySlots == null)
                 {
-                    ExtentKey key = keys[i];
+                    var key = keys[i];
                     string message;
                     if (Extent is EntitySet)
                     {
-                        string keyPropertiesString = MemberPath.PropertiesToUserString(key.KeyFields, true);
+                        var keyPropertiesString = MemberPath.PropertiesToUserString(key.KeyFields, true);
                         message = formatEntitySetMessage(keyPropertiesString, Extent.Name);
                     }
                     else
                     {
-                        string endName = prefix.RootEdmMember.Name;
-                        string keyPropertiesString = MemberPath.PropertiesToUserString(key.KeyFields, false);
+                        var endName = prefix.RootEdmMember.Name;
+                        var keyPropertiesString = MemberPath.PropertiesToUserString(key.KeyFields, false);
                         message = formatAssociationSetMessage(keyPropertiesString, endName, Extent.Name);
                     }
-                    ErrorLog.Record error = new ErrorLog.Record(errorCode, message, ownerCell, String.Empty);
+                    var error = new ErrorLog.Record(errorCode, message, ownerCell, String.Empty);
                     return error;
                 }
             }
@@ -513,7 +525,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         internal IEnumerable<MemberPath> GetProjectedMembers()
         {
-            foreach (MemberProjectedSlot slot in this.GetMemberProjectedSlots())
+            foreach (var slot in GetMemberProjectedSlots())
             {
                 yield return slot.MemberPath;
             }
@@ -522,9 +534,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // effects: Returns the fields in this, i.e., not constants or null slots
         private IEnumerable<MemberProjectedSlot> GetMemberProjectedSlots()
         {
-            foreach (ProjectedSlot slot in m_projectedSlots)
+            foreach (var slot in m_projectedSlots)
             {
-                MemberProjectedSlot memberSlot = slot as MemberProjectedSlot;
+                var memberSlot = slot as MemberProjectedSlot;
                 if (memberSlot != null)
                 {
                     yield return memberSlot;
@@ -536,7 +548,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // Output list is a copy, i.e., can be modified by the caller
         internal List<MemberProjectedSlot> GetAllQuerySlots()
         {
-            HashSet<MemberProjectedSlot> slots = new HashSet<MemberProjectedSlot>(GetMemberProjectedSlots());
+            var slots = new HashSet<MemberProjectedSlot>(GetMemberProjectedSlots());
             slots.Add(new MemberProjectedSlot(SourceExtentMemberPath));
             foreach (var restriction in Conditions)
             {
@@ -549,9 +561,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // or -1 if it is not projected
         internal int GetProjectedPosition(MemberProjectedSlot slot)
         {
-            for (int i = 0; i < m_projectedSlots.Length; i++)
+            for (var i = 0; i < m_projectedSlots.Length; i++)
             {
-                if (MemberProjectedSlot.EqualityComparer.Equals(slot, m_projectedSlots[i]))
+                if (ProjectedSlot.EqualityComparer.Equals(slot, m_projectedSlots[i]))
                 {
                     return i;
                 }
@@ -563,11 +575,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // or empty list if it is not projected
         internal List<int> GetProjectedPositions(MemberPath member)
         {
-            List<int> pathIndexes = new List<int>();
-            for (int i = 0; i < m_projectedSlots.Length; i++)
+            var pathIndexes = new List<int>();
+            for (var i = 0; i < m_projectedSlots.Length; i++)
             {
-                MemberProjectedSlot slot = m_projectedSlots[i] as MemberProjectedSlot;
-                if (slot != null && MemberPath.EqualityComparer.Equals(member, slot.MemberPath))
+                var slot = m_projectedSlots[i] as MemberProjectedSlot;
+                if (slot != null
+                    && MemberPath.EqualityComparer.Equals(member, slot.MemberPath))
                 {
                     pathIndexes.Add(i);
                 }
@@ -580,14 +593,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // one of the path entries is not projected in the cellquery, returns null
         internal List<int> GetProjectedPositions(IEnumerable<MemberPath> paths)
         {
-            List<int> pathIndexes = new List<int>();
-            foreach (MemberPath member in paths)
+            var pathIndexes = new List<int>();
+            foreach (var member in paths)
             {
                 // Get the index in checkQuery and add to pathIndexes
-                List<int> slotIndexes = GetProjectedPositions(member);
+                var slotIndexes = GetProjectedPositions(member);
                 Debug.Assert(slotIndexes != null);
                 if (slotIndexes.Count == 0)
-                { // member is not projected
+                {
+                    // member is not projected
                     return null;
                 }
                 Debug.Assert(slotIndexes.Count == 1, "Expecting the path to be projected only once");
@@ -600,12 +614,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         //           represent the association end member passed in.
         internal List<int> GetAssociationEndSlots(AssociationEndMember endMember)
         {
-            List<int> slotIndexes = new List<int>();
-            Debug.Assert(this.Extent is AssociationSet);
-            for (int i = 0; i < m_projectedSlots.Length; i++)
+            var slotIndexes = new List<int>();
+            Debug.Assert(Extent is AssociationSet);
+            for (var i = 0; i < m_projectedSlots.Length; i++)
             {
-                MemberProjectedSlot slot = m_projectedSlots[i] as MemberProjectedSlot;
-                if (slot != null && slot.MemberPath.RootEdmMember.Equals(endMember))
+                var slot = m_projectedSlots[i] as MemberProjectedSlot;
+                if (slot != null
+                    && slot.MemberPath.RootEdmMember.Equals(endMember))
                 {
                     slotIndexes.Add(i);
                 }
@@ -620,20 +635,21 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // slotsToSearchFrom domain. 
         internal List<int> GetProjectedPositions(IEnumerable<MemberPath> paths, List<int> slotsToSearchFrom)
         {
-            List<int> pathIndexes = new List<int>();
-            foreach (MemberPath member in paths)
+            var pathIndexes = new List<int>();
+            foreach (var member in paths)
             {
                 // Get the index in checkQuery and add to pathIndexes
-                List<int> slotIndexes = GetProjectedPositions(member);
+                var slotIndexes = GetProjectedPositions(member);
                 Debug.Assert(slotIndexes != null);
                 if (slotIndexes.Count == 0)
-                { // member is not projected
+                {
+                    // member is not projected
                     return null;
                 }
-                int slotIndex = -1;
+                var slotIndex = -1;
                 if (slotIndexes.Count > 1)
                 {
-                    for (int i = 0; i < slotIndexes.Count; i++)
+                    for (var i = 0; i < slotIndexes.Count; i++)
                     {
                         if (slotsToSearchFrom.Contains(slotIndexes[i]))
                         {
@@ -655,7 +671,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return pathIndexes;
         }
 
-
         // requires: The CellConstantDomains in the OneOfConsts of the where
         // clause are partially done
         // effects: Given the domains of different variables in domainMap,
@@ -663,22 +678,22 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // CellConstantDomains in OneOfConsts are complete
         internal void UpdateWhereClause(MemberDomainMap domainMap)
         {
-            List<BoolExpression> atoms = new List<BoolExpression>();
-            foreach (BoolExpression atom in WhereClause.Atoms)
+            var atoms = new List<BoolExpression>();
+            foreach (var atom in WhereClause.Atoms)
             {
-                BoolLiteral literal = atom.AsLiteral;
-                MemberRestriction restriction = literal as MemberRestriction;
+                var literal = atom.AsLiteral;
+                var restriction = literal as MemberRestriction;
                 Debug.Assert(restriction != null, "All bool literals must be OneOfConst at this point");
                 // The oneOfConst needs to be fixed with the new possible values from the domainMap.
-                IEnumerable<Constant> possibleValues = domainMap.GetDomain(restriction.RestrictedMemberSlot.MemberPath);
-                MemberRestriction newOneOf = restriction.CreateCompleteMemberRestriction(possibleValues);
+                var possibleValues = domainMap.GetDomain(restriction.RestrictedMemberSlot.MemberPath);
+                var newOneOf = restriction.CreateCompleteMemberRestriction(possibleValues);
 
                 // Prevent optimization of single constraint e.g: "300 in (300)"
                 // But we want to optimize type constants e.g: "category in (Category)"
                 // To prevent optimization of bool expressions we add a Sentinel OneOF
 
-                ScalarRestriction scalarConst = restriction as ScalarRestriction;
-                bool addSentinel =
+                var scalarConst = restriction as ScalarRestriction;
+                var addSentinel =
                     scalarConst != null &&
                     !scalarConst.Domain.Contains(Constant.Null) &&
                     !scalarConst.Domain.Contains(Constant.NotNull) &&
@@ -695,7 +710,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 {
                     domainMap.RemoveSentinel(newOneOf.RestrictedMemberSlot.MemberPath);
                 }
-
             }
             // We create a new whereClause that has the memberDomainMap set
             if (atoms.Count > 0)
@@ -703,9 +717,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 m_whereClause = BoolExpression.CreateAnd(atoms.ToArray());
             }
         }
+
         #endregion
 
         #region BooleanExprs related Methods
+
         // effects: Returns a boolean expression corresponding to the
         // "varNum" boolean in this.
         internal BoolExpression GetBoolVar(int varNum)
@@ -719,7 +735,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             //Debug.Assert(m_boolExprs.Count == 0, "Overwriting existing booleans");
             m_boolExprs = new List<BoolExpression>(numBoolVars);
-            for (int i = 0; i < numBoolVars; i++)
+            for (var i = 0; i < numBoolVars; i++)
             {
                 m_boolExprs.Add(null);
             }
@@ -728,7 +744,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         #endregion
+
         #region WhereClause related methods
+
         // requires: The current whereClause corresponds to "True", "OneOfConst" or "
         // "OneOfConst AND ... AND OneOfConst"
         // effects: Yields all the conjuncts (OneOfConsts) in this (i.e., if the whereClause is
@@ -743,16 +761,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return GetConjunctsFromWhereClause(m_originalWhereClause);
         }
 
-
         private IEnumerable<MemberRestriction> GetConjunctsFromWhereClause(BoolExpression whereClause)
         {
-            foreach (BoolExpression boolExpr in whereClause.Atoms)
+            foreach (var boolExpr in whereClause.Atoms)
             {
                 if (boolExpr.IsTrue)
                 {
                     continue;
                 }
-                MemberRestriction result = boolExpr.AsLiteral as MemberRestriction;
+                var result = boolExpr.AsLiteral as MemberRestriction;
                 Debug.Assert(result != null, "Atom must be restriction");
                 yield return result;
             }
@@ -761,12 +778,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #endregion
 
         #region Full CellQuery methods
+
         // effects: Determines all the identifiers used in this and adds them to identifiers
         internal void GetIdentifiers(CqlIdentifiers identifiers)
         {
-            foreach (ProjectedSlot projectedSlot in m_projectedSlots)
+            foreach (var projectedSlot in m_projectedSlots)
             {
-                MemberProjectedSlot slot = projectedSlot as MemberProjectedSlot;
+                var slot = projectedSlot as MemberProjectedSlot;
                 if (slot != null)
                 {
                     slot.MemberPath.GetIdentifiers(identifiers);
@@ -777,16 +795,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         internal void CreateBasicCellRelation(ViewCellRelation viewCellRelation)
         {
-            List<MemberProjectedSlot> slots = GetAllQuerySlots();
+            var slots = GetAllQuerySlots();
             // Create a base cell relation that has all the scalar slots of this
             m_basicCellRelation = new BasicCellRelation(this, viewCellRelation, slots);
         }
 
-        
-
         #endregion
 
         #region String Methods
+
         // effects: Modifies stringBuilder to contain a string representation
         // of the cell query in terms of the original cells that are being used
         internal override void ToCompactString(StringBuilder stringBuilder)
@@ -794,10 +811,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             // This could be a simplified view where a number of cells
             // got merged or it could be one of the original booleans. So
             // determine their numbers using the booleans in m_cellWrapper
-            List<BoolExpression> boolExprs = m_boolExprs;
-            int i = 0;
-            bool first = true;
-            foreach (BoolExpression boolExpr in boolExprs)
+            var boolExprs = m_boolExprs;
+            var i = 0;
+            var first = true;
+            foreach (var boolExpr in boolExprs)
             {
                 if (boolExpr != null)
                 {
@@ -814,7 +831,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 }
                 i++;
             }
-            if (true == first)
+            if (first)
             {
                 // No booleans, i.e., no compact representation. Use full string to avoid empty output
                 ToFullString(stringBuilder);
@@ -859,7 +876,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         #endregion
-
     }
-
 }

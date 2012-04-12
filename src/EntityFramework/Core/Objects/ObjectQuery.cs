@@ -1,22 +1,22 @@
 namespace System.Data.Entity.Core.Objects
 {
-    using System;
     using System.Collections;
     using System.ComponentModel;
-    using System.Data;
-    using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common;
-    using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Linq.Expressions;
 
     /// <summary>
     ///   This class implements untyped queries at the object-layer. 
     /// </summary>
-    [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface"), SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
+    [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public abstract class ObjectQuery : IEnumerable, IQueryable, IOrderedQueryable, IListSource
     {
         #region Private Instance Members
@@ -24,12 +24,12 @@ namespace System.Data.Entity.Core.Objects
         // -----------------
         // Instance Fields
         // -----------------
-        
+
         /// <summary>
         ///   The underlying implementation of this ObjectQuery as provided by a concrete subclass
         ///   of ObjectQueryImplementation. Implementations currently exist for Entity-SQL- and Linq-to-Entities-based ObjectQueries.
         /// </summary>
-        private ObjectQueryState _state;
+        private readonly ObjectQueryState _state;
 
         /// <summary>
         ///   The result type of the query - 'TResultType' expressed as an O-Space type usage. Cached here and
@@ -63,11 +63,11 @@ namespace System.Data.Entity.Core.Objects
         internal ObjectQuery(ObjectQueryState queryState)
         {
             Debug.Assert(queryState != null, "ObjectQuery state cannot be null");
-            
+
             // Set the query state.
-            this._state = queryState;
+            _state = queryState;
         }
-                
+
         #endregion
 
         #region Internal Properties
@@ -75,8 +75,11 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         /// Gets an untyped instantiation of the underlying ObjectQueryState that implements this ObjectQuery.
         /// </summary>
-        internal ObjectQueryState QueryState { get { return this._state; } }
-                
+        internal ObjectQueryState QueryState
+        {
+            get { return _state; }
+        }
+
         #endregion
 
         #region IQueryable implementation
@@ -87,7 +90,7 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         Type IQueryable.ElementType
         {
-            get { return this._state.ElementType; }
+            get { return _state.ElementType; }
         }
 
         /// <summary>
@@ -98,16 +101,13 @@ namespace System.Data.Entity.Core.Objects
         /// between LINQ and Entity-SQL queries.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        System.Linq.Expressions.Expression IQueryable.Expression
+        Expression IQueryable.Expression
         {
-            get
-            {
-                return this.GetExpression();
-            }
+            get { return GetExpression(); }
         }
 
-        internal abstract System.Linq.Expressions.Expression GetExpression();
-        
+        internal abstract Expression GetExpression();
+
         /// <summary>
         /// Gets the IQueryProvider associated with this query instance.
         /// </summary>
@@ -118,7 +118,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 if (_provider == null)
                 {
-                    _provider = new System.Data.Entity.Core.Objects.ELinq.ObjectQueryProvider(this);
+                    _provider = new ObjectQueryProvider(this);
                 }
                 return _provider;
             }
@@ -141,9 +141,7 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IListSource.ContainsListCollection
         {
-            get
-            {
-                return false; // this means that the IList we return is the one which contains our actual data, it is not a collection
+            get { return false; // this means that the IList we return is the one which contains our actual data, it is not a collection
             }
         }
 
@@ -172,10 +170,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         public ObjectContext Context
         {
-            get
-            {
-                return this._state.ObjectContext;
-            }
+            get { return _state.ObjectContext; }
         }
 
         /// <summary>
@@ -183,15 +178,12 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         public MergeOption MergeOption
         {
-            get
-            {
-                return this._state.EffectiveMergeOption;
-            }
+            get { return _state.EffectiveMergeOption; }
 
             set
             {
                 EntityUtil.CheckArgumentMergeOption(value);
-                this._state.UserSpecifiedMergeOption = value;
+                _state.UserSpecifiedMergeOption = value;
             }
         }
 
@@ -200,10 +192,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         public ObjectParameterCollection Parameters
         {
-            get
-            {
-                return this._state.EnsureParameters();
-            }
+            get { return _state.EnsureParameters(); }
         }
 
         /// <summary>
@@ -211,15 +200,9 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         public bool EnablePlanCaching
         {
-            get
-            {
-                return this._state.PlanCachingEnabled;
-            }
+            get { return _state.PlanCachingEnabled; }
 
-            set
-            {
-                this._state.PlanCachingEnabled = value;
-            }
+            set { _state.PlanCachingEnabled = value; }
         }
 
         #endregion
@@ -242,7 +225,7 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IList IListSource.GetList()
         {
-            return this.GetIListSourceListInternal();
+            return GetIListSourceListInternal();
         }
 
         /// <summary>
@@ -250,11 +233,11 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         /// <returns></returns>
         [Browsable(false)]
-        public string ToTraceString() 
+        public string ToTraceString()
         {
-            return this._state.GetExecutionPlan(null).ToTraceString();
+            return _state.GetExecutionPlan(null).ToTraceString();
         }
-                        
+
         /// <summary>
         ///   This method returns information about the result type of the ObjectQuery.
         /// </summary>
@@ -262,14 +245,14 @@ namespace System.Data.Entity.Core.Objects
         ///   The TypeMetadata that describes the shape of the query results.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        public TypeUsage GetResultType ()
+        public TypeUsage GetResultType()
         {
             Context.EnsureMetadata();
-            if (null == this._resultType)
+            if (null == _resultType)
             {
                 // Retrieve the result type from the implementation, in terms of C-Space.
-                TypeUsage cSpaceQueryResultType = this._state.ResultType;
-                
+                var cSpaceQueryResultType = _state.ResultType;
+
                 // Determine the 'TResultType' equivalent type usage based on the mapped O-Space type.
                 // If the result type of the query is a collection[something], then
                 // extract out the 'something' (element type) and use that. This
@@ -282,18 +265,18 @@ namespace System.Data.Entity.Core.Objects
                 }
 
                 // Map the C-space result type to O-space.
-                tResultType = this._state.ObjectContext.Perspective.MetadataWorkspace.GetOSpaceTypeUsage(tResultType);
+                tResultType = _state.ObjectContext.Perspective.MetadataWorkspace.GetOSpaceTypeUsage(tResultType);
                 if (null == tResultType)
                 {
-                    throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.ObjectQuery_UnableToMapResultType);
+                    throw EntityUtil.InvalidOperation(Strings.ObjectQuery_UnableToMapResultType);
                 }
 
-                this._resultType = tResultType;
+                _resultType = tResultType;
             }
 
-            return this._resultType;
+            return _resultType;
         }
-         
+
         /// <summary>
         ///   This method allows explicit query evaluation with a specified merge
         ///   option which will override the merge option property.
@@ -307,15 +290,15 @@ namespace System.Data.Entity.Core.Objects
         public ObjectResult Execute(MergeOption mergeOption)
         {
             EntityUtil.CheckArgumentMergeOption(mergeOption);
-            return this.ExecuteInternal(mergeOption);
+            return ExecuteInternal(mergeOption);
         }
-                
+
         #region IEnumerable implementation
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumeratorInternal();
+            return GetEnumeratorInternal();
         }
 
         #endregion
@@ -323,9 +306,11 @@ namespace System.Data.Entity.Core.Objects
         #endregion
 
         #region Internal Methods
+
         internal abstract IEnumerator GetEnumeratorInternal();
         internal abstract IList GetIListSourceListInternal();
         internal abstract ObjectResult ExecuteInternal(MergeOption mergeOption);
+
         #endregion
     }
 }

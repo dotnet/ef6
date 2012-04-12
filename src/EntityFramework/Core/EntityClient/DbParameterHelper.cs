@@ -1,15 +1,11 @@
-namespace System.Data.Entity.Core.EntityClient {
-
-    using System;
+namespace System.Data.Entity.Core.EntityClient
+{
     using System.ComponentModel;
-    using System.Data;
-    using System.Data.Entity.Core;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
-    using System.Data.Entity;
     using System.Data.Entity.Resources;
 
-    public sealed partial class EntityParameter : DbParameter { 
+    public sealed partial class EntityParameter : DbParameter
+    {
         private object _value;
 
         private object _parent;
@@ -17,209 +13,229 @@ namespace System.Data.Entity.Core.EntityClient {
         private ParameterDirection _direction;
         private int? _size;
 
-
         private string _sourceColumn;
         private DataRowVersion _sourceVersion;
         private bool _sourceColumnNullMapping;
 
         private bool? _isNullable;
 
-        private object _coercedValue;
-
-        private EntityParameter(EntityParameter source) : this() { 
+        private EntityParameter(EntityParameter source)
+            : this()
+        {
             EntityUtil.CheckArgumentNull(source, "source");
 
             source.CloneHelper(this);
 
-            ICloneable cloneable = (_value as ICloneable);
-            if (null != cloneable) { 
+            var cloneable = (_value as ICloneable);
+            if (null != cloneable)
+            {
                 _value = cloneable.Clone();
             }
         }
 
-        private object CoercedValue { 
-            get {
-                return _coercedValue;
-            }
-            set {
-                _coercedValue = value;
-            }
-        }
+        private object CoercedValue { get; set; }
 
         [
-        RefreshProperties(RefreshProperties.All),
-        EntityResCategoryAttribute(EntityRes.DataCategory_Data),
-        EntityResDescriptionAttribute(EntityRes.DbParameter_Direction),
+            RefreshProperties(RefreshProperties.All)
         ]
-        override public ParameterDirection Direction { 
-            get {
-                ParameterDirection direction = _direction;
+        [EntityResCategory(EntityRes.DataCategory_Data)]
+        [EntityResDescription(EntityRes.DbParameter_Direction)]
+        public override ParameterDirection Direction
+        {
+            get
+            {
+                var direction = _direction;
                 return ((0 != direction) ? direction : ParameterDirection.Input);
             }
-            set {
-                if (_direction != value) {
-                    switch (value) { 
-                    case ParameterDirection.Input:
-                    case ParameterDirection.Output:
-                    case ParameterDirection.InputOutput:
-                    case ParameterDirection.ReturnValue:
-                        PropertyChanging();
-                        _direction = value;
-                        break;
-                    default:
-                        throw EntityUtil.InvalidParameterDirection(value);
+            set
+            {
+                if (_direction != value)
+                {
+                    switch (value)
+                    {
+                        case ParameterDirection.Input:
+                        case ParameterDirection.Output:
+                        case ParameterDirection.InputOutput:
+                        case ParameterDirection.ReturnValue:
+                            PropertyChanging();
+                            _direction = value;
+                            break;
+                        default:
+                            throw EntityUtil.InvalidParameterDirection(value);
                     }
                 }
             }
         }
 
-        override public bool IsNullable { 
-            get {
-                bool result = this._isNullable.HasValue ? this._isNullable.Value : true;
+        public override bool IsNullable
+        {
+            get
+            {
+                var result = _isNullable.HasValue ? _isNullable.Value : true;
                 return result;
             }
-            set {
-                _isNullable = value;
-            }
+            set { _isNullable = value; }
         }
 
         [
-        EntityResCategoryAttribute(EntityRes.DataCategory_Data),
-        EntityResDescriptionAttribute(EntityRes.DbParameter_Size),
+            EntityResCategory(EntityRes.DataCategory_Data)
         ]
-        override public int Size { 
-            get {
-                int size = _size.HasValue ? _size.Value : 0;
-                if (0 == size) {
+        [EntityResDescription(EntityRes.DbParameter_Size)]
+        public override int Size
+        {
+            get
+            {
+                var size = _size.HasValue ? _size.Value : 0;
+                if (0 == size)
+                {
                     size = ValueSize(Value);
                 }
                 return size;
             }
-            set {
-                if (!_size.HasValue || _size.Value != value) {
-                    if (value < -1) {
+            set
+            {
+                if (!_size.HasValue
+                    || _size.Value != value)
+                {
+                    if (value < -1)
+                    {
                         throw EntityUtil.InvalidSizeValue(value);
                     }
                     PropertyChanging();
-                    if (0 == value) {
+                    if (0 == value)
+                    {
                         _size = null;
                     }
-                    else {
+                    else
+                    {
                         _size = value;
                     }
                 }
             }
         }
 
-        private void ResetSize() {
-            if (_size.HasValue) {
+        private void ResetSize()
+        {
+            if (_size.HasValue)
+            {
                 PropertyChanging();
                 _size = null;
             }
         }
 
-        private bool ShouldSerializeSize() { 
+        private bool ShouldSerializeSize()
+        {
             return (_size.HasValue && _size.Value != 0);
         }
 
         [
-        EntityResCategoryAttribute(EntityRes.DataCategory_Update),
-        EntityResDescriptionAttribute(EntityRes.DbParameter_SourceColumn),
+            EntityResCategory(EntityRes.DataCategory_Update)
         ]
-        override public string SourceColumn { 
-            get {
-                string sourceColumn = _sourceColumn;
+        [EntityResDescription(EntityRes.DbParameter_SourceColumn)]
+        public override string SourceColumn
+        {
+            get
+            {
+                var sourceColumn = _sourceColumn;
                 return ((null != sourceColumn) ? sourceColumn : string.Empty);
             }
-            set {
-                _sourceColumn = value;
-            }
+            set { _sourceColumn = value; }
         }
 
-        public override bool SourceColumnNullMapping {
-            get {
-                return _sourceColumnNullMapping;
-            }
-            set {
-                _sourceColumnNullMapping = value;
-            }
+        public override bool SourceColumnNullMapping
+        {
+            get { return _sourceColumnNullMapping; }
+            set { _sourceColumnNullMapping = value; }
         }
 
         [
-        EntityResCategoryAttribute(EntityRes.DataCategory_Update),
-        EntityResDescriptionAttribute(EntityRes.DbParameter_SourceVersion),
+            EntityResCategory(EntityRes.DataCategory_Update)
         ]
-        override public DataRowVersion SourceVersion { 
-            get {
-                DataRowVersion sourceVersion = _sourceVersion;
+        [EntityResDescription(EntityRes.DbParameter_SourceVersion)]
+        public override DataRowVersion SourceVersion
+        {
+            get
+            {
+                var sourceVersion = _sourceVersion;
                 return ((0 != sourceVersion) ? sourceVersion : DataRowVersion.Current);
             }
-            set {
-                switch(value) { 
-                case DataRowVersion.Original:
-                case DataRowVersion.Current:
-                case DataRowVersion.Proposed:
-                case DataRowVersion.Default:
-                    _sourceVersion = value;
-                    break;
-                default:
-                    throw EntityUtil.InvalidDataRowVersion(value);
+            set
+            {
+                switch (value)
+                {
+                    case DataRowVersion.Original:
+                    case DataRowVersion.Current:
+                    case DataRowVersion.Proposed:
+                    case DataRowVersion.Default:
+                        _sourceVersion = value;
+                        break;
+                    default:
+                        throw EntityUtil.InvalidDataRowVersion(value);
                 }
             }
         }
 
-        private void CloneHelperCore(EntityParameter destination) {
-            destination._value                     = _value;
-            
-            destination._direction                 = _direction;
-            destination._size                      = _size;
+        private void CloneHelperCore(EntityParameter destination)
+        {
+            destination._value = _value;
 
-            destination._sourceColumn              = _sourceColumn;
-            destination._sourceVersion             = _sourceVersion;
-            destination._sourceColumnNullMapping   = _sourceColumnNullMapping;
-            destination._isNullable                = _isNullable;
+            destination._direction = _direction;
+            destination._size = _size;
+
+            destination._sourceColumn = _sourceColumn;
+            destination._sourceVersion = _sourceVersion;
+            destination._sourceColumnNullMapping = _sourceColumnNullMapping;
+            destination._isNullable = _isNullable;
         }
-        
-        internal void CopyTo(DbParameter destination) {
+
+        internal void CopyTo(DbParameter destination)
+        {
             EntityUtil.CheckArgumentNull(destination, "destination");
             CloneHelper((EntityParameter)destination);
         }
 
-        internal object CompareExchangeParent(object value, object comparand) {
-            
-            
-            
-            
-            object parent = _parent;
-            if (comparand == parent) {
+        internal object CompareExchangeParent(object value, object comparand)
+        {
+            var parent = _parent;
+            if (comparand == parent)
+            {
                 _parent = value;
             }
             return parent;
         }
 
-        internal void ResetParent() {
+        internal void ResetParent()
+        {
             _parent = null;
         }
 
-        override public string ToString() { 
+        public override string ToString()
+        {
             return ParameterName;
         }
 
-        private static int ValueSizeCore(object value) { 
-            if (!EntityUtil.IsNull(value)) {
-                string svalue = (value as string);
-                if (null != svalue) {
+        private static int ValueSizeCore(object value)
+        {
+            if (!EntityUtil.IsNull(value))
+            {
+                var svalue = (value as string);
+                if (null != svalue)
+                {
                     return svalue.Length;
                 }
-                byte[] bvalue = (value as byte[]);
-                if (null != bvalue) {
+                var bvalue = (value as byte[]);
+                if (null != bvalue)
+                {
                     return bvalue.Length;
                 }
-                char[] cvalue = (value as char[]);
-                if (null != cvalue) {
+                var cvalue = (value as char[]);
+                if (null != cvalue)
+                {
                     return cvalue.Length;
                 }
-                if ((value is byte) || (value is char)) {
+                if ((value is byte)
+                    || (value is char))
+                {
                     return 1;
                 }
             }

@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Text;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics;
+
     /// <summary>
     /// Represents an enumeration member.
     /// </summary>
@@ -40,7 +35,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             EntityUtil.CheckStringArgument(name, "name");
             Debug.Assert(value != null, "value != null");
-            Debug.Assert(value is SByte || value is Byte || value is Int16 || value is Int32 || value is Int64, "Unsupported type of enum member value.");
+            Debug.Assert(
+                value is SByte || value is Byte || value is Int16 || value is Int32 || value is Int64,
+                "Unsupported type of enum member value.");
 
             _name = name;
             _value = value;
@@ -53,9 +50,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Gets the kind of this type.
         /// </summary>
-        public override BuiltInTypeKind BuiltInTypeKind 
-        { 
-            get { return BuiltInTypeKind.EnumMember; } 
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
+            get { return BuiltInTypeKind.EnumMember; }
         }
 
         /// <summary>
@@ -64,10 +61,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public string Name
         {
-            get
-            {
-                return _name;
-            }
+            get { return _name; }
         }
 
         /// <summary>
@@ -76,10 +70,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.PrimitiveType, false)]
         public object Value
         {
-            get
-            {
-                return _value;
-            }
+            get { return _value; }
         }
 
         /// <summary>
@@ -87,10 +78,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal override string Identity
         {
-            get
-            {
-                return Name;
-            }
+            get { return Name; }
         }
 
         #endregion

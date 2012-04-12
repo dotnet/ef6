@@ -4,9 +4,9 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core;
-    using System.Data.Entity.Resources;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Resources;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;

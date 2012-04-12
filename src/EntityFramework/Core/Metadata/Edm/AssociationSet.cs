@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     /// <summary>
@@ -11,6 +6,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public sealed class AssociationSet : RelationshipSet
     {
         #region Constructors
+
         /// <summary>
         /// Initializes a new instance of AssocationSet with the given name and the association type
         /// </summary>
@@ -20,23 +16,24 @@ namespace System.Data.Entity.Core.Metadata.Edm
             : base(name, null, null, null, associationType)
         {
         }
+
         #endregion
 
         #region Fields
+
         private readonly ReadOnlyMetadataCollection<AssociationSetEnd> _associationSetEnds =
             new ReadOnlyMetadataCollection<AssociationSetEnd>(new MetadataCollection<AssociationSetEnd>());
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the association type associated with this association set
         /// </summary>
         public new AssociationType ElementType
         {
-            get
-            {
-                return (AssociationType)base.ElementType;
-            }
+            get { return (AssociationType)base.ElementType; }
         }
 
         /// <summary>
@@ -45,28 +42,30 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.AssociationSetEnd, true)]
         public ReadOnlyMetadataCollection<AssociationSetEnd> AssociationSetEnds
         {
-            get
-            {
-                return _associationSetEnds;
-            }
+            get { return _associationSetEnds; }
         }
 
         /// <summary>
         /// Returns the kind of the type
         /// </summary>
-        public override BuiltInTypeKind BuiltInTypeKind { get { return BuiltInTypeKind.AssociationSet; } }
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
+            get { return BuiltInTypeKind.AssociationSet; }
+        }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Sets this item to be readonly, once this is set, the item will never be writable again.
         /// </summary>
         internal override void SetReadOnly()
         {
-            if (!this.IsReadOnly)
+            if (!IsReadOnly)
             {
                 base.SetReadOnly();
-                this.AssociationSetEnds.Source.SetReadOnly();
+                AssociationSetEnds.Source.SetReadOnly();
             }
         }
 
@@ -76,8 +75,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="associationSetEnd"></param>
         internal void AddAssociationSetEnd(AssociationSetEnd associationSetEnd)
         {
-            this.AssociationSetEnds.Source.Add(associationSetEnd);
+            AssociationSetEnds.Source.Add(associationSetEnd);
         }
+
         #endregion
     }
 }

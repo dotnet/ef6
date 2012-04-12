@@ -1,8 +1,7 @@
-using System;
-using System.ComponentModel;
-
 namespace System.Data.Entity.Core.Objects
 {
+    using System.ComponentModel;
+
     internal interface IObjectView
     {
         void EntityPropertyChanged(object sender, PropertyChangedEventArgs e);

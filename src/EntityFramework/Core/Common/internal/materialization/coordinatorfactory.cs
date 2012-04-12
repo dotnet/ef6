@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Data.Entity.Core.Objects.Internal;
-
-namespace System.Data.Entity.Core.Common.Internal.Materialization
+﻿namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Objects.Internal;
+    using System.Diagnostics;
+    using System.Linq.Expressions;
+    using System.Text;
+
     /// <summary>
     /// An immutable class used to generate new coordinators. These coordinators are used
     /// at runtime to materialize results.
@@ -59,7 +59,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// <summary>
         /// Nested results below this (at depth + 1)
         /// </summary>
-        internal readonly System.Collections.ObjectModel.ReadOnlyCollection<CoordinatorFactory> NestedCoordinators;
+        internal readonly ReadOnlyCollection<CoordinatorFactory> NestedCoordinators;
 
         /// <summary>
         /// Indicates whether this is a leaf reader.
@@ -72,43 +72,45 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// nested collections, data discriminators (not all rows have data), keys (not all rows have new data).
         /// </summary>
         internal readonly bool IsSimple;
-       
+
         /// <summary>
         /// For value-layer queries, the factories for all the records that we can potentially process
         /// at this level in the query result.
         /// </summary>
-        internal readonly System.Collections.ObjectModel.ReadOnlyCollection<RecordStateFactory> RecordStateFactories;
+        internal readonly ReadOnlyCollection<RecordStateFactory> RecordStateFactories;
 
         #endregion
 
         #region constructor
 
-        protected CoordinatorFactory(int depth, int stateSlot, Func<Shaper, bool> hasData, Func<Shaper, bool> setKeys, Func<Shaper, bool> checkKeys, CoordinatorFactory[] nestedCoordinators, RecordStateFactory[] recordStateFactories)
+        protected CoordinatorFactory(
+            int depth, int stateSlot, Func<Shaper, bool> hasData, Func<Shaper, bool> setKeys, Func<Shaper, bool> checkKeys,
+            CoordinatorFactory[] nestedCoordinators, RecordStateFactory[] recordStateFactories)
         {
-            this.Depth = depth;
-            this.StateSlot = stateSlot;
+            Depth = depth;
+            StateSlot = stateSlot;
 
             // figure out if there are any nested coordinators
-            this.IsLeafResult = 0 == nestedCoordinators.Length;
+            IsLeafResult = 0 == nestedCoordinators.Length;
 
             // if there is no explicit 'has data' discriminator, it means all rows contain data for the coordinator
             if (hasData == null)
             {
-                this.HasData = AlwaysTrue;
+                HasData = AlwaysTrue;
             }
             else
             {
-                this.HasData = hasData;
+                HasData = hasData;
             }
 
             // if there is no explicit set key delegate, just return true (the value is not used anyways)
             if (setKeys == null)
             {
-                this.SetKeys = AlwaysTrue;
+                SetKeys = AlwaysTrue;
             }
             else
             {
-                this.SetKeys = setKeys;
+                SetKeys = setKeys;
             }
 
             // If there are no keys, it means different things depending on whether we are a leaf
@@ -118,24 +120,24 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             // all rows are elements of a single child collection).
             if (checkKeys == null)
             {
-                if (this.IsLeafResult)
+                if (IsLeafResult)
                 {
-                    this.CheckKeys = AlwaysFalse; // every row is a new result (the keys don't match)
+                    CheckKeys = AlwaysFalse; // every row is a new result (the keys don't match)
                 }
                 else
                 {
-                    this.CheckKeys = AlwaysTrue; // every row belongs to a single child collection
+                    CheckKeys = AlwaysTrue; // every row belongs to a single child collection
                 }
             }
             else
             {
-                this.CheckKeys = checkKeys;
+                CheckKeys = checkKeys;
             }
-            this.NestedCoordinators = new System.Collections.ObjectModel.ReadOnlyCollection<CoordinatorFactory>(nestedCoordinators);
-            this.RecordStateFactories = new System.Collections.ObjectModel.ReadOnlyCollection<RecordStateFactory>(recordStateFactories);
+            NestedCoordinators = new ReadOnlyCollection<CoordinatorFactory>(nestedCoordinators);
+            RecordStateFactories = new ReadOnlyCollection<RecordStateFactory>(recordStateFactories);
 
             // Determines whether this coordinator can be handled by a 'simple' enumerator. See IsSimple for details.
-            this.IsSimple = IsLeafResult && null == checkKeys && null == hasData;
+            IsSimple = IsLeafResult && null == checkKeys && null == hasData;
         }
 
         #endregion
@@ -192,40 +194,45 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         #region constructor
 
-        public CoordinatorFactory(int depth, int stateSlot, Expression hasData, Expression setKeys, Expression checkKeys, CoordinatorFactory[] nestedCoordinators, Expression element, Expression elementWithErrorHandling, Expression initializeCollection, RecordStateFactory[] recordStateFactories)
-            : base(depth, stateSlot, CompilePredicate(hasData), CompilePredicate(setKeys), CompilePredicate(checkKeys), nestedCoordinators, recordStateFactories)
+        public CoordinatorFactory(
+            int depth, int stateSlot, Expression hasData, Expression setKeys, Expression checkKeys, CoordinatorFactory[] nestedCoordinators,
+            Expression element, Expression elementWithErrorHandling, Expression initializeCollection,
+            RecordStateFactory[] recordStateFactories)
+            : base(
+                depth, stateSlot, CompilePredicate(hasData), CompilePredicate(setKeys), CompilePredicate(checkKeys), nestedCoordinators,
+                recordStateFactories)
         {
             // If we are in a case where a wrapped entity is available, then use it; otherwise use the raw element.
             // However, in both cases, use the raw element for the error handling case where what we care about is
             // getting the appropriate exception message.
             if (typeof(IEntityWrapper).IsAssignableFrom(element.Type))
             {
-                this.WrappedElement = Translator.Compile<IEntityWrapper>(element);
+                WrappedElement = Translator.Compile<IEntityWrapper>(element);
                 elementWithErrorHandling = Translator.Emit_UnwrapAndEnsureType(elementWithErrorHandling, typeof(TElement));
             }
             else
             {
-                this.Element = Translator.Compile<TElement>(element);
+                Element = Translator.Compile<TElement>(element);
             }
-            this.ElementWithErrorHandling = Translator.Compile<TElement>(elementWithErrorHandling);
-            this.InitializeCollection = null == initializeCollection
-                ? s => new List<TElement>()
-                : Translator.Compile<ICollection<TElement>>(initializeCollection);
+            ElementWithErrorHandling = Translator.Compile<TElement>(elementWithErrorHandling);
+            InitializeCollection = null == initializeCollection
+                                       ? s => new List<TElement>()
+                                       : Translator.Compile<ICollection<TElement>>(initializeCollection);
 
-            this.Description = new StringBuilder()
-                                    .Append("HasData: ")
-                                    .AppendLine(DescribeExpression(hasData))
-                                    .Append("SetKeys: ")
-                                    .AppendLine(DescribeExpression(setKeys))
-                                    .Append("CheckKeys: ")
-                                    .AppendLine(DescribeExpression(checkKeys))
-                                    .Append("Element: ")
-                                    .AppendLine(DescribeExpression(element))
-                                    .Append("ElementWithExceptionHandling: ")
-                                    .AppendLine(DescribeExpression(elementWithErrorHandling))
-                                    .Append("InitializeCollection: ")
-                                    .AppendLine(DescribeExpression(initializeCollection))
-                                    .ToString();
+            Description = new StringBuilder()
+                .Append("HasData: ")
+                .AppendLine(DescribeExpression(hasData))
+                .Append("SetKeys: ")
+                .AppendLine(DescribeExpression(setKeys))
+                .Append("CheckKeys: ")
+                .AppendLine(DescribeExpression(checkKeys))
+                .Append("Element: ")
+                .AppendLine(DescribeExpression(element))
+                .Append("ElementWithExceptionHandling: ")
+                .AppendLine(DescribeExpression(elementWithErrorHandling))
+                .Append("InitializeCollection: ")
+                .AppendLine(DescribeExpression(initializeCollection))
+                .ToString();
         }
 
         #endregion
@@ -285,11 +292,11 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         internal RecordState GetDefaultRecordState(Shaper<RecordState> shaper)
         {
             RecordState result = null;
-            if (this.RecordStateFactories.Count > 0)
+            if (RecordStateFactories.Count > 0)
             {
                 // CONSIDER(SteveSta): We're relying upon having the default for polymorphic types be 
                 // the first item in the list; that sounds kind of risky.
-                result = (RecordState)shaper.State[this.RecordStateFactories[0].StateSlotNumber];
+                result = (RecordState)shaper.State[RecordStateFactories[0].StateSlotNumber];
                 Debug.Assert(null != result, "did you initialize the record states?");
                 result.ResetToDefaultState();
             }

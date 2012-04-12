@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
-
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
 // to prevent from simple mistakes during development (e.g. method argument validation 
 // in cases where it was you who created the variables or the variables had already been validated or 
@@ -15,11 +12,6 @@ using System.Collections.Generic;
 // or the tree was built/rewritten not the way we thought it was.
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
-
-using System.Globalization;
-using System.Linq;
-
-using System.Data.Entity.Core.Query.InternalTrees;
 using md = System.Data.Entity.Core.Metadata.Edm;
 
 //
@@ -46,11 +38,16 @@ using md = System.Data.Entity.Core.Metadata.Edm;
 //   * Rebuilding the node tree: The augmented node tree is now converted back into 
 //       a regular node tree.
 //
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
 
     #region AugmentedNode
+
     //
     // This region describes a number of classes that are used to build an annotated 
     // (or augmented) node tree. There are 3 main classes defined here
@@ -75,14 +72,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal class AugmentedNode
     {
         #region private state
-        private int m_id;
-        private Node m_node;
+
+        private readonly int m_id;
+        private readonly Node m_node;
         protected AugmentedNode m_parent;
-        private List<AugmentedNode> m_children;
+        private readonly List<AugmentedNode> m_children;
         private readonly List<JoinEdge> m_joinEdges = new List<JoinEdge>();
+
         #endregion
 
         #region constructors
+
         /// <summary>
         /// basic constructor
         /// </summary>
@@ -99,30 +99,40 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="id">Id for this node</param>
         /// <param name="node">current node</param>
         /// <param name="children">list of children</param>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal AugmentedNode(int id, Node node, List<AugmentedNode> children)
         {
             m_id = id;
             m_node = node;
             m_children = children;
             PlanCompiler.Assert(children != null, "null children (gasp!)");
-            foreach (AugmentedNode chi in m_children)
+            foreach (var chi in m_children)
             {
                 chi.m_parent = this;
             }
         }
+
         #endregion
 
         #region public properties
+
         /// <summary>
         /// Id of this node
         /// </summary>
-        internal int Id { get { return m_id; } }
+        internal int Id
+        {
+            get { return m_id; }
+        }
+
         /// <summary>
         /// The node
         /// </summary>
-        internal Node Node { get { return m_node; } }
-        
+        internal Node Node
+        {
+            get { return m_node; }
+        }
+
         /// <summary>
         /// Parent node
         /// </summary>
@@ -148,6 +158,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             get { return m_joinEdges; }
         }
+
         #endregion
     }
 
@@ -157,9 +168,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal sealed class AugmentedTableNode : AugmentedNode
     {
         #region private state
-        private int m_lastVisibleId;
-        private Table m_table;
- 
+
+        private readonly Table m_table;
+
         // The replacement table 
         private AugmentedTableNode m_replacementTable;
 
@@ -167,40 +178,42 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private int m_newLocationId;
 
         // List of columns of this table that are nullable (and must have nulls pruned out)
-        private VarVec m_nullableColumns; 
-        
+
         #endregion
 
         #region constructors
+
         /// <summary>
         /// Basic constructor
         /// </summary>
         /// <param name="id">node id</param>
         /// <param name="node">scan table node</param>
-        internal AugmentedTableNode(int id, Node node) : base(id, node)
+        internal AugmentedTableNode(int id, Node node)
+            : base(id, node)
         {
-            ScanTableOp scanTableOp = (ScanTableOp)node.Op;
+            var scanTableOp = (ScanTableOp)node.Op;
             m_table = scanTableOp.Table;
-            m_lastVisibleId = id;
+            LastVisibleId = id;
             m_replacementTable = this;
             m_newLocationId = id;
         }
+
         #endregion
 
         #region public properties
+
         /// <summary>
         /// The Table
         /// </summary>
-        internal Table Table { get { return m_table; } }
+        internal Table Table
+        {
+            get { return m_table; }
+        }
 
         /// <summary>
         /// The highest node (id) at which this table is visible
         /// </summary>
-        internal int LastVisibleId
-        {
-            get { return m_lastVisibleId; }
-            set { m_lastVisibleId = value; }
-        }
+        internal int LastVisibleId { get; set; }
 
         /// <summary>
         /// Has this table been eliminated
@@ -233,17 +246,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal bool IsMoved
         {
-            get { return m_newLocationId != this.Id; }
+            get { return m_newLocationId != Id; }
         }
 
         /// <summary>
         /// Get the list of nullable columns (that require special handling)
         /// </summary>
-        internal VarVec NullableColumns
-        {
-            get { return m_nullableColumns; }
-            set { m_nullableColumns = value; }
-        }
+        internal VarVec NullableColumns { get; set; }
+
         #endregion
     }
 
@@ -253,12 +263,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal sealed class AugmentedJoinNode : AugmentedNode
     {
         #region private state
-        private List<ColumnVar> m_leftVars;
-        private List<ColumnVar> m_rightVars;
-        private Node m_otherPredicate;
+
+        private readonly List<ColumnVar> m_leftVars;
+        private readonly List<ColumnVar> m_rightVars;
+        private readonly Node m_otherPredicate;
+
         #endregion
 
         #region constructors
+
         /// <summary>
         /// basic constructor
         /// </summary>
@@ -269,11 +282,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="leftVars">left-side equijoin vars</param>
         /// <param name="rightVars">right-side equijoin vars</param>
         /// <param name="otherPredicate">any remaining predicate</param>
-        internal AugmentedJoinNode(int id, Node node, 
-            AugmentedNode leftChild, AugmentedNode rightChild, 
-            List<ColumnVar> leftVars, List<ColumnVar> rightVars, 
+        internal AugmentedJoinNode(
+            int id, Node node,
+            AugmentedNode leftChild, AugmentedNode rightChild,
+            List<ColumnVar> leftVars, List<ColumnVar> rightVars,
             Node otherPredicate)
-            : this(id, node, new List<AugmentedNode>(new AugmentedNode[] {leftChild, rightChild}))
+            : this(id, node, new List<AugmentedNode>(new[] { leftChild, rightChild }))
         {
             m_otherPredicate = otherPredicate;
             m_rightVars = rightVars;
@@ -296,27 +310,42 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #region public properties
+
         /// <summary>
         /// Non-equijoin predicate
         /// </summary>
-        internal Node OtherPredicate { get { return m_otherPredicate; } }
+        internal Node OtherPredicate
+        {
+            get { return m_otherPredicate; }
+        }
+
         /// <summary>
         /// Equijoin columns of the left side
         /// </summary>
-        internal List<ColumnVar> LeftVars { get { return m_leftVars; } }
+        internal List<ColumnVar> LeftVars
+        {
+            get { return m_leftVars; }
+        }
+
         /// <summary>
         /// Equijoin columns of the right side
         /// </summary>
-        internal List<ColumnVar> RightVars { get { return m_rightVars; } }
+        internal List<ColumnVar> RightVars
+        {
+            get { return m_rightVars; }
+        }
+
         #endregion
 
         #region private methods
 
         #endregion
     }
+
     #endregion
 
     #region JoinGraph
+
     /// <summary>
     /// The only join kinds we care about
     /// </summary>
@@ -334,15 +363,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal class JoinEdge
     {
         #region private state
-        private AugmentedTableNode m_left;
-        private AugmentedTableNode m_right;
-        private AugmentedJoinNode m_joinNode;
-        private JoinKind m_joinKind;
-        private List<ColumnVar> m_leftVars;
-        private List<ColumnVar> m_rightVars;
+
+        private readonly AugmentedTableNode m_left;
+        private readonly AugmentedTableNode m_right;
+        private readonly AugmentedJoinNode m_joinNode;
+        private readonly List<ColumnVar> m_leftVars;
+        private readonly List<ColumnVar> m_rightVars;
+
         #endregion
 
         #region constructors
+
         /// <summary>
         /// Internal constructor
         /// </summary>
@@ -352,57 +383,77 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="joinKind">the Join Kind</param>
         /// <param name="leftVars">list of equijoin columns of the left table</param>
         /// <param name="rightVars">equijoin columns of the right table</param>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        private JoinEdge(AugmentedTableNode left, AugmentedTableNode right,
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        private JoinEdge(
+            AugmentedTableNode left, AugmentedTableNode right,
             AugmentedJoinNode joinNode, JoinKind joinKind,
             List<ColumnVar> leftVars, List<ColumnVar> rightVars)
         {
             m_left = left;
             m_right = right;
-            m_joinKind = joinKind;
+            JoinKind = joinKind;
             m_joinNode = joinNode;
             m_leftVars = leftVars;
             m_rightVars = rightVars;
             PlanCompiler.Assert(m_leftVars.Count == m_rightVars.Count, "Count mismatch: " + m_leftVars.Count + "," + m_rightVars.Count);
         }
+
         #endregion
 
         #region public apis
 
-
         /// <summary>
         /// The left table
         /// </summary>
-        internal AugmentedTableNode Left { get { return m_left; } }
+        internal AugmentedTableNode Left
+        {
+            get { return m_left; }
+        }
+
         /// <summary>
         /// The right table of the join
         /// </summary>
-        internal AugmentedTableNode Right { get { return m_right; } }
+        internal AugmentedTableNode Right
+        {
+            get { return m_right; }
+        }
+
         /// <summary>
         /// The underlying join node, may be null
         /// </summary>     
-        internal AugmentedJoinNode JoinNode { get { return m_joinNode; } }
+        internal AugmentedJoinNode JoinNode
+        {
+            get { return m_joinNode; }
+        }
 
         /// <summary>
         /// The join kind
         /// </summary>
-        internal JoinKind JoinKind { get { return m_joinKind; } set { m_joinKind = value; } }
+        internal JoinKind JoinKind { get; set; }
 
         /// <summary>
         /// Equijoin columns of the left table
         /// </summary>
-        internal List<ColumnVar> LeftVars { get { return m_leftVars; } }
+        internal List<ColumnVar> LeftVars
+        {
+            get { return m_leftVars; }
+        }
+
         /// <summary>
         /// Equijoin columns of the right table
         /// </summary>
-        internal List<ColumnVar> RightVars { get { return m_rightVars; } }
+        internal List<ColumnVar> RightVars
+        {
+            get { return m_rightVars; }
+        }
 
         /// <summary>
         /// Is this join edge useless?
         /// </summary>
         internal bool IsEliminated
         {
-            get { return this.Left.IsEliminated || this.Right.IsEliminated; }
+            get { return Left.IsEliminated || Right.IsEliminated; }
         }
 
         /// <summary>
@@ -414,23 +465,26 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="leftVar">equijoin column of the left table</param>
         /// <param name="rightVar">equijoin column of the right table</param>
         /// <returns>the new join edge</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        internal static JoinEdge CreateJoinEdge(AugmentedTableNode left, AugmentedTableNode right,
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        internal static JoinEdge CreateJoinEdge(
+            AugmentedTableNode left, AugmentedTableNode right,
             AugmentedJoinNode joinNode,
             ColumnVar leftVar, ColumnVar rightVar)
         {
-            List<ColumnVar> leftVars = new List<ColumnVar>();
-            List<ColumnVar> rightVars = new List<ColumnVar>();
+            var leftVars = new List<ColumnVar>();
+            var rightVars = new List<ColumnVar>();
             leftVars.Add(leftVar);
             rightVars.Add(rightVar);
 
-            OpType joinOpType = joinNode.Node.Op.OpType;
-            PlanCompiler.Assert((joinOpType == OpType.LeftOuterJoin || joinOpType == OpType.InnerJoin), 
+            var joinOpType = joinNode.Node.Op.OpType;
+            PlanCompiler.Assert(
+                (joinOpType == OpType.LeftOuterJoin || joinOpType == OpType.InnerJoin),
                 "Unexpected join type for join edge: " + joinOpType);
 
-            JoinKind joinKind = joinOpType == OpType.LeftOuterJoin ? JoinKind.LeftOuter : JoinKind.Inner;
+            var joinKind = joinOpType == OpType.LeftOuterJoin ? JoinKind.LeftOuter : JoinKind.Inner;
 
-            JoinEdge joinEdge = new JoinEdge(left, right, joinNode, joinKind, leftVars, rightVars);
+            var joinEdge = new JoinEdge(left, right, joinNode, joinKind, leftVars, rightVars);
             return joinEdge;
         }
 
@@ -443,10 +497,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="leftVars">left equijoin vars</param>
         /// <param name="rightVars">right equijoin vars</param>
         /// <returns>the join edge</returns>
-        internal static JoinEdge CreateTransitiveJoinEdge(AugmentedTableNode left, AugmentedTableNode right, JoinKind joinKind,
+        internal static JoinEdge CreateTransitiveJoinEdge(
+            AugmentedTableNode left, AugmentedTableNode right, JoinKind joinKind,
             List<ColumnVar> leftVars, List<ColumnVar> rightVars)
         {
-            JoinEdge joinEdge = new JoinEdge(left, right, null, joinKind, leftVars, rightVars);
+            var joinEdge = new JoinEdge(left, right, null, joinKind, leftVars, rightVars);
             return joinEdge;
         }
 
@@ -467,6 +522,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             m_rightVars.Add(rightVar);
             return true;
         }
+
         #endregion
     }
 
@@ -476,20 +532,26 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal class JoinGraph
     {
         #region private state
-        private Command m_command;
-        private AugmentedJoinNode m_root;
-        private List<AugmentedNode> m_vertexes;
-        private Dictionary<Table, AugmentedTableNode> m_tableVertexMap;
+
+        private readonly Command m_command;
+        private readonly AugmentedJoinNode m_root;
+        private readonly List<AugmentedNode> m_vertexes;
+        private readonly Dictionary<Table, AugmentedTableNode> m_tableVertexMap;
         private VarMap m_varMap;
-        private Dictionary<Var, VarVec> m_reverseVarMap;
-        private Dictionary<Var, AugmentedTableNode> m_varToDefiningNodeMap; //Includes all replacing vars and referenced vars from replacing tables
-        private Dictionary<Node, Node> m_processedNodes;
+        private readonly Dictionary<Var, VarVec> m_reverseVarMap;
+
+        private readonly Dictionary<Var, AugmentedTableNode> m_varToDefiningNodeMap;
+                                                             //Includes all replacing vars and referenced vars from replacing tables
+
+        private readonly Dictionary<Node, Node> m_processedNodes;
         private bool m_modifiedGraph;
-        private ConstraintManager m_constraintManager;
-        private VarRefManager m_varRefManager;
+        private readonly ConstraintManager m_constraintManager;
+        private readonly VarRefManager m_varRefManager;
+
         #endregion
 
         #region constructors
+
         /// <summary>
         /// The basic constructor. Builds up the annotated node tree, and the set of
         /// join edges
@@ -498,7 +560,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="constraintManager">current constraint manager</param>
         /// <param name="varRefManager">the var ref manager for the tree</param>
         /// <param name="joinNode">current join node</param>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal JoinGraph(Command command, ConstraintManager constraintManager, VarRefManager varRefManager, Node joinNode)
         {
             m_command = command;
@@ -519,9 +582,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Build the join edges
             BuildJoinEdges(m_root, m_root.Id);
         }
+
         #endregion
 
         #region public methods
+
         /// <summary>
         /// Perform all kinds of join elimination. The output is the transformed join tree.
         /// The varMap output is a dictionary that maintains var renames - this will be used
@@ -533,21 +598,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="varMap">remapped vars</param>
         /// <param name="processedNodes">list of nodes that need no further processing</param>
-        internal Node DoJoinElimination(out VarMap varMap, 
-            out Dictionary<Node, Node> processedNodes) 
+        internal Node DoJoinElimination(
+            out VarMap varMap,
+            out Dictionary<Node, Node> processedNodes)
         {
             //Turn left outer joins into inner joins when possible
             TryTurnLeftOuterJoinsIntoInnerJoins();
 
             // Generate transitive edges
             GenerateTransitiveEdges();
-            
+
             // Do real join elimination
             EliminateSelfJoins();
             EliminateParentChildJoins();
 
             // Build the result tree
-            Node result = BuildNodeTree();
+            var result = BuildNodeTree();
 
             // Get other output properties
             varMap = m_varMap;
@@ -559,7 +625,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #region private methods
-        
+
         #region Building the annotated node tree
 
         //
@@ -580,11 +646,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>a subsetted VarVec that only contains the columnVars from the input vec</returns>
         private VarVec GetColumnVars(VarVec varVec)
         {
-            VarVec columnVars = m_command.CreateVarVec();
+            var columnVars = m_command.CreateVarVec();
 
-            foreach (Var v in varVec)
+            foreach (var v in varVec)
             {
-                if (v.VarType == VarType.Column)
+                if (v.VarType
+                    == VarType.Column)
                 {
                     columnVars.Set(v);
                 }
@@ -597,10 +664,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="columnVars">the list of vars to fill in</param>
         /// <param name="vec">the var set</param>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "columnVar"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "columnVar")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private static void GetColumnVars(List<ColumnVar> columnVars, IEnumerable<Var> vec)
         {
-            foreach (Var v in vec)
+            foreach (var v in vec)
             {
                 PlanCompiler.Assert(v.VarType == VarType.Column, "Expected a columnVar. Found " + v.VarType);
                 columnVars.Add((ColumnVar)v);
@@ -624,7 +693,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="leftVars">equijoin columns of the left side</param>
         /// <param name="rightVars">equijoin columns of the right side</param>
         /// <param name="otherPredicateNode">any other predicates</param>
-        private void SplitPredicate(Node joinNode,
+        private void SplitPredicate(
+            Node joinNode,
             out List<ColumnVar> leftVars, out List<ColumnVar> rightVars,
             out Node otherPredicateNode)
         {
@@ -635,20 +705,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // If this is a full-outer join, then don't do any splitting
             //
-            if (joinNode.Op.OpType == OpType.FullOuterJoin) 
+            if (joinNode.Op.OpType
+                == OpType.FullOuterJoin)
             {
                 return;
             }
 
-            Predicate predicate = new Predicate(m_command, joinNode.Child2);
+            var predicate = new Predicate(m_command, joinNode.Child2);
 
             // 
             // Split the predicate
             //
-            ExtendedNodeInfo leftInputNodeInfo = m_command.GetExtendedNodeInfo(joinNode.Child0);
-            ExtendedNodeInfo rightInputNodeInfo = m_command.GetExtendedNodeInfo(joinNode.Child1);
-            VarVec leftDefinitions = GetColumnVars(leftInputNodeInfo.Definitions);
-            VarVec rightDefinitions = GetColumnVars(rightInputNodeInfo.Definitions);
+            var leftInputNodeInfo = m_command.GetExtendedNodeInfo(joinNode.Child0);
+            var rightInputNodeInfo = m_command.GetExtendedNodeInfo(joinNode.Child1);
+            var leftDefinitions = GetColumnVars(leftInputNodeInfo.Definitions);
+            var rightDefinitions = GetColumnVars(rightInputNodeInfo.Definitions);
             Predicate otherPredicate;
             List<Var> tempLeftVars;
             List<Var> tempRightVars;
@@ -682,7 +753,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 case OpType.ScanTable:
                     m_processedNodes[node] = node;
-                    ScanTableOp scanTableOp = (ScanTableOp)node.Op;
+                    var scanTableOp = (ScanTableOp)node.Op;
                     augmentedNode = new AugmentedTableNode(m_vertexes.Count, node);
                     m_tableVertexMap[scanTableOp.Table] = (AugmentedTableNode)augmentedNode;
                     break;
@@ -691,8 +762,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 case OpType.LeftOuterJoin:
                 case OpType.FullOuterJoin:
                     m_processedNodes[node] = node;
-                    AugmentedNode left = BuildAugmentedNodeTree(node.Child0);
-                    AugmentedNode right = BuildAugmentedNodeTree(node.Child1);
+                    var left = BuildAugmentedNodeTree(node.Child0);
+                    var right = BuildAugmentedNodeTree(node.Child1);
                     List<ColumnVar> leftVars;
                     List<ColumnVar> rightVars;
                     Node otherPredicate;
@@ -703,15 +774,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
                 case OpType.CrossJoin:
                     m_processedNodes[node] = node;
-                    List<AugmentedNode> children = new List<AugmentedNode>();
-                    foreach (Node chi in node.Children)
+                    var children = new List<AugmentedNode>();
+                    foreach (var chi in node.Children)
                     {
                         children.Add(BuildAugmentedNodeTree(chi));
                     }
                     augmentedNode = new AugmentedJoinNode(m_vertexes.Count, node, children);
                     m_varRefManager.AddChildren(node);
                     break;
-                
+
                 default:
                     augmentedNode = new AugmentedNode(m_vertexes.Count, node);
                     break;
@@ -720,6 +791,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             m_vertexes.Add(augmentedNode);
             return augmentedNode;
         }
+
         #endregion
 
         #region Building JoinEdges
@@ -765,7 +837,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // If the tables participating in the join are not visible at this node,
             // then simply return. We will not add the join edge
             //
-            if (leftTableNode.LastVisibleId < joinNode.Id || 
+            if (leftTableNode.LastVisibleId < joinNode.Id
+                ||
                 rightTableNode.LastVisibleId < joinNode.Id)
             {
                 return false;
@@ -776,7 +849,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // If there is, then simply add a predicate to that edge. Otherwise, create
             // an edge
             // 
-            foreach (JoinEdge joinEdge in leftTableNode.JoinEdges)
+            foreach (var joinEdge in leftTableNode.JoinEdges)
             {
                 if (joinEdge.Right.Table.Equals(rightVar.Table))
                 {
@@ -786,7 +859,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             // Create a new join edge
-            JoinEdge newJoinEdge = JoinEdge.CreateJoinEdge(leftTableNode, rightTableNode, joinNode, leftVar, rightVar);
+            var newJoinEdge = JoinEdge.CreateJoinEdge(leftTableNode, rightTableNode, joinNode, leftVar, rightVar);
             leftTableNode.JoinEdges.Add(newJoinEdge);
             joinNode.JoinEdges.Add(newJoinEdge);
             return true;
@@ -801,7 +874,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private static bool SingleTableVars(IEnumerable<ColumnVar> varList)
         {
             Table table = null;
-            foreach (ColumnVar v in varList)
+            foreach (var v in varList)
             {
                 if (table == null)
                 {
@@ -837,14 +910,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="maxVisibility">the highest node where any of the tables below is visible</param>
         private void BuildJoinEdges(AugmentedJoinNode joinNode, int maxVisibility)
         {
-            OpType opType = joinNode.Node.Op.OpType;
+            var opType = joinNode.Node.Op.OpType;
 
             // 
             // Simply visit the children for cross-joins
             //
             if (opType == OpType.CrossJoin)
             {
-                foreach (AugmentedNode chi in joinNode.Children)
+                foreach (var chi in joinNode.Children)
                 {
                     BuildJoinEdges(chi, maxVisibility);
                 }
@@ -880,8 +953,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // Special cases. Nothing further if there exists anything other than 
             // a set of equi-join predicates
-            if (joinNode.Node.Op.OpType == OpType.FullOuterJoin || 
-                joinNode.OtherPredicate != null || 
+            if (joinNode.Node.Op.OpType == OpType.FullOuterJoin ||
+                joinNode.OtherPredicate != null
+                ||
                 joinNode.LeftVars.Count == 0)
             {
                 return;
@@ -891,14 +965,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // If we have a left-outer join, and the join predicate involves more than one table on the 
             // right side, then quit
             //
-            if ((opType == OpType.LeftOuterJoin) && 
+            if ((opType == OpType.LeftOuterJoin)
+                &&
                 (!SingleTableVars(joinNode.RightVars) || !SingleTableVars(joinNode.LeftVars)))
             {
                 return;
             }
 
-            JoinKind joinKind = (opType == OpType.LeftOuterJoin) ? JoinKind.LeftOuter : JoinKind.Inner;
-            for (int i = 0; i < joinNode.LeftVars.Count; i++)
+            var joinKind = (opType == OpType.LeftOuterJoin) ? JoinKind.LeftOuter : JoinKind.Inner;
+            for (var i = 0; i < joinNode.LeftVars.Count; i++)
             {
                 // Add a join edge. 
                 if (AddJoinEdge(joinNode, joinNode.LeftVars[i], joinNode.RightVars[i]))
@@ -933,9 +1008,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     BuildJoinEdges(node as AugmentedJoinNode, maxVisibility);
                     // Now visit the predicate
                     break;
-                
+
                 case OpType.ScanTable:
-                    AugmentedTableNode tableNode = (AugmentedTableNode)node;
+                    var tableNode = (AugmentedTableNode)node;
                     tableNode.LastVisibleId = maxVisibility;
                     break;
 
@@ -945,9 +1020,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             return;
         }
+
         #endregion
 
         #region Transitive Edge generation
+
         //
         // The goal of this module is to generate transitive join edges. 
         // In general, if A is joined to B, and B is joined to C, then A can be joined to
@@ -983,42 +1060,48 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="edge1"></param>
         /// <param name="edge2"></param>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private static bool GenerateTransitiveEdge(JoinEdge edge1, JoinEdge edge2)
         {
             PlanCompiler.Assert(edge1.Right == edge2.Left, "need a common table for transitive predicate generation");
 
             // Ignore the "mirror" image.
-            if (edge2.Right == edge1.Left)
+            if (edge2.Right
+                == edge1.Left)
             {
                 return false;
             }
 
             // Check to see if the joins are of the same type. 
-            if (edge1.JoinKind != edge2.JoinKind)
+            if (edge1.JoinKind
+                != edge2.JoinKind)
             {
                 return false;
             }
 
             // Allow left-outer-joins only for self-joins
-            if (edge1.JoinKind == JoinKind.LeftOuter &&
+            if (edge1.JoinKind == JoinKind.LeftOuter
+                &&
                 (edge1.Left != edge1.Right || edge2.Left != edge2.Right))
             {
-                    return false;
+                return false;
             }
 
             // For LeftOuterJoin, the joins must be on the same columns.
             // Prerequisite for that is they have the same number of vars.
-            if (edge1.JoinKind == JoinKind.LeftOuter && edge1.RightVars.Count != edge2.LeftVars.Count)
+            if (edge1.JoinKind == JoinKind.LeftOuter
+                && edge1.RightVars.Count != edge2.LeftVars.Count)
             {
                 return false;
             }
 
             // check to see whether there already exists an edge for the combination
             // of these tables
-            foreach (JoinEdge edge3 in edge1.Left.JoinEdges)
+            foreach (var edge3 in edge1.Left.JoinEdges)
             {
-                if (edge3.Right == edge2.Right)
+                if (edge3.Right
+                    == edge2.Right)
                 {
                     return false;
                 }
@@ -1032,32 +1115,35 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // where the key value pair has the var coming from the inner (shared table)as a key 
             // and the corresponding var from the other table 
 
-            IEnumerable<KeyValuePair<ColumnVar, ColumnVar>> orderedEdge1Vars = CreateOrderedKeyValueList(edge1.RightVars, edge1.LeftVars);
-            IEnumerable<KeyValuePair<ColumnVar, ColumnVar>> orderedEdge2Vars = CreateOrderedKeyValueList(edge2.LeftVars, edge2.RightVars);
+            var orderedEdge1Vars = CreateOrderedKeyValueList(edge1.RightVars, edge1.LeftVars);
+            var orderedEdge2Vars = CreateOrderedKeyValueList(edge2.LeftVars, edge2.RightVars);
 
-            IEnumerator<KeyValuePair<ColumnVar, ColumnVar>> orderedEdge1VarsEnumerator = orderedEdge1Vars.GetEnumerator();
-            IEnumerator<KeyValuePair<ColumnVar, ColumnVar>> orderedEdge2VarsEnumerator = orderedEdge2Vars.GetEnumerator();
-            
-            List<ColumnVar> leftVars = new List<ColumnVar>();
-            List<ColumnVar> rightVars = new List<ColumnVar>();
+            var orderedEdge1VarsEnumerator = orderedEdge1Vars.GetEnumerator();
+            var orderedEdge2VarsEnumerator = orderedEdge2Vars.GetEnumerator();
 
-            bool hasMore = orderedEdge1VarsEnumerator.MoveNext() && orderedEdge2VarsEnumerator.MoveNext();
+            var leftVars = new List<ColumnVar>();
+            var rightVars = new List<ColumnVar>();
+
+            var hasMore = orderedEdge1VarsEnumerator.MoveNext() && orderedEdge2VarsEnumerator.MoveNext();
             while (hasMore)
             {
-                if (orderedEdge1VarsEnumerator.Current.Key == orderedEdge2VarsEnumerator.Current.Key)
+                if (orderedEdge1VarsEnumerator.Current.Key
+                    == orderedEdge2VarsEnumerator.Current.Key)
                 {
                     leftVars.Add(orderedEdge1VarsEnumerator.Current.Value);
                     rightVars.Add(orderedEdge2VarsEnumerator.Current.Value);
                     hasMore = orderedEdge1VarsEnumerator.MoveNext() &&
-                    orderedEdge2VarsEnumerator.MoveNext();
+                              orderedEdge2VarsEnumerator.MoveNext();
                 }
-                else if (edge1.JoinKind == JoinKind.LeftOuter)
+                else if (edge1.JoinKind
+                         == JoinKind.LeftOuter)
                 {
                     return false;
                 }
-                else if (orderedEdge1VarsEnumerator.Current.Key.Id > orderedEdge2VarsEnumerator.Current.Key.Id)
+                else if (orderedEdge1VarsEnumerator.Current.Key.Id
+                         > orderedEdge2VarsEnumerator.Current.Key.Id)
                 {
-                    hasMore = orderedEdge2VarsEnumerator.MoveNext();                 
+                    hasMore = orderedEdge2VarsEnumerator.MoveNext();
                 }
                 else
                 {
@@ -1065,14 +1151,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
             }
 
-
             // Ok, we're now ready to finally create a new edge
-            JoinEdge newEdge = JoinEdge.CreateTransitiveJoinEdge(edge1.Left, edge2.Right, edge1.JoinKind,
+            var newEdge = JoinEdge.CreateTransitiveJoinEdge(
+                edge1.Left, edge2.Right, edge1.JoinKind,
                 leftVars, rightVars);
             edge1.Left.JoinEdges.Add(newEdge);
-            if (edge1.JoinKind == JoinKind.Inner)
+            if (edge1.JoinKind
+                == JoinKind.Inner)
             {
-                JoinEdge reverseEdge = JoinEdge.CreateTransitiveJoinEdge(edge2.Right, edge1.Left, edge1.JoinKind,
+                var reverseEdge = JoinEdge.CreateTransitiveJoinEdge(
+                    edge2.Right, edge1.Left, edge1.JoinKind,
                     rightVars, leftVars);
                 edge2.Right.JoinEdges.Add(reverseEdge);
             }
@@ -1087,14 +1175,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="keyVars"></param>
         /// <param name="valueVars"></param>
         /// <returns></returns>
-        private static IEnumerable<KeyValuePair<ColumnVar, ColumnVar>> CreateOrderedKeyValueList(List<ColumnVar> keyVars, List<ColumnVar> valueVars)
+        private static IEnumerable<KeyValuePair<ColumnVar, ColumnVar>> CreateOrderedKeyValueList(
+            List<ColumnVar> keyVars, List<ColumnVar> valueVars)
         {
-            List<KeyValuePair<ColumnVar, ColumnVar>> edgeVars = new List<KeyValuePair<ColumnVar, ColumnVar>>(keyVars.Count);
-            for (int i = 0; i < keyVars.Count; i++)
+            var edgeVars = new List<KeyValuePair<ColumnVar, ColumnVar>>(keyVars.Count);
+            for (var i = 0; i < keyVars.Count; i++)
             {
                 edgeVars.Add(new KeyValuePair<ColumnVar, ColumnVar>(keyVars[i], valueVars[i]));
             }
-           return edgeVars.OrderBy(kv => kv.Key.Id);
+            return edgeVars.OrderBy(kv => kv.Key.Id);
         }
 
         /// <summary>
@@ -1119,26 +1208,29 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         private void TryTurnLeftOuterJoinsIntoInnerJoins()
         {
-            foreach (AugmentedJoinNode augmentedJoinNode in m_vertexes.OfType<AugmentedJoinNode>().Where(j => j.Node.Op.OpType == OpType.LeftOuterJoin && j.JoinEdges.Count > 0))
+            foreach (
+                var augmentedJoinNode in
+                    m_vertexes.OfType<AugmentedJoinNode>().Where(j => j.Node.Op.OpType == OpType.LeftOuterJoin && j.JoinEdges.Count > 0))
             {
                 if (CanAllJoinEdgesBeTurnedIntoInnerJoins(augmentedJoinNode.Children[1], augmentedJoinNode.JoinEdges))
                 {
                     augmentedJoinNode.Node.Op = m_command.CreateInnerJoinOp();
                     m_modifiedGraph = true;
-                    List<JoinEdge> newJoinEdges = new List<JoinEdge>(augmentedJoinNode.JoinEdges.Count);
-                    foreach (JoinEdge joinEdge in augmentedJoinNode.JoinEdges)
+                    var newJoinEdges = new List<JoinEdge>(augmentedJoinNode.JoinEdges.Count);
+                    foreach (var joinEdge in augmentedJoinNode.JoinEdges)
                     {
                         joinEdge.JoinKind = JoinKind.Inner;
                         if (!ContainsJoinEdgeForTable(joinEdge.Right.JoinEdges, joinEdge.Left.Table))
                         {
                             //create the mirroring join edge
-                            JoinEdge newJoinEdge = JoinEdge.CreateJoinEdge(joinEdge.Right, joinEdge.Left, augmentedJoinNode, joinEdge.RightVars[0], joinEdge.LeftVars[0]);
+                            var newJoinEdge = JoinEdge.CreateJoinEdge(
+                                joinEdge.Right, joinEdge.Left, augmentedJoinNode, joinEdge.RightVars[0], joinEdge.LeftVars[0]);
                             joinEdge.Right.JoinEdges.Add(newJoinEdge);
                             newJoinEdges.Add(newJoinEdge);
-                            for (int i = 1; i < joinEdge.LeftVars.Count; i++)
+                            for (var i = 1; i < joinEdge.LeftVars.Count; i++)
                             {
                                 newJoinEdge.AddCondition(augmentedJoinNode, joinEdge.RightVars[i], joinEdge.LeftVars[i]);
-                            }               
+                            }
                         }
                     }
                     augmentedJoinNode.JoinEdges.AddRange(newJoinEdges);
@@ -1168,12 +1260,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             do
             {
                 parent = (AugmentedJoinNode)currentNode.Parent;
-                if (parent.Node.Op.OpType != OpType.LeftOuterJoin || parent.Children[0] != currentNode)
+                if (parent.Node.Op.OpType != OpType.LeftOuterJoin
+                    || parent.Children[0] != currentNode)
                 {
                     return false;
                 }
                 currentNode = parent;
-            } while (currentNode != root);
+            }
+            while (currentNode != root);
 
             return true;
         }
@@ -1186,7 +1280,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         private static bool ContainsJoinEdgeForTable(IEnumerable<JoinEdge> joinEdges, Table table)
         {
-            foreach (JoinEdge joinEdge in joinEdges)
+            foreach (var joinEdge in joinEdges)
             {
                 if (joinEdge.Right.Table.Equals(table))
                 {
@@ -1206,7 +1300,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         private bool CanAllJoinEdgesBeTurnedIntoInnerJoins(AugmentedNode rightNode, IEnumerable<JoinEdge> joinEdges)
         {
-            foreach (JoinEdge joinEdge in joinEdges)
+            foreach (var joinEdge in joinEdges)
             {
                 if (!CanJoinEdgeBeTurnedIntoInnerJoin(rightNode, joinEdge))
                 {
@@ -1246,20 +1340,23 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="joinEdge"></param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private bool IsConstraintPresentForTurningIntoInnerJoin(JoinEdge joinEdge)
         {
             List<ForeignKeyConstraint> fkConstraints;
 
-            if (m_constraintManager.IsParentChildRelationship(joinEdge.Right.Table.TableMetadata.Extent, joinEdge.Left.Table.TableMetadata.Extent, out fkConstraints))
+            if (m_constraintManager.IsParentChildRelationship(
+                joinEdge.Right.Table.TableMetadata.Extent, joinEdge.Left.Table.TableMetadata.Extent, out fkConstraints))
             {
                 PlanCompiler.Assert(fkConstraints != null && fkConstraints.Count > 0, "Invalid foreign key constraints");
-                foreach (ForeignKeyConstraint fkConstraint in fkConstraints)
+                foreach (var fkConstraint in fkConstraints)
                 {
                     IList<ColumnVar> columnVars;
                     if (IsJoinOnFkConstraint(fkConstraint, joinEdge.RightVars, joinEdge.LeftVars, out columnVars))
                     {
-                        if (fkConstraint.ParentKeys.Count == joinEdge.RightVars.Count &&
+                        if (fkConstraint.ParentKeys.Count == joinEdge.RightVars.Count
+                            &&
                             columnVars.Where(v => v.ColumnMetadata.IsNullable).Count() == 0)
                         {
                             return true;
@@ -1275,9 +1372,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         private void GenerateTransitiveEdges()
         {
-            foreach (AugmentedNode augmentedNode in m_vertexes)
+            foreach (var augmentedNode in m_vertexes)
             {
-                AugmentedTableNode tableNode = augmentedNode as AugmentedTableNode;
+                var tableNode = augmentedNode as AugmentedTableNode;
                 if (tableNode == null)
                 {
                     continue;
@@ -1288,15 +1385,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // the inner calls may add new entries to the collections, and cause the 
                 // enumeration to throw
                 //
-                int i = 0;
+                var i = 0;
                 while (i < tableNode.JoinEdges.Count)
                 {
-                    JoinEdge e1 = tableNode.JoinEdges[i];
-                    int j = 0;
-                    AugmentedTableNode rightTable = e1.Right;
+                    var e1 = tableNode.JoinEdges[i];
+                    var j = 0;
+                    var rightTable = e1.Right;
                     while (j < rightTable.JoinEdges.Count)
                     {
-                        JoinEdge e2 = rightTable.JoinEdges[j];
+                        var e2 = rightTable.JoinEdges[j];
                         GenerateTransitiveEdge(e1, e2);
                         j++;
                     }
@@ -1304,9 +1401,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
             }
         }
+
         #endregion
 
         #region Join Elimination Helpers
+
         //
         // Utility routines used both by selfjoin elimination and parent-child join
         // elimination
@@ -1330,7 +1429,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             //The table with lower id, would have to be logically located at the other table's location
             //Check whether it can be moved there
-            if (replacingTable.Id < table.NewLocationId)
+            if (replacingTable.Id
+                < table.NewLocationId)
             {
                 return CanBeMovedBasedOnLojParticipation(table, replacingTable);
             }
@@ -1352,14 +1452,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         private static bool CanBeEliminatedViaStarJoinBasedOnOtherJoinParticipation(JoinEdge tableJoinEdge, JoinEdge replacingTableJoinEdge)
         {
-            if (tableJoinEdge.JoinNode == null || replacingTableJoinEdge.JoinNode == null)
+            if (tableJoinEdge.JoinNode == null
+                || replacingTableJoinEdge.JoinNode == null)
             {
                 return false;
             }
 
-            AugmentedNode leastCommonAncestor = GetLeastCommonAncestor(tableJoinEdge.Right, replacingTableJoinEdge.Right);
-            return 
-                !CanGetFileredByJoins(tableJoinEdge, leastCommonAncestor, true) && 
+            var leastCommonAncestor = GetLeastCommonAncestor(tableJoinEdge.Right, replacingTableJoinEdge.Right);
+            return
+                !CanGetFileredByJoins(tableJoinEdge, leastCommonAncestor, true) &&
                 !CanGetFileredByJoins(replacingTableJoinEdge, leastCommonAncestor, false);
         }
 
@@ -1377,13 +1478,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private static bool CanGetFileredByJoins(JoinEdge joinEdge, AugmentedNode leastCommonAncestor, bool disallowAnyJoin)
         {
             AugmentedNode currentNode = joinEdge.Right;
-            AugmentedNode currentParent = currentNode.Parent;   
+            var currentParent = currentNode.Parent;
 
-            while (currentParent != null && currentNode != leastCommonAncestor)
+            while (currentParent != null
+                   && currentNode != leastCommonAncestor)
             {
                 //If the current node is a rigth child of a left outer join return or participates in a inner join
-                if (currentParent.Node != joinEdge.JoinNode.Node &&  
-                        (disallowAnyJoin || currentParent.Node.Op.OpType != OpType.LeftOuterJoin || currentParent.Children[0] != currentNode)
+                if (currentParent.Node != joinEdge.JoinNode.Node
+                    &&
+                    (disallowAnyJoin || currentParent.Node.Op.OpType != OpType.LeftOuterJoin || currentParent.Children[0] != currentNode)
                     )
                 {
                     return true;
@@ -1406,13 +1509,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         private static bool CanBeMovedBasedOnLojParticipation(AugmentedTableNode table, AugmentedTableNode replacingTable)
         {
-            AugmentedNode leastCommonAncestor = GetLeastCommonAncestor(table, replacingTable);
+            var leastCommonAncestor = GetLeastCommonAncestor(table, replacingTable);
             AugmentedNode currentNode = table;
-            while (currentNode.Parent != null && currentNode != leastCommonAncestor)
+            while (currentNode.Parent != null
+                   && currentNode != leastCommonAncestor)
             {
                 //If the current node is a left child of an left outer join return
-                if (currentNode.Parent.Node.Op.OpType == OpType.LeftOuterJoin &&
-                     currentNode.Parent.Children[0] == currentNode)
+                if (currentNode.Parent.Node.Op.OpType == OpType.LeftOuterJoin
+                    &&
+                    currentNode.Parent.Children[0] == currentNode)
                 {
                     return false;
                 }
@@ -1429,7 +1534,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         private static AugmentedNode GetLeastCommonAncestor(AugmentedNode node1, AugmentedNode node2)
         {
-            if (node1.Id == node2.Id)
+            if (node1.Id
+                == node2.Id)
             {
                 return node1;
             }
@@ -1437,7 +1543,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             AugmentedNode currentParent;
             AugmentedNode rigthNode;
 
-            if (node1.Id < node2.Id)
+            if (node1.Id
+                < node2.Id)
             {
                 currentParent = node1;
                 rigthNode = node2;
@@ -1448,7 +1555,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 rigthNode = node1;
             }
 
-            while (currentParent.Id < rigthNode.Id)
+            while (currentParent.Id
+                   < rigthNode.Id)
             {
                 currentParent = currentParent.Parent;
             }
@@ -1466,8 +1574,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="tableVars">list of vars to replace</param>
         /// <param name="replacementVars">list of vars to replace with</param>
         /// <typeparam name="T">Var or one of its subtypes</typeparam>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "vars"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        private void MarkTableAsEliminated<T>(AugmentedTableNode tableNode, AugmentedTableNode replacementNode,
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "vars")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        private void MarkTableAsEliminated<T>(
+            AugmentedTableNode tableNode, AugmentedTableNode replacementNode,
             List<T> tableVars, List<T> replacementVars) where T : Var
         {
             PlanCompiler.Assert(tableVars != null && replacementVars != null, "null vars");
@@ -1477,7 +1588,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             m_modifiedGraph = true;
 
             // Set up the replacement table (if necessary)
-            if (tableNode.Id < replacementNode.NewLocationId)
+            if (tableNode.Id
+                < replacementNode.NewLocationId)
             {
                 tableNode.ReplacementTable = replacementNode;
                 replacementNode.NewLocationId = tableNode.Id;
@@ -1488,7 +1600,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             // Add mappings for each var of the table
-            for (int i = 0; i < tableVars.Count; i++)
+            for (var i = 0; i < tableVars.Count; i++)
             {
                 //
                 // Bug 446708: Make sure that the "replacement" column is 
@@ -1507,7 +1619,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // It should also be possible to retrieve the location of each referenced var 
             // defined on a replacing table, because replacing tables may get moved.
             //
-            foreach (Var var in replacementNode.Table.ReferencedColumns)
+            foreach (var var in replacementNode.Table.ReferencedColumns)
             {
                 m_varToDefiningNodeMap[var] = replacementNode;
             }
@@ -1539,7 +1651,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
                 else
                 {
-                    replacedVars = this.m_command.CreateVarVec();
+                    replacedVars = m_command.CreateVarVec();
                 }
                 m_reverseVarMap[replacingVar] = replacedVars;
             }
@@ -1553,6 +1665,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #region SelfJoin Elimination
+
         //
         // The goal of this submodule is to eliminate selfjoins. We consider two kinds
         // of selfjoins here - explicit, and implicit. 
@@ -1576,7 +1689,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="replacementNode">the table being used in its place</param>
         private void EliminateSelfJoinedTable(AugmentedTableNode tableNode, AugmentedTableNode replacementNode)
         {
-            MarkTableAsEliminated<Var>(tableNode, replacementNode, tableNode.Table.Columns, replacementNode.Table.Columns);
+            MarkTableAsEliminated(tableNode, replacementNode, tableNode.Table.Columns, replacementNode.Table.Columns);
         }
 
         /// <summary>
@@ -1601,13 +1714,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="joinEdges">list of join edges</param>
         private void EliminateStarSelfJoin(List<JoinEdge> joinEdges)
         {
-            List<List<JoinEdge>> compatibleGroups = new List<List<JoinEdge>>();
+            var compatibleGroups = new List<List<JoinEdge>>();
 
-            foreach (JoinEdge joinEdge in joinEdges)
+            foreach (var joinEdge in joinEdges)
             {
                 // Try to put the join edge in some of the existing groups
-                bool matched = false;
-                foreach (List<JoinEdge> joinEdgeList in compatibleGroups)
+                var matched = false;
+                foreach (var joinEdgeList in compatibleGroups)
                 {
                     if (AreMatchingForStarSelfJoinElimination(joinEdgeList[0], joinEdge))
                     {
@@ -1619,28 +1732,30 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
                 // If the join edge could not be part of any of the existing groups,
                 // see whether it quailifes for leading a new group
-                if (!matched && QualifiesForStarSelfJoinGroup(joinEdge))
+                if (!matched
+                    && QualifiesForStarSelfJoinGroup(joinEdge))
                 {
-                    List<JoinEdge> newList = new List<JoinEdge>();
+                    var newList = new List<JoinEdge>();
                     newList.Add(joinEdge);
                     compatibleGroups.Add(newList);
                 }
             }
 
-            foreach (List<JoinEdge> joinList in compatibleGroups.Where(l => l.Count > 1))
+            foreach (var joinList in compatibleGroups.Where(l => l.Count > 1))
             {
                 // Identify the table with the smallest id, and use that as the candidate
-                JoinEdge smallestEdge = joinList[0];
-                foreach (JoinEdge joinEdge in joinList)
+                var smallestEdge = joinList[0];
+                foreach (var joinEdge in joinList)
                 {
-                    if (smallestEdge.Right.Id > joinEdge.Right.Id)
+                    if (smallestEdge.Right.Id
+                        > joinEdge.Right.Id)
                     {
                         smallestEdge = joinEdge;
                     }
                 }
 
                 // Now walk through all the edges in the group, and mark all the tables as eliminated
-                foreach (JoinEdge joinEdge in joinList)
+                foreach (var joinEdge in joinList)
                 {
                     if (joinEdge == smallestEdge)
                     {
@@ -1666,18 +1781,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             // In order for the join edges to be compatible thay have to  
             // represent joins on the same number of columns and of the same join kinds.
-            if (edge2.LeftVars.Count != edge1.LeftVars.Count ||
+            if (edge2.LeftVars.Count != edge1.LeftVars.Count
+                ||
                 edge2.JoinKind != edge1.JoinKind)
             {
                 return false;
             }
 
             // Now make sure that we're joining on the same columns
-            for (int j = 0; j < edge2.LeftVars.Count; j++)
+            for (var j = 0; j < edge2.LeftVars.Count; j++)
             {
                 // Check for reference equality on the left-table Vars. Check for
                 // name equality on the right table vars
-                if (!edge2.LeftVars[j].Equals(edge1.LeftVars[j]) ||
+                if (!edge2.LeftVars[j].Equals(edge1.LeftVars[j])
+                    ||
                     !edge2.RightVars[j].ColumnMetadata.Name.Equals(edge1.RightVars[j].ColumnMetadata.Name))
                 {
                     return false;
@@ -1701,11 +1818,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Now make sure that all key columns of the right table are used
             //
-            VarVec keyVars = m_command.CreateVarVec(joinEdge.Right.Table.Keys);
+            var keyVars = m_command.CreateVarVec(joinEdge.Right.Table.Keys);
             foreach (Var v in joinEdge.RightVars)
             {
                 // Make sure that no other column is referenced in case of an outer join
-                if (joinEdge.JoinKind == JoinKind.LeftOuter && !keyVars.IsSet(v))
+                if (joinEdge.JoinKind == JoinKind.LeftOuter
+                    && !keyVars.IsSet(v))
                 {
                     return false;
                 }
@@ -1728,8 +1846,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             // First build up a number of equivalence classes. Each equivalence class
             // contains instances of the same table
-            Dictionary<md.EntitySetBase, List<JoinEdge>> groupedEdges = new Dictionary<md.EntitySetBase, List<JoinEdge>>();
-            foreach (JoinEdge joinEdge in tableNode.JoinEdges)
+            var groupedEdges = new Dictionary<md.EntitySetBase, List<JoinEdge>>();
+            foreach (var joinEdge in tableNode.JoinEdges)
             {
                 // Ignore useless edges
                 if (joinEdge.IsEliminated)
@@ -1748,7 +1866,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // Now walk through each equivalence class, and identify if we can eliminate some of
             // the self-joins
-            foreach (KeyValuePair<md.EntitySetBase, List<JoinEdge>> kv in groupedEdges)
+            foreach (var kv in groupedEdges)
             {
                 // If there's only one table in the class, skip this and move on
                 if (kv.Value.Count <= 1)
@@ -1778,9 +1896,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 return false;
             }
-            
+
             // Check to see that only the corresponding columns are being compared
-            for (int i = 0; i < joinEdge.LeftVars.Count; i++)
+            for (var i = 0; i < joinEdge.LeftVars.Count; i++)
             {
                 if (!joinEdge.LeftVars[i].ColumnMetadata.Name.Equals(joinEdge.RightVars[i].ColumnMetadata.Name))
                 {
@@ -1792,10 +1910,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Now make sure that the join edge includes every single key column
             // For left-outer joins, we must have no columns other than the key columns
             //
-            VarVec keyVars = m_command.CreateVarVec(joinEdge.Left.Table.Keys);
+            var keyVars = m_command.CreateVarVec(joinEdge.Left.Table.Keys);
             foreach (Var v in joinEdge.LeftVars)
             {
-                if (joinEdge.JoinKind == JoinKind.LeftOuter && !keyVars.IsSet(v))
+                if (joinEdge.JoinKind == JoinKind.LeftOuter
+                    && !keyVars.IsSet(v))
                 {
                     return false;
                 }
@@ -1834,7 +1953,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             // First try and eliminate all explicit self-joins
-            foreach (JoinEdge joinEdge in tableNode.JoinEdges)
+            foreach (var joinEdge in tableNode.JoinEdges)
             {
                 EliminateSelfJoin(joinEdge);
             }
@@ -1845,9 +1964,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         private void EliminateSelfJoins()
         {
-            foreach (AugmentedNode augmentedNode in m_vertexes)
+            foreach (var augmentedNode in m_vertexes)
             {
-                AugmentedTableNode tableNode = augmentedNode as AugmentedTableNode;
+                var tableNode = augmentedNode as AugmentedTableNode;
                 if (tableNode != null)
                 {
                     EliminateSelfJoins(tableNode);
@@ -1855,6 +1974,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
             }
         }
+
         #endregion
 
         #region Parent-Child join elimination
@@ -1889,11 +2009,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// Eliminate the left table 
         /// </summary>
         /// <param name="joinEdge"></param>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void EliminateLeftTable(JoinEdge joinEdge)
         {
             PlanCompiler.Assert(joinEdge.JoinKind == JoinKind.Inner, "Expected inner join");
-            MarkTableAsEliminated<ColumnVar>(joinEdge.Left, joinEdge.Right, joinEdge.LeftVars, joinEdge.RightVars);
+            MarkTableAsEliminated(joinEdge.Left, joinEdge.Right, joinEdge.LeftVars, joinEdge.RightVars);
 
             //
             // Find the list of non-nullable columns
@@ -1902,7 +2023,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 joinEdge.Right.NullableColumns = m_command.CreateVarVec();
             }
-            foreach (ColumnVar v in joinEdge.RightVars)
+            foreach (var v in joinEdge.RightVars)
             {
                 //
                 // if the column is known to be non-nullable, then we don't need to 
@@ -1919,13 +2040,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// Eliminate the right table
         /// </summary>
         /// <param name="joinEdge"></param>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void EliminateRightTable(JoinEdge joinEdge)
         {
             PlanCompiler.Assert(joinEdge.JoinKind == JoinKind.LeftOuter, "Expected left-outer-join");
-            PlanCompiler.Assert(joinEdge.Left.Id < joinEdge.Right.Id, 
+            PlanCompiler.Assert(
+                joinEdge.Left.Id < joinEdge.Right.Id,
                 "(left-id, right-id) = (" + joinEdge.Left.Id + "," + joinEdge.Right.Id + ")");
-            MarkTableAsEliminated<ColumnVar>(joinEdge.Right, joinEdge.Left, joinEdge.RightVars, joinEdge.LeftVars);
+            MarkTableAsEliminated(joinEdge.Right, joinEdge.Left, joinEdge.RightVars, joinEdge.LeftVars);
         }
 
         /// <summary>
@@ -1969,7 +2092,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     keys.Or(replacedVars);
                 }
             }
-            
+
             //If the keys were not replacing any vars, no need to clone
             if (keys == null)
             {
@@ -1990,7 +2113,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Consider join elimination for left-outer-joins only if we have a 1 - 1 or 1 - 0..1 relationship
             //
-            if (joinEdge.JoinKind == JoinKind.LeftOuter && fkConstraint.ChildMultiplicity == md.RelationshipMultiplicity.Many)
+            if (joinEdge.JoinKind == JoinKind.LeftOuter
+                && fkConstraint.ChildMultiplicity == md.RelationshipMultiplicity.Many)
             {
                 return false;
             }
@@ -2004,7 +2128,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // For inner joins, try and eliminate the parent table
             //
-            if (joinEdge.JoinKind == JoinKind.Inner)
+            if (joinEdge.JoinKind
+                == JoinKind.Inner)
             {
                 if (HasNonKeyReferences(joinEdge.Left.Table))
                 {
@@ -2020,15 +2145,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 EliminateLeftTable(joinEdge);
                 return true;
             }
-            //
-            // For left outer joins, try and eliminate the child table
-            //
+                //
+                // For left outer joins, try and eliminate the child table
+                //
             else
             {
                 // SQLBUDT #512375: For the 1 - 0..1 we also verify that the child's columns are not 
                 // referenced outside the join condition, thus passing true for allowRefsForJoinedOnFkOnly only
                 // if the multiplicity is 1 - 1
-                return TryEliminateRightTable(joinEdge, fkConstraint.ChildKeys.Count, fkConstraint.ChildMultiplicity == md.RelationshipMultiplicity.One);   
+                return TryEliminateRightTable(
+                    joinEdge, fkConstraint.ChildKeys.Count, fkConstraint.ChildMultiplicity == md.RelationshipMultiplicity.One);
             }
         }
 
@@ -2042,16 +2168,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="childVars"></param>
         /// <param name="childForeignKeyVars"></param>
         /// <returns></returns>
-        private static bool IsJoinOnFkConstraint(ForeignKeyConstraint fkConstraint, IList<ColumnVar> parentVars, IList<ColumnVar> childVars, out IList<ColumnVar> childForeignKeyVars)
+        private static bool IsJoinOnFkConstraint(
+            ForeignKeyConstraint fkConstraint, IList<ColumnVar> parentVars, IList<ColumnVar> childVars,
+            out IList<ColumnVar> childForeignKeyVars)
         {
             childForeignKeyVars = new List<ColumnVar>(fkConstraint.ChildKeys.Count);
             //
             // Make sure that every one of the parent key properties is referenced
             //
-            foreach (string keyProp in fkConstraint.ParentKeys)
+            foreach (var keyProp in fkConstraint.ParentKeys)
             {
-                bool foundKey = false;
-                foreach (ColumnVar cv in parentVars)
+                var foundKey = false;
+                foreach (var cv in parentVars)
                 {
                     if (cv.ColumnMetadata.Name.Equals(keyProp))
                     {
@@ -2069,19 +2197,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Make sure that every one of the child key properties is referenced
             // and furthermore equi-joined to the corresponding parent key properties
             //
-            foreach (string keyProp in fkConstraint.ChildKeys)
+            foreach (var keyProp in fkConstraint.ChildKeys)
             {
-                bool foundKey = false;
-                for (int pos = 0; pos < parentVars.Count; pos++)
+                var foundKey = false;
+                for (var pos = 0; pos < parentVars.Count; pos++)
                 {
-                    ColumnVar rightVar = childVars[pos];
+                    var rightVar = childVars[pos];
                     if (rightVar.ColumnMetadata.Name.Equals(keyProp))
                     {
                         childForeignKeyVars.Add(rightVar);
                         foundKey = true;
                         string parentPropertyName;
-                        ColumnVar leftVar = parentVars[pos];
-                        if (!fkConstraint.GetParentProperty(rightVar.ColumnMetadata.Name, out parentPropertyName) ||
+                        var leftVar = parentVars[pos];
+                        if (!fkConstraint.GetParentProperty(rightVar.ColumnMetadata.Name, out parentPropertyName)
+                            ||
                             !parentPropertyName.Equals(leftVar.ColumnMetadata.Name))
                         {
                             return false;
@@ -2136,7 +2265,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //  2. All columns on the child side are non nullable
             // NOTE: Technically we could also allow the case when only one column on the child side is nullable
             // and its corresponding column on the parent side is the only column referenced from the parent table. 
-            if (childColumnVars.Count > 1 && childColumnVars.Where(v => v.ColumnMetadata.IsNullable).Count() > 0)
+            if (childColumnVars.Count > 1
+                && childColumnVars.Where(v => v.ColumnMetadata.IsNullable).Count() > 0)
             {
                 return false;
             }
@@ -2165,7 +2295,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 return false;
             }
 
-            if ((!allowRefsForJoinedOnFkOnly || joinEdge.RightVars.Count != fkConstraintKeyCount) && RightTableHasKeyReferences(joinEdge))
+            if ((!allowRefsForJoinedOnFkOnly || joinEdge.RightVars.Count != fkConstraintKeyCount)
+                && RightTableHasKeyReferences(joinEdge))
             {
                 return false;
             }
@@ -2185,19 +2316,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// Eliminate the join if possible, for this edge
         /// </summary>
         /// <param name="joinEdge">the current join edge</param>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void EliminateParentChildJoin(JoinEdge joinEdge)
         {
             List<ForeignKeyConstraint> fkConstraints;
 
             // Is there a foreign key constraint between these 2 tables?
-            if (m_constraintManager.IsParentChildRelationship(joinEdge.Left.Table.TableMetadata.Extent, joinEdge.Right.Table.TableMetadata.Extent,
+            if (m_constraintManager.IsParentChildRelationship(
+                joinEdge.Left.Table.TableMetadata.Extent, joinEdge.Right.Table.TableMetadata.Extent,
                 out fkConstraints))
             {
                 PlanCompiler.Assert(fkConstraints != null && fkConstraints.Count > 0, "Invalid foreign key constraints");
                 // Now walk through the list of foreign key constraints and attempt join 
                 // elimination
-                foreach (ForeignKeyConstraint fkConstraint in fkConstraints)
+                foreach (var fkConstraint in fkConstraints)
                 {
                     if (TryEliminateParentChildJoin(joinEdge, fkConstraint))
                     {
@@ -2209,22 +2342,24 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // For LeftOuterJoin we should check for the opportunity to eliminate based on a parent-child
             // relationship in the opposite direction too. For inner joins that should not be an issue
             // as the opposite join edge would have been generated too.
-            if (joinEdge.JoinKind == JoinKind.LeftOuter)
+            if (joinEdge.JoinKind
+                == JoinKind.LeftOuter)
             {
-                if (m_constraintManager.IsParentChildRelationship(joinEdge.Right.Table.TableMetadata.Extent, joinEdge.Left.Table.TableMetadata.Extent,
-                out fkConstraints))
+                if (m_constraintManager.IsParentChildRelationship(
+                    joinEdge.Right.Table.TableMetadata.Extent, joinEdge.Left.Table.TableMetadata.Extent,
+                    out fkConstraints))
                 {
                     PlanCompiler.Assert(fkConstraints != null && fkConstraints.Count > 0, "Invalid foreign key constraints");
                     // Now walk through the list of foreign key constraints and attempt join 
                     // elimination
-                    foreach (ForeignKeyConstraint fkConstraint in fkConstraints)
+                    foreach (var fkConstraint in fkConstraints)
                     {
                         if (TryEliminateChildParentJoin(joinEdge, fkConstraint))
                         {
                             return;
                         }
                     }
-                }      
+                }
             }
         }
 
@@ -2234,7 +2369,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="tableNode">the "left" table in a join</param>
         private void EliminateParentChildJoins(AugmentedTableNode tableNode)
         {
-            foreach (JoinEdge joinEdge in tableNode.JoinEdges)
+            foreach (var joinEdge in tableNode.JoinEdges)
             {
                 EliminateParentChildJoin(joinEdge);
                 if (tableNode.IsEliminated)
@@ -2249,18 +2384,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         private void EliminateParentChildJoins()
         {
-            foreach (AugmentedNode node in m_vertexes)
+            foreach (var node in m_vertexes)
             {
-                AugmentedTableNode tableNode = node as AugmentedTableNode;
-                if (tableNode != null && !tableNode.IsEliminated)
+                var tableNode = node as AugmentedTableNode;
+                if (tableNode != null
+                    && !tableNode.IsEliminated)
                 {
                     EliminateParentChildJoins(tableNode);
                 }
             }
         }
+
         #endregion
 
         #region Rebuilding the Node Tree
+
         //
         // The goal of this submodule is to rebuild the node tree from the annotated node tree, 
         // and getting rid of eliminated tables along the way
@@ -2272,7 +2410,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// Return the result of join elimination
         /// </summary>
         /// <returns>the transformed node tree</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node BuildNodeTree()
         {
             // Has anything changed? If not, then simply return the original tree.
@@ -2282,12 +2421,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             // Generate transitive closure for all Vars in the varMap
-            VarMap newVarMap = new VarMap();
-            foreach (KeyValuePair<Var, Var> kv in m_varMap)
+            var newVarMap = new VarMap();
+            foreach (var kv in m_varMap)
             {
-                Var newVar1 = kv.Value;
+                var newVar1 = kv.Value;
                 Var newVar2;
-                while (m_varMap.TryGetValue(newVar1, out newVar2)) 
+                while (m_varMap.TryGetValue(newVar1, out newVar2))
                 {
                     PlanCompiler.Assert(newVar2 != null, "null var mapping?");
                     newVar1 = newVar2;
@@ -2298,7 +2437,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // Otherwise build the tree
             Dictionary<Node, int> predicates;
-            Node newNode = RebuildNodeTree(m_root, out predicates);
+            var newNode = RebuildNodeTree(m_root, out predicates);
             PlanCompiler.Assert(newNode != null, "Resulting node tree is null");
             PlanCompiler.Assert(predicates == null || predicates.Count == 0, "Leaking predicates?");
             return newNode;
@@ -2311,7 +2450,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="inputNode"></param>
         /// <param name="nonNullableColumns"></param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node BuildFilterForNullableColumns(Node inputNode, VarVec nonNullableColumns)
         {
             if (nonNullableColumns == null)
@@ -2319,17 +2459,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 return inputNode;
             }
 
-            VarVec remappedVarVec = nonNullableColumns.Remap(m_varMap);
+            var remappedVarVec = nonNullableColumns.Remap(m_varMap);
             if (remappedVarVec.IsEmpty)
             {
                 return inputNode;
             }
 
             Node predNode = null;
-            foreach (Var v in remappedVarVec)
+            foreach (var v in remappedVarVec)
             {
-                Node varRefNode = m_command.CreateNode(m_command.CreateVarRefOp(v));
-                Node isNotNullNode = m_command.CreateNode(m_command.CreateConditionalOp(OpType.IsNull), varRefNode);
+                var varRefNode = m_command.CreateNode(m_command.CreateVarRefOp(v));
+                var isNotNullNode = m_command.CreateNode(m_command.CreateConditionalOp(OpType.IsNull), varRefNode);
                 isNotNullNode = m_command.CreateNode(m_command.CreateConditionalOp(OpType.Not), isNotNullNode);
                 if (predNode == null)
                 {
@@ -2337,13 +2477,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
                 else
                 {
-                    predNode = m_command.CreateNode(m_command.CreateConditionalOp(OpType.And),
+                    predNode = m_command.CreateNode(
+                        m_command.CreateConditionalOp(OpType.And),
                         predNode, isNotNullNode);
                 }
             }
 
             PlanCompiler.Assert(predNode != null, "Null predicate?");
-            Node filterNode = m_command.CreateNode(m_command.CreateFilterOp(), inputNode, predNode);
+            var filterNode = m_command.CreateNode(m_command.CreateFilterOp(), inputNode, predNode);
             return filterNode;
         }
 
@@ -2395,7 +2536,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //Get the minimum location Id at which the other predicate can be specified.
             if (joinNode.OtherPredicate != null)
             {
-                foreach (Var var in joinNode.OtherPredicate.GetNodeInfo(this.m_command).ExternalReferences)
+                foreach (var var in joinNode.OtherPredicate.GetNodeInfo(m_command).ExternalReferences)
                 {
                     Var newVar;
                     if (!m_varMap.TryGetValue(var, out newVar))
@@ -2404,10 +2545,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     }
                     minLocationId = GetLeastCommonAncestor(minLocationId, GetLocationId(newVar, minLocationId));
                 }
-            }         
+            }
 
-            Node predicateNode = joinNode.OtherPredicate;
-            for (int i = 0; i < joinNode.LeftVars.Count; i++)
+            var predicateNode = joinNode.OtherPredicate;
+            for (var i = 0; i < joinNode.LeftVars.Count; i++)
             {
                 Var newLeftVar;
                 Var newRightVar;
@@ -2427,10 +2568,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 minLocationId = GetLeastCommonAncestor(minLocationId, GetLocationId(newLeftVar, minLocationId));
                 minLocationId = GetLeastCommonAncestor(minLocationId, GetLocationId(newRightVar, minLocationId));
 
-                Node leftVarNode = m_command.CreateNode(m_command.CreateVarRefOp(newLeftVar));
-                Node rightVarNode = m_command.CreateNode(m_command.CreateVarRefOp(newRightVar));
+                var leftVarNode = m_command.CreateNode(m_command.CreateVarRefOp(newLeftVar));
+                var rightVarNode = m_command.CreateNode(m_command.CreateVarRefOp(newRightVar));
 
-                Node equalsNode = m_command.CreateNode(m_command.CreateComparisonOp(OpType.EQ),
+                var equalsNode = m_command.CreateNode(
+                    m_command.CreateComparisonOp(OpType.EQ),
                     leftVarNode, rightVarNode);
                 if (predicateNode != null)
                 {
@@ -2454,11 +2596,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="joinNode">the crossjoin node</param>
         /// <returns>new node tree</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node RebuildNodeTreeForCrossJoins(AugmentedJoinNode joinNode)
         {
-            List<Node> newChildren = new List<Node>();
-            foreach (AugmentedNode chi in joinNode.Children)
+            var newChildren = new List<Node>();
+            foreach (var chi in joinNode.Children)
             {
                 Dictionary<Node, int> predicates;
                 newChildren.Add(RebuildNodeTree(chi, out predicates));
@@ -2475,7 +2618,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             else
             {
-                Node newJoinNode = m_command.CreateNode(m_command.CreateCrossJoinOp(), newChildren);
+                var newJoinNode = m_command.CreateNode(m_command.CreateCrossJoinOp(), newChildren);
                 m_processedNodes[newJoinNode] = newJoinNode;
                 return newJoinNode;
             }
@@ -2495,23 +2638,25 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Handle the simple cases first - cross joins
             //
-            if (joinNode.Node.Op.OpType == OpType.CrossJoin)
+            if (joinNode.Node.Op.OpType
+                == OpType.CrossJoin)
             {
                 predicates = null;
                 return RebuildNodeTreeForCrossJoins(joinNode);
             }
 
             Dictionary<Node, int> leftPredicates;
-            Dictionary<Node, int> rightPredicates;    
+            Dictionary<Node, int> rightPredicates;
 
-            Node leftNode = RebuildNodeTree(joinNode.Children[0], out leftPredicates);
-            Node rightNode = RebuildNodeTree(joinNode.Children[1], out rightPredicates);
+            var leftNode = RebuildNodeTree(joinNode.Children[0], out leftPredicates);
+            var rightNode = RebuildNodeTree(joinNode.Children[1], out rightPredicates);
 
             int localPredicateMinLocationId;
             Node localPredicateNode;
 
             // The special case first, when we may 'eat' the local predicate
-            if (leftNode != null && rightNode == null && joinNode.Node.Op.OpType == OpType.LeftOuterJoin)
+            if (leftNode != null && rightNode == null
+                && joinNode.Node.Op.OpType == OpType.LeftOuterJoin)
             {
                 // Ignore the local predicate
                 // Is this correct always? What kind of assertions can we make here?
@@ -2523,9 +2668,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 localPredicateNode = RebuildPredicate(joinNode, out localPredicateMinLocationId);
             }
 
-            localPredicateNode = CombinePredicateNodes(joinNode.Id, localPredicateNode, localPredicateMinLocationId, leftPredicates, rightPredicates, out predicates);
+            localPredicateNode = CombinePredicateNodes(
+                joinNode.Id, localPredicateNode, localPredicateMinLocationId, leftPredicates, rightPredicates, out predicates);
 
-            if (leftNode == null && rightNode == null)
+            if (leftNode == null
+                && rightNode == null)
             {
                 if (localPredicateNode == null)
                 {
@@ -2533,7 +2680,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
                 else
                 {
-                    Node singleRowTableNode = m_command.CreateNode(m_command.CreateSingleRowTableOp());
+                    var singleRowTableNode = m_command.CreateNode(m_command.CreateSingleRowTableOp());
                     return BuildFilterNode(singleRowTableNode, localPredicateNode);
                 }
             }
@@ -2543,7 +2690,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             else if (rightNode == null)
             {
-                 return BuildFilterNode(leftNode, localPredicateNode);
+                return BuildFilterNode(leftNode, localPredicateNode);
             }
             else
             {
@@ -2552,8 +2699,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     localPredicateNode = m_command.CreateNode(m_command.CreateTrueOp());
                 }
 
-                Node newJoinNode = m_command.CreateNode(joinNode.Node.Op,
-                        leftNode, rightNode, localPredicateNode);
+                var newJoinNode = m_command.CreateNode(
+                    joinNode.Node.Op,
+                    leftNode, rightNode, localPredicateNode);
                 m_processedNodes[newJoinNode] = newJoinNode;
                 return newJoinNode;
             }
@@ -2575,7 +2723,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>rebuilt node tree for this node</returns>
         private Node RebuildNodeTree(AugmentedTableNode tableNode)
         {
-            AugmentedTableNode replacementNode = tableNode;
+            var replacementNode = tableNode;
 
             //
             // If this table has already been moved - nothing further to do.
@@ -2602,7 +2750,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // in place in the node tree (possibly as part of eliminating some other join). 
             // In that case, we don't need to do anything further - simply return null
             //
-            if (replacementNode.NewLocationId < tableNode.Id)
+            if (replacementNode.NewLocationId
+                < tableNode.Id)
             {
                 return null;
             }
@@ -2612,7 +2761,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // of the current table. Check to see if the replacement node has any
             // columns that would require nulls to be pruned out
             //
-            Node filterNode = BuildFilterForNullableColumns(replacementNode.Node, replacementNode.NullableColumns);
+            var filterNode = BuildFilterForNullableColumns(replacementNode.Node, replacementNode.NullableColumns);
             return filterNode;
         }
 
@@ -2633,7 +2782,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 case OpType.ScanTable:
                     predicates = null;
                     return RebuildNodeTree((AugmentedTableNode)augmentedNode);
-                
+
                 case OpType.CrossJoin:
                 case OpType.LeftOuterJoin:
                 case OpType.InnerJoin:
@@ -2645,11 +2794,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     return augmentedNode.Node;
             }
         }
-        
+
         #endregion
 
         #region Helper Methods for Rebuilding the Node Tree
-        
+
         /// <summary>
         /// Helper method for RebuildNodeTree.
         /// Given predicate nodes and the minimum location ids at which they can be specified, it creates:
@@ -2664,7 +2813,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="outPredicates">An output dictionary of predicates and the minimum location id at which they can be specified 
         /// that includes all input predicates with minimum location id greater then targetNodeId</param>
         /// <returns>A single predicate "AND"-ing all input predicates with a minimum location id that is less or equal to the tiven targetNodeId.</returns>
-        private Node CombinePredicateNodes(int targetNodeId, Node localPredicateNode, int localPredicateMinLocationId, Dictionary<Node, int> leftPredicates, Dictionary<Node, int> rightPredicates, out Dictionary<Node, int> outPredicates)
+        private Node CombinePredicateNodes(
+            int targetNodeId, Node localPredicateNode, int localPredicateMinLocationId, Dictionary<Node, int> leftPredicates,
+            Dictionary<Node, int> rightPredicates, out Dictionary<Node, int> outPredicates)
         {
             Node result = null;
             outPredicates = new Dictionary<Node, int>();
@@ -2676,7 +2827,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             if (leftPredicates != null)
             {
-                foreach (KeyValuePair<Node, int> predicatePair in leftPredicates)
+                foreach (var predicatePair in leftPredicates)
                 {
                     result = ClassifyPredicate(targetNodeId, predicatePair.Key, predicatePair.Value, result, outPredicates);
                 }
@@ -2684,7 +2835,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             if (rightPredicates != null)
             {
-                foreach (KeyValuePair<Node, int> predicatePair in rightPredicates)
+                foreach (var predicatePair in rightPredicates)
                 {
                     result = ClassifyPredicate(targetNodeId, predicatePair.Key, predicatePair.Value, result, outPredicates);
                 }
@@ -2704,7 +2855,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="result"></param>
         /// <param name="outPredicates"></param>
         /// <returns></returns>
-        private Node ClassifyPredicate(int targetNodeId, Node predicateNode, int predicateMinLocationId, Node result, Dictionary<Node, int> outPredicates)
+        private Node ClassifyPredicate(
+            int targetNodeId, Node predicateNode, int predicateMinLocationId, Node result, Dictionary<Node, int> outPredicates)
         {
             if (targetNodeId >= predicateMinLocationId)
             {
@@ -2773,13 +2925,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             AugmentedNode currentNode = m_root;
-            AugmentedNode child1Parent = currentNode;
-            AugmentedNode child2Parent = currentNode;
+            var child1Parent = currentNode;
+            var child2Parent = currentNode;
 
             while (child1Parent == child2Parent)
             {
                 currentNode = child1Parent;
-                if (currentNode.Id == nodeId1 || currentNode.Id == nodeId2)
+                if (currentNode.Id == nodeId1
+                    || currentNode.Id == nodeId2)
                 {
                     return currentNode.Id;
                 }
@@ -2801,9 +2954,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </returns>
         private static AugmentedNode PickSubtree(int nodeId, AugmentedNode root)
         {
-            AugmentedNode subree = root.Children[0];
-            int i = 1;
-            while ((subree.Id < nodeId) && (i < root.Children.Count))
+            var subree = root.Children[0];
+            var i = 1;
+            while ((subree.Id < nodeId)
+                   && (i < root.Children.Count))
             {
                 subree = root.Children[i];
                 i++;
@@ -2812,10 +2966,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         #endregion
-        
+
         #endregion
 
         #endregion
     }
+
     #endregion
 }

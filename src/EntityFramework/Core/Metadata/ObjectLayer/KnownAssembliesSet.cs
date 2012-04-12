@@ -1,11 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Diagnostics;
-
-namespace System.Data.Entity.Core.Metadata.Edm
+﻿namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Reflection;
+
     /// <summary>
     /// This class is responsible for keeping track of which assemblies we have already 
     /// considered so we don't reconsider them again. 
@@ -19,9 +18,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     ///         OR
     ///         3. We are seeing it with a null EdmItemCollection this time
     /// </summary>
-    internal class KnownAssembliesSet 
+    internal class KnownAssembliesSet
     {
-        private Dictionary<Assembly, KnownAssemblyEntry> _assemblies;
+        private readonly Dictionary<Assembly, KnownAssemblyEntry> _assemblies;
+
         internal KnownAssembliesSet()
         {
             _assemblies = new Dictionary<Assembly, KnownAssemblyEntry>();
@@ -32,7 +32,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _assemblies = new Dictionary<Assembly, KnownAssemblyEntry>(set._assemblies);
         }
 
-        internal bool TryGetKnownAssembly(Assembly assembly, object loaderCookie, EdmItemCollection itemCollection, out KnownAssemblyEntry entry)
+        internal bool TryGetKnownAssembly(
+            Assembly assembly, object loaderCookie, EdmItemCollection itemCollection, out KnownAssemblyEntry entry)
         {
             if (!_assemblies.TryGetValue(assembly, out entry))
             {
@@ -68,8 +69,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             KnownAssemblyEntry current;
             if (_assemblies.TryGetValue(assembly, out current))
             {
-                Debug.Assert(current.SeenWithEdmItemCollection != knownAssemblyEntry.SeenWithEdmItemCollection &&
-                    knownAssemblyEntry.SeenWithEdmItemCollection, "should only be updating if we haven't seen it with an edmItemCollection yet.");
+                Debug.Assert(
+                    current.SeenWithEdmItemCollection != knownAssemblyEntry.SeenWithEdmItemCollection &&
+                    knownAssemblyEntry.SeenWithEdmItemCollection,
+                    "should only be updating if we haven't seen it with an edmItemCollection yet.");
                 _assemblies[assembly] = knownAssemblyEntry;
             }
             else

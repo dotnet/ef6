@@ -1,10 +1,10 @@
-﻿using System.Data.Entity.Core.Metadata.Edm;
-using System.Diagnostics;
-using System.Globalization;
-using System.Xml;
-
-namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
+﻿namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.Xml;
+
     /// <summary>
     /// Represents enum Member element from the CSDL.
     /// </summary>
@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <summary>
         /// Value for this member.
         /// </summary>
-        long? _value;
+        private long? _value;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SchemaEnumMember"/> class.
@@ -23,17 +23,15 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </param>
         public SchemaEnumMember(SchemaElement parentElement)
             : base(parentElement)
-        { }
+        {
+        }
 
         /// <summary>
         /// Gets the value of this enum member. Possibly null if not specified in the CSDL.
         /// </summary>
         public long? Value
         {
-            get 
-            {
-                return _value;
-            }
+            get { return _value; }
 
             set
             {
@@ -52,12 +50,13 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(reader != null, "reader != null");
 
-            bool handled = base.HandleAttribute(reader);
-            if (!handled && (handled = CanHandleAttribute(reader, XmlConstants.Value)))
+            var handled = base.HandleAttribute(reader);
+            if (!handled
+                && (handled = CanHandleAttribute(reader, XmlConstants.Value)))
             {
                 HandleValueAttribute(reader);
             }
-            
+
             return handled;
         }
 

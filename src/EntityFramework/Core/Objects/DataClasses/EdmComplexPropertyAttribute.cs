@@ -1,8 +1,5 @@
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     /// Attribute for complex properties
     /// Implied default AttributeUsage properties Inherited=True, AllowMultiple=False,
@@ -11,11 +8,5 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class EdmComplexPropertyAttribute : EdmPropertyAttribute
     {
-        /// <summary>
-        /// Attribute for complex properties
-        /// </summary>
-        public EdmComplexPropertyAttribute()
-        {
-        }
     }
 }

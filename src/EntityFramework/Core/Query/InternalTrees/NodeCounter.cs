@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Diagnostics;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using md=System.Data.Entity.Core.Metadata.Edm;
+﻿using md = System.Data.Entity.Core.Metadata.Edm;
 
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
@@ -20,7 +14,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal static int Count(Node subTree)
         {
-            NodeCounter counter = new NodeCounter();
+            var counter = new NodeCounter();
             return counter.VisitNode(subTree);
         }
 
@@ -32,8 +26,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         protected override int VisitDefault(Node n)
         {
-            int count = 1;
-            foreach (Node child in n.Children)
+            var count = 1;
+            foreach (var child in n.Children)
             {
                 count += VisitNode(child);
             }
@@ -41,5 +35,3 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
     }
 }
-
-

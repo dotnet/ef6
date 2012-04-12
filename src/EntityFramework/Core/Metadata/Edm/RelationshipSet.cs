@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     /// <summary>
@@ -11,6 +6,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public abstract class RelationshipSet : EntitySetBase
     {
         #region Constructors
+
         /// <summary>
         /// The constructor for constructing the RelationshipSet with a given name and an relationship type
         /// </summary>
@@ -24,24 +20,27 @@ namespace System.Data.Entity.Core.Metadata.Edm
             : base(name, schema, table, definingQuery, relationshipType)
         {
         }
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the relationship type associated with this relationship set
         /// </summary>
         public new RelationshipType ElementType
         {
-            get
-            {
-                return (RelationshipType)base.ElementType;
-            }
+            get { return (RelationshipType)base.ElementType; }
         }
 
         /// <summary>
         /// Returns the kind of the type
         /// </summary>
-        public override BuiltInTypeKind BuiltInTypeKind { get { return BuiltInTypeKind.RelationshipSet; } }
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
+            get { return BuiltInTypeKind.RelationshipSet; }
+        }
+
         #endregion
     }
 }

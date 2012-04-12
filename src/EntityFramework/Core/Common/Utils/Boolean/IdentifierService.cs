@@ -1,33 +1,28 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Linq;
-using System.Runtime.CompilerServices;
-
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
+    using System.Runtime.CompilerServices;
+
     /// <summary>
     /// Services related to different identifier types for Boolean expressions.
     /// </summary>
     internal abstract class IdentifierService<T_Identifier>
     {
         #region Static members
+
         internal static readonly IdentifierService<T_Identifier> Instance = GetIdentifierService();
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private static IdentifierService<T_Identifier> GetIdentifierService()
         {
-            Type identifierType = typeof(T_Identifier);
-            if (identifierType.IsGenericType && 
+            var identifierType = typeof(T_Identifier);
+            if (identifierType.IsGenericType
+                &&
                 identifierType.GetGenericTypeDefinition() == typeof(DomainConstraint<,>))
             {
                 // initialize a domain constraint literal service
-                Type[] genericArguments = identifierType.GetGenericArguments();
-                Type variableType = genericArguments[0];
-                Type elementType = genericArguments[1];
+                var genericArguments = identifierType.GetGenericArguments();
+                var variableType = genericArguments[0];
+                var elementType = genericArguments[1];
                 return (IdentifierService<T_Identifier>)Activator.CreateInstance(
                     typeof(DomainConstraintIdentifierService<,>).MakeGenericType(identifierType, variableType, elementType));
             }
@@ -37,15 +32,19 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
                 return new GenericIdentifierService();
             }
         }
+
         #endregion
 
         #region Constructors
+
         private IdentifierService()
         {
         }
+
         #endregion
 
         #region Service methods
+
         /// <summary>
         /// Returns negation of the given literal.
         /// </summary>
@@ -60,6 +59,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// Performs local simplification appropriate to the current identifier.
         /// </summary>
         internal abstract BoolExpr<T_Identifier> LocalSimplify(BoolExpr<T_Identifier> expression);
+
         #endregion
 
         private class GenericIdentifierService : IdentifierService<T_Identifier>
@@ -83,11 +83,12 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         private class DomainConstraintIdentifierService<T_Variable, T_Element> : IdentifierService<DomainConstraint<T_Variable, T_Element>>
         {
-            internal override Literal<DomainConstraint<T_Variable, T_Element>> NegateLiteral(Literal<DomainConstraint<T_Variable, T_Element>> literal)
+            internal override Literal<DomainConstraint<T_Variable, T_Element>> NegateLiteral(
+                Literal<DomainConstraint<T_Variable, T_Element>> literal)
             {
                 // negate the literal by inverting the range, rather than changing the sign
                 // of the literal
-                TermExpr<DomainConstraint<T_Variable, T_Element>> term = new TermExpr<DomainConstraint<T_Variable, T_Element>>(
+                var term = new TermExpr<DomainConstraint<T_Variable, T_Element>>(
                     literal.Term.Identifier.InvertDomainConstraint());
                 return new Literal<DomainConstraint<T_Variable, T_Element>>(term, literal.IsTermPositive);
             }
@@ -97,9 +98,10 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
                 return new DomainConstraintConversionContext<T_Variable, T_Element>();
             }
 
-            internal override BoolExpr<DomainConstraint<T_Variable, T_Element>> LocalSimplify(BoolExpr<DomainConstraint<T_Variable, T_Element>> expression)
+            internal override BoolExpr<DomainConstraint<T_Variable, T_Element>> LocalSimplify(
+                BoolExpr<DomainConstraint<T_Variable, T_Element>> expression)
             {
-                expression = NegationPusher.EliminateNot<T_Variable, T_Element>(expression);
+                expression = NegationPusher.EliminateNot(expression);
                 return expression.Accept(Simplifier<DomainConstraint<T_Variable, T_Element>>.Instance);
             }
         }

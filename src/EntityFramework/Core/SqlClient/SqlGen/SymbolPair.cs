@@ -1,14 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
-using System.Data.SqlClient;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees;
-
 namespace System.Data.Entity.Core.SqlClient.SqlGen
 {
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Diagnostics;
+
     /// <summary>
     /// The SymbolPair exists to solve the record flattening problem.
     /// <see cref="SqlGenerator.Visit(DbPropertyExpression)"/>
@@ -25,15 +19,15 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
     /// This is returned by <see cref="SqlGenerator.Visit(DbPropertyExpression)"/>,
     /// but never makes it into a SqlBuilder.
     /// </summary>
-    class SymbolPair : ISqlFragment
+    internal class SymbolPair : ISqlFragment
     {
         public Symbol Source;
         public Symbol Column;
 
         public SymbolPair(Symbol source, Symbol column)
         {
-            this.Source = source;
-            this.Column = column;
+            Source = source;
+            Column = column;
         }
 
         #region ISqlFragment Members

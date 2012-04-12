@@ -1,10 +1,5 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
-    using System;
-    using System.Globalization;
-    using System.Collections;
-    using System.Collections.Generic;
-
     /// <summary>
     /// Represents an ast node for an inline function definition.
     /// </summary>
@@ -21,11 +16,11 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         internal FunctionDefinition(Identifier name, NodeList<PropDefinition> argDefList, Node body, int startPosition, int endPosition)
         {
-            this._name = name;
-            this._paramDefList = argDefList;
-            this._body = body;
-            this._startPosition = startPosition;
-            this._endPosition = endPosition;
+            _name = name;
+            _paramDefList = argDefList;
+            _body = body;
+            _startPosition = startPosition;
+            _endPosition = endPosition;
         }
 
         /// <summary>
@@ -33,7 +28,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         internal string Name
         {
-            get { return this._name.Name; }
+            get { return _name.Name; }
         }
 
         /// <summary>
@@ -41,7 +36,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         internal NodeList<PropDefinition> Parameters
         {
-            get { return this._paramDefList; }
+            get { return _paramDefList; }
         }
 
         /// <summary>
@@ -49,7 +44,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         internal Node Body
         {
-            get { return this._body; }
+            get { return _body; }
         }
 
         /// <summary>
@@ -57,7 +52,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         internal int StartPosition
         {
-            get { return this._startPosition; }
+            get { return _startPosition; }
         }
 
         /// <summary>
@@ -65,7 +60,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         internal int EndPosition
         {
-            get { return this._endPosition; }
+            get { return _endPosition; }
         }
     }
 }

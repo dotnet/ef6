@@ -1,15 +1,11 @@
-using System;
-using System.Data;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Objects;
-using System.Data.Entity.Core.Objects.DataClasses;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Collections.Generic;
-using System.Collections;
-
 namespace System.Data.Entity.Core
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Data.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
+
     /// <summary>
     /// This is the interface to a particular entry in an IEntityStateManager.  It provides
     /// information about the state of the entity in question and the ability to modify that state

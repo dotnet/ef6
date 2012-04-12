@@ -1,6 +1,8 @@
 ﻿namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
+    using System.Collections;
     using System.Collections.Generic;
+    using System.Data.Entity.Resources;
     using System.Linq;
     using System.Linq.Expressions;
 
@@ -38,7 +40,7 @@
 
         #region IEnumerable Members
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return _source.GetEnumerator();
         }
@@ -56,9 +58,10 @@
 
         #region IOrderedEnumerable<TElement> Members
 
-        IOrderedEnumerable<TElement> IOrderedEnumerable<TElement>.CreateOrderedEnumerable<K>(Func<TElement, K> keySelector, IComparer<K> comparer, bool descending)
+        IOrderedEnumerable<TElement> IOrderedEnumerable<TElement>.CreateOrderedEnumerable<K>(
+            Func<TElement, K> keySelector, IComparer<K> comparer, bool descending)
         {
-            throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_CreateOrderedEnumerableNotSupported);
+            throw EntityUtil.NotSupported(Strings.ELinq_CreateOrderedEnumerableNotSupported);
         }
 
         #endregion
@@ -77,15 +80,13 @@
 
         IQueryProvider IQueryable.Provider
         {
-            get
-            {
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnsupportedQueryableMethod);
-            }
+            get { throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedQueryableMethod); }
         }
 
         #endregion
 
         #region IQueryable<TElement> Members
+
         #endregion
     }
 }

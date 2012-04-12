@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees.Internal;
-using System.Data.Entity.Core.Common.Utils;
-
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
-    using System.Diagnostics.CodeAnalysis;
+    using System.Data.Entity.Core.Common.CommandTrees.Internal;
+    using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
     /// Represents a single row delete operation expressed as a canonical command tree.
@@ -21,7 +15,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             EntityUtil.CheckArgumentNull(predicate, "predicate");
 
-            this._predicate = predicate;
+            _predicate = predicate;
         }
 
         /// <summary>
@@ -41,11 +35,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </list>
         /// </remarks>
         public DbExpression Predicate
-        {   
-            get
-            {
-                return _predicate;
-            }
+        {
+            get { return _predicate; }
         }
 
         internal override DbCommandTreeKind CommandTreeKind
@@ -55,11 +46,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         internal override bool HasReader
         {
-            get 
+            get
             {
                 // a delete command never returns server-gen values, and
                 // therefore never returns a reader
-                return false; 
+                return false;
             }
         }
 
@@ -67,15 +58,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             base.DumpStructure(dumper);
 
-            if (this.Predicate != null)
+            if (Predicate != null)
             {
-                dumper.Dump(this.Predicate, "Predicate");
+                dumper.Dump(Predicate, "Predicate");
             }
         }
 
         internal override string PrintTree(ExpressionPrinter printer)
         {
-            return printer.Print(this); 
+            return printer.Print(this);
         }
     }
 }

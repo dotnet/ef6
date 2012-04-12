@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
-
-namespace System.Data.Entity.Core.Common.Utils.Boolean
+﻿namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+
     /// <summary>
     /// Manages state used to translate BoolExpr to decision diagram vertices and back again.
     /// Specializations exist for generic and DomainConstraint expressions.
@@ -40,8 +38,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         internal LiteralVertexPair(Vertex vertex, Literal<T_Identifier> literal)
         {
-            this.Vertex = vertex;
-            this.Literal = literal;
+            Vertex = vertex;
+            Literal = literal;
         }
     }
 
@@ -50,8 +48,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     /// </summary>
     internal sealed class GenericConversionContext<T_Identifier> : ConversionContext<T_Identifier>
     {
-        readonly Dictionary<TermExpr<T_Identifier>, int> _variableMap = new Dictionary<TermExpr<T_Identifier>, int>();
-        Dictionary<int, TermExpr<T_Identifier>> _inverseVariableMap;
+        private readonly Dictionary<TermExpr<T_Identifier>, int> _variableMap = new Dictionary<TermExpr<T_Identifier>, int>();
+        private Dictionary<int, TermExpr<T_Identifier>> _inverseVariableMap;
 
         internal override Vertex TranslateTermToVertex(TermExpr<T_Identifier> term)
         {
@@ -66,18 +64,18 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         internal override IEnumerable<LiteralVertexPair<T_Identifier>> GetSuccessors(Vertex vertex)
         {
-            LiteralVertexPair<T_Identifier>[] successors = new LiteralVertexPair<T_Identifier>[2];
+            var successors = new LiteralVertexPair<T_Identifier>[2];
 
             Debug.Assert(2 == vertex.Children.Length);
-            Vertex then = vertex.Children[0];
-            Vertex @else = vertex.Children[1];
+            var then = vertex.Children[0];
+            var @else = vertex.Children[1];
 
             // get corresponding term expression
             InitializeInverseVariableMap();
-            TermExpr<T_Identifier> term = _inverseVariableMap[vertex.Variable];
+            var term = _inverseVariableMap[vertex.Variable];
 
             // add positive successor (then)
-            Literal<T_Identifier> literal = new Literal<T_Identifier>(term, true);
+            var literal = new Literal<T_Identifier>(term, true);
             successors[0] = new LiteralVertexPair<T_Identifier>(then, literal);
 
             // add negative successor (else)
@@ -98,14 +96,16 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     /// <summary>
     /// Specialization of ConversionContext for DomainConstraint BoolExpr
     /// </summary>
-    internal sealed class DomainConstraintConversionContext<T_Variable, T_Element> : ConversionContext<DomainConstraint<T_Variable, T_Element>>
+    internal sealed class DomainConstraintConversionContext<T_Variable, T_Element> :
+        ConversionContext<DomainConstraint<T_Variable, T_Element>>
     {
         /// <summary>
         /// A map from domain variables to decision diagram variables.
         /// </summary>
-        readonly Dictionary<DomainVariable<T_Variable, T_Element>, int> _domainVariableToRobddVariableMap =
+        private readonly Dictionary<DomainVariable<T_Variable, T_Element>, int> _domainVariableToRobddVariableMap =
             new Dictionary<DomainVariable<T_Variable, T_Element>, int>();
-        Dictionary<int, DomainVariable<T_Variable, T_Element>> _inverseMap;
+
+        private Dictionary<int, DomainVariable<T_Variable, T_Element>> _inverseMap;
 
         /// <summary>
         /// Translates a domain constraint term to an N-ary DD vertex. 
@@ -129,7 +129,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
             }
 
             // determine assignments for this constraints (if the range contains a value in the domain, '1', else '0')
-            Vertex[] children = domain.Select(element => range.Contains(element) ? Vertex.One : Vertex.Zero).ToArray();
+            var children = domain.Select(element => range.Contains(element) ? Vertex.One : Vertex.Zero).ToArray();
 
             // see if we know this variable
             int robddVariable;
@@ -152,11 +152,11 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
             var domain = domainVariable.Domain.ToArray();
 
             // foreach unique successor vertex, build up range
-            Dictionary<Vertex, Set<T_Element>> vertexToRange = new Dictionary<Vertex, Set<T_Element>>();
+            var vertexToRange = new Dictionary<Vertex, Set<T_Element>>();
 
-            for (int i = 0; i < vertex.Children.Length; i++)
+            for (var i = 0; i < vertex.Children.Length; i++)
             {
-                Vertex successorVertex = vertex.Children[i];
+                var successorVertex = vertex.Children[i];
                 Set<T_Element> range;
                 if (!vertexToRange.TryGetValue(successorVertex, out range))
                 {

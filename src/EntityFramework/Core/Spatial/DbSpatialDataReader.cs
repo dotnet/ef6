@@ -1,7 +1,5 @@
 ﻿namespace System.Data.Entity.Core.Spatial
 {
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     /// A provider-independent service API for geospatial (Geometry/Geography) type support.
     /// </summary>

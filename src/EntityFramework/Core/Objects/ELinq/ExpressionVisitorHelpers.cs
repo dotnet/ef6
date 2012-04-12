@@ -2,8 +2,8 @@
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Data;
     using System.Data.Entity.Core;
+    using System.Data.Entity.Resources;
 
     // Because we are using the source file for ExpressionVistor from System.Core
     // we need to add code to facilitate some external calls that ExpressionVisitor makes.
@@ -13,12 +13,12 @@
     {
         internal static Exception UnhandledExpressionType(ExpressionType expressionType)
         {
-            return EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnhandledExpressionType(expressionType));
+            return EntityUtil.NotSupported(Strings.ELinq_UnhandledExpressionType(expressionType));
         }
-        
+
         internal static Exception UnhandledBindingType(MemberBindingType memberBindingType)
         {
-            return EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.ELinq_UnhandledBindingType(memberBindingType));
+            return EntityUtil.NotSupported(Strings.ELinq_UnhandledBindingType(memberBindingType));
         }
     }
 
@@ -27,21 +27,29 @@
         internal static ReadOnlyCollection<T> ToReadOnlyCollection<T>(this IEnumerable<T> sequence)
         {
             if (sequence == null)
+            {
                 return DefaultReadOnlyCollection<T>.Empty;
-            ReadOnlyCollection<T> col = sequence as ReadOnlyCollection<T>;
+            }
+            var col = sequence as ReadOnlyCollection<T>;
             if (col != null)
+            {
                 return col;
+            }
             return new ReadOnlyCollection<T>(sequence.ToArray());
         }
+
         private static class DefaultReadOnlyCollection<T>
         {
             private static ReadOnlyCollection<T> _defaultCollection;
+
             internal static ReadOnlyCollection<T> Empty
             {
                 get
                 {
                     if (_defaultCollection == null)
+                    {
                         _defaultCollection = new ReadOnlyCollection<T>(new T[] { });
+                    }
                     return _defaultCollection;
                 }
             }

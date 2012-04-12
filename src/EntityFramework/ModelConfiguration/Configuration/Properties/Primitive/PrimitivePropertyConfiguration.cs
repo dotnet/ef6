@@ -3,7 +3,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Common;
-    using System.Data.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
@@ -13,7 +13,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;

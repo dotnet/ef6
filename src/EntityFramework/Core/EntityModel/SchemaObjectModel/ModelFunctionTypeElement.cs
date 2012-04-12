@@ -5,20 +5,21 @@
     using System.Text;
     using Som = System.Data.Entity.Core.EntityModel.SchemaObjectModel;
 
-    abstract class ModelFunctionTypeElement : FacetEnabledSchemaElement
+    internal abstract class ModelFunctionTypeElement : FacetEnabledSchemaElement
     {
-        protected TypeUsage _typeUsage = null;
+        protected TypeUsage _typeUsage;
 
         internal ModelFunctionTypeElement(SchemaElement parentElement)
             : base(parentElement)
         {
-            _typeUsageBuilder = new TypeUsageBuilder(this);  
+            _typeUsageBuilder = new TypeUsageBuilder(this);
         }
 
         internal abstract void WriteIdentity(StringBuilder builder);
 
         internal abstract TypeUsage GetTypeUsage();
-        
-        internal abstract bool ResolveNameAndSetTypeUsage(Converter.ConversionCache convertedItemCache, Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems);
+
+        internal abstract bool ResolveNameAndSetTypeUsage(
+            Converter.ConversionCache convertedItemCache, Dictionary<SchemaElement, GlobalItem> newGlobalItems);
     }
 }

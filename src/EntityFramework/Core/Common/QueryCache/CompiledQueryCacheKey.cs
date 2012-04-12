@@ -1,8 +1,7 @@
 namespace System.Data.Entity.Core.Common.QueryCache
 {
-    using System;
     using System.Diagnostics;
-    
+
     internal sealed class CompiledQueryCacheKey : QueryCacheKey
     {
         private readonly Guid _cacheIdentity;
@@ -20,12 +19,13 @@ namespace System.Data.Entity.Core.Common.QueryCache
         public override bool Equals(object compareTo)
         {
             Debug.Assert(compareTo != null, "Comparison key should not be null");
-            if (typeof(CompiledQueryCacheKey) != compareTo.GetType())
+            if (typeof(CompiledQueryCacheKey)
+                != compareTo.GetType())
             {
                 return false;
             }
 
-            return ((CompiledQueryCacheKey)compareTo)._cacheIdentity.Equals(this._cacheIdentity);
+            return ((CompiledQueryCacheKey)compareTo)._cacheIdentity.Equals(_cacheIdentity);
         }
 
         /// <summary>

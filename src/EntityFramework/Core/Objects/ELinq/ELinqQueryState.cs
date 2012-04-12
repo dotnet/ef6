@@ -1,19 +1,15 @@
 namespace System.Data.Entity.Core.Objects.ELinq
 {
-    using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.Internal;
     using System.Data.Entity.Core.Common.QueryCache;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Objects;
-    using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Diagnostics;
-    using System.Reflection;
-    using System.Linq;
     using System.Linq.Expressions;
-    using System.Collections.ObjectModel;
+    using System.Reflection;
 
     /// <summary>
     /// Models a Linq to Entities ObjectQuery
@@ -26,7 +22,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private Func<bool> _recompileRequired;
         private ReadOnlyCollection<KeyValuePair<ObjectParameter, QueryParameterExpression>> _linqParameters;
         private bool _useCSharpNullComparisonBehavior;
-        
+
         #endregion
 
         #region Constructors
@@ -76,27 +72,28 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // Since this method is only called once, on demand, a full conversion pass
             // is performed to produce the DbExpression and return its result type. 
             // This does not affect any cached execution plan or closure bindings that may be present.
-            ExpressionConverter converter = this.CreateExpressionConverter();
+            var converter = CreateExpressionConverter();
             return converter.Convert().ResultType;
         }
 
         internal override ObjectQueryExecutionPlan GetExecutionPlan(MergeOption? forMergeOption)
         {
-            Debug.Assert(this.Span == null, "Include span specified on compiled LINQ-based ObjectQuery instead of within the expression tree?");
+            Debug.Assert(Span == null, "Include span specified on compiled LINQ-based ObjectQuery instead of within the expression tree?");
 
             // If this query has already been prepared, its current execution plan may no longer be valid.
-            ObjectQueryExecutionPlan plan = this._cachedPlan;
+            var plan = _cachedPlan;
             if (plan != null)
             {
                 // Was a merge option specified in the call to Execute(MergeOption) or set via ObjectQuery.MergeOption?
-                MergeOption? explicitMergeOption = GetMergeOption(forMergeOption, this.UserSpecifiedMergeOption);
+                var explicitMergeOption = GetMergeOption(forMergeOption, UserSpecifiedMergeOption);
 
                 // If a merge option was explicitly specified, and it does not match the plan's merge option, then the plan is no longer valid.
                 // If the context flag UseCSharpNullComparisonBehavior was modified, then the plan is no longer valid.
-                if((explicitMergeOption.HasValue && 
-                    explicitMergeOption.Value != plan.MergeOption) ||
-                   this._recompileRequired() ||
-                   this.ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior != this._useCSharpNullComparisonBehavior)
+                if ((explicitMergeOption.HasValue &&
+                     explicitMergeOption.Value != plan.MergeOption) ||
+                    _recompileRequired()
+                    ||
+                    ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior != _useCSharpNullComparisonBehavior)
                 {
                     plan = null;
                 }
@@ -106,68 +103,70 @@ namespace System.Data.Entity.Core.Objects.ELinq
             if (plan == null)
             {
                 // Metadata is required to generate the execution plan.
-                this.ObjectContext.EnsureMetadata();
+                ObjectContext.EnsureMetadata();
 
                 // Reset internal state
-                this._recompileRequired = null;
-                this.ResetParameters();
+                _recompileRequired = null;
+                ResetParameters();
 
                 // Translate LINQ expression to a DbExpression
-                ExpressionConverter converter = this.CreateExpressionConverter();
-                DbExpression queryExpression = converter.Convert();
-                
+                var converter = CreateExpressionConverter();
+                var queryExpression = converter.Convert();
+
                 // This delegate tells us when a part of the expression tree has changed requiring a recompile.
-                this._recompileRequired = converter.RecompileRequired;
+                _recompileRequired = converter.RecompileRequired;
 
                 // Determine the merge option, with the following precedence:
                 // 1. A merge option was specified explicitly as the argument to Execute(MergeOption).
                 // 2. The user has set the MergeOption property on the ObjectQuery instance.
                 // 3. A merge option has been extracted from the 'root' query and propagated to the root of the expression tree.
                 // 4. The global default merge option.
-                MergeOption mergeOption = EnsureMergeOption(forMergeOption,
-                                                            this.UserSpecifiedMergeOption,
-                                                            converter.PropagatedMergeOption);
+                var mergeOption = EnsureMergeOption(
+                    forMergeOption,
+                    UserSpecifiedMergeOption,
+                    converter.PropagatedMergeOption);
 
-                this._useCSharpNullComparisonBehavior = this.ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior;
+                _useCSharpNullComparisonBehavior = ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior;
 
                 // If parameters were aggregated from referenced (non-LINQ) ObjectQuery instances then add them to the parameters collection
                 _linqParameters = converter.GetParameters();
-                if (_linqParameters != null && _linqParameters.Count > 0)
+                if (_linqParameters != null
+                    && _linqParameters.Count > 0)
                 {
-                    ObjectParameterCollection currentParams = this.EnsureParameters();
+                    var currentParams = EnsureParameters();
                     currentParams.SetReadOnly(false);
-                    foreach (KeyValuePair<ObjectParameter, QueryParameterExpression> pair in _linqParameters)
+                    foreach (var pair in _linqParameters)
                     {
                         // Note that it is safe to add the parameter directly only
                         // because parameters are cloned before they are added to the
                         // converter's parameter collection, or they came from this
                         // instance's parameter collection in the first place.
-                        ObjectParameter convertedParam = pair.Key;
+                        var convertedParam = pair.Key;
                         currentParams.Add(convertedParam);
                     }
                     currentParams.SetReadOnly(true);
                 }
 
                 // Try retrieving the execution plan from the global query cache (if plan caching is enabled).
-                System.Data.Entity.Core.Common.QueryCache.QueryCacheManager cacheManager = null;
-                System.Data.Entity.Core.Common.QueryCache.LinqQueryCacheKey cacheKey = null;
-                if (this.PlanCachingEnabled && !this._recompileRequired())
+                QueryCacheManager cacheManager = null;
+                LinqQueryCacheKey cacheKey = null;
+                if (PlanCachingEnabled && !_recompileRequired())
                 {
                     // Create a new cache key that reflects the current state of the Parameters collection
                     // and the Span object (if any), and uses the specified merge option.
                     string expressionKey;
                     if (ExpressionKeyGen.TryGenerateKey(queryExpression, out expressionKey))
                     {
-                        cacheKey = new System.Data.Entity.Core.Common.QueryCache.LinqQueryCacheKey(
-                                            expressionKey,
-                                            (null == this.Parameters ? 0 : this.Parameters.Count),
-                                            (null == this.Parameters ? null : this.Parameters.GetCacheKey()),
-                                            (null == converter.PropagatedSpan ? null : converter.PropagatedSpan.GetCacheKey()),
-                                            mergeOption,
-                                            this._useCSharpNullComparisonBehavior,
-                                            this.ElementType);
+                        cacheKey = new LinqQueryCacheKey(
+                            expressionKey,
+                            (null == Parameters ? 0 : Parameters.Count),
+                            (null == Parameters ? null : Parameters.GetCacheKey()),
+                            (null == converter.PropagatedSpan ? null : converter.PropagatedSpan.GetCacheKey()),
+                            mergeOption,
+                            _useCSharpNullComparisonBehavior,
+                            ElementType);
 
-                        cacheManager = this.ObjectContext.MetadataWorkspace.GetQueryCacheManager();
+                        cacheManager = ObjectContext.MetadataWorkspace.GetQueryCacheManager();
                         ObjectQueryExecutionPlan executionPlan = null;
                         if (cacheManager.TryCacheLookup(cacheKey, out executionPlan))
                         {
@@ -179,8 +178,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 // If execution plan wasn't retrieved from the cache, build a new one and cache it.
                 if (plan == null)
                 {
-                    DbQueryCommandTree tree = DbQueryCommandTree.FromValidExpression(this.ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression);
-                    plan = ObjectQueryExecutionPlan.Prepare(this.ObjectContext, tree, this.ElementType, mergeOption, converter.PropagatedSpan, null, converter.AliasGenerator);
+                    var tree = DbQueryCommandTree.FromValidExpression(ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression);
+                    plan = ObjectQueryExecutionPlan.Prepare(
+                        ObjectContext, tree, ElementType, mergeOption, converter.PropagatedSpan, null, converter.AliasGenerator);
 
                     // If caching is enabled then update the cache now.
                     // Note: the logic is the same as in EntitySqlQueryState.
@@ -199,23 +199,23 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 // Remember the current plan in the local cache, so that we don't have to recalc the key and look into the global cache
                 // if the same instance of query gets executed more than once.
-                this._cachedPlan = plan;
+                _cachedPlan = plan;
             }
 
             // Evaluate parameter values for the query.
             if (_linqParameters != null)
             {
-                foreach (KeyValuePair<ObjectParameter, QueryParameterExpression> pair in _linqParameters)
+                foreach (var pair in _linqParameters)
                 {
-                    ObjectParameter parameter = pair.Key;
-                    QueryParameterExpression parameterExpression = pair.Value;
+                    var parameter = pair.Key;
+                    var parameterExpression = pair.Value;
                     if (null != parameterExpression)
                     {
                         parameter.Value = parameterExpression.EvaluateParameter(null);
                     }
                 }
             }
-                        
+
             return plan;
         }
 
@@ -230,12 +230,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <returns>A new ObjectQueryState instance that incorporates the Include path, in this case a new method call expression</returns>
         internal override ObjectQueryState Include<TElementType>(ObjectQuery<TElementType> sourceQuery, string includePath)
         {
-            MethodInfo includeMethod = sourceQuery.GetType().GetMethod("Include", BindingFlags.Public | BindingFlags.Instance);
+            var includeMethod = sourceQuery.GetType().GetMethod("Include", BindingFlags.Public | BindingFlags.Instance);
             Debug.Assert(includeMethod != null, "Unable to find ObjectQuery.Include method?");
 
-            Expression includeCall = Expression.Call(Expression.Constant(sourceQuery), includeMethod, new Expression[] { Expression.Constant(includePath, typeof(string)) });
-            ObjectQueryState retState = new ELinqQueryState(this.ElementType, this.ObjectContext, includeCall);
-            this.ApplySettingsTo(retState);
+            Expression includeCall = Expression.Call(
+                Expression.Constant(sourceQuery), includeMethod, new Expression[] { Expression.Constant(includePath, typeof(string)) });
+            ObjectQueryState retState = new ELinqQueryState(ElementType, ObjectContext, includeCall);
+            ApplySettingsTo(retState);
             return retState;
         }
 
@@ -257,35 +258,38 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// </summary>
         /// <param name="expression">The LINQ expression that describes this query</param>
         /// <returns>Always returns <c>true</c></returns>
-        internal override bool TryGetExpression(out System.Linq.Expressions.Expression expression)
+        internal override bool TryGetExpression(out Expression expression)
         {
-            expression = this.Expression;
+            expression = Expression;
             return true;
         }
 
         #endregion
 
-        internal virtual Expression Expression { get { return _expression; } }
-                
+        internal virtual Expression Expression
+        {
+            get { return _expression; }
+        }
+
         protected virtual ExpressionConverter CreateExpressionConverter()
         {
-            Funcletizer funcletizer = Funcletizer.CreateQueryFuncletizer(this.ObjectContext);
+            var funcletizer = Funcletizer.CreateQueryFuncletizer(ObjectContext);
             return new ExpressionConverter(funcletizer, _expression);
         }
 
         private void ResetParameters()
         {
-            if (this.Parameters != null)
+            if (Parameters != null)
             {
-                bool wasLocked = ((ICollection<ObjectParameter>)this.Parameters).IsReadOnly;
+                var wasLocked = ((ICollection<ObjectParameter>)Parameters).IsReadOnly;
                 if (wasLocked)
                 {
-                    this.Parameters.SetReadOnly(false);
+                    Parameters.SetReadOnly(false);
                 }
-                this.Parameters.Clear();
+                Parameters.Clear();
                 if (wasLocked)
                 {
-                    this.Parameters.SetReadOnly(true);
+                    Parameters.SetReadOnly(true);
                 }
             }
             _linqParameters = null;

@@ -1,12 +1,11 @@
-using System.Data.Entity.Core.Common.Utils;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Validation;
-using System.Text;
-using System.Diagnostics;
-using System.Data.Entity.Core.Metadata.Edm;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.Validation;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+    using System.Text;
 
     /// <summary>
     /// This class contains a pair of cell queries which is essentially a
@@ -30,6 +29,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     internal class Cell : InternalBase
     {
         #region Constructor
+
         // effects: Creates a cell with the C and S queries 
         private Cell(CellQuery cQuery, CellQuery sQuery, CellLabel label, int cellNumber)
         {
@@ -38,9 +38,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_sQuery = sQuery;
             m_label = label;
             m_cellNumber = cellNumber;
-            Debug.Assert(m_sQuery.NumProjectedSlots == m_cQuery.NumProjectedSlots,
-                         "Cell queries disagree on the number of projected fields");
+            Debug.Assert(
+                m_sQuery.NumProjectedSlots == m_cQuery.NumProjectedSlots,
+                "Cell queries disagree on the number of projected fields");
         }
+
         /// <summary>
         /// Copy Constructor
         /// </summary>
@@ -55,16 +57,19 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #endregion
 
         #region Fields
-        private CellQuery m_cQuery;
-        private CellQuery m_sQuery;
-        private int m_cellNumber; // cell number that identifies this cell
-        private CellLabel m_label; // The File and Path Info for the CSMappingFragment
+
+        private readonly CellQuery m_cQuery;
+        private readonly CellQuery m_sQuery;
+        private readonly int m_cellNumber; // cell number that identifies this cell
+        private readonly CellLabel m_label; // The File and Path Info for the CSMappingFragment
         // that the Cell was constructed over.
         // The view cell relation for all projected slots in this
         private ViewCellRelation m_viewCellRelation;
+
         #endregion
 
         #region Properties
+
         // effects: Returns the C query
         internal CellQuery CQuery
         {
@@ -94,9 +99,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get { return StringUtil.FormatInvariant("V{0}", CellNumber); }
         }
+
         #endregion
 
         #region Methods
+
         // effects: Determines all the identifiers used in this and adds them to identifiers
         internal void GetIdentifiers(CqlIdentifiers identifiers)
         {
@@ -110,7 +117,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // are not mapped into C-space, returns null
         internal Set<EdmProperty> GetCSlotsForTableColumns(IEnumerable<MemberPath> columns)
         {
-            List<int> fieldNums = SQuery.GetProjectedPositions(columns);
+            var fieldNums = SQuery.GetProjectedPositions(columns);
             if (fieldNums == null)
             {
                 return null;
@@ -120,11 +127,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             // cSide and they correspond to the primary key of the
             // entity set
 
-            Set<EdmProperty> cSideMembers = new Set<EdmProperty>();
-            foreach (int fieldNum in fieldNums)
+            var cSideMembers = new Set<EdmProperty>();
+            foreach (var fieldNum in fieldNums)
             {
-                ProjectedSlot projectedSlot = CQuery.ProjectedSlotAt(fieldNum);
-                MemberProjectedSlot slot = projectedSlot as MemberProjectedSlot;
+                var projectedSlot = CQuery.ProjectedSlotAt(fieldNum);
+                var slot = projectedSlot as MemberProjectedSlot;
                 if (slot != null)
                 {
                     // We can call LastMember since columns do not map to
@@ -167,14 +174,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         private void GenerateCellRelations(int cellNumber)
         {
             // Generate the view cell relation
-            List<ViewCellSlot> projectedSlots = new List<ViewCellSlot>();
+            var projectedSlots = new List<ViewCellSlot>();
             // construct a ViewCellSlot for each slot
-            Debug.Assert(CQuery.NumProjectedSlots == SQuery.NumProjectedSlots,
-                         "Cell queries in cell have a different number of slots");
-            for (int i = 0; i < CQuery.NumProjectedSlots; i++)
+            Debug.Assert(
+                CQuery.NumProjectedSlots == SQuery.NumProjectedSlots,
+                "Cell queries in cell have a different number of slots");
+            for (var i = 0; i < CQuery.NumProjectedSlots; i++)
             {
-                ProjectedSlot cSlot = CQuery.ProjectedSlotAt(i);
-                ProjectedSlot sSlot = SQuery.ProjectedSlotAt(i);
+                var cSlot = CQuery.ProjectedSlotAt(i);
+                var sSlot = SQuery.ProjectedSlotAt(i);
                 Debug.Assert(cSlot != null, "Has cell query been normalized?");
                 Debug.Assert(sSlot != null, "Has cell query been normalized?");
 
@@ -182,10 +190,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 Debug.Assert(cSlot is MemberProjectedSlot, "cSlot is expected to be MemberProjectedSlot");
                 Debug.Assert(sSlot is MemberProjectedSlot, "sSlot is expected to be MemberProjectedSlot");
 
-                MemberProjectedSlot cJoinSlot = (MemberProjectedSlot)cSlot;
-                MemberProjectedSlot sJoinSlot = (MemberProjectedSlot)sSlot;
+                var cJoinSlot = (MemberProjectedSlot)cSlot;
+                var sJoinSlot = (MemberProjectedSlot)sSlot;
 
-                ViewCellSlot slot = new ViewCellSlot(i, cJoinSlot, sJoinSlot);
+                var slot = new ViewCellSlot(i, cJoinSlot, sJoinSlot);
                 projectedSlots.Add(slot);
             }
             m_viewCellRelation = new ViewCellRelation(this, projectedSlots, cellNumber);
@@ -216,7 +224,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             // Print mapping
             builder.AppendLine();
             builder.AppendLine("=========================================================================");
-            foreach (Cell cell in cells)
+            foreach (var cell in cells)
             {
                 builder.AppendLine();
                 StringUtil.FormatStringBuilder(builder, "Mapping Cell V{0}:", cell.CellNumber);
@@ -236,10 +244,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #endregion
 
         #region Factory methods
+
         internal static Cell CreateCS(CellQuery cQuery, CellQuery sQuery, CellLabel label, int cellNumber)
         {
             return new Cell(cQuery, sQuery, label, cellNumber);
         }
+
         #endregion
     }
 }

@@ -16,14 +16,13 @@ namespace System.Data.Entity.Core.Objects
         /// considered modified and require updating.
         /// </summary>
         ///
-        ClientWins       = MergeOption.PreserveChanges,
-        
+        ClientWins = MergeOption.PreserveChanges,
+
         /// <summary>
         /// Discard all changes on the client and refresh values with store values.
         /// Client original values is updated to match the store.
         /// </summary>
         ///
-        StoreWins      = MergeOption.OverwriteChanges,
+        StoreWins = MergeOption.OverwriteChanges,
     }
 }
-

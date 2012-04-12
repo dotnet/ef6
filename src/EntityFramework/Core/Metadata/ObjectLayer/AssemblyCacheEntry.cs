@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-
-namespace System.Data.Entity.Core.Metadata.Edm
+﻿namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Reflection;
+
     internal abstract class AssemblyCacheEntry
     {
         internal abstract IList<EdmType> TypesInAssembly { get; }
@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal bool TryGetEdmType(string typeName, out EdmType edmType)
         {
             edmType = null;
-            foreach (EdmType loadedEdmType in this.TypesInAssembly)
+            foreach (var loadedEdmType in TypesInAssembly)
             {
                 if (loadedEdmType.Identity == typeName)
                 {

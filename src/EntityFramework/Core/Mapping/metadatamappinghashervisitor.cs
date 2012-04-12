@@ -1,25 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity.Core.Mapping;
-using System.Diagnostics;
-using System.Globalization;
-
-
-namespace System.Data.Entity.Core.Mapping
+﻿namespace System.Data.Entity.Core.Mapping
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
+    using System.Linq;
 
-    internal partial class MetadataMappingHasherVisitor : BaseMetadataMappingVisitor
+    internal class MetadataMappingHasherVisitor : BaseMetadataMappingVisitor
     {
         private CompressingHashBuilder m_hashSourceBuilder;
         private Dictionary<Object, int> m_itemsAlreadySeen = new Dictionary<Object, int>();
-        private int m_instanceNumber = 0;
+        private int m_instanceNumber;
         private EdmItemCollection m_EdmItemCollection;
         private double m_MappingVersion;
 
@@ -27,99 +21,103 @@ namespace System.Data.Entity.Core.Mapping
         private MetadataMappingHasherVisitor(double mappingVersion)
         {
             m_MappingVersion = mappingVersion;
-            this.m_hashSourceBuilder = new CompressingHashBuilder(MetadataHelper.CreateMetadataHashAlgorithm(m_MappingVersion));
+            m_hashSourceBuilder = new CompressingHashBuilder(MetadataHelper.CreateMetadataHashAlgorithm(m_MappingVersion));
         }
-        
+
         #region visitor method
+
         protected override void Visit(StorageEntityContainerMapping storageEntityContainerMapping)
         {
             Debug.Assert(storageEntityContainerMapping != null, "storageEntityContainerMapping cannot be null!");
 
             // at the entry point of visitor, we setup the versions
-            Debug.Assert(m_MappingVersion == storageEntityContainerMapping.StorageMappingItemCollection.MappingVersion, "the original version and the mapping collection version are not the same");
-            this.m_MappingVersion = storageEntityContainerMapping.StorageMappingItemCollection.MappingVersion;
+            Debug.Assert(
+                m_MappingVersion == storageEntityContainerMapping.StorageMappingItemCollection.MappingVersion,
+                "the original version and the mapping collection version are not the same");
+            m_MappingVersion = storageEntityContainerMapping.StorageMappingItemCollection.MappingVersion;
 
-            this.m_EdmItemCollection = storageEntityContainerMapping.StorageMappingItemCollection.EdmItemCollection;
+            m_EdmItemCollection = storageEntityContainerMapping.StorageMappingItemCollection.EdmItemCollection;
 
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(storageEntityContainerMapping, out index))
+            if (!AddObjectToSeenListAndHashBuilder(storageEntityContainerMapping, out index))
             {
                 // if this has been add to the seen list, then just 
                 return;
             }
-            if (this.m_itemsAlreadySeen.Count > 1)
+            if (m_itemsAlreadySeen.Count > 1)
             {
-
                 // this means user try another visit over SECM, this is allowed but all the previous visit all lost due to clean
                 // user can visit different SECM objects by using the same visitor to load the SECM object
-                this.Clean();
+                Clean();
                 Visit(storageEntityContainerMapping);
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(storageEntityContainerMapping, index);
+            AddObjectStartDumpToHashBuilder(storageEntityContainerMapping, index);
 
             #region Inner data visit
 
-            this.AddObjectContentToHashBuilder(storageEntityContainerMapping.Identity);
+            AddObjectContentToHashBuilder(storageEntityContainerMapping.Identity);
 
-            this.AddV2ObjectContentToHashBuilder(storageEntityContainerMapping.GenerateUpdateViews, this.m_MappingVersion);
+            AddV2ObjectContentToHashBuilder(storageEntityContainerMapping.GenerateUpdateViews, m_MappingVersion);
 
             base.Visit(storageEntityContainerMapping);
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
 
         protected override void Visit(EntityContainer entityContainer)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(entityContainer, out index))
+            if (!AddObjectToSeenListAndHashBuilder(entityContainer, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(entityContainer, index);
+            AddObjectStartDumpToHashBuilder(entityContainer, index);
 
             #region Inner data visit
-            
-            this.AddObjectContentToHashBuilder(entityContainer.Identity);
+
+            AddObjectContentToHashBuilder(entityContainer.Identity);
             // Name is covered by Identity
 
             base.Visit(entityContainer);
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
 
         protected override void Visit(StorageSetMapping storageSetMapping)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(storageSetMapping, out index))
+            if (!AddObjectToSeenListAndHashBuilder(storageSetMapping, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(storageSetMapping, index);
+            AddObjectStartDumpToHashBuilder(storageSetMapping, index);
 
             #region Inner data visit
+
             base.Visit(storageSetMapping);
+
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
 
         protected override void Visit(StorageTypeMapping storageTypeMapping)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(storageTypeMapping, out index))
+            if (!AddObjectToSeenListAndHashBuilder(storageTypeMapping, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(storageTypeMapping, index);
+            AddObjectStartDumpToHashBuilder(storageTypeMapping, index);
 
             #region Inner data visit
 
@@ -127,30 +125,30 @@ namespace System.Data.Entity.Core.Mapping
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
 
         protected override void Visit(StorageMappingFragment storageMappingFragment)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(storageMappingFragment, out index))
+            if (!AddObjectToSeenListAndHashBuilder(storageMappingFragment, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(storageMappingFragment, index);
+            AddObjectStartDumpToHashBuilder(storageMappingFragment, index);
 
             #region Inner data visit
 
-            this.AddV2ObjectContentToHashBuilder(storageMappingFragment.IsSQueryDistinct, this.m_MappingVersion);
+            AddV2ObjectContentToHashBuilder(storageMappingFragment.IsSQueryDistinct, m_MappingVersion);
 
             base.Visit(storageMappingFragment);
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
-        
+
         protected override void Visit(StoragePropertyMapping storagePropertyMapping)
         {
             base.Visit(storagePropertyMapping);
@@ -159,12 +157,12 @@ namespace System.Data.Entity.Core.Mapping
         protected override void Visit(StorageComplexPropertyMapping storageComplexPropertyMapping)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(storageComplexPropertyMapping, out index))
+            if (!AddObjectToSeenListAndHashBuilder(storageComplexPropertyMapping, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(storageComplexPropertyMapping, index);
+            AddObjectStartDumpToHashBuilder(storageComplexPropertyMapping, index);
 
             #region Inner data visit
 
@@ -172,17 +170,18 @@ namespace System.Data.Entity.Core.Mapping
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
+
         protected override void Visit(StorageComplexTypeMapping storageComplexTypeMapping)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(storageComplexTypeMapping, out index))
+            if (!AddObjectToSeenListAndHashBuilder(storageComplexTypeMapping, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(storageComplexTypeMapping, index);
+            AddObjectStartDumpToHashBuilder(storageComplexTypeMapping, index);
 
             #region Inner data visit
 
@@ -190,39 +189,40 @@ namespace System.Data.Entity.Core.Mapping
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
-        
+
         protected override void Visit(StorageConditionPropertyMapping storageConditionPropertyMapping)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(storageConditionPropertyMapping, out index))
+            if (!AddObjectToSeenListAndHashBuilder(storageConditionPropertyMapping, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(storageConditionPropertyMapping, index);
+            AddObjectStartDumpToHashBuilder(storageConditionPropertyMapping, index);
 
             #region Inner data visit
-            this.AddObjectContentToHashBuilder(storageConditionPropertyMapping.IsNull);
-            this.AddObjectContentToHashBuilder(storageConditionPropertyMapping.Value);
+
+            AddObjectContentToHashBuilder(storageConditionPropertyMapping.IsNull);
+            AddObjectContentToHashBuilder(storageConditionPropertyMapping.Value);
 
             base.Visit(storageConditionPropertyMapping);
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
 
         protected override void Visit(StorageScalarPropertyMapping storageScalarPropertyMapping)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(storageScalarPropertyMapping, out index))
+            if (!AddObjectToSeenListAndHashBuilder(storageScalarPropertyMapping, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(storageScalarPropertyMapping, index);
+            AddObjectStartDumpToHashBuilder(storageScalarPropertyMapping, index);
 
             #region Inner data visit
 
@@ -230,155 +230,164 @@ namespace System.Data.Entity.Core.Mapping
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
-        
+
         protected override void Visit(EntitySetBase entitySetBase)
         {
             base.Visit(entitySetBase);
         }
-        
+
         protected override void Visit(EntitySet entitySet)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(entitySet, out index))
+            if (!AddObjectToSeenListAndHashBuilder(entitySet, out index))
             {
                 return;
             }
+
             #region Inner data visit
 
-            this.AddObjectStartDumpToHashBuilder(entitySet, index);
-            this.AddObjectContentToHashBuilder(entitySet.Name);
-            this.AddObjectContentToHashBuilder(entitySet.Schema);
-            this.AddObjectContentToHashBuilder(entitySet.Table);
+            AddObjectStartDumpToHashBuilder(entitySet, index);
+            AddObjectContentToHashBuilder(entitySet.Name);
+            AddObjectContentToHashBuilder(entitySet.Schema);
+            AddObjectContentToHashBuilder(entitySet.Table);
 
             base.Visit(entitySet);
 
-            foreach (var entityType in MetadataHelper.GetTypeAndSubtypesOf(entitySet.ElementType, this.m_EdmItemCollection, false).Where(type => type != entitySet.ElementType))
+            foreach (
+                var entityType in
+                    MetadataHelper.GetTypeAndSubtypesOf(entitySet.ElementType, m_EdmItemCollection, false).Where(
+                        type => type != entitySet.ElementType))
             {
-                this.Visit(entityType);
+                Visit(entityType);
             }
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
 
         protected override void Visit(AssociationSet associationSet)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(associationSet, out index))
+            if (!AddObjectToSeenListAndHashBuilder(associationSet, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(associationSet, index);
+            AddObjectStartDumpToHashBuilder(associationSet, index);
 
             #region Inner data visit
-            this.AddObjectContentToHashBuilder(associationSet.CachedProviderSql);
+
+            AddObjectContentToHashBuilder(associationSet.CachedProviderSql);
             // Name is coverd by Identity
-            this.AddObjectContentToHashBuilder(associationSet.Identity);
-            this.AddObjectContentToHashBuilder(associationSet.Schema);
-            this.AddObjectContentToHashBuilder(associationSet.Table);
+            AddObjectContentToHashBuilder(associationSet.Identity);
+            AddObjectContentToHashBuilder(associationSet.Schema);
+            AddObjectContentToHashBuilder(associationSet.Table);
 
             base.Visit(associationSet);
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
 
         protected override void Visit(EntityType entityType)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(entityType, out index))
+            if (!AddObjectToSeenListAndHashBuilder(entityType, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(entityType, index);
+            AddObjectStartDumpToHashBuilder(entityType, index);
 
             #region Inner data visit
-            this.AddObjectContentToHashBuilder(entityType.Abstract);
-            this.AddObjectContentToHashBuilder(entityType.Identity);
+
+            AddObjectContentToHashBuilder(entityType.Abstract);
+            AddObjectContentToHashBuilder(entityType.Identity);
             // FullName, Namespace and Name are all covered by Identity
 
             base.Visit(entityType);
- 
+
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
 
         protected override void Visit(AssociationSetEnd associationSetEnd)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(associationSetEnd, out index))
+            if (!AddObjectToSeenListAndHashBuilder(associationSetEnd, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(associationSetEnd, index);
+            AddObjectStartDumpToHashBuilder(associationSetEnd, index);
 
             #region Inner data visit
-            this.AddObjectContentToHashBuilder(associationSetEnd.Identity);
+
+            AddObjectContentToHashBuilder(associationSetEnd.Identity);
             // Name is covered by Identity
 
             base.Visit(associationSetEnd);
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
 
         protected override void Visit(AssociationType associationType)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(associationType, out index))
+            if (!AddObjectToSeenListAndHashBuilder(associationType, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(associationType, index);
+            AddObjectStartDumpToHashBuilder(associationType, index);
 
             #region Inner data visit
-            this.AddObjectContentToHashBuilder(associationType.Abstract);
-            this.AddObjectContentToHashBuilder(associationType.Identity);
+
+            AddObjectContentToHashBuilder(associationType.Abstract);
+            AddObjectContentToHashBuilder(associationType.Identity);
             // FullName, Namespace, and Name are all covered by Identity
 
             base.Visit(associationType);
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
 
         protected override void Visit(EdmProperty edmProperty)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(edmProperty, out index))
+            if (!AddObjectToSeenListAndHashBuilder(edmProperty, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(edmProperty, index);
+            AddObjectStartDumpToHashBuilder(edmProperty, index);
 
             #region Inner data visit
+
             // since the delaring type is fixed and referenced to the upper type, 
             // there is no need to hash this
             //this.AddObjectContentToHashBuilder(edmProperty.DeclaringType);
-            this.AddObjectContentToHashBuilder(edmProperty.DefaultValue);
-            this.AddObjectContentToHashBuilder(edmProperty.Identity);
+            AddObjectContentToHashBuilder(edmProperty.DefaultValue);
+            AddObjectContentToHashBuilder(edmProperty.Identity);
             // Name is covered by Identity
-            this.AddObjectContentToHashBuilder(edmProperty.IsStoreGeneratedComputed);
-            this.AddObjectContentToHashBuilder(edmProperty.IsStoreGeneratedIdentity);
-            this.AddObjectContentToHashBuilder(edmProperty.Nullable);
+            AddObjectContentToHashBuilder(edmProperty.IsStoreGeneratedComputed);
+            AddObjectContentToHashBuilder(edmProperty.IsStoreGeneratedIdentity);
+            AddObjectContentToHashBuilder(edmProperty.Nullable);
 
             base.Visit(edmProperty);
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
 
         protected override void Visit(NavigationProperty navigationProperty)
@@ -390,107 +399,112 @@ namespace System.Data.Entity.Core.Mapping
         protected override void Visit(EdmMember edmMember)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(edmMember, out index))
+            if (!AddObjectToSeenListAndHashBuilder(edmMember, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(edmMember, index);
+            AddObjectStartDumpToHashBuilder(edmMember, index);
 
             #region Inner data visit
-            this.AddObjectContentToHashBuilder(edmMember.Identity);
+
+            AddObjectContentToHashBuilder(edmMember.Identity);
             // Name is covered by Identity
-            this.AddObjectContentToHashBuilder(edmMember.IsStoreGeneratedComputed);
-            this.AddObjectContentToHashBuilder(edmMember.IsStoreGeneratedIdentity);
+            AddObjectContentToHashBuilder(edmMember.IsStoreGeneratedComputed);
+            AddObjectContentToHashBuilder(edmMember.IsStoreGeneratedIdentity);
 
             base.Visit(edmMember);
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
 
         protected override void Visit(AssociationEndMember associationEndMember)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(associationEndMember, out index))
+            if (!AddObjectToSeenListAndHashBuilder(associationEndMember, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(associationEndMember, index);
+            AddObjectStartDumpToHashBuilder(associationEndMember, index);
 
             #region Inner data visit
-            this.AddObjectContentToHashBuilder(associationEndMember.DeleteBehavior);
-            this.AddObjectContentToHashBuilder(associationEndMember.Identity);
+
+            AddObjectContentToHashBuilder(associationEndMember.DeleteBehavior);
+            AddObjectContentToHashBuilder(associationEndMember.Identity);
             // Name is covered by Identity
-            this.AddObjectContentToHashBuilder(associationEndMember.IsStoreGeneratedComputed);
-            this.AddObjectContentToHashBuilder(associationEndMember.IsStoreGeneratedIdentity);
-            this.AddObjectContentToHashBuilder(associationEndMember.RelationshipMultiplicity);
+            AddObjectContentToHashBuilder(associationEndMember.IsStoreGeneratedComputed);
+            AddObjectContentToHashBuilder(associationEndMember.IsStoreGeneratedIdentity);
+            AddObjectContentToHashBuilder(associationEndMember.RelationshipMultiplicity);
 
             base.Visit(associationEndMember);
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
-        
+
         protected override void Visit(ReferentialConstraint referentialConstraint)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(referentialConstraint, out index))
+            if (!AddObjectToSeenListAndHashBuilder(referentialConstraint, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(referentialConstraint, index);
+            AddObjectStartDumpToHashBuilder(referentialConstraint, index);
 
             #region Inner data visit
-            this.AddObjectContentToHashBuilder(referentialConstraint.Identity);
+
+            AddObjectContentToHashBuilder(referentialConstraint.Identity);
 
             base.Visit(referentialConstraint);
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
 
         protected override void Visit(RelationshipEndMember relationshipEndMember)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(relationshipEndMember, out index))
+            if (!AddObjectToSeenListAndHashBuilder(relationshipEndMember, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(relationshipEndMember, index);
+            AddObjectStartDumpToHashBuilder(relationshipEndMember, index);
 
             #region Inner data visit
-            this.AddObjectContentToHashBuilder(relationshipEndMember.DeleteBehavior);
-            this.AddObjectContentToHashBuilder(relationshipEndMember.Identity);
+
+            AddObjectContentToHashBuilder(relationshipEndMember.DeleteBehavior);
+            AddObjectContentToHashBuilder(relationshipEndMember.Identity);
             // Name is covered by Identity
-            this.AddObjectContentToHashBuilder(relationshipEndMember.IsStoreGeneratedComputed);
-            this.AddObjectContentToHashBuilder(relationshipEndMember.IsStoreGeneratedIdentity);
-            this.AddObjectContentToHashBuilder(relationshipEndMember.RelationshipMultiplicity);
+            AddObjectContentToHashBuilder(relationshipEndMember.IsStoreGeneratedComputed);
+            AddObjectContentToHashBuilder(relationshipEndMember.IsStoreGeneratedIdentity);
+            AddObjectContentToHashBuilder(relationshipEndMember.RelationshipMultiplicity);
 
             base.Visit(relationshipEndMember);
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
 
         protected override void Visit(TypeUsage typeUsage)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(typeUsage, out index))
+            if (!AddObjectToSeenListAndHashBuilder(typeUsage, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(typeUsage, index);
+            AddObjectStartDumpToHashBuilder(typeUsage, index);
 
             #region Inner data visit
+
             //No need to add identity of TypeUsage to the hash since it would take into account
             //facets that viewgen would not care and we visit the important facets anyway.
 
@@ -498,7 +512,7 @@ namespace System.Data.Entity.Core.Mapping
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
 
         protected override void Visit(RelationshipType relationshipType)
@@ -510,83 +524,85 @@ namespace System.Data.Entity.Core.Mapping
         {
             base.Visit(edmType);
         }
-        
+
         protected override void Visit(EnumType enumType)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(enumType, out index))
+            if (!AddObjectToSeenListAndHashBuilder(enumType, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(enumType, index);
+            AddObjectStartDumpToHashBuilder(enumType, index);
 
-            this.AddObjectContentToHashBuilder(enumType.Identity);
-            this.Visit(enumType.UnderlyingType);
+            AddObjectContentToHashBuilder(enumType.Identity);
+            Visit(enumType.UnderlyingType);
 
             base.Visit(enumType);
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
 
         protected override void Visit(EnumMember enumMember)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(enumMember, out index))
+            if (!AddObjectToSeenListAndHashBuilder(enumMember, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(enumMember, index);
+            AddObjectStartDumpToHashBuilder(enumMember, index);
 
-            this.AddObjectContentToHashBuilder(enumMember.Name);
-            this.AddObjectContentToHashBuilder(enumMember.Value);
+            AddObjectContentToHashBuilder(enumMember.Name);
+            AddObjectContentToHashBuilder(enumMember.Value);
 
             base.Visit(enumMember);
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
 
         protected override void Visit(CollectionType collectionType)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(collectionType, out index))
+            if (!AddObjectToSeenListAndHashBuilder(collectionType, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(collectionType, index);
+            AddObjectStartDumpToHashBuilder(collectionType, index);
 
             #region Inner data visit
-            this.AddObjectContentToHashBuilder(collectionType.Identity);
+
+            AddObjectContentToHashBuilder(collectionType.Identity);
             // Identity contains Name, NamespaceName and FullName
 
             base.Visit(collectionType);
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
-        
+
         protected override void Visit(RefType refType)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(refType, out index))
+            if (!AddObjectToSeenListAndHashBuilder(refType, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(refType, index);
+            AddObjectStartDumpToHashBuilder(refType, index);
 
             #region Inner data visit
-            this.AddObjectContentToHashBuilder(refType.Identity);
+
+            AddObjectContentToHashBuilder(refType.Identity);
             // Identity contains Name, NamespaceName and FullName
 
             base.Visit(refType);
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
 
         protected override void Visit(EntityTypeBase entityTypeBase)
@@ -597,29 +613,31 @@ namespace System.Data.Entity.Core.Mapping
         protected override void Visit(Facet facet)
         {
             int index;
-            if (facet.Name != DbProviderManifest.NullableFacetName)
+            if (facet.Name
+                != DbProviderManifest.NullableFacetName)
             {
                 // skip all the non interesting facets
                 return;
             }
 
-            if (!this.AddObjectToSeenListAndHashBuilder(facet, out index))
+            if (!AddObjectToSeenListAndHashBuilder(facet, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(facet, index);
+            AddObjectStartDumpToHashBuilder(facet, index);
 
             #region Inner data visit
-            this.AddObjectContentToHashBuilder(facet.Identity);
+
+            AddObjectContentToHashBuilder(facet.Identity);
             // Identity already contains Name
-            this.AddObjectContentToHashBuilder(facet.Value);
+            AddObjectContentToHashBuilder(facet.Value);
 
             base.Visit(facet);
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
 
         protected override void Visit(EdmFunction edmFunction)
@@ -627,70 +645,73 @@ namespace System.Data.Entity.Core.Mapping
             // View Generation doesn't deal with functions
             // so just return;
         }
-        
+
         protected override void Visit(ComplexType complexType)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(complexType, out index))
+            if (!AddObjectToSeenListAndHashBuilder(complexType, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(complexType, index);
+            AddObjectStartDumpToHashBuilder(complexType, index);
 
             #region Inner data visit
-            this.AddObjectContentToHashBuilder(complexType.Abstract);
-            this.AddObjectContentToHashBuilder(complexType.Identity);
+
+            AddObjectContentToHashBuilder(complexType.Abstract);
+            AddObjectContentToHashBuilder(complexType.Identity);
             // Identity covers, FullName, Name, and NamespaceName
 
             base.Visit(complexType);
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
-        
+
         protected override void Visit(PrimitiveType primitiveType)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(primitiveType, out index))
+            if (!AddObjectToSeenListAndHashBuilder(primitiveType, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(primitiveType, index);
+            AddObjectStartDumpToHashBuilder(primitiveType, index);
 
             #region Inner data visit
-            this.AddObjectContentToHashBuilder(primitiveType.Name);
-            this.AddObjectContentToHashBuilder(primitiveType.NamespaceName);
+
+            AddObjectContentToHashBuilder(primitiveType.Name);
+            AddObjectContentToHashBuilder(primitiveType.NamespaceName);
 
             base.Visit(primitiveType);
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
-        
+
         protected override void Visit(FunctionParameter functionParameter)
         {
             int index;
-            if (!this.AddObjectToSeenListAndHashBuilder(functionParameter, out index))
+            if (!AddObjectToSeenListAndHashBuilder(functionParameter, out index))
             {
                 return;
             }
 
-            this.AddObjectStartDumpToHashBuilder(functionParameter, index);
+            AddObjectStartDumpToHashBuilder(functionParameter, index);
 
             #region Inner data visit
-            this.AddObjectContentToHashBuilder(functionParameter.Identity);
+
+            AddObjectContentToHashBuilder(functionParameter.Identity);
             // Identity already has Name
-            this.AddObjectContentToHashBuilder(functionParameter.Mode);
+            AddObjectContentToHashBuilder(functionParameter.Mode);
 
             base.Visit(functionParameter);
 
             #endregion
 
-            this.AddObjectEndDumpToHashBuilder();
+            AddObjectEndDumpToHashBuilder();
         }
 
         protected override void Visit(DbProviderManifest providerManifest)
@@ -698,24 +719,22 @@ namespace System.Data.Entity.Core.Mapping
             // the provider manifest will be checked by all the other types lining up.
             // no need to store more info.
         }
+
         #endregion
 
         #region hasher helper method
 
         internal string HashValue
         {
-            get
-            {
-                return m_hashSourceBuilder.ComputeHash();
-            }
+            get { return m_hashSourceBuilder.ComputeHash(); }
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private void Clean()
         {
-            this.m_hashSourceBuilder = new CompressingHashBuilder(MetadataHelper.CreateMetadataHashAlgorithm(m_MappingVersion));
-            this.m_instanceNumber = 0;
-            this.m_itemsAlreadySeen = new Dictionary<object, int>();
+            m_hashSourceBuilder = new CompressingHashBuilder(MetadataHelper.CreateMetadataHashAlgorithm(m_MappingVersion));
+            m_instanceNumber = 0;
+            m_itemsAlreadySeen = new Dictionary<object, int>();
         }
 
         /// <summary>
@@ -727,12 +746,12 @@ namespace System.Data.Entity.Core.Mapping
         /// <returns></returns>
         private bool TryAddSeenItem(Object o, out int indexSeen)
         {
-            if (!this.m_itemsAlreadySeen.TryGetValue(o, out indexSeen))
+            if (!m_itemsAlreadySeen.TryGetValue(o, out indexSeen))
             {
-                this.m_itemsAlreadySeen.Add(o, this.m_instanceNumber);
+                m_itemsAlreadySeen.Add(o, m_instanceNumber);
 
-                indexSeen = this.m_instanceNumber;
-                this.m_instanceNumber++;
+                indexSeen = m_instanceNumber;
+                m_instanceNumber++;
 
                 return true;
             }
@@ -754,9 +773,9 @@ namespace System.Data.Entity.Core.Mapping
             }
             if (!TryAddSeenItem(o, out instanceIndex))
             {
-                this.AddObjectStartDumpToHashBuilder(o, instanceIndex);
-                this.AddSeenObjectToHashBuilder(instanceIndex);
-                this.AddObjectEndDumpToHashBuilder();
+                AddObjectStartDumpToHashBuilder(o, instanceIndex);
+                AddSeenObjectToHashBuilder(instanceIndex);
+                AddObjectEndDumpToHashBuilder();
                 return false;
             }
             return true;
@@ -765,39 +784,39 @@ namespace System.Data.Entity.Core.Mapping
         private void AddSeenObjectToHashBuilder(int instanceIndex)
         {
             Debug.Assert(instanceIndex >= 0, "referencing index should not be less than 0");
-            this.m_hashSourceBuilder.AppendLine("Instance Reference: " + instanceIndex);
+            m_hashSourceBuilder.AppendLine("Instance Reference: " + instanceIndex);
         }
 
         private void AddObjectStartDumpToHashBuilder(object o, int objectIndex)
         {
-            this.m_hashSourceBuilder.AppendObjectStartDump(o, objectIndex);
+            m_hashSourceBuilder.AppendObjectStartDump(o, objectIndex);
         }
 
         private void AddObjectEndDumpToHashBuilder()
         {
-            this.m_hashSourceBuilder.AppendObjectEndDump();
+            m_hashSourceBuilder.AppendObjectEndDump();
         }
 
         private void AddObjectContentToHashBuilder(object content)
         {
             if (content != null)
             {
-                IFormattable formatContent = content as IFormattable;
+                var formatContent = content as IFormattable;
                 if (formatContent != null)
                 {
                     // if the content is formattable, the following code made it culture invariant,
                     // for instance, the int, "30,000" can be formatted to "30-000" if the user 
                     // has a different language and region setting
-                    this.m_hashSourceBuilder.AppendLine(formatContent.ToString(null, CultureInfo.InvariantCulture));
+                    m_hashSourceBuilder.AppendLine(formatContent.ToString(null, CultureInfo.InvariantCulture));
                 }
                 else
                 {
-                    this.m_hashSourceBuilder.AppendLine(content.ToString());
+                    m_hashSourceBuilder.AppendLine(content.ToString());
                 }
             }
             else
             {
-                this.m_hashSourceBuilder.AppendLine("NULL");
+                m_hashSourceBuilder.AppendLine("NULL");
             }
         }
 
@@ -811,7 +830,7 @@ namespace System.Data.Entity.Core.Mapping
             // if the version number is greater than or equal to V2, then we add the value
             if (version >= XmlConstants.EdmVersionForV2)
             {
-                this.AddObjectContentToHashBuilder(content);
+                AddObjectContentToHashBuilder(content);
             }
         }
 
@@ -819,11 +838,11 @@ namespace System.Data.Entity.Core.Mapping
         {
             Debug.Assert(storageEntityContainerMapping != null, "storageEntityContainerMapping is null!");
 
-            MetadataMappingHasherVisitor visitor = new MetadataMappingHasherVisitor(mappingVersion);
+            var visitor = new MetadataMappingHasherVisitor(mappingVersion);
             visitor.Visit(storageEntityContainerMapping);
             return visitor.HashValue;
         }
-        #endregion
 
+        #endregion
     }
 }

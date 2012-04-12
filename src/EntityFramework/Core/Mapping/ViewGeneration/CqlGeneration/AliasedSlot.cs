@@ -1,20 +1,19 @@
-using System.Linq;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
-using System.Text;
-using System.Diagnostics;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using System.Data.Entity.Core.Common.Utils;
-using System.Collections.Generic;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
 {
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
+    using System.Diagnostics;
+    using System.Text;
+
     /// <summary>
     /// Encapsulates a slot in a particular cql block.
     /// </summary>
     internal sealed class QualifiedSlot : ProjectedSlot
     {
         #region Constructor
+
         /// <summary>
         /// Creates a qualified slot "block_alias.slot_alias"
         /// </summary>
@@ -24,14 +23,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             m_block = block;
             m_slot = slot; // Note: slot can be another qualified slot.
         }
+
         #endregion
 
         #region Fields
+
         private readonly CqlBlock m_block;
         private readonly ProjectedSlot m_slot;
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Creates new <see cref="ProjectedSlot"/> that is qualified with <paramref name="block"/>.CqlAlias.
         /// If current slot is composite (such as <see cref="CaseStatementProjectedSlot"/>, then this method recursively qualifies all parts
@@ -40,7 +43,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         internal override ProjectedSlot DeepQualify(CqlBlock block)
         {
             // We take the slot inside this and change the block
-            QualifiedSlot result = new QualifiedSlot(block, m_slot);
+            var result = new QualifiedSlot(block, m_slot);
             return result;
         }
 
@@ -50,7 +53,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         internal override string GetCqlFieldAlias(MemberPath outputMember)
         {
             // Keep looking inside the chain of qualified slots till we find a non-qualified slot and then get the alias name for it.
-            string result = GetOriginalSlot().GetCqlFieldAlias(outputMember);
+            var result = GetOriginalSlot().GetCqlFieldAlias(outputMember);
             return result;
         }
 
@@ -59,10 +62,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         /// </summary>
         internal ProjectedSlot GetOriginalSlot()
         {
-            ProjectedSlot slot = m_slot;
+            var slot = m_slot;
             while (true)
             {
-                QualifiedSlot qualifiedSlot = slot as QualifiedSlot;
+                var qualifiedSlot = slot as QualifiedSlot;
                 if (qualifiedSlot == null)
                 {
                     break;
@@ -94,6 +97,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             StringUtil.FormatStringBuilder(builder, "{0} ", m_block.CqlAlias);
             m_slot.ToCompactString(builder);
         }
+
         #endregion
     }
 }

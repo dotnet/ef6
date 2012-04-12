@@ -1,10 +1,6 @@
 namespace System.Data.Entity.Core
 {
-    using System;
-    using System.Data;
-    using System.Data.Entity.Core;
     using System.Runtime.Serialization;
-    using System.Security.Permissions;
 
     /// <summary>
     /// This exception is thrown when the store provider exhibits a behavior incompatible with the entity client provider
@@ -15,26 +11,28 @@ namespace System.Data.Entity.Core
         /// <summary>
         /// Initializes a new instance of ProviderIncompatibleException
         /// </summary>
-        public ProviderIncompatibleException() 
-            : base() 
-        { }
+        public ProviderIncompatibleException()
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of ProviderIncompatibleException
         /// </summary>
         /// <param name="message"></param>
-        public ProviderIncompatibleException(string message) 
-            : base(message) 
-        { }
-        
+        public ProviderIncompatibleException(string message)
+            : base(message)
+        {
+        }
+
         /// <summary>
         /// Constructor that takes a message and an inner exception
         /// </summary>
         /// <param name="message"></param>
         /// <param name="innerException"></param>
         public ProviderIncompatibleException(string message, Exception innerException)
-            : base(message, innerException) 
-        { }
+            : base(message, innerException)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of ProviderIncompatibleException
@@ -42,8 +40,8 @@ namespace System.Data.Entity.Core
         /// <param name="info"></param>
         /// <param name="context"></param>
         private ProviderIncompatibleException(SerializationInfo info, StreamingContext context)
-            : base(info, context) 
-        { }
+            : base(info, context)
+        {
+        }
     }
 }
-

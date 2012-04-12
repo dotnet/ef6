@@ -1,8 +1,8 @@
-using System;
-using System.Collections.Generic;
-
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
+
     /// <summary>
     /// Abstracts the properties of an End element in a relationship
     /// </summary>
@@ -21,12 +21,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <summary>
         /// Multiplicity of the End
         /// </summary>
-        System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity? Multiplicity { get; set; }
+        RelationshipMultiplicity? Multiplicity { get; set; }
 
         /// <summary>
         /// The On&lt;Operation&gt;s defined for the End
         /// </summary>
         ICollection<OnOperation> Operations { get; }
-
     }
 }

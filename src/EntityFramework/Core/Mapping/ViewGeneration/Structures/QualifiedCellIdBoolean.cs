@@ -1,10 +1,10 @@
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
-using System.Diagnostics;
-using System.Text;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
+    using System.Diagnostics;
+    using System.Text;
+
     /// <summary>
     /// A class that denotes "block_alias.booleanVar", e.g., "T1._from2".
     /// It is a subclass of <see cref="CellIdBoolean"/> with an added block alias.
@@ -12,6 +12,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     internal sealed class QualifiedCellIdBoolean : CellIdBoolean
     {
         #region Constructor
+
         /// <summary>
         /// Creates a boolean of the form "<paramref name="block"/>.<paramref name="originalCellNum"/>".
         /// </summary>
@@ -20,13 +21,17 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             m_block = block;
         }
+
         #endregion
 
         #region Fields
+
         private readonly CqlBlock m_block;
+
         #endregion
 
         #region Methods
+
         internal override StringBuilder AsEsql(StringBuilder builder, string blockAlias, bool skipIsNotNull)
         {
             // QualifiedCellIdBoolean is only used during JOIN processing where there is no single input, hence blockAlias is expected to be null.
@@ -38,6 +43,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             return base.AsCqt(m_block.GetInput(row), skipIsNotNull);
         }
+
         #endregion
     }
 }

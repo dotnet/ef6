@@ -1,12 +1,10 @@
 namespace System.Data.Entity.Core.Common.QueryCache
 {
-    using System;
+    using System.Collections.Concurrent;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Diagnostics;
-    using System.Threading;
-    using System.Collections.Concurrent;
 
     /// <summary> 
     /// Represents a compiled LINQ ObjectQuery cache entry
@@ -22,9 +20,10 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// A dictionary that contains a plan for each combination of
         /// merge option and UseCSharpNullComparisonBehavior flag.
         /// </summary>
-        private ConcurrentDictionary<String, ObjectQueryExecutionPlan> _plans;
+        private readonly ConcurrentDictionary<String, ObjectQueryExecutionPlan> _plans;
 
         #region Constructors
+
         /// <summary> 
         /// constructor 
         /// </summary> 
@@ -33,9 +32,10 @@ namespace System.Data.Entity.Core.Common.QueryCache
         internal CompiledQueryCacheEntry(QueryCacheKey queryCacheKey, MergeOption? mergeOption)
             : base(queryCacheKey, null)
         {
-            this.PropagatedMergeOption = mergeOption;
-            _plans = new ConcurrentDictionary<string,ObjectQueryExecutionPlan>();
+            PropagatedMergeOption = mergeOption;
+            _plans = new ConcurrentDictionary<string, ObjectQueryExecutionPlan>();
         }
+
         #endregion
 
         #region Methods/Properties
@@ -49,7 +49,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// <returns>The corresponding execution plan, if it exists; otherwise <c>null</c>.</returns>
         internal ObjectQueryExecutionPlan GetExecutionPlan(MergeOption mergeOption, bool useCSharpNullComparisonBehavior)
         {
-            string key = GenerateLocalCacheKey(mergeOption, useCSharpNullComparisonBehavior);
+            var key = GenerateLocalCacheKey(mergeOption, useCSharpNullComparisonBehavior);
             ObjectQueryExecutionPlan plan;
             _plans.TryGetValue(key, out plan);
             return plan;
@@ -67,7 +67,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         {
             Debug.Assert(newPlan != null, "New plan cannot be null");
 
-            string planKey = GenerateLocalCacheKey(newPlan.MergeOption, useCSharpNullComparisonBehavior);
+            var planKey = GenerateLocalCacheKey(newPlan.MergeOption, useCSharpNullComparisonBehavior);
             // Get the value if it is there. If not, add it and get it.
             return (_plans.GetOrAdd(planKey, newPlan));
         }

@@ -1,19 +1,20 @@
 namespace System.Data.Entity.Core.Objects.Internal
 {
-    using System;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Common.Internal.Materialization;
-    using System.Data.Entity.Core.Common.QueryCache;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using CompiledQueryParameters = System.Collections.ObjectModel.ReadOnlyCollection<System.Collections.Generic.KeyValuePair<ObjectParameter, System.Data.Entity.Core.Objects.ELinq.QueryParameterExpression>>;
-    
+    using CompiledQueryParameters =
+        System.Collections.ObjectModel.ReadOnlyCollection<Collections.Generic.KeyValuePair<ObjectParameter, ELinq.QueryParameterExpression>>
+        ;
+
     /// <summary>
     /// Represents the 'compiled' form of all elements (query + result assembly) required to execute a specific <see cref="ObjectQuery"/>
     /// </summary>
@@ -24,28 +25,32 @@ namespace System.Data.Entity.Core.Objects.Internal
         internal readonly TypeUsage ResultType;
         internal readonly MergeOption MergeOption;
         internal readonly CompiledQueryParameters CompiledQueryParameters;
-        
+
         /// <summary>If the query yields entities from a single entity set, the value is stored here.</summary>
         private readonly EntitySet _singleEntitySet;
 
-        private ObjectQueryExecutionPlan(DbCommandDefinition commandDefinition, ShaperFactory resultShaperFactory, TypeUsage resultType, MergeOption mergeOption, EntitySet singleEntitySet, CompiledQueryParameters compiledQueryParameters)
+        private ObjectQueryExecutionPlan(
+            DbCommandDefinition commandDefinition, ShaperFactory resultShaperFactory, TypeUsage resultType, MergeOption mergeOption,
+            EntitySet singleEntitySet, CompiledQueryParameters compiledQueryParameters)
         {
             Debug.Assert(commandDefinition != null, "A command definition is required");
             Debug.Assert(resultShaperFactory != null, "A result shaper factory is required");
             Debug.Assert(resultType != null, "A result type is required");
 
-            this.CommandDefinition = commandDefinition;
-            this.ResultShaperFactory = resultShaperFactory;
-            this.ResultType = resultType;
-            this.MergeOption = mergeOption;
-            this._singleEntitySet = singleEntitySet;
-            this.CompiledQueryParameters = compiledQueryParameters;
+            CommandDefinition = commandDefinition;
+            ResultShaperFactory = resultShaperFactory;
+            ResultType = resultType;
+            MergeOption = mergeOption;
+            _singleEntitySet = singleEntitySet;
+            CompiledQueryParameters = compiledQueryParameters;
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-        internal static ObjectQueryExecutionPlan Prepare(ObjectContext context, DbQueryCommandTree tree, Type elementType, MergeOption mergeOption, Span span, CompiledQueryParameters compiledQueryParameters, AliasGenerator aliasGenerator)
+        internal static ObjectQueryExecutionPlan Prepare(
+            ObjectContext context, DbQueryCommandTree tree, Type elementType, MergeOption mergeOption, Span span,
+            CompiledQueryParameters compiledQueryParameters, AliasGenerator aliasGenerator)
         {
-            TypeUsage treeResultType = tree.Query.ResultType;
+            var treeResultType = tree.Query.ResultType;
 
             // Rewrite this tree for Span?
             DbExpression spannedQuery = null;
@@ -59,16 +64,16 @@ namespace System.Data.Entity.Core.Objects.Internal
                 spanInfo = null;
             }
 
-            DbConnection connection = context.Connection;
+            var connection = context.Connection;
             DbCommandDefinition definition = null;
 
             // The connection is required to get to the CommandDefinition builder.
             if (connection == null)
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.ObjectQuery_InvalidConnection);
+                throw EntityUtil.InvalidOperation(Strings.ObjectQuery_InvalidConnection);
             }
-                        
-            DbProviderServices services = DbProviderServices.GetProviderServices(connection);
+
+            var services = DbProviderServices.GetProviderServices(connection);
 
             try
             {
@@ -89,7 +94,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                     // we don't wan't folks to have to know all the various types of exceptions that can 
                     // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
                     // the inner exception of it.
-                    throw EntityUtil.CommandCompilation(System.Data.Entity.Resources.Strings.EntityClient_CommandDefinitionPreparationFailed, e);
+                    throw EntityUtil.CommandCompilation(Strings.EntityClient_CommandDefinitionPreparationFailed, e);
                 }
                 throw;
             }
@@ -99,10 +104,11 @@ namespace System.Data.Entity.Core.Objects.Internal
                 throw EntityUtil.ProviderDoesNotSupportCommandTrees();
             }
 
-            EntityCommandDefinition entityDefinition = (EntityCommandDefinition)definition;
-            QueryCacheManager cacheManager = context.Perspective.MetadataWorkspace.GetQueryCacheManager();
-            
-            ShaperFactory shaperFactory = ShaperFactory.Create(elementType, cacheManager, entityDefinition.CreateColumnMap(null),
+            var entityDefinition = (EntityCommandDefinition)definition;
+            var cacheManager = context.Perspective.MetadataWorkspace.GetQueryCacheManager();
+
+            var shaperFactory = ShaperFactory.Create(
+                elementType, cacheManager, entityDefinition.CreateColumnMap(null),
                 context.MetadataWorkspace, spanInfo, mergeOption, false);
 
             // attempt to determine entity information for this query (e.g. which entity type and which entity set)
@@ -110,12 +116,13 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             EntitySet singleEntitySet = null;
 
-            if (treeResultType.EdmType.BuiltInTypeKind == BuiltInTypeKind.CollectionType)
+            if (treeResultType.EdmType.BuiltInTypeKind
+                == BuiltInTypeKind.CollectionType)
             {
                 // determine if the entity set is unambiguous given the entity type
                 if (null != entityDefinition.EntitySets)
                 {
-                    foreach (EntitySet entitySet in entityDefinition.EntitySets)
+                    foreach (var entitySet in entityDefinition.EntitySets)
                     {
                         if (null != entitySet)
                         {
@@ -138,13 +145,14 @@ namespace System.Data.Entity.Core.Objects.Internal
                 }
             }
 
-            return new ObjectQueryExecutionPlan(definition, shaperFactory, treeResultType, mergeOption, singleEntitySet, compiledQueryParameters);
+            return new ObjectQueryExecutionPlan(
+                definition, shaperFactory, treeResultType, mergeOption, singleEntitySet, compiledQueryParameters);
         }
 
         internal string ToTraceString()
         {
-            string traceString = string.Empty;
-            EntityCommandDefinition entityCommandDef = this.CommandDefinition as EntityCommandDefinition;
+            var traceString = string.Empty;
+            var entityCommandDef = CommandDefinition as EntityCommandDefinition;
             if (entityCommandDef != null)
             {
                 traceString = entityCommandDef.ToTraceString();
@@ -159,8 +167,8 @@ namespace System.Data.Entity.Core.Objects.Internal
             try
             {
                 // create entity command (just do this to snarf store command)
-                EntityCommandDefinition commandDefinition = (EntityCommandDefinition)this.CommandDefinition;
-                EntityCommand entityCommand = new EntityCommand((EntityConnection)context.Connection, commandDefinition);
+                var commandDefinition = (EntityCommandDefinition)CommandDefinition;
+                var entityCommand = new EntityCommand((EntityConnection)context.Connection, commandDefinition);
 
                 // pass through parameters and timeout values
                 if (context.CommandTimeout.HasValue)
@@ -170,9 +178,9 @@ namespace System.Data.Entity.Core.Objects.Internal
 
                 if (parameterValues != null)
                 {
-                    foreach (ObjectParameter parameter in parameterValues)
+                    foreach (var parameter in parameterValues)
                     {
-                        int index = entityCommand.Parameters.IndexOf(parameter.Name);
+                        var index = entityCommand.Parameters.IndexOf(parameter.Name);
 
                         if (index != -1)
                         {
@@ -184,13 +192,14 @@ namespace System.Data.Entity.Core.Objects.Internal
                 // acquire store reader
                 storeReader = commandDefinition.ExecuteStoreCommands(entityCommand, CommandBehavior.Default);
 
-                ShaperFactory<TResultType> shaperFactory = (ShaperFactory<TResultType>)this.ResultShaperFactory;
-                Shaper<TResultType> shaper = shaperFactory.Create(storeReader, context, context.MetadataWorkspace, this.MergeOption, true);
+                var shaperFactory = (ShaperFactory<TResultType>)ResultShaperFactory;
+                var shaper = shaperFactory.Create(storeReader, context, context.MetadataWorkspace, MergeOption, true);
 
                 // create materializer delegate
                 TypeUsage resultItemEdmType;
 
-                if (ResultType.EdmType.BuiltInTypeKind == BuiltInTypeKind.CollectionType)
+                if (ResultType.EdmType.BuiltInTypeKind
+                    == BuiltInTypeKind.CollectionType)
                 {
                     resultItemEdmType = ((CollectionType)ResultType.EdmType).TypeUsage;
                 }
@@ -199,7 +208,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                     resultItemEdmType = ResultType;
                 }
 
-                return new ObjectResult<TResultType>(shaper, this._singleEntitySet, resultItemEdmType);
+                return new ObjectResult<TResultType>(shaper, _singleEntitySet, resultItemEdmType);
             }
             catch (Exception)
             {
@@ -213,12 +222,13 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
         }
 
-        internal static ObjectResult<TResultType> ExecuteCommandTree<TResultType>(ObjectContext context, DbQueryCommandTree query, MergeOption mergeOption)
+        internal static ObjectResult<TResultType> ExecuteCommandTree<TResultType>(
+            ObjectContext context, DbQueryCommandTree query, MergeOption mergeOption)
         {
             Debug.Assert(context != null, "ObjectContext cannot be null");
             Debug.Assert(query != null, "Command tree cannot be null");
 
-            ObjectQueryExecutionPlan execPlan = ObjectQueryExecutionPlan.Prepare(context, query, typeof(TResultType), mergeOption, null, null, System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.DbExpressionBuilder.AliasGenerator);
+            var execPlan = Prepare(context, query, typeof(TResultType), mergeOption, null, null, DbExpressionBuilder.AliasGenerator);
             return execPlan.Execute<TResultType>(context, null);
         }
     }

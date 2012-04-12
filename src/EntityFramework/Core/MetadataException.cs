@@ -1,6 +1,6 @@
 namespace System.Data.Entity.Core
 {
-    using System;
+    using System.Data.Entity.Resources;
     using System.Runtime.Serialization;
 
     /// <summary>
@@ -13,11 +13,12 @@ namespace System.Data.Entity.Core
         private const int HResultMetadata = -2146232007;
 
         #region Constructors
+
         /// <summary>
         /// constructor with default message
         /// </summary>
         public MetadataException() // required ctor
-            : base(System.Data.Entity.Resources.Strings.Metadata_General_Error)
+            : base(Strings.Metadata_General_Error)
         {
             HResult = HResultMetadata;
         }
@@ -52,6 +53,7 @@ namespace System.Data.Entity.Core
             : base(info, context)
         {
         }
+
         #endregion
     }
 }

@@ -1,9 +1,9 @@
 namespace System.Data.Entity.Internal.Linq
 {
     using System.Collections.Concurrent;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Infrastructure;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;

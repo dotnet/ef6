@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:edm="http://schemas.microsoft.com/ado/2007/05/edm" targetNamespace="http://schemas.microsoft.com/ado/2007/05/edm">
   <xs:annotation>
     <xs:documentation xml:lang="en">
-            Common Data Model Schema Definition Language.
-            Copyright (c) Microsoft Corp. All rights reserved.
-        </xs:documentation>
+      Common Data Model Schema Definition Language.
+    </xs:documentation>
   </xs:annotation>
   <xs:import namespace="http://schemas.microsoft.com/ado/2006/04/codegeneration" schemaLocation="System.Data.Resources.CodeGenerationSchema.xsd" />
   <xs:element name="Schema" type="edm:TSchema" />
@@ -75,7 +75,10 @@
     -->
   <xs:complexType name="TDocumentation">
     <xs:annotation>
-      <xs:documentation>The Documentation element is used to provide documentation of comments on the contents of the XML file.  It is valid under Schema, Type, Index and Relationship elements.</xs:documentation>
+      <xs:documentation>
+        The Documentation element is used to provide documentation of comments on the contents of the XML file.  It is valid
+        under Schema, Type, Index and Relationship elements.
+      </xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:element name="Summary" type="edm:TText" minOccurs="0" maxOccurs="1" />
@@ -91,7 +94,9 @@
   </xs:complexType>
   <xs:complexType name="TXmlOrText" mixed="true">
     <xs:annotation>
-      <xs:documentation>This type allows pretty much any content</xs:documentation>
+      <xs:documentation>
+        This type allows pretty much any content
+      </xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded" />
@@ -329,7 +334,7 @@
         </xs:choice>
       </xs:sequence>
       <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
-      <xs:attribute name="Extends" type ="edm:TSimpleIdentifier" use="optional" />
+      <xs:attribute name="Extends" type="edm:TSimpleIdentifier" use="optional" />
     </xs:complexType>
   </xs:element>
   <!-- 

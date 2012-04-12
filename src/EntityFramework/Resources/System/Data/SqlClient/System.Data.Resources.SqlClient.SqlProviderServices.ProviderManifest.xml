@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+
 <!-- 
 ####################################################################################################################
 
@@ -9,18 +10,12 @@ PROCESS
 -->
 <ProviderManifest Namespace="SqlServer" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/providermanifest">
   <Types>
-    <Type Name="tinyint" PrimitiveTypeKind="Byte">
-    </Type>
-    <Type Name="smallint" PrimitiveTypeKind="Int16">
-    </Type>
-    <Type Name="int" PrimitiveTypeKind="Int32">
-    </Type>
-    <Type Name="bigint" PrimitiveTypeKind="Int64">
-    </Type>
-    <Type Name="float" PrimitiveTypeKind="Double">
-    </Type>
-    <Type Name="real" PrimitiveTypeKind="Single">
-    </Type>
+    <Type Name="tinyint" PrimitiveTypeKind="Byte"></Type>
+    <Type Name="smallint" PrimitiveTypeKind="Int16"></Type>
+    <Type Name="int" PrimitiveTypeKind="Int32"></Type>
+    <Type Name="bigint" PrimitiveTypeKind="Int64"></Type>
+    <Type Name="float" PrimitiveTypeKind="Double"></Type>
+    <Type Name="real" PrimitiveTypeKind="Single"></Type>
     <Type Name="decimal" PrimitiveTypeKind="Decimal">
       <FacetDescriptions>
         <Precision Minimum="1" Maximum="38" DefaultValue="18" Constant="false" />
@@ -63,7 +58,7 @@ PROCESS
         <FixedLength DefaultValue="false" Constant="true" />
       </FacetDescriptions>
     </Type>
-    <Type Name="image" PrimitiveTypeKind="Binary" >
+    <Type Name="image" PrimitiveTypeKind="Binary">
       <FacetDescriptions>
         <MaxLength DefaultValue="2147483647" Constant="true" />
         <FixedLength DefaultValue="false" Constant="true" />
@@ -81,21 +76,20 @@ PROCESS
         <FixedLength DefaultValue="true" Constant="true" />
       </FacetDescriptions>
     </Type>
-    <Type Name="bit" PrimitiveTypeKind="Boolean">
-    </Type>
+    <Type Name="bit" PrimitiveTypeKind="Boolean"></Type>
     <Type Name="smalldatetime" PrimitiveTypeKind="DateTime">
       <FacetDescriptions>
-        <Precision DefaultValue="0" Constant="true" />          
+        <Precision DefaultValue="0" Constant="true" />
       </FacetDescriptions>
     </Type>
     <Type Name="datetime" PrimitiveTypeKind="DateTime">
       <FacetDescriptions>
-          <Precision DefaultValue="3" Constant="true" />
+        <Precision DefaultValue="3" Constant="true" />
       </FacetDescriptions>
     </Type>
     <Type Name="datetime2" PrimitiveTypeKind="DateTime">
       <FacetDescriptions>
-        <Precision Minimum="0" Maximum="7" DefaultValue="7" Constant="false" />              
+        <Precision Minimum="0" Maximum="7" DefaultValue="7" Constant="false" />
       </FacetDescriptions>
     </Type>
     <Type Name="date" PrimitiveTypeKind="DateTime">
@@ -155,23 +149,22 @@ PROCESS
         <FixedLength DefaultValue="false" Constant="true" />
       </FacetDescriptions>
     </Type>
-    <Type Name="ntext" PrimitiveTypeKind="String" >
+    <Type Name="ntext" PrimitiveTypeKind="String">
       <FacetDescriptions>
         <MaxLength DefaultValue="1073741823" Constant="true" />
         <Unicode DefaultValue="true" Constant="true" />
         <FixedLength DefaultValue="false" Constant="true" />
       </FacetDescriptions>
     </Type>
-    <Type Name="text" PrimitiveTypeKind="String" >
+    <Type Name="text" PrimitiveTypeKind="String">
       <FacetDescriptions>
         <MaxLength DefaultValue="2147483647" Constant="true" />
         <Unicode DefaultValue="false" Constant="true" />
         <FixedLength DefaultValue="false" Constant="true" />
       </FacetDescriptions>
     </Type>
-    <Type Name="uniqueidentifier" PrimitiveTypeKind="Guid">
-    </Type>
-    <Type Name="xml" PrimitiveTypeKind="String" >
+    <Type Name="uniqueidentifier" PrimitiveTypeKind="Guid"></Type>
+    <Type Name="xml" PrimitiveTypeKind="String">
       <FacetDescriptions>
         <MaxLength DefaultValue="1073741823" Constant="true" />
         <Unicode DefaultValue="true" Constant="true" />
@@ -450,16 +443,16 @@ PROCESS
     </Function>
 
 
-      <!-- STDEVP -->
+    <!-- STDEVP -->
     <Function Name="STDEVP" Aggregate="true" BuiltIn="true">
       <ReturnType Type="Double" />
       <Parameter Name="arg" Type="Collection(Double)" Mode="In" />
     </Function>
 
-      <Function Name="STDEVP" Aggregate="true" BuiltIn="true">
-          <ReturnType Type="Double" />
-          <Parameter Name="arg" Type="Collection(Decimal)" Mode="In" />
-      </Function>      
+    <Function Name="STDEVP" Aggregate="true" BuiltIn="true">
+      <ReturnType Type="Double" />
+      <Parameter Name="arg" Type="Collection(Decimal)" Mode="In" />
+    </Function>      
 
     <!-- VAR -->
     <Function Name="VAR" Aggregate="true" BuiltIn="true">
@@ -472,7 +465,7 @@ PROCESS
       <Parameter Name="arg" Type="Collection(Decimal)" Mode="In" />
     </Function>
 
-      <!-- VARP -->
+    <!-- VARP -->
     <Function Name="VARP" Aggregate="true" BuiltIn="true">
       <ReturnType Type="Double" />
       <Parameter Name="arg" Type="Collection(Double)" Mode="In" />
@@ -484,7 +477,7 @@ PROCESS
     </Function>
 
 
-      <!-- END AGGREGATES ############################################# -->
+    <!-- END AGGREGATES ############################################# -->
 
     <!-- BEGIN STRING FUNCTIONS ##################################### -->
     <!-- ASCII( arg ) 
@@ -501,7 +494,7 @@ PROCESS
                 returns: char(1)
         -->
     <Function Name="CHAR" BuiltIn="true">
-      <ReturnType Type="String"/>
+      <ReturnType Type="String" />
       <Parameter Name="arg" Type="Int32" Mode="In" />
     </Function>
 
@@ -604,7 +597,7 @@ PROCESS
                 returns: nchar(1)
         -->
     <Function Name="NCHAR" BuiltIn="true">
-      <ReturnType Type="String"/>
+      <ReturnType Type="String" />
       <Parameter Name="arg" Type="Int32" Mode="In" />
     </Function>
 
@@ -625,13 +618,13 @@ PROCESS
                 returns: nvarchar   
         -->
     <Function Name="QUOTENAME" BuiltIn="true">
-      <ReturnType Type="String"  />
+      <ReturnType Type="String" />
       <Parameter Name="character_string" Type="String" Mode="In" />
     </Function>
     <Function Name="QUOTENAME" BuiltIn="true">
-      <ReturnType Type="String"  />
-      <Parameter Name="character_string" Type="String"  Mode="In" />
-      <Parameter Name="quote_character" Type="String"  Mode="In" />
+      <ReturnType Type="String" />
+      <Parameter Name="character_string" Type="String" Mode="In" />
+      <Parameter Name="quote_character" Type="String" Mode="In" />
     </Function>
 
     <!-- REPLACE( strTarget, strSearch, strReplacement )
@@ -642,9 +635,9 @@ PROCESS
         -->
     <Function Name="REPLACE" BuiltIn="true">
       <ReturnType Type="String" />
-      <Parameter Name="strTarget" Type="String"  Mode="In" />
-      <Parameter Name="strSearch" Type="String"  Mode="In" />
-      <Parameter Name="strReplacement" Type="String"  Mode="In" />
+      <Parameter Name="strTarget" Type="String" Mode="In" />
+      <Parameter Name="strSearch" Type="String" Mode="In" />
+      <Parameter Name="strReplacement" Type="String" Mode="In" />
     </Function>
 
     <!-- REPLICATE( strSource, count )
@@ -653,7 +646,7 @@ PROCESS
             returns: varchar, nvarchar   
         -->
     <Function Name="REPLICATE" BuiltIn="true">
-      <ReturnType Type="String"  />
+      <ReturnType Type="String" />
       <Parameter Name="strTarget" Type="String" Mode="In" />
       <Parameter Name="count" Type="Int32" Mode="In" />
     </Function>
@@ -712,20 +705,20 @@ PROCESS
                 returns: char   
         -->
     <Function Name="STR" BuiltIn="true">
-      <ReturnType Type="String"  />
+      <ReturnType Type="String" />
       <Parameter Name="number" Type="Double" Mode="In" />
     </Function>
     <Function Name="STR" BuiltIn="true">
-      <ReturnType Type="String"  />
+      <ReturnType Type="String" />
       <Parameter Name="number" Type="Decimal" Mode="In" />
     </Function>
-   <Function Name="STR" BuiltIn="true">
-      <ReturnType Type="String"  />
+    <Function Name="STR" BuiltIn="true">
+      <ReturnType Type="String" />
       <Parameter Name="number" Type="Double" Mode="In" />
       <Parameter Name="length" Type="Int32" Mode="In" />
     </Function>
     <Function Name="STR" BuiltIn="true">
-      <ReturnType Type="String"  />
+      <ReturnType Type="String" />
       <Parameter Name="number" Type="Decimal" Mode="In" />
       <Parameter Name="length" Type="Int32" Mode="In" />
     </Function>
@@ -740,9 +733,9 @@ PROCESS
       <Parameter Name="number" Type="Decimal" Mode="In" />
       <Parameter Name="length" Type="Int32" Mode="In" />
       <Parameter Name="decimal" Type="Int32" Mode="In" />
-   </Function>
+    </Function>
 
-      <!-- STUFF( strInput, start, length, strReplacement )
+    <!-- STUFF( strInput, start, length, strReplacement )
                 strInput: varchar, nvarchar
                 start: int
                 legth: int
@@ -750,11 +743,11 @@ PROCESS
                 returns: int, bigint   
         -->
     <Function Name="STUFF" BuiltIn="true">
-      <ReturnType Type="String"  />
-      <Parameter Name="strInput" Type="String"  Mode="In" />
+      <ReturnType Type="String" />
+      <Parameter Name="strInput" Type="String" Mode="In" />
       <Parameter Name="start" Type="Int32" Mode="In" />
       <Parameter Name="length" Type="Int32" Mode="In" />
-      <Parameter Name="strReplacement" Type="String"  Mode="In" />
+      <Parameter Name="strReplacement" Type="String" Mode="In" />
     </Function>
 
     <!-- SUBSTRING( str, start, length )
@@ -818,7 +811,7 @@ PROCESS
       <Parameter Name="arg" Type="Double" Mode="In" />
     </Function>
 
-      <!-- ACOS( arg )
+    <!-- ACOS( arg )
                 arg: float
                 returns: float   
         -->
@@ -831,7 +824,7 @@ PROCESS
       <Parameter Name="arg1" Type="Decimal" Mode="In" />
     </Function>
 
-      <!-- ASIN( arg )
+    <!-- ASIN( arg )
                 arg: float
                 returns: float   
         -->
@@ -844,7 +837,7 @@ PROCESS
       <Parameter Name="arg" Type="Decimal" Mode="In" />
     </Function>
 
-      <!-- ATAN( arg )
+    <!-- ATAN( arg )
                 arg: float
                 returns: float   
         -->
@@ -858,7 +851,7 @@ PROCESS
       <Parameter Name="arg" Type="Decimal" Mode="In" />
     </Function>
 
-      <!-- ATN2( arg1, arg2 )
+    <!-- ATN2( arg1, arg2 )
                 arg1: float
                 arg2: float
                 returns: float   
@@ -876,7 +869,7 @@ PROCESS
     </Function>
 
 
-      <!-- CEILING( arg )
+    <!-- CEILING( arg )
                 arg: smalldatetime, datetime
                 returns: int   
         -->
@@ -897,7 +890,7 @@ PROCESS
       <Parameter Name="arg" Type="Double" Mode="In" />
     </Function>
 
-      <!-- COS( arg )
+    <!-- COS( arg )
                 arg: float
                 returns: float   
         -->
@@ -911,7 +904,7 @@ PROCESS
       <Parameter Name="arg" Type="Decimal" Mode="In" />
     </Function>
 
-      <!-- COT( arg )
+    <!-- COT( arg )
                 arg: float
                 returns: float   
         -->
@@ -924,7 +917,7 @@ PROCESS
       <Parameter Name="arg" Type="Decimal" Mode="In" />
     </Function>
 
-      <!-- DEGREES( arg )
+    <!-- DEGREES( arg )
                 arg: tinyint, smallint, int, bigint, numeric, decimal, smallmoney, money, real, float
                 returns: tinyint, smallint, int, bigint, numeric, decimal, smallmoney, money, real, float
         -->
@@ -958,7 +951,7 @@ PROCESS
       <Parameter Name="arg" Type="Decimal" Mode="In" />
     </Function>
 
-      <!-- FLOOR( arg )
+    <!-- FLOOR( arg )
                 arg: tinyint, smallint, int, bigint, numeric, decimal, smallmoney, money, real, float
                 returns: tinyint, smallint, int, bigint, numeric, decimal, smallmoney, money, real, float
         -->
@@ -992,7 +985,7 @@ PROCESS
       <Parameter Name="arg" Type="Decimal" Mode="In" />
     </Function>
 
-      <!-- LOG10( arg )
+    <!-- LOG10( arg )
                 arg: float
                 returns: float   
         -->
@@ -1196,8 +1189,8 @@ PROCESS
       <Parameter Name="arg1" Type="Double" Mode="In" />
     </Function>
     <Function Name="SQUARE" BuiltIn="true">
-          <ReturnType Type="Double" />
-          <Parameter Name="arg1" Type="Decimal" Mode="In" />
+      <ReturnType Type="Double" />
+      <Parameter Name="arg1" Type="Decimal" Mode="In" />
     </Function>
     <!-- TAN( arg )
                 arg: float
@@ -1212,7 +1205,7 @@ PROCESS
       <Parameter Name="arg" Type="Decimal" Mode="In" />
     </Function>
 
-      <!-- END MATH FUNCTIONS ######################################### -->
+    <!-- END MATH FUNCTIONS ######################################### -->
 
 
     <!-- BEGIN DATE FUNCTIONS ####################################### -->
@@ -1247,7 +1240,7 @@ PROCESS
       <Parameter Name="date" Type="String" Mode="In" />
     </Function>
 
-      <!-- DATEDIFF( datepart, startdate, enddate )
+    <!-- DATEDIFF( datepart, startdate, enddate )
                 datepart: nvarchar
                 startdate: smalldatetime, datetime, char, nchar, varchar, nvarchar
                 enddate: smalldatetime, datetime, char, nchar, varchar, nvarchar
@@ -1303,9 +1296,9 @@ PROCESS
     </Function>
     <Function Name="DATEDIFF" BuiltIn="true">
       <ReturnType Type="Int32" />
-       <Parameter Name="datepart" Type="String" Mode="In" />
-       <Parameter Name="startdate" Type="DateTimeOffset" Mode="In" />
-       <Parameter Name="enddate" Type="String" Mode="In" />
+      <Parameter Name="datepart" Type="String" Mode="In" />
+      <Parameter Name="startdate" Type="DateTimeOffset" Mode="In" />
+      <Parameter Name="enddate" Type="String" Mode="In" />
     </Function>
     <Function Name="DATEDIFF" BuiltIn="true">
       <ReturnType Type="Int32" />
@@ -1351,7 +1344,7 @@ PROCESS
     </Function>
 
 
-      <!-- DATENAME( datepart, date )
+    <!-- DATENAME( datepart, date )
             datepart: nvarchar
             date: smalldatetime, datetime, char, nchar, varchar, nvarchar
             returns: nvarchar   
@@ -1421,35 +1414,35 @@ PROCESS
             returns: datetime   
         -->
     <Function Name="GETDATE" BuiltIn="true">
-      <ReturnType Type="DateTime"/>
+      <ReturnType Type="DateTime" />
     </Function>
 
     <!-- SYSDATETIME()
             returns: datetime   
       -->
     <Function Name="SYSDATETIME" BuiltIn="true">
-      <ReturnType Type="DateTime"/>
+      <ReturnType Type="DateTime" />
     </Function>
 
     <!-- SYSUTCDATETIME()
           returns: datetime   
     -->
     <Function Name="SYSUTCDATETIME" BuiltIn="true">
-      <ReturnType Type="DateTime"/>
+      <ReturnType Type="DateTime" />
     </Function>
       
     <!-- SYSDATETIMEOFFSET()
             returns: datetime   
     -->
     <Function Name="SYSDATETIMEOFFSET" BuiltIn="true">
-      <ReturnType Type="DateTimeOffset"/>
+      <ReturnType Type="DateTimeOffset" />
     </Function>
 
     <!-- GETUTCDATE()
          returns: datetime   
     -->
     <Function Name="GETUTCDATE" BuiltIn="true">
-      <ReturnType Type="DateTime"/>
+      <ReturnType Type="DateTime" />
     </Function>
 
     <!-- MONTH( date )
@@ -1641,19 +1634,19 @@ PROCESS
       <Parameter Name="arg2" Type="DateTime" Mode="In" />
       <Parameter Name="arg3" Type="DateTime" Mode="In" />
     </Function>
-      <Function Name="CHECKSUM" BuiltIn="true">
-          <ReturnType Type="Int32" />
-          <Parameter Name="arg1" Type="DateTimeOffset" Mode="In" />
-          <Parameter Name="arg2" Type="DateTimeOffset" Mode="In" />
-          <Parameter Name="arg3" Type="DateTimeOffset" Mode="In" />
-      </Function>
-      <Function Name="CHECKSUM" BuiltIn="true">
-          <ReturnType Type="Int32" />
-          <Parameter Name="arg1" Type="Time" Mode="In" />
-          <Parameter Name="arg2" Type="Time" Mode="In" />
-          <Parameter Name="arg3" Type="Time" Mode="In" />
-      </Function>
-      <Function Name="CHECKSUM" BuiltIn="true">
+    <Function Name="CHECKSUM" BuiltIn="true">
+      <ReturnType Type="Int32" />
+      <Parameter Name="arg1" Type="DateTimeOffset" Mode="In" />
+      <Parameter Name="arg2" Type="DateTimeOffset" Mode="In" />
+      <Parameter Name="arg3" Type="DateTimeOffset" Mode="In" />
+    </Function>
+    <Function Name="CHECKSUM" BuiltIn="true">
+      <ReturnType Type="Int32" />
+      <Parameter Name="arg1" Type="Time" Mode="In" />
+      <Parameter Name="arg2" Type="Time" Mode="In" />
+      <Parameter Name="arg3" Type="Time" Mode="In" />
+    </Function>
+    <Function Name="CHECKSUM" BuiltIn="true">
       <ReturnType Type="Int32" />
       <Parameter Name="arg1" Type="Binary" Mode="In" />
       <Parameter Name="arg2" Type="Binary" Mode="In" />
@@ -1749,7 +1742,7 @@ PROCESS
     <Function Name="NUMRINGS" BuiltIn="true">
       <ReturnType Type="Int32" />
       <Parameter Name="geographyValue" Type="Geography" Mode="In" />
-    </Function>    
+    </Function>
     <Function Name="REDUCE" BuiltIn="true">
       <ReturnType Type="Geography" />
       <Parameter Name="geographyValue" Type="Geography" Mode="In" />

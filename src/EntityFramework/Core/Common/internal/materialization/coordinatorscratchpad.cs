@@ -1,17 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity.Core.Objects.ELinq;
-using System.Data.Entity.Core.Query.InternalTrees;
-using System.Diagnostics;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security;
-using System.Security.Permissions;
-
-namespace System.Data.Entity.Core.Common.Internal.Materialization
+﻿namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
+    using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Core.Objects.ELinq;
+    using System.Diagnostics;
+    using System.Linq.Expressions;
+    using System.Reflection;
+    using System.Runtime.CompilerServices;
 
     /// <summary>
     /// Used in the Translator to aggregate information about a (nested) reader 
@@ -26,10 +21,12 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         private readonly Type _elementType;
         private CoordinatorScratchpad _parent;
         private readonly List<CoordinatorScratchpad> _nestedCoordinatorScratchpads;
+
         /// <summary>
         /// Map from original expressions to expressions with detailed error handling.
         /// </summary>
         private readonly Dictionary<Expression, Expression> _expressionWithErrorHandlingMap;
+
         /// <summary>
         /// Expressions that should be precompiled (i.e. reduced to constants in 
         /// compiled delegates.
@@ -137,7 +134,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// </summary>
         internal void AddNestedCoordinator(CoordinatorScratchpad nested)
         {
-            Debug.Assert(nested.Depth == this.Depth + 1, "can only nest depth + 1");
+            Debug.Assert(nested.Depth == Depth + 1, "can only nest depth + 1");
             nested._parent = this;
             _nestedCoordinatorScratchpads.Add(nested);
         }
@@ -153,7 +150,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             if (null != _recordStateScratchpads)
             {
                 recordStateFactories = new RecordStateFactory[_recordStateScratchpads.Count];
-                for (int i = 0; i < recordStateFactories.Length; i++)
+                for (var i = 0; i < recordStateFactories.Length; i++)
                 {
                     recordStateFactories[i] = _recordStateScratchpads[i].Compile();
                 }
@@ -163,33 +160,36 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 recordStateFactories = new RecordStateFactory[0];
             }
 
-            CoordinatorFactory[] nestedCoordinators = new CoordinatorFactory[_nestedCoordinatorScratchpads.Count];
-            for (int i = 0; i < nestedCoordinators.Length; i++)
+            var nestedCoordinators = new CoordinatorFactory[_nestedCoordinatorScratchpads.Count];
+            for (var i = 0; i < nestedCoordinators.Length; i++)
             {
                 nestedCoordinators[i] = _nestedCoordinatorScratchpads[i].Compile();
             }
 
             // compile inline delegates
-            ReplacementExpressionVisitor replacementVisitor = new ReplacementExpressionVisitor(null, this._inlineDelegates);
-            Expression element = new SecurityBoundaryExpressionVisitor().Visit(replacementVisitor.Visit(this.Element));
+            var replacementVisitor = new ReplacementExpressionVisitor(null, _inlineDelegates);
+            var element = new SecurityBoundaryExpressionVisitor().Visit(replacementVisitor.Visit(Element));
 
             // substitute expressions that have error handlers into a new expression (used
             // when a more detailed exception message is needed)
-            replacementVisitor = new ReplacementExpressionVisitor(this._expressionWithErrorHandlingMap, this._inlineDelegates);
-            Expression elementWithErrorHandling = new SecurityBoundaryExpressionVisitor().Visit(replacementVisitor.Visit(this.Element));
+            replacementVisitor = new ReplacementExpressionVisitor(_expressionWithErrorHandlingMap, _inlineDelegates);
+            var elementWithErrorHandling = new SecurityBoundaryExpressionVisitor().Visit(replacementVisitor.Visit(Element));
 
-            CoordinatorFactory result = (CoordinatorFactory)Activator.CreateInstance(typeof(CoordinatorFactory<>).MakeGenericType(_elementType), new object[] {
-                                                            this.Depth, 
-                                                            this.StateSlotNumber, 
-                                                            this.HasData, 
-                                                            this.SetKeys, 
-                                                            this.CheckKeys, 
-                                                            nestedCoordinators, 
-                                                            element,
-                                                            elementWithErrorHandling,
-                                                            this.InitializeCollection,
-                                                            recordStateFactories
-                                                            });
+            var result =
+                (CoordinatorFactory)Activator.CreateInstance(
+                    typeof(CoordinatorFactory<>).MakeGenericType(_elementType), new object[]
+                                                                                    {
+                                                                                        Depth,
+                                                                                        StateSlotNumber,
+                                                                                        HasData,
+                                                                                        SetKeys,
+                                                                                        CheckKeys,
+                                                                                        nestedCoordinators,
+                                                                                        element,
+                                                                                        elementWithErrorHandling,
+                                                                                        InitializeCollection,
+                                                                                        recordStateFactories
+                                                                                    });
             return result;
         }
 
@@ -199,7 +199,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// </summary>
         internal RecordStateScratchpad CreateRecordStateScratchpad()
         {
-            RecordStateScratchpad recordStateScratchpad = new RecordStateScratchpad();
+            var recordStateScratchpad = new RecordStateScratchpad();
 
             if (null == _recordStateScratchpads)
             {
@@ -208,6 +208,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             _recordStateScratchpads.Add(recordStateScratchpad);
             return recordStateScratchpad;
         }
+
         #endregion
 
         #region Nested types
@@ -222,11 +223,12 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             private readonly Dictionary<Expression, Expression> _replacementDictionary;
             private readonly HashSet<LambdaExpression> _inlineDelegates;
 
-            internal ReplacementExpressionVisitor(Dictionary<Expression, Expression> replacementDictionary,
+            internal ReplacementExpressionVisitor(
+                Dictionary<Expression, Expression> replacementDictionary,
                 HashSet<LambdaExpression> inlineDelegates)
             {
-                this._replacementDictionary = replacementDictionary;
-                this._inlineDelegates = inlineDelegates;
+                _replacementDictionary = replacementDictionary;
+                _inlineDelegates = inlineDelegates;
             }
 
             internal override Expression Visit(Expression expression)
@@ -240,7 +242,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
                 // check to see if a substitution has been provided for this expression
                 Expression replacement;
-                if (null != this._replacementDictionary && this._replacementDictionary.TryGetValue(expression, out replacement))
+                if (null != _replacementDictionary
+                    && _replacementDictionary.TryGetValue(expression, out replacement))
                 {
                     // once a substitution is found, we stop walking the sub-expression and
                     // return immediately (since recursive replacement is not needed or wanted)
@@ -249,10 +252,11 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 else
                 {
                     // check if we need to precompile an inline delegate
-                    bool preCompile = false;
+                    var preCompile = false;
                     LambdaExpression lambda = null;
 
-                    if (expression.NodeType == ExpressionType.Lambda &&
+                    if (expression.NodeType == ExpressionType.Lambda
+                        &&
                         null != _inlineDelegates)
                     {
                         lambda = (LambdaExpression)expression;
@@ -262,7 +266,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     if (preCompile)
                     {
                         // do replacement in the body of the lambda expression
-                        Expression body = Visit(lambda.Body);
+                        var body = Visit(lambda.Body);
 
                         // compile to a delegate
                         result = Expression.Constant(Translator.Compile(body.Type, body));
@@ -301,10 +305,12 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// </remarks>
         private sealed class SecurityBoundaryExpressionVisitor : EntityExpressionVisitor
         {
-            private static readonly MethodInfo s_userMaterializationFuncInvokeMethod = typeof(Func<DbDataReader, object[], object>).GetMethod("Invoke");
-            private ParameterExpression _values = Expression.Parameter(typeof(object[]), "values");
-            private ParameterExpression _reader = Expression.Parameter(typeof(DbDataReader), "reader");
-            private List<Expression> _initializationArguments = new List<Expression>();
+            private static readonly MethodInfo s_userMaterializationFuncInvokeMethod =
+                typeof(Func<DbDataReader, object[], object>).GetMethod("Invoke");
+
+            private readonly ParameterExpression _values = Expression.Parameter(typeof(object[]), "values");
+            private readonly ParameterExpression _reader = Expression.Parameter(typeof(DbDataReader), "reader");
+            private readonly List<Expression> _initializationArguments = new List<Expression>();
             private int _userExpressionDepth;
 
             /// <summary>
@@ -322,14 +328,16 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 }
 
                 var nex = exp as NewExpression;
-                if (nex != null && _userExpressionDepth >= 1)
+                if (nex != null
+                    && _userExpressionDepth >= 1)
                 {
                     // We are creating an internal type like CompensatingCollection<T> or Grouping<K, V>
                     // and at this particular point we are sure that the user isn't creating these
                     // since this.userArgumentType is not null.
-                    if (_userArgumentType != null && !nex.Type.IsPublic && nex.Type.Assembly == typeof(SecurityBoundaryExpressionVisitor).Assembly)
+                    if (_userArgumentType != null && !nex.Type.IsPublic
+                        && nex.Type.Assembly == typeof(SecurityBoundaryExpressionVisitor).Assembly)
                     {
-                        return this.CreateInitializationArgumentReplacement(nex, _userArgumentType);
+                        return CreateInitializationArgumentReplacement(nex, _userArgumentType);
                     }
 
                     var constructorParameters = nex.Constructor.GetParameters();
@@ -342,13 +350,13 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         // Visit this argument because it itself could be a user expression e.g.
                         // new { Argument = new SecureString { m_length = 32 } }
                         _userArgumentType = constructorParameters[i].ParameterType;
-                        var visitedArgument = this.Visit(argument);
+                        var visitedArgument = Visit(argument);
 
                         // If it hasn't changed, it's trusted code. (Untrusted code would have its
                         // Convert and MarkAsUserExpression expressions removed.)
                         if (visitedArgument == argument)
                         {
-                            var convert = this.CreateInitializationArgumentReplacement(argument);
+                            var convert = CreateInitializationArgumentReplacement(argument);
 
                             // Change the argument to access the values array.
                             newArguments.Add(convert);
@@ -363,7 +371,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
                     if (_userExpressionDepth == 1)
                     {
-                        var userMaterializationFunc = Expression.Lambda<Func<DbDataReader, object[], object>>(nex, _reader, _values).Compile();
+                        var userMaterializationFunc =
+                            Expression.Lambda<Func<DbDataReader, object[], object>>(nex, _reader, _values).Compile();
 
                         // Convert the constructor invocation into a func that runs without elevated permissions.
                         return Expression.Convert(
@@ -383,7 +392,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             internal override Expression VisitConditional(ConditionalExpression c)
             {
-                if (_userExpressionDepth >= 1 && _userArgumentType != null)
+                if (_userExpressionDepth >= 1
+                    && _userArgumentType != null)
                 {
                     var test = c.Test as MethodCallExpression;
                     var ifFalse = c.IfFalse as MethodCallExpression;
@@ -394,7 +404,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         && typeof(DbDataReader).IsAssignableFrom(test.Object.Type)
                         && test.Method.Name == "IsDBNull")
                     {
-                        if (ifFalse != null && (ifFalse.Object != null && typeof(DbDataReader).IsAssignableFrom(ifFalse.Object.Type) || IsUserExpressionMethod(ifFalse.Method)))
+                        if (ifFalse != null
+                            &&
+                            (ifFalse.Object != null && typeof(DbDataReader).IsAssignableFrom(ifFalse.Object.Type)
+                             || IsUserExpressionMethod(ifFalse.Method)))
                         {
                             return base.VisitConditional(c);
                         }
@@ -403,7 +416,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     // If there's something more complicated then we have to replace it all.
                     // We can't just replace the false expression because it may not be evaluated
                     // if the test returns true.
-                    return this.CreateInitializationArgumentReplacement(c);
+                    return CreateInitializationArgumentReplacement(c);
                 }
 
                 return base.VisitConditional(c);
@@ -420,7 +433,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     if (typeof(DbDataReader).IsAssignableFrom(m.Type))
                     {
                         var shaper = m.Expression as ParameterExpression;
-                        if (shaper != null && shaper == Translator.Shaper_Parameter)
+                        if (shaper != null
+                            && shaper == Translator.Shaper_Parameter)
                         {
                             return _reader;
                         }
@@ -437,9 +451,11 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     var newMemberInit = base.VisitMemberInit(init);
 
                     // Only compile into a delegate if this is the top-level user expression.
-                    if (newMemberInit != init && _userExpressionDepth == 1)
+                    if (newMemberInit != init
+                        && _userExpressionDepth == 1)
                     {
-                        var userMaterializationFunc = Expression.Lambda<Func<DbDataReader, object[], object>>(newMemberInit, _reader, _values).Compile();
+                        var userMaterializationFunc =
+                            Expression.Lambda<Func<DbDataReader, object[], object>>(newMemberInit, _reader, _values).Compile();
 
                         // Convert the object initializer into a func that runs without elevated permissions.
                         return Expression.Convert(
@@ -494,7 +510,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         _userArgumentType = null;
 
                         _userExpressionDepth++;
-                        return this.Visit(m.Arguments[0]);
+                        return Visit(m.Arguments[0]);
                     }
                     finally
                     {
@@ -505,12 +521,13 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 {
                     // If this method call is on a DbDataReader then we can replace it; otherwise,
                     // assume it's something on the shaper and extract the value into the values array.
-                    if (m.Object != null && typeof(DbDataReader).IsAssignableFrom(m.Object.Type))
+                    if (m.Object != null
+                        && typeof(DbDataReader).IsAssignableFrom(m.Object.Type))
                     {
                         return base.VisitMethodCall(m);
                     }
 
-                    return this.CreateInitializationArgumentReplacement(m);
+                    return CreateInitializationArgumentReplacement(m);
                 }
 
                 return base.VisitMethodCall(m);
@@ -518,13 +535,13 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             private Expression CreateInitializationArgumentReplacement(Expression original)
             {
-                return this.CreateInitializationArgumentReplacement(original, original.Type);
+                return CreateInitializationArgumentReplacement(original, original.Type);
             }
 
             private Expression CreateInitializationArgumentReplacement(Expression original, Type expressionType)
             {
                 _initializationArguments.Add(Expression.Convert(original, typeof(object)));
-                
+
                 return Expression.Convert(
                     Expression.MakeBinary(ExpressionType.ArrayIndex, _values, Expression.Constant(_initializationArguments.Count - 1)),
                     expressionType);
@@ -535,6 +552,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 return method.IsGenericMethod && method.GetGenericMethodDefinition() == InitializerMetadata.UserExpressionMarker;
             }
         }
+
         #endregion
     }
 }

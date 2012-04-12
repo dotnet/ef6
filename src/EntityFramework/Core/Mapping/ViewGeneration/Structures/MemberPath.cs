@@ -1,16 +1,16 @@
-using System;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using System.Data.Entity.Core.Common.Utils;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Linq;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Text;
+
     /// <summary>
     /// A class that corresponds to a path in some extent, e.g., Person, Person.addr, Person.addr.state
     /// Empty path represents path to the extent.
@@ -18,18 +18,23 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     internal sealed class MemberPath : InternalBase, IEquatable<MemberPath>
     {
         #region Fields
+
         /// <summary>
         /// The base entity set.
         /// </summary>
         private readonly EntitySetBase m_extent;
+
         /// <summary>
         ///  List of members in the path.
         /// </summary>
         private readonly List<EdmMember> m_path;
+
         internal static readonly IEqualityComparer<MemberPath> EqualityComparer = new Comparer();
+
         #endregion
 
         #region Constructors
+
         /// <summary>
         /// Creates a member path that corresponds to <paramref name="path"/> in the <paramref name="extent"/> (or the extent itself).
         /// </summary>
@@ -44,14 +49,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// </summary>
         internal MemberPath(EntitySetBase extent)
             : this(extent, Enumerable.Empty<EdmMember>())
-        { }
+        {
+        }
 
         /// <summary>
         /// Creates a path corresponding to <paramref name="extent"/>.<paramref name="member"/>
         /// </summary>
         internal MemberPath(EntitySetBase extent, EdmMember member)
-            : this(extent, Enumerable.Repeat<EdmMember>(member, 1))
-        { }
+            : this(extent, Enumerable.Repeat(member, 1))
+        {
+        }
 
         /// <summary>
         /// Creates a member path corresponding to the path <paramref name="prefix"/>.<paramref name="last"/>
@@ -62,9 +69,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_path = new List<EdmMember>(prefix.m_path);
             m_path.Add(last);
         }
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the first path item in a non-empty path, otherwise null.
         /// </summary>
@@ -129,7 +138,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                     return null;
                 }
                 Facet facet;
-                if (LeafEdmMember.TypeUsage.Facets.TryGetValue(EdmProviderManifest.DefaultValueFacetName, false, out facet))
+                if (LeafEdmMember.TypeUsage.Facets.TryGetValue(DbProviderManifest.DefaultValueFacetName, false, out facet))
                 {
                     return facet.Value;
                 }
@@ -181,10 +190,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 }
                 else if (m_path.Count == 1)
                 {
-                    AssociationEndMember endMember = this.RootEdmMember as AssociationEndMember;
+                    var endMember = RootEdmMember as AssociationEndMember;
                     if (endMember != null)
                     {
-                        EntitySet result = MetadataHelper.GetEntitySetAtEnd((AssociationSet)m_extent, endMember);
+                        var result = MetadataHelper.GetEntitySetAtEnd((AssociationSet)m_extent, endMember);
                         return result;
                     }
                 }
@@ -226,20 +235,22 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get
             {
-                string alias = PathToString(true);
+                var alias = PathToString(true);
                 if (false == alias.Contains("_"))
                 {
                     // if alias of the member does not contain any "_", we can replace "." with "_" so that we can get a simple identifier.
                     alias = alias.Replace('.', '_');
                 }
-                StringBuilder builder = new StringBuilder();
+                var builder = new StringBuilder();
                 CqlWriter.AppendEscapedName(builder, alias);
                 return builder.ToString();
             }
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Returns false iff the path is 
         /// * A descendant of some nullable property
@@ -254,12 +265,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return true;
             }
 
-            EdmMember member = m_path.Last();
+            var member = m_path.Last();
 
             //Dont check last member, thats the property we are testing
-            for (int i = 0; i < m_path.Count - 1; i++)
+            for (var i = 0; i < m_path.Count - 1; i++)
             {
-                EdmMember current = m_path[i];
+                var current = m_path[i];
                 // If member is nullable then "this" will not always be defined
                 if (MetadataHelper.IsMemberNullable(current))
                 {
@@ -275,51 +286,57 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return true;
             }
 
-            EntityType entitySetType = m_extent.ElementType as EntityType;
+            var entitySetType = m_extent.ElementType as EntityType;
             if (entitySetType == null) //association type
             {
                 return true;
             }
 
             //well, we handle the first case because we don't knwo how to get to subtype (i.e. the edge to avoid)
-            EntityType memberDeclaringType = m_path[0].DeclaringType as EntityType;
-            EntityType parentType = memberDeclaringType.BaseType as EntityType;
+            var memberDeclaringType = m_path[0].DeclaringType as EntityType;
+            var parentType = memberDeclaringType.BaseType as EntityType;
 
-
-            if (entitySetType.EdmEquals(memberDeclaringType) || MetadataHelper.IsParentOf(memberDeclaringType, entitySetType) || parentType == null)
+            if (entitySetType.EdmEquals(memberDeclaringType) || MetadataHelper.IsParentOf(memberDeclaringType, entitySetType)
+                || parentType == null)
             {
                 return true;
             }
-            else if (!parentType.Abstract && !MetadataHelper.DoesMemberExist(parentType, member))
+            else if (!parentType.Abstract
+                     && !MetadataHelper.DoesMemberExist(parentType, member))
             {
                 return false;
             }
 
-            bool result = !RecurseToFindMemberAbsentInConcreteType(parentType, memberDeclaringType, member, entitySetType, inheritanceGraph);
+            var result = !RecurseToFindMemberAbsentInConcreteType(parentType, memberDeclaringType, member, entitySetType, inheritanceGraph);
             return result;
         }
 
-        private static bool RecurseToFindMemberAbsentInConcreteType(EntityType current, EntityType avoidEdge, EdmMember member, EntityType entitySetType, Dictionary<EntityType, Set<EntityType>> inheritanceGraph)
+        private static bool RecurseToFindMemberAbsentInConcreteType(
+            EntityType current, EntityType avoidEdge, EdmMember member, EntityType entitySetType,
+            Dictionary<EntityType, Set<EntityType>> inheritanceGraph)
         {
-            Set<EntityType> edges = inheritanceGraph[current];
+            var edges = inheritanceGraph[current];
 
             //for each outgoing edge (from current) where the edge is not the one to avoid,
             // navigate depth-first
             foreach (var edge in edges.Where(type => !type.EdmEquals(avoidEdge)))
             {
                 //Dont traverse above the EntitySet's Element type
-                if (entitySetType.BaseType != null && entitySetType.BaseType.EdmEquals(edge))
+                if (entitySetType.BaseType != null
+                    && entitySetType.BaseType.EdmEquals(edge))
                 {
                     continue;
                 }
 
-                if (!edge.Abstract && !MetadataHelper.DoesMemberExist(edge, member))
+                if (!edge.Abstract
+                    && !MetadataHelper.DoesMemberExist(edge, member))
                 {
                     //found it.. I'm the concrete type that has member absent.
                     return true;
                 }
 
-                if (RecurseToFindMemberAbsentInConcreteType(edge, current /*avoid traversing down back here*/, member, entitySetType, inheritanceGraph))
+                if (RecurseToFindMemberAbsentInConcreteType(
+                    edge, current /*avoid traversing down back here*/, member, entitySetType, inheritanceGraph))
                 {
                     //one of the edges reachable from me found it
                     return true;
@@ -337,7 +354,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             // Get the extent name and extent type name
             identifiers.AddIdentifier(m_extent.Name);
             identifiers.AddIdentifier(m_extent.ElementType.Name);
-            foreach (EdmMember member in m_path)
+            foreach (var member in m_path)
             {
                 identifiers.AddIdentifier(member.Name);
             }
@@ -348,7 +365,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// </summary>
         internal static bool AreAllMembersNullable(IEnumerable<MemberPath> members)
         {
-            foreach (MemberPath path in members)
+            foreach (var path in members)
             {
                 if (path.m_path.Count == 0)
                 {
@@ -368,9 +385,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// </summary>
         internal static string PropertiesToUserString(IEnumerable<MemberPath> members, bool fullPath)
         {
-            bool isFirst = true;
-            StringBuilder builder = new StringBuilder();
-            foreach (MemberPath path in members)
+            var isFirst = true;
+            var builder = new StringBuilder();
+            foreach (var path in members)
             {
                 if (isFirst == false)
                 {
@@ -398,8 +415,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             // Due to the TREAT stuff, we cannot build incrementally.
             // So we use a local StringBuilder - it should not be that inefficient (one extra copy).
-            StringBuilder builder = new StringBuilder();
-            
+            var builder = new StringBuilder();
+
             // Add blockAlias as a starting point for blockAlias.member1.member2...
             CqlWriter.AppendEscapedName(builder, blockAlias);
 
@@ -407,51 +424,45 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             AsCql(
                 // accessMember action
                 (memberName) =>
-                {
-                    builder.Append('.');
-                    CqlWriter.AppendEscapedName(builder, memberName);
-                },
+                    {
+                        builder.Append('.');
+                        CqlWriter.AppendEscapedName(builder, memberName);
+                    },
                 // getKey action
                 () =>
-                {
-                    builder.Insert(0, "Key(");
-                    builder.Append(")");
-                },
+                    {
+                        builder.Insert(0, "Key(");
+                        builder.Append(")");
+                    },
                 // treatAs action
                 (treatAsType) =>
-                {
-                    builder.Insert(0, "TREAT(");
-                    builder.Append(" AS ");
-                    CqlWriter.AppendEscapedTypeName(builder, treatAsType);
-                    builder.Append(')');
-                });
+                    {
+                        builder.Insert(0, "TREAT(");
+                        builder.Append(" AS ");
+                        CqlWriter.AppendEscapedTypeName(builder, treatAsType);
+                        builder.Append(')');
+                    });
 
-            inputBuilder.Append(builder.ToString());
+            inputBuilder.Append(builder);
             return inputBuilder;
         }
 
         internal DbExpression AsCqt(DbExpression row)
         {
-            DbExpression cqt = row;
+            var cqt = row;
 
             // Process all items in the path.
             AsCql(
                 // accessMember action
-                (memberName) =>
-                {
-                    cqt = DbExpressionBuilder.Property(cqt, memberName);
-                },
+                (memberName) => { cqt = cqt.Property(memberName); },
                 // getKey action
-                () =>
-                {
-                    cqt = cqt.GetRefKey();
-                },
+                () => { cqt = cqt.GetRefKey(); },
                 // treatAs action
                 (treatAsType) =>
-                {
-                    var typeUsage = TypeUsage.Create(treatAsType);
-                    cqt = cqt.TreatAs(typeUsage);
-                });
+                    {
+                        var typeUsage = TypeUsage.Create(treatAsType);
+                        cqt = cqt.TreatAs(typeUsage);
+                    });
 
             return cqt;
         }
@@ -461,7 +472,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             // Keep track of the previous type so that we can determine if we need to cast or not.
             EdmType prevType = m_extent.ElementType;
 
-            foreach (EdmMember member in m_path)
+            foreach (var member in m_path)
             {
                 // If prevType is a ref (e.g., ref to CPerson), we need to get the type that it is pointing to and then look for this member in that type.
                 StructuralType prevStructuralType;
@@ -479,7 +490,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
                 // Check whether the prevType has the present member in it.
                 // If not, we will need to cast the prev type to the appropriate subtype.
-                bool found = MetadataHelper.DoesMemberExist(prevStructuralType, member);
+                var found = MetadataHelper.DoesMemberExist(prevStructuralType, member);
 
                 if (prevRefType != null)
                 {
@@ -489,7 +500,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                     // We are at CPerson right now. So if we say Key(CPerson), we will get a row with all the key elements.
                     // Then we can continue going down the path in CPerson
 
-                    Debug.Assert(found == true, "We did not find the key property in a ref's element type - it cannot be in a subtype");
+                    Debug.Assert(found, "We did not find the key property in a ref's element type - it cannot be in a subtype");
                     Debug.Assert(MetadataHelper.IsPartOfEntityTypeKey(member), "Member is expected to be a key property");
 
                     // Emit KEY(current path segment)
@@ -520,7 +531,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         public override bool Equals(object obj)
         {
-            MemberPath right = obj as MemberPath;
+            var right = obj as MemberPath;
             if (obj == null)
             {
                 return false;
@@ -538,47 +549,52 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// </summary>
         internal bool IsScalarType()
         {
-            return this.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType ||
-                   this.EdmType.BuiltInTypeKind == BuiltInTypeKind.EnumType;
+            return EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType ||
+                   EdmType.BuiltInTypeKind == BuiltInTypeKind.EnumType;
         }
 
         internal static IEnumerable<MemberPath> GetKeyMembers(EntitySetBase extent, MemberDomainMap domainMap)
         {
-            MemberPath extentPath = new MemberPath(extent);
-            List<MemberPath> keyAttributes = new List<MemberPath>(
-                extentPath.GetMembers(extentPath.Extent.ElementType, null /* isScalar */, null /* isConditional */, true /* isPartOfKey */, domainMap));
+            var extentPath = new MemberPath(extent);
+            var keyAttributes = new List<MemberPath>(
+                extentPath.GetMembers(
+                    extentPath.Extent.ElementType, null /* isScalar */, null /* isConditional */, true /* isPartOfKey */, domainMap));
             Debug.Assert(keyAttributes.Any(), "No key attributes?");
             return keyAttributes;
         }
 
-        internal IEnumerable<MemberPath> GetMembers(EdmType edmType, bool? isScalar, bool? isConditional, bool? isPartOfKey, MemberDomainMap domainMap)
+        internal IEnumerable<MemberPath> GetMembers(
+            EdmType edmType, bool? isScalar, bool? isConditional, bool? isPartOfKey, MemberDomainMap domainMap)
         {
-            MemberPath currentPath = this;
-            StructuralType structuralType = (StructuralType)edmType;
-            foreach (EdmMember edmMember in structuralType.Members)
+            var currentPath = this;
+            var structuralType = (StructuralType)edmType;
+            foreach (var edmMember in structuralType.Members)
             {
                 if (edmMember is AssociationEndMember)
                 {
                     // get end's keys
-                    foreach (MemberPath endKey in new MemberPath(currentPath, edmMember).GetMembers(
-                                                         ((RefType)edmMember.TypeUsage.EdmType).ElementType,
-                                                         isScalar, isConditional, true /*isPartOfKey*/, domainMap))
+                    foreach (var endKey in new MemberPath(currentPath, edmMember).GetMembers(
+                        ((RefType)edmMember.TypeUsage.EdmType).ElementType,
+                        isScalar, isConditional, true /*isPartOfKey*/, domainMap))
                     {
                         yield return endKey;
                     }
                 }
-                bool isActuallyScalar = MetadataHelper.IsNonRefSimpleMember(edmMember);
-                if (isScalar == null || isScalar == isActuallyScalar)
+                var isActuallyScalar = MetadataHelper.IsNonRefSimpleMember(edmMember);
+                if (isScalar == null
+                    || isScalar == isActuallyScalar)
                 {
-                    EdmProperty childProperty = edmMember as EdmProperty;
+                    var childProperty = edmMember as EdmProperty;
                     if (childProperty != null)
                     {
-                        bool isActuallyKey = MetadataHelper.IsPartOfEntityTypeKey(childProperty);
-                        if (isPartOfKey == null || isPartOfKey == isActuallyKey)
+                        var isActuallyKey = MetadataHelper.IsPartOfEntityTypeKey(childProperty);
+                        if (isPartOfKey == null
+                            || isPartOfKey == isActuallyKey)
                         {
-                            MemberPath childPath = new MemberPath(currentPath, childProperty);
-                            bool isActuallyConditional = domainMap.IsConditionMember(childPath);
-                            if (isConditional == null || isConditional == isActuallyConditional)
+                            var childPath = new MemberPath(currentPath, childProperty);
+                            var isActuallyConditional = domainMap.IsConditionMember(childPath);
+                            if (isConditional == null
+                                || isConditional == isActuallyConditional)
                             {
                                 yield return childPath;
                             }
@@ -593,7 +609,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// </summary>
         internal bool IsEquivalentViaRefConstraint(MemberPath path1)
         {
-            MemberPath path0 = this;
+            var path0 = this;
 
             // Now check if they are equivalent via referential constraint
 
@@ -608,7 +624,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             // PersonAddress.Person.pid are the same
 
             if (path0.EdmType is EntityTypeBase || path1.EdmType is EntityTypeBase ||
-                MetadataHelper.IsNonRefSimpleMember(path0.LeafEdmMember) == false ||
+                MetadataHelper.IsNonRefSimpleMember(path0.LeafEdmMember) == false
+                ||
                 MetadataHelper.IsNonRefSimpleMember(path1.LeafEdmMember) == false)
             {
                 // If the path corresponds to a top level extent only, ignore
@@ -616,13 +633,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return false;
             }
 
-            AssociationSet assocSet0 = path0.Extent as AssociationSet;
-            AssociationSet assocSet1 = path1.Extent as AssociationSet;
-            EntitySet entitySet0 = path0.Extent as EntitySet;
-            EntitySet entitySet1 = path1.Extent as EntitySet;
-            bool result = false;
+            var assocSet0 = path0.Extent as AssociationSet;
+            var assocSet1 = path1.Extent as AssociationSet;
+            var entitySet0 = path0.Extent as EntitySet;
+            var entitySet1 = path1.Extent as EntitySet;
+            var result = false;
 
-            if (assocSet0 != null && assocSet1 != null)
+            if (assocSet0 != null
+                && assocSet1 != null)
             {
                 // PersonAddress.Person.pid and PersonAddress.Address.pid case
                 // Check if they are the same association or not
@@ -632,18 +650,19 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 }
                 result = AreAssocationEndPathsEquivalentViaRefConstraint(path0, path1, assocSet0);
             }
-            else if (entitySet0 != null && entitySet1 != null)
+            else if (entitySet0 != null
+                     && entitySet1 != null)
             {
                 // Person.pid, Address.pid case
                 // Find all the associations between the two sets. If the
                 // fields are equivalent via any association + referential
                 // constraint, return true
-                List<AssociationSet> assocSets = MetadataHelper.GetAssociationsForEntitySets(entitySet0, entitySet1);
-                foreach (AssociationSet assocSet in assocSets)
+                var assocSets = MetadataHelper.GetAssociationsForEntitySets(entitySet0, entitySet1);
+                foreach (var assocSet in assocSets)
                 {
                     // For Person.pid, get PersonAddress.Person.pid or
-                    MemberPath assocEndPath0 = path0.GetCorrespondingAssociationPath(assocSet);
-                    MemberPath assocEndPath1 = path1.GetCorrespondingAssociationPath(assocSet);
+                    var assocEndPath0 = path0.GetCorrespondingAssociationPath(assocSet);
+                    var assocEndPath1 = path1.GetCorrespondingAssociationPath(assocSet);
                     if (AreAssocationEndPathsEquivalentViaRefConstraint(assocEndPath0, assocEndPath1, assocSet))
                     {
                         result = true;
@@ -654,14 +673,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             else
             {
                 // One of them is an assocSet and the other is an entity set
-                AssociationSet assocSet = assocSet0 != null ? assocSet0 : assocSet1;
-                EntitySet entitySet = entitySet0 != null ? entitySet0 : entitySet1;
-                Debug.Assert(assocSet != null && entitySet != null,
-                             "One set must be association and the other must be entity set");
+                var assocSet = assocSet0 != null ? assocSet0 : assocSet1;
+                var entitySet = entitySet0 != null ? entitySet0 : entitySet1;
+                Debug.Assert(
+                    assocSet != null && entitySet != null,
+                    "One set must be association and the other must be entity set");
 
-                MemberPath assocEndPathA = path0.Extent is AssociationSet ? path0 : path1;
-                MemberPath entityPath = path0.Extent is EntitySet ? path0 : path1;
-                MemberPath assocEndPathB = entityPath.GetCorrespondingAssociationPath(assocSet);
+                var assocEndPathA = path0.Extent is AssociationSet ? path0 : path1;
+                var entityPath = path0.Extent is EntitySet ? path0 : path1;
+                var assocEndPathB = entityPath.GetCorrespondingAssociationPath(assocSet);
                 if (assocEndPathB == null)
                 {
                     //An EntitySet might participate in multiple AssociationSets
@@ -683,44 +703,48 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// Returns true if <paramref name="assocPath0"/> and <paramref name="assocPath1"/> are equivalent via a referential constraint in <paramref name="assocSet"/>.
         /// Requires: <paramref name="assocPath0"/> and <paramref name="assocPath1"/> correspond to paths in <paramref name="assocSet"/>.
         /// </summary>
-        private static bool AreAssocationEndPathsEquivalentViaRefConstraint(MemberPath assocPath0,
-                                                                            MemberPath assocPath1,
-                                                                            AssociationSet assocSet)
+        private static bool AreAssocationEndPathsEquivalentViaRefConstraint(
+            MemberPath assocPath0,
+            MemberPath assocPath1,
+            AssociationSet assocSet)
         {
-            Debug.Assert(assocPath0.Extent.Equals(assocSet) && assocPath1.Extent.Equals(assocSet),
-                         "Extent for paths must be assocSet");
+            Debug.Assert(
+                assocPath0.Extent.Equals(assocSet) && assocPath1.Extent.Equals(assocSet),
+                "Extent for paths must be assocSet");
 
-            AssociationEndMember end0 = assocPath0.RootEdmMember as AssociationEndMember;
-            AssociationEndMember end1 = assocPath1.RootEdmMember as AssociationEndMember;
-            EdmProperty property0 = assocPath0.LeafEdmMember as EdmProperty;
-            EdmProperty property1 = assocPath1.LeafEdmMember as EdmProperty;
+            var end0 = assocPath0.RootEdmMember as AssociationEndMember;
+            var end1 = assocPath1.RootEdmMember as AssociationEndMember;
+            var property0 = assocPath0.LeafEdmMember as EdmProperty;
+            var property1 = assocPath1.LeafEdmMember as EdmProperty;
 
-            if (end0 == null || end1 == null || property0 == null || property1 == null)
+            if (end0 == null || end1 == null || property0 == null
+                || property1 == null)
             {
                 return false;
             }
 
             // Now check if these fields are connected via a referential constraint
-            AssociationType assocType = assocSet.ElementType;
-            bool foundConstraint = false;
+            var assocType = assocSet.ElementType;
+            var foundConstraint = false;
 
-            foreach (ReferentialConstraint constraint in assocType.ReferentialConstraints)
+            foreach (var constraint in assocType.ReferentialConstraints)
             {
-                bool isFrom0 = end0.Name == constraint.FromRole.Name &&
-                    end1.Name == constraint.ToRole.Name;
-                bool isFrom1 = end1.Name == constraint.FromRole.Name &&
-                    end0.Name == constraint.ToRole.Name;
+                var isFrom0 = end0.Name == constraint.FromRole.Name &&
+                              end1.Name == constraint.ToRole.Name;
+                var isFrom1 = end1.Name == constraint.FromRole.Name &&
+                              end0.Name == constraint.ToRole.Name;
 
                 if (isFrom0 || isFrom1)
                 {
                     // Found an RI for the two sets. Make sure that the properties are at the same ordinal
 
                     // isFrom0 is true when end0 corresponds to FromRole and end1 to ToRole
-                    ReadOnlyMetadataCollection<EdmProperty> properties0 = isFrom0 ? constraint.FromProperties : constraint.ToProperties;
-                    ReadOnlyMetadataCollection<EdmProperty> properties1 = isFrom0 ? constraint.ToProperties : constraint.FromProperties;
-                    int indexForPath0 = properties0.IndexOf(property0);
-                    int indexForPath1 = properties1.IndexOf(property1);
-                    if (indexForPath0 == indexForPath1 && indexForPath0 != -1)
+                    var properties0 = isFrom0 ? constraint.FromProperties : constraint.ToProperties;
+                    var properties1 = isFrom0 ? constraint.ToProperties : constraint.FromProperties;
+                    var indexForPath0 = properties0.IndexOf(property0);
+                    var indexForPath1 = properties1.IndexOf(property1);
+                    if (indexForPath0 == indexForPath1
+                        && indexForPath0 != -1)
                     {
                         foundConstraint = true;
                         break;
@@ -740,10 +764,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// </summary>
         private MemberPath GetCorrespondingAssociationPath(AssociationSet assocSet)
         {
-            Debug.Assert(this.Extent is EntitySet, "path must be in the context of an entity set");
+            Debug.Assert(Extent is EntitySet, "path must be in the context of an entity set");
 
             // Find the end corresponding to the entity set
-            AssociationEndMember end = MetadataHelper.GetSomeEndForEntitySet(assocSet, (EntitySet)m_extent);
+            var end = MetadataHelper.GetSomeEndForEntitySet(assocSet, m_extent);
             // An EntitySet might participate in multiple AssociationSets and
             // this might not be the association set that defines the expected referential constraint.
             if (end == null)
@@ -751,11 +775,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return null;
             }
             // Create the new members using the end
-            List<EdmMember> newMembers = new List<EdmMember>();
+            var newMembers = new List<EdmMember>();
             newMembers.Add(end);
             newMembers.AddRange(m_path);
             // The extent is the assocSet
-            MemberPath result = new MemberPath(assocSet, newMembers);
+            var result = new MemberPath(assocSet, newMembers);
             return result;
         }
 
@@ -769,15 +793,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return null;
             }
 
-            AssociationEndMember relationEndMember = LeafEdmMember as AssociationEndMember;
+            var relationEndMember = LeafEdmMember as AssociationEndMember;
             if (relationEndMember == null)
             {
                 return null;
             }
 
             // Yes, it's a reference, determine its entity set refScope
-            AssociationSet associationSet = (AssociationSet)m_extent;
-            EntitySet result = MetadataHelper.GetEntitySetAtEnd(associationSet, relationEndMember);
+            var associationSet = (AssociationSet)m_extent;
+            var result = MetadataHelper.GetEntitySetAtEnd(associationSet, relationEndMember);
             return result;
         }
 
@@ -787,7 +811,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// </summary>
         internal string PathToString(bool? forAlias)
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
 
             if (forAlias != null)
             {
@@ -798,7 +822,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                     // we choose CCustomer and not CPerson. 
                     if (m_path.Count == 0)
                     {
-                        EntityTypeBase type = m_extent.ElementType;
+                        var type = m_extent.ElementType;
                         return type.Name;
                     }
                     builder.Append(m_path[0].DeclaringType.Name); // Get CCustomer here
@@ -811,7 +835,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
 
             // Just join the path using "."
-            for (int i = 0; i < m_path.Count; i++)
+            for (var i = 0; i < m_path.Count; i++)
             {
                 builder.Append('.');
                 builder.Append(m_path[i].Name);
@@ -831,31 +855,35 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             builder.Append(instanceToken + PathToString(null));
         }
+
         #endregion
 
         #region Comparer
+
         private sealed class Comparer : IEqualityComparer<MemberPath>
         {
             public bool Equals(MemberPath left, MemberPath right)
             {
-                if (object.ReferenceEquals(left, right))
+                if (ReferenceEquals(left, right))
                 {
                     return true;
                 }
                 // One of them is non-null at least. So if the other one is
                 // null, we cannot be equal
-                if (left == null || right == null)
+                if (left == null
+                    || right == null)
                 {
                     return false;
                 }
                 // Both are non-null at this point
                 // Checks that the paths are equal component-wise
-                if (left.m_extent.Equals(right.m_extent) == false || left.m_path.Count != right.m_path.Count)
+                if (left.m_extent.Equals(right.m_extent) == false
+                    || left.m_path.Count != right.m_path.Count)
                 {
                     return false;
                 }
 
-                for (int i = 0; i < left.m_path.Count; i++)
+                for (var i = 0; i < left.m_path.Count; i++)
                 {
                     // Comparing MemberMetadata -- can use Equals
                     if (false == left.m_path[i].Equals(right.m_path[i]))
@@ -868,14 +896,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
             public int GetHashCode(MemberPath key)
             {
-                int result = key.m_extent.GetHashCode();
-                foreach (EdmMember member in key.m_path)
+                var result = key.m_extent.GetHashCode();
+                foreach (var member in key.m_path)
                 {
                     result ^= member.GetHashCode();
                 }
                 return result;
             }
         }
+
         #endregion
     }
 }

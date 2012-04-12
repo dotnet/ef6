@@ -1,10 +1,12 @@
 namespace System.Data.Entity.Core.Common.EntitySql
 {
-    using System;
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.EntitySql.AST;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.Text;
 
     /// <summary>
     /// Error reporting Helper
@@ -14,12 +16,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <summary>
         /// Reports function overload resolution error.
         /// </summary>
-        internal static void ReportFunctionOverloadError(AST.MethodExpr functionExpr, EdmFunction functionType, List<TypeUsage> argTypes)
+        internal static void ReportFunctionOverloadError(MethodExpr functionExpr, EdmFunction functionType, List<TypeUsage> argTypes)
         {
-            string strDelim = "";
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            var strDelim = "";
+            var sb = new StringBuilder();
             sb.Append(functionType.Name).Append("(");
-            for (int i = 0 ; i < argTypes.Count ; i++)
+            for (var i = 0; i < argTypes.Count; i++)
             {
                 sb.Append(strDelim);
                 sb.Append(argTypes[i] != null ? argTypes[i].EdmType.FullName : "NULL");
@@ -30,34 +32,38 @@ namespace System.Data.Entity.Core.Common.EntitySql
             Func<object, object, object, string> formatString;
             if (TypeSemantics.IsAggregateFunction(functionType))
             {
-                formatString = TypeHelpers.IsCanonicalFunction(functionType) ? 
-                                            (Func<object, object, object, string>)System.Data.Entity.Resources.Strings.NoCanonicalAggrFunctionOverloadMatch :
-                                            (Func<object, object, object, string>)System.Data.Entity.Resources.Strings.NoAggrFunctionOverloadMatch;
+                formatString = TypeHelpers.IsCanonicalFunction(functionType)
+                                   ? Strings.NoCanonicalAggrFunctionOverloadMatch
+                                   : (Func<object, object, object, string>)Strings.NoAggrFunctionOverloadMatch;
             }
             else
             {
-                formatString = TypeHelpers.IsCanonicalFunction(functionType) ?
-                                            (Func<object, object, object, string>)System.Data.Entity.Resources.Strings.NoCanonicalFunctionOverloadMatch :
-                                            (Func<object, object, object, string>)System.Data.Entity.Resources.Strings.NoFunctionOverloadMatch;
+                formatString = TypeHelpers.IsCanonicalFunction(functionType)
+                                   ? Strings.NoCanonicalFunctionOverloadMatch
+                                   : (Func<object, object, object, string>)Strings.NoFunctionOverloadMatch;
             }
 
-            throw EntityUtil.EntitySqlError(functionExpr.ErrCtx.CommandText,
-                                 formatString(functionType.NamespaceName, functionType.Name, sb.ToString()),
-                                 functionExpr.ErrCtx.InputPosition,
-                                 System.Data.Entity.Resources.Strings.CtxFunction(functionType.Name),
-                                 false /* loadContextInfoFromResource */);
+            throw EntityUtil.EntitySqlError(
+                functionExpr.ErrCtx.CommandText,
+                formatString(functionType.NamespaceName, functionType.Name, sb.ToString()),
+                functionExpr.ErrCtx.InputPosition,
+                Strings.CtxFunction(functionType.Name),
+                false /* loadContextInfoFromResource */);
         }
-        
+
         /// <summary>
         /// provides error feedback for aliases already used in a given context
         /// </summary>
         /// <param name="aliasName"></param>
         /// <param name="errCtx"></param>
         /// <param name="contextMessage"></param>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.EntityUtil.EntitySqlError(System.Data.Entity.Core.Common.EntitySql.ErrorContext,System.String)")]
-        internal static void ReportAliasAlreadyUsedError( string aliasName, ErrorContext errCtx, string contextMessage )
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId =
+                "System.Data.Entity.Core.EntityUtil.EntitySqlError(System.Data.Entity.Core.Common.EntitySql.ErrorContext,System.String)")]
+        internal static void ReportAliasAlreadyUsedError(string aliasName, ErrorContext errCtx, string contextMessage)
         {
-            throw EntityUtil.EntitySqlError(errCtx, String.Format(CultureInfo.InvariantCulture, "{0} {1}", System.Data.Entity.Resources.Strings.AliasNameAlreadyUsed(aliasName), contextMessage));
+            throw EntityUtil.EntitySqlError(
+                errCtx, String.Format(CultureInfo.InvariantCulture, "{0} {1}", Strings.AliasNameAlreadyUsed(aliasName), contextMessage));
         }
 
         /// <summary>
@@ -66,7 +72,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <param name="errCtx"></param>
         /// <param name="leftType"></param>
         /// <param name="rightType"></param>
-        internal static void ReportIncompatibleCommonType( ErrorContext errCtx, TypeUsage leftType, TypeUsage rightType )
+        internal static void ReportIncompatibleCommonType(ErrorContext errCtx, TypeUsage leftType, TypeUsage rightType)
         {
             //
             // 'navigate' through the type structure in order to find where the incompability is
@@ -76,7 +82,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             // if we hit this point, throw the generic incompatible type error message
             //
-            throw EntityUtil.EntitySqlError(errCtx, System.Data.Entity.Resources.Strings.ArgumentTypesAreIncompatible(leftType.Identity, rightType.Identity));
+            throw EntityUtil.EntitySqlError(errCtx, Strings.ArgumentTypesAreIncompatible(leftType.Identity, rightType.Identity));
         }
 
         /// <summary>
@@ -87,61 +93,67 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <param name="rootRightType"></param>
         /// <param name="leftType"></param>
         /// <param name="rightType"></param>
-        private static void ReportIncompatibleCommonType( ErrorContext errCtx, TypeUsage rootLeftType, TypeUsage rootRightType, TypeUsage leftType, TypeUsage rightType )
+        private static void ReportIncompatibleCommonType(
+            ErrorContext errCtx, TypeUsage rootLeftType, TypeUsage rootRightType, TypeUsage leftType, TypeUsage rightType)
         {
             TypeUsage commonType = null;
-            bool isRootType = (rootLeftType == leftType);
-            string errorMessage = String.Empty;
+            var isRootType = (rootLeftType == leftType);
+            var errorMessage = String.Empty;
 
-            if (leftType.EdmType.BuiltInTypeKind != rightType.EdmType.BuiltInTypeKind)
+            if (leftType.EdmType.BuiltInTypeKind
+                != rightType.EdmType.BuiltInTypeKind)
             {
-                throw EntityUtil.EntitySqlError(errCtx,
-                                     System.Data.Entity.Resources.Strings.TypeKindMismatch(
-                                                   GetReadableTypeKind(leftType), 
-                                                   GetReadableTypeName(leftType),
-                                                   GetReadableTypeKind(rightType), 
-                                                   GetReadableTypeName(rightType)));
+                throw EntityUtil.EntitySqlError(
+                    errCtx,
+                    Strings.TypeKindMismatch(
+                        GetReadableTypeKind(leftType),
+                        GetReadableTypeName(leftType),
+                        GetReadableTypeKind(rightType),
+                        GetReadableTypeName(rightType)));
             }
 
-            switch( leftType.EdmType.BuiltInTypeKind )
+            switch (leftType.EdmType.BuiltInTypeKind)
             {
                 case BuiltInTypeKind.RowType:
-                    RowType leftRow = (RowType)leftType.EdmType;
-                    RowType rightRow = (RowType)rightType.EdmType;
+                    var leftRow = (RowType)leftType.EdmType;
+                    var rightRow = (RowType)rightType.EdmType;
 
-                    if (leftRow.Members.Count != rightRow.Members.Count)
+                    if (leftRow.Members.Count
+                        != rightRow.Members.Count)
                     {
                         if (isRootType)
                         {
-                            errorMessage = System.Data.Entity.Resources.Strings.InvalidRootRowType(
-                                                         GetReadableTypeName(leftRow), 
-                                                         GetReadableTypeName(rightRow));
+                            errorMessage = Strings.InvalidRootRowType(
+                                GetReadableTypeName(leftRow),
+                                GetReadableTypeName(rightRow));
                         }
                         else
                         {
-                            errorMessage = System.Data.Entity.Resources.Strings.InvalidRowType(
-                                                         GetReadableTypeName(leftRow),
-                                                         GetReadableTypeName(rootLeftType), 
-                                                         GetReadableTypeName(rightRow), 
-                                                         GetReadableTypeName(rootRightType));
+                            errorMessage = Strings.InvalidRowType(
+                                GetReadableTypeName(leftRow),
+                                GetReadableTypeName(rootLeftType),
+                                GetReadableTypeName(rightRow),
+                                GetReadableTypeName(rootRightType));
                         }
-                        
+
                         throw EntityUtil.EntitySqlError(errCtx, errorMessage);
                     }
 
-                    for (int i = 0 ; i < leftRow.Members.Count ; i++)
+                    for (var i = 0; i < leftRow.Members.Count; i++)
                     {
-                        ReportIncompatibleCommonType(errCtx, rootLeftType, rootRightType, leftRow.Members[i].TypeUsage, rightRow.Members[i].TypeUsage);
+                        ReportIncompatibleCommonType(
+                            errCtx, rootLeftType, rootRightType, leftRow.Members[i].TypeUsage, rightRow.Members[i].TypeUsage);
                     }
-                break;
+                    break;
 
                 case BuiltInTypeKind.CollectionType:
                 case BuiltInTypeKind.RefType:
-                    ReportIncompatibleCommonType(errCtx, 
-                                               rootLeftType, 
-                                               rootRightType, 
-                                               TypeHelpers.GetElementTypeUsage(leftType), 
-                                               TypeHelpers.GetElementTypeUsage(rightType));
+                    ReportIncompatibleCommonType(
+                        errCtx,
+                        rootLeftType,
+                        rootRightType,
+                        TypeHelpers.GetElementTypeUsage(leftType),
+                        TypeHelpers.GetElementTypeUsage(rightType));
                     break;
 
                 case BuiltInTypeKind.EntityType:
@@ -149,51 +161,53 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     {
                         if (isRootType)
                         {
-                            errorMessage = System.Data.Entity.Resources.Strings.InvalidEntityRootTypeArgument(
-                                                         GetReadableTypeName(leftType), 
-                                                         GetReadableTypeName(rightType));
+                            errorMessage = Strings.InvalidEntityRootTypeArgument(
+                                GetReadableTypeName(leftType),
+                                GetReadableTypeName(rightType));
                         }
                         else
                         {
-                            errorMessage = System.Data.Entity.Resources.Strings.InvalidEntityTypeArgument(
-                                                         GetReadableTypeName(leftType),
-                                                         GetReadableTypeName(rootLeftType),
-                                                         GetReadableTypeName(rightType),
-                                                         GetReadableTypeName(rootRightType));
+                            errorMessage = Strings.InvalidEntityTypeArgument(
+                                GetReadableTypeName(leftType),
+                                GetReadableTypeName(rootLeftType),
+                                GetReadableTypeName(rightType),
+                                GetReadableTypeName(rootRightType));
                         }
                         throw EntityUtil.EntitySqlError(errCtx, errorMessage);
                     }
                     break;
 
                 case BuiltInTypeKind.ComplexType:
-                    ComplexType leftComplex = (ComplexType)leftType.EdmType;
-                    ComplexType rightComplex = (ComplexType)rightType.EdmType;
-                    if (leftComplex.Members.Count != rightComplex.Members.Count)
+                    var leftComplex = (ComplexType)leftType.EdmType;
+                    var rightComplex = (ComplexType)rightType.EdmType;
+                    if (leftComplex.Members.Count
+                        != rightComplex.Members.Count)
                     {
                         if (isRootType)
                         {
-                            errorMessage = System.Data.Entity.Resources.Strings.InvalidRootComplexType(
-                                                         GetReadableTypeName(leftComplex),
-                                                         GetReadableTypeName(rightComplex));
+                            errorMessage = Strings.InvalidRootComplexType(
+                                GetReadableTypeName(leftComplex),
+                                GetReadableTypeName(rightComplex));
                         }
                         else
                         {
-                            errorMessage = System.Data.Entity.Resources.Strings.InvalidComplexType(
-                                                         GetReadableTypeName(leftComplex),
-                                                         GetReadableTypeName(rootLeftType),
-                                                         GetReadableTypeName(rightComplex),
-                                                         GetReadableTypeName(rootRightType));
+                            errorMessage = Strings.InvalidComplexType(
+                                GetReadableTypeName(leftComplex),
+                                GetReadableTypeName(rootLeftType),
+                                GetReadableTypeName(rightComplex),
+                                GetReadableTypeName(rootRightType));
                         }
                         throw EntityUtil.EntitySqlError(errCtx, errorMessage);
                     }
 
-                    for (int i = 0 ; i < leftComplex.Members.Count ; i++)
+                    for (var i = 0; i < leftComplex.Members.Count; i++)
                     {
-                        ReportIncompatibleCommonType(errCtx, 
-                                                   rootLeftType, 
-                                                   rootRightType, 
-                                                   leftComplex.Members[i].TypeUsage, 
-                                                   rightComplex.Members[i].TypeUsage);
+                        ReportIncompatibleCommonType(
+                            errCtx,
+                            rootLeftType,
+                            rootRightType,
+                            leftComplex.Members[i].TypeUsage,
+                            rightComplex.Members[i].TypeUsage);
                     }
                     break;
 
@@ -202,21 +216,21 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     {
                         if (isRootType)
                         {
-                            errorMessage = System.Data.Entity.Resources.Strings.InvalidPlaceholderRootTypeArgument(
-                                                               GetReadableTypeKind(leftType),
-                                                               GetReadableTypeName(leftType),
-                                                               GetReadableTypeKind(rightType),
-                                                               GetReadableTypeName(rightType));
+                            errorMessage = Strings.InvalidPlaceholderRootTypeArgument(
+                                GetReadableTypeKind(leftType),
+                                GetReadableTypeName(leftType),
+                                GetReadableTypeKind(rightType),
+                                GetReadableTypeName(rightType));
                         }
                         else
                         {
-                            errorMessage = System.Data.Entity.Resources.Strings.InvalidPlaceholderTypeArgument(
-                                                               GetReadableTypeKind(leftType),
-                                                               GetReadableTypeName(leftType),
-                                                               GetReadableTypeName(rootLeftType),
-                                                               GetReadableTypeKind(rightType),
-                                                               GetReadableTypeName(rightType),
-                                                               GetReadableTypeName(rootRightType));
+                            errorMessage = Strings.InvalidPlaceholderTypeArgument(
+                                GetReadableTypeKind(leftType),
+                                GetReadableTypeName(leftType),
+                                GetReadableTypeName(rootLeftType),
+                                GetReadableTypeKind(rightType),
+                                GetReadableTypeName(rightType),
+                                GetReadableTypeName(rootRightType));
                         }
                         throw EntityUtil.EntitySqlError(errCtx, errorMessage);
                     }
@@ -225,15 +239,17 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         #region Private Type Name Helpers
-        private static string GetReadableTypeName( TypeUsage type )
+
+        private static string GetReadableTypeName(TypeUsage type)
         {
             return GetReadableTypeName(type.EdmType);
         }
 
-        private static string GetReadableTypeName( EdmType type )
+        private static string GetReadableTypeName(EdmType type)
         {
-            if (type.BuiltInTypeKind == BuiltInTypeKind.RowType || 
-                type.BuiltInTypeKind == BuiltInTypeKind.CollectionType ||
+            if (type.BuiltInTypeKind == BuiltInTypeKind.RowType ||
+                type.BuiltInTypeKind == BuiltInTypeKind.CollectionType
+                ||
                 type.BuiltInTypeKind == BuiltInTypeKind.RefType)
             {
                 return type.Name;
@@ -241,41 +257,41 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return type.FullName;
         }
 
-        private static string GetReadableTypeKind( TypeUsage type )
+        private static string GetReadableTypeKind(TypeUsage type)
         {
             return GetReadableTypeKind(type.EdmType);
         }
 
-        private static string GetReadableTypeKind( EdmType type )
+        private static string GetReadableTypeKind(EdmType type)
         {
-            string typeKindName = String.Empty;
-            switch( type.BuiltInTypeKind)
+            var typeKindName = String.Empty;
+            switch (type.BuiltInTypeKind)
             {
                 case BuiltInTypeKind.RowType:
-                    typeKindName = System.Data.Entity.Resources.Strings.LocalizedRow;
+                    typeKindName = Strings.LocalizedRow;
                     break;
                 case BuiltInTypeKind.CollectionType:
-                    typeKindName = System.Data.Entity.Resources.Strings.LocalizedCollection;
+                    typeKindName = Strings.LocalizedCollection;
                     break;
                 case BuiltInTypeKind.RefType:
-                    typeKindName = System.Data.Entity.Resources.Strings.LocalizedReference;
+                    typeKindName = Strings.LocalizedReference;
                     break;
                 case BuiltInTypeKind.EntityType:
-                    typeKindName = System.Data.Entity.Resources.Strings.LocalizedEntity;
+                    typeKindName = Strings.LocalizedEntity;
                     break;
                 case BuiltInTypeKind.ComplexType:
-                    typeKindName = System.Data.Entity.Resources.Strings.LocalizedComplex;
+                    typeKindName = Strings.LocalizedComplex;
                     break;
                 case BuiltInTypeKind.PrimitiveType:
-                    typeKindName = System.Data.Entity.Resources.Strings.LocalizedPrimitive;
+                    typeKindName = Strings.LocalizedPrimitive;
                     break;
                 default:
                     typeKindName = type.BuiltInTypeKind.ToString();
                     break;
             }
-            return typeKindName + " " + System.Data.Entity.Resources.Strings.LocalizedType;
+            return typeKindName + " " + Strings.LocalizedType;
         }
+
         #endregion
     }
-
 }

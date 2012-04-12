@@ -1,8 +1,5 @@
 namespace System.Data.Entity.Edm.Common
 {
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     /// </summary>
     [Serializable]

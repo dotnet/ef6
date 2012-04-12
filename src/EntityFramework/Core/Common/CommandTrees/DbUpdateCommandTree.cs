@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
+using ReadOnlyModificationClauses =
+    System.Collections.ObjectModel.ReadOnlyCollection<System.Data.Entity.Core.Common.CommandTrees.DbModificationClause>;
 
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees.Internal;
-using System.Data.Entity.Core.Common.Utils;
-using System.Diagnostics;
-
-using ReadOnlyModificationClauses = System.Collections.ObjectModel.ReadOnlyCollection<System.Data.Entity.Core.Common.CommandTrees.DbModificationClause>;  // System.Data.Common.ReadOnlyCollection conflicts
+// System.Data.Common.ReadOnlyCollection conflicts
 
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
-    using System.Diagnostics.CodeAnalysis;
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.CommandTrees.Internal;
+    using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
     /// Represents a single-row update operation expressed as a canonical command tree.
@@ -23,16 +20,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         private readonly DbExpression _returning;
         private readonly ReadOnlyModificationClauses _setClauses;
 
-        internal DbUpdateCommandTree(MetadataWorkspace metadata, DataSpace dataSpace, DbExpressionBinding target, DbExpression predicate, ReadOnlyModificationClauses setClauses, DbExpression returning)
+        internal DbUpdateCommandTree(
+            MetadataWorkspace metadata, DataSpace dataSpace, DbExpressionBinding target, DbExpression predicate,
+            ReadOnlyModificationClauses setClauses, DbExpression returning)
             : base(metadata, dataSpace, target)
         {
             EntityUtil.CheckArgumentNull(predicate, "predicate");
             EntityUtil.CheckArgumentNull(setClauses, "setClauses");
             // returning is allowed to be null
 
-            this._predicate = predicate;
-            this._setClauses = setClauses;
-            this._returning = returning;
+            _predicate = predicate;
+            _setClauses = setClauses;
+            _returning = returning;
         }
 
         /// <summary>
@@ -40,10 +39,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </summary>
         public IList<DbModificationClause> SetClauses
         {
-            get
-            {
-                return _setClauses;
-            }
+            get { return _setClauses; }
         }
 
         /// <summary>
@@ -59,10 +55,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </remarks>
         public DbExpression Returning
         {
-            get
-            {
-                return _returning;
-            }
+            get { return _returning; }
         }
 
         /// <summary>
@@ -83,10 +76,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </remarks>
         public DbExpression Predicate
         {
-            get
-            {   
-                return _predicate;
-            }
+            get { return _predicate; }
         }
 
         internal override DbCommandTreeKind CommandTreeKind
@@ -103,13 +93,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             base.DumpStructure(dumper);
 
-            if (this.Predicate != null)
+            if (Predicate != null)
             {
-                dumper.Dump(this.Predicate, "Predicate");
+                dumper.Dump(Predicate, "Predicate");
             }
 
             dumper.Begin("SetClauses", null);
-            foreach (DbModificationClause clause in this.SetClauses)
+            foreach (var clause in SetClauses)
             {
                 if (null != clause)
                 {
@@ -118,7 +108,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             dumper.End("SetClauses");
 
-            dumper.Dump(this.Returning, "Returning");
+            dumper.Dump(Returning, "Returning");
         }
 
         internal override string PrintTree(ExpressionPrinter printer)

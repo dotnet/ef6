@@ -1,10 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace System.Data.Entity.Core.Objects
+﻿namespace System.Data.Entity.Core.Objects
 {
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
 
     /// <summary>
     /// Defines behavior for implementations of IQueryable that allow modifications to the membership of the resulting set.

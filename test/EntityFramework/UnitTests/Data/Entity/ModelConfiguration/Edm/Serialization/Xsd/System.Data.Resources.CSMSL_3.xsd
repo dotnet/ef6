@@ -10,7 +10,6 @@
   <xs:annotation>
     <xs:documentation xml:lang="en">
       Common Data Model Schema Definition Language.
-      Copyright (c) Microsoft Corp. All rights reserved.
     </xs:documentation>
   </xs:annotation>
 

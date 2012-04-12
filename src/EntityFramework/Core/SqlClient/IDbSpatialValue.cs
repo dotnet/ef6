@@ -1,8 +1,8 @@
-using System.Data.Entity.Core.Spatial;
-using System.Data.Entity.Core.Metadata.Edm;
-
 namespace System.Data.Entity.Core.SqlClient.Internal
 {
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Spatial;
+
     /// <summary>
     /// Adapter interface to make working with instances of <see cref="DbGeometry"/> or <see cref="DbGeography"/> easier.  
     /// Implementing types wrap instances of DbGeography/DbGeometry and allow them to be consumed in a common way. 
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.SqlClient.Internal
         string WellKnownText { get; }
         byte[] WellKnownBinary { get; }
         string GmlString { get; }
-        
+
         Exception NotSqlCompatible();
     }
 
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core.SqlClient.Internal
 
         internal DbGeographyAdapter(DbGeography geomValue)
         {
-            this.value = geomValue;
+            value = geomValue;
         }
 
         private TResult NullIfNotImplemented<TResult>(Func<DbGeography, TResult> accessor)
@@ -71,7 +71,7 @@ namespace System.Data.Entity.Core.SqlClient.Internal
         {
             try
             {
-                return accessor(this.value);
+                return accessor(value);
             }
             catch (NotImplementedException)
             {
@@ -83,7 +83,7 @@ namespace System.Data.Entity.Core.SqlClient.Internal
         {
             try
             {
-                return accessor(this.value);
+                return accessor(value);
             }
             catch (NotImplementedException)
             {
@@ -91,9 +91,15 @@ namespace System.Data.Entity.Core.SqlClient.Internal
             }
         }
 
-        public bool IsGeography { get { return true; } }
+        public bool IsGeography
+        {
+            get { return true; }
+        }
 
-        public PrimitiveTypeKind PrimitiveType { get { return PrimitiveTypeKind.Geography; } }
+        public PrimitiveTypeKind PrimitiveType
+        {
+            get { return PrimitiveTypeKind.Geography; }
+        }
 
         public object ProviderValue
         {
@@ -110,7 +116,8 @@ namespace System.Data.Entity.Core.SqlClient.Internal
             get
             {
                 return NullIfNotImplemented(geog => geog.AsTextIncludingElevationAndMeasure())
-                    ?? NullIfNotImplemented(geog => geog.AsText()); // better than nothing if the provider doesn't support AsTextIncludingElevationAndMeasure
+                       ?? NullIfNotImplemented(geog => geog.AsText());
+                    // better than nothing if the provider doesn't support AsTextIncludingElevationAndMeasure
             }
         }
 
@@ -124,7 +131,10 @@ namespace System.Data.Entity.Core.SqlClient.Internal
             get { return NullIfNotImplemented(geog => geog.AsGml()); }
         }
 
-        public Exception NotSqlCompatible() { return EntityUtil.GeographyValueNotSqlCompatible(); }
+        public Exception NotSqlCompatible()
+        {
+            return EntityUtil.GeographyValueNotSqlCompatible();
+        }
     }
 
     internal struct DbGeometryAdapter : IDbSpatialValue
@@ -133,7 +143,7 @@ namespace System.Data.Entity.Core.SqlClient.Internal
 
         internal DbGeometryAdapter(DbGeometry geomValue)
         {
-            this.value = geomValue;
+            value = geomValue;
         }
 
         private TResult NullIfNotImplemented<TResult>(Func<DbGeometry, TResult> accessor)
@@ -141,7 +151,7 @@ namespace System.Data.Entity.Core.SqlClient.Internal
         {
             try
             {
-                return accessor(this.value);
+                return accessor(value);
             }
             catch (NotImplementedException)
             {
@@ -153,7 +163,7 @@ namespace System.Data.Entity.Core.SqlClient.Internal
         {
             try
             {
-                return accessor(this.value);
+                return accessor(value);
             }
             catch (NotImplementedException)
             {
@@ -161,9 +171,15 @@ namespace System.Data.Entity.Core.SqlClient.Internal
             }
         }
 
-        public bool IsGeography { get { return false; } }
+        public bool IsGeography
+        {
+            get { return false; }
+        }
 
-        public PrimitiveTypeKind PrimitiveType { get { return PrimitiveTypeKind.Geometry; } }
+        public PrimitiveTypeKind PrimitiveType
+        {
+            get { return PrimitiveTypeKind.Geometry; }
+        }
 
         public object ProviderValue
         {
@@ -177,10 +193,11 @@ namespace System.Data.Entity.Core.SqlClient.Internal
 
         public string WellKnownText
         {
-            get 
+            get
             {
                 return NullIfNotImplemented(geom => geom.AsTextIncludingElevationAndMeasure())
-                    ?? NullIfNotImplemented(geom => geom.AsText()); // better than nothing if the provider doesn't support AsTextIncludingElevationAndMeasure
+                       ?? NullIfNotImplemented(geom => geom.AsText());
+                    // better than nothing if the provider doesn't support AsTextIncludingElevationAndMeasure
             }
         }
 
@@ -194,6 +211,9 @@ namespace System.Data.Entity.Core.SqlClient.Internal
             get { return NullIfNotImplemented(geom => geom.AsGml()); }
         }
 
-        public Exception NotSqlCompatible() { return EntityUtil.GeometryValueNotSqlCompatible(); }
+        public Exception NotSqlCompatible()
+        {
+            return EntityUtil.GeometryValueNotSqlCompatible();
+        }
     }
 }

@@ -1,30 +1,26 @@
 namespace System.Data.Entity.Core.Common.QueryCache
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Data.Entity.Core.Common;
-    using System.Data.Common;
-    using System.Diagnostics;
-
     /// <summary> 
     /// Represents the abstract base class for all cache entry values in the query cache 
     /// </summary> 
     internal class QueryCacheEntry
     {
         #region Fields
+
         /// <summary>
         /// querycachekey for this entry
         /// </summary>
-        readonly private QueryCacheKey _queryCacheKey;
+        private readonly QueryCacheKey _queryCacheKey;
 
         /// <summary> 
         /// strong reference to the target object 
         /// </summary> 
-        readonly protected object _target;
+        protected readonly object _target;
+
         #endregion
 
         #region Constructors
+
         /// <summary> 
         /// cache entry constructor 
         /// </summary> 
@@ -35,9 +31,11 @@ namespace System.Data.Entity.Core.Common.QueryCache
             _queryCacheKey = queryCacheKey;
             _target = target;
         }
+
         #endregion
 
         #region Methods and Properties
+
         /// <summary> 
         /// The payload of this cache entry.
         /// </summary> 
@@ -53,6 +51,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         {
             get { return _queryCacheKey; }
         }
+
         #endregion
     }
 }

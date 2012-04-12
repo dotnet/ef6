@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Globalization;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-
 namespace System.Data.Entity.Core.Objects.Internal
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+    using System.Globalization;
+
     /// <summary>
     /// Responsible for performing Relationship-span only rewrites over a Command Tree rooted
     /// by the <see cref="Query"/> property. Virtual methods provide an opportunity for derived
@@ -20,35 +17,38 @@ namespace System.Data.Entity.Core.Objects.Internal
     {
         internal static bool EntityTypeEquals(EntityTypeBase entityType1, EntityTypeBase entityType2)
         {
-            return object.ReferenceEquals(entityType1, entityType2);
+            return ReferenceEquals(entityType1, entityType2);
         }
 
         #region Private members
 
         private int _spanCount;
         private SpanIndex _spanIndex;
-        private DbExpression _toRewrite;
+        private readonly DbExpression _toRewrite;
         private bool _relationshipSpan;
-        private DbCommandTree _tree;
-        private Stack<NavigationInfo> _navSources = new Stack<NavigationInfo>();
+        private readonly DbCommandTree _tree;
+        private readonly Stack<NavigationInfo> _navSources = new Stack<NavigationInfo>();
         private readonly AliasGenerator _aliasGenerator;
-        
+
         #endregion
 
         #region 'Public' API
 
-        internal static bool TryRewrite(DbQueryCommandTree tree, Span span, MergeOption mergeOption, AliasGenerator aliasGenerator, out DbExpression newQuery, out SpanIndex spanInfo)
+        internal static bool TryRewrite(
+            DbQueryCommandTree tree, Span span, MergeOption mergeOption, AliasGenerator aliasGenerator, out DbExpression newQuery,
+            out SpanIndex spanInfo)
         {
             newQuery = null;
             spanInfo = null;
 
             ObjectSpanRewriter rewriter = null;
-            bool requiresRelationshipSpan = Span.RequiresRelationshipSpan(mergeOption);
+            var requiresRelationshipSpan = Span.RequiresRelationshipSpan(mergeOption);
 
             // Potentially perform a rewrite for span.
             // Note that the public 'Span' property is NOT used to retrieve the Span instance
             // since this forces creation of a Span object that may not be required.
-            if (span != null && span.SpanList.Count > 0)
+            if (span != null
+                && span.SpanList.Count > 0)
             {
                 rewriter = new ObjectFullSpanRewriter(tree, tree.Query, span, aliasGenerator);
             }
@@ -63,7 +63,9 @@ namespace System.Data.Entity.Core.Objects.Internal
                 newQuery = rewriter.RewriteQuery();
                 if (newQuery != null)
                 {
-                    Debug.Assert(rewriter.SpanIndex != null || tree.Query.ResultType.EdmEquals(newQuery.ResultType), "Query was rewritten for Span but no SpanIndex was created?");
+                    Debug.Assert(
+                        rewriter.SpanIndex != null || tree.Query.ResultType.EdmEquals(newQuery.ResultType),
+                        "Query was rewritten for Span but no SpanIndex was created?");
                     spanInfo = rewriter.SpanIndex;
                 }
             }
@@ -88,25 +90,38 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <summary>
         /// Gets the metadata workspace the will be used to retrieve required metadata, for example association types.
         /// </summary>
-        internal MetadataWorkspace Metadata { get { return _tree.MetadataWorkspace; } }
-                
+        internal MetadataWorkspace Metadata
+        {
+            get { return _tree.MetadataWorkspace; }
+        }
+
         /// <summary>
         /// Gets a DbExpression representing the query that should be spanned.
         /// </summary>
-        internal DbExpression Query { get { return _toRewrite; } }
-        
+        internal DbExpression Query
+        {
+            get { return _toRewrite; }
+        }
+
         /// <summary>
         /// Gets a value indicating whether relationship span is required (ObjectQuery sets this to 'false' for NoTracking queries).
         /// </summary>
-        internal bool RelationshipSpan { get { return _relationshipSpan; } set { _relationshipSpan = value; } }
-        
+        internal bool RelationshipSpan
+        {
+            get { return _relationshipSpan; }
+            set { _relationshipSpan = value; }
+        }
+
         /// <summary>
         /// Gets a dictionary that indicates, for a given result row type produced by a span rewrite, 
         /// which columns represent which association end members.
         /// This dictionary is initially empty before <see cref="RewriteQuery"/> is called and will remain so
         /// if no rewrites are required.
         /// </summary>
-        internal SpanIndex SpanIndex { get { return _spanIndex; } }
+        internal SpanIndex SpanIndex
+        {
+            get { return _spanIndex; }
+        }
 
         /// <summary>
         /// Main 'public' entry point called by ObjectQuery.
@@ -114,8 +129,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <returns>The rewritten version of <see cref="Query"/> if spanning was required; otherwise <c>null</c>.</returns>
         internal DbExpression RewriteQuery()
         {
-            DbExpression retExpr = Rewrite(_toRewrite);
-            if (object.ReferenceEquals(_toRewrite, retExpr))
+            var retExpr = Rewrite(_toRewrite);
+            if (ReferenceEquals(_toRewrite, retExpr))
             {
                 return null;
             }
@@ -128,7 +143,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         #endregion
 
         #region 'Protected' API
-        
+
         internal struct SpanTrackingInfo
         {
             public List<KeyValuePair<string, DbExpression>> ColumnDefinitions;
@@ -139,7 +154,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         internal SpanTrackingInfo InitializeTrackingInfo(bool createAssociationEndTrackingInfo)
         {
-            SpanTrackingInfo info = new SpanTrackingInfo();
+            var info = new SpanTrackingInfo();
             info.ColumnDefinitions = new List<KeyValuePair<string, DbExpression>>();
             info.ColumnNames = new AliasGenerator(string.Format(CultureInfo.InvariantCulture, "Span{0}_Column", _spanCount));
             info.SpannedColumns = new Dictionary<int, AssociationEndMember>();
@@ -151,14 +166,17 @@ namespace System.Data.Entity.Core.Objects.Internal
             return info;
         }
 
-        internal virtual SpanTrackingInfo CreateEntitySpanTrackingInfo(DbExpression expression, EntityType entityType) { return new SpanTrackingInfo(); }
-        
+        internal virtual SpanTrackingInfo CreateEntitySpanTrackingInfo(DbExpression expression, EntityType entityType)
+        {
+            return new SpanTrackingInfo();
+        }
+
         protected DbExpression Rewrite(DbExpression expression)
         {
             //SQLBUDT #554182: This is special casing for expressions below which it is safe to push the span
             // info without having to rebind.  By pushing the span info down (i.e. possible extra projections),
             // we potentially end up with simpler generated command. 
-            switch(expression.ExpressionKind)
+            switch (expression.ExpressionKind)
             {
                 case DbExpressionKind.Element:
                     return RewriteElementExpression((DbElementExpression)expression);
@@ -166,7 +184,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                     return RewriteLimitExpression((DbLimitExpression)expression);
             }
 
-            switch(expression.ResultType.EdmType.BuiltInTypeKind)
+            switch (expression.ResultType.EdmType.BuiltInTypeKind)
             {
                 case BuiltInTypeKind.EntityType:
                     return RewriteEntity(expression, (EntityType)expression.ResultType.EdmType);
@@ -211,17 +229,18 @@ namespace System.Data.Entity.Core.Objects.Internal
             // of Entity/Ref navigation property) since a Ref produced from the constructed Entity
             // will not indicate an Entity set, and therefore no Ref created against any Entity set
             // in the container can possibly be a match for it.
-            if (DbExpressionKind.NewInstance == expression.ExpressionKind)
+            if (DbExpressionKind.NewInstance
+                == expression.ExpressionKind)
             {
                 return expression;
             }
 
             // Save the span count for later use.
             _spanCount++;
-            int thisSpan = _spanCount;
+            var thisSpan = _spanCount;
 
-            SpanTrackingInfo tracking = CreateEntitySpanTrackingInfo(expression, entityType);
- 
+            var tracking = CreateEntitySpanTrackingInfo(expression, entityType);
+
             // If relationship span is required then attempt to span any appropriate relationship ends.
             List<KeyValuePair<AssociationEndMember, AssociationEndMember>> relationshipSpans = null;
             relationshipSpans = GetRelationshipSpanEnds(entityType);
@@ -234,39 +253,40 @@ namespace System.Data.Entity.Core.Objects.Internal
                 {
                     tracking = InitializeTrackingInfo(false);
                 }
-                                
+
                 // Track column index to span information, starting at the current column count (which could be zero) plus 1.
                 // 1 is added because the column containing the root entity will be added later to provide column zero.
-                int idx = tracking.ColumnDefinitions.Count + 1;
+                var idx = tracking.ColumnDefinitions.Count + 1;
                 // For all applicable relationship spans that were identified...
-                foreach (KeyValuePair<AssociationEndMember, AssociationEndMember> relSpan in relationshipSpans)
+                foreach (var relSpan in relationshipSpans)
                 {
                     // If the specified association end member was already full-spanned then the full entity
                     // will be returned in the query and there is no need to relationship-span this end to produce
                     // another result column that contains the Entity key of the full entity.
                     // Hence the relationship span is only added if there are no full-span columns or the full-span
                     // columns do not indicate that they include the target association end member of this relationship span.
-                    if( null == tracking.FullSpannedEnds ||
+                    if (null == tracking.FullSpannedEnds
+                        ||
                         !tracking.FullSpannedEnds.ContainsKey(relSpan.Value))
                     {
                         // If the source Ref is already available, because the currently spanned Entity is
                         // the result of a Relationship Navigation operation from that Ref, then use the source
                         // Ref directly rather than introducing a new Navigation operation.
                         DbExpression columnDef = null;
-                        if(!TryGetNavigationSource(relSpan.Value, out columnDef))
+                        if (!TryGetNavigationSource(relSpan.Value, out columnDef))
                         {
                             // Add a new column defined by the navigation required to reach the targeted association end
                             // and update the column -> association end map to include an entry for this new column.
                             DbExpression navSource = expression.GetEntityRef();
                             columnDef = navSource.NavigateAllowingAllRelationshipsInSameTypeHierarchy(relSpan.Key, relSpan.Value);
                         }
-                        
+
                         tracking.ColumnDefinitions.Add(
                             new KeyValuePair<string, DbExpression>(
                                 tracking.ColumnNames.Next(),
                                 columnDef
-                            )
-                        );
+                                )
+                            );
 
                         tracking.SpannedColumns[idx] = relSpan.Value;
 
@@ -289,24 +309,24 @@ namespace System.Data.Entity.Core.Objects.Internal
                 new KeyValuePair<string, DbExpression>(
                     string.Format(CultureInfo.InvariantCulture, "Span{0}_SpanRoot", thisSpan),
                     expression
-                )
-            );
+                    )
+                );
 
             // Create the span row-producing NewInstanceExpression from which the span RowType can be retrieved.
             DbExpression spannedExpression = DbExpressionBuilder.NewRow(tracking.ColumnDefinitions);
-            
+
             // Update the rowtype -> spaninfo map for the newly created row type instance.
-            RowType spanRowType = (RowType)spannedExpression.ResultType.EdmType;
+            var spanRowType = (RowType)spannedExpression.ResultType.EdmType;
             AddSpanMap(spanRowType, tracking.SpannedColumns);
-                       
+
             // Return the rewritten expression
             return spannedExpression;
         }
 
         private DbExpression RewriteElementExpression(DbElementExpression expression)
         {
-            DbExpression rewrittenInput = Rewrite(expression.Argument);
-            if (!object.ReferenceEquals(expression.Argument, rewrittenInput))
+            var rewrittenInput = Rewrite(expression.Argument);
+            if (!ReferenceEquals(expression.Argument, rewrittenInput))
             {
                 expression = rewrittenInput.Element();
             }
@@ -315,8 +335,8 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         private DbExpression RewriteLimitExpression(DbLimitExpression expression)
         {
-            DbExpression rewrittenInput = Rewrite(expression.Argument);
-            if (!object.ReferenceEquals(expression.Argument, rewrittenInput))
+            var rewrittenInput = Rewrite(expression.Argument);
+            if (!ReferenceEquals(expression.Argument, rewrittenInput))
             {
                 // Note that here we use the original expression.Limit. It is safe to do so, 
                 //  because we only allow physical paging (i.e. Limit can only be a constant or parameter)
@@ -327,7 +347,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         private DbExpression RewriteRow(DbExpression expression, RowType rowType)
         {
-            DbLambdaExpression lambdaExpression = expression as DbLambdaExpression;
+            var lambdaExpression = expression as DbLambdaExpression;
             DbNewInstanceExpression newRow;
 
             if (lambdaExpression != null)
@@ -346,14 +366,14 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             Dictionary<int, DbExpression> unmodifiedColumns = null;
             Dictionary<int, DbExpression> spannedColumns = null;
-            for(int idx = 0; idx < rowType.Properties.Count; idx++)
+            for (var idx = 0; idx < rowType.Properties.Count; idx++)
             {
                 // Retrieve the property that represents the current column
-                EdmProperty columnProp = rowType.Properties[idx];
+                var columnProp = rowType.Properties[idx];
 
                 // Construct an expression that defines the current column.
                 DbExpression columnExpr = null;
-                if(newRow != null)
+                if (newRow != null)
                 {
                     // For a row-constructing NewInstance expression, the corresponding argument can simply be used
                     columnExpr = newRow.Arguments[idx];
@@ -365,8 +385,8 @@ namespace System.Data.Entity.Core.Objects.Internal
                     columnExpr = expression.Property(columnProp.Name);
                 }
 
-                DbExpression spannedColumn = this.Rewrite(columnExpr);
-                if (!object.ReferenceEquals(spannedColumn, columnExpr))
+                var spannedColumn = Rewrite(columnExpr);
+                if (!ReferenceEquals(spannedColumn, columnExpr))
                 {
                     // If so, then update the dictionary of column index to span information
                     if (null == spannedColumns)
@@ -379,7 +399,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 else
                 {
                     // Otherwise, update the dictionary of column index to unmodified expression
-                    if(null == unmodifiedColumns)
+                    if (null == unmodifiedColumns)
                     {
                         unmodifiedColumns = new Dictionary<int, DbExpression>();
                     }
@@ -387,9 +407,9 @@ namespace System.Data.Entity.Core.Objects.Internal
                     unmodifiedColumns[idx] = columnExpr;
                 }
             }
-            
+
             // A new expression need only be built if at least one column was spanned
-            if(null == spannedColumns)
+            if (null == spannedColumns)
             {
                 // No columns were spanned, indicate that the original expression should remain.
                 return expression;
@@ -397,11 +417,11 @@ namespace System.Data.Entity.Core.Objects.Internal
             else
             {
                 // At least one column was spanned, so build a new row constructor that defines the new row, including spanned columns.
-                List<DbExpression> columnArguments = new List<DbExpression>(rowType.Properties.Count);
-                List<EdmProperty> properties = new List<EdmProperty>(rowType.Properties.Count);
-                for (int idx = 0; idx < rowType.Properties.Count; idx++)
+                var columnArguments = new List<DbExpression>(rowType.Properties.Count);
+                var properties = new List<EdmProperty>(rowType.Properties.Count);
+                for (var idx = 0; idx < rowType.Properties.Count; idx++)
                 {
-                    EdmProperty columnProp = rowType.Properties[idx];
+                    var columnProp = rowType.Properties[idx];
                     DbExpression columnDef = null;
                     if (!spannedColumns.TryGetValue(idx, out columnDef))
                     {
@@ -415,10 +435,10 @@ namespace System.Data.Entity.Core.Objects.Internal
                 // Note that this initializer metadata does not strictly match the new row type
                 // that includes spanned columns, but will be correct once the object materializer
                 // has interpreted the query results to produce the correct value for each colum.
-                RowType rewrittenRow = new RowType(properties, rowType.InitializerMetadata);
-                TypeUsage rewrittenRowTypeUsage = TypeUsage.Create(rewrittenRow);
+                var rewrittenRow = new RowType(properties, rowType.InitializerMetadata);
+                var rewrittenRowTypeUsage = TypeUsage.Create(rewrittenRow);
                 DbExpression rewritten = rewrittenRowTypeUsage.New(columnArguments);
-                
+
                 // SQLBUDT #554182: If we insert a new projection we should should make sure to 
                 // not interfere with the nullability of the input. 
                 // In particular, if the input row is null and we construct a new row as a projection over its columns
@@ -427,17 +447,18 @@ namespace System.Data.Entity.Core.Objects.Internal
                 if (newRow == null)
                 {
                     DbExpression condition = DbExpressionBuilder.CreateIsNullExpressionAllowingRowTypeArgument(expression);
-                    DbExpression nullExpression = DbExpressionBuilder.Null(rewrittenRowTypeUsage);
+                    DbExpression nullExpression = rewrittenRowTypeUsage.Null();
                     rewritten = DbExpressionBuilder.Case(
-                        new List<DbExpression>(new DbExpression[] { condition }),
-                        new List<DbExpression>(new DbExpression[] { nullExpression }),
+                        new List<DbExpression>(new[] { condition }),
+                        new List<DbExpression>(new[] { nullExpression }),
                         rewritten);
                 }
-                
+
                 // Add an entry to the spanned row type => original row type map for the new row type.
                 AddSpannedRowType(rewrittenRow, expression.ResultType);
-                
-                if (lambdaExpression != null && newRow != null)
+
+                if (lambdaExpression != null
+                    && newRow != null)
                 {
                     rewritten = DbLambda.Create(rewritten, lambdaExpression.Lambda.Variables).Invoke(lambdaExpression.Arguments);
                 }
@@ -445,14 +466,15 @@ namespace System.Data.Entity.Core.Objects.Internal
                 return rewritten;
             }
         }
-        
+
         private DbExpression RewriteCollection(DbExpression expression)
         {
-            DbExpression target = expression;
+            var target = expression;
 
             // If the collection expression is a project expression, get a strongly typed reference to it for later use.
             DbProjectExpression project = null;
-            if (DbExpressionKind.Project == expression.ExpressionKind)
+            if (DbExpressionKind.Project
+                == expression.ExpressionKind)
             {
                 project = (DbProjectExpression)expression;
                 target = project.Input.Expression;
@@ -462,7 +484,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             // a RelationshipNavigation operation, it may be possible to optimize the relationship span rewrite
             // for the Entities produced by the navigation. 
             NavigationInfo navInfo = null;
-            if (this.RelationshipSpan)
+            if (RelationshipSpan)
             {
                 // Attempt to find a RelationshipNavigationExpression in the collection-defining expression
                 target = RelationshipNavigationVisitor.FindNavigationExpression(target, _aliasGenerator, out navInfo);
@@ -472,22 +494,22 @@ namespace System.Data.Entity.Core.Objects.Internal
             // and the source association end available for possible use when the projection over the collection is rewritten.
             if (navInfo != null)
             {
-                this.EnterNavigationCollection(navInfo);
+                EnterNavigationCollection(navInfo);
             }
             else
             {
                 // Otherwise, add a null navigation info instance to the stack to indicate that relationship navigation
                 // cannot be optimized for the entities produced by this collection expression (if it is a collection of entities).
-                this.EnterCollection();
+                EnterCollection();
             }
-            
+
             // If the expression is already a DbProjectExpression then simply visit the projection,
             // instead of introducing another projection over the existing one.
-            DbExpression result = expression;
+            var result = expression;
             if (project != null)
             {
-                DbExpression newProjection = this.Rewrite(project.Projection);
-                if (!object.ReferenceEquals(project.Projection, newProjection))
+                var newProjection = Rewrite(project.Projection);
+                if (!ReferenceEquals(project.Projection, newProjection))
                 {
                     result = target.BindAs(project.Input.VariableName).Project(newProjection);
                 }
@@ -496,43 +518,44 @@ namespace System.Data.Entity.Core.Objects.Internal
             {
                 // This is not a recognized special case, so simply add the span projection over the original
                 // collection-producing expression, if it is required.
-                DbExpressionBinding collectionBinding = target.BindAs(_aliasGenerator.Next());
+                var collectionBinding = target.BindAs(_aliasGenerator.Next());
                 DbExpression projection = collectionBinding.Variable;
 
-                DbExpression spannedProjection = this.Rewrite(projection);
+                var spannedProjection = Rewrite(projection);
 
-                if (!object.ReferenceEquals(projection, spannedProjection))
+                if (!ReferenceEquals(projection, spannedProjection))
                 {
                     result = collectionBinding.Project(spannedProjection);
                 }
             }
 
             // Remove any navigation information from scope, if it was added
-            this.ExitCollection();
+            ExitCollection();
 
             // If a navigation expression defines this collection and its navigation information was used to
             // short-circuit relationship span rewrites, then enclose the entire rewritten expression in a
             // Lambda binding that brings the source Ref of the navigation operation into scope. This ref is
             // refered to by VariableReferenceExpressions in the original navigation expression as well as any
             // short-circuited relationship span columns in the rewritten expression.
-            if (navInfo != null && navInfo.InUse)
+            if (navInfo != null
+                && navInfo.InUse)
             {
                 // Create a Lambda function that binds the original navigation source expression under the variable name
                 // used in the navigation expression and the relationship span columns, and which has its Lambda body
                 // defined by the rewritten collection expression.
-                List<DbVariableReferenceExpression> formals = new List<DbVariableReferenceExpression>(1);
+                var formals = new List<DbVariableReferenceExpression>(1);
                 formals.Add(navInfo.SourceVariable);
 
-                List<DbExpression> args = new List<DbExpression>(1);
+                var args = new List<DbExpression>(1);
                 args.Add(navInfo.Source);
 
-                result = DbExpressionBuilder.Invoke(DbExpressionBuilder.Lambda(result, formals), args);
+                result = DbExpressionBuilder.Lambda(result, formals).Invoke(args);
             }
 
             // Return the (possibly rewritten) collection expression.
             return result;
         }
-        
+
         private void EnterCollection()
         {
             _navSources.Push(null);
@@ -556,7 +579,8 @@ namespace System.Data.Entity.Core.Objects.Internal
             if (_navSources.Count > 0)
             {
                 info = _navSources.Peek();
-                if (info != null && !object.ReferenceEquals(wasSourceNowTargetEnd, info.SourceEnd))
+                if (info != null
+                    && !ReferenceEquals(wasSourceNowTargetEnd, info.SourceEnd))
                 {
                     info = null;
                 }
@@ -573,7 +597,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 return false;
             }
         }
-                      
+
         /// <summary>
         /// Gathers the applicable { from, to } relationship end pairings for the specified entity type.
         /// Note that it is possible for both { x, y } and { y, x } - where x and y are relationship ends - 
@@ -594,13 +618,13 @@ namespace System.Data.Entity.Core.Objects.Internal
             if (_relationshipSpan)
             {
                 // Consider all Association types...
-                foreach (AssociationType association in _tree.MetadataWorkspace.GetItems<AssociationType>(DataSpace.CSpace))
+                foreach (var association in _tree.MetadataWorkspace.GetItems<AssociationType>(DataSpace.CSpace))
                 {
                     // ... which have exactly two ends
                     if (2 == association.AssociationEndMembers.Count)
                     {
-                        AssociationEndMember end0 = association.AssociationEndMembers[0];
-                        AssociationEndMember end1 = association.AssociationEndMembers[1];
+                        var end0 = association.AssociationEndMembers[0];
+                        var end1 = association.AssociationEndMembers[1];
 
                         // If end0 -> end1 is valid for relationship span then add { end0, end1 }
                         // to the list of end pairings.
@@ -647,7 +671,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///     <c>True</c> if the end pairing represents a valid navigation from an instance of the specified entity type
         ///     to an association end with a multiplicity upper bound of at most 1; otherwise <c>false</c>
         /// </returns>
-        private static bool IsValidRelationshipSpan(EntityType compareType, AssociationType associationType, AssociationEndMember fromEnd, AssociationEndMember toEnd)
+        private static bool IsValidRelationshipSpan(
+            EntityType compareType, AssociationType associationType, AssociationEndMember fromEnd, AssociationEndMember toEnd)
         {
             // Only a relationship end with a multiplicity of AT MOST one may be
             // considered as the 'to' end, so that the cardinality of the result
@@ -685,12 +710,13 @@ namespace System.Data.Entity.Core.Objects.Internal
             //      Navigation for a subtype relationship will return null if the Entity instance navigation source
             //      is not actually of the required subtype).
             //
-            if(!associationType.IsForeignKey &&
-               (RelationshipMultiplicity.One == toEnd.RelationshipMultiplicity ||
-                RelationshipMultiplicity.ZeroOrOne == toEnd.RelationshipMultiplicity))
+            if (!associationType.IsForeignKey
+                &&
+                (RelationshipMultiplicity.One == toEnd.RelationshipMultiplicity ||
+                 RelationshipMultiplicity.ZeroOrOne == toEnd.RelationshipMultiplicity))
             {
-                EntityType fromEntityType = (EntityType)((RefType)fromEnd.TypeUsage.EdmType).ElementType;
-                return (ObjectSpanRewriter.EntityTypeEquals(compareType, fromEntityType) ||
+                var fromEntityType = (EntityType)((RefType)fromEnd.TypeUsage.EdmType).ElementType;
+                return (EntityTypeEquals(compareType, fromEntityType) ||
                         TypeSemantics.IsSubTypeOf(compareType, fromEntityType) ||
                         TypeSemantics.IsSubTypeOf(fromEntityType, compareType));
             }
@@ -702,46 +728,61 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         private class NavigationInfo
         {
-            private DbVariableReferenceExpression _sourceRef;
-            private AssociationEndMember _sourceEnd;
-            private DbExpression _source;            
+            private readonly DbVariableReferenceExpression _sourceRef;
+            private readonly AssociationEndMember _sourceEnd;
+            private readonly DbExpression _source;
 
-            public NavigationInfo(DbRelationshipNavigationExpression originalNavigation, DbRelationshipNavigationExpression rewrittenNavigation)
+            public NavigationInfo(
+                DbRelationshipNavigationExpression originalNavigation, DbRelationshipNavigationExpression rewrittenNavigation)
             {
                 Debug.Assert(originalNavigation != null, "originalNavigation cannot be null");
                 Debug.Assert(rewrittenNavigation != null, "rewrittenNavigation cannot be null");
 
-                this._sourceEnd = (AssociationEndMember)originalNavigation.NavigateFrom;
-                this._sourceRef = (DbVariableReferenceExpression)rewrittenNavigation.NavigationSource;
-                this._source = originalNavigation.NavigationSource;
+                _sourceEnd = (AssociationEndMember)originalNavigation.NavigateFrom;
+                _sourceRef = (DbVariableReferenceExpression)rewrittenNavigation.NavigationSource;
+                _source = originalNavigation.NavigationSource;
             }
 
             public bool InUse;
 
-            public AssociationEndMember SourceEnd { get { return _sourceEnd; } }
-            public DbExpression Source { get { return _source; } }
-            public DbVariableReferenceExpression SourceVariable { get { return _sourceRef; } }
+            public AssociationEndMember SourceEnd
+            {
+                get { return _sourceEnd; }
+            }
+
+            public DbExpression Source
+            {
+                get { return _source; }
+            }
+
+            public DbVariableReferenceExpression SourceVariable
+            {
+                get { return _sourceRef; }
+            }
         }
 
         private class RelationshipNavigationVisitor : DefaultExpressionVisitor
         {
-            internal static DbExpression FindNavigationExpression(DbExpression expression, AliasGenerator aliasGenerator, out NavigationInfo navInfo)
+            internal static DbExpression FindNavigationExpression(
+                DbExpression expression, AliasGenerator aliasGenerator, out NavigationInfo navInfo)
             {
                 Debug.Assert(TypeSemantics.IsCollectionType(expression.ResultType), "Non-collection input to projection?");
 
                 navInfo = null;
 
-                TypeUsage elementType = ((CollectionType)expression.ResultType.EdmType).TypeUsage;
-                if (!TypeSemantics.IsEntityType(elementType) && !TypeSemantics.IsReferenceType(elementType))
+                var elementType = ((CollectionType)expression.ResultType.EdmType).TypeUsage;
+                if (!TypeSemantics.IsEntityType(elementType)
+                    && !TypeSemantics.IsReferenceType(elementType))
                 {
                     return expression;
                 }
 
-                RelationshipNavigationVisitor visitor = new RelationshipNavigationVisitor(aliasGenerator);
-                DbExpression rewrittenExpression = visitor.Find(expression);
-                if (!object.ReferenceEquals(expression, rewrittenExpression))
+                var visitor = new RelationshipNavigationVisitor(aliasGenerator);
+                var rewrittenExpression = visitor.Find(expression);
+                if (!ReferenceEquals(expression, rewrittenExpression))
                 {
-                    Debug.Assert(visitor._original != null && visitor._rewritten != null, "Expression was rewritten but no navigation was found?");
+                    Debug.Assert(
+                        visitor._original != null && visitor._rewritten != null, "Expression was rewritten but no navigation was found?");
                     navInfo = new NavigationInfo(visitor._original, visitor._rewritten);
                     return rewrittenExpression;
                 }
@@ -762,7 +803,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             private DbExpression Find(DbExpression expression)
             {
-                return this.VisitExpression(expression);
+                return VisitExpression(expression);
             }
 
             protected override DbExpression VisitExpression(DbExpression expression)
@@ -786,24 +827,24 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             public override DbExpression Visit(DbRelationshipNavigationExpression expression)
             {
-                this._original = expression;
+                _original = expression;
 
                 // Ensure a unique variable name when the expression is used in a command tree
-                string varName = _aliasGenerator.Next();
-                DbVariableReferenceExpression sourceRef = new DbVariableReferenceExpression(expression.NavigationSource.ResultType, varName);
+                var varName = _aliasGenerator.Next();
+                var sourceRef = new DbVariableReferenceExpression(expression.NavigationSource.ResultType, varName);
 
-                this._rewritten = sourceRef.Navigate(expression.NavigateFrom, expression.NavigateTo);
+                _rewritten = sourceRef.Navigate(expression.NavigateFrom, expression.NavigateTo);
 
-                return this._rewritten;
+                return _rewritten;
             }
 
             // For Distinct, Limit, OfType there is no need to override the base visitor behavior.
-            
+
             public override DbExpression Visit(DbFilterExpression expression)
             {
                 // Only consider the Filter input
-                DbExpression found = Find(expression.Input.Expression);
-                if(!object.ReferenceEquals(found, expression.Input.Expression))
+                var found = Find(expression.Input.Expression);
+                if (!ReferenceEquals(found, expression.Input.Expression))
                 {
                     return found.BindAs(expression.Input.VariableName).Filter(expression.Predicate);
                 }
@@ -812,25 +853,27 @@ namespace System.Data.Entity.Core.Objects.Internal
                     return expression;
                 }
             }
-            
+
             public override DbExpression Visit(DbProjectExpression expression)
             {
                 // Only allowed cases:
                 // SELECT Deref(x) FROM <expression> AS x
                 // SELECT x FROM <expression> as x
-                DbExpression testExpr = expression.Projection;
-                if (DbExpressionKind.Deref == testExpr.ExpressionKind)
+                var testExpr = expression.Projection;
+                if (DbExpressionKind.Deref
+                    == testExpr.ExpressionKind)
                 {
                     testExpr = ((DbDerefExpression)testExpr).Argument;
                 }
 
-                if (DbExpressionKind.VariableReference == testExpr.ExpressionKind)
+                if (DbExpressionKind.VariableReference
+                    == testExpr.ExpressionKind)
                 {
-                    DbVariableReferenceExpression varRef = (DbVariableReferenceExpression)testExpr;
+                    var varRef = (DbVariableReferenceExpression)testExpr;
                     if (varRef.VariableName.Equals(expression.Input.VariableName, StringComparison.Ordinal))
                     {
-                        DbExpression found = Find(expression.Input.Expression);
-                        if (!object.ReferenceEquals(found, expression.Input.Expression))
+                        var found = Find(expression.Input.Expression);
+                        if (!ReferenceEquals(found, expression.Input.Expression))
                         {
                             return found.BindAs(expression.Input.VariableName).Project(expression.Projection);
                         }
@@ -842,8 +885,8 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             public override DbExpression Visit(DbSortExpression expression)
             {
-                DbExpression found = Find(expression.Input.Expression);
-                if(!object.ReferenceEquals(found, expression.Input.Expression))
+                var found = Find(expression.Input.Expression);
+                if (!ReferenceEquals(found, expression.Input.Expression))
                 {
                     return found.BindAs(expression.Input.VariableName).Sort(expression.SortOrder);
                 }
@@ -855,8 +898,8 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             public override DbExpression Visit(DbSkipExpression expression)
             {
-                DbExpression found = Find(expression.Input.Expression);
-                if (!object.ReferenceEquals(found, expression.Input.Expression))
+                var found = Find(expression.Input.Expression);
+                if (!ReferenceEquals(found, expression.Input.Expression))
                 {
                     return found.BindAs(expression.Input.VariableName).Skip(expression.SortOrder, expression.Count);
                 }
@@ -866,6 +909,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 }
             }
         }
+
         #endregion
     }
 }

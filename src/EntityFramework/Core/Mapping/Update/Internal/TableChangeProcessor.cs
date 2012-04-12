@@ -2,9 +2,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
-    using System.Data.Common;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
@@ -25,6 +23,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     internal class TableChangeProcessor
     {
         #region Constructors
+
         /// <summary>
         /// Constructs processor based on the contents of a change node.
         /// </summary>
@@ -38,14 +37,18 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             // cache information about table key
             m_keyOrdinals = InitializeKeyOrdinals(table);
         }
+
         #endregion
 
         #region Fields
+
         private readonly EntitySet m_table;
         private readonly int[] m_keyOrdinals;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets metadata for the table being modified.
         /// </summary>
@@ -58,17 +61,25 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// Gets a map from column ordinal to property descriptions for columns that are components of the table's
         /// primary key.
         /// </summary>
-        internal int[] KeyOrdinals { get { return m_keyOrdinals; } }
+        internal int[] KeyOrdinals
+        {
+            get { return m_keyOrdinals; }
+        }
+
         #endregion
 
         #region Methods
+
         // Determines whether the given ordinal position in the property list
         // for this table is a key value.
         internal bool IsKeyProperty(int propertyOrdinal)
         {
-            foreach (int keyOrdinal in m_keyOrdinals)
+            foreach (var keyOrdinal in m_keyOrdinals)
             {
-                if (propertyOrdinal == keyOrdinal) { return true; }
+                if (propertyOrdinal == keyOrdinal)
+                {
+                    return true;
+                }
             }
             return false;
         }
@@ -76,17 +87,18 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // Determines which column ordinals in the table are part of the key.
         private static int[] InitializeKeyOrdinals(EntitySet table)
         {
-            EntityType tableType = table.ElementType;
+            var tableType = table.ElementType;
             IList<EdmMember> keyMembers = tableType.KeyMembers;
-            IBaseList<EdmMember> members = TypeHelpers.GetAllStructuralMembers(tableType);
-            int[] keyOrdinals = new int[keyMembers.Count];
+            var members = TypeHelpers.GetAllStructuralMembers(tableType);
+            var keyOrdinals = new int[keyMembers.Count];
 
-            for (int keyMemberIndex = 0; keyMemberIndex < keyMembers.Count; keyMemberIndex++)
+            for (var keyMemberIndex = 0; keyMemberIndex < keyMembers.Count; keyMemberIndex++)
             {
-                EdmMember keyMember = keyMembers[keyMemberIndex];
+                var keyMember = keyMembers[keyMemberIndex];
                 keyOrdinals[keyMemberIndex] = members.IndexOf(keyMember);
 
-                Debug.Assert(keyOrdinals[keyMemberIndex] >= 0 && keyOrdinals[keyMemberIndex] < members.Count,
+                Debug.Assert(
+                    keyOrdinals[keyMemberIndex] >= 0 && keyOrdinals[keyMemberIndex] < members.Count,
                     "an EntityType key member must also be a member of the entity type");
             }
 
@@ -97,26 +109,27 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // and deletes with the same key are merged into updates.
         internal List<UpdateCommand> CompileCommands(ChangeNode changeNode, UpdateCompiler compiler)
         {
-            Set<CompositeKey> keys = new Set<CompositeKey>(compiler.m_translator.KeyComparer);
+            var keys = new Set<CompositeKey>(compiler.m_translator.KeyComparer);
 
             // Retrieve all delete results (original values) and insert results (current values) while
             // populating a set of all row keys. The set contains a single key per row.
-            Dictionary<CompositeKey, PropagatorResult> deleteResults = ProcessKeys(compiler, changeNode.Deleted, keys);
-            Dictionary<CompositeKey, PropagatorResult> insertResults = ProcessKeys(compiler, changeNode.Inserted, keys);
+            var deleteResults = ProcessKeys(compiler, changeNode.Deleted, keys);
+            var insertResults = ProcessKeys(compiler, changeNode.Inserted, keys);
 
-            List<UpdateCommand> commands = new List<UpdateCommand>(deleteResults.Count + insertResults.Count);
+            var commands = new List<UpdateCommand>(deleteResults.Count + insertResults.Count);
 
             // Examine each row key to see if the row is being deleted, inserted or updated
-            foreach (CompositeKey key in keys)
+            foreach (var key in keys)
             {
                 PropagatorResult deleteResult;
                 PropagatorResult insertResult;
 
-                bool hasDelete = deleteResults.TryGetValue(key, out deleteResult);
-                bool hasInsert = insertResults.TryGetValue(key, out insertResult);
+                var hasDelete = deleteResults.TryGetValue(key, out deleteResult);
+                var hasInsert = insertResults.TryGetValue(key, out insertResult);
 
-                Debug.Assert(hasDelete || hasInsert, "(update/TableChangeProcessor) m_keys must not contain a value " +
-                    "if there is no corresponding insert or delete");
+                Debug.Assert(
+                    hasDelete || hasInsert, "(update/TableChangeProcessor) m_keys must not contain a value " +
+                                            "if there is no corresponding insert or delete");
 
                 try
                 {
@@ -133,7 +146,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     else
                     {
                         // this is an update because it has both a delete result and an insert result
-                        UpdateCommand updateCommand = compiler.BuildUpdateCommand(deleteResult, insertResult, this);
+                        var updateCommand = compiler.BuildUpdateCommand(deleteResult, insertResult, this);
                         if (null != updateCommand)
                         {
                             // if null is returned, it means it is a no-op update
@@ -146,19 +159,22 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     if (UpdateTranslator.RequiresContext(e))
                     {
                         // collect state entries in scope for the current compilation
-                        List<IEntityStateEntry> stateEntries = new List<IEntityStateEntry>();
+                        var stateEntries = new List<IEntityStateEntry>();
                         if (null != deleteResult)
                         {
-                            stateEntries.AddRange(SourceInterpreter.GetAllStateEntries(
-                                deleteResult, compiler.m_translator, m_table));
+                            stateEntries.AddRange(
+                                SourceInterpreter.GetAllStateEntries(
+                                    deleteResult, compiler.m_translator, m_table));
                         }
                         if (null != insertResult)
                         {
-                            stateEntries.AddRange(SourceInterpreter.GetAllStateEntries(
-                                insertResult, compiler.m_translator, m_table));
+                            stateEntries.AddRange(
+                                SourceInterpreter.GetAllStateEntries(
+                                    insertResult, compiler.m_translator, m_table));
                         }
 
-                        throw EntityUtil.Update(System.Data.Entity.Resources.Strings.Update_GeneralExecutionException,
+                        throw EntityUtil.Update(
+                            Strings.Update_GeneralExecutionException,
                             e, stateEntries);
                     }
                     throw;
@@ -170,17 +186,18 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         // Determines key values for a list of changes. Side effect: populates <see cref="keys" /> which
         // includes an entry for every key involved in a change.
-        private Dictionary<CompositeKey, PropagatorResult> ProcessKeys(UpdateCompiler compiler, List<PropagatorResult> changes, Set<CompositeKey> keys)
+        private Dictionary<CompositeKey, PropagatorResult> ProcessKeys(
+            UpdateCompiler compiler, List<PropagatorResult> changes, Set<CompositeKey> keys)
         {
-            Dictionary<CompositeKey, PropagatorResult> map = new Dictionary<CompositeKey, PropagatorResult>(
+            var map = new Dictionary<CompositeKey, PropagatorResult>(
                 compiler.m_translator.KeyComparer);
 
-            foreach (PropagatorResult change in changes)
+            foreach (var change in changes)
             {
                 // Reassign change to row since we cannot modify iteration variable
-                PropagatorResult row = change;
+                var row = change;
 
-                CompositeKey key = new CompositeKey(GetKeyConstants(row));
+                var key = new CompositeKey(GetKeyConstants(row));
 
                 // Make sure we aren't inserting another row with the same key
                 PropagatorResult other;
@@ -196,18 +213,19 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             return map;
         }
 
-        [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCode", Justification = "Based on Bug VSTS Pioneer #433188: IsVisibleOutsideAssembly is wrong on generic instantiations.")]
+        [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCode",
+            Justification = "Based on Bug VSTS Pioneer #433188: IsVisibleOutsideAssembly is wrong on generic instantiations.")]
         private void DiagnoseKeyCollision(UpdateCompiler compiler, PropagatorResult change, CompositeKey key, PropagatorResult other)
         {
-            KeyManager keyManager = compiler.m_translator.KeyManager;
-            CompositeKey otherKey = new CompositeKey(GetKeyConstants(other));
+            var keyManager = compiler.m_translator.KeyManager;
+            var otherKey = new CompositeKey(GetKeyConstants(other));
 
             // determine if the conflict is due to shared principal key values
-            bool sharedPrincipal = true;
-            for (int i = 0; sharedPrincipal && i < key.KeyComponents.Length; i++)
+            var sharedPrincipal = true;
+            for (var i = 0; sharedPrincipal && i < key.KeyComponents.Length; i++)
             {
-                int identifier1 = key.KeyComponents[i].Identifier;
-                int identifier2 = otherKey.KeyComponents[i].Identifier;
+                var identifier1 = key.KeyComponents[i].Identifier;
+                var identifier2 = otherKey.KeyComponents[i].Identifier;
 
                 if (!keyManager.GetPrincipals(identifier1).Intersect(keyManager.GetPrincipals(identifier2)).Any())
                 {
@@ -226,13 +244,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 // if there are no shared principals, it implies that common dependents are the problem
                 HashSet<IEntityStateEntry> commonDependents = null;
-                foreach (PropagatorResult keyValue in key.KeyComponents.Concat(otherKey.KeyComponents))
+                foreach (var keyValue in key.KeyComponents.Concat(otherKey.KeyComponents))
                 {
                     var dependents = new HashSet<IEntityStateEntry>();
-                    foreach (int dependentId in keyManager.GetDependents(keyValue.Identifier))
+                    foreach (var dependentId in keyManager.GetDependents(keyValue.Identifier))
                     {
                         PropagatorResult dependentResult;
-                        if (keyManager.TryGetIdentifierOwner(dependentId, out dependentResult) &&
+                        if (keyManager.TryGetIdentifierOwner(dependentId, out dependentResult)
+                            &&
                             null != dependentResult.StateEntry)
                         {
                             dependents.Add(dependentResult.StateEntry);
@@ -251,7 +270,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 // to ensure the exception shape is consistent with constraint violations discovered while processing
                 // commands (a more conventional scenario in which different tables are contributing principal values)
                 // wrap a DataConstraintException in an UpdateException
-                throw EntityUtil.Update(Strings.Update_GeneralExecutionException,
+                throw EntityUtil.Update(
+                    Strings.Update_GeneralExecutionException,
                     EntityUtil.Constraint(Strings.Update_ReferentialConstraintIntegrityViolation), commonDependents);
             }
         }
@@ -259,15 +279,16 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // Extracts key constants from the given row.
         private PropagatorResult[] GetKeyConstants(PropagatorResult row)
         {
-            PropagatorResult[] keyConstants = new PropagatorResult[m_keyOrdinals.Length];
-            for (int i = 0; i < m_keyOrdinals.Length; i++)
+            var keyConstants = new PropagatorResult[m_keyOrdinals.Length];
+            for (var i = 0; i < m_keyOrdinals.Length; i++)
             {
-                PropagatorResult constant = row.GetMemberValue(m_keyOrdinals[i]);
+                var constant = row.GetMemberValue(m_keyOrdinals[i]);
 
                 keyConstants[i] = constant;
             }
             return keyConstants;
         }
+
         #endregion
     }
 }

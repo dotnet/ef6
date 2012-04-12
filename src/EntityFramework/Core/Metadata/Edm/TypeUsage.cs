@@ -1,12 +1,11 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
-    using System.Data.Common;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Text;
+    using System.Threading;
 
     /// <summary>
     /// Class representing a type information for an item
@@ -22,7 +21,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="edmType">The type which the TypeUsage object describes</param>
         /// <exception cref="System.ArgumentNullException">Thrown if edmType argument is null</exception>
         private TypeUsage(EdmType edmType)
-        :base(MetadataFlags.Readonly)
+            : base(MetadataFlags.Readonly)
         {
             EntityUtil.GenericCheckArgumentNull(edmType, "edmType");
 
@@ -42,13 +41,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private TypeUsage(EdmType edmType, IEnumerable<Facet> facets)
             : this(edmType)
         {
-            MetadataCollection<Facet> facetCollection = new MetadataCollection<Facet>(facets);
+            var facetCollection = new MetadataCollection<Facet>(facets);
             facetCollection.SetReadOnly();
             _facets = facetCollection.AsReadOnlyMetadataCollection();
         }
+
         #endregion
 
         #region Factory Methods
+
         /// <summary>
         /// Factory method for creating a TypeUsage with specified EdmType
         /// </summary>
@@ -66,7 +67,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>new TypeUsage instance with default facet values</returns>
         internal static TypeUsage Create(EdmType edmType, FacetValues values)
         {
-            return new TypeUsage(edmType,
+            return new TypeUsage(
+                edmType,
                 GetDefaultFacetDescriptionsAndOverrideFacetValues(edmType, values));
         }
 
@@ -83,7 +85,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal TypeUsage ShallowCopy(FacetValues facetValues)
         {
-            return TypeUsage.Create(_edmType, OverrideFacetValues(Facets, facetValues));
+            return Create(_edmType, OverrideFacetValues(Facets, facetValues));
         }
 
         /// <summary>
@@ -93,9 +95,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A TypeUsage instance with default facet values for the specified EdmType</returns>
         public static TypeUsage CreateDefaultTypeUsage(EdmType edmType)
         {
-            EntityUtil.CheckArgumentNull<EdmType>(edmType, "edmType");
-            
-            TypeUsage type = TypeUsage.Create(edmType);
+            EntityUtil.CheckArgumentNull(edmType, "edmType");
+
+            var type = Create(edmType);
             return type;
         }
 
@@ -107,22 +109,30 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="isFixedLength">Whether the string type is fixed length or not</param>
         /// <param name="maxLength">The max length of the string type</param>
         /// <returns>A TypeUsage object describing a string type with the given facet values</returns>
-        public static TypeUsage CreateStringTypeUsage(PrimitiveType primitiveType,
-                                                      bool isUnicode,
-                                                      bool isFixedLength,
-                                                      int maxLength)
+        public static TypeUsage CreateStringTypeUsage(
+            PrimitiveType primitiveType,
+            bool isUnicode,
+            bool isFixedLength,
+            int maxLength)
         {
-            EntityUtil.CheckArgumentNull<PrimitiveType>(primitiveType, "primitiveType");
+            EntityUtil.CheckArgumentNull(primitiveType, "primitiveType");
 
-            if (primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.String)
+            if (primitiveType.PrimitiveTypeKind
+                != PrimitiveTypeKind.String)
             {
                 throw EntityUtil.NotStringTypeForTypeUsage();
             }
 
             ValidateMaxLength(maxLength);
 
-            TypeUsage typeUsage = TypeUsage.Create(primitiveType,
-                new FacetValues{ MaxLength = maxLength, Unicode = isUnicode, FixedLength = isFixedLength});
+            var typeUsage = Create(
+                primitiveType,
+                new FacetValues
+                    {
+                        MaxLength = maxLength,
+                        Unicode = isUnicode,
+                        FixedLength = isFixedLength
+                    });
 
             return typeUsage;
         }
@@ -136,23 +146,29 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="isFixedLength">Whether the string type is fixed length or not</param>
         /// <returns>A TypeUsage object describing a string type with the given facet values
         /// and unbounded MaxLength</returns>
-        public static TypeUsage CreateStringTypeUsage(PrimitiveType primitiveType,
-                                                      bool isUnicode,
-                                                      bool isFixedLength)
+        public static TypeUsage CreateStringTypeUsage(
+            PrimitiveType primitiveType,
+            bool isUnicode,
+            bool isFixedLength)
         {
-            EntityUtil.CheckArgumentNull<PrimitiveType>(primitiveType, "primitiveType");
+            EntityUtil.CheckArgumentNull(primitiveType, "primitiveType");
 
-            if (primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.String)
+            if (primitiveType.PrimitiveTypeKind
+                != PrimitiveTypeKind.String)
             {
                 throw EntityUtil.NotStringTypeForTypeUsage();
             }
-            TypeUsage typeUsage = TypeUsage.Create(primitiveType,
-                new FacetValues{ MaxLength = TypeUsage.DefaultMaxLengthFacetValue,
-                                  Unicode = isUnicode, FixedLength = isFixedLength});
+            var typeUsage = Create(
+                primitiveType,
+                new FacetValues
+                    {
+                        MaxLength = DefaultMaxLengthFacetValue,
+                        Unicode = isUnicode,
+                        FixedLength = isFixedLength
+                    });
 
             return typeUsage;
         }
-
 
         /// <summary>
         /// Factory method for creating a Binary TypeUsage object with the specified facets
@@ -161,21 +177,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="isFixedLength">Whether the binary type is fixed length or not</param>
         /// <param name="maxLength">The max length of the binary type</param>
         /// <returns>A TypeUsage object describing a binary type with the given facet values</returns>
-        public static TypeUsage CreateBinaryTypeUsage(PrimitiveType primitiveType,
-                                                      bool isFixedLength,
-                                                      int maxLength)
+        public static TypeUsage CreateBinaryTypeUsage(
+            PrimitiveType primitiveType,
+            bool isFixedLength,
+            int maxLength)
         {
-            EntityUtil.CheckArgumentNull<PrimitiveType>(primitiveType, "primitiveType");
+            EntityUtil.CheckArgumentNull(primitiveType, "primitiveType");
 
-            if (primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.Binary)
+            if (primitiveType.PrimitiveTypeKind
+                != PrimitiveTypeKind.Binary)
             {
                 throw EntityUtil.NotBinaryTypeForTypeUsage();
             }
 
             ValidateMaxLength(maxLength);
 
-            TypeUsage typeUsage = TypeUsage.Create(primitiveType,
-                new FacetValues{MaxLength = maxLength, FixedLength = isFixedLength});
+            var typeUsage = Create(
+                primitiveType,
+                new FacetValues
+                    {
+                        MaxLength = maxLength,
+                        FixedLength = isFixedLength
+                    });
 
             return typeUsage;
         }
@@ -189,15 +212,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A TypeUsage object describing a binary type with the given facet values</returns>
         public static TypeUsage CreateBinaryTypeUsage(PrimitiveType primitiveType, bool isFixedLength)
         {
-            EntityUtil.CheckArgumentNull<PrimitiveType>(primitiveType, "primitiveType");
+            EntityUtil.CheckArgumentNull(primitiveType, "primitiveType");
 
-            if (primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.Binary)
+            if (primitiveType.PrimitiveTypeKind
+                != PrimitiveTypeKind.Binary)
             {
                 throw EntityUtil.NotBinaryTypeForTypeUsage();
             }
-            TypeUsage typeUsage = TypeUsage.Create(primitiveType,
-                new FacetValues{MaxLength = TypeUsage.DefaultMaxLengthFacetValue,
-                                 FixedLength = isFixedLength});
+            var typeUsage = Create(
+                primitiveType,
+                new FacetValues
+                    {
+                        MaxLength = DefaultMaxLengthFacetValue,
+                        FixedLength = isFixedLength
+                    });
 
             return typeUsage;
         }
@@ -208,17 +236,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="primitiveType">A PrimitiveType for which to construct the TypeUsage</param>
         /// <param name="precision">Precision for seconds</param>
         /// <returns>A TypeUsage object describing a DateTime type with the given facet values</returns>
-        public static TypeUsage CreateDateTimeTypeUsage(PrimitiveType primitiveType,
-                                                        byte? precision)
+        public static TypeUsage CreateDateTimeTypeUsage(
+            PrimitiveType primitiveType,
+            byte? precision)
         {
-            EntityUtil.CheckArgumentNull<PrimitiveType>(primitiveType, "primitiveType");
+            EntityUtil.CheckArgumentNull(primitiveType, "primitiveType");
 
-            if (primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.DateTime)
+            if (primitiveType.PrimitiveTypeKind
+                != PrimitiveTypeKind.DateTime)
             {
                 throw EntityUtil.NotDateTimeTypeForTypeUsage();
             }
-            TypeUsage typeUsage = TypeUsage.Create(primitiveType,
-                new FacetValues{Precision = precision});
+            var typeUsage = Create(
+                primitiveType,
+                new FacetValues
+                    {
+                        Precision = precision
+                    });
 
             return typeUsage;
         }
@@ -229,18 +263,24 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="primitiveType">A PrimitiveType for which to construct the TypeUsage</param>
         /// <param name="precision">Precision for seconds</param>
         /// <returns>A TypeUsage object describing a DateTime type with the given facet values</returns>
-        public static TypeUsage CreateDateTimeOffsetTypeUsage(PrimitiveType primitiveType,
-                                                        byte? precision)
+        public static TypeUsage CreateDateTimeOffsetTypeUsage(
+            PrimitiveType primitiveType,
+            byte? precision)
         {
-            EntityUtil.CheckArgumentNull<PrimitiveType>(primitiveType, "primitiveType");
+            EntityUtil.CheckArgumentNull(primitiveType, "primitiveType");
 
-            if (primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.DateTimeOffset)
+            if (primitiveType.PrimitiveTypeKind
+                != PrimitiveTypeKind.DateTimeOffset)
             {
                 throw EntityUtil.NotDateTimeOffsetTypeForTypeUsage();
             }
 
-            TypeUsage typeUsage = TypeUsage.Create(primitiveType,
-                new FacetValues{ Precision = precision });
+            var typeUsage = Create(
+                primitiveType,
+                new FacetValues
+                    {
+                        Precision = precision
+                    });
 
             return typeUsage;
         }
@@ -251,22 +291,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="primitiveType">A PrimitiveType for which to construct the TypeUsage</param>
         /// <param name="precision">Precision for seconds</param>
         /// <returns>A TypeUsage object describing a Time type with the given facet values</returns>
-        public static TypeUsage CreateTimeTypeUsage(PrimitiveType primitiveType,
-                                                        byte? precision)
+        public static TypeUsage CreateTimeTypeUsage(
+            PrimitiveType primitiveType,
+            byte? precision)
         {
-            EntityUtil.CheckArgumentNull<PrimitiveType>(primitiveType, "primitiveType");
+            EntityUtil.CheckArgumentNull(primitiveType, "primitiveType");
 
-            if (primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.Time)
+            if (primitiveType.PrimitiveTypeKind
+                != PrimitiveTypeKind.Time)
             {
                 throw EntityUtil.NotTimeTypeForTypeUsage();
             }
-            TypeUsage typeUsage = TypeUsage.Create(primitiveType,
-                new FacetValues{ Precision = precision });
+            var typeUsage = Create(
+                primitiveType,
+                new FacetValues
+                    {
+                        Precision = precision
+                    });
 
             return typeUsage;
         }
-
-
 
         /// <summary>
         /// Factory method for creating a Decimal TypeUsage object with the specified facets
@@ -275,19 +319,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="precision">The precision of the decimal type</param>
         /// <param name="scale">The scale of the decimal type</param>
         /// <returns>A TypeUsage object describing a decimal type with the given facet values</returns>
-        public static TypeUsage CreateDecimalTypeUsage(PrimitiveType primitiveType,
-                                                       byte precision,
-                                                       byte scale)
+        public static TypeUsage CreateDecimalTypeUsage(
+            PrimitiveType primitiveType,
+            byte precision,
+            byte scale)
         {
-            EntityUtil.CheckArgumentNull<PrimitiveType>(primitiveType, "primitiveType");
+            EntityUtil.CheckArgumentNull(primitiveType, "primitiveType");
 
-            if (primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.Decimal)
+            if (primitiveType.PrimitiveTypeKind
+                != PrimitiveTypeKind.Decimal)
             {
                 throw EntityUtil.NotDecimalTypeForTypeUsage();
             }
 
-            TypeUsage typeUsage = TypeUsage.Create(primitiveType,
-                new FacetValues{Precision = precision, Scale = scale });
+            var typeUsage = Create(
+                primitiveType,
+                new FacetValues
+                    {
+                        Precision = precision,
+                        Scale = scale
+                    });
 
             return typeUsage;
         }
@@ -299,20 +350,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A TypeUsage object describing a decimal type with unbounded precision and scale</returns>
         public static TypeUsage CreateDecimalTypeUsage(PrimitiveType primitiveType)
         {
-            EntityUtil.CheckArgumentNull<PrimitiveType>(primitiveType, "primitiveType");
+            EntityUtil.CheckArgumentNull(primitiveType, "primitiveType");
 
-            if (primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.Decimal)
+            if (primitiveType.PrimitiveTypeKind
+                != PrimitiveTypeKind.Decimal)
             {
                 throw EntityUtil.NotDecimalTypeForTypeUsage();
             }
-            TypeUsage typeUsage = TypeUsage.Create(primitiveType,
-                new FacetValues{ Precision = TypeUsage.DefaultPrecisionFacetValue, Scale = TypeUsage.DefaultScaleFacetValue });
+            var typeUsage = Create(
+                primitiveType,
+                new FacetValues
+                    {
+                        Precision = DefaultPrecisionFacetValue,
+                        Scale = DefaultScaleFacetValue
+                    });
 
             return typeUsage;
         }
+
         #endregion
 
         #region Fields
+
         private TypeUsage _modelTypeUsage;
         private readonly EdmType _edmType;
         private ReadOnlyMetadataCollection<Facet> _facets;
@@ -322,31 +381,36 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Set of facets that should be included in identity for TypeUsage
         /// </summary>
         /// <remarks>keep this sorted for binary searching</remarks>
-        private static readonly string[] s_identityFacets = new string[] { 
-            DbProviderManifest.DefaultValueFacetName,
-            DbProviderManifest.FixedLengthFacetName,
-            DbProviderManifest.MaxLengthFacetName,
-            DbProviderManifest.NullableFacetName,
-            DbProviderManifest.PrecisionFacetName,
-            DbProviderManifest.ScaleFacetName,
-            DbProviderManifest.UnicodeFacetName,
-            DbProviderManifest.SridFacetName,
-        };
+        private static readonly string[] s_identityFacets = new[]
+                                                                {
+                                                                    DbProviderManifest.DefaultValueFacetName,
+                                                                    DbProviderManifest.FixedLengthFacetName,
+                                                                    DbProviderManifest.MaxLengthFacetName,
+                                                                    DbProviderManifest.NullableFacetName,
+                                                                    DbProviderManifest.PrecisionFacetName,
+                                                                    DbProviderManifest.ScaleFacetName,
+                                                                    DbProviderManifest.UnicodeFacetName,
+                                                                    DbProviderManifest.SridFacetName,
+                                                                };
 
-        internal static readonly EdmConstants.Unbounded DefaultMaxLengthFacetValue       = EdmConstants.UnboundedValue;
-        internal static readonly EdmConstants.Unbounded DefaultPrecisionFacetValue       = EdmConstants.UnboundedValue;
-        internal static readonly EdmConstants.Unbounded DefaultScaleFacetValue           = EdmConstants.UnboundedValue;
-        internal static readonly bool                   DefaultUnicodeFacetValue         = true;
-        internal static readonly bool                   DefaultFixedLengthFacetValue     = false;
-        internal static readonly byte?                  DefaultDateTimePrecisionFacetValue = null;
+        internal static readonly EdmConstants.Unbounded DefaultMaxLengthFacetValue = EdmConstants.UnboundedValue;
+        internal static readonly EdmConstants.Unbounded DefaultPrecisionFacetValue = EdmConstants.UnboundedValue;
+        internal static readonly EdmConstants.Unbounded DefaultScaleFacetValue = EdmConstants.UnboundedValue;
+        internal const bool DefaultUnicodeFacetValue = true;
+        internal const bool DefaultFixedLengthFacetValue = false;
+        internal static readonly byte? DefaultDateTimePrecisionFacetValue = null;
 
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the kind of the type
         /// </summary>
-        public override BuiltInTypeKind BuiltInTypeKind { get { return BuiltInTypeKind.TypeUsage; } }
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
+            get { return BuiltInTypeKind.TypeUsage; }
+        }
 
         /// <summary>
         /// Gets the type that this TypeUsage describes
@@ -354,10 +418,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.EdmType, false)]
         public EdmType EdmType
         {
-            get
-            {
-                return _edmType;
-            }
+            get { return _edmType; }
         }
 
         /// <summary>
@@ -370,17 +431,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 if (null == _facets)
                 {
-                    MetadataCollection<Facet> facets = new MetadataCollection<Facet>(GetFacets());
+                    var facets = new MetadataCollection<Facet>(GetFacets());
                     // we never modify the collection so we can set it readonly from the start
                     facets.SetReadOnly();
-                    System.Threading.Interlocked.CompareExchange(ref _facets, facets.AsReadOnlyMetadataCollection(), null);
+                    Interlocked.CompareExchange(ref _facets, facets.AsReadOnlyMetadataCollection(), null);
                 }
                 return _facets;
             }
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Returns a Model type usage for a provider type
         /// </summary>
@@ -389,10 +452,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             if (_modelTypeUsage == null)
             {
-                EdmType edmType = this.EdmType;
+                var edmType = EdmType;
 
                 // If the edm type is already a cspace type, return the same type
-                if (edmType.DataSpace == DataSpace.CSpace || edmType.DataSpace == DataSpace.OSpace)
+                if (edmType.DataSpace == DataSpace.CSpace
+                    || edmType.DataSpace == DataSpace.OSpace)
                 {
                     return this;
                 }
@@ -400,26 +464,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 TypeUsage result;
                 if (Helper.IsRowType(edmType))
                 {
-                    RowType sspaceRowType = (RowType)edmType;
-                    EdmProperty[] properties = new EdmProperty[sspaceRowType.Properties.Count];
-                    for (int i = 0; i < properties.Length; i++)
+                    var sspaceRowType = (RowType)edmType;
+                    var properties = new EdmProperty[sspaceRowType.Properties.Count];
+                    for (var i = 0; i < properties.Length; i++)
                     {
-                        EdmProperty sspaceProperty = sspaceRowType.Properties[i];
-                        TypeUsage newTypeUsage = sspaceProperty.TypeUsage.GetModelTypeUsage();
+                        var sspaceProperty = sspaceRowType.Properties[i];
+                        var newTypeUsage = sspaceProperty.TypeUsage.GetModelTypeUsage();
                         properties[i] = new EdmProperty(sspaceProperty.Name, newTypeUsage);
                     }
-                    RowType edmRowType = new RowType(properties, sspaceRowType.InitializerMetadata);
-                    result = TypeUsage.Create(edmRowType, this.Facets);
+                    var edmRowType = new RowType(properties, sspaceRowType.InitializerMetadata);
+                    result = Create(edmRowType, Facets);
                 }
                 else if (Helper.IsCollectionType(edmType))
                 {
-                    CollectionType sspaceCollectionType = ((CollectionType)edmType);
-                    TypeUsage newTypeUsage = sspaceCollectionType.TypeUsage.GetModelTypeUsage();
-                    result = TypeUsage.Create(new CollectionType(newTypeUsage), this.Facets);
+                    var sspaceCollectionType = ((CollectionType)edmType);
+                    var newTypeUsage = sspaceCollectionType.TypeUsage.GetModelTypeUsage();
+                    result = Create(new CollectionType(newTypeUsage), Facets);
                 }
                 else if (Helper.IsRefType(edmType))
                 {
-                    System.Diagnostics.Debug.Assert(((RefType)edmType).ElementType.DataSpace == DataSpace.CSpace);
+                    Debug.Assert(((RefType)edmType).ElementType.DataSpace == DataSpace.CSpace);
                     result = this;
                 }
                 else if (Helper.IsPrimitiveType(edmType))
@@ -428,26 +492,32 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                     if (result == null)
                     {
-                        throw EntityUtil.ProviderIncompatible(System.Data.Entity.Resources.Strings.Mapping_ProviderReturnsNullType(this.ToString()));
+                        throw EntityUtil.ProviderIncompatible(Strings.Mapping_ProviderReturnsNullType(ToString()));
                     }
 
                     if (!TypeSemantics.IsNullable(this))
                     {
-                        result = TypeUsage.Create(result.EdmType,
-                            OverrideFacetValues(result.Facets,
-                                new FacetValues{ Nullable = false }));        
+                        result = Create(
+                            result.EdmType,
+                            OverrideFacetValues(
+                                result.Facets,
+                                new FacetValues
+                                    {
+                                        Nullable = false
+                                    }));
                     }
                 }
-                else if (Helper.IsEntityTypeBase(edmType) || Helper.IsComplexType(edmType))
+                else if (Helper.IsEntityTypeBase(edmType)
+                         || Helper.IsComplexType(edmType))
                 {
                     result = this;
                 }
                 else
                 {
-                    System.Diagnostics.Debug.Assert(false, "Unexpected type found in entity data reader");
+                    Debug.Assert(false, "Unexpected type found in entity data reader");
                     return null;
                 }
-                System.Threading.Interlocked.CompareExchange(ref _modelTypeUsage, result, null);
+                Interlocked.CompareExchange(ref _modelTypeUsage, result, null);
             }
             return _modelTypeUsage;
         }
@@ -459,7 +529,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>true if this typeUsage is a subtype of the specified typeUsage</returns>
         public bool IsSubtypeOf(TypeUsage typeUsage)
         {
-            if (EdmType == null || typeUsage == null)
+            if (EdmType == null
+                || typeUsage == null)
             {
                 return false;
             }
@@ -469,7 +540,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private IEnumerable<Facet> GetFacets()
         {
-            foreach (FacetDescription facetDescription in _edmType.GetAssociatedFacetDescriptions())
+            foreach (var facetDescription in _edmType.GetAssociatedFacetDescriptions())
             {
                 yield return facetDescription.DefaultValueFacet;
             }
@@ -488,51 +559,53 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                if (this.Facets.Count == 0)
+                if (Facets.Count == 0)
                 {
-                    return this.EdmType.Identity;
+                    return EdmType.Identity;
                 }
 
-                if (this._identity == null)
+                if (_identity == null)
                 {
-                    StringBuilder builder = new StringBuilder(128);
+                    var builder = new StringBuilder(128);
                     BuildIdentity(builder);
-                    string identity = builder.ToString();
-                    System.Threading.Interlocked.CompareExchange(ref _identity, identity, null);
+                    var identity = builder.ToString();
+                    Interlocked.CompareExchange(ref _identity, identity, null);
                 }
-                return this._identity;
+                return _identity;
             }
         }
-        
+
         private static IEnumerable<Facet> GetDefaultFacetDescriptionsAndOverrideFacetValues(EdmType type, FacetValues values)
         {
-            return OverrideFacetValues(type.GetAssociatedFacetDescriptions(),
+            return OverrideFacetValues(
+                type.GetAssociatedFacetDescriptions(),
                 fd => fd,
                 fd => fd.DefaultValueFacet,
                 values);
         }
 
-
         private static IEnumerable<Facet> OverrideFacetValues(IEnumerable<Facet> facets, FacetValues values)
         {
-            return OverrideFacetValues(facets,
+            return OverrideFacetValues(
+                facets,
                 f => f.Description,
                 f => f,
                 values);
         }
 
-     
-        private static IEnumerable<Facet> OverrideFacetValues<T>(IEnumerable<T> facetThings,
-                Func<T, FacetDescription> getDescription,
-                Func<T, Facet> getFacet,
-                FacetValues values)
+        private static IEnumerable<Facet> OverrideFacetValues<T>(
+            IEnumerable<T> facetThings,
+            Func<T, FacetDescription> getDescription,
+            Func<T, Facet> getFacet,
+            FacetValues values)
         {
             // yield all the non custom values
             foreach (var thing in facetThings)
             {
-                FacetDescription description = getDescription(thing);
-                Facet facet;    
-                if (!description.IsConstant && values.TryGetFacet(description, out facet))
+                var description = getDescription(thing);
+                Facet facet;
+                if (!description.IsConstant
+                    && values.TryGetFacet(description, out facet))
                 {
                     yield return facet;
                 }
@@ -541,7 +614,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     yield return getFacet(thing);
                 }
             }
-
         }
 
         internal override void BuildIdentity(StringBuilder builder)
@@ -553,25 +625,31 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return;
             }
 
-            builder.Append(this.EdmType.Identity);
+            builder.Append(EdmType.Identity);
 
             builder.Append("(");
-            bool first = true;
-            for (int j = 0; j < this.Facets.Count; j++)
+            var first = true;
+            for (var j = 0; j < Facets.Count; j++)
             {
-                Facet facet = this.Facets[j];
-                
+                var facet = Facets[j];
+
                 if (0 <= Array.BinarySearch(s_identityFacets, facet.Name, StringComparer.Ordinal))
                 {
-                    if (first) { first = false; }
-                    else { builder.Append(","); }
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        builder.Append(",");
+                    }
 
                     builder.Append(facet.Name);
                     builder.Append("=");
                     // If the facet is present, add its value to the identity
                     // We only include built-in system facets for the identity
                     builder.Append(facet.Value ?? String.Empty);
-                }                
+                }
             }
             builder.Append(")");
         }
@@ -592,22 +670,40 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal override bool EdmEquals(MetadataItem item)
         {
             // short-circuit if this and other are reference equivalent
-            if (Object.ReferenceEquals(this, item)) { return true; }
+            if (ReferenceEquals(this, item))
+            {
+                return true;
+            }
 
             // check type of item
-            if (null == item || BuiltInTypeKind.TypeUsage != item.BuiltInTypeKind) { return false; }
-            TypeUsage other = (TypeUsage)item;
+            if (null == item
+                || BuiltInTypeKind.TypeUsage != item.BuiltInTypeKind)
+            {
+                return false;
+            }
+            var other = (TypeUsage)item;
 
             // verify edm types are equivalent
-            if (!this.EdmType.EdmEquals(other.EdmType)) { return false; }
+            if (!EdmType.EdmEquals(other.EdmType))
+            {
+                return false;
+            }
 
             // if both usages have default facets, no need to compare
-            if (null == this._facets && null == other._facets) { return true; }
+            if (null == _facets
+                && null == other._facets)
+            {
+                return true;
+            }
 
             // initialize facets and compare
-            if (this.Facets.Count != other.Facets.Count) { return false; }
+            if (Facets.Count
+                != other.Facets.Count)
+            {
+                return false;
+            }
 
-            foreach (Facet thisFacet in this.Facets)
+            foreach (var thisFacet in Facets)
             {
                 Facet otherFacet;
                 if (!other.Facets.TryGetValue(thisFacet.Name, false, out otherFacet))
@@ -617,7 +713,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
 
                 // check that the facet values are the same
-                if (!Object.Equals(thisFacet.Value, otherFacet.Value))
+                if (!Equals(thisFacet.Value, otherFacet.Value))
                 {
                     return false;
                 }
@@ -630,11 +726,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             if (maxLength <= 0)
             {
-                throw EntityUtil.ArgumentOutOfRange(System.Data.Entity.Resources.Strings.InvalidMaxLengthSize, "maxLength");
+                throw EntityUtil.ArgumentOutOfRange(Strings.InvalidMaxLengthSize, "maxLength");
             }
         }
 
         #endregion
-
     }
 }

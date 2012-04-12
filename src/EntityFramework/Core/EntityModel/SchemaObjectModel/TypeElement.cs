@@ -1,10 +1,9 @@
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
-    using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Xml;
 
@@ -14,16 +13,14 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     /// </summary>
     internal class TypeElement : SchemaType
     {
-
-        PrimitiveType _primitiveType = new PrimitiveType();
-        List<FacetDescriptionElement> _facetDescriptions = new List<FacetDescriptionElement>();
+        private readonly PrimitiveType _primitiveType = new PrimitiveType();
+        private readonly List<FacetDescriptionElement> _facetDescriptions = new List<FacetDescriptionElement>();
 
         public TypeElement(Schema parent)
             : base(parent)
         {
             _primitiveType.NamespaceName = Schema.Namespace;
         }
-
 
         protected override bool HandleElement(XmlReader reader)
         {
@@ -99,7 +96,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private void HandlePrecisionElement(XmlReader reader)
         {
             Debug.Assert(reader != null);
-            ByteFacetDescriptionElement facetDescription = new ByteFacetDescriptionElement(this, DbProviderManifest.PrecisionFacetName);
+            var facetDescription = new ByteFacetDescriptionElement(this, DbProviderManifest.PrecisionFacetName);
             facetDescription.Parse(reader);
 
             _facetDescriptions.Add(facetDescription);
@@ -112,7 +109,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private void HandleScaleElement(XmlReader reader)
         {
             Debug.Assert(reader != null);
-            ByteFacetDescriptionElement facetDescription = new ByteFacetDescriptionElement(this, DbProviderManifest.ScaleFacetName);
+            var facetDescription = new ByteFacetDescriptionElement(this, DbProviderManifest.ScaleFacetName);
             facetDescription.Parse(reader);
             _facetDescriptions.Add(facetDescription);
         }
@@ -124,7 +121,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private void HandleMaxLengthElement(XmlReader reader)
         {
             Debug.Assert(reader != null);
-            IntegerFacetDescriptionElement facetDescription = new IntegerFacetDescriptionElement(this, DbProviderManifest.MaxLengthFacetName);
+            var facetDescription = new IntegerFacetDescriptionElement(this, DbProviderManifest.MaxLengthFacetName);
             facetDescription.Parse(reader);
             _facetDescriptions.Add(facetDescription);
         }
@@ -136,7 +133,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private void HandleUnicodeElement(XmlReader reader)
         {
             Debug.Assert(reader != null);
-            BooleanFacetDescriptionElement facetDescription = new BooleanFacetDescriptionElement(this, DbProviderManifest.UnicodeFacetName);
+            var facetDescription = new BooleanFacetDescriptionElement(this, DbProviderManifest.UnicodeFacetName);
             facetDescription.Parse(reader);
             _facetDescriptions.Add(facetDescription);
         }
@@ -148,7 +145,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private void HandleFixedLengthElement(XmlReader reader)
         {
             Debug.Assert(reader != null);
-            BooleanFacetDescriptionElement facetDescription = new BooleanFacetDescriptionElement(this, DbProviderManifest.FixedLengthFacetName);
+            var facetDescription = new BooleanFacetDescriptionElement(this, DbProviderManifest.FixedLengthFacetName);
             facetDescription.Parse(reader);
             _facetDescriptions.Add(facetDescription);
         }
@@ -160,7 +157,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private void HandleSridElement(XmlReader reader)
         {
             Debug.Assert(reader != null);
-            SridFacetDescriptionElement facetDescription = new SridFacetDescriptionElement(this, DbProviderManifest.SridFacetName);
+            var facetDescription = new SridFacetDescriptionElement(this, DbProviderManifest.SridFacetName);
             facetDescription.Parse(reader);
             _facetDescriptions.Add(facetDescription);
         }
@@ -172,10 +169,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private void HandleIsStrictElement(XmlReader reader)
         {
             Debug.Assert(reader != null);
-            BooleanFacetDescriptionElement facetDescription = new BooleanFacetDescriptionElement(this, DbProviderManifest.IsStrictFacetName);
+            var facetDescription = new BooleanFacetDescriptionElement(this, DbProviderManifest.IsStrictFacetName);
             facetDescription.Parse(reader);
             _facetDescriptions.Add(facetDescription);
         }
+
         /////////////////////////////////////////////////////////////////////
         // Attribute Handlers
 
@@ -186,7 +184,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private void HandlePrimitiveTypeKindAttribute(XmlReader reader)
         {
             Debug.Assert(reader != null);
-            string value = reader.Value;
+            var value = reader.Value;
             try
             {
                 _primitiveType.PrimitiveTypeKind = (PrimitiveTypeKind)Enum.Parse(typeof(PrimitiveTypeKind), value);
@@ -194,36 +192,28 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             }
             catch (ArgumentException)
             {
-                AddError(ErrorCode.InvalidPrimitiveTypeKind, EdmSchemaErrorSeverity.Error,
-                    System.Data.Entity.Resources.Strings.InvalidPrimitiveTypeKind(value));
+                AddError(
+                    ErrorCode.InvalidPrimitiveTypeKind, EdmSchemaErrorSeverity.Error,
+                    Strings.InvalidPrimitiveTypeKind(value));
             }
         }
 
         public override string Name
         {
-            get
-            {
-                return _primitiveType.Name;
-            }
-            set
-            {
-                _primitiveType.Name = value;
-            }
+            get { return _primitiveType.Name; }
+            set { _primitiveType.Name = value; }
         }
 
         public PrimitiveType PrimitiveType
         {
-            get
-            {
-                return _primitiveType; 
-            }
+            get { return _primitiveType; }
         }
 
         public IEnumerable<FacetDescription> FacetDescriptions
         {
-            get 
+            get
             {
-                foreach (FacetDescriptionElement element in _facetDescriptions)
+                foreach (var element in _facetDescriptions)
                 {
                     yield return element.FacetDescription;
                 }
@@ -235,17 +225,18 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             base.ResolveTopLevelNames();
 
             // Call validate on the facet descriptions
-            foreach (FacetDescriptionElement facetDescription in _facetDescriptions)
+            foreach (var facetDescription in _facetDescriptions)
             {
                 try
                 {
-                    facetDescription.CreateAndValidateFacetDescription(this.Name);
+                    facetDescription.CreateAndValidateFacetDescription(Name);
                 }
                 catch (ArgumentException e)
                 {
-                    AddError(ErrorCode.InvalidFacetInProviderManifest,
-                             EdmSchemaErrorSeverity.Error,
-                             e.Message);
+                    AddError(
+                        ErrorCode.InvalidFacetInProviderManifest,
+                        EdmSchemaErrorSeverity.Error,
+                        e.Message);
                 }
             }
             // facet descriptions don't have any names to resolve
@@ -270,18 +261,21 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         private bool ValidateInterFacetConsistency()
         {
-            if (PrimitiveType.PrimitiveTypeKind == PrimitiveTypeKind.Decimal)
+            if (PrimitiveType.PrimitiveTypeKind
+                == PrimitiveTypeKind.Decimal)
             {
-                FacetDescription precisionFacetDescription = Helper.GetFacet(FacetDescriptions, EdmProviderManifest.PrecisionFacetName);
-                FacetDescription scaleFacetDescription = Helper.GetFacet(FacetDescriptions, EdmProviderManifest.ScaleFacetName);
+                var precisionFacetDescription = Helper.GetFacet(FacetDescriptions, DbProviderManifest.PrecisionFacetName);
+                var scaleFacetDescription = Helper.GetFacet(FacetDescriptions, DbProviderManifest.ScaleFacetName);
 
-                if(precisionFacetDescription.MaxValue.Value < scaleFacetDescription.MaxValue.Value)
+                if (precisionFacetDescription.MaxValue.Value
+                    < scaleFacetDescription.MaxValue.Value)
                 {
-                    AddError(ErrorCode.BadPrecisionAndScale,
-                             EdmSchemaErrorSeverity.Error,
-                             System.Data.Entity.Resources.Strings.BadPrecisionAndScale(
-                                           precisionFacetDescription.MaxValue.Value,
-                                           scaleFacetDescription.MaxValue.Value));
+                    AddError(
+                        ErrorCode.BadPrecisionAndScale,
+                        EdmSchemaErrorSeverity.Error,
+                        Strings.BadPrecisionAndScale(
+                            precisionFacetDescription.MaxValue.Value,
+                            scaleFacetDescription.MaxValue.Value));
                     return false;
                 }
             }
@@ -291,7 +285,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         private bool ValidateSufficientFacets()
         {
-            PrimitiveType baseType = _primitiveType.BaseType as PrimitiveType;
+            var baseType = _primitiveType.BaseType as PrimitiveType;
             // the base type will be an edm type
             // the edm type is the athority for which facets are required
             if (baseType == null)
@@ -300,22 +294,23 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 return false;
             }
 
-            bool addedErrors = false;
-            foreach (FacetDescription systemFacetDescription in baseType.FacetDescriptions)
+            var addedErrors = false;
+            foreach (var systemFacetDescription in baseType.FacetDescriptions)
             {
-                FacetDescription providerFacetDescription = Helper.GetFacet(FacetDescriptions, systemFacetDescription.FacetName);
+                var providerFacetDescription = Helper.GetFacet(FacetDescriptions, systemFacetDescription.FacetName);
                 if (providerFacetDescription == null)
                 {
-                    AddError(ErrorCode.RequiredFacetMissing,
-                             EdmSchemaErrorSeverity.Error,
-                             System.Data.Entity.Resources.Strings.MissingFacetDescription(
-                                           PrimitiveType.Name,
-                                           PrimitiveType.PrimitiveTypeKind,
-                                           systemFacetDescription.FacetName));
+                    AddError(
+                        ErrorCode.RequiredFacetMissing,
+                        EdmSchemaErrorSeverity.Error,
+                        Strings.MissingFacetDescription(
+                            PrimitiveType.Name,
+                            PrimitiveType.PrimitiveTypeKind,
+                            systemFacetDescription.FacetName));
                     addedErrors = true;
                 }
             }
-            
+
             return !addedErrors;
         }
     }

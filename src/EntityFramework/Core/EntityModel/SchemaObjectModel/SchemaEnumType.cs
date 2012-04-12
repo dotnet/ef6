@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -25,7 +26,7 @@
         /// <summary>
         /// Resolved underlying type of this enum type. 
         /// </summary>
-        private SchemaType _underlyingType; 
+        private SchemaType _underlyingType;
 
         /// <summary>
         /// Members of this EnumType.
@@ -41,7 +42,8 @@
         public SchemaEnumType(Schema parentElement)
             : base(parentElement)
         {
-            if (Schema.DataModel == SchemaDataModelOption.EntityDataModel)
+            if (Schema.DataModel
+                == SchemaDataModelOption.EntityDataModel)
             {
                 OtherContent.Add(Schema.SchemaSource);
             }
@@ -125,7 +127,7 @@
 
             if (!base.HandleAttribute(reader))
             {
-                if(CanHandleAttribute(reader, XmlConstants.IsFlags))
+                if (CanHandleAttribute(reader, XmlConstants.IsFlags))
                 {
                     HandleBoolAttribute(reader, ref _isFlags);
                 }
@@ -150,7 +152,7 @@
         {
             Debug.Assert(reader != null, "reader != null");
 
-            SchemaEnumMember enumMember = new SchemaEnumMember(this);
+            var enumMember = new SchemaEnumMember(this);
             enumMember.Parse(reader);
 
             // if the value has not been specified we need to fix it up.
@@ -162,16 +164,17 @@
                 }
                 else
                 {
-                    long previousValue = (long)_enumMembers[_enumMembers.Count - 1].Value;
+                    var previousValue = (long)_enumMembers[_enumMembers.Count - 1].Value;
                     if (previousValue < long.MaxValue)
                     {
                         enumMember.Value = previousValue + 1;
                     }
                     else
                     {
-                        AddError(ErrorCode.CalculatedEnumValueOutOfRange,
+                        AddError(
+                            ErrorCode.CalculatedEnumValueOutOfRange,
                             EdmSchemaErrorSeverity.Error,
-                            System.Data.Entity.Resources.Strings.CalculatedEnumValueOutOfRange);
+                            Strings.CalculatedEnumValueOutOfRange);
 
                         // the error has been reported. Assigning previous + 1 would cause an overflow. Null is not really 
                         // expected later on so just assign the previous value. 
@@ -195,7 +198,7 @@
                 _underlyingType = Schema.SchemaManager.SchemaTypes
                     .Single(t => t is ScalarType && ((ScalarType)t).TypeKind == PrimitiveTypeKind.Int32);
             }
-            else 
+            else
             {
                 Debug.Assert(_unresolvedUnderlyingTypeName != string.Empty);
                 Schema.ResolveTypeName(this, _unresolvedUnderlyingTypeName, out _underlyingType);
@@ -211,11 +214,13 @@
 
             var enumUnderlyingType = UnderlyingType as ScalarType;
 
-            if (enumUnderlyingType == null || !Helper.IsSupportedEnumUnderlyingType(enumUnderlyingType.TypeKind))
+            if (enumUnderlyingType == null
+                || !Helper.IsSupportedEnumUnderlyingType(enumUnderlyingType.TypeKind))
             {
-                AddError(ErrorCode.InvalidEnumUnderlyingType,
+                AddError(
+                    ErrorCode.InvalidEnumUnderlyingType,
                     EdmSchemaErrorSeverity.Error,
-                    System.Data.Entity.Resources.Strings.InvalidEnumUnderlyingType);
+                    Strings.InvalidEnumUnderlyingType);
             }
             else
             {
@@ -227,18 +232,21 @@
 
                 foreach (var invalidEnumMember in invalidEnumMembers)
                 {
-                    invalidEnumMember.AddError(ErrorCode.EnumMemberValueOutOfItsUnderylingTypeRange,
+                    invalidEnumMember.AddError(
+                        ErrorCode.EnumMemberValueOutOfItsUnderylingTypeRange,
                         EdmSchemaErrorSeverity.Error,
-                        System.Data.Entity.Resources.Strings.EnumMemberValueOutOfItsUnderylingTypeRange(invalidEnumMember.Value, invalidEnumMember.Name, UnderlyingType.Name));
+                        Strings.EnumMemberValueOutOfItsUnderylingTypeRange(
+                            invalidEnumMember.Value, invalidEnumMember.Name, UnderlyingType.Name));
                 }
             }
 
             // Check for duplicate enumeration members.
             if (_enumMembers.GroupBy(o => o.Name).Where(g => g.Count() > 1).Any())
             {
-                AddError(ErrorCode.DuplicateEnumMember,
+                AddError(
+                    ErrorCode.DuplicateEnumMember,
                     EdmSchemaErrorSeverity.Error,
-                    System.Data.Entity.Resources.Strings.DuplicateEnumMember);
+                    Strings.DuplicateEnumMember);
             }
         }
     }

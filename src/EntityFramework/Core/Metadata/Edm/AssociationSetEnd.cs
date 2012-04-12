@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Text;
-
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     /// <summary>
@@ -13,6 +6,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public sealed class AssociationSetEnd : MetadataItem
     {
         #region Constructors
+
         /// <summary>
         /// Initializes a new instance of AssocationSetEnd
         /// </summary>
@@ -26,19 +20,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _parentSet = EntityUtil.GenericCheckArgumentNull(parentSet, "parentSet");
             _endMember = EntityUtil.GenericCheckArgumentNull(endMember, "endMember");
         }
+
         #endregion
 
         #region Fields
+
         private readonly EntitySet _entitySet;
         private readonly AssociationSet _parentSet;
         private readonly AssociationEndMember _endMember;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the kind of the type
         /// </summary>
-        public override BuiltInTypeKind BuiltInTypeKind { get { return BuiltInTypeKind.AssociationSetEnd; } }
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
+            get { return BuiltInTypeKind.AssociationSetEnd; }
+        }
 
         /// <summary>
         /// The parent association set for this AssociationSetEnd.
@@ -48,10 +49,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.AssociationSet, false)]
         public AssociationSet ParentAssociationSet
         {
-            get
-            {
-                return _parentSet;
-            }
+            get { return _parentSet; }
         }
 
         /// <summary>
@@ -62,10 +60,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.AssociationEndMember, false)]
         public AssociationEndMember CorrespondingAssociationEndMember
         {
-            get
-            {
-                return _endMember;
-            }
+            get { return _endMember; }
         }
 
         /// <summary>
@@ -74,10 +69,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public string Name
         {
-            get
-            {
-                return CorrespondingAssociationEndMember.Name;
-            }
+            get { return CorrespondingAssociationEndMember.Name; }
         }
 
         /// <summary>
@@ -89,10 +81,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Obsolete("This property is going away, please use the Name property instead")]
         public string Role
         {
-            get
-            {
-                return Name;
-            }
+            get { return Name; }
         }
 
         /// <summary>
@@ -101,10 +90,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.EntitySet, false)]
         public EntitySet EntitySet
         {
-            get
-            {
-                return _entitySet;
-            }
+            get { return _entitySet; }
         }
 
         /// <summary>
@@ -112,14 +98,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal override string Identity
         {
-            get
-            {
-                return this.Name;
-            }
+            get { return Name; }
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Overriding System.Object.ToString to provide better String representation 
         /// for this type.
@@ -138,25 +123,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 base.SetReadOnly();
 
-                AssociationSet parentAssociationSet = ParentAssociationSet;
+                var parentAssociationSet = ParentAssociationSet;
                 if (parentAssociationSet != null)
                 {
                     parentAssociationSet.SetReadOnly();
                 }
 
-                AssociationEndMember endMember = CorrespondingAssociationEndMember;
+                var endMember = CorrespondingAssociationEndMember;
                 if (endMember != null)
                 {
                     endMember.SetReadOnly();
                 }
 
-                EntitySet entitySet = EntitySet;
+                var entitySet = EntitySet;
                 if (entitySet != null)
                 {
                     entitySet.SetReadOnly();
                 }
             }
         }
+
         #endregion
     }
 }

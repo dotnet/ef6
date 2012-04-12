@@ -1,5 +1,3 @@
-using System;
-
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     /// <summary>
@@ -8,36 +6,26 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     internal sealed class ReturnValue<T>
     {
         #region Instance Fields
-        private bool _succeeded = false;
-        private T _value = default(T);
+
+        private bool _succeeded;
+        private T _value;
+
         #endregion
+
         /// <summary>
         /// 
         /// </summary>
-        internal  ReturnValue()
+        internal bool Succeeded
         {
+            get { return _succeeded; }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        internal  bool Succeeded
+        internal T Value
         {
-            get
-            {
-                return _succeeded;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        internal  T Value
-        {
-            get
-            {
-                return _value;
-            }
+            get { return _value; }
             set
             {
                 _value = value;

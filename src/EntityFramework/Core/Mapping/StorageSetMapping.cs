@@ -7,8 +7,8 @@ using System.Data.Entity.Core.Common.Utils;
 using System.Diagnostics;
 using System.Linq;
 
-namespace System.Data.Entity.Core.Mapping {
-
+namespace System.Data.Entity.Core.Mapping
+{
     using Triple = Pair<EntitySetBase, Pair<EntityTypeBase, bool>>;
 
     /// <summary>
@@ -34,65 +34,55 @@ namespace System.Data.Entity.Core.Mapping {
     internal abstract class StorageSetMapping
     {
         #region Constructors
+
         /// <summary>
         /// Construct the new StorageSetMapping object.
         /// </summary>
         /// <param name="extent">Extent metadata object</param>
         /// <param name="entityContainerMapping">The EntityContainer mapping that contains this extent mapping</param>
-        internal StorageSetMapping(EntitySetBase extent, StorageEntityContainerMapping entityContainerMapping) {
-            this.m_entityContainerMapping = entityContainerMapping;
-            this.m_extent = extent;
-            this.m_typeMappings = new List<StorageTypeMapping>();
+        internal StorageSetMapping(EntitySetBase extent, StorageEntityContainerMapping entityContainerMapping)
+        {
+            m_entityContainerMapping = entityContainerMapping;
+            m_extent = extent;
+            m_typeMappings = new List<StorageTypeMapping>();
         }
+
         #endregion
 
         #region Fields
+
         /// <summary>
         /// The EntityContainer mapping that contains this extent mapping.
         /// </summary>
-        private StorageEntityContainerMapping m_entityContainerMapping;
+        private readonly StorageEntityContainerMapping m_entityContainerMapping;
+
         /// <summary>
         /// The extent for which this mapping represents.
         /// </summary>
-        private EntitySetBase m_extent;
+        private readonly EntitySetBase m_extent;
+
         /// <summary>
         /// Set of type mappings that make up the Set Mapping.
         /// Unless this is a EntitySetMapping with inheritance,
         /// you would have a single type mapping per set.
         /// </summary>
-        private List<StorageTypeMapping> m_typeMappings;
-        /// <summary>
-        /// User defined Query View for the EntitySet.
-        /// </summary>
-        private string m_queryView;
-        /// <summary>
-        /// Line Number for Set Mapping element start tag.
-        /// </summary>
-        private int m_startLineNumber;
-        /// <summary>
-        /// Line position for Set Mapping element start tag.
-        /// </summary>
-        private int m_startLinePosition;
-        /// <summary>
-        /// Has modificationfunctionmapping for set mapping.
-        /// </summary>
-        private bool m_hasModificationFunctionMapping;
+        private readonly List<StorageTypeMapping> m_typeMappings;
+
         /// <summary>
         /// Stores type-Specific user-defined QueryViews.
         /// </summary>
-        private Dictionary<Triple, string> m_typeSpecificQueryViews = new Dictionary<Triple, string>(Triple.PairComparer.Instance);
+        private readonly Dictionary<Triple, string> m_typeSpecificQueryViews = new Dictionary<Triple, string>(Triple.PairComparer.Instance);
 
         #endregion
 
         #region Properties
+
         /// <summary>
         /// The set for which this mapping is for
         /// </summary>
         internal EntitySetBase Set
         {
-            get {
-                return this.m_extent;
-            }
+            get { return m_extent; }
         }
 
         ///// <summary>
@@ -102,25 +92,19 @@ namespace System.Data.Entity.Core.Mapping {
         ///// </summary>
         internal ReadOnlyCollection<StorageTypeMapping> TypeMappings
         {
-            get
-            {
-                return this.m_typeMappings.AsReadOnly();
-            }
+            get { return m_typeMappings.AsReadOnly(); }
         }
 
-        internal StorageEntityContainerMapping EntityContainerMapping 
+        internal StorageEntityContainerMapping EntityContainerMapping
         {
-            get 
-            { 
-                return m_entityContainerMapping; 
-            }
+            get { return m_entityContainerMapping; }
         }
 
         /// <summary>
         /// Whether the SetMapping has empty content
         /// Returns true if there no table Mapping fragments
         /// </summary>
-        internal virtual bool HasNoContent 
+        internal virtual bool HasNoContent
         {
             get
             {
@@ -128,78 +112,45 @@ namespace System.Data.Entity.Core.Mapping {
                 {
                     return false;
                 }
-                foreach (StorageTypeMapping typeMap in TypeMappings)
+                foreach (var typeMap in TypeMappings)
                 {
-                    foreach (StorageMappingFragment mapFragment in typeMap.MappingFragments)
+                    foreach (var mapFragment in typeMap.MappingFragments)
                     {
-                        foreach (StoragePropertyMapping propertyMap in mapFragment.AllProperties)
+                        foreach (var propertyMap in mapFragment.AllProperties)
                         {
                             return false;
                         }
-
                     }
                 }
                 return true;
             }
         }
 
-        internal string QueryView
-        {
-            get { return m_queryView; }
-            set { m_queryView = value; }
-        }
+        internal string QueryView { get; set; }
 
         /// <summary>
         /// Line Number in MSL file where the Set Mapping Element's Start Tag is present.
         /// </summary>
-        internal int StartLineNumber
-        {
-            get
-            {
-                return m_startLineNumber;
-            }
-            set
-            {
-                m_startLineNumber = value;
-            }
-        }
+        internal int StartLineNumber { get; set; }
 
         /// <summary>
         /// Line Position in MSL file where the Set Mapping Element's Start Tag is present.
         /// </summary>
-        internal int StartLinePosition
-        {
-            get
-            {
-                return m_startLinePosition;
-            }
-            set
-            {
-                m_startLinePosition = value;
-            }
-        }
+        internal int StartLinePosition { get; set; }
 
-        internal bool HasModificationFunctionMapping
-        {
-            get
-            {
-                return m_hasModificationFunctionMapping;
-            }
-            set
-            {
-                m_hasModificationFunctionMapping = value;
-            }
-        }
+        internal bool HasModificationFunctionMapping { get; set; }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Add type mapping as a child under this SetMapping
         /// </summary>
         /// <param name="typeMapping"></param>
         internal void AddTypeMapping(StorageTypeMapping typeMapping)
         {
-            this.m_typeMappings.Add(typeMapping);
+            m_typeMappings.Add(typeMapping);
         }
 
 #if DEBUG
@@ -209,7 +160,7 @@ namespace System.Data.Entity.Core.Mapping {
         /// </summary>
         internal abstract void Print(int index);
 #endif
-        
+
         internal bool ContainsTypeSpecificQueryView(Triple key)
         {
             return m_typeSpecificQueryViews.ContainsKey(key);

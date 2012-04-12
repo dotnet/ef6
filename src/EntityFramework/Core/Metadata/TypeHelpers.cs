@@ -1,13 +1,11 @@
 namespace System.Data.Entity.Core.Common
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Data;
-    using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -23,28 +21,35 @@ namespace System.Data.Entity.Core.Common
         /// Asserts types are in Model space
         /// </summary>
         /// <param name="typeUsage"></param>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "CSpace"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "PrimitiveType"), Conditional("DEBUG")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "CSpace")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "PrimitiveType")]
+        [Conditional("DEBUG")]
         internal static void AssertEdmType(TypeUsage typeUsage)
         {
-            EdmType type = typeUsage.EdmType;
+            var type = typeUsage.EdmType;
             if (TypeSemantics.IsCollectionType(typeUsage))
             {
-                AssertEdmType(TypeHelpers.GetElementTypeUsage(typeUsage));
+                AssertEdmType(GetElementTypeUsage(typeUsage));
             }
-            else if (TypeSemantics.IsStructuralType(typeUsage) && !Helper.IsComplexType(typeUsage.EdmType) && !Helper.IsEntityType(typeUsage.EdmType))
+            else if (TypeSemantics.IsStructuralType(typeUsage) && !Helper.IsComplexType(typeUsage.EdmType)
+                     && !Helper.IsEntityType(typeUsage.EdmType))
             {
-                foreach (EdmMember m in TypeHelpers.GetDeclaredStructuralMembers(typeUsage))
+                foreach (EdmMember m in GetDeclaredStructuralMembers(typeUsage))
                 {
                     AssertEdmType(m.TypeUsage);
                 }
             }
             else if (TypeSemantics.IsPrimitiveType(typeUsage))
             {
-                PrimitiveType pType = type as PrimitiveType;
+                var pType = type as PrimitiveType;
                 if (null != pType)
                 {
-                    if (pType.DataSpace != DataSpace.CSpace)
-                        throw new NotSupportedException(String.Format(CultureInfo.InvariantCulture, "PrimitiveType must be CSpace '{0}'", typeUsage.ToString()));
+                    if (pType.DataSpace
+                        != DataSpace.CSpace)
+                    {
+                        throw new NotSupportedException(
+                            String.Format(CultureInfo.InvariantCulture, "PrimitiveType must be CSpace '{0}'", typeUsage));
+                    }
                 }
             }
         }
@@ -56,17 +61,19 @@ namespace System.Data.Entity.Core.Common
         [Conditional("DEBUG")]
         internal static void AssertEdmType(DbCommandTree commandTree)
         {
-            DbQueryCommandTree queryCommandTree = commandTree as DbQueryCommandTree;
+            var queryCommandTree = commandTree as DbQueryCommandTree;
             if (null != queryCommandTree)
             {
                 AssertEdmType(queryCommandTree.Query.ResultType);
             }
         }
+
         #endregion
 
         //
         // Type Semantics
         //
+
         #region Type Semantics
 
         /// <summary>
@@ -78,8 +85,8 @@ namespace System.Data.Entity.Core.Common
         {
             if (TypeSemantics.IsRowType(typeUsage))
             {
-                RowType rowType = (RowType)typeUsage.EdmType;
-                foreach (EdmProperty property in rowType.Properties)
+                var rowType = (RowType)typeUsage.EdmType;
+                foreach (var property in rowType.Properties)
                 {
                     if (!IsValidSortOpKeyType(property.TypeUsage))
                     {
@@ -121,17 +128,18 @@ namespace System.Data.Entity.Core.Common
         /// <returns></returns>
         internal static bool IsSetComparableOpType(TypeUsage typeUsage)
         {
-            if (Helper.IsEntityType(typeUsage.EdmType)    ||
+            if (Helper.IsEntityType(typeUsage.EdmType) ||
                 Helper.IsPrimitiveType(typeUsage.EdmType) ||
-                Helper.IsEnumType(typeUsage.EdmType)      ||
-                Helper.IsRefType(typeUsage.EdmType)        )
+                Helper.IsEnumType(typeUsage.EdmType)
+                ||
+                Helper.IsRefType(typeUsage.EdmType))
             {
                 return true;
             }
             else if (TypeSemantics.IsRowType(typeUsage))
             {
-                RowType rowType = (RowType)typeUsage.EdmType;
-                foreach (EdmProperty property in rowType.Properties)
+                var rowType = (RowType)typeUsage.EdmType;
+                foreach (var property in rowType.Properties)
                 {
                     if (!IsSetComparableOpType(property.TypeUsage))
                     {
@@ -151,10 +159,9 @@ namespace System.Data.Entity.Core.Common
         internal static bool IsValidIsNullOpType(TypeUsage typeUsage)
         {
             return TypeSemantics.IsReferenceType(typeUsage) ||
-                   TypeSemantics.IsEntityType(typeUsage)    ||
+                   TypeSemantics.IsEntityType(typeUsage) ||
                    TypeSemantics.IsScalarType(typeUsage);
         }
-
 
         internal static bool IsValidInOpType(TypeUsage typeUsage)
         {
@@ -171,7 +178,7 @@ namespace System.Data.Entity.Core.Common
         internal static TypeUsage GetCommonTypeUsage(IEnumerable<TypeUsage> types)
         {
             TypeUsage commonType = null;
-            foreach (TypeUsage testType in types)
+            foreach (var testType in types)
             {
                 if (null == testType)
                 {
@@ -199,17 +206,19 @@ namespace System.Data.Entity.Core.Common
         //
         // Type property extractors
         //
+
         #region Type property extractors
-        
+
         internal static bool TryGetClosestPromotableType(TypeUsage fromType, out TypeUsage promotableType)
         {
             promotableType = null;
             if (Helper.IsPrimitiveType(fromType.EdmType))
             {
-                PrimitiveType fromPrimitiveType = (PrimitiveType)fromType.EdmType;
+                var fromPrimitiveType = (PrimitiveType)fromType.EdmType;
                 IList<PrimitiveType> promotableTypes = EdmProviderManifest.Instance.GetPromotionTypes(fromPrimitiveType);
-                int index = promotableTypes.IndexOf(fromPrimitiveType);
-                if (-1 != index && index + 1 < promotableTypes.Count)
+                var index = promotableTypes.IndexOf(fromPrimitiveType);
+                if (-1 != index
+                    && index + 1 < promotableTypes.Count)
                 {
                     promotableType = TypeUsage.Create(promotableTypes[index + 1]);
                 }
@@ -217,19 +226,20 @@ namespace System.Data.Entity.Core.Common
             return (null != promotableType);
         }
 
-
         #endregion
 
         //
         // Facet Helpers
         //
+
         #region Facet Helpers
 
         internal static bool TryGetBooleanFacetValue(TypeUsage type, string facetName, out bool boolValue)
         {
             boolValue = false;
             Facet boolFacet;
-            if (type.Facets.TryGetValue(facetName, false, out boolFacet) && boolFacet.Value != null)
+            if (type.Facets.TryGetValue(facetName, false, out boolFacet)
+                && boolFacet.Value != null)
             {
                 boolValue = (bool)boolFacet.Value;
                 return true;
@@ -242,7 +252,8 @@ namespace System.Data.Entity.Core.Common
         {
             byteValue = 0;
             Facet byteFacet;
-            if (type.Facets.TryGetValue(facetName, false, out byteFacet) && byteFacet.Value != null && !Helper.IsUnboundedFacetValue(byteFacet))
+            if (type.Facets.TryGetValue(facetName, false, out byteFacet) && byteFacet.Value != null
+                && !Helper.IsUnboundedFacetValue(byteFacet))
             {
                 byteValue = (byte)byteFacet.Value;
                 return true;
@@ -255,7 +266,8 @@ namespace System.Data.Entity.Core.Common
         {
             intValue = 0;
             Facet intFacet;
-            if (type.Facets.TryGetValue(facetName, false, out intFacet) && intFacet.Value != null && !Helper.IsUnboundedFacetValue(intFacet) && !Helper.IsVariableFacetValue(intFacet))
+            if (type.Facets.TryGetValue(facetName, false, out intFacet) && intFacet.Value != null && !Helper.IsUnboundedFacetValue(intFacet)
+                && !Helper.IsVariableFacetValue(intFacet))
             {
                 intValue = (int)intFacet.Value;
                 return true;
@@ -266,7 +278,8 @@ namespace System.Data.Entity.Core.Common
 
         internal static bool TryGetIsFixedLength(TypeUsage type, out bool isFixedLength)
         {
-            if (!TypeSemantics.IsPrimitiveType(type, PrimitiveTypeKind.String) &&
+            if (!TypeSemantics.IsPrimitiveType(type, PrimitiveTypeKind.String)
+                &&
                 !TypeSemantics.IsPrimitiveType(type, PrimitiveTypeKind.Binary))
             {
                 isFixedLength = false;
@@ -274,7 +287,7 @@ namespace System.Data.Entity.Core.Common
             }
 
             // Binary and String MaxLength facets share the same name
-            return TypeHelpers.TryGetBooleanFacetValue(type, DbProviderManifest.FixedLengthFacetName, out isFixedLength);
+            return TryGetBooleanFacetValue(type, DbProviderManifest.FixedLengthFacetName, out isFixedLength);
         }
 
         internal static bool TryGetIsUnicode(TypeUsage type, out bool isUnicode)
@@ -285,7 +298,7 @@ namespace System.Data.Entity.Core.Common
                 return false;
             }
 
-            return TypeHelpers.TryGetBooleanFacetValue(type, DbProviderManifest.UnicodeFacetName, out isUnicode);
+            return TryGetBooleanFacetValue(type, DbProviderManifest.UnicodeFacetName, out isUnicode);
         }
 
         internal static bool IsFacetValueConstant(TypeUsage type, string facetName)
@@ -296,7 +309,8 @@ namespace System.Data.Entity.Core.Common
 
         internal static bool TryGetMaxLength(TypeUsage type, out int maxLength)
         {
-            if (!TypeSemantics.IsPrimitiveType(type, PrimitiveTypeKind.String) &&
+            if (!TypeSemantics.IsPrimitiveType(type, PrimitiveTypeKind.String)
+                &&
                 !TypeSemantics.IsPrimitiveType(type, PrimitiveTypeKind.Binary))
             {
                 maxLength = 0;
@@ -304,7 +318,7 @@ namespace System.Data.Entity.Core.Common
             }
 
             // Binary and String FixedLength facets share the same name
-            return TypeHelpers.TryGetIntFacetValue(type, DbProviderManifest.MaxLengthFacetName, out maxLength);
+            return TryGetIntFacetValue(type, DbProviderManifest.MaxLengthFacetName, out maxLength);
         }
 
         internal static bool TryGetPrecision(TypeUsage type, out byte precision)
@@ -315,7 +329,7 @@ namespace System.Data.Entity.Core.Common
                 return false;
             }
 
-            return TypeHelpers.TryGetByteFacetValue(type, DbProviderManifest.PrecisionFacetName, out precision);
+            return TryGetByteFacetValue(type, DbProviderManifest.PrecisionFacetName, out precision);
         }
 
         internal static bool TryGetScale(TypeUsage type, out byte scale)
@@ -326,12 +340,13 @@ namespace System.Data.Entity.Core.Common
                 return false;
             }
 
-            return TypeHelpers.TryGetByteFacetValue(type, DbProviderManifest.ScaleFacetName, out scale);
+            return TryGetByteFacetValue(type, DbProviderManifest.ScaleFacetName, out scale);
         }
 
         internal static bool TryGetPrimitiveTypeKind(TypeUsage type, out PrimitiveTypeKind typeKind)
         {
-            if (type != null && type.EdmType != null && type.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType)
+            if (type != null && type.EdmType != null
+                && type.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType)
             {
                 typeKind = ((PrimitiveType)type.EdmType).PrimitiveTypeKind;
                 return true;
@@ -346,7 +361,9 @@ namespace System.Data.Entity.Core.Common
         //
         // Type Constructors
         //
+
         #region Type Constructors
+
         internal static CollectionType CreateCollectionType(TypeUsage elementType)
         {
             return new CollectionType(elementType);
@@ -364,8 +381,8 @@ namespace System.Data.Entity.Core.Common
 
         internal static RowType CreateRowType(IEnumerable<KeyValuePair<string, TypeUsage>> columns, InitializerMetadata initializerMetadata)
         {
-            List<EdmProperty> rowElements = new List<EdmProperty>();
-            foreach (KeyValuePair<string, TypeUsage> kvp in columns)
+            var rowElements = new List<EdmProperty>();
+            foreach (var kvp in columns)
             {
                 rowElements.Add(new EdmProperty(kvp.Key, kvp.Value));
             }
@@ -397,10 +414,10 @@ namespace System.Data.Entity.Core.Common
             IEnumerable<EdmMember> entityKeys = entityType.KeyMembers;
             if (null == entityKeys)
             {
-                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.Cqt_Metadata_EntityTypeNullKeyMembersInvalid, "entityType");
+                throw EntityUtil.Argument(Strings.Cqt_Metadata_EntityTypeNullKeyMembersInvalid, "entityType");
             }
 
-            List<KeyValuePair<string, TypeUsage>> resultCols = new List<KeyValuePair<string, TypeUsage>>();
+            var resultCols = new List<KeyValuePair<string, TypeUsage>>();
             //int idx = 0;
             foreach (EdmProperty keyProperty in entityKeys)
             {
@@ -410,10 +427,10 @@ namespace System.Data.Entity.Core.Common
 
             if (resultCols.Count < 1)
             {
-                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.Cqt_Metadata_EntityTypeEmptyKeyMembersInvalid, "entityType");
+                throw EntityUtil.Argument(Strings.Cqt_Metadata_EntityTypeEmptyKeyMembersInvalid, "entityType");
             }
 
-            return TypeHelpers.CreateRowType(resultCols);
+            return CreateRowType(resultCols);
         }
 
         /// <summary>
@@ -432,9 +449,9 @@ namespace System.Data.Entity.Core.Common
             Debug.Assert(scalarType != null, "scalarType != null");
             Debug.Assert(TypeSemantics.IsScalarType(scalarType), "Primitive or enum type expected.");
 
-            return TypeSemantics.IsEnumerationType(scalarType) ?
-                CreateEnumUnderlyingTypeUsage(scalarType) :
-                scalarType;
+            return TypeSemantics.IsEnumerationType(scalarType)
+                       ? CreateEnumUnderlyingTypeUsage(scalarType)
+                       : scalarType;
         }
 
         /// <summary>
@@ -467,6 +484,7 @@ namespace System.Data.Entity.Core.Common
         //
         // Type extractors
         //
+
         #region Type Extractors
 
         /// <summary>
@@ -481,7 +499,7 @@ namespace System.Data.Entity.Core.Common
 
         internal static IBaseList<EdmMember> GetAllStructuralMembers(EdmType edmType)
         {
-            System.Diagnostics.Debug.Assert(edmType != null);
+            Debug.Assert(edmType != null);
             switch (edmType.BuiltInTypeKind)
             {
                 case BuiltInTypeKind.AssociationType:
@@ -529,8 +547,11 @@ namespace System.Data.Entity.Core.Common
             }
         }
 
-        internal static readonly ReadOnlyMetadataCollection<EdmMember> EmptyArrayEdmMember = new ReadOnlyMetadataCollection<EdmMember>(new MetadataCollection<EdmMember>().SetReadOnly());
-        internal static readonly FilteredReadOnlyMetadataCollection<EdmProperty, EdmMember> EmptyArrayEdmProperty = new FilteredReadOnlyMetadataCollection<EdmProperty, EdmMember>(EmptyArrayEdmMember, null);
+        internal static readonly ReadOnlyMetadataCollection<EdmMember> EmptyArrayEdmMember =
+            new ReadOnlyMetadataCollection<EdmMember>(new MetadataCollection<EdmMember>().SetReadOnly());
+
+        internal static readonly FilteredReadOnlyMetadataCollection<EdmProperty, EdmMember> EmptyArrayEdmProperty =
+            new FilteredReadOnlyMetadataCollection<EdmProperty, EdmMember>(EmptyArrayEdmMember, null);
 
         internal static ReadOnlyMetadataCollection<EdmProperty> GetProperties(TypeUsage typeUsage)
         {
@@ -571,7 +592,8 @@ namespace System.Data.Entity.Core.Common
         /// </summary>
         internal static RowType GetTvfReturnType(EdmFunction tvf)
         {
-            if (tvf.ReturnParameter != null && TypeSemantics.IsCollectionType(tvf.ReturnParameter.TypeUsage))
+            if (tvf.ReturnParameter != null
+                && TypeSemantics.IsCollectionType(tvf.ReturnParameter.TypeUsage))
             {
                 var expectedElementTypeUsage = ((CollectionType)tvf.ReturnParameter.TypeUsage.EdmType).TypeUsage;
                 if (TypeSemantics.IsRowType(expectedElementTypeUsage))
@@ -588,7 +610,7 @@ namespace System.Data.Entity.Core.Common
         internal static bool TryGetCollectionElementType(TypeUsage type, out TypeUsage elementType)
         {
             CollectionType collectionType;
-            if (TypeHelpers.TryGetEdmType<CollectionType>(type, out collectionType))
+            if (TryGetEdmType(type, out collectionType))
             {
                 elementType = collectionType.TypeUsage;
                 return (elementType != null);
@@ -608,7 +630,8 @@ namespace System.Data.Entity.Core.Common
         internal static bool TryGetRefEntityType(TypeUsage type, out EntityType referencedEntityType)
         {
             RefType refType;
-            if (TryGetEdmType<RefType>(type, out refType) &&
+            if (TryGetEdmType(type, out refType)
+                &&
                 Helper.IsEntityType(refType.ElementType))
             {
                 referencedEntityType = (EntityType)refType.ElementType;
@@ -631,12 +654,15 @@ namespace System.Data.Entity.Core.Common
             type = typeUsage.EdmType as TEdmType;
             return (type != null);
         }
+
         #endregion
 
         //
         // Misc
         //
+
         #region Misc
+
         internal static TypeUsage GetReadOnlyType(TypeUsage type)
         {
             if (!(type.IsReadOnly))
@@ -654,7 +680,7 @@ namespace System.Data.Entity.Core.Common
         {
             return type.ToString();
         }
-                
+
         internal static string GetFullName(EdmType type)
         {
             return GetFullName(type.NamespaceName, type.Name);
@@ -665,7 +691,7 @@ namespace System.Data.Entity.Core.Common
             Debug.Assert(entitySet.EntityContainer != null, "entitySet.EntityContainer is null");
             return GetFullName(entitySet.EntityContainer.Name, entitySet.Name);
         }
-                
+
         internal static string GetFullName(string qualifier, string name)
         {
             if (string.IsNullOrEmpty(qualifier))
@@ -691,24 +717,24 @@ namespace System.Data.Entity.Core.Common
                     throw EntityUtil.InvalidDataType(TypeCode.Empty);
 
                 case TypeCode.Object:
-                    if (clrType == typeof(System.Byte[]))
+                    if (clrType == typeof(Byte[]))
                     {
                         return DbType.Binary;
                     }
-                    if (clrType == typeof(System.Char[]))
+                    if (clrType == typeof(Char[]))
                     {
                         // Always treat char and char[] as string
                         return DbType.String;
                     }
-                    else if (clrType == typeof(System.Guid))
+                    else if (clrType == typeof(Guid))
                     {
                         return DbType.Guid;
                     }
-                    else if (clrType == typeof(System.TimeSpan))
+                    else if (clrType == typeof(TimeSpan))
                     {
                         return DbType.Time;
                     }
-                    else if (clrType == typeof(System.DateTimeOffset))
+                    else if (clrType == typeof(DateTimeOffset))
                     {
                         return DbType.DateTimeOffset;
                     }
@@ -765,7 +791,7 @@ namespace System.Data.Entity.Core.Common
                 return false;
             }
 
-            PrimitiveType intType = (PrimitiveType)valueType.EdmType;
+            var intType = (PrimitiveType)valueType.EdmType;
             switch (intType.PrimitiveTypeKind)
             {
                 case PrimitiveTypeKind.Byte:
@@ -796,26 +822,37 @@ namespace System.Data.Entity.Core.Common
         /// </summary>
         /// <param name="primitiveTypeKind"></param>
         /// <returns></returns>
-        static internal TypeUsage GetLiteralTypeUsage(PrimitiveTypeKind primitiveTypeKind)
+        internal static TypeUsage GetLiteralTypeUsage(PrimitiveTypeKind primitiveTypeKind)
         {
             // all clr strings by default are unicode
             return GetLiteralTypeUsage(primitiveTypeKind, true /* unicode */);
         }
 
-        static internal TypeUsage GetLiteralTypeUsage(PrimitiveTypeKind primitiveTypeKind, bool isUnicode)
+        internal static TypeUsage GetLiteralTypeUsage(PrimitiveTypeKind primitiveTypeKind, bool isUnicode)
         {
             TypeUsage typeusage;
-            PrimitiveType primitiveType = EdmProviderManifest.Instance.GetPrimitiveType(primitiveTypeKind);
+            var primitiveType = EdmProviderManifest.Instance.GetPrimitiveType(primitiveTypeKind);
             switch (primitiveTypeKind)
             {
                 case PrimitiveTypeKind.String:
-                    typeusage = TypeUsage.Create(primitiveType,
-                        new FacetValues{ Unicode = isUnicode, MaxLength = TypeUsage.DefaultMaxLengthFacetValue, FixedLength = false, Nullable = false});
+                    typeusage = TypeUsage.Create(
+                        primitiveType,
+                        new FacetValues
+                            {
+                                Unicode = isUnicode,
+                                MaxLength = TypeUsage.DefaultMaxLengthFacetValue,
+                                FixedLength = false,
+                                Nullable = false
+                            });
                     break;
 
                 default:
-                    typeusage = TypeUsage.Create(primitiveType,
-                        new FacetValues{ Nullable = false });
+                    typeusage = TypeUsage.Create(
+                        primitiveType,
+                        new FacetValues
+                            {
+                                Nullable = false
+                            });
                     break;
             }
             return typeusage;
@@ -824,15 +861,18 @@ namespace System.Data.Entity.Core.Common
         #endregion
 
         #region EdmFunction Helpers
+
         internal static bool IsCanonicalFunction(EdmFunction function)
         {
-            bool isCanonicalFunction = (function.DataSpace == DataSpace.CSpace && function.NamespaceName == EdmConstants.EdmNamespace);
+            var isCanonicalFunction = (function.DataSpace == DataSpace.CSpace && function.NamespaceName == EdmConstants.EdmNamespace);
 
-            Debug.Assert(!isCanonicalFunction || (isCanonicalFunction && !function.HasUserDefinedBody),
+            Debug.Assert(
+                !isCanonicalFunction || (isCanonicalFunction && !function.HasUserDefinedBody),
                 "Canonical function '" + function.FullName + "' can not have a user defined body");
 
             return isCanonicalFunction;
         }
+
         #endregion
     }
 }

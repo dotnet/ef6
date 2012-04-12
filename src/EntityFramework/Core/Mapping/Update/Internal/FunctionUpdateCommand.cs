@@ -1,16 +1,18 @@
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Common;
+    using System.Collections.ObjectModel;
     using System.Data.Common;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Spatial;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
-    using System.Data.Entity.Core.Spatial;
 
     /// <summary>
     /// Aggregates information about a modification command delegated to a store function.
@@ -18,6 +20,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     internal sealed class FunctionUpdateCommand : UpdateCommand
     {
         #region Constructors
+
         /// <summary>
         /// Initialize a new function command. Initializes the command object.
         /// </summary>
@@ -25,8 +28,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="translator">Translator</param>
         /// <param name="stateEntries">State entries handled by this operation.</param>
         /// <param name="stateEntry">'Root' state entry being handled by this function.</param>
-        internal FunctionUpdateCommand(StorageModificationFunctionMapping functionMapping, UpdateTranslator translator,
-            System.Collections.ObjectModel.ReadOnlyCollection<IEntityStateEntry> stateEntries,
+        internal FunctionUpdateCommand(
+            StorageModificationFunctionMapping functionMapping, UpdateTranslator translator,
+            ReadOnlyCollection<IEntityStateEntry> stateEntries,
             ExtractedStateEntry stateEntry)
             : base(stateEntry.Original, stateEntry.Current)
         {
@@ -38,13 +42,15 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             m_stateEntries = stateEntries;
 
             // create a command
-            DbCommandDefinition commandDefinition = translator.GenerateCommandDefinition(functionMapping);
+            var commandDefinition = translator.GenerateCommandDefinition(functionMapping);
             m_dbCommand = commandDefinition.CreateCommand();
         }
+
         #endregion
 
         #region Fields
-        private readonly System.Collections.ObjectModel.ReadOnlyCollection<IEntityStateEntry> m_stateEntries;
+
+        private readonly ReadOnlyCollection<IEntityStateEntry> m_stateEntries;
 
         /// <summary>
         /// Gets the store command wrapped by this command.
@@ -73,12 +79,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// Gets a reference to the rows affected output parameter for the stored procedure. May be null.
         /// </summary>
         private DbParameter m_rowsAffectedParameter;
+
         #endregion
 
         #region Properties
+
         internal override IEnumerable<int> InputIdentifiers
         {
-            get 
+            get
             {
                 if (null == m_inputIdentifiers)
                 {
@@ -86,7 +94,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 }
                 else
                 {
-                    foreach (KeyValuePair<int, DbParameter> inputIdentifier in m_inputIdentifiers)
+                    foreach (var inputIdentifier in m_inputIdentifiers)
                     {
                         yield return inputIdentifier.Key;
                     }
@@ -102,7 +110,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 {
                     return Enumerable.Empty<int>();
                 }
-                return m_outputIdentifiers.Keys; 
+                return m_outputIdentifiers.Keys;
             }
         }
 
@@ -110,9 +118,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             get { return UpdateCommandKind.Function; }
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Gets state entries contributing to this function. Supports error reporting.
         /// </summary>
@@ -122,17 +132,18 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         // Adds and register a DbParameter to the current command.
-        internal void SetParameterValue(PropagatorResult result, StorageModificationFunctionParameterBinding parameterBinding, UpdateTranslator translator)
+        internal void SetParameterValue(
+            PropagatorResult result, StorageModificationFunctionParameterBinding parameterBinding, UpdateTranslator translator)
         {
             // retrieve DbParameter
-            DbParameter parameter = this.m_dbCommand.Parameters[parameterBinding.Parameter.Name];
-            TypeUsage parameterType = parameterBinding.Parameter.TypeUsage;
-            object parameterValue = translator.KeyManager.GetPrincipalValue(result);
-            translator.SetParameterValue(parameter, parameterType, parameterValue); 
+            var parameter = m_dbCommand.Parameters[parameterBinding.Parameter.Name];
+            var parameterType = parameterBinding.Parameter.TypeUsage;
+            var parameterValue = translator.KeyManager.GetPrincipalValue(result);
+            translator.SetParameterValue(parameter, parameterType, parameterValue);
 
             // if the parameter corresponds to an identifier (key component), remember this fact in case
             // it's important for dependency ordering (e.g., output the identifier before creating it)
-            int identifier = result.Identifier;
+            var identifier = result.Identifier;
             if (PropagatorResult.NullIdentifier != identifier)
             {
                 const int initialSize = 2; // expect on average less than two input identifiers per command
@@ -140,7 +151,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 {
                     m_inputIdentifiers = new List<KeyValuePair<int, DbParameter>>(initialSize);
                 }
-                foreach (int principal in translator.KeyManager.GetPrincipals(identifier))
+                foreach (var principal in translator.KeyManager.GetPrincipals(identifier))
                 {
                     m_inputIdentifiers.Add(new KeyValuePair<int, DbParameter>(principal, parameter));
                 }
@@ -152,7 +163,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             if (null != rowsAffectedParameter)
             {
-                Debug.Assert(rowsAffectedParameter.Mode == ParameterMode.Out || rowsAffectedParameter.Mode == ParameterMode.InOut,
+                Debug.Assert(
+                    rowsAffectedParameter.Mode == ParameterMode.Out || rowsAffectedParameter.Mode == ParameterMode.InOut,
                     "when loading mapping metadata, we check that the parameter is an out parameter");
                 m_rowsAffectedParameter = m_dbCommand.Parameters[rowsAffectedParameter.Name];
             }
@@ -170,12 +182,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
             m_resultColumns.Add(new KeyValuePair<string, PropagatorResult>(columnName, result));
 
-            int identifier = result.Identifier;
+            var identifier = result.Identifier;
             if (PropagatorResult.NullIdentifier != identifier)
             {
                 if (translator.KeyManager.HasPrincipals(identifier))
                 {
-                    throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.Update_GeneratedDependent(columnName));
+                    throw EntityUtil.InvalidOperation(Strings.Update_GeneratedDependent(columnName));
                 }
 
                 // register output identifier to enable fix-up and dependency tracking
@@ -200,7 +212,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // also added to the identifierValues dictionary, which associates proxy identifiers for keys in the session
         // with their actual values, permitting fix-up of identifiers across relationships.
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-        internal override long Execute(UpdateTranslator translator, EntityConnection connection, Dictionary<int, object> identifierValues,
+        internal override long Execute(
+            UpdateTranslator translator, EntityConnection connection, Dictionary<int, object> identifierValues,
             List<KeyValuePair<PropagatorResult, object>> generatedValues)
         {
             // configure command to use the connection and transaction for this session
@@ -215,7 +228,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             // boundaries)
             if (null != m_inputIdentifiers)
             {
-                foreach (KeyValuePair<int, DbParameter> inputIdentifier in m_inputIdentifiers)
+                foreach (var inputIdentifier in m_inputIdentifiers)
                 {
                     object value;
                     if (identifierValues.TryGetValue(inputIdentifier.Key, out value))
@@ -233,8 +246,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 // If there are result columns, read the server gen results
                 rowsAffected = 0;
-                IBaseList<EdmMember> members = TypeHelpers.GetAllStructuralMembers(this.CurrentValues.StructuralType);                
-                using (DbDataReader reader = m_dbCommand.ExecuteReader(CommandBehavior.SequentialAccess))
+                var members = TypeHelpers.GetAllStructuralMembers(CurrentValues.StructuralType);
+                using (var reader = m_dbCommand.ExecuteReader(CommandBehavior.SequentialAccess))
                 {
                     // Retrieve only the first row from the first result set
                     if (reader.Read())
@@ -245,11 +258,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             .Select(r => new KeyValuePair<int, PropagatorResult>(GetColumnOrdinal(translator, reader, r.Key), r.Value))
                             .OrderBy(r => r.Key)) // order by column ordinal to avoid breaking SequentialAccess readers
                         {
-                            int columnOrdinal = resultColumn.Key;
-                            TypeUsage columnType = members[resultColumn.Value.RecordOrdinal].TypeUsage;
+                            var columnOrdinal = resultColumn.Key;
+                            var columnType = members[resultColumn.Value.RecordOrdinal].TypeUsage;
                             object value;
 
-                            if (Helper.IsSpatialType(columnType) && !reader.IsDBNull(columnOrdinal))
+                            if (Helper.IsSpatialType(columnType)
+                                && !reader.IsDBNull(columnOrdinal))
                             {
                                 value = SpatialHelpers.GetSpatialValue(translator.MetadataWorkspace, reader, columnType, columnOrdinal);
                             }
@@ -259,11 +273,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             }
 
                             // register for back-propagation
-                            PropagatorResult result = resultColumn.Value;
+                            var result = resultColumn.Value;
                             generatedValues.Add(new KeyValuePair<PropagatorResult, object>(result, value));
 
                             // register identifier if it exists
-                            int identifier = result.Identifier;
+                            var identifier = result.Identifier;
                             if (PropagatorResult.NullIdentifier != identifier)
                             {
                                 identifierValues.Add(identifier, value);
@@ -301,8 +315,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         if (UpdateTranslator.RequiresContext(e))
                         {
                             // wrap the exception
-                            throw EntityUtil.Update(System.Data.Entity.Resources.Strings.Update_UnableToConvertRowsAffectedParameterToInt32(
-                                m_rowsAffectedParameter.ParameterName, typeof(int).FullName), e, this.GetStateEntries(translator));
+                            throw EntityUtil.Update(
+                                Strings.Update_UnableToConvertRowsAffectedParameterToInt32(
+                                    m_rowsAffectedParameter.ParameterName, typeof(int).FullName), e, GetStateEntries(translator));
                         }
                         throw;
                     }
@@ -321,8 +336,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
             catch (IndexOutOfRangeException)
             {
-                throw EntityUtil.Update(System.Data.Entity.Resources.Strings.Update_MissingResultColumn(columnName), null,
-                    this.GetStateEntries(translator));
+                throw EntityUtil.Update(
+                    Strings.Update_MissingResultColumn(columnName), null,
+                    GetStateEntries(translator));
             }
             return columnOrdinal;
         }
@@ -354,46 +370,64 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         internal override int CompareToType(UpdateCommand otherCommand)
         {
-            Debug.Assert(!object.ReferenceEquals(this, otherCommand), "caller should ensure other command is different");
+            Debug.Assert(!ReferenceEquals(this, otherCommand), "caller should ensure other command is different");
 
-            FunctionUpdateCommand other = (FunctionUpdateCommand)otherCommand;
+            var other = (FunctionUpdateCommand)otherCommand;
 
             // first state entry is the 'main' state entry for the command (see ctor)
-            IEntityStateEntry thisParent = this.m_stateEntries[0];
-            IEntityStateEntry otherParent = other.m_stateEntries[0];
+            var thisParent = m_stateEntries[0];
+            var otherParent = other.m_stateEntries[0];
 
             // order by operator
-            int result = (int)GetModificationOperator(thisParent.State) -
-                (int)GetModificationOperator(otherParent.State);
-            if (0 != result) { return result; }
+            var result = (int)GetModificationOperator(thisParent.State) -
+                         (int)GetModificationOperator(otherParent.State);
+            if (0 != result)
+            {
+                return result;
+            }
 
             // order by entity set
             result = StringComparer.Ordinal.Compare(thisParent.EntitySet.Name, otherParent.EntitySet.Name);
-            if (0 != result) { return result; }
-            result = StringComparer.Ordinal.Compare(thisParent.EntitySet.EntityContainer.Name, otherParent.EntitySet.EntityContainer.Name);
-            if (0 != result) { return result; }
-            
-            // order by key values
-            int thisInputIdentifierCount = (null == this.m_inputIdentifiers ? 0 : this.m_inputIdentifiers.Count);
-            int otherInputIdentifierCount = (null == other.m_inputIdentifiers ? 0 : other.m_inputIdentifiers.Count);
-            result = thisInputIdentifierCount - otherInputIdentifierCount;
-            if (0 != result) { return result; }
-            for (int i = 0; i < thisInputIdentifierCount; i++)
+            if (0 != result)
             {
-                DbParameter thisParameter = this.m_inputIdentifiers[i].Value;
-                DbParameter otherParameter = other.m_inputIdentifiers[i].Value;
+                return result;
+            }
+            result = StringComparer.Ordinal.Compare(thisParent.EntitySet.EntityContainer.Name, otherParent.EntitySet.EntityContainer.Name);
+            if (0 != result)
+            {
+                return result;
+            }
+
+            // order by key values
+            var thisInputIdentifierCount = (null == m_inputIdentifiers ? 0 : m_inputIdentifiers.Count);
+            var otherInputIdentifierCount = (null == other.m_inputIdentifiers ? 0 : other.m_inputIdentifiers.Count);
+            result = thisInputIdentifierCount - otherInputIdentifierCount;
+            if (0 != result)
+            {
+                return result;
+            }
+            for (var i = 0; i < thisInputIdentifierCount; i++)
+            {
+                var thisParameter = m_inputIdentifiers[i].Value;
+                var otherParameter = other.m_inputIdentifiers[i].Value;
                 result = ByValueComparer.Default.Compare(thisParameter.Value, otherParameter.Value);
-                if (0 != result) { return result; }
+                if (0 != result)
+                {
+                    return result;
+                }
             }
 
             // If the result is still zero, it means key values are all the same. Switch to synthetic identifiers
             // to differentiate.
-            for (int i = 0; i < thisInputIdentifierCount; i++)
+            for (var i = 0; i < thisInputIdentifierCount; i++)
             {
-                int thisIdentifier = this.m_inputIdentifiers[i].Key;
-                int otherIdentifier = other.m_inputIdentifiers[i].Key;
+                var thisIdentifier = m_inputIdentifiers[i].Key;
+                var otherIdentifier = other.m_inputIdentifiers[i].Key;
                 result = thisIdentifier - otherIdentifier;
-                if (0 != result) { return result; }
+                if (0 != result)
+                {
+                    return result;
+                }
             }
 
             return result;

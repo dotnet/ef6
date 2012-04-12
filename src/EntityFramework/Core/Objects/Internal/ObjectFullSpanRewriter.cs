@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
 
     internal class ObjectFullSpanRewriter : ObjectSpanRewriter
@@ -18,13 +19,13 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             internal SpanPathInfo(EntityType declaringType)
             {
-                this.DeclaringType = declaringType;
+                DeclaringType = declaringType;
             }
 
             /// <summary>
             /// The effective Entity type of this node in the tree
             /// </summary>
-            internal EntityType DeclaringType;
+            internal readonly EntityType DeclaringType;
 
             /// <summary>
             /// Describes the navigation properties that should be retrieved
@@ -38,7 +39,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// Maintains a reference to the SpanPathInfo tree node representing the
         /// current position in the 'Include' path that is currently being expanded.
         /// </summary>
-        private Stack<SpanPathInfo> _currentSpanPath = new Stack<SpanPathInfo>();
+        private readonly Stack<SpanPathInfo> _currentSpanPath = new Stack<SpanPathInfo>();
 
         internal ObjectFullSpanRewriter(DbCommandTree tree, DbExpression toRewrite, Span span, AliasGenerator aliasGenerator)
             : base(tree, toRewrite, aliasGenerator)
@@ -50,25 +51,25 @@ namespace System.Data.Entity.Core.Objects.Internal
             // the Command Tree that is being rewritten. This could be either
             // literally 'T' or Collection<T>.
             EntityType entityType = null;
-            if (!TryGetEntityType(this.Query.ResultType, out entityType))
+            if (!TryGetEntityType(Query.ResultType, out entityType))
             {
                 // If the result type of the query is neither an Entity type nor a collection
                 // type with an Entity element type, then full Span is currently not allowed.
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.ObjectQuery_Span_IncludeRequiresEntityOrEntityCollection);
+                throw EntityUtil.InvalidOperation(Strings.ObjectQuery_Span_IncludeRequiresEntityOrEntityCollection);
             }
 
             // Construct the SpanPathInfo navigation property tree using the
             // list of Include Span paths from the Span object:
             // Create a SpanPathInfo instance that represents the root of the tree
             // and takes its Entity type from the Entity type of the result type of the query.
-            SpanPathInfo spanRoot = new SpanPathInfo(entityType);
-            
+            var spanRoot = new SpanPathInfo(entityType);
+
             // Populate the tree of navigation properties based on the navigation property names
             // in the Span paths from the Span object. Commonly rooted span paths are merged, so
             // that paths of "Customer.Order" and "Customer.Address", for example, will share a
             // common SpanPathInfo for "Customer" in the Children collection of the root SpanPathInfo,
             // and that SpanPathInfo will contain one child for "Order" and another for "Address".
-            foreach (Span.SpanPath path in span.SpanList)
+            foreach (var path in span.SpanList)
             {
                 AddSpanPath(spanRoot, path.Navigations);
             }
@@ -96,7 +97,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             if (!parentInfo.DeclaringType.NavigationProperties.TryGetValue(navPropNames[pos], true, out nextNavProp))
             {
                 // The navigation property name is not valid for this Entity type
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.ObjectQuery_Span_NoNavProp(parentInfo.DeclaringType.FullName, navPropNames[pos]));
+                throw EntityUtil.InvalidOperation(Strings.ObjectQuery_Span_NoNavProp(parentInfo.DeclaringType.FullName, navPropNames[pos]));
             }
 
             // The navigation property was retrieved, an entry for it must be ensured in the Children
@@ -160,17 +161,20 @@ namespace System.Data.Entity.Core.Objects.Internal
         private static bool TryGetEntityType(TypeUsage resultType, out EntityType entityType)
         {
             // If the result type is an Entity, then simply use that type.
-            if (BuiltInTypeKind.EntityType == resultType.EdmType.BuiltInTypeKind)
+            if (BuiltInTypeKind.EntityType
+                == resultType.EdmType.BuiltInTypeKind)
             {
                 entityType = (EntityType)resultType.EdmType;
                 return true;
             }
-            else if (BuiltInTypeKind.CollectionType == resultType.EdmType.BuiltInTypeKind)
+            else if (BuiltInTypeKind.CollectionType
+                     == resultType.EdmType.BuiltInTypeKind)
             {
                 // If the result type of the query is a collection, attempt to extract
                 // the element type of the collection and determine if it is an Entity type.
-                EdmType elementType = ((CollectionType)resultType.EdmType).TypeUsage.EdmType;
-                if (BuiltInTypeKind.EntityType == elementType.BuiltInTypeKind)
+                var elementType = ((CollectionType)resultType.EdmType).TypeUsage.EdmType;
+                if (BuiltInTypeKind.EntityType
+                    == elementType.BuiltInTypeKind)
                 {
                     entityType = (EntityType)elementType;
                     return true;
@@ -188,16 +192,18 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <returns>The AssociationEndMember that is the target of the navigation operation represented by the NavigationProperty</returns>
         private AssociationEndMember GetNavigationPropertyTargetEnd(NavigationProperty property)
         {
-            AssociationType relationship = this.Metadata.GetItem<AssociationType>(property.RelationshipType.FullName, DataSpace.CSpace);
-            Debug.Assert(relationship.AssociationEndMembers.Contains(property.ToEndMember.Name), "Association does not declare member referenced by Navigation property?");
+            var relationship = Metadata.GetItem<AssociationType>(property.RelationshipType.FullName, DataSpace.CSpace);
+            Debug.Assert(
+                relationship.AssociationEndMembers.Contains(property.ToEndMember.Name),
+                "Association does not declare member referenced by Navigation property?");
             return relationship.AssociationEndMembers[property.ToEndMember.Name];
         }
 
         internal override SpanTrackingInfo CreateEntitySpanTrackingInfo(DbExpression expression, EntityType entityType)
         {
-            SpanTrackingInfo tracking = new SpanTrackingInfo();
+            var tracking = new SpanTrackingInfo();
 
-            SpanPathInfo currentInfo = _currentSpanPath.Peek();
+            var currentInfo = _currentSpanPath.Peek();
             if (currentInfo.Children != null)
             {
                 // The current SpanPathInfo instance on the top of the span path stack indicates
@@ -205,13 +211,13 @@ namespace System.Data.Entity.Core.Objects.Internal
                 // and also specifies (in the form of child SpanPathInfo instances) which sub-paths
                 // must be expanded for each of those navigation properties.
                 // The SpanPathInfo instance may be the root instance or a SpanPathInfo that represents a sub-path.
-                int idx = 1; // SpanRoot is always the first (zeroth) column, full- and relationship-span columns follow.
-                foreach (KeyValuePair<NavigationProperty, SpanPathInfo> nextInfo in currentInfo.Children)
+                var idx = 1; // SpanRoot is always the first (zeroth) column, full- and relationship-span columns follow.
+                foreach (var nextInfo in currentInfo.Children)
                 {
                     // If the tracking information was not initialized yet, do so now.
                     if (null == tracking.ColumnDefinitions)
                     {
-                        tracking = InitializeTrackingInfo(this.RelationshipSpan);
+                        tracking = InitializeTrackingInfo(RelationshipSpan);
                     }
 
                     // Create a property expression that retrieves the specified navigation property from the Entity-typed expression.
@@ -228,18 +234,18 @@ namespace System.Data.Entity.Core.Objects.Internal
                     // property and adjust the stack to track which Include path is being expanded and which 
                     // element of that path is considered 'current'.
                     _currentSpanPath.Push(nextInfo.Value);
-                    columnDef = this.Rewrite(columnDef);
+                    columnDef = Rewrite(columnDef);
                     _currentSpanPath.Pop();
 
                     // Add a new column to the tracked columns using the rewritten column definition
                     tracking.ColumnDefinitions.Add(new KeyValuePair<string, DbExpression>(tracking.ColumnNames.Next(), columnDef));
-                    AssociationEndMember targetEnd = GetNavigationPropertyTargetEnd(nextInfo.Key);
+                    var targetEnd = GetNavigationPropertyTargetEnd(nextInfo.Key);
                     tracking.SpannedColumns[idx] = targetEnd;
 
                     // If full span and relationship span are both required, a relationship span may be rendered
                     // redundant by an already added full span. Therefore the association ends that have been expanded
                     // as part of full span are tracked using a dictionary.
-                    if (this.RelationshipSpan)
+                    if (RelationshipSpan)
                     {
                         tracking.FullSpannedEnds[targetEnd] = true;
                     }

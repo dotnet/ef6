@@ -2,8 +2,8 @@ namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core;
-    using System.Data.Entity.Resources;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Linq;
 
     /// <summary>

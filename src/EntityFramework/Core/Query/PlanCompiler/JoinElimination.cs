@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
-
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
 // to prevent from simple mistakes during development (e.g. method argument validation 
 // in cases where it was you who created the variables or the variables had already been validated or 
@@ -16,12 +13,11 @@ using System.Collections.Generic;
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
 
-using System.Globalization;
-
-using System.Data.Entity.Core.Query.InternalTrees;
-
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Query.InternalTrees;
+
     /// <summary>
     /// The JoinElimination module is intended to do just that - eliminate unnecessary joins. 
     /// This module deals with the following kinds of joins
@@ -35,31 +31,46 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal class JoinElimination : BasicOpVisitorOfNode
     {
         #region private state
-        private PlanCompiler m_compilerState;
-        private Command Command { get { return m_compilerState.Command; } }
-        private ConstraintManager ConstraintManager { get { return m_compilerState.ConstraintManager;  } }
-        private Dictionary<Node, Node> m_joinGraphUnnecessaryMap = new Dictionary<Node,Node>();
-        private VarRemapper m_varRemapper;
-        private bool m_treeModified = false;
-        private VarRefManager m_varRefManager;
+
+        private readonly PlanCompiler m_compilerState;
+
+        private Command Command
+        {
+            get { return m_compilerState.Command; }
+        }
+
+        private ConstraintManager ConstraintManager
+        {
+            get { return m_compilerState.ConstraintManager; }
+        }
+
+        private readonly Dictionary<Node, Node> m_joinGraphUnnecessaryMap = new Dictionary<Node, Node>();
+        private readonly VarRemapper m_varRemapper;
+        private bool m_treeModified;
+        private readonly VarRefManager m_varRefManager;
+
         #endregion
 
         #region constructors
+
         private JoinElimination(PlanCompiler compilerState)
         {
             m_compilerState = compilerState;
             m_varRemapper = new VarRemapper(m_compilerState.Command);
-            m_varRefManager = new VarRefManager(m_compilerState.Command); 
+            m_varRefManager = new VarRefManager(m_compilerState.Command);
         }
+
         #endregion
 
         #region public surface
+
         internal static bool Process(PlanCompiler compilerState)
         {
-            JoinElimination je = new JoinElimination(compilerState);
+            var je = new JoinElimination(compilerState);
             je.Process();
             return je.m_treeModified;
         }
+
         #endregion
 
         #region private methods
@@ -69,12 +80,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         private void Process()
         {
-            this.Command.Root = VisitNode(this.Command.Root);
+            Command.Root = VisitNode(Command.Root);
         }
 
         #region JoinHelpers
 
         #region Building JoinGraphs
+
         /// <summary>
         /// Do we need to build a join graph for this node - returns false, if we've already
         /// processed this
@@ -94,27 +106,27 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private Node ProcessJoinGraph(Node joinNode)
         {
             // Build the join graph
-            JoinGraph joinGraph = new JoinGraph(this.Command, this.ConstraintManager, this.m_varRefManager, joinNode);
+            var joinGraph = new JoinGraph(Command, ConstraintManager, m_varRefManager, joinNode);
 
             // Get the transformed node tree
             VarMap remappedVars;
             Dictionary<Node, Node> processedNodes;
-            Node newNode = joinGraph.DoJoinElimination(out remappedVars, out processedNodes);
+            var newNode = joinGraph.DoJoinElimination(out remappedVars, out processedNodes);
 
             // Get the set of vars that need to be renamed
-            foreach (KeyValuePair<Var, Var> kv in remappedVars)
+            foreach (var kv in remappedVars)
             {
                 m_varRemapper.AddMapping(kv.Key, kv.Value);
             }
             // get the set of nodes that have already been processed
-            foreach (Node n in processedNodes.Keys)
+            foreach (var n in processedNodes.Keys)
             {
                 m_joinGraphUnnecessaryMap[n] = n;
             }
 
             return newNode;
         }
-        
+
         /// <summary>
         /// Default handler for a node. Simply visits the children, then handles any var
         /// remapping, and then recomputes the node info
@@ -125,7 +137,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             VisitChildren(n);
             m_varRemapper.RemapNode(n);
-            this.Command.RecomputeNodeInfo(n);
+            Command.RecomputeNodeInfo(n);
             return n;
         }
 
@@ -147,6 +159,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         #region RelOps
+
         #region JoinOps
 
         /// <summary>
@@ -180,9 +193,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #endregion
-        #endregion
 
         #endregion
 
+        #endregion
     }
 }

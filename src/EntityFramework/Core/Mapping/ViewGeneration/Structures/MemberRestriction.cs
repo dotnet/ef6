@@ -1,13 +1,12 @@
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
-    using DomainBoolExpr    = System.Data.Entity.Core.Common.Utils.Boolean.BoolExpr<System.Data.Entity.Core.Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
-    using DomainTermExpr    = System.Data.Entity.Core.Common.Utils.Boolean.TermExpr<System.Data.Entity.Core.Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Text;
+    using DomainBoolExpr =
+        System.Data.Entity.Core.Common.Utils.Boolean.BoolExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
+    using DomainTermExpr =
+        System.Data.Entity.Core.Common.Utils.Boolean.TermExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
 
     /// <summary>
     /// An abstract class that denotes the boolean expression: "var in values".
@@ -18,13 +17,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     internal abstract class MemberRestriction : BoolLiteral
     {
         #region Constructors
+
         /// <summary>
         /// Creates an incomplete member restriction with the meaning "<paramref name="slot"/> = <paramref name="value"/>".
         /// "Partial" means that the <see cref="Domain"/> in this restriction is partial - hence the operations on the restriction are limited.
         /// </summary>
         protected MemberRestriction(MemberProjectedSlot slot, Constant value)
-            : this(slot, new Constant[] { value })
-        { }
+            : this(slot, new[] { value })
+        {
+        }
 
         /// <summary>
         /// Creates an incomplete member restriction with the meaning "<paramref name="slot"/> in <paramref name="values"/>".
@@ -43,8 +44,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_restrictedMemberSlot = slot;
             m_domain = domain;
             m_isComplete = true;
-            Debug.Assert(m_domain.Count != 0, "If you want a boolean that evaluates to false, " +
-                         "use the ConstantBool abstraction");
+            Debug.Assert(
+                m_domain.Count != 0, "If you want a boolean that evaluates to false, " +
+                                     "use the ConstantBool abstraction");
         }
 
         /// <summary>
@@ -56,15 +58,19 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             Debug.Assert(possibleValues != null);
         }
+
         #endregion
 
         #region Fields
+
         private readonly MemberProjectedSlot m_restrictedMemberSlot;
         private readonly Domain m_domain;
         private readonly bool m_isComplete;
+
         #endregion
 
         #region Properties
+
         internal bool IsComplete
         {
             get { return m_isComplete; }
@@ -85,9 +91,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get { return m_domain; }
         }
+
         #endregion
 
         #region BoolLiteral Members
+
         /// <summary>
         /// Returns a boolean expression that is domain-aware and ready for optimizations etc.
         /// </summary>
@@ -100,7 +108,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             if (domainMap != null)
             {
                 // Look up the domain from the domainMap
-                IEnumerable<Constant> domain = domainMap.GetDomain(m_restrictedMemberSlot.MemberPath);
+                var domain = domainMap.GetDomain(m_restrictedMemberSlot.MemberPath);
                 result = MakeTermExpression(this, domain, m_domain.Values);
             }
             else
@@ -121,8 +129,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         internal override void GetRequiredSlots(MemberProjectionIndex projectedSlotMap, bool[] requiredSlots)
         {
             // Simply get the slot for the variable var in "var in values"
-            MemberPath member = RestrictedMemberSlot.MemberPath;
-            int slotNum = projectedSlotMap.IndexOf(member);
+            var member = RestrictedMemberSlot.MemberPath;
+            var slotNum = projectedSlotMap.IndexOf(member);
             requiredSlots[slotNum] = true;
         }
 
@@ -131,16 +139,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// </summary>
         protected override bool IsEqualTo(BoolLiteral right)
         {
-            MemberRestriction rightRestriction= right as MemberRestriction;
+            var rightRestriction = right as MemberRestriction;
             if (rightRestriction == null)
             {
                 return false;
             }
-            if (object.ReferenceEquals(this, rightRestriction))
+            if (ReferenceEquals(this, rightRestriction))
             {
                 return true;
             }
-            if (false == MemberProjectedSlot.EqualityComparer.Equals(m_restrictedMemberSlot, rightRestriction.m_restrictedMemberSlot))
+            if (false == ProjectedSlot.EqualityComparer.Equals(m_restrictedMemberSlot, rightRestriction.m_restrictedMemberSlot))
             {
                 return false;
             }
@@ -153,7 +161,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// </summary>
         public override int GetHashCode()
         {
-            int result = MemberProjectedSlot.EqualityComparer.GetHashCode(m_restrictedMemberSlot);
+            var result = ProjectedSlot.EqualityComparer.GetHashCode(m_restrictedMemberSlot);
             result ^= m_domain.GetHash();
             return result;
         }
@@ -163,16 +171,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// </summary>
         protected override bool IsIdentifierEqualTo(BoolLiteral right)
         {
-            MemberRestriction rightOneOfConst = right as MemberRestriction;
+            var rightOneOfConst = right as MemberRestriction;
             if (rightOneOfConst == null)
             {
                 return false;
             }
-            if (object.ReferenceEquals(this, rightOneOfConst))
+            if (ReferenceEquals(this, rightOneOfConst))
             {
                 return true;
             }
-            return MemberProjectedSlot.EqualityComparer.Equals(m_restrictedMemberSlot, rightOneOfConst.m_restrictedMemberSlot);
+            return ProjectedSlot.EqualityComparer.Equals(m_restrictedMemberSlot, rightOneOfConst.m_restrictedMemberSlot);
         }
 
         /// <summary>
@@ -180,9 +188,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// </summary>
         protected override int GetIdentifierHash()
         {
-            int result = MemberProjectedSlot.EqualityComparer.GetHashCode(m_restrictedMemberSlot);
+            var result = ProjectedSlot.EqualityComparer.GetHashCode(m_restrictedMemberSlot);
             return result;
         }
+
         #endregion
 
         #region Other Methods
@@ -199,6 +208,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             builder.Append(")");
             return builder;
         }
+
         #endregion
     }
 }

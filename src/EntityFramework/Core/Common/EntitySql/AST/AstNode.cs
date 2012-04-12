@@ -1,7 +1,5 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
-    using System;
-    using System.Globalization;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -12,7 +10,9 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
     {
         private ErrorContext _errCtx = new ErrorContext();
 
-        internal Node() { }
+        internal Node()
+        {
+        }
 
         internal Node(string commandText, int inputPosition)
         {
@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
     /// <summary>
     /// An ast node represents a generic list of ast nodes.
     /// </summary>
-    internal sealed class NodeList<T> : Node, System.Collections.Generic.IEnumerable<T>
+    internal sealed class NodeList<T> : Node, IEnumerable<T>
         where T : Node
     {
         private readonly List<T> _list = new List<T>();
@@ -81,15 +81,17 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         #region GetEnumerator
-        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator()
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             return _list.GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return _list.GetEnumerator();
         }
+
         #endregion
     }
 }

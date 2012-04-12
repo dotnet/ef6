@@ -1,22 +1,15 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Diagnostics;
-using System.Reflection;
-using System.Text;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     internal interface IBaseList<T> : IList
     {
-        T this[string identity] { get;}
+        T this[string identity] { get; }
 
-        new T this[int index] { get;}
+        new T this[int index] { get; }
 
         int IndexOf(T item);
     }
@@ -30,30 +23,35 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// <typeparam name="TBase">The type of items that you pass as input</typeparam>
     */
     internal class FilteredReadOnlyMetadataCollection<TDerived, TBase> : ReadOnlyMetadataCollection<TDerived>, IBaseList<TBase>
-                where TDerived : TBase 
-                where TBase : MetadataItem
+        where TDerived : TBase
+        where TBase : MetadataItem
     {
         #region Constructors
+
         /// <summary>
         /// The constructor for constructing a read-only metadata collection to wrap another MetadataCollection.
         /// </summary>
         /// <param name="collection">The metadata collection to wrap</param>
         /// <exception cref="System.ArgumentNullException">Thrown if collection argument is null</exception>
         /// <param name="predicate">Predicate method which determines membership</param>
-        internal FilteredReadOnlyMetadataCollection(ReadOnlyMetadataCollection<TBase> collection, Predicate<TBase> predicate) : base(FilterCollection(collection, predicate))
+        internal FilteredReadOnlyMetadataCollection(ReadOnlyMetadataCollection<TBase> collection, Predicate<TBase> predicate)
+            : base(FilterCollection(collection, predicate))
         {
             Debug.Assert(collection != null);
-            Debug.Assert(collection.IsReadOnly, "wrappers should only be created once loading is over, and this collection is still loading");
+            Debug.Assert(
+                collection.IsReadOnly, "wrappers should only be created once loading is over, and this collection is still loading");
             _source = collection;
             _predicate = predicate;
-
         }
+
         #endregion
 
         #region Private Fields
+
         // The original metadata collection over which this filtered collection is the view
         private readonly ReadOnlyMetadataCollection<TBase> _source;
         private readonly Predicate<TBase> _predicate;
+
         #endregion
 
         #region Properties
@@ -69,10 +67,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                TBase item = _source[identity];
+                var item = _source[identity];
                 if (_predicate(item))
                 {
-                    return (TDerived)item; 
+                    return (TDerived)item;
                 }
                 throw EntityUtil.ItemInvalidIdentity(identity, "identity");
             }
@@ -81,6 +79,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Gets an item from the collection with the given identity
         /// </summary>
@@ -91,7 +90,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the Collection does not have an item with the given identity</exception>
         public override TDerived GetValue(string identity, bool ignoreCase)
         {
-            TBase item = _source.GetValue(identity, ignoreCase);
+            var item = _source.GetValue(identity, ignoreCase);
 
             if (_predicate(item))
             {
@@ -110,7 +109,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public override bool Contains(string identity)
         {
             TBase item;
-            if (_source.TryGetValue(identity, false/*ignoreCase*/, out item))
+            if (_source.TryGetValue(identity, false /*ignoreCase*/, out item))
             {
                 return (_predicate(item));
             }
@@ -127,7 +126,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">if identity argument is null</exception>
         public override bool TryGetValue(string identity, bool ignoreCase, out TDerived item)
         {
-            item = null; 
+            item = null;
             TBase baseTypeItem;
             if (_source.TryGetValue(identity, ignoreCase, out baseTypeItem))
             {
@@ -142,8 +141,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal static List<TDerived> FilterCollection(ReadOnlyMetadataCollection<TBase> collection, Predicate<TBase> predicate)
         {
-            List<TDerived> list = new List<TDerived>(collection.Count);
-            foreach (TBase item in collection)
+            var list = new List<TDerived>(collection.Count);
+            foreach (var item in collection)
             {
                 if (predicate(item))
                 {
@@ -185,10 +184,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         TBase IBaseList<TBase>.this[int index]
         {
-            get
-            {
-                return this[index];
-            }
+            get { return this[index]; }
         }
 
         /// <summary>
@@ -200,7 +196,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             if (_predicate(item))
             {
-                return this.IndexOf((TDerived)item);
+                return IndexOf((TDerived)item);
             }
 
             return -1;

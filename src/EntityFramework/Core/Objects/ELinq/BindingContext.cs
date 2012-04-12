@@ -1,19 +1,11 @@
 using CqtExpression = System.Data.Entity.Core.Common.CommandTrees.DbExpression;
 using LinqExpression = System.Linq.Expressions.Expression;
-using System.Linq.Expressions;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Reflection;
-using System.Data.Entity.Core.Common.EntitySql;
-using System.Diagnostics;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Globalization;
+
 namespace System.Data.Entity.Core.Objects.ELinq
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// Class containing binding information for an expression converter (associating CQT bindings
     /// with LINQ lambda parameter or LINQ sub-expressions)
@@ -68,7 +60,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             _scopes.Pop();
         }
 
-        internal bool TryGetBoundExpression(Expression linqExpression, out CqtExpression cqtExpression)
+        internal bool TryGetBoundExpression(LinqExpression linqExpression, out CqtExpression cqtExpression)
         {
             cqtExpression = _scopes
                 .Where(binding => binding.LinqExpression == linqExpression)
@@ -87,7 +79,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     /// </summary>
     internal sealed class Binding
     {
-        internal Binding(Expression linqExpression, CqtExpression cqtExpression)
+        internal Binding(LinqExpression linqExpression, CqtExpression cqtExpression)
         {
             EntityUtil.CheckArgumentNull(linqExpression, "linqExpression");
             EntityUtil.CheckArgumentNull(cqtExpression, "cqtExpression");
@@ -95,7 +87,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             CqtExpression = cqtExpression;
         }
 
-        internal readonly Expression LinqExpression;
+        internal readonly LinqExpression LinqExpression;
         internal readonly CqtExpression CqtExpression;
     }
 }

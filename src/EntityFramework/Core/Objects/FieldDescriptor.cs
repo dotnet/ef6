@@ -1,16 +1,13 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Objects.DataClasses;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Diagnostics;
-using System.Globalization;
-
 namespace System.Data.Entity.Core.Objects
 {
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Data.Common;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+    using System.Globalization;
+
     internal sealed class FieldDescriptor : PropertyDescriptor
     {
         private readonly EdmProperty _property;
@@ -36,7 +33,7 @@ namespace System.Data.Entity.Core.Objects
             _property = property;
             _isReadOnly = isReadOnly;
             _fieldType = DetermineClrType(_property.TypeUsage);
-            System.Diagnostics.Debug.Assert(_fieldType != null, "FieldDescriptor's CLR type has unexpected value of null.");
+            Debug.Assert(_fieldType != null, "FieldDescriptor's CLR type has unexpected value of null.");
         }
 
         /// <summary>
@@ -47,7 +44,7 @@ namespace System.Data.Entity.Core.Objects
         private Type DetermineClrType(TypeUsage typeUsage)
         {
             Type result = null;
-            EdmType edmType = typeUsage.EdmType;
+            var edmType = typeUsage.EdmType;
 
             switch (edmType.BuiltInTypeKind)
             {
@@ -61,7 +58,7 @@ namespace System.Data.Entity.Core.Objects
                     break;
 
                 case BuiltInTypeKind.CollectionType:
-                    TypeUsage elementTypeUse = ((CollectionType)edmType).TypeUsage;
+                    var elementTypeUse = ((CollectionType)edmType).TypeUsage;
                     result = DetermineClrType(elementTypeUse);
                     result = typeof(IEnumerable<>).MakeGenericType(result);
                     break;
@@ -71,10 +68,11 @@ namespace System.Data.Entity.Core.Objects
                     result = edmType.ClrType;
                     Facet nullable;
                     if (result.IsValueType &&
-                        typeUsage.Facets.TryGetValue(DbProviderManifest.NullableFacetName, false, out nullable) &&
+                        typeUsage.Facets.TryGetValue(DbProviderManifest.NullableFacetName, false, out nullable)
+                        &&
                         ((bool)nullable.Value))
                     {
-                        result = typeof(Nullable<>).MakeGenericType(result); 
+                        result = typeof(Nullable<>).MakeGenericType(result);
                     }
                     break;
 
@@ -83,7 +81,11 @@ namespace System.Data.Entity.Core.Objects
                     break;
 
                 default:
-                    Debug.Fail(string.Format(CultureInfo.CurrentCulture, "The type {0} was not the expected scalar, enumeration, collection, structural, nominal, or reference type.", edmType.GetType()));
+                    Debug.Fail(
+                        string.Format(
+                            CultureInfo.CurrentCulture,
+                            "The type {0} was not the expected scalar, enumeration, collection, structural, nominal, or reference type.",
+                            edmType.GetType()));
                     break;
             }
 
@@ -106,14 +108,17 @@ namespace System.Data.Entity.Core.Objects
         {
             get { return _itemType; }
         }
+
         public override bool IsReadOnly
         {
             get { return _isReadOnly; }
         }
+
         public override Type PropertyType
         {
             get { return _fieldType; }
         }
+
         public override bool CanResetValue(object item)
         {
             return false;
@@ -130,7 +135,7 @@ namespace System.Data.Entity.Core.Objects
 
             object propertyValue;
 
-            DbDataRecord dbDataRecord = item as DbDataRecord;
+            var dbDataRecord = item as DbDataRecord;
             if (dbDataRecord != null)
             {
                 propertyValue = (dbDataRecord.GetValue(dbDataRecord.GetOrdinal(_property.Name)));
@@ -142,6 +147,7 @@ namespace System.Data.Entity.Core.Objects
 
             return propertyValue;
         }
+
         public override void ResetValue(object item)
         {
             throw EntityUtil.NotSupported();
@@ -163,10 +169,12 @@ namespace System.Data.Entity.Core.Objects
                 throw EntityUtil.WriteOperationNotAllowedOnReadOnlyBindingList();
             }
         }
+
         public override bool ShouldSerializeValue(object item)
         {
             return false;
         }
+
         public override bool IsBrowsable
         {
             get { return true; }

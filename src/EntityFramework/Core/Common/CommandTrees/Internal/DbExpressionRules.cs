@@ -1,14 +1,8 @@
-﻿using System.Data.Entity.Core.Common.CommandTrees;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Diagnostics;
-using System.Data.Entity.Core.Common.Utils;
-using System.Linq;
-using System.Globalization;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-
-namespace System.Data.Entity.Core.Common.CommandTrees.Internal
+﻿namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// Enacapsulates the logic that defines an expression 'rule' which is capable of transforming a candidate <see cref="DbExpression"/>
     /// into a result DbExpression, and indicating what action should be taken on that result expression by the rule application logic.
@@ -42,7 +36,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         /// <param name="expression">The <see cref="DbExpression"/> that the rule should inspect and determine if processing is possible</param>
         /// <returns><c>true</c> if the rule can attempt processing of the expression via the <see cref="TryProcess"/> method; otherwise <c>false</c></returns>
         internal abstract bool ShouldProcess(DbExpression expression);
-        
+
         /// <summary>
         /// Attempts to process the input <paramref name="expression"/> to produce a <paramref name="result"/> <see cref="DbExpression"/>.
         /// </summary>
@@ -50,7 +44,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         /// <param name="result">The result expression produced by the rule if processing was successful</param>
         /// <returns><c>true</c> if the rule was able to successfully process the input expression and produce a result expression; otherwise <c>false</c></returns>
         internal abstract bool TryProcess(DbExpression expression, out DbExpression result);
-        
+
         /// <summary>
         /// Indicates what action - as a <see cref="ProcessedAction"/> value - the rule processor should take if <see cref="TryProcess"/> returns true.
         /// </summary>
@@ -63,26 +57,26 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     /// </summary>
     internal abstract class DbExpressionRuleProcessingVisitor : DefaultExpressionVisitor
     {
-        protected DbExpressionRuleProcessingVisitor() { }
-
         protected abstract IEnumerable<DbExpressionRule> GetRules();
 
-        private static Tuple<DbExpression, DbExpressionRule.ProcessedAction> ProcessRules(DbExpression expression, List<DbExpressionRule> rules)
+        private static Tuple<DbExpression, DbExpressionRule.ProcessedAction> ProcessRules(
+            DbExpression expression, List<DbExpressionRule> rules)
         {
             // Considering each rule in the rule set in turn, if the rule indicates that it can process the
             // input expression, call TryProcess to attempt processing. If successful, take the action specified
             // by the rule's OnExpressionProcessed action, which may involve returning the action and the result
             // expression so that processing can be reset or halted.
 
-            for (int idx = 0; idx < rules.Count; idx++)
+            for (var idx = 0; idx < rules.Count; idx++)
             {
-                DbExpressionRule currentRule = rules[idx];
+                var currentRule = rules[idx];
                 if (currentRule.ShouldProcess(expression))
                 {
                     DbExpression result;
                     if (currentRule.TryProcess(expression, out result))
                     {
-                        if (currentRule.OnExpressionProcessed != DbExpressionRule.ProcessedAction.Continue)
+                        if (currentRule.OnExpressionProcessed
+                            != DbExpressionRule.ProcessedAction.Continue)
                         {
                             return Tuple.Create(result, currentRule.OnExpressionProcessed);
                         }
@@ -103,14 +97,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             // Driver loop to apply rules while the status of processing is 'Reset',
             // or correctly set the _stopped flag if status is 'Stopped'.
 
-            List<DbExpressionRule> currentRules = this.GetRules().ToList();
+            var currentRules = GetRules().ToList();
             var ruleResult = ProcessRules(expression, currentRules);
-            while (ruleResult.Item2 == DbExpressionRule.ProcessedAction.Reset)
+            while (ruleResult.Item2
+                   == DbExpressionRule.ProcessedAction.Reset)
             {
-                currentRules = this.GetRules().ToList();
+                currentRules = GetRules().ToList();
                 ruleResult = ProcessRules(ruleResult.Item1, currentRules);
             }
-            if (ruleResult.Item2 == DbExpressionRule.ProcessedAction.Stop)
+            if (ruleResult.Item2
+                == DbExpressionRule.ProcessedAction.Stop)
             {
                 _stopped = true;
             }
@@ -120,7 +116,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         protected override DbExpression VisitExpression(DbExpression expression)
         {
             // Pre-process this visitor's rules
-            DbExpression result = ApplyRules(expression);
+            var result = ApplyRules(expression);
             if (_stopped)
             {
                 // If rule processing was stopped, the result expression must be returned immediately

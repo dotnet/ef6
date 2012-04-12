@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
-
+// Please use PlanCompiler.Assert instead of Debug.Assert in this class...
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
 // to prevent from simple mistakes during development (e.g. method argument validation 
 // in cases where it was you who created the variables or the variables had already been validated or 
@@ -15,16 +12,14 @@ using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Ass
 // or the tree was built/rewritten not the way we thought it was.
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
-
-using System.Globalization;
-
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
 using md = System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Query.InternalTrees;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Query.InternalTrees;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -43,13 +38,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     /// </summary>
     internal class TypeInfo
     {
-
         #region private state
-        private readonly md.TypeUsage m_type;    // the type
-        private object m_typeId;            // the type's Id, assigned by the StructuredTypeInfo processing.
-        private List<TypeInfo> m_immediateSubTypes;  // the list of children below this type in it's type hierarchy.
-        private readonly TypeInfo m_superType;       // the type one level up in this types type hierarchy -- the base type.
-        private readonly RootTypeInfo m_rootType;    // the top-most type in this types type hierarchy
+
+        private readonly md.TypeUsage m_type; // the type
+        private readonly List<TypeInfo> m_immediateSubTypes; // the list of children below this type in it's type hierarchy.
+        private readonly TypeInfo m_superType; // the type one level up in this types type hierarchy -- the base type.
+        private readonly RootTypeInfo m_rootType; // the top-most type in this types type hierarchy
+
         #endregion
 
         #region Constructors and factory methods
@@ -100,10 +95,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal bool IsRootType
         {
-            get
-            {
-                return m_rootType == null;
-            }
+            get { return m_rootType == null; }
         }
 
         /// <summary>
@@ -111,10 +103,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal List<TypeInfo> ImmediateSubTypes
         {
-            get
-            {
-                return m_immediateSubTypes;
-            }
+            get { return m_immediateSubTypes; }
         }
 
         /// <summary>
@@ -122,10 +111,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal TypeInfo SuperType
         {
-            get
-            {
-                return m_superType;
-            }
+            get { return m_superType; }
         }
 
         /// <summary>
@@ -133,36 +119,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal RootTypeInfo RootType
         {
-            get
-            {
-                return m_rootType ?? (RootTypeInfo)this;
-            }
+            get { return m_rootType ?? (RootTypeInfo)this; }
         }
+
         /// <summary>
         /// The metadata type
         /// </summary>
         internal md.TypeUsage Type
         {
-            get
-            {
-                return m_type;
-            }
+            get { return m_type; }
         }
 
         /// <summary>
         /// The typeid value for this type - only applies to nominal types
         /// </summary>
-        internal object TypeId
-        {
-            get
-            {
-                return m_typeId;
-            }
-            set
-            {
-                m_typeId = value;
-            }
-        }
+        internal object TypeId { get; set; }
 
         #endregion
 
@@ -188,10 +159,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal virtual md.RowType FlattenedType
         {
-            get
-            {
-                return RootType.FlattenedType;
-            }
+            get { return RootType.FlattenedType; }
         }
 
         /// <summary>
@@ -199,10 +167,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal virtual md.TypeUsage FlattenedTypeUsage
         {
-            get
-            {
-                return RootType.FlattenedTypeUsage;
-            }
+            get { return RootType.FlattenedTypeUsage; }
         }
 
         /// <summary>
@@ -210,10 +175,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal virtual md.EdmProperty EntitySetIdProperty
         {
-            get
-            {
-                return RootType.EntitySetIdProperty;
-            }
+            get { return RootType.EntitySetIdProperty; }
         }
 
         /// <summary>
@@ -221,10 +183,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal bool HasEntitySetIdProperty
         {
-            get
-            {
-                return RootType.EntitySetIdProperty != null;
-            }
+            get { return RootType.EntitySetIdProperty != null; }
         }
 
         /// <summary>
@@ -232,10 +191,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal virtual md.EdmProperty NullSentinelProperty
         {
-            get
-            {
-                return RootType.NullSentinelProperty;
-            }
+            get { return RootType.NullSentinelProperty; }
         }
 
         /// <summary>
@@ -243,10 +199,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal bool HasNullSentinelProperty
         {
-            get
-            {
-                return RootType.NullSentinelProperty != null;
-            }
+            get { return RootType.NullSentinelProperty != null; }
         }
 
         /// <summary>
@@ -255,10 +208,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal virtual md.EdmProperty TypeIdProperty
         {
-            get
-            {
-                return RootType.TypeIdProperty;
-            }
+            get { return RootType.TypeIdProperty; }
         }
 
         /// <summary>
@@ -266,10 +216,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal bool HasTypeIdProperty
         {
-            get
-            {
-                return RootType.TypeIdProperty != null;
-            }
+            get { return RootType.TypeIdProperty != null; }
         }
 
         /// <summary>
@@ -277,10 +224,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal virtual IEnumerable<PropertyRef> PropertyRefList
         {
-            get
-            {
-                return RootType.PropertyRefList;
-            }
+            get { return RootType.PropertyRefList; }
         }
 
         /// <summary>
@@ -291,7 +235,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         internal md.EdmProperty GetNewProperty(PropertyRef propertyRef)
         {
             md.EdmProperty property;
-            bool result = TryGetNewProperty(propertyRef, true, out property);
+            var result = TryGetNewProperty(propertyRef, true, out property);
             Debug.Assert(result, "Should have thrown if the property was not found");
             return property;
         }
@@ -305,19 +249,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         internal bool TryGetNewProperty(PropertyRef propertyRef, bool throwIfMissing, out md.EdmProperty newProperty)
         {
-            return this.RootType.TryGetNewProperty(propertyRef, throwIfMissing, out newProperty);
+            return RootType.TryGetNewProperty(propertyRef, throwIfMissing, out newProperty);
         }
 
         /// <summary>
         /// Get the list of "key" properties (in the flattened type)
         /// </summary>
         /// <returns>the key property equivalents in the flattened type</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Non-EdmProperty"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Non-EdmProperty")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal IEnumerable<PropertyRef> GetKeyPropertyRefs()
         {
             md.EntityTypeBase entityType = null;
             md.RefType refType = null;
-            if (TypeHelpers.TryGetEdmType<md.RefType>(m_type, out refType))
+            if (TypeHelpers.TryGetEdmType(m_type, out refType))
             {
                 entityType = refType.ElementType;
             }
@@ -328,11 +274,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // Walk through the list of keys of the entity type, and find their analogs in the
             // "flattened" type
-            foreach (md.EdmMember p in entityType.KeyMembers)
+            foreach (var p in entityType.KeyMembers)
             {
                 // Eventually this could be RelationshipEndMember, but currently only properties are suppported as key members
                 PlanCompiler.Assert(p is md.EdmProperty, "Non-EdmProperty key members are not supported");
-                SimplePropertyRef spr = new SimplePropertyRef(p);
+                var spr = new SimplePropertyRef(p);
                 yield return spr;
             }
         }
@@ -345,11 +291,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>List of identity properties</returns>
         internal IEnumerable<PropertyRef> GetIdentityPropertyRefs()
         {
-            if (this.HasEntitySetIdProperty)
+            if (HasEntitySetIdProperty)
             {
                 yield return EntitySetIdPropertyRef.Instance;
             }
-            foreach (PropertyRef p in this.GetKeyPropertyRefs())
+            foreach (var p in GetKeyPropertyRefs())
             {
                 yield return p;
             }
@@ -361,7 +307,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         internal IEnumerable<PropertyRef> GetAllPropertyRefs()
         {
-            foreach (PropertyRef p in this.PropertyRefList)
+            foreach (var p in PropertyRefList)
             {
                 yield return p;
             }
@@ -373,7 +319,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         internal IEnumerable<md.EdmProperty> GetAllProperties()
         {
-            foreach (md.EdmProperty m in this.FlattenedType.Properties)
+            foreach (var m in FlattenedType.Properties)
             {
                 yield return m;
             }
@@ -384,7 +330,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal List<TypeInfo> GetTypeHierarchy()
         {
-            List<TypeInfo> result = new List<TypeInfo>();
+            var result = new List<TypeInfo>();
             GetTypeHierarchy(result);
             return result;
         }
@@ -395,11 +341,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private void GetTypeHierarchy(List<TypeInfo> result)
         {
             result.Add(this);
-            foreach (TypeInfo subType in this.ImmediateSubTypes)
+            foreach (var subType in ImmediateSubTypes)
             {
                 subType.GetTypeHierarchy(result);
             }
         }
+
         #endregion
     }
 
@@ -409,18 +356,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     /// </summary>
     internal class RootTypeInfo : TypeInfo
     {
-
         #region private state
+
         private readonly List<PropertyRef> m_propertyRefList;
         private readonly Dictionary<PropertyRef, md.EdmProperty> m_propertyMap;
         private md.EdmProperty m_nullSentinelProperty;
         private md.EdmProperty m_typeIdProperty;
-        private TypeIdKind m_typeIdKind;
-        private md.TypeUsage m_typeIdType;
         private readonly ExplicitDiscriminatorMap m_discriminatorMap;
         private md.EdmProperty m_entitySetIdProperty;
         private md.RowType m_flattenedType;
         private md.TypeUsage m_flattenedTypeUsage;
+
         #endregion
 
         #region Constructor
@@ -429,7 +375,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// Constructor for a root type
         /// </summary>
         /// <param name="type"></param>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal RootTypeInfo(md.TypeUsage type, ExplicitDiscriminatorMap discriminatorMap)
             : base(type, null)
         {
@@ -438,7 +385,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             m_propertyMap = new Dictionary<PropertyRef, md.EdmProperty>();
             m_propertyRefList = new List<PropertyRef>();
             m_discriminatorMap = discriminatorMap;
-            m_typeIdKind = TypeIdKind.Generated;
+            TypeIdKind = TypeIdKind.Generated;
         }
 
         #endregion
@@ -448,20 +395,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         /// Kind of the typeid column (if any)
         /// </summary>
-        internal TypeIdKind TypeIdKind
-        {
-            get { return m_typeIdKind; }
-            set { m_typeIdKind = value; }
-        }
+        internal TypeIdKind TypeIdKind { get; set; }
 
         /// <summary>
         /// Datatype of the typeid column (if any)
         /// </summary>
-        internal md.TypeUsage TypeIdType
-        {
-            get { return m_typeIdType; }
-            set { m_typeIdType = value; }
-        }
+        internal md.TypeUsage TypeIdType { get; set; }
+
         /// <summary>
         /// Add a mapping from the propertyRef (of the old type) to the 
         /// corresponding property in the new type.
@@ -502,10 +442,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal new md.RowType FlattenedType
         {
-            get
-            {
-                return m_flattenedType;
-            }
+            get { return m_flattenedType; }
             set
             {
                 m_flattenedType = value;
@@ -518,10 +455,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal new md.TypeUsage FlattenedTypeUsage
         {
-            get
-            {
-                return m_flattenedTypeUsage;
-            }
+            get { return m_flattenedTypeUsage; }
         }
 
         /// <summary>
@@ -529,10 +463,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal ExplicitDiscriminatorMap DiscriminatorMap
         {
-            get
-            {
-                return m_discriminatorMap;
-            }
+            get { return m_discriminatorMap; }
         }
 
         /// <summary>
@@ -540,18 +471,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal new md.EdmProperty EntitySetIdProperty
         {
-            get
-            {
-                return m_entitySetIdProperty;
-            }
+            get { return m_entitySetIdProperty; }
         }
 
         internal new md.EdmProperty NullSentinelProperty
         {
-            get
-            {
-                return m_nullSentinelProperty;
-            }
+            get { return m_nullSentinelProperty; }
         }
 
         /// <summary>
@@ -559,10 +484,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal new IEnumerable<PropertyRef> PropertyRefList
         {
-            get
-            {
-                return m_propertyRefList;
-            }
+            get { return m_propertyRefList; }
         }
 
         /// <summary>
@@ -578,16 +500,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="property">Complex property.</param>
         /// <returns>Offset.</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "TypeInfo"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "TypeInfo")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal int GetNestedStructureOffset(PropertyRef property)
         {
             // m_propertyRefList contains every element of the flattened type
-            for (int i = 0; i < m_propertyRefList.Count; i++)
+            for (var i = 0; i < m_propertyRefList.Count; i++)
             {
-                NestedPropertyRef nestedPropertyRef = m_propertyRefList[i] as NestedPropertyRef;
+                var nestedPropertyRef = m_propertyRefList[i] as NestedPropertyRef;
 
                 // match offset of the first element of the complex type property
-                if (null != nestedPropertyRef && nestedPropertyRef.InnerProperty.Equals(property))
+                if (null != nestedPropertyRef
+                    && nestedPropertyRef.InnerProperty.Equals(property))
                 {
                     return i;
                 }
@@ -604,14 +529,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="throwIfMissing">throw if the property is not found</param>
         /// <param name="property">the corresponding property on the new type</param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal new bool TryGetNewProperty(PropertyRef propertyRef, bool throwIfMissing, out md.EdmProperty property)
         {
-            bool result = m_propertyMap.TryGetValue(propertyRef, out property);
+            var result = m_propertyMap.TryGetValue(propertyRef, out property);
             if (throwIfMissing && !result)
             {
                 {
-                    PlanCompiler.Assert(false, "Unable to find property " + propertyRef.ToString() + " in type " + this.Type.EdmType.Identity);
+                    PlanCompiler.Assert(false, "Unable to find property " + propertyRef + " in type " + Type.EdmType.Identity);
                 }
             }
             return result;
@@ -623,10 +549,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal new md.EdmProperty TypeIdProperty
         {
-            get
-            {
-                return m_typeIdProperty;
-            }
+            get { return m_typeIdProperty; }
         }
 
         #endregion

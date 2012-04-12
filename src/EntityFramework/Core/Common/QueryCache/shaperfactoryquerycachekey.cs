@@ -1,7 +1,8 @@
-﻿using System.Diagnostics;
-using System.Data.Entity.Core.Objects;
-namespace System.Data.Entity.Core.Common.QueryCache
+﻿namespace System.Data.Entity.Core.Common.QueryCache
 {
+    using System.Data.Entity.Core.Objects;
+    using System.Diagnostics;
+
     internal class ShaperFactoryQueryCacheKey<T> : QueryCacheKey
     {
         private readonly string _columnMapKey;
@@ -23,9 +24,9 @@ namespace System.Data.Entity.Core.Common.QueryCache
             {
                 return false;
             }
-            return this._columnMapKey.Equals(other._columnMapKey, _stringComparison)
-                && this._mergeOption == other._mergeOption
-                && this._isValueLayer == other._isValueLayer;
+            return _columnMapKey.Equals(other._columnMapKey, _stringComparison)
+                   && _mergeOption == other._mergeOption
+                   && _isValueLayer == other._isValueLayer;
         }
 
         public override int GetHashCode()

@@ -7,7 +7,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// An abstract base type for types that implement the IExpressionVisitor interface to derive from.
     /// </summary>
-    /*CQT_PUBLIC_API(*/internal/*)*/ abstract class BasicExpressionVisitor : DbExpressionVisitor
+    /*CQT_PUBLIC_API(*/
+    internal /*)*/ abstract class BasicExpressionVisitor : DbExpressionVisitor
     {
         #region protected API, may be overridden to add functionality at specific points in the traversal
 
@@ -33,7 +34,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             VisitExpression(expression.Left);
             VisitExpression(expression.Right);
         }
-                
+
         /// <summary>
         /// Convenience method to visit the specified <see cref="DbExpressionBinding"/>.
         /// </summary>
@@ -121,7 +122,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         public virtual void VisitExpressionList(IList<DbExpression> expressionList)
         {
             EntityUtil.CheckArgumentNull(expressionList, "expressionList");
-            for(int idx = 0; idx < expressionList.Count; idx++)
+            for (var idx = 0; idx < expressionList.Count; idx++)
             {
                 VisitExpression(expressionList[idx]);
             }
@@ -135,7 +136,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         public virtual void VisitAggregateList(IList<DbAggregate> aggregates)
         {
             EntityUtil.CheckArgumentNull(aggregates, "aggregates");
-            for(int idx = 0; idx < aggregates.Count; idx++)
+            for (var idx = 0; idx < aggregates.Count; idx++)
             {
                 VisitAggregate(aggregates[idx]);
             }
@@ -154,12 +155,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         internal virtual void VisitRelatedEntityReferenceList(IList<DbRelatedEntityRef> relatedEntityReferences)
         {
-            for (int idx = 0; idx < relatedEntityReferences.Count; idx++)
+            for (var idx = 0; idx < relatedEntityReferences.Count; idx++)
             {
-                this.VisitRelatedEntityReference(relatedEntityReferences[idx]);
+                VisitRelatedEntityReference(relatedEntityReferences[idx]);
             }
         }
-        
+
         internal virtual void VisitRelatedEntityReference(DbRelatedEntityRef relatedEntityRef)
         {
             VisitExpression(relatedEntityRef.TargetEntityReference);
@@ -258,11 +259,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
 #if METHOD_EXPRESSION
-        /// <summary>
-        /// Visitor pattern method for <see cref="MethodExpression"/>.
-        /// </summary>
-        /// <param name="expression">The MethodExpression that is being visited.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="expression"/> is null</exception>
+    /// <summary>
+    /// Visitor pattern method for <see cref="MethodExpression"/>.
+    /// </summary>
+    /// <param name="expression">The MethodExpression that is being visited.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="expression"/> is null</exception>
         public override void Visit(MethodExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
@@ -285,8 +286,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
             EntityUtil.CheckArgumentNull(expression, "expression");
-            
-            if(expression.Instance != null)
+
+            if (expression.Instance != null)
             {
                 VisitExpression(expression.Instance);
             }
@@ -490,12 +491,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
             EntityUtil.CheckArgumentNull(expression, "expression");
-            
+
             VisitExpressionList(expression.When);
             VisitExpressionList(expression.Then);
             VisitExpression(expression.Else);
         }
-
 
         /// <summary>
         /// Visitor pattern method for <see cref="DbNewInstanceExpression"/>.
@@ -509,8 +509,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             VisitExpressionList(expression.Arguments);
             if (expression.HasRelatedEntityReferences)
             {
-                Debug.Assert(expression.RelatedEntityReferences != null, "HasRelatedEntityReferences returned true for null RelatedEntityReferences list?");
-                this.VisitRelatedEntityReferenceList(expression.RelatedEntityReferences);
+                Debug.Assert(
+                    expression.RelatedEntityReferences != null,
+                    "HasRelatedEntityReferences returned true for null RelatedEntityReferences list?");
+                VisitRelatedEntityReferenceList(expression.RelatedEntityReferences);
             }
         }
 
@@ -534,7 +536,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
             VisitExpression(EntityUtil.CheckArgumentNull(expression, "expression").NavigationSource);
         }
-        
+
         /// <summary>
         /// Visitor pattern method for <see cref="DbDerefExpression"/>.
         /// </summary>
@@ -575,7 +577,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
             EntityUtil.CheckArgumentNull(expression, "expression");
         }
-                
+
         /// <summary>
         /// Visitor pattern method for <see cref="DbFilterExpression"/>.
         /// </summary>
@@ -616,12 +618,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
             EntityUtil.CheckArgumentNull(expression, "expression");
 
-            foreach (DbExpressionBinding b in expression.Inputs)
+            foreach (var b in expression.Inputs)
             {
                 VisitExpressionBindingPre(b);
             }
-            
-            foreach (DbExpressionBinding b in expression.Inputs)
+
+            foreach (var b in expression.Inputs)
             {
                 VisitExpressionBindingPost(b);
             }
@@ -681,7 +683,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             VisitExpressionList(expression.Keys);
             VisitGroupExpressionBindingMid(expression.Input);
             VisitAggregateList(expression.Aggregates);
-            VisitGroupExpressionBindingPost(expression.Input);            
+            VisitGroupExpressionBindingPost(expression.Input);
         }
 
         /// <summary>
@@ -695,7 +697,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             EntityUtil.CheckArgumentNull(expression, "expression");
 
             VisitExpressionBindingPre(expression.Input);
-            foreach (DbSortClause sortKey in expression.SortOrder)
+            foreach (var sortKey in expression.SortOrder)
             {
                 VisitExpression(sortKey.Expression);
             }
@@ -714,7 +716,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             EntityUtil.CheckArgumentNull(expression, "expression");
 
             VisitExpressionBindingPre(expression.Input);
-            for(int idx = 0; idx < expression.SortOrder.Count; idx++)
+            for (var idx = 0; idx < expression.SortOrder.Count; idx++)
             {
                 VisitExpression(expression.SortOrder[idx].Expression);
             }
@@ -735,6 +737,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             VisitExpression(expression.Predicate);
             VisitExpressionBindingPost(expression.Input);
         }
+
         #endregion
     }
 }

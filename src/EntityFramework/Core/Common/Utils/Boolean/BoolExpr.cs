@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Globalization;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.Linq;
+
     /// <summary>
     /// Base type for Boolean expressions. Boolean expressions are immutable,
     /// and value-comparable using Equals. Services include local simplification
@@ -21,7 +18,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     ///     "!A" means "not A"
     /// </remarks>
     /// <typeparam name="T_Identifier">The type of leaf term identifiers in this expression.</typeparam>
-    internal abstract partial class BoolExpr<T_Identifier> : IEquatable<BoolExpr<T_Identifier>>
+    internal abstract class BoolExpr<T_Identifier> : IEquatable<BoolExpr<T_Identifier>>
     {
         /// <summary>
         /// Gets an enumeration value indicating the type of the expression node.
@@ -74,8 +71,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         {
             Debug.Assert(null != candidates && 1 < candidates.Length, "must be at least one to pick");
 
-            int resultUniqueTermCount = default(int);
-            int resultTermCount = default(int);
+            var resultUniqueTermCount = default(int);
+            var resultTermCount = default(int);
             BoolExpr<T_Identifier> result = null;
 
             foreach (var candidate in candidates)
@@ -84,12 +81,13 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
                 var simplifiedCandidate = candidate.Simplify();
 
                 // determine "interesting" properties of the expression
-                int candidateUniqueTermCount = simplifiedCandidate.GetTerms().Distinct().Count();
-                int candidateTermCount = simplifiedCandidate.CountTerms();
+                var candidateUniqueTermCount = simplifiedCandidate.GetTerms().Distinct().Count();
+                var candidateTermCount = simplifiedCandidate.CountTerms();
 
                 // see if it's better than the current result best result
                 if (null == result || // bootstrap
-                    candidateUniqueTermCount < resultUniqueTermCount || // check if the candidate improves on # of terms
+                    candidateUniqueTermCount < resultUniqueTermCount
+                    || // check if the candidate improves on # of terms
                     (candidateUniqueTermCount == resultUniqueTermCount && // in case of tie, choose based on total
                      candidateTermCount < resultTermCount))
                 {
@@ -145,7 +143,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         public bool Equals(BoolExpr<T_Identifier> other)
         {
             return null != other && ExprType == other.ExprType &&
-                EquivalentTypeEquals(other);
+                   EquivalentTypeEquals(other);
         }
 
         protected abstract bool EquivalentTypeEquals(BoolExpr<T_Identifier> other);
@@ -161,16 +159,21 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         // private constructor so that we control existence of True instance
         private TrueExpr()
-            : base()
         {
         }
 
         /// <summary>
         /// Gets the one instance of TrueExpr
         /// </summary>
-        internal static TrueExpr<T_Identifier> Value { get { return s_value; } }
+        internal static TrueExpr<T_Identifier> Value
+        {
+            get { return s_value; }
+        }
 
-        internal override ExprType ExprType { get { return ExprType.True; } }
+        internal override ExprType ExprType
+        {
+            get { return ExprType.True; }
+        }
 
         internal override T_Return Accept<T_Return>(Visitor<T_Identifier, T_Return> visitor)
         {
@@ -184,7 +187,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         protected override bool EquivalentTypeEquals(BoolExpr<T_Identifier> other)
         {
-            return object.ReferenceEquals(this, other);
+            return ReferenceEquals(this, other);
         }
     }
 
@@ -198,16 +201,21 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         // private constructor so that we control existence of False instance
         private FalseExpr()
-            : base()
         {
         }
 
         /// <summary>
         /// Gets the one instance of FalseExpr
         /// </summary>
-        internal static FalseExpr<T_Identifier> Value { get { return s_value; } }
+        internal static FalseExpr<T_Identifier> Value
+        {
+            get { return s_value; }
+        }
 
-        internal override ExprType ExprType { get { return ExprType.False; } }
+        internal override ExprType ExprType
+        {
+            get { return ExprType.False; }
+        }
 
         internal override T_Return Accept<T_Return>(Visitor<T_Identifier, T_Return> visitor)
         {
@@ -221,7 +229,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         protected override bool EquivalentTypeEquals(BoolExpr<T_Identifier> other)
         {
-            return object.ReferenceEquals(this, other);
+            return ReferenceEquals(this, other);
         }
     }
 
@@ -241,27 +249,42 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// term expressions.</param>
         /// <param name="identifier">Identifier/tag for this term.</param>
         internal TermExpr(IEqualityComparer<T_Identifier> comparer, T_Identifier identifier)
-            : base()
         {
-            Debug.Assert(null != (object)identifier);
+            Debug.Assert(null != identifier);
             _identifier = identifier;
-            if (null == comparer) { _comparer = EqualityComparer<T_Identifier>.Default; }
-            else { _comparer = comparer; }
+            if (null == comparer)
+            {
+                _comparer = EqualityComparer<T_Identifier>.Default;
+            }
+            else
+            {
+                _comparer = comparer;
+            }
         }
-        internal TermExpr(T_Identifier identifier) : this(null, identifier) { }
+
+        internal TermExpr(T_Identifier identifier)
+            : this(null, identifier)
+        {
+        }
 
         /// <summary>
         /// Gets identifier for this term. This value is used to determine whether
         /// two terms as equivalent.
         /// </summary>
-        internal T_Identifier Identifier { get { return _identifier; } }
+        internal T_Identifier Identifier
+        {
+            get { return _identifier; }
+        }
 
-        internal override ExprType ExprType { get { return ExprType.Term; } }
-        
+        internal override ExprType ExprType
+        {
+            get { return ExprType.Term; }
+        }
+
         public override bool Equals(object obj)
         {
             Debug.Fail("use only typed equals");
-            return this.Equals(obj as TermExpr<T_Identifier>);
+            return Equals(obj as TermExpr<T_Identifier>);
         }
 
         public bool Equals(TermExpr<T_Identifier> other)
@@ -273,12 +296,12 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         {
             return _comparer.Equals(_identifier, ((TermExpr<T_Identifier>)other)._identifier);
         }
-        
+
         public override int GetHashCode()
         {
             return _comparer.GetHashCode(_identifier);
         }
-        
+
         public override string ToString()
         {
             return StringUtil.FormatInvariant("{0}", _identifier);
@@ -291,9 +314,9 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         internal override BoolExpr<T_Identifier> MakeNegated()
         {
-            Literal<T_Identifier> literal = new Literal<T_Identifier>(this, true);
+            var literal = new Literal<T_Identifier>(this, true);
             // leverage normalization code if it exists
-            Literal<T_Identifier> negatedLiteral = literal.MakeNegated();
+            var negatedLiteral = literal.MakeNegated();
             if (negatedLiteral.IsTermPositive)
             {
                 return negatedLiteral.Term;
@@ -322,7 +345,6 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// </summary>
         /// <param name="children">Child expressions</param>
         protected TreeExpr(IEnumerable<BoolExpr<T_Identifier>> children)
-            : base()
         {
             Debug.Assert(null != children);
             _children = new Set<BoolExpr<T_Identifier>>(children);
@@ -333,8 +355,11 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// <summary>
         /// Gets the children of this expression node.
         /// </summary>
-        internal Set<BoolExpr<T_Identifier>> Children { get { return _children; } }
-        
+        internal Set<BoolExpr<T_Identifier>> Children
+        {
+            get { return _children; }
+        }
+
         public override bool Equals(object obj)
         {
             Debug.Fail("use only typed Equals");
@@ -389,7 +414,10 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         {
         }
 
-        internal override ExprType ExprType { get { return ExprType.And; } }
+        internal override ExprType ExprType
+        {
+            get { return ExprType.And; }
+        }
 
         internal override T_Return Accept<T_Return>(Visitor<T_Identifier, T_Return> visitor)
         {
@@ -429,7 +457,10 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         {
         }
 
-        internal override ExprType ExprType { get { return ExprType.Or; } }
+        internal override ExprType ExprType
+        {
+            get { return ExprType.Or; }
+        }
 
         internal override T_Return Accept<T_Return>(Visitor<T_Identifier, T_Return> visitor)
         {
@@ -448,13 +479,19 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// </summary>
         /// <param name="child"></param>
         internal NotExpr(BoolExpr<T_Identifier> child)
-            : base(new BoolExpr<T_Identifier>[] { child })
+            : base(new[] { child })
         {
         }
 
-        internal override ExprType ExprType { get { return ExprType.Not; } }
+        internal override ExprType ExprType
+        {
+            get { return ExprType.Not; }
+        }
 
-        internal BoolExpr<T_Identifier> Child { get { return Children.First(); } }
+        internal BoolExpr<T_Identifier> Child
+        {
+            get { return Children.First(); }
+        }
 
         internal override T_Return Accept<T_Return>(Visitor<T_Identifier, T_Return> visitor)
         {
@@ -468,7 +505,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         internal override BoolExpr<T_Identifier> MakeNegated()
         {
-            return this.Child;
+            return Child;
         }
     }
 
@@ -477,6 +514,11 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     /// </summary>
     internal enum ExprType
     {
-        And, Not, Or, Term, True, False,
+        And,
+        Not,
+        Or,
+        Term,
+        True,
+        False,
     }
 }

@@ -1,13 +1,12 @@
 namespace System.Data.Entity.Core.SqlClient.SqlGen
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
-    using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Globalization;
@@ -26,8 +25,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         {
             const string dummySetParameter = "@p";
 
-            StringBuilder commandText = new StringBuilder(s_commandTextBuilderInitialCapacity);
-            ExpressionTranslator translator = new ExpressionTranslator(commandText, tree, null != tree.Returning, sqlVersion);
+            var commandText = new StringBuilder(s_commandTextBuilderInitialCapacity);
+            var translator = new ExpressionTranslator(commandText, tree, null != tree.Returning, sqlVersion);
 
             if (tree.SetClauses.Count == 0)
             {
@@ -40,12 +39,18 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             commandText.AppendLine();
 
             // set c1 = ..., c2 = ..., ...
-            bool first = true;
+            var first = true;
             commandText.Append("set ");
             foreach (DbSetClause setClause in tree.SetClauses)
             {
-                if (first) { first = false; }
-                else { commandText.Append(", "); }
+                if (first)
+                {
+                    first = false;
+                }
+                else
+                {
+                    commandText.Append(", ");
+                }
                 setClause.Property.Accept(translator);
                 commandText.Append(" = ");
                 setClause.Value.Accept(translator);
@@ -73,7 +78,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             commandText.AppendLine();
 
             // generate returning sql
-            GenerateReturningSql(commandText, tree, null, translator, tree.Returning, false); 
+            GenerateReturningSql(commandText, tree, null, translator, tree.Returning, false);
 
             parameters = translator.Parameters;
             return commandText.ToString();
@@ -81,14 +86,14 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
         internal static string GenerateDeleteSql(DbDeleteCommandTree tree, SqlVersion sqlVersion, out List<SqlParameter> parameters)
         {
-            StringBuilder commandText = new StringBuilder(s_commandTextBuilderInitialCapacity);
-            ExpressionTranslator translator = new ExpressionTranslator(commandText, tree, false, sqlVersion);
+            var commandText = new StringBuilder(s_commandTextBuilderInitialCapacity);
+            var translator = new ExpressionTranslator(commandText, tree, false, sqlVersion);
 
             // delete [schemaName].[tableName]
             commandText.Append("delete ");
             tree.Target.Expression.Accept(translator);
             commandText.AppendLine();
-            
+
             // where c1 = ... AND c2 = ...
             commandText.Append("where ");
             tree.Predicate.Accept(translator);
@@ -99,12 +104,13 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
         internal static string GenerateInsertSql(DbInsertCommandTree tree, SqlVersion sqlVersion, out List<SqlParameter> parameters)
         {
-            StringBuilder commandText = new StringBuilder(s_commandTextBuilderInitialCapacity);
-            ExpressionTranslator translator = new ExpressionTranslator(commandText, tree,
+            var commandText = new StringBuilder(s_commandTextBuilderInitialCapacity);
+            var translator = new ExpressionTranslator(
+                commandText, tree,
                 null != tree.Returning, sqlVersion);
 
-            bool useGeneratedValuesVariable = UseGeneratedValuesVariable(tree, sqlVersion);
-            EntityType tableType = (EntityType)((DbScanExpression)tree.Target.Expression).Target.ElementType;
+            var useGeneratedValuesVariable = UseGeneratedValuesVariable(tree, sqlVersion);
+            var tableType = (EntityType)((DbScanExpression)tree.Target.Expression).Target.ElementType;
 
             if (useGeneratedValuesVariable)
             {
@@ -113,8 +119,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                     .Append("declare ")
                     .Append(s_generatedValuesVariableName)
                     .Append(" table(");
-                bool first = true;
-                foreach (EdmMember column in tableType.KeyMembers)
+                var first = true;
+                foreach (var column in tableType.KeyMembers)
                 {
                     if (first)
                     {
@@ -124,8 +130,9 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                     {
                         commandText.Append(", ");
                     }
-                    string columnType = SqlGenerator.GenerateSqlForStoreType(sqlVersion, column.TypeUsage);
-                    if (columnType == "rowversion" || columnType == "timestamp")
+                    var columnType = SqlGenerator.GenerateSqlForStoreType(sqlVersion, column.TypeUsage);
+                    if (columnType == "rowversion"
+                        || columnType == "timestamp")
                     {
                         // rowversion and timestamp are intrinsically read-only. use binary to gather server generated
                         // values for these types.
@@ -138,7 +145,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                     Facet collationFacet;
                     if (column.TypeUsage.Facets.TryGetValue(DbProviderManifest.CollationFacetName, false, out collationFacet))
                     {
-                        string collation = collationFacet.Value as string;
+                        var collation = collationFacet.Value as string;
                         if (!string.IsNullOrEmpty(collation))
                         {
                             commandText.Append(" collate ").Append(collation);
@@ -157,11 +164,17 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             {
                 // (c1, c2, c3, ...)
                 commandText.Append("(");
-                bool first = true;
+                var first = true;
                 foreach (DbSetClause setClause in tree.SetClauses)
                 {
-                    if (first) { first = false; }
-                    else { commandText.Append(", "); }
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        commandText.Append(", ");
+                    }
                     setClause.Property.Accept(translator);
                 }
                 commandText.AppendLine(")");
@@ -175,8 +188,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             {
                 // output inserted.id into @generated_values
                 commandText.Append("output ");
-                bool first = true;
-                foreach (EdmMember column in tableType.KeyMembers)
+                var first = true;
+                foreach (var column in tableType.KeyMembers)
                 {
                     if (first)
                     {
@@ -197,12 +210,18 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             if (0 < tree.SetClauses.Count)
             {
                 // values c1, c2, ...
-                bool first = true;
+                var first = true;
                 commandText.Append("values (");
                 foreach (DbSetClause setClause in tree.SetClauses)
                 {
-                    if (first) { first = false; }
-                    else { commandText.Append(", "); }
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        commandText.Append(", ");
+                    }
                     setClause.Value.Accept(translator);
 
                     translator.RegisterMemberValue(setClause.Property, setClause.Value);
@@ -215,7 +234,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 commandText.AppendLine("default values");
             }
             // generate returning sql
-            GenerateReturningSql(commandText, tree, tableType, translator, tree.Returning, useGeneratedValuesVariable); 
+            GenerateReturningSql(commandText, tree, tableType, translator, tree.Returning, useGeneratedValuesVariable);
 
             parameters = translator.Parameters;
             return commandText.ToString();
@@ -229,15 +248,17 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// </summary>
         private static bool UseGeneratedValuesVariable(DbInsertCommandTree tree, SqlVersion sqlVersion)
         {
-            bool useGeneratedValuesVariable = false;
-            if (sqlVersion > SqlVersion.Sql8 && tree.Returning != null)
+            var useGeneratedValuesVariable = false;
+            if (sqlVersion > SqlVersion.Sql8
+                && tree.Returning != null)
             {
                 // Figure out which columns have values
-                HashSet<EdmMember> columnsWithValues = new HashSet<EdmMember>(tree.SetClauses.Cast<DbSetClause>().Select(s => ((DbPropertyExpression)s.Property).Property));
+                var columnsWithValues =
+                    new HashSet<EdmMember>(tree.SetClauses.Cast<DbSetClause>().Select(s => ((DbPropertyExpression)s.Property).Property));
 
                 // Only SQL Server 2005+ support an output clause for inserts
-                bool firstKeyFound = false;
-                foreach (EdmMember keyMember in ((DbScanExpression)tree.Target.Expression).Target.ElementType.KeyMembers)
+                var firstKeyFound = false;
+                foreach (var keyMember in ((DbScanExpression)tree.Target.Expression).Target.ElementType.KeyMembers)
                 {
                     if (!columnsWithValues.Contains(keyMember))
                     {
@@ -268,7 +289,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         // SQL gen, where we only access table columns)
         private static string GenerateMemberTSql(EdmMember member)
         {
-            EntityType entityType = (EntityType)member.DeclaringType;
+            var entityType = (EntityType)member.DeclaringType;
             string sql;
             if (!entityType.TryGetMemberSql(member, out sql))
             {
@@ -315,11 +336,15 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// for the tree</param>
         /// <param name="returning">Returning expression. If null, the method returns
         /// immediately without producing a SELECT statement.</param>
-        private static void GenerateReturningSql(StringBuilder commandText, DbModificationCommandTree tree, EntityType tableType,
+        private static void GenerateReturningSql(
+            StringBuilder commandText, DbModificationCommandTree tree, EntityType tableType,
             ExpressionTranslator translator, DbExpression returning, bool useGeneratedValuesVariable)
         {
             // Nothing to do if there is no Returning expression
-            if (null == returning) { return; }
+            if (null == returning)
+            {
+                return;
+            }
 
             // select
             commandText.Append("select ");
@@ -342,13 +367,13 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 commandText.Append(" as g join ");
                 tree.Target.Expression.Accept(translator);
                 commandText.Append(" as t on ");
-                string separator = string.Empty;
-                foreach (EdmMember keyMember in tableType.KeyMembers)
+                var separator = string.Empty;
+                foreach (var keyMember in tableType.KeyMembers)
                 {
                     commandText.Append(separator);
                     separator = " and ";
                     commandText.Append("g.");
-                    string memberTSql = GenerateMemberTSql(keyMember);
+                    var memberTSql = GenerateMemberTSql(keyMember);
                     commandText.Append(memberTSql);
                     commandText.Append(" = t.");
                     commandText.Append(memberTSql);
@@ -365,9 +390,9 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
                 // where
                 commandText.Append("where @@ROWCOUNT > 0");
-                EntitySetBase table = ((DbScanExpression)tree.Target.Expression).Target;
-                bool identity = false;
-                foreach (EdmMember keyMember in table.ElementType.KeyMembers)
+                var table = ((DbScanExpression)tree.Target.Expression).Target;
+                var identity = false;
+                foreach (var keyMember in table.ElementType.KeyMembers)
                 {
                     commandText.Append(" and ");
                     commandText.Append(GenerateMemberTSql(keyMember));
@@ -388,13 +413,14 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                         if (identity)
                         {
                             // there can be only one server generated key
-                            throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.Update_NotSupportedServerGenKey(table.Name));
+                            throw EntityUtil.NotSupported(Strings.Update_NotSupportedServerGenKey(table.Name));
                         }
 
                         if (!IsValidScopeIdentityColumnType(keyMember.TypeUsage))
                         {
-                            throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.Update_NotSupportedIdentityType(
-                                keyMember.Name, keyMember.TypeUsage.ToString()));
+                            throw EntityUtil.InvalidOperation(
+                                Strings.Update_NotSupportedIdentityType(
+                                    keyMember.Name, keyMember.TypeUsage.ToString()));
                         }
 
                         commandText.Append("scope_identity()");
@@ -410,26 +436,30 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             // tinyint, smallint, int, bigint, decimal(p,0), or numeric(p,0)
 
             // make sure it's a primitive type
-            if (typeUsage.EdmType.BuiltInTypeKind != BuiltInTypeKind.PrimitiveType)
+            if (typeUsage.EdmType.BuiltInTypeKind
+                != BuiltInTypeKind.PrimitiveType)
             {
                 return false;
             }
 
             // check if this is a supported primitive type (compare by name)
-            string typeName = typeUsage.EdmType.Name;
+            var typeName = typeUsage.EdmType.Name;
 
             // integer types
             if (typeName == "tinyint" || typeName == "smallint" ||
-                typeName == "int" || typeName == "bigint")
+                typeName == "int"
+                || typeName == "bigint")
             {
                 return true;
             }
 
             // variable scale types (require scale = 0)
-            if (typeName == "decimal" || typeName == "numeric")
+            if (typeName == "decimal"
+                || typeName == "numeric")
             {
                 Facet scaleFacet;
-                return (typeUsage.Facets.TryGetValue(DbProviderManifest.ScaleFacetName,
+                return (typeUsage.Facets.TryGetValue(
+                    DbProviderManifest.ScaleFacetName,
                     false, out scaleFacet) && Convert.ToInt32(scaleFacet.Value, CultureInfo.InvariantCulture) == 0);
             }
 
@@ -451,7 +481,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             /// <param name="commandTree">Command tree generating SQL</param>
             /// <param name="preserveMemberValues">Indicates whether the translator should preserve
             /// member values while compiling t-SQL (only needed for server generation)</param>
-            internal ExpressionTranslator(StringBuilder commandText, DbModificationCommandTree commandTree, 
+            internal ExpressionTranslator(
+                StringBuilder commandText, DbModificationCommandTree commandTree,
                 bool preserveMemberValues, SqlVersion version)
             {
                 Debug.Assert(null != commandText);
@@ -460,19 +491,28 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 _commandTree = commandTree;
                 _version = version;
                 _parameters = new List<SqlParameter>();
-                _memberValues = preserveMemberValues ? new Dictionary<EdmMember, SqlParameter>() :
-                    null;
+                _memberValues = preserveMemberValues
+                                    ? new Dictionary<EdmMember, SqlParameter>()
+                                    : null;
             }
 
             private readonly StringBuilder _commandText;
             private readonly DbModificationCommandTree _commandTree;
             private readonly List<SqlParameter> _parameters;
             private readonly Dictionary<EdmMember, SqlParameter> _memberValues;
-            private readonly static AliasGenerator s_parameterNames = new AliasGenerator("@", 1000);
+            private static readonly AliasGenerator s_parameterNames = new AliasGenerator("@", 1000);
             private readonly SqlVersion _version;
 
-            internal List<SqlParameter> Parameters { get { return _parameters; } }
-            internal Dictionary<EdmMember, SqlParameter> MemberValues { get { return _memberValues; } }
+            internal List<SqlParameter> Parameters
+            {
+                get { return _parameters; }
+            }
+
+            internal Dictionary<EdmMember, SqlParameter> MemberValues
+            {
+                get { return _memberValues; }
+            }
+
             internal string PropertyAlias { get; set; }
 
             // generate parameter (name based on parameter ordinal)
@@ -481,7 +521,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 // Suppress the MaxLength facet in the type usage because
                 // SqlClient will silently truncate data when SqlParameter.Size < |SqlParameter.Value|.
                 const bool preventTruncation = true;
-                SqlParameter parameter = SqlProviderServices.CreateSqlParameter(s_parameterNames.GetName(_parameters.Count), type, ParameterMode.In, value, preventTruncation, _version);
+                var parameter = SqlProviderServices.CreateSqlParameter(
+                    s_parameterNames.GetName(_parameters.Count), type, ParameterMode.In, value, preventTruncation, _version);
 
                 _parameters.Add(parameter);
 
@@ -500,7 +541,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
             public override void Visit(DbComparisonExpression expression)
             {
-                Debug.Assert(expression.ExpressionKind == DbExpressionKind.Equals,
+                Debug.Assert(
+                    expression.ExpressionKind == DbExpressionKind.Equals,
                     "only equals comparison expressions are produced in DML command trees in V1");
 
                 VisitBinary(expression, " = ");
@@ -520,16 +562,19 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 if (null != _memberValues)
                 {
                     // register the value for this property
-                    Debug.Assert(propertyExpression.ExpressionKind == DbExpressionKind.Property,
+                    Debug.Assert(
+                        propertyExpression.ExpressionKind == DbExpressionKind.Property,
                         "DML predicates and setters must be of the form property = value");
 
                     // get name of left property 
-                    EdmMember property = ((DbPropertyExpression)propertyExpression).Property;
+                    var property = ((DbPropertyExpression)propertyExpression).Property;
 
                     // don't track null values
-                    if (value.ExpressionKind != DbExpressionKind.Null)
+                    if (value.ExpressionKind
+                        != DbExpressionKind.Null)
                     {
-                        Debug.Assert(value.ExpressionKind == DbExpressionKind.Constant,
+                        Debug.Assert(
+                            value.ExpressionKind == DbExpressionKind.Constant,
                             "value must either constant or null");
                         // retrieve the last parameter added (which describes the parameter)
                         _memberValues[property] = _parameters[_parameters.Count - 1];
@@ -552,7 +597,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
             public override void Visit(DbConstantExpression expression)
             {
-                SqlParameter parameter = CreateParameter(expression.Value, expression.ResultType);
+                var parameter = CreateParameter(expression.Value, expression.ResultType);
                 _commandText.Append(parameter.ParameterName);
             }
 
@@ -564,11 +609,13 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 if (expression.Target.DefiningQuery != null)
                 {
                     string missingCudElement;
-                    if (_commandTree.CommandTreeKind == DbCommandTreeKind.Delete)
+                    if (_commandTree.CommandTreeKind
+                        == DbCommandTreeKind.Delete)
                     {
                         missingCudElement = StorageMslConstructs.DeleteFunctionElement;
                     }
-                    else if (_commandTree.CommandTreeKind == DbCommandTreeKind.Insert)
+                    else if (_commandTree.CommandTreeKind
+                             == DbCommandTreeKind.Insert)
                     {
                         missingCudElement = StorageMslConstructs.InsertFunctionElement;
                     }
@@ -577,7 +624,9 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                         Debug.Assert(_commandTree.CommandTreeKind == DbCommandTreeKind.Update, "did you add a new option?");
                         missingCudElement = StorageMslConstructs.UpdateFunctionElement;
                     }
-                    throw EntityUtil.Update(System.Data.Entity.Resources.Strings.Update_SqlEntitySetWithoutDmlFunctions(expression.Target.Name, missingCudElement, StorageMslConstructs.ModificationFunctionMappingElement), null);
+                    throw EntityUtil.Update(
+                        Strings.Update_SqlEntitySetWithoutDmlFunctions(
+                            expression.Target.Name, missingCudElement, StorageMslConstructs.ModificationFunctionMappingElement), null);
                 }
 
                 _commandText.Append(SqlGenerator.GetTargetTSql(expression.Target));
@@ -585,9 +634,9 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
             public override void Visit(DbPropertyExpression expression)
             {
-                if (!string.IsNullOrEmpty(this.PropertyAlias))
+                if (!string.IsNullOrEmpty(PropertyAlias))
                 {
-                    _commandText.Append(this.PropertyAlias);
+                    _commandText.Append(PropertyAlias);
                     _commandText.Append(".");
                 }
                 _commandText.Append(GenerateMemberTSql(expression.Property));
@@ -602,11 +651,17 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             {
                 // assumes all arguments are self-describing (no need to use aliases
                 // because no renames are ever used in the projection)
-                bool first = true;
-                foreach (DbExpression argument in expression.Arguments)
+                var first = true;
+                foreach (var argument in expression.Arguments)
                 {
-                    if (first) { first = false; }
-                    else { _commandText.Append(", "); }
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        _commandText.Append(", ");
+                    }
                     argument.Accept(this);
                 }
             }
@@ -619,8 +674,6 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 expression.Right.Accept(this);
                 _commandText.Append(")");
             }
-
         }
     }
 }
-

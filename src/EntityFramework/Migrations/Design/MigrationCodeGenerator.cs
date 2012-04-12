@@ -1,8 +1,8 @@
 namespace System.Data.Entity.Migrations.Design
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Migrations.Model;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;

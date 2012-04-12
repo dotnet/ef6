@@ -1,21 +1,11 @@
-using System.Collections.Generic;
-using System.Collections;
-using System.Diagnostics;
-using System.Globalization;
-using System.Reflection;
-using System.Text;
-using System.Xml;
-using System.Data.Entity.Core.Mapping;
-using System.IO;
-using System.Security;
-using System.Security.Permissions;
-using System.Security.Cryptography;
-using System.Data.Entity.Core.EntityModel.SchemaObjectModel;
-using System.Threading;
-using System.Runtime.Versioning;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.EntityModel.SchemaObjectModel;
+    using System.Diagnostics;
+    using System.Runtime.Versioning;
+    using System.Xml;
+
     /// <summary>
     /// This class represents one file-based artifact item to be loaded.
     /// </summary>
@@ -26,7 +16,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// It is used to prevent other instances of this class from (re)loading the same
         /// artifact. See comment in the MetadataArtifactLoaderFile c'tor below.
         /// </summary>
-        private readonly bool _alreadyLoaded = false;
+        private readonly bool _alreadyLoaded;
+
         private readonly string _path;
 
         /// <summary>
@@ -62,7 +53,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>0 if the loaders are "equal" (i.e., have the same _path value)</returns>
         public int CompareTo(object obj)
         {
-            MetadataArtifactLoaderFile loader = obj as MetadataArtifactLoaderFile;
+            var loader = obj as MetadataArtifactLoaderFile;
             if (loader != null)
             {
                 return string.Compare(_path, loader._path, StringComparison.OrdinalIgnoreCase);
@@ -79,7 +70,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>true if the objects have the same _path value</returns>
         public override bool Equals(object obj)
         {
-            return this.CompareTo(obj) == 0;
+            return CompareTo(obj) == 0;
         }
 
         /// <summary>
@@ -93,11 +84,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         public override void CollectFilePermissionPaths(List<string> paths, DataSpace spaceToGet)
         {
-            if (!_alreadyLoaded && MetadataArtifactLoader.IsArtifactOfDataSpace(_path, spaceToGet))
+            if (!_alreadyLoaded
+                && IsArtifactOfDataSpace(_path, spaceToGet))
             {
                 paths.Add(_path);
             }
         }
+
         /// <summary>
         /// Get paths to artifacts for a specific DataSpace.
         /// </summary>
@@ -105,8 +98,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of strings identifying paths to all artifacts for a specific DataSpace</returns>
         public override List<string> GetPaths(DataSpace spaceToGet)
         {
-            List<string> list = new List<string>();
-            if (!_alreadyLoaded && MetadataArtifactLoader.IsArtifactOfDataSpace(_path, spaceToGet))
+            var list = new List<string>();
+            if (!_alreadyLoaded
+                && IsArtifactOfDataSpace(_path, spaceToGet))
             {
                 list.Add(_path);
             }
@@ -119,7 +113,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of strings identifying paths to all resources</returns>
         public override List<string> GetPaths()
         {
-            List<string> list = new List<string>();
+            var list = new List<string>();
             if (!_alreadyLoaded)
             {
                 list.Add(_path);
@@ -133,10 +127,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of XmlReaders for all resources</returns>
         public override List<XmlReader> GetReaders(Dictionary<MetadataArtifactLoader, XmlReader> sourceDictionary)
         {
-            List<XmlReader> list = new List<XmlReader>();
+            var list = new List<XmlReader>();
             if (!_alreadyLoaded)
             {
-                XmlReader reader = CreateXmlReader();
+                var reader = CreateXmlReader();
                 list.Add(reader);
                 if (sourceDictionary != null)
                 {
@@ -154,10 +148,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of XmlReader objects</returns>
         public override List<XmlReader> CreateReaders(DataSpace spaceToGet)
         {
-            List<XmlReader> list = new List<XmlReader>();
-            if (!_alreadyLoaded && MetadataArtifactLoader.IsArtifactOfDataSpace(_path, spaceToGet))
+            var list = new List<XmlReader>();
+            if (!_alreadyLoaded
+                && IsArtifactOfDataSpace(_path, spaceToGet))
             {
-                XmlReader reader = CreateXmlReader();
+                var reader = CreateXmlReader();
                 list.Add(reader);
             }
             return list;
@@ -171,11 +166,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [ResourceConsumption(ResourceScope.Machine, ResourceScope.Machine)] //We are not changing the scope of consumption here
         private XmlReader CreateXmlReader()
         {
-            XmlReaderSettings readerSettings = Schema.CreateEdmStandardXmlReaderSettings();
+            var readerSettings = Schema.CreateEdmStandardXmlReaderSettings();
             // we know that we aren't reading a fragment
             readerSettings.ConformanceLevel = ConformanceLevel.Document;
             return XmlReader.Create(_path, readerSettings);
         }
-
     }
 }

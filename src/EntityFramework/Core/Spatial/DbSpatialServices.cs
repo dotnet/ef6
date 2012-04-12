@@ -1,7 +1,7 @@
-using System.Data.Entity.Core.Common.Utils;
-
 namespace System.Data.Entity.Core.Spatial
 {
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.SqlClient;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -14,24 +14,17 @@ namespace System.Data.Entity.Core.Spatial
 
         public static DbSpatialServices Default
         {
-            get
-            {
-                return defaultServices.Value;
-            }
-        }
-
-        protected DbSpatialServices()
-        {
+            get { return defaultServices.Value; }
         }
 
         // For CTP1 use the SQL types whenever they are available.   
         // in future we will have to consider providing a more pluggable 
         // story here so that users can specify what spatial services they want to use by default.
-        static DbSpatialServices LoadDefaultServices()
+        private static DbSpatialServices LoadDefaultServices()
         {
-            if (System.Data.Entity.Core.SqlClient.SqlProviderServices.SqlTypesAssemblyIsAvailable)
+            if (SqlProviderServices.SqlTypesAssemblyIsAvailable)
             {
-                return System.Data.Entity.Core.SqlClient.SqlSpatialServices.Instance;
+                return SqlSpatialServices.Instance;
             }
             else
             {
@@ -139,10 +132,14 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeography value as defined by the well known binary value with the specified coordinate system identifier (SRID) (<see cref="DbGeography.DefaultCoordinateSystemId"/>).</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiLineWellKnownBinary"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public abstract DbGeography GeographyMultiLineFromBinary(byte[] multiLineWellKnownBinary, int coordinateSystemId);
 
         /// <summary>
@@ -153,10 +150,14 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeography value as defined by the well known binary value with the specified coordinate system identifier (SRID) (<see cref="DbGeography.DefaultCoordinateSystemId"/>).</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPointWellKnownBinary"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public abstract DbGeography GeographyMultiPointFromBinary(byte[] multiPointWellKnownBinary, int coordinateSystemId);
 
         /// <summary>
@@ -167,8 +168,10 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeography value as defined by the well known binary value with the specified coordinate system identifier (SRID) (<see cref="DbGeography.DefaultCoordinateSystemId"/>).</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPolygonWellKnownBinary"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public abstract DbGeography GeographyMultiPolygonFromBinary(byte[] multiPolygonWellKnownBinary, int coordinateSystemId);
 
         /// <summary>
@@ -241,10 +244,14 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeography value as defined by the well known text value with the specified coordinate system identifier (SRID) (<see cref="DbGeography.DefaultCoordinateSystemId"/>).</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiLineWellKnownText"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public abstract DbGeography GeographyMultiLineFromText(string multiLineWellKnownText, int coordinateSystemId);
 
         /// <summary>
@@ -255,10 +262,14 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeography value as defined by the well known text value with the specified coordinate system identifier (SRID) (<see cref="DbGeography.DefaultCoordinateSystemId"/>).</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPointWellKnownText"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public abstract DbGeography GeographyMultiPointFromText(string multiPointWellKnownText, int coordinateSystemId);
 
         /// <summary>
@@ -269,8 +280,10 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeography value as defined by the well known text value with the specified coordinate system identifier (SRID) (<see cref="DbGeography.DefaultCoordinateSystemId"/>).</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPolygonWellKnownText"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public abstract DbGeography GeographyMultiPolygonFromText(string multiPolygonWellKnownText, int coordinateSystemId);
 
         /// <summary>
@@ -733,10 +746,14 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier (SRID) (<see cref="DbGeometry.DefaultCoordinateSystemId"/>).</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiLineWellKnownBinary"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public abstract DbGeometry GeometryMultiLineFromBinary(byte[] multiLineWellKnownBinary, int coordinateSystemId);
 
         /// <summary>
@@ -747,10 +764,14 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier (SRID) (<see cref="DbGeometry.DefaultCoordinateSystemId"/>).</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPointWellKnownBinary"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public abstract DbGeometry GeometryMultiPointFromBinary(byte[] multiPointWellKnownBinary, int coordinateSystemId);
 
         /// <summary>
@@ -761,8 +782,10 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier (SRID) (<see cref="DbGeometry.DefaultCoordinateSystemId"/>).</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPolygonWellKnownBinary"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public abstract DbGeometry GeometryMultiPolygonFromBinary(byte[] multiPolygonWellKnownBinary, int coordinateSystemId);
 
         /// <summary>
@@ -835,10 +858,14 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier (SRID) (<see cref="DbGeometry.DefaultCoordinateSystemId"/>).</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiLineWellKnownText"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public abstract DbGeometry GeometryMultiLineFromText(string multiLineWellKnownText, int coordinateSystemId);
 
         /// <summary>
@@ -849,10 +876,14 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier (SRID) (<see cref="DbGeometry.DefaultCoordinateSystemId"/>).</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPointWellKnownText"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public abstract DbGeometry GeometryMultiPointFromText(string multiPointWellKnownText, int coordinateSystemId);
 
         /// <summary>
@@ -863,8 +894,10 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier (SRID) (<see cref="DbGeometry.DefaultCoordinateSystemId"/>).</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPolygonKnownText"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public abstract DbGeometry GeometryMultiPolygonFromText(string multiPolygonKnownText, int coordinateSystemId);
 
         /// <summary>
@@ -1243,7 +1276,7 @@ namespace System.Data.Entity.Core.Spatial
         /// </summary>
         /// <exception cref="ArgumentNullException"><paramref name="geometryValue"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="geometryValue"/> is not compatible with this spatial services implementation.</exception>
-         public abstract double? GetElevation(DbGeometry geometryValue);
+        public abstract double? GetElevation(DbGeometry geometryValue);
 
         /// <summary>
         /// Returns the M (Measure) coordinate of the given <see cref="DbGeometry"/> value, if it represents a point.
@@ -1346,7 +1379,8 @@ namespace System.Data.Entity.Core.Spatial
         /// </summary>
         /// <exception cref="ArgumentNullException"><paramref name="geometryValue"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="geometryValue"/> is not compatible with this spatial services implementation.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Centroid", Justification = "Naming convention prescribed by OGC specification")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Centroid",
+            Justification = "Naming convention prescribed by OGC specification")]
         public abstract DbGeometry GetCentroid(DbGeometry geometryValue);
 
         /// <summary>

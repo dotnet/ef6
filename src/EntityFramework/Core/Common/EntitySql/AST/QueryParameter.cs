@@ -1,6 +1,6 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
-    using System;
+    using System.Data.Entity.Resources;
 
     /// <summary>
     /// Represents an ast node for a query parameter.
@@ -23,9 +23,10 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             //
             // valid parameter format is: @({LETTER})(_|{LETTER}|{DIGIT})*
             //
-            if (_name.StartsWith("_", StringComparison.OrdinalIgnoreCase) || Char.IsDigit(_name, 0))
+            if (_name.StartsWith("_", StringComparison.OrdinalIgnoreCase)
+                || Char.IsDigit(_name, 0))
             {
-                throw EntityUtil.EntitySqlError(ErrCtx, System.Data.Entity.Resources.Strings.InvalidParameterFormat(_name));
+                throw EntityUtil.EntitySqlError(ErrCtx, Strings.InvalidParameterFormat(_name));
             }
         }
 

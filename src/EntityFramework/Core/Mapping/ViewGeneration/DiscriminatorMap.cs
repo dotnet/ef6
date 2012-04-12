@@ -1,14 +1,15 @@
-﻿using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Common.CommandTrees.Internal;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Linq;
-using System.Globalization;
-using System.Diagnostics;
-using System.Data.Entity.Core.Common.Utils;
-
-namespace System.Data.Entity.Core.Mapping.ViewGeneration
+﻿namespace System.Data.Entity.Core.Mapping.ViewGeneration
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.CommandTrees.Internal;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Query.InternalTrees;
+    using System.Diagnostics;
+    using System.Linq;
+
     /// <summary>
     /// Describes top-level query mapping view projection of the form:
     /// 
@@ -27,37 +28,41 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         /// Expression retrieving discriminator value from projection input.
         /// </summary>
         internal readonly DbPropertyExpression Discriminator;
+
         /// <summary>
         /// Map from discriminator values to implied entity type.
         /// </summary>
-        internal readonly System.Collections.ObjectModel.ReadOnlyCollection<KeyValuePair<object, EntityType>> TypeMap;
+        internal readonly ReadOnlyCollection<KeyValuePair<object, EntityType>> TypeMap;
+
         /// <summary>
         /// Map from entity property to expression generating value for that property. Note that
         /// the expression must be the same for all types in discriminator map.
         /// </summary>
-        internal readonly System.Collections.ObjectModel.ReadOnlyCollection<KeyValuePair<EdmProperty, DbExpression>> PropertyMap;
+        internal readonly ReadOnlyCollection<KeyValuePair<EdmProperty, DbExpression>> PropertyMap;
+
         /// <summary>
         /// Map from entity relproperty to expression generating value for that property. Note that
         /// the expression must be the same for all types in discriminator map.
         /// </summary>
-        internal readonly System.Collections.ObjectModel.ReadOnlyCollection<KeyValuePair<Query.InternalTrees.RelProperty, DbExpression>> RelPropertyMap;
+        internal readonly ReadOnlyCollection<KeyValuePair<RelProperty, DbExpression>> RelPropertyMap;
 
         /// <summary>
         /// EntitySet to which the map applies.
         /// </summary>
         internal readonly EntitySet EntitySet;
 
-        private DiscriminatorMap(DbPropertyExpression discriminator,
+        private DiscriminatorMap(
+            DbPropertyExpression discriminator,
             List<KeyValuePair<object, EntityType>> typeMap,
             Dictionary<EdmProperty, DbExpression> propertyMap,
-            Dictionary<Query.InternalTrees.RelProperty, DbExpression> relPropertyMap,
+            Dictionary<RelProperty, DbExpression> relPropertyMap,
             EntitySet entitySet)
         {
-            this.Discriminator = discriminator;
-            this.TypeMap = typeMap.AsReadOnly();
-            this.PropertyMap = propertyMap.ToList().AsReadOnly();
-            this.RelPropertyMap = relPropertyMap.ToList().AsReadOnly();
-            this.EntitySet = entitySet;
+            Discriminator = discriminator;
+            TypeMap = typeMap.AsReadOnly();
+            PropertyMap = propertyMap.ToList().AsReadOnly();
+            RelPropertyMap = relPropertyMap.ToList().AsReadOnly();
+            EntitySet = entitySet;
         }
 
         /// <summary>
@@ -67,31 +72,49 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         {
             discriminatorMap = null;
 
-            if (queryView.ExpressionKind != DbExpressionKind.Project) { return false; }
-            var project = (DbProjectExpression)queryView;
-
-            if (project.Projection.ExpressionKind != DbExpressionKind.Case) { return false; }
-            var caseExpression = (DbCaseExpression)project.Projection;
-            if (project.Projection.ResultType.EdmType.BuiltInTypeKind != BuiltInTypeKind.EntityType) { return false; }
-
-            // determine value domain by walking filter
-            if (project.Input.Expression.ExpressionKind != DbExpressionKind.Filter) { return false; }
-            var filterExpression = (DbFilterExpression)project.Input.Expression;
-
-            HashSet<object> discriminatorDomain = new HashSet<object>();
-            if (!ViewSimplifier.TryMatchDiscriminatorPredicate(filterExpression, (equalsExp, discriminatorValue) => discriminatorDomain.Add(discriminatorValue)))
+            if (queryView.ExpressionKind
+                != DbExpressionKind.Project)
             {
                 return false;
             }
-                        
+            var project = (DbProjectExpression)queryView;
+
+            if (project.Projection.ExpressionKind
+                != DbExpressionKind.Case)
+            {
+                return false;
+            }
+            var caseExpression = (DbCaseExpression)project.Projection;
+            if (project.Projection.ResultType.EdmType.BuiltInTypeKind
+                != BuiltInTypeKind.EntityType)
+            {
+                return false;
+            }
+
+            // determine value domain by walking filter
+            if (project.Input.Expression.ExpressionKind
+                != DbExpressionKind.Filter)
+            {
+                return false;
+            }
+            var filterExpression = (DbFilterExpression)project.Input.Expression;
+
+            var discriminatorDomain = new HashSet<object>();
+            if (
+                !ViewSimplifier.TryMatchDiscriminatorPredicate(
+                    filterExpression, (equalsExp, discriminatorValue) => discriminatorDomain.Add(discriminatorValue)))
+            {
+                return false;
+            }
+
             var typeMap = new List<KeyValuePair<object, EntityType>>();
             var propertyMap = new Dictionary<EdmProperty, DbExpression>();
-            var relPropertyMap = new Dictionary<Query.InternalTrees.RelProperty, DbExpression>();
-            var typeToRelPropertyMap = new Dictionary<EntityType, List<Query.InternalTrees.RelProperty>>();
+            var relPropertyMap = new Dictionary<RelProperty, DbExpression>();
+            var typeToRelPropertyMap = new Dictionary<EntityType, List<RelProperty>>();
             DbPropertyExpression discriminator = null;
 
             EdmProperty discriminatorProperty = null;
-            for (int i = 0; i < caseExpression.When.Count; i++)
+            for (var i = 0; i < caseExpression.When.Count; i++)
             {
                 var when = caseExpression.When[i];
                 var then = caseExpression.Then[i];
@@ -100,16 +123,30 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
                 DbPropertyExpression currentDiscriminator;
                 object discriminatorValue;
-                if (!ViewSimplifier.TryMatchPropertyEqualsValue(when, projectionVariableName, out currentDiscriminator, out discriminatorValue)) { return false; }
+                if (
+                    !ViewSimplifier.TryMatchPropertyEqualsValue(
+                        when, projectionVariableName, out currentDiscriminator, out discriminatorValue))
+                {
+                    return false;
+                }
 
                 // must be the same discriminator in every case
-                if (null == discriminatorProperty) { discriminatorProperty = (EdmProperty)currentDiscriminator.Property; }
-                else if (discriminatorProperty != currentDiscriminator.Property) { return false; }
+                if (null == discriminatorProperty)
+                {
+                    discriminatorProperty = (EdmProperty)currentDiscriminator.Property;
+                }
+                else if (discriminatorProperty != currentDiscriminator.Property)
+                {
+                    return false;
+                }
                 discriminator = currentDiscriminator;
 
                 // right hand side must be entity type constructor
                 EntityType currentType;
-                if (!TryMatchEntityTypeConstructor(then, propertyMap, relPropertyMap, typeToRelPropertyMap, out currentType)) { return false; }
+                if (!TryMatchEntityTypeConstructor(then, propertyMap, relPropertyMap, typeToRelPropertyMap, out currentType))
+                {
+                    return false;
+                }
 
                 // remember type + discriminator value
                 typeMap.Add(new KeyValuePair<object, EntityType>(discriminatorValue, currentType));
@@ -119,12 +156,19 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             }
 
             // make sure only one member of discriminator domain remains...
-            if (1 != discriminatorDomain.Count) { return false; }
+            if (1 != discriminatorDomain.Count)
+            {
+                return false;
+            }
 
             // check default case
             EntityType elseType;
-            if (null == caseExpression.Else ||
-                !TryMatchEntityTypeConstructor(caseExpression.Else, propertyMap, relPropertyMap, typeToRelPropertyMap, out elseType)) { return false; }
+            if (null == caseExpression.Else
+                ||
+                !TryMatchEntityTypeConstructor(caseExpression.Else, propertyMap, relPropertyMap, typeToRelPropertyMap, out elseType))
+            {
+                return false;
+            }
             typeMap.Add(new KeyValuePair<object, EntityType>(discriminatorDomain.Single(), elseType));
 
             // Account for cases where some type in the hierarchy specifies a rel-property, but another
@@ -137,17 +181,20 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             // since the store may right-pad strings, ensure discriminator values are unique in their trimmed
             // form
             var discriminatorValues = typeMap.Select(map => map.Key);
-            int uniqueValueCount = discriminatorValues.Distinct(TrailingSpaceComparer.Instance).Count();
-            int valueCount = typeMap.Count;
-            if (uniqueValueCount != valueCount) { return false; }
+            var uniqueValueCount = discriminatorValues.Distinct(TrailingSpaceComparer.Instance).Count();
+            var valueCount = typeMap.Count;
+            if (uniqueValueCount != valueCount)
+            {
+                return false;
+            }
 
             discriminatorMap = new DiscriminatorMap(discriminator, typeMap, propertyMap, relPropertyMap, entitySet);
             return true;
         }
 
         private static bool CheckForMissingRelProperties(
-            Dictionary<Query.InternalTrees.RelProperty, DbExpression> relPropertyMap,
-            Dictionary<EntityType, List<Query.InternalTrees.RelProperty>> typeToRelPropertyMap)
+            Dictionary<RelProperty, DbExpression> relPropertyMap,
+            Dictionary<EntityType, List<RelProperty>> typeToRelPropertyMap)
         {
             // Easily the lousiest implementation of this search.
             // Check to see that for each relProperty that we see in the relPropertyMap
@@ -155,9 +202,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             // which that rel-property is specified *must* also have specified it.
             // We don't need to check for equivalence here - because that's already been
             // checked
-            foreach (Query.InternalTrees.RelProperty relProperty in relPropertyMap.Keys)
+            foreach (var relProperty in relPropertyMap.Keys)
             {
-                foreach (KeyValuePair<EntityType, List<Query.InternalTrees.RelProperty>> kv in typeToRelPropertyMap)
+                foreach (var kv in typeToRelPropertyMap)
                 {
                     if (kv.Key.IsSubtypeOf(relProperty.FromEnd.TypeUsage.EdmType))
                     {
@@ -171,13 +218,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return true;
         }
 
-        private static bool TryMatchEntityTypeConstructor(DbExpression then,
+        private static bool TryMatchEntityTypeConstructor(
+            DbExpression then,
             Dictionary<EdmProperty, DbExpression> propertyMap,
-            Dictionary<Query.InternalTrees.RelProperty, DbExpression> relPropertyMap,
-            Dictionary<EntityType, List<Query.InternalTrees.RelProperty>> typeToRelPropertyMap,
+            Dictionary<RelProperty, DbExpression> relPropertyMap,
+            Dictionary<EntityType, List<RelProperty>> typeToRelPropertyMap,
             out EntityType entityType)
         {
-            if (then.ExpressionKind != DbExpressionKind.NewInstance)
+            if (then.ExpressionKind
+                != DbExpressionKind.NewInstance)
             {
                 entityType = null;
                 return false;
@@ -187,14 +236,17 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
             // process arguments to constructor (must be aligned across all case statements)
             Debug.Assert(entityType.Properties.Count == constructor.Arguments.Count, "invalid new instance");
-            for (int j = 0; j < entityType.Properties.Count; j++)
+            for (var j = 0; j < entityType.Properties.Count; j++)
             {
                 var property = entityType.Properties[j];
                 var assignment = constructor.Arguments[j];
                 DbExpression existingAssignment;
                 if (propertyMap.TryGetValue(property, out existingAssignment))
                 {
-                    if (!ExpressionsCompatible(assignment, existingAssignment)) { return false; }
+                    if (!ExpressionsCompatible(assignment, existingAssignment))
+                    {
+                        return false;
+                    }
                 }
                 else
                 {
@@ -205,21 +257,25 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             // Now handle the rel properties
             if (constructor.HasRelatedEntityReferences)
             {
-                List<Query.InternalTrees.RelProperty> relPropertyList;
+                List<RelProperty> relPropertyList;
                 if (!typeToRelPropertyMap.TryGetValue(entityType, out relPropertyList))
                 {
-                    relPropertyList = new List<System.Data.Entity.Core.Query.InternalTrees.RelProperty>();
+                    relPropertyList = new List<RelProperty>();
                     typeToRelPropertyMap[entityType] = relPropertyList;
                 }
-                foreach (DbRelatedEntityRef relatedRef in constructor.RelatedEntityReferences)
+                foreach (var relatedRef in constructor.RelatedEntityReferences)
                 {
-                    Query.InternalTrees.RelProperty relProperty = new System.Data.Entity.Core.Query.InternalTrees.RelProperty((RelationshipType)relatedRef.TargetEnd.DeclaringType,
+                    var relProperty = new RelProperty(
+                        (RelationshipType)relatedRef.TargetEnd.DeclaringType,
                         relatedRef.SourceEnd, relatedRef.TargetEnd);
-                    DbExpression assignment = relatedRef.TargetEntityReference;
+                    var assignment = relatedRef.TargetEntityReference;
                     DbExpression existingAssignment;
                     if (relPropertyMap.TryGetValue(relProperty, out existingAssignment))
                     {
-                        if (!ExpressionsCompatible(assignment, existingAssignment)) { return false; }
+                        if (!ExpressionsCompatible(assignment, existingAssignment))
+                        {
+                            return false;
+                        }
                     }
                     else
                     {
@@ -243,7 +299,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         /// </summary>
         private static bool ExpressionsCompatible(DbExpression x, DbExpression y)
         {
-            if (x.ExpressionKind != y.ExpressionKind) { return false; }
+            if (x.ExpressionKind
+                != y.ExpressionKind)
+            {
+                return false;
+            }
             switch (x.ExpressionKind)
             {
                 case DbExpressionKind.Property:
@@ -251,17 +311,20 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                         var prop1 = (DbPropertyExpression)x;
                         var prop2 = (DbPropertyExpression)y;
                         return prop1.Property == prop2.Property &&
-                            ExpressionsCompatible(prop1.Instance, prop2.Instance);
+                               ExpressionsCompatible(prop1.Instance, prop2.Instance);
                     }
                 case DbExpressionKind.VariableReference:
                     return ((DbVariableReferenceExpression)x).VariableName ==
-                        ((DbVariableReferenceExpression)y).VariableName;
+                           ((DbVariableReferenceExpression)y).VariableName;
                 case DbExpressionKind.NewInstance:
                     {
                         var newX = (DbNewInstanceExpression)x;
                         var newY = (DbNewInstanceExpression)y;
-                        if (!newX.ResultType.EdmType.EdmEquals(newY.ResultType.EdmType)) { return false; }
-                        for (int i = 0; i < newX.Arguments.Count; i++)
+                        if (!newX.ResultType.EdmType.EdmEquals(newY.ResultType.EdmType))
+                        {
+                            return false;
+                        }
+                        for (var i = 0; i < newX.Arguments.Count; i++)
                         {
                             if (!ExpressionsCompatible(newX.Arguments[i], newY.Arguments[i]))
                             {
@@ -272,10 +335,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                     }
                 case DbExpressionKind.Ref:
                     {
-                        DbRefExpression refX = (DbRefExpression)x;
-                        DbRefExpression refY = (DbRefExpression)y;
+                        var refX = (DbRefExpression)x;
+                        var refY = (DbRefExpression)y;
                         return (refX.EntitySet.EdmEquals(refY.EntitySet) &&
-                            ExpressionsCompatible(refX.Argument, refY.Argument));
+                                ExpressionsCompatible(refX.Argument, refY.Argument));
                     }
                 default:
                     // here come the false negatives...

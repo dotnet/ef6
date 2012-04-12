@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Query.InternalTrees;
-//using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
+ //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
 
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
 // to prevent from simple mistakes during development (e.g. method argument validation 
@@ -19,6 +16,8 @@ using System.Data.Entity.Core.Query.InternalTrees;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -28,22 +27,31 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal abstract class SubqueryTrackingVisitor : BasicOpVisitorOfNode
     {
         #region Private State
+
         protected readonly PlanCompiler m_compilerState;
-        protected Command m_command { get { return m_compilerState.Command; } }
+
+        protected Command m_command
+        {
+            get { return m_compilerState.Command; }
+        }
 
         // nested subquery tracking
         protected readonly Stack<Node> m_ancestors = new Stack<Node>();
         private readonly Dictionary<Node, List<Node>> m_nodeSubqueries = new Dictionary<Node, List<Node>>();
+
         #endregion
 
         #region Constructor
+
         protected SubqueryTrackingVisitor(PlanCompiler planCompilerState)
         {
-            this.m_compilerState = planCompilerState;
+            m_compilerState = planCompilerState;
         }
+
         #endregion
 
         #region Subquery Handling
+
         /// <summary>
         /// Adds a subquery to the list of subqueries for the relOpNode
         /// </summary>
@@ -69,10 +77,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="outputVar">the output var to be used - at the current location - in lieu of the subquery</param>
         /// <param name="subquery">the subquery to move</param>
         /// <returns>a var ref node for the var returned from the subquery</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         protected Node AddSubqueryToParentRelOp(Var outputVar, Node subquery)
         {
-            Node ancestor = FindRelOpAncestor();
+            var ancestor = FindRelOpAncestor();
             PlanCompiler.Assert(ancestor != null, "no ancestors found?");
             AddSubqueryToRelOpNode(ancestor, subquery);
 
@@ -87,7 +96,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>the first RelOp node</returns>
         protected Node FindRelOpAncestor()
         {
-            foreach (Node n in m_ancestors)
+            foreach (var n in m_ancestors)
             {
                 if (n.Op.IsRelOp)
                 {
@@ -100,6 +109,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             return null;
         }
+
         #endregion
 
         #region Visitor Helpers
@@ -115,7 +125,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Push the current node onto the stack
             m_ancestors.Push(n);
 
-            for (int i = 0; i < n.Children.Count; i++)
+            for (var i = 0; i < n.Children.Count; i++)
             {
                 n.Children[i] = VisitNode(n.Children[i]);
             }
@@ -154,9 +164,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 newNode = subqueries[0];
                 subqueriesStartPos = 1;
             }
-            for (int i = subqueriesStartPos; i < subqueries.Count; i++)
+            for (var i = subqueriesStartPos; i < subqueries.Count; i++)
             {
-                OuterApplyOp op = m_command.CreateOuterApplyOp();
+                var op = m_command.CreateOuterApplyOp();
                 newNode = m_command.CreateNode(op, newNode, subqueries[i]);
             }
             if (!inputFirst)
@@ -187,7 +197,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op">Current RelOp</param>
         /// <param name="n">Node to process</param>
         /// <returns>Current subtree</returns> 
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VisitRelOpDefault"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VisitRelOpDefault")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         protected override Node VisitRelOpDefault(RelOp op, Node n)
         {
             VisitChildren(n); // visit all my children first
@@ -195,7 +207,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Then identify all the subqueries that have shown up as part of my node
             // Create Apply Nodes for each of these.
             List<Node> nestedSubqueries;
-            if (m_nodeSubqueries.TryGetValue(n, out nestedSubqueries) && nestedSubqueries.Count > 0)
+            if (m_nodeSubqueries.TryGetValue(n, out nestedSubqueries)
+                && nestedSubqueries.Count > 0)
             {
                 // Validate - this must only apply to the following nodes
                 PlanCompiler.Assert(
@@ -203,7 +216,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     n.Op.OpType == OpType.GroupBy || n.Op.OpType == OpType.GroupByInto,
                     "VisitRelOpDefault: Unexpected op?" + n.Op.OpType);
 
-                Node newInputNode = AugmentWithSubqueries(n.Child0, nestedSubqueries, true);
+                var newInputNode = AugmentWithSubqueries(n.Child0, nestedSubqueries, true);
                 // Now make this the new input child
                 n.Child0 = newInputNode;
             }
@@ -216,7 +229,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="n">Current subtree</param>
         /// <returns>Whether the node was modified</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "JoinOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "JoinOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         protected bool ProcessJoinOp(Node n)
         {
             VisitChildren(n); // visit all my children first
@@ -232,16 +247,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 return false;
             }
 
-            PlanCompiler.Assert(n.Op.OpType == OpType.InnerJoin ||
+            PlanCompiler.Assert(
+                n.Op.OpType == OpType.InnerJoin ||
                 n.Op.OpType == OpType.LeftOuterJoin ||
                 n.Op.OpType == OpType.FullOuterJoin, "unexpected op?");
             PlanCompiler.Assert(n.HasChild2, "missing second child to JoinOp?");
-            Node joinCondition = n.Child2;
+            var joinCondition = n.Child2;
 
-            Node inputNode = m_command.CreateNode(m_command.CreateSingleRowTableOp());
+            var inputNode = m_command.CreateNode(m_command.CreateSingleRowTableOp());
             inputNode = AugmentWithSubqueries(inputNode, nestedSubqueries, true);
-            Node filterNode = m_command.CreateNode(m_command.CreateFilterOp(), inputNode, joinCondition);
-            Node existsNode = m_command.CreateNode(m_command.CreateExistsOp(), filterNode);
+            var filterNode = m_command.CreateNode(m_command.CreateFilterOp(), inputNode, joinCondition);
+            var existsNode = m_command.CreateNode(m_command.CreateExistsOp(), filterNode);
 
             n.Child2 = existsNode;
             return true;
@@ -265,7 +281,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 // We pass 'inputFirst = false' since the subqueries contribute to the driver in the unnest,
                 // they are not generated by the unnest.
-                Node newNode = AugmentWithSubqueries(n, nestedSubqueries, false /* inputFirst */);
+                var newNode = AugmentWithSubqueries(n, nestedSubqueries, false /* inputFirst */);
                 return newNode;
             }
             else
@@ -277,6 +293,5 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #endregion
-
     }
 }

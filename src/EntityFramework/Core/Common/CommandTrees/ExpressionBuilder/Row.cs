@@ -1,15 +1,15 @@
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Common.Utils;
-
 namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Common.Utils;
+
     /// <summary>
     /// The Row class is intended to provide a constructor-like means of calling <see cref="DbExpressionBuilder.NewRow"/>.
     /// </summary>
     public sealed class Row
     {
-        private readonly System.Collections.ObjectModel.ReadOnlyCollection<KeyValuePair<string, DbExpression>> arguments;
+        private readonly ReadOnlyCollection<KeyValuePair<string, DbExpression>> arguments;
 
         /// <summary>
         /// Constructs a new Row with the specified first column value and optional successive column values
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <param name="columnValues">Key-value pairs that provide any subsequent columns in the new row instance (optional)</param>
         public Row(KeyValuePair<string, DbExpression> columnValue, params KeyValuePair<string, DbExpression>[] columnValues)
         {
-            this.arguments = new System.Collections.ObjectModel.ReadOnlyCollection<KeyValuePair<string, DbExpression>>(Helpers.Prepend(columnValues, columnValue));
+            arguments = new ReadOnlyCollection<KeyValuePair<string, DbExpression>>(Helpers.Prepend(columnValues, columnValue));
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <seealso cref="DbExpressionBuilder.NewRow"/>
         public DbNewInstanceExpression ToExpression()
         {
-            return DbExpressionBuilder.NewRow(this.arguments);
+            return DbExpressionBuilder.NewRow(arguments);
         }
 
         /// <summary>

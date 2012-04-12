@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
-
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
 // to prevent from simple mistakes during development (e.g. method argument validation 
 // in cases where it was you who created the variables or the variables had already been validated or 
@@ -16,17 +12,17 @@ using System.Collections.Generic;
 // or the tree was built/rewritten not the way we thought it was.
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
-
-using System.Globalization;
-using System.Linq;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
 using md = System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Query.InternalTrees;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
 
     /// <summary>
     /// The type flattener module is part of the structured type elimination phase,
@@ -82,12 +78,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     /// </summary>
     internal class StructuredTypeInfo
     {
-
         #region private state
 
         private md.TypeUsage m_stringType;
         private md.TypeUsage m_intType;
-        private Dictionary<md.TypeUsage, TypeInfo> m_typeInfoMap;
+        private readonly Dictionary<md.TypeUsage, TypeInfo> m_typeInfoMap;
         private bool m_typeInfoMapPopulated;
         private md.EntitySet[] m_entitySetIdToEntitySetMap; //used as a Dictionary with the index as key
         private Dictionary<md.EntitySet, int> m_entitySetToEntitySetIdMap;
@@ -98,14 +93,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private Dictionary<md.EntityTypeBase, md.EntitySet> m_entityTypeToEntitySetMap;
         private Dictionary<md.EntitySetBase, ExplicitDiscriminatorMap> m_discriminatorMaps;
         private RelPropertyHelper m_relPropertyHelper;
-        private HashSet<string> m_typesNeedingNullSentinel;
+        private readonly HashSet<string> m_typesNeedingNullSentinel;
+
         #endregion
 
         #region constructor
 
         private StructuredTypeInfo(HashSet<string> typesNeedingNullSentinel)
         {
-
             // Bug 428351: Make the type->typeInfo dictionary use ref equality for
             // types. The problem is that records (and other transient types) can 
             // compare equal, even if they are not reference-equal, and this causes
@@ -131,7 +126,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="relPropertyHelper">helper for rel properties</param>
         /// <param name="typesNeedingNullSentinel">which types need a null sentinel</param>
         /// <param name="structuredTypeInfo"></param>
-        internal static void Process(Command itree,
+        internal static void Process(
+            Command itree,
             HashSet<md.TypeUsage> referencedTypes,
             HashSet<md.EntitySet> referencedEntitySets,
             HashSet<md.EntityType> freeFloatingEntityConstructorTypes,
@@ -141,7 +137,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             out StructuredTypeInfo structuredTypeInfo)
         {
             structuredTypeInfo = new StructuredTypeInfo(typesNeedingNullSentinel);
-            structuredTypeInfo.Process(itree, referencedTypes, referencedEntitySets, freeFloatingEntityConstructorTypes, discriminatorMaps, relPropertyHelper);
+            structuredTypeInfo.Process(
+                itree, referencedTypes, referencedEntitySets, freeFloatingEntityConstructorTypes, discriminatorMaps, relPropertyHelper);
         }
 
         /// <summary>
@@ -153,8 +150,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="freeFloatingEntityConstructorTypes">free-floating entityConstructor types</param>
         /// <param name="discriminatorMaps">discriminator information for entity sets mapped using TPH pattern</param>
         /// <param name="relPropertyHelper">helper for rel properties</param>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "itree"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        private void Process(Command itree,
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "itree")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        private void Process(
+            Command itree,
             HashSet<md.TypeUsage> referencedTypes,
             HashSet<md.EntitySet> referencedEntitySets,
             HashSet<md.EntityType> freeFloatingEntityConstructorTypes,
@@ -181,15 +181,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal md.EntitySet[] EntitySetIdToEntitySetMap
         {
-            get
-            {
-                return m_entitySetIdToEntitySetMap;
-            }
+            get { return m_entitySetIdToEntitySetMap; }
         }
 
         #endregion
 
         #region "public" methods
+
         /// <summary>
         /// Get a helper for rel properties
         /// </summary>
@@ -197,6 +195,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             get { return m_relPropertyHelper; }
         }
+
         /// <summary>
         /// Gets the "single" entityset that stores instances of this type
         /// </summary>
@@ -205,7 +204,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         internal md.EntitySet GetEntitySet(md.EntityTypeBase type)
         {
             md.EntitySet set;
-            md.EntityTypeBase rootType = GetRootType(type);
+            var rootType = GetRootType(type);
             if (!m_entityTypeToEntitySetMap.TryGetValue(rootType, out set))
             {
                 return null;
@@ -218,10 +217,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="e">the entityset</param>
         /// <returns>entitysetid value</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal int GetEntitySetId(md.EntitySet e)
         {
-            int result = 0;
+            var result = 0;
 
             if (!m_entitySetToEntitySetIdMap.TryGetValue(e, out result))
             {
@@ -234,9 +234,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// Gets entity sets referenced by the query.
         /// </summary>
         /// <returns>entity sets</returns>
-        internal Common.Utils.Set<md.EntitySet> GetEntitySets()
+        internal Set<md.EntitySet> GetEntitySets()
         {
-            return new Common.Utils.Set<md.EntitySet>(m_entitySetIdToEntitySetMap).MakeReadOnly();
+            return new Set<md.EntitySet>(m_entitySetIdToEntitySetMap).MakeReadOnly();
         }
 
         /// <summary>
@@ -247,7 +247,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="type">the type to look up</param>
         /// <returns>the typeinfo for the type (null if we couldn't find one)</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "typeInfo"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "typeInfo")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal TypeInfo GetTypeInfo(md.TypeUsage type)
         {
             if (!TypeUtils.IsStructuredType(type))
@@ -257,7 +259,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             TypeInfo typeInfo = null;
             if (!m_typeInfoMap.TryGetValue(type, out typeInfo))
             {
-                PlanCompiler.Assert(!TypeUtils.IsStructuredType(type) || !m_typeInfoMapPopulated,
+                PlanCompiler.Assert(
+                    !TypeUtils.IsStructuredType(type) || !m_typeInfoMapPopulated,
                     "cannot find typeInfo for type " + type);
             }
             return typeInfo;
@@ -277,8 +280,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private void AddEntityTypeToSetEntry(md.EntityType entityType, md.EntitySet entitySet)
         {
             md.EntitySet other;
-            md.EntityTypeBase rootType = GetRootType(entityType);
-            bool hasSingleEntitySet = true;
+            var rootType = GetRootType(entityType);
+            var hasSingleEntitySet = true;
 
             if (entitySet == null)
             {
@@ -307,7 +310,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="referencedEntitySets">referenced entitysets</param>
         /// <param name="freeFloatingEntityConstructorTypes">free-floating entity constructor types</param>
         /// </summary>
-        private void ProcessEntitySets(HashSet<md.EntitySet> referencedEntitySets, HashSet<md.EntityType> freeFloatingEntityConstructorTypes)
+        private void ProcessEntitySets(
+            HashSet<md.EntitySet> referencedEntitySets, HashSet<md.EntityType> freeFloatingEntityConstructorTypes)
         {
             AssignEntitySetIds(referencedEntitySets);
 
@@ -315,11 +319,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // set up the entity-type to set map
             //
             m_entityTypeToEntitySetMap = new Dictionary<md.EntityTypeBase, md.EntitySet>();
-            foreach (md.EntitySet e in referencedEntitySets)
+            foreach (var e in referencedEntitySets)
             {
                 AddEntityTypeToSetEntry(e.ElementType, e);
             }
-            foreach (md.EntityType t in freeFloatingEntityConstructorTypes)
+            foreach (var t in freeFloatingEntityConstructorTypes)
             {
                 AddEntityTypeToSetEntry(t, null);
             }
@@ -336,15 +340,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             Dictionary<md.EntitySetBase, ExplicitDiscriminatorMap> filteredMaps = null;
             if (null != discriminatorMaps)
             {
-                filteredMaps = new Dictionary<md.EntitySetBase, ExplicitDiscriminatorMap>(discriminatorMaps.Count, discriminatorMaps.Comparer);
-                foreach (KeyValuePair<md.EntitySetBase, DiscriminatorMapInfo> setMapPair in discriminatorMaps)
+                filteredMaps = new Dictionary<md.EntitySetBase, ExplicitDiscriminatorMap>(
+                    discriminatorMaps.Count, discriminatorMaps.Comparer);
+                foreach (var setMapPair in discriminatorMaps)
                 {
-                    md.EntitySetBase set = setMapPair.Key;
-                    ExplicitDiscriminatorMap map = setMapPair.Value.DiscriminatorMap;
+                    var set = setMapPair.Key;
+                    var map = setMapPair.Value.DiscriminatorMap;
                     if (null != map)
                     {
-                        md.EntityTypeBase rootType = GetRootType(set.ElementType);
-                        bool hasOneSet = GetEntitySet(rootType) != null;
+                        var rootType = GetRootType(set.ElementType);
+                        var hasOneSet = GetEntitySet(rootType) != null;
                         if (hasOneSet)
                         {
                             filteredMaps.Add(set, map);
@@ -369,8 +374,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             m_entitySetIdToEntitySetMap = new md.EntitySet[referencedEntitySets.Count];
             m_entitySetToEntitySetIdMap = new Dictionary<md.EntitySet, int>();
 
-            int id = 0;
-            foreach (md.EntitySet e in referencedEntitySets)
+            var id = 0;
+            foreach (var e in referencedEntitySets)
             {
                 if (m_entitySetToEntitySetIdMap.ContainsKey(e))
                 {
@@ -408,7 +413,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="referencedTypes"></param>
         private void PopulateTypeInfoMap(HashSet<md.TypeUsage> referencedTypes)
         {
-            foreach (md.TypeUsage t in referencedTypes)
+            foreach (var t in referencedTypes)
             {
                 CreateTypeInfoForType(t);
             }
@@ -430,13 +435,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             // must be an entity type...
-            if (type.BuiltInTypeKind != md.BuiltInTypeKind.EntityType)
+            if (type.BuiltInTypeKind
+                != md.BuiltInTypeKind.EntityType)
             {
                 return false;
             }
 
             // get root entity type (discriminator maps are mapped from the root)
-            md.EntityTypeBase rootEntityType = GetRootType((md.EntityType)type);
+            var rootEntityType = GetRootType((md.EntityType)type);
 
             // find entity set
             md.EntitySet entitySet;
@@ -489,7 +495,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="type">New type to add</param>
         /// <param name="discriminatorMap">type discriminator map</param>
         /// <returns>The TypeInfo for this type</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private TypeInfo CreateTypeInfoForStructuredType(md.TypeUsage type, ExplicitDiscriminatorMap discriminatorMap)
         {
             TypeInfo typeInfo;
@@ -508,18 +515,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             md.RefType refType;
             if (type.EdmType.BaseType != null)
             {
-
                 superTypeInfo = CreateTypeInfoForStructuredType(md.TypeUsage.Create(type.EdmType.BaseType), discriminatorMap);
             }
-            // 
-            // Handle Ref types also in a similar fashion
-            //
-            else if (TypeHelpers.TryGetEdmType<md.RefType>(type, out refType))
+                // 
+                // Handle Ref types also in a similar fashion
+                //
+            else if (TypeHelpers.TryGetEdmType(type, out refType))
             {
-                md.EntityType entityType = refType.ElementType as md.EntityType;
-                if (entityType != null && entityType.BaseType != null)
+                var entityType = refType.ElementType as md.EntityType;
+                if (entityType != null
+                    && entityType.BaseType != null)
                 {
-                    md.TypeUsage baseRefType = TypeHelpers.CreateReferenceTypeUsage(entityType.BaseType as md.EntityType);
+                    var baseRefType = TypeHelpers.CreateReferenceTypeUsage(entityType.BaseType as md.EntityType);
                     superTypeInfo = CreateTypeInfoForStructuredType(baseRefType, discriminatorMap);
                 }
             }
@@ -537,15 +544,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             {
                 md.EntityTypeBase entityType;
-                if (TypeHelpers.TryGetEdmType<md.EntityTypeBase>(type, out entityType))
+                if (TypeHelpers.TryGetEdmType(type, out entityType))
                 {
-                    foreach (RelProperty p in m_relPropertyHelper.GetDeclaredOnlyRelProperties(entityType))
+                    foreach (var p in m_relPropertyHelper.GetDeclaredOnlyRelProperties(entityType))
                     {
                         CreateTypeInfoForType(p.ToEnd.TypeUsage);
                     }
                 }
             }
-
 
             // Now add myself to the map
             typeInfo = TypeInfo.Create(type, superTypeInfo, discriminatorMap);
@@ -566,9 +572,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         private void AssignTypeIds()
         {
-            int typeNum = 0;
+            var typeNum = 0;
 
-            foreach (KeyValuePair<md.TypeUsage, TypeInfo> kv in m_typeInfoMap)
+            foreach (var kv in m_typeInfoMap)
             {
                 // See if there is a declared discriminator value for this column
                 if (kv.Value.RootType.DiscriminatorMap != null)
@@ -578,9 +584,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     kv.Value.TypeId = kv.Value.RootType.DiscriminatorMap.GetTypeId(entityType);
                 }
 
-                // Only handle root types. The call below will ensure that all the 
-                // subtypes are appropriately tagged
-                else if (kv.Value.IsRootType && (md.TypeSemantics.IsEntityType(kv.Key) || md.TypeSemantics.IsComplexType(kv.Key)))
+                    // Only handle root types. The call below will ensure that all the 
+                    // subtypes are appropriately tagged
+                else if (kv.Value.IsRootType
+                         && (md.TypeSemantics.IsEntityType(kv.Key) || md.TypeSemantics.IsComplexType(kv.Key)))
                 {
                     AssignRootTypeId(kv.Value, String.Format(CultureInfo.InvariantCulture, "{0}X", typeNum));
                     typeNum++;
@@ -607,8 +614,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private void AssignTypeIdsToSubTypes(TypeInfo typeInfo)
         {
             // Now walk through all my subtypes, and assign their typeids
-            int mySubTypeNum = 0;
-            foreach (TypeInfo subtype in typeInfo.ImmediateSubTypes)
+            var mySubTypeNum = 0;
+            foreach (var subtype in typeInfo.ImmediateSubTypes)
             {
                 AssignTypeId(subtype, mySubTypeNum);
                 mySubTypeNum++;
@@ -632,6 +639,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #region Flattening/Exploding types
+
         /// <summary>
         /// A type needs a type-id property if it is an entity type or a complex tpe that
         /// has subtypes.
@@ -667,7 +675,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private bool NeedsEntitySetIdProperty(TypeInfo typeInfo)
         {
             md.EntityType entityType;
-            md.RefType refType = typeInfo.Type.EdmType as md.RefType;
+            var refType = typeInfo.Type.EdmType as md.RefType;
             if (refType != null)
             {
                 entityType = refType.ElementType as md.EntityType;
@@ -676,7 +684,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 entityType = typeInfo.Type.EdmType as md.EntityType;
             }
-            bool result = ((entityType != null) && (GetEntitySet(entityType) == null));
+            var result = ((entityType != null) && (GetEntitySet(entityType) == null));
             return result;
         }
 
@@ -689,7 +697,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Walk through the list of types, and only process the supertypes, since
             // The ExplodeType method will ensure that all the subtypes are appropriately
             // tagged
-            foreach (KeyValuePair<md.TypeUsage, TypeInfo> kv in m_typeInfoMap)
+            foreach (var kv in m_typeInfoMap)
             {
                 if (kv.Value.IsRootType)
                 {
@@ -710,14 +718,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             if (TypeUtils.IsStructuredType(type))
             {
-                TypeInfo typeInfo = GetTypeInfo(type);
+                var typeInfo = GetTypeInfo(type);
                 ExplodeType(typeInfo);
                 return typeInfo;
             }
 
             if (TypeUtils.IsCollectionType(type))
             {
-                md.TypeUsage elementType = TypeHelpers.GetEdmType<md.CollectionType>(type).TypeUsage;
+                var elementType = TypeHelpers.GetEdmType<md.CollectionType>(type).TypeUsage;
                 ExplodeType(elementType);
                 return null;
             }
@@ -825,14 +833,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="typeInfo">type in the type hierarchy</param>
         private void ExplodeRootStructuredTypeHelper(TypeInfo typeInfo)
         {
-            RootTypeInfo rootType = typeInfo.RootType;
+            var rootType = typeInfo.RootType;
 
             // Identify the members of this type. For Refs, use the key properties
             // of the target entity type. For all other types, simply use the type
             // members
             IEnumerable typeMembers = null;
             md.RefType refType;
-            if (TypeHelpers.TryGetEdmType<md.RefType>(typeInfo.Type, out refType))
+            if (TypeHelpers.TryGetEdmType(typeInfo.Type, out refType))
             {
                 //
                 // If this is not the root type, then don't bother adding the keys.
@@ -852,7 +860,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Walk through all the members of the type
             foreach (md.EdmMember p in typeMembers)
             {
-                TypeInfo propertyType = ExplodeType(p.TypeUsage);
+                var propertyType = ExplodeType(p.TypeUsage);
 
                 //
                 // If we can't find a TypeInfo for this property's type, then it must
@@ -869,7 +877,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     // We're dealing with a structured type again. Create NestedPropertyRef
                     // for each property of the nested type
                     //
-                    foreach (PropertyRef nestedPropInfo in propertyType.PropertyRefList)
+                    foreach (var nestedPropInfo in propertyType.PropertyRefList)
                     {
                         rootType.AddPropertyRef(nestedPropInfo.CreateNestedPropertyRef(p));
                     }
@@ -879,7 +887,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // 
             // Process all subtypes now
             //
-            foreach (TypeInfo subTypeInfo in typeInfo.ImmediateSubTypes)
+            foreach (var subTypeInfo in typeInfo.ImmediateSubTypes)
             {
                 ExplodeRootStructuredTypeHelper(subTypeInfo);
             }
@@ -891,17 +899,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="typeInfo">the type to process</param>
         private void AddRelProperties(TypeInfo typeInfo)
         {
-
-            md.EntityTypeBase entityType = (md.EntityTypeBase)typeInfo.Type.EdmType;
+            var entityType = (md.EntityTypeBase)typeInfo.Type.EdmType;
 
             //
             // Walk through each rel-property defined for this specific type, 
             // and add a corresponding property-ref
             //
-            foreach (RelProperty p in m_relPropertyHelper.GetDeclaredOnlyRelProperties(entityType))
+            foreach (var p in m_relPropertyHelper.GetDeclaredOnlyRelProperties(entityType))
             {
-                md.EdmType refType = p.ToEnd.TypeUsage.EdmType;
-                TypeInfo refTypeInfo = GetTypeInfo(p.ToEnd.TypeUsage);
+                var refType = p.ToEnd.TypeUsage.EdmType;
+                var refTypeInfo = GetTypeInfo(p.ToEnd.TypeUsage);
 
                 //
                 // We're dealing with a structured type again - flatten this out
@@ -909,7 +916,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 //
                 ExplodeType(refTypeInfo);
 
-                foreach (PropertyRef nestedPropInfo in refTypeInfo.PropertyRefList)
+                foreach (var nestedPropInfo in refTypeInfo.PropertyRefList)
                 {
                     typeInfo.RootType.AddPropertyRef(nestedPropInfo.CreateNestedPropertyRef(p));
                 }
@@ -918,7 +925,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // 
             // Process all subtypes now
             //
-            foreach (TypeInfo subTypeInfo in typeInfo.ImmediateSubTypes)
+            foreach (var subTypeInfo in typeInfo.ImmediateSubTypes)
             {
                 AddRelProperties(subTypeInfo);
             }
@@ -935,7 +942,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// Finally, we identify the TypeId and EntitySetId property if they exist
         /// </summary>
         /// <param name="type"></param>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void CreateFlattenedRecordType(RootTypeInfo type)
         {
             //
@@ -944,7 +952,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // then simply use the name from that property
             //
             bool usePropertyNamesFromUnderlyingType;
-            if (md.TypeSemantics.IsEntityType(type.Type) &&
+            if (md.TypeSemantics.IsEntityType(type.Type)
+                &&
                 type.ImmediateSubTypes.Count == 0)
             {
                 usePropertyNamesFromUnderlyingType = true;
@@ -954,29 +963,28 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 usePropertyNamesFromUnderlyingType = false;
             }
 
-
             // Build the record type
-            List<KeyValuePair<string, md.TypeUsage>> fieldList = new List<KeyValuePair<string, md.TypeUsage>>();
-            HashSet<string> fieldNames = new HashSet<string>();
-            int nextFieldId = 0;
-            foreach (PropertyRef p in type.PropertyRefList)
+            var fieldList = new List<KeyValuePair<string, md.TypeUsage>>();
+            var fieldNames = new HashSet<string>();
+            var nextFieldId = 0;
+            foreach (var p in type.PropertyRefList)
             {
                 string fieldName = null;
                 if (usePropertyNamesFromUnderlyingType)
                 {
-                    SimplePropertyRef simpleP = p as SimplePropertyRef;
+                    var simpleP = p as SimplePropertyRef;
                     if (simpleP != null)
                     {
                         fieldName = simpleP.Property.Name;
                     }
                 }
-               
+
                 if (fieldName == null)
                 {
                     fieldName = "F" + nextFieldId.ToString(CultureInfo.InvariantCulture);
                     nextFieldId++;
                 }
-                
+
                 // Deal with collisions
                 while (fieldNames.Contains(fieldName))
                 {
@@ -984,7 +992,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     nextFieldId++;
                 }
 
-                md.TypeUsage propertyType = GetPropertyType(type, p);
+                var propertyType = GetPropertyType(type, p);
                 fieldList.Add(new KeyValuePair<string, md.TypeUsage>(fieldName, propertyType));
                 fieldNames.Add(fieldName);
             }
@@ -992,8 +1000,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             type.FlattenedType = TypeHelpers.CreateRowType(fieldList);
 
             // Now build up the property map
-            IEnumerator<PropertyRef> origProps = type.PropertyRefList.GetEnumerator();
-            foreach (md.EdmProperty p in type.FlattenedType.Properties)
+            var origProps = type.PropertyRefList.GetEnumerator();
+            foreach (var p in type.FlattenedType.Properties)
             {
                 if (!origProps.MoveNext())
                 {
@@ -1018,13 +1026,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             if (TypeUtils.IsStructuredType(type))
             {
-                TypeInfo typeInfo = GetTypeInfo(type);
+                var typeInfo = GetTypeInfo(type);
                 return typeInfo.FlattenedTypeUsage;
             }
             md.TypeUsage elementType;
             if (TypeHelpers.TryGetCollectionElementType(type, out elementType))
             {
-                md.TypeUsage newElementType = GetNewType(elementType);
+                var newElementType = GetNewType(elementType);
                 if (newElementType.EdmEquals(elementType))
                 {
                     return type;
@@ -1039,7 +1047,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 return TypeHelpers.CreateEnumUnderlyingTypeUsage(type);
             }
-            
+
             if (md.TypeSemantics.IsStrongSpatialType(type))
             {
                 return TypeHelpers.CreateSpatialUnionTypeUsage(type);
@@ -1060,7 +1068,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="typeInfo">typeinfo of the current type</param>
         /// <param name="p">current property ref</param>
         /// <returns>the datatype of the property</returns>
-        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private md.TypeUsage GetPropertyType(RootTypeInfo typeInfo, PropertyRef p)
         {
             md.TypeUsage result = null;
@@ -1069,7 +1079,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Get the "leaf" property first
             while (p is NestedPropertyRef)
             {
-                NestedPropertyRef npr = (NestedPropertyRef)p;
+                var npr = (NestedPropertyRef)p;
                 p = npr.OuterProperty;
                 innerProperty = npr.InnerProperty;
             }
@@ -1083,8 +1093,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 var simplePropertyRef = (SimplePropertyRef)innerProperty;
                 if (simplePropertyRef != null)
                 {
-                    md.TypeUsage innerType = simplePropertyRef.Property.TypeUsage;
-                    TypeInfo innerTypeInfo = GetTypeInfo(innerType);
+                    var innerType = simplePropertyRef.Property.TypeUsage;
+                    var innerTypeInfo = GetTypeInfo(innerType);
                     result = innerTypeInfo.RootType.TypeIdType;
                 }
                 else
@@ -1092,7 +1102,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     result = typeInfo.TypeIdType;
                 }
             }
-            else if (p is EntitySetIdPropertyRef || p is NullSentinelPropertyRef)
+            else if (p is EntitySetIdPropertyRef
+                     || p is NullSentinelPropertyRef)
             {
                 result = m_intType;
             }
@@ -1102,7 +1113,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             else
             {
-                SimplePropertyRef simpleP = p as SimplePropertyRef;
+                var simpleP = p as SimplePropertyRef;
                 if (simpleP != null)
                 {
                     result = md.Helper.GetModelTypeUsage(simpleP.Property);
@@ -1119,6 +1130,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #region utils
+
         /// <summary>
         /// Get the root entity type for a type
         /// </summary>
@@ -1132,7 +1144,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             return type;
         }
+
         #endregion
+
         #endregion
     }
 }

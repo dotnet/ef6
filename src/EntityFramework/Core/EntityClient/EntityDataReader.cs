@@ -1,30 +1,29 @@
 namespace System.Data.Entity.Core.EntityClient
 {
-    using System;
     using System.Collections;
     using System.ComponentModel;
-    using System.Data;
-    using System.Data.Entity.Core;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// A data reader class for the entity client provider
     /// </summary>
-    [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface"), SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
+    [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public class EntityDataReader : DbDataReader, IExtendedDataRecord
     {
         // The command object that owns this reader
         private EntityCommand _command;
 
-        private CommandBehavior _behavior;
+        private readonly CommandBehavior _behavior;
 
         // Store data reader, _storeExtendedDataRecord points to the same reader as _storeDataReader, it's here to just
         // save the casting wherever it's used
-        private DbDataReader _storeDataReader;
-        private IExtendedDataRecord _storeExtendedDataRecord;
+        private readonly DbDataReader _storeDataReader;
+        private readonly IExtendedDataRecord _storeExtendedDataRecord;
 
         /// <summary>
         /// The constructor for the data reader, each EntityDataReader must always be associated with a EntityCommand and an underlying
@@ -32,14 +31,13 @@ namespace System.Data.Entity.Core.EntityClient
         /// of cleaning the command object, but it does assume responsibility of cleaning up the store data reader object.
         /// </summary>
         internal EntityDataReader(EntityCommand command, DbDataReader storeDataReader, CommandBehavior behavior)
-            : base()
         {
             Debug.Assert(command != null && storeDataReader != null);
 
-            this._command = command;
-            this._storeDataReader = storeDataReader;
-            this._storeExtendedDataRecord = storeDataReader as IExtendedDataRecord;
-            this._behavior = behavior;
+            _command = command;
+            _storeDataReader = storeDataReader;
+            _storeExtendedDataRecord = storeDataReader as IExtendedDataRecord;
+            _behavior = behavior;
         }
 
         /// <summary>
@@ -47,10 +45,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override int Depth
         {
-            get
-            {
-                return this._storeDataReader.Depth;
-            }
+            get { return _storeDataReader.Depth; }
         }
 
         /// <summary>
@@ -58,10 +53,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override int FieldCount
         {
-            get
-            {
-                return this._storeDataReader.FieldCount;
-            }
+            get { return _storeDataReader.FieldCount; }
         }
 
         /// <summary>
@@ -69,10 +61,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override bool HasRows
         {
-            get
-            {
-                return this._storeDataReader.HasRows;
-            }
+            get { return _storeDataReader.HasRows; }
         }
 
         /// <summary>
@@ -80,10 +69,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override bool IsClosed
         {
-            get
-            {
-                return this._storeDataReader.IsClosed;
-            }
+            get { return _storeDataReader.IsClosed; }
         }
 
         /// <summary>
@@ -91,10 +77,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override int RecordsAffected
         {
-            get
-            {
-                return this._storeDataReader.RecordsAffected;
-            }
+            get { return _storeDataReader.RecordsAffected; }
         }
 
         /// <summary>
@@ -103,10 +86,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <param name="ordinal">The ordinal of the column to retrieve the value</param>
         public override object this[int ordinal]
         {
-            get
-            {
-                return this._storeDataReader[ordinal];
-            }
+            get { return _storeDataReader[ordinal]; }
         }
 
         /// <summary>
@@ -118,7 +98,7 @@ namespace System.Data.Entity.Core.EntityClient
             get
             {
                 EntityUtil.CheckArgumentNull(name, "name");
-                return this._storeDataReader[name];
+                return _storeDataReader[name];
             }
         }
 
@@ -127,10 +107,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override int VisibleFieldCount
         {
-            get
-            {
-                return this._storeDataReader.VisibleFieldCount;
-            }
+            get { return _storeDataReader.VisibleFieldCount; }
         }
 
         /// <summary>
@@ -140,13 +117,13 @@ namespace System.Data.Entity.Core.EntityClient
         {
             get
             {
-                if (null == this._storeExtendedDataRecord)
+                if (null == _storeExtendedDataRecord)
                 {
                     // if a command has no results (e.g. FunctionImport with no return type),
                     // there is nothing to report.
                     return null;
                 }
-                return this._storeExtendedDataRecord.DataRecordInfo;
+                return _storeExtendedDataRecord.DataRecordInfo;
             }
         }
 
@@ -155,18 +132,19 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override void Close()
         {
-            if (this._command != null)
+            if (_command != null)
             {
-                this._storeDataReader.Close();
+                _storeDataReader.Close();
 
                 // Notify the command object that we are closing, so clean up operations such as copying output parameters can be done
-                this._command.NotifyDataReaderClosing();
-                if ((this._behavior & CommandBehavior.CloseConnection) == CommandBehavior.CloseConnection)
+                _command.NotifyDataReaderClosing();
+                if ((_behavior & CommandBehavior.CloseConnection)
+                    == CommandBehavior.CloseConnection)
                 {
-                    Debug.Assert(this._command.Connection != null);
-                    this._command.Connection.Close();
+                    Debug.Assert(_command.Connection != null);
+                    _command.Connection.Close();
                 }
-                this._command = null;
+                _command = null;
             }
         }
 
@@ -179,7 +157,7 @@ namespace System.Data.Entity.Core.EntityClient
             base.Dispose(disposing);
             if (disposing)
             {
-                this._storeDataReader.Dispose();
+                _storeDataReader.Dispose();
             }
         }
 
@@ -190,7 +168,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The boolean value</returns>
         public override bool GetBoolean(int ordinal)
         {
-            return this._storeDataReader.GetBoolean(ordinal);
+            return _storeDataReader.GetBoolean(ordinal);
         }
 
         /// <summary>
@@ -200,7 +178,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The byte value</returns>
         public override byte GetByte(int ordinal)
         {
-            return this._storeDataReader.GetByte(ordinal);
+            return _storeDataReader.GetByte(ordinal);
         }
 
         /// <summary>
@@ -214,7 +192,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The actual number of bytes read</returns>
         public override long GetBytes(int ordinal, long dataOffset, byte[] buffer, int bufferOffset, int length)
         {
-            return this._storeDataReader.GetBytes(ordinal, dataOffset, buffer, bufferOffset, length);
+            return _storeDataReader.GetBytes(ordinal, dataOffset, buffer, bufferOffset, length);
         }
 
         /// <summary>
@@ -224,7 +202,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The char value</returns>
         public override char GetChar(int ordinal)
         {
-            return this._storeDataReader.GetChar(ordinal);
+            return _storeDataReader.GetChar(ordinal);
         }
 
         /// <summary>
@@ -238,7 +216,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The actual number of characters read</returns>
         public override long GetChars(int ordinal, long dataOffset, char[] buffer, int bufferOffset, int length)
         {
-            return this._storeDataReader.GetChars(ordinal, dataOffset, buffer, bufferOffset, length);
+            return _storeDataReader.GetChars(ordinal, dataOffset, buffer, bufferOffset, length);
         }
 
         /// <summary>
@@ -248,7 +226,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The name of the data type of the column</returns>
         public override string GetDataTypeName(int ordinal)
         {
-            return this._storeDataReader.GetDataTypeName(ordinal);
+            return _storeDataReader.GetDataTypeName(ordinal);
         }
 
         /// <summary>
@@ -258,7 +236,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The datetime value</returns>
         public override DateTime GetDateTime(int ordinal)
         {
-            return this._storeDataReader.GetDateTime(ordinal);
+            return _storeDataReader.GetDateTime(ordinal);
         }
 
         /// <summary>
@@ -268,7 +246,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The data reader</returns>
         protected override DbDataReader GetDbDataReader(int ordinal)
         {
-            return this._storeDataReader.GetData(ordinal);
+            return _storeDataReader.GetData(ordinal);
         }
 
         /// <summary>
@@ -278,7 +256,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The decimal value</returns>
         public override decimal GetDecimal(int ordinal)
         {
-            return this._storeDataReader.GetDecimal(ordinal);
+            return _storeDataReader.GetDecimal(ordinal);
         }
 
         /// <summary>
@@ -288,7 +266,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The double value</returns>
         public override double GetDouble(int ordinal)
         {
-            return this._storeDataReader.GetDouble(ordinal);
+            return _storeDataReader.GetDouble(ordinal);
         }
 
         /// <summary>
@@ -298,7 +276,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The data type of the column</returns>
         public override Type GetFieldType(int ordinal)
         {
-            return this._storeDataReader.GetFieldType(ordinal);
+            return _storeDataReader.GetFieldType(ordinal);
         }
 
         /// <summary>
@@ -308,7 +286,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The float value</returns>
         public override float GetFloat(int ordinal)
         {
-            return this._storeDataReader.GetFloat(ordinal);
+            return _storeDataReader.GetFloat(ordinal);
         }
 
         /// <summary>
@@ -318,7 +296,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The guid value</returns>
         public override Guid GetGuid(int ordinal)
         {
-            return this._storeDataReader.GetGuid(ordinal);
+            return _storeDataReader.GetGuid(ordinal);
         }
 
         /// <summary>
@@ -328,7 +306,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The int16 value</returns>
         public override short GetInt16(int ordinal)
         {
-            return this._storeDataReader.GetInt16(ordinal);
+            return _storeDataReader.GetInt16(ordinal);
         }
 
         /// <summary>
@@ -338,7 +316,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The int32 value</returns>
         public override int GetInt32(int ordinal)
         {
-            return this._storeDataReader.GetInt32(ordinal);
+            return _storeDataReader.GetInt32(ordinal);
         }
 
         /// <summary>
@@ -348,7 +326,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The int64 value</returns>
         public override long GetInt64(int ordinal)
         {
-            return this._storeDataReader.GetInt64(ordinal);
+            return _storeDataReader.GetInt64(ordinal);
         }
 
         /// <summary>
@@ -358,7 +336,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The name</returns>
         public override string GetName(int ordinal)
         {
-            return this._storeDataReader.GetName(ordinal);
+            return _storeDataReader.GetName(ordinal);
         }
 
         /// <summary>
@@ -369,7 +347,7 @@ namespace System.Data.Entity.Core.EntityClient
         public override int GetOrdinal(string name)
         {
             EntityUtil.CheckArgumentNull(name, "name");
-            return this._storeDataReader.GetOrdinal(name);
+            return _storeDataReader.GetOrdinal(name);
         }
 
         /// <summary>
@@ -377,8 +355,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <param name="ordinal"></param>
         /// <returns></returns>
-        [EditorBrowsableAttribute(EditorBrowsableState.Never)]
-        override public Type GetProviderSpecificFieldType(int ordinal)
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override Type GetProviderSpecificFieldType(int ordinal)
         {
             return _storeDataReader.GetProviderSpecificFieldType(ordinal);
         }
@@ -388,7 +366,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <param name="ordinal"></param>
         /// <returns></returns>
-        [EditorBrowsableAttribute(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override object GetProviderSpecificValue(int ordinal)
         {
             return _storeDataReader.GetProviderSpecificValue(ordinal);
@@ -399,7 +377,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        [EditorBrowsableAttribute(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetProviderSpecificValues(object[] values)
         {
             return _storeDataReader.GetProviderSpecificValues(values);
@@ -411,7 +389,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The DataTable describing the columns</returns>
         public override DataTable GetSchemaTable()
         {
-            return this._storeDataReader.GetSchemaTable();
+            return _storeDataReader.GetSchemaTable();
         }
 
         /// <summary>
@@ -421,7 +399,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The string value</returns>
         public override string GetString(int ordinal)
         {
-            return this._storeDataReader.GetString(ordinal);
+            return _storeDataReader.GetString(ordinal);
         }
 
         /// <summary>
@@ -431,7 +409,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The value</returns>
         public override object GetValue(int ordinal)
         {
-            return this._storeDataReader.GetValue(ordinal);
+            return _storeDataReader.GetValue(ordinal);
         }
 
         /// <summary>
@@ -441,7 +419,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The number of System.Object instances in the array</returns>
         public override int GetValues(object[] values)
         {
-            return this._storeDataReader.GetValues(values);
+            return _storeDataReader.GetValues(values);
         }
 
         /// <summary>
@@ -451,7 +429,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>true if the column value is DBNull</returns>
         public override bool IsDBNull(int ordinal)
         {
-            return this._storeDataReader.IsDBNull(ordinal);
+            return _storeDataReader.IsDBNull(ordinal);
         }
 
         /// <summary>
@@ -460,15 +438,15 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>true if there are more result sets</returns>
         public override bool NextResult()
         {
-            try 
+            try
             {
-                return this._storeDataReader.NextResult();
+                return _storeDataReader.NextResult();
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
-                if (EntityUtil.IsCatchableExceptionType(e)) 
+                if (EntityUtil.IsCatchableExceptionType(e))
                 {
-                    throw EntityUtil.CommandExecution(System.Data.Entity.Resources.Strings.EntityClient_StoreReaderFailed, e);
+                    throw EntityUtil.CommandExecution(Strings.EntityClient_StoreReaderFailed, e);
                 }
                 throw;
             }
@@ -480,7 +458,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>true if there are more rows</returns>
         public override bool Read()
         {
-            return this._storeDataReader.Read();
+            return _storeDataReader.Read();
         }
 
         /// <summary>
@@ -489,7 +467,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>An enumerator for this data reader</returns>
         public override IEnumerator GetEnumerator()
         {
-            return this._storeDataReader.GetEnumerator();
+            return _storeDataReader.GetEnumerator();
         }
 
         /// <summary>
@@ -497,13 +475,13 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public DbDataRecord GetDataRecord(int i)
         {
-            if (null == this._storeExtendedDataRecord)
+            if (null == _storeExtendedDataRecord)
             {
-                Debug.Assert(this.FieldCount == 0, "we have fields but no metadata?");
+                Debug.Assert(FieldCount == 0, "we have fields but no metadata?");
                 // for a query with no results, any request is out of range...
                 EntityUtil.ThrowArgumentOutOfRangeException("i");
             }
-            return this._storeExtendedDataRecord.GetDataRecord(i);
+            return _storeExtendedDataRecord.GetDataRecord(i);
         }
 
         /// <summary>
@@ -511,7 +489,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public DbDataReader GetDataReader(int i)
         {
-            return this.GetDbDataReader(i);
+            return GetDbDataReader(i);
         }
     }
 }

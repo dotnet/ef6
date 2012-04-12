@@ -1,16 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Xml;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Xml;
+
     internal sealed class SridFacetDescriptionElement : FacetDescriptionElement
     {
         public SridFacetDescriptionElement(TypeElement type, string name)
-        :base(type, name)
+            : base(type, name)
         {
         }
 
@@ -28,14 +24,15 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader">xml reader currently positioned at Default attribute</param>
         protected override void HandleDefaultAttribute(XmlReader reader)
         {
-            string value = reader.Value;
-            if (value.Trim() == XmlConstants.Variable)
+            var value = reader.Value;
+            if (value.Trim()
+                == XmlConstants.Variable)
             {
                 DefaultValue = EdmConstants.VariableValue;
                 return;
             }
 
-            int intValue = -1;
+            var intValue = -1;
             if (HandleIntAttribute(reader, ref intValue))
             {
                 DefaultValue = intValue;

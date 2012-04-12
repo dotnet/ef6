@@ -1,21 +1,13 @@
-using System.Collections.Generic;
-using System.Collections;
-using System.Diagnostics;
-using System.Globalization;
-using System.Reflection;
-using System.Text;
-using System.Xml;
-using System.Data.Entity.Core.Mapping;
-using System.IO;
-using System.Security;
-using System.Security.Permissions;
-using System.Threading;
-using System.Collections.ObjectModel;
-using System.Runtime.Versioning;
-
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Runtime.Versioning;
+    using System.Threading;
+    using System.Xml;
+
     /// <summary>
     /// This class represents a collection of artifact files to be loaded from one
     /// filesystem folder.
@@ -25,7 +17,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private ReadOnlyCollection<MetadataArtifactLoaderFile> _csdlChildren;
         private ReadOnlyCollection<MetadataArtifactLoaderFile> _ssdlChildren;
         private ReadOnlyCollection<MetadataArtifactLoaderFile> _mslChildren;
-
 
         private readonly string _path;
         private readonly ICollection<string> _uriRegistry;
@@ -50,10 +41,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file paths which are a Machine resource
         public override void CollectFilePermissionPaths(List<string> paths, DataSpace spaceToGet)
         {
-           IList<MetadataArtifactLoaderFile> files;
-            if(TryGetListForSpace(spaceToGet, out files))
+            IList<MetadataArtifactLoaderFile> files;
+            if (TryGetListForSpace(spaceToGet, out files))
             {
-                foreach(var loader in files)
+                foreach (var loader in files)
                 {
                     loader.CollectFilePermissionPaths(paths, spaceToGet);
                 }
@@ -62,31 +53,30 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         public override bool IsComposite
         {
-            get
-            {
-                return true;
-            }
+            get { return true; }
         }
 
         internal ReadOnlyCollection<MetadataArtifactLoaderFile> CsdlChildren
         {
-            get 
+            get
             {
                 LoadCollections();
                 return _csdlChildren;
             }
         }
+
         internal ReadOnlyCollection<MetadataArtifactLoaderFile> SsdlChildren
         {
-            get 
+            get
             {
                 LoadCollections();
                 return _ssdlChildren;
             }
         }
+
         internal ReadOnlyCollection<MetadataArtifactLoaderFile> MslChildren
         {
-            get 
+            get
             {
                 LoadCollections();
                 return _mslChildren;
@@ -99,23 +89,24 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// files for sometime later.
         /// </summary>
         [ResourceExposure(ResourceScope.None)]
-        [ResourceConsumption(ResourceScope.Machine, ResourceScope.Machine)] //For GetArtifactsInDirectory method call. We pick the paths from class variable. 
-                                                                            //so this method does not expose any resource.
-        void LoadCollections()
+        [ResourceConsumption(ResourceScope.Machine, ResourceScope.Machine)]
+        //For GetArtifactsInDirectory method call. We pick the paths from class variable. 
+        //so this method does not expose any resource.
+        private void LoadCollections()
         {
             if (_csdlChildren == null)
             {
-                ReadOnlyCollection<MetadataArtifactLoaderFile> csdlChildren = GetArtifactsInDirectory(_path, XmlConstants.CSpaceSchemaExtension, _uriRegistry).AsReadOnly();
+                var csdlChildren = GetArtifactsInDirectory(_path, XmlConstants.CSpaceSchemaExtension, _uriRegistry).AsReadOnly();
                 Interlocked.CompareExchange(ref _csdlChildren, csdlChildren, null);
             }
             if (_ssdlChildren == null)
             {
-                ReadOnlyCollection<MetadataArtifactLoaderFile> ssdlChildren = GetArtifactsInDirectory(_path, XmlConstants.SSpaceSchemaExtension, _uriRegistry).AsReadOnly();
+                var ssdlChildren = GetArtifactsInDirectory(_path, XmlConstants.SSpaceSchemaExtension, _uriRegistry).AsReadOnly();
                 Interlocked.CompareExchange(ref _ssdlChildren, ssdlChildren, null);
             }
             if (_mslChildren == null)
             {
-                ReadOnlyCollection<MetadataArtifactLoaderFile> mslChildren = GetArtifactsInDirectory(_path, XmlConstants.CSSpaceSchemaExtension, _uriRegistry).AsReadOnly();
+                var mslChildren = GetArtifactsInDirectory(_path, XmlConstants.CSSpaceSchemaExtension, _uriRegistry).AsReadOnly();
                 Interlocked.CompareExchange(ref _mslChildren, mslChildren, null);
             }
         }
@@ -140,7 +131,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of strings identifying paths to all artifacts for a specific DataSpace</returns>
         public override List<string> GetPaths(DataSpace spaceToGet)
         {
-            List<string> list = new List<string>();
+            var list = new List<string>();
             IList<MetadataArtifactLoaderFile> files;
 
             if (!TryGetListForSpace(spaceToGet, out files))
@@ -148,7 +139,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return list;
             }
 
-            foreach (MetadataArtifactLoaderFile file in files)
+            foreach (var file in files)
             {
                 list.AddRange(file.GetPaths(spaceToGet));
             }
@@ -182,17 +173,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of strings identifying paths to all resources</returns>
         public override List<string> GetPaths()
         {
-            List<string> list = new List<string>();
+            var list = new List<string>();
 
-            foreach (MetadataArtifactLoaderFile resource in CsdlChildren)
+            foreach (var resource in CsdlChildren)
             {
                 list.AddRange(resource.GetPaths());
             }
-            foreach (MetadataArtifactLoaderFile resource in SsdlChildren)
+            foreach (var resource in SsdlChildren)
             {
                 list.AddRange(resource.GetPaths());
             }
-            foreach (MetadataArtifactLoaderFile resource in MslChildren)
+            foreach (var resource in MslChildren)
             {
                 list.AddRange(resource.GetPaths());
             }
@@ -206,17 +197,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of XmlReader objects; cannot be null</returns>
         public override List<XmlReader> GetReaders(Dictionary<MetadataArtifactLoader, XmlReader> sourceDictionary)
         {
-            List<XmlReader> list = new List<XmlReader>();
+            var list = new List<XmlReader>();
 
-            foreach (MetadataArtifactLoaderFile resource in CsdlChildren)
+            foreach (var resource in CsdlChildren)
             {
                 list.AddRange(resource.GetReaders(sourceDictionary));
             }
-            foreach (MetadataArtifactLoaderFile resource in SsdlChildren)
+            foreach (var resource in SsdlChildren)
             {
                 list.AddRange(resource.GetReaders(sourceDictionary));
             }
-            foreach (MetadataArtifactLoaderFile resource in MslChildren)
+            foreach (var resource in MslChildren)
             {
                 list.AddRange(resource.GetReaders(sourceDictionary));
             }
@@ -231,7 +222,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of XmlReader objects</returns>
         public override List<XmlReader> CreateReaders(DataSpace spaceToGet)
         {
-            List<XmlReader> list = new List<XmlReader>();
+            var list = new List<XmlReader>();
             IList<MetadataArtifactLoaderFile> files;
 
             if (!TryGetListForSpace(spaceToGet, out files))
@@ -239,7 +230,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return list;
             }
 
-            foreach (MetadataArtifactLoaderFile file in files)
+            foreach (var file in files)
             {
                 list.AddRange(file.CreateReaders(spaceToGet));
             }
@@ -248,24 +239,27 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [ResourceExposure(ResourceScope.Machine)] //Exposes the directory name which is a Machine resource
-        [ResourceConsumption(ResourceScope.Machine)] //For Directory.GetFiles method call but we do not create the directory name in this method 
-        private static List<MetadataArtifactLoaderFile> GetArtifactsInDirectory(string directory, string extension, ICollection<string> uriRegistry)
+        [ResourceConsumption(ResourceScope.Machine)]
+        //For Directory.GetFiles method call but we do not create the directory name in this method 
+        private static List<MetadataArtifactLoaderFile> GetArtifactsInDirectory(
+            string directory, string extension, ICollection<string> uriRegistry)
         {
-            List<MetadataArtifactLoaderFile> loaders = new List<MetadataArtifactLoaderFile>();
+            var loaders = new List<MetadataArtifactLoaderFile>();
 
-            string[] fileNames = Directory.GetFiles(
-                                            directory,
-                                            MetadataArtifactLoader.wildcard + extension,
-                                            SearchOption.TopDirectoryOnly
-                                        );
+            var fileNames = Directory.GetFiles(
+                directory,
+                wildcard + extension,
+                SearchOption.TopDirectoryOnly
+                );
 
-
-            foreach (string fileName in fileNames)
+            foreach (var fileName in fileNames)
             {
-                string fullPath = System.IO.Path.Combine(directory, fileName);
+                var fullPath = IO.Path.Combine(directory, fileName);
 
                 if (uriRegistry.Contains(fullPath))
+                {
                     continue;
+                }
 
                 // We need a second filter on the file names verifying the right extension because
                 // a file name with an extension longer than 3 characters might still match the 

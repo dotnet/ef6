@@ -2,10 +2,10 @@ namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
-    using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Linq;
 
@@ -21,18 +21,20 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="storeItemCollection">Store item collection.</param>
         /// <param name="setMapping">Mapping in which view is declared.</param>
         /// <returns>Errors in view definition.</returns>
-        internal static IEnumerable<EdmSchemaError> ValidateQueryView(DbQueryCommandTree view, StorageSetMapping setMapping, EntityTypeBase elementType, bool includeSubtypes)
+        internal static IEnumerable<EdmSchemaError> ValidateQueryView(
+            DbQueryCommandTree view, StorageSetMapping setMapping, EntityTypeBase elementType, bool includeSubtypes)
         {
-            ViewExpressionValidator validator = new ViewExpressionValidator(setMapping, elementType, includeSubtypes);
+            var validator = new ViewExpressionValidator(setMapping, elementType, includeSubtypes);
             validator.VisitExpression(view.Query);
             if (validator.Errors.Count() == 0)
             {
                 //For AssociationSet views, we have to check for a specific pattern of errors where
                 //the Ref expression passed into the construcor might use an EntitySet that is different from
                 //the EntitySet defined in the CSDL.
-                if (setMapping.Set.BuiltInTypeKind == BuiltInTypeKind.AssociationSet)
+                if (setMapping.Set.BuiltInTypeKind
+                    == BuiltInTypeKind.AssociationSet)
                 {
-                    AssociationSetViewValidator refValidator = new AssociationSetViewValidator(setMapping);
+                    var refValidator = new AssociationSetViewValidator(setMapping);
                     refValidator.VisitExpression(view.Query);
                     return refValidator.Errors;
                 }
@@ -47,8 +49,15 @@ namespace System.Data.Entity.Core.Mapping
             private readonly EntityTypeBase _elementType;
             private readonly bool _includeSubtypes;
 
-            private EdmItemCollection EdmItemCollection { get { return _setMapping.EntityContainerMapping.StorageMappingItemCollection.EdmItemCollection; } }
-            private StoreItemCollection StoreItemCollection { get { return _setMapping.EntityContainerMapping.StorageMappingItemCollection.StoreItemCollection; } }
+            private EdmItemCollection EdmItemCollection
+            {
+                get { return _setMapping.EntityContainerMapping.StorageMappingItemCollection.EdmItemCollection; }
+            }
+
+            private StoreItemCollection StoreItemCollection
+            {
+                get { return _setMapping.EntityContainerMapping.StorageMappingItemCollection.StoreItemCollection; }
+            }
 
             internal ViewExpressionValidator(StorageSetMapping setMapping, EntityTypeBase elementType, bool includeSubtypes)
             {
@@ -62,7 +71,10 @@ namespace System.Data.Entity.Core.Mapping
                 _errors = new List<EdmSchemaError>();
             }
 
-            internal IEnumerable<EdmSchemaError> Errors { get { return _errors; } }
+            internal IEnumerable<EdmSchemaError> Errors
+            {
+                get { return _errors; }
+            }
 
             public override void VisitExpression(DbExpression expression)
             {
@@ -77,7 +89,7 @@ namespace System.Data.Entity.Core.Mapping
             {
                 switch (expressionKind)
                 {
-                    // Supported expression kinds
+                        // Supported expression kinds
                     case DbExpressionKind.Constant:
                     case DbExpressionKind.Property:
                     case DbExpressionKind.Null:
@@ -107,11 +119,14 @@ namespace System.Data.Entity.Core.Mapping
                     case DbExpressionKind.Function:
                         break;
                     default:
-                        string elementString = (_includeSubtypes) ? "IsTypeOf(" + _elementType.ToString() + ")" : _elementType.ToString();
-                        _errors.Add(new EdmSchemaError(System.Data.Entity.Resources.Strings.Mapping_UnsupportedExpressionKind_QueryView(
-                            _setMapping.Set.Name, elementString, expressionKind), (int)StorageMappingErrorCode.MappingUnsupportedExpressionKindQueryView,
-                            EdmSchemaErrorSeverity.Error, _setMapping.EntityContainerMapping.SourceLocation, _setMapping.StartLineNumber,
-                            _setMapping.StartLinePosition));
+                        var elementString = (_includeSubtypes) ? "IsTypeOf(" + _elementType + ")" : _elementType.ToString();
+                        _errors.Add(
+                            new EdmSchemaError(
+                                Strings.Mapping_UnsupportedExpressionKind_QueryView(
+                                    _setMapping.Set.Name, elementString, expressionKind),
+                                (int)StorageMappingErrorCode.MappingUnsupportedExpressionKindQueryView,
+                                EdmSchemaErrorSeverity.Error, _setMapping.EntityContainerMapping.SourceLocation, _setMapping.StartLineNumber,
+                                _setMapping.StartLinePosition));
                         break;
                 }
             }
@@ -119,31 +134,39 @@ namespace System.Data.Entity.Core.Mapping
             public override void Visit(DbPropertyExpression expression)
             {
                 base.Visit(expression);
-                if (expression.Property.BuiltInTypeKind != BuiltInTypeKind.EdmProperty)
+                if (expression.Property.BuiltInTypeKind
+                    != BuiltInTypeKind.EdmProperty)
                 {
-                    _errors.Add(new EdmSchemaError(System.Data.Entity.Resources.Strings.Mapping_UnsupportedPropertyKind_QueryView(
-                        _setMapping.Set.Name, expression.Property.Name, expression.Property.BuiltInTypeKind), (int)StorageMappingErrorCode.MappingUnsupportedPropertyKindQueryView,
-                        EdmSchemaErrorSeverity.Error, _setMapping.EntityContainerMapping.SourceLocation, _setMapping.StartLineNumber,
-                        _setMapping.StartLinePosition));
-
+                    _errors.Add(
+                        new EdmSchemaError(
+                            Strings.Mapping_UnsupportedPropertyKind_QueryView(
+                                _setMapping.Set.Name, expression.Property.Name, expression.Property.BuiltInTypeKind),
+                            (int)StorageMappingErrorCode.MappingUnsupportedPropertyKindQueryView,
+                            EdmSchemaErrorSeverity.Error, _setMapping.EntityContainerMapping.SourceLocation, _setMapping.StartLineNumber,
+                            _setMapping.StartLinePosition));
                 }
             }
 
             public override void Visit(DbNewInstanceExpression expression)
             {
                 base.Visit(expression);
-                EdmType type = expression.ResultType.EdmType;
-                if (type.BuiltInTypeKind != BuiltInTypeKind.RowType)
+                var type = expression.ResultType.EdmType;
+                if (type.BuiltInTypeKind
+                    != BuiltInTypeKind.RowType)
                 {
                     // restrict initialization of non-row types to the target of the view or complex types
                     // in the target
-                    if (!(type == _elementType || (_includeSubtypes && _elementType.IsAssignableFrom(type))) &&
+                    if (!(type == _elementType || (_includeSubtypes && _elementType.IsAssignableFrom(type)))
+                        &&
                         !(type.BuiltInTypeKind == BuiltInTypeKind.ComplexType && GetComplexTypes().Contains((ComplexType)type)))
                     {
-                        _errors.Add(new EdmSchemaError(System.Data.Entity.Resources.Strings.Mapping_UnsupportedInitialization_QueryView(
-                            _setMapping.Set.Name, type.FullName), (int)StorageMappingErrorCode.MappingUnsupportedInitializationQueryView,
-                            EdmSchemaErrorSeverity.Error, _setMapping.EntityContainerMapping.SourceLocation, _setMapping.StartLineNumber,
-                            _setMapping.StartLinePosition));
+                        _errors.Add(
+                            new EdmSchemaError(
+                                Strings.Mapping_UnsupportedInitialization_QueryView(
+                                    _setMapping.Set.Name, type.FullName),
+                                (int)StorageMappingErrorCode.MappingUnsupportedInitializationQueryView,
+                                EdmSchemaErrorSeverity.Error, _setMapping.EntityContainerMapping.SourceLocation, _setMapping.StartLineNumber,
+                                _setMapping.StartLinePosition));
                     }
                 }
             }
@@ -154,7 +177,7 @@ namespace System.Data.Entity.Core.Mapping
             private IEnumerable<ComplexType> GetComplexTypes()
             {
                 // Retrieve all top-level properties of entity types constructed in the view.
-                IEnumerable<EdmProperty> properties = GetEntityTypes().SelectMany(entityType => entityType.Properties).Distinct();
+                var properties = GetEntityTypes().SelectMany(entityType => entityType.Properties).Distinct();
                 return GetComplexTypes(properties);
             }
 
@@ -164,10 +187,10 @@ namespace System.Data.Entity.Core.Mapping
             private IEnumerable<ComplexType> GetComplexTypes(IEnumerable<EdmProperty> properties)
             {
                 // CONSIDER:: if complex type inheritance is supported, this will need to change
-                foreach (ComplexType complexType in properties.Select(p => p.TypeUsage.EdmType).OfType<ComplexType>())
+                foreach (var complexType in properties.Select(p => p.TypeUsage.EdmType).OfType<ComplexType>())
                 {
                     yield return complexType;
-                    foreach (ComplexType nestedComplexType in GetComplexTypes(complexType.Properties))
+                    foreach (var nestedComplexType in GetComplexTypes(complexType.Properties))
                     {
                         yield return nestedComplexType;
                     }
@@ -182,9 +205,10 @@ namespace System.Data.Entity.Core.Mapping
                 if (_includeSubtypes)
                 {
                     // Return all entity types in the hierarchy for OfType or 'complete' views.
-                    return MetadataHelper.GetTypeAndSubtypesOf(_elementType, this.EdmItemCollection, true).OfType<EntityType>();
+                    return MetadataHelper.GetTypeAndSubtypesOf(_elementType, EdmItemCollection, true).OfType<EntityType>();
                 }
-                else if (_elementType.BuiltInTypeKind == BuiltInTypeKind.EntityType)
+                else if (_elementType.BuiltInTypeKind
+                         == BuiltInTypeKind.EntityType)
                 {
                     // Yield single entity type for OfType(only ) views.
                     return Enumerable.Repeat((EntityType)_elementType, 1);
@@ -201,14 +225,18 @@ namespace System.Data.Entity.Core.Mapping
                 base.Visit(expression);
 
                 // Verify function is defined in S-space or it is a built-in canonical function.
-                if (!IsStoreSpaceOrCanonicalFunction(this.StoreItemCollection, expression.Function))
+                if (!IsStoreSpaceOrCanonicalFunction(StoreItemCollection, expression.Function))
                 {
-                    _errors.Add(new EdmSchemaError(System.Data.Entity.Resources.Strings.Mapping_UnsupportedFunctionCall_QueryView(
-                        _setMapping.Set.Name, expression.Function.Identity), (int)StorageMappingErrorCode.UnsupportedFunctionCallInQueryView,
-                        EdmSchemaErrorSeverity.Error, _setMapping.EntityContainerMapping.SourceLocation, _setMapping.StartLineNumber,
-                        _setMapping.StartLinePosition));
+                    _errors.Add(
+                        new EdmSchemaError(
+                            Strings.Mapping_UnsupportedFunctionCall_QueryView(
+                                _setMapping.Set.Name, expression.Function.Identity),
+                            (int)StorageMappingErrorCode.UnsupportedFunctionCallInQueryView,
+                            EdmSchemaErrorSeverity.Error, _setMapping.EntityContainerMapping.SourceLocation, _setMapping.StartLineNumber,
+                            _setMapping.StartLinePosition));
                 }
             }
+
             internal static bool IsStoreSpaceOrCanonicalFunction(StoreItemCollection sSpace, EdmFunction function)
             {
                 if (TypeHelpers.IsCanonicalFunction(function))
@@ -232,16 +260,18 @@ namespace System.Data.Entity.Core.Mapping
                 Debug.Assert(null != expression.Target);
 
                 // Verify scan target is in S-space.
-                EntitySetBase target = expression.Target;
-                EntityContainer targetContainer = target.EntityContainer;
+                var target = expression.Target;
+                var targetContainer = target.EntityContainer;
                 Debug.Assert(null != target.EntityContainer);
 
                 if ((targetContainer.DataSpace != DataSpace.SSpace))
                 {
-                    _errors.Add(new EdmSchemaError(System.Data.Entity.Resources.Strings.Mapping_UnsupportedScanTarget_QueryView(
-                        _setMapping.Set.Name, target.Name), (int)StorageMappingErrorCode.MappingUnsupportedScanTargetQueryView,
-                        EdmSchemaErrorSeverity.Error, _setMapping.EntityContainerMapping.SourceLocation, _setMapping.StartLineNumber,
-                        _setMapping.StartLinePosition));
+                    _errors.Add(
+                        new EdmSchemaError(
+                            Strings.Mapping_UnsupportedScanTarget_QueryView(
+                                _setMapping.Set.Name, target.Name), (int)StorageMappingErrorCode.MappingUnsupportedScanTargetQueryView,
+                            EdmSchemaErrorSeverity.Error, _setMapping.EntityContainerMapping.SourceLocation, _setMapping.StartLineNumber,
+                            _setMapping.StartLinePosition));
                 }
             }
         }
@@ -253,12 +283,13 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         private class AssociationSetViewValidator : DbExpressionVisitor<DbExpressionEntitySetInfo>
         {
-            private readonly Stack<KeyValuePair<string, DbExpressionEntitySetInfo>> variableScopes = new Stack<KeyValuePair<string, DbExpressionEntitySetInfo>>();
-            private StorageSetMapping _setMapping;
-            private List<EdmSchemaError> _errors = new List<EdmSchemaError>();
+            private readonly Stack<KeyValuePair<string, DbExpressionEntitySetInfo>> variableScopes =
+                new Stack<KeyValuePair<string, DbExpressionEntitySetInfo>>();
+
+            private readonly StorageSetMapping _setMapping;
+            private readonly List<EdmSchemaError> _errors = new List<EdmSchemaError>();
 
             internal AssociationSetViewValidator(StorageSetMapping setMapping)
-                : base()
             {
                 Debug.Assert(setMapping != null);
                 _setMapping = setMapping;
@@ -276,31 +307,31 @@ namespace System.Data.Entity.Core.Mapping
 
             private DbExpressionEntitySetInfo VisitExpressionBinding(DbExpressionBinding binding)
             {
-                DbExpressionBinding result = binding;
+                var result = binding;
                 if (binding != null)
                 {
-                    return this.VisitExpression(binding.Expression);
+                    return VisitExpression(binding.Expression);
                 }
                 return null;
             }
 
             private void VisitExpressionBindingEnterScope(DbExpressionBinding binding)
             {
-                DbExpressionEntitySetInfo info = this.VisitExpressionBinding(binding);
-                this.variableScopes.Push(new KeyValuePair<string, DbExpressionEntitySetInfo>(binding.VariableName, info));
+                var info = VisitExpressionBinding(binding);
+                variableScopes.Push(new KeyValuePair<string, DbExpressionEntitySetInfo>(binding.VariableName, info));
             }
 
             private void VisitExpressionBindingExitScope()
             {
-                this.variableScopes.Pop();
+                variableScopes.Pop();
             }
 
             //Verifies that the Sets we got from visiting the tree( under AssociationType constructor) match the ones 
             //defined in CSDL
             private void ValidateEntitySetsMappedForAssociationSetMapping(DbExpressionStructuralTypeEntitySetInfo setInfos)
             {
-                AssociationSet associationSet = _setMapping.Set as AssociationSet;
-                int i = 0;
+                var associationSet = _setMapping.Set as AssociationSet;
+                var i = 0;
                 //While we should be able to find the EntitySets in all cases, since this is a user specified
                 //query view, it is better to be defensive since we might have missed some path up the tree
                 //while computing the sets
@@ -309,22 +340,26 @@ namespace System.Data.Entity.Core.Mapping
                 {
                     foreach (DbExpressionSimpleTypeEntitySetInfo setInfo in setInfos.SetInfos.Select(it => it.Value))
                     {
-                        AssociationSetEnd setEnd = associationSet.AssociationSetEnds[i];
-                        EntitySet declaredSet = setEnd.EntitySet;
+                        var setEnd = associationSet.AssociationSetEnds[i];
+                        var declaredSet = setEnd.EntitySet;
                         if (!declaredSet.Equals(setInfo.EntitySet))
                         {
-                            _errors.Add(new EdmSchemaError(System.Data.Entity.Resources.Strings.Mapping_EntitySetMismatchOnAssociationSetEnd_QueryView(
-                            setInfo.EntitySet.Name, declaredSet.Name, setEnd.Name, _setMapping.Set.Name), (int)StorageMappingErrorCode.MappingUnsupportedInitializationQueryView,
-                            EdmSchemaErrorSeverity.Error, _setMapping.EntityContainerMapping.SourceLocation, _setMapping.StartLineNumber,
-                            _setMapping.StartLinePosition));
+                            _errors.Add(
+                                new EdmSchemaError(
+                                    Strings.Mapping_EntitySetMismatchOnAssociationSetEnd_QueryView(
+                                        setInfo.EntitySet.Name, declaredSet.Name, setEnd.Name, _setMapping.Set.Name),
+                                    (int)StorageMappingErrorCode.MappingUnsupportedInitializationQueryView,
+                                    EdmSchemaErrorSeverity.Error, _setMapping.EntityContainerMapping.SourceLocation,
+                                    _setMapping.StartLineNumber,
+                                    _setMapping.StartLinePosition));
                         }
                         i++;
                     }
                 }
             }
 
-
             #region DbExpressionVisitor<DbExpression> Members
+
             public override DbExpressionEntitySetInfo Visit(DbExpression expression)
             {
                 return null;
@@ -332,12 +367,12 @@ namespace System.Data.Entity.Core.Mapping
 
             public override DbExpressionEntitySetInfo Visit(DbVariableReferenceExpression expression)
             {
-                return this.variableScopes.Where(it => (it.Key == expression.VariableName)).Select(it => it.Value).FirstOrDefault();
+                return variableScopes.Where(it => (it.Key == expression.VariableName)).Select(it => it.Value).FirstOrDefault();
             }
 
             public override DbExpressionEntitySetInfo Visit(DbPropertyExpression expression)
             {
-                DbExpressionStructuralTypeEntitySetInfo setInfos = VisitExpression(expression.Instance) as DbExpressionStructuralTypeEntitySetInfo;
+                var setInfos = VisitExpression(expression.Instance) as DbExpressionStructuralTypeEntitySetInfo;
                 if (setInfos != null)
                 {
                     return setInfos.GetEntitySetInfoForMember(expression.Property.Name);
@@ -347,28 +382,30 @@ namespace System.Data.Entity.Core.Mapping
 
             public override DbExpressionEntitySetInfo Visit(DbProjectExpression expression)
             {
-                this.VisitExpressionBindingEnterScope(expression.Input);
-                DbExpressionEntitySetInfo setInfo = VisitExpression(expression.Projection);
-                this.VisitExpressionBindingExitScope();
+                VisitExpressionBindingEnterScope(expression.Input);
+                var setInfo = VisitExpression(expression.Projection);
+                VisitExpressionBindingExitScope();
                 return setInfo;
             }
 
             public override DbExpressionEntitySetInfo Visit(DbNewInstanceExpression expression)
             {
-                DbExpressionMemberCollectionEntitySetInfo argumentSetInfos = VisitExpressionList(expression.Arguments);
-                StructuralType structuralType = (expression.ResultType.EdmType as StructuralType);
-                if (argumentSetInfos != null && structuralType != null)
+                var argumentSetInfos = VisitExpressionList(expression.Arguments);
+                var structuralType = (expression.ResultType.EdmType as StructuralType);
+                if (argumentSetInfos != null
+                    && structuralType != null)
                 {
-                    DbExpressionStructuralTypeEntitySetInfo structuralTypeSetInfos = new DbExpressionStructuralTypeEntitySetInfo();                    
-                    int i = 0;
-                    foreach (DbExpressionEntitySetInfo info in argumentSetInfos.entitySetInfos)
+                    var structuralTypeSetInfos = new DbExpressionStructuralTypeEntitySetInfo();
+                    var i = 0;
+                    foreach (var info in argumentSetInfos.entitySetInfos)
                     {
                         structuralTypeSetInfos.Add(structuralType.Members[i].Name, info);
                         i++;
                     }
                     //Since we already validated the query view, the only association type that
                     //can be constructed is the type for the set we are validating the mapping for.
-                    if (expression.ResultType.EdmType.BuiltInTypeKind == BuiltInTypeKind.AssociationType)
+                    if (expression.ResultType.EdmType.BuiltInTypeKind
+                        == BuiltInTypeKind.AssociationType)
                     {
                         ValidateEntitySetsMappedForAssociationSetMapping(structuralTypeSetInfos);
                     }
@@ -382,12 +419,10 @@ namespace System.Data.Entity.Core.Mapping
                 return new DbExpressionMemberCollectionEntitySetInfo(list.Select(it => (VisitExpression(it))));
             }
 
-
             public override DbExpressionEntitySetInfo Visit(DbRefExpression expression)
             {
                 return new DbExpressionSimpleTypeEntitySetInfo(expression.EntitySet);
             }
-
 
             public override DbExpressionEntitySetInfo Visit(DbComparisonExpression expression)
             {
@@ -549,7 +584,6 @@ namespace System.Data.Entity.Core.Mapping
                 return null;
             }
 
-
             public override DbExpressionEntitySetInfo Visit(DbApplyExpression expression)
             {
                 return null;
@@ -576,14 +610,17 @@ namespace System.Data.Entity.Core.Mapping
             }
 
             #endregion
-
         }
 
-        internal abstract class DbExpressionEntitySetInfo { }
+        internal abstract class DbExpressionEntitySetInfo
+        {
+        }
+
         #region DbExpressionEntitySetInfo implementations
+
         private class DbExpressionSimpleTypeEntitySetInfo : DbExpressionEntitySetInfo
         {
-            private EntitySet m_entitySet;
+            private readonly EntitySet m_entitySet;
 
             internal EntitySet EntitySet
             {
@@ -598,7 +635,7 @@ namespace System.Data.Entity.Core.Mapping
 
         private class DbExpressionStructuralTypeEntitySetInfo : DbExpressionEntitySetInfo
         {
-            private Dictionary<String, DbExpressionEntitySetInfo> m_entitySetInfos;
+            private readonly Dictionary<String, DbExpressionEntitySetInfo> m_entitySetInfos;
 
             internal DbExpressionStructuralTypeEntitySetInfo()
             {
@@ -612,10 +649,7 @@ namespace System.Data.Entity.Core.Mapping
 
             internal IEnumerable<KeyValuePair<string, DbExpressionEntitySetInfo>> SetInfos
             {
-                get
-                {
-                    return m_entitySetInfos;
-                }
+                get { return m_entitySetInfos; }
             }
 
             internal DbExpressionEntitySetInfo GetEntitySetInfoForMember(string memberName)
@@ -626,7 +660,7 @@ namespace System.Data.Entity.Core.Mapping
 
         private class DbExpressionMemberCollectionEntitySetInfo : DbExpressionEntitySetInfo
         {
-            private IEnumerable<DbExpressionEntitySetInfo> m_entitySets;
+            private readonly IEnumerable<DbExpressionEntitySetInfo> m_entitySets;
 
             internal DbExpressionMemberCollectionEntitySetInfo(IEnumerable<DbExpressionEntitySetInfo> entitySetInfos)
             {
@@ -635,12 +669,10 @@ namespace System.Data.Entity.Core.Mapping
 
             internal IEnumerable<DbExpressionEntitySetInfo> entitySetInfos
             {
-                get
-                {
-                    return m_entitySets;
-                }
+                get { return m_entitySets; }
             }
         }
+
         #endregion
     }
 }

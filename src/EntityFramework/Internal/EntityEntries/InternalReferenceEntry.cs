@@ -2,9 +2,9 @@
 {
     using System.Collections.Concurrent;
     using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;

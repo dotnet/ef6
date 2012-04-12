@@ -1,5 +1,6 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
 
     /// <summary>
@@ -13,7 +14,8 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// <summary>
         /// Initializes identifier.
         /// </summary>
-        internal Identifier(string name, bool isEscaped, string query, int inputPos) : base(query, inputPos)
+        internal Identifier(string name, bool isEscaped, string query, int inputPos)
+            : base(query, inputPos)
         {
             // name may be empty in the case of "byte[]". 
             // "byte" and "[]" come in as two identifiers where second one is escaped and empty.
@@ -22,16 +24,16 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
 
             if (!isEscaped)
             {
-                bool isIdentifierASCII = true;
+                var isIdentifierASCII = true;
                 if (!CqlLexer.IsLetterOrDigitOrUnderscore(name, out isIdentifierASCII))
                 {
                     if (isIdentifierASCII)
                     {
-                        throw EntityUtil.EntitySqlError(this.ErrCtx, System.Data.Entity.Resources.Strings.InvalidSimpleIdentifier(name));
+                        throw EntityUtil.EntitySqlError(ErrCtx, Strings.InvalidSimpleIdentifier(name));
                     }
                     else
                     {
-                        throw EntityUtil.EntitySqlError(this.ErrCtx, System.Data.Entity.Resources.Strings.InvalidSimpleIdentifierNonASCII(name));
+                        throw EntityUtil.EntitySqlError(ErrCtx, Strings.InvalidSimpleIdentifierNonASCII(name));
                     }
                 }
             }

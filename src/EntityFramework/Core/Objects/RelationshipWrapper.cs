@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Data.Entity.Core.Metadata.Edm;
-
 namespace System.Data.Entity.Core.Objects
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     internal sealed class RelationshipWrapper : IEquatable<RelationshipWrapper>
@@ -18,9 +16,9 @@ namespace System.Data.Entity.Core.Objects
             Debug.Assert(null != extent, "null RelationshipWrapper");
             Debug.Assert(null != (object)key, "null key");
 
-            this.AssociationSet = extent;
-            this.Key0 = key;
-            this.Key1 = key;
+            AssociationSet = extent;
+            Key0 = key;
+            Key1 = key;
         }
 
         internal RelationshipWrapper(RelationshipWrapper wrapper, int ordinal, EntityKey key)
@@ -29,22 +27,24 @@ namespace System.Data.Entity.Core.Objects
             Debug.Assert((uint)ordinal <= 1u, "ordinal out of range");
             Debug.Assert(null != (object)key, "null key2");
 
-            this.AssociationSet = wrapper.AssociationSet;
-            this.Key0 = (0 == ordinal) ? key : wrapper.Key0;
-            this.Key1 = (0 == ordinal) ? wrapper.Key1 : key;
+            AssociationSet = wrapper.AssociationSet;
+            Key0 = (0 == ordinal) ? key : wrapper.Key0;
+            Key1 = (0 == ordinal) ? wrapper.Key1 : key;
         }
 
-        internal RelationshipWrapper(AssociationSet extent,
-                                     KeyValuePair<string, EntityKey> roleAndKey1,
-                                     KeyValuePair<string, EntityKey> roleAndKey2)
+        internal RelationshipWrapper(
+            AssociationSet extent,
+            KeyValuePair<string, EntityKey> roleAndKey1,
+            KeyValuePair<string, EntityKey> roleAndKey2)
             : this(extent, roleAndKey1.Key, roleAndKey1.Value, roleAndKey2.Key, roleAndKey2.Value)
         {
         }
 
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "role1")]
-        internal RelationshipWrapper(AssociationSet extent,
-                                     string role0, EntityKey key0,
-                                     string role1, EntityKey key1)
+        internal RelationshipWrapper(
+            AssociationSet extent,
+            string role0, EntityKey key0,
+            string role1, EntityKey key1)
         {
             Debug.Assert(null != extent, "null AssociationSet");
             Debug.Assert(null != (object)key0, "null key0");
@@ -76,7 +76,7 @@ namespace System.Data.Entity.Core.Objects
 
         internal ReadOnlyMetadataCollection<AssociationEndMember> AssociationEndMembers
         {
-            get { return this.AssociationSet.ElementType.AssociationEndMembers; }
+            get { return AssociationSet.ElementType.AssociationEndMembers; }
         }
 
         internal AssociationEndMember GetAssociationEndMember(EntityKey key)
@@ -105,7 +105,7 @@ namespace System.Data.Entity.Core.Objects
 
         public override int GetHashCode()
         {
-            return this.AssociationSet.Name.GetHashCode() ^ (this.Key0.GetHashCode() + this.Key1.GetHashCode());
+            return AssociationSet.Name.GetHashCode() ^ (Key0.GetHashCode() + Key1.GetHashCode());
         }
 
         public override bool Equals(object obj)
@@ -115,11 +115,11 @@ namespace System.Data.Entity.Core.Objects
 
         public bool Equals(RelationshipWrapper wrapper)
         {
-            return (Object.ReferenceEquals(this, wrapper) ||
+            return (ReferenceEquals(this, wrapper) ||
                     ((null != wrapper) &&
-                     Object.ReferenceEquals(this.AssociationSet, wrapper.AssociationSet) &&
-                     this.Key0.Equals(wrapper.Key0) &&
-                     this.Key1.Equals(wrapper.Key1)));
+                     ReferenceEquals(AssociationSet, wrapper.AssociationSet) &&
+                     Key0.Equals(wrapper.Key0) &&
+                     Key1.Equals(wrapper.Key1)));
         }
     }
 }

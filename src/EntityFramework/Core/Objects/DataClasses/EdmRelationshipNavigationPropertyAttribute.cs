@@ -1,9 +1,5 @@
-using System;
-
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     /// Attribute identifying the Ends defined for a RelationshipSet
     /// Implied default AttributeUsage properties Inherited=True, AllowMultiple=False,
@@ -12,9 +8,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class EdmRelationshipNavigationPropertyAttribute : EdmPropertyAttribute
     {
-        private string _relationshipNamespaceName;
-        private string _relationshipName;
-        private string _targetRoleName;
+        private readonly string _relationshipNamespaceName;
+        private readonly string _relationshipName;
+        private readonly string _targetRoleName;
 
         /// <summary>
         /// Attribute identifying the Ends defined for a RelationshipSet
@@ -49,6 +45,5 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             get { return _targetRoleName; }
         }
-
     }
 }

@@ -1,16 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml;
-using System.Data.Entity.Core.Metadata.Edm;
+namespace System.Data.Entity.Core.Mapping
+{
+    using System.Data.Entity.Core.Metadata.Edm;
 
-namespace System.Data.Entity.Core.Mapping {
     /// <summary>
     /// Mapping metadata for all OC member maps.
     /// </summary>
-    internal class ObjectAssociationEndMapping: ObjectMemberMapping
+    internal class ObjectAssociationEndMapping : ObjectMemberMapping
     {
         #region Constructors
+
         /// <summary>
         /// Constrcut a new AssociationEnd member mapping metadata object
         /// </summary>
@@ -20,6 +18,7 @@ namespace System.Data.Entity.Core.Mapping {
             : base(edmAssociationEnd, clrAssociationEnd)
         {
         }
+
         #endregion
 
         #region Properties
@@ -29,11 +28,9 @@ namespace System.Data.Entity.Core.Mapping {
         /// </summary>
         internal override MemberMappingKind MemberMappingKind
         {
-            get
-            {
-                return MemberMappingKind.AssociationEndMapping;
-            }
+            get { return MemberMappingKind.AssociationEndMapping; }
         }
+
         #endregion
     }
 }

@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Linq;
-using System.Linq.Expressions;
-
-namespace System.Data.Entity.Core.Common.Internal.Materialization
+﻿namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq.Expressions;
 
     /// <summary>
     /// An immutable class used to generate new RecordStates, which are used
@@ -50,22 +48,22 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// part of an entity.  This does not include records that are part of a nested
         /// collection, however.
         /// </summary>
-        internal readonly System.Collections.ObjectModel.ReadOnlyCollection<RecordStateFactory> NestedRecordStateFactories;
+        internal readonly ReadOnlyCollection<RecordStateFactory> NestedRecordStateFactories;
 
         /// <summary>
         /// The name for each column.
         /// </summary>
-        internal readonly System.Collections.ObjectModel.ReadOnlyCollection<string> ColumnNames;
+        internal readonly ReadOnlyCollection<string> ColumnNames;
 
         /// <summary>
         /// The type usage information for each column.
         /// </summary>
-        internal readonly System.Collections.ObjectModel.ReadOnlyCollection<TypeUsage> TypeUsages;
+        internal readonly ReadOnlyCollection<TypeUsage> TypeUsages;
 
         /// <summary>
         /// Tracks which columns might need special handling (nested readers/records)
         /// </summary>
-        internal readonly System.Collections.ObjectModel.ReadOnlyCollection<bool> IsColumnNested;
+        internal readonly ReadOnlyCollection<bool> IsColumnNested;
 
         /// <summary>
         /// Tracks whether there are ANY columns that need special handling.
@@ -90,23 +88,25 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         #region constructor
 
-        public RecordStateFactory(int stateSlotNumber, int columnCount, RecordStateFactory[] nestedRecordStateFactories, DataRecordInfo dataRecordInfo, Expression gatherData, string[] propertyNames, TypeUsage[] typeUsages)
+        public RecordStateFactory(
+            int stateSlotNumber, int columnCount, RecordStateFactory[] nestedRecordStateFactories, DataRecordInfo dataRecordInfo,
+            Expression gatherData, string[] propertyNames, TypeUsage[] typeUsages)
         {
-            this.StateSlotNumber = stateSlotNumber;
-            this.ColumnCount = columnCount;
-            this.NestedRecordStateFactories = new System.Collections.ObjectModel.ReadOnlyCollection<RecordStateFactory>(nestedRecordStateFactories);
-            this.DataRecordInfo = dataRecordInfo;
-            this.GatherData = Translator.Compile<bool>(gatherData);
-            this.Description = gatherData.ToString();
-            this.ColumnNames = new System.Collections.ObjectModel.ReadOnlyCollection<string>(propertyNames);
-            this.TypeUsages = new System.Collections.ObjectModel.ReadOnlyCollection<TypeUsage>(typeUsages);
+            StateSlotNumber = stateSlotNumber;
+            ColumnCount = columnCount;
+            NestedRecordStateFactories = new ReadOnlyCollection<RecordStateFactory>(nestedRecordStateFactories);
+            DataRecordInfo = dataRecordInfo;
+            GatherData = Translator.Compile<bool>(gatherData);
+            Description = gatherData.ToString();
+            ColumnNames = new ReadOnlyCollection<string>(propertyNames);
+            TypeUsages = new ReadOnlyCollection<TypeUsage>(typeUsages);
 
-            this.FieldNameLookup = new FieldNameLookup(this.ColumnNames, -1);
+            FieldNameLookup = new FieldNameLookup(ColumnNames, -1);
 
             // pre-compute the nested objects from typeUsage, for performance
-            bool[] isColumnNested = new bool[columnCount];
+            var isColumnNested = new bool[columnCount];
 
-            for (int ordinal = 0; ordinal < columnCount; ordinal++)
+            for (var ordinal = 0; ordinal < columnCount; ordinal++)
             {
                 switch (typeUsages[ordinal].EdmType.BuiltInTypeKind)
                 {
@@ -115,14 +115,14 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     case BuiltInTypeKind.RowType:
                     case BuiltInTypeKind.CollectionType:
                         isColumnNested[ordinal] = true;
-                        this.HasNestedColumns = true;
+                        HasNestedColumns = true;
                         break;
                     default:
                         isColumnNested[ordinal] = false;
                         break;
                 }
             }
-            this.IsColumnNested = new System.Collections.ObjectModel.ReadOnlyCollection<bool>(isColumnNested);
+            IsColumnNested = new ReadOnlyCollection<bool>(isColumnNested);
         }
 
         #endregion
@@ -139,5 +139,4 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         #endregion
     }
-
 }

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Diagnostics;
-namespace System.Data.Entity.Core.Common.Utils
+﻿namespace System.Data.Entity.Core.Common.Utils
 {
+    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Threading;
 
     /// <summary>
     /// Remembers the result of evaluating an expensive function so that subsequent

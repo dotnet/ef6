@@ -1,29 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity;
-using System.Data.Entity.Core.Mapping;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Diagnostics;
-using System.Linq;
-using System.Xml;
-
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Xml;
 
     internal delegate void AttributeValueNotification(string token, Action<string, ErrorCode, EdmSchemaErrorSeverity> addError);
+
     internal delegate DbProviderManifest ProviderManifestNeeded(Action<string, ErrorCode, EdmSchemaErrorSeverity> addError);
 
     /// <summary>
     /// Class responsible for parsing,validating a collection of schema
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("DataModel={DataModel}")]
+    [DebuggerDisplay("DataModel={DataModel}")]
     internal class SchemaManager
     {
         #region Instance Fields
+
         // This keeps track of all the possible namespaces encountered till now. This helps in displaying the error to the
         // user - if the particular type is not found, we can report whether the namespace was invalid or the type with the
         // given name was not found in the given namespace. This also helps in validating the namespace in the using elements
@@ -45,30 +43,35 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private readonly ProviderManifestNeeded _providerManifestNeeded;
         private readonly AttributeValueNotification _providerNotification;
         private readonly AttributeValueNotification _providerManifestTokenNotification;
+
         #endregion
 
         #region Constructor
-        private SchemaManager(SchemaDataModelOption dataModel, AttributeValueNotification providerNotification, AttributeValueNotification providerManifestTokenNotification, ProviderManifestNeeded providerManifestNeeded)
+
+        private SchemaManager(
+            SchemaDataModelOption dataModel, AttributeValueNotification providerNotification,
+            AttributeValueNotification providerManifestTokenNotification, ProviderManifestNeeded providerManifestNeeded)
         {
             _dataModel = dataModel;
             _providerNotification = providerNotification;
             _providerManifestTokenNotification = providerManifestTokenNotification;
             _providerManifestNeeded = providerManifestNeeded;
         }
+
         #endregion
 
         #region Public Methods
 
-
-        
-        public static IList<EdmSchemaError> LoadProviderManifest(XmlReader xmlReader, string location,
+        public static IList<EdmSchemaError> LoadProviderManifest(
+            XmlReader xmlReader, string location,
             bool checkForSystemNamespace, out Schema schema)
         {
             IList<Schema> schemaCollection = new List<Schema>(1);
 
             DbProviderManifest providerManifest = checkForSystemNamespace ? EdmProviderManifest.Instance : null;
-            IList<EdmSchemaError> errors = ParseAndValidate(new XmlReader[] { xmlReader },
-                new string[] { location }, SchemaDataModelOption.ProviderManifestModel,
+            var errors = ParseAndValidate(
+                new[] { xmlReader },
+                new[] { location }, SchemaDataModelOption.ProviderManifestModel,
                 providerManifest, out schemaCollection);
 
             // In case of errors, there are no schema in the schema collection
@@ -85,33 +88,39 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             return errors;
         }
 
-        public static void NoOpAttributeValueNotification(string attributeValue, Action<string, ErrorCode, EdmSchemaErrorSeverity> addError) { }
-        
-        public static IList<EdmSchemaError> ParseAndValidate(IEnumerable<XmlReader> xmlReaders,
+        public static void NoOpAttributeValueNotification(string attributeValue, Action<string, ErrorCode, EdmSchemaErrorSeverity> addError)
+        {
+        }
+
+        public static IList<EdmSchemaError> ParseAndValidate(
+            IEnumerable<XmlReader> xmlReaders,
             IEnumerable<string> sourceFilePaths, SchemaDataModelOption dataModel,
             DbProviderManifest providerManifest,
             out IList<Schema> schemaCollection)
         {
-            return ParseAndValidate(xmlReaders, 
-                sourceFilePaths, 
+            return ParseAndValidate(
+                xmlReaders,
+                sourceFilePaths,
                 dataModel,
                 NoOpAttributeValueNotification,
                 NoOpAttributeValueNotification,
-                delegate(Action<string, ErrorCode, EdmSchemaErrorSeverity> addError) { return providerManifest == null ? MetadataItem.EdmProviderManifest : providerManifest; },
+                delegate { return providerManifest == null ? MetadataItem.EdmProviderManifest : providerManifest; },
                 out schemaCollection);
         }
 
-        public static IList<EdmSchemaError> ParseAndValidate(IEnumerable<XmlReader> xmlReaders,
+        public static IList<EdmSchemaError> ParseAndValidate(
+            IEnumerable<XmlReader> xmlReaders,
             IEnumerable<string> sourceFilePaths, SchemaDataModelOption dataModel,
             AttributeValueNotification providerNotification,
             AttributeValueNotification providerManifestTokenNotification,
             ProviderManifestNeeded providerManifestNeeded,
             out IList<Schema> schemaCollection)
         {
-            SchemaManager schemaManager = new SchemaManager(dataModel, providerNotification, providerManifestTokenNotification, providerManifestNeeded);
+            var schemaManager = new SchemaManager(
+                dataModel, providerNotification, providerManifestTokenNotification, providerManifestNeeded);
             var errorCollection = new List<EdmSchemaError>();
             schemaCollection = new List<Schema>();
-            bool errorEncountered = false;
+            var errorEncountered = false;
 
             List<string> filePathList;
             if (sourceFilePaths != null)
@@ -123,8 +132,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 filePathList = new List<string>();
             }
 
-            int index = 0;
-            foreach (XmlReader xmlReader in xmlReaders)
+            var index = 0;
+            foreach (var xmlReader in xmlReaders)
             {
                 string location = null;
                 if (filePathList.Count <= index)
@@ -142,7 +151,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 var errorsForCurrentSchema = schema.Parse(xmlReader, location);
 
                 CheckIsSameVersion(schema, schemaCollection, errorCollection);
-                
+
                 // If the number of errors exceeded the max error count, then return
                 if (UpdateErrorCollectionAndCheckForMaxErrors(errorCollection, errorsForCurrentSchema, ref errorEncountered))
                 {
@@ -156,7 +165,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 {
                     schemaCollection.Add(schema);
                     schemaManager.AddSchema(schema);
-                    Debug.Assert(schemaCollection.All(s => s.SchemaVersion == schema.SchemaVersion || s.SchemaVersion != XmlConstants.UndefinedVersion));
+                    Debug.Assert(
+                        schemaCollection.All(
+                            s => s.SchemaVersion == schema.SchemaVersion || s.SchemaVersion != XmlConstants.UndefinedVersion));
                 }
                 index++;
             }
@@ -165,7 +176,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             // parsing and validating phase
             if (!errorEncountered)
             {
-                foreach (Schema schema in schemaCollection)
+                foreach (var schema in schemaCollection)
                 {
                     if (UpdateErrorCollectionAndCheckForMaxErrors(errorCollection, schema.Resolve(), ref errorEncountered))
                     {
@@ -177,7 +188,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 // parsing and validating phase
                 if (!errorEncountered)
                 {
-                    foreach (Schema schema in schemaCollection)
+                    foreach (var schema in schemaCollection)
                     {
                         if (UpdateErrorCollectionAndCheckForMaxErrors(errorCollection, schema.ValidateSchema(), ref errorEncountered))
                         {
@@ -186,7 +197,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                     }
                 }
             }
-            
+
             return errorCollection;
         }
 
@@ -195,14 +206,17 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             // to make life simpler, we skip down to the first/root element, unless we're
             // already there
-            if (!reader.EOF && reader.NodeType != XmlNodeType.Element)
+            if (!reader.EOF
+                && reader.NodeType != XmlNodeType.Element)
             {
-                while (reader.Read() && reader.NodeType != XmlNodeType.Element)
+                while (reader.Read()
+                       && reader.NodeType != XmlNodeType.Element)
                 {
                 }
             }
 
-            if (!reader.EOF &&
+            if (!reader.EOF
+                &&
                 (reader.LocalName == XmlConstants.Schema || reader.LocalName == StorageMslConstructs.MappingElement))
             {
                 return TryGetSchemaVersion(reader.NamespaceURI, out version, out dataSpace);
@@ -264,23 +278,30 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             }
         }
 
-        private static bool CheckIsSameVersion(Schema schemaToBeAdded, IEnumerable<Schema> schemaCollection, List<EdmSchemaError> errorCollection)
+        private static bool CheckIsSameVersion(
+            Schema schemaToBeAdded, IEnumerable<Schema> schemaCollection, List<EdmSchemaError> errorCollection)
         {
-            if (schemaToBeAdded.SchemaVersion != XmlConstants.UndefinedVersion && schemaCollection.Count() > 0)
+            if (schemaToBeAdded.SchemaVersion != XmlConstants.UndefinedVersion
+                && schemaCollection.Count() > 0)
             {
-                if (schemaCollection.Any(s => s.SchemaVersion != XmlConstants.UndefinedVersion && s.SchemaVersion != schemaToBeAdded.SchemaVersion))
+                if (
+                    schemaCollection.Any(
+                        s => s.SchemaVersion != XmlConstants.UndefinedVersion && s.SchemaVersion != schemaToBeAdded.SchemaVersion))
                 {
                     errorCollection.Add(
-                    new EdmSchemaError(
-                        Strings.CannotLoadDifferentVersionOfSchemaInTheSameItemCollection,
-                        (int)ErrorCode.CannotLoadDifferentVersionOfSchemaInTheSameItemCollection,
-                        EdmSchemaErrorSeverity.Error));
+                        new EdmSchemaError(
+                            Strings.CannotLoadDifferentVersionOfSchemaInTheSameItemCollection,
+                            (int)ErrorCode.CannotLoadDifferentVersionOfSchemaInTheSameItemCollection,
+                            EdmSchemaErrorSeverity.Error));
                 }
             }
             return true;
         }
 
-        public double SchemaVersion { get { return this.effectiveSchemaVersion; } }
+        public double SchemaVersion
+        {
+            get { return effectiveSchemaVersion; }
+        }
 
         /// <summary>
         /// Add the namespace of the given schema to the namespace lookup table
@@ -289,15 +310,16 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(schema.DataModel == _dataModel, "DataModel must match");
 
-            if (_namespaceLookUpTable.Count == 0 && schema.DataModel != SchemaDataModelOption.ProviderManifestModel)
+            if (_namespaceLookUpTable.Count == 0
+                && schema.DataModel != SchemaDataModelOption.ProviderManifestModel)
             {
                 // Add the primitive type namespace to the namespace look up table
-                if (this.PrimitiveSchema.Namespace != null)
+                if (PrimitiveSchema.Namespace != null)
                 {
-                    _namespaceLookUpTable.Add(this.PrimitiveSchema.Namespace);
+                    _namespaceLookUpTable.Add(PrimitiveSchema.Namespace);
                 }
             }
-                                    
+
             // Add the namespace to the namespaceLookUpTable. 
             // Its okay to have multiple schemas with the same namespace
             _namespaceLookUpTable.Add(schema.Namespace);
@@ -310,7 +332,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         public bool TryResolveType(string namespaceName, string typeName, out SchemaType schemaType)
         {
             // For resolving entity container names, namespace can be null
-            string fullyQualifiedName = String.IsNullOrEmpty(namespaceName) ? typeName : namespaceName + "." + typeName;
+            var fullyQualifiedName = String.IsNullOrEmpty(namespaceName) ? typeName : namespaceName + "." + typeName;
 
             schemaType = SchemaTypes.LookUpEquivalentKey(fullyQualifiedName);
             if (schemaType != null)
@@ -328,6 +350,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             return _namespaceLookUpTable.Contains(namespaceName);
         }
+
         #endregion // Public Methods
 
         #region Private Methods
@@ -339,19 +362,20 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns></returns>
         internal static bool TryGetBaseUri(XmlReader xmlReader, out string location)
         {
-            string baseUri = xmlReader.BaseURI;
+            var baseUri = xmlReader.BaseURI;
             Uri uri = null;
 
             if (!string.IsNullOrEmpty(baseUri) &&
-                 Uri.TryCreate(baseUri, UriKind.Absolute, out uri) &&
-                 uri.Scheme == "file")
+                Uri.TryCreate(baseUri, UriKind.Absolute, out uri)
+                &&
+                uri.Scheme == "file")
             {
                 location = Helper.GetFileNameFromUri(uri);
                 return true;
             }
             else
             {
-                location = null;                
+                location = null;
                 return false;
             }
         }
@@ -362,7 +386,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// than max errors
         /// </summary>
         /// <returns></returns>
-        private static bool UpdateErrorCollectionAndCheckForMaxErrors(List<EdmSchemaError> errorCollection, 
+        private static bool UpdateErrorCollectionAndCheckForMaxErrors(
+            List<EdmSchemaError> errorCollection,
             IList<EdmSchemaError> newErrors, ref bool errorEncountered)
         {
             // If we have encountered error already in one of the schemas, then we don't need to check for errors in the remaining schemas.
@@ -378,27 +403,25 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             // Add the new errors to the error collection
             errorCollection.AddRange(newErrors);
 
-            if (errorEncountered && 
+            if (errorEncountered &&
                 errorCollection.Where(e => e.Severity == EdmSchemaErrorSeverity.Error).Count() > MaxErrorCount)
             {
                 return true;
             }
             return false;
         }
+
         #endregion
 
         #region Internal Properties
 
         internal SchemaElementLookUpTable<SchemaType> SchemaTypes
         {
-            get
-            {
-                return _schemaTypes;
-            }
+            get { return _schemaTypes; }
         }
 
         internal DbProviderManifest GetProviderManifest(Action<string, ErrorCode, EdmSchemaErrorSeverity> addError)
-        { 
+        {
             if (_providerManifest == null)
             {
                 _providerManifest = _providerManifestNeeded(addError);
@@ -406,39 +429,33 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             return _providerManifest;
         }
 
-        internal SchemaDataModelOption DataModel { get { return _dataModel; } }
+        internal SchemaDataModelOption DataModel
+        {
+            get { return _dataModel; }
+        }
 
         internal void EnsurePrimitiveSchemaIsLoaded(double forSchemaVersion)
         {
             if (_primitiveSchema == null)
             {
-                this.effectiveSchemaVersion = forSchemaVersion;
+                effectiveSchemaVersion = forSchemaVersion;
                 _primitiveSchema = new PrimitiveSchema(this);
             }
         }
 
         internal PrimitiveSchema PrimitiveSchema
         {
-            get
-            {
-                return _primitiveSchema;
-            }
+            get { return _primitiveSchema; }
         }
 
         internal AttributeValueNotification ProviderNotification
         {
-            get
-            {
-                return _providerNotification;
-            }
+            get { return _providerNotification; }
         }
 
         internal AttributeValueNotification ProviderManifestTokenNotification
         {
-            get
-            {
-                return _providerManifestTokenNotification;
-            }
+            get { return _providerManifestTokenNotification; }
         }
 
         #endregion

@@ -1,39 +1,32 @@
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
 
     /// <summary>
     /// Summary description for SchemaElementLookUpTable.
     /// </summary>
     internal sealed class SchemaElementLookUpTable<T> : IEnumerable<T>, ISchemaElementLookUpTable<T>
-    where T : SchemaElement
+        where T : SchemaElement
     {
         #region Instance Fields
-        private Dictionary<string,T> _keyToType = null;
-        private List<string> _keysInDefOrder = new List<string>();
+
+        private Dictionary<string, T> _keyToType;
+        private readonly List<string> _keysInDefOrder = new List<string>();
+
         #endregion
 
         #region Public Methods
-        /// <summary>
-        /// 
-        /// </summary>
-        public SchemaElementLookUpTable()
-        {
-        }
 
         /// <summary>
         /// 
         /// </summary>
         public int Count
         {
-            get
-            {
-                return KeyToType.Count;
-            }
+            get { return KeyToType.Count; }
         }
 
         /// <summary>
@@ -63,15 +56,13 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
             return null;
         }
+
         /// <summary>
         /// 
         /// </summary>
         public T this[string key]
         {
-            get
-            {
-                return KeyToType[KeyFromName(key)];
-            }
+            get { return KeyToType[KeyFromName(key)]; }
         }
 
         /// <summary>
@@ -79,7 +70,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         public T GetElementAt(int index)
         {
-                return KeyToType[_keysInDefOrder[index]];
+            return KeyToType[_keysInDefOrder[index]];
         }
 
         /// <summary>
@@ -88,11 +79,12 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns></returns>
         public IEnumerator<T> GetEnumerator()
         {
-            return new SchemaElementLookUpTableEnumerator<T,T>(KeyToType,_keysInDefOrder);
+            return new SchemaElementLookUpTableEnumerator<T, T>(KeyToType, _keysInDefOrder);
         }
-        IEnumerator System.Collections.IEnumerable.GetEnumerator()
+
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            return new SchemaElementLookUpTableEnumerator<T,T>(KeyToType,_keysInDefOrder);
+            return new SchemaElementLookUpTableEnumerator<T, T>(KeyToType, _keysInDefOrder);
         }
 
         /// <summary>
@@ -100,9 +92,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         /// <returns></returns>
         public IEnumerator<S> GetFilteredEnumerator<S>()
-        where S : T
+            where S : T
         {
-            return new SchemaElementLookUpTableEnumerator<S,T>(KeyToType,_keysInDefOrder);
+            return new SchemaElementLookUpTableEnumerator<S, T>(KeyToType, _keysInDefOrder);
         }
 
         /// <summary>
@@ -119,14 +111,14 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 return AddErrorKind.MissingNameError;
             }
 
-            string key = KeyFromElement(type);
+            var key = KeyFromElement(type);
             T element;
             if (KeyToType.TryGetValue(key, out element))
             {
                 return AddErrorKind.DuplicateNameError;
             }
 
-            KeyToType.Add(key,type);
+            KeyToType.Add(key, type);
             _keysInDefOrder.Add(key);
 
             return AddErrorKind.Succeeded;
@@ -137,21 +129,23 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             Debug.Assert(type != null, "type parameter is null");
             Debug.Assert(null != duplicateKeyErrorFormat, "duplicateKeyErrorFormat cannot be null");
 
-            AddErrorKind error = TryAdd(type);
+            var error = TryAdd(type);
 
             if (error == AddErrorKind.MissingNameError)
             {
                 if (!doNotAddErrorForEmptyName)
                 {
-                    type.AddError(ErrorCode.InvalidName, EdmSchemaErrorSeverity.Error,
-                        System.Data.Entity.Resources.Strings.MissingName);
+                    type.AddError(
+                        ErrorCode.InvalidName, EdmSchemaErrorSeverity.Error,
+                        Strings.MissingName);
                 }
                 return;
             }
             else if (error == AddErrorKind.DuplicateNameError)
             {
-                type.AddError(ErrorCode.AlreadyDefined, EdmSchemaErrorSeverity.Error,
-                        duplicateKeyErrorFormat(type.FQName));
+                type.AddError(
+                    ErrorCode.AlreadyDefined, EdmSchemaErrorSeverity.Error,
+                    duplicateKeyErrorFormat(type.FQName));
             }
             else
             {
@@ -162,9 +156,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #endregion
 
         #region Internal Methods
+
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// 
         /// </summary>
@@ -186,27 +182,30 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
             return unnormalizedKey;
         }
+
         #endregion
 
         #region Private Properties
+
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<string,T> KeyToType
+        private Dictionary<string, T> KeyToType
         {
             get
             {
-                if ( _keyToType == null )
+                if (_keyToType == null)
                 {
-                    _keyToType = new Dictionary<string,T>(StringComparer.Ordinal);
+                    _keyToType = new Dictionary<string, T>(StringComparer.Ordinal);
                 }
                 return _keyToType;
             }
         }
+
         #endregion
     }
 
-    enum AddErrorKind
+    internal enum AddErrorKind
     {
         Succeeded,
 

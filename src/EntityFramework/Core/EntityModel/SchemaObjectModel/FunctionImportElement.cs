@@ -1,6 +1,5 @@
 ﻿namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
@@ -9,17 +8,20 @@
 
     internal class FunctionImportElement : Function
     {
-        private string _unresolvedEntitySet = null;
-        private bool _entitySetPathDefined = false;
-        private EntityContainer _container = null;
-        private EntityContainerEntitySet _entitySet = null;
-        private bool? _isSideEffecting = null;
+        private string _unresolvedEntitySet;
+        private bool _entitySetPathDefined;
+        private EntityContainer _container;
+        private EntityContainerEntitySet _entitySet;
+        private bool? _isSideEffecting;
 
         internal FunctionImportElement(EntityContainer container)
             : base(container.Schema)
         {
-            if (Schema.DataModel == SchemaDataModelOption.EntityDataModel)
+            if (Schema.DataModel
+                == SchemaDataModelOption.EntityDataModel)
+            {
                 OtherContent.Add(Schema.SchemaSource);
+            }
 
             _container = container;
 
@@ -27,22 +29,19 @@
             _isComposable = false;
         }
 
-        public override bool IsFunctionImport { get { return true; } }
+        public override bool IsFunctionImport
+        {
+            get { return true; }
+        }
 
         public override string FQName
         {
-            get
-            {
-                return _container.Name + "." + this.Name;
-            }
+            get { return _container.Name + "." + Name; }
         }
 
         public override string Identity
         {
-            get
-            {
-                return base.Name;
-            }
+            get { return base.Name; }
         }
 
         public EntityContainer Container
@@ -50,7 +49,10 @@
             get { return _container; }
         }
 
-        public EntityContainerEntitySet EntitySet { get { return _entitySet; } }
+        public EntityContainerEntitySet EntitySet
+        {
+            get { return _entitySet; }
+        }
 
         protected override bool HandleAttribute(XmlReader reader)
         {
@@ -86,7 +88,7 @@
             {
                 // Even though EF does not support this attribute, we want to remember the value in order to throw an error
                 // in case user specifies IsComposable = true and IsSideEffecting = true.
-                bool isSideEffecting = true;
+                var isSideEffecting = true;
                 if (HandleBoolAttribute(reader, ref isSideEffecting))
                 {
                     _isSideEffecting = isSideEffecting;
@@ -110,15 +112,17 @@
             Debug.Assert(null != _container, "function imports must know container");
 
             // resolve entity set
-            if (null == entitySet && null != unresolvedEntitySet)
+            if (null == entitySet
+                && null != unresolvedEntitySet)
             {
                 entitySet = _container.FindEntitySet(unresolvedEntitySet);
 
                 if (null == entitySet)
                 {
-                    owner.AddError(ErrorCode.FunctionImportUnknownEntitySet,
+                    owner.AddError(
+                        ErrorCode.FunctionImportUnknownEntitySet,
                         EdmSchemaErrorSeverity.Error,
-                        System.Data.Entity.Resources.Strings.FunctionImportUnknownEntitySet(unresolvedEntitySet, this.FQName));
+                        Strings.FunctionImportUnknownEntitySet(unresolvedEntitySet, FQName));
                 }
             }
         }
@@ -127,54 +131,64 @@
         {
             base.Validate();
 
-            ValidateFunctionImportReturnType(this, _type, this.CollectionKind, _entitySet, _entitySetPathDefined);
+            ValidateFunctionImportReturnType(this, _type, CollectionKind, _entitySet, _entitySetPathDefined);
 
             if (_returnTypeList != null)
             {
-                foreach (ReturnType returnType in _returnTypeList)
+                foreach (var returnType in _returnTypeList)
                 {
                     Debug.Assert(returnType.Type != null, "FunctionImport/ReturnType element must not have subelements.");
 
-                    ValidateFunctionImportReturnType(returnType, returnType.Type, returnType.CollectionKind, returnType.EntitySet, returnType.EntitySetPathDefined);
+                    ValidateFunctionImportReturnType(
+                        returnType, returnType.Type, returnType.CollectionKind, returnType.EntitySet, returnType.EntitySetPathDefined);
                 }
             }
 
-            if (_isComposable && _isSideEffecting.HasValue && _isSideEffecting.Value == true)
+            if (_isComposable && _isSideEffecting.HasValue
+                && _isSideEffecting.Value)
             {
-                this.AddError(ErrorCode.FunctionImportComposableAndSideEffectingNotAllowed,
-                              EdmSchemaErrorSeverity.Error,
-                              Strings.FunctionImportComposableAndSideEffectingNotAllowed(this.FQName));
+                AddError(
+                    ErrorCode.FunctionImportComposableAndSideEffectingNotAllowed,
+                    EdmSchemaErrorSeverity.Error,
+                    Strings.FunctionImportComposableAndSideEffectingNotAllowed(FQName));
             }
 
             if (_parameters != null)
             {
-                foreach (Parameter p in _parameters)
+                foreach (var p in _parameters)
                 {
-                    if (p.IsRefType || p.CollectionKind != Metadata.Edm.CollectionKind.None)
+                    if (p.IsRefType
+                        || p.CollectionKind != CollectionKind.None)
                     {
-                        this.AddError(ErrorCode.FunctionImportCollectionAndRefParametersNotAllowed,
-                                      EdmSchemaErrorSeverity.Error,
-                                      Strings.FunctionImportCollectionAndRefParametersNotAllowed(this.FQName));
+                        AddError(
+                            ErrorCode.FunctionImportCollectionAndRefParametersNotAllowed,
+                            EdmSchemaErrorSeverity.Error,
+                            Strings.FunctionImportCollectionAndRefParametersNotAllowed(FQName));
                     }
 
                     if (!p.TypeUsageBuilder.Nullable)
                     {
-                        this.AddError(ErrorCode.FunctionImportNonNullableParametersNotAllowed,
-                                      EdmSchemaErrorSeverity.Error,
-                                      Strings.FunctionImportNonNullableParametersNotAllowed(this.FQName));
+                        AddError(
+                            ErrorCode.FunctionImportNonNullableParametersNotAllowed,
+                            EdmSchemaErrorSeverity.Error,
+                            Strings.FunctionImportNonNullableParametersNotAllowed(FQName));
                     }
                 }
             }
         }
 
-        private void ValidateFunctionImportReturnType(SchemaElement owner, SchemaType returnType, CollectionKind returnTypeCollectionKind, EntityContainerEntitySet entitySet, bool entitySetPathDefined)
+        private void ValidateFunctionImportReturnType(
+            SchemaElement owner, SchemaType returnType, CollectionKind returnTypeCollectionKind, EntityContainerEntitySet entitySet,
+            bool entitySetPathDefined)
         {
-            if (returnType != null && !ReturnTypeMeetsFunctionImportBasicRequirements(returnType, returnTypeCollectionKind))
+            if (returnType != null
+                && !ReturnTypeMeetsFunctionImportBasicRequirements(returnType, returnTypeCollectionKind))
             {
-                owner.AddError(ErrorCode.FunctionImportUnsupportedReturnType,
+                owner.AddError(
+                    ErrorCode.FunctionImportUnsupportedReturnType,
                     EdmSchemaErrorSeverity.Error,
                     owner,
-                    GetReturnTypeErrorMessage(this.Name)
+                    GetReturnTypeErrorMessage(Name)
                     );
             }
             ValidateFunctionImportReturnType(owner, returnType, entitySet, entitySetPathDefined);
@@ -183,24 +197,58 @@
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         private bool ReturnTypeMeetsFunctionImportBasicRequirements(SchemaType type, CollectionKind returnTypeCollectionKind)
         {
-            if (type is ScalarType && returnTypeCollectionKind == CollectionKind.Bag) 
+            if (type is ScalarType
+                && returnTypeCollectionKind == CollectionKind.Bag)
+            {
                 return true;
-            if (type is SchemaEntityType && returnTypeCollectionKind == CollectionKind.Bag) return true;
+            }
+            if (type is SchemaEntityType
+                && returnTypeCollectionKind == CollectionKind.Bag)
+            {
+                return true;
+            }
 
-            if (Schema.SchemaVersion == XmlConstants.EdmVersionForV1_1)
+            if (Schema.SchemaVersion
+                == XmlConstants.EdmVersionForV1_1)
             {
-                if (type is ScalarType && returnTypeCollectionKind == CollectionKind.None) return true;
-                if (type is SchemaEntityType && returnTypeCollectionKind == CollectionKind.None) return true;
-                if (type is SchemaComplexType && returnTypeCollectionKind == CollectionKind.None) return true;
-                if (type is SchemaComplexType && returnTypeCollectionKind == CollectionKind.Bag) return true;
+                if (type is ScalarType
+                    && returnTypeCollectionKind == CollectionKind.None)
+                {
+                    return true;
+                }
+                if (type is SchemaEntityType
+                    && returnTypeCollectionKind == CollectionKind.None)
+                {
+                    return true;
+                }
+                if (type is SchemaComplexType
+                    && returnTypeCollectionKind == CollectionKind.None)
+                {
+                    return true;
+                }
+                if (type is SchemaComplexType
+                    && returnTypeCollectionKind == CollectionKind.Bag)
+                {
+                    return true;
+                }
             }
-            if (Schema.SchemaVersion >= XmlConstants.EdmVersionForV2)
+            if (Schema.SchemaVersion
+                >= XmlConstants.EdmVersionForV2)
             {
-                if (type is SchemaComplexType && returnTypeCollectionKind == CollectionKind.Bag) return true;
+                if (type is SchemaComplexType
+                    && returnTypeCollectionKind == CollectionKind.Bag)
+                {
+                    return true;
+                }
             }
-            if (Schema.SchemaVersion >= XmlConstants.EdmVersionForV3)
+            if (Schema.SchemaVersion
+                >= XmlConstants.EdmVersionForV3)
             {
-                if (type is SchemaEnumType && returnTypeCollectionKind == CollectionKind.Bag) return true;
+                if (type is SchemaEnumType
+                    && returnTypeCollectionKind == CollectionKind.Bag)
+                {
+                    return true;
+                }
             }
 
             return false;
@@ -214,16 +262,18 @@
         /// ReturnType="Collection(ComplexTypeA)" EntitySet="something"
         /// ReturnType="Collection(ComplexTypeA)", but the ComplexTypeA has a nested complexType property, this scenario will be handle in the runtime
         /// </summary>
-        private void ValidateFunctionImportReturnType(SchemaElement owner, SchemaType returnType, EntityContainerEntitySet entitySet, bool entitySetPathDefined)
+        private void ValidateFunctionImportReturnType(
+            SchemaElement owner, SchemaType returnType, EntityContainerEntitySet entitySet, bool entitySetPathDefined)
         {
             // If entity type, verify specification of entity set and that the type is appropriate for the entity set
-            SchemaEntityType entityType = returnType as SchemaEntityType;
+            var entityType = returnType as SchemaEntityType;
 
             if (entitySet != null && entitySetPathDefined)
             {
-                owner.AddError(ErrorCode.FunctionImportEntitySetAndEntitySetPathDeclared,
-                               EdmSchemaErrorSeverity.Error,
-                               Strings.FunctionImportEntitySetAndEntitySetPathDeclared(this.FQName));
+                owner.AddError(
+                    ErrorCode.FunctionImportEntitySetAndEntitySetPathDeclared,
+                    EdmSchemaErrorSeverity.Error,
+                    Strings.FunctionImportEntitySetAndEntitySetPathDeclared(FQName));
             }
 
             if (null != entityType)
@@ -232,23 +282,26 @@
                 if (null == entitySet)
                 {
                     // ReturnType="Collection(EntityTypeA)"
-                    owner.AddError(ErrorCode.FunctionImportReturnsEntitiesButDoesNotSpecifyEntitySet,
+                    owner.AddError(
+                        ErrorCode.FunctionImportReturnsEntitiesButDoesNotSpecifyEntitySet,
                         EdmSchemaErrorSeverity.Error,
-                        System.Data.Entity.Resources.Strings.FunctionImportReturnEntitiesButDoesNotSpecifyEntitySet(this.FQName));
+                        Strings.FunctionImportReturnEntitiesButDoesNotSpecifyEntitySet(FQName));
                 }
-                else if (null != entitySet.EntityType && !entityType.IsOfType(entitySet.EntityType))
+                else if (null != entitySet.EntityType
+                         && !entityType.IsOfType(entitySet.EntityType))
                 {
                     // ReturnType="Collection(EntityTypeA)" EntitySet="ESet.EType is not oftype EntityTypeA"
-                    owner.AddError(ErrorCode.FunctionImportEntityTypeDoesNotMatchEntitySet,
+                    owner.AddError(
+                        ErrorCode.FunctionImportEntityTypeDoesNotMatchEntitySet,
                         EdmSchemaErrorSeverity.Error,
-                        System.Data.Entity.Resources.Strings.FunctionImportEntityTypeDoesNotMatchEntitySet(
-                        this.FQName, entitySet.EntityType.FQName, entitySet.Name));
+                        Strings.FunctionImportEntityTypeDoesNotMatchEntitySet(
+                            FQName, entitySet.EntityType.FQName, entitySet.Name));
                 }
             }
             else
             {
                 // complex type
-                SchemaComplexType complexType = returnType as SchemaComplexType;
+                var complexType = returnType as SchemaComplexType;
                 if (complexType != null)
                 {
                     if (entitySet != null || entitySetPathDefined)
@@ -259,21 +312,23 @@
                             EdmSchemaErrorSeverity.Error,
                             owner.LineNumber,
                             owner.LinePosition,
-                            System.Data.Entity.Resources.Strings.ComplexTypeAsReturnTypeAndDefinedEntitySet(this.FQName, complexType.Name));
+                            Strings.ComplexTypeAsReturnTypeAndDefinedEntitySet(FQName, complexType.Name));
                     }
                 }
                 else
                 {
-                    Debug.Assert(returnType == null || returnType is ScalarType || returnType is SchemaEnumType || returnType is Relationship, 
+                    Debug.Assert(
+                        returnType == null || returnType is ScalarType || returnType is SchemaEnumType || returnType is Relationship,
                         "null return type, scalar return type, enum return type or relationship expected here.");
 
                     // scalar type or no return type
                     if (entitySet != null || entitySetPathDefined)
                     {
                         // EntitySet="A"
-                        owner.AddError(ErrorCode.FunctionImportSpecifiesEntitySetButDoesNotReturnEntityType,
+                        owner.AddError(
+                            ErrorCode.FunctionImportSpecifiesEntitySetButDoesNotReturnEntityType,
                             EdmSchemaErrorSeverity.Error,
-                            System.Data.Entity.Resources.Strings.FunctionImportSpecifiesEntitySetButNotEntityType(this.FQName));
+                            Strings.FunctionImportSpecifiesEntitySetButNotEntityType(FQName));
                     }
                 }
             }
@@ -282,11 +337,13 @@
         private string GetReturnTypeErrorMessage(string functionName)
         {
             string errorMessage;
-            if (Schema.SchemaVersion == XmlConstants.EdmVersionForV1)
+            if (Schema.SchemaVersion
+                == XmlConstants.EdmVersionForV1)
             {
                 errorMessage = Strings.FunctionImportWithUnsupportedReturnTypeV1(functionName);
             }
-            else if (Schema.SchemaVersion == XmlConstants.EdmVersionForV1_1)
+            else if (Schema.SchemaVersion
+                     == XmlConstants.EdmVersionForV1_1)
             {
                 errorMessage = Strings.FunctionImportWithUnsupportedReturnTypeV1_1(functionName);
             }
@@ -302,7 +359,7 @@
 
         internal override SchemaElement Clone(SchemaElement parentElement)
         {
-            FunctionImportElement function = new FunctionImportElement((EntityContainer)parentElement);
+            var function = new FunctionImportElement((EntityContainer)parentElement);
             CloneSetFunctionFields(function);
             function._container = _container;
             function._entitySet = _entitySet;

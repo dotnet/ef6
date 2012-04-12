@@ -12,7 +12,7 @@
     /// </summary>
     internal class NullEntityWrapper : IEntityWrapper
     {
-        private static IEntityWrapper s_nullWrapper = new NullEntityWrapper();
+        private static readonly IEntityWrapper s_nullWrapper = new NullEntityWrapper();
 
         // Private constructor prevents anyone else from creating an instance
         private NullEntityWrapper()
@@ -74,10 +74,7 @@
                 Debug.Fail("Cannot access EntityKey from null wrapper.");
                 return null;
             }
-            set
-            {
-                Debug.Fail("Cannot access EntityKey from null wrapper.");
-            }
+            set { Debug.Fail("Cannot access EntityKey from null wrapper."); }
         }
 
         public EntityKey GetEntityKeyFromEntity()
@@ -93,10 +90,7 @@
                 Debug.Fail("Cannot access Context from null wrapper.");
                 return null;
             }
-            set
-            {
-                Debug.Fail("Cannot access Context from null wrapper.");
-            }
+            set { Debug.Fail("Cannot access Context from null wrapper."); }
         }
 
         public MergeOption MergeOption
@@ -176,19 +170,16 @@
         public bool InitializingProxyRelatedEnds
         {
             get
-            { 
+            {
                 Debug.Fail("Cannot access flag on null wrapper.");
                 return false;
             }
-            set
-            {
-                Debug.Fail("Cannot access flag on null wrapper.");
-            }
+            set { Debug.Fail("Cannot access flag on null wrapper."); }
         }
 
         public void UpdateCurrentValueRecord(object value, EntityEntry entry)
         {
-            Debug.Fail("Cannot UpdateCurrentValueRecord on a null entity."); 
+            Debug.Fail("Cannot UpdateCurrentValueRecord on a null entity.");
         }
 
         public bool RequiresRelationshipChangeTracking

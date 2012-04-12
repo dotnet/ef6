@@ -1,8 +1,8 @@
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Xml;
 
@@ -11,34 +11,26 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     /// </summary>
     internal abstract class EntityContainerRelationshipSet : SchemaElement
     {
-
         private IRelationship _relationship;
-        string _unresolvedRelationshipTypeName;
+        private string _unresolvedRelationshipTypeName;
 
-        
         /// <summary>
         /// Constructs an EntityContainerRelationshipSet
         /// </summary>
         /// <param name="parentElement">Reference to the schema element.</param>
-        public EntityContainerRelationshipSet( EntityContainer parentElement )
-            : base( parentElement )
+        public EntityContainerRelationshipSet(EntityContainer parentElement)
+            : base(parentElement)
         {
         }
 
         public override string FQName
         {
-            get
-            {
-                return this.ParentElement.Name + "." + this.Name;
-            }
+            get { return ParentElement.Name + "." + Name; }
         }
 
         internal IRelationship Relationship
         {
-            get
-            {
-                return _relationship;
-            }
+            get { return _relationship; }
             set
             {
                 Debug.Assert(value != null, "relationship can never be set to null");
@@ -46,25 +38,24 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             }
         }
 
-        protected abstract bool HasEnd( string role );
-        protected abstract void AddEnd( IRelationshipEnd relationshipEnd, EntityContainerEntitySet entitySet );
+        protected abstract bool HasEnd(string role);
+        protected abstract void AddEnd(IRelationshipEnd relationshipEnd, EntityContainerEntitySet entitySet);
         internal abstract IEnumerable<EntityContainerRelationshipSetEnd> Ends { get; }
 
         /// <summary>
         /// The method that is called when an Association attribute is encountered.
         /// </summary>
         /// <param name="reader">An XmlReader positioned at the Association attribute.</param>
-        protected void HandleRelationshipTypeNameAttribute( XmlReader reader )
+        protected void HandleRelationshipTypeNameAttribute(XmlReader reader)
         {
-            Debug.Assert( reader != null );
-            ReturnValue<string> value = HandleDottedNameAttribute( reader, _unresolvedRelationshipTypeName );
-            if ( value.Succeeded )
+            Debug.Assert(reader != null);
+            var value = HandleDottedNameAttribute(reader, _unresolvedRelationshipTypeName);
+            if (value.Succeeded)
             {
                 _unresolvedRelationshipTypeName = value.Value;
             }
         }
 
-        
         /// <summary>
         /// Used during the resolve phase to resolve the type name to the object that represents that type
         /// </summary>
@@ -72,24 +63,25 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             base.ResolveTopLevelNames();
 
-            if ( _relationship == null )
+            if (_relationship == null)
             {
                 SchemaType element;
-                if ( !Schema.ResolveTypeName( this, _unresolvedRelationshipTypeName, out element ) )
+                if (!Schema.ResolveTypeName(this, _unresolvedRelationshipTypeName, out element))
                 {
                     return;
                 }
 
                 _relationship = element as IRelationship;
-                if ( _relationship == null )
+                if (_relationship == null)
                 {
-                    AddError( ErrorCode.InvalidPropertyType, EdmSchemaErrorSeverity.Error,
-                        System.Data.Entity.Resources.Strings.InvalidRelationshipSetType(element.Name ) );
+                    AddError(
+                        ErrorCode.InvalidPropertyType, EdmSchemaErrorSeverity.Error,
+                        Strings.InvalidRelationshipSetType(element.Name));
                     return;
                 }
             }
 
-            foreach ( EntityContainerRelationshipSetEnd end in Ends )
+            foreach (var end in Ends)
             {
                 end.ResolveTopLevelNames();
             }
@@ -98,7 +90,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         internal override void ResolveSecondLevelNames()
         {
             base.ResolveSecondLevelNames();
-            foreach (EntityContainerRelationshipSetEnd end in Ends)
+            foreach (var end in Ends)
             {
                 end.ResolveSecondLevelNames();
             }
@@ -114,11 +106,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             InferEnds();
 
             // check out the ends
-            foreach ( EntityContainerRelationshipSetEnd end in Ends )
+            foreach (var end in Ends)
             {
                 end.Validate();
             }
-
 
             // Enabling Association between subtypes in case of Referential Constraints, since 
             // CSD is blocked on this. We need to make a long term call about whether we should
@@ -144,7 +135,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             //      No extra ends are there because the names have been matched, and an extra name will have caused an error
             //
             //    looks like no count validation needs to be done
-
         }
 
         /// <summary>
@@ -152,13 +142,13 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         private void InferEnds()
         {
-            Debug.Assert( Relationship != null );
+            Debug.Assert(Relationship != null);
 
-            foreach ( IRelationshipEnd relationshipEnd in Relationship.Ends )
+            foreach (var relationshipEnd in Relationship.Ends)
             {
-                if ( ! HasEnd( relationshipEnd.Name ) )
+                if (! HasEnd(relationshipEnd.Name))
                 {
-                    EntityContainerEntitySet entitySet = InferEntitySet(relationshipEnd);
+                    var entitySet = InferEntitySet(relationshipEnd);
                     if (entitySet != null)
                     {
                         // we don't have this end, we need to add it
@@ -168,55 +158,52 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             }
         }
 
-
         /// <summary>
         /// For the given relationship end, find the EntityContainer Property that will work for the extent
         /// </summary>
         /// <param name="relationshipEnd">The relationship end of the RelationshipSet that needs and extent</param>
         /// <returns>Null is none could be found, or the EntityContainerProperty that is the valid extent</returns>
-        private EntityContainerEntitySet InferEntitySet( IRelationshipEnd relationshipEnd )
+        private EntityContainerEntitySet InferEntitySet(IRelationshipEnd relationshipEnd)
         {
             Debug.Assert(relationshipEnd != null, "relationshipEnd parameter is null");
 
-            List<EntityContainerEntitySet> possibleExtents = new List<EntityContainerEntitySet>();
-            foreach ( EntityContainerEntitySet set in ParentElement.EntitySets )
+            var possibleExtents = new List<EntityContainerEntitySet>();
+            foreach (var set in ParentElement.EntitySets)
             {
-                if ( relationshipEnd.Type.IsOfType( set.EntityType ) )
+                if (relationshipEnd.Type.IsOfType(set.EntityType))
                 {
-                    possibleExtents.Add( set );
+                    possibleExtents.Add(set);
                 }
             }
 
-            if ( possibleExtents.Count == 1 )
+            if (possibleExtents.Count == 1)
             {
                 return possibleExtents[0];
             }
-            else if ( possibleExtents.Count == 0 )
+            else if (possibleExtents.Count == 0)
             {
                 // no matchs
-                AddError( ErrorCode.MissingExtentEntityContainerEnd, EdmSchemaErrorSeverity.Error,
-                    System.Data.Entity.Resources.Strings.MissingEntityContainerEnd(relationshipEnd.Name, FQName ) );
+                AddError(
+                    ErrorCode.MissingExtentEntityContainerEnd, EdmSchemaErrorSeverity.Error,
+                    Strings.MissingEntityContainerEnd(relationshipEnd.Name, FQName));
             }
             else
             {
                 // abmigous
-                AddError( ErrorCode.AmbiguousEntityContainerEnd, EdmSchemaErrorSeverity.Error,
-                    System.Data.Entity.Resources.Strings.AmbiguousEntityContainerEnd(relationshipEnd.Name, FQName ) );
+                AddError(
+                    ErrorCode.AmbiguousEntityContainerEnd, EdmSchemaErrorSeverity.Error,
+                    Strings.AmbiguousEntityContainerEnd(relationshipEnd.Name, FQName));
             }
 
             return null;
         }
 
-        
         /// <summary>
         /// The parent element as an EntityContainer
         /// </summary>
         internal new EntityContainer ParentElement
         {
-            get
-            {
-                return (EntityContainer)( base.ParentElement );
-            }
+            get { return (EntityContainer)(base.ParentElement); }
         }
     }
 }

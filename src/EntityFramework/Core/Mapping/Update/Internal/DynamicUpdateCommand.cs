@@ -1,17 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.EntityClient;
-using System.Diagnostics;
-using System.Data.Entity.Core.Common.Utils;
-using System.Linq;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using System.Data.Entity.Core.Spatial;
-
-namespace System.Data.Entity.Core.Mapping.Update.Internal
+﻿namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
+    using System.Collections.Generic;
+    using System.Data.Common;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Spatial;
+    using System.Diagnostics;
+    using System.Linq;
+
     internal sealed class DynamicUpdateCommand : UpdateCommand
     {
         private readonly ModificationOperator m_operator;
@@ -20,8 +20,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private readonly Dictionary<int, string> m_outputIdentifiers;
         private readonly DbModificationCommandTree m_modificationCommandTree;
 
-
-        internal DynamicUpdateCommand(TableChangeProcessor processor, UpdateTranslator translator, ModificationOperator op,
+        internal DynamicUpdateCommand(
+            TableChangeProcessor processor, UpdateTranslator translator, ModificationOperator op,
             PropagatorResult originalValues, PropagatorResult currentValues, DbModificationCommandTree tree,
             Dictionary<int, string> outputIdentifiers)
             : base(originalValues, currentValues)
@@ -32,22 +32,25 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             m_outputIdentifiers = outputIdentifiers; // may be null (not all commands have output identifiers)
 
             // initialize identifier information (supports lateral propagation of server gen values)
-            if (ModificationOperator.Insert == op || ModificationOperator.Update == op)
+            if (ModificationOperator.Insert == op
+                || ModificationOperator.Update == op)
             {
                 const int capacity = 2; // "average" number of identifiers per row
-                m_inputIdentifiers = new List<KeyValuePair<int ,DbSetClause>>(capacity);
+                m_inputIdentifiers = new List<KeyValuePair<int, DbSetClause>>(capacity);
 
-                foreach (KeyValuePair<EdmMember, PropagatorResult> member in
-                    Helper.PairEnumerations(TypeHelpers.GetAllStructuralMembers(this.CurrentValues.StructuralType),
-                                             this.CurrentValues.GetMemberValues()))
+                foreach (var member in
+                    Helper.PairEnumerations(
+                        TypeHelpers.GetAllStructuralMembers(CurrentValues.StructuralType),
+                        CurrentValues.GetMemberValues()))
                 {
                     DbSetClause setter;
-                    int identifier = member.Value.Identifier;
+                    var identifier = member.Value.Identifier;
 
-                    if (PropagatorResult.NullIdentifier != identifier &&
+                    if (PropagatorResult.NullIdentifier != identifier
+                        &&
                         TryGetSetterExpression(tree, member.Key, op, out setter)) // can find corresponding setter
                     {
-                        foreach (int principal in translator.KeyManager.GetPrincipals(identifier))
+                        foreach (var principal in translator.KeyManager.GetPrincipals(identifier))
                         {
                             m_inputIdentifiers.Add(new KeyValuePair<int, DbSetClause>(principal, setter));
                         }
@@ -58,7 +61,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         // effects: try to find setter expression for the given member
         // requires: command tree must be an insert or update tree (since other DML trees hnabve 
-        private static bool TryGetSetterExpression(DbModificationCommandTree tree, EdmMember member, ModificationOperator op, out DbSetClause setter)
+        private static bool TryGetSetterExpression(
+            DbModificationCommandTree tree, EdmMember member, ModificationOperator op, out DbSetClause setter)
         {
             Debug.Assert(op == ModificationOperator.Insert || op == ModificationOperator.Update, "only inserts and updates have setters");
             IEnumerable<DbModificationClause> clauses;
@@ -85,10 +89,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             return false;
         }
 
-        internal override long Execute(UpdateTranslator translator, EntityConnection connection, Dictionary<int, object> identifierValues, List<KeyValuePair<PropagatorResult, object>> generatedValues)
+        internal override long Execute(
+            UpdateTranslator translator, EntityConnection connection, Dictionary<int, object> identifierValues,
+            List<KeyValuePair<PropagatorResult, object>> generatedValues)
         {
             // Compile command
-            using (DbCommand command = this.CreateCommand(translator, identifierValues))
+            using (var command = CreateCommand(translator, identifierValues))
             {
                 // configure command to use the connection and transaction for this session
                 command.Transaction = ((null != connection.CurrentTransaction) ? connection.CurrentTransaction.StoreTransaction : null);
@@ -104,21 +110,22 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 {
                     // retrieve server gen results
                     rowsAffected = 0;
-                    using (DbDataReader reader = command.ExecuteReader(CommandBehavior.SequentialAccess))
+                    using (var reader = command.ExecuteReader(CommandBehavior.SequentialAccess))
                     {
                         if (reader.Read())
                         {
                             rowsAffected++;
 
-                            IBaseList<EdmMember> members = TypeHelpers.GetAllStructuralMembers(this.CurrentValues.StructuralType);
+                            var members = TypeHelpers.GetAllStructuralMembers(CurrentValues.StructuralType);
 
-                            for (int ordinal = 0; ordinal < reader.FieldCount; ordinal++)
+                            for (var ordinal = 0; ordinal < reader.FieldCount; ordinal++)
                             {
                                 // column name of result corresponds to column name of table
-                                string columnName = reader.GetName(ordinal);
-                                EdmMember member = members[columnName];
+                                var columnName = reader.GetName(ordinal);
+                                var member = members[columnName];
                                 object value;
-                                if (Helper.IsSpatialType(member.TypeUsage) && !reader.IsDBNull(ordinal))
+                                if (Helper.IsSpatialType(member.TypeUsage)
+                                    && !reader.IsDBNull(ordinal))
                                 {
                                     value = SpatialHelpers.GetSpatialValue(translator.MetadataWorkspace, reader, member.TypeUsage, ordinal);
                                 }
@@ -128,14 +135,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                                 }
 
                                 // retrieve result which includes the context for back-propagation
-                                int columnOrdinal = members.IndexOf(member);
-                                PropagatorResult result = this.CurrentValues.GetMemberValue(columnOrdinal);
+                                var columnOrdinal = members.IndexOf(member);
+                                var result = CurrentValues.GetMemberValue(columnOrdinal);
 
                                 // register for back-propagation
                                 generatedValues.Add(new KeyValuePair<PropagatorResult, object>(result, value));
 
                                 // register identifier if it exists
-                                int identifier = result.Identifier;
+                                var identifier = result.Identifier;
                                 if (PropagatorResult.NullIdentifier != identifier)
                                 {
                                     identifierValues.Add(identifier, value);
@@ -162,21 +169,21 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// </summary>
         private DbCommand CreateCommand(UpdateTranslator translator, Dictionary<int, object> identifierValues)
         {
-            DbModificationCommandTree commandTree = m_modificationCommandTree;
+            var commandTree = m_modificationCommandTree;
 
             // check if any server gen identifiers need to be set
             if (null != m_inputIdentifiers)
             {
-                Dictionary<DbSetClause, DbSetClause> modifiedClauses = new Dictionary<DbSetClause, DbSetClause>();
-                for (int idx = 0; idx < m_inputIdentifiers.Count; idx++)
+                var modifiedClauses = new Dictionary<DbSetClause, DbSetClause>();
+                for (var idx = 0; idx < m_inputIdentifiers.Count; idx++)
                 {
-                    KeyValuePair<int, DbSetClause> inputIdentifier = m_inputIdentifiers[idx];
+                    var inputIdentifier = m_inputIdentifiers[idx];
 
                     object value;
                     if (identifierValues.TryGetValue(inputIdentifier.Key, out value))
                     {
                         // reset the value of the identifier
-                        DbSetClause newClause = new DbSetClause(inputIdentifier.Value.Property, DbExpressionBuilder.Constant(value));
+                        var newClause = new DbSetClause(inputIdentifier.Value.Property, DbExpressionBuilder.Constant(value));
                         modifiedClauses[inputIdentifier.Value] = newClause;
                         m_inputIdentifiers[idx] = new KeyValuePair<int, DbSetClause>(inputIdentifier.Key, newClause);
                     }
@@ -187,7 +194,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             return translator.CreateCommand(commandTree);
         }
 
-        private static DbModificationCommandTree RebuildCommandTree(DbModificationCommandTree originalTree, Dictionary<DbSetClause, DbSetClause> clauseMappings)
+        private static DbModificationCommandTree RebuildCommandTree(
+            DbModificationCommandTree originalTree, Dictionary<DbSetClause, DbSetClause> clauseMappings)
         {
             if (clauseMappings.Count == 0)
             {
@@ -195,18 +203,24 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             DbModificationCommandTree result;
-            Debug.Assert(originalTree.CommandTreeKind == DbCommandTreeKind.Insert || originalTree.CommandTreeKind == DbCommandTreeKind.Update, "Set clauses specified for a modification tree that is not an update or insert tree?");
-            if (originalTree.CommandTreeKind == DbCommandTreeKind.Insert)
+            Debug.Assert(
+                originalTree.CommandTreeKind == DbCommandTreeKind.Insert || originalTree.CommandTreeKind == DbCommandTreeKind.Update,
+                "Set clauses specified for a modification tree that is not an update or insert tree?");
+            if (originalTree.CommandTreeKind
+                == DbCommandTreeKind.Insert)
             {
-                DbInsertCommandTree insertTree = (DbInsertCommandTree)originalTree;
-                result = new DbInsertCommandTree(insertTree.MetadataWorkspace, insertTree.DataSpace, 
+                var insertTree = (DbInsertCommandTree)originalTree;
+                result = new DbInsertCommandTree(
+                    insertTree.MetadataWorkspace, insertTree.DataSpace,
                     insertTree.Target, ReplaceClauses(insertTree.SetClauses, clauseMappings).AsReadOnly(), insertTree.Returning);
             }
             else
             {
-                DbUpdateCommandTree updateTree = (DbUpdateCommandTree)originalTree;
-                result = new DbUpdateCommandTree(updateTree.MetadataWorkspace, updateTree.DataSpace,
-                    updateTree.Target, updateTree.Predicate, ReplaceClauses(updateTree.SetClauses, clauseMappings).AsReadOnly(), updateTree.Returning);
+                var updateTree = (DbUpdateCommandTree)originalTree;
+                result = new DbUpdateCommandTree(
+                    updateTree.MetadataWorkspace, updateTree.DataSpace,
+                    updateTree.Target, updateTree.Predicate, ReplaceClauses(updateTree.SetClauses, clauseMappings).AsReadOnly(),
+                    updateTree.Returning);
             }
 
             return result;
@@ -215,10 +229,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <summary>
         /// Creates a new list of modification clauses with the specified remapped clauses replaced.
         /// </summary>
-        private static List<DbModificationClause> ReplaceClauses(IList<DbModificationClause> originalClauses, Dictionary<DbSetClause, DbSetClause> mappings)
+        private static List<DbModificationClause> ReplaceClauses(
+            IList<DbModificationClause> originalClauses, Dictionary<DbSetClause, DbSetClause> mappings)
         {
-            List<DbModificationClause> result = new List<DbModificationClause>(originalClauses.Count);
-            for (int idx = 0; idx < originalClauses.Count; idx++)
+            var result = new List<DbModificationClause>(originalClauses.Count);
+            for (var idx = 0; idx < originalClauses.Count; idx++)
             {
                 DbSetClause replacementClause;
                 if (mappings.TryGetValue((DbSetClause)originalClauses[idx], out replacementClause))
@@ -233,13 +248,19 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             return result;
         }
 
-        internal ModificationOperator Operator { get { return m_operator; } }
+        internal ModificationOperator Operator
+        {
+            get { return m_operator; }
+        }
 
-        internal override EntitySet Table { get { return this.m_processor.Table; } }
+        internal override EntitySet Table
+        {
+            get { return m_processor.Table; }
+        }
 
-        internal override IEnumerable<int> InputIdentifiers 
-        { 
-            get 
+        internal override IEnumerable<int> InputIdentifiers
+        {
+            get
             {
                 if (null == m_inputIdentifiers)
                 {
@@ -247,24 +268,24 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 }
                 else
                 {
-                    foreach (KeyValuePair<int, DbSetClause> inputIdentifier in m_inputIdentifiers)
+                    foreach (var inputIdentifier in m_inputIdentifiers)
                     {
                         yield return inputIdentifier.Key;
                     }
                 }
-            } 
+            }
         }
 
-        internal override IEnumerable<int> OutputIdentifiers 
-        { 
-            get 
-            { 
+        internal override IEnumerable<int> OutputIdentifiers
+        {
+            get
+            {
                 if (null == m_outputIdentifiers)
                 {
                     return Enumerable.Empty<int>();
                 }
-                return m_outputIdentifiers.Keys; 
-            } 
+                return m_outputIdentifiers.Keys;
+            }
         }
 
         internal override UpdateCommandKind Kind
@@ -274,20 +295,20 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         internal override IList<IEntityStateEntry> GetStateEntries(UpdateTranslator translator)
         {
-            List<IEntityStateEntry> stateEntries = new List<IEntityStateEntry>(2);
-            if (null != this.OriginalValues)
+            var stateEntries = new List<IEntityStateEntry>(2);
+            if (null != OriginalValues)
             {
-                foreach (IEntityStateEntry stateEntry in SourceInterpreter.GetAllStateEntries(
-                    this.OriginalValues, translator, this.Table))
+                foreach (var stateEntry in SourceInterpreter.GetAllStateEntries(
+                    OriginalValues, translator, Table))
                 {
                     stateEntries.Add(stateEntry);
                 }
             }
 
-            if (null != this.CurrentValues)
+            if (null != CurrentValues)
             {
-                foreach (IEntityStateEntry stateEntry in SourceInterpreter.GetAllStateEntries(
-                    this.CurrentValues, translator, this.Table))
+                foreach (var stateEntry in SourceInterpreter.GetAllStateEntries(
+                    CurrentValues, translator, Table))
                 {
                     stateEntries.Add(stateEntry);
                 }
@@ -297,41 +318,56 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         internal override int CompareToType(UpdateCommand otherCommand)
         {
-            Debug.Assert(!object.ReferenceEquals(this, otherCommand), "caller is supposed to ensure otherCommand is different reference");
+            Debug.Assert(!ReferenceEquals(this, otherCommand), "caller is supposed to ensure otherCommand is different reference");
 
-            DynamicUpdateCommand other = (DynamicUpdateCommand)otherCommand;
+            var other = (DynamicUpdateCommand)otherCommand;
 
             // order by operation type
-            int result = (int)this.Operator - (int)other.Operator;
-            if (0 != result) { return result; }
+            var result = (int)Operator - (int)other.Operator;
+            if (0 != result)
+            {
+                return result;
+            }
 
             // order by Container.Table
-            result = StringComparer.Ordinal.Compare(this.m_processor.Table.Name, other.m_processor.Table.Name);
-            if (0 != result) { return result; }
-            result = StringComparer.Ordinal.Compare(this.m_processor.Table.EntityContainer.Name, other.m_processor.Table.EntityContainer.Name);
-            if (0 != result) { return result; }
-            
-            // order by table key
-            PropagatorResult thisResult = (this.Operator == ModificationOperator.Delete ? this.OriginalValues : this.CurrentValues);
-            PropagatorResult otherResult = (other.Operator == ModificationOperator.Delete ? other.OriginalValues : other.CurrentValues);
-            for (int i = 0; i < m_processor.KeyOrdinals.Length; i++)
+            result = StringComparer.Ordinal.Compare(m_processor.Table.Name, other.m_processor.Table.Name);
+            if (0 != result)
             {
-                int keyOrdinal = m_processor.KeyOrdinals[i];
-                object thisValue = thisResult.GetMemberValue(keyOrdinal).GetSimpleValue();
-                object otherValue = otherResult.GetMemberValue(keyOrdinal).GetSimpleValue();
+                return result;
+            }
+            result = StringComparer.Ordinal.Compare(m_processor.Table.EntityContainer.Name, other.m_processor.Table.EntityContainer.Name);
+            if (0 != result)
+            {
+                return result;
+            }
+
+            // order by table key
+            var thisResult = (Operator == ModificationOperator.Delete ? OriginalValues : CurrentValues);
+            var otherResult = (other.Operator == ModificationOperator.Delete ? other.OriginalValues : other.CurrentValues);
+            for (var i = 0; i < m_processor.KeyOrdinals.Length; i++)
+            {
+                var keyOrdinal = m_processor.KeyOrdinals[i];
+                var thisValue = thisResult.GetMemberValue(keyOrdinal).GetSimpleValue();
+                var otherValue = otherResult.GetMemberValue(keyOrdinal).GetSimpleValue();
                 result = ByValueComparer.Default.Compare(thisValue, otherValue);
-                if (0 != result) { return result; }
+                if (0 != result)
+                {
+                    return result;
+                }
             }
 
             // If the result is still zero, it means key values are all the same. Switch to synthetic identifiers
             // to differentiate.
-            for (int i = 0; i < m_processor.KeyOrdinals.Length; i++)
+            for (var i = 0; i < m_processor.KeyOrdinals.Length; i++)
             {
-                int keyOrdinal = m_processor.KeyOrdinals[i];
-                int thisValue = thisResult.GetMemberValue(keyOrdinal).Identifier;
-                int otherValue = otherResult.GetMemberValue(keyOrdinal).Identifier;
+                var keyOrdinal = m_processor.KeyOrdinals[i];
+                var thisValue = thisResult.GetMemberValue(keyOrdinal).Identifier;
+                var otherValue = otherResult.GetMemberValue(keyOrdinal).Identifier;
                 result = thisValue - otherValue;
-                if (0 != result) { return result; }
+                if (0 != result)
+                {
+                    return result;
+                }
             }
 
             return result;

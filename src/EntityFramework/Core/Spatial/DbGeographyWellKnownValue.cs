@@ -1,7 +1,7 @@
-﻿using System.Runtime.Serialization;
-namespace System.Data.Entity.Core.Spatial
+﻿namespace System.Data.Entity.Core.Spatial
 {
     using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// A data contract serializable representation of a <see cref="DbGeography"/> value.
@@ -9,20 +9,16 @@ namespace System.Data.Entity.Core.Spatial
     [DataContract]
     public sealed class DbGeographyWellKnownValue
     {
-        public DbGeographyWellKnownValue()
-        {
-        }
-
         /// <summary>
         /// Gets or sets the coordinate system identifier (SRID) of this value.
         /// </summary>
-        [DataMember(Order=1, IsRequired=false, EmitDefaultValue=false)]
+        [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
         public int CoordinateSystemId { get; set; }
 
         /// <summary>
         /// Gets or sets the well known text representation of this value.
         /// </summary>
-        [DataMember(Order=2, IsRequired=false, EmitDefaultValue=false)]
+        [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
         public string WellKnownText { get; set; }
 
         /// <summary>
@@ -30,6 +26,6 @@ namespace System.Data.Entity.Core.Spatial
         /// </summary>
         [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "Required for this feature")]
-        public byte[] WellKnownBinary { get; set; }      
+        public byte[] WellKnownBinary { get; set; }
     }
 }

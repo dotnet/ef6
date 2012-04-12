@@ -1,13 +1,10 @@
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Diagnostics;
-using System.Threading;
-using System.Linq;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using System.Reflection;
 
     /// <summary>
     /// Represent the edm navigation property class
@@ -15,6 +12,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public sealed class NavigationProperty : EdmMember
     {
         #region Constructors
+
         /// <summary>
         /// Initializes a new instance of the navigation property class
         /// </summary>
@@ -36,37 +34,40 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="name">name of the property</param>
         /// <param name="typeUsage">TypeUsage object containing the property type and its facets</param>
         /// <param name="propertyInfo">for the property</param>
-        internal NavigationProperty(string name, TypeUsage typeUsage, System.Reflection.PropertyInfo propertyInfo)
+        internal NavigationProperty(string name, TypeUsage typeUsage, PropertyInfo propertyInfo)
             : this(name, typeUsage)
         {
-            System.Diagnostics.Debug.Assert(name == propertyInfo.Name, "different PropertyName?");
+            Debug.Assert(name == propertyInfo.Name, "different PropertyName?");
             if (null != propertyInfo)
             {
-                System.Reflection.MethodInfo method;
-                
+                MethodInfo method;
+
                 method = propertyInfo.GetGetMethod();
-                PropertyGetterHandle = ((null != method) ? method.MethodHandle : default(System.RuntimeMethodHandle));
+                PropertyGetterHandle = ((null != method) ? method.MethodHandle : default(RuntimeMethodHandle));
             }
         }
+
         #endregion
 
         /// <summary>
         /// Returns the kind of the type
         /// </summary>
-        public override BuiltInTypeKind BuiltInTypeKind { get { return BuiltInTypeKind.NavigationProperty; } }
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
+            get { return BuiltInTypeKind.NavigationProperty; }
+        }
 
         #region Fields
+
         internal const string RelationshipTypeNamePropertyName = "RelationshipType";
         internal const string ToEndMemberNamePropertyName = "ToEndMember";
-        private RelationshipType _relationshipType;
-        private RelationshipEndMember _toEndMember;
-        private RelationshipEndMember _fromEndMember;
 
         /// <summary>Store the handle, allowing the PropertyInfo/MethodInfo/Type references to be GC'd</summary>
-        internal readonly System.RuntimeMethodHandle PropertyGetterHandle;
+        internal readonly RuntimeMethodHandle PropertyGetterHandle;
 
         /// <summary>cached dynamic methods to access the property values from a CLR instance</summary> 
         private readonly NavigationPropertyAccessor _accessor;
+
         #endregion
 
         /// <summary>
@@ -74,51 +75,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <exception cref="System.InvalidOperationException">Thrown if the NavigationProperty instance is in ReadOnly state</exception>
         [MetadataProperty(BuiltInTypeKind.RelationshipType, false)]
-        public RelationshipType RelationshipType
-        {
-            get
-            {
-                return _relationshipType;
-            }
-            internal set
-            {
-                _relationshipType = value;
-            }
-        }
+        public RelationshipType RelationshipType { get; internal set; }
 
         /// <summary>
         /// Gets/Sets the to relationship end member in the navigation
         /// </summary>
         /// <exception cref="System.InvalidOperationException">Thrown if the NavigationProperty instance is in ReadOnly state</exception>
         [MetadataProperty(BuiltInTypeKind.RelationshipEndMember, false)]
-        public RelationshipEndMember ToEndMember
-        {
-            get
-            {
-                return _toEndMember;
-            }
-            internal set
-            {
-                _toEndMember = value;
-            }
-        }
+        public RelationshipEndMember ToEndMember { get; internal set; }
 
         /// <summary>
         /// Gets/Sets the from relationship end member in the navigation
         /// </summary>
         /// <exception cref="System.InvalidOperationException">Thrown if the NavigationProperty instance is in ReadOnly state</exception>
         [MetadataProperty(BuiltInTypeKind.RelationshipEndMember, false)]
-        public RelationshipEndMember FromEndMember
-        {
-            get
-            {
-                return _fromEndMember;
-            }
-            internal set
-            {
-                _fromEndMember = value;
-            }
-        }
+        public RelationshipEndMember FromEndMember { get; internal set; }
 
         internal NavigationPropertyAccessor Accessor
         {
@@ -135,29 +106,29 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public IEnumerable<EdmProperty> GetDependentProperties()
         {
             // Get the declared type
-            AssociationType associationType = (AssociationType)this.RelationshipType;
+            var associationType = (AssociationType)RelationshipType;
             Debug.Assert(
-                         associationType.ReferentialConstraints != null,
-                         "ReferenceConstraints cannot be null");
+                associationType.ReferentialConstraints != null,
+                "ReferenceConstraints cannot be null");
 
             if (associationType.ReferentialConstraints.Count > 0)
             {
-                ReferentialConstraint rc = associationType.ReferentialConstraints[0];
-                RelationshipEndMember dependentEndMember = rc.ToRole;
+                var rc = associationType.ReferentialConstraints[0];
+                var dependentEndMember = rc.ToRole;
 
-                if (dependentEndMember.EdmEquals(this.FromEndMember))
+                if (dependentEndMember.EdmEquals(FromEndMember))
                 {
                     //Order the dependant properties in the order of principal end's key members.
                     var keyMembers = rc.FromRole.GetEntityType().KeyMembers;
                     var dependantProperties = new List<EdmProperty>(keyMembers.Count);
-                    for (int i = 0; i < keyMembers.Count; i++)
+                    for (var i = 0; i < keyMembers.Count; i++)
                     {
                         dependantProperties.Add(rc.ToProperties[rc.FromProperties.IndexOf(((EdmProperty)keyMembers[i]))]);
                     }
                     return dependantProperties.AsReadOnly();
                 }
             }
-            
+
             return Enumerable.Empty<EdmProperty>();
         }
     }

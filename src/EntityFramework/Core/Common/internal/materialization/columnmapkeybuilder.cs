@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Objects.ELinq;
-using System.Data.Entity.Core.Objects.Internal;
-using System.Data.Entity.Core.Query.InternalTrees;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-
-namespace System.Data.Entity.Core.Common.Internal.Materialization
+﻿namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects.ELinq;
+    using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Core.Query.InternalTrees;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.Text;
+
     /// <summary>
     /// Supports building a unique key for a column map so that compiled delegates (<see cref="ShaperFactory"/>)
     /// can be cached. The general rule: if the <see cref="Translator"/> cares about some property of
@@ -45,7 +44,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// </summary>
         internal static string GetColumnMapKey(ColumnMap columnMap, SpanIndex spanIndex)
         {
-            ColumnMapKeyBuilder builder = new ColumnMapKeyBuilder(spanIndex);
+            var builder = new ColumnMapKeyBuilder(spanIndex);
             columnMap.Accept(builder, 0);
             return builder._builder.ToString();
         }
@@ -85,15 +84,16 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 Append(prefix, type.NamespaceName);
                 Append(".", type.Name);
 
-                if (type.BuiltInTypeKind == BuiltInTypeKind.RowType)
+                if (type.BuiltInTypeKind
+                    == BuiltInTypeKind.RowType)
                 {
                     if (_spanIndex != null)
                     {
                         Append("<<");
-                        Dictionary<int, AssociationEndMember> spanMap = _spanIndex.GetSpanMap((RowType)type);
+                        var spanMap = _spanIndex.GetSpanMap((RowType)type);
                         if (null != spanMap)
                         {
-                            string separator = string.Empty;
+                            var separator = string.Empty;
                             foreach (var pair in spanMap)
                             {
                                 Append(separator);
@@ -138,8 +138,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             Append("{");
             if (null != elements)
             {
-                string separator = string.Empty;
-                foreach (ColumnMap element in elements)
+                var separator = string.Empty;
+                foreach (var element in elements)
                 {
                     Append(separator, element);
                     separator = ",";
@@ -155,16 +155,16 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             Append(",K", entityIdentity.Keys);
 
-            SimpleEntityIdentity simple = entityIdentity as SimpleEntityIdentity;
+            var simple = entityIdentity as SimpleEntityIdentity;
             if (null != simple)
             {
                 Append(",", simple.EntitySet);
             }
             else
             {
-                DiscriminatedEntityIdentity discriminated = (DiscriminatedEntityIdentity)entityIdentity;
+                var discriminated = (DiscriminatedEntityIdentity)entityIdentity;
                 Append("CM", discriminated.EntitySetColumnMap);
-                foreach (EntitySet entitySet in discriminated.EntitySetMap)
+                foreach (var entitySet in discriminated.EntitySetMap)
                 {
                     Append(",E", entitySet);
                 }
@@ -240,15 +240,16 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             Append("Ref-", columnMap.EntityIdentity);
 
             EntityType referencedEntityType;
-            bool isRefType = TypeHelpers.TryGetRefEntityType(columnMap.Type, out referencedEntityType);
+            var isRefType = TypeHelpers.TryGetRefEntityType(columnMap.Type, out referencedEntityType);
             Debug.Assert(isRefType, "RefColumnMap is not of RefType?");
             Append(",T", referencedEntityType);
         }
 
         internal override void Visit(ScalarColumnMap columnMap, int dummy)
         {
-            String description = String.Format(CultureInfo.InvariantCulture,
-                                            "S({0}-{1}:{2})", columnMap.CommandId, columnMap.ColumnPos, columnMap.Type.Identity);
+            var description = String.Format(
+                CultureInfo.InvariantCulture,
+                "S({0}-{1}:{2})", columnMap.CommandId, columnMap.ColumnPos, columnMap.Type.Identity);
             Append(description);
         }
 
@@ -271,7 +272,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             // FUTURE(CMeek):: consider using either a separate cache for MultipleDiscriminator OR make the delegate transparent
             Append(String.Format(CultureInfo.InvariantCulture, "MD-{0}", Guid.NewGuid()));
         }
-    
+
         #endregion
     }
 }

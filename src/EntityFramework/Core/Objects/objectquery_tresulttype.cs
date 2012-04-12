@@ -1,18 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data.Entity;
-using System.Data.Entity.Core.Objects.ELinq;
-using System.Data.Entity.Core.Objects.Internal;
-using System.Diagnostics;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-
 namespace System.Data.Entity.Core.Objects
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Data.Entity.Core.Objects.ELinq;
+    using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Resources;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Reflection;
 
     /// <summary>
     ///   This class implements strongly-typed queries at the object-layer through
@@ -41,7 +39,7 @@ namespace System.Data.Entity.Core.Objects
         public new ObjectResult<T> Execute(MergeOption mergeOption)
         {
             EntityUtil.CheckArgumentMergeOption(mergeOption);
-            return this.GetResults(mergeOption);
+            return GetResults(mergeOption);
         }
 
         /// <summary>
@@ -52,9 +50,9 @@ namespace System.Data.Entity.Core.Objects
         public ObjectQuery<T> Include(string path)
         {
             EntityUtil.CheckStringArgument(path, "path");
-            return new ObjectQuery<T>(this.QueryState.Include(this, path));
+            return new ObjectQuery<T>(QueryState.Include(this, path));
         }
-        
+
         #endregion
 
         #region IEnumerable<T> implementation
@@ -66,10 +64,10 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
-            ObjectResult<T> disposableEnumerable = this.GetResults(null);
+            var disposableEnumerable = GetResults(null);
             try
             {
-                IEnumerator<T> result = disposableEnumerable.GetEnumerator();
+                var result = disposableEnumerable.GetEnumerator();
                 return result;
             }
             catch
@@ -85,7 +83,7 @@ namespace System.Data.Entity.Core.Objects
         #endregion
 
         #region ObjectQuery Overrides
-        
+
         internal override IEnumerator GetEnumeratorInternal()
         {
             return ((IEnumerable<T>)this).GetEnumerator();
@@ -93,12 +91,12 @@ namespace System.Data.Entity.Core.Objects
 
         internal override IList GetIListSourceListInternal()
         {
-            return ((IListSource)this.GetResults(null)).GetList();
+            return ((IListSource)GetResults(null)).GetList();
         }
 
         internal override ObjectResult ExecuteInternal(MergeOption mergeOption)
         {
-            return this.GetResults(mergeOption);
+            return GetResults(mergeOption);
         }
 
         /// <summary>
@@ -117,40 +115,42 @@ namespace System.Data.Entity.Core.Objects
             // If this ObjectQuery is not backed by a LINQ Expression (it is an ESQL query),
             // then create a ConstantExpression that uses this ObjectQuery as its value.
             Expression retExpr;
-            if (!this.QueryState.TryGetExpression(out retExpr))
+            if (!QueryState.TryGetExpression(out retExpr))
             {
                 retExpr = Expression.Constant(this);
             }
 
-            Type objectQueryType = typeof(ObjectQuery<T>);
-            if (this.QueryState.UserSpecifiedMergeOption.HasValue)
+            var objectQueryType = typeof(ObjectQuery<T>);
+            if (QueryState.UserSpecifiedMergeOption.HasValue)
             {
-                MethodInfo mergeAsMethod = objectQueryType.GetMethod("MergeAs", BindingFlags.Instance | BindingFlags.NonPublic);
+                var mergeAsMethod = objectQueryType.GetMethod("MergeAs", BindingFlags.Instance | BindingFlags.NonPublic);
                 Debug.Assert(mergeAsMethod != null, "Could not retrieve ObjectQuery<T>.MergeAs method using reflection?");
                 retExpr = TypeSystem.EnsureType(retExpr, objectQueryType);
-                retExpr = Expression.Call(retExpr, mergeAsMethod, Expression.Constant(this.QueryState.UserSpecifiedMergeOption.Value));
+                retExpr = Expression.Call(retExpr, mergeAsMethod, Expression.Constant(QueryState.UserSpecifiedMergeOption.Value));
             }
 
-            if (null != this.QueryState.Span)
+            if (null != QueryState.Span)
             {
-                MethodInfo includeSpanMethod = objectQueryType.GetMethod("IncludeSpan", BindingFlags.Instance | BindingFlags.NonPublic);
+                var includeSpanMethod = objectQueryType.GetMethod("IncludeSpan", BindingFlags.Instance | BindingFlags.NonPublic);
                 Debug.Assert(includeSpanMethod != null, "Could not retrieve ObjectQuery<T>.IncludeSpan method using reflection?");
                 retExpr = TypeSystem.EnsureType(retExpr, objectQueryType);
-                retExpr = Expression.Call(retExpr, includeSpanMethod, Expression.Constant(this.QueryState.Span));
+                retExpr = Expression.Call(retExpr, includeSpanMethod, Expression.Constant(QueryState.Span));
             }
 
             return retExpr;
         }
 
         // Intended for use only in the MethodCallExpression produced for inline queries.
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"), SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "mergeOption")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "mergeOption")]
         internal ObjectQuery<T> MergeAs(MergeOption mergeOption)
         {
             throw EntityUtil.InvalidOperation(Strings.ELinq_MethodNotDirectlyCallable);
         }
 
         // Intended for use only in the MethodCallExpression produced for inline queries.
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"), SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "span")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "span")]
         internal ObjectQuery<T> IncludeSpan(Span span)
         {
             throw EntityUtil.InvalidOperation(Strings.ELinq_MethodNotDirectlyCallable);
@@ -162,16 +162,16 @@ namespace System.Data.Entity.Core.Objects
 
         private ObjectResult<T> GetResults(MergeOption? forMergeOption)
         {
-            this.QueryState.ObjectContext.EnsureConnection();
+            QueryState.ObjectContext.EnsureConnection();
 
             try
             {
-                ObjectQueryExecutionPlan execPlan = this.QueryState.GetExecutionPlan(forMergeOption);
-                return execPlan.Execute<T>(this.QueryState.ObjectContext, this.QueryState.Parameters);
+                var execPlan = QueryState.GetExecutionPlan(forMergeOption);
+                return execPlan.Execute<T>(QueryState.ObjectContext, QueryState.Parameters);
             }
             catch
             {
-                this.QueryState.ObjectContext.ReleaseConnection();
+                QueryState.ObjectContext.ReleaseConnection();
                 throw;
             }
         }

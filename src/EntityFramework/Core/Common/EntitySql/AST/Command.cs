@@ -1,10 +1,5 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
-    using System;
-    using System.Globalization;
-    using System.Collections;
-    using System.Collections.Generic;
-
     /// <summary>
     /// Represents eSQL command as node. 
     /// </summary>
@@ -48,5 +43,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
     ///     - UpdateStatement
     ///     - DeleteStatement
     /// </summary>
-    internal abstract class Statement : Node { }
+    internal abstract class Statement : Node
+    {
+    }
 }

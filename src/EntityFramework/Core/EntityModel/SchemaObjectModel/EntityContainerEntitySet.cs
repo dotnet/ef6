@@ -1,66 +1,53 @@
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Xml;
-    
+
     /// <summary>
     /// Represents an EntitySet element.
     /// </summary>
     internal sealed class EntityContainerEntitySet : SchemaElement
     {
-        private SchemaEntityType _entityType = null;
-        private string _unresolvedEntityTypeName = null;
-        private string _schema = null;
-        private string _table = null;
-        private EntityContainerEntitySetDefiningQuery _definingQueryElement = null;
+        private SchemaEntityType _entityType;
+        private string _unresolvedEntityTypeName;
+        private string _schema;
+        private string _table;
+        private EntityContainerEntitySetDefiningQuery _definingQueryElement;
 
-      
         /// <summary>
         /// Constructs an EntityContainerEntitySet
         /// </summary>
         /// <param name="parentElement">Reference to the schema element.</param>
-        public EntityContainerEntitySet( EntityContainer parentElement )
-            : base( parentElement )
+        public EntityContainerEntitySet(EntityContainer parentElement)
+            : base(parentElement)
         {
         }
 
         public override string FQName
         {
-            get
-            {
-                return this.ParentElement.Name + "." + this.Name;
-            }
+            get { return ParentElement.Name + "." + Name; }
         }
 
         public SchemaEntityType EntityType
         {
-            get
-            {
-                return _entityType;
-            }
+            get { return _entityType; }
         }
 
         public string DbSchema
         {
-            get
-            {
-                return _schema;
-            }
+            get { return _schema; }
         }
 
         public string Table
         {
-            get
-            {
-                return _table;
-            }
+            get { return _table; }
         }
 
         public string DefiningQuery
         {
-            get 
+            get
             {
                 if (_definingQueryElement != null)
                 {
@@ -76,7 +63,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             {
                 return true;
             }
-            else if (Schema.DataModel == SchemaDataModelOption.ProviderDataModel)
+            else if (Schema.DataModel
+                     == SchemaDataModelOption.ProviderDataModel)
             {
                 if (CanHandleElement(reader, XmlConstants.DefiningQuery))
                 {
@@ -84,7 +72,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                     return true;
                 }
             }
-            else if (Schema.DataModel == SchemaDataModelOption.EntityDataModel)
+            else if (Schema.DataModel
+                     == SchemaDataModelOption.EntityDataModel)
             {
                 if (CanHandleElement(reader, XmlConstants.ValueAnnotation))
                 {
@@ -113,7 +102,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 HandleEntityTypeAttribute(reader);
                 return true;
             }
-            if (Schema.DataModel == SchemaDataModelOption.ProviderDataModel)
+            if (Schema.DataModel
+                == SchemaDataModelOption.ProviderDataModel)
             {
                 if (CanHandleAttribute(reader, XmlConstants.Schema))
                 {
@@ -133,14 +123,15 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(reader != null);
 
-            EntityContainerEntitySetDefiningQuery query = new EntityContainerEntitySetDefiningQuery(this);
+            var query = new EntityContainerEntitySetDefiningQuery(this);
             query.Parse(reader);
             _definingQueryElement = query;
         }
 
         protected override void HandleNameAttribute(XmlReader reader)
         {
-            if (Schema.DataModel == SchemaDataModelOption.ProviderDataModel)
+            if (Schema.DataModel
+                == SchemaDataModelOption.ProviderDataModel)
             {
                 // ssdl will take anything, because this is the table name, and we
                 // can't predict what the vendor will need in a table name
@@ -151,16 +142,17 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 base.HandleNameAttribute(reader);
             }
         }
+
         /// <summary>
         /// The method that is called when a Type attribute is encountered.
         /// </summary>
         /// <param name="reader">An XmlReader positioned at the Type attribute.</param>
-        private void HandleEntityTypeAttribute( XmlReader reader )
+        private void HandleEntityTypeAttribute(XmlReader reader)
         {
-            Debug.Assert( reader != null );
+            Debug.Assert(reader != null);
 
-            ReturnValue<string> value = HandleDottedNameAttribute( reader, _unresolvedEntityTypeName );
-            if ( value.Succeeded )
+            var value = HandleDottedNameAttribute(reader, _unresolvedEntityTypeName);
+            if (value.Succeeded)
             {
                 _unresolvedEntityTypeName = value.Value;
             }
@@ -170,27 +162,28 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// The method that is called when a DbSchema attribute is encountered.
         /// </summary>
         /// <param name="reader">An XmlReader positioned at the Type attribute.</param>
-        private void HandleDbSchemaAttribute( XmlReader reader )
+        private void HandleDbSchemaAttribute(XmlReader reader)
         {
-            Debug.Assert(Schema.DataModel == SchemaDataModelOption.ProviderDataModel, "We shouldn't see this attribute unless we are parsing ssdl");
-            Debug.Assert( reader != null );
+            Debug.Assert(
+                Schema.DataModel == SchemaDataModelOption.ProviderDataModel, "We shouldn't see this attribute unless we are parsing ssdl");
+            Debug.Assert(reader != null);
 
-             _schema = reader.Value;
+            _schema = reader.Value;
         }
 
         /// <summary>
         /// The method that is called when a DbTable attribute is encountered.
         /// </summary>
         /// <param name="reader">An XmlReader positioned at the Type attribute.</param>
-        private void HandleTableAttribute( XmlReader reader )
+        private void HandleTableAttribute(XmlReader reader)
         {
-            Debug.Assert(Schema.DataModel == SchemaDataModelOption.ProviderDataModel, "We shouldn't see this attribute unless we are parsing ssdl");
-            Debug.Assert( reader != null );
+            Debug.Assert(
+                Schema.DataModel == SchemaDataModelOption.ProviderDataModel, "We shouldn't see this attribute unless we are parsing ssdl");
+            Debug.Assert(reader != null);
 
-             _table = reader.Value;
+            _table = reader.Value;
         }
-        
-        
+
         /// <summary>
         /// Used during the resolve phase to resolve the type name to the object that represents that type
         /// </summary>
@@ -198,19 +191,20 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             base.ResolveTopLevelNames();
 
-            if ( _entityType == null )
+            if (_entityType == null)
             {
                 SchemaType type = null;
-                if ( ! Schema.ResolveTypeName( this, _unresolvedEntityTypeName, out type) )
+                if (! Schema.ResolveTypeName(this, _unresolvedEntityTypeName, out type))
                 {
                     return;
                 }
 
                 _entityType = type as SchemaEntityType;
-                if ( _entityType == null )
+                if (_entityType == null)
                 {
-                    AddError( ErrorCode.InvalidPropertyType, EdmSchemaErrorSeverity.Error,
-                        System.Data.Entity.Resources.Strings.InvalidEntitySetType(_unresolvedEntityTypeName ) );
+                    AddError(
+                        ErrorCode.InvalidPropertyType, EdmSchemaErrorSeverity.Error,
+                        Strings.InvalidEntitySetType(_unresolvedEntityTypeName));
                     return;
                 }
             }
@@ -222,32 +216,35 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
             if (_entityType.KeyProperties.Count == 0)
             {
-                AddError(ErrorCode.EntitySetTypeHasNoKeys, EdmSchemaErrorSeverity.Error,
-                    System.Data.Entity.Resources.Strings.EntitySetTypeHasNoKeys(Name, _entityType.FQName));
+                AddError(
+                    ErrorCode.EntitySetTypeHasNoKeys, EdmSchemaErrorSeverity.Error,
+                    Strings.EntitySetTypeHasNoKeys(Name, _entityType.FQName));
             }
 
             if (_definingQueryElement != null)
             {
                 _definingQueryElement.Validate();
 
-                if (DbSchema != null || Table != null)
+                if (DbSchema != null
+                    || Table != null)
                 {
-                    AddError(ErrorCode.TableAndSchemaAreMutuallyExclusiveWithDefiningQuery, EdmSchemaErrorSeverity.Error,
-                        System.Data.Entity.Resources.Strings.TableAndSchemaAreMutuallyExclusiveWithDefiningQuery(FQName));
+                    AddError(
+                        ErrorCode.TableAndSchemaAreMutuallyExclusiveWithDefiningQuery, EdmSchemaErrorSeverity.Error,
+                        Strings.TableAndSchemaAreMutuallyExclusiveWithDefiningQuery(FQName));
                 }
             }
         }
 
         internal override SchemaElement Clone(SchemaElement parentElement)
         {
-            EntityContainerEntitySet entitySet = new EntityContainerEntitySet((EntityContainer)parentElement);
-            entitySet._definingQueryElement = this._definingQueryElement;
-            entitySet._entityType = this._entityType;
-            entitySet._schema = this._schema;
-            entitySet._table = this._table;
-            entitySet.Name = this.Name;
+            var entitySet = new EntityContainerEntitySet((EntityContainer)parentElement);
+            entitySet._definingQueryElement = _definingQueryElement;
+            entitySet._entityType = _entityType;
+            entitySet._schema = _schema;
+            entitySet._table = _table;
+            entitySet.Name = Name;
 
             return entitySet;
         }
-   }
+    }
 }

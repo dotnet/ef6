@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-
-namespace System.Data.Entity.Core.Metadata.Edm
+﻿namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Reflection;
+
     internal class OcAssemblyCache
     {
         /// <summary>
         /// cache for loaded assembly
         /// </summary>
-        private Dictionary<Assembly, ImmutableAssemblyCacheEntry> _conventionalOcCache;
+        private readonly Dictionary<Assembly, ImmutableAssemblyCacheEntry> _conventionalOcCache;
 
         internal OcAssemblyCache()
         {
@@ -43,6 +43,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             _conventionalOcCache.Add(assembly, cacheEntry);
         }
-
     }
 }

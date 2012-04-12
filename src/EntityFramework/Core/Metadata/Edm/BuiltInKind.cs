@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     /// List of all the built in types
     /// </summary>
@@ -135,7 +129,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// EdmMember Type Kind
         /// </summary>
         EdmMember,
-        
+
         /// <summary>
         /// Parameter Mode Kind
         /// </summary>

@@ -1,8 +1,6 @@
 ﻿namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
-    using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
     using System.Globalization;
@@ -10,10 +8,10 @@
     using System.Xml;
     using Som = System.Data.Entity.Core.EntityModel.SchemaObjectModel;
 
-    class RowTypePropertyElement : ModelFunctionTypeElement
+    internal class RowTypePropertyElement : ModelFunctionTypeElement
     {
-        private ModelFunctionTypeElement _typeSubElement = null;
-        private bool _isRefType = false;
+        private ModelFunctionTypeElement _typeSubElement;
+        private bool _isRefType;
         private CollectionKind _collectionKind = CollectionKind.None;
 
         internal RowTypePropertyElement(SchemaElement parentElement)
@@ -56,7 +54,9 @@
 
             string type;
             if (!Utils.GetString(Schema, reader, out type))
+            {
                 return;
+            }
 
             TypeModifier typeModifier;
             Function.RemoveTypeModifier(ref type, out typeModifier, out _isRefType);
@@ -67,12 +67,19 @@
                     _collectionKind = CollectionKind.Bag;
                     break;
                 default:
-                    Debug.Assert(typeModifier == TypeModifier.None, string.Format(CultureInfo.CurrentCulture, "Type is not valid for property {0}: {1}. The modifier for the type cannot be used in this context.", FQName, reader.Value));
+                    Debug.Assert(
+                        typeModifier == TypeModifier.None,
+                        string.Format(
+                            CultureInfo.CurrentCulture,
+                            "Type is not valid for property {0}: {1}. The modifier for the type cannot be used in this context.", FQName,
+                            reader.Value));
                     break;
             }
 
             if (!Utils.ValidateDottedName(Schema, reader, type))
+            {
                 return;
+            }
 
             _unresolvedType = type;
         }
@@ -181,7 +188,8 @@
             return _typeUsage;
         }
 
-        internal override bool ResolveNameAndSetTypeUsage(Converter.ConversionCache convertedItemCache, Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
+        internal override bool ResolveNameAndSetTypeUsage(
+            Converter.ConversionCache convertedItemCache, Dictionary<SchemaElement, GlobalItem> newGlobalItems)
         {
             if (_typeUsage == null)
             {
@@ -196,20 +204,22 @@
                         _typeUsageBuilder.ValidateAndSetTypeUsage(_type as ScalarType, false);
                         _typeUsage = _typeUsageBuilder.TypeUsage;
                     }
-                    else  //Try to resolve edm type. If not now, it will resolve in the second pass
+                    else //Try to resolve edm type. If not now, it will resolve in the second pass
                     {
-                        EdmType edmType = (EdmType)Converter.LoadSchemaElement(_type, _type.Schema.ProviderManifest, convertedItemCache, newGlobalItems);
+                        var edmType =
+                            (EdmType)Converter.LoadSchemaElement(_type, _type.Schema.ProviderManifest, convertedItemCache, newGlobalItems);
                         if (edmType != null)
                         {
                             if (_isRefType)
                             {
-                                EntityType entityType = edmType as EntityType;
+                                var entityType = edmType as EntityType;
                                 Debug.Assert(entityType != null);
                                 _typeUsage = TypeUsage.Create(new RefType(entityType));
                             }
                             else
                             {
-                                _typeUsageBuilder.ValidateAndSetTypeUsage(edmType, false); //use typeusagebuilder so dont lose facet information
+                                _typeUsageBuilder.ValidateAndSetTypeUsage(edmType, false);
+                                    //use typeusagebuilder so dont lose facet information
                                 _typeUsage = _typeUsageBuilder.TypeUsage;
                             }
                         }
@@ -233,7 +243,8 @@
         {
             if (_type != null)
             {
-                if (_type is ScalarType == false || _isRefType || _collectionKind != CollectionKind.None)
+                if (_type is ScalarType == false || _isRefType
+                    || _collectionKind != CollectionKind.None)
                 {
                     return false;
                 }

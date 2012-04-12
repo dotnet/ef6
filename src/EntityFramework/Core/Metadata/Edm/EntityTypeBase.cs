@@ -1,7 +1,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System;
     using System.Collections.Generic;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
 
     /// <summary>
@@ -10,6 +10,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public abstract class EntityTypeBase : StructuralType
     {
         #region Constructors
+
         /// <summary>
         /// Initializes a new instance of Entity Type
         /// </summary>
@@ -23,14 +24,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             _keyMembers = new ReadOnlyMetadataCollection<EdmMember>(new MetadataCollection<EdmMember>());
         }
+
         #endregion
 
         #region Fields
+
         private readonly ReadOnlyMetadataCollection<EdmMember> _keyMembers;
         private string[] _keyMemberNames;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the list of all the key members for this entity type
         /// </summary>
@@ -42,10 +47,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 // Since we allow entity types with no keys, we should first check if there are 
                 // keys defined on the base class. If yes, then return the keys otherwise, return
                 // the keys defined on this class
-                if (this.BaseType != null && ((EntityTypeBase)this.BaseType).KeyMembers.Count != 0)
+                if (BaseType != null
+                    && ((EntityTypeBase)BaseType).KeyMembers.Count != 0)
                 {
                     Debug.Assert(_keyMembers.Count == 0, "Since the base type have keys, current type cannot have keys defined");
-                    return ((EntityTypeBase)this.BaseType).KeyMembers;
+                    return ((EntityTypeBase)BaseType).KeyMembers;
                 }
                 else
                 {
@@ -62,17 +68,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                String[] keyNames = _keyMemberNames;
+                var keyNames = _keyMemberNames;
                 if (keyNames == null)
                 {
-                    keyNames = new string[this.KeyMembers.Count];
-                    for (int i = 0; i < keyNames.Length; i++)
+                    keyNames = new string[KeyMembers.Count];
+                    for (var i = 0; i < keyNames.Length; i++)
                     {
-                        keyNames[i] = this.KeyMembers[i].Name;
+                        keyNames[i] = KeyMembers[i].Name;
                     }
                     _keyMemberNames = keyNames;
                 }
-                Debug.Assert(_keyMemberNames.Length == this.KeyMembers.Count, "This list is out of sync with the key members count. This property was called before all the keymembers were added");
+                Debug.Assert(
+                    _keyMemberNames.Length == KeyMembers.Count,
+                    "This list is out of sync with the key members count. This property was called before all the keymembers were added");
                 return _keyMemberNames;
             }
         }
@@ -80,6 +88,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Returns the list of all the key members for this entity type
         /// </summary>
@@ -90,12 +99,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             EntityUtil.GenericCheckArgumentNull(member, "member");
             Util.ThrowIfReadOnly(this);
-            Debug.Assert(this.BaseType == null || ((EntityTypeBase)this.BaseType).KeyMembers.Count == 0,
+            Debug.Assert(
+                BaseType == null || ((EntityTypeBase)BaseType).KeyMembers.Count == 0,
                 "Key cannot be added if there is a basetype with keys");
 
             if (!Members.Contains(member))
             {
-                this.AddMember(member);
+                AddMember(member);
             }
             _keyMembers.Source.Add(member);
         }
@@ -117,20 +127,22 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="members">members for this type</param>
         /// <param name="entityType">the membersCollection to which the members should be added</param>
-        internal static void CheckAndAddMembers(IEnumerable<EdmMember> members,
-                                                EntityType entityType)
+        internal static void CheckAndAddMembers(
+            IEnumerable<EdmMember> members,
+            EntityType entityType)
         {
-            foreach (EdmMember member in members)
+            foreach (var member in members)
             {
                 // Check for each property to be non-null
                 if (null == member)
+                {
                     throw EntityUtil.CollectionParameterElementIsNull("members");
+                }
 
                 // Add the property to the member collection
                 entityType.AddMember(member);
             }
         }
-
 
         /// <summary>
         /// Checks for each key member to be non-null 
@@ -145,7 +157,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="keyMembers">the list of keys (member names) to be added for the given type</param>
         internal void CheckAndAddKeyMembers(IEnumerable<String> keyMembers)
         {
-            foreach (string keyMember in keyMembers)
+            foreach (var keyMember in keyMembers)
             {
                 // Check for each keymember to be non-null
                 if (null == keyMember)
@@ -156,7 +168,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 EdmMember member;
                 if (!Members.TryGetValue(keyMember, false, out member))
                 {
-                    throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.InvalidKeyMember(keyMember)); //--- to do, identify the right exception to throw here
+                    throw EntityUtil.Argument(Strings.InvalidKeyMember(keyMember)); //--- to do, identify the right exception to throw here
                 }
                 // Add the key member to the key member collection 
                 AddKeyMember(member);
@@ -164,6 +176,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         #endregion
-
     }
 }

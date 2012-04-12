@@ -1,9 +1,9 @@
 namespace System.Data.Entity.Core.Common
 {
     using System.Collections.Generic;
-    using System.Data;
-    using System.Data.Entity.Core;
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
 
     /// <summary>
@@ -11,8 +11,7 @@ namespace System.Data.Entity.Core.Common
     /// </summary>
     public class DataRecordInfo
     {
-
-        private readonly System.Collections.ObjectModel.ReadOnlyCollection<FieldMetadata> _fieldMetadata;
+        private readonly ReadOnlyCollection<FieldMetadata> _fieldMetadata;
         private readonly TypeUsage _metadata;
 
         /// <summary>
@@ -24,29 +23,34 @@ namespace System.Data.Entity.Core.Common
         public DataRecordInfo(TypeUsage metadata, IEnumerable<EdmMember> memberInfo)
         {
             EntityUtil.CheckArgumentNull(metadata, "metadata");
-            IBaseList<EdmMember> members = TypeHelpers.GetAllStructuralMembers(metadata.EdmType);
+            var members = TypeHelpers.GetAllStructuralMembers(metadata.EdmType);
 
-            List<FieldMetadata> fieldList = new List<FieldMetadata>(members.Count);
+            var fieldList = new List<FieldMetadata>(members.Count);
 
             if (null != memberInfo)
             {
-                foreach (EdmMember member in memberInfo)
+                foreach (var member in memberInfo)
                 {
                     if ((null != member) &&
-                        (0 <= members.IndexOf(member)) &&
-                        ((BuiltInTypeKind.EdmProperty == member.BuiltInTypeKind) ||         // for ComplexType, EntityType; BuiltTypeKind.NaviationProperty not allowed
+                        (0 <= members.IndexOf(member))
+                        &&
+                        ((BuiltInTypeKind.EdmProperty == member.BuiltInTypeKind)
+                         || // for ComplexType, EntityType; BuiltTypeKind.NaviationProperty not allowed
                          (BuiltInTypeKind.AssociationEndMember == member.BuiltInTypeKind))) // for AssociationType
-                    {   // each memberInfo must be non-null and be part of Properties or AssociationEndMembers
+                    {
+                        // each memberInfo must be non-null and be part of Properties or AssociationEndMembers
                         //validate that EdmMembers are from the same type or base type of the passed in metadata.
-                        if((member.DeclaringType != metadata.EdmType) && 
+                        if ((member.DeclaringType != metadata.EdmType)
+                            &&
                             !member.DeclaringType.IsBaseTypeOf(metadata.EdmType))
                         {
-                            throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.EdmMembersDefiningTypeDoNotAgreeWithMetadataType);
+                            throw EntityUtil.Argument(Strings.EdmMembersDefiningTypeDoNotAgreeWithMetadataType);
                         }
                         fieldList.Add(new FieldMetadata(fieldList.Count, member));
                     }
                     else
-                    {   // expecting empty memberInfo for non-structural && non-null member part of members if structural
+                    {
+                        // expecting empty memberInfo for non-structural && non-null member part of members if structural
                         throw EntityUtil.Argument("memberInfo");
                     }
                 }
@@ -54,9 +58,10 @@ namespace System.Data.Entity.Core.Common
 
             // expecting structural types to have something at least 1 property
             // (((null == structural) && (0 == fieldList.Count)) || ((null != structural) && (0 < fieldList.Count)))
-            if (Helper.IsStructuralType(metadata.EdmType) == (0 < fieldList.Count))
+            if (Helper.IsStructuralType(metadata.EdmType)
+                == (0 < fieldList.Count))
             {
-                _fieldMetadata = new System.Collections.ObjectModel.ReadOnlyCollection<FieldMetadata>(fieldList);
+                _fieldMetadata = new ReadOnlyCollection<FieldMetadata>(fieldList);
                 _metadata = metadata;
             }
             else
@@ -72,21 +77,20 @@ namespace System.Data.Entity.Core.Common
         {
             Debug.Assert(null != metadata, "invalid attempt to instantiate DataRecordInfo with null metadata information");
 
-            IBaseList<EdmMember> structuralMembers = TypeHelpers.GetAllStructuralMembers(metadata);
-            FieldMetadata[] fieldList = new FieldMetadata[structuralMembers.Count];
-            for (int i = 0; i < fieldList.Length; ++i)
+            var structuralMembers = TypeHelpers.GetAllStructuralMembers(metadata);
+            var fieldList = new FieldMetadata[structuralMembers.Count];
+            for (var i = 0; i < fieldList.Length; ++i)
             {
-                EdmMember member = structuralMembers[i];
-                Debug.Assert((BuiltInTypeKind.EdmProperty == member.BuiltInTypeKind) ||
-                             (BuiltInTypeKind.AssociationEndMember == member.BuiltInTypeKind),
-                             "unexpected BuiltInTypeKind for member");
+                var member = structuralMembers[i];
+                Debug.Assert(
+                    (BuiltInTypeKind.EdmProperty == member.BuiltInTypeKind) ||
+                    (BuiltInTypeKind.AssociationEndMember == member.BuiltInTypeKind),
+                    "unexpected BuiltInTypeKind for member");
                 fieldList[i] = new FieldMetadata(i, member);
             }
-            _fieldMetadata = new System.Collections.ObjectModel.ReadOnlyCollection<FieldMetadata>(fieldList);
+            _fieldMetadata = new ReadOnlyCollection<FieldMetadata>(fieldList);
             _metadata = metadata;
-
         }
-
 
         /// <summary>
         /// Reusing TypeUsage and FieldMetadata from another EntityRecordInfo which has all the same info
@@ -101,12 +105,9 @@ namespace System.Data.Entity.Core.Common
         /// <summary>
         /// Column information.
         /// </summary>
-        public System.Collections.ObjectModel.ReadOnlyCollection<FieldMetadata> FieldMetadata
+        public ReadOnlyCollection<FieldMetadata> FieldMetadata
         {
-            get
-            {
-                return _fieldMetadata;
-            }
+            get { return _fieldMetadata; }
         }
 
         /// <summary>
@@ -114,10 +115,7 @@ namespace System.Data.Entity.Core.Common
         /// </summary>
         public TypeUsage RecordType
         {
-            get
-            {
-                return _metadata;
-            }
+            get { return _metadata; }
         }
     }
 }

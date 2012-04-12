@@ -1,6 +1,8 @@
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
+    using System.Xml;
 
     /// <summary>
     /// Summary description for NestedType.
@@ -8,22 +10,29 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     internal sealed class SchemaComplexType : StructuredType
     {
         #region Public Methods
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="parentElement"></param>
         internal SchemaComplexType(Schema parentElement)
-        :   base(parentElement)
+            : base(parentElement)
         {
-            if (Schema.DataModel == SchemaDataModelOption.EntityDataModel)
+            if (Schema.DataModel
+                == SchemaDataModelOption.EntityDataModel)
+            {
                 OtherContent.Add(Schema.SchemaSource);
+            }
         }
+
         #endregion
 
         #region Public Properties
+
         #endregion
 
         #region Protected Methods
+
         /// <summary>
         /// 
         /// </summary>
@@ -31,22 +40,23 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             base.ResolveTopLevelNames();
 
-            if ( BaseType != null )
+            if (BaseType != null)
             {
-                if ( !(BaseType is SchemaComplexType) )
+                if (!(BaseType is SchemaComplexType))
                 {
-                    AddError( ErrorCode.InvalidBaseType, EdmSchemaErrorSeverity.Error,
-                        System.Data.Entity.Resources.Strings.InvalidBaseTypeForNestedType(BaseType.FQName,FQName));
+                    AddError(
+                        ErrorCode.InvalidBaseType, EdmSchemaErrorSeverity.Error,
+                        Strings.InvalidBaseTypeForNestedType(BaseType.FQName, FQName));
                 }
             }
         }
 
-        protected override bool HandleElement(Xml.XmlReader reader)
+        protected override bool HandleElement(XmlReader reader)
         {
             if (base.HandleElement(reader))
             {
                 return true;
-            } 
+            }
             else if (CanHandleElement(reader, XmlConstants.ValueAnnotation))
             {
                 // EF does not support this EDM 3.0 element, so ignore it.
@@ -61,6 +71,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             }
             return false;
         }
+
         #endregion
     }
 }

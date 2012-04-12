@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Diagnostics;
-using System.Text;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     /// <summary>
@@ -25,8 +18,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _typeUsage = memberTypeUsage;
         }
 
-        private TypeUsage _typeUsage;
-        private string _name;
+        private readonly TypeUsage _typeUsage;
+        private readonly string _name;
         private StructuralType _declaringType;
 
         /// <summary>
@@ -34,10 +27,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal override string Identity
         {
-            get
-            {
-                return this.Name;
-            }
+            get { return Name; }
         }
 
         /// <summary>
@@ -46,10 +36,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public String Name
         {
-            get
-            {
-                return _name;
-            }
+            get { return _name; }
         }
 
         /// <summary>
@@ -57,10 +44,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         public StructuralType DeclaringType
         {
-            get
-            {
-                return _declaringType;
-            }
+            get { return _declaringType; }
         }
 
         /// <summary>
@@ -70,10 +54,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.TypeUsage, false)]
         public TypeUsage TypeUsage
         {
-            get
-            {
-                return _typeUsage;
-            }
+            get { return _typeUsage; }
         }
 
         /// <summary>
@@ -84,7 +65,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             return Name;
         }
-
 
         /// <summary>
         /// Sets the member to read only mode. Once this is done, there are no changes
@@ -115,9 +95,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                Facet item=null;
+                Facet item = null;
                 if (TypeUsage.Facets.TryGetValue(EdmProviderManifest.StoreGeneratedPatternFacetName, false, out item))
-                { 
+                {
                     return ((StoreGeneratedPattern)item.Value) == StoreGeneratedPattern.Computed;
                 }
                 return false;
@@ -133,7 +113,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 Facet item = null;
                 if (TypeUsage.Facets.TryGetValue(EdmProviderManifest.StoreGeneratedPatternFacetName, false, out item))
-                { 
+                {
                     return ((StoreGeneratedPattern)item.Value) == StoreGeneratedPattern.Identity;
                 }
                 return false;

@@ -1,6 +1,5 @@
 namespace System.Data.Entity.Core.Common.QueryCache
 {
-    using System;
     using System.Data.Entity.Core.Objects;
     using System.Diagnostics;
 
@@ -59,14 +58,14 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// <param name="mergeOption">The merge option in effect. Required for result assembly.</param>
         /// <param name="useCSharpNullComparisonBehavior">Flag indicating if the C# behavior should be used for null comparisons</param>
         /// <param name="resultType">The type of each result item - for a given query as a CLR type instance</param>
-        internal LinqQueryCacheKey(string expressionKey,
-                                   int parameterCount,
-                                   string parametersToken,
-                                   string includePathsToken,
-                                   MergeOption mergeOption,
-                                   bool useCSharpNullComparisonBehavior,
-                                   Type resultType)
-            : base()
+        internal LinqQueryCacheKey(
+            string expressionKey,
+            int parameterCount,
+            string parametersToken,
+            string includePathsToken,
+            MergeOption mergeOption,
+            bool useCSharpNullComparisonBehavior,
+            Type resultType)
         {
             Debug.Assert(null != expressionKey, "expressionKey must not be null");
 
@@ -78,7 +77,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
             _resultType = resultType;
             _useCSharpNullComparisonBehavior = useCSharpNullComparisonBehavior;
 
-            int combinedHash = _expressionKey.GetHashCode() ^
+            var combinedHash = _expressionKey.GetHashCode() ^
                                _mergeOption.GetHashCode();
 
             if (_parametersToken != null)
@@ -102,21 +101,22 @@ namespace System.Data.Entity.Core.Common.QueryCache
         public override bool Equals(object otherObject)
         {
             Debug.Assert(null != otherObject, "otherObject must not be null");
-            if (typeof(LinqQueryCacheKey) != otherObject.GetType())
+            if (typeof(LinqQueryCacheKey)
+                != otherObject.GetType())
             {
                 return false;
             }
 
-            LinqQueryCacheKey otherObjectQueryCacheKey = (LinqQueryCacheKey)otherObject;
+            var otherObjectQueryCacheKey = (LinqQueryCacheKey)otherObject;
 
             // also use result type...
             return (_parameterCount == otherObjectQueryCacheKey._parameterCount) &&
                    (_mergeOption == otherObjectQueryCacheKey._mergeOption) &&
-                    Equals(otherObjectQueryCacheKey._expressionKey, _expressionKey) &&
-                    Equals(otherObjectQueryCacheKey._includePathsToken, _includePathsToken) &&
-                    Equals(otherObjectQueryCacheKey._parametersToken, _parametersToken) &&
-                    Equals(otherObjectQueryCacheKey._resultType, _resultType) &&
-                    Equals(otherObjectQueryCacheKey._useCSharpNullComparisonBehavior, _useCSharpNullComparisonBehavior);
+                   Equals(otherObjectQueryCacheKey._expressionKey, _expressionKey) &&
+                   Equals(otherObjectQueryCacheKey._includePathsToken, _includePathsToken) &&
+                   Equals(otherObjectQueryCacheKey._parametersToken, _parametersToken) &&
+                   Equals(otherObjectQueryCacheKey._resultType, _resultType) &&
+                   Equals(otherObjectQueryCacheKey._useCSharpNullComparisonBehavior, _useCSharpNullComparisonBehavior);
         }
 
         /// <summary>
@@ -132,7 +132,13 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// </summary>
         public override string ToString()
         {
-            return String.Join("|", new string[] { _expressionKey, _parametersToken, _includePathsToken, Enum.GetName(typeof(MergeOption), _mergeOption), _useCSharpNullComparisonBehavior.ToString() });
+            return String.Join(
+                "|",
+                new[]
+                    {
+                        _expressionKey, _parametersToken, _includePathsToken, Enum.GetName(typeof(MergeOption), _mergeOption),
+                        _useCSharpNullComparisonBehavior.ToString()
+                    });
         }
     }
 }

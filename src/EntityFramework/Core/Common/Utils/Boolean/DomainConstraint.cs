@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
-
-namespace System.Data.Entity.Core.Common.Utils.Boolean
+﻿namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
+    using System.Collections.Generic;
+    using System.Diagnostics;
+
     /// <summary>
     /// Represents a variable with finite domain, e.g., c in {1, 2, 3}
     /// </summary>
@@ -30,21 +27,31 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
             _identifier = identifier;
             _domain = domain.AsReadOnly();
             _identifierComparer = identifierComparer ?? EqualityComparer<T_Variable>.Default;
-            int domainHashCode = _domain.GetElementsHashCode();
-            int identifierHashCode = _identifierComparer.GetHashCode(_identifier);
+            var domainHashCode = _domain.GetElementsHashCode();
+            var identifierHashCode = _identifierComparer.GetHashCode(_identifier);
             _hashCode = domainHashCode ^ identifierHashCode;
         }
-        internal DomainVariable(T_Variable identifier, Set<T_Element> domain) : this(identifier, domain, null) { }
+
+        internal DomainVariable(T_Variable identifier, Set<T_Element> domain)
+            : this(identifier, domain, null)
+        {
+        }
 
         /// <summary>
         /// Gets the variable.
         /// </summary>
-        internal T_Variable Identifier { get { return _identifier; } }
+        internal T_Variable Identifier
+        {
+            get { return _identifier; }
+        }
 
         /// <summary>
         /// Gets the domain of this variable.
         /// </summary>
-        internal Set<T_Element> Domain { get { return _domain; } }
+        internal Set<T_Element> Domain
+        {
+            get { return _domain; }
+        }
 
         public override int GetHashCode()
         {
@@ -53,16 +60,26 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         public override bool Equals(object obj)
         {
-            if (Object.ReferenceEquals(this, obj)) { return true; }
-            DomainVariable<T_Variable, T_Element> other = obj as DomainVariable<T_Variable, T_Element>;
-            if (null == other) { return false; }
-            if (_hashCode != other._hashCode) { return false; }
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            var other = obj as DomainVariable<T_Variable, T_Element>;
+            if (null == other)
+            {
+                return false;
+            }
+            if (_hashCode != other._hashCode)
+            {
+                return false;
+            }
             return (_identifierComparer.Equals(_identifier, other._identifier) && _domain.SetEquals(other._domain));
         }
 
         public override string ToString()
         {
-            return StringUtil.FormatInvariant("{0}{{{1}}}",
+            return StringUtil.FormatInvariant(
+                "{0}{{{1}}}",
                 _identifier.ToString(), _domain);
         }
     }
@@ -97,19 +114,25 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// Constructor supporting a singleton range domain constraint
         /// </summary>
         internal DomainConstraint(DomainVariable<T_Variable, T_Element> variable, T_Element element)
-            : this(variable, new Set<T_Element>(new T_Element[] { element }).MakeReadOnly())
+            : this(variable, new Set<T_Element>(new[] { element }).MakeReadOnly())
         {
         }
 
         /// <summary>
         /// Gets the variable for this constraint.
         /// </summary>
-        internal DomainVariable<T_Variable, T_Element> Variable { get { return _variable; } }
+        internal DomainVariable<T_Variable, T_Element> Variable
+        {
+            get { return _variable; }
+        }
 
         /// <summary>
         /// Get the range for this constraint.
         /// </summary>
-        internal Set<T_Element> Range { get { return _range; } }
+        internal Set<T_Element> Range
+        {
+            get { return _range; }
+        }
 
         /// <summary>
         /// Inverts this constraint (this iff. !result)
@@ -118,16 +141,26 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// <returns></returns>
         internal DomainConstraint<T_Variable, T_Element> InvertDomainConstraint()
         {
-            return new DomainConstraint<T_Variable, T_Element>(_variable,
+            return new DomainConstraint<T_Variable, T_Element>(
+                _variable,
                 _variable.Domain.Difference(_range).AsReadOnly());
         }
 
         public override bool Equals(object obj)
         {
-            if (Object.ReferenceEquals(this, obj)) { return true; }
-            DomainConstraint<T_Variable, T_Element> other = obj as DomainConstraint<T_Variable, T_Element>;
-            if (null == other) { return false; }
-            if (_hashCode != other._hashCode) { return false; }
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            var other = obj as DomainConstraint<T_Variable, T_Element>;
+            if (null == other)
+            {
+                return false;
+            }
+            if (_hashCode != other._hashCode)
+            {
+                return false;
+            }
             return (_range.SetEquals(other._range) && _variable.Equals(other._variable));
         }
 
@@ -138,7 +171,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         public override string ToString()
         {
-            return StringUtil.FormatInvariant("{0} in [{1}]",
+            return StringUtil.FormatInvariant(
+                "{0} in [{1}]",
                 _variable, _range);
         }
     }

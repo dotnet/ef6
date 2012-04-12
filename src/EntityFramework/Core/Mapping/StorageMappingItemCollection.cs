@@ -1,30 +1,33 @@
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity;
-using System.Data.Entity.Core.Mapping.Update.Internal;
-using System.Data.Entity.Core.Mapping.ViewGeneration;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.Versioning;
-using System.Xml;
 using som = System.Data.Entity.Core.EntityModel.SchemaObjectModel;
 
 namespace System.Data.Entity.Core.Mapping
 {
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Mapping.Update.Internal;
+    using System.Data.Entity.Core.Mapping.ViewGeneration;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using OfTypeQVCacheKey = Pair<EntitySetBase, Pair<EntityTypeBase, bool>>;
+    using System.Globalization;
+    using System.Linq;
+    using System.Runtime.Versioning;
+    using System.Xml;
+    using OfTypeQVCacheKey =
+        System.Data.Entity.Core.Common.Utils.Pair<Metadata.Edm.EntitySetBase, Common.Utils.Pair<Metadata.Edm.EntityTypeBase, bool>>;
 
     /// <summary>
     /// Class for representing a collection of items in Storage Mapping( CS Mapping) space.
     /// </summary>
-    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling"), CLSCompliant(false)]
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
+    [CLSCompliant(false)]
     public partial class StorageMappingItemCollection : MappingItemCollection
     {
         #region Fields
+
         //EdmItemCollection that is associated with the MSL Loader.
         private EdmItemCollection m_edmCollection;
 
@@ -43,22 +46,26 @@ namespace System.Data.Entity.Core.Mapping
         // For e.g. If the CSpace member of type Edm.Int32 maps to a sspace member of type SqlServer.bigint, then the KeyValuePair
         // for the cspace member will contain SqlServer.int (store equivalent for Edm.Int32) and SqlServer.bigint (Actual store type
         // to which the member was mapped to)
-        private Dictionary<EdmMember, KeyValuePair<TypeUsage, TypeUsage>> m_memberMappings = new Dictionary<EdmMember, KeyValuePair<TypeUsage, TypeUsage>>();
+        private readonly Dictionary<EdmMember, KeyValuePair<TypeUsage, TypeUsage>> m_memberMappings =
+            new Dictionary<EdmMember, KeyValuePair<TypeUsage, TypeUsage>>();
+
         private ViewLoader _viewLoader;
 
         internal enum InterestingMembersKind
-        { 
-            RequiredOriginalValueMembers,   // legacy - used by the obsolete GetRequiredOriginalValueMembers
-            FullUpdate,                     // Interesting members in case of full update scenario
-            PartialUpdate                   // Interesting members in case of partial update scenario
+        {
+            RequiredOriginalValueMembers, // legacy - used by the obsolete GetRequiredOriginalValueMembers
+            FullUpdate, // Interesting members in case of full update scenario
+            PartialUpdate // Interesting members in case of partial update scenario
         };
 
-        private ConcurrentDictionary<Tuple<EntitySetBase, EntityTypeBase, InterestingMembersKind>, ReadOnlyCollection<EdmMember>> _cachedInterestingMembers =
-            new ConcurrentDictionary<Tuple<EntitySetBase, EntityTypeBase, InterestingMembersKind>, ReadOnlyCollection<EdmMember>>();
+        private readonly ConcurrentDictionary<Tuple<EntitySetBase, EntityTypeBase, InterestingMembersKind>, ReadOnlyCollection<EdmMember>>
+            _cachedInterestingMembers =
+                new ConcurrentDictionary<Tuple<EntitySetBase, EntityTypeBase, InterestingMembersKind>, ReadOnlyCollection<EdmMember>>();
 
         #endregion
 
         #region Constructors
+
         /// <summary>
         /// constructor that takes in a list of folder or files or a mix of both and
         /// creates metadata for mapping in all the files.
@@ -67,9 +74,11 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="storeCollection"></param>
         /// <param name="filePaths"></param>
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file path names which are a Machine resource
-        [ResourceConsumption(ResourceScope.Machine)] //For MetadataArtifactLoader.CreateCompositeFromFilePaths method call but we do not create the file paths in this method
+        [ResourceConsumption(ResourceScope.Machine)]
+        //For MetadataArtifactLoader.CreateCompositeFromFilePaths method call but we do not create the file paths in this method
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public StorageMappingItemCollection(EdmItemCollection edmCollection, StoreItemCollection storeCollection,
+        public StorageMappingItemCollection(
+            EdmItemCollection edmCollection, StoreItemCollection storeCollection,
             params string[] filePaths)
             : base(DataSpace.CSSpace)
         {
@@ -77,8 +86,8 @@ namespace System.Data.Entity.Core.Mapping
             EntityUtil.CheckArgumentNull(storeCollection, "storeCollection");
             EntityUtil.CheckArgumentNull(filePaths, "filePaths");
 
-            this.m_edmCollection = edmCollection;
-            this.m_storeItemCollection = storeCollection;
+            m_edmCollection = edmCollection;
+            m_storeItemCollection = storeCollection;
 
             // Wrap the file paths in instances of the MetadataArtifactLoader class, which provides
             // an abstraction and a uniform interface over a diverse set of metadata artifacts.
@@ -90,8 +99,9 @@ namespace System.Data.Entity.Core.Mapping
                 composite = MetadataArtifactLoader.CreateCompositeFromFilePaths(filePaths, XmlConstants.CSSpaceSchemaExtension);
                 readers = composite.CreateReaders(DataSpace.CSSpace);
 
-                this.Init(edmCollection, storeCollection, readers,
-                          composite.GetPaths(DataSpace.CSSpace), true /*throwOnError*/);
+                Init(
+                    edmCollection, storeCollection, readers,
+                    composite.GetPaths(DataSpace.CSSpace), true /*throwOnError*/);
             }
             finally
             {
@@ -110,21 +120,22 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="storeCollection">The store metadata collection that this mapping is to use</param>
         /// <param name="xmlReaders">The XmlReaders to load mapping from</param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public StorageMappingItemCollection(EdmItemCollection edmCollection,
-                                            StoreItemCollection storeCollection,
-                                            IEnumerable<XmlReader> xmlReaders)
+        public StorageMappingItemCollection(
+            EdmItemCollection edmCollection,
+            StoreItemCollection storeCollection,
+            IEnumerable<XmlReader> xmlReaders)
             : base(DataSpace.CSSpace)
         {
             EntityUtil.CheckArgumentNull(xmlReaders, "xmlReaders");
 
-            MetadataArtifactLoader composite = MetadataArtifactLoader.CreateCompositeFromXmlReaders(xmlReaders);
+            var composite = MetadataArtifactLoader.CreateCompositeFromXmlReaders(xmlReaders);
 
-            this.Init(edmCollection,
-                      storeCollection,
-                      composite.GetReaders(),   // filter out duplicates
-                      composite.GetPaths(),
-                      true /* throwOnError*/);
-
+            Init(
+                edmCollection,
+                storeCollection,
+                composite.GetReaders(), // filter out duplicates
+                composite.GetPaths(),
+                true /* throwOnError*/);
         }
 
         /// <summary>
@@ -139,11 +150,12 @@ namespace System.Data.Entity.Core.Mapping
         // referenced by System.Data.Entity.Design.dll
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        internal StorageMappingItemCollection(EdmItemCollection edmCollection,
-                                              StoreItemCollection storeCollection,
-                                              IEnumerable<XmlReader> xmlReaders,
-                                              List<string> filePaths,
-                                              out IList<EdmSchemaError> errors)
+        internal StorageMappingItemCollection(
+            EdmItemCollection edmCollection,
+            StoreItemCollection storeCollection,
+            IEnumerable<XmlReader> xmlReaders,
+            List<string> filePaths,
+            out IList<EdmSchemaError> errors)
             : base(DataSpace.CSSpace)
         {
             // we will check the parameters for this internal ctor becuase
@@ -153,7 +165,7 @@ namespace System.Data.Entity.Core.Mapping
             EntityUtil.CheckArgumentContainsNull(ref xmlReaders, "xmlReaders");
             // filePaths is allowed to be null
 
-            errors = this.Init(edmCollection, storeCollection, xmlReaders, filePaths, false /*throwOnError*/);
+            errors = Init(edmCollection, storeCollection, xmlReaders, filePaths, false /*throwOnError*/);
         }
 
         /// <summary>
@@ -165,13 +177,14 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="filePaths">Mapping URIs</param>
         /// <param name="xmlReaders">The XmlReaders to load mapping from</param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        internal StorageMappingItemCollection(EdmItemCollection edmCollection,
-                                              StoreItemCollection storeCollection,
-                                              IEnumerable<XmlReader> xmlReaders,
-                                              List<string> filePaths)
+        internal StorageMappingItemCollection(
+            EdmItemCollection edmCollection,
+            StoreItemCollection storeCollection,
+            IEnumerable<XmlReader> xmlReaders,
+            List<string> filePaths)
             : base(DataSpace.CSSpace)
         {
-            this.Init(edmCollection, storeCollection, xmlReaders, filePaths, true /*throwOnError*/);
+            Init(edmCollection, storeCollection, xmlReaders, filePaths, true /*throwOnError*/);
         }
 
         /// <summary>
@@ -183,54 +196,58 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="filePaths">Mapping URIs</param>
         /// <param name="xmlReaders">The XmlReaders to load mapping from</param>
         /// <param name="errors">a list of errors for each file loaded</param>
-        private IList<EdmSchemaError> Init(EdmItemCollection edmCollection,
-                          StoreItemCollection storeCollection,
-                          IEnumerable<XmlReader> xmlReaders,
-                          List<string> filePaths,
-                          bool throwOnError)
+        private IList<EdmSchemaError> Init(
+            EdmItemCollection edmCollection,
+            StoreItemCollection storeCollection,
+            IEnumerable<XmlReader> xmlReaders,
+            List<string> filePaths,
+            bool throwOnError)
         {
             EntityUtil.CheckArgumentNull(xmlReaders, "xmlReaders");
             EntityUtil.CheckArgumentNull(edmCollection, "edmCollection");
             EntityUtil.CheckArgumentNull(storeCollection, "storeCollection");
 
-            this.m_edmCollection = edmCollection;
-            this.m_storeItemCollection = storeCollection;
-            
+            m_edmCollection = edmCollection;
+            m_storeItemCollection = storeCollection;
+
             Dictionary<EntitySetBase, GeneratedView> userDefinedQueryViewsDict;
             Dictionary<OfTypeQVCacheKey, GeneratedView> userDefinedQueryViewsOfTypeDict;
-            
-            this.m_viewDictionary = new ViewDictionary(this, out userDefinedQueryViewsDict, out userDefinedQueryViewsOfTypeDict);
 
-            List<EdmSchemaError> errors = new List<EdmSchemaError>();
-            
-            if(this.m_edmCollection.EdmVersion != XmlConstants.UndefinedVersion &&
-                this.m_storeItemCollection.StoreSchemaVersion != XmlConstants.UndefinedVersion &&
-                this.m_edmCollection.EdmVersion != this.m_storeItemCollection.StoreSchemaVersion)
+            m_viewDictionary = new ViewDictionary(this, out userDefinedQueryViewsDict, out userDefinedQueryViewsOfTypeDict);
+
+            var errors = new List<EdmSchemaError>();
+
+            if (m_edmCollection.EdmVersion != XmlConstants.UndefinedVersion &&
+                m_storeItemCollection.StoreSchemaVersion != XmlConstants.UndefinedVersion
+                &&
+                m_edmCollection.EdmVersion != m_storeItemCollection.StoreSchemaVersion)
             {
                 errors.Add(
                     new EdmSchemaError(
-                        Strings.Mapping_DifferentEdmStoreVersion, 
+                        Strings.Mapping_DifferentEdmStoreVersion,
                         (int)StorageMappingErrorCode.MappingDifferentEdmStoreVersion, EdmSchemaErrorSeverity.Error));
             }
             else
             {
-                double expectedVersion = this.m_edmCollection.EdmVersion != XmlConstants.UndefinedVersion
-                    ? this.m_edmCollection.EdmVersion
-                    : this.m_storeItemCollection.StoreSchemaVersion;
-                errors.AddRange(LoadItems(xmlReaders, filePaths, userDefinedQueryViewsDict, userDefinedQueryViewsOfTypeDict, expectedVersion));
+                var expectedVersion = m_edmCollection.EdmVersion != XmlConstants.UndefinedVersion
+                                          ? m_edmCollection.EdmVersion
+                                          : m_storeItemCollection.StoreSchemaVersion;
+                errors.AddRange(
+                    LoadItems(xmlReaders, filePaths, userDefinedQueryViewsDict, userDefinedQueryViewsOfTypeDict, expectedVersion));
             }
 
             Debug.Assert(errors != null);
 
             if (errors.Count > 0 && throwOnError)
             {
-                if (!System.Data.Entity.Core.Common.Utils.MetadataHelper.CheckIfAllErrorsAreWarnings(errors))
+                if (!MetadataHelper.CheckIfAllErrorsAreWarnings(errors))
                 {
                     // NOTE: not using Strings.InvalidSchemaEncountered because it will truncate the errors list.
                     throw new MappingException(
-                    String.Format(System.Globalization.CultureInfo.CurrentCulture,
-                                    EntityRes.GetString(EntityRes.InvalidSchemaEncountered),
-                                    Helper.CombineErrorMessage(errors)));
+                        String.Format(
+                            CultureInfo.CurrentCulture,
+                            EntityRes.GetString(EntityRes.InvalidSchemaEncountered),
+                            Helper.CombineErrorMessage(errors)));
                 }
             }
 
@@ -259,10 +276,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         internal EdmItemCollection EdmItemCollection
         {
-            get
-            {
-                return this.m_edmCollection;
-            }
+            get { return m_edmCollection; }
         }
 
         /// <summary>
@@ -270,10 +284,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         public double MappingVersion
         {
-            get
-            {
-                return this.m_mappingVersion;
-            }
+            get { return m_mappingVersion; }
         }
 
         /// <summary>
@@ -281,10 +292,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         internal StoreItemCollection StoreItemCollection
         {
-            get
-            {
-                return this.m_storeItemCollection;
-            }
+            get { return m_storeItemCollection; }
         }
 
         /// <summary>
@@ -299,7 +307,7 @@ namespace System.Data.Entity.Core.Mapping
             EntityUtil.CheckArgumentNull(identity, "identity");
             if (typeSpace != DataSpace.CSpace)
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.Mapping_Storage_InvalidSpace(typeSpace));
+                throw EntityUtil.InvalidOperation(Strings.Mapping_Storage_InvalidSpace(typeSpace));
             }
             return GetItem<Map>(identity, ignoreCase);
         }
@@ -316,9 +324,9 @@ namespace System.Data.Entity.Core.Mapping
         {
             if (typeSpace != DataSpace.CSpace)
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.Mapping_Storage_InvalidSpace(typeSpace));
+                throw EntityUtil.InvalidOperation(Strings.Mapping_Storage_InvalidSpace(typeSpace));
             }
-            return TryGetItem<Map>(identity, ignoreCase, out map);
+            return TryGetItem(identity, ignoreCase, out map);
         }
 
         /// <summary>
@@ -329,7 +337,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <exception cref="ArgumentException"> Thrown if mapping space is not valid</exception>
         internal override Map GetMap(string identity, DataSpace typeSpace)
         {
-            return this.GetMap(identity, typeSpace, false /*ignoreCase*/);
+            return GetMap(identity, typeSpace, false /*ignoreCase*/);
         }
 
         /// <summary>
@@ -341,7 +349,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <returns>Returns false if no match found.</returns>
         internal override bool TryGetMap(string identity, DataSpace typeSpace, out Map map)
         {
-            return this.TryGetMap(identity, typeSpace, false /*ignoreCase*/, out map);
+            return TryGetMap(identity, typeSpace, false /*ignoreCase*/, out map);
         }
 
         /// <summary>
@@ -351,12 +359,12 @@ namespace System.Data.Entity.Core.Mapping
         internal override Map GetMap(GlobalItem item)
         {
             EntityUtil.CheckArgumentNull(item, "item");
-            DataSpace typeSpace = item.DataSpace;
+            var typeSpace = item.DataSpace;
             if (typeSpace != DataSpace.CSpace)
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.Mapping_Storage_InvalidSpace(typeSpace));
+                throw EntityUtil.InvalidOperation(Strings.Mapping_Storage_InvalidSpace(typeSpace));
             }
-            return this.GetMap(item.Identity, typeSpace);
+            return GetMap(item.Identity, typeSpace);
         }
 
         /// <summary>
@@ -372,13 +380,13 @@ namespace System.Data.Entity.Core.Mapping
                 map = null;
                 return false;
             }
-            DataSpace typeSpace = item.DataSpace;
+            var typeSpace = item.DataSpace;
             if (typeSpace != DataSpace.CSpace)
             {
                 map = null;
                 return false;
             }
-            return this.TryGetMap(item.Identity, typeSpace, out map);
+            return TryGetMap(item.Identity, typeSpace, out map);
         }
 
         /// <summary>
@@ -390,7 +398,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         internal Dictionary<EntitySetBase, string> GenerateEntitySetViews(out IList<EdmSchemaError> errors)
         {
-            Dictionary<EntitySetBase, string> esqlViews = new Dictionary<EntitySetBase, string>();
+            var esqlViews = new Dictionary<EntitySetBase, string>();
             errors = new List<EdmSchemaError>();
             foreach (var mapping in GetItems<Map>())
             {
@@ -406,23 +414,30 @@ namespace System.Data.Entity.Core.Mapping
                     // If entityContainerMapping contains only query views, then add a warning to the errors and continue to next mapping.
                     if (!entityContainerMapping.HasMappingFragments())
                     {
-                        Debug.Assert(2088 == (int)StorageMappingErrorCode.MappingAllQueryViewAtCompileTime, "Please change the ERRORCODE_MAPPINGALLQUERYVIEWATCOMPILETIME value as well");
-                        errors.Add(new EdmSchemaError(
-                            Strings.Mapping_AllQueryViewAtCompileTime(entityContainerMapping.Identity),
-                            (int)StorageMappingErrorCode.MappingAllQueryViewAtCompileTime,
-                            EdmSchemaErrorSeverity.Warning));
+                        Debug.Assert(
+                            2088 == (int)StorageMappingErrorCode.MappingAllQueryViewAtCompileTime,
+                            "Please change the ERRORCODE_MAPPINGALLQUERYVIEWATCOMPILETIME value as well");
+                        errors.Add(
+                            new EdmSchemaError(
+                                Strings.Mapping_AllQueryViewAtCompileTime(entityContainerMapping.Identity),
+                                (int)StorageMappingErrorCode.MappingAllQueryViewAtCompileTime,
+                                EdmSchemaErrorSeverity.Warning));
                     }
                     else
                     {
-                        ViewGenResults viewGenResults = ViewgenGatekeeper.GenerateViewsFromMapping(entityContainerMapping, new ConfigViewGenerator() { GenerateEsql = true });
+                        var viewGenResults = ViewgenGatekeeper.GenerateViewsFromMapping(
+                            entityContainerMapping, new ConfigViewGenerator
+                                                        {
+                                                            GenerateEsql = true
+                                                        });
                         if (viewGenResults.HasErrors)
                         {
                             ((List<EdmSchemaError>)errors).AddRange(viewGenResults.Errors);
                         }
-                        KeyToListMap<EntitySetBase, GeneratedView> extentMappingViews = viewGenResults.Views;
-                        foreach (KeyValuePair<EntitySetBase, List<GeneratedView>> extentViewPair in extentMappingViews.KeyValuePairs)
+                        var extentMappingViews = viewGenResults.Views;
+                        foreach (var extentViewPair in extentMappingViews.KeyValuePairs)
                         {
-                            List<GeneratedView> generatedViews = extentViewPair.Value;
+                            var generatedViews = extentViewPair.Value;
                             // Multiple Views are returned for an extent but the first view
                             // is the only one that we will use for now. In the future,
                             // we might start using the other views which are per type within an extent.
@@ -443,13 +458,14 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="entityType">An EntityType that participates in the given EntitySet. Must not be null.</param>
         /// <param name="interestingMembersKind">Scenario the members should be returned for.</param>
         /// <returns>ReadOnlyCollection of interesting members for the requested scenario (<paramref name="interestingMembersKind"/>).</returns>        
-        internal ReadOnlyCollection<EdmMember> GetInterestingMembers(EntitySetBase entitySet, EntityTypeBase entityType, InterestingMembersKind interestingMembersKind)
+        internal ReadOnlyCollection<EdmMember> GetInterestingMembers(
+            EntitySetBase entitySet, EntityTypeBase entityType, InterestingMembersKind interestingMembersKind)
         {
             Debug.Assert(entitySet != null, "entitySet != null");
             Debug.Assert(entityType != null, "entityType != null");
 
             var key = new Tuple<EntitySetBase, EntityTypeBase, InterestingMembersKind>(entitySet, entityType, interestingMembersKind);
-            return _cachedInterestingMembers.GetOrAdd(key,  FindInterestingMembers(entitySet, entityType, interestingMembersKind));
+            return _cachedInterestingMembers.GetOrAdd(key, FindInterestingMembers(entitySet, entityType, interestingMembersKind));
         }
 
         /// <summary>
@@ -460,16 +476,19 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="entityType">An EntityType that participates in the given EntitySet. Must not be null.</param>
         /// <param name="interestingMembersKind">Scenario the members should be returned for.</param>
         /// <returns>ReadOnlyCollection of interesting members for the requested scenario (<paramref name="interestingMembersKind"/>).</returns>        
-        private ReadOnlyCollection<EdmMember> FindInterestingMembers(EntitySetBase entitySet, EntityTypeBase entityType, InterestingMembersKind interestingMembersKind)
+        private ReadOnlyCollection<EdmMember> FindInterestingMembers(
+            EntitySetBase entitySet, EntityTypeBase entityType, InterestingMembersKind interestingMembersKind)
         {
             Debug.Assert(entitySet != null, "entitySet != null");
             Debug.Assert(entityType != null, "entityType != null");
 
             var interestingMembers = new List<EdmMember>();
 
-            foreach (var storageTypeMapping in MappingMetadataHelper.GetMappingsForEntitySetAndSuperTypes(this, entitySet.EntityContainer, entitySet, entityType))
+            foreach (
+                var storageTypeMapping in
+                    MappingMetadataHelper.GetMappingsForEntitySetAndSuperTypes(this, entitySet.EntityContainer, entitySet, entityType))
             {
-                StorageAssociationTypeMapping associationTypeMapping = storageTypeMapping as StorageAssociationTypeMapping;
+                var associationTypeMapping = storageTypeMapping as StorageAssociationTypeMapping;
                 if (associationTypeMapping != null)
                 {
                     FindInterestingAssociationMappingMembers(associationTypeMapping, interestingMembers);
@@ -478,7 +497,8 @@ namespace System.Data.Entity.Core.Mapping
                 {
                     Debug.Assert(storageTypeMapping is StorageEntityTypeMapping, "StorageEntityTypeMapping expected.");
 
-                    FindInterestingEntityMappingMembers((StorageEntityTypeMapping)storageTypeMapping, interestingMembersKind, interestingMembers);
+                    FindInterestingEntityMappingMembers(
+                        (StorageEntityTypeMapping)storageTypeMapping, interestingMembersKind, interestingMembers);
                 }
             }
 
@@ -489,8 +509,8 @@ namespace System.Data.Entity.Core.Mapping
             }
 
             foreach (var functionMappings in MappingMetadataHelper
-                                                .GetModificationFunctionMappingsForEntitySetAndType(this, entitySet.EntityContainer, entitySet, entityType)
-                                                .Where(functionMappings => functionMappings.UpdateFunctionMapping != null))
+                .GetModificationFunctionMappingsForEntitySetAndType(this, entitySet.EntityContainer, entitySet, entityType)
+                .Where(functionMappings => functionMappings.UpdateFunctionMapping != null))
             {
                 FindInterestingFunctionMappingMembers(functionMappings, interestingMembersKind, ref interestingMembers);
             }
@@ -505,7 +525,8 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         /// <param name="associationTypeMapping">Association type mapping. Must not be null.</param>
         /// <param name="interestingMembers">The list the interesting members (if any) will be added to. Must not be null.</param>
-        private static void FindInterestingAssociationMappingMembers(StorageAssociationTypeMapping associationTypeMapping, List<EdmMember> interestingMembers)
+        private static void FindInterestingAssociationMappingMembers(
+            StorageAssociationTypeMapping associationTypeMapping, List<EdmMember> interestingMembers)
         {
             Debug.Assert(associationTypeMapping != null, "entityTypeMapping != null");
             Debug.Assert(interestingMembers != null, "interestingMembers != null");
@@ -513,10 +534,10 @@ namespace System.Data.Entity.Core.Mapping
             //(2) Ends participating in association are "interesting"
             interestingMembers.AddRange(
                 associationTypeMapping
-                .MappingFragments
-                .SelectMany(m => m.AllProperties)
-                .OfType<StorageEndPropertyMapping>()
-                .Select(epm => epm.EndMember));
+                    .MappingFragments
+                    .SelectMany(m => m.AllProperties)
+                    .OfType<StorageEndPropertyMapping>()
+                    .Select(epm => epm.EndMember));
         }
 
         /// <summary>
@@ -526,25 +547,28 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="entityTypeMapping">Entity type mapping. Must not be null.</param>
         /// <param name="interestingMembersKind">Scenario the members should be returned for.</param>
         /// <param name="interestingMembers">The list the interesting members (if any) will be added to. Must not be null.</param>
-        private static void FindInterestingEntityMappingMembers(StorageEntityTypeMapping entityTypeMapping, InterestingMembersKind interestingMembersKind, List<EdmMember> interestingMembers)
+        private static void FindInterestingEntityMappingMembers(
+            StorageEntityTypeMapping entityTypeMapping, InterestingMembersKind interestingMembersKind, List<EdmMember> interestingMembers)
         {
             Debug.Assert(entityTypeMapping != null, "entityTypeMapping != null");
             Debug.Assert(interestingMembers != null, "interestingMembers != null");
 
             foreach (var propertyMapping in entityTypeMapping.MappingFragments.SelectMany(mf => mf.AllProperties))
             {
-                StorageScalarPropertyMapping scalarPropMapping = propertyMapping as StorageScalarPropertyMapping;
-                StorageComplexPropertyMapping complexPropMapping = propertyMapping as StorageComplexPropertyMapping;
-                StorageConditionPropertyMapping conditionMapping = propertyMapping as StorageConditionPropertyMapping;
+                var scalarPropMapping = propertyMapping as StorageScalarPropertyMapping;
+                var complexPropMapping = propertyMapping as StorageComplexPropertyMapping;
+                var conditionMapping = propertyMapping as StorageConditionPropertyMapping;
 
                 Debug.Assert(!(propertyMapping is StorageEndPropertyMapping), "association mapping properties should be handled elsewhere.");
 
-                Debug.Assert(scalarPropMapping != null ||
-                             complexPropMapping != null ||
-                             conditionMapping != null, "Unimplemented property mapping");
+                Debug.Assert(
+                    scalarPropMapping != null ||
+                    complexPropMapping != null ||
+                    conditionMapping != null, "Unimplemented property mapping");
 
                 //scalar property
-                if (scalarPropMapping != null && scalarPropMapping.EdmProperty != null)
+                if (scalarPropMapping != null
+                    && scalarPropMapping.EdmProperty != null)
                 {
                     // (0) if a member is part of the key it is interesting
                     if (MetadataHelper.IsPartOfEntityTypeKey(scalarPropMapping.EdmProperty))
@@ -555,8 +579,9 @@ namespace System.Data.Entity.Core.Mapping
                             interestingMembers.Add(scalarPropMapping.EdmProperty);
                         }
                     }
-                    //(3) if a scalar property has Fixed concurrency mode then it is "interesting"
-                    else if (MetadataHelper.GetConcurrencyMode(scalarPropMapping.EdmProperty) == ConcurrencyMode.Fixed)
+                        //(3) if a scalar property has Fixed concurrency mode then it is "interesting"
+                    else if (MetadataHelper.GetConcurrencyMode(scalarPropMapping.EdmProperty)
+                             == ConcurrencyMode.Fixed)
                     {
                         interestingMembers.Add(scalarPropMapping.EdmProperty);
                     }
@@ -566,7 +591,8 @@ namespace System.Data.Entity.Core.Mapping
                     // (7) All complex members - partial update scenarios only
                     // (3.1) The complex property or its one of its children has fixed concurrency mode
                     if (interestingMembersKind == InterestingMembersKind.PartialUpdate ||
-                        MetadataHelper.GetConcurrencyMode(complexPropMapping.EdmProperty) == ConcurrencyMode.Fixed || HasFixedConcurrencyModeInAnyChildProperty(complexPropMapping))
+                        MetadataHelper.GetConcurrencyMode(complexPropMapping.EdmProperty) == ConcurrencyMode.Fixed
+                        || HasFixedConcurrencyModeInAnyChildProperty(complexPropMapping))
                     {
                         interestingMembers.Add(complexPropMapping.EdmProperty);
                     }
@@ -591,23 +617,26 @@ namespace System.Data.Entity.Core.Mapping
         {
             Debug.Assert(complexMapping != null, "complexMapping != null");
 
-            foreach (StoragePropertyMapping propertyMapping in complexMapping.TypeMappings.SelectMany(m => m.AllProperties))
+            foreach (var propertyMapping in complexMapping.TypeMappings.SelectMany(m => m.AllProperties))
             {
-                StorageScalarPropertyMapping childScalarPropertyMapping = propertyMapping as StorageScalarPropertyMapping;
-                StorageComplexPropertyMapping childComplexPropertyMapping = propertyMapping as StorageComplexPropertyMapping;
+                var childScalarPropertyMapping = propertyMapping as StorageScalarPropertyMapping;
+                var childComplexPropertyMapping = propertyMapping as StorageComplexPropertyMapping;
 
-                Debug.Assert(childScalarPropertyMapping != null ||
-                             childComplexPropertyMapping != null, "Unimplemented property mapping for complex property");
+                Debug.Assert(
+                    childScalarPropertyMapping != null ||
+                    childComplexPropertyMapping != null, "Unimplemented property mapping for complex property");
 
                 //scalar property and has Fixed CC mode
-                if (childScalarPropertyMapping != null && MetadataHelper.GetConcurrencyMode(childScalarPropertyMapping.EdmProperty) == ConcurrencyMode.Fixed)
+                if (childScalarPropertyMapping != null
+                    && MetadataHelper.GetConcurrencyMode(childScalarPropertyMapping.EdmProperty) == ConcurrencyMode.Fixed)
                 {
                     return true;
                 }
-                // Complex Prop and sub-properties or itself has fixed CC mode
-                else if (childComplexPropertyMapping != null &&
-                    (MetadataHelper.GetConcurrencyMode(childComplexPropertyMapping.EdmProperty) == ConcurrencyMode.Fixed
-                        || HasFixedConcurrencyModeInAnyChildProperty(childComplexPropertyMapping)))
+                    // Complex Prop and sub-properties or itself has fixed CC mode
+                else if (childComplexPropertyMapping != null
+                         &&
+                         (MetadataHelper.GetConcurrencyMode(childComplexPropertyMapping.EdmProperty) == ConcurrencyMode.Fixed
+                          || HasFixedConcurrencyModeInAnyChildProperty(childComplexPropertyMapping)))
                 {
                     return true;
                 }
@@ -622,29 +651,35 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="entitySetBase">Entity set <paramref name="entityType"/> relates to. Must not be null.</param>
         /// <param name="entityType">Entity type for which to find foreign key properties. Must not be null.</param>
         /// <param name="interestingMembers">The list the interesting members (if any) will be added to. Must not be null.</param>
-        private static void FindForeignKeyProperties(EntitySetBase entitySetBase, EntityTypeBase entityType, List<EdmMember> interestingMembers)
+        private static void FindForeignKeyProperties(
+            EntitySetBase entitySetBase, EntityTypeBase entityType, List<EdmMember> interestingMembers)
         {
             var entitySet = entitySetBase as EntitySet;
-            if (entitySet != null && entitySet.HasForeignKeyRelationships)
+            if (entitySet != null
+                && entitySet.HasForeignKeyRelationships)
             {
                 // (6) Foreign keys
                 // select all foreign key properties defined on the entityType and all its ancestors
                 interestingMembers.AddRange(
-                        MetadataHelper.GetTypeAndParentTypesOf(entityType, true)
+                    MetadataHelper.GetTypeAndParentTypesOf(entityType, true)
                         .SelectMany(e => ((EntityType)e).Properties)
                         .Where(p => entitySet.ForeignKeyDependents.SelectMany(fk => fk.Item2.ToProperties).Contains(p)));
             }
         }
-        
+
         /// <summary>
         /// Finds interesting members for modification functions mapped to stored procedures and adds them to the <paramref name="interestingMembers"/>.
         /// </summary>
         /// <param name="functionMappings">Modification function mapping. Must not be null.</param>
         /// <param name="interestingMembersKind">Update scenario the members will be used in (in general - partial update vs. full update).</param>
         /// <param name="interestingMembers"></param>
-        private static void FindInterestingFunctionMappingMembers(StorageEntityTypeModificationFunctionMapping functionMappings, InterestingMembersKind interestingMembersKind, ref List<EdmMember> interestingMembers)
+        private static void FindInterestingFunctionMappingMembers(
+            StorageEntityTypeModificationFunctionMapping functionMappings, InterestingMembersKind interestingMembersKind,
+            ref List<EdmMember> interestingMembers)
         {
-            Debug.Assert(functionMappings != null && functionMappings.UpdateFunctionMapping != null, "Expected function mapping fragment with non-null update function mapping");
+            Debug.Assert(
+                functionMappings != null && functionMappings.UpdateFunctionMapping != null,
+                "Expected function mapping fragment with non-null update function mapping");
             Debug.Assert(interestingMembers != null, "interestingMembers != null");
 
             // for partial update scenarios (e.g. EntityDataSourceControl) all members are interesting otherwise the data may be corrupt. 
@@ -653,7 +688,8 @@ namespace System.Data.Entity.Core.Mapping
             if (interestingMembersKind == InterestingMembersKind.PartialUpdate)
             {
                 // (5) Members included in Update ModificationFunction
-                interestingMembers.AddRange(functionMappings.UpdateFunctionMapping.ParameterBindings.Select(p => p.MemberPath.Members.Last()));
+                interestingMembers.AddRange(
+                    functionMappings.UpdateFunctionMapping.ParameterBindings.Select(p => p.MemberPath.Members.Last()));
             }
             else
             {
@@ -661,7 +697,8 @@ namespace System.Data.Entity.Core.Mapping
                 // This also works when you have complex-types (4.1)
 
                 Debug.Assert(
-                    interestingMembersKind == InterestingMembersKind.FullUpdate || interestingMembersKind == InterestingMembersKind.RequiredOriginalValueMembers,
+                    interestingMembersKind == InterestingMembersKind.FullUpdate
+                    || interestingMembersKind == InterestingMembersKind.RequiredOriginalValueMembers,
                     "Unexpected kind of interesting members - if you changed the InterestingMembersKind enum type update this code accordingly");
 
                 foreach (var parameterBinding in functionMappings.UpdateFunctionMapping.ParameterBindings.Where(p => !p.IsCurrent))
@@ -687,7 +724,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         internal GeneratedView GetGeneratedView(EntitySetBase extent, MetadataWorkspace workspace)
         {
-            return this.m_viewDictionary.GetGeneratedView(extent, workspace, this);
+            return m_viewDictionary.GetGeneratedView(extent, workspace, this);
         }
 
         // Add to the cache. If it is already present, then throw an exception
@@ -700,18 +737,18 @@ namespace System.Data.Entity.Core.Mapping
             }
             catch (ArgumentException e)
             {
-                throw new MappingException(System.Data.Entity.Resources.Strings.Mapping_Duplicate_Type(storageMap.EdmItem.Identity), e);
+                throw new MappingException(Strings.Mapping_Duplicate_Type(storageMap.EdmItem.Identity), e);
             }
         }
 
         // Contains whether the given StorageEntityContainerName
         internal bool ContainsStorageEntityContainer(string storageEntityContainerName)
         {
-            ReadOnlyCollection<StorageEntityContainerMapping> entityContainerMaps =
-                this.GetItems<StorageEntityContainerMapping>();
-            return entityContainerMaps.Any(map => map.StorageEntityContainer.Name.Equals(storageEntityContainerName, StringComparison.Ordinal));
+            var entityContainerMaps =
+                GetItems<StorageEntityContainerMapping>();
+            return
+                entityContainerMaps.Any(map => map.StorageEntityContainer.Name.Equals(storageEntityContainerName, StringComparison.Ordinal));
         }
-
 
         /// <summary>
         /// This helper method loads items based on contents of in-memory XmlReader instances.
@@ -720,18 +757,21 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="xmlReaders">A list of XmlReader instances</param>
         /// <param name="mappingSchemaUris">A list of URIs</param>
         /// <returns>A list of schema errors</returns>
-        private List<EdmSchemaError> LoadItems(IEnumerable<XmlReader> xmlReaders,
-                                               List<string> mappingSchemaUris,
-                                               Dictionary<EntitySetBase, GeneratedView> userDefinedQueryViewsDict,
-                                               Dictionary<OfTypeQVCacheKey, GeneratedView> userDefinedQueryViewsOfTypeDict,
-                                               double expectedVersion)
+        private List<EdmSchemaError> LoadItems(
+            IEnumerable<XmlReader> xmlReaders,
+            List<string> mappingSchemaUris,
+            Dictionary<EntitySetBase, GeneratedView> userDefinedQueryViewsDict,
+            Dictionary<OfTypeQVCacheKey, GeneratedView> userDefinedQueryViewsOfTypeDict,
+            double expectedVersion)
         {
-            Debug.Assert(m_memberMappings.Count == 0, "Assumption: This method is called only once, and from the constructor because m_extentMappingViews is not thread safe.");
+            Debug.Assert(
+                m_memberMappings.Count == 0,
+                "Assumption: This method is called only once, and from the constructor because m_extentMappingViews is not thread safe.");
 
-            List<EdmSchemaError> errors = new List<EdmSchemaError>();
+            var errors = new List<EdmSchemaError>();
 
-            int index = -1;
-            foreach (XmlReader xmlReader in xmlReaders)
+            var index = -1;
+            foreach (var xmlReader in xmlReaders)
             {
                 index++;
                 string location = null;
@@ -744,24 +784,26 @@ namespace System.Data.Entity.Core.Mapping
                     location = mappingSchemaUris[index];
                 }
 
-                StorageMappingItemLoader mapLoader = new StorageMappingItemLoader(
-                                                            xmlReader,
-                                                            this,
-                                                            location,  // ASSUMPTION: location is only used for generating error-messages
-                                                            m_memberMappings);
+                var mapLoader = new StorageMappingItemLoader(
+                    xmlReader,
+                    this,
+                    location, // ASSUMPTION: location is only used for generating error-messages
+                    m_memberMappings);
                 errors.AddRange(mapLoader.ParsingErrors);
 
                 CheckIsSameVersion(expectedVersion, mapLoader.MappingVersion, errors);
 
                 // Process container mapping.
-                StorageEntityContainerMapping containerMapping = mapLoader.ContainerMapping;
-                if (mapLoader.HasQueryViews && containerMapping != null)
+                var containerMapping = mapLoader.ContainerMapping;
+                if (mapLoader.HasQueryViews
+                    && containerMapping != null)
                 {
                     // Compile the query views so that we can report the errors in the user specified views.
                     CompileUserDefinedQueryViews(containerMapping, userDefinedQueryViewsDict, userDefinedQueryViewsOfTypeDict, errors);
                 }
                 // Add container mapping if there are no errors and entity container mapping is not already present.
-                if (MetadataHelper.CheckIfAllErrorsAreWarnings(errors) && !this.Contains(containerMapping))
+                if (MetadataHelper.CheckIfAllErrorsAreWarnings(errors)
+                    && !Contains(containerMapping))
                 {
                     AddInternal(containerMapping);
                 }
@@ -775,13 +817,14 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         /// This method compiles all the user defined query views in the <paramref name="entityContainerMapping"/>.
         /// </summary>
-        private static void CompileUserDefinedQueryViews(StorageEntityContainerMapping entityContainerMapping,
-                                                         Dictionary<EntitySetBase, GeneratedView> userDefinedQueryViewsDict,
-                                                         Dictionary<OfTypeQVCacheKey, GeneratedView> userDefinedQueryViewsOfTypeDict,
-                                                         IList<EdmSchemaError> errors)
+        private static void CompileUserDefinedQueryViews(
+            StorageEntityContainerMapping entityContainerMapping,
+            Dictionary<EntitySetBase, GeneratedView> userDefinedQueryViewsDict,
+            Dictionary<OfTypeQVCacheKey, GeneratedView> userDefinedQueryViewsOfTypeDict,
+            IList<EdmSchemaError> errors)
         {
-            ConfigViewGenerator config = new ConfigViewGenerator();
-            foreach (StorageSetMapping setMapping in entityContainerMapping.AllSetMaps)
+            var config = new ConfigViewGenerator();
+            foreach (var setMapping in entityContainerMapping.AllSetMaps)
             {
                 if (setMapping.QueryView != null)
                 {
@@ -789,32 +832,34 @@ namespace System.Data.Entity.Core.Mapping
                     if (!userDefinedQueryViewsDict.TryGetValue(setMapping.Set, out generatedView))
                     {
                         // Parse the view so that we will get back any errors in the view.
-                        if (GeneratedView.TryParseUserSpecifiedView(setMapping,
-                                                                    setMapping.Set.ElementType,
-                                                                    setMapping.QueryView,
-                                                                    true, // includeSubtypes
-                                                                    entityContainerMapping.StorageMappingItemCollection,
-                                                                    config,
-                                                                    /*out*/ errors,
-                                                                    out generatedView))
+                        if (GeneratedView.TryParseUserSpecifiedView(
+                            setMapping,
+                            setMapping.Set.ElementType,
+                            setMapping.QueryView,
+                            true, // includeSubtypes
+                            entityContainerMapping.StorageMappingItemCollection,
+                            config,
+                            /*out*/ errors,
+                            out generatedView))
                         {
                             // Add first QueryView
                             userDefinedQueryViewsDict.Add(setMapping.Set, generatedView);
                         }
 
                         // Add all type-specific QueryViews
-                        foreach (OfTypeQVCacheKey key in setMapping.GetTypeSpecificQVKeys())
+                        foreach (var key in setMapping.GetTypeSpecificQVKeys())
                         {
                             Debug.Assert(key.First.Equals(setMapping.Set));
 
-                            if (GeneratedView.TryParseUserSpecifiedView(setMapping,
-                                                                        key.Second.First, // type
-                                                                        setMapping.GetTypeSpecificQueryView(key),
-                                                                        key.Second.Second, // includeSubtypes
-                                                                        entityContainerMapping.StorageMappingItemCollection,
-                                                                        config,
-                                                                        /*out*/ errors,
-                                                                        out generatedView))
+                            if (GeneratedView.TryParseUserSpecifiedView(
+                                setMapping,
+                                key.Second.First, // type
+                                setMapping.GetTypeSpecificQueryView(key),
+                                key.Second.Second, // includeSubtypes
+                                entityContainerMapping.StorageMappingItemCollection,
+                                config,
+                                /*out*/ errors,
+                                out generatedView))
                             {
                                 userDefinedQueryViewsOfTypeDict.Add(key, generatedView);
                             }
@@ -830,7 +875,8 @@ namespace System.Data.Entity.Core.Mapping
             {
                 m_mappingVersion = currentLoaderVersion;
             }
-            if (expectedVersion != XmlConstants.UndefinedVersion && currentLoaderVersion != XmlConstants.UndefinedVersion && currentLoaderVersion != expectedVersion)
+            if (expectedVersion != XmlConstants.UndefinedVersion && currentLoaderVersion != XmlConstants.UndefinedVersion
+                && currentLoaderVersion != expectedVersion)
             {
                 // Check that the mapping version is the same as the storage and model version
                 errors.Add(
@@ -838,14 +884,15 @@ namespace System.Data.Entity.Core.Mapping
                         Strings.Mapping_DifferentMappingEdmStoreVersion,
                         (int)StorageMappingErrorCode.MappingDifferentMappingEdmStoreVersion, EdmSchemaErrorSeverity.Error));
             }
-            if (currentLoaderVersion != m_mappingVersion && currentLoaderVersion != XmlConstants.UndefinedVersion)
+            if (currentLoaderVersion != m_mappingVersion
+                && currentLoaderVersion != XmlConstants.UndefinedVersion)
             {
                 // Check that the mapping versions are all consistent with each other
                 errors.Add(
-                   new EdmSchemaError(
-                       Strings.CannotLoadDifferentVersionOfSchemaInTheSameItemCollection,
-                       (int)StorageMappingErrorCode.CannotLoadDifferentVersionOfSchemaInTheSameItemCollection,
-                       EdmSchemaErrorSeverity.Error));
+                    new EdmSchemaError(
+                        Strings.CannotLoadDifferentVersionOfSchemaInTheSameItemCollection,
+                        (int)StorageMappingErrorCode.CannotLoadDifferentVersionOfSchemaInTheSameItemCollection,
+                        EdmSchemaErrorSeverity.Error));
             }
         }
 
@@ -871,28 +918,37 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="includeSubtypes"></param>
         /// <param name="generatedView"></param>
         /// <returns></returns>
-        internal bool TryGetGeneratedViewOfType(EntitySetBase entity, EntityTypeBase type, bool includeSubtypes, out GeneratedView generatedView)
+        internal bool TryGetGeneratedViewOfType(
+            EntitySetBase entity, EntityTypeBase type, bool includeSubtypes, out GeneratedView generatedView)
         {
-            return this.m_viewDictionary.TryGetGeneratedViewOfType(entity, type, includeSubtypes, out generatedView);
+            return m_viewDictionary.TryGetGeneratedViewOfType(entity, type, includeSubtypes, out generatedView);
         }
 
         // Check for duplicate items (items with same name) in edm item collection and store item collection. Mapping is the only logical place to do this. 
         // The only other place is workspace, but that is at the time of registering item collections (only when the second one gets registered) and we 
         // will have to throw exceptions at that time. If we do this check in mapping, we might throw error in a more consistent way (by adding it to error
         // collection). Also if someone is just creating item collection, and not registering it with workspace (tools), doing it in mapping makes more sense
-        private static void CheckForDuplicateItems(EdmItemCollection edmItemCollection, StoreItemCollection storeItemCollection, List<EdmSchemaError> errorCollection)
+        private static void CheckForDuplicateItems(
+            EdmItemCollection edmItemCollection, StoreItemCollection storeItemCollection, List<EdmSchemaError> errorCollection)
         {
-            Debug.Assert(edmItemCollection != null && storeItemCollection != null && errorCollection != null, "The parameters must not be null in CheckForDuplicateItems");
+            Debug.Assert(
+                edmItemCollection != null && storeItemCollection != null && errorCollection != null,
+                "The parameters must not be null in CheckForDuplicateItems");
 
-            foreach (GlobalItem item in edmItemCollection)
+            foreach (var item in edmItemCollection)
             {
                 if (storeItemCollection.Contains(item.Identity))
                 {
-                    errorCollection.Add(new EdmSchemaError(Strings.Mapping_ItemWithSameNameExistsBothInCSpaceAndSSpace(item.Identity),
-                                        (int)StorageMappingErrorCode.ItemWithSameNameExistsBothInCSpaceAndSSpace, EdmSchemaErrorSeverity.Error));
+                    errorCollection.Add(
+                        new EdmSchemaError(
+                            Strings.Mapping_ItemWithSameNameExistsBothInCSpaceAndSSpace(item.Identity),
+                            (int)StorageMappingErrorCode.ItemWithSameNameExistsBothInCSpaceAndSSpace, EdmSchemaErrorSeverity.Error));
                 }
             }
         }
-    }//---- ItemCollection
+    }
 
-}//---- 
+//---- ItemCollection
+}
+
+//---- 

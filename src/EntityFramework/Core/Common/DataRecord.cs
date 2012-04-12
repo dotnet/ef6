@@ -1,14 +1,11 @@
 namespace System.Data.Entity.Core.Objects
 {
     using System.Collections.Generic;
-    using System.Data;
-    using System.Data.Entity.Core;
-    using System.Data.Entity.Core.Common;
-    using System.Data.Common;
-    using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Objects;
-    using System.Diagnostics;
     using System.ComponentModel;
+    using System.Data.Common;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
 
     /// <summary>
     /// Instances of this class would be returned to user via Query&lt;T&gt;
@@ -30,7 +27,7 @@ namespace System.Data.Entity.Core.Objects
             _workspace = workspace;
             _edmUsage = edmUsage;
 #if DEBUG
-            for (int i = 0; i < values.Length; ++i)
+            for (var i = 0; i < values.Length; ++i)
             {
                 Debug.Assert(null != values[i], "should have been DBNull.Value");
             }
@@ -46,7 +43,8 @@ namespace System.Data.Entity.Core.Objects
             get
             {
                 if (null == _recordInfo)
-                {   // delay creation of DataRecordInfo until necessary
+                {
+                    // delay creation of DataRecordInfo until necessary
                     if (null == _workspace)
                     {
                         // When _workspace is null, we are materializing PODR.
@@ -69,10 +67,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         public override int FieldCount
         {
-            get
-            {
-                return _values.Length;
-            }
+            get { return _values.Length; }
         }
 
         /// <summary>
@@ -80,10 +75,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         public override object this[int ordinal]
         {
-            get
-            {
-                return GetValue(ordinal);
-            }
+            get { return GetValue(ordinal); }
         }
 
         /// <summary>
@@ -91,10 +83,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         public override object this[string name]
         {
-            get
-            {
-                return GetValue(GetOrdinal(name));
-            }
+            get { return GetValue(GetOrdinal(name)); }
         }
 
         /// <summary>
@@ -118,10 +107,10 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         public override long GetBytes(int ordinal, long fieldOffset, byte[] buffer, int bufferOffset, int length)
         {
-            int cbytes = 0;
+            var cbytes = 0;
             int ndataIndex;
 
-            byte[] data = (byte[])_values[ordinal];
+            var data = (byte[])_values[ordinal];
 
             cbytes = data.Length;
 
@@ -137,7 +126,9 @@ namespace System.Data.Entity.Core.Objects
 
             // if no buffer is passed in, return the number of characters we have
             if (null == buffer)
+            {
                 return cbytes;
+            }
 
             try
             {
@@ -145,9 +136,13 @@ namespace System.Data.Entity.Core.Objects
                 {
                     // help the user out in the case where there's less data than requested
                     if ((ndataIndex + length) > cbytes)
+                    {
                         cbytes = cbytes - ndataIndex;
+                    }
                     else
+                    {
                         cbytes = length;
+                    }
                 }
 
                 Array.Copy(data, ndataIndex, buffer, bufferOffset, cbytes);
@@ -160,19 +155,30 @@ namespace System.Data.Entity.Core.Objects
                     cbytes = data.Length;
 
                     if (length < 0)
+                    {
                         throw EntityUtil.InvalidDataLength(length);
+                    }
 
                     // if bad buffer index, throw
-                    if (bufferOffset < 0 || bufferOffset >= buffer.Length)
+                    if (bufferOffset < 0
+                        || bufferOffset >= buffer.Length)
+                    {
                         throw EntityUtil.InvalidDestinationBufferIndex(length, bufferOffset, "bufferOffset");
+                    }
 
                     // if bad data index, throw
-                    if (fieldOffset < 0 || fieldOffset >= cbytes)
+                    if (fieldOffset < 0
+                        || fieldOffset >= cbytes)
+                    {
                         throw EntityUtil.InvalidSourceBufferIndex(length, fieldOffset, "fieldOffset");
+                    }
 
                     // if there is not enough room in the buffer for data
-                    if (cbytes + bufferOffset > buffer.Length)
+                    if (cbytes + bufferOffset
+                        > buffer.Length)
+                    {
                         throw EntityUtil.InvalidBufferSizeOrIndex(cbytes, bufferOffset);
+                    }
                 }
 
                 throw;
@@ -194,9 +200,9 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         public override long GetChars(int ordinal, long fieldOffset, char[] buffer, int bufferOffset, int length)
         {
-            int cchars = 0;
+            var cchars = 0;
             int ndataIndex;
-            string data = (string)_values[ordinal];
+            var data = (string)_values[ordinal];
 
             cchars = data.Length;
 
@@ -212,7 +218,9 @@ namespace System.Data.Entity.Core.Objects
 
             // if no buffer is passed in, return the number of characters we have
             if (null == buffer)
+            {
                 return cchars;
+            }
 
             try
             {
@@ -220,9 +228,13 @@ namespace System.Data.Entity.Core.Objects
                 {
                     // help the user out in the case where there's less data than requested
                     if ((ndataIndex + length) > cchars)
+                    {
                         cchars = cchars - ndataIndex;
+                    }
                     else
+                    {
                         cchars = length;
+                    }
                 }
                 data.CopyTo(ndataIndex, buffer, bufferOffset, cchars);
             }
@@ -234,19 +246,30 @@ namespace System.Data.Entity.Core.Objects
                     cchars = data.Length;
 
                     if (length < 0)
+                    {
                         throw EntityUtil.InvalidDataLength(length);
+                    }
 
                     // if bad buffer index, throw
-                    if (bufferOffset < 0 || bufferOffset >= buffer.Length)
+                    if (bufferOffset < 0
+                        || bufferOffset >= buffer.Length)
+                    {
                         throw EntityUtil.InvalidDestinationBufferIndex(buffer.Length, bufferOffset, "bufferOffset");
+                    }
 
                     // if bad data index, throw
-                    if (fieldOffset < 0 || fieldOffset >= cchars)
+                    if (fieldOffset < 0
+                        || fieldOffset >= cchars)
+                    {
                         throw EntityUtil.InvalidSourceBufferIndex(cchars, fieldOffset, "fieldOffset");
+                    }
 
                     // if there is not enough room in the buffer for data
-                    if (cchars + bufferOffset > buffer.Length)
+                    if (cchars + bufferOffset
+                        > buffer.Length)
+                    {
                         throw EntityUtil.InvalidBufferSizeOrIndex(cchars, bufferOffset);
+                    }
                 }
 
                 throw;
@@ -268,7 +291,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         public DbDataReader GetDataReader(int i)
         {
-            return this.GetDbDataReader(i);
+            return GetDbDataReader(i);
         }
 
         /// <summary>
@@ -308,8 +331,8 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         public override Type GetFieldType(int ordinal)
         {
-            EdmType edmMemberType = GetMember(ordinal).TypeUsage.EdmType;
-            return edmMemberType.ClrType ?? typeof(System.Object);
+            var edmMemberType = GetMember(ordinal).TypeUsage.EdmType;
+            return edmMemberType.ClrType ?? typeof(Object);
         }
 
         /// <summary>
@@ -398,8 +421,8 @@ namespace System.Data.Entity.Core.Objects
                 throw EntityUtil.ArgumentNull("values");
             }
 
-            int copyLen = Math.Min(values.Length, FieldCount);
-            for (int i = 0; i < copyLen; ++i)
+            var copyLen = Math.Min(values.Length, FieldCount);
+            for (var i = 0; i < copyLen; ++i)
             {
                 values[i] = _values[i];
             }
@@ -420,12 +443,13 @@ namespace System.Data.Entity.Core.Objects
         }
 
         #region ICustomTypeDescriptor implementation
+
         //[barryfr] Reference: http://msdn.microsoft.com/msdnmag/issues/05/04/NETMatters/
         //Holds all of the PropertyDescriptors for the PrimitiveType objects in _values
-        private PropertyDescriptorCollection _propertyDescriptors = null;
+        private PropertyDescriptorCollection _propertyDescriptors;
         private FilterCache _filterCache;
         //Stores an AttributeCollection for each PrimitiveType object in _values
-        Dictionary<object, AttributeCollection> _attrCache = null;
+        private Dictionary<object, AttributeCollection> _attrCache;
 
         //Holds the filtered properties and attributes last used when GetProperties(Attribute[]) was called.
         private class FilterCache
@@ -435,22 +459,45 @@ namespace System.Data.Entity.Core.Objects
             //Verifies that this list of attributes matches the list passed into GetProperties(Attribute[])
             public bool IsValid(Attribute[] other)
             {
-                if (other == null || Attributes == null) return false;
-
-                if (Attributes.Length != other.Length) return false;
-
-                for (int i = 0; i < other.Length; i++)
+                if (other == null
+                    || Attributes == null)
                 {
-                    if (!Attributes[i].Match(other[i])) return false;
+                    return false;
+                }
+
+                if (Attributes.Length
+                    != other.Length)
+                {
+                    return false;
+                }
+
+                for (var i = 0; i < other.Length; i++)
+                {
+                    if (!Attributes[i].Match(other[i]))
+                    {
+                        return false;
+                    }
                 }
 
                 return true;
             }
         }
 
-        AttributeCollection ICustomTypeDescriptor.GetAttributes() { return TypeDescriptor.GetAttributes(this, true); }
-        string ICustomTypeDescriptor.GetClassName() { return null; }
-        string ICustomTypeDescriptor.GetComponentName() { return null; }
+        AttributeCollection ICustomTypeDescriptor.GetAttributes()
+        {
+            return TypeDescriptor.GetAttributes(this, true);
+        }
+
+        string ICustomTypeDescriptor.GetClassName()
+        {
+            return null;
+        }
+
+        string ICustomTypeDescriptor.GetComponentName()
+        {
+            return null;
+        }
+
         /// <summary>
         /// Initialize the property descriptors for each PrimitiveType attribute.
         /// See similar functionality in DataRecordObjectView's ITypedList implementation.
@@ -463,11 +510,13 @@ namespace System.Data.Entity.Core.Objects
                 return null;
             }
 
-            if (_propertyDescriptors == null && 0 < _values.Length)
+            if (_propertyDescriptors == null
+                && 0 < _values.Length)
             {
                 // Create a new PropertyDescriptorCollection with read-only properties
-                _propertyDescriptors = CreatePropertyDescriptorCollection(this.DataRecordInfo.RecordType.EdmType as StructuralType,
-                                                                          typeof(MaterializedDataRecord), true);
+                _propertyDescriptors = CreatePropertyDescriptorCollection(
+                    DataRecordInfo.RecordType.EdmType as StructuralType,
+                    typeof(MaterializedDataRecord), true);
             }
 
             return _propertyDescriptors;
@@ -481,50 +530,67 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="componentType">The type to use as the component type</param>
         /// <param name="isReadOnly">Whether the properties in the collection should be read only or not</param>
         /// <returns></returns>
-        internal static PropertyDescriptorCollection CreatePropertyDescriptorCollection(StructuralType structuralType, Type componentType, bool isReadOnly)
+        internal static PropertyDescriptorCollection CreatePropertyDescriptorCollection(
+            StructuralType structuralType, Type componentType, bool isReadOnly)
         {
-            List<PropertyDescriptor> pdList = new List<PropertyDescriptor>();
+            var pdList = new List<PropertyDescriptor>();
             if (structuralType != null)
             {
-                foreach (EdmMember member in structuralType.Members)
+                foreach (var member in structuralType.Members)
                 {
-                    if (member.BuiltInTypeKind == BuiltInTypeKind.EdmProperty)
+                    if (member.BuiltInTypeKind
+                        == BuiltInTypeKind.EdmProperty)
                     {
-                        EdmProperty edmPropertyMember = (EdmProperty)member;
+                        var edmPropertyMember = (EdmProperty)member;
 
-                        FieldDescriptor fd = new FieldDescriptor(componentType, isReadOnly, edmPropertyMember);
+                        var fd = new FieldDescriptor(componentType, isReadOnly, edmPropertyMember);
                         pdList.Add(fd);
                     }
                 }
             }
             return (new PropertyDescriptorCollection(pdList.ToArray()));
         }
-        PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties() { return ((ICustomTypeDescriptor)this).GetProperties(null); }
+
+        PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties()
+        {
+            return ((ICustomTypeDescriptor)this).GetProperties(null);
+        }
+
         PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties(Attribute[] attributes)
         {
-            bool filtering = (null != attributes && 0 < attributes.Length);
+            var filtering = (null != attributes && 0 < attributes.Length);
 
-            PropertyDescriptorCollection props = InitializePropertyDescriptors();
-            if (props == null) { return props; }
+            var props = InitializePropertyDescriptors();
+            if (props == null)
+            {
+                return props;
+            }
 
-            FilterCache cache = _filterCache;
+            var cache = _filterCache;
 
             // Use a cached version if possible
-            if (filtering && cache != null && cache.IsValid(attributes))
+            if (filtering && cache != null
+                && cache.IsValid(attributes))
+            {
                 return cache.FilteredProperties;
-            else if (!filtering && props != null)
+            }
+            else if (!filtering
+                     && props != null)
+            {
                 return props;
+            }
 
             //Build up the attribute cache, since our PropertyDescriptor doesn't store it internally.
             // _values is set only during construction.
-            if (null == _attrCache && null!=attributes && 0<attributes.Length)
+            if (null == _attrCache && null != attributes
+                && 0 < attributes.Length)
             {
                 _attrCache = new Dictionary<object, AttributeCollection>();
                 foreach (FieldDescriptor pd in _propertyDescriptors)
                 {
-                    object o = pd.GetValue(this);
-                    object[] atts = o.GetType().GetCustomAttributes(/*inherit*/false); //atts will not be null (atts.Length==0)
-                    Attribute[] attrArray = new Attribute[atts.Length];
+                    var o = pd.GetValue(this);
+                    var atts = o.GetType().GetCustomAttributes( /*inherit*/false); //atts will not be null (atts.Length==0)
+                    var attrArray = new Attribute[atts.Length];
                     atts.CopyTo(attrArray, 0);
                     _attrCache.Add(pd, new AttributeCollection(attrArray));
                 }
@@ -552,7 +618,10 @@ namespace System.Data.Entity.Core.Objects
             return props;
         }
 
-        object ICustomTypeDescriptor.GetPropertyOwner(PropertyDescriptor pd) { return this; }
+        object ICustomTypeDescriptor.GetPropertyOwner(PropertyDescriptor pd)
+        {
+            return this;
+        }
 
         #endregion
     }

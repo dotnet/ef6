@@ -1,10 +1,5 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
-    using System;
-    using System.Globalization;
-    using System.Collections;
-    using System.Collections.Generic;
-
     /// <summary>
     /// Represents an ast node for a collection type definition.
     /// </summary>
@@ -17,7 +12,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         internal CollectionTypeDefinition(Node elementTypeDef)
         {
-            this._elementTypeDef = elementTypeDef;
+            _elementTypeDef = elementTypeDef;
         }
 
         /// <summary>
@@ -25,7 +20,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         internal Node ElementTypeDef
         {
-            get { return this._elementTypeDef; }
+            get { return _elementTypeDef; }
         }
     }
 
@@ -41,7 +36,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         internal RefTypeDefinition(Node refTypeIdentifier)
         {
-            this._refTypeIdentifier = refTypeIdentifier;
+            _refTypeIdentifier = refTypeIdentifier;
         }
 
         /// <summary>
@@ -49,7 +44,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         internal Node RefTypeIdentifier
         {
-            get { return this._refTypeIdentifier; }
+            get { return _refTypeIdentifier; }
         }
     }
 
@@ -65,7 +60,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         internal RowTypeDefinition(NodeList<PropDefinition> propDefList)
         {
-            this._propDefList = propDefList;
+            _propDefList = propDefList;
         }
 
         /// <summary>
@@ -73,7 +68,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         internal NodeList<PropDefinition> Properties
         {
-            get { return this._propDefList; }
+            get { return _propDefList; }
         }
     }
 
@@ -91,8 +86,8 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// <param name="identifier"></param>
         internal PropDefinition(Identifier name, Node typeDefExpr)
         {
-            this._name = name;
-            this._typeDefExpr = typeDefExpr;
+            _name = name;
+            _typeDefExpr = typeDefExpr;
         }
 
         /// <summary>
@@ -100,7 +95,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         internal Identifier Name
         {
-            get { return this._name; }
+            get { return _name; }
         }
 
         /// <summary>
@@ -108,7 +103,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         internal Node Type
         {
-            get { return this._typeDefExpr; }
+            get { return _typeDefExpr; }
         }
     }
 }

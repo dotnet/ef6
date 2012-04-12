@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
+    using System.Collections.Generic;
+    using System.Diagnostics;
+
     // Simplifier visitor for Boolean expressions. Performs the following
     // simplifications bottom-up:
     // - Eliminate True and False (A Or False iff. A, A And True iff. A)
@@ -23,14 +21,17 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         internal override BoolExpr<T_Identifier> VisitNot(NotExpr<T_Identifier> expression)
         {
-            BoolExpr<T_Identifier> child = expression.Child.Accept(this);
+            var child = expression.Child.Accept(this);
             switch (child.ExprType)
             {
                 case ExprType.Not:
                     return ((NotExpr<T_Identifier>)child).Child;
-                case ExprType.True: return FalseExpr<T_Identifier>.Value;
-                case ExprType.False: return TrueExpr<T_Identifier>.Value;
-                default: return base.VisitNot(expression);
+                case ExprType.True:
+                    return FalseExpr<T_Identifier>.Value;
+                case ExprType.False:
+                    return TrueExpr<T_Identifier>.Value;
+                default:
+                    return base.VisitNot(expression);
             }
         }
 
@@ -46,17 +47,18 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         private BoolExpr<T_Identifier> SimplifyTree(TreeExpr<T_Identifier> tree)
         {
-            bool isAnd = ExprType.And == tree.ExprType;
+            var isAnd = ExprType.And == tree.ExprType;
             Debug.Assert(isAnd || ExprType.Or == tree.ExprType);
 
             // Get list of simplified children, flattening nested And/Or expressions
-            List<BoolExpr<T_Identifier>> simplifiedChildren = new List<BoolExpr<T_Identifier>>(tree.Children.Count);
-            foreach (BoolExpr<T_Identifier> child in tree.Children)
+            var simplifiedChildren = new List<BoolExpr<T_Identifier>>(tree.Children.Count);
+            foreach (var child in tree.Children)
             {
-                BoolExpr<T_Identifier> simplifiedChild = child.Accept(this);
+                var simplifiedChild = child.Accept(this);
                 // And(And(A, B), C) iff. And(A, B, C)
                 // Or(Or(A, B), C) iff. Or(A, B, C)
-                if (simplifiedChild.ExprType == tree.ExprType)
+                if (simplifiedChild.ExprType
+                    == tree.ExprType)
                 {
                     simplifiedChildren.AddRange(((TreeExpr<T_Identifier>)simplifiedChild).Children);
                 }
@@ -67,9 +69,9 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
             }
 
             // Track negated children separately to identify tautologies and contradictions
-            Dictionary<BoolExpr<T_Identifier>, bool> negatedChildren = new Dictionary<BoolExpr<T_Identifier>, bool>(tree.Children.Count);
-            List<BoolExpr<T_Identifier>> otherChildren = new List<BoolExpr<T_Identifier>>(tree.Children.Count);
-            foreach (BoolExpr<T_Identifier> simplifiedChild in simplifiedChildren)
+            var negatedChildren = new Dictionary<BoolExpr<T_Identifier>, bool>(tree.Children.Count);
+            var otherChildren = new List<BoolExpr<T_Identifier>>(tree.Children.Count);
+            foreach (var simplifiedChild in simplifiedChildren)
             {
                 switch (simplifiedChild.ExprType)
                 {
@@ -78,12 +80,18 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
                         break;
                     case ExprType.False:
                         // False And A --> False
-                        if (isAnd) { return FalseExpr<T_Identifier>.Value; }
+                        if (isAnd)
+                        {
+                            return FalseExpr<T_Identifier>.Value;
+                        }
                         // False || A --> A (omit False from child collections)
                         break;
                     case ExprType.True:
                         // True Or A --> True
-                        if (!isAnd) { return TrueExpr<T_Identifier>.Value; }
+                        if (!isAnd)
+                        {
+                            return TrueExpr<T_Identifier>.Value;
+                        }
                         // True And A --> A (omit True from child collections)
                         break;
                     default:
@@ -91,27 +99,39 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
                         break;
                 }
             }
-            List<BoolExpr<T_Identifier>> children = new List<BoolExpr<T_Identifier>>();
-            foreach (BoolExpr<T_Identifier> child in otherChildren)
+            var children = new List<BoolExpr<T_Identifier>>();
+            foreach (var child in otherChildren)
             {
                 if (negatedChildren.ContainsKey(child))
                 {
                     // A && !A --> False, A || !A --> True
-                    if (isAnd) { return FalseExpr<T_Identifier>.Value; }
-                    else { return TrueExpr<T_Identifier>.Value; }
+                    if (isAnd)
+                    {
+                        return FalseExpr<T_Identifier>.Value;
+                    }
+                    else
+                    {
+                        return TrueExpr<T_Identifier>.Value;
+                    }
                 }
                 children.Add(child);
             }
-            foreach (BoolExpr<T_Identifier> child in negatedChildren.Keys)
+            foreach (var child in negatedChildren.Keys)
             {
                 children.Add(child.MakeNegated());
             }
             if (0 == children.Count)
             {
                 // And() iff. True
-                if (isAnd) { return TrueExpr<T_Identifier>.Value; }
-                // Or() iff. False
-                else { return FalseExpr<T_Identifier>.Value; }
+                if (isAnd)
+                {
+                    return TrueExpr<T_Identifier>.Value;
+                }
+                    // Or() iff. False
+                else
+                {
+                    return FalseExpr<T_Identifier>.Value;
+                }
             }
             else if (1 == children.Count)
             {
@@ -122,8 +142,14 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
             {
                 // Construct simplified And/Or expression
                 TreeExpr<T_Identifier> result;
-                if (isAnd) { result = new AndExpr<T_Identifier>(children); }
-                else { result = new OrExpr<T_Identifier>(children); }
+                if (isAnd)
+                {
+                    result = new AndExpr<T_Identifier>(children);
+                }
+                else
+                {
+                    result = new OrExpr<T_Identifier>(children);
+                }
                 return result;
             }
         }

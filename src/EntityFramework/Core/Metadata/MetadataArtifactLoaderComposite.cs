@@ -1,19 +1,11 @@
-using System.Collections.Generic;
-using System.Collections;
-using System.Diagnostics;
-using System.Globalization;
-using System.Reflection;
-using System.Text;
-using System.Xml;
-using System.Data.Entity.Core.Mapping;
-using System.IO;
-using System.Security;
-using System.Security.Permissions;
-using System.Collections.ObjectModel;
-
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Diagnostics;
+    using System.Xml;
+
     /// <summary>
     /// This class represents a super-collection (a collection of collections) 
     /// of artifact resources. Typically, this "meta-collection" would contain
@@ -45,7 +37,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         public override void CollectFilePermissionPaths(List<string> paths, DataSpace spaceToGet)
         {
-            foreach (MetadataArtifactLoader loader in _children)
+            foreach (var loader in _children)
             {
                 loader.CollectFilePermissionPaths(paths, spaceToGet);
             }
@@ -53,10 +45,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         public override bool IsComposite
         {
-            get
-            {
-                return true;
-            }
+            get { return true; }
         }
 
         /// <summary>
@@ -65,9 +54,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of strings identifying paths to all resources</returns>
         public override List<string> GetOriginalPaths()
         {
-            List<string> list = new List<string>();
+            var list = new List<string>();
 
-            foreach (MetadataArtifactLoader loader in _children)
+            foreach (var loader in _children)
             {
                 list.AddRange(loader.GetOriginalPaths());
             }
@@ -83,9 +72,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of strings identifying paths to all artifacts for a specific DataSpace</returns>
         public override List<string> GetOriginalPaths(DataSpace spaceToGet)
         {
-            List<string> list = new List<string>();
+            var list = new List<string>();
 
-            foreach (MetadataArtifactLoader loader in _children)
+            foreach (var loader in _children)
             {
                 list.AddRange(loader.GetOriginalPaths(spaceToGet));
             }
@@ -100,9 +89,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of strings identifying paths to all artifacts for a specific DataSpace</returns>
         public override List<string> GetPaths(DataSpace spaceToGet)
         {
-            List<string> list = new List<string>();
+            var list = new List<string>();
 
-            foreach (MetadataArtifactLoader loader in _children)
+            foreach (var loader in _children)
             {
                 list.AddRange(loader.GetPaths(spaceToGet));
             }
@@ -116,9 +105,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of strings identifying paths to all resources</returns>
         public override List<string> GetPaths()
         {
-            List<string> list = new List<string>();
+            var list = new List<string>();
 
-            foreach (MetadataArtifactLoader resource in _children)
+            foreach (var resource in _children)
             {
                 list.AddRange(resource.GetPaths());
             }
@@ -132,9 +121,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of XmlReader objects; cannot be null</returns>
         public override List<XmlReader> GetReaders(Dictionary<MetadataArtifactLoader, XmlReader> sourceDictionary)
         {
-            List<XmlReader> list = new List<XmlReader>();
+            var list = new List<XmlReader>();
 
-            foreach (MetadataArtifactLoader resource in _children)
+            foreach (var resource in _children)
             {
                 list.AddRange(resource.GetReaders(sourceDictionary));
             }
@@ -149,9 +138,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of XmlReader objects</returns>
         public override List<XmlReader> CreateReaders(DataSpace spaceToGet)
         {
-            List<XmlReader> list = new List<XmlReader>();
+            var list = new List<XmlReader>();
 
-            foreach (MetadataArtifactLoader resource in _children)
+            foreach (var resource in _children)
             {
                 list.AddRange(resource.CreateReaders(spaceToGet));
             }
@@ -163,7 +152,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         public IEnumerator<MetadataArtifactLoader> GetEnumerator()
         {
-            return this._children.GetEnumerator();
+            return _children.GetEnumerator();
         }
 
         #endregion
@@ -172,7 +161,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this._children.GetEnumerator();
+            return _children.GetEnumerator();
         }
 
         #endregion

@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Text;
-
 namespace System.Data.Entity.Core.Common.Utils
 {
+    using System.Collections.Generic;
+    using System.Text;
+
     /// <summary>
     /// Represents a node in a hierarchical collection of information strings. 
     /// Intended as a common way mechanism to represent tree structures for debugging (using the TreePrinter class).
@@ -13,9 +10,8 @@ namespace System.Data.Entity.Core.Common.Utils
     /// </summary>
     internal class TreeNode
     {
-        private StringBuilder _text;
-        private List<TreeNode> _children = new List<TreeNode>();
-        private int _position;
+        private readonly StringBuilder _text;
+        private readonly List<TreeNode> _children = new List<TreeNode>();
 
         // Default constructor
         internal TreeNode()
@@ -54,21 +50,27 @@ namespace System.Data.Entity.Core.Common.Utils
                 _children.AddRange(children);
             }
         }
-                
+
         // 'public' properties
 
         /// <summary>
         /// The current text of this node.
         /// </summary>
-        internal StringBuilder Text { get { return _text; } }
+        internal StringBuilder Text
+        {
+            get { return _text; }
+        }
 
         /// <summary>
         /// The collection of child nodes for this node, which may be empty.
         /// </summary>
-        internal IList<TreeNode> Children { get { return _children; } }
+        internal IList<TreeNode> Children
+        {
+            get { return _children; }
+        }
 
         // Used only by the TreePrinter when generating the output string
-        internal int Position { get { return _position; } set { _position = value; } }
+        internal int Position { get; set; }
     }
 
     /// <summary>
@@ -80,7 +82,7 @@ namespace System.Data.Entity.Core.Common.Utils
     {
         #region Private Instance Members
 
-        private List<TreeNode> _scopes = new List<TreeNode>();
+        private readonly List<TreeNode> _scopes = new List<TreeNode>();
         private bool _showLines = true;
         private char _horizontals = '_';
         private char _verticals = '|';
@@ -96,9 +98,9 @@ namespace System.Data.Entity.Core.Common.Utils
         /// <returns>A string representation of the specified tree</returns>
         internal virtual string Print(TreeNode node)
         {
-             this.PreProcess(node);
+            PreProcess(node);
 
-            StringBuilder text = new StringBuilder();
+            var text = new StringBuilder();
             PrintNode(text, node);
             return text.ToString();
         }
@@ -108,15 +110,16 @@ namespace System.Data.Entity.Core.Common.Utils
         #region 'Protected' API
 
         // 'protected' constructor
-        internal TreePrinter() { }
 
         // 'protected' API that may be overriden to customize printing
-        
+
         /// <summary>
         /// Called once on the root of the tree before printing begins
         /// </summary>
         /// <param name="node">The TreeNode that is the root of the tree</param>
-        internal virtual void PreProcess(TreeNode node) { }
+        internal virtual void PreProcess(TreeNode node)
+        {
+        }
 
         /// <summary>
         /// Called once for every node after indentation, connecting lines and the node's text value
@@ -124,7 +127,9 @@ namespace System.Data.Entity.Core.Common.Utils
         /// </summary>
         /// <param name="node">The current node</param>
         /// <param name="text">The StringBuilder into which the tree is being printed</param>
-        internal virtual void AfterAppend(TreeNode node, StringBuilder text) { }
+        internal virtual void AfterAppend(TreeNode node, StringBuilder text)
+        {
+        }
 
         /// <summary>
         /// Called once for every node immediately after the line prefix (if any) and appropriate
@@ -133,7 +138,9 @@ namespace System.Data.Entity.Core.Common.Utils
         /// </summary>
         /// <param name="node">The current node</param>
         /// <param name="text">The StringBuilder into which the tree is being printed</param>
-        internal virtual void BeforeAppend(TreeNode node, StringBuilder text) { }
+        internal virtual void BeforeAppend(TreeNode node, StringBuilder text)
+        {
+        }
 
         /// <summary>
         /// The recursive step of the printing process, called once for each TreeNode in the tree
@@ -143,10 +150,10 @@ namespace System.Data.Entity.Core.Common.Utils
         internal virtual void PrintNode(StringBuilder text, TreeNode node)
         {
             IndentLine(text);
-            
-            this.BeforeAppend(node, text);
-            text.Append(node.Text.ToString());
-            this.AfterAppend(node, text);
+
+            BeforeAppend(node, text);
+            text.Append(node.Text);
+            AfterAppend(node, text);
 
             PrintChildren(text, node);
         }
@@ -160,7 +167,7 @@ namespace System.Data.Entity.Core.Common.Utils
         {
             _scopes.Add(node);
             node.Position = 0;
-            foreach (TreeNode childNode in node.Children)
+            foreach (var childNode in node.Children)
             {
                 text.AppendLine();
                 node.Position++;
@@ -176,11 +183,12 @@ namespace System.Data.Entity.Core.Common.Utils
 
         private void IndentLine(StringBuilder text)
         {
-            int idx = 0;
-            for (int scopeIdx = 0; scopeIdx < _scopes.Count; scopeIdx++)
+            var idx = 0;
+            for (var scopeIdx = 0; scopeIdx < _scopes.Count; scopeIdx++)
             {
-                TreeNode parentScope = _scopes[scopeIdx];
-                if (!_showLines || (parentScope.Position == parentScope.Children.Count && scopeIdx != _scopes.Count - 1))
+                var parentScope = _scopes[scopeIdx];
+                if (!_showLines
+                    || (parentScope.Position == parentScope.Children.Count && scopeIdx != _scopes.Count - 1))
                 {
                     text.Append(' ');
                 }

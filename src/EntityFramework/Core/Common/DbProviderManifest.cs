@@ -1,6 +1,8 @@
 namespace System.Data.Entity.Core.Common
 {
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Xml;
 
@@ -9,24 +11,21 @@ namespace System.Data.Entity.Core.Common
     /// </summary>
     public abstract class DbProviderManifest
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        protected DbProviderManifest()
-        {
-        }
-
         /// <summary>Value to pass to GetInformation to get the StoreSchemaDefinition</summary>
         public static readonly string StoreSchemaDefinition = "StoreSchemaDefinition";
+
         /// <summary>Value to pass to GetInformation to get the StoreSchemaMapping</summary>
         public static readonly string StoreSchemaMapping = "StoreSchemaMapping";
+
         /// <summary>Value to pass to GetInformation to get the ConceptualSchemaDefinition</summary>
         public static readonly string ConceptualSchemaDefinition = "ConceptualSchemaDefinition";
 
         /// <summary>Value to pass to GetInformation to get the StoreSchemaDefinitionVersion3</summary>
         public static readonly string StoreSchemaDefinitionVersion3 = "StoreSchemaDefinitionVersion3";
+
         /// <summary>Value to pass to GetInformation to get the StoreSchemaMappingVersion3</summary>
         public static readonly string StoreSchemaMappingVersion3 = "StoreSchemaMappingVersion3";
+
         /// <summary>Value to pass to GetInformation to get the ConceptualSchemaDefinitionVersion3</summary>
         public static readonly string ConceptualSchemaDefinitionVersion3 = "ConceptualSchemaDefinitionVersion3";
 
@@ -80,32 +79,32 @@ namespace System.Data.Entity.Core.Common
         /// Name of the IsStrict Facet
         /// </summary>
         internal const string IsStrictFacetName = "IsStrict";
-       
+
         /// <summary>
         /// Returns the namespace used by this provider manifest
         /// </summary>
-        public abstract string NamespaceName {get;}
-                
+        public abstract string NamespaceName { get; }
+
         /// <summary>
         /// Return the set of types supported by the store
         /// </summary>
         /// <returns>A collection of primitive types</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        public abstract System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType> GetStoreTypes();
+        public abstract ReadOnlyCollection<PrimitiveType> GetStoreTypes();
 
         /// <summary>
         /// Returns all the edm functions supported by the provider manifest.
         /// </summary>
         /// <returns>A collection of edm functions.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        public abstract System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction> GetStoreFunctions();
+        public abstract ReadOnlyCollection<EdmFunction> GetStoreFunctions();
 
         /// <summary>
         /// Returns all the FacetDescriptions for a particular edmType
         /// </summary>
         /// <param name="edmType">the edmType to return FacetDescriptions for</param>
         /// <returns>The FacetDescriptions for the edmType given</returns>
-        public abstract System.Collections.ObjectModel.ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType edmType);
+        public abstract ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType edmType);
 
         /// <summary>
         /// This method allows a provider writer to take a edmType and a set of facets
@@ -155,23 +154,23 @@ namespace System.Data.Entity.Core.Common
                     // occur, so we just rethrow a ProviderIncompatibleException and make whatever we caught  
                     // the inner exception of it.
                     throw EntityUtil.ProviderIncompatible(
-                            System.Data.Entity.Resources.Strings.EntityClient_FailedToGetInformation(informationType), e);
+                        Strings.EntityClient_FailedToGetInformation(informationType), e);
                 }
                 throw;
             }
             if (reader == null)
             {
                 // if the provider returned null for the conceptual schema definition, return the default one
-                if (informationType == ConceptualSchemaDefinitionVersion3 ||
+                if (informationType == ConceptualSchemaDefinitionVersion3
+                    ||
                     informationType == ConceptualSchemaDefinition)
                 {
                     return DbProviderServices.GetConceptualSchemaDefinition(informationType);
                 }
 
-                throw EntityUtil.ProviderIncompatible(System.Data.Entity.Resources.Strings.ProviderReturnedNullForGetDbInformation(informationType));
+                throw EntityUtil.ProviderIncompatible(Strings.ProviderReturnedNullForGetDbInformation(informationType));
             }
             return reader;
-
         }
 
         /// <summary>
@@ -198,7 +197,7 @@ namespace System.Data.Entity.Core.Common
         /// <returns>The argument with the wildcards and the escape character escaped</returns>
         public virtual string EscapeLikeArgument(string argument)
         {
-            throw EntityUtil.ProviderIncompatible(System.Data.Entity.Resources.Strings.ProviderShouldOverrideEscapeLikeArgument);
+            throw EntityUtil.ProviderIncompatible(Strings.ProviderShouldOverrideEscapeLikeArgument);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
     internal class ViewCellSlot : ProjectedSlot
     {
         #region Constructor
+
         // effects: 
         /// <summary>
         /// Creates a view cell slot that corresponds to <paramref name="slotNum"/> in some cell. The <paramref name="cSlot"/> and <paramref name="sSlot"/> represent the
@@ -24,15 +25,19 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             m_cSlot = cSlot;
             m_sSlot = sSlot;
         }
+
         #endregion
 
         #region Fields
+
         private readonly int m_slotNum;
         private readonly MemberProjectedSlot m_cSlot;
         private readonly MemberProjectedSlot m_sSlot;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the slot corresponding to the left cellquery.
         /// </summary>
@@ -48,26 +53,28 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         {
             get { return m_sSlot; }
         }
+
         #endregion
 
         #region Comparer/String Methods
+
         protected override bool IsEqualTo(ProjectedSlot right)
         {
-            ViewCellSlot rightSlot = right as ViewCellSlot;
+            var rightSlot = right as ViewCellSlot;
             if (rightSlot == null)
             {
                 return false;
             }
 
             return m_slotNum == rightSlot.m_slotNum &&
-                MemberProjectedSlot.EqualityComparer.Equals(m_cSlot, rightSlot.m_cSlot) &&
-                MemberProjectedSlot.EqualityComparer.Equals(m_sSlot, rightSlot.m_sSlot);
+                   EqualityComparer.Equals(m_cSlot, rightSlot.m_cSlot) &&
+                   EqualityComparer.Equals(m_sSlot, rightSlot.m_sSlot);
         }
 
         protected override int GetHash()
         {
-            return MemberProjectedSlot.EqualityComparer.GetHashCode(m_cSlot) ^
-                   MemberProjectedSlot.EqualityComparer.GetHashCode(m_sSlot) ^
+            return EqualityComparer.GetHashCode(m_cSlot) ^
+                   EqualityComparer.GetHashCode(m_sSlot) ^
                    m_slotNum;
         }
 
@@ -76,9 +83,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         /// </summary>
         internal static string SlotsToUserString(IEnumerable<ViewCellSlot> slots, bool isFromCside)
         {
-            StringBuilder builder = new StringBuilder();
-            bool first = true;
-            foreach (ViewCellSlot slot in slots)
+            var builder = new StringBuilder();
+            var first = true;
+            foreach (var slot in slots)
             {
                 if (false == first)
                 {
@@ -92,8 +99,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
         internal static string SlotToUserString(ViewCellSlot slot, bool isFromCside)
         {
-            MemberProjectedSlot actualSlot = isFromCside ? slot.CSlot : slot.SSlot;
-            string result = StringUtil.FormatInvariant("{0}", actualSlot);
+            var actualSlot = isFromCside ? slot.CSlot : slot.SSlot;
+            var result = StringUtil.FormatInvariant("{0}", actualSlot);
             return result;
         }
 
@@ -134,6 +141,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             m_sSlot.ToCompactString(builder);
             builder.Append('>');
         }
+
         #endregion
     }
 }

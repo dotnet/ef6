@@ -1,17 +1,17 @@
-using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
-using System.Text;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
+    using System.Text;
+
     /// <summary>
     /// This class is just a wrapper over case statements so that we don't pollute the <see cref="CaseStatement"/> class itself.
     /// </summary>
     internal sealed class CaseStatementProjectedSlot : ProjectedSlot
     {
         #region Constructor
+
         /// <summary>
         /// Creates a slot for <paramref name="statement"/>.
         /// </summary>
@@ -20,17 +20,22 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_caseStatement = statement;
             m_withRelationships = withRelationships;
         }
+
         #endregion
 
         #region Fields
+
         /// <summary>
         /// The actual case statement.
         /// </summary>
         private readonly CaseStatement m_caseStatement;
+
         private readonly IEnumerable<WithRelationship> m_withRelationships;
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Creates new <see cref="ProjectedSlot"/> that is qualified with <paramref name="block"/>.CqlAlias.
         /// If current slot is composite (such as <see cref="CaseStatementProjectedSlot"/>, then this method recursively qualifies all parts
@@ -38,7 +43,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// </summary>
         internal override ProjectedSlot DeepQualify(CqlBlock block)
         {
-            CaseStatement newStatement = m_caseStatement.DeepQualify(block);
+            var newStatement = m_caseStatement.DeepQualify(block);
             return new CaseStatementProjectedSlot(newStatement, null);
         }
 
@@ -57,6 +62,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             m_caseStatement.ToCompactString(builder);
         }
+
         #endregion
     }
 }

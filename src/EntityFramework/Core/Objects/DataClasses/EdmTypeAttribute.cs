@@ -1,18 +1,12 @@
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-
 #pragma warning disable 3015 // no accessible constructors which use only CLS-compliant types
 
     /// <summary>
     /// Base attribute for schematized types
     /// </summary>
-    public abstract class EdmTypeAttribute: System.Attribute
+    public abstract class EdmTypeAttribute : Attribute
     {
-        private string _typeName;
-        private string _namespaceName;
-
         /// <summary>
         /// Only allow derived attributes from this assembly
         /// </summary>
@@ -23,31 +17,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         /// Returns the name of the type that this type maps to in the CSpace
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return _typeName;
-            }
-            set
-            {
-                _typeName = value;
-            }
-        }
+        public string Name { get; set; }
 
         /// <summary>
         /// Returns the namespace of the type that this type maps to in the CSpace
         /// </summary>
-        public string NamespaceName
-        {
-            get
-            {
-                return _namespaceName;
-            }
-            set
-            {
-                _namespaceName = value;
-            }
-        }
+        public string NamespaceName { get; set; }
     }
 }

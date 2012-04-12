@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees.Internal;
-using System.Data.Entity.Core.Common.Utils;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
+    using System.Data.Entity.Core.Common.CommandTrees.Internal;
+    using System.Data.Entity.Core.Common.Utils;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -15,11 +9,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// </summary>
     public sealed class DbSetClause : DbModificationClause
     {
-        private DbExpression _prop;
-        private DbExpression _val;
+        private readonly DbExpression _prop;
+        private readonly DbExpression _val;
 
         internal DbSetClause(DbExpression targetProperty, DbExpression sourceValue)
-            : base()
         {
             EntityUtil.CheckArgumentNull(targetProperty, "targetProperty");
             EntityUtil.CheckArgumentNull(sourceValue, "sourceValue");
@@ -35,12 +28,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </remarks>
         public DbExpression Property
         {
-            get
-            {
-                return _prop;
-            }
+            get { return _prop; }
         }
-        
+
         /// <summary>
         /// Gets an <see cref="DbExpression"/> that specifies the new value with which to update the property.
         /// </summary>
@@ -48,38 +38,38 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// Constrained to be a <see cref="DbConstantExpression"/> or <see cref="DbNullExpression"/>
         /// </remarks>
         public DbExpression Value
-        { 
-            get
-            {
-                return _val;
-            }
+        {
+            get { return _val; }
         }
-                
+
         internal override void DumpStructure(ExpressionDumper dumper)
         {
             dumper.Begin("DbSetClause");
-            if (null != this.Property)
+            if (null != Property)
             {
-                dumper.Dump(this.Property, "Property");
+                dumper.Dump(Property, "Property");
             }
-            if (null != this.Value)
+            if (null != Value)
             {
-                dumper.Dump(this.Value, "Value");
+                dumper.Dump(Value, "Value");
             }
             dumper.End("DbSetClause");
         }
 
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbSetClause"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Common.Utils.TreeNode.#ctor(System.String,System.Data.Entity.Core.Common.Utils.TreeNode[])")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbSetClause")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Common.Utils.TreeNode.#ctor(System.String,System.Data.Entity.Core.Common.Utils.TreeNode[])"
+            )]
         internal override TreeNode Print(DbExpressionVisitor<TreeNode> visitor)
         {
-            TreeNode node = new TreeNode("DbSetClause");
-            if (null != this.Property)
+            var node = new TreeNode("DbSetClause");
+            if (null != Property)
             {
-                node.Children.Add(new TreeNode("Property", this.Property.Accept(visitor)));
+                node.Children.Add(new TreeNode("Property", Property.Accept(visitor)));
             }
-            if (null != this.Value)
+            if (null != Value)
             {
-                node.Children.Add(new TreeNode("Value", this.Value.Accept(visitor)));
+                node.Children.Add(new TreeNode("Value", Value.Accept(visitor)));
             }
             return node;
         }

@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
-
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
 // to prevent from simple mistakes during development (e.g. method argument validation 
 // in cases where it was you who created the variables or the variables had already been validated or 
@@ -16,10 +13,11 @@ using System.Collections.Generic;
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
 
-using System.Data.Entity.Core.Query.InternalTrees;
-
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Query.InternalTrees;
+
     /// <summary>
     /// The VarRemapper is a utility class that can be used to "remap" Var references
     /// in a node, or a subtree. 
@@ -27,17 +25,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal class VarRemapper : BasicOpVisitor
     {
         #region Private state
+
         private readonly Dictionary<Var, Var> m_varMap;
         protected readonly Command m_command;
+
         #endregion
 
         #region Constructors
+
         /// <summary>
         /// Internal constructor
         /// </summary>
         /// <param name="command">Current iqt command</param>
         internal VarRemapper(Command command)
-            :this(command, new Dictionary<Var,Var>())
+            : this(command, new Dictionary<Var, Var>())
         {
         }
 
@@ -51,9 +52,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             m_command = command;
             m_varMap = varMap;
         }
+
         #endregion
 
         #region Public surface
+
         /// <summary>
         /// Add a mapping for "oldVar" - when the replace methods are invoked, they
         /// will replace all references to "oldVar" by "newVar"
@@ -91,7 +94,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 return;
             }
 
-            foreach (Node chi in subTree.Children)
+            foreach (var chi in subTree.Children)
             {
                 RemapSubtree(chi);
             }
@@ -118,12 +121,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="varList"></param>
         internal static VarList RemapVarList(Command command, Dictionary<Var, Var> varMap, VarList varList)
         {
-            VarRemapper varRemapper = new VarRemapper(command, varMap);
+            var varRemapper = new VarRemapper(command, varMap);
             return varRemapper.RemapVarList(varList);
         }
+
         #endregion
 
         #region Private methods
+
         /// <summary>
         /// Get the mapping for a Var - returns the var itself, mapping was found
         /// </summary>
@@ -144,7 +149,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         private IEnumerable<Var> MapVars(IEnumerable<Var> vars)
         {
-            foreach (Var v in vars)
+            foreach (var v in vars)
             {
                 yield return Map(v);
             }
@@ -152,41 +157,42 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         private void Map(VarVec vec)
         {
-            VarVec newVec = m_command.CreateVarVec(MapVars(vec));
+            var newVec = m_command.CreateVarVec(MapVars(vec));
             vec.InitFrom(newVec);
         }
 
         private void Map(VarList varList)
         {
-            VarList newList = Command.CreateVarList(MapVars(varList));
+            var newList = Command.CreateVarList(MapVars(varList));
             varList.Clear();
             varList.AddRange(newList);
         }
 
         private void Map(VarMap varMap)
         {
-            VarMap newVarMap = new VarMap();
-            foreach (KeyValuePair<Var, Var> kv in varMap)
+            var newVarMap = new VarMap();
+            foreach (var kv in varMap)
             {
-                Var newVar = Map(kv.Value);
+                var newVar = Map(kv.Value);
                 newVarMap.Add(kv.Key, newVar);
             }
             varMap.Clear();
-            foreach (KeyValuePair<Var, Var> kv in newVarMap)
+            foreach (var kv in newVarMap)
             {
                 varMap.Add(kv.Key, kv.Value);
             }
         }
-        private void Map(List<InternalTrees.SortKey> sortKeys)
+
+        private void Map(List<SortKey> sortKeys)
         {
-            VarVec sortVars = m_command.CreateVarVec();
-            bool hasDuplicates = false;
+            var sortVars = m_command.CreateVarVec();
+            var hasDuplicates = false;
 
             // 
             // Map each var in the sort list. Remapping may introduce duplicates, and
             // we should get rid of duplicates, since sql doesn't like them
             //
-            foreach (InternalTrees.SortKey sk in sortKeys)
+            foreach (var sk in sortKeys)
             {
                 sk.Var = Map(sk.Var);
                 if (sortVars.IsSet(sk.Var))
@@ -201,10 +207,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             if (hasDuplicates)
             {
-                List<InternalTrees.SortKey> newSortKeys = new List<SortKey>(sortKeys);
+                var newSortKeys = new List<SortKey>(sortKeys);
                 sortKeys.Clear();
                 sortVars.Clear();
-                foreach (InternalTrees.SortKey sk in newSortKeys)
+                foreach (var sk in newSortKeys)
                 {
                     if (!sortVars.IsSet(sk.Var))
                     {
@@ -216,6 +222,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         #region VisitorMethods
+
         /// <summary>
         ///  Default visitor for a node - does not visit the children 
         /// The reason we have this method is because the default VisitDefault
@@ -228,21 +235,25 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         #region ScalarOps
+
         public override void Visit(VarRefOp op, Node n)
         {
             VisitScalarOpDefault(op, n);
-            Var newVar = Map(op.Var);
+            var newVar = Map(op.Var);
             if (newVar != op.Var)
             {
                 n.Op = m_command.CreateVarRefOp(newVar);
             }
         }
+
         #endregion
 
         #region AncillaryOps
+
         #endregion
 
         #region PhysicalOps
+
         protected override void VisitNestOp(NestBaseOp op, Node n)
         {
             throw EntityUtil.NotSupported();
@@ -253,53 +264,62 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             VisitPhysicalOpDefault(op, n);
             Map(op.Outputs);
 
-            SimpleCollectionColumnMap newColumnMap = (SimpleCollectionColumnMap)ColumnMapTranslator.Translate(op.ColumnMap, m_varMap);
+            var newColumnMap = (SimpleCollectionColumnMap)ColumnMapTranslator.Translate(op.ColumnMap, m_varMap);
             n.Op = m_command.CreatePhysicalProjectOp(op.Outputs, newColumnMap);
         }
+
         #endregion
 
         #region RelOps
+
         protected override void VisitGroupByOp(GroupByBaseOp op, Node n)
         {
             VisitRelOpDefault(op, n);
             Map(op.Outputs);
             Map(op.Keys);
         }
+
         public override void Visit(GroupByIntoOp op, Node n)
         {
             VisitGroupByOp(op, n);
             Map(op.Inputs);
         }
+
         public override void Visit(DistinctOp op, Node n)
         {
             VisitRelOpDefault(op, n);
             Map(op.Keys);
         }
+
         public override void Visit(ProjectOp op, Node n)
         {
             VisitRelOpDefault(op, n);
             Map(op.Outputs);
         }
+
         public override void Visit(UnnestOp op, Node n)
         {
             VisitRelOpDefault(op, n);
-            Var newVar = Map(op.Var);
+            var newVar = Map(op.Var);
             if (newVar != op.Var)
             {
                 n.Op = m_command.CreateUnnestOp(newVar, op.Table);
             }
         }
+
         protected override void VisitSetOp(SetOp op, Node n)
         {
             VisitRelOpDefault(op, n);
             Map(op.VarMap[0]);
             Map(op.VarMap[1]);
         }
+
         protected override void VisitSortOp(SortBaseOp op, Node n)
         {
             VisitRelOpDefault(op, n);
             Map(op.Keys);
         }
+
         #endregion
 
         #endregion

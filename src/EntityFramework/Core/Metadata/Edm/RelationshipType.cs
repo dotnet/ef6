@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using System.Threading;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Threading;
 
     /// <summary>
     /// Represents the Relationship type
@@ -17,6 +13,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private ReadOnlyMetadataCollection<RelationshipEndMember> _relationshipEndMembers;
 
         #region Constructors
+
         /// <summary>
         /// Initializes a new instance of relationship type
         /// </summary>
@@ -25,15 +22,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="version">version of the relationship type</param>
         /// <param name="dataSpace">dataSpace in which this edmtype belongs to</param>
         /// <exception cref="System.ArgumentNullException">Thrown if either name, namespace or version arguments are null</exception>
-        internal RelationshipType(string name,
-                                  string namespaceName,
-                                  DataSpace dataSpace)
+        internal RelationshipType(
+            string name,
+            string namespaceName,
+            DataSpace dataSpace)
             : base(name, namespaceName, dataSpace)
         {
         }
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the list of ends for this relationship type
         /// </summary>
@@ -41,16 +41,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                Debug.Assert(IsReadOnly, "this is a wrapper around this.Members, don't call it during metadata loading, only call it after the metadata is set to readonly");
+                Debug.Assert(
+                    IsReadOnly,
+                    "this is a wrapper around this.Members, don't call it during metadata loading, only call it after the metadata is set to readonly");
                 if (null == _relationshipEndMembers)
                 {
-                    FilteredReadOnlyMetadataCollection<RelationshipEndMember, EdmMember> relationshipEndMembers = new FilteredReadOnlyMetadataCollection<RelationshipEndMember, EdmMember>(
-                                this.Members, Helper.IsRelationshipEndMember);
+                    var relationshipEndMembers = new FilteredReadOnlyMetadataCollection<RelationshipEndMember, EdmMember>(
+                        Members, Helper.IsRelationshipEndMember);
                     Interlocked.CompareExchange(ref _relationshipEndMembers, relationshipEndMembers, null);
                 }
                 return _relationshipEndMembers;
             }
         }
+
         #endregion
     }
 }

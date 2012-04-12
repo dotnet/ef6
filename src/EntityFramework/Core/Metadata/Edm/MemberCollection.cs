@@ -1,16 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Reflection;
-using System.Text;
-using System.Diagnostics;
-using System.Globalization;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Diagnostics;
+    using System.Globalization;
+
     /// <summary>
     /// Class representing a collection of member objects
     /// </summary>
@@ -31,6 +25,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // Enumerator class for details on how it works.
 
         #region Constructors
+
         /// <summary>
         /// Default constructor for constructing an empty collection
         /// </summary>
@@ -53,22 +48,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Debug.Assert(declaringType != null, "This member collection must belong to a declaring type");
             _declaringType = declaringType;
         }
+
         #endregion
 
         #region Fields
-        private StructuralType _declaringType;
+
+        private readonly StructuralType _declaringType;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the collection as a readonly collection
         /// </summary>
-        public override System.Collections.ObjectModel.ReadOnlyCollection<EdmMember> AsReadOnly
+        public override ReadOnlyCollection<EdmMember> AsReadOnly
         {
-            get
-            {
-                return new System.Collections.ObjectModel.ReadOnlyCollection<EdmMember>(this);
-            }
+            get { return new ReadOnlyCollection<EdmMember>(this); }
         }
 
         /// <summary>
@@ -76,10 +72,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         public override int Count
         {
-            get
-            {
-                return GetBaseTypeMemberCount() + base.Count;
-            }
+            get { return GetBaseTypeMemberCount() + base.Count; }
         }
 
         /// <summary>
@@ -93,7 +86,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                int relativeIndex = GetRelativeIndex(index);
+                var relativeIndex = GetRelativeIndex(index);
                 if (relativeIndex < 0)
                 {
                     // This means baseTypeMemberCount must be non-zero, so we can safely cast the base type to StructuralType
@@ -102,10 +95,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 return base[relativeIndex];
             }
-            set
-            {
-                throw EntityUtil.OperationOnReadOnlyCollection();
-            }
+            set { throw EntityUtil.OperationOnReadOnlyCollection(); }
         }
 
         /// <summary>
@@ -118,14 +108,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.InvalidOperationException">Always thrown on setter</exception>
         public override EdmMember this[string identity]
         {
-            get
-            {
-                return GetValue(identity, false);
-            }
-            set
-            {
-                throw EntityUtil.OperationOnReadOnlyCollection();
-            }
+            get { return GetValue(identity, false); }
+            set { throw EntityUtil.OperationOnReadOnlyCollection(); }
         }
 
         /// <summary>
@@ -140,7 +124,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             // Make sure the member is valid for the add operation. 
             ValidateMemberForAdd(member, "member");
-            
+
             base.Add(member);
 
             // Fix up the declaring type
@@ -160,8 +144,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             // The item is not in this collection, check the base type member collection
-            EdmType baseType = _declaringType.BaseType;
-            if (baseType != null && ((StructuralType)baseType).Members.Contains(identity))
+            var baseType = _declaringType.BaseType;
+            if (baseType != null
+                && ((StructuralType)baseType).Members.Contains(identity))
             {
                 return true;
             }
@@ -178,14 +163,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             // Try to get it from this collection, if found, then the relative index needs to be added with the number
             // of members in the base type to get the absolute index
-            int relativeIndex = base.IndexOf(item);
+            var relativeIndex = base.IndexOf(item);
             if (relativeIndex != -1)
             {
                 return relativeIndex + GetBaseTypeMemberCount();
             }
 
             // Try to find it in the base type
-            StructuralType baseType = _declaringType.BaseType as StructuralType;
+            var baseType = _declaringType.BaseType as StructuralType;
             if (baseType != null)
             {
                 return baseType.Members.IndexOf(item);
@@ -211,8 +196,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             // Check if the array together with the array index has enough room to copy
-            int baseTypeMemberCount = GetBaseTypeMemberCount();
-            if (base.Count + baseTypeMemberCount > array.Length - arrayIndex)
+            var baseTypeMemberCount = GetBaseTypeMemberCount();
+            if (base.Count + baseTypeMemberCount
+                > array.Length - arrayIndex)
             {
                 throw EntityUtil.Argument("arrayIndex");
             }
@@ -240,7 +226,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             if (!base.TryGetValue(identity, ignoreCase, out item))
             {
                 // Now go to the parent type to find it
-                EdmType baseType = _declaringType.BaseType;
+                var baseType = _declaringType.BaseType;
                 if (baseType != null)
                 {
                     ((StructuralType)baseType).Members.TryGetValue(identity, ignoreCase, out item);
@@ -273,10 +259,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal ReadOnlyMetadataCollection<T> GetDeclaredOnlyMembers<T>() where T : EdmMember
         {
-            MetadataCollection<T> newCollection = new MetadataCollection<T>();
-            for (int i = 0; i < base.Count; i++)
+            var newCollection = new MetadataCollection<T>();
+            for (var i = 0; i < base.Count; i++)
             {
-                T member = base[i] as T;
+                var member = base[i] as T;
                 if (member != null)
                 {
                     newCollection.Add(member);
@@ -294,7 +280,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private int GetBaseTypeMemberCount()
         {
             // The count of members is what in this collection plus base type's member collection
-            StructuralType baseType = _declaringType.BaseType as StructuralType;
+            var baseType = _declaringType.BaseType as StructuralType;
             if (baseType != null)
             {
                 return baseType.Members.Count;
@@ -311,24 +297,29 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>The relative index</returns>
         private int GetRelativeIndex(int index)
         {
-            int baseTypeMemberCount = GetBaseTypeMemberCount();
-            int thisTypeMemberCount = base.Count;
+            var baseTypeMemberCount = GetBaseTypeMemberCount();
+            var thisTypeMemberCount = base.Count;
 
             // Check if the index is in range
-            if (index < 0 || index >= baseTypeMemberCount + thisTypeMemberCount)
+            if (index < 0
+                || index >= baseTypeMemberCount + thisTypeMemberCount)
             {
                 throw EntityUtil.ArgumentOutOfRange("index");
             }
 
             return index - baseTypeMemberCount;
         }
-        
+
         private void ValidateMemberForAdd(EdmMember member, string argumentName)
         {
             // Check to make sure the given member is not associated with another type
             EntityUtil.GenericCheckArgumentNull(member, argumentName);
 
-            Debug.Assert(member.DeclaringType == null, string.Format(CultureInfo.CurrentCulture, "The member {0} already has a declaring type, it cannot be added to this collection.", argumentName));
+            Debug.Assert(
+                member.DeclaringType == null,
+                string.Format(
+                    CultureInfo.CurrentCulture, "The member {0} already has a declaring type, it cannot be added to this collection.",
+                    argumentName));
 
             // Validate the item with the declaring type. 
             _declaringType.ValidateMemberForAdd(member);

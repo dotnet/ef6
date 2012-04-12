@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Query.InternalTrees;
-//using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
+ //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
 
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
 // to prevent from simple mistakes during development (e.g. method argument validation 
@@ -26,8 +20,12 @@ using System.Data.Entity.Core.Query.InternalTrees;
 //  (a) Transforms collection aggregate functions into a GroupBy. 
 //  (b) Translates Exists(X) into Exists(select 1 from X)
 //
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -36,20 +34,23 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal class Normalizer : SubqueryTrackingVisitor
     {
         #region constructors
+
         private Normalizer(PlanCompiler planCompilerState)
-            :base(planCompilerState)
+            : base(planCompilerState)
         {
         }
+
         #endregion
 
         #region public methods
+
         /// <summary>
         /// The driver routine.
         /// </summary>
         /// <param name="planCompilerState">plan compiler state</param>
         internal static void Process(PlanCompiler planCompilerState)
         {
-            Normalizer normalizer = new Normalizer(planCompilerState);
+            var normalizer = new Normalizer(planCompilerState);
             normalizer.Process();
         }
 
@@ -58,10 +59,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region private methods
 
         #region driver
+
         private void Process()
         {
             m_command.Root = VisitNode(m_command.Root);
         }
+
         #endregion
 
         #region visitor methods
@@ -92,7 +95,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private Node BuildDummyProjectForExists(Node child)
         {
             Var newVar;
-            Node projectNode = m_command.BuildProject(
+            var projectNode = m_command.BuildProject(
                 child,
                 m_command.CreateNode(m_command.CreateInternalConstantOp(m_command.IntegerType, 1)),
                 out newVar);
@@ -105,16 +108,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="collectionNode">the scalarop collection node</param>
         /// <returns>the unnest node</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node BuildUnnest(Node collectionNode)
         {
             PlanCompiler.Assert(collectionNode.Op.IsScalarOp, "non-scalar usage of Un-nest?");
             PlanCompiler.Assert(TypeSemantics.IsCollectionType(collectionNode.Op.Type), "non-collection usage for Un-nest?");
 
             Var newVar;
-            Node varDefNode = m_command.CreateVarDefNode(collectionNode, out newVar);
-            UnnestOp unnestOp = m_command.CreateUnnestOp(newVar);
-            Node unnestNode = m_command.CreateNode(unnestOp, varDefNode);
+            var varDefNode = m_command.CreateVarDefNode(collectionNode, out newVar);
+            var unnestOp = m_command.CreateUnnestOp(newVar);
+            var unnestNode = m_command.CreateNode(unnestOp, varDefNode);
 
             return unnestNode;
         }
@@ -125,17 +129,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op">current function op</param>
         /// <param name="n">current function subtree</param>
         /// <returns>the new expression that corresponds to the TVF</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node VisitCollectionFunction(FunctionOp op, Node n)
         {
             PlanCompiler.Assert(TypeSemantics.IsCollectionType(op.Type), "non-TVF function?");
 
-            Node unnestNode = BuildUnnest(n);
-            UnnestOp unnestOp = unnestNode.Op as UnnestOp;
-            PhysicalProjectOp projectOp = m_command.CreatePhysicalProjectOp(unnestOp.Table.Columns[0]);
-            Node projectNode = m_command.CreateNode(projectOp, unnestNode);
-            CollectOp collectOp = m_command.CreateCollectOp(n.Op.Type);
-            Node collectNode = m_command.CreateNode(collectOp, projectNode);
+            var unnestNode = BuildUnnest(n);
+            var unnestOp = unnestNode.Op as UnnestOp;
+            var projectOp = m_command.CreatePhysicalProjectOp(unnestOp.Table.Columns[0]);
+            var projectNode = m_command.CreateNode(projectOp, unnestNode);
+            var collectOp = m_command.CreateCollectOp(n.Op.Type);
+            var collectNode = m_command.CreateNode(collectOp, projectNode);
 
             return collectNode;
         }
@@ -163,43 +168,45 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private Node VisitCollectionAggregateFunction(FunctionOp op, Node n)
         {
             TypeUsage softCastType = null;
-            Node argNode = n.Child0;
-            if (OpType.SoftCast == argNode.Op.OpType)
+            var argNode = n.Child0;
+            if (OpType.SoftCast
+                == argNode.Op.OpType)
             {
                 softCastType = TypeHelpers.GetEdmType<CollectionType>(argNode.Op.Type).TypeUsage;
                 argNode = argNode.Child0;
 
-                while (OpType.SoftCast == argNode.Op.OpType)
+                while (OpType.SoftCast
+                       == argNode.Op.OpType)
                 {
                     argNode = argNode.Child0;
                 }
             }
 
-            Node unnestNode = BuildUnnest(argNode);
-            UnnestOp unnestOp = unnestNode.Op as UnnestOp;
-            Var unnestOutputVar = unnestOp.Table.Columns[0];
+            var unnestNode = BuildUnnest(argNode);
+            var unnestOp = unnestNode.Op as UnnestOp;
+            var unnestOutputVar = unnestOp.Table.Columns[0];
 
-            AggregateOp aggregateOp = m_command.CreateAggregateOp(op.Function, false);
-            VarRefOp unnestVarRefOp = m_command.CreateVarRefOp(unnestOutputVar);
-            Node unnestVarRefNode = m_command.CreateNode(unnestVarRefOp);
+            var aggregateOp = m_command.CreateAggregateOp(op.Function, false);
+            var unnestVarRefOp = m_command.CreateVarRefOp(unnestOutputVar);
+            var unnestVarRefNode = m_command.CreateNode(unnestVarRefOp);
             if (softCastType != null)
             {
                 unnestVarRefNode = m_command.CreateNode(m_command.CreateSoftCastOp(softCastType), unnestVarRefNode);
             }
-            Node aggExprNode = m_command.CreateNode(aggregateOp, unnestVarRefNode);
+            var aggExprNode = m_command.CreateNode(aggregateOp, unnestVarRefNode);
 
-            VarVec keyVars = m_command.CreateVarVec(); // empty keys
-            Node keyVarDefListNode = m_command.CreateNode(m_command.CreateVarDefListOp());
+            var keyVars = m_command.CreateVarVec(); // empty keys
+            var keyVarDefListNode = m_command.CreateNode(m_command.CreateVarDefListOp());
 
-            VarVec gbyOutputVars = m_command.CreateVarVec();
+            var gbyOutputVars = m_command.CreateVarVec();
             Var aggVar;
-            Node aggVarDefListNode = m_command.CreateVarDefListNode(aggExprNode, out aggVar);
+            var aggVarDefListNode = m_command.CreateVarDefListNode(aggExprNode, out aggVar);
             gbyOutputVars.Set(aggVar);
-            GroupByOp gbyOp = m_command.CreateGroupByOp(keyVars, gbyOutputVars);
-            Node gbySubqueryNode = m_command.CreateNode(gbyOp, unnestNode, keyVarDefListNode, aggVarDefListNode);
+            var gbyOp = m_command.CreateGroupByOp(keyVars, gbyOutputVars);
+            var gbySubqueryNode = m_command.CreateNode(gbyOp, unnestNode, keyVarDefListNode, aggVarDefListNode);
 
             // "Move" this subquery to my parent relop
-            Node ret = AddSubqueryToParentRelOp(aggVar, gbySubqueryNode);
+            var ret = AddSubqueryToParentRelOp(aggVar, gbySubqueryNode);
 
             return ret;
         }
@@ -213,7 +220,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "functionOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "functionOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(FunctionOp op, Node n)
         {
             VisitScalarOpDefault(op, n);
@@ -224,7 +233,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 newNode = VisitCollectionFunction(op, n);
             }
-            // Is this a collection-aggregate function?
+                // Is this a collection-aggregate function?
             else if (PlanCompilerUtil.IsCollectionAggregateFunction(op, n))
             {
                 newNode = VisitCollectionAggregateFunction(op, n);
@@ -241,6 +250,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #region RelOps
+
         /// <summary>
         /// Processing for all JoinOps
         /// </summary>
@@ -253,7 +263,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 // update the join condition
                 // #479372: Build up a dummy project node over the input, as we always wrap the child of exists
-                n.Child2.Child0 =  BuildDummyProjectForExists(n.Child2.Child0);
+                n.Child2.Child0 = BuildDummyProjectForExists(n.Child2.Child0);
             }
             return n;
         }

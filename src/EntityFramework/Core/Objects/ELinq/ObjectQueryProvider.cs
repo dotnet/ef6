@@ -1,8 +1,8 @@
 namespace System.Data.Entity.Core.Objects.ELinq
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Linq;
     using System.Linq.Expressions;
@@ -56,10 +56,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
             EntityUtil.CheckArgumentNull(expression, "expression");
             if (!typeof(IQueryable<S>).IsAssignableFrom(expression.Type))
             {
-                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.ELinq_ExpressionMustBeIQueryable, "expression");
+                throw EntityUtil.Argument(Strings.ELinq_ExpressionMustBeIQueryable, "expression");
             }
 
-            ObjectQuery<S> query = CreateQuery<S>(expression);
+            var query = CreateQuery<S>(expression);
 
             return query;
         }
@@ -76,9 +76,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
         S IQueryProvider.Execute<S>(Expression expression)
         {
             EntityUtil.CheckArgumentNull(expression, "expression");
-            ObjectQuery<S> query = CreateQuery<S>(expression);
+            var query = CreateQuery<S>(expression);
 
-            return ExecuteSingle<S>(query, expression);
+            return ExecuteSingle(query, expression);
         }
 
         /// <summary>
@@ -93,13 +93,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
             EntityUtil.CheckArgumentNull(expression, "expression");
             if (!typeof(IQueryable).IsAssignableFrom(expression.Type))
             {
-                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.ELinq_ExpressionMustBeIQueryable, "expression");
+                throw EntityUtil.Argument(Strings.ELinq_ExpressionMustBeIQueryable, "expression");
             }
 
             // Determine the type of the query instance by binding generic parameter in Query<>.Queryable
             // (based on element type of expression)
-            Type elementType = TypeSystem.GetElementType(expression.Type);
-            ObjectQuery query = CreateQuery(expression, elementType);
+            var elementType = TypeSystem.GetElementType(expression.Type);
+            var query = CreateQuery(expression, elementType);
 
             return query;
         }
@@ -116,9 +116,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
         {
             EntityUtil.CheckArgumentNull(expression, "expression");
 
-            ObjectQuery query = CreateQuery(expression, expression.Type);
-            IEnumerable<object> objQuery = Enumerable.Cast<object>(query);
-            return ExecuteSingle<object>(objQuery, expression);
+            var query = CreateQuery(expression, expression.Type);
+            var objQuery = Enumerable.Cast<object>(query);
+            return ExecuteSingle(objQuery, expression);
         }
 
         /// <summary>
@@ -191,19 +191,19 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 {
                     case SequenceMethod.First:
                     case SequenceMethod.FirstPredicate:
-                            return (sequence) => { return Enumerable.First(sequence); };
+                        return (sequence) => { return sequence.First(); };
 
                     case SequenceMethod.FirstOrDefault:
                     case SequenceMethod.FirstOrDefaultPredicate:
-                            return (sequence) => { return Enumerable.FirstOrDefault(sequence); };
+                        return (sequence) => { return sequence.FirstOrDefault(); };
 
                     case SequenceMethod.SingleOrDefault:
                     case SequenceMethod.SingleOrDefaultPredicate:
-                            return (sequence) => { return Enumerable.SingleOrDefault(sequence); };
+                        return (sequence) => { return sequence.SingleOrDefault(); };
                 }
             }
 
-            return (sequence) => { return Enumerable.Single(sequence); };
+            return (sequence) => { return sequence.Single(); };
         }
 
         #endregion

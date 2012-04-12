@@ -2,13 +2,12 @@ namespace System.Data.Entity
 {
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Data.Entity.Core;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
+    using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Validation;
-    using System.Data.Entity.Core.Objects;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 

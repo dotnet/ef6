@@ -1,41 +1,102 @@
-using System.Collections.Generic;
-using System.Text;
-using System.Data;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Text.RegularExpressions;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.Common.Internal
 {
+    using System.Data.Entity.Core.Metadata.Edm;
+
     /// <summary>
     /// Provides singleton model TypeUsages for each DbType that can be expressed using a supported EDM type and appropriate facet values.
     /// Used by EntityParameter.GetTypeUsage - if you add additional TypeUsage fields here, review the impact on that method.
     /// </summary>
     internal static class DbTypeMap
     {
-        internal static readonly TypeUsage AnsiString = CreateType(PrimitiveTypeKind.String, new FacetValues { Unicode = false, FixedLength = false, MaxLength = (int?)null });
-        internal static readonly TypeUsage AnsiStringFixedLength = CreateType(PrimitiveTypeKind.String, new FacetValues { Unicode = false, FixedLength = true, MaxLength = (int?)null });
-        internal static readonly TypeUsage String = CreateType(PrimitiveTypeKind.String, new FacetValues { Unicode = true, FixedLength = false, MaxLength = (int?)null });
-        internal static readonly TypeUsage StringFixedLength = CreateType(PrimitiveTypeKind.String, new FacetValues { Unicode = true, FixedLength = true, MaxLength = (int?)null });
+        internal static readonly TypeUsage AnsiString = CreateType(
+            PrimitiveTypeKind.String, new FacetValues
+                                          {
+                                              Unicode = false,
+                                              FixedLength = false,
+                                              MaxLength = (int?)null
+                                          });
+
+        internal static readonly TypeUsage AnsiStringFixedLength = CreateType(
+            PrimitiveTypeKind.String, new FacetValues
+                                          {
+                                              Unicode = false,
+                                              FixedLength = true,
+                                              MaxLength = (int?)null
+                                          });
+
+        internal static readonly TypeUsage String = CreateType(
+            PrimitiveTypeKind.String, new FacetValues
+                                          {
+                                              Unicode = true,
+                                              FixedLength = false,
+                                              MaxLength = (int?)null
+                                          });
+
+        internal static readonly TypeUsage StringFixedLength = CreateType(
+            PrimitiveTypeKind.String, new FacetValues
+                                          {
+                                              Unicode = true,
+                                              FixedLength = true,
+                                              MaxLength = (int?)null
+                                          });
+
         // SQLBUDT #514204 - EntityCommand: XML parameter size must be ignored
         /* XML parameters must not have a explicit size */
-        internal static readonly TypeUsage Xml = CreateType(PrimitiveTypeKind.String, new FacetValues { Unicode = true, FixedLength = false, MaxLength = (int?)null });
-        internal static readonly TypeUsage Binary = CreateType(PrimitiveTypeKind.Binary , new FacetValues { MaxLength = (int?)null });
+
+        internal static readonly TypeUsage Xml = CreateType(
+            PrimitiveTypeKind.String, new FacetValues
+                                          {
+                                              Unicode = true,
+                                              FixedLength = false,
+                                              MaxLength = (int?)null
+                                          });
+
+        internal static readonly TypeUsage Binary = CreateType(
+            PrimitiveTypeKind.Binary, new FacetValues
+                                          {
+                                              MaxLength = (int?)null
+                                          });
+
         internal static readonly TypeUsage Boolean = CreateType(PrimitiveTypeKind.Boolean);
         internal static readonly TypeUsage Byte = CreateType(PrimitiveTypeKind.Byte);
         internal static readonly TypeUsage DateTime = CreateType(PrimitiveTypeKind.DateTime);
         internal static readonly TypeUsage Date = CreateType(PrimitiveTypeKind.DateTime);
-        internal static readonly TypeUsage DateTime2 = CreateType(PrimitiveTypeKind.DateTime, new FacetValues { Precision = (byte?)null });
-        internal static readonly TypeUsage Time = CreateType(PrimitiveTypeKind.Time, new FacetValues { Precision = (byte?)null });
-        internal static readonly TypeUsage DateTimeOffset = CreateType(PrimitiveTypeKind.DateTimeOffset, new FacetValues { Precision = (byte?)null });
+
+        internal static readonly TypeUsage DateTime2 = CreateType(
+            PrimitiveTypeKind.DateTime, new FacetValues
+                                            {
+                                                Precision = (byte?)null
+                                            });
+
+        internal static readonly TypeUsage Time = CreateType(
+            PrimitiveTypeKind.Time, new FacetValues
+                                        {
+                                            Precision = (byte?)null
+                                        });
+
+        internal static readonly TypeUsage DateTimeOffset = CreateType(
+            PrimitiveTypeKind.DateTimeOffset, new FacetValues
+                                                  {
+                                                      Precision = (byte?)null
+                                                  });
+
         // For decimal and money, in the case of precision == 0, we don't want any facets when picking the type so the
         // default type should be picked    
-        internal static readonly TypeUsage Decimal = CreateType(PrimitiveTypeKind.Decimal, new FacetValues { Precision = (byte?)null, Scale = (byte?)null });
+        internal static readonly TypeUsage Decimal = CreateType(
+            PrimitiveTypeKind.Decimal, new FacetValues
+                                           {
+                                               Precision = (byte?)null,
+                                               Scale = (byte?)null
+                                           });
+
         // SQLBU 480928: Need to make currency a separate case once we enable money type
-        internal static readonly TypeUsage Currency = CreateType(PrimitiveTypeKind.Decimal, new FacetValues { Precision = (byte?)null, Scale = (byte?)null });
+        internal static readonly TypeUsage Currency = CreateType(
+            PrimitiveTypeKind.Decimal, new FacetValues
+                                           {
+                                               Precision = (byte?)null,
+                                               Scale = (byte?)null
+                                           });
+
         internal static readonly TypeUsage Double = CreateType(PrimitiveTypeKind.Double);
         internal static readonly TypeUsage Guid = CreateType(PrimitiveTypeKind.Guid);
         internal static readonly TypeUsage Int16 = CreateType(PrimitiveTypeKind.Int16);
@@ -46,94 +107,94 @@ namespace System.Data.Entity.Core.Common.Internal
 
         internal static bool TryGetModelTypeUsage(DbType dbType, out TypeUsage modelType)
         {
-            switch(dbType)
+            switch (dbType)
             {
                 case DbType.AnsiString:
-                    modelType = DbTypeMap.AnsiString;
+                    modelType = AnsiString;
                     break;
 
                 case DbType.AnsiStringFixedLength:
-                    modelType = DbTypeMap.AnsiStringFixedLength;
+                    modelType = AnsiStringFixedLength;
                     break;
 
                 case DbType.String:
-                    modelType = DbTypeMap.String;
+                    modelType = String;
                     break;
 
                 case DbType.StringFixedLength:
-                    modelType = DbTypeMap.StringFixedLength;
+                    modelType = StringFixedLength;
                     break;
 
                 case DbType.Xml:
-                    modelType = DbTypeMap.Xml;
+                    modelType = Xml;
                     break;
 
                 case DbType.Binary:
-                    modelType = DbTypeMap.Binary;
+                    modelType = Binary;
                     break;
 
                 case DbType.Boolean:
-                    modelType = DbTypeMap.Boolean;
+                    modelType = Boolean;
                     break;
 
                 case DbType.Byte:
-                    modelType = DbTypeMap.Byte;
+                    modelType = Byte;
                     break;
 
                 case DbType.DateTime:
-                    modelType = DbTypeMap.DateTime;
+                    modelType = DateTime;
                     break;
 
                 case DbType.Date:
-                    modelType = DbTypeMap.Date;
+                    modelType = Date;
                     break;
 
                 case DbType.DateTime2:
-                    modelType = DbTypeMap.DateTime2;
+                    modelType = DateTime2;
                     break;
 
                 case DbType.Time:
-                    modelType = DbTypeMap.Time;
+                    modelType = Time;
                     break;
 
                 case DbType.DateTimeOffset:
-                    modelType = DbTypeMap.DateTimeOffset;
+                    modelType = DateTimeOffset;
                     break;
 
                 case DbType.Decimal:
-                    modelType = DbTypeMap.Decimal;
+                    modelType = Decimal;
                     break;
 
                 case DbType.Currency:
-                    modelType = DbTypeMap.Currency;
+                    modelType = Currency;
                     break;
 
                 case DbType.Double:
-                    modelType = DbTypeMap.Double;
+                    modelType = Double;
                     break;
 
                 case DbType.Guid:
-                    modelType = DbTypeMap.Guid;
+                    modelType = Guid;
                     break;
 
                 case DbType.Int16:
-                    modelType = DbTypeMap.Int16;
+                    modelType = Int16;
                     break;
 
                 case DbType.Int32:
-                    modelType = DbTypeMap.Int32;
+                    modelType = Int32;
                     break;
 
                 case DbType.Int64:
-                    modelType = DbTypeMap.Int64;
+                    modelType = Int64;
                     break;
 
                 case DbType.Single:
-                    modelType = DbTypeMap.Single;
+                    modelType = Single;
                     break;
 
                 case DbType.SByte:
-                    modelType = DbTypeMap.SByte;
+                    modelType = SByte;
                     break;
 
                 case DbType.VarNumeric:
@@ -155,9 +216,9 @@ namespace System.Data.Entity.Core.Common.Internal
 
         private static TypeUsage CreateType(PrimitiveTypeKind type, FacetValues facets)
         {
-            PrimitiveType primitiveType = EdmProviderManifest.Instance.GetPrimitiveType(type);
-            TypeUsage typeUsage = TypeUsage.Create(primitiveType, facets);
+            var primitiveType = EdmProviderManifest.Instance.GetPrimitiveType(type);
+            var typeUsage = TypeUsage.Create(primitiveType, facets);
             return typeUsage;
-        }       
+        }
     }
 }

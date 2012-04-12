@@ -1,18 +1,21 @@
-using System.Reflection;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Data.Entity.Core.Common.Utils;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.EntityModel.SchemaObjectModel;
+    using System.IO;
+    using System.Reflection;
+
     internal static class MetadataAssemblyHelper
     {
         private const string EcmaPublicKey = "b77a5c561934e089";
         private const string MicrosoftPublicKey = "b03f5f7f11d50a3a";
 
-        static byte [] EcmaPublicKeyToken = System.Data.Entity.Core.EntityModel.SchemaObjectModel.ScalarType.ConvertToByteArray(EcmaPublicKey);
-        static byte [] MsPublicKeyToken = System.Data.Entity.Core.EntityModel.SchemaObjectModel.ScalarType.ConvertToByteArray(MicrosoftPublicKey);
-        private static Memoizer<Assembly, bool> _filterAssemblyCacheByAssembly = new Memoizer<Assembly, bool>(MetadataAssemblyHelper.ComputeShouldFilterAssembly, EqualityComparer<Assembly>.Default);
+        private static readonly byte[] EcmaPublicKeyToken = ScalarType.ConvertToByteArray(EcmaPublicKey);
+        private static readonly byte[] MsPublicKeyToken = ScalarType.ConvertToByteArray(MicrosoftPublicKey);
+
+        private static readonly Memoizer<Assembly, bool> _filterAssemblyCacheByAssembly =
+            new Memoizer<Assembly, bool>(ComputeShouldFilterAssembly, EqualityComparer<Assembly>.Default);
 
         internal static Assembly SafeLoadReferencedAssembly(AssemblyName assemblyName)
         {
@@ -22,7 +25,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 assembly = Assembly.Load(assemblyName);
             }
-            catch (System.IO.FileNotFoundException)
+            catch (FileNotFoundException)
             {
                 // See 552932: ObjectItemCollection: fails on referenced assemblies that are not available
             }
@@ -32,10 +35,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private static bool ComputeShouldFilterAssembly(Assembly assembly)
         {
-            AssemblyName assemblyName = new AssemblyName(assembly.FullName);
+            var assemblyName = new AssemblyName(assembly.FullName);
             return ShouldFilterAssembly(assemblyName);
         }
-        
+
         internal static bool ShouldFilterAssembly(Assembly assembly)
         {
             return _filterAssemblyCacheByAssembly.Evaluate(assembly);
@@ -48,17 +51,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     ArePublicKeyTokensEqual(assemblyName.GetPublicKeyToken(), MsPublicKeyToken));
         }
 
-        private static bool ArePublicKeyTokensEqual(byte [] left, byte [] right)
+        private static bool ArePublicKeyTokensEqual(byte[] left, byte[] right)
         {
             // some assemblies don't have public keys
-            if (left.Length != right.Length)
+            if (left.Length
+                != right.Length)
             {
                 return false;
             }
 
-            for (int i = 0; i < left.Length; i++)
+            for (var i = 0; i < left.Length; i++)
             {
-                if (left[i] != right[i])
+                if (left[i]
+                    != right[i])
                 {
                     return false;
                 }
@@ -68,17 +73,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal static IEnumerable<Assembly> GetNonSystemReferencedAssemblies(Assembly assembly)
         {
-            foreach (AssemblyName name in assembly.GetReferencedAssemblies())
+            foreach (var name in assembly.GetReferencedAssemblies())
             {
                 if (!ShouldFilterAssembly(name))
                 {
-                    Assembly referenceAssembly = SafeLoadReferencedAssembly(name);
-                    if(referenceAssembly != null )
+                    var referenceAssembly = SafeLoadReferencedAssembly(name);
+                    if (referenceAssembly != null)
                     {
                         yield return referenceAssembly;
                     }
                 }
             }
         }
-     }
+    }
 }

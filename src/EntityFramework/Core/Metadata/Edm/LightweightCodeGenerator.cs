@@ -1,9 +1,9 @@
 namespace System.Data.Entity.Core.Objects
 {
-    using System;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
@@ -32,15 +32,16 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>for an OSpace property, get the property value from a clr instance</summary>
         internal static object GetValue(EdmProperty property, object target)
         {
-            Func<object, object> getter = GetGetterDelegateForProperty(property);
+            var getter = GetGetterDelegateForProperty(property);
             Debug.Assert(null != getter, "null getter");
 
             return getter(target);
         }
 
-        internal static Func<object,object> GetGetterDelegateForProperty(EdmProperty property)
+        internal static Func<object, object> GetGetterDelegateForProperty(EdmProperty property)
         {
-            return property.ValueGetter ?? (property.ValueGetter = CreatePropertyGetter(property.EntityDeclaringType, property.PropertyGetterHandle));
+            return property.ValueGetter
+                   ?? (property.ValueGetter = CreatePropertyGetter(property.EntityDeclaringType, property.PropertyGetterHandle));
         }
 
         /// <summary>for an OSpace property, set the property value on a clr instance</summary>
@@ -61,18 +62,19 @@ namespace System.Data.Entity.Core.Objects
         /// </permission>
         internal static void SetValue(EdmProperty property, object target, object value)
         {
-            Action<object, object> setter = GetSetterDelegateForProperty(property);
+            var setter = GetSetterDelegateForProperty(property);
             setter(target, value);
         }
 
         /// <summary>For an OSpace property, gets the delegate to set the property value on a clr instance.</summary>
         internal static Action<object, object> GetSetterDelegateForProperty(EdmProperty property)
         {
-            Action<object, object> setter = property.ValueSetter;
+            var setter = property.ValueSetter;
             if (null == setter)
             {
-                setter = CreatePropertySetter(property.EntityDeclaringType, property.PropertySetterHandle,
-                        property.Nullable);
+                setter = CreatePropertySetter(
+                    property.EntityDeclaringType, property.PropertySetterHandle,
+                    property.Nullable);
                 property.ValueSetter = setter;
             }
             Debug.Assert(null != setter, "null setter");
@@ -83,9 +85,11 @@ namespace System.Data.Entity.Core.Objects
         /// Gets the related end instance for the source AssociationEndMember by creating a DynamicMethod to 
         /// call GetRelatedCollection or GetRelatedReference
         /// </summary>
-        internal static RelatedEnd GetRelatedEnd(RelationshipManager sourceRelationshipManager, AssociationEndMember sourceMember, AssociationEndMember targetMember, RelatedEnd existingRelatedEnd)
+        internal static RelatedEnd GetRelatedEnd(
+            RelationshipManager sourceRelationshipManager, AssociationEndMember sourceMember, AssociationEndMember targetMember,
+            RelatedEnd existingRelatedEnd)
         {
-            Func<RelationshipManager, RelatedEnd, RelatedEnd> getRelatedEnd = sourceMember.GetRelatedEnd;
+            var getRelatedEnd = sourceMember.GetRelatedEnd;
             if (null == getRelatedEnd)
             {
                 getRelatedEnd = CreateGetRelatedEndMethod(sourceMember, targetMember);
@@ -100,8 +104,8 @@ namespace System.Data.Entity.Core.Objects
 
         internal static Action<object, object> CreateNavigationPropertySetter(Type declaringType, PropertyInfo navigationProperty)
         {
-            MethodInfo mi = navigationProperty.GetSetMethod(true);
-            Type realType = navigationProperty.PropertyType;
+            var mi = navigationProperty.GetSetMethod(true);
+            var realType = navigationProperty.PropertyType;
 
             if (null == mi)
             {
@@ -115,18 +119,18 @@ namespace System.Data.Entity.Core.Objects
             {
                 ThrowPropertyDeclaringTypeIsValueType();
             }
-            
+
             // the setter always skips visibility so that we can call our internal method to handle errors
             // because CreateDynamicMethod asserts ReflectionPermission, method is "elevated" and must be treated carefully
-            DynamicMethod method = CreateDynamicMethod(mi.Name, typeof(void), new Type[] { typeof(object), typeof(object) });
-            ILGenerator gen = method.GetILGenerator();
+            var method = CreateDynamicMethod(mi.Name, typeof(void), new[] { typeof(object), typeof(object) });
+            var gen = method.GetILGenerator();
             GenerateNecessaryPermissionDemands(gen, mi);
 
             gen.Emit(OpCodes.Ldarg_0);
             gen.Emit(OpCodes.Castclass, declaringType);
             gen.Emit(OpCodes.Ldarg_1);
             gen.Emit(OpCodes.Castclass, navigationProperty.PropertyType);
-            gen.Emit(OpCodes.Callvirt, mi);       // .Property =
+            gen.Emit(OpCodes.Callvirt, mi); // .Property =
             gen.Emit(OpCodes.Ret);
 
             return (Action<object, object>)method.CreateDelegate(typeof(Action<object, object>));
@@ -141,8 +145,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>Parameterless constructor for the specified type.</returns>
         internal static ConstructorInfo GetConstructorForType(Type type)
         {
-            System.Diagnostics.Debug.Assert(type != null);
-            ConstructorInfo ci = type.GetConstructor(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null, System.Type.EmptyTypes, null);
+            Debug.Assert(type != null);
+            var ci = type.GetConstructor(
+                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null, Type.EmptyTypes,
+                null);
             if (null == ci)
             {
                 ThrowConstructorNoParameterless(type);
@@ -150,18 +156,17 @@ namespace System.Data.Entity.Core.Objects
             return ci;
         }
 
-
         /// <summary>
         /// generate a delegate equivalent to
         /// private object Constructor() { return new XClass(); }
         /// </summary>
         internal static Delegate CreateConstructor(Type type)
         {
-            ConstructorInfo ci = GetConstructorForType(type);
+            var ci = GetConstructorForType(type);
 
             // because CreateDynamicMethod asserts ReflectionPermission, method is "elevated" and must be treated carefully
-            DynamicMethod method = CreateDynamicMethod(ci.DeclaringType.Name, typeof(object), Type.EmptyTypes);
-            ILGenerator gen = method.GetILGenerator();
+            var method = CreateDynamicMethod(ci.DeclaringType.Name, typeof(object), Type.EmptyTypes);
+            var gen = method.GetILGenerator();
             GenerateNecessaryPermissionDemands(gen, ci);
 
             gen.Emit(OpCodes.Newobj, ci);
@@ -199,8 +204,9 @@ namespace System.Data.Entity.Core.Objects
                 ThrowPropertyIsIndexed();
             }
 
-            Type realType = mi.ReturnType;
-            if ((null == realType) || (typeof(void) == realType))
+            var realType = mi.ReturnType;
+            if ((null == realType)
+                || (typeof(void) == realType))
             {
                 ThrowPropertyUnsupportedForm();
             }
@@ -210,8 +216,8 @@ namespace System.Data.Entity.Core.Objects
             }
 
             // because CreateDynamicMethod asserts ReflectionPermission, method is "elevated" and must be treated carefully
-            DynamicMethod method = CreateDynamicMethod(mi.Name, typeof(object), new Type[] { typeof(object) });
-            ILGenerator gen = method.GetILGenerator();
+            var method = CreateDynamicMethod(mi.Name, typeof(object), new[] { typeof(object) });
+            var gen = method.GetILGenerator();
             GenerateNecessaryPermissionDemands(gen, mi);
 
             // the 'this' target pointer
@@ -222,12 +228,13 @@ namespace System.Data.Entity.Core.Objects
             if (realType.IsValueType)
             {
                 Type elementType;
-                if (realType.IsGenericType && (typeof(Nullable<>) == realType.GetGenericTypeDefinition()))
+                if (realType.IsGenericType
+                    && (typeof(Nullable<>) == realType.GetGenericTypeDefinition()))
                 {
                     elementType = realType.GetGenericArguments()[0];
 
-                    Label lableFalse = gen.DefineLabel();
-                    LocalBuilder local = gen.DeclareLocal(realType);
+                    var lableFalse = gen.DefineLabel();
+                    var local = gen.DeclareLocal(realType);
                     gen.Emit(OpCodes.Stloc_S, local);
 
                     gen.Emit(OpCodes.Ldloca_S, local);
@@ -296,7 +303,8 @@ namespace System.Data.Entity.Core.Objects
         /// Or if the parameter type is a pointer.
         /// Or if the method or declaring class has a <see cref="System.Security.Permissions.StrongNameIdentityPermissionAttribute"/>.
         /// </exception>
-        private static Action<object, object> CreatePropertySetter(RuntimeTypeHandle entityDeclaringType, RuntimeMethodHandle rmh, bool allowNull)
+        private static Action<object, object> CreatePropertySetter(
+            RuntimeTypeHandle entityDeclaringType, RuntimeMethodHandle rmh, bool allowNull)
         {
             MethodInfo mi;
             Type realType;
@@ -304,22 +312,24 @@ namespace System.Data.Entity.Core.Objects
 
             // the setter always skips visibility so that we can call our internal method to handle errors
             // because CreateDynamicMethod asserts ReflectionPermission, method is "elevated" and must be treated carefully
-            DynamicMethod method = CreateDynamicMethod(mi.Name, typeof(void), new Type[] { typeof(object), typeof(object) });
-            ILGenerator gen = method.GetILGenerator();
+            var method = CreateDynamicMethod(mi.Name, typeof(void), new[] { typeof(object), typeof(object) });
+            var gen = method.GetILGenerator();
             GenerateNecessaryPermissionDemands(gen, mi);
 
-            Type elementType = realType;
-            Label labelContinueNull = gen.DefineLabel();
-            Label labelContinueValue = gen.DefineLabel();
-            Label labelInvalidValue = gen.DefineLabel();
+            var elementType = realType;
+            var labelContinueNull = gen.DefineLabel();
+            var labelContinueValue = gen.DefineLabel();
+            var labelInvalidValue = gen.DefineLabel();
             if (realType.IsValueType)
             {
-                if (realType.IsGenericType && (typeof(Nullable<>) == realType.GetGenericTypeDefinition()))
+                if (realType.IsGenericType
+                    && (typeof(Nullable<>) == realType.GetGenericTypeDefinition()))
                 {
                     elementType = realType.GetGenericArguments()[0];
                 }
                 else
-                {   // force allowNull false for non-nullable value types
+                {
+                    // force allowNull false for non-nullable value types
                     allowNull = false;
                 }
             }
@@ -333,57 +343,67 @@ namespace System.Data.Entity.Core.Objects
             gen.Emit(OpCodes.Isinst, elementType);
 
             if (allowNull)
-            {   // reference type or nullable type
+            {
+                // reference type or nullable type
                 gen.Emit(OpCodes.Ldarg_1);
                 if (elementType == realType)
                 {
-                    gen.Emit(OpCodes.Brfalse_S, labelContinueNull);             // if (null ==
+                    gen.Emit(OpCodes.Brfalse_S, labelContinueNull); // if (null ==
                 }
                 else
                 {
                     gen.Emit(OpCodes.Brtrue, labelContinueValue);
-                    gen.Emit(OpCodes.Pop);                                      // pop Isinst
+                    gen.Emit(OpCodes.Pop); // pop Isinst
 
-                    LocalBuilder local = gen.DeclareLocal(realType);
-                    gen.Emit(OpCodes.Ldloca_S, local);                          // load valuetype&
-                    gen.Emit(OpCodes.Initobj, realType);                        // init &
-                    gen.Emit(OpCodes.Ldloc_0);                                  // load valuetype
+                    var local = gen.DeclareLocal(realType);
+                    gen.Emit(OpCodes.Ldloca_S, local); // load valuetype&
+                    gen.Emit(OpCodes.Initobj, realType); // init &
+                    gen.Emit(OpCodes.Ldloc_0); // load valuetype
                     gen.Emit(OpCodes.Br_S, labelContinueNull);
                     gen.MarkLabel(labelContinueValue);
                 }
             }
             gen.Emit(OpCodes.Dup);
-            gen.Emit(OpCodes.Brfalse_S, labelInvalidValue);                     // (arg1 is Inst)
+            gen.Emit(OpCodes.Brfalse_S, labelInvalidValue); // (arg1 is Inst)
 
             if (elementType.IsValueType)
             {
-                gen.Emit(OpCodes.Unbox_Any, elementType);                       // ((PropertyType)value)
+                gen.Emit(OpCodes.Unbox_Any, elementType); // ((PropertyType)value)
 
                 if (elementType != realType)
-                {                                                               // new Nullable<PropertyType>
-                    gen.Emit(OpCodes.Newobj, realType.GetConstructor(new Type[] { elementType }));
+                {
+                    // new Nullable<PropertyType>
+                    gen.Emit(OpCodes.Newobj, realType.GetConstructor(new[] { elementType }));
                 }
             }
             gen.MarkLabel(labelContinueNull);
-            gen.Emit(mi.IsVirtual ? OpCodes.Callvirt : OpCodes.Call, mi);       // .Property =
+            gen.Emit(mi.IsVirtual ? OpCodes.Callvirt : OpCodes.Call, mi); // .Property =
             gen.Emit(OpCodes.Ret);
 
             // ThrowInvalidValue(value, typeof(PropertyType), DeclaringType.Name, PropertyName
             gen.MarkLabel(labelInvalidValue);
-            gen.Emit(OpCodes.Pop);                                      // pop Ldarg_0
-            gen.Emit(OpCodes.Pop);                                      // pop IsInst'
-            gen.Emit(OpCodes.Ldarg_1);                                  // determine if InvalidCast or NullReference
+            gen.Emit(OpCodes.Pop); // pop Ldarg_0
+            gen.Emit(OpCodes.Pop); // pop IsInst'
+            gen.Emit(OpCodes.Ldarg_1); // determine if InvalidCast or NullReference
             gen.Emit(OpCodes.Ldtoken, elementType);
             gen.Emit(OpCodes.Call, typeof(Type).GetMethod("GetTypeFromHandle", BindingFlags.Static | BindingFlags.Public));
             gen.Emit(OpCodes.Ldstr, mi.DeclaringType.Name);
             gen.Emit(OpCodes.Ldstr, mi.Name.Substring(4)); // substring to strip "set_"
-            Debug.Assert(null != (Action<Object,Type,String,String>)EntityUtil.ThrowSetInvalidValue, "missing method ThrowSetInvalidValue(object,Type,string,string)");
-            gen.Emit(OpCodes.Call, typeof(EntityUtil).GetMethod("ThrowSetInvalidValue", BindingFlags.Static | BindingFlags.NonPublic, null, new Type[] { typeof(object),typeof(Type),typeof(string),typeof(string)},null));
+            Debug.Assert(
+                null != (Action<Object, Type, String, String>)EntityUtil.ThrowSetInvalidValue,
+                "missing method ThrowSetInvalidValue(object,Type,string,string)");
+            gen.Emit(
+                OpCodes.Call,
+                typeof(EntityUtil).GetMethod(
+                    "ThrowSetInvalidValue", BindingFlags.Static | BindingFlags.NonPublic, null,
+                    new[] { typeof(object), typeof(Type), typeof(string), typeof(string) }, null));
             gen.Emit(OpCodes.Ret);
             return (Action<object, object>)method.CreateDelegate(typeof(Action<object, object>));
         }
 
-        internal static void ValidateSetterProperty(RuntimeTypeHandle entityDeclaringType, RuntimeMethodHandle setterMethodHandle, out MethodInfo setterMethodInfo, out Type realType)
+        internal static void ValidateSetterProperty(
+            RuntimeTypeHandle entityDeclaringType, RuntimeMethodHandle setterMethodHandle, out MethodInfo setterMethodInfo,
+            out Type realType)
         {
             if (default(RuntimeMethodHandle).Equals(setterMethodHandle))
             {
@@ -402,13 +422,16 @@ namespace System.Data.Entity.Core.Objects
                 ThrowPropertyDeclaringTypeIsValueType();
             }
 
-            ParameterInfo[] parameters = setterMethodInfo.GetParameters();
-            if ((null == parameters) || (1 != parameters.Length))
-            {   // if no parameters (i.e. not a set_Property method), will still throw this message
+            var parameters = setterMethodInfo.GetParameters();
+            if ((null == parameters)
+                || (1 != parameters.Length))
+            {
+                // if no parameters (i.e. not a set_Property method), will still throw this message
                 ThrowPropertyIsIndexed();
             }
             realType = setterMethodInfo.ReturnType;
-            if ((null != realType) && (typeof(void) != realType))
+            if ((null != realType)
+                && (typeof(void) != realType))
             {
                 ThrowPropertyUnsupportedForm();
             }
@@ -425,7 +448,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>true if the specified method requires permission demands to be invoked safely, false otherwise.</returns>
         internal static bool RequiresPermissionDemands(MethodBase mi)
         {
-            System.Diagnostics.Debug.Assert(mi != null);
+            Debug.Assert(mi != null);
             return !IsPublic(mi);
         }
 
@@ -433,7 +456,10 @@ namespace System.Data.Entity.Core.Objects
         {
             if (!IsPublic(mi))
             {
-                gen.Emit(OpCodes.Ldsfld, typeof(LightweightCodeGenerator).GetField("MemberAccessReflectionPermission", BindingFlags.Static | BindingFlags.NonPublic));
+                gen.Emit(
+                    OpCodes.Ldsfld,
+                    typeof(LightweightCodeGenerator).GetField(
+                        "MemberAccessReflectionPermission", BindingFlags.Static | BindingFlags.NonPublic));
                 gen.Emit(OpCodes.Callvirt, typeof(ReflectionPermission).GetMethod("Demand"));
             }
         }
@@ -455,25 +481,36 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="targetMember">target end of the relationship for the requested navigation</param>
         /// <returns>Delegate that can be used to invoke the corresponding method.</returns>
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private static Func<RelationshipManager, RelatedEnd, RelatedEnd> CreateGetRelatedEndMethod(AssociationEndMember sourceMember, AssociationEndMember targetMember)
+        private static Func<RelationshipManager, RelatedEnd, RelatedEnd> CreateGetRelatedEndMethod(
+            AssociationEndMember sourceMember, AssociationEndMember targetMember)
         {
-            Debug.Assert(sourceMember.DeclaringType == targetMember.DeclaringType, "Source and Target members must be in the same DeclaringType");
+            Debug.Assert(
+                sourceMember.DeclaringType == targetMember.DeclaringType, "Source and Target members must be in the same DeclaringType");
 
-            EntityType sourceEntityType = MetadataHelper.GetEntityTypeForEnd(sourceMember);
-            EntityType targetEntityType = MetadataHelper.GetEntityTypeForEnd(targetMember);
-            NavigationPropertyAccessor sourceAccessor = MetadataHelper.GetNavigationPropertyAccessor(targetEntityType, targetMember, sourceMember);
-            NavigationPropertyAccessor targetAccessor = MetadataHelper.GetNavigationPropertyAccessor(sourceEntityType, sourceMember, targetMember);
+            var sourceEntityType = MetadataHelper.GetEntityTypeForEnd(sourceMember);
+            var targetEntityType = MetadataHelper.GetEntityTypeForEnd(targetMember);
+            var sourceAccessor = MetadataHelper.GetNavigationPropertyAccessor(targetEntityType, targetMember, sourceMember);
+            var targetAccessor = MetadataHelper.GetNavigationPropertyAccessor(sourceEntityType, sourceMember, targetMember);
 
-            MethodInfo genericCreateRelatedEndMethod = typeof(LightweightCodeGenerator).GetMethod("CreateGetRelatedEndMethod", BindingFlags.NonPublic | BindingFlags.Static, null, new Type[] { typeof(AssociationEndMember), typeof(AssociationEndMember), typeof(NavigationPropertyAccessor), typeof(NavigationPropertyAccessor) }, null);
+            var genericCreateRelatedEndMethod = typeof(LightweightCodeGenerator).GetMethod(
+                "CreateGetRelatedEndMethod", BindingFlags.NonPublic | BindingFlags.Static, null,
+                new[]
+                    {
+                        typeof(AssociationEndMember), typeof(AssociationEndMember), typeof(NavigationPropertyAccessor),
+                        typeof(NavigationPropertyAccessor)
+                    }, null);
             Debug.Assert(genericCreateRelatedEndMethod != null, "Could not find method LightweightCodeGenerator.CreateGetRelatedEndMethod");
 
-            MethodInfo createRelatedEndMethod = genericCreateRelatedEndMethod.MakeGenericMethod(sourceEntityType.ClrType, targetEntityType.ClrType);
-            object getRelatedEndDelegate = createRelatedEndMethod.Invoke(null, new object[] { sourceMember, targetMember, sourceAccessor, targetAccessor });
+            var createRelatedEndMethod = genericCreateRelatedEndMethod.MakeGenericMethod(sourceEntityType.ClrType, targetEntityType.ClrType);
+            var getRelatedEndDelegate = createRelatedEndMethod.Invoke(
+                null, new object[] { sourceMember, targetMember, sourceAccessor, targetAccessor });
 
             return (Func<RelationshipManager, RelatedEnd, RelatedEnd>)getRelatedEndDelegate;
         }
 
-        private static Func<RelationshipManager, RelatedEnd, RelatedEnd> CreateGetRelatedEndMethod<TSource, TTarget>(AssociationEndMember sourceMember, AssociationEndMember targetMember, NavigationPropertyAccessor sourceAccessor, NavigationPropertyAccessor targetAccessor)
+        private static Func<RelationshipManager, RelatedEnd, RelatedEnd> CreateGetRelatedEndMethod<TSource, TTarget>(
+            AssociationEndMember sourceMember, AssociationEndMember targetMember, NavigationPropertyAccessor sourceAccessor,
+            NavigationPropertyAccessor targetAccessor)
             where TSource : class
             where TTarget : class
         {
@@ -486,26 +523,28 @@ namespace System.Data.Entity.Core.Objects
                 case RelationshipMultiplicity.One:
                     {
                         getRelatedEnd = (manager, relatedEnd) =>
-                            manager.GetRelatedReference<TSource, TTarget>(sourceMember.DeclaringType.FullName,
-                                                                          sourceMember.Name,
-                                                                          targetMember.Name,
-                                                                          sourceAccessor,
-                                                                          targetAccessor,
-                                                                          sourceMember.RelationshipMultiplicity,
-                                                                          relatedEnd);
-                        
+                                        manager.GetRelatedReference<TSource, TTarget>(
+                                            sourceMember.DeclaringType.FullName,
+                                            sourceMember.Name,
+                                            targetMember.Name,
+                                            sourceAccessor,
+                                            targetAccessor,
+                                            sourceMember.RelationshipMultiplicity,
+                                            relatedEnd);
+
                         break;
                     }
                 case RelationshipMultiplicity.Many:
                     {
                         getRelatedEnd = (manager, relatedEnd) =>
-                            manager.GetRelatedCollection<TSource, TTarget>(sourceMember.DeclaringType.FullName,
-                                                                           sourceMember.Name,
-                                                                           targetMember.Name,
-                                                                           sourceAccessor,
-                                                                           targetAccessor,
-                                                                           sourceMember.RelationshipMultiplicity,
-                                                                           relatedEnd);
+                                        manager.GetRelatedCollection<TSource, TTarget>(
+                                            sourceMember.DeclaringType.FullName,
+                                            sourceMember.Name,
+                                            targetMember.Name,
+                                            sourceAccessor,
+                                            targetAccessor,
+                                            sourceMember.RelationshipMultiplicity,
+                                            relatedEnd);
 
                         break;
                     }
@@ -518,46 +557,55 @@ namespace System.Data.Entity.Core.Objects
 
         private static void ThrowConstructorNoParameterless(Type type)
         {
-            throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.CodeGen_ConstructorNoParameterless(type.FullName));
+            throw EntityUtil.InvalidOperation(Strings.CodeGen_ConstructorNoParameterless(type.FullName));
         }
+
         private static void ThrowPropertyDeclaringTypeIsValueType()
         {
-            throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.CodeGen_PropertyDeclaringTypeIsValueType);
+            throw EntityUtil.InvalidOperation(Strings.CodeGen_PropertyDeclaringTypeIsValueType);
         }
+
         private static void ThrowPropertyUnsupportedForm()
         {
-            throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.CodeGen_PropertyUnsupportedForm);
+            throw EntityUtil.InvalidOperation(Strings.CodeGen_PropertyUnsupportedForm);
         }
+
         private static void ThrowPropertyUnsupportedType()
         {
-            throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.CodeGen_PropertyUnsupportedType);
+            throw EntityUtil.InvalidOperation(Strings.CodeGen_PropertyUnsupportedType);
         }
+
         private static void ThrowPropertyStrongNameIdentity()
         {
-            throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.CodeGen_PropertyStrongNameIdentity);
+            throw EntityUtil.InvalidOperation(Strings.CodeGen_PropertyStrongNameIdentity);
         }
+
         private static void ThrowPropertyIsIndexed()
         {
-            throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.CodeGen_PropertyIsIndexed);
+            throw EntityUtil.InvalidOperation(Strings.CodeGen_PropertyIsIndexed);
         }
+
         private static void ThrowPropertyIsStatic()
         {
-            throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.CodeGen_PropertyIsStatic);
+            throw EntityUtil.InvalidOperation(Strings.CodeGen_PropertyIsStatic);
         }
+
         private static void ThrowPropertyNoGetter()
         {
-            throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.CodeGen_PropertyNoGetter);
+            throw EntityUtil.InvalidOperation(Strings.CodeGen_PropertyNoGetter);
         }
+
         private static void ThrowPropertyNoSetter()
         {
-            throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.CodeGen_PropertyNoSetter);
+            throw EntityUtil.InvalidOperation(Strings.CodeGen_PropertyNoSetter);
         }
 
         #endregion
 
         #region Lightweight code generation
 
-        internal static readonly ReflectionPermission MemberAccessReflectionPermission = new ReflectionPermission(ReflectionPermissionFlag.MemberAccess);
+        internal static readonly ReflectionPermission MemberAccessReflectionPermission =
+            new ReflectionPermission(ReflectionPermissionFlag.MemberAccess);
 
         [SuppressMessage("Microsoft.Security", "CA2143:TransparentMethodsShouldNotDemandFxCopRule")]
         internal static bool HasMemberAccessReflectionPermission()
@@ -578,7 +626,7 @@ namespace System.Data.Entity.Core.Objects
 
         // Assert MemberAccess to skip visibility check & ReflectionEmit so we can generate the method (make calls to EF internals).
         [SuppressMessage("Microsoft.Security", "CA2128")]
-        [System.Security.SecuritySafeCritical]
+        [SecuritySafeCritical]
         [ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
         internal static DynamicMethod CreateDynamicMethod(string name, Type returnType, Type[] parameterTypes)
         {

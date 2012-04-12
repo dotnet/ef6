@@ -1,31 +1,35 @@
-using System.Data.Entity.Core.Common.Utils;
-using System.Collections.Generic;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 {
+    using System.Data.Entity.Core.Common.Utils;
+
     // Abstract class representing a relation signature for a cell query
     internal abstract class CellRelation : InternalBase
     {
-
         #region Constructor
+
         // effects: Given a cell number (for debugging purposes), creates a
         // cell relation 
         protected CellRelation(int cellNumber)
         {
             m_cellNumber = cellNumber;
         }
+
         #endregion
 
         #region Fields
+
         internal int m_cellNumber; // The number of the cell for which this
         // relation was made (for debugging) 
+
         #endregion
 
         #region Properties
+
         internal int CellNumber
         {
             get { return m_cellNumber; }
         }
+
         #endregion
 
         #region Methods

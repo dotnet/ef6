@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Linq;
-using System.Linq.Expressions;
-
-namespace System.Data.Entity.Core.Common.Internal.Materialization
+﻿namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Text;
+
     /// <summary>
     /// The RecordState class is responsible for tracking state about a record
     /// that should be returned from a data reader.
@@ -27,14 +25,15 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// True when the record is supposed to be null. (Null Structured Types...)
         /// </summary>
         private bool _pendingIsNull;
-        private bool _currentIsNull;
 
+        private bool _currentIsNull;
 
         /// <summary>
         /// An EntityRecordInfo, with EntityKey and EntitySet populated; set 
         /// by the GatherData expression.
         /// </summary>
         private EntityRecordInfo _currentEntityRecordInfo;
+
         private EntityRecordInfo _pendingEntityRecordInfo;
 
         /// <summary>
@@ -42,6 +41,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// to be in the Shaper.State.
         /// </summary>
         internal object[] CurrentColumnValues;
+
         internal object[] PendingColumnValues;
 
         #endregion
@@ -50,10 +50,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         internal RecordState(RecordStateFactory recordStateFactory, CoordinatorFactory coordinatorFactory)
         {
-            this.RecordStateFactory = recordStateFactory;
-            this.CoordinatorFactory = coordinatorFactory;
-            this.CurrentColumnValues = new object[RecordStateFactory.ColumnCount];
-            this.PendingColumnValues = new object[RecordStateFactory.ColumnCount];
+            RecordStateFactory = recordStateFactory;
+            CoordinatorFactory = coordinatorFactory;
+            CurrentColumnValues = new object[RecordStateFactory.ColumnCount];
+            PendingColumnValues = new object[RecordStateFactory.ColumnCount];
         }
 
         #endregion
@@ -70,7 +70,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// </summary>
         internal void AcceptPendingValues()
         {
-            object[] temp = CurrentColumnValues;
+            var temp = CurrentColumnValues;
             CurrentColumnValues = PendingColumnValues;
             PendingColumnValues = temp;
 
@@ -83,11 +83,11 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             // we could probably optimize by building an expression and compiling it.
             if (RecordStateFactory.HasNestedColumns)
             {
-                for (int ordinal = 0; ordinal < CurrentColumnValues.Length; ordinal++)
+                for (var ordinal = 0; ordinal < CurrentColumnValues.Length; ordinal++)
                 {
                     if (RecordStateFactory.IsColumnNested[ordinal])
                     {
-                        RecordState recordState = CurrentColumnValues[ordinal] as RecordState;
+                        var recordState = CurrentColumnValues[ordinal] as RecordState;
                         if (null != recordState)
                         {
                             recordState.AcceptPendingValues();
@@ -135,10 +135,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// </summary>
         internal long GetBytes(int ordinal, long dataOffset, byte[] buffer, int bufferOffset, int length)
         {
-            byte[] byteValue = (byte[])CurrentColumnValues[ordinal];
-            int valueLength = byteValue.Length;
-            int sourceOffset = (int)dataOffset;
-            int byteCount = valueLength - sourceOffset;
+            var byteValue = (byte[])CurrentColumnValues[ordinal];
+            var valueLength = byteValue.Length;
+            var sourceOffset = (int)dataOffset;
+            var byteCount = valueLength - sourceOffset;
 
             if (null != buffer)
             {
@@ -157,7 +157,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// </summary>
         internal long GetChars(int ordinal, long dataOffset, char[] buffer, int bufferOffset, int length)
         {
-            string stringValue = CurrentColumnValues[ordinal] as string;
+            var stringValue = CurrentColumnValues[ordinal] as string;
             char[] charValue;
 
             if (stringValue != null)
@@ -169,9 +169,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 charValue = (char[])CurrentColumnValues[ordinal];
             }
 
-            int valueLength = charValue.Length;
-            int sourceOffset = (int)dataOffset;
-            int charCount = valueLength - sourceOffset;
+            var valueLength = charValue.Length;
+            var sourceOffset = (int)dataOffset;
+            var charCount = valueLength - sourceOffset;
 
             if (null != buffer)
             {
@@ -179,9 +179,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
                 if (0 < charCount)
                 {
-                    Buffer.BlockCopy(charValue, sourceOffset * System.Text.UnicodeEncoding.CharSize,
-                                        buffer, bufferOffset * System.Text.UnicodeEncoding.CharSize,
-                                                   charCount * System.Text.UnicodeEncoding.CharSize);
+                    Buffer.BlockCopy(
+                        charValue, sourceOffset * UnicodeEncoding.CharSize,
+                        buffer, bufferOffset * UnicodeEncoding.CharSize,
+                        charCount * UnicodeEncoding.CharSize);
                 }
             }
             return Math.Max(0, charCount);
@@ -193,7 +194,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         internal string GetName(int ordinal)
         {
             // Some folks are picky about the exception we throw
-            if (ordinal < 0 || ordinal >= RecordStateFactory.ColumnCount)
+            if (ordinal < 0
+                || ordinal >= RecordStateFactory.ColumnCount)
             {
                 throw EntityUtil.ArgumentOutOfRange("ordinal");
             }
@@ -268,7 +270,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// </summary>
         internal bool SetEntityRecordInfo(EntityKey entityKey, EntitySet entitySet)
         {
-            _pendingEntityRecordInfo = new EntityRecordInfo(this.RecordStateFactory.DataRecordInfo, entityKey, entitySet);
+            _pendingEntityRecordInfo = new EntityRecordInfo(RecordStateFactory.DataRecordInfo, entityKey, entitySet);
             return true;
         }
 
@@ -281,7 +283,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             // CONSIDER(SteveSta): If additional, performance is needed, we could make these
             // singleton objects on the RecordStateFactory, but that has additional overhead 
             // and working set that we may not want to have.
-            for (int i = 0; i < PendingColumnValues.Length; i++)
+            for (var i = 0; i < PendingColumnValues.Length; i++)
             {
                 PendingColumnValues[i] = DBNull.Value;
             }

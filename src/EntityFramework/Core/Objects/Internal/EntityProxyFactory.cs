@@ -1,10 +1,10 @@
 ﻿namespace System.Data.Entity.Core.Objects.Internal
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -17,6 +17,7 @@
     using System.Security;
     using System.Security.Permissions;
     using System.Threading;
+    using System.Xml.Serialization;
 
     /// <summary>
     /// Factory for creating proxy classes that can intercept calls to a class' members.
@@ -32,48 +33,56 @@
         /// proxy assembly through reflection into the EntityProxyFactory.
         /// </summary>
         private static AssemblyBuilderAccess s_ProxyAssemblyBuilderAccess = AssemblyBuilderAccess.Run;
+
         /// <summary>
         /// Dictionary of proxy class type information, keyed by the pair of the CLR type and EntityType CSpaceName of the type being proxied.
         /// A null value for a particular EntityType name key records the fact that 
         /// no proxy Type could be created for the specified type.
         /// </summary>
-        private static Dictionary<Tuple<Type, string>, EntityProxyTypeInfo> s_ProxyNameMap = new Dictionary<Tuple<Type, string>, EntityProxyTypeInfo>();
+        private static readonly Dictionary<Tuple<Type, string>, EntityProxyTypeInfo> s_ProxyNameMap =
+            new Dictionary<Tuple<Type, string>, EntityProxyTypeInfo>();
+
         /// <summary>
         /// Dictionary of proxy class type information, keyed by the proxy type
         /// </summary>
-        private static Dictionary<Type, EntityProxyTypeInfo> s_ProxyTypeMap = new Dictionary<Type, EntityProxyTypeInfo>();
-        private static Dictionary<Assembly, ModuleBuilder> s_ModuleBuilders = new Dictionary<Assembly, ModuleBuilder>();
-        private static ReaderWriterLockSlim s_TypeMapLock = new ReaderWriterLockSlim();
+        private static readonly Dictionary<Type, EntityProxyTypeInfo> s_ProxyTypeMap = new Dictionary<Type, EntityProxyTypeInfo>();
+
+        private static readonly Dictionary<Assembly, ModuleBuilder> s_ModuleBuilders = new Dictionary<Assembly, ModuleBuilder>();
+        private static readonly ReaderWriterLockSlim s_TypeMapLock = new ReaderWriterLockSlim();
 
         /// <summary>
         /// The runtime assembly of the proxy types.
         /// This is not the same as the AssemblyBuilder used to create proxy types.
         /// </summary>
-        private static HashSet<Assembly> ProxyRuntimeAssemblies = new HashSet<Assembly>();
+        private static readonly HashSet<Assembly> ProxyRuntimeAssemblies = new HashSet<Assembly>();
 
         private static ModuleBuilder GetDynamicModule(EntityType ospaceEntityType)
         {
-            Assembly assembly = ospaceEntityType.ClrType.Assembly;
+            var assembly = ospaceEntityType.ClrType.Assembly;
             ModuleBuilder moduleBuilder;
             if (!s_ModuleBuilders.TryGetValue(assembly, out moduleBuilder))
             {
-                AssemblyName assemblyName = new AssemblyName(String.Format(CultureInfo.InvariantCulture, "EntityFrameworkDynamicProxies-{0}", assembly.FullName));
+                var assemblyName =
+                    new AssemblyName(String.Format(CultureInfo.InvariantCulture, "EntityFrameworkDynamicProxies-{0}", assembly.FullName));
                 assemblyName.Version = new Version(1, 0, 0, 0);
-                
+
                 // Mark assembly as security transparent, meaning it cannot cause an elevation of privilege.
                 // This also means the assembly cannot satisfy a link demand. Instead link demands become full demands.
-                ConstructorInfo securityTransparentAttributeConstructor = typeof(SecurityTransparentAttribute).GetConstructor(Type.EmptyTypes);
+                var securityTransparentAttributeConstructor = typeof(SecurityTransparentAttribute).GetConstructor(Type.EmptyTypes);
 
                 // Mark assembly with [SecurityRules(SecurityRuleSet.Level1)]. In memory, the assembly will inherit
                 // this automatically from SDE, but when persisted it needs this attribute to be considered Level1.
-                ConstructorInfo securityRulesAttributeConstructor = typeof(SecurityRulesAttribute).GetConstructor(new Type[] { typeof(SecurityRuleSet) });
+                var securityRulesAttributeConstructor = typeof(SecurityRulesAttribute).GetConstructor(new[] { typeof(SecurityRuleSet) });
 
-                CustomAttributeBuilder[] attributeBuilders = new CustomAttributeBuilder[] { 
-                    new CustomAttributeBuilder(securityTransparentAttributeConstructor, new object[0]),
-                    new CustomAttributeBuilder(securityRulesAttributeConstructor, new object[1] { SecurityRuleSet.Level1 })
-                };
+                var attributeBuilders = new[]
+                                            {
+                                                new CustomAttributeBuilder(securityTransparentAttributeConstructor, new object[0]),
+                                                new CustomAttributeBuilder(
+                                                    securityRulesAttributeConstructor, new object[1] { SecurityRuleSet.Level1 })
+                                            };
 
-                AssemblyBuilder assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, s_ProxyAssemblyBuilderAccess, attributeBuilders);
+                var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(
+                    assemblyName, s_ProxyAssemblyBuilderAccess, attributeBuilders);
 
                 if (s_ProxyAssemblyBuilderAccess == AssemblyBuilderAccess.RunAndSave)
                 {
@@ -121,7 +130,8 @@
             Debug.Assert(instance != null, "the instance should not be null");
             wrapper = null;
             EntityProxyTypeInfo proxyTypeInfo;
-            if (IsProxyType(instance.GetType()) &&
+            if (IsProxyType(instance.GetType())
+                &&
                 TryGetProxyType(instance.GetType(), out proxyTypeInfo))
             {
                 wrapper = proxyTypeInfo.GetEntityWrapper(instance);
@@ -181,11 +191,12 @@
         /// <param name="targetRoleName">Target role of the relationship</param>
         /// <param name="associationType">The AssociationType for that property</param>
         /// <returns>True if an AssociationType is found in proxy metadata, false otherwise</returns>
-        internal static bool TryGetAssociationTypeFromProxyInfo(IEntityWrapper wrappedEntity, string relationshipName, string targetRoleName, out AssociationType associationType)
+        internal static bool TryGetAssociationTypeFromProxyInfo(
+            IEntityWrapper wrappedEntity, string relationshipName, string targetRoleName, out AssociationType associationType)
         {
             EntityProxyTypeInfo proxyInfo = null;
             associationType = null;
-            return (EntityProxyFactory.TryGetProxyType(wrappedEntity.Entity.GetType(), out proxyInfo) && proxyInfo != null &&
+            return (TryGetProxyType(wrappedEntity.Entity.GetType(), out proxyInfo) && proxyInfo != null &&
                     proxyInfo.TryGetNavigationPropertyAssociationType(relationshipName, targetRoleName, out associationType));
         }
 
@@ -209,7 +220,7 @@
             s_TypeMapLock.EnterUpgradeableReadLock();
             try
             {
-                foreach (EntityType ospaceEntityType in ospaceEntityTypes)
+                foreach (var ospaceEntityType in ospaceEntityTypes)
                 {
                     Debug.Assert(ospaceEntityType != null, "Null EntityType element reference present in enumeration.");
                     TryCreateProxyType(ospaceEntityType);
@@ -223,16 +234,19 @@
 
         private static EntityProxyTypeInfo TryCreateProxyType(EntityType ospaceEntityType)
         {
-            Debug.Assert(s_TypeMapLock.IsUpgradeableReadLockHeld, "EntityProxyTypeInfo.TryCreateProxyType method was called without first acquiring an upgradeable read lock from s_TypeMapLock.");
+            Debug.Assert(
+                s_TypeMapLock.IsUpgradeableReadLockHeld,
+                "EntityProxyTypeInfo.TryCreateProxyType method was called without first acquiring an upgradeable read lock from s_TypeMapLock.");
 
             EntityProxyTypeInfo proxyTypeInfo;
-            ClrEntityType clrEntityType = (ClrEntityType)ospaceEntityType;
+            var clrEntityType = (ClrEntityType)ospaceEntityType;
 
-            Tuple<Type, string> proxyIdentiy = new Tuple<Type, string>(clrEntityType.ClrType, clrEntityType.HashedDescription);
+            var proxyIdentiy = new Tuple<Type, string>(clrEntityType.ClrType, clrEntityType.HashedDescription);
 
-            if (!s_ProxyNameMap.TryGetValue(proxyIdentiy, out proxyTypeInfo) && CanProxyType(ospaceEntityType))
+            if (!s_ProxyNameMap.TryGetValue(proxyIdentiy, out proxyTypeInfo)
+                && CanProxyType(ospaceEntityType))
             {
-                ModuleBuilder moduleBuilder = GetDynamicModule(ospaceEntityType);
+                var moduleBuilder = GetDynamicModule(ospaceEntityType);
                 proxyTypeInfo = BuildType(moduleBuilder, clrEntityType);
 
                 s_TypeMapLock.EnterWriteLock();
@@ -299,34 +313,35 @@
         {
             Debug.Assert(propertyInfo != null, "Null propertyInfo");
 
-            ParameterExpression Object_Parameter = Expression.Parameter(typeof(object), "instance");
-            Func<object, object> nonProxyGetter = Expression.Lambda<Func<object, object>>(
-                                    Expression.PropertyOrField(
-                                        Expression.Convert(Object_Parameter, declaringType),
-                                        propertyInfo.Name),
-                                    Object_Parameter).Compile();
+            var Object_Parameter = Expression.Parameter(typeof(object), "instance");
+            var nonProxyGetter = Expression.Lambda<Func<object, object>>(
+                Expression.PropertyOrField(
+                    Expression.Convert(Object_Parameter, declaringType),
+                    propertyInfo.Name),
+                Object_Parameter).Compile();
 
-            string propertyName = propertyInfo.Name;
+            var propertyName = propertyInfo.Name;
             return (entity) =>
-            {
-                Type type = entity.GetType();
-                if (IsProxyType(type))
-                {
-                    object value;
-                    if (TryGetBasePropertyValue(type, propertyName, entity, out value))
-                    {
-                        return value;
-                    }
-                }
-                return nonProxyGetter(entity);
-            };
+                       {
+                           var type = entity.GetType();
+                           if (IsProxyType(type))
+                           {
+                               object value;
+                               if (TryGetBasePropertyValue(type, propertyName, entity, out value))
+                               {
+                                   return value;
+                               }
+                           }
+                           return nonProxyGetter(entity);
+                       };
         }
 
         private static bool TryGetBasePropertyValue(Type proxyType, string propertyName, object entity, out object value)
         {
             EntityProxyTypeInfo typeInfo;
             value = null;
-            if (TryGetProxyType(proxyType, out typeInfo) && typeInfo.ContainsBaseGetter(propertyName))
+            if (TryGetProxyType(proxyType, out typeInfo)
+                && typeInfo.ContainsBaseGetter(propertyName))
             {
                 value = typeInfo.BaseGetter(entity, propertyName);
                 return true;
@@ -338,27 +353,28 @@
         {
             Debug.Assert(propertyInfo != null, "Null propertyInfo");
 
-            Action<object, object> nonProxySetter = LightweightCodeGenerator.CreateNavigationPropertySetter(declaringType, propertyInfo);
+            var nonProxySetter = LightweightCodeGenerator.CreateNavigationPropertySetter(declaringType, propertyInfo);
 
-            string propertyName = propertyInfo.Name;
+            var propertyName = propertyInfo.Name;
             return (entity, value) =>
-            {
-                Type type = entity.GetType();
-                if (IsProxyType(type))
-                {
-                    if (TrySetBasePropertyValue(type, propertyName, entity, value))
-                    {
-                        return;
-                    }
-                }
-                nonProxySetter(entity, value);
-            };
+                       {
+                           var type = entity.GetType();
+                           if (IsProxyType(type))
+                           {
+                               if (TrySetBasePropertyValue(type, propertyName, entity, value))
+                               {
+                                   return;
+                               }
+                           }
+                           nonProxySetter(entity, value);
+                       };
         }
 
         private static bool TrySetBasePropertyValue(Type proxyType, string propertyName, object entity, object value)
         {
             EntityProxyTypeInfo typeInfo;
-            if (TryGetProxyType(proxyType, out typeInfo) && typeInfo.ContainsBaseSetter(propertyName))
+            if (TryGetProxyType(proxyType, out typeInfo)
+                && typeInfo.ContainsBaseSetter(propertyName))
             {
                 typeInfo.BaseSetter(entity, propertyName, value);
                 return true;
@@ -379,29 +395,32 @@
         /// </returns>
         private static EntityProxyTypeInfo BuildType(ModuleBuilder moduleBuilder, ClrEntityType ospaceEntityType)
         {
-            Debug.Assert(s_TypeMapLock.IsUpgradeableReadLockHeld, "EntityProxyTypeInfo.BuildType method was called without first acquiring an upgradeable read lock from s_TypeMapLock.");
+            Debug.Assert(
+                s_TypeMapLock.IsUpgradeableReadLockHeld,
+                "EntityProxyTypeInfo.BuildType method was called without first acquiring an upgradeable read lock from s_TypeMapLock.");
 
             EntityProxyTypeInfo proxyTypeInfo;
 
-            ProxyTypeBuilder proxyTypeBuilder = new ProxyTypeBuilder(ospaceEntityType);
-            Type proxyType = proxyTypeBuilder.CreateType(moduleBuilder);
+            var proxyTypeBuilder = new ProxyTypeBuilder(ospaceEntityType);
+            var proxyType = proxyTypeBuilder.CreateType(moduleBuilder);
 
             if (proxyType != null)
             {
                 // Set the runtime assembly of the proxy types if it hasn't already been set.
                 // This is used by the IsProxyType method.
-                Assembly typeAssembly = proxyType.Assembly;
+                var typeAssembly = proxyType.Assembly;
                 if (!ProxyRuntimeAssemblies.Contains(typeAssembly))
                 {
                     ProxyRuntimeAssemblies.Add(typeAssembly);
                     AddAssemblyToResolveList(typeAssembly);
                 }
 
-                proxyTypeInfo = new EntityProxyTypeInfo(proxyType, ospaceEntityType,
+                proxyTypeInfo = new EntityProxyTypeInfo(
+                    proxyType, ospaceEntityType,
                     proxyTypeBuilder.CreateInitalizeCollectionMethod(proxyType),
                     proxyTypeBuilder.BaseGetters, proxyTypeBuilder.BaseSetters);
 
-                foreach (EdmMember member in proxyTypeBuilder.LazyLoadMembers)
+                foreach (var member in proxyTypeBuilder.LazyLoadMembers)
                 {
                     InterceptMember(member, proxyType, proxyTypeInfo);
                 }
@@ -428,7 +447,7 @@
         {
             if (ProxyRuntimeAssemblies.Contains(assembly)) // If the assembly is not a known proxy assembly, ignore it.
             {
-                ResolveEventHandler resolveHandler = new ResolveEventHandler((sender, args) => args.Name == assembly.FullName ? assembly : null);
+                ResolveEventHandler resolveHandler = (sender, args) => args.Name == assembly.FullName ? assembly : null;
                 AppDomain.CurrentDomain.AssemblyResolve += resolveHandler;
             }
         }
@@ -448,15 +467,25 @@
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private static void InterceptMember(EdmMember member, Type proxyType, EntityProxyTypeInfo proxyTypeInfo)
         {
-            PropertyInfo property = EntityUtil.GetTopProperty(proxyType, member.Name);
-            Debug.Assert(property != null, String.Format(CultureInfo.CurrentCulture, "Expected property {0} to be defined on proxy type {1}", member.Name, proxyType.FullName));
+            var property = EntityUtil.GetTopProperty(proxyType, member.Name);
+            Debug.Assert(
+                property != null,
+                String.Format(
+                    CultureInfo.CurrentCulture, "Expected property {0} to be defined on proxy type {1}", member.Name, proxyType.FullName));
 
-            FieldInfo interceptorField = proxyType.GetField(LazyLoadImplementor.GetInterceptorFieldName(member.Name), BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.NonPublic);
-            Debug.Assert(interceptorField != null, String.Format(CultureInfo.CurrentCulture, "Expected interceptor field for property {0} to be defined on proxy type {1}", member.Name, proxyType.FullName));
+            var interceptorField = proxyType.GetField(
+                LazyLoadImplementor.GetInterceptorFieldName(member.Name),
+                BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.NonPublic);
+            Debug.Assert(
+                interceptorField != null,
+                String.Format(
+                    CultureInfo.CurrentCulture, "Expected interceptor field for property {0} to be defined on proxy type {1}", member.Name,
+                    proxyType.FullName));
 
-            Delegate interceptorDelegate = typeof(LazyLoadBehavior).GetMethod("GetInterceptorDelegate", BindingFlags.NonPublic | BindingFlags.Static).
-                MakeGenericMethod(proxyType, property.PropertyType).
-                Invoke(null, new object[] { member, proxyTypeInfo.EntityWrapperDelegate }) as Delegate;
+            var interceptorDelegate =
+                typeof(LazyLoadBehavior).GetMethod("GetInterceptorDelegate", BindingFlags.NonPublic | BindingFlags.Static).
+                    MakeGenericMethod(proxyType, property.PropertyType).
+                    Invoke(null, new object[] { member, proxyTypeInfo.EntityWrapperDelegate }) as Delegate;
 
             AssignInterceptionDelegate(interceptorDelegate, interceptorField);
         }
@@ -485,7 +514,8 @@
         /// </summary>
         private static void SetResetFKSetterFlagDelegate(Type proxyType, EntityProxyTypeInfo proxyTypeInfo)
         {
-            var resetFKSetterFlagField = proxyType.GetField(ResetFKSetterFlagFieldName, BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.NonPublic);
+            var resetFKSetterFlagField = proxyType.GetField(
+                ResetFKSetterFlagFieldName, BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.NonPublic);
             Debug.Assert(resetFKSetterFlagField != null, "Expected resetFKSetterFlagField to be defined on the proxy type.");
 
             var resetFKSetterFlagDelegate = GetResetFKSetterFlagDelegate(proxyTypeInfo.EntityWrapperDelegate);
@@ -500,11 +530,11 @@
         private static Action<object> GetResetFKSetterFlagDelegate(Func<object, object> getEntityWrapperDelegate)
         {
             return (proxy) =>
-            {
-                Debug.Assert(getEntityWrapperDelegate != null, "entityWrapperDelegate must not be null");
-                
-                ResetFKSetterFlag(getEntityWrapperDelegate(proxy));
-            };
+                       {
+                           Debug.Assert(getEntityWrapperDelegate != null, "entityWrapperDelegate must not be null");
+
+                           ResetFKSetterFlag(getEntityWrapperDelegate(proxy));
+                       };
         }
 
         /// <summary>
@@ -515,9 +545,11 @@
         /// </summary>
         private static void ResetFKSetterFlag(object wrappedEntityAsObject)
         {
-            Debug.Assert(wrappedEntityAsObject == null || wrappedEntityAsObject is IEntityWrapper, "wrappedEntityAsObject must be an IEntityWrapper");
+            Debug.Assert(
+                wrappedEntityAsObject == null || wrappedEntityAsObject is IEntityWrapper, "wrappedEntityAsObject must be an IEntityWrapper");
             var wrappedEntity = (IEntityWrapper)wrappedEntityAsObject; // We want an exception if the cast fails.
-            if (wrappedEntity != null && wrappedEntity.Context != null)
+            if (wrappedEntity != null
+                && wrappedEntity.Context != null)
             {
                 wrappedEntity.Context.ObjectStateManager.EntityInvokingFKSetter = null;
             }
@@ -529,7 +561,8 @@
         /// </summary>
         private static void SetCompareByteArraysDelegate(Type proxyType)
         {
-            var compareByteArraysField = proxyType.GetField(CompareByteArraysFieldName, BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.NonPublic);
+            var compareByteArraysField = proxyType.GetField(
+                CompareByteArraysFieldName, BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.NonPublic);
             Debug.Assert(compareByteArraysField != null, "Expected compareByteArraysField to be defined on the proxy type.");
 
             AssignInterceptionDelegate(new Func<object, object, bool>(ByValueEqualityComparer.Default.Equals), compareByteArraysField);
@@ -554,31 +587,34 @@
         /// </remarks>
         private static bool CanProxyType(EntityType ospaceEntityType)
         {
-            TypeAttributes access = ospaceEntityType.ClrType.Attributes & TypeAttributes.VisibilityMask;
+            var access = ospaceEntityType.ClrType.Attributes & TypeAttributes.VisibilityMask;
 
-            ConstructorInfo ctor = ospaceEntityType.ClrType.GetConstructor(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null, Type.EmptyTypes, null);
-            bool accessableCtor = ctor != null && (((ctor.Attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.Public) ||
-                                                   ((ctor.Attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.Family) ||
-                                                   ((ctor.Attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.FamORAssem));
+            var ctor =
+                ospaceEntityType.ClrType.GetConstructor(
+                    BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null,
+                    Type.EmptyTypes, null);
+            var accessableCtor = ctor != null && (((ctor.Attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.Public) ||
+                                                  ((ctor.Attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.Family) ||
+                                                  ((ctor.Attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.FamORAssem));
 
             return (!(ospaceEntityType.Abstract ||
-                     ospaceEntityType.ClrType.IsSealed ||
-                     typeof(IEntityWithRelationships).IsAssignableFrom(ospaceEntityType.ClrType) ||
-                     !accessableCtor) &&
-                     access == TypeAttributes.Public);
+                      ospaceEntityType.ClrType.IsSealed ||
+                      typeof(IEntityWithRelationships).IsAssignableFrom(ospaceEntityType.ClrType) ||
+                      !accessableCtor) &&
+                    access == TypeAttributes.Public);
         }
 
         private static bool CanProxyMethod(MethodInfo method)
         {
-            bool result = false;
+            var result = false;
 
             if (method != null)
             {
-                MethodAttributes access = method.Attributes & MethodAttributes.MemberAccessMask;
+                var access = method.Attributes & MethodAttributes.MemberAccessMask;
                 result = method.IsVirtual &&
                          !method.IsFinal &&
-                         (access == MethodAttributes.Public || 
-                          access == MethodAttributes.Family || 
+                         (access == MethodAttributes.Public ||
+                          access == MethodAttributes.Family ||
                           access == MethodAttributes.FamORAssem);
             }
 
@@ -600,14 +636,14 @@
         private class ProxyTypeBuilder
         {
             private TypeBuilder _typeBuilder;
-            private BaseProxyImplementor _baseImplementor;
-            private IPOCOImplementor _ipocoImplementor;
-            private LazyLoadImplementor _lazyLoadImplementor;
-            private DataContractImplementor _dataContractImplementor;
-            private ISerializableImplementor _iserializableImplementor;
-            private ClrEntityType _ospaceEntityType;
+            private readonly BaseProxyImplementor _baseImplementor;
+            private readonly IPOCOImplementor _ipocoImplementor;
+            private readonly LazyLoadImplementor _lazyLoadImplementor;
+            private readonly DataContractImplementor _dataContractImplementor;
+            private readonly ISerializableImplementor _iserializableImplementor;
+            private readonly ClrEntityType _ospaceEntityType;
             private ModuleBuilder _moduleBuilder;
-            private List<FieldBuilder> _serializedFields = new List<FieldBuilder>(3);
+            private readonly List<FieldBuilder> _serializedFields = new List<FieldBuilder>(3);
 
             public ProxyTypeBuilder(ClrEntityType ospaceEntityType)
             {
@@ -631,18 +667,12 @@
 
             public List<PropertyInfo> BaseGetters
             {
-                get
-                {
-                    return _baseImplementor.BaseGetters;
-                }
+                get { return _baseImplementor.BaseGetters; }
             }
 
             public List<PropertyInfo> BaseSetters
             {
-                get
-                {
-                    return _baseImplementor.BaseSetters;
-                }
+                get { return _baseImplementor.BaseSetters; }
             }
 
             public IEnumerable<EdmMember> LazyLoadMembers
@@ -653,17 +683,19 @@
             public Type CreateType(ModuleBuilder moduleBuilder)
             {
                 _moduleBuilder = moduleBuilder;
-                bool hadProxyProperties = false;
+                var hadProxyProperties = false;
 
                 if (_iserializableImplementor.TypeIsSuitable)
                 {
-                    foreach (EdmMember member in _ospaceEntityType.Members)
+                    foreach (var member in _ospaceEntityType.Members)
                     {
-                        if (_ipocoImplementor.CanProxyMember(member) ||
+                        if (_ipocoImplementor.CanProxyMember(member)
+                            ||
                             _lazyLoadImplementor.CanProxyMember(member))
                         {
-                            PropertyInfo baseProperty = EntityUtil.GetTopProperty(BaseType, member.Name);
-                            PropertyBuilder propertyBuilder = TypeBuilder.DefineProperty(member.Name, System.Reflection.PropertyAttributes.None, baseProperty.PropertyType, Type.EmptyTypes);
+                            var baseProperty = EntityUtil.GetTopProperty(BaseType, member.Name);
+                            var propertyBuilder = TypeBuilder.DefineProperty(
+                                member.Name, PropertyAttributes.None, baseProperty.PropertyType, Type.EmptyTypes);
 
                             if (!_ipocoImplementor.EmitMember(TypeBuilder, member, propertyBuilder, baseProperty, _baseImplementor))
                             {
@@ -694,19 +726,23 @@
                 {
                     if (_typeBuilder == null)
                     {
-                        TypeAttributes proxyTypeAttributes = TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.Sealed;
-                        if ((BaseType.Attributes & TypeAttributes.Serializable) == TypeAttributes.Serializable)
+                        var proxyTypeAttributes = TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.Sealed;
+                        if ((BaseType.Attributes & TypeAttributes.Serializable)
+                            == TypeAttributes.Serializable)
                         {
                             proxyTypeAttributes |= TypeAttributes.Serializable;
                         }
 
                         // If the type as a long name, then use only the first part of it so that there is no chance that the generated
                         // name will be too long.  Note that the full name always gets used to compute the hash.
-                        string baseName = BaseType.Name.Length <= 20 ? BaseType.Name : BaseType.Name.Substring(0, 20);
-                        string proxyTypeName = String.Format(CultureInfo.InvariantCulture, ProxyTypeNameFormat, baseName, _ospaceEntityType.HashedDescription);
+                        var baseName = BaseType.Name.Length <= 20 ? BaseType.Name : BaseType.Name.Substring(0, 20);
+                        var proxyTypeName = String.Format(
+                            CultureInfo.InvariantCulture, ProxyTypeNameFormat, baseName, _ospaceEntityType.HashedDescription);
 
                         _typeBuilder = _moduleBuilder.DefineType(proxyTypeName, proxyTypeAttributes, BaseType, _ipocoImplementor.Interfaces);
-                        _typeBuilder.DefineDefaultConstructor(MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.RTSpecialName | MethodAttributes.SpecialName);
+                        _typeBuilder.DefineDefaultConstructor(
+                            MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.RTSpecialName
+                            | MethodAttributes.SpecialName);
 
                         Action<FieldBuilder, bool> registerField = RegisterInstanceField;
                         _ipocoImplementor.Implement(_typeBuilder, registerField);
@@ -726,13 +762,15 @@
             {
                 if (CanProxyGetter(baseProperty))
                 {
-                    MethodInfo baseGetter = baseProperty.GetGetMethod(true);
-                    const MethodAttributes getterAttributes = MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
-                    MethodAttributes getterAccess = baseGetter.Attributes & MethodAttributes.MemberAccessMask;
+                    var baseGetter = baseProperty.GetGetMethod(true);
+                    const MethodAttributes getterAttributes =
+                        MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
+                    var getterAccess = baseGetter.Attributes & MethodAttributes.MemberAccessMask;
 
                     // Define a property getter override in the proxy type
-                    MethodBuilder getterBuilder = typeBuilder.DefineMethod("get_" + baseProperty.Name, getterAccess | getterAttributes, baseProperty.PropertyType, Type.EmptyTypes);
-                    ILGenerator gen = getterBuilder.GetILGenerator();
+                    var getterBuilder = typeBuilder.DefineMethod(
+                        "get_" + baseProperty.Name, getterAccess | getterAttributes, baseProperty.PropertyType, Type.EmptyTypes);
+                    var gen = getterBuilder.GetILGenerator();
 
                     gen.Emit(OpCodes.Ldarg_0);
                     gen.Emit(OpCodes.Call, baseGetter);
@@ -746,13 +784,15 @@
             {
                 if (CanProxySetter(baseProperty))
                 {
+                    var baseSetter = baseProperty.GetSetMethod(true);
+                    ;
+                    const MethodAttributes methodAttributes =
+                        MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
+                    var methodAccess = baseSetter.Attributes & MethodAttributes.MemberAccessMask;
 
-                    MethodInfo baseSetter = baseProperty.GetSetMethod(true); ;
-                    const MethodAttributes methodAttributes = MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
-                    MethodAttributes methodAccess = baseSetter.Attributes & MethodAttributes.MemberAccessMask;
-
-                    MethodBuilder setterBuilder = typeBuilder.DefineMethod("set_" + baseProperty.Name, methodAccess | methodAttributes, null, new Type[] { baseProperty.PropertyType });
-                    ILGenerator generator = setterBuilder.GetILGenerator();
+                    var setterBuilder = typeBuilder.DefineMethod(
+                        "set_" + baseProperty.Name, methodAccess | methodAttributes, null, new[] { baseProperty.PropertyType });
+                    var generator = setterBuilder.GetILGenerator();
                     generator.Emit(OpCodes.Ldarg_0);
                     generator.Emit(OpCodes.Ldarg_1);
                     generator.Emit(OpCodes.Call, baseSetter);
@@ -769,17 +809,22 @@
                 }
                 else
                 {
-                    MarkAsNotSerializable(field); 
+                    MarkAsNotSerializable(field);
                 }
             }
 
-            private static readonly ConstructorInfo s_NonSerializedAttributeConstructor = typeof(NonSerializedAttribute).GetConstructor(Type.EmptyTypes);
-            private static readonly ConstructorInfo s_IgnoreDataMemberAttributeConstructor = typeof(IgnoreDataMemberAttribute).GetConstructor(Type.EmptyTypes);
-            private static readonly ConstructorInfo s_XmlIgnoreAttributeConstructor = typeof(System.Xml.Serialization.XmlIgnoreAttribute).GetConstructor(Type.EmptyTypes);
+            private static readonly ConstructorInfo s_NonSerializedAttributeConstructor =
+                typeof(NonSerializedAttribute).GetConstructor(Type.EmptyTypes);
+
+            private static readonly ConstructorInfo s_IgnoreDataMemberAttributeConstructor =
+                typeof(IgnoreDataMemberAttribute).GetConstructor(Type.EmptyTypes);
+
+            private static readonly ConstructorInfo s_XmlIgnoreAttributeConstructor =
+                typeof(XmlIgnoreAttribute).GetConstructor(Type.EmptyTypes);
 
             private static void MarkAsNotSerializable(FieldBuilder field)
             {
-                object[] emptyArray = new object[0];
+                var emptyArray = new object[0];
 
                 field.SetCustomAttribute(new CustomAttributeBuilder(s_NonSerializedAttributeConstructor, emptyArray));
 
@@ -794,7 +839,7 @@
 
     internal class LazyLoadImplementor
     {
-        HashSet<EdmMember> _members;
+        private HashSet<EdmMember> _members;
 
         public LazyLoadImplementor(EntityType ospaceEntityType)
         {
@@ -810,11 +855,12 @@
         {
             _members = new HashSet<EdmMember>();
 
-            foreach (EdmMember member in ospaceEntityType.Members)
+            foreach (var member in ospaceEntityType.Members)
             {
-                PropertyInfo clrProperty = EntityUtil.GetTopProperty(ospaceEntityType.ClrType, member.Name);
+                var clrProperty = EntityUtil.GetTopProperty(ospaceEntityType.ClrType, member.Name);
                 if (clrProperty != null &&
-                    EntityProxyFactory.CanProxyGetter(clrProperty) &&
+                    EntityProxyFactory.CanProxyGetter(clrProperty)
+                    &&
                     LazyLoadBehavior.IsLazyLoadCandidate(ospaceEntityType, member))
                 {
                     _members.Add(member);
@@ -833,17 +879,20 @@
             // The field is typed as object, for two reasons:
             // 1. The practical one, IEntityWrapper is internal and not accessible from the dynamic assembly.
             // 2. We purposely want the wrapper field to be opaque on the proxy type.
-            FieldBuilder wrapperField = typeBuilder.DefineField(EntityProxyTypeInfo.EntityWrapperFieldName, typeof(object), FieldAttributes.Public);
+            var wrapperField = typeBuilder.DefineField(EntityProxyTypeInfo.EntityWrapperFieldName, typeof(object), FieldAttributes.Public);
             registerField(wrapperField, false);
         }
 
-        public bool EmitMember(TypeBuilder typeBuilder, EdmMember member, PropertyBuilder propertyBuilder, PropertyInfo baseProperty, BaseProxyImplementor baseImplementor)
+        public bool EmitMember(
+            TypeBuilder typeBuilder, EdmMember member, PropertyBuilder propertyBuilder, PropertyInfo baseProperty,
+            BaseProxyImplementor baseImplementor)
         {
             if (_members.Contains(member))
             {
-                MethodInfo baseGetter = baseProperty.GetGetMethod(true);
-                const MethodAttributes getterAttributes = MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
-                MethodAttributes getterAccess = baseGetter.Attributes & MethodAttributes.MemberAccessMask;
+                var baseGetter = baseProperty.GetGetMethod(true);
+                const MethodAttributes getterAttributes =
+                    MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
+                var getterAccess = baseGetter.Attributes & MethodAttributes.MemberAccessMask;
 
                 // Define field to store interceptor Func
                 // Signature of interceptor Func delegate is as follows:
@@ -855,13 +904,15 @@
                 //     ProxyType is the type of the proxy object,
                 //     propertyValue is the value returned from the proxied type's property getter.
 
-                Type interceptorType = typeof(Func<,,>).MakeGenericType(typeBuilder, baseProperty.PropertyType, typeof(bool));
-                MethodInfo interceptorInvoke = TypeBuilder.GetMethod(interceptorType, typeof(Func<,,>).GetMethod("Invoke"));
-                FieldBuilder interceptorField = typeBuilder.DefineField(GetInterceptorFieldName(baseProperty.Name), interceptorType, FieldAttributes.Private | FieldAttributes.Static);
+                var interceptorType = typeof(Func<,,>).MakeGenericType(typeBuilder, baseProperty.PropertyType, typeof(bool));
+                var interceptorInvoke = TypeBuilder.GetMethod(interceptorType, typeof(Func<,,>).GetMethod("Invoke"));
+                var interceptorField = typeBuilder.DefineField(
+                    GetInterceptorFieldName(baseProperty.Name), interceptorType, FieldAttributes.Private | FieldAttributes.Static);
 
                 // Define a property getter override in the proxy type
-                MethodBuilder getterBuilder = typeBuilder.DefineMethod("get_" + baseProperty.Name, getterAccess | getterAttributes, baseProperty.PropertyType, Type.EmptyTypes);
-                ILGenerator generator = getterBuilder.GetILGenerator();
+                var getterBuilder = typeBuilder.DefineMethod(
+                    "get_" + baseProperty.Name, getterAccess | getterAttributes, baseProperty.PropertyType, Type.EmptyTypes);
+                var generator = getterBuilder.GetILGenerator();
 
                 // Emit instructions for the following call:
                 //   T value = base.SomeProperty;
@@ -870,15 +921,15 @@
                 //   return base.SomeProperty;
                 // where _interceptorForSomeProperty represents the interceptor Func field.
 
-                Label lableTrue = generator.DefineLabel();
-                generator.DeclareLocal(baseProperty.PropertyType);       // T value
-                generator.Emit(OpCodes.Ldarg_0);            // call base.SomeProperty
+                var lableTrue = generator.DefineLabel();
+                generator.DeclareLocal(baseProperty.PropertyType); // T value
+                generator.Emit(OpCodes.Ldarg_0); // call base.SomeProperty
                 generator.Emit(OpCodes.Call, baseGetter); // call to base property getter
-                generator.Emit(OpCodes.Stloc_0);            // value = result
-                generator.Emit(OpCodes.Ldarg_0);            // load this
+                generator.Emit(OpCodes.Stloc_0); // value = result
+                generator.Emit(OpCodes.Ldarg_0); // load this
                 generator.Emit(OpCodes.Ldfld, interceptorField); // load this._interceptor
-                generator.Emit(OpCodes.Ldarg_0);            // load this
-                generator.Emit(OpCodes.Ldloc_0);            // load value
+                generator.Emit(OpCodes.Ldarg_0); // load this
+                generator.Emit(OpCodes.Ldloc_0); // load value
                 generator.Emit(OpCodes.Callvirt, interceptorInvoke); // call to interceptor delegate with (this, value)
                 generator.Emit(OpCodes.Brtrue_S, lableTrue); // if true, just return
                 generator.Emit(OpCodes.Ldarg_0); // else, call the base propertty getter again
@@ -896,12 +947,10 @@
             return false;
         }
 
-
         internal static string GetInterceptorFieldName(string memberName)
         {
             return "ef_proxy_interceptorFor" + memberName;
         }
-
     }
 
     internal class BaseProxyImplementor
@@ -924,6 +973,7 @@
         {
             get { return _baseSetters; }
         }
+
         public void AddBasePropertyGetter(PropertyInfo baseProperty)
         {
             _baseGetters.Add(baseProperty);
@@ -946,17 +996,21 @@
             }
         }
 
-        static readonly MethodInfo s_StringEquals = typeof(string).GetMethod("op_Equality", new Type[] { typeof(string), typeof(string) });
-        static readonly ConstructorInfo s_InvalidOperationConstructor = typeof(InvalidOperationException).GetConstructor(Type.EmptyTypes);
+        private static readonly MethodInfo s_StringEquals = typeof(string).GetMethod(
+            "op_Equality", new[] { typeof(string), typeof(string) });
+
+        private static readonly ConstructorInfo s_InvalidOperationConstructor =
+            typeof(InvalidOperationException).GetConstructor(Type.EmptyTypes);
 
         private void ImplementBaseGetter(TypeBuilder typeBuilder)
         {
             // Define a property getter in the proxy type
-            MethodBuilder getterBuilder = typeBuilder.DefineMethod("GetBasePropertyValue", MethodAttributes.Public | MethodAttributes.HideBySig, typeof(object), new Type[] { typeof(string) });
-            ILGenerator gen = getterBuilder.GetILGenerator();
-            Label[] labels = new Label[_baseGetters.Count];
+            var getterBuilder = typeBuilder.DefineMethod(
+                "GetBasePropertyValue", MethodAttributes.Public | MethodAttributes.HideBySig, typeof(object), new[] { typeof(string) });
+            var gen = getterBuilder.GetILGenerator();
+            var labels = new Label[_baseGetters.Count];
 
-            for (int i = 0; i < _baseGetters.Count; i++)
+            for (var i = 0; i < _baseGetters.Count; i++)
             {
                 labels[i] = gen.DefineLabel();
                 gen.Emit(OpCodes.Ldarg_1);
@@ -974,12 +1028,14 @@
 
         private void ImplementBaseSetter(TypeBuilder typeBuilder)
         {
-            MethodBuilder setterBuilder = typeBuilder.DefineMethod("SetBasePropertyValue", MethodAttributes.Public | MethodAttributes.HideBySig, typeof(void), new Type[] { typeof(string), typeof(object) });
-            ILGenerator gen = setterBuilder.GetILGenerator();
+            var setterBuilder = typeBuilder.DefineMethod(
+                "SetBasePropertyValue", MethodAttributes.Public | MethodAttributes.HideBySig, typeof(void),
+                new[] { typeof(string), typeof(object) });
+            var gen = setterBuilder.GetILGenerator();
 
-            Label[] labels = new Label[_baseSetters.Count];
+            var labels = new Label[_baseSetters.Count];
 
-            for (int i = 0; i < _baseSetters.Count; i++)
+            for (var i = 0; i < _baseSetters.Count; i++)
             {
                 labels[i] = gen.DefineLabel();
                 gen.Emit(OpCodes.Ldarg_1);
@@ -1000,40 +1056,59 @@
 
     internal class IPOCOImplementor
     {
-        private EntityType _ospaceEntityType;
+        private readonly EntityType _ospaceEntityType;
 
-        FieldBuilder _changeTrackerField;
-        FieldBuilder _relationshipManagerField;
-        FieldBuilder _resetFKSetterFlagField;
-        FieldBuilder _compareByteArraysField;
+        private FieldBuilder _changeTrackerField;
+        private FieldBuilder _relationshipManagerField;
+        private FieldBuilder _resetFKSetterFlagField;
+        private FieldBuilder _compareByteArraysField;
 
-        MethodBuilder _entityMemberChanging;
-        MethodBuilder _entityMemberChanged;
-        MethodBuilder _getRelationshipManager;
+        private MethodBuilder _entityMemberChanging;
+        private MethodBuilder _entityMemberChanged;
+        private MethodBuilder _getRelationshipManager;
 
-        private List<KeyValuePair<NavigationProperty, PropertyInfo>> _referenceProperties;
-        private List<KeyValuePair<NavigationProperty, PropertyInfo>> _collectionProperties;
+        private readonly List<KeyValuePair<NavigationProperty, PropertyInfo>> _referenceProperties;
+        private readonly List<KeyValuePair<NavigationProperty, PropertyInfo>> _collectionProperties;
         private bool _implementIEntityWithChangeTracker;
         private bool _implementIEntityWithRelationships;
         private HashSet<EdmMember> _scalarMembers;
         private HashSet<EdmMember> _relationshipMembers;
-        
-        static readonly MethodInfo s_EntityMemberChanging = typeof(IEntityChangeTracker).GetMethod("EntityMemberChanging", new Type[] { typeof(string) });
-        static readonly MethodInfo s_EntityMemberChanged = typeof(IEntityChangeTracker).GetMethod("EntityMemberChanged", new Type[] { typeof(string) });
-        static readonly MethodInfo s_CreateRelationshipManager = typeof(RelationshipManager).GetMethod("Create", new Type[] { typeof(IEntityWithRelationships) });
-        static readonly MethodInfo s_GetRelationshipManager = typeof(IEntityWithRelationships).GetProperty("RelationshipManager").GetGetMethod();
-        static readonly MethodInfo s_GetRelatedReference = typeof(RelationshipManager).GetMethod("GetRelatedReference", new Type[] { typeof(string), typeof(string) });
-        static readonly MethodInfo s_GetRelatedCollection = typeof(RelationshipManager).GetMethod("GetRelatedCollection", new Type[] { typeof(string), typeof(string) });
-        static readonly MethodInfo s_GetRelatedEnd = typeof(RelationshipManager).GetMethod("GetRelatedEnd", new Type[] { typeof(string), typeof(string) });
-        static readonly MethodInfo s_ObjectEquals = typeof(object).GetMethod("Equals", new Type[] { typeof(object), typeof(object) });
-        static readonly ConstructorInfo s_InvalidOperationConstructor = typeof(InvalidOperationException).GetConstructor(new Type[] { typeof(string) });
-        static readonly MethodInfo s_IEntityWrapper_GetEntity = typeof(IEntityWrapper).GetProperty("Entity").GetGetMethod();
-        static readonly MethodInfo s_Action_Invoke = typeof(Action<object>).GetMethod("Invoke", new Type[] { typeof(object) });
-        static readonly MethodInfo s_Func_object_object_bool_Invoke = typeof(Func<object, object, bool>).GetMethod("Invoke", new Type[] { typeof(object), typeof(object) });
+
+        private static readonly MethodInfo s_EntityMemberChanging = typeof(IEntityChangeTracker).GetMethod(
+            "EntityMemberChanging", new[] { typeof(string) });
+
+        private static readonly MethodInfo s_EntityMemberChanged = typeof(IEntityChangeTracker).GetMethod(
+            "EntityMemberChanged", new[] { typeof(string) });
+
+        private static readonly MethodInfo s_CreateRelationshipManager = typeof(RelationshipManager).GetMethod(
+            "Create", new[] { typeof(IEntityWithRelationships) });
+
+        private static readonly MethodInfo s_GetRelationshipManager =
+            typeof(IEntityWithRelationships).GetProperty("RelationshipManager").GetGetMethod();
+
+        private static readonly MethodInfo s_GetRelatedReference = typeof(RelationshipManager).GetMethod(
+            "GetRelatedReference", new[] { typeof(string), typeof(string) });
+
+        private static readonly MethodInfo s_GetRelatedCollection = typeof(RelationshipManager).GetMethod(
+            "GetRelatedCollection", new[] { typeof(string), typeof(string) });
+
+        private static readonly MethodInfo s_GetRelatedEnd = typeof(RelationshipManager).GetMethod(
+            "GetRelatedEnd", new[] { typeof(string), typeof(string) });
+
+        private static readonly MethodInfo s_ObjectEquals = typeof(object).GetMethod("Equals", new[] { typeof(object), typeof(object) });
+
+        private static readonly ConstructorInfo s_InvalidOperationConstructor =
+            typeof(InvalidOperationException).GetConstructor(new[] { typeof(string) });
+
+        private static readonly MethodInfo s_IEntityWrapper_GetEntity = typeof(IEntityWrapper).GetProperty("Entity").GetGetMethod();
+        private static readonly MethodInfo s_Action_Invoke = typeof(Action<object>).GetMethod("Invoke", new[] { typeof(object) });
+
+        private static readonly MethodInfo s_Func_object_object_bool_Invoke = typeof(Func<object, object, bool>).GetMethod(
+            "Invoke", new[] { typeof(object), typeof(object) });
 
         public IPOCOImplementor(EntityType ospaceEntityType)
         {
-            Type baseType = ospaceEntityType.ClrType;
+            var baseType = ospaceEntityType.ClrType;
             _referenceProperties = new List<KeyValuePair<NavigationProperty, PropertyInfo>>();
             _collectionProperties = new List<KeyValuePair<NavigationProperty, PropertyInfo>>();
 
@@ -1050,28 +1125,32 @@
             _scalarMembers = new HashSet<EdmMember>();
             _relationshipMembers = new HashSet<EdmMember>();
 
-            foreach (EdmMember member in ospaceEntityType.Members)
+            foreach (var member in ospaceEntityType.Members)
             {
-                PropertyInfo clrProperty = EntityUtil.GetTopProperty(ospaceEntityType.ClrType, member.Name);
-                if (clrProperty != null && EntityProxyFactory.CanProxySetter(clrProperty))
+                var clrProperty = EntityUtil.GetTopProperty(ospaceEntityType.ClrType, member.Name);
+                if (clrProperty != null
+                    && EntityProxyFactory.CanProxySetter(clrProperty))
                 {
-                    if (member.BuiltInTypeKind == BuiltInTypeKind.EdmProperty)
+                    if (member.BuiltInTypeKind
+                        == BuiltInTypeKind.EdmProperty)
                     {
                         if (_implementIEntityWithChangeTracker)
                         {
                             _scalarMembers.Add(member);
                         }
                     }
-                    else if (member.BuiltInTypeKind == BuiltInTypeKind.NavigationProperty)
+                    else if (member.BuiltInTypeKind
+                             == BuiltInTypeKind.NavigationProperty)
                     {
                         if (_implementIEntityWithRelationships)
                         {
-                            NavigationProperty navProperty = (NavigationProperty)member;
-                            RelationshipMultiplicity multiplicity = navProperty.ToEndMember.RelationshipMultiplicity;
+                            var navProperty = (NavigationProperty)member;
+                            var multiplicity = navProperty.ToEndMember.RelationshipMultiplicity;
 
                             if (multiplicity == RelationshipMultiplicity.Many)
                             {
-                                if (clrProperty.PropertyType.IsGenericType &&
+                                if (clrProperty.PropertyType.IsGenericType
+                                    &&
                                     clrProperty.PropertyType.GetGenericTypeDefinition() == typeof(ICollection<>))
                                 {
                                     _relationshipMembers.Add(member);
@@ -1086,7 +1165,8 @@
                 }
             }
 
-            if (ospaceEntityType.Members.Count != _scalarMembers.Count + _relationshipMembers.Count)
+            if (ospaceEntityType.Members.Count
+                != _scalarMembers.Count + _relationshipMembers.Count)
             {
                 _scalarMembers.Clear();
                 _relationshipMembers.Clear();
@@ -1106,17 +1186,26 @@
                 ImplementIEntityWithRelationships(typeBuilder, registerField);
             }
 
-            _resetFKSetterFlagField = typeBuilder.DefineField(EntityProxyFactory.ResetFKSetterFlagFieldName, typeof(Action<object>), FieldAttributes.Private| FieldAttributes.Static);
-            _compareByteArraysField = typeBuilder.DefineField(EntityProxyFactory.CompareByteArraysFieldName, typeof(Func<object, object, bool>), FieldAttributes.Private | FieldAttributes.Static);
+            _resetFKSetterFlagField = typeBuilder.DefineField(
+                EntityProxyFactory.ResetFKSetterFlagFieldName, typeof(Action<object>), FieldAttributes.Private | FieldAttributes.Static);
+            _compareByteArraysField = typeBuilder.DefineField(
+                EntityProxyFactory.CompareByteArraysFieldName, typeof(Func<object, object, bool>),
+                FieldAttributes.Private | FieldAttributes.Static);
         }
 
         public Type[] Interfaces
         {
             get
             {
-                List<Type> types = new List<Type>();
-                if (_implementIEntityWithChangeTracker) { types.Add(typeof(IEntityWithChangeTracker)); }
-                if (_implementIEntityWithRelationships) { types.Add(typeof(IEntityWithRelationships)); }
+                var types = new List<Type>();
+                if (_implementIEntityWithChangeTracker)
+                {
+                    types.Add(typeof(IEntityWithChangeTracker));
+                }
+                if (_implementIEntityWithRelationships)
+                {
+                    types.Add(typeof(IEntityWithRelationships));
+                }
                 return types.ToArray();
             }
         }
@@ -1125,8 +1214,10 @@
         {
             if (_collectionProperties.Count > 0)
             {
-                DynamicMethod initializeEntityCollections = LightweightCodeGenerator.CreateDynamicMethod(proxyType.Name + "_InitializeEntityCollections", typeof(IEntityWrapper), new Type[] { typeof(IEntityWrapper) });
-                ILGenerator generator = initializeEntityCollections.GetILGenerator();
+                var initializeEntityCollections =
+                    LightweightCodeGenerator.CreateDynamicMethod(
+                        proxyType.Name + "_InitializeEntityCollections", typeof(IEntityWrapper), new[] { typeof(IEntityWrapper) });
+                var generator = initializeEntityCollections.GetILGenerator();
                 generator.DeclareLocal(proxyType);
                 generator.DeclareLocal(typeof(RelationshipManager));
                 generator.Emit(OpCodes.Ldarg_0);
@@ -1137,10 +1228,11 @@
                 generator.Emit(OpCodes.Callvirt, s_GetRelationshipManager);
                 generator.Emit(OpCodes.Stloc_1);
 
-                foreach (KeyValuePair<NavigationProperty, PropertyInfo> navProperty in _collectionProperties)
+                foreach (var navProperty in _collectionProperties)
                 {
                     // Update Constructor to initialize this property
-                    MethodInfo getRelatedCollection = s_GetRelatedCollection.MakeGenericMethod(EntityUtil.GetCollectionElementType(navProperty.Value.PropertyType));
+                    var getRelatedCollection =
+                        s_GetRelatedCollection.MakeGenericMethod(EntityUtil.GetCollectionElementType(navProperty.Value.PropertyType));
 
                     generator.Emit(OpCodes.Ldloc_0);
                     generator.Emit(OpCodes.Ldloc_1);
@@ -1162,11 +1254,13 @@
             return _scalarMembers.Contains(member) || _relationshipMembers.Contains(member);
         }
 
-        public bool EmitMember(TypeBuilder typeBuilder, EdmMember member, PropertyBuilder propertyBuilder, PropertyInfo baseProperty, BaseProxyImplementor baseImplementor)
+        public bool EmitMember(
+            TypeBuilder typeBuilder, EdmMember member, PropertyBuilder propertyBuilder, PropertyInfo baseProperty,
+            BaseProxyImplementor baseImplementor)
         {
             if (_scalarMembers.Contains(member))
             {
-                bool isKeyMember = _ospaceEntityType.KeyMembers.Contains(member.Identity);
+                var isKeyMember = _ospaceEntityType.KeyMembers.Contains(member.Identity);
                 EmitScalarSetter(typeBuilder, propertyBuilder, baseProperty, isKeyMember);
                 return true;
             }
@@ -1174,8 +1268,9 @@
             {
                 Debug.Assert(member != null, "member is null");
                 Debug.Assert(member.BuiltInTypeKind == BuiltInTypeKind.NavigationProperty);
-                NavigationProperty navProperty = member as NavigationProperty;
-                if (navProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many)
+                var navProperty = member as NavigationProperty;
+                if (navProperty.ToEndMember.RelationshipMultiplicity
+                    == RelationshipMultiplicity.Many)
                 {
                     EmitCollectionProperty(typeBuilder, propertyBuilder, baseProperty, navProperty);
                 }
@@ -1191,19 +1286,20 @@
 
         private void EmitScalarSetter(TypeBuilder typeBuilder, PropertyBuilder propertyBuilder, PropertyInfo baseProperty, bool isKeyMember)
         {
-            MethodInfo baseSetter = baseProperty.GetSetMethod(true); 
+            var baseSetter = baseProperty.GetSetMethod(true);
             const MethodAttributes methodAttributes = MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
-            MethodAttributes methodAccess = baseSetter.Attributes & MethodAttributes.MemberAccessMask;
+            var methodAccess = baseSetter.Attributes & MethodAttributes.MemberAccessMask;
 
-            MethodBuilder setterBuilder = typeBuilder.DefineMethod("set_" + baseProperty.Name, methodAccess | methodAttributes, null, new Type[] { baseProperty.PropertyType });
-            ILGenerator generator = setterBuilder.GetILGenerator();
-            Label endOfMethod = generator.DefineLabel();
+            var setterBuilder = typeBuilder.DefineMethod(
+                "set_" + baseProperty.Name, methodAccess | methodAttributes, null, new[] { baseProperty.PropertyType });
+            var generator = setterBuilder.GetILGenerator();
+            var endOfMethod = generator.DefineLabel();
 
             // If the CLR property represents a key member of the Entity Type,
             // ignore attempts to set the key value to the same value.
             if (isKeyMember)
             {
-                MethodInfo baseGetter = baseProperty.GetGetMethod(true);
+                var baseGetter = baseProperty.GetGetMethod(true);
 
                 if (baseGetter != null)
                 {
@@ -1211,18 +1307,19 @@
                     // { 
                     //     // perform set operation
                     // }
-                    
-                    Type propertyType = baseProperty.PropertyType;
 
-                    if (propertyType == typeof(int) ||         // signed integer types
+                    var propertyType = baseProperty.PropertyType;
+
+                    if (propertyType == typeof(int) || // signed integer types
                         propertyType == typeof(short) ||
                         propertyType == typeof(Int64) ||
-                        propertyType == typeof(bool) ||        // boolean
-                        propertyType == typeof(byte) ||         
+                        propertyType == typeof(bool) || // boolean
+                        propertyType == typeof(byte) ||
                         propertyType == typeof(UInt32) ||
-                        propertyType == typeof(UInt64)||
+                        propertyType == typeof(UInt64) ||
                         propertyType == typeof(float) ||
-                        propertyType == typeof(double) ||
+                        propertyType == typeof(double)
+                        ||
                         propertyType.IsEnum)
                     {
                         generator.Emit(OpCodes.Ldarg_0);
@@ -1243,7 +1340,7 @@
                     else
                     {
                         // Get the specific type's inequality method if it exists
-                        MethodInfo op_inequality = propertyType.GetMethod("op_Inequality", new Type[] { propertyType, propertyType });
+                        var op_inequality = propertyType.GetMethod("op_Inequality", new[] { propertyType, propertyType });
                         if (op_inequality != null)
                         {
                             generator.Emit(OpCodes.Ldarg_0);
@@ -1310,17 +1407,22 @@
             propertyBuilder.SetSetMethod(setterBuilder);
         }
 
-        private void EmitReferenceProperty(TypeBuilder typeBuilder, PropertyBuilder propertyBuilder, PropertyInfo baseProperty, NavigationProperty navProperty)
+        private void EmitReferenceProperty(
+            TypeBuilder typeBuilder, PropertyBuilder propertyBuilder, PropertyInfo baseProperty, NavigationProperty navProperty)
         {
             const MethodAttributes methodAttributes = MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
-            MethodInfo baseSetter = baseProperty.GetSetMethod(true); ;
-            MethodAttributes methodAccess = baseSetter.Attributes & MethodAttributes.MemberAccessMask;
+            var baseSetter = baseProperty.GetSetMethod(true);
+            ;
+            var methodAccess = baseSetter.Attributes & MethodAttributes.MemberAccessMask;
 
-            MethodInfo specificGetRelatedReference = s_GetRelatedReference.MakeGenericMethod(baseProperty.PropertyType);
-            MethodInfo specificEntityReferenceSetValue = typeof(EntityReference<>).MakeGenericType(baseProperty.PropertyType).GetMethod("set_Value"); ;
+            var specificGetRelatedReference = s_GetRelatedReference.MakeGenericMethod(baseProperty.PropertyType);
+            var specificEntityReferenceSetValue = typeof(EntityReference<>).MakeGenericType(baseProperty.PropertyType).GetMethod(
+                "set_Value");
+            ;
 
-            MethodBuilder setterBuilder = typeBuilder.DefineMethod("set_" + baseProperty.Name, methodAccess | methodAttributes, null, new Type[] { baseProperty.PropertyType });
-            ILGenerator generator = setterBuilder.GetILGenerator();
+            var setterBuilder = typeBuilder.DefineMethod(
+                "set_" + baseProperty.Name, methodAccess | methodAttributes, null, new[] { baseProperty.PropertyType });
+            var generator = setterBuilder.GetILGenerator();
             generator.Emit(OpCodes.Ldarg_0);
             generator.Emit(OpCodes.Callvirt, _getRelationshipManager);
             generator.Emit(OpCodes.Ldstr, navProperty.RelationshipType.FullName);
@@ -1331,19 +1433,22 @@
             generator.Emit(OpCodes.Ret);
             propertyBuilder.SetSetMethod(setterBuilder);
 
-            _referenceProperties.Add(new KeyValuePair<NavigationProperty,PropertyInfo>(navProperty, baseProperty));
+            _referenceProperties.Add(new KeyValuePair<NavigationProperty, PropertyInfo>(navProperty, baseProperty));
         }
 
-        private void EmitCollectionProperty(TypeBuilder typeBuilder, PropertyBuilder propertyBuilder, PropertyInfo baseProperty, NavigationProperty navProperty)
+        private void EmitCollectionProperty(
+            TypeBuilder typeBuilder, PropertyBuilder propertyBuilder, PropertyInfo baseProperty, NavigationProperty navProperty)
         {
             const MethodAttributes methodAttributes = MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
-            MethodInfo baseSetter = baseProperty.GetSetMethod(true); ;
-            MethodAttributes methodAccess = baseSetter.Attributes & MethodAttributes.MemberAccessMask;
-            
-            string cannotSetException = System.Data.Entity.Resources.Strings.EntityProxyTypeInfo_CannotSetEntityCollectionProperty(propertyBuilder.Name, typeBuilder.Name);
-            MethodBuilder setterBuilder = typeBuilder.DefineMethod("set_" + baseProperty.Name, methodAccess | methodAttributes, null, new Type[] { baseProperty.PropertyType });
-            ILGenerator generator = setterBuilder.GetILGenerator();
-            Label instanceEqual = generator.DefineLabel();
+            var baseSetter = baseProperty.GetSetMethod(true);
+            ;
+            var methodAccess = baseSetter.Attributes & MethodAttributes.MemberAccessMask;
+
+            var cannotSetException = Strings.EntityProxyTypeInfo_CannotSetEntityCollectionProperty(propertyBuilder.Name, typeBuilder.Name);
+            var setterBuilder = typeBuilder.DefineMethod(
+                "set_" + baseProperty.Name, methodAccess | methodAttributes, null, new[] { baseProperty.PropertyType });
+            var generator = setterBuilder.GetILGenerator();
+            var instanceEqual = generator.DefineLabel();
             generator.Emit(OpCodes.Ldarg_1);
             generator.Emit(OpCodes.Ldarg_0);
             generator.Emit(OpCodes.Call, _getRelationshipManager);
@@ -1372,9 +1477,10 @@
             registerField(_changeTrackerField, false);
 
             // Implement EntityMemberChanging(string propertyName)
-            _entityMemberChanging = typeBuilder.DefineMethod("EntityMemberChanging", MethodAttributes.Private | MethodAttributes.HideBySig, typeof(void), new Type[] { typeof(string) });
-            ILGenerator generator = _entityMemberChanging.GetILGenerator();
-            Label methodEnd = generator.DefineLabel();
+            _entityMemberChanging = typeBuilder.DefineMethod(
+                "EntityMemberChanging", MethodAttributes.Private | MethodAttributes.HideBySig, typeof(void), new[] { typeof(string) });
+            var generator = _entityMemberChanging.GetILGenerator();
+            var methodEnd = generator.DefineLabel();
             generator.Emit(OpCodes.Ldarg_0);
             generator.Emit(OpCodes.Ldfld, _changeTrackerField);
             generator.Emit(OpCodes.Brfalse_S, methodEnd);
@@ -1386,7 +1492,8 @@
             generator.Emit(OpCodes.Ret);
 
             // Implement EntityMemberChanged(string propertyName)
-            _entityMemberChanged = typeBuilder.DefineMethod("EntityMemberChanged", MethodAttributes.Private | MethodAttributes.HideBySig, typeof(void), new Type[] { typeof(string) });
+            _entityMemberChanged = typeBuilder.DefineMethod(
+                "EntityMemberChanged", MethodAttributes.Private | MethodAttributes.HideBySig, typeof(void), new[] { typeof(string) });
             generator = _entityMemberChanged.GetILGenerator();
             methodEnd = generator.DefineLabel();
             generator.Emit(OpCodes.Ldarg_0);
@@ -1400,8 +1507,11 @@
             generator.Emit(OpCodes.Ret);
 
             // Implement IEntityWithChangeTracker.SetChangeTracker(IEntityChangeTracker changeTracker)
-            MethodBuilder setChangeTracker = typeBuilder.DefineMethod("SetChangeTracker", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.NewSlot | MethodAttributes.Virtual | MethodAttributes.Final,
-                typeof(void), new Type[] { typeof(IEntityChangeTracker) });
+            var setChangeTracker = typeBuilder.DefineMethod(
+                "SetChangeTracker",
+                MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.NewSlot | MethodAttributes.Virtual
+                | MethodAttributes.Final,
+                typeof(void), new[] { typeof(IEntityChangeTracker) });
             generator = setChangeTracker.GetILGenerator();
             generator.Emit(OpCodes.Ldarg_0);
             generator.Emit(OpCodes.Ldarg_1);
@@ -1411,16 +1521,21 @@
 
         private void ImplementIEntityWithRelationships(TypeBuilder typeBuilder, Action<FieldBuilder, bool> registerField)
         {
-            _relationshipManagerField = typeBuilder.DefineField("_relationshipManager", typeof(RelationshipManager), FieldAttributes.Private);
+            _relationshipManagerField = typeBuilder.DefineField(
+                "_relationshipManager", typeof(RelationshipManager), FieldAttributes.Private);
             registerField(_relationshipManagerField, true);
 
-            PropertyBuilder relationshipManagerProperty = typeBuilder.DefineProperty("RelationshipManager", System.Reflection.PropertyAttributes.None, typeof(RelationshipManager), Type.EmptyTypes);
+            var relationshipManagerProperty = typeBuilder.DefineProperty(
+                "RelationshipManager", PropertyAttributes.None, typeof(RelationshipManager), Type.EmptyTypes);
 
             // Implement IEntityWithRelationships.get_RelationshipManager
-            _getRelationshipManager = typeBuilder.DefineMethod("get_RelationshipManager", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.NewSlot | MethodAttributes.SpecialName | MethodAttributes.Virtual | MethodAttributes.Final,
+            _getRelationshipManager = typeBuilder.DefineMethod(
+                "get_RelationshipManager",
+                MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.NewSlot | MethodAttributes.SpecialName
+                | MethodAttributes.Virtual | MethodAttributes.Final,
                 typeof(RelationshipManager), Type.EmptyTypes);
-            ILGenerator generator = _getRelationshipManager.GetILGenerator();
-            Label trueLabel = generator.DefineLabel();
+            var generator = _getRelationshipManager.GetILGenerator();
+            var trueLabel = generator.DefineLabel();
             generator.Emit(OpCodes.Ldarg_0);
             generator.Emit(OpCodes.Ldfld, _relationshipManagerField);
             generator.Emit(OpCodes.Brtrue_S, trueLabel);
@@ -1480,10 +1595,13 @@
     /// </remarks>
     internal sealed class DataContractImplementor
     {
-        private static readonly ConstructorInfo s_DataContractAttributeConstructor = typeof(DataContractAttribute).GetConstructor(Type.EmptyTypes);
-        private static readonly PropertyInfo[] s_DataContractProperties = new PropertyInfo[] {
-            typeof(DataContractAttribute).GetProperty("IsReference")
-        };
+        private static readonly ConstructorInfo s_DataContractAttributeConstructor =
+            typeof(DataContractAttribute).GetConstructor(Type.EmptyTypes);
+
+        private static readonly PropertyInfo[] s_DataContractProperties = new[]
+                                                                              {
+                                                                                  typeof(DataContractAttribute).GetProperty("IsReference")
+                                                                              };
 
         private readonly Type _baseClrType;
         private readonly DataContractAttribute _dataContract;
@@ -1492,7 +1610,7 @@
         {
             _baseClrType = ospaceEntityType.ClrType;
 
-            DataContractAttribute[] attributes = (DataContractAttribute[])_baseClrType.GetCustomAttributes(typeof(DataContractAttribute), false);
+            var attributes = (DataContractAttribute[])_baseClrType.GetCustomAttributes(typeof(DataContractAttribute), false);
             if (attributes.Length > 0)
             {
                 _dataContract = attributes[0];
@@ -1504,12 +1622,14 @@
             if (_dataContract != null)
             {
                 // Use base data contract properties to help determine values of properties the proxy type's data contract.
-                object[] propertyValues = new object[] {
-                    // IsReference
-                    _dataContract.IsReference
-                };
+                var propertyValues = new object[]
+                                         {
+                                             // IsReference
+                                             _dataContract.IsReference
+                                         };
 
-                CustomAttributeBuilder attributeBuilder = new CustomAttributeBuilder(s_DataContractAttributeConstructor, new object[0], s_DataContractProperties, propertyValues);
+                var attributeBuilder = new CustomAttributeBuilder(
+                    s_DataContractAttributeConstructor, new object[0], s_DataContractProperties, propertyValues);
                 typeBuilder.SetCustomAttribute(attributeBuilder);
             }
         }
@@ -1519,7 +1639,7 @@
     /// This class determines if the proxied type implements ISerializable with the special serialization constructor.
     /// If it does, it adds the appropriate members to the proxy type.
     /// </summary>
-    internal sealed class ISerializableImplementor 
+    internal sealed class ISerializableImplementor
     {
         private readonly Type _baseClrType;
         private readonly bool _baseImplementsISerializable;
@@ -1536,28 +1656,36 @@
             {
                 // Determine if interface implementation can be overridden.
                 // Fortunately, there's only one method to check.
-                InterfaceMapping mapping = _baseClrType.GetInterfaceMap(typeof(ISerializable));
+                var mapping = _baseClrType.GetInterfaceMap(typeof(ISerializable));
                 _getObjectDataMethod = mapping.TargetMethods[0];
 
                 // Members that implement interfaces must be public, unless they are explicitly implemented, in which case they are private and sealed (at least for C#).
-                bool canOverrideMethod = (_getObjectDataMethod.IsVirtual && !_getObjectDataMethod.IsFinal) && _getObjectDataMethod.IsPublic;
+                var canOverrideMethod = (_getObjectDataMethod.IsVirtual && !_getObjectDataMethod.IsFinal) && _getObjectDataMethod.IsPublic;
 
                 if (canOverrideMethod)
                 {
                     // Determine if proxied type provides the special serialization constructor.
                     // In order for the proxy class to properly support ISerializable, this constructor must not be private.
-                    _serializationConstructor = _baseClrType.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, new Type[] { typeof(SerializationInfo), typeof(StreamingContext) }, null);
+                    _serializationConstructor =
+                        _baseClrType.GetConstructor(
+                            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null,
+                            new[] { typeof(SerializationInfo), typeof(StreamingContext) }, null);
 
-                    _canOverride = _serializationConstructor != null && (_serializationConstructor.IsPublic || _serializationConstructor.IsFamily || _serializationConstructor.IsFamilyOrAssembly);
+                    _canOverride = _serializationConstructor != null
+                                   &&
+                                   (_serializationConstructor.IsPublic || _serializationConstructor.IsFamily
+                                    || _serializationConstructor.IsFamilyOrAssembly);
                 }
 
-                Debug.Assert(!(_canOverride && (_getObjectDataMethod == null || _serializationConstructor == null)), "Both GetObjectData method and Serialization Constructor must be present when proxy overrides ISerializable implementation.");
+                Debug.Assert(
+                    !(_canOverride && (_getObjectDataMethod == null || _serializationConstructor == null)),
+                    "Both GetObjectData method and Serialization Constructor must be present when proxy overrides ISerializable implementation.");
             }
         }
 
         internal bool TypeIsSuitable
         {
-            get 
+            get
             {
                 // To be suitable,
                 // either proxied type doesn't implement ISerializable,
@@ -1568,23 +1696,20 @@
 
         internal bool TypeImplementsISerializable
         {
-            get
-            {
-                return _baseImplementsISerializable;
-            }
+            get { return _baseImplementsISerializable; }
         }
 
         internal void Implement(TypeBuilder typeBuilder, IEnumerable<FieldBuilder> serializedFields)
         {
             if (_baseImplementsISerializable && _canOverride)
             {
-                PermissionSet serializationFormatterPermissions = new PermissionSet(null);
+                var serializationFormatterPermissions = new PermissionSet(null);
                 serializationFormatterPermissions.AddPermission(new SecurityPermission(SecurityPermissionFlag.SerializationFormatter));
 
-                Type[] parameterTypes = new Type[] { typeof(SerializationInfo), typeof(StreamingContext) };
-                MethodInfo getTypeFromHandle = typeof(Type).GetMethod("GetTypeFromHandle", new Type[] { typeof(RuntimeTypeHandle) });
-                MethodInfo addValue = typeof(SerializationInfo).GetMethod("AddValue", new Type[] { typeof(string), typeof(object), typeof(Type) });
-                MethodInfo getValue = typeof(SerializationInfo).GetMethod("GetValue", new Type[] { typeof(string), typeof(Type) });
+                var parameterTypes = new[] { typeof(SerializationInfo), typeof(StreamingContext) };
+                var getTypeFromHandle = typeof(Type).GetMethod("GetTypeFromHandle", new[] { typeof(RuntimeTypeHandle) });
+                var addValue = typeof(SerializationInfo).GetMethod("AddValue", new[] { typeof(string), typeof(object), typeof(Type) });
+                var getValue = typeof(SerializationInfo).GetMethod("GetValue", new[] { typeof(string), typeof(Type) });
 
                 //
                 // Define GetObjectData method override
@@ -1592,17 +1717,18 @@
                 // [SecurityPermission(SecurityAction.Demand, SerializationFormatter=true)]
                 // public void GetObjectData(SerializationInfo info, StreamingContext context)
                 //
-                MethodBuilder proxyGetObjectData = typeBuilder.DefineMethod(_getObjectDataMethod.Name,
-                                                                            MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Virtual,
-                                                                            null,
-                                                                            parameterTypes);
+                var proxyGetObjectData = typeBuilder.DefineMethod(
+                    _getObjectDataMethod.Name,
+                    MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Virtual,
+                    null,
+                    parameterTypes);
                 proxyGetObjectData.AddDeclarativeSecurity(SecurityAction.Demand, serializationFormatterPermissions);
 
                 {
-                    ILGenerator generator = proxyGetObjectData.GetILGenerator();
+                    var generator = proxyGetObjectData.GetILGenerator();
 
                     // Call SerializationInfo.AddValue to serialize each field value
-                    foreach (FieldBuilder field in serializedFields)
+                    foreach (var field in serializedFields)
                     {
                         generator.Emit(OpCodes.Ldarg_1);
                         generator.Emit(OpCodes.Ldstr, field.Name);
@@ -1627,22 +1753,23 @@
                 // [SecurityPermission(SecurityAction.Demand, SerializationFormatter=true)]
                 // .ctor(SerializationInfo info, StreamingContext context)
                 //
-                MethodAttributes constructorAttributes = MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName;
-                constructorAttributes |= _serializationConstructor.IsPublic? MethodAttributes.Public : MethodAttributes.Private;
+                var constructorAttributes = MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName;
+                constructorAttributes |= _serializationConstructor.IsPublic ? MethodAttributes.Public : MethodAttributes.Private;
 
-                ConstructorBuilder proxyConstructor = typeBuilder.DefineConstructor(constructorAttributes, CallingConventions.Standard | CallingConventions.HasThis, parameterTypes);
+                var proxyConstructor = typeBuilder.DefineConstructor(
+                    constructorAttributes, CallingConventions.Standard | CallingConventions.HasThis, parameterTypes);
                 proxyConstructor.AddDeclarativeSecurity(SecurityAction.Demand, serializationFormatterPermissions);
 
                 {
                     //Emit call to base serialization constructor
-                    ILGenerator generator = proxyConstructor.GetILGenerator();
+                    var generator = proxyConstructor.GetILGenerator();
                     generator.Emit(OpCodes.Ldarg_0);
                     generator.Emit(OpCodes.Ldarg_1);
                     generator.Emit(OpCodes.Ldarg_2);
                     generator.Emit(OpCodes.Call, _serializationConstructor);
 
                     // Call SerializationInfo.GetValue to retrieve the value of each field
-                    foreach (FieldBuilder field in serializedFields)
+                    foreach (var field in serializedFields)
                     {
                         generator.Emit(OpCodes.Ldarg_0);
                         generator.Emit(OpCodes.Ldarg_1);

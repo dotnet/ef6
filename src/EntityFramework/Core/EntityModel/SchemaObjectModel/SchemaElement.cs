@@ -1,10 +1,6 @@
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
-    using System;
     using System.Collections.Generic;
-    using System.Data;
-    using System.Data.Entity.Core;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
@@ -13,6 +9,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.IO;
     using System.Xml;
     using System.Xml.Linq;
+    using System.Xml.Schema;
 
     /// <summary>
     /// Summary description for SchemaElement.
@@ -23,45 +20,40 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         // see http://www.w3.org/TR/2006/REC-xml-names-20060816/
         internal const string XmlNamespaceNamespace = "http://www.w3.org/2000/xmlns/";
 
-
         #region Instance Fields
-        private SchemaElement _parentElement = null;
-        private Schema _schema = null;
-        private int _lineNumber = 0;
-        private int _linePosition = 0;
-        private string _name = null;
-        private DocumentationElement _documentation = null;
+
+        private Schema _schema;
+        private int _lineNumber;
+        private int _linePosition;
+        private string _name;
 
         private List<MetadataProperty> _otherContent;
 
         #endregion
 
         #region Static Fields
+
         /// <summary></summary>
         protected const int MaxValueVersionComponent = short.MaxValue;
+
         #endregion
 
         #region Public Properties
+
         /// <summary>
         /// 
         /// </summary>
-        internal  int LineNumber
+        internal int LineNumber
         {
-            get
-            {
-                return _lineNumber;
-            }
+            get { return _lineNumber; }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        internal  int LinePosition
+        internal int LinePosition
         {
-            get
-            {
-                return _linePosition;
-            }
+            get { return _linePosition; }
         }
 
         /// <summary>
@@ -69,70 +61,35 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         public virtual string Name
         {
-            get
-            {
-                return _name;
-            }
-            set
-            {
-                _name = value;
-            }
+            get { return _name; }
+            set { _name = value; }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        internal  DocumentationElement Documentation
-        {
-            get
-            {
-                return _documentation;
-            }
-            set
-            {
-                _documentation = value;
-            }
-        }
+        internal DocumentationElement Documentation { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        internal  SchemaElement ParentElement
-        {
-            get
-            {
-                return _parentElement;
-            }
-            private set
-            {
-                _parentElement = value;
-            }
-        }
+        internal SchemaElement ParentElement { get; private set; }
 
         /// <summary>
         /// 
         /// </summary>
         internal Schema Schema
         {
-            get
-            {
-                return _schema;
-            }
-            set
-            {
-                _schema = value;
-            }
+            get { return _schema; }
+            set { _schema = value; }
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
-        public  virtual string FQName
+        public virtual string FQName
         {
-            get
-            {
-                return Name;
-            }
+            get { return Name; }
         }
 
         /// <summary>
@@ -140,32 +97,29 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         public virtual string Identity
         {
-            get
-            {
-                return Name;
-            }
+            get { return Name; }
         }
 
-       
         public List<MetadataProperty> OtherContent
         {
-            get 
+            get
             {
                 if (_otherContent == null)
                 {
                     _otherContent = new List<MetadataProperty>();
                 }
 
-                return _otherContent; 
+                return _otherContent;
             }
         }
+
         #endregion
 
         #region Internal Methods
+
         /// <summary>
         /// Validates this element and its children
         /// </summary>
-        
         internal virtual void Validate()
         {
         }
@@ -178,9 +132,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="lineNumber"></param>
         /// <param name="linePosition"></param>
         /// <param name="message"></param>
-        internal void AddError( ErrorCode errorCode, EdmSchemaErrorSeverity severity, int lineNumber, int linePosition, object message )
+        internal void AddError(ErrorCode errorCode, EdmSchemaErrorSeverity severity, int lineNumber, int linePosition, object message)
         {
-            AddError(errorCode,severity,SchemaLocation,lineNumber,linePosition,message);
+            AddError(errorCode, severity, SchemaLocation, lineNumber, linePosition, message);
         }
 
         /// <summary>
@@ -190,12 +144,12 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="severity"></param>
         /// <param name="reader"></param>
         /// <param name="message"></param>
-        internal void AddError( ErrorCode errorCode, EdmSchemaErrorSeverity severity, XmlReader reader, object message )
+        internal void AddError(ErrorCode errorCode, EdmSchemaErrorSeverity severity, XmlReader reader, object message)
         {
             int lineNumber;
             int linePosition;
             GetPositionInfo(reader, out lineNumber, out linePosition);
-            AddError(errorCode,severity,SchemaLocation,lineNumber,linePosition,message);
+            AddError(errorCode, severity, SchemaLocation, lineNumber, linePosition, message);
         }
 
         /// <summary>
@@ -204,9 +158,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="errorCode"></param>
         /// <param name="severity"></param>
         /// <param name="message"></param>
-        internal void AddError( ErrorCode errorCode, EdmSchemaErrorSeverity severity, object message )
+        internal void AddError(ErrorCode errorCode, EdmSchemaErrorSeverity severity, object message)
         {
-            AddError(errorCode,severity,SchemaLocation,LineNumber,LinePosition,message);
+            AddError(errorCode, severity, SchemaLocation, LineNumber, LinePosition, message);
         }
 
         /// <summary>
@@ -216,9 +170,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="severity"></param>
         /// <param name="element"></param>
         /// <param name="message"></param>
-        internal void AddError( ErrorCode errorCode, EdmSchemaErrorSeverity severity, SchemaElement element, object message )
+        internal void AddError(ErrorCode errorCode, EdmSchemaErrorSeverity severity, SchemaElement element, object message)
         {
-            AddError(errorCode,severity,element.Schema.Location,element.LineNumber,element.LinePosition,message);
+            AddError(errorCode, severity, element.Schema.Location, element.LineNumber, element.LinePosition, message);
         }
 
         /// <summary>
@@ -230,42 +184,46 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             GetPositionInfo(reader);
 
-            bool hasEndElement = !reader.IsEmptyElement;
+            var hasEndElement = !reader.IsEmptyElement;
 
             Debug.Assert(reader.NodeType == XmlNodeType.Element);
-            for ( bool more = reader.MoveToFirstAttribute(); more; more = reader.MoveToNextAttribute() )
+            for (var more = reader.MoveToFirstAttribute(); more; more = reader.MoveToNextAttribute())
             {
                 ParseAttribute(reader);
             }
             HandleAttributesComplete();
 
-            bool done = !hasEndElement;
-            bool skipToNextElement = false;
-            while ( !done )
+            var done = !hasEndElement;
+            var skipToNextElement = false;
+            while (!done)
             {
-                if ( skipToNextElement )
+                if (skipToNextElement)
                 {
                     skipToNextElement = false;
                     reader.Skip();
-                    if ( reader.EOF )
+                    if (reader.EOF)
+                    {
                         break;
+                    }
                 }
                 else
                 {
-                    if ( !reader.Read() )
+                    if (!reader.Read())
+                    {
                         break;
+                    }
                 }
-                switch ( reader.NodeType )
+                switch (reader.NodeType)
                 {
                     case XmlNodeType.Element:
                         skipToNextElement = ParseElement(reader);
                         break;
 
                     case XmlNodeType.EndElement:
-                    {
-                        done = true;
-                        break;
-                    }
+                        {
+                            done = true;
+                            break;
+                        }
 
                     case XmlNodeType.CDATA:
                     case XmlNodeType.Text:
@@ -279,32 +237,35 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                     case XmlNodeType.Comment:
                     case XmlNodeType.Notation:
                     case XmlNodeType.ProcessingInstruction:
-                    {
-                        break;
-                    }
+                        {
+                            break;
+                        }
 
                         // we ignore these elements that can have children
                     case XmlNodeType.DocumentType:
                     case XmlNodeType.EntityReference:
-                    {
-                        skipToNextElement = true;
-                        break;
-                    }
+                        {
+                            skipToNextElement = true;
+                            break;
+                        }
 
                     default:
-                    {
-                        AddError( ErrorCode.UnexpectedXmlNodeType, EdmSchemaErrorSeverity.Error, reader,
-                            System.Data.Entity.Resources.Strings.UnexpectedXmlNodeType(reader.NodeType));
-                        skipToNextElement = true;
-                        break;
-                    }
+                        {
+                            AddError(
+                                ErrorCode.UnexpectedXmlNodeType, EdmSchemaErrorSeverity.Error, reader,
+                                Strings.UnexpectedXmlNodeType(reader.NodeType));
+                            skipToNextElement = true;
+                            break;
+                        }
                 }
             }
             HandleChildElementsComplete();
-            if ( reader.EOF && reader.Depth > 0 )
+            if (reader.EOF
+                && reader.Depth > 0)
             {
-                AddError( ErrorCode.MalformedXml, EdmSchemaErrorSeverity.Error, 0, 0,
-                    System.Data.Entity.Resources.Strings.MalformedXml(LineNumber,LinePosition));
+                AddError(
+                    ErrorCode.MalformedXml, EdmSchemaErrorSeverity.Error, 0, 0,
+                    Strings.MalformedXml(LineNumber, LinePosition));
             }
         }
 
@@ -314,7 +275,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader">the reader whose position is desired</param>
         internal void GetPositionInfo(XmlReader reader)
         {
-            GetPositionInfo(reader,out _lineNumber,out _linePosition);
+            GetPositionInfo(reader, out _lineNumber, out _linePosition);
         }
 
         /// <summary>
@@ -325,8 +286,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="linePosition">the line position</param>
         internal static void GetPositionInfo(XmlReader reader, out int lineNumber, out int linePosition)
         {
-            IXmlLineInfo xmlLineInfo = reader as IXmlLineInfo;
-            if ( xmlLineInfo != null && xmlLineInfo.HasLineInfo() )
+            var xmlLineInfo = reader as IXmlLineInfo;
+            if (xmlLineInfo != null
+                && xmlLineInfo.HasLineInfo())
             {
                 lineNumber = xmlLineInfo.LineNumber;
                 linePosition = xmlLineInfo.LinePosition;
@@ -337,16 +299,18 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 linePosition = 0;
             }
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
         internal virtual void ResolveTopLevelNames()
         {
         }
+
         internal virtual void ResolveSecondLevelNames()
         {
         }
+
         #endregion
 
         #region Protected Methods
@@ -357,22 +321,22 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="parentElement"></param>
         internal SchemaElement(SchemaElement parentElement)
         {
-            if ( parentElement != null )
+            if (parentElement != null)
             {
                 ParentElement = parentElement;
-                for ( SchemaElement element = parentElement; element != null; element = element.ParentElement )
+                for (var element = parentElement; element != null; element = element.ParentElement)
                 {
-                    Schema schema = element as Schema;
-                    if ( schema != null )
+                    var schema = element as Schema;
+                    if (schema != null)
                     {
                         Schema = schema;
                         break;
                     }
                 }
-                
+
                 if (Schema == null)
                 {
-                    throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.AllElementsMustBeInSchema);
+                    throw EntityUtil.InvalidOperation(Strings.AllElementsMustBeInSchema);
                 }
             }
         }
@@ -405,12 +369,14 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns></returns>
         protected string HandleUndottedNameAttribute(XmlReader reader, string field)
         {
-            string name = field;
+            var name = field;
             Debug.Assert(string.IsNullOrEmpty(field), string.Format(CultureInfo.CurrentCulture, "{0} is already defined", reader.Name));
 
-            bool success = Utils.GetUndottedName(Schema, reader, out name);
-            if ( !success )
+            var success = Utils.GetUndottedName(Schema, reader, out name);
+            if (!success)
+            {
                 return name;
+            }
 
             return name;
         }
@@ -425,12 +391,14 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "field")]
         protected ReturnValue<string> HandleDottedNameAttribute(XmlReader reader, string field)
         {
-            ReturnValue<string> returnValue = new ReturnValue<string>();
+            var returnValue = new ReturnValue<string>();
             Debug.Assert(string.IsNullOrEmpty(field), string.Format(CultureInfo.CurrentCulture, "{0} is already defined", reader.Name));
 
             string value;
-            if ( !Utils.GetDottedName(Schema,reader,out value) )
+            if (!Utils.GetDottedName(Schema, reader, out value))
+            {
                 return returnValue;
+            }
 
             returnValue.Value = value;
             return returnValue;
@@ -445,8 +413,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         internal bool HandleIntAttribute(XmlReader reader, ref int field)
         {
             int value;
-            if ( !Utils.GetInt(Schema, reader, out value) )
+            if (!Utils.GetInt(Schema, reader, out value))
+            {
                 return false;
+            }
 
             field = value;
             return true;
@@ -461,12 +431,15 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         internal bool HandleByteAttribute(XmlReader reader, ref byte field)
         {
             byte value;
-            if ( !Utils.GetByte(Schema, reader, out value) )
+            if (!Utils.GetByte(Schema, reader, out value))
+            {
                 return false;
+            }
 
             field = value;
             return true;
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -476,8 +449,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         internal bool HandleBoolAttribute(XmlReader reader, ref bool field)
         {
             bool value;
-            if ( !Utils.GetBool(Schema,reader,out value) )
+            if (!Utils.GetBool(Schema, reader, out value))
+            {
                 return false;
+            }
 
             field = value;
             return true;
@@ -495,15 +470,19 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         protected virtual void SkipElement(XmlReader reader)
         {
-            using (XmlReader subtree = reader.ReadSubtree())
+            using (var subtree = reader.ReadSubtree())
             {
-                while (subtree.Read()) ;
+                while (subtree.Read())
+                {
+                    ;
+                }
             }
         }
 
         #endregion
 
         #region Protected Properties
+
         /// <summary>
         /// 
         /// </summary>
@@ -511,8 +490,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             get
             {
-                if ( Schema != null )
+                if (Schema != null)
+                {
                     return Schema.Location;
+                }
                 return null;
             }
         }
@@ -526,9 +507,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             throw Error.NotImplemented();
         }
+
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// 
         /// </summary>
@@ -539,7 +522,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             Documentation = new DocumentationElement(this);
             Documentation.Parse(reader);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -558,19 +541,26 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="lineNumber"></param>
         /// <param name="linePosition"></param>
         /// <param name="message"></param>
-        private void AddError( ErrorCode errorCode, EdmSchemaErrorSeverity severity, string sourceLocation, int lineNumber, int linePosition, object message )
+        private void AddError(
+            ErrorCode errorCode, EdmSchemaErrorSeverity severity, string sourceLocation, int lineNumber, int linePosition, object message)
         {
             EdmSchemaError error = null;
-            string messageString = message as string;
-            if ( messageString != null )
-                error = new EdmSchemaError( messageString, (int)errorCode, severity, sourceLocation, lineNumber, linePosition );
+            var messageString = message as string;
+            if (messageString != null)
+            {
+                error = new EdmSchemaError(messageString, (int)errorCode, severity, sourceLocation, lineNumber, linePosition);
+            }
             else
             {
-                Exception ex = message as Exception;
-                if ( ex != null )
-                    error = new EdmSchemaError( ex.Message, (int)errorCode, severity, sourceLocation, lineNumber, linePosition, ex );
+                var ex = message as Exception;
+                if (ex != null)
+                {
+                    error = new EdmSchemaError(ex.Message, (int)errorCode, severity, sourceLocation, lineNumber, linePosition, ex);
+                }
                 else
-                    error = new EdmSchemaError( message.ToString(), (int)errorCode, severity, sourceLocation, lineNumber, linePosition );
+                {
+                    error = new EdmSchemaError(message.ToString(), (int)errorCode, severity, sourceLocation, lineNumber, linePosition);
+                }
             }
             Schema.AddError(error);
         }
@@ -582,34 +572,38 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private void ParseAttribute(XmlReader reader)
         {
 #if false
-            // the attribute value is schema invalid, just skip it; this avoids some duplicate errors at the expense of better error messages...
+    // the attribute value is schema invalid, just skip it; this avoids some duplicate errors at the expense of better error messages...
             if ( reader.SchemaInfo != null && reader.SchemaInfo.Validity == System.Xml.Schema.XmlSchemaValidity.Invalid )
                 continue;
 #endif
-            string attributeNamespace = reader.NamespaceURI;
-            if (attributeNamespace == XmlConstants.AnnotationNamespace 
+            var attributeNamespace = reader.NamespaceURI;
+            if (attributeNamespace == XmlConstants.AnnotationNamespace
                 && reader.LocalName == XmlConstants.UseStrongSpatialTypes
-                && !ProhibitAttribute(attributeNamespace, reader.LocalName) 
+                && !ProhibitAttribute(attributeNamespace, reader.LocalName)
                 && HandleAttribute(reader))
             {
                 return;
             }
             else if (!Schema.IsParseableXmlNamespace(attributeNamespace, true))
             {
-                AddOtherContent(reader);                
+                AddOtherContent(reader);
             }
-            else if (!ProhibitAttribute(attributeNamespace, reader.LocalName)&&
+            else if (!ProhibitAttribute(attributeNamespace, reader.LocalName)
+                     &&
                      HandleAttribute(reader))
             {
                 return;
             }
-            else if (reader.SchemaInfo == null || reader.SchemaInfo.Validity != System.Xml.Schema.XmlSchemaValidity.Invalid)
+            else if (reader.SchemaInfo == null
+                     || reader.SchemaInfo.Validity != XmlSchemaValidity.Invalid)
             {
                 // there's no handler for (namespace,name) and there wasn't a validation error. 
                 // Report an error of our own if the node is in no namespace or if it is in one of our xml schemas tartget namespace.
-                if (string.IsNullOrEmpty(attributeNamespace) || Schema.IsParseableXmlNamespace(attributeNamespace, true))
+                if (string.IsNullOrEmpty(attributeNamespace)
+                    || Schema.IsParseableXmlNamespace(attributeNamespace, true))
                 {
-                    AddError(ErrorCode.UnexpectedXmlAttribute, EdmSchemaErrorSeverity.Error, reader, System.Data.Entity.Resources.Strings.UnexpectedXmlAttribute(reader.Name));
+                    AddError(
+                        ErrorCode.UnexpectedXmlAttribute, EdmSchemaErrorSeverity.Error, reader, Strings.UnexpectedXmlAttribute(reader.Name));
                 }
             }
         }
@@ -633,7 +627,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         protected virtual bool HandleAttribute(XmlReader reader)
         {
-            if(CanHandleAttribute(reader, XmlConstants.Name))
+            if (CanHandleAttribute(reader, XmlConstants.Name))
             {
                 HandleNameAttribute(reader);
                 return true;
@@ -649,11 +643,12 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             GetPositionInfo(reader, out lineNumber, out linePosition);
 
             MetadataProperty property;
-            if (reader.NodeType == XmlNodeType.Element)
+            if (reader.NodeType
+                == XmlNodeType.Element)
             {
-
-                if (this._schema.SchemaVersion == XmlConstants.EdmVersionForV1 ||
-                    this._schema.SchemaVersion == XmlConstants.EdmVersionForV1_1)
+                if (_schema.SchemaVersion == XmlConstants.EdmVersionForV1
+                    ||
+                    _schema.SchemaVersion == XmlConstants.EdmVersionForV1_1)
                 {
                     // skip this element
                     // we don't support element annotations in v1 and v1.1
@@ -663,31 +658,33 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 // in V1 and V1.1 the codegen can only appear as the attribute annotation and we want to maintain
                 // the same behavior for V2, thus we throw if we encounter CodeGen namespace 
                 // in structural annotation in V2 and furthur version
-                if (this._schema.SchemaVersion >= XmlConstants.EdmVersionForV2 
+                if (_schema.SchemaVersion >= XmlConstants.EdmVersionForV2
                     && reader.NamespaceURI == XmlConstants.CodeGenerationSchemaNamespace)
                 {
                     Debug.Assert(
-                        XmlConstants.SchemaVersionLatest == XmlConstants.EdmVersionForV3, 
+                        XmlConstants.SchemaVersionLatest == XmlConstants.EdmVersionForV3,
                         "Please add checking for the latest namespace");
 
-                    AddError(ErrorCode.NoCodeGenNamespaceInStructuralAnnotation, EdmSchemaErrorSeverity.Error, lineNumber, linePosition, Strings.NoCodeGenNamespaceInStructuralAnnotation(XmlConstants.CodeGenerationSchemaNamespace));
+                    AddError(
+                        ErrorCode.NoCodeGenNamespaceInStructuralAnnotation, EdmSchemaErrorSeverity.Error, lineNumber, linePosition,
+                        Strings.NoCodeGenNamespaceInStructuralAnnotation(XmlConstants.CodeGenerationSchemaNamespace));
                     return true;
                 }
 
                 Debug.Assert(
-                        !Schema.IsParseableXmlNamespace(reader.NamespaceURI, false),
-                        "Structural annotation cannot use any edm reserved namespaces");
+                    !Schema.IsParseableXmlNamespace(reader.NamespaceURI, false),
+                    "Structural annotation cannot use any edm reserved namespaces");
 
                 // using this subtree aproach because when I call 
                 // reader.ReadOuterXml() it positions me at the Node beyond
                 // the end of the node I am starting on
                 // which doesn't work with the parsing logic
-                using (XmlReader subtree = reader.ReadSubtree())
+                using (var subtree = reader.ReadSubtree())
                 {
                     subtree.Read();
                     using (var stringReader = new StringReader(subtree.ReadOuterXml()))
                     {
-                        XElement element = XElement.Load(stringReader);
+                        var element = XElement.Load(stringReader);
 
                         property = CreateMetadataPropertyFromOtherNamespaceXmlArtifact(
                             element.Name.NamespaceName, element.Name.LocalName, element);
@@ -712,17 +709,21 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             }
             else
             {
-                AddError(ErrorCode.AlreadyDefined, EdmSchemaErrorSeverity.Error, lineNumber, linePosition, Strings.DuplicateAnnotation(property.Identity, this.FQName));
+                AddError(
+                    ErrorCode.AlreadyDefined, EdmSchemaErrorSeverity.Error, lineNumber, linePosition,
+                    Strings.DuplicateAnnotation(property.Identity, FQName));
             }
             return false;
         }
 
-        internal static MetadataProperty CreateMetadataPropertyFromOtherNamespaceXmlArtifact(string xmlNamespaceUri, string artifactName, object value)
+        internal static MetadataProperty CreateMetadataPropertyFromOtherNamespaceXmlArtifact(
+            string xmlNamespaceUri, string artifactName, object value)
         {
             MetadataProperty property;
-            property = new MetadataProperty(xmlNamespaceUri + ":" + artifactName,
-                                       TypeUsage.Create(EdmProviderManifest.Instance.GetPrimitiveType(PrimitiveTypeKind.String)),
-                                       value);
+            property = new MetadataProperty(
+                xmlNamespaceUri + ":" + artifactName,
+                TypeUsage.Create(EdmProviderManifest.Instance.GetPrimitiveType(PrimitiveTypeKind.String)),
+                value);
             return property;
         }
 
@@ -733,10 +734,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns>true if element content should be skipped</returns>
         private bool ParseElement(XmlReader reader)
         {
-            string elementNamespace = reader.NamespaceURI;
+            var elementNamespace = reader.NamespaceURI;
             // for schema element that right under the schema, we just ignore them, since schema does not
             // have metadataproperties
-            if (!Schema.IsParseableXmlNamespace(elementNamespace, true) && this.ParentElement != null)
+            if (!Schema.IsParseableXmlNamespace(elementNamespace, true)
+                && ParentElement != null)
             {
                 return AddOtherContent(reader);
             }
@@ -746,12 +748,13 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             }
             else
             {
-
                 // we need to report an error if the namespace for this element is a target namespace for the xml schemas we are parsing against.
                 // otherwise we assume that this is either a valid 'any' element or that the xsd validator has generated an error
-                if (string.IsNullOrEmpty(elementNamespace) || Schema.IsParseableXmlNamespace(reader.NamespaceURI, false))
+                if (string.IsNullOrEmpty(elementNamespace)
+                    || Schema.IsParseableXmlNamespace(reader.NamespaceURI, false))
                 {
-                    AddError(ErrorCode.UnexpectedXmlElement, EdmSchemaErrorSeverity.Error, reader, System.Data.Entity.Resources.Strings.UnexpectedXmlElement(reader.Name));
+                    AddError(
+                        ErrorCode.UnexpectedXmlElement, EdmSchemaErrorSeverity.Error, reader, Strings.UnexpectedXmlElement(reader.Name));
                 }
                 return true;
             }
@@ -783,23 +786,25 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             {
                 return;
             }
-            else if (reader.Value != null && reader.Value.Trim().Length == 0)
+            else if (reader.Value != null
+                     && reader.Value.Trim().Length == 0)
             {
                 // just ignore this text.  Don't add an error, since the value is just whitespace.
             }
             else
             {
-                AddError( ErrorCode.TextNotAllowed, EdmSchemaErrorSeverity.Error, reader, System.Data.Entity.Resources.Strings.TextNotAllowed(reader.Value ) );
+                AddError(ErrorCode.TextNotAllowed, EdmSchemaErrorSeverity.Error, reader, Strings.TextNotAllowed(reader.Value));
             }
         }
+
         #endregion
 
         [Conditional("DEBUG")]
         internal static void AssertReaderConsidersSchemaInvalid(XmlReader reader)
         {
-            Debug.Assert(reader.SchemaInfo == null ||
-                         reader.SchemaInfo.Validity != System.Xml.Schema.XmlSchemaValidity.Valid, "The xsd should see this as not acceptable");
+            Debug.Assert(
+                reader.SchemaInfo == null ||
+                reader.SchemaInfo.Validity != XmlSchemaValidity.Valid, "The xsd should see this as not acceptable");
         }
-
     }
 }

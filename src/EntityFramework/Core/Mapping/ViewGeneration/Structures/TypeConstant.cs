@@ -1,17 +1,14 @@
-using System.Text;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Diagnostics;
-using System.Linq;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Text;
+
     /// <summary>
     /// A constant for storing type values, e.g., a type constant is used to denote (say) a Person type, Address type, etc.
     /// It essentially encapsulates an EDM nominal type.
@@ -19,6 +16,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     internal sealed class TypeConstant : Constant
     {
         #region Constructor
+
         /// <summary>
         /// Creates a type constant corresponding to the <paramref name="type"/>.
         /// </summary>
@@ -27,16 +25,20 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             Debug.Assert(type != null, "type must not be null.");
             m_edmType = type;
         }
+
         #endregion
 
         #region Fields
+
         /// <summary>
         /// The EDM type denoted by this type constant.
         /// </summary>
         private readonly EdmType m_edmType;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the EDM type corresponding to the type constant.
         /// </summary>
@@ -44,9 +46,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get { return m_edmType; }
         }
+
         #endregion
 
         #region Methods
+
         internal override bool IsNull()
         {
             return false;
@@ -69,7 +73,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         protected override bool IsEqualTo(Constant right)
         {
-            TypeConstant rightTypeConstant = right as TypeConstant;
+            var rightTypeConstant = right as TypeConstant;
             if (rightTypeConstant == null)
             {
                 return false;
@@ -80,7 +84,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         public override int GetHashCode()
         {
             if (m_edmType == null)
-            { // null type constant
+            {
+                // null type constant
                 return 0;
             }
             else
@@ -94,44 +99,44 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             AsCql(
                 // createRef action
                 (refScopeEntitySet, keyMemberOutputPaths) =>
-                {
-                    // Construct a scoped reference: CreateRef(CPerson1Set, NewRow(pid1, pid2), CPerson1)
-                    EntityType refEntityType = (EntityType)(((RefType)outputMember.EdmType).ElementType);
-                    builder.Append("CreateRef(");
-                    CqlWriter.AppendEscapedQualifiedName(builder, refScopeEntitySet.EntityContainer.Name, refScopeEntitySet.Name);
-                    builder.Append(", row(");
-                    for (int i = 0; i < keyMemberOutputPaths.Count; ++i)
                     {
-                        if (i > 0)
+                        // Construct a scoped reference: CreateRef(CPerson1Set, NewRow(pid1, pid2), CPerson1)
+                        var refEntityType = (EntityType)(((RefType)outputMember.EdmType).ElementType);
+                        builder.Append("CreateRef(");
+                        CqlWriter.AppendEscapedQualifiedName(builder, refScopeEntitySet.EntityContainer.Name, refScopeEntitySet.Name);
+                        builder.Append(", row(");
+                        for (var i = 0; i < keyMemberOutputPaths.Count; ++i)
                         {
-                            builder.Append(", ");
+                            if (i > 0)
+                            {
+                                builder.Append(", ");
+                            }
+                            // Given the member, we need its aliased name
+                            var fullFieldAlias = CqlWriter.GetQualifiedName(blockAlias, keyMemberOutputPaths[i].CqlFieldAlias);
+                            builder.Append(fullFieldAlias);
                         }
-                        // Given the member, we need its aliased name
-                        string fullFieldAlias = CqlWriter.GetQualifiedName(blockAlias, keyMemberOutputPaths[i].CqlFieldAlias);
-                        builder.Append(fullFieldAlias);
-                    }
-                    builder.Append("), ");
-                    CqlWriter.AppendEscapedTypeName(builder, refEntityType);
-                    builder.Append(')');
-                },
+                        builder.Append("), ");
+                        CqlWriter.AppendEscapedTypeName(builder, refEntityType);
+                        builder.Append(')');
+                    },
                 // createType action
                 (membersOutputPaths) =>
-                {
-                    // Construct an entity/complex/Association type in the Members order for fields: CPerson(CPerson1_Pid, CPerson1_Name)
-                    CqlWriter.AppendEscapedTypeName(builder, m_edmType);
-                    builder.Append('(');
-                    for (int i = 0; i < membersOutputPaths.Count; ++i)
                     {
-                        if (i > 0)
+                        // Construct an entity/complex/Association type in the Members order for fields: CPerson(CPerson1_Pid, CPerson1_Name)
+                        CqlWriter.AppendEscapedTypeName(builder, m_edmType);
+                        builder.Append('(');
+                        for (var i = 0; i < membersOutputPaths.Count; ++i)
                         {
-                            builder.Append(", ");
+                            if (i > 0)
+                            {
+                                builder.Append(", ");
+                            }
+                            // Given the member, we need its aliased name: CPerson1_Pid
+                            var fullFieldAlias = CqlWriter.GetQualifiedName(blockAlias, membersOutputPaths[i].CqlFieldAlias);
+                            builder.Append(fullFieldAlias);
                         }
-                        // Given the member, we need its aliased name: CPerson1_Pid
-                        string fullFieldAlias = CqlWriter.GetQualifiedName(blockAlias, membersOutputPaths[i].CqlFieldAlias);
-                        builder.Append(fullFieldAlias);
-                    }
-                    builder.Append(')');
-                },
+                        builder.Append(')');
+                    },
                 outputMember);
 
             return builder;
@@ -144,20 +149,20 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             AsCql(
                 // createRef action
                 (refScopeEntitySet, keyMemberOutputPaths) =>
-                {
-                    // Construct a scoped reference: CreateRef(CPerson1Set, NewRow(pid1, pid2), CPerson1)
-                    EntityType refEntityType = (EntityType)(((RefType)outputMember.EdmType).ElementType);
-                    cqt = refScopeEntitySet.CreateRef(
-                        refEntityType,
-                        keyMemberOutputPaths.Select(km => row.Property(km.CqlFieldAlias)));
-                },
+                    {
+                        // Construct a scoped reference: CreateRef(CPerson1Set, NewRow(pid1, pid2), CPerson1)
+                        var refEntityType = (EntityType)(((RefType)outputMember.EdmType).ElementType);
+                        cqt = refScopeEntitySet.CreateRef(
+                            refEntityType,
+                            keyMemberOutputPaths.Select(km => row.Property(km.CqlFieldAlias)));
+                    },
                 // createType action
                 (membersOutputPaths) =>
-                {
-                    // Construct an entity/complex/Association type in the Members order for fields: CPerson(CPerson1_Pid, CPerson1_Name)
-                    cqt = TypeUsage.Create(m_edmType).New(
-                        membersOutputPaths.Select(m => row.Property(m.CqlFieldAlias)));
-                },
+                    {
+                        // Construct an entity/complex/Association type in the Members order for fields: CPerson(CPerson1_Pid, CPerson1_Name)
+                        cqt = TypeUsage.Create(m_edmType).New(
+                            membersOutputPaths.Select(m => row.Property(m.CqlFieldAlias)));
+                    },
                 outputMember);
 
             return cqt;
@@ -170,19 +175,19 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// </summary>
         private void AsCql(Action<EntitySet, IList<MemberPath>> createRef, Action<IList<MemberPath>> createType, MemberPath outputMember)
         {
-            EntitySet refScopeEntitySet = outputMember.GetScopeOfRelationEnd();
+            var refScopeEntitySet = outputMember.GetScopeOfRelationEnd();
             if (refScopeEntitySet != null)
             {
                 // Construct a scoped reference: CreateRef(CPerson1Set, NewRow(pid1, pid2), CPerson1)
-                EntityType entityType = refScopeEntitySet.ElementType;
-                List<MemberPath> keyMemberOutputPaths = new List<MemberPath>(entityType.KeyMembers.Select(km => new MemberPath(outputMember, km)));
+                var entityType = refScopeEntitySet.ElementType;
+                var keyMemberOutputPaths = new List<MemberPath>(entityType.KeyMembers.Select(km => new MemberPath(outputMember, km)));
                 createRef(refScopeEntitySet, keyMemberOutputPaths);
             }
             else
             {
                 // Construct an entity/complex/Association type in the Members order for fields: CPerson(CPerson1_Pid, CPerson1_Name)
                 Debug.Assert(m_edmType is StructuralType, "m_edmType must be a structural type.");
-                List<MemberPath> memberOutputPaths = new List<MemberPath>();
+                var memberOutputPaths = new List<MemberPath>();
                 foreach (EdmMember structuralMember in Helper.GetAllStructuralMembers(m_edmType))
                 {
                     memberOutputPaths.Add(new MemberPath(outputMember, structuralMember));
@@ -193,7 +198,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         internal override string ToUserString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             ToCompactString(builder);
             return builder.ToString();
         }
@@ -202,6 +207,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             builder.Append(m_edmType.Name);
         }
+
         #endregion
     }
 }

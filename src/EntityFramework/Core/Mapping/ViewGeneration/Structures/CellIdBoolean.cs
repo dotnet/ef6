@@ -13,6 +13,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     internal class CellIdBoolean : TrueFalseLiteral
     {
         #region Constructor
+
         /// <summary>
         /// Creates a boolean expression for the variable name specified by <paramref name="index"/>, e.g., 0 results in from0, 1 into from1.
         /// </summary>
@@ -22,17 +23,22 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_index = index;
             m_slotName = identifiers.GetFromVariable(index);
         }
+
         #endregion
 
         #region Fields
+
         /// <summary>
         /// e.g., from0, from1.
         /// </summary>
         private readonly int m_index;
+
         private readonly string m_slotName;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the slotName corresponding to this, ie., _from0 etc.
         /// </summary>
@@ -40,13 +46,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get { return m_slotName; }
         }
+
         #endregion
 
         #region BoolLiteral members
+
         internal override StringBuilder AsEsql(StringBuilder builder, string blockAlias, bool skipIsNotNull)
         {
             // Get e.g., T2._from1 using the table alias
-            string qualifiedName = CqlWriter.GetQualifiedName(blockAlias, SlotName);
+            var qualifiedName = CqlWriter.GetQualifiedName(blockAlias, SlotName);
             builder.Append(qualifiedName);
             return builder;
         }
@@ -73,14 +81,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         internal override void GetRequiredSlots(MemberProjectionIndex projectedSlotMap, bool[] requiredSlots)
         {
             // The slot corresponding to from1, etc
-            int numBoolSlots = requiredSlots.Length - projectedSlotMap.Count;
-            int slotNum = projectedSlotMap.BoolIndexToSlot(m_index, numBoolSlots);
+            var numBoolSlots = requiredSlots.Length - projectedSlotMap.Count;
+            var slotNum = projectedSlotMap.BoolIndexToSlot(m_index, numBoolSlots);
             requiredSlots[slotNum] = true;
         }
 
         protected override bool IsEqualTo(BoolLiteral right)
         {
-            CellIdBoolean rightBoolean = right as CellIdBoolean;
+            var rightBoolean = right as CellIdBoolean;
             if (rightBoolean == null)
             {
                 return false;
@@ -97,13 +105,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             return this;
         }
+
         #endregion
 
         #region Other Methods
+
         internal override void ToCompactString(StringBuilder builder)
         {
             builder.Append(SlotName);
         }
+
         #endregion
     }
 }

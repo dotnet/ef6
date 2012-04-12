@@ -1,7 +1,7 @@
 ﻿namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
-    using System;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Xml;
 
     /// <summary>
@@ -37,8 +37,9 @@
 
             if (String.IsNullOrEmpty(_commandText))
             {
-                AddError(ErrorCode.EmptyCommandText, EdmSchemaErrorSeverity.Error,
-                    System.Data.Entity.Resources.Strings.EmptyCommandText);
+                AddError(
+                    ErrorCode.EmptyCommandText, EdmSchemaErrorSeverity.Error,
+                    Strings.EmptyCommandText);
             }
         }
     }

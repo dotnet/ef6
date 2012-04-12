@@ -1,10 +1,9 @@
-using System.Data.Entity.Core.Common.Utils;
-using System.Text;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration
 {
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Text;
 
     internal enum ViewGenMode
     {
@@ -44,46 +43,48 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     internal sealed class ConfigViewGenerator : InternalBase
     {
         #region Constructors
+
         internal ConfigViewGenerator()
         {
             m_watch = new Stopwatch();
             m_singleWatch = new Stopwatch();
-            int numEnums = Enum.GetNames(typeof(PerfType)).Length;
+            var numEnums = Enum.GetNames(typeof(PerfType)).Length;
             m_breakdownTimes = new TimeSpan[numEnums];
             m_traceLevel = ViewGenTraceLevel.None;
             m_generateUpdateViews = false;
             StartWatch();
         }
+
         #endregion
 
         #region Fields
-        private bool m_generateViewsForEachType;
+
         private ViewGenTraceLevel m_traceLevel;
         private readonly TimeSpan[] m_breakdownTimes;
-        private Stopwatch m_watch;
+        private readonly Stopwatch m_watch;
+
         /// <summary>
         /// To measure a single thing at a time.
         /// </summary>
-        private Stopwatch m_singleWatch;
+        private readonly Stopwatch m_singleWatch;
+
         /// <summary>
         /// Perf op being measured.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         private PerfType m_singlePerfOp;
+
         private bool m_enableValidation = true;
         private bool m_generateUpdateViews = true;
-        private bool m_generateEsql = false;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// If true then view generation will produce eSQL, otherwise CQTs only.
         /// </summary>
-        internal bool GenerateEsql
-        {
-            get { return m_generateEsql; }
-            set { m_generateEsql = value; }
-        }
+        internal bool GenerateEsql { get; set; }
 
         /// <summary>
         /// Callers can set elements in this list.
@@ -111,11 +112,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             set { m_generateUpdateViews = value; }
         }
 
-        internal bool GenerateViewsForEachType
-        {
-            get { return m_generateViewsForEachType; }
-            set { m_generateViewsForEachType = value; }
-        }
+        internal bool GenerateViewsForEachType { get; set; }
 
         internal bool IsViewTracing
         {
@@ -131,9 +128,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         {
             get { return IsTraceAllowed(ViewGenTraceLevel.Verbose); }
         }
+
         #endregion
 
         #region Methods
+
         private void StartWatch()
         {
             m_watch.Start();
@@ -151,8 +150,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         internal void StopSingleWatch(PerfType perfType)
         {
             Debug.Assert(m_singlePerfOp == perfType, "Started op for different activity " + m_singlePerfOp + " -- not " + perfType);
-            TimeSpan timeElapsed = m_singleWatch.Elapsed;
-            int index = (int)perfType;
+            var timeElapsed = m_singleWatch.Elapsed;
+            var index = (int)perfType;
             m_singleWatch.Stop();
             m_singleWatch.Reset();
             BreakdownTimes[index] = BreakdownTimes[index].Add(timeElapsed);
@@ -164,8 +163,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         /// <param name="perfType"></param>
         internal void SetTimeForFinishedActivity(PerfType perfType)
         {
-            TimeSpan timeElapsed = m_watch.Elapsed;
-            int index = (int)perfType;
+            var timeElapsed = m_watch.Elapsed;
+            var index = (int)perfType;
             BreakdownTimes[index] = BreakdownTimes[index].Add(timeElapsed);
             m_watch.Reset();
             m_watch.Start();
@@ -180,6 +179,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         {
             StringUtil.FormatStringBuilder(builder, "Trace Switch: {0}", m_traceLevel);
         }
+
         #endregion
     }
 }

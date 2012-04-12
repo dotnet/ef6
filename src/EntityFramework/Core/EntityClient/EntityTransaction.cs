@@ -1,21 +1,15 @@
-using System.Collections.Generic;
-using System.Text;
-using System.Data;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.EntityClient
 {
-    using Metadata.Edm;
+    using System.Data.Common;
+    using System.Diagnostics;
 
     /// <summary>
     /// Class representing a transaction for the conceptual layer
     /// </summary>
     public sealed class EntityTransaction : DbTransaction
     {
-        private EntityConnection _connection;
-        private DbTransaction _storeTransaction;
+        private readonly EntityConnection _connection;
+        private readonly DbTransaction _storeTransaction;
 
         /// <summary>
         /// Constructs the EntityTransaction object with an associated connection and the underlying store transaction
@@ -23,12 +17,11 @@ namespace System.Data.Entity.Core.EntityClient
         /// <param name="connection">The EntityConnetion object owning this transaction</param>
         /// <param name="storeTransaction">The underlying transaction object</param>
         internal EntityTransaction(EntityConnection connection, DbTransaction storeTransaction)
-            : base()
         {
             Debug.Assert(connection != null && storeTransaction != null);
 
-            this._connection = connection;
-            this._storeTransaction = storeTransaction;
+            _connection = connection;
+            _storeTransaction = storeTransaction;
         }
 
         /// <summary>
@@ -37,7 +30,8 @@ namespace System.Data.Entity.Core.EntityClient
         public new EntityConnection Connection
         {
             get
-            {   // follow the store transaction behavior
+            {
+                // follow the store transaction behavior
                 return ((null != _storeTransaction.Connection) ? _connection : null);
             }
         }
@@ -48,7 +42,8 @@ namespace System.Data.Entity.Core.EntityClient
         protected override DbConnection DbConnection
         {
             get
-            {   // follow the store transaction behavior
+            {
+                // follow the store transaction behavior
                 return ((null != _storeTransaction.Connection) ? _connection : null);
             }
         }
@@ -58,10 +53,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override IsolationLevel IsolationLevel
         {
-            get
-            {
-                return this._storeTransaction.IsolationLevel;
-            }
+            get { return _storeTransaction.IsolationLevel; }
         }
 
         /// <summary>
@@ -69,10 +61,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         internal DbTransaction StoreTransaction
         {
-            get
-            {
-                return this._storeTransaction;
-            }
+            get { return _storeTransaction; }
         }
 
         /// <summary>
@@ -82,7 +71,7 @@ namespace System.Data.Entity.Core.EntityClient
         {
             try
             {
-                this._storeTransaction.Commit();
+                _storeTransaction.Commit();
             }
             catch (Exception e)
             {
@@ -93,7 +82,7 @@ namespace System.Data.Entity.Core.EntityClient
                 throw;
             }
 
-            this.ClearCurrentTransaction();
+            ClearCurrentTransaction();
         }
 
         /// <summary>
@@ -103,7 +92,7 @@ namespace System.Data.Entity.Core.EntityClient
         {
             try
             {
-                this._storeTransaction.Rollback();
+                _storeTransaction.Rollback();
             }
             catch (Exception e)
             {
@@ -114,7 +103,7 @@ namespace System.Data.Entity.Core.EntityClient
                 throw;
             }
 
-            this.ClearCurrentTransaction();
+            ClearCurrentTransaction();
         }
 
         /// <summary>
@@ -125,8 +114,8 @@ namespace System.Data.Entity.Core.EntityClient
         {
             if (disposing)
             {
-                this.ClearCurrentTransaction();
-                this._storeTransaction.Dispose();
+                ClearCurrentTransaction();
+                _storeTransaction.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -136,7 +125,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         private void ClearCurrentTransaction()
         {
-            if (_connection.CurrentTransaction == this)
+            if (_connection.CurrentTransaction
+                == this)
             {
                 _connection.ClearCurrentTransaction();
             }

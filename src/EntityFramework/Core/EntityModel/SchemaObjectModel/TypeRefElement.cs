@@ -1,17 +1,16 @@
 ﻿namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
-    using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
     using System.Text;
     using System.Xml;
     using Som = System.Data.Entity.Core.EntityModel.SchemaObjectModel;
 
-    class TypeRefElement : ModelFunctionTypeElement
+    internal class TypeRefElement : ModelFunctionTypeElement
     {
         #region constructor
+
         /// <summary>
         /// 
         /// </summary>
@@ -19,8 +18,8 @@
         internal TypeRefElement(SchemaElement parentElement)
             : base(parentElement)
         {
-
         }
+
         #endregion
 
         protected override bool HandleAttribute(XmlReader reader)
@@ -44,15 +43,20 @@
 
             string type;
             if (!Utils.GetString(Schema, reader, out type))
+            {
                 return;
+            }
 
             if (!Utils.ValidateDottedName(Schema, reader, type))
+            {
                 return;
+            }
 
             _unresolvedType = type;
         }
 
-        internal override bool ResolveNameAndSetTypeUsage(Converter.ConversionCache convertedItemCache, Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
+        internal override bool ResolveNameAndSetTypeUsage(
+            Converter.ConversionCache convertedItemCache, Dictionary<SchemaElement, GlobalItem> newGlobalItems)
         {
             if (_type is ScalarType) //Create and store type usage for scalar type
             {
@@ -60,9 +64,9 @@
                 _typeUsage = _typeUsageBuilder.TypeUsage;
                 return true;
             }
-            else  //Try to resolve edm type. If not now, it will resolve in the second pass
+            else //Try to resolve edm type. If not now, it will resolve in the second pass
             {
-                EdmType edmType = (EdmType)Converter.LoadSchemaElement(_type, _type.Schema.ProviderManifest, convertedItemCache, newGlobalItems);
+                var edmType = (EdmType)Converter.LoadSchemaElement(_type, _type.Schema.ProviderManifest, convertedItemCache, newGlobalItems);
                 if (edmType != null)
                 {
                     _typeUsageBuilder.ValidateAndSetTypeUsage(edmType, false); //use typeusagebuilder so dont lose facet information

@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
 
     /// <summary>
@@ -10,6 +11,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     internal enum OpType
     {
         #region ScalarOpType
+
         /// <summary>
         /// Constants
         /// </summary>
@@ -34,7 +36,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// ConstantPredicate
         /// </summary>
         ConstantPredicate,
-        
+
         /// <summary>
         /// A Var reference
         /// </summary>
@@ -44,12 +46,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// GreaterThan
         /// </summary>
         GT,
-        
+
         /// <summary>
         /// >=
         /// </summary>
         GE,
-        
+
         /// <summary>
         /// Lessthan or equals
         /// </summary>
@@ -119,7 +121,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// Not
         /// </summary>
         Not,
-        
+
         /// <summary>
         /// is null 
         /// </summary>
@@ -154,7 +156,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// a basic aggregate
         /// </summary>
         Aggregate,
-        
+
         /// <summary>
         /// function call
         /// </summary>
@@ -189,27 +191,27 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// Multiset constructor
         /// </summary>
         NewMultiset,
-        
+
         /// <summary>
         /// record constructor
         /// </summary>
         NewRecord,
-        
+
         /// <summary>
         /// Get the key from a Ref
         /// </summary>
         GetRefKey,
-        
-       /// <summary>
+
+        /// <summary>
         /// Get the ref from an entity instance
         /// </summary>
         GetEntityRef,
-        
+
         /// <summary>
         /// create a reference 
         /// </summary>
         Ref,
-        
+
         /// <summary>
         /// exists
         /// </summary>
@@ -234,13 +236,16 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// Traverse a relationship and get the references of the other end
         /// </summary>
         Navigate,
+
         #endregion
 
         #region RelOpType
+
         /// <summary>
         /// A table scan
         /// </summary>
         ScanTable,
+
         /// <summary>
         /// A view scan
         /// </summary>
@@ -250,7 +255,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// Filter
         /// </summary>
         Filter,
-        
+
         /// <summary>
         /// Project
         /// </summary>
@@ -315,10 +320,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// UnionAll
         /// </summary>
         UnionAll,
+
         /// <summary>
         /// Intersect
         /// </summary>
         Intersect,
+
         /// <summary>
         /// Except
         /// </summary>
@@ -342,24 +349,30 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #endregion
 
         #region AncillaryOpType
+
         /// <summary>
         /// Variable definition
         /// </summary>
         VarDef,
+
         /// <summary>
         /// List of variable definitions
         /// </summary>
         VarDefList,
+
         #endregion
-        
+
         #region RulePatternOpType
+
         /// <summary>
         /// Leaf
         /// </summary>
         Leaf,
+
         #endregion
 
         #region PhysicalOpType
+
         /// <summary>
         /// Physical Project
         /// </summary>
@@ -369,10 +382,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// single-stream nest aggregation
         /// </summary>
         SingleStreamNest,
+
         /// <summary>
         /// multi-stream nest aggregation
         /// </summary>
         MultiStreamNest,
+
         #endregion
 
         /// <summary>
@@ -388,60 +403,86 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     internal abstract class Op
     {
         #region private state
-        private OpType m_opType;
+
+        private readonly OpType m_opType;
+
         #endregion
 
         #region constructors
+
         /// <summary>
         /// Basic constructor
         /// </summary>
-        internal Op(OpType opType) 
-        { 
-            m_opType = opType; 
+        internal Op(OpType opType)
+        {
+            m_opType = opType;
         }
+
         #endregion
 
         #region public methods
+
         /// <summary>
         /// Represents an unknown arity. Usually for Ops that can have a varying number of Args
         /// </summary>
         internal const int ArityVarying = -1;
- 
+
         /// <summary>
         /// Kind of Op
         /// </summary>
-        internal OpType OpType { get { return m_opType; } }
+        internal OpType OpType
+        {
+            get { return m_opType; }
+        }
 
         /// <summary>
         /// The Arity of this Op (ie) how many arguments can it have.
         /// Returns -1 if the arity is not known a priori
         /// </summary>
-        internal virtual int Arity { get { return ArityVarying; } }
+        internal virtual int Arity
+        {
+            get { return ArityVarying; }
+        }
 
         /// <summary>
         /// Is this a ScalarOp
         /// </summary>
-        internal virtual bool IsScalarOp { get { return false; } }
+        internal virtual bool IsScalarOp
+        {
+            get { return false; }
+        }
 
         /// <summary>
         /// Is this a RulePatternOp
         /// </summary>
-        internal virtual bool IsRulePatternOp { get { return false; } }
+        internal virtual bool IsRulePatternOp
+        {
+            get { return false; }
+        }
 
         /// <summary>
         /// Is this a RelOp
         /// </summary>
-        internal virtual bool IsRelOp { get { return false; } }
+        internal virtual bool IsRelOp
+        {
+            get { return false; }
+        }
 
         /// <summary>
         /// Is this an AncillaryOp
         /// </summary>
-        internal virtual bool IsAncillaryOp { get { return false; } }
+        internal virtual bool IsAncillaryOp
+        {
+            get { return false; }
+        }
 
         /// <summary>
         /// Is this a PhysicalOp
         /// </summary>
-        internal virtual bool IsPhysicalOp { get { return false; } }
+        internal virtual bool IsPhysicalOp
+        {
+            get { return false; }
+        }
 
         /// <summary>
         /// Is the other Op equivalent?
@@ -459,7 +500,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal virtual TypeUsage Type
         {
             get { return null; }
-            set { throw System.Data.Entity.Resources.Error.NotSupported(); }
+            set { throw Error.NotSupported(); }
         }
 
         /// <summary>
@@ -468,11 +509,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="v">The BasicOpVisitor that is visiting this Op</param>
         /// <param name="n">The Node that references this Op</param>
         [DebuggerNonUserCode]
-        internal virtual void Accept(BasicOpVisitor v, Node n) 
-        { 
-            v.Visit(this, n); 
+        internal virtual void Accept(BasicOpVisitor v, Node n)
+        {
+            v.Visit(this, n);
         }
-        
+
         /// <summary>
         /// Visitor pattern method for visitors with a return value
         /// </summary>
@@ -480,10 +521,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="n">The node in question</param>
         /// <returns>An instance of TResultType</returns>
         [DebuggerNonUserCode]
-        internal virtual TResultType Accept<TResultType>(BasicOpVisitorOfT<TResultType> v, Node n) 
-        { 
+        internal virtual TResultType Accept<TResultType>(BasicOpVisitorOfT<TResultType> v, Node n)
+        {
             return v.Visit(this, n);
         }
+
         #endregion
     }
 
@@ -493,10 +535,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     internal abstract class ScalarOp : Op
     {
         #region private state
+
         private TypeUsage m_type;
+
         #endregion
 
         #region constructors
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -509,14 +554,22 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             m_type = type;
         }
 
-        protected ScalarOp(OpType opType) : base(opType) { }
+        protected ScalarOp(OpType opType)
+            : base(opType)
+        {
+        }
+
         #endregion
 
         #region public methods
+
         /// <summary>
         /// ScalarOp
         /// </summary>
-        internal override bool IsScalarOp { get { return true; } }
+        internal override bool IsScalarOp
+        {
+            get { return true; }
+        }
 
         /// <summary>
         /// Two scalarOps are equivalent (usually) if their OpTypes and types are the 
@@ -527,25 +580,26 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>true, if the Ops are indeed equivalent</returns>
         internal override bool IsEquivalent(Op other)
         {
-            return (other.OpType == this.OpType && TypeSemantics.IsStructurallyEqual(this.Type, other.Type));
+            return (other.OpType == OpType && TypeSemantics.IsStructurallyEqual(Type, other.Type));
         }
 
         /// <summary>
         /// Datatype of result
         /// </summary>
-        internal override TypeUsage Type 
-        { 
-            get { return m_type; } 
-            set { m_type = value; } 
+        internal override TypeUsage Type
+        {
+            get { return m_type; }
+            set { m_type = value; }
         }
-        
+
         /// <summary>
         /// Is this an Aggregate
         /// </summary>
-        internal virtual bool IsAggregateOp 
+        internal virtual bool IsAggregateOp
         {
-            get{return false;}
+            get { return false; }
         }
+
         #endregion
     }
 
@@ -555,18 +609,28 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     internal abstract class RelOp : Op
     {
         #region constructors
+
         /// <summary>
         /// Basic constructor.
         /// </summary>
         /// <param name="opType">kind of Op</param>
-        internal RelOp(OpType opType) : base(opType) { }
+        internal RelOp(OpType opType)
+            : base(opType)
+        {
+        }
+
         #endregion
 
         #region public methods
+
         /// <summary>
         /// RelOp
         /// </summary>
-        internal override bool IsRelOp { get { return true; } }
+        internal override bool IsRelOp
+        {
+            get { return true; }
+        }
+
         #endregion
     }
 
@@ -576,18 +640,28 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     internal abstract class AncillaryOp : Op
     {
         #region constructors
+
         /// <summary>
         /// Default constructor
         /// </summary>
         /// <param name="opType">kind of Op</param>
-        internal AncillaryOp(OpType opType) : base(opType) { }
+        internal AncillaryOp(OpType opType)
+            : base(opType)
+        {
+        }
+
         #endregion
 
         #region public methods
+
         /// <summary>
         /// AncillaryOp
         /// </summary>
-        internal override bool IsAncillaryOp { get { return true; } }
+        internal override bool IsAncillaryOp
+        {
+            get { return true; }
+        }
+
         #endregion
     }
 
@@ -597,18 +671,28 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     internal abstract class PhysicalOp : Op
     {
         #region constructors
+
         /// <summary>
         /// Default constructor
         /// </summary>
         /// <param name="opType">the op type</param>
-        internal PhysicalOp(OpType opType) : base(opType) { }
+        internal PhysicalOp(OpType opType)
+            : base(opType)
+        {
+        }
+
         #endregion
 
         #region public methods
+
         /// <summary>
         /// This is a physical Op
         /// </summary>
-        internal override bool IsPhysicalOp { get { return true; } }
+        internal override bool IsPhysicalOp
+        {
+            get { return true; }
+        }
+
         #endregion
     }
 
@@ -618,18 +702,28 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     internal abstract class RulePatternOp : Op
     {
         #region constructors
+
         /// <summary>
         /// Default constructor
         /// </summary>
         /// <param name="opType">kind of Op</param>
-        internal RulePatternOp(OpType opType) : base(opType) { }
+        internal RulePatternOp(OpType opType)
+            : base(opType)
+        {
+        }
+
         #endregion
 
         #region public methods
+
         /// <summary>
         /// RulePatternOp
         /// </summary>
-        internal override bool IsRulePatternOp { get { return true; } }
+        internal override bool IsRulePatternOp
+        {
+            get { return true; }
+        }
+
         #endregion
     }
 }

@@ -1,9 +1,7 @@
-using System.Data.Entity.Core.Common.Internal;
-using System.Diagnostics;
-using System.Data.Entity.Core.Spatial.Internal;
-
 namespace System.Data.Entity.Core.Spatial
 {
+    using System.Data.Entity.Core.Spatial.Internal;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     [Serializable]
@@ -21,16 +19,31 @@ namespace System.Data.Entity.Core.Spatial
 
             internal ReadOnlySpatialValues(int spatialRefSysId, string textValue, byte[] binaryValue, string gmlValue)
             {
-                this.srid = spatialRefSysId;
-                this.wkb = (binaryValue == null ? null : (byte[])binaryValue.Clone());
-                this.wkt = textValue;
-                this.gml = gmlValue;
+                srid = spatialRefSysId;
+                wkb = (binaryValue == null ? null : (byte[])binaryValue.Clone());
+                wkt = textValue;
+                gml = gmlValue;
             }
 
-            internal int CoordinateSystemId { get { return this.srid; } }
-            internal byte[] CloneBinary() { return (this.wkb == null ? null : (byte[])this.wkb.Clone()); }
-            internal string Text { get { return this.wkt; } }
-            internal string GML { get { return this.gml; } }
+            internal int CoordinateSystemId
+            {
+                get { return srid; }
+            }
+
+            internal byte[] CloneBinary()
+            {
+                return (wkb == null ? null : (byte[])wkb.Clone());
+            }
+
+            internal string Text
+            {
+                get { return wkt; }
+            }
+
+            internal string GML
+            {
+                get { return gml; }
+            }
         }
 
         #endregion
@@ -38,7 +51,6 @@ namespace System.Data.Entity.Core.Spatial
         internal static readonly DefaultSpatialServices Instance = new DefaultSpatialServices();
 
         private DefaultSpatialServices()
-            : base()
         {
         }
 
@@ -47,10 +59,10 @@ namespace System.Data.Entity.Core.Spatial
             // TODO_SPATIAL: This is thrown for all APIs that cannot be implemented without spatial capabilities. Consider adding a message that indicates why this is the case and how it can be mitigated (like EnsureSqlTypesAssembly does).
             return new NotImplementedException();
         }
-                
+
         private static ReadOnlySpatialValues CheckProviderValue(object providerValue)
         {
-            ReadOnlySpatialValues expectedValue = providerValue as ReadOnlySpatialValues;
+            var expectedValue = providerValue as ReadOnlySpatialValues;
             if (expectedValue == null)
             {
                 throw SpatialExceptions.ProviderValueNotCompatibleWithSpatialServices();
@@ -63,7 +75,7 @@ namespace System.Data.Entity.Core.Spatial
             Debug.Assert(geographyValue != null, "Validate geographyValue is non-null before calling CheckCompatible");
             if (geographyValue != null)
             {
-                ReadOnlySpatialValues expectedValue = geographyValue.ProviderValue as ReadOnlySpatialValues;
+                var expectedValue = geographyValue.ProviderValue as ReadOnlySpatialValues;
                 if (expectedValue != null)
                 {
                     return expectedValue;
@@ -77,7 +89,7 @@ namespace System.Data.Entity.Core.Spatial
             Debug.Assert(geometryValue != null, "Validate geometryValue is non-null before calling CheckCompatible");
             if (geometryValue != null)
             {
-                ReadOnlySpatialValues expectedValue = geometryValue.ProviderValue as ReadOnlySpatialValues;
+                var expectedValue = geometryValue.ProviderValue as ReadOnlySpatialValues;
                 if (expectedValue != null)
                 {
                     return expectedValue;
@@ -85,27 +97,33 @@ namespace System.Data.Entity.Core.Spatial
             }
             throw SpatialExceptions.GeometryValueNotCompatibleWithSpatialServices("geometryValue");
         }
-                
+
         #region Geography API
-                
+
         public override DbGeography GeographyFromProviderValue(object providerValue)
         {
             providerValue.CheckNull("providerValue");
-            ReadOnlySpatialValues expectedValue = CheckProviderValue(providerValue);
+            var expectedValue = CheckProviderValue(providerValue);
             return CreateGeography(this, expectedValue);
         }
 
         public override object CreateProviderValue(DbGeographyWellKnownValue wellKnownValue)
         {
             wellKnownValue.CheckNull("wellKnownValue");
-            return new ReadOnlySpatialValues(wellKnownValue.CoordinateSystemId, wellKnownValue.WellKnownText, wellKnownValue.WellKnownBinary, gmlValue: null);
+            return new ReadOnlySpatialValues(
+                wellKnownValue.CoordinateSystemId, wellKnownValue.WellKnownText, wellKnownValue.WellKnownBinary, gmlValue: null);
         }
 
         public override DbGeographyWellKnownValue CreateWellKnownValue(DbGeography geographyValue)
         {
             geographyValue.CheckNull("geographyValue");
-            ReadOnlySpatialValues backingValue = CheckCompatible(geographyValue);
-            return new DbGeographyWellKnownValue() { CoordinateSystemId = backingValue.CoordinateSystemId, WellKnownBinary = backingValue.CloneBinary(), WellKnownText = backingValue.Text };
+            var backingValue = CheckCompatible(geographyValue);
+            return new DbGeographyWellKnownValue
+                       {
+                           CoordinateSystemId = backingValue.CoordinateSystemId,
+                           WellKnownBinary = backingValue.CloneBinary(),
+                           WellKnownText = backingValue.Text
+                       };
         }
 
         #region Static Constructors - Well Known Binary (WKB)
@@ -113,15 +131,17 @@ namespace System.Data.Entity.Core.Spatial
         public override DbGeography GeographyFromBinary(byte[] geographyBinary)
         {
             geographyBinary.CheckNull("geographyBinary");
-            ReadOnlySpatialValues backingValue = new ReadOnlySpatialValues(DbGeography.DefaultCoordinateSystemId, textValue: null, binaryValue: geographyBinary, gmlValue: null);
-            return DbSpatialServices.CreateGeography(this, backingValue);
+            var backingValue = new ReadOnlySpatialValues(
+                DbGeography.DefaultCoordinateSystemId, textValue: null, binaryValue: geographyBinary, gmlValue: null);
+            return CreateGeography(this, backingValue);
         }
 
         public override DbGeography GeographyFromBinary(byte[] geographyBinary, int spatialReferenceSystemId)
         {
             geographyBinary.CheckNull("geographyBinary");
-            ReadOnlySpatialValues backingValue = new ReadOnlySpatialValues(spatialReferenceSystemId, textValue: null, binaryValue: geographyBinary, gmlValue: null);
-            return DbSpatialServices.CreateGeography(this, backingValue);
+            var backingValue = new ReadOnlySpatialValues(
+                spatialReferenceSystemId, textValue: null, binaryValue: geographyBinary, gmlValue: null);
+            return CreateGeography(this, backingValue);
         }
 
         public override DbGeography GeographyLineFromBinary(byte[] geographyBinary, int spatialReferenceSystemId)
@@ -142,20 +162,21 @@ namespace System.Data.Entity.Core.Spatial
             throw SpatialServicesUnavailable();
         }
 
-       public override DbGeography GeographyMultiLineFromBinary(byte[] geographyBinary, int spatialReferenceSystemId)
+        public override DbGeography GeographyMultiLineFromBinary(byte[] geographyBinary, int spatialReferenceSystemId)
         {
             // Without a backing implementation, this method cannot enforce the requirement that the result be of the specified geometry type
             throw SpatialServicesUnavailable();
         }
 
-         public override DbGeography GeographyMultiPointFromBinary(byte[] geographyBinary, int spatialReferenceSystemId)
+        public override DbGeography GeographyMultiPointFromBinary(byte[] geographyBinary, int spatialReferenceSystemId)
         {
             // Without a backing implementation, this method cannot enforce the requirement that the result be of the specified geometry type
             throw SpatialServicesUnavailable();
         }
 
-         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "MultiPolygon", Justification = "Match MultiPoint, MultiLine")]
-         public override DbGeography GeographyMultiPolygonFromBinary(byte[] geographyBinary, int spatialReferenceSystemId)
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "MultiPolygon",
+            Justification = "Match MultiPoint, MultiLine")]
+        public override DbGeography GeographyMultiPolygonFromBinary(byte[] geographyBinary, int spatialReferenceSystemId)
         {
             // Without a backing implementation, this method cannot enforce the requirement that the result be of the specified geometry type
             throw SpatialServicesUnavailable();
@@ -174,15 +195,17 @@ namespace System.Data.Entity.Core.Spatial
         public override DbGeography GeographyFromText(string geographyText)
         {
             geographyText.CheckNull("geographyText");
-            ReadOnlySpatialValues backingValue = new ReadOnlySpatialValues(DbGeography.DefaultCoordinateSystemId, textValue: geographyText, binaryValue: null, gmlValue: null);
-            return DbSpatialServices.CreateGeography(this, backingValue);
+            var backingValue = new ReadOnlySpatialValues(
+                DbGeography.DefaultCoordinateSystemId, textValue: geographyText, binaryValue: null, gmlValue: null);
+            return CreateGeography(this, backingValue);
         }
 
         public override DbGeography GeographyFromText(string geographyText, int spatialReferenceSystemId)
         {
             geographyText.CheckNull("geographyText");
-            ReadOnlySpatialValues backingValue = new ReadOnlySpatialValues(spatialReferenceSystemId, textValue: geographyText, binaryValue: null, gmlValue: null);
-            return DbSpatialServices.CreateGeography(this, backingValue);
+            var backingValue = new ReadOnlySpatialValues(
+                spatialReferenceSystemId, textValue: geographyText, binaryValue: null, gmlValue: null);
+            return CreateGeography(this, backingValue);
         }
 
         public override DbGeography GeographyLineFromText(string geographyText, int spatialReferenceSystemId)
@@ -215,7 +238,8 @@ namespace System.Data.Entity.Core.Spatial
             throw SpatialServicesUnavailable();
         }
 
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "MultiPolygon", Justification = "Match MultiPoint, MultiLine")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "MultiPolygon",
+            Justification = "Match MultiPoint, MultiLine")]
         public override DbGeography GeographyMultiPolygonFromText(string geographyText, int spatialReferenceSystemId)
         {
             // Without a backing implementation, this method cannot enforce the requirement that the result be of the specified geometry type
@@ -235,15 +259,17 @@ namespace System.Data.Entity.Core.Spatial
         public override DbGeography GeographyFromGml(string geographyMarkup)
         {
             geographyMarkup.CheckNull("geographyMarkup");
-            ReadOnlySpatialValues backingValue = new ReadOnlySpatialValues(DbGeography.DefaultCoordinateSystemId, textValue: null, binaryValue: null, gmlValue: geographyMarkup);
-            return DbSpatialServices.CreateGeography(this, backingValue);
+            var backingValue = new ReadOnlySpatialValues(
+                DbGeography.DefaultCoordinateSystemId, textValue: null, binaryValue: null, gmlValue: geographyMarkup);
+            return CreateGeography(this, backingValue);
         }
 
         public override DbGeography GeographyFromGml(string geographyMarkup, int spatialReferenceSystemId)
         {
             geographyMarkup.CheckNull("geographyMarkup");
-            ReadOnlySpatialValues backingValue = new ReadOnlySpatialValues(spatialReferenceSystemId, textValue: null, binaryValue: null, gmlValue: geographyMarkup);
-            return DbSpatialServices.CreateGeography(this, backingValue);
+            var backingValue = new ReadOnlySpatialValues(
+                spatialReferenceSystemId, textValue: null, binaryValue: null, gmlValue: geographyMarkup);
+            return CreateGeography(this, backingValue);
         }
 
         #endregion
@@ -253,7 +279,7 @@ namespace System.Data.Entity.Core.Spatial
         public override int GetCoordinateSystemId(DbGeography geographyValue)
         {
             geographyValue.CheckNull("geographyValue");
-            ReadOnlySpatialValues backingValue = CheckCompatible(geographyValue);
+            var backingValue = CheckCompatible(geographyValue);
             return backingValue.CoordinateSystemId;
         }
 
@@ -278,22 +304,22 @@ namespace System.Data.Entity.Core.Spatial
 
         public override string AsText(DbGeography geographyValue)
         {
-           geographyValue.CheckNull("geographyValue");
-            ReadOnlySpatialValues expectedValue = CheckCompatible(geographyValue);
+            geographyValue.CheckNull("geographyValue");
+            var expectedValue = CheckCompatible(geographyValue);
             return expectedValue.Text;
         }
 
         public override byte[] AsBinary(DbGeography geographyValue)
         {
             geographyValue.CheckNull("geographyValue");
-            ReadOnlySpatialValues expectedValue = CheckCompatible(geographyValue);
+            var expectedValue = CheckCompatible(geographyValue);
             return expectedValue.CloneBinary();
         }
 
         public override string AsGml(DbGeography geographyValue)
         {
             geographyValue.CheckNull("geographyValue");
-            ReadOnlySpatialValues expectedValue = CheckCompatible(geographyValue);
+            var expectedValue = CheckCompatible(geographyValue);
             return expectedValue.GML;
         }
 
@@ -349,7 +375,6 @@ namespace System.Data.Entity.Core.Spatial
         {
             throw SpatialServicesUnavailable();
         }
-
 
         #endregion
 
@@ -441,24 +466,30 @@ namespace System.Data.Entity.Core.Spatial
         #endregion
 
         #region Geometry API
-                
+
         public override object CreateProviderValue(DbGeometryWellKnownValue wellKnownValue)
         {
             wellKnownValue.CheckNull("wellKnownValue");
-            return new ReadOnlySpatialValues(wellKnownValue.CoordinateSystemId, wellKnownValue.WellKnownText, wellKnownValue.WellKnownBinary, gmlValue: null);
+            return new ReadOnlySpatialValues(
+                wellKnownValue.CoordinateSystemId, wellKnownValue.WellKnownText, wellKnownValue.WellKnownBinary, gmlValue: null);
         }
 
         public override DbGeometryWellKnownValue CreateWellKnownValue(DbGeometry geometryValue)
         {
             geometryValue.CheckNull("geometryValue");
-            ReadOnlySpatialValues backingValue = CheckCompatible(geometryValue);
-            return new DbGeometryWellKnownValue() { CoordinateSystemId = backingValue.CoordinateSystemId, WellKnownBinary = backingValue.CloneBinary(), WellKnownText = backingValue.Text };
+            var backingValue = CheckCompatible(geometryValue);
+            return new DbGeometryWellKnownValue
+                       {
+                           CoordinateSystemId = backingValue.CoordinateSystemId,
+                           WellKnownBinary = backingValue.CloneBinary(),
+                           WellKnownText = backingValue.Text
+                       };
         }
 
         public override DbGeometry GeometryFromProviderValue(object providerValue)
         {
             providerValue.CheckNull("providerValue");
-            ReadOnlySpatialValues expectedValue = CheckProviderValue(providerValue);
+            var expectedValue = CheckProviderValue(providerValue);
             return CreateGeometry(this, expectedValue);
         }
 
@@ -467,15 +498,17 @@ namespace System.Data.Entity.Core.Spatial
         public override DbGeometry GeometryFromBinary(byte[] geometryBinary)
         {
             geometryBinary.CheckNull("geometryBinary");
-            ReadOnlySpatialValues backingValue = new ReadOnlySpatialValues(DbGeometry.DefaultCoordinateSystemId, textValue: null, binaryValue: geometryBinary, gmlValue: null);
-            return DbSpatialServices.CreateGeometry(this, backingValue);
+            var backingValue = new ReadOnlySpatialValues(
+                DbGeometry.DefaultCoordinateSystemId, textValue: null, binaryValue: geometryBinary, gmlValue: null);
+            return CreateGeometry(this, backingValue);
         }
 
         public override DbGeometry GeometryFromBinary(byte[] geometryBinary, int spatialReferenceSystemId)
         {
             geometryBinary.CheckNull("geometryBinary");
-            ReadOnlySpatialValues backingValue = new ReadOnlySpatialValues(spatialReferenceSystemId, textValue: null, binaryValue: geometryBinary, gmlValue: null);
-            return DbSpatialServices.CreateGeometry(this, backingValue);
+            var backingValue = new ReadOnlySpatialValues(
+                spatialReferenceSystemId, textValue: null, binaryValue: geometryBinary, gmlValue: null);
+            return CreateGeometry(this, backingValue);
         }
 
         public override DbGeometry GeometryLineFromBinary(byte[] geometryBinary, int spatialReferenceSystemId)
@@ -496,7 +529,7 @@ namespace System.Data.Entity.Core.Spatial
             throw SpatialServicesUnavailable();
         }
 
-       public override DbGeometry GeometryMultiLineFromBinary(byte[] geometryBinary, int spatialReferenceSystemId)
+        public override DbGeometry GeometryMultiLineFromBinary(byte[] geometryBinary, int spatialReferenceSystemId)
         {
             // Without a backing implementation, this method cannot enforce the requirement that the result be of the specified geometry type
             throw SpatialServicesUnavailable();
@@ -508,7 +541,8 @@ namespace System.Data.Entity.Core.Spatial
             throw SpatialServicesUnavailable();
         }
 
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "MultiPolygon", Justification = "Match MultiPoint, MultiLine")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "MultiPolygon",
+            Justification = "Match MultiPoint, MultiLine")]
         public override DbGeometry GeometryMultiPolygonFromBinary(byte[] geometryBinary, int spatialReferenceSystemId)
         {
             // Without a backing implementation, this method cannot enforce the requirement that the result be of the specified geometry type
@@ -528,15 +562,17 @@ namespace System.Data.Entity.Core.Spatial
         public override DbGeometry GeometryFromText(string geometryText)
         {
             geometryText.CheckNull("geometryText");
-            ReadOnlySpatialValues backingValue = new ReadOnlySpatialValues(DbGeometry.DefaultCoordinateSystemId, textValue: geometryText, binaryValue: null, gmlValue: null);
-            return DbSpatialServices.CreateGeometry(this, backingValue);
+            var backingValue = new ReadOnlySpatialValues(
+                DbGeometry.DefaultCoordinateSystemId, textValue: geometryText, binaryValue: null, gmlValue: null);
+            return CreateGeometry(this, backingValue);
         }
 
         public override DbGeometry GeometryFromText(string geometryText, int spatialReferenceSystemId)
         {
             geometryText.CheckNull("geometryText");
-            ReadOnlySpatialValues backingValue = new ReadOnlySpatialValues(spatialReferenceSystemId, textValue: geometryText, binaryValue: null, gmlValue: null);
-            return DbSpatialServices.CreateGeometry(this, backingValue);
+            var backingValue = new ReadOnlySpatialValues(
+                spatialReferenceSystemId, textValue: geometryText, binaryValue: null, gmlValue: null);
+            return CreateGeometry(this, backingValue);
         }
 
         public override DbGeometry GeometryLineFromText(string geometryText, int spatialReferenceSystemId)
@@ -569,7 +605,8 @@ namespace System.Data.Entity.Core.Spatial
             throw SpatialServicesUnavailable();
         }
 
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "MultiPolygon", Justification = "Match MultiPoint, MultiLine")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "MultiPolygon",
+            Justification = "Match MultiPoint, MultiLine")]
         public override DbGeometry GeometryMultiPolygonFromText(string geometryText, int spatialReferenceSystemId)
         {
             // Without a backing implementation, this method cannot enforce the requirement that the result be of the specified geometry type
@@ -589,15 +626,17 @@ namespace System.Data.Entity.Core.Spatial
         public override DbGeometry GeometryFromGml(string geometryMarkup)
         {
             geometryMarkup.CheckNull("geometryMarkup");
-            ReadOnlySpatialValues backingValue = new ReadOnlySpatialValues(DbGeometry.DefaultCoordinateSystemId, textValue: null, binaryValue: null, gmlValue: geometryMarkup);
-            return DbSpatialServices.CreateGeometry(this, backingValue);
+            var backingValue = new ReadOnlySpatialValues(
+                DbGeometry.DefaultCoordinateSystemId, textValue: null, binaryValue: null, gmlValue: geometryMarkup);
+            return CreateGeometry(this, backingValue);
         }
 
         public override DbGeometry GeometryFromGml(string geometryMarkup, int spatialReferenceSystemId)
         {
             geometryMarkup.CheckNull("geometryMarkup");
-            ReadOnlySpatialValues backingValue = new ReadOnlySpatialValues(spatialReferenceSystemId, textValue: null, binaryValue: null, gmlValue: geometryMarkup);
-            return DbSpatialServices.CreateGeometry(this, backingValue);
+            var backingValue = new ReadOnlySpatialValues(
+                spatialReferenceSystemId, textValue: null, binaryValue: null, gmlValue: geometryMarkup);
+            return CreateGeometry(this, backingValue);
         }
 
         #endregion
@@ -607,7 +646,7 @@ namespace System.Data.Entity.Core.Spatial
         public override int GetCoordinateSystemId(DbGeometry geometryValue)
         {
             geometryValue.CheckNull("geometryValue");
-            ReadOnlySpatialValues backingValue = CheckCompatible(geometryValue);
+            var backingValue = CheckCompatible(geometryValue);
             return backingValue.CoordinateSystemId;
         }
 
@@ -653,21 +692,21 @@ namespace System.Data.Entity.Core.Spatial
         public override string AsText(DbGeometry geometryValue)
         {
             geometryValue.CheckNull("geometryValue");
-            ReadOnlySpatialValues expectedValue = CheckCompatible(geometryValue);
+            var expectedValue = CheckCompatible(geometryValue);
             return expectedValue.Text;
         }
 
         public override byte[] AsBinary(DbGeometry geometryValue)
         {
             geometryValue.CheckNull("geometryValue");
-            ReadOnlySpatialValues expectedValue = CheckCompatible(geometryValue);
+            var expectedValue = CheckCompatible(geometryValue);
             return expectedValue.CloneBinary();
         }
 
         public override string AsGml(DbGeometry geometryValue)
         {
             geometryValue.CheckNull("geometryValue");
-            ReadOnlySpatialValues expectedValue = CheckCompatible(geometryValue);
+            var expectedValue = CheckCompatible(geometryValue);
             return expectedValue.GML;
         }
 
@@ -679,7 +718,7 @@ namespace System.Data.Entity.Core.Spatial
         {
             throw SpatialServicesUnavailable();
         }
-        
+
         public override bool Disjoint(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
             throw SpatialServicesUnavailable();
@@ -877,6 +916,7 @@ namespace System.Data.Entity.Core.Spatial
         {
             throw SpatialServicesUnavailable();
         }
+
         #endregion
 
         #endregion

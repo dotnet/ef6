@@ -1,15 +1,14 @@
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Objects.DataClasses;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
 using Som = System.Data.Entity.Core.EntityModel.SchemaObjectModel;
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
+    using System.Linq;
 
     /// <summary>
     /// Helper Class for converting SOM objects to metadata objects
@@ -19,6 +18,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     internal static class Converter
     {
         #region Constructor
+
         /// <summary>
         /// Static constructor for creating FacetDescription objects that we use
         /// </summary>
@@ -28,13 +28,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Debug.Assert(Enum.GetUnderlyingType(typeof(ConcurrencyMode)) == typeof(int), "Please update underlying type below accordingly.");
 
             // Create the enum types that we will need
-            EnumType concurrencyModeType = new EnumType(EdmProviderManifest.ConcurrencyModeFacetName,
-                                                        EdmConstants.EdmNamespace,
-                                                        underlyingType: PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32),
-                                                        isFlags: false,
-                                                        dataSpace: DataSpace.CSpace);
+            var concurrencyModeType = new EnumType(
+                EdmProviderManifest.ConcurrencyModeFacetName,
+                EdmConstants.EdmNamespace,
+                underlyingType: PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32),
+                isFlags: false,
+                dataSpace: DataSpace.CSpace);
 
-            foreach (string name in Enum.GetNames(typeof(ConcurrencyMode)))
+            foreach (var name in Enum.GetNames(typeof(ConcurrencyMode)))
             {
                 concurrencyModeType.AddMember(
                     new EnumMember(
@@ -42,15 +43,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         (int)Enum.Parse(typeof(ConcurrencyMode), name, false)));
             }
 
-            Debug.Assert(Enum.GetUnderlyingType(typeof(StoreGeneratedPattern)) == typeof(int), "Please update underlying type below accordingly.");
+            Debug.Assert(
+                Enum.GetUnderlyingType(typeof(StoreGeneratedPattern)) == typeof(int), "Please update underlying type below accordingly.");
 
-            EnumType storeGeneratedPatternType = new EnumType(EdmProviderManifest.StoreGeneratedPatternFacetName,
-                                                              EdmConstants.EdmNamespace,
-                                                              underlyingType: PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32),
-                                                              isFlags: false,
-                                                              dataSpace: DataSpace.CSpace);
+            var storeGeneratedPatternType = new EnumType(
+                EdmProviderManifest.StoreGeneratedPatternFacetName,
+                EdmConstants.EdmNamespace,
+                underlyingType: PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32),
+                isFlags: false,
+                dataSpace: DataSpace.CSpace);
 
-            foreach (string name in Enum.GetNames(typeof(StoreGeneratedPattern)))
+            foreach (var name in Enum.GetNames(typeof(StoreGeneratedPattern)))
             {
                 storeGeneratedPatternType.AddMember(
                     new EnumMember(
@@ -58,27 +61,31 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         (int)Enum.Parse(typeof(StoreGeneratedPattern), name, false)));
             }
 
-
             // Now create the facet description objects
-            ConcurrencyModeFacet = new FacetDescription(EdmProviderManifest.ConcurrencyModeFacetName,
-                                                        concurrencyModeType,
-                                                        null,
-                                                        null,
-                                                        ConcurrencyMode.None);
-            StoreGeneratedPatternFacet = new FacetDescription(EdmProviderManifest.StoreGeneratedPatternFacetName,
-                                                              storeGeneratedPatternType,
-                                                              null,
-                                                              null,
-                                                              StoreGeneratedPattern.None);
-            CollationFacet = new FacetDescription(EdmProviderManifest.CollationFacetName,
-                                                  MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.String),
-                                                  null,
-                                                  null,
-                                                  string.Empty);
+            ConcurrencyModeFacet = new FacetDescription(
+                EdmProviderManifest.ConcurrencyModeFacetName,
+                concurrencyModeType,
+                null,
+                null,
+                ConcurrencyMode.None);
+            StoreGeneratedPatternFacet = new FacetDescription(
+                EdmProviderManifest.StoreGeneratedPatternFacetName,
+                storeGeneratedPatternType,
+                null,
+                null,
+                StoreGeneratedPattern.None);
+            CollationFacet = new FacetDescription(
+                DbProviderManifest.CollationFacetName,
+                MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind.String),
+                null,
+                null,
+                string.Empty);
         }
+
         #endregion
 
         #region Fields
+
         internal static readonly FacetDescription ConcurrencyModeFacet;
         internal static readonly FacetDescription StoreGeneratedPatternFacet;
         internal static readonly FacetDescription CollationFacet;
@@ -86,29 +93,32 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Converts a schema from SOM into Metadata
         /// </summary>
         /// <param name="somSchema">The SOM schema to convert</param>
         /// <param name="providerManifest">The provider manifest to be used for conversion</param>
         /// <param name="itemCollection">The item collection for currently existing metadata objects</param>
-        internal static IEnumerable<GlobalItem> ConvertSchema(Som.Schema somSchema,
-                                                              DbProviderManifest providerManifest,
-                                                              ItemCollection itemCollection)
+        internal static IEnumerable<GlobalItem> ConvertSchema(
+            Som.Schema somSchema,
+            DbProviderManifest providerManifest,
+            ItemCollection itemCollection)
         {
-            Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems = new Dictionary<Som.SchemaElement, GlobalItem>();
+            var newGlobalItems = new Dictionary<Som.SchemaElement, GlobalItem>();
             ConvertSchema(somSchema, providerManifest, new ConversionCache(itemCollection), newGlobalItems);
             return newGlobalItems.Values;
         }
 
-        internal static IEnumerable<GlobalItem> ConvertSchema(IList<Som.Schema> somSchemas,
-                                                              DbProviderManifest providerManifest,
-                                                              ItemCollection itemCollection)
+        internal static IEnumerable<GlobalItem> ConvertSchema(
+            IList<Som.Schema> somSchemas,
+            DbProviderManifest providerManifest,
+            ItemCollection itemCollection)
         {
-            Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems = new Dictionary<Som.SchemaElement, GlobalItem>();
-            ConversionCache conversionCache = new ConversionCache(itemCollection);
+            var newGlobalItems = new Dictionary<Som.SchemaElement, GlobalItem>();
+            var conversionCache = new ConversionCache(itemCollection);
 
-            foreach (Som.Schema somSchema in somSchemas)
+            foreach (var somSchema in somSchemas)
             {
                 ConvertSchema(somSchema, providerManifest, conversionCache, newGlobalItems);
             }
@@ -116,11 +126,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return newGlobalItems.Values;
         }
 
-        private static void ConvertSchema(Som.Schema somSchema, DbProviderManifest providerManifest,
+        private static void ConvertSchema(
+            Som.Schema somSchema, DbProviderManifest providerManifest,
             ConversionCache convertedItemCache, Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
         {
-            List<Som.Function> funcsWithUnresolvedTypes = new List<Som.Function>();
-            foreach (Som.SchemaType element in somSchema.SchemaTypes)
+            var funcsWithUnresolvedTypes = new List<Som.Function>();
+            foreach (var element in somSchema.SchemaTypes)
             {
                 if (null == LoadSchemaElement(element, providerManifest, convertedItemCache, newGlobalItems))
                 {
@@ -132,7 +143,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
             }
 
-            foreach (Som.SchemaEntityType element in somSchema.SchemaTypes.OfType<Som.SchemaEntityType>())
+            foreach (var element in somSchema.SchemaTypes.OfType<Som.SchemaEntityType>())
             {
                 LoadEntityTypePhase2(element, providerManifest, convertedItemCache, newGlobalItems);
             }
@@ -145,9 +156,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
             }
 
-            if (convertedItemCache.ItemCollection.DataSpace == DataSpace.CSpace)
+            if (convertedItemCache.ItemCollection.DataSpace
+                == DataSpace.CSpace)
             {
-                EdmItemCollection edmCollection = (EdmItemCollection)convertedItemCache.ItemCollection;
+                var edmCollection = (EdmItemCollection)convertedItemCache.ItemCollection;
                 edmCollection.EdmVersion = somSchema.SchemaVersion;
             }
             else
@@ -155,7 +167,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 Debug.Assert(convertedItemCache.ItemCollection.DataSpace == DataSpace.SSpace, "Did you add a new space?");
                 // when converting the ProviderManifest, the DataSpace is SSpace, but the ItemCollection is EmptyItemCollection, 
                 // not StoreItemCollection
-                StoreItemCollection storeCollection = convertedItemCache.ItemCollection as StoreItemCollection;
+                var storeCollection = convertedItemCache.ItemCollection as StoreItemCollection;
                 if (storeCollection != null)
                 {
                     storeCollection.StoreSchemaVersion = somSchema.SchemaVersion;
@@ -172,16 +184,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="newGlobalItems">The new GlobalItem objects that are created as a result of this conversion</param>
         /// <returns>The item resulting from the load</returns>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
-        internal static MetadataItem LoadSchemaElement(Som.SchemaType element,
-                                              DbProviderManifest providerManifest,
-                                              ConversionCache convertedItemCache,
-                                              Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
+        internal static MetadataItem LoadSchemaElement(
+            Som.SchemaType element,
+            DbProviderManifest providerManifest,
+            ConversionCache convertedItemCache,
+            Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
         {
             Debug.Assert(providerManifest != null, "This will make the dataspace to be default SSpace");
             // Try to fetch from the collection first
             GlobalItem item;
 
-            Debug.Assert(!convertedItemCache.ItemCollection.TryGetValue(element.FQName, false, out item), "Som should have checked for duplicate items");
+            Debug.Assert(
+                !convertedItemCache.ItemCollection.TryGetValue(element.FQName, false, out item),
+                "Som should have checked for duplicate items");
 
             // Try to fetch in our collection of new GlobalItems
             if (newGlobalItems.TryGetValue(element, out item))
@@ -189,39 +204,44 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return item;
             }
 
-            Som.EntityContainer entityContainer = element as Som.EntityContainer;
+            var entityContainer = element as Som.EntityContainer;
             // Perform different conversion depending on the type of the SOM object
             if (entityContainer != null)
             {
-                item = ConvertToEntityContainer(entityContainer,
-                                                providerManifest,
-                                                convertedItemCache,
-                                                newGlobalItems);
+                item = ConvertToEntityContainer(
+                    entityContainer,
+                    providerManifest,
+                    convertedItemCache,
+                    newGlobalItems);
             }
             else if (element is Som.SchemaEntityType)
             {
-                item = ConvertToEntityType((Som.SchemaEntityType)element,
-                                           providerManifest,
-                                           convertedItemCache,
-                                           newGlobalItems);
+                item = ConvertToEntityType(
+                    (Som.SchemaEntityType)element,
+                    providerManifest,
+                    convertedItemCache,
+                    newGlobalItems);
             }
             else if (element is Som.Relationship)
             {
-                item = ConvertToAssociationType((Som.Relationship)element,
-                                                providerManifest,
-                                                convertedItemCache,
-                                                newGlobalItems);
+                item = ConvertToAssociationType(
+                    (Som.Relationship)element,
+                    providerManifest,
+                    convertedItemCache,
+                    newGlobalItems);
             }
             else if (element is Som.SchemaComplexType)
             {
-                item = ConvertToComplexType((Som.SchemaComplexType)element,
-                                            providerManifest,
-                                            convertedItemCache,
-                                            newGlobalItems);
+                item = ConvertToComplexType(
+                    (Som.SchemaComplexType)element,
+                    providerManifest,
+                    convertedItemCache,
+                    newGlobalItems);
             }
             else if (element is Som.Function)
             {
-                item = ConvertToFunction((Som.Function)element, providerManifest,
+                item = ConvertToFunction(
+                    (Som.Function)element, providerManifest,
                     convertedItemCache, null, newGlobalItems);
             }
             else if (element is Som.SchemaEnumType)
@@ -232,7 +252,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 // the only type we don't handle is the ProviderManifest TypeElement
                 // if it is anything else, it is probably a mistake
-                Debug.Assert(element is Som.TypeElement &&
+                Debug.Assert(
+                    element is Som.TypeElement &&
                     element.Schema.DataModel == Som.SchemaDataModelOption.ProviderManifestModel,
                     "Unknown Type in somschema");
                 return null;
@@ -249,41 +270,49 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="convertedItemCache">The item collection for currently existing metadata objects</param>
         /// <param name="newGlobalItems">The new GlobalItem objects that are created as a result of this conversion</param>
         /// <returns>The entity container object resulting from the convert</returns>
-        private static EntityContainer ConvertToEntityContainer(Som.EntityContainer element,
-                                                                DbProviderManifest providerManifest,
-                                                                ConversionCache convertedItemCache,
-                                                                Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
+        private static EntityContainer ConvertToEntityContainer(
+            Som.EntityContainer element,
+            DbProviderManifest providerManifest,
+            ConversionCache convertedItemCache,
+            Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
         {
             // Creating a new entity container object and populate with converted entity set objects
-            EntityContainer entityContainer = new EntityContainer(element.Name, GetDataSpace(providerManifest));
+            var entityContainer = new EntityContainer(element.Name, GetDataSpace(providerManifest));
             newGlobalItems.Add(element, entityContainer);
 
-            foreach (Som.EntityContainerEntitySet entitySet in element.EntitySets)
+            foreach (var entitySet in element.EntitySets)
             {
-                entityContainer.AddEntitySetBase(ConvertToEntitySet(entitySet,
-                                                                      providerManifest,
-                                                                      convertedItemCache,
-                                                                      newGlobalItems));
+                entityContainer.AddEntitySetBase(
+                    ConvertToEntitySet(
+                        entitySet,
+                        providerManifest,
+                        convertedItemCache,
+                        newGlobalItems));
             }
 
             // Populate with converted relationship set objects
-            foreach (Som.EntityContainerRelationshipSet relationshipSet in element.RelationshipSets)
+            foreach (var relationshipSet in element.RelationshipSets)
             {
-                Debug.Assert(relationshipSet.Relationship.RelationshipKind == RelationshipKind.Association,
-                             "We do not support containment set");
+                Debug.Assert(
+                    relationshipSet.Relationship.RelationshipKind == RelationshipKind.Association,
+                    "We do not support containment set");
 
-                entityContainer.AddEntitySetBase(ConvertToAssociationSet(relationshipSet,
-                                                                           providerManifest,
-                                                                           convertedItemCache,
-                                                                           entityContainer,
-                                                                           newGlobalItems));
+                entityContainer.AddEntitySetBase(
+                    ConvertToAssociationSet(
+                        relationshipSet,
+                        providerManifest,
+                        convertedItemCache,
+                        entityContainer,
+                        newGlobalItems));
             }
 
             // Populate with converted function imports
-            foreach (Som.Function functionImport in element.FunctionImports)
+            foreach (var functionImport in element.FunctionImports)
             {
-                entityContainer.AddFunctionImport(ConvertToFunction(functionImport,
-                    providerManifest, convertedItemCache, entityContainer, newGlobalItems));
+                entityContainer.AddFunctionImport(
+                    ConvertToFunction(
+                        functionImport,
+                        providerManifest, convertedItemCache, entityContainer, newGlobalItems));
             }
 
             // Extract the optional Documentation
@@ -309,17 +338,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="convertedItemCache">The item collection for currently existing metadata objects</param>
         /// <param name="newGlobalItems">The new GlobalItem objects that are created as a result of this conversion</param>
         /// <returns>The entity type object resulting from the convert</returns>
-        private static EntityType ConvertToEntityType(Som.SchemaEntityType element,
-                                                      DbProviderManifest providerManifest,
-                                                      ConversionCache convertedItemCache,
-                                                      Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
+        private static EntityType ConvertToEntityType(
+            Som.SchemaEntityType element,
+            DbProviderManifest providerManifest,
+            ConversionCache convertedItemCache,
+            Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
         {
             string[] keyMembers = null;
             // Check if this type has keys
             if (element.DeclaredKeyProperties.Count != 0)
             {
                 keyMembers = new string[element.DeclaredKeyProperties.Count];
-                for (int i = 0; i < keyMembers.Length; i++)
+                for (var i = 0; i < keyMembers.Length; i++)
                 {
                     //Add the name of the key property to the list of
                     //key properties
@@ -327,29 +357,32 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
             }
 
-            EdmProperty[] properties = new EdmProperty[element.Properties.Count];
-            int index = 0;
+            var properties = new EdmProperty[element.Properties.Count];
+            var index = 0;
 
-            foreach (Som.StructuredProperty somProperty in element.Properties)
+            foreach (var somProperty in element.Properties)
             {
-                properties[index++] = ConvertToProperty(somProperty,
-                                                        providerManifest,
-                                                        convertedItemCache,
-                                                        newGlobalItems);
+                properties[index++] = ConvertToProperty(
+                    somProperty,
+                    providerManifest,
+                    convertedItemCache,
+                    newGlobalItems);
             }
 
-            EntityType entityType = new EntityType(element.Name,
-                                                   element.Namespace,
-                                                   GetDataSpace(providerManifest),
-                                                   keyMembers,
-                                                   properties);
+            var entityType = new EntityType(
+                element.Name,
+                element.Namespace,
+                GetDataSpace(providerManifest),
+                keyMembers,
+                properties);
 
             if (element.BaseType != null)
             {
-                entityType.BaseType = (EdmType)(LoadSchemaElement(element.BaseType,
-                                                                  providerManifest,
-                                                                  convertedItemCache,
-                                                                  newGlobalItems));
+                entityType.BaseType = (EdmType)(LoadSchemaElement(
+                    element.BaseType,
+                    providerManifest,
+                    convertedItemCache,
+                    newGlobalItems));
             }
 
             // set the abstract and sealed type values for the entity type
@@ -364,23 +397,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return entityType;
         }
 
-        private static void LoadEntityTypePhase2(Som.SchemaEntityType element,
-                                                      DbProviderManifest providerManifest,
-                                                      ConversionCache convertedItemCache,
-                                                      Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
+        private static void LoadEntityTypePhase2(
+            Som.SchemaEntityType element,
+            DbProviderManifest providerManifest,
+            ConversionCache convertedItemCache,
+            Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
         {
-            EntityType entityType = (EntityType)newGlobalItems[element];
+            var entityType = (EntityType)newGlobalItems[element];
 
             // Since Navigation properties are internal and not part of member collection, we
             // need to initialize the base class first before we start adding the navigation property
             // this will ensure that all the base navigation properties are initialized
-            foreach (Som.NavigationProperty somNavigationProperty in element.NavigationProperties)
+            foreach (var somNavigationProperty in element.NavigationProperties)
             {
-                entityType.AddMember(ConvertToNavigationProperty(entityType,
-                                                                 somNavigationProperty,
-                                                                 providerManifest,
-                                                                 convertedItemCache,
-                                                                 newGlobalItems));
+                entityType.AddMember(
+                    ConvertToNavigationProperty(
+                        entityType,
+                        somNavigationProperty,
+                        providerManifest,
+                        convertedItemCache,
+                        newGlobalItems));
             }
         }
 
@@ -392,22 +428,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="convertedItemCache">The item collection for currently existing metadata objects</param>
         /// <param name="newGlobalItems">The new GlobalItem objects that are created as a result of this conversion</param>
         /// <returns>The complex type object resulting from the convert</returns>
-        private static ComplexType ConvertToComplexType(Som.SchemaComplexType element,
-                                                        DbProviderManifest providerManifest,
-                                                        ConversionCache convertedItemCache,
-                                                        Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
+        private static ComplexType ConvertToComplexType(
+            Som.SchemaComplexType element,
+            DbProviderManifest providerManifest,
+            ConversionCache convertedItemCache,
+            Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
         {
-            ComplexType complexType = new ComplexType(element.Name,
-                                                      element.Namespace,
-                                                      GetDataSpace(providerManifest));
+            var complexType = new ComplexType(
+                element.Name,
+                element.Namespace,
+                GetDataSpace(providerManifest));
             newGlobalItems.Add(element, complexType);
 
-            foreach (Som.StructuredProperty somProperty in element.Properties)
+            foreach (var somProperty in element.Properties)
             {
-                complexType.AddMember(ConvertToProperty(somProperty,
-                                                          providerManifest,
-                                                          convertedItemCache,
-                                                          newGlobalItems));
+                complexType.AddMember(
+                    ConvertToProperty(
+                        somProperty,
+                        providerManifest,
+                        convertedItemCache,
+                        newGlobalItems));
             }
 
             // set the abstract and sealed type values for the entity type
@@ -415,10 +455,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (element.BaseType != null)
             {
-                complexType.BaseType = (EdmType)(LoadSchemaElement(element.BaseType,
-                                                                  providerManifest,
-                                                                  convertedItemCache,
-                                                                  newGlobalItems));
+                complexType.BaseType = (EdmType)(LoadSchemaElement(
+                    element.BaseType,
+                    providerManifest,
+                    convertedItemCache,
+                    newGlobalItems));
             }
 
             // Extract the optional Documentation
@@ -440,40 +481,44 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="newGlobalItems">The new GlobalItem objects that are created as a result of this conversion</param>
         /// <returns>The association type object resulting from the convert</returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-        private static AssociationType ConvertToAssociationType(Som.Relationship element,
-                                                                DbProviderManifest providerManifest,
-                                                                ConversionCache convertedItemCache,
-                                                                Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
+        private static AssociationType ConvertToAssociationType(
+            Som.Relationship element,
+            DbProviderManifest providerManifest,
+            ConversionCache convertedItemCache,
+            Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
         {
             Debug.Assert(element.RelationshipKind == RelationshipKind.Association);
 
-            AssociationType associationType = new AssociationType(element.Name,
-                                                                  element.Namespace,
-                                                                  element.IsForeignKey,
-                                                                  GetDataSpace(providerManifest));
+            var associationType = new AssociationType(
+                element.Name,
+                element.Namespace,
+                element.IsForeignKey,
+                GetDataSpace(providerManifest));
             newGlobalItems.Add(element, associationType);
 
             foreach (Som.RelationshipEnd end in element.Ends)
             {
                 Som.SchemaType entityTypeElement = end.Type;
-                EntityType endEntityType = (EntityType)LoadSchemaElement(entityTypeElement,
-                                                                providerManifest,
-                                                                convertedItemCache,
-                                                                newGlobalItems);
+                var endEntityType = (EntityType)LoadSchemaElement(
+                    entityTypeElement,
+                    providerManifest,
+                    convertedItemCache,
+                    newGlobalItems);
 
-                AssociationEndMember endMember = InitializeAssociationEndMember(associationType, end, endEntityType);
+                var endMember = InitializeAssociationEndMember(associationType, end, endEntityType);
                 AddOtherContent(end, endMember);
                 // Loop through and convert the operations
-                foreach (Som.OnOperation operation in end.Operations)
+                foreach (var operation in end.Operations)
                 {
                     // Process only the ones that we recognize
-                    if (operation.Operation != Som.Operation.Delete)
+                    if (operation.Operation
+                        != Som.Operation.Delete)
                     {
                         continue;
                     }
 
                     // Determine the action for this operation
-                    OperationAction action = OperationAction.None;
+                    var action = OperationAction.None;
                     switch (operation.Action)
                     {
                         case Som.Action.Cascade:
@@ -498,30 +543,35 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Debug.Assert(associationType.ReferentialConstraints.Count == 0, "This must never have been initialized");
 
-            for (int i = 0; i < element.Constraints.Count; i++)
+            for (var i = 0; i < element.Constraints.Count; i++)
             {
-                Som.ReferentialConstraint constraint = element.Constraints[i];
-                AssociationEndMember fromMember = (AssociationEndMember)associationType.Members[constraint.PrincipalRole.Name];
-                AssociationEndMember toMember = (AssociationEndMember)associationType.Members[constraint.DependentRole.Name];
-                EntityTypeBase fromEntityType = ((RefType)fromMember.TypeUsage.EdmType).ElementType;
-                EntityTypeBase toEntityType = ((RefType)toMember.TypeUsage.EdmType).ElementType;
+                var constraint = element.Constraints[i];
+                var fromMember = (AssociationEndMember)associationType.Members[constraint.PrincipalRole.Name];
+                var toMember = (AssociationEndMember)associationType.Members[constraint.DependentRole.Name];
+                var fromEntityType = ((RefType)fromMember.TypeUsage.EdmType).ElementType;
+                var toEntityType = ((RefType)toMember.TypeUsage.EdmType).ElementType;
 
-                ReferentialConstraint referentialConstraint = new ReferentialConstraint(fromMember, toMember,
-                                                                                        GetProperties(fromEntityType, constraint.PrincipalRole.RoleProperties),
-                                                                                        GetProperties(toEntityType, constraint.DependentRole.RoleProperties));
+                var referentialConstraint = new ReferentialConstraint(
+                    fromMember, toMember,
+                    GetProperties(fromEntityType, constraint.PrincipalRole.RoleProperties),
+                    GetProperties(toEntityType, constraint.DependentRole.RoleProperties));
 
                 // Attach the optional Documentation
                 if (constraint.Documentation != null)
+                {
                     referentialConstraint.Documentation = ConvertToDocumentation(constraint.Documentation);
+                }
                 if (constraint.PrincipalRole.Documentation != null)
+                {
                     referentialConstraint.FromRole.Documentation = ConvertToDocumentation(constraint.PrincipalRole.Documentation);
+                }
                 if (constraint.DependentRole.Documentation != null)
+                {
                     referentialConstraint.ToRole.Documentation = ConvertToDocumentation(constraint.DependentRole.Documentation);
-
+                }
 
                 associationType.AddReferentialConstraint(referentialConstraint);
                 AddOtherContent(element.Constraints[i], referentialConstraint);
-
             }
 
             // Extract the optional Documentation
@@ -540,19 +590,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="associationType"></param>
         /// <param name="end"></param>
         /// <param name="endMemberType"></param>
-        private static AssociationEndMember InitializeAssociationEndMember(AssociationType associationType, Som.IRelationshipEnd end,
+        private static AssociationEndMember InitializeAssociationEndMember(
+            AssociationType associationType, Som.IRelationshipEnd end,
             EntityType endMemberType)
         {
             AssociationEndMember associationEnd;
 
             EdmMember member;
             // make sure that the end is not initialized as of yet
-            if (!associationType.Members.TryGetValue(end.Name, false/*ignoreCase*/, out member))
+            if (!associationType.Members.TryGetValue(end.Name, false /*ignoreCase*/, out member))
             {
                 // Create the end member and add the operations
-                associationEnd = new AssociationEndMember(end.Name,
-                                                          endMemberType.GetReferenceType(),
-                                                          end.Multiplicity.Value);
+                associationEnd = new AssociationEndMember(
+                    end.Name,
+                    endMemberType.GetReferenceType(),
+                    end.Multiplicity.Value);
                 associationType.AddKeyMember(associationEnd);
             }
             else
@@ -561,9 +613,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             //Extract the optional Documentation
-            Som.RelationshipEnd relationshipEnd = end as Som.RelationshipEnd;
+            var relationshipEnd = end as Som.RelationshipEnd;
 
-            if (relationshipEnd != null && (relationshipEnd.Documentation != null))
+            if (relationshipEnd != null
+                && (relationshipEnd.Documentation != null))
             {
                 associationEnd.Documentation = ConvertToDocumentation(relationshipEnd.Documentation);
             }
@@ -574,16 +627,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private static EdmProperty[] GetProperties(EntityTypeBase entityType, IList<Som.PropertyRefElement> properties)
         {
             Debug.Assert(properties.Count != 0);
-            EdmProperty[] result = new EdmProperty[properties.Count];
+            var result = new EdmProperty[properties.Count];
 
-            for (int i = 0; i < properties.Count; i++)
+            for (var i = 0; i < properties.Count; i++)
             {
                 result[i] = (EdmProperty)entityType.Members[properties[i].Name];
             }
 
             return result;
         }
-
 
         private static void AddOtherContent(Som.SchemaElement element, MetadataItem item)
         {
@@ -601,16 +653,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="convertedItemCache">The item collection for currently existing metadata objects</param>
         /// <param name="newGlobalItems">The new GlobalItem objects that are created as a result of this conversion</param>
         /// <returns>The entity set object resulting from the convert</returns>
-        private static EntitySet ConvertToEntitySet(Som.EntityContainerEntitySet set,
-                                                    DbProviderManifest providerManifest,
-                                                    ConversionCache convertedItemCache,
-                                                    Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
+        private static EntitySet ConvertToEntitySet(
+            Som.EntityContainerEntitySet set,
+            DbProviderManifest providerManifest,
+            ConversionCache convertedItemCache,
+            Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
         {
-            EntitySet entitySet = new EntitySet(set.Name, set.DbSchema, set.Table, set.DefiningQuery,
-                                                 (EntityType)LoadSchemaElement(set.EntityType,
-                                                                               providerManifest,
-                                                                               convertedItemCache,
-                                                                               newGlobalItems));
+            var entitySet = new EntitySet(
+                set.Name, set.DbSchema, set.Table, set.DefiningQuery,
+                (EntityType)LoadSchemaElement(
+                    set.EntityType,
+                    providerManifest,
+                    convertedItemCache,
+                    newGlobalItems));
 
             // Extract the optional Documentation
             if (set.Documentation != null)
@@ -642,34 +697,38 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="newGlobalItems">The new GlobalItem objects that are created as a result of this conversion</param>
         /// <param name="container"></param>
         /// <returns>The association set object resulting from the convert</returns>
-        private static AssociationSet ConvertToAssociationSet(Som.EntityContainerRelationshipSet relationshipSet,
-                                                              DbProviderManifest providerManifest,
-                                                              ConversionCache convertedItemCache,
-                                                              EntityContainer container,
-                                                              Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
+        private static AssociationSet ConvertToAssociationSet(
+            Som.EntityContainerRelationshipSet relationshipSet,
+            DbProviderManifest providerManifest,
+            ConversionCache convertedItemCache,
+            EntityContainer container,
+            Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
         {
             Debug.Assert(relationshipSet.Relationship.RelationshipKind == RelationshipKind.Association);
 
-            AssociationType associationType = (AssociationType)LoadSchemaElement((Som.SchemaType)relationshipSet.Relationship,
-                                                                                  providerManifest,
-                                                                                  convertedItemCache,
-                                                                                  newGlobalItems);
+            var associationType = (AssociationType)LoadSchemaElement(
+                (Som.SchemaType)relationshipSet.Relationship,
+                providerManifest,
+                convertedItemCache,
+                newGlobalItems);
 
-            AssociationSet associationSet = new AssociationSet(relationshipSet.Name, associationType);
+            var associationSet = new AssociationSet(relationshipSet.Name, associationType);
 
-            foreach (Som.EntityContainerRelationshipSetEnd end in relationshipSet.Ends)
+            foreach (var end in relationshipSet.Ends)
             {
                 //-- need the EntityType for the end
-                EntityType endEntityType = (EntityType)LoadSchemaElement(end.EntitySet.EntityType,
-                                                                         providerManifest,
-                                                                         convertedItemCache,
-                                                                         newGlobalItems);
+                var endEntityType = (EntityType)LoadSchemaElement(
+                    end.EntitySet.EntityType,
+                    providerManifest,
+                    convertedItemCache,
+                    newGlobalItems);
                 //-- need to get the end member
-                AssociationEndMember endMember = (AssociationEndMember)associationType.Members[end.Name];
+                var endMember = (AssociationEndMember)associationType.Members[end.Name];
                 //-- create the end
-                AssociationSetEnd associationSetEnd = new AssociationSetEnd(GetEntitySet(end.EntitySet, container),
-                                                                            associationSet,
-                                                                            endMember);
+                var associationSetEnd = new AssociationSetEnd(
+                    GetEntitySet(end.EntitySet, container),
+                    associationSet,
+                    endMember);
 
                 AddOtherContent(end, associationSetEnd);
                 associationSet.AddAssociationSetEnd(associationSetEnd);
@@ -699,10 +758,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="convertedItemCache">The item collection for currently existing metadata objects</param>
         /// <param name="newGlobalItems">The new GlobalItem objects that are created as a result of this conversion</param>
         /// <returns>The property object resulting from the convert</returns>
-        private static EdmProperty ConvertToProperty(Som.StructuredProperty somProperty,
-                                                  DbProviderManifest providerManifest,
-                                                  ConversionCache convertedItemCache,
-                                                  Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
+        private static EdmProperty ConvertToProperty(
+            Som.StructuredProperty somProperty,
+            DbProviderManifest providerManifest,
+            ConversionCache convertedItemCache,
+            Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
         {
             EdmProperty property;
 
@@ -710,9 +770,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // property as a type usage object as well                  
             TypeUsage typeUsage = null;
 
-            Som.ScalarType scalarType = somProperty.Type as Som.ScalarType;
+            var scalarType = somProperty.Type as Som.ScalarType;
 
-            if (scalarType != null && somProperty.Schema.DataModel != Som.SchemaDataModelOption.EntityDataModel)
+            if (scalarType != null
+                && somProperty.Schema.DataModel != Som.SchemaDataModelOption.EntityDataModel)
             {
                 // parsing ssdl
                 typeUsage = somProperty.TypeUsage;
@@ -733,13 +794,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     propertyType = (EdmType)LoadSchemaElement(somProperty.Type, providerManifest, convertedItemCache, newGlobalItems);
                 }
 
-                if (somProperty.CollectionKind != CollectionKind.None)
+                if (somProperty.CollectionKind
+                    != CollectionKind.None)
                 {
                     typeUsage = TypeUsage.Create(new CollectionType(propertyType));
                 }
                 else
                 {
-                    Som.SchemaEnumType enumType = scalarType == null ? somProperty.Type as Som.SchemaEnumType : null;
+                    var enumType = scalarType == null ? somProperty.Type as Som.SchemaEnumType : null;
                     typeUsage = TypeUsage.Create(propertyType);
                     if (enumType != null)
                     {
@@ -775,28 +837,32 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="convertedItemCache">The item collection for currently existing metadata objects</param>
         /// <param name="newGlobalItems">The new GlobalItem objects that are created as a result of this conversion</param>
         /// <returns>The property object resulting from the convert</returns>
-        private static NavigationProperty ConvertToNavigationProperty(EntityType declaringEntityType,
-                                                                      Som.NavigationProperty somNavigationProperty,
-                                                                      DbProviderManifest providerManifest,
-                                                                      ConversionCache convertedItemCache,
-                                                                      Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
+        private static NavigationProperty ConvertToNavigationProperty(
+            EntityType declaringEntityType,
+            Som.NavigationProperty somNavigationProperty,
+            DbProviderManifest providerManifest,
+            ConversionCache convertedItemCache,
+            Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
         {
             // Navigation properties cannot be primitive types, so we can ignore the possibility of having primitive type
             // facets
-            EntityType toEndEntityType = (EntityType)LoadSchemaElement(somNavigationProperty.Type,
-                                                      providerManifest,
-                                                      convertedItemCache,
-                                                      newGlobalItems);
+            var toEndEntityType = (EntityType)LoadSchemaElement(
+                somNavigationProperty.Type,
+                providerManifest,
+                convertedItemCache,
+                newGlobalItems);
 
             EdmType edmType = toEndEntityType;
 
             // Also load the relationship Type that this navigation property represents
-            AssociationType relationshipType = (AssociationType)LoadSchemaElement((Som.Relationship)somNavigationProperty.Relationship,
-                    providerManifest, convertedItemCache, newGlobalItems);
+            var relationshipType = (AssociationType)LoadSchemaElement(
+                (Som.Relationship)somNavigationProperty.Relationship,
+                providerManifest, convertedItemCache, newGlobalItems);
 
             Som.IRelationshipEnd somRelationshipEnd = null;
             somNavigationProperty.Relationship.TryGetEnd(somNavigationProperty.ToEnd.Name, out somRelationshipEnd);
-            if (somRelationshipEnd.Multiplicity == RelationshipMultiplicity.Many)
+            if (somRelationshipEnd.Multiplicity
+                == RelationshipMultiplicity.Many)
             {
                 edmType = toEndEntityType.GetCollectionType();
             }
@@ -807,15 +873,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             TypeUsage typeUsage;
-            if (somRelationshipEnd.Multiplicity == RelationshipMultiplicity.One)
+            if (somRelationshipEnd.Multiplicity
+                == RelationshipMultiplicity.One)
             {
-                typeUsage = TypeUsage.Create(edmType,
-                    new FacetValues { Nullable = false });
+                typeUsage = TypeUsage.Create(
+                    edmType,
+                    new FacetValues
+                        {
+                            Nullable = false
+                        });
             }
             else
             {
                 typeUsage = TypeUsage.Create(edmType);
-
             }
 
             // We need to make sure that both the ends of the relationtype are initialized. If there are not, then we should
@@ -824,7 +894,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             InitializeAssociationEndMember(relationshipType, somNavigationProperty.FromEnd, declaringEntityType);
 
             // The type of the navigation property must be a ref or collection depending on which end they belong to
-            NavigationProperty navigationProperty = new NavigationProperty(somNavigationProperty.Name, typeUsage);
+            var navigationProperty = new NavigationProperty(somNavigationProperty.Name, typeUsage);
             navigationProperty.RelationshipType = relationshipType;
             navigationProperty.ToEndMember = (RelationshipEndMember)relationshipType.Members[somNavigationProperty.ToEnd.Name];
             navigationProperty.FromEndMember = (RelationshipEndMember)relationshipType.Members[somNavigationProperty.FromEnd.Name];
@@ -848,47 +918,52 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="functionImportEntityContainer">For function imports, the entity container including the function declaration</param>
         /// <param name="newGlobalItems">The new GlobalItem objects that are created as a result of this conversion</param>
         /// <returns>The function object resulting from the convert</returns>
-        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily"), SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-        private static EdmFunction ConvertToFunction(Som.Function somFunction,
-                                                  DbProviderManifest providerManifest,
-                                                  ConversionCache convertedItemCache,
-                                                  EntityContainer functionImportEntityContainer,
-                                                  Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
+        private static EdmFunction ConvertToFunction(
+            Som.Function somFunction,
+            DbProviderManifest providerManifest,
+            ConversionCache convertedItemCache,
+            EntityContainer functionImportEntityContainer,
+            Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
         {
             // If we already have it, don't bother converting
             GlobalItem globalItem = null;
 
             // if we are converted the function import, we need not check the global items collection,
             // since the function imports are local to the entity container
-            if (!somFunction.IsFunctionImport && newGlobalItems.TryGetValue(somFunction, out globalItem))
+            if (!somFunction.IsFunctionImport
+                && newGlobalItems.TryGetValue(somFunction, out globalItem))
             {
                 return (EdmFunction)globalItem;
             }
 
-            bool areConvertingForProviderManifest = somFunction.Schema.DataModel == Som.SchemaDataModelOption.ProviderManifestModel;
-            List<FunctionParameter> returnParameters = new List<FunctionParameter>();
+            var areConvertingForProviderManifest = somFunction.Schema.DataModel == Som.SchemaDataModelOption.ProviderManifestModel;
+            var returnParameters = new List<FunctionParameter>();
             if (somFunction.ReturnTypeList != null)
             {
-                int i = 0;
-                foreach (Som.ReturnType somReturnType in somFunction.ReturnTypeList)
+                var i = 0;
+                foreach (var somReturnType in somFunction.ReturnTypeList)
                 {
-                    TypeUsage returnType = GetFunctionTypeUsage(somFunction is Som.ModelFunction,
-                                                            somFunction,
-                                                            somReturnType,
-                                                            providerManifest,
-                                                            areConvertingForProviderManifest,
-                                                            somReturnType.Type,
-                                                            somReturnType.CollectionKind,
-                                                            somReturnType.IsRefType /*isRefType*/,
-                                                            convertedItemCache,
-                                                            newGlobalItems);
+                    var returnType = GetFunctionTypeUsage(
+                        somFunction is Som.ModelFunction,
+                        somFunction,
+                        somReturnType,
+                        providerManifest,
+                        areConvertingForProviderManifest,
+                        somReturnType.Type,
+                        somReturnType.CollectionKind,
+                        somReturnType.IsRefType /*isRefType*/,
+                        convertedItemCache,
+                        newGlobalItems);
                     if (null != returnType)
                     {
                         // Create the return parameter object, need to set the declaring type explicitly on the return parameter
                         // because we aren't adding it to the members collection
-                        string modifier = i == 0 ? string.Empty : i.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                        var modifier = i == 0 ? string.Empty : i.ToString(CultureInfo.InvariantCulture);
                         i++;
-                        FunctionParameter returnParameter = new FunctionParameter(EdmConstants.ReturnType + modifier, returnType, ParameterMode.ReturnValue);
+                        var returnParameter = new FunctionParameter(
+                            EdmConstants.ReturnType + modifier, returnType, ParameterMode.ReturnValue);
                         AddOtherContent(somReturnType, returnParameter);
                         returnParameters.Add(returnParameter);
                     }
@@ -898,19 +973,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     }
                 }
             }
-            // this case must be second to avoid calling somFunction.Type when returnTypeList has more than one element.
+                // this case must be second to avoid calling somFunction.Type when returnTypeList has more than one element.
             else if (somFunction.Type != null)
             {
-                TypeUsage returnType = GetFunctionTypeUsage(somFunction is Som.ModelFunction,
-                                                        somFunction,
-                                                        null,
-                                                        providerManifest,
-                                                        areConvertingForProviderManifest,
-                                                        somFunction.Type,
-                                                        somFunction.CollectionKind,
-                                                        somFunction.IsReturnAttributeReftype /*isRefType*/,
-                                                        convertedItemCache,
-                                                        newGlobalItems);
+                var returnType = GetFunctionTypeUsage(
+                    somFunction is Som.ModelFunction,
+                    somFunction,
+                    null,
+                    providerManifest,
+                    areConvertingForProviderManifest,
+                    somFunction.Type,
+                    somFunction.CollectionKind,
+                    somFunction.IsReturnAttributeReftype /*isRefType*/,
+                    convertedItemCache,
+                    newGlobalItems);
                 if (null != returnType)
                 {
                     // Create the return parameter object, need to set the declaring type explicitly on the return parameter
@@ -933,21 +1009,27 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 if (null != somFunctionImport.EntitySet)
                 {
                     EntityContainer entityContainer;
-                    Debug.Assert(somFunctionImport.ReturnTypeList == null || somFunctionImport.ReturnTypeList.Count == 1,
+                    Debug.Assert(
+                        somFunctionImport.ReturnTypeList == null || somFunctionImport.ReturnTypeList.Count == 1,
                         "EntitySet cannot be specified on a FunctionImport if there are multiple ReturnType children");
 
-                    Debug.Assert(functionImportEntityContainer != null, "functionImportEntityContainer must be specified during function import conversion");
+                    Debug.Assert(
+                        functionImportEntityContainer != null,
+                        "functionImportEntityContainer must be specified during function import conversion");
                     entityContainer = functionImportEntityContainer;
-                    entitySets = new EntitySet[] { GetEntitySet(somFunctionImport.EntitySet, entityContainer) };
+                    entitySets = new[] { GetEntitySet(somFunctionImport.EntitySet, entityContainer) };
                 }
                 else if (null != somFunctionImport.ReturnTypeList)
                 {
-                    Debug.Assert(functionImportEntityContainer != null, "functionImportEntityContainer must be specified during function import conversion");
-                    EntityContainer entityContainer = functionImportEntityContainer;
+                    Debug.Assert(
+                        functionImportEntityContainer != null,
+                        "functionImportEntityContainer must be specified during function import conversion");
+                    var entityContainer = functionImportEntityContainer;
                     entitySets = somFunctionImport.ReturnTypeList
-                        .Select(returnType => null != returnType.EntitySet
-                            ? GetEntitySet(returnType.EntitySet, functionImportEntityContainer)
-                            : null)
+                        .Select(
+                            returnType => null != returnType.EntitySet
+                                              ? GetEntitySet(returnType.EntitySet, functionImportEntityContainer)
+                                              : null)
                         .ToArray();
                 }
             }
@@ -956,27 +1038,29 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 functionNamespace = somFunction.Namespace;
             }
 
-            List<FunctionParameter> parameters = new List<FunctionParameter>();
-            foreach (Som.Parameter somParameter in somFunction.Parameters)
+            var parameters = new List<FunctionParameter>();
+            foreach (var somParameter in somFunction.Parameters)
             {
-                TypeUsage parameterType = GetFunctionTypeUsage(somFunction is Som.ModelFunction,
-                                                               somFunction,
-                                                               somParameter,
-                                                               providerManifest,
-                                                               areConvertingForProviderManifest,
-                                                               somParameter.Type,
-                                                               somParameter.CollectionKind,
-                                                               somParameter.IsRefType,
-                                                               convertedItemCache,
-                                                               newGlobalItems);
+                var parameterType = GetFunctionTypeUsage(
+                    somFunction is Som.ModelFunction,
+                    somFunction,
+                    somParameter,
+                    providerManifest,
+                    areConvertingForProviderManifest,
+                    somParameter.Type,
+                    somParameter.CollectionKind,
+                    somParameter.IsRefType,
+                    convertedItemCache,
+                    newGlobalItems);
                 if (parameterType == null)
                 {
                     return null;
                 }
 
-                FunctionParameter parameter = new FunctionParameter(somParameter.Name,
-                                                                    parameterType,
-                                                                    GetParameterMode(somParameter.ParameterDirection));
+                var parameter = new FunctionParameter(
+                    somParameter.Name,
+                    parameterType,
+                    GetParameterMode(somParameter.ParameterDirection));
                 AddOtherContent(somParameter, parameter);
 
                 if (somParameter.Documentation != null)
@@ -986,25 +1070,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 parameters.Add(parameter);
             }
 
-            EdmFunction function = new EdmFunction(somFunction.Name,
+            var function = new EdmFunction(
+                somFunction.Name,
                 functionNamespace,
                 GetDataSpace(providerManifest),
                 new EdmFunctionPayload
-                {
-                    Schema = somFunction.DbSchema,
-                    StoreFunctionName = somFunction.StoreFunctionName,
-                    CommandText = somFunction.CommandText,
-                    EntitySets = entitySets,
-                    IsAggregate = somFunction.IsAggregate,
-                    IsBuiltIn = somFunction.IsBuiltIn,
-                    IsNiladic = somFunction.IsNiladicFunction,
-                    IsComposable = somFunction.IsComposable,
-                    IsFromProviderManifest = areConvertingForProviderManifest,
-                    IsFunctionImport = somFunction.IsFunctionImport,
-                    ReturnParameters = returnParameters.ToArray(),
-                    Parameters = parameters.ToArray(),
-                    ParameterTypeSemantics = somFunction.ParameterTypeSemantics,
-                });
+                    {
+                        Schema = somFunction.DbSchema,
+                        StoreFunctionName = somFunction.StoreFunctionName,
+                        CommandText = somFunction.CommandText,
+                        EntitySets = entitySets,
+                        IsAggregate = somFunction.IsAggregate,
+                        IsBuiltIn = somFunction.IsBuiltIn,
+                        IsNiladic = somFunction.IsNiladicFunction,
+                        IsComposable = somFunction.IsComposable,
+                        IsFromProviderManifest = areConvertingForProviderManifest,
+                        IsFunctionImport = somFunction.IsFunctionImport,
+                        ReturnParameters = returnParameters.ToArray(),
+                        Parameters = parameters.ToArray(),
+                        ParameterTypeSemantics = somFunction.ParameterTypeSemantics,
+                    });
 
             // Add this function to new global items, only if it is not a function import
             if (!somFunction.IsFunctionImport)
@@ -1015,7 +1100,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             //Check if we already converted functions since we are loading it from 
             //ssdl we could see functions many times.
             GlobalItem returnFunction = null;
-            Debug.Assert(!convertedItemCache.ItemCollection.TryGetValue(function.Identity, false, out returnFunction),
+            Debug.Assert(
+                !convertedItemCache.ItemCollection.TryGetValue(function.Identity, false, out returnFunction),
                 "Function duplicates must be checked by som");
 
             // Extract the optional Documentation
@@ -1038,23 +1124,27 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Debug.Assert(somEnumType != null, "somEnumType != null");
             Debug.Assert(newGlobalItems != null, "newGlobalItems != null");
-            Debug.Assert(somEnumType.UnderlyingType is Som.ScalarType, "At this point the underlying type should have already been validated and should be ScalarType");
+            Debug.Assert(
+                somEnumType.UnderlyingType is Som.ScalarType,
+                "At this point the underlying type should have already been validated and should be ScalarType");
 
-            Som.ScalarType enumUnderlyingType = (Som.ScalarType)somEnumType.UnderlyingType;
+            var enumUnderlyingType = (Som.ScalarType)somEnumType.UnderlyingType;
 
             // note that enums don't live in SSpace so there is no need to GetDataSpace() for it.
-            EnumType enumType = new EnumType(somEnumType.Name,
-                                             somEnumType.Namespace,
-                                             enumUnderlyingType.Type,
-                                             somEnumType.IsFlags,
-                                             DataSpace.CSpace);
+            var enumType = new EnumType(
+                somEnumType.Name,
+                somEnumType.Namespace,
+                enumUnderlyingType.Type,
+                somEnumType.IsFlags,
+                DataSpace.CSpace);
 
-            Type clrEnumUnderlyingType = enumUnderlyingType.Type.ClrEquivalentType;
+            var clrEnumUnderlyingType = enumUnderlyingType.Type.ClrEquivalentType;
 
             foreach (var somEnumMember in somEnumType.EnumMembers)
             {
                 Debug.Assert(somEnumMember.Value != null, "value must not be null at this point");
-                var enumMember = new EnumMember(somEnumMember.Name, Convert.ChangeType(somEnumMember.Value, clrEnumUnderlyingType, CultureInfo.InvariantCulture));
+                var enumMember = new EnumMember(
+                    somEnumMember.Name, Convert.ChangeType(somEnumMember.Value, clrEnumUnderlyingType, CultureInfo.InvariantCulture));
 
                 if (somEnumMember.Documentation != null)
                 {
@@ -1089,17 +1179,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return element.MetadataDocumentation;
         }
 
-        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity"), SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
-        private static TypeUsage GetFunctionTypeUsage(bool isModelFunction,
-                                                      Som.Function somFunction,
-                                                      Som.FacetEnabledSchemaElement somParameter,
-                                                      DbProviderManifest providerManifest,
-                                                      bool areConvertingForProviderManifest,
-                                                      Som.SchemaType type,
-                                                      CollectionKind collectionKind,
-                                                      bool isRefType,
-                                                      ConversionCache convertedItemCache,
-                                                      Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
+        private static TypeUsage GetFunctionTypeUsage(
+            bool isModelFunction,
+            Som.Function somFunction,
+            Som.FacetEnabledSchemaElement somParameter,
+            DbProviderManifest providerManifest,
+            bool areConvertingForProviderManifest,
+            Som.SchemaType type,
+            CollectionKind collectionKind,
+            bool isRefType,
+            ConversionCache convertedItemCache,
+            Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
         {
             if (null != somParameter && areConvertingForProviderManifest
                 && somParameter.HasUserDefinedFacets)
@@ -1109,12 +1201,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (null == type)
             {
-                if (isModelFunction && somParameter != null && somParameter is Som.Parameter)
+                if (isModelFunction && somParameter != null
+                    && somParameter is Som.Parameter)
                 {
                     ((Som.Parameter)somParameter).ResolveNestedTypeNames(convertedItemCache, newGlobalItems);
                     return somParameter.TypeUsage;
                 }
-                else if (somParameter != null && somParameter is Som.ReturnType)
+                else if (somParameter != null
+                         && somParameter is Som.ReturnType)
                 {
                     ((Som.ReturnType)somParameter).ResolveNestedTypeNames(convertedItemCache, newGlobalItems);
                     return somParameter.TypeUsage;
@@ -1129,7 +1223,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             if (!areConvertingForProviderManifest)
             {
                 // SOM verifies the type is either scalar, row, or entity
-                Som.ScalarType scalarType = type as Som.ScalarType;
+                var scalarType = type as Som.ScalarType;
                 if (null != scalarType)
                 {
                     if (isModelFunction && somParameter != null)
@@ -1142,14 +1236,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     }
                     else if (isModelFunction)
                     {
-                        Som.ModelFunction modelFunction = somFunction as Som.ModelFunction;
+                        var modelFunction = somFunction as Som.ModelFunction;
                         if (modelFunction.TypeUsage == null)
                         {
                             modelFunction.ValidateAndSetTypeUsage(scalarType);
                         }
                         return modelFunction.TypeUsage;
                     }
-                    else if (somParameter != null && somParameter.HasUserDefinedFacets && somFunction.Schema.DataModel == System.Data.Entity.Core.EntityModel.SchemaObjectModel.SchemaDataModelOption.ProviderDataModel)
+                    else if (somParameter != null && somParameter.HasUserDefinedFacets
+                             && somFunction.Schema.DataModel == Som.SchemaDataModelOption.ProviderDataModel)
                     {
                         somParameter.ValidateAndSetTypeUsage(scalarType);
                         return somParameter.TypeUsage;
@@ -1161,7 +1256,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
                 else
                 {
-                    edmType = (EdmType)LoadSchemaElement(type,
+                    edmType = (EdmType)LoadSchemaElement(
+                        type,
                         providerManifest,
                         convertedItemCache,
                         newGlobalItems);
@@ -1192,12 +1288,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             else if (type is Som.TypeElement)
             {
-                Som.TypeElement typeElement = type as Som.TypeElement;
+                var typeElement = type as Som.TypeElement;
                 edmType = typeElement.PrimitiveType;
             }
             else
             {
-                Som.ScalarType typeElement = type as Som.ScalarType;
+                var typeElement = type as Som.ScalarType;
                 edmType = typeElement.Type;
             }
 
@@ -1221,7 +1317,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             return usage;
-
         }
 
         /// <summary>
@@ -1258,9 +1353,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="targetType">The primitive or enum type of the target</param>
         private static void ApplyTypePropertyFacets(TypeUsage sourceType, ref TypeUsage targetType)
         {
-            Dictionary<string, Facet> newFacets = targetType.Facets.ToDictionary(f => f.Name);
-            bool madeChange = false;
-            foreach (Facet sourceFacet in sourceType.Facets)
+            var newFacets = targetType.Facets.ToDictionary(f => f.Name);
+            var madeChange = false;
+            foreach (var sourceFacet in sourceType.Facets)
             {
                 Facet targetFacet;
                 if (newFacets.TryGetValue(sourceFacet.Name, out targetFacet))
@@ -1289,11 +1384,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="somProperty">The property containing the information</param>
         /// <param name="propertyTypeUsage">The type usage object where to populate facet</param>
-        private static void PopulateGeneralFacets(Som.StructuredProperty somProperty,
-                                                  ref TypeUsage propertyTypeUsage)
+        private static void PopulateGeneralFacets(
+            Som.StructuredProperty somProperty,
+            ref TypeUsage propertyTypeUsage)
         {
-            bool madeChanges = false;
-            Dictionary<string, Facet> facets = propertyTypeUsage.Facets.ToDictionary(f => f.Name);
+            var madeChanges = false;
+            var facets = propertyTypeUsage.Facets.ToDictionary(f => f.Name);
             if (!somProperty.Nullable)
             {
                 facets[DbProviderManifest.NullableFacetName] = Facet.Create(MetadataItem.NullableFacetDescription, false);
@@ -1302,15 +1398,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (somProperty.Default != null)
             {
-                facets[DbProviderManifest.DefaultValueFacetName] = Facet.Create(MetadataItem.DefaultValueFacetDescription, somProperty.DefaultAsObject);
+                facets[DbProviderManifest.DefaultValueFacetName] = Facet.Create(
+                    MetadataItem.DefaultValueFacetDescription, somProperty.DefaultAsObject);
                 madeChanges = true;
             }
 
             //This is not really a general facet
             //If we are dealing with a 1.1 Schema, Add a facet for CollectionKind
-            if (somProperty.Schema.SchemaVersion == XmlConstants.EdmVersionForV1_1)
+            if (somProperty.Schema.SchemaVersion
+                == XmlConstants.EdmVersionForV1_1)
             {
-                Facet newFacet = Facet.Create(MetadataItem.CollectionKindFacetDescription, somProperty.CollectionKind);
+                var newFacet = Facet.Create(MetadataItem.CollectionKindFacetDescription, somProperty.CollectionKind);
                 facets.Add(newFacet.Name, newFacet);
                 madeChanges = true;
             }
@@ -1340,13 +1438,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="scalarType">The schema type representing the primitive type</param>
         /// <param name="providerManifest">The provider manifest for retrieving the store types</param>
-        private static PrimitiveType GetPrimitiveType(Som.ScalarType scalarType,
-                                                          DbProviderManifest providerManifest)
+        private static PrimitiveType GetPrimitiveType(
+            Som.ScalarType scalarType,
+            DbProviderManifest providerManifest)
         {
             PrimitiveType returnValue = null;
-            string scalarTypeName = scalarType.Name;
+            var scalarTypeName = scalarType.Name;
 
-            foreach (PrimitiveType primitiveType in providerManifest.GetStoreTypes())
+            foreach (var primitiveType in providerManifest.GetStoreTypes())
             {
                 if (primitiveType.Name == scalarTypeName)
                 {
@@ -1363,26 +1462,29 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private static void UpdateSentinelValuesInFacets(ref TypeUsage typeUsage)
         {
             // For string and decimal types, replace the sentinel by the max possible value
-            PrimitiveType primitiveType = (PrimitiveType)typeUsage.EdmType;
-            if (primitiveType.PrimitiveTypeKind == PrimitiveTypeKind.String ||
+            var primitiveType = (PrimitiveType)typeUsage.EdmType;
+            if (primitiveType.PrimitiveTypeKind == PrimitiveTypeKind.String
+                ||
                 primitiveType.PrimitiveTypeKind == PrimitiveTypeKind.Binary)
             {
-                Facet maxLengthFacet = typeUsage.Facets[EdmProviderManifest.MaxLengthFacetName];
+                var maxLengthFacet = typeUsage.Facets[DbProviderManifest.MaxLengthFacetName];
                 if (Helper.IsUnboundedFacetValue(maxLengthFacet))
                 {
                     typeUsage = typeUsage.ShallowCopy(
-                            new FacetValues
+                        new FacetValues
                             {
-                                MaxLength = Helper.GetFacet(primitiveType.FacetDescriptions,
-                                                   EdmProviderManifest.MaxLengthFacetName).MaxValue
+                                MaxLength = Helper.GetFacet(
+                                    primitiveType.FacetDescriptions,
+                                    DbProviderManifest.MaxLengthFacetName).MaxValue
                             });
                 }
             }
-
         }
+
         #endregion
 
         #region Nested types
+
         /// <summary>
         /// Cache containing item collection and type usages to support looking up and generating
         /// metadata types.
@@ -1390,21 +1492,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal class ConversionCache
         {
             #region Fields
+
             internal readonly ItemCollection ItemCollection;
             private readonly Dictionary<EdmType, TypeUsage> _nullFacetsTypeUsage;
             private readonly Dictionary<EdmType, TypeUsage> _nullFacetsCollectionTypeUsage;
+
             #endregion
 
             #region Constructors
+
             internal ConversionCache(ItemCollection itemCollection)
             {
-                this.ItemCollection = itemCollection;
-                this._nullFacetsTypeUsage = new Dictionary<EdmType, TypeUsage>();
-                this._nullFacetsCollectionTypeUsage = new Dictionary<EdmType, TypeUsage>();
+                ItemCollection = itemCollection;
+                _nullFacetsTypeUsage = new Dictionary<EdmType, TypeUsage>();
+                _nullFacetsCollectionTypeUsage = new Dictionary<EdmType, TypeUsage>();
             }
+
             #endregion
 
             #region Methods
+
             /// <summary>
             /// Gets type usage for the given type with null facet values. Caches usage to avoid creating
             /// redundant type usages.
@@ -1441,7 +1548,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
 
                 // construct collection type from cached element type
-                TypeUsage elementTypeUsage = GetTypeUsageWithNullFacets(edmType);
+                var elementTypeUsage = GetTypeUsageWithNullFacets(edmType);
                 result = TypeUsage.Create(new CollectionType(elementTypeUsage), FacetValues.NullFacetValues);
 
                 // cache result
@@ -1449,8 +1556,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 return result;
             }
+
             #endregion
         }
+
         #endregion
     }
 }

@@ -1,14 +1,13 @@
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Query.PlanCompiler;
-using System.Diagnostics;
-using System.Linq;
-
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Query.PlanCompiler;
+    using System.Data.Entity.Resources;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
 
     /// <summary>
     /// The Command object encapsulates all information relating to a single command.
@@ -22,31 +21,32 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     internal class Command
     {
         #region private state
-        private Dictionary<string, ParameterVar> m_parameterMap;
-        private List<Var> m_vars;
-        private List<Table> m_tables;
-        private Node m_root;
-        private MetadataWorkspace m_metadataWorkspace;
-        private TypeUsage m_boolType;
-        private TypeUsage m_intType;
-        private TypeUsage m_stringType;
-        private ConstantPredicateOp m_trueOp;
-        private ConstantPredicateOp m_falseOp;
-        private NodeInfoVisitor m_nodeInfoVisitor;
-        private PlanCompiler.KeyPullup m_keyPullupVisitor;
+
+        private readonly Dictionary<string, ParameterVar> m_parameterMap;
+        private readonly List<Var> m_vars;
+        private readonly List<Table> m_tables;
+        private readonly MetadataWorkspace m_metadataWorkspace;
+        private readonly TypeUsage m_boolType;
+        private readonly TypeUsage m_intType;
+        private readonly TypeUsage m_stringType;
+        private readonly ConstantPredicateOp m_trueOp;
+        private readonly ConstantPredicateOp m_falseOp;
+        private readonly NodeInfoVisitor m_nodeInfoVisitor;
+        private readonly KeyPullup m_keyPullupVisitor;
         private int m_nextNodeId;
         private int m_nextBranchDiscriminatorValue = 1000;
 
         private bool m_disableVarVecEnumCaching;
-        private Stack<VarVec.VarVecEnumerator> m_freeVarVecEnumerators;
-        private Stack<VarVec> m_freeVarVecs;
-        
+        private readonly Stack<VarVec.VarVecEnumerator> m_freeVarVecEnumerators;
+        private readonly Stack<VarVec> m_freeVarVecs;
 
         // set of referenced rel properties in this query
-        private HashSet<RelProperty> m_referencedRelProperties;
+        private readonly HashSet<RelProperty> m_referencedRelProperties;
+
         #endregion
 
         #region constructors
+
         /// <summary>
         /// Creates a new command
         /// </summary>
@@ -56,22 +56,22 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             m_vars = new List<Var>();
             m_tables = new List<Table>();
             m_metadataWorkspace = metadataWorkspace;
-            if(!TryGetPrimitiveType(PrimitiveTypeKind.Boolean, out m_boolType))
+            if (!TryGetPrimitiveType(PrimitiveTypeKind.Boolean, out m_boolType))
             {
-                throw EntityUtil.ProviderIncompatible(System.Data.Entity.Resources.Strings.Cqt_General_NoProviderBooleanType);
+                throw EntityUtil.ProviderIncompatible(Strings.Cqt_General_NoProviderBooleanType);
             }
             if (!TryGetPrimitiveType(PrimitiveTypeKind.Int32, out m_intType))
             {
-                throw EntityUtil.ProviderIncompatible(System.Data.Entity.Resources.Strings.Cqt_General_NoProviderIntegerType);
+                throw EntityUtil.ProviderIncompatible(Strings.Cqt_General_NoProviderIntegerType);
             }
             if (!TryGetPrimitiveType(PrimitiveTypeKind.String, out m_stringType))
             {
-                throw EntityUtil.ProviderIncompatible(System.Data.Entity.Resources.Strings.Cqt_General_NoProviderStringType);
+                throw EntityUtil.ProviderIncompatible(Strings.Cqt_General_NoProviderStringType);
             }
             m_trueOp = new ConstantPredicateOp(m_boolType, true);
             m_falseOp = new ConstantPredicateOp(m_boolType, false);
             m_nodeInfoVisitor = new NodeInfoVisitor(this);
-            m_keyPullupVisitor = new PlanCompiler.KeyPullup(this);
+            m_keyPullupVisitor = new KeyPullup(this);
 
             // FreeLists
             m_freeVarVecEnumerators = new Stack<VarVec.VarVecEnumerator>();
@@ -79,32 +79,47 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
             m_referencedRelProperties = new HashSet<RelProperty>();
         }
+
         #endregion
 
         #region public methods
+
         /// <summary>
         /// Gets the metadata workspace associated with this command
         /// </summary>
-        internal virtual MetadataWorkspace MetadataWorkspace { get { return m_metadataWorkspace; } }
-                
+        internal virtual MetadataWorkspace MetadataWorkspace
+        {
+            get { return m_metadataWorkspace; }
+        }
+
         /// <summary>
         /// Gets/sets the root node of the query
         /// </summary>
-        internal virtual Node Root { get { return m_root; } set { m_root = value; } }
+        internal virtual Node Root { get; set; }
 
-        internal virtual void DisableVarVecEnumCaching() { m_disableVarVecEnumCaching = true; } 
-                
+        internal virtual void DisableVarVecEnumCaching()
+        {
+            m_disableVarVecEnumCaching = true;
+        }
+
         /// <summary>
         /// Returns the next value for a UnionAll BranchDiscriminator.
         /// </summary>
-        internal virtual int NextBranchDiscriminatorValue { get { return m_nextBranchDiscriminatorValue++; } }
+        internal virtual int NextBranchDiscriminatorValue
+        {
+            get { return m_nextBranchDiscriminatorValue++; }
+        }
 
         /// <summary>
         /// Returns the next value for a node id, without incrementing it. 
         /// </summary>
-        internal virtual int NextNodeId { get { return m_nextNodeId; } }
+        internal virtual int NextNodeId
+        {
+            get { return m_nextNodeId; }
+        }
 
         #region Metadata Helpers
+
         /// <summary>
         /// Helper routine to get the metadata representation for the bool type
         /// </summary>
@@ -141,9 +156,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
             if (modelType == PrimitiveTypeKind.String)
             {
-                type = TypeUsage.CreateStringTypeUsage(MetadataWorkspace.GetModelPrimitiveType(modelType), 
-                                                       false /*unicode*/, 
-                                                       false /*fixed*/);
+                type = TypeUsage.CreateStringTypeUsage(
+                    MetadataWorkspace.GetModelPrimitiveType(modelType),
+                    false /*unicode*/,
+                    false /*fixed*/);
             }
             else
             {
@@ -152,9 +168,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
             return (null != type);
         }
+
         #endregion
 
         #region VarVec Creation
+
         /// <summary>
         /// VarVec constructor
         /// </summary>
@@ -181,7 +199,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal virtual VarVec CreateVarVec(Var v)
         {
-            VarVec varset = CreateVarVec();
+            var varset = CreateVarVec();
             varset.Set(v);
             return varset;
         }
@@ -193,7 +211,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal virtual VarVec CreateVarVec(IEnumerable<Var> v)
         {
-            VarVec vec = CreateVarVec();
+            var vec = CreateVarVec();
             vec.InitFrom(v);
             return vec;
         }
@@ -205,7 +223,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal virtual VarVec CreateVarVec(VarVec v)
         {
-            VarVec vec = CreateVarVec();
+            var vec = CreateVarVec();
             vec.InitFrom(v);
             return vec;
         }
@@ -218,9 +236,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             m_freeVarVecs.Push(vec);
         }
+
         #endregion
 
         #region VarVecEnumerator
+
         /// <summary>
         /// Create a new enumerator for a VarVec; use a free one if its
         /// available; otherwise, create a new one
@@ -255,9 +275,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                 m_freeVarVecEnumerators.Push(enumerator);
             }
         }
+
         #endregion
 
         #region VarList
+
         /// <summary>
         /// Create an ordered list of Vars - initially empty
         /// </summary>
@@ -276,6 +298,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return new VarList(vars);
         }
+
         #endregion
 
         #region VarMap
@@ -288,7 +311,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return m_tables.Count;
         }
-
 
         /// <summary>
         /// Create a table whose element type is "elementType"
@@ -331,7 +353,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="keyMembers">the key columns (if any)</param>
         /// <param name="entitySet">(OPTIONAL) entityset corresponding to this table</param>
         /// <returns></returns>
-        internal virtual TableMD CreateFlatTableDefinition(IEnumerable<EdmProperty> properties, IEnumerable<EdmMember> keyMembers, EntitySetBase entitySet)
+        internal virtual TableMD CreateFlatTableDefinition(
+            IEnumerable<EdmProperty> properties, IEnumerable<EdmMember> keyMembers, EntitySetBase entitySet)
         {
             return new TableMD(properties, keyMembers, entitySet);
         }
@@ -343,7 +366,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>A new Table instance with columns as defined in the specified metadata</returns>
         internal virtual Table CreateTableInstance(TableMD tableMetadata)
         {
-            Table t = new Table(this, tableMetadata, NewTableId());
+            var t = new Table(this, tableMetadata, NewTableId());
             m_tables.Add(t);
             return t;
         }
@@ -397,12 +420,15 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="parameterName">The name of the parameter for which to create the var</param>
         /// <param name="parameterType">The type of the parameter, and therefore the new var</param>
         /// <returns>A new ParameterVar instance with the specified name and type</returns>
-        internal virtual ParameterVar CreateParameterVar(string parameterName,
+        internal virtual ParameterVar CreateParameterVar(
+            string parameterName,
             TypeUsage parameterType)
         {
             if (m_parameterMap.ContainsKey(parameterName))
+            {
                 throw new ArgumentException("duplicate parameter name: " + parameterName);
-            ParameterVar v = new ParameterVar(NewVarId(), parameterType, parameterName);
+            }
+            var v = new ParameterVar(NewVarId(), parameterType, parameterName);
             m_vars.Add(v);
             m_parameterMap[parameterName] = v;
             return v;
@@ -424,7 +450,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             Debug.Assert(oldVar != null, "oldVar != null");
             Debug.Assert(m_vars.Contains(oldVar));
-            ParameterVar v = new ParameterVar(NewVarId(), generateReplacementType(oldVar.Type), oldVar.ParameterName);
+            var v = new ParameterVar(NewVarId(), generateReplacementType(oldVar.Type), oldVar.ParameterName);
             m_parameterMap[oldVar.ParameterName] = v;
             m_vars.Add(v);
             return v;
@@ -462,7 +488,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return ReplaceParameterVar(oldVar, t => TypeHelpers.CreateSpatialUnionTypeUsage(t));
         }
 
-
         /// <summary>
         /// Creates a new var for a table column
         /// </summary>
@@ -472,7 +497,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal virtual ColumnVar CreateColumnVar(Table table, ColumnMD columnMD)
         {
             // create a new column var now
-            ColumnVar c = new ColumnVar(NewVarId(), table, columnMD);
+            var c = new ColumnVar(NewVarId(), table, columnMD);
             table.Columns.Add(c);
             m_vars.Add(c);
             return c;
@@ -485,7 +510,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>A new ComputedVar instance with the specified result type</returns>
         internal virtual ComputedVar CreateComputedVar(TypeUsage type)
         {
-            ComputedVar v = new ComputedVar(NewVarId(), type);
+            var v = new ComputedVar(NewVarId(), type);
             m_vars.Add(v);
             return v;
         }
@@ -497,7 +522,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>A new SetOp Var with the specified result type</returns>
         internal virtual SetOpVar CreateSetOpVar(TypeUsage type)
         {
-            SetOpVar v = new SetOpVar(NewVarId(), type);
+            var v = new SetOpVar(NewVarId(), type);
             m_vars.Add(v);
             return v;
         }
@@ -505,6 +530,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #endregion
 
         #region Node Creation
+
         //
         // The routines below help in node construction. All command tree nodes must go
         // through these routines. These routines help to stamp each node with a unique
@@ -518,7 +544,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>A new Node with zero children that references the specified Op</returns>
         internal virtual Node CreateNode(Op op)
         {
-            return this.CreateNode(op, new List<Node>());
+            return CreateNode(op, new List<Node>());
         }
 
         /// <summary>
@@ -529,9 +555,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>A new Node with the specified child Node, that references the specified Op</returns>
         internal virtual Node CreateNode(Op op, Node arg1)
         {
-            List<Node> l = new List<Node>();
+            var l = new List<Node>();
             l.Add(arg1);
-            return this.CreateNode(op, l);
+            return CreateNode(op, l);
         }
 
         /// <summary>
@@ -543,9 +569,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>A new Node with the specified child Nodes, that references the specified Op</returns>
         internal virtual Node CreateNode(Op op, Node arg1, Node arg2)
         {
-            List<Node> l = new List<Node>();
-            l.Add(arg1); l.Add(arg2);
-            return this.CreateNode(op, l);
+            var l = new List<Node>();
+            l.Add(arg1);
+            l.Add(arg2);
+            return CreateNode(op, l);
         }
 
         /// <summary>
@@ -558,9 +585,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>A new Node with the specified child Nodes, that references the specified Op</returns>
         internal virtual Node CreateNode(Op op, Node arg1, Node arg2, Node arg3)
         {
-            List<Node> l = new List<Node>();
-            l.Add(arg1); l.Add(arg2); l.Add(arg3);
-            return this.CreateNode(op, l);
+            var l = new List<Node>();
+            l.Add(arg1);
+            l.Add(arg2);
+            l.Add(arg3);
+            return CreateNode(op, l);
         }
 
         /// <summary>
@@ -602,8 +631,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             {
                 return new NullOp(type);
             }
-            // Identify "safe" constants - the only safe ones are boolean (and we should
-            // probably include ints eventually)
+                // Identify "safe" constants - the only safe ones are boolean (and we should
+                // probably include ints eventually)
             else if (TypeSemantics.IsBooleanType(type))
             {
                 return new InternalConstantOp(type, value);
@@ -634,7 +663,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal virtual NullSentinelOp CreateNullSentinelOp()
         {
-            return new NullSentinelOp(this.IntegerType, 1);
+            return new NullSentinelOp(IntegerType, 1);
         }
 
         /// <summary>
@@ -665,6 +694,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return m_trueOp;
         }
+
         /// <summary>
         /// Create a constant predicateOp with the value false
         /// </summary>
@@ -711,8 +741,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>A new IsOfOp that references the specified type metadata</returns>
         internal virtual IsOfOp CreateIsOfOp(TypeUsage isOfType)
         {
-            return new IsOfOp(isOfType, false/*only*/, m_boolType);
+            return new IsOfOp(isOfType, false /*only*/, m_boolType);
         }
+
         /// <summary>
         /// Creates a new IsOfOp, which tests if the argument is of the specified type (and only the specified type)
         /// </summary>
@@ -752,7 +783,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>A new ComparisonOp of the specified comparison OpType</returns>
         internal virtual ComparisonOp CreateComparisonOp(OpType opType)
         {
-            return new ComparisonOp(opType, this.BooleanType);
+            return new ComparisonOp(opType, BooleanType);
         }
 
         /// <summary>
@@ -761,7 +792,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>The new LikeOp</returns>
         internal virtual LikeOp CreateLikeOp()
         {
-            return new LikeOp(this.BooleanType);
+            return new LikeOp(BooleanType);
         }
 
         /// <summary>
@@ -771,7 +802,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>A new ConditionalOp with the specified conditional OpType</returns>
         internal virtual ConditionalOp CreateConditionalOp(OpType opType)
         {
-            return new ConditionalOp(opType, this.BooleanType);
+            return new ConditionalOp(opType, BooleanType);
         }
 
         /// <summary>
@@ -829,7 +860,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="entitySet">the entityset that this instance belongs to</param>
         /// <param name="relProperties">list of rel properties that have corresponding values</param>
         /// <returns>A new DiscriminatedNewInstanceOp with the specified result type and discrimination behavior</returns>
-        internal virtual DiscriminatedNewEntityOp CreateDiscriminatedNewEntityOp(TypeUsage type, ExplicitDiscriminatorMap discriminatorMap,
+        internal virtual DiscriminatedNewEntityOp CreateDiscriminatedNewEntityOp(
+            TypeUsage type, ExplicitDiscriminatorMap discriminatorMap,
             EntitySet entitySet, List<RelProperty> relProperties)
         {
             return new DiscriminatedNewEntityOp(type, discriminatorMap, entitySet, relProperties);
@@ -874,7 +906,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="type"></param>
         /// <param name="fields"></param>
         /// <returns></returns>
-        internal virtual NewRecordOp CreateNewRecordOp(TypeUsage type,
+        internal virtual NewRecordOp CreateNewRecordOp(
+            TypeUsage type,
             List<EdmProperty> fields)
         {
             return new NewRecordOp(type, fields);
@@ -889,6 +922,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return new VarRefOp(v);
         }
+
         /// <summary>
         /// Creates a new ArithmeticOp of the specified type
         /// </summary>
@@ -910,12 +944,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             //
             // Track all rel-properties
             //
-            NavigationProperty navProp = prop as NavigationProperty;
+            var navProp = prop as NavigationProperty;
             if (navProp != null)
             {
-                RelProperty relProperty = new RelProperty(navProp.RelationshipType, navProp.FromEndMember, navProp.ToEndMember);
+                var relProperty = new RelProperty(navProp.RelationshipType, navProp.FromEndMember, navProp.ToEndMember);
                 AddRelPropertyReference(relProperty);
-                RelProperty inverseRelProperty = new RelProperty(navProp.RelationshipType, navProp.ToEndMember, navProp.FromEndMember);
+                var inverseRelProperty = new RelProperty(navProp.RelationshipType, navProp.ToEndMember, navProp.FromEndMember);
                 AddRelPropertyReference(inverseRelProperty);
             }
 
@@ -951,8 +985,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>A new ExistsOp</returns>
         internal ExistsOp CreateExistsOp()
         {
-            return new ExistsOp(this.BooleanType);
+            return new ExistsOp(BooleanType);
         }
+
         /// <summary>
         /// Creates a new ElementOp
         /// </summary>
@@ -972,6 +1007,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return new GetEntityRefOp(type);
         }
+
         /// <summary>
         /// Creates a new GetRefKeyOp: a key-extractor (from a ref instance) Op
         /// </summary>
@@ -1027,6 +1063,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return VarDefListOp.Instance;
         }
+
         /// <summary>
         /// Creates a VarDefOp (for a computed var)
         /// </summary>
@@ -1049,11 +1086,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal Node CreateVarDefNode(Node definingExpr, out Var computedVar)
         {
             Debug.Assert(definingExpr.Op != null);
-            ScalarOp scalarOp = definingExpr.Op as ScalarOp;
+            var scalarOp = definingExpr.Op as ScalarOp;
             Debug.Assert(scalarOp != null);
-            computedVar = this.CreateComputedVar(scalarOp.Type);
-            VarDefOp varDefOp = this.CreateVarDefOp(computedVar);
-            Node varDefNode = this.CreateNode(varDefOp, definingExpr);
+            computedVar = CreateComputedVar(scalarOp.Type);
+            var varDefOp = CreateVarDefOp(computedVar);
+            var varDefNode = CreateNode(varDefOp, definingExpr);
             return varDefNode;
         }
 
@@ -1066,11 +1103,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal Node CreateVarDefListNode(Node definingExpr, out Var computedVar)
         {
-            Node varDefNode = this.CreateVarDefNode(definingExpr, out computedVar);
-            VarDefListOp op = this.CreateVarDefListOp();
-            Node varDefListNode = this.CreateNode(op, varDefNode);
+            var varDefNode = CreateVarDefNode(definingExpr, out computedVar);
+            var op = CreateVarDefListOp();
+            var varDefListNode = CreateNode(op, varDefNode);
             return varDefListNode;
         }
+
         #endregion
 
         #region RelOps
@@ -1082,9 +1120,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>A new ScanTableOp that references a new Table instance based on the specified table metadata</returns>
         internal ScanTableOp CreateScanTableOp(TableMD tableMetadata)
         {
-            Table table = this.CreateTableInstance(tableMetadata);
+            var table = CreateTableInstance(tableMetadata);
             return CreateScanTableOp(table);
         }
+
         /// <summary>
         /// A variant of the above
         /// </summary>
@@ -1104,6 +1143,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return new ScanViewOp(table);
         }
+
         /// <summary>
         /// Creates an instance of a ScanViewOp
         /// </summary>
@@ -1111,9 +1151,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>a new ScanViewOp</returns>
         internal virtual ScanViewOp CreateScanViewOp(TableMD tableMetadata)
         {
-            Table table = this.CreateTableInstance(tableMetadata);
-            return this.CreateScanViewOp(table);
+            var table = CreateTableInstance(tableMetadata);
+            return CreateScanViewOp(table);
         }
+
         /// <summary>
         /// Creates a new UnnestOp, which creates a streaming result from a scalar (non-RelOp) value
         /// </summary>
@@ -1121,7 +1162,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>A new UnnestOp that targets the specified Var</returns>
         internal virtual UnnestOp CreateUnnestOp(Var v)
         {
-            Table t = this.CreateTableInstance(Command.CreateTableDefinition(TypeHelpers.GetEdmType<CollectionType>(v.Type).TypeUsage));
+            var t = CreateTableInstance(Command.CreateTableDefinition(TypeHelpers.GetEdmType<CollectionType>(v.Type).TypeUsage));
             return CreateUnnestOp(v, t);
         }
 
@@ -1154,6 +1195,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return new ProjectOp(vars);
         }
+
         /// <summary>
         /// A variant of the above where the ProjectOp produces exactly one var
         /// </summary>
@@ -1161,7 +1203,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal virtual ProjectOp CreateProjectOp(Var v)
         {
-            VarVec varSet = this.CreateVarVec();
+            var varSet = CreateVarVec();
             varSet.Set(v);
             return new ProjectOp(varSet);
         }
@@ -1216,6 +1258,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return CrossApplyOp.Instance;
         }
+
         /// <summary>
         /// Creates a new OuterApplyOp
         /// </summary>
@@ -1240,6 +1283,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return new SortKey(v, asc, collation);
         }
+
         /// <summary>
         /// Creates a new SortKey with the specified var and order
         /// </summary>
@@ -1326,6 +1370,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return new DistinctOp(keyVars);
         }
+
         /// <summary>
         /// An overload of the above - where the distinct has exactly one key
         /// </summary>
@@ -1333,9 +1378,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal virtual DistinctOp CreateDistinctOp(Var keyVar)
         {
-            return new DistinctOp(this.CreateVarVec(keyVar));
+            return new DistinctOp(CreateVarVec(keyVar));
         }
-        
+
         /// <summary>
         /// Creates a new UnionAllOp
         /// </summary>
@@ -1354,11 +1399,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="rightMap">Mappings from the Output Vars to the Vars produced by the right argument</param>
         /// <param name="branchDiscriminator">Var that contains the branch discrimination value (may be null until key pullup occurs)</param>
         /// <returns>A UnionAllOp that references the specified left and right Vars</returns>
-        internal virtual UnionAllOp CreateUnionAllOp(VarMap leftMap, VarMap rightMap, Var branchDiscriminator) 
+        internal virtual UnionAllOp CreateUnionAllOp(VarMap leftMap, VarMap rightMap, Var branchDiscriminator)
         {
             Debug.Assert(leftMap.Count == rightMap.Count, "VarMap count mismatch");
-            VarVec vec = this.CreateVarVec();
-            foreach (Var v in leftMap.Keys)
+            var vec = CreateVarVec();
+            foreach (var v in leftMap.Keys)
             {
                 vec.Set(v);
             }
@@ -1374,13 +1419,14 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal virtual IntersectOp CreateIntersectOp(VarMap leftMap, VarMap rightMap)
         {
             Debug.Assert(leftMap.Count == rightMap.Count, "VarMap count mismatch");
-            VarVec vec = this.CreateVarVec();
-            foreach (Var v in leftMap.Keys)
+            var vec = CreateVarVec();
+            foreach (var v in leftMap.Keys)
             {
                 vec.Set(v);
             }
             return new IntersectOp(vec, leftMap, rightMap);
         }
+
         /// <summary>
         /// Creates a new ExceptOp
         /// </summary>
@@ -1390,8 +1436,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal virtual ExceptOp CreateExceptOp(VarMap leftMap, VarMap rightMap)
         {
             Debug.Assert(leftMap.Count == rightMap.Count, "VarMap count mismatch");
-            VarVec vec = this.CreateVarVec();
-            foreach (Var v in leftMap.Keys)
+            var vec = CreateVarVec();
+            foreach (var v in leftMap.Keys)
             {
                 vec.Set(v);
             }
@@ -1419,6 +1465,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #endregion
 
         #region PhysicalOps
+
         /// <summary>
         /// Create a PhysicalProjectOp - with a columnMap describing the output
         /// </summary>
@@ -1429,6 +1476,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return new PhysicalProjectOp(outputVars, columnMap);
         }
+
         /// <summary>
         /// Create a physicalProjectOp - with a single column output
         /// </summary>
@@ -1436,16 +1484,16 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal virtual PhysicalProjectOp CreatePhysicalProjectOp(Var outputVar)
         {
-            VarList varList = Command.CreateVarList();
+            var varList = CreateVarList();
             varList.Add(outputVar);
-            VarRefColumnMap varRefColumnMap = new VarRefColumnMap(outputVar);
+            var varRefColumnMap = new VarRefColumnMap(outputVar);
 
-            SimpleCollectionColumnMap collectionColumnMap = new SimpleCollectionColumnMap(
-                TypeUtils.CreateCollectionType(varRefColumnMap.Type),   // type
-                null,                                                   // name
-                varRefColumnMap,                                        // element map
-                new SimpleColumnMap[0],                                 // keys
-                new SimpleColumnMap[0]);                                // foreign keys
+            var collectionColumnMap = new SimpleCollectionColumnMap(
+                TypeUtils.CreateCollectionType(varRefColumnMap.Type), // type
+                null, // name
+                varRefColumnMap, // element map
+                new SimpleColumnMap[0], // keys
+                new SimpleColumnMap[0]); // foreign keys
             return CreatePhysicalProjectOp(varList, collectionColumnMap);
         }
 
@@ -1460,7 +1508,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="sortKeys">sort keys specific to this collecion</param>
         /// <param name="discriminatorValue">discriminator value for this collection (under the current nestOp)</param>
         /// <returns>a new CollectionInfo instance</returns>
-        internal static CollectionInfo CreateCollectionInfo(Var collectionVar, ColumnMap columnMap, VarList flattenedElementVars, VarVec keys, List<InternalTrees.SortKey> sortKeys, object discriminatorValue)
+        internal static CollectionInfo CreateCollectionInfo(
+            Var collectionVar, ColumnMap columnMap, VarList flattenedElementVars, VarVec keys, List<SortKey> sortKeys,
+            object discriminatorValue)
         {
             return new CollectionInfo(collectionVar, columnMap, flattenedElementVars, keys, sortKeys, discriminatorValue);
         }
@@ -1475,7 +1525,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="collectionInfoList">CollectionInfo for each collection </param>
         /// <param name="discriminatorVar">Var describing the discriminator</param>
         /// <returns></returns>
-        internal virtual SingleStreamNestOp CreateSingleStreamNestOp(VarVec keys,
+        internal virtual SingleStreamNestOp CreateSingleStreamNestOp(
+            VarVec keys,
             List<SortKey> prefixSortKeys, List<SortKey> postfixSortKeys,
             VarVec outputVars,
             List<CollectionInfo> collectionInfoList, Var discriminatorVar)
@@ -1490,14 +1541,17 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="outputVars">List of outputVars</param>
         /// <param name="collectionInfoList">CollectionInfo for each collection element</param>
         /// <returns></returns>
-        internal virtual MultiStreamNestOp CreateMultiStreamNestOp(List<SortKey> prefixSortKeys, VarVec outputVars,
+        internal virtual MultiStreamNestOp CreateMultiStreamNestOp(
+            List<SortKey> prefixSortKeys, VarVec outputVars,
             List<CollectionInfo> collectionInfoList)
         {
             return new MultiStreamNestOp(prefixSortKeys, outputVars, collectionInfoList);
         }
+
         #endregion
 
         #region NodeInfo
+
         /// <summary>
         /// Get auxilliary information for a Node
         /// </summary>
@@ -1517,6 +1571,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return n.GetExtendedNodeInfo(this);
         }
+
         /// <summary>
         /// Recompute the nodeinfo for a node, but only if has already been computed
         /// </summary>
@@ -1525,9 +1580,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             m_nodeInfoVisitor.RecomputeNodeInfo(n);
         }
+
         #endregion
 
         #region KeyInfo
+
         /// <summary>
         /// Pulls up keys if necessary and gets the key information for a Node
         /// </summary>
@@ -1537,9 +1594,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return m_keyPullupVisitor.GetKeys(n);
         }
+
         #endregion
 
         #region Type Comparisons
+
         //
         // The functions described in this region are used through out the 
         // PlanCompiler to reason about type equality. Make sure that you 
@@ -1556,8 +1615,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>true, if the types are "equal"</returns>
         internal static bool EqualTypes(TypeUsage x, TypeUsage y)
         {
-            return PlanCompiler.TypeUsageEqualityComparer.Instance.Equals(x, y);
+            return TypeUsageEqualityComparer.Instance.Equals(x, y);
         }
+
         /// <summary>
         /// Check to see if two types are considered "equal" for the purposes
         /// of the plan compiler
@@ -1567,11 +1627,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>true, if the types are "equal"</returns>
         internal static bool EqualTypes(EdmType x, EdmType y)
         {
-            return PlanCompiler.TypeUsageEqualityComparer.Equals(x, y);
+            return TypeUsageEqualityComparer.Equals(x, y);
         }
+
         #endregion
 
         #region Builder Methods
+
         /// <summary>
         /// Builds out a UNION-ALL ladder from a sequence of node,var pairs.
         /// Assumption: Each node produces exactly one Var
@@ -1597,8 +1659,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                 return;
             }
 
-            int varPerNode = inputVars.Count / inputNodes.Count;
-            Debug.Assert((inputVars.Count % inputNodes.Count == 0) && (varPerNode >= 1), "Inconsistent nodes/vars count:" + inputNodes.Count + "," + inputVars.Count);
+            var varPerNode = inputVars.Count / inputNodes.Count;
+            Debug.Assert(
+                (inputVars.Count % inputNodes.Count == 0) && (varPerNode >= 1),
+                "Inconsistent nodes/vars count:" + inputNodes.Count + "," + inputVars.Count);
 
             if (inputNodes.Count == 1)
             {
@@ -1607,28 +1671,28 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                 return;
             }
 
-            List<Var> unionAllVars = new List<Var>();
+            var unionAllVars = new List<Var>();
 
-            Node unionAllNode = inputNodes[0];
-            for (int j = 0; j < varPerNode; j++)
+            var unionAllNode = inputNodes[0];
+            for (var j = 0; j < varPerNode; j++)
             {
                 unionAllVars.Add(inputVars[j]);
             }
 
-            for (int i = 1; i < inputNodes.Count; i++)
+            for (var i = 1; i < inputNodes.Count; i++)
             {
-                VarMap leftVarMap = new VarMap();
-                VarMap rightVarMap = new VarMap();
-                List<Var> setOpVars = new List<Var>();
-                for (int j = 0; j < varPerNode; j++)
+                var leftVarMap = new VarMap();
+                var rightVarMap = new VarMap();
+                var setOpVars = new List<Var>();
+                for (var j = 0; j < varPerNode; j++)
                 {
-                    SetOpVar newVar = this.CreateSetOpVar(unionAllVars[j].Type);
+                    var newVar = CreateSetOpVar(unionAllVars[j].Type);
                     setOpVars.Add(newVar);
                     leftVarMap.Add(newVar, unionAllVars[j]);
                     rightVarMap.Add(newVar, inputVars[i * varPerNode + j]);
                 }
-                Op unionAllOp = this.CreateUnionAllOp(leftVarMap, rightVarMap);
-                unionAllNode = this.CreateNode(unionAllOp, unionAllNode, inputNodes[i]);
+                Op unionAllOp = CreateUnionAllOp(leftVarMap, rightVarMap);
+                unionAllNode = CreateNode(unionAllOp, unionAllNode, inputNodes[i]);
                 unionAllVars = setOpVars;
             }
 
@@ -1643,13 +1707,15 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="inputVars"></param>
         /// <param name="resultNode"></param>
         /// <param name="resultVar"></param>
-        internal virtual void BuildUnionAllLadder(IList<Node> inputNodes, IList<Var> inputVars,
+        internal virtual void BuildUnionAllLadder(
+            IList<Node> inputNodes, IList<Var> inputVars,
             out Node resultNode, out Var resultVar)
         {
             Debug.Assert(inputNodes.Count == inputVars.Count, "Count mismatch:" + inputNodes.Count + "," + inputVars.Count);
             IList<Var> varList;
             BuildUnionAllLadder(inputNodes, inputVars, out resultNode, out varList);
-            if (varList != null && varList.Count > 0)
+            if (varList != null
+                && varList.Count > 0)
             {
                 resultVar = varList[0];
             }
@@ -1669,24 +1735,25 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="inputVars">List of vars from the input that need to be projected</param>
         /// <param name="computedExpressions">list (possibly empty) of any computed expressions</param>
         /// <returns></returns>
-        internal virtual Node BuildProject(Node inputNode, IEnumerable<Var> inputVars,
+        internal virtual Node BuildProject(
+            Node inputNode, IEnumerable<Var> inputVars,
             IEnumerable<Node> computedExpressions)
         {
             Debug.Assert(inputNode.Op.IsRelOp, "Expected a RelOp. Found " + inputNode.Op.OpType);
 
-            VarDefListOp varDefListOp = this.CreateVarDefListOp();
-            Node varDefListNode = this.CreateNode(varDefListOp);
-            VarVec projectVars = this.CreateVarVec(inputVars);
-            foreach (Node expr in computedExpressions)
+            var varDefListOp = CreateVarDefListOp();
+            var varDefListNode = CreateNode(varDefListOp);
+            var projectVars = CreateVarVec(inputVars);
+            foreach (var expr in computedExpressions)
             {
-                Var v = this.CreateComputedVar(expr.Op.Type);
+                Var v = CreateComputedVar(expr.Op.Type);
                 projectVars.Set(v);
-                VarDefOp varDefOp = this.CreateVarDefOp(v);
-                Node varDefNode = this.CreateNode(varDefOp, expr);
+                var varDefOp = CreateVarDefOp(v);
+                var varDefNode = CreateNode(varDefOp, expr);
                 varDefListNode.Children.Add(varDefNode);
             }
-            Node projectNode = this.CreateNode(
-                this.CreateProjectOp(projectVars),
+            var projectNode = CreateNode(
+                CreateProjectOp(projectVars),
                 inputNode,
                 varDefListNode);
             return projectNode;
@@ -1704,7 +1771,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>the new project subtree node</returns>
         internal virtual Node BuildProject(Node input, Node computedExpression, out Var projectVar)
         {
-            Node projectNode = BuildProject(input, new Var[] { }, new Node[] { computedExpression });
+            var projectNode = BuildProject(input, new Var[] { }, new[] { computedExpression });
             projectVar = ((ProjectOp)projectNode.Op).Outputs.First;
             return projectNode;
         }
@@ -1726,12 +1793,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="includeSubtypes">do we include subtypes of the desired element type</param>
         /// <param name="resultNode">the result subtree</param>
         /// <param name="resultVar">the single Var produced by the result subtree</param>
-        internal virtual void BuildOfTypeTree(Node inputNode, Var inputVar, TypeUsage desiredType, bool includeSubtypes,
+        internal virtual void BuildOfTypeTree(
+            Node inputNode, Var inputVar, TypeUsage desiredType, bool includeSubtypes,
             out Node resultNode, out Var resultVar)
         {
-            Op isOfOp = includeSubtypes ? this.CreateIsOfOp(desiredType) : this.CreateIsOfOnlyOp(desiredType);
-            Node predicate = this.CreateNode(isOfOp, this.CreateNode(this.CreateVarRefOp(inputVar)));
-            Node filterNode = this.CreateNode(this.CreateFilterOp(), inputNode, predicate);
+            Op isOfOp = includeSubtypes ? CreateIsOfOp(desiredType) : CreateIsOfOnlyOp(desiredType);
+            var predicate = CreateNode(isOfOp, CreateNode(CreateVarRefOp(inputVar)));
+            var filterNode = CreateNode(CreateFilterOp(), inputNode, predicate);
 
             resultNode = BuildFakeTreatProject(filterNode, inputVar, desiredType, out resultVar);
         }
@@ -1746,9 +1814,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>the result subtree</returns>
         internal virtual Node BuildFakeTreatProject(Node inputNode, Var inputVar, TypeUsage desiredType, out Var resultVar)
         {
-            Node treatNode = this.CreateNode(this.CreateFakeTreatOp(desiredType), 
-                this.CreateNode(this.CreateVarRefOp(inputVar)));
-            Node resultNode = this.BuildProject(inputNode, treatNode, out resultVar);
+            var treatNode = CreateNode(
+                CreateFakeTreatOp(desiredType),
+                CreateNode(CreateVarRefOp(inputVar)));
+            var resultNode = BuildProject(inputNode, treatNode, out resultVar);
             return resultNode;
         }
 
@@ -1762,20 +1831,20 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>the resulting comparison tree</returns>
         internal Node BuildComparison(OpType opType, Node arg0, Node arg1)
         {
-            if (!Command.EqualTypes(arg0.Op.Type, arg1.Op.Type))
+            if (!EqualTypes(arg0.Op.Type, arg1.Op.Type))
             {
-                TypeUsage commonType = TypeHelpers.GetCommonTypeUsage(arg0.Op.Type, arg1.Op.Type);
+                var commonType = TypeHelpers.GetCommonTypeUsage(arg0.Op.Type, arg1.Op.Type);
                 Debug.Assert(commonType != null, "No common type for " + arg0.Op.Type + " and " + arg1.Op.Type);
                 if (!EqualTypes(commonType, arg0.Op.Type))
                 {
-                    arg0 = this.CreateNode(this.CreateSoftCastOp(commonType), arg0);
+                    arg0 = CreateNode(CreateSoftCastOp(commonType), arg0);
                 }
                 if (!EqualTypes(commonType, arg1.Op.Type))
                 {
-                    arg1 = this.CreateNode(this.CreateSoftCastOp(commonType), arg1);
+                    arg1 = CreateNode(CreateSoftCastOp(commonType), arg1);
                 }
             }
-            Node newNode = this.CreateNode(this.CreateComparisonOp(opType), arg0, arg1);
+            var newNode = CreateNode(CreateComparisonOp(opType), arg0, arg1);
             return newNode;
         }
 
@@ -1787,14 +1856,16 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal virtual Node BuildCollect(Node relOpNode, Var relOpVar)
         {
-            Node physicalProjectNode = this.CreateNode(this.CreatePhysicalProjectOp(relOpVar), relOpNode);
-            TypeUsage collectOpType = TypeHelpers.CreateCollectionTypeUsage(relOpVar.Type);
-            Node collectNode = this.CreateNode(this.CreateCollectOp(collectOpType), physicalProjectNode);
+            var physicalProjectNode = CreateNode(CreatePhysicalProjectOp(relOpVar), relOpNode);
+            var collectOpType = TypeHelpers.CreateCollectionTypeUsage(relOpVar.Type);
+            var collectNode = CreateNode(CreateCollectOp(collectOpType), physicalProjectNode);
             return collectNode;
         }
+
         #endregion
 
         #region Rel Properties
+
         /// <summary>
         /// Mark this rel-property as "referenced" in the current query, if the target
         /// end has multiplicity of one (or zero_or_one)
@@ -1802,7 +1873,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="relProperty">the rel-property</param>
         private void AddRelPropertyReference(RelProperty relProperty)
         {
-            if (relProperty.ToEnd.RelationshipMultiplicity != RelationshipMultiplicity.Many &&
+            if (relProperty.ToEnd.RelationshipMultiplicity != RelationshipMultiplicity.Many
+                &&
                 !m_referencedRelProperties.Contains(relProperty))
             {
                 m_referencedRelProperties.Add(relProperty);
@@ -1824,12 +1896,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>true, if the rel property was referenced in the query</returns>
         internal virtual bool IsRelPropertyReferenced(RelProperty relProperty)
         {
-            bool ret = m_referencedRelProperties.Contains(relProperty);
+            var ret = m_referencedRelProperties.Contains(relProperty);
             return ret;
         }
+
         #endregion
 
         #endregion
     }
-
 }

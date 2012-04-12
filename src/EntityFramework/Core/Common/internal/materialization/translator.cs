@@ -1,12 +1,9 @@
 ﻿namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
     using System.Collections.Generic;
-    using System.Data;
     using System.Data.Common;
-    using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common.QueryCache;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
@@ -21,6 +18,7 @@
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Runtime.CompilerServices;
+    using System.Security;
     using System.Security.Permissions;
 
     /// <summary>
@@ -33,7 +31,7 @@
 
         internal TranslatorArg(Type requestedType)
         {
-            this.RequestedType = requestedType;
+            RequestedType = requestedType;
         }
     }
 
@@ -49,8 +47,8 @@
 
         internal TranslatorResult(Expression returnedExpression, Type requestedType)
         {
-            this.RequestedType = requestedType;
-            this.ReturnedExpression = returnedExpression;
+            RequestedType = requestedType;
+            ReturnedExpression = returnedExpression;
         }
 
         /// <summary>
@@ -61,7 +59,7 @@
         {
             get
             {
-                Expression result = Translator.Emit_EnsureType(ReturnedExpression, RequestedType);
+                var result = Translator.Emit_EnsureType(ReturnedExpression, RequestedType);
                 return result;
             }
         }
@@ -71,10 +69,7 @@
         /// </summary>
         internal Expression UnconvertedExpression
         {
-            get
-            {
-                return ReturnedExpression;
-            }
+            get { return ReturnedExpression; }
         }
 
         /// <summary>
@@ -106,7 +101,7 @@
         internal CollectionTranslatorResult(Expression returnedExpression, Type requestedType, Expression expressionToGetCoordinator)
             : base(returnedExpression, requestedType)
         {
-            this.ExpressionToGetCoordinator = expressionToGetCoordinator;
+            ExpressionToGetCoordinator = expressionToGetCoordinator;
         }
     }
 
@@ -191,16 +186,18 @@
         /// The main entry point for the translation process. Given a ColumnMap, returns 
         /// a ShaperFactory which can be used to materialize results for a query.
         /// </summary>
-        internal static ShaperFactory<TRequestedType> TranslateColumnMap<TRequestedType>(QueryCacheManager queryCacheManager, ColumnMap columnMap, MetadataWorkspace workspace, SpanIndex spanIndex, MergeOption mergeOption, bool valueLayer)
+        internal static ShaperFactory<TRequestedType> TranslateColumnMap<TRequestedType>(
+            QueryCacheManager queryCacheManager, ColumnMap columnMap, MetadataWorkspace workspace, SpanIndex spanIndex,
+            MergeOption mergeOption, bool valueLayer)
         {
             Debug.Assert(columnMap is CollectionColumnMap, "root column map must be a collection for a query");
 
             // If the query cache already contains a plan, then we're done
             ShaperFactory<TRequestedType> result;
-            string columnMapKey = ColumnMapKeyBuilder.GetColumnMapKey(columnMap, spanIndex);
-            ShaperFactoryQueryCacheKey<TRequestedType> cacheKey = new ShaperFactoryQueryCacheKey<TRequestedType>(columnMapKey, mergeOption, valueLayer);
+            var columnMapKey = ColumnMapKeyBuilder.GetColumnMapKey(columnMap, spanIndex);
+            var cacheKey = new ShaperFactoryQueryCacheKey<TRequestedType>(columnMapKey, mergeOption, valueLayer);
 
-            if (queryCacheManager.TryCacheLookup<ShaperFactoryQueryCacheKey<TRequestedType>, ShaperFactory<TRequestedType>>(cacheKey, out result))
+            if (queryCacheManager.TryCacheLookup(cacheKey, out result))
             {
                 return result;
             }
@@ -209,25 +206,28 @@
             // the translator visitor that recursively tranforms ColumnMaps into Expressions
             // stored on the CoordinatorScratchpads it also constructs.  We'll compile those
             // expressions into delegates later.
-            Translator translator = new Translator(workspace, spanIndex, mergeOption, valueLayer);
+            var translator = new Translator(workspace, spanIndex, mergeOption, valueLayer);
             columnMap.Accept(translator, new TranslatorArg(typeof(IEnumerable<>).MakeGenericType(typeof(TRequestedType))));
 
-            Debug.Assert(null != translator._rootCoordinatorScratchpad, "translating the root of the query must populate _rootCoordinatorBuilder"); // how can this happen?
+            Debug.Assert(
+                null != translator._rootCoordinatorScratchpad, "translating the root of the query must populate _rootCoordinatorBuilder");
+                // how can this happen?
 
             // We're good. Go ahead and recursively compile the CoordinatorScratchpads we
             // created in the vistor into CoordinatorFactories which contain compiled
             // delegates for the expressions we generated.
-            CoordinatorFactory<TRequestedType> coordinatorFactory = (CoordinatorFactory<TRequestedType>)translator._rootCoordinatorScratchpad.Compile();
+            var coordinatorFactory = (CoordinatorFactory<TRequestedType>)translator._rootCoordinatorScratchpad.Compile();
 
             // Along the way we constructed a nice delegate to perform runtime permission 
             // checks (e.g. for LinkDemand and non-public members).  We need that now.
-            Action checkPermissionsDelegate = translator.GetCheckPermissionsDelegate();
+            var checkPermissionsDelegate = translator.GetCheckPermissionsDelegate();
 
             // Finally, take everything we've produced, and create the ShaperFactory to
             // contain it all, then add it to the query cache so we don't need to do this
             // for this query again.
-            result = new ShaperFactory<TRequestedType>(translator._stateSlotCount, coordinatorFactory, checkPermissionsDelegate, mergeOption);
-            QueryCacheEntry cacheEntry = new QueryCacheEntry(cacheKey, result);
+            result = new ShaperFactory<TRequestedType>(
+                translator._stateSlotCount, coordinatorFactory, checkPermissionsDelegate, mergeOption);
+            var cacheEntry = new QueryCacheEntry(cacheKey, result);
             if (queryCacheManager.TryLookupAndAdd(cacheEntry, out cacheEntry))
             {
                 // Someone beat us to it. Use their result instead.
@@ -246,7 +246,7 @@
         /// by the user to ensure the compilation doesn't violate them.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2128")]
-        [System.Security.SecuritySafeCritical]
+        [SecuritySafeCritical]
         [ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
         internal static Func<Shaper, TResult> Compile<TResult>(Expression body)
         {
@@ -261,7 +261,7 @@
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         internal static object Compile(Type resultType, Expression body)
         {
-            MethodInfo compile = Translator_Compile.MakeGenericMethod(resultType);
+            var compile = Translator_Compile.MakeGenericMethod(resultType);
             return compile.Invoke(null, new object[] { body });
         }
 
@@ -312,7 +312,7 @@
             {
                 // If we don't have MemberAccess, compile the expressions to see if they
                 // might be satisfied by RestrictedMemberAccess.
-                foreach (Expression<Func<object>> userExpression in userExpressions)
+                foreach (var userExpression in userExpressions)
                 {
                     userExpression.Compile();
                 }
@@ -361,7 +361,7 @@
                     }
                     else
                     {
-                        EdmType edmElementType = ((CollectionType)edmType).TypeUsage.EdmType;
+                        var edmElementType = ((CollectionType)edmType).TypeUsage.EdmType;
                         result = DetermineClrType(edmElementType);
                         result = typeof(IEnumerable<>).MakeGenericType(result);
                     }
@@ -399,7 +399,7 @@
                         // we need an anonymous type.  ELINQ solves this by annotating the
                         // edmType with some additional information, which we'll pick up 
                         // here.
-                        InitializerMetadata initializerMetadata = ((RowType)edmType).InitializerMetadata;
+                        var initializerMetadata = ((RowType)edmType).InitializerMetadata;
                         if (null != initializerMetadata)
                         {
                             result = initializerMetadata.ClrType;
@@ -414,7 +414,11 @@
                     break;
 
                 default:
-                    Debug.Fail(string.Format(CultureInfo.CurrentCulture, "The type {0} was not the expected scalar, enumeration, collection, structural, nominal, or reference type.", edmType.GetType()));
+                    Debug.Fail(
+                        string.Format(
+                            CultureInfo.CurrentCulture,
+                            "The type {0} was not the expected scalar, enumeration, collection, structural, nominal, or reference type.",
+                            edmType.GetType()));
                     break;
             }
             Debug.Assert(null != result, "no result?"); // just making sure we cover this in the switch statement.
@@ -457,7 +461,7 @@
 
             ObjectTypeMapping result;
 
-            EdmType resolvedType = ResolveSpanType(edmType);
+            var resolvedType = ResolveSpanType(edmType);
             if (null == resolvedType)
             {
                 resolvedType = edmType;
@@ -478,7 +482,7 @@
         /// <returns></returns>
         private EdmType ResolveSpanType(EdmType edmType)
         {
-            EdmType result = edmType;
+            var result = edmType;
 
             switch (result.BuiltInTypeKind)
             {
@@ -495,8 +499,9 @@
                 case BuiltInTypeKind.RowType:
                     // If there is a SpanMap, pick up the EdmType from the first column
                     // in the record, otherwise it's just the type we already have.
-                    RowType rowType = (RowType)result;
-                    if (null != _spanIndex && _spanIndex.HasSpanMap(rowType))
+                    var rowType = (RowType)result;
+                    if (null != _spanIndex
+                        && _spanIndex.HasSpanMap(rowType))
                     {
                         result = rowType.Members[0].TypeUsage.EdmType;
                     }
@@ -513,15 +518,15 @@
         {
             // Note that we call through to a typed method so that we can call Expression.Lambda<Func> instead
             // of the straightforward Expression.Lambda. The latter requires FullTrust.
-            Type delegateReturnType = body.Type;
-            MethodInfo createMethod = Translator_TypedCreateInlineDelegate.MakeGenericMethod(delegateReturnType);
-            LambdaExpression result = (LambdaExpression)createMethod.Invoke(this, new object[] { body });
+            var delegateReturnType = body.Type;
+            var createMethod = Translator_TypedCreateInlineDelegate.MakeGenericMethod(delegateReturnType);
+            var result = (LambdaExpression)createMethod.Invoke(this, new object[] { body });
             return result;
         }
 
         private Expression<Func<Shaper, T>> TypedCreateInlineDelegate<T>(Expression body)
         {
-            Expression<Func<Shaper, T>> result = Expression.Lambda<Func<Shaper, T>>(body, Shaper_Parameter);
+            var result = Expression.Lambda<Func<Shaper, T>>(body, Shaper_Parameter);
             _currentCoordinatorScratchpad.AddInlineDelegate(result);
             return result;
         }
@@ -546,26 +551,45 @@
         private static readonly MethodInfo DbDataReader_GetByte = typeof(DbDataReader).GetMethod("GetByte");
         private static readonly MethodInfo DbDataReader_IsDBNull = typeof(DbDataReader).GetMethod("IsDBNull");
 
-        private static readonly ConstructorInfo EntityKey_ctor_SingleKey = typeof(EntityKey).GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { typeof(EntitySet), typeof(object) }, null);
-        private static readonly ConstructorInfo EntityKey_ctor_CompositeKey = typeof(EntityKey).GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { typeof(EntitySet), typeof(object[]) }, null);
+        private static readonly ConstructorInfo EntityKey_ctor_SingleKey =
+            typeof(EntityKey).GetConstructor(
+                BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { typeof(EntitySet), typeof(object) }, null);
 
-        private static readonly MethodInfo IEqualityComparerOfString_Equals = typeof(IEqualityComparer<String>).GetMethod("Equals", new Type[] { typeof(string), typeof(string) });
+        private static readonly ConstructorInfo EntityKey_ctor_CompositeKey =
+            typeof(EntityKey).GetConstructor(
+                BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { typeof(EntitySet), typeof(object[]) }, null);
+
+        private static readonly MethodInfo IEqualityComparerOfString_Equals = typeof(IEqualityComparer<String>).GetMethod(
+            "Equals", new[] { typeof(string), typeof(string) });
 
         private static readonly ConstructorInfo MaterializedDataRecord_ctor = typeof(MaterializedDataRecord).GetConstructor(
-                                                                                            BindingFlags.NonPublic | BindingFlags.Instance,
-                                                                                            null, new Type[] { typeof(MetadataWorkspace), typeof(TypeUsage), typeof(object[]) },
-                                                                                            null);
+            BindingFlags.NonPublic | BindingFlags.Instance,
+            null, new[] { typeof(MetadataWorkspace), typeof(TypeUsage), typeof(object[]) },
+            null);
 
-        private static readonly MethodInfo RecordState_GatherData = typeof(RecordState).GetMethod("GatherData", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly MethodInfo RecordState_SetNullRecord = typeof(RecordState).GetMethod("SetNullRecord", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo RecordState_GatherData = typeof(RecordState).GetMethod(
+            "GatherData", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        private static readonly MethodInfo RecordState_SetNullRecord = typeof(RecordState).GetMethod(
+            "SetNullRecord", BindingFlags.NonPublic | BindingFlags.Instance);
 
         private static readonly MethodInfo Shaper_Discriminate = typeof(Shaper).GetMethod("Discriminate");
-        private static readonly MethodInfo Shaper_GetPropertyValueWithErrorHandling = typeof(Shaper).GetMethod("GetPropertyValueWithErrorHandling");
-        private static readonly MethodInfo Shaper_GetColumnValueWithErrorHandling = typeof(Shaper).GetMethod("GetColumnValueWithErrorHandling");
+
+        private static readonly MethodInfo Shaper_GetPropertyValueWithErrorHandling =
+            typeof(Shaper).GetMethod("GetPropertyValueWithErrorHandling");
+
+        private static readonly MethodInfo Shaper_GetColumnValueWithErrorHandling =
+            typeof(Shaper).GetMethod("GetColumnValueWithErrorHandling");
+
         private static readonly MethodInfo Shaper_GetGeographyColumnValue = typeof(Shaper).GetMethod("GetGeographyColumnValue");
         private static readonly MethodInfo Shaper_GetGeometryColumnValue = typeof(Shaper).GetMethod("GetGeometryColumnValue");
-        private static readonly MethodInfo Shaper_GetSpatialColumnValueWithErrorHandling = typeof(Shaper).GetMethod("GetSpatialColumnValueWithErrorHandling");
-        private static readonly MethodInfo Shaper_GetSpatialPropertyValueWithErrorHandling = typeof(Shaper).GetMethod("GetSpatialPropertyValueWithErrorHandling");
+
+        private static readonly MethodInfo Shaper_GetSpatialColumnValueWithErrorHandling =
+            typeof(Shaper).GetMethod("GetSpatialColumnValueWithErrorHandling");
+
+        private static readonly MethodInfo Shaper_GetSpatialPropertyValueWithErrorHandling =
+            typeof(Shaper).GetMethod("GetSpatialPropertyValueWithErrorHandling");
+
         private static readonly MethodInfo Shaper_HandleEntity = typeof(Shaper).GetMethod("HandleEntity");
         private static readonly MethodInfo Shaper_HandleEntityAppendOnly = typeof(Shaper).GetMethod("HandleEntityAppendOnly");
         private static readonly MethodInfo Shaper_HandleEntityNoTracking = typeof(Shaper).GetMethod("HandleEntityNoTracking");
@@ -578,22 +602,46 @@
         private static readonly MethodInfo Shaper_SetState = typeof(Shaper).GetMethod("SetState");
         private static readonly MethodInfo Shaper_SetStatePassthrough = typeof(Shaper).GetMethod("SetStatePassthrough");
 
-        private static readonly MethodInfo Translator_BinaryEquals = typeof(Translator).GetMethod("BinaryEquals", BindingFlags.NonPublic | BindingFlags.Static);
-        private static readonly MethodInfo Translator_CheckedConvert = typeof(Translator).GetMethod("CheckedConvert", BindingFlags.NonPublic | BindingFlags.Static);
-        private static readonly MethodInfo Translator_Compile = typeof(Translator).GetMethod("Compile", BindingFlags.NonPublic | BindingFlags.Static, null, new Type[] { typeof(Expression) }, null);
-        private static readonly MethodInfo Translator_MultipleDiscriminatorPolymorphicColumnMapHelper = typeof(Translator).GetMethod("MultipleDiscriminatorPolymorphicColumnMapHelper", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly MethodInfo Translator_TypedCreateInlineDelegate = typeof(Translator).GetMethod("TypedCreateInlineDelegate", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo Translator_BinaryEquals = typeof(Translator).GetMethod(
+            "BinaryEquals", BindingFlags.NonPublic | BindingFlags.Static);
 
-        private static readonly PropertyInfo EntityWrapperFactory_NullWrapper = typeof(EntityWrapperFactory).GetProperty("NullWrapper", BindingFlags.Static | BindingFlags.NonPublic);
+        private static readonly MethodInfo Translator_CheckedConvert = typeof(Translator).GetMethod(
+            "CheckedConvert", BindingFlags.NonPublic | BindingFlags.Static);
+
+        private static readonly MethodInfo Translator_Compile = typeof(Translator).GetMethod(
+            "Compile", BindingFlags.NonPublic | BindingFlags.Static, null, new[] { typeof(Expression) }, null);
+
+        private static readonly MethodInfo Translator_MultipleDiscriminatorPolymorphicColumnMapHelper =
+            typeof(Translator).GetMethod("MultipleDiscriminatorPolymorphicColumnMapHelper", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        private static readonly MethodInfo Translator_TypedCreateInlineDelegate = typeof(Translator).GetMethod(
+            "TypedCreateInlineDelegate", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        private static readonly PropertyInfo EntityWrapperFactory_NullWrapper = typeof(EntityWrapperFactory).GetProperty(
+            "NullWrapper", BindingFlags.Static | BindingFlags.NonPublic);
+
         private static readonly PropertyInfo IEntityWrapper_Entity = typeof(IEntityWrapper).GetProperty("Entity");
-        private static readonly MethodInfo EntityProxyTypeInfo_SetEntityWrapper = typeof(EntityProxyTypeInfo).GetMethod("SetEntityWrapper", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        private static readonly MethodInfo EntityWrapperFactory_GetPocoPropertyAccessorStrategyFunc = typeof(EntityWrapperFactory).GetMethod("GetPocoPropertyAccessorStrategyFunc", BindingFlags.NonPublic | BindingFlags.Static);
-        private static readonly MethodInfo EntityWrapperFactory_GetNullPropertyAccessorStrategyFunc = typeof(EntityWrapperFactory).GetMethod("GetNullPropertyAccessorStrategyFunc", BindingFlags.NonPublic | BindingFlags.Static);
-        private static readonly MethodInfo EntityWrapperFactory_GetEntityWithChangeTrackerStrategyFunc = typeof(EntityWrapperFactory).GetMethod("GetEntityWithChangeTrackerStrategyFunc", BindingFlags.NonPublic | BindingFlags.Static);
-        private static readonly MethodInfo EntityWrapperFactory_GetSnapshotChangeTrackingStrategyFunc = typeof(EntityWrapperFactory).GetMethod("GetSnapshotChangeTrackingStrategyFunc", BindingFlags.NonPublic | BindingFlags.Static);
-        private static readonly MethodInfo EntityWrapperFactory_GetEntityWithKeyStrategyStrategyFunc = typeof(EntityWrapperFactory).GetMethod("GetEntityWithKeyStrategyStrategyFunc", BindingFlags.NonPublic | BindingFlags.Static);
-        private static readonly MethodInfo EntityWrapperFactory_GetPocoEntityKeyStrategyFunc = typeof(EntityWrapperFactory).GetMethod("GetPocoEntityKeyStrategyFunc", BindingFlags.NonPublic | BindingFlags.Static);
+        private static readonly MethodInfo EntityProxyTypeInfo_SetEntityWrapper = typeof(EntityProxyTypeInfo).GetMethod(
+            "SetEntityWrapper", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        private static readonly MethodInfo EntityWrapperFactory_GetPocoPropertyAccessorStrategyFunc =
+            typeof(EntityWrapperFactory).GetMethod("GetPocoPropertyAccessorStrategyFunc", BindingFlags.NonPublic | BindingFlags.Static);
+
+        private static readonly MethodInfo EntityWrapperFactory_GetNullPropertyAccessorStrategyFunc =
+            typeof(EntityWrapperFactory).GetMethod("GetNullPropertyAccessorStrategyFunc", BindingFlags.NonPublic | BindingFlags.Static);
+
+        private static readonly MethodInfo EntityWrapperFactory_GetEntityWithChangeTrackerStrategyFunc =
+            typeof(EntityWrapperFactory).GetMethod("GetEntityWithChangeTrackerStrategyFunc", BindingFlags.NonPublic | BindingFlags.Static);
+
+        private static readonly MethodInfo EntityWrapperFactory_GetSnapshotChangeTrackingStrategyFunc =
+            typeof(EntityWrapperFactory).GetMethod("GetSnapshotChangeTrackingStrategyFunc", BindingFlags.NonPublic | BindingFlags.Static);
+
+        private static readonly MethodInfo EntityWrapperFactory_GetEntityWithKeyStrategyStrategyFunc =
+            typeof(EntityWrapperFactory).GetMethod("GetEntityWithKeyStrategyStrategyFunc", BindingFlags.NonPublic | BindingFlags.Static);
+
+        private static readonly MethodInfo EntityWrapperFactory_GetPocoEntityKeyStrategyFunc =
+            typeof(EntityWrapperFactory).GetMethod("GetPocoEntityKeyStrategyFunc", BindingFlags.NonPublic | BindingFlags.Static);
 
         #endregion
 
@@ -607,8 +655,12 @@
         private static readonly Expression Shaper_Workspace = Expression.Field(Shaper_Parameter, typeof(Shaper).GetField("Workspace"));
         private static readonly Expression Shaper_State = Expression.Field(Shaper_Parameter, typeof(Shaper).GetField("State"));
         private static readonly Expression Shaper_Context = Expression.Field(Shaper_Parameter, typeof(Shaper).GetField("Context"));
-        private static readonly Expression Shaper_Context_Options = Expression.Property(Shaper_Context, typeof(ObjectContext).GetProperty("ContextOptions"));
-        private static readonly Expression Shaper_ProxyCreationEnabled = Expression.Property(Shaper_Context_Options, typeof(ObjectContextOptions).GetProperty("ProxyCreationEnabled"));
+
+        private static readonly Expression Shaper_Context_Options = Expression.Property(
+            Shaper_Context, typeof(ObjectContext).GetProperty("ContextOptions"));
+
+        private static readonly Expression Shaper_ProxyCreationEnabled = Expression.Property(
+            Shaper_Context_Options, typeof(ObjectContextOptions).GetProperty("ProxyCreationEnabled"));
 
         #endregion
 
@@ -618,7 +670,7 @@
         private static Expression Emit_AndAlso(IEnumerable<Expression> operands)
         {
             Expression result = null;
-            foreach (Expression operand in operands)
+            foreach (var operand in operands)
             {
                 if (result == null)
                 {
@@ -638,7 +690,7 @@
         private static Expression Emit_BitwiseOr(IEnumerable<Expression> operands)
         {
             Expression result = null;
-            foreach (Expression operand in operands)
+            foreach (var operand in operands)
             {
                 if (result == null)
                 {
@@ -667,7 +719,8 @@
             EntityUtil.CheckArgumentNull(type, "type");
 
             // check if null can be assigned to the type
-            if (type.IsClass || TypeSystem.IsNullableType(type))
+            if (type.IsClass
+                || TypeSystem.IsNullableType(type))
             {
                 // create the constant directly if it accepts null
                 nullConstant = Expression.Constant(null, type);
@@ -697,8 +750,9 @@
         /// </summary>
         internal static Expression Emit_EnsureType(Expression input, Type type)
         {
-            Expression result = input;
-            if (input.Type != type && !typeof(IEntityWrapper).IsAssignableFrom(input.Type))
+            var result = input;
+            if (input.Type != type
+                && !typeof(IEntityWrapper).IsAssignableFrom(input.Type))
             {
                 if (type.IsAssignableFrom(input.Type))
                 {
@@ -709,7 +763,7 @@
                 {
                     // user is asking for the 'wrong' type... add exception handling
                     // in case of failure
-                    MethodInfo checkedConvertMethod = Translator_CheckedConvert.MakeGenericMethod(input.Type, type);
+                    var checkedConvertMethod = Translator_CheckedConvert.MakeGenericMethod(input.Type, type);
                     result = Expression.Call(checkedConvertMethod, input);
                 }
             }
@@ -728,9 +782,11 @@
         /// <param name="mergeOption">Either NoTracking or AppendOnly depending on whether the entity is to be tracked</param>
         /// <param name="isProxy">If true, then a proxy is being created</param>
         /// <returns>An expression representing the IEntityWrapper for the new entity</returns>
-        internal static Expression Emit_EnsureTypeAndWrap(Expression input, Expression keyReader, Expression entitySetReader, Type requestedType, Type identityType, Type actualType, MergeOption mergeOption, bool isProxy)
+        internal static Expression Emit_EnsureTypeAndWrap(
+            Expression input, Expression keyReader, Expression entitySetReader, Type requestedType, Type identityType, Type actualType,
+            MergeOption mergeOption, bool isProxy)
         {
-            Expression result = Emit_EnsureType(input, requestedType); // Needed to ensure appropriate exception is thrown
+            var result = Emit_EnsureType(input, requestedType); // Needed to ensure appropriate exception is thrown
             if (!requestedType.IsClass)
             {
                 result = Emit_EnsureType(input, typeof(object));
@@ -742,20 +798,27 @@
         /// <summary>
         /// Returns an expression that creates an IEntityWrapper approprioate for the type of entity being materialized.
         /// </summary>
-        private static Expression CreateEntityWrapper(Expression input, Expression keyReader, Expression entitySetReader, Type actualType, Type identityType, MergeOption mergeOption, bool isProxy)
+        private static Expression CreateEntityWrapper(
+            Expression input, Expression keyReader, Expression entitySetReader, Type actualType, Type identityType, MergeOption mergeOption,
+            bool isProxy)
         {
             Expression result;
-            bool isIEntityWithKey = typeof(IEntityWithKey).IsAssignableFrom(actualType);
-            bool isIEntityWithRelationships = typeof(IEntityWithRelationships).IsAssignableFrom(actualType);
-            bool isIEntityWithChangeTracker = typeof(IEntityWithChangeTracker).IsAssignableFrom(actualType);
-            if (isIEntityWithRelationships && isIEntityWithChangeTracker && isIEntityWithKey && !isProxy)
+            var isIEntityWithKey = typeof(IEntityWithKey).IsAssignableFrom(actualType);
+            var isIEntityWithRelationships = typeof(IEntityWithRelationships).IsAssignableFrom(actualType);
+            var isIEntityWithChangeTracker = typeof(IEntityWithChangeTracker).IsAssignableFrom(actualType);
+            if (isIEntityWithRelationships && isIEntityWithChangeTracker && isIEntityWithKey
+                && !isProxy)
             {
                 // This is the case where all our interfaces are implemented by the entity and we are not creating a proxy.
                 // This is the case that absolutely must be kept fast.  It is a simple call to the wrapper constructor.
-                Type genericType = typeof(LightweightEntityWrapper<>).MakeGenericType(actualType);
-                ConstructorInfo ci = genericType.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.CreateInstance, null,
-                                                                new Type[] { actualType, typeof(EntityKey), typeof(EntitySet), typeof(ObjectContext), typeof(MergeOption), typeof(Type) }, null);
-                result = Expression.New(ci, input, keyReader, entitySetReader, Shaper_Context, Expression.Constant(mergeOption, typeof(MergeOption)), Expression.Constant(identityType, typeof(Type)));
+                var genericType = typeof(LightweightEntityWrapper<>).MakeGenericType(actualType);
+                var ci = genericType.GetConstructor(
+                    BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.CreateInstance, null,
+                    new[] { actualType, typeof(EntityKey), typeof(EntitySet), typeof(ObjectContext), typeof(MergeOption), typeof(Type) },
+                    null);
+                result = Expression.New(
+                    ci, input, keyReader, entitySetReader, Shaper_Context, Expression.Constant(mergeOption, typeof(MergeOption)),
+                    Expression.Constant(identityType, typeof(Type)));
             }
             else
             {
@@ -763,27 +826,34 @@
                 // whether or not we are creating a proxy.
                 // We pass in lambdas to create the strategy objects so that they can have the materialized entity as
                 // a parameter while still being set in the wrapper constructor.
-                Expression propertyAccessorStrategy = !isIEntityWithRelationships || isProxy ?
-                                                      Expression.Call(EntityWrapperFactory_GetPocoPropertyAccessorStrategyFunc) :
-                                                      Expression.Call(EntityWrapperFactory_GetNullPropertyAccessorStrategyFunc);
+                Expression propertyAccessorStrategy = !isIEntityWithRelationships || isProxy
+                                                          ? Expression.Call(EntityWrapperFactory_GetPocoPropertyAccessorStrategyFunc)
+                                                          : Expression.Call(EntityWrapperFactory_GetNullPropertyAccessorStrategyFunc);
 
-                Expression keyStrategy = isIEntityWithKey ?
-                                         Expression.Call(EntityWrapperFactory_GetEntityWithKeyStrategyStrategyFunc) :
-                                         Expression.Call(EntityWrapperFactory_GetPocoEntityKeyStrategyFunc);
+                Expression keyStrategy = isIEntityWithKey
+                                             ? Expression.Call(EntityWrapperFactory_GetEntityWithKeyStrategyStrategyFunc)
+                                             : Expression.Call(EntityWrapperFactory_GetPocoEntityKeyStrategyFunc);
 
-                Expression changeTrackingStrategy = isIEntityWithChangeTracker ?
-                                                    Expression.Call(EntityWrapperFactory_GetEntityWithChangeTrackerStrategyFunc) :
-                                                    Expression.Call(EntityWrapperFactory_GetSnapshotChangeTrackingStrategyFunc);
+                Expression changeTrackingStrategy = isIEntityWithChangeTracker
+                                                        ? Expression.Call(EntityWrapperFactory_GetEntityWithChangeTrackerStrategyFunc)
+                                                        : Expression.Call(EntityWrapperFactory_GetSnapshotChangeTrackingStrategyFunc);
 
-                Type genericType = isIEntityWithRelationships ?
-                                   typeof(EntityWrapperWithRelationships<>).MakeGenericType(actualType) :
-                                   typeof(EntityWrapperWithoutRelationships<>).MakeGenericType(actualType);
+                var genericType = isIEntityWithRelationships
+                                      ? typeof(EntityWrapperWithRelationships<>).MakeGenericType(actualType)
+                                      : typeof(EntityWrapperWithoutRelationships<>).MakeGenericType(actualType);
 
-                ConstructorInfo ci = genericType.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.CreateInstance, null,
-                                                                new Type[] { actualType, typeof(EntityKey), typeof(EntitySet), typeof(ObjectContext), typeof(MergeOption), typeof(Type),
-                                                                             typeof(Func<object, IPropertyAccessorStrategy>), typeof(Func<object, IChangeTrackingStrategy>), typeof(Func<object, IEntityKeyStrategy>) }, null);
-                result = Expression.New(ci, input, keyReader, entitySetReader, Shaper_Context, Expression.Constant(mergeOption, typeof(MergeOption)), Expression.Constant(identityType, typeof(Type)),
-                                        propertyAccessorStrategy, changeTrackingStrategy, keyStrategy);
+                var ci = genericType.GetConstructor(
+                    BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.CreateInstance, null,
+                    new[]
+                        {
+                            actualType, typeof(EntityKey), typeof(EntitySet), typeof(ObjectContext), typeof(MergeOption), typeof(Type),
+                            typeof(Func<object, IPropertyAccessorStrategy>), typeof(Func<object, IChangeTrackingStrategy>),
+                            typeof(Func<object, IEntityKeyStrategy>)
+                        }, null);
+                result = Expression.New(
+                    ci, input, keyReader, entitySetReader, Shaper_Context, Expression.Constant(mergeOption, typeof(MergeOption)),
+                    Expression.Constant(identityType, typeof(Type)),
+                    propertyAccessorStrategy, changeTrackingStrategy, keyStrategy);
             }
             result = Expression.Convert(result, typeof(IEntityWrapper));
             return result;
@@ -795,7 +865,7 @@
         /// </summary>
         internal static Expression Emit_UnwrapAndEnsureType(Expression input, Type type)
         {
-            return Translator.Emit_EnsureType(Expression.Property(input, IEntityWrapper_Entity), type);
+            return Emit_EnsureType(Expression.Property(input, IEntityWrapper_Entity), type);
         }
 
         /// <summary>
@@ -812,11 +882,12 @@
                 }
                 catch (InvalidCastException)
                 {
-                    Type valueType = value.GetType();
+                    var valueType = value.GetType();
 
                     // In the case of CompensatingCollection<T>, simply report IEnumerable<T> in the
                     // exception message because the user has no reason to know what the type represents.
-                    if (valueType.IsGenericType && valueType.GetGenericTypeDefinition() == typeof(CompensatingCollection<>))
+                    if (valueType.IsGenericType
+                        && valueType.GetGenericTypeDefinition() == typeof(CompensatingCollection<>))
                     {
                         valueType = typeof(IEnumerable<>).MakeGenericType(valueType.GetGenericArguments());
                     }
@@ -837,7 +908,8 @@
         {
             Expression result;
             Debug.Assert(left.Type == right.Type, "equals with different types");
-            if (typeof(byte[]) == left.Type)
+            if (typeof(byte[])
+                == left.Type)
             {
                 result = Expression.Call(Translator_BinaryEquals, left, right);
             }
@@ -863,13 +935,15 @@
             {
                 return false;
             }
-            if (left.Length != right.Length)
+            if (left.Length
+                != right.Length)
             {
                 return false;
             }
-            for (int i = 0; i < left.Length; i++)
+            for (var i = 0; i < left.Length; i++)
             {
-                if (left[i] != right[i])
+                if (left[i]
+                    != right[i])
                 {
                     return false;
                 }
@@ -882,23 +956,24 @@
         /// a value (Emit_EntityKey_HasValue == true) and that the EntitySet has value 
         /// (EntitySet != null).
         /// </summary>
-        private static Expression Emit_EntityKey_ctor(Translator translator, EntityIdentity entityIdentity, bool isForColumnValue, out Expression entitySetReader) 
+        private static Expression Emit_EntityKey_ctor(
+            Translator translator, EntityIdentity entityIdentity, bool isForColumnValue, out Expression entitySetReader)
         {
             Expression result;
             Expression setEntitySetStateSlotValue = null;
 
             // First build the expressions that read each value that comprises the EntityKey
-            List<Expression> keyReaders = new List<Expression>(entityIdentity.Keys.Length);
-            for (int i = 0; i < entityIdentity.Keys.Length; i++)
+            var keyReaders = new List<Expression>(entityIdentity.Keys.Length);
+            for (var i = 0; i < entityIdentity.Keys.Length; i++)
             {
-                Expression keyReader = entityIdentity.Keys[i].Accept(translator, new TranslatorArg(typeof(object))).Expression;
+                var keyReader = entityIdentity.Keys[i].Accept(translator, new TranslatorArg(typeof(object))).Expression;
                 keyReaders.Add(keyReader);
             }
 
             // Next build the expression that determines us the entitySet; how we do this differs 
             // depending on whether we have a simple or discriminated identity.
 
-            SimpleEntityIdentity simpleEntityIdentity = entityIdentity as SimpleEntityIdentity;
+            var simpleEntityIdentity = entityIdentity as SimpleEntityIdentity;
             if (null != simpleEntityIdentity)
             {
                 if (simpleEntityIdentity.EntitySet == null)
@@ -915,28 +990,29 @@
                 // For DiscriminatedEntityIdentities, the we have to search the EntitySetMap 
                 // for the matching discriminator value; we'll get the discriminator first, 
                 // the compare them all in sequence.                
-                DiscriminatedEntityIdentity discriminatedEntityIdentity = (DiscriminatedEntityIdentity)entityIdentity;
+                var discriminatedEntityIdentity = (DiscriminatedEntityIdentity)entityIdentity;
 
-                Expression discriminator = discriminatedEntityIdentity.EntitySetColumnMap.Accept(translator, new TranslatorArg(typeof(int?))).Expression;
-                EntitySet[] entitySets = discriminatedEntityIdentity.EntitySetMap;
+                var discriminator =
+                    discriminatedEntityIdentity.EntitySetColumnMap.Accept(translator, new TranslatorArg(typeof(int?))).Expression;
+                var entitySets = discriminatedEntityIdentity.EntitySetMap;
 
                 // CONSIDER(SteveSta): We could just do an index lookup here instead of a series of 
                 //         comparisons, however this is MEST, and they get what they asked for.
 
                 // (_discriminator == 0 ? entitySets[0] : (_discriminator == 1 ? entitySets[1] ... : null)
                 entitySetReader = Expression.Constant(null, typeof(EntitySet));
-                for (int i = 0; i < entitySets.Length; i++)
+                for (var i = 0; i < entitySets.Length; i++)
                 {
                     entitySetReader = Expression.Condition(
-                                                Expression.Equal(discriminator, Expression.Constant(i, typeof(int?))),
-                                                Expression.Constant(entitySets[i], typeof(EntitySet)),
-                                                entitySetReader
-                                                );
+                        Expression.Equal(discriminator, Expression.Constant(i, typeof(int?))),
+                        Expression.Constant(entitySets[i], typeof(EntitySet)),
+                        entitySetReader
+                        );
                 }
 
                 // Allocate a stateSlot to contain the entitySet we determine, and ensure we
                 // store it there on the way to constructing the key.
-                int entitySetStateSlotNumber = translator.AllocateStateSlot();
+                var entitySetStateSlotNumber = translator.AllocateStateSlot();
                 setEntitySetStateSlotValue = Emit_Shaper_SetStatePassthrough(entitySetStateSlotNumber, entitySetReader);
                 entitySetReader = Emit_Shaper_GetState(entitySetStateSlotNumber, typeof(EntitySet));
             }
@@ -946,16 +1022,18 @@
             if (1 == entityIdentity.Keys.Length)
             {
                 // new EntityKey(entitySet, keyReaders[0])
-                result = Expression.New(EntityKey_ctor_SingleKey,
-                                            entitySetReader,
-                                            keyReaders[0]);
+                result = Expression.New(
+                    EntityKey_ctor_SingleKey,
+                    entitySetReader,
+                    keyReaders[0]);
             }
             else
             {
                 // new EntityKey(entitySet, { keyReaders[0], ... keyReaders[n] })
-                result = Expression.New(EntityKey_ctor_CompositeKey,
-                                            entitySetReader,
-                                            Expression.NewArrayInit(typeof(object), keyReaders));
+                result = Expression.New(
+                    EntityKey_ctor_CompositeKey,
+                    entitySetReader,
+                    Expression.NewArrayInit(typeof(object), keyReaders));
             }
 
             // In the case where we've had to store the entitySetReader value in a 
@@ -966,7 +1044,8 @@
             if (null != setEntitySetStateSlotValue)
             {
                 Expression noEntityKeyExpression;
-                if (translator.IsValueLayer && !isForColumnValue)
+                if (translator.IsValueLayer
+                    && !isForColumnValue)
                 {
                     noEntityKeyExpression = Expression.Constant(EntityKey.NoEntitySetKey, typeof(EntityKey));
                 }
@@ -975,10 +1054,10 @@
                     noEntityKeyExpression = Expression.Constant(null, typeof(EntityKey));
                 }
                 result = Expression.Condition(
-                                            Expression.Equal(setEntitySetStateSlotValue, Expression.Constant(null, typeof(EntitySet))),
-                                            noEntityKeyExpression,
-                                            result
-                                            );
+                    Expression.Equal(setEntitySetStateSlotValue, Expression.Constant(null, typeof(EntitySet))),
+                    noEntityKeyExpression,
+                    result
+                    );
             }
             return result;
         }
@@ -992,7 +1071,7 @@
             Debug.Assert(0 < keyColumns.Length, "empty keyColumns?");
 
             // !shaper.Reader.IsDBNull(keyColumn[0].ordinal)
-            Expression result = Emit_Reader_IsDBNull(keyColumns[0]);
+            var result = Emit_Reader_IsDBNull(keyColumns[0]);
             result = Expression.Not(result);
             return result;
         }
@@ -1003,7 +1082,7 @@
         private static Expression Emit_Reader_GetValue(int ordinal, Type type)
         {
             // (type)shaper.Reader.GetValue(ordinal)
-            Expression result = Emit_EnsureType(Expression.Call(Shaper_Reader, DbDataReader_GetValue, Expression.Constant(ordinal)), type);
+            var result = Emit_EnsureType(Expression.Call(Shaper_Reader, DbDataReader_GetValue, Expression.Constant(ordinal)), type);
             return result;
         }
 
@@ -1024,26 +1103,31 @@
         private static Expression Emit_Reader_IsDBNull(ColumnMap columnMap)
         {
             // CONSIDER(SteveSta): I don't care for the derefing columnMap.  Find an alternative.
-            Expression result = Emit_Reader_IsDBNull(((ScalarColumnMap)columnMap).ColumnPos);
+            var result = Emit_Reader_IsDBNull(((ScalarColumnMap)columnMap).ColumnPos);
             return result;
         }
 
         /// <summary>
         /// Create expression to read a property value with error handling
         /// </summary>
-        private static Expression Emit_Shaper_GetPropertyValueWithErrorHandling(Type propertyType, int ordinal, string propertyName, string typeName, TypeUsage columnType)
+        private static Expression Emit_Shaper_GetPropertyValueWithErrorHandling(
+            Type propertyType, int ordinal, string propertyName, string typeName, TypeUsage columnType)
         {
             // // shaper.GetSpatialColumnValueWithErrorHandling(ordinal, propertyName, typeName, primitiveColumnType) OR shaper.GetColumnValueWithErrorHandling(ordinal, propertyName, typeName)
             Expression result;
             PrimitiveTypeKind primitiveColumnType;
             if (Helper.IsSpatialType(columnType, out primitiveColumnType))
             {
-                result = Expression.Call(Shaper_Parameter, Shaper_GetSpatialPropertyValueWithErrorHandling.MakeGenericMethod(propertyType), 
-                    Expression.Constant(ordinal), Expression.Constant(propertyName), Expression.Constant(typeName), Expression.Constant(primitiveColumnType, typeof(PrimitiveTypeKind)));
+                result = Expression.Call(
+                    Shaper_Parameter, Shaper_GetSpatialPropertyValueWithErrorHandling.MakeGenericMethod(propertyType),
+                    Expression.Constant(ordinal), Expression.Constant(propertyName), Expression.Constant(typeName),
+                    Expression.Constant(primitiveColumnType, typeof(PrimitiveTypeKind)));
             }
             else
             {
-                result = Expression.Call(Shaper_Parameter, Shaper_GetPropertyValueWithErrorHandling.MakeGenericMethod(propertyType), Expression.Constant(ordinal), Expression.Constant(propertyName), Expression.Constant(typeName));
+                result = Expression.Call(
+                    Shaper_Parameter, Shaper_GetPropertyValueWithErrorHandling.MakeGenericMethod(propertyType), Expression.Constant(ordinal),
+                    Expression.Constant(propertyName), Expression.Constant(typeName));
             }
             return result;
         }
@@ -1058,12 +1142,17 @@
             PrimitiveTypeKind primitiveColumnType;
             if (Helper.IsSpatialType(columnType, out primitiveColumnType))
             {
-                primitiveColumnType = Helper.IsGeographicType((PrimitiveType)columnType.EdmType) ? PrimitiveTypeKind.Geography : PrimitiveTypeKind.Geometry;
-                result = Expression.Call(Shaper_Parameter, Shaper_GetSpatialColumnValueWithErrorHandling.MakeGenericMethod(resultType), Expression.Constant(ordinal), Expression.Constant(primitiveColumnType, typeof(PrimitiveTypeKind)));
+                primitiveColumnType = Helper.IsGeographicType((PrimitiveType)columnType.EdmType)
+                                          ? PrimitiveTypeKind.Geography
+                                          : PrimitiveTypeKind.Geometry;
+                result = Expression.Call(
+                    Shaper_Parameter, Shaper_GetSpatialColumnValueWithErrorHandling.MakeGenericMethod(resultType),
+                    Expression.Constant(ordinal), Expression.Constant(primitiveColumnType, typeof(PrimitiveTypeKind)));
             }
             else
             {
-                result = Expression.Call(Shaper_Parameter, Shaper_GetColumnValueWithErrorHandling.MakeGenericMethod(resultType), Expression.Constant(ordinal));
+                result = Expression.Call(
+                    Shaper_Parameter, Shaper_GetColumnValueWithErrorHandling.MakeGenericMethod(resultType), Expression.Constant(ordinal));
             }
             return result;
         }
@@ -1094,7 +1183,7 @@
         private static Expression Emit_Shaper_GetState(int stateSlotNumber, Type type)
         {
             // (type)shaper.State[stateSlotNumber]
-            Expression result = Emit_EnsureType(Expression.ArrayIndex(Shaper_State, Expression.Constant(stateSlotNumber)), type);
+            var result = Emit_EnsureType(Expression.ArrayIndex(Shaper_State, Expression.Constant(stateSlotNumber)), type);
             return result;
         }
 
@@ -1104,7 +1193,8 @@
         private static Expression Emit_Shaper_SetState(int stateSlotNumber, Expression value)
         {
             // shaper.SetState<T>(stateSlotNumber, value)
-            Expression result = Expression.Call(Shaper_Parameter, Shaper_SetState.MakeGenericMethod(value.Type), Expression.Constant(stateSlotNumber), value);
+            Expression result = Expression.Call(
+                Shaper_Parameter, Shaper_SetState.MakeGenericMethod(value.Type), Expression.Constant(stateSlotNumber), value);
             return result;
         }
 
@@ -1114,9 +1204,11 @@
         private static Expression Emit_Shaper_SetStatePassthrough(int stateSlotNumber, Expression value)
         {
             // shaper.SetState<T>(stateSlotNumber, value)
-            Expression result = Expression.Call(Shaper_Parameter, Shaper_SetStatePassthrough.MakeGenericMethod(value.Type), Expression.Constant(stateSlotNumber), value);
+            Expression result = Expression.Call(
+                Shaper_Parameter, Shaper_SetStatePassthrough.MakeGenericMethod(value.Type), Expression.Constant(stateSlotNumber), value);
             return result;
         }
+
         #endregion
 
         #region ColumnMapVisitor implementation
@@ -1124,8 +1216,8 @@
         // utility accept that looks up CLR type
         private static TranslatorResult AcceptWithMappedType(Translator translator, ColumnMap columnMap)
         {
-            Type type = translator.DetermineClrType(columnMap.Type);
-            TranslatorResult result = columnMap.Accept(translator, new TranslatorArg(type));
+            var type = translator.DetermineClrType(columnMap.Type);
+            var result = columnMap.Accept(translator, new TranslatorArg(type));
             return result;
         }
 
@@ -1150,13 +1242,13 @@
             }
             else
             {
-                ComplexType complexType = (ComplexType)columnMap.Type.EdmType;
-                Type clrType = DetermineClrType(complexType);
-                ConstructorInfo constructor = GetConstructor(clrType);
+                var complexType = (ComplexType)columnMap.Type.EdmType;
+                var clrType = DetermineClrType(complexType);
+                var constructor = GetConstructor(clrType);
 
                 // Build expressions to read the property values from the source data 
                 // reader and bind them to their target properties
-                List<MemberBinding> propertyBindings = CreatePropertyBindings(columnMap, complexType.Properties);
+                var propertyBindings = CreatePropertyBindings(columnMap, complexType.Properties);
 
                 // We have all the property bindings now; go ahead and build the expression to
                 // construct the type and store the property values.
@@ -1189,12 +1281,12 @@
             //
             // We always need the entityKey, except when MergeOption.NoTracking and the
             // clrType doesn't derive from IEntityWithKey
-            EntityIdentity entityIdentity = columnMap.EntityIdentity;
+            var entityIdentity = columnMap.EntityIdentity;
             Expression entitySetReader = null;
-            Expression entityKeyReader = Emit_EntityKey_ctor(this, entityIdentity, false, out entitySetReader);
+            var entityKeyReader = Emit_EntityKey_ctor(this, entityIdentity, false, out entitySetReader);
 
             if (IsValueLayer)
-            {                
+            {
                 Expression nullCheckExpression = Expression.Not(Emit_EntityKey_HasValue(entityIdentity.Keys));
                 //Expression nullCheckExpression = Emit_EntityKey_HasValue(entityIdentity.Keys);
                 result = BuildExpressionToGetRecordState(columnMap, entityKeyReader, entitySetReader, nullCheckExpression);
@@ -1203,49 +1295,54 @@
             {
                 Expression constructEntity = null;
 
-                EntityType cSpaceType = (EntityType)columnMap.Type.EdmType;
+                var cSpaceType = (EntityType)columnMap.Type.EdmType;
                 Debug.Assert(cSpaceType.BuiltInTypeKind == BuiltInTypeKind.EntityType, "Type was " + cSpaceType.BuiltInTypeKind);
-                ClrEntityType oSpaceType = (ClrEntityType)LookupObjectMapping(cSpaceType).ClrType;
-                Type clrType = oSpaceType.ClrType;
+                var oSpaceType = (ClrEntityType)LookupObjectMapping(cSpaceType).ClrType;
+                var clrType = oSpaceType.ClrType;
 
                 // Build expressions to read the property values from the source data 
                 // reader and bind them to their target properties
-                List<MemberBinding> propertyBindings = CreatePropertyBindings(columnMap, cSpaceType.Properties);
+                var propertyBindings = CreatePropertyBindings(columnMap, cSpaceType.Properties);
 
                 // We have all the property bindings now; go ahead and build the expression to
                 // construct the entity or proxy and store the property values.  We'll wrap it with more
                 // stuff that needs to happen (or not) below.
-                EntityProxyTypeInfo proxyTypeInfo = EntityProxyFactory.GetProxyType(oSpaceType);
+                var proxyTypeInfo = EntityProxyFactory.GetProxyType(oSpaceType);
 
                 // If no proxy type exists for the entity, construct the regular entity object.
                 // If a proxy type does exist, examine the ObjectContext.ContextOptions.ProxyCreationEnabled flag
                 // to determine whether to create a regular or proxy entity object.
 
-                Expression constructNonProxyEntity = Emit_ConstructEntity(oSpaceType, propertyBindings, entityKeyReader, entitySetReader, arg, null);
+                var constructNonProxyEntity = Emit_ConstructEntity(
+                    oSpaceType, propertyBindings, entityKeyReader, entitySetReader, arg, null);
                 if (proxyTypeInfo == null)
                 {
                     constructEntity = constructNonProxyEntity;
                 }
                 else
                 {
-                    Expression constructProxyEntity = Emit_ConstructEntity(oSpaceType, propertyBindings, entityKeyReader, entitySetReader, arg, proxyTypeInfo);
+                    var constructProxyEntity = Emit_ConstructEntity(
+                        oSpaceType, propertyBindings, entityKeyReader, entitySetReader, arg, proxyTypeInfo);
 
-                    constructEntity = Expression.Condition(Shaper_ProxyCreationEnabled,
-                                                           constructProxyEntity,
-                                                           constructNonProxyEntity);
+                    constructEntity = Expression.Condition(
+                        Shaper_ProxyCreationEnabled,
+                        constructProxyEntity,
+                        constructNonProxyEntity);
                 }
 
                 // If we're tracking, call HandleEntity (or HandleIEntityWithKey or 
                 // HandleEntityAppendOnly) as appropriate
                 if (MergeOption.NoTracking != _mergeOption)
                 {
-                    Type actualType = proxyTypeInfo == null ? clrType : proxyTypeInfo.ProxyType;
-                    if (typeof(IEntityWithKey).IsAssignableFrom(actualType) && MergeOption.AppendOnly != _mergeOption)
+                    var actualType = proxyTypeInfo == null ? clrType : proxyTypeInfo.ProxyType;
+                    if (typeof(IEntityWithKey).IsAssignableFrom(actualType)
+                        && MergeOption.AppendOnly != _mergeOption)
                     {
-                        constructEntity = Expression.Call(Shaper_Parameter, Shaper_HandleIEntityWithKey.MakeGenericMethod(clrType),
-                                                                                            constructEntity,
-                                                                                            entitySetReader
-                                                                                            );
+                        constructEntity = Expression.Call(
+                            Shaper_Parameter, Shaper_HandleIEntityWithKey.MakeGenericMethod(clrType),
+                            constructEntity,
+                            entitySetReader
+                            );
                     }
                     else
                     {
@@ -1255,47 +1352,52 @@
                             // the cost of materialization when the entity is already in the state manager
 
                             //Func<Shaper, TEntity> entityDelegate = shaper => constructEntity(shaper);
-                            LambdaExpression entityDelegate = CreateInlineDelegate(constructEntity);
-                            constructEntity = Expression.Call(Shaper_Parameter, Shaper_HandleEntityAppendOnly.MakeGenericMethod(clrType),
-                                                                                            entityDelegate,
-                                                                                            entityKeyReader,
-                                                                                            entitySetReader
-                                                                                            );
+                            var entityDelegate = CreateInlineDelegate(constructEntity);
+                            constructEntity = Expression.Call(
+                                Shaper_Parameter, Shaper_HandleEntityAppendOnly.MakeGenericMethod(clrType),
+                                entityDelegate,
+                                entityKeyReader,
+                                entitySetReader
+                                );
                         }
                         else
                         {
-                            constructEntity = Expression.Call(Shaper_Parameter, Shaper_HandleEntity.MakeGenericMethod(clrType),
-                                                                                            constructEntity,
-                                                                                            entityKeyReader,
-                                                                                            entitySetReader
-                                                                                            );
+                            constructEntity = Expression.Call(
+                                Shaper_Parameter, Shaper_HandleEntity.MakeGenericMethod(clrType),
+                                constructEntity,
+                                entityKeyReader,
+                                entitySetReader
+                                );
                         }
                     }
                 }
                 else
                 {
-                    constructEntity = Expression.Call(Shaper_Parameter, Shaper_HandleEntityNoTracking.MakeGenericMethod(clrType),
-                                                                                            constructEntity
-                                                                                            );
+                    constructEntity = Expression.Call(
+                        Shaper_Parameter, Shaper_HandleEntityNoTracking.MakeGenericMethod(clrType),
+                        constructEntity
+                        );
                 }
 
                 // All the above is gated upon whether there really is an entity value; 
                 // we won't bother executing anything unless there is an entityKey value,
                 // otherwise we'll just return a typed null.
                 result = Expression.Condition(
-                                            Emit_EntityKey_HasValue(entityIdentity.Keys),
-                                            constructEntity,
-                                            Emit_WrappedNullConstant()
-                                            );
+                    Emit_EntityKey_HasValue(entityIdentity.Keys),
+                    constructEntity,
+                    Emit_WrappedNullConstant()
+                    );
             }
 
             return new TranslatorResult(result, arg.RequestedType);
         }
 
-        private Expression Emit_ConstructEntity(EntityType oSpaceType, IEnumerable<MemberBinding> propertyBindings, Expression entityKeyReader, Expression entitySetReader, TranslatorArg arg, EntityProxyTypeInfo proxyTypeInfo)
+        private Expression Emit_ConstructEntity(
+            EntityType oSpaceType, IEnumerable<MemberBinding> propertyBindings, Expression entityKeyReader, Expression entitySetReader,
+            TranslatorArg arg, EntityProxyTypeInfo proxyTypeInfo)
         {
-            bool isProxy = proxyTypeInfo != null;
-            Type clrType = oSpaceType.ClrType;
+            var isProxy = proxyTypeInfo != null;
+            var clrType = oSpaceType.ClrType;
             Type actualType;
 
             Expression constructEntity;
@@ -1307,14 +1409,15 @@
             }
             else
             {
-                ConstructorInfo constructor = GetConstructor(clrType);
+                var constructor = GetConstructor(clrType);
                 constructEntity = Expression.MemberInit(Expression.New(constructor), propertyBindings);
                 actualType = clrType;
             }
 
             // After calling the constructor, immediately create an IEntityWrapper instance for the entity.
-            constructEntity = Emit_EnsureTypeAndWrap(constructEntity, entityKeyReader, entitySetReader, arg.RequestedType, clrType, actualType,
-                                                     _mergeOption == MergeOption.NoTracking ? MergeOption.NoTracking : MergeOption.AppendOnly, isProxy);
+            constructEntity = Emit_EnsureTypeAndWrap(
+                constructEntity, entityKeyReader, entitySetReader, arg.RequestedType, clrType, actualType,
+                _mergeOption == MergeOption.NoTracking ? MergeOption.NoTracking : MergeOption.AppendOnly, isProxy);
 
             if (isProxy)
             {
@@ -1338,20 +1441,22 @@
         /// Along the way we'll keep track of non-public properties and properties that
         /// have link demands, so we can ensure enforce them.
         /// </summary>
-        private List<MemberBinding> CreatePropertyBindings(StructuredColumnMap columnMap, ReadOnlyMetadataCollection<EdmProperty> properties)
+        private List<MemberBinding> CreatePropertyBindings(
+            StructuredColumnMap columnMap, ReadOnlyMetadataCollection<EdmProperty> properties)
         {
-            List<MemberBinding> result = new List<MemberBinding>(columnMap.Properties.Length);
+            var result = new List<MemberBinding>(columnMap.Properties.Length);
 
-            ObjectTypeMapping mapping = LookupObjectMapping(columnMap.Type.EdmType);
+            var mapping = LookupObjectMapping(columnMap.Type.EdmType);
 
-            for (int i = 0; i < columnMap.Properties.Length; i++)
+            for (var i = 0; i < columnMap.Properties.Length; i++)
             {
-                EdmProperty edmProperty = mapping.GetPropertyMap(properties[i].Name).ClrProperty;
+                var edmProperty = mapping.GetPropertyMap(properties[i].Name).ClrProperty;
 
                 // get MethodInfo for setter
                 MethodInfo propertyAccessor;
                 Type propertyType;
-                LightweightCodeGenerator.ValidateSetterProperty(edmProperty.EntityDeclaringType, edmProperty.PropertySetterHandle, out propertyAccessor, out propertyType);
+                LightweightCodeGenerator.ValidateSetterProperty(
+                    edmProperty.EntityDeclaringType, edmProperty.PropertySetterHandle, out propertyAccessor, out propertyType);
 
                 // determine if any security checks are required
                 if (!LightweightCodeGenerator.IsPublic(propertyAccessor))
@@ -1360,19 +1465,20 @@
                 }
 
                 // get translation of property value
-                Expression valueReader = columnMap.Properties[i].Accept(this, new TranslatorArg(propertyType)).Expression;
+                var valueReader = columnMap.Properties[i].Accept(this, new TranslatorArg(propertyType)).Expression;
 
-                ScalarColumnMap scalarColumnMap = columnMap.Properties[i] as ScalarColumnMap;
+                var scalarColumnMap = columnMap.Properties[i] as ScalarColumnMap;
                 if (null != scalarColumnMap)
                 {
-                    string propertyName = propertyAccessor.Name.Substring(4); // substring to strip "set_"
+                    var propertyName = propertyAccessor.Name.Substring(4); // substring to strip "set_"
 
                     // create a value reader with error handling
-                    Expression valueReaderWithErrorHandling = Emit_Shaper_GetPropertyValueWithErrorHandling(propertyType, scalarColumnMap.ColumnPos, propertyName, propertyAccessor.DeclaringType.Name, scalarColumnMap.Type);
+                    var valueReaderWithErrorHandling = Emit_Shaper_GetPropertyValueWithErrorHandling(
+                        propertyType, scalarColumnMap.ColumnPos, propertyName, propertyAccessor.DeclaringType.Name, scalarColumnMap.Type);
                     _currentCoordinatorScratchpad.AddExpressionWithErrorHandling(valueReader, valueReaderWithErrorHandling);
                 }
 
-                Type entityDeclaringType = Type.GetTypeFromHandle(edmProperty.EntityDeclaringType);
+                var entityDeclaringType = Type.GetTypeFromHandle(edmProperty.EntityDeclaringType);
                 MemberBinding binding = Expression.Bind(GetProperty(propertyAccessor, entityDeclaringType), valueReader);
                 result.Add(binding);
             }
@@ -1392,15 +1498,16 @@
             {
                 declaringType = setterMethod.DeclaringType;
             }
-            BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
-            foreach (PropertyInfo propertyInfo in declaringType.GetProperties(bindingAttr))
+            var bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
+            foreach (var propertyInfo in declaringType.GetProperties(bindingAttr))
             {
                 if (propertyInfo.GetSetMethod(nonPublic: true) == setterMethod)
                 {
                     return propertyInfo;
                 }
             }
-            Debug.Fail("Should always find a property for the setterMethod since we got the setter method from a property in the first place.");
+            Debug.Fail(
+                "Should always find a property for the setterMethod since we got the setter method from a property in the first place.");
             return null;
         }
 
@@ -1414,13 +1521,13 @@
             // We're building a conditional ladder, where we'll compare each 
             // discriminator value with the one from the source data reader, and 
             // we'll pick that type if they match.
-            Expression discriminatorReader = AcceptWithMappedType(this, columnMap.TypeDiscriminator).Expression;
+            var discriminatorReader = AcceptWithMappedType(this, columnMap.TypeDiscriminator).Expression;
 
             if (IsValueLayer)
             {
                 result = Emit_EnsureType(
-                                BuildExpressionToGetRecordState(columnMap, null, null, Expression.Constant(true)),
-                                arg.RequestedType);
+                    BuildExpressionToGetRecordState(columnMap, null, null, Expression.Constant(true)),
+                    arg.RequestedType);
             }
             else
             {
@@ -1431,7 +1538,7 @@
             {
                 // determine CLR type for the type choice, and don't bother adding 
                 // this choice if it can't produce a result
-                Type type = DetermineClrType(typeChoice.Value.Type);
+                var type = DetermineClrType(typeChoice.Value.Type);
 
                 if (type.IsAbstract)
                 {
@@ -1444,19 +1551,22 @@
                 // For string types, we have to use a specific comparison that handles
                 // trailing spaces properly, not just the general equality test we use 
                 // elsewhere.
-                if (discriminatorReader.Type == typeof(string))
+                if (discriminatorReader.Type
+                    == typeof(string))
                 {
-                    discriminatorMatches = Expression.Call(Expression.Constant(TrailingSpaceStringComparer.Instance), IEqualityComparerOfString_Equals, discriminatorConstant, discriminatorReader);
+                    discriminatorMatches = Expression.Call(
+                        Expression.Constant(TrailingSpaceStringComparer.Instance), IEqualityComparerOfString_Equals, discriminatorConstant,
+                        discriminatorReader);
                 }
                 else
                 {
                     discriminatorMatches = Emit_Equal(discriminatorConstant, discriminatorReader);
                 }
 
-                result = Expression.Condition(discriminatorMatches,
-                                            typeChoice.Value.Accept(this, arg).Expression,
-                                            result);
-
+                result = Expression.Condition(
+                    discriminatorMatches,
+                    typeChoice.Value.Accept(this, arg).Expression,
+                    result);
             }
             return new TranslatorResult(result, arg.RequestedType);
         }
@@ -1467,8 +1577,9 @@
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         internal override TranslatorResult Visit(MultipleDiscriminatorPolymorphicColumnMap columnMap, TranslatorArg arg)
         {
-            MethodInfo multipleDiscriminatorPolymorphicColumnMapHelper = Translator_MultipleDiscriminatorPolymorphicColumnMapHelper.MakeGenericMethod(arg.RequestedType);
-            Expression result = (Expression)multipleDiscriminatorPolymorphicColumnMapHelper.Invoke(this, new object[] { columnMap, arg });
+            var multipleDiscriminatorPolymorphicColumnMapHelper =
+                Translator_MultipleDiscriminatorPolymorphicColumnMapHelper.MakeGenericMethod(arg.RequestedType);
+            var result = (Expression)multipleDiscriminatorPolymorphicColumnMapHelper.Invoke(this, new object[] { columnMap, arg });
             return new TranslatorResult(result, arg.RequestedType);
         }
 
@@ -1479,36 +1590,38 @@
         private Expression MultipleDiscriminatorPolymorphicColumnMapHelper<TElement>(MultipleDiscriminatorPolymorphicColumnMap columnMap)
         {
             // construct an array of discriminator values
-            Expression[] discriminatorReaders = new Expression[columnMap.TypeDiscriminators.Length];
-            for (int i = 0; i < discriminatorReaders.Length; i++)
+            var discriminatorReaders = new Expression[columnMap.TypeDiscriminators.Length];
+            for (var i = 0; i < discriminatorReaders.Length; i++)
             {
                 discriminatorReaders[i] = columnMap.TypeDiscriminators[i].Accept(this, new TranslatorArg(typeof(object))).Expression;
             }
             Expression discriminatorValues = Expression.NewArrayInit(typeof(object), discriminatorReaders);
 
             // Next build the expressions that will construct the type choices. An array of KeyValuePair<EntityType, Func<Shaper, TElement>>
-            List<Expression> elementDelegates = new List<Expression>();
-            Type typeDelegatePairType = typeof(KeyValuePair<EntityType, Func<Shaper, TElement>>);
-            ConstructorInfo typeDelegatePairConstructor = typeDelegatePairType.GetConstructor(new Type[] { typeof(EntityType), typeof(Func<Shaper, TElement>) });
+            var elementDelegates = new List<Expression>();
+            var typeDelegatePairType = typeof(KeyValuePair<EntityType, Func<Shaper, TElement>>);
+            var typeDelegatePairConstructor =
+                typeDelegatePairType.GetConstructor(new[] { typeof(EntityType), typeof(Func<Shaper, TElement>) });
             foreach (var typeChoice in columnMap.TypeChoices)
             {
-                Expression typeReader = Emit_EnsureType(AcceptWithMappedType(this, typeChoice.Value).UnwrappedExpression, typeof(TElement));
-                LambdaExpression typeReaderDelegate = CreateInlineDelegate(typeReader);
+                var typeReader = Emit_EnsureType(AcceptWithMappedType(this, typeChoice.Value).UnwrappedExpression, typeof(TElement));
+                var typeReaderDelegate = CreateInlineDelegate(typeReader);
                 Expression typeDelegatePair = Expression.New(
-                                                    typeDelegatePairConstructor, 
-                                                    Expression.Constant(typeChoice.Key), 
-                                                    typeReaderDelegate
-                                                    );
+                    typeDelegatePairConstructor,
+                    Expression.Constant(typeChoice.Key),
+                    typeReaderDelegate
+                    );
                 elementDelegates.Add(typeDelegatePair);
             }
 
             // invoke shaper.Discrimate({ discriminatorValue1...discriminatorValueN }, discriminateDelegate, elementDelegates)
-            MethodInfo shaperDiscriminateOfT = Shaper_Discriminate.MakeGenericMethod(typeof(TElement));
-            Expression result = Expression.Call(Shaper_Parameter, shaperDiscriminateOfT,
-                                                    discriminatorValues,
-                                                    Expression.Constant(columnMap.Discriminate),
-                                                    Expression.NewArrayInit(typeDelegatePairType, elementDelegates)
-                                                    );
+            var shaperDiscriminateOfT = Shaper_Discriminate.MakeGenericMethod(typeof(TElement));
+            Expression result = Expression.Call(
+                Shaper_Parameter, shaperDiscriminateOfT,
+                discriminatorValues,
+                Expression.Constant(columnMap.Discriminate),
+                Expression.NewArrayInit(typeDelegatePairType, elementDelegates)
+                );
             return result;
         }
 
@@ -1531,7 +1644,8 @@
             }
             else
             {
-                Debug.Assert(columnMap.Type.EdmType.BuiltInTypeKind == BuiltInTypeKind.RowType, "RecordColumnMap without RowType?"); // we kind of depend upon this 
+                Debug.Assert(columnMap.Type.EdmType.BuiltInTypeKind == BuiltInTypeKind.RowType, "RecordColumnMap without RowType?");
+                    // we kind of depend upon this 
                 Expression nullConstant;
 
                 // There are (at least) three different reasons we have a RecordColumnMap
@@ -1544,9 +1658,10 @@
                 }
                 else
                 {
-                    RowType spanRowType = (RowType)columnMap.Type.EdmType;
+                    var spanRowType = (RowType)columnMap.Type.EdmType;
 
-                    if (null != _spanIndex && _spanIndex.HasSpanMap(spanRowType))
+                    if (null != _spanIndex
+                        && _spanIndex.HasSpanMap(spanRowType))
                     {
                         result = HandleSpandexRecord(columnMap, arg, spanRowType);
                         nullConstant = Emit_WrappedNullConstant();
@@ -1568,15 +1683,16 @@
             return new TranslatorResult(result, arg.RequestedType);
         }
 
-        private Expression BuildExpressionToGetRecordState(StructuredColumnMap columnMap, Expression entityKeyReader, Expression entitySetReader, Expression nullCheckExpression)
+        private Expression BuildExpressionToGetRecordState(
+            StructuredColumnMap columnMap, Expression entityKeyReader, Expression entitySetReader, Expression nullCheckExpression)
         {
-            RecordStateScratchpad recordStateScratchpad = _currentCoordinatorScratchpad.CreateRecordStateScratchpad();
+            var recordStateScratchpad = _currentCoordinatorScratchpad.CreateRecordStateScratchpad();
 
-            int stateSlotNumber = AllocateStateSlot();
+            var stateSlotNumber = AllocateStateSlot();
             recordStateScratchpad.StateSlotNumber = stateSlotNumber;
 
-            int propertyCount = columnMap.Properties.Length;
-            int readerCount = (null != entityKeyReader) ? propertyCount + 1 : propertyCount;
+            var propertyCount = columnMap.Properties.Length;
+            var readerCount = (null != entityKeyReader) ? propertyCount + 1 : propertyCount;
 
             recordStateScratchpad.ColumnCount = propertyCount;
 
@@ -1584,30 +1700,31 @@
             // it may be a polymorphic type; eg: TREAT(Product AS DiscontinuedProduct); we
             // construct an EntityRecordInfo with a sentinel EntityNotValidKey as it's Key
             EntityType entityTypeMetadata = null;
-            if (TypeHelpers.TryGetEdmType<EntityType>(columnMap.Type, out entityTypeMetadata))
+            if (TypeHelpers.TryGetEdmType(columnMap.Type, out entityTypeMetadata))
             {
                 recordStateScratchpad.DataRecordInfo = new EntityRecordInfo(entityTypeMetadata, EntityKey.EntityNotValidKey, null);
             }
             else
             {
-                TypeUsage edmType = Helper.GetModelTypeUsage(columnMap.Type);
+                var edmType = Helper.GetModelTypeUsage(columnMap.Type);
                 recordStateScratchpad.DataRecordInfo = new DataRecordInfo(edmType);
             }
 
-            Expression[] propertyReaders = new Expression[readerCount];
-            string[] propertyNames = new string[recordStateScratchpad.ColumnCount];
-            TypeUsage[] typeUsages = new TypeUsage[recordStateScratchpad.ColumnCount];
+            var propertyReaders = new Expression[readerCount];
+            var propertyNames = new string[recordStateScratchpad.ColumnCount];
+            var typeUsages = new TypeUsage[recordStateScratchpad.ColumnCount];
 
-            for (int ordinal = 0; ordinal < propertyCount; ordinal++)
+            for (var ordinal = 0; ordinal < propertyCount; ordinal++)
             {
-                Expression propertyReader = columnMap.Properties[ordinal].Accept(this, new TranslatorArg(typeof(Object))).Expression;
+                var propertyReader = columnMap.Properties[ordinal].Accept(this, new TranslatorArg(typeof(Object))).Expression;
 
                 // recordState.SetColumnValue(i, propertyReader ?? DBNull.Value)
-                propertyReaders[ordinal] = Expression.Call(Shaper_Parameter, Shaper_SetColumnValue, 
-                                                        Expression.Constant(stateSlotNumber),
-                                                        Expression.Constant(ordinal), 
-                                                        Expression.Coalesce(propertyReader, DBNull_Value)
-                                                    );
+                propertyReaders[ordinal] = Expression.Call(
+                    Shaper_Parameter, Shaper_SetColumnValue,
+                    Expression.Constant(stateSlotNumber),
+                    Expression.Constant(ordinal),
+                    Expression.Coalesce(propertyReader, DBNull_Value)
+                    );
 
                 propertyNames[ordinal] = columnMap.Properties[ordinal].Name;
                 typeUsages[ordinal] = columnMap.Properties[ordinal].Type;
@@ -1615,10 +1732,11 @@
 
             if (null != entityKeyReader)
             {
-                propertyReaders[readerCount - 1] = Expression.Call(Shaper_Parameter, Shaper_SetEntityRecordInfo,
-                                                        Expression.Constant(stateSlotNumber),
-                                                        entityKeyReader,
-                                                        entitySetReader);
+                propertyReaders[readerCount - 1] = Expression.Call(
+                    Shaper_Parameter, Shaper_SetEntityRecordInfo,
+                    Expression.Constant(stateSlotNumber),
+                    entityKeyReader,
+                    entitySetReader);
             }
 
             recordStateScratchpad.GatherData = Emit_BitwiseOr(propertyReaders);
@@ -1628,13 +1746,15 @@
             // Finally, build the expression to read the recordState from the shaper state
 
             // (RecordState)shaperState.State[stateSlotNumber].GatherData(shaper)           
-            Expression result = Expression.Call(Emit_Shaper_GetState(stateSlotNumber, typeof(RecordState)), RecordState_GatherData, Shaper_Parameter);
+            Expression result = Expression.Call(
+                Emit_Shaper_GetState(stateSlotNumber, typeof(RecordState)), RecordState_GatherData, Shaper_Parameter);
 
             // If there's a null check, then everything above is gated upon whether 
             // it's value is DBNull.Value.
             if (null != nullCheckExpression)
             {
-                Expression nullResult = Expression.Call(Emit_Shaper_GetState(stateSlotNumber, typeof(RecordState)), RecordState_SetNullRecord);
+                Expression nullResult = Expression.Call(
+                    Emit_Shaper_GetState(stateSlotNumber, typeof(RecordState)), RecordState_SetNullRecord);
                 // nullCheckExpression ? (type)null : result
                 result = Expression.Condition(nullCheckExpression, nullResult, result);
             }
@@ -1647,12 +1767,12 @@
         /// </summary>
         private Expression HandleLinqRecord(RecordColumnMap columnMap, InitializerMetadata initializerMetadata)
         {
-            List<TranslatorResult> propertyReaders = new List<TranslatorResult>(columnMap.Properties.Length);
+            var propertyReaders = new List<TranslatorResult>(columnMap.Properties.Length);
 
             foreach (var pair in columnMap.Properties.Zip(initializerMetadata.GetChildTypes()))
             {
-                ColumnMap propertyColumnMap = pair.Key;
-                Type type = pair.Value;
+                var propertyColumnMap = pair.Key;
+                var type = pair.Value;
 
                 // Note that we're not just blindly using the type from the column map
                 // because we need to match the type thatthe initializer says it needs; 
@@ -1662,11 +1782,11 @@
                     type = DetermineClrType(propertyColumnMap.Type);
                 }
 
-                TranslatorResult propertyReader = propertyColumnMap.Accept(this, new TranslatorArg(type));
+                var propertyReader = propertyColumnMap.Accept(this, new TranslatorArg(type));
                 propertyReaders.Add(propertyReader);
             }
 
-            Expression result = initializerMetadata.Emit(this, propertyReaders);
+            var result = initializerMetadata.Emit(this, propertyReaders);
             return result;
         }
 
@@ -1679,10 +1799,10 @@
 
             // Build an array of expressions that read the individual values from the 
             // source data reader.
-            Expression[] columnReaders = new Expression[columnMap.Properties.Length];
-            for (int i = 0; i < columnReaders.Length; i++)
+            var columnReaders = new Expression[columnMap.Properties.Length];
+            for (var i = 0; i < columnReaders.Length; i++)
             {
-                Expression columnReader = AcceptWithMappedType(this, columnMap.Properties[i]).UnwrappedExpression;
+                var columnReader = AcceptWithMappedType(this, columnMap.Properties[i]).UnwrappedExpression;
 
                 // ((object)columnReader) ?? DBNull.Value
                 columnReaders[i] = Expression.Coalesce(Emit_EnsureType(columnReader, typeof(object)), DBNull_Value);
@@ -1690,11 +1810,10 @@
             // new object[] {columnReader0..columnReaderN}
             Expression columnReaderArray = Expression.NewArrayInit(typeof(object), columnReaders);
 
-
             // Get an expression representing the TypeUsage of the MaterializedDataRecord 
             // we're about to construct; we need to remove the span information from it, 
             // though, since we don't want to surface that...
-            TypeUsage type = columnMap.Type;
+            var type = columnMap.Type;
             if (null != _spanIndex)
             {
                 type = _spanIndex.GetSpannedRowType(spanRowType) ?? type;
@@ -1702,7 +1821,8 @@
             Expression typeUsage = Expression.Constant(type, typeof(TypeUsage));
 
             // new MaterializedDataRecord(Shaper.Workspace, typeUsage, values)
-            Expression result = Emit_EnsureType(Expression.New(MaterializedDataRecord_ctor, Shaper_Workspace, typeUsage, columnReaderArray), arg.RequestedType);
+            var result = Emit_EnsureType(
+                Expression.New(MaterializedDataRecord_ctor, Shaper_Workspace, typeUsage, columnReaderArray), arg.RequestedType);
             return result;
         }
 
@@ -1711,44 +1831,50 @@
         /// </summary>
         private Expression HandleSpandexRecord(RecordColumnMap columnMap, TranslatorArg arg, RowType spanRowType)
         {
-            Dictionary<int, AssociationEndMember> spanMap = _spanIndex.GetSpanMap(spanRowType);
+            var spanMap = _spanIndex.GetSpanMap(spanRowType);
 
             // First, build the expression to materialize the root item.
-            Expression result = columnMap.Properties[0].Accept(this, arg).Expression;
+            var result = columnMap.Properties[0].Accept(this, arg).Expression;
 
             // Now build expressions that call into the appropriate shaper method
             // for the type of span for each spanned item.
-            for (int i = 1; i < columnMap.Properties.Length; i++)
+            for (var i = 1; i < columnMap.Properties.Length; i++)
             {
-                AssociationEndMember targetMember = spanMap[i];
-                TranslatorResult propertyTranslatorResult = AcceptWithMappedType(this, columnMap.Properties[i]);
-                Expression spannedResultReader = propertyTranslatorResult.Expression;
+                var targetMember = spanMap[i];
+                var propertyTranslatorResult = AcceptWithMappedType(this, columnMap.Properties[i]);
+                var spannedResultReader = propertyTranslatorResult.Expression;
 
                 // figure out the flavor of the span
-                CollectionTranslatorResult collectionTranslatorResult = propertyTranslatorResult as CollectionTranslatorResult;
+                var collectionTranslatorResult = propertyTranslatorResult as CollectionTranslatorResult;
                 if (null != collectionTranslatorResult)
                 {
-                    Expression expressionToGetCoordinator = collectionTranslatorResult.ExpressionToGetCoordinator;
+                    var expressionToGetCoordinator = collectionTranslatorResult.ExpressionToGetCoordinator;
 
                     // full span collection
-                    Type elementType = spannedResultReader.Type.GetGenericArguments()[0];
+                    var elementType = spannedResultReader.Type.GetGenericArguments()[0];
 
-                    MethodInfo handleFullSpanCollectionMethod = Shaper_HandleFullSpanCollection.MakeGenericMethod(arg.RequestedType, elementType);
-                    result = Expression.Call(Shaper_Parameter, handleFullSpanCollectionMethod, result, expressionToGetCoordinator, Expression.Constant(targetMember));
+                    var handleFullSpanCollectionMethod = Shaper_HandleFullSpanCollection.MakeGenericMethod(arg.RequestedType, elementType);
+                    result = Expression.Call(
+                        Shaper_Parameter, handleFullSpanCollectionMethod, result, expressionToGetCoordinator,
+                        Expression.Constant(targetMember));
                 }
                 else
                 {
-                    if (typeof(EntityKey) == spannedResultReader.Type)
+                    if (typeof(EntityKey)
+                        == spannedResultReader.Type)
                     {
                         // relationship span
-                        MethodInfo handleRelationshipSpanMethod = Shaper_HandleRelationshipSpan.MakeGenericMethod(arg.RequestedType);
-                        result = Expression.Call(Shaper_Parameter, handleRelationshipSpanMethod, result, spannedResultReader, Expression.Constant(targetMember));
+                        var handleRelationshipSpanMethod = Shaper_HandleRelationshipSpan.MakeGenericMethod(arg.RequestedType);
+                        result = Expression.Call(
+                            Shaper_Parameter, handleRelationshipSpanMethod, result, spannedResultReader, Expression.Constant(targetMember));
                     }
                     else
                     {
                         // full span element
-                        MethodInfo handleFullSpanElementMethod = Shaper_HandleFullSpanElement.MakeGenericMethod(arg.RequestedType, spannedResultReader.Type);
-                        result = Expression.Call(Shaper_Parameter, handleFullSpanElementMethod, result, spannedResultReader, Expression.Constant(targetMember));
+                        var handleFullSpanElementMethod = Shaper_HandleFullSpanElement.MakeGenericMethod(
+                            arg.RequestedType, spannedResultReader.Type);
+                        result = Expression.Call(
+                            Shaper_Parameter, handleFullSpanElementMethod, result, spannedResultReader, Expression.Constant(targetMember));
                     }
                 }
             }
@@ -1786,23 +1912,23 @@
         /// <summary>
         /// Common code for both Simple and Discrminated Column Maps.
         /// </summary>
-        private TranslatorResult ProcessCollectionColumnMap(CollectionColumnMap columnMap, TranslatorArg arg, ColumnMap discriminatorColumnMap, object discriminatorValue)
+        private TranslatorResult ProcessCollectionColumnMap(
+            CollectionColumnMap columnMap, TranslatorArg arg, ColumnMap discriminatorColumnMap, object discriminatorValue)
         {
-            Type elementType = DetermineElementType(arg.RequestedType, columnMap);
+            var elementType = DetermineElementType(arg.RequestedType, columnMap);
 
             // CoordinatorScratchpad aggregates information about the current nested
             // result (represented by the given CollectionColumnMap)
-            CoordinatorScratchpad coordinatorScratchpad = new CoordinatorScratchpad(elementType);
+            var coordinatorScratchpad = new CoordinatorScratchpad(elementType);
 
             // enter scope for current coordinator when translating children, etc.
             EnterCoordinatorTranslateScope(coordinatorScratchpad);
 
-
-            ColumnMap elementColumnMap = columnMap.Element;
+            var elementColumnMap = columnMap.Element;
 
             if (IsValueLayer)
             {
-                StructuredColumnMap structuredElement = elementColumnMap as StructuredColumnMap;
+                var structuredElement = elementColumnMap as StructuredColumnMap;
 
                 // If we have a collection of non-structured types we have to put 
                 // a structure around it, because we don't have data readers of 
@@ -1810,7 +1936,7 @@
                 // this structure can't ever be null.
                 if (null == structuredElement)
                 {
-                    ColumnMap[] columnMaps = new ColumnMap[1] { columnMap.Element };
+                    var columnMaps = new ColumnMap[1] { columnMap.Element };
                     elementColumnMap = new RecordColumnMap(columnMap.Element.Type, columnMap.Element.Name, columnMaps, null);
                 }
             }
@@ -1819,7 +1945,7 @@
             // from the source data reader.
             // We use UnconvertedExpression here so we can defer doing type checking in case
             // we need to translate to a POCO collection later in the process.
-            Expression elementReader = elementColumnMap.Accept(this, new TranslatorArg(elementType)).UnconvertedExpression;
+            var elementReader = elementColumnMap.Accept(this, new TranslatorArg(elementType)).UnconvertedExpression;
 
             // Build the expression(s) that read the collection's keys from the source
             // data reader; note that the top level collection may not have keys if there
@@ -1829,9 +1955,9 @@
             if (null != columnMap.Keys)
             {
                 keyReaders = new Expression[columnMap.Keys.Length];
-                for (int i = 0; i < keyReaders.Length; i++)
+                for (var i = 0; i < keyReaders.Length; i++)
                 {
-                    Expression keyReader = AcceptWithMappedType(this, columnMap.Keys[i]).Expression;
+                    var keyReader = AcceptWithMappedType(this, columnMap.Keys[i]).Expression;
                     keyReaders[i] = keyReader;
                 }
             }
@@ -1849,8 +1975,10 @@
             }
 
             // get expression retrieving the coordinator
-            Expression expressionToGetCoordinator = BuildExpressionToGetCoordinator(elementType, elementReader, keyReaders, discriminatorReader, discriminatorValue, coordinatorScratchpad);
-            MethodInfo getElementsExpression = typeof(Coordinator<>).MakeGenericType(elementType).GetMethod("GetElements", BindingFlags.NonPublic | BindingFlags.Instance);
+            var expressionToGetCoordinator = BuildExpressionToGetCoordinator(
+                elementType, elementReader, keyReaders, discriminatorReader, discriminatorValue, coordinatorScratchpad);
+            var getElementsExpression = typeof(Coordinator<>).MakeGenericType(elementType).GetMethod(
+                "GetElements", BindingFlags.NonPublic | BindingFlags.Instance);
 
             Expression result;
             if (IsValueLayer)
@@ -1879,7 +2007,7 @@
                         throw EntityUtil.InvalidOperation(Strings.ObjectQuery_UnableToMaterializeArbitaryProjectionType(arg.RequestedType));
                     }
 
-                    Type listOfElementType = typeof(List<>).MakeGenericType(innerElementType);
+                    var listOfElementType = typeof(List<>).MakeGenericType(innerElementType);
                     if (typeToInstantiate != listOfElementType)
                     {
                         coordinatorScratchpad.InitializeCollection = Emit_EnsureType(
@@ -1896,8 +2024,8 @@
                     if (!arg.RequestedType.IsAssignableFrom(result.Type))
                     {
                         // new CompensatingCollection<TElement>(_collectionReader)
-                        Type compensatingCollectionType = typeof(CompensatingCollection<>).MakeGenericType(elementType);
-                        ConstructorInfo constructorInfo = compensatingCollectionType.GetConstructors()[0];
+                        var compensatingCollectionType = typeof(CompensatingCollection<>).MakeGenericType(elementType);
+                        var constructorInfo = compensatingCollectionType.GetConstructors()[0];
                         result = Emit_EnsureType(Expression.New(constructorInfo, result), compensatingCollectionType);
                     }
                 }
@@ -1925,7 +2053,8 @@
                 if (result == collectionType)
                 {
                     // if the user isn't asking for a CLR collection type (e.g. ObjectQuery<object>("{{1, 2}}")), we choose for them
-                    TypeUsage edmElementType = ((CollectionType)columnMap.Type.EdmType).TypeUsage; // the TypeUsage of the Element of the collection.
+                    var edmElementType = ((CollectionType)columnMap.Type.EdmType).TypeUsage;
+                        // the TypeUsage of the Element of the collection.
                     result = DetermineClrType(edmElementType);
                 }
             }
@@ -1962,9 +2091,11 @@
         /// been building into the CoordinatorScratchpad, which we'll compile
         /// later, once we've left the visitor.
         /// </summary>
-        private Expression BuildExpressionToGetCoordinator(Type elementType, Expression element, Expression[] keyReaders, Expression discriminator, object discriminatorValue, CoordinatorScratchpad coordinatorScratchpad)
+        private Expression BuildExpressionToGetCoordinator(
+            Type elementType, Expression element, Expression[] keyReaders, Expression discriminator, object discriminatorValue,
+            CoordinatorScratchpad coordinatorScratchpad)
         {
-            int stateSlotNumber = AllocateStateSlot();
+            var stateSlotNumber = AllocateStateSlot();
             coordinatorScratchpad.StateSlotNumber = stateSlotNumber;
 
             // Ensure that the element type of the collec element translator
@@ -1973,23 +2104,24 @@
             // Build expressions to set the key values into their state slots, and
             // to compare the current values from the source reader with the values
             // in the slots.
-            List<Expression> setKeyTerms = new List<Expression>(keyReaders.Length);
-            List<Expression> checkKeyTerms = new List<Expression>(keyReaders.Length);
+            var setKeyTerms = new List<Expression>(keyReaders.Length);
+            var checkKeyTerms = new List<Expression>(keyReaders.Length);
 
-            foreach (Expression keyReader in keyReaders)
+            foreach (var keyReader in keyReaders)
             {
                 // allocate space for the key value in the reader state
-                int keyStateSlotNumber = AllocateStateSlot();
+                var keyStateSlotNumber = AllocateStateSlot();
 
                 // SetKey: readerState.SetState<T>(stateSlot, keyReader)
                 setKeyTerms.Add(Emit_Shaper_SetState(keyStateSlotNumber, keyReader));
 
                 // CheckKey: ((T)readerState.State[ordinal]).Equals(keyValue)
-                checkKeyTerms.Add(Emit_Equal(
-                                        Emit_Shaper_GetState(keyStateSlotNumber, keyReader.Type), 
-                                        keyReader
-                                        )
-                                 );
+                checkKeyTerms.Add(
+                    Emit_Equal(
+                        Emit_Shaper_GetState(keyStateSlotNumber, keyReader.Type),
+                        keyReader
+                        )
+                    );
             }
 
             // For setting keys, we use BitwiseOr so that we don't short-circuit (all  
@@ -2003,15 +2135,15 @@
             if (null != discriminator)
             {
                 // discriminatorValue == discriminator
-                coordinatorScratchpad.HasData = Emit_Equal(   
-                                                    Expression.Constant(discriminatorValue, discriminator.Type), 
-                                                    discriminator
-                                                    );
+                coordinatorScratchpad.HasData = Emit_Equal(
+                    Expression.Constant(discriminatorValue, discriminator.Type),
+                    discriminator
+                    );
             }
 
             // Finally, build the expression to read the coordinator from the state
             // (Coordinator<elementType>)readerState.State[stateOrdinal]
-            Expression result = Emit_Shaper_GetState(stateSlotNumber, typeof(Coordinator<>).MakeGenericType(elementType));
+            var result = Emit_Shaper_GetState(stateSlotNumber, typeof(Coordinator<>).MakeGenericType(elementType));
             return result;
         }
 
@@ -2027,15 +2159,15 @@
         /// </summary>
         internal override TranslatorResult Visit(RefColumnMap columnMap, TranslatorArg arg)
         {
-            EntityIdentity entityIdentity = columnMap.EntityIdentity;
+            var entityIdentity = columnMap.EntityIdentity;
             Expression entitySetReader; // Ignored here; used when constructing Entities
 
             // hasValue ? entityKey : (EntityKey)null
             Expression result = Expression.Condition(
-                                                Emit_EntityKey_HasValue(entityIdentity.Keys),
-                                                Emit_EntityKey_ctor(this, entityIdentity, true, out entitySetReader),
-                                                Expression.Constant(null, typeof(EntityKey))
-                                                );
+                Emit_EntityKey_HasValue(entityIdentity.Keys),
+                Emit_EntityKey_ctor(this, entityIdentity, true, out entitySetReader),
+                Expression.Constant(null, typeof(EntityKey))
+                );
             return new TranslatorResult(result, arg.RequestedType);
         }
 
@@ -2048,11 +2180,11 @@
         /// </summary>
         internal override TranslatorResult Visit(ScalarColumnMap columnMap, TranslatorArg arg)
         {
-            Type type = arg.RequestedType;
-            TypeUsage columnType = columnMap.Type;
-            int ordinal = columnMap.ColumnPos;
+            var type = arg.RequestedType;
+            var columnType = columnMap.Type;
+            var ordinal = columnMap.ColumnPos;
             Expression result;
-            
+
             // 1. Create an expression to access the column value as an instance of the correct type. For non-spatial types this requires a call to one of the
             //    DbDataReader GetXXX methods; spatial values must be read using the provider's spatial services implementation.
             // 2. If the type was nullable (strings, byte[], Nullable<T>), wrap the expression with a check for the DBNull value and produce the correct typed null instead.
@@ -2062,63 +2194,77 @@
             PrimitiveTypeKind typeKind;
             if (Helper.IsSpatialType(columnType, out typeKind))
             {
-                Debug.Assert(Helper.IsGeographicType((PrimitiveType)columnType.EdmType) || Helper.IsGeometricType((PrimitiveType)columnType.EdmType), "Spatial primitive type is neither Geometry or Geography?");
-                result = Emit_Conditional_NotDBNull(Helper.IsGeographicType((PrimitiveType)columnType.EdmType) ? Emit_EnsureType(Emit_Shaper_GetGeographyColumnValue(ordinal), type)
-                                                                                            : Emit_EnsureType(Emit_Shaper_GetGeometryColumnValue(ordinal), type),
-                                                    ordinal, type);
+                Debug.Assert(
+                    Helper.IsGeographicType((PrimitiveType)columnType.EdmType) || Helper.IsGeometricType((PrimitiveType)columnType.EdmType),
+                    "Spatial primitive type is neither Geometry or Geography?");
+                result =
+                    Emit_Conditional_NotDBNull(
+                        Helper.IsGeographicType((PrimitiveType)columnType.EdmType)
+                            ? Emit_EnsureType(Emit_Shaper_GetGeographyColumnValue(ordinal), type)
+                            : Emit_EnsureType(Emit_Shaper_GetGeometryColumnValue(ordinal), type),
+                        ordinal, type);
             }
             else
             {
                 bool needsNullableCheck;
-                MethodInfo readerMethod = GetReaderMethod(type, out needsNullableCheck);
+                var readerMethod = GetReaderMethod(type, out needsNullableCheck);
 
                 result = Expression.Call(Shaper_Reader, readerMethod, Expression.Constant(ordinal));
 
                 // if the requested type is a nullable enum we need to cast it first to the non-nullable enum type to avoid InvalidCastException.
                 // Note that we guard against null values by wrapping the expression with DbNullCheck later. Also we don't actually 
                 // look at the type of the value returned by reader. If the value is not castable to enum we will fail with cast exception.
-                Type nonNullableType = TypeSystem.GetNonNullableType(type);
-                if (nonNullableType.IsEnum && nonNullableType != type)
+                var nonNullableType = TypeSystem.GetNonNullableType(type);
+                if (nonNullableType.IsEnum
+                    && nonNullableType != type)
                 {
-                    Debug.Assert(needsNullableCheck, "This is a nullable enum so needsNullableCheck should be true to emit code that handles null values read from the reader.");
+                    Debug.Assert(
+                        needsNullableCheck,
+                        "This is a nullable enum so needsNullableCheck should be true to emit code that handles null values read from the reader.");
 
                     result = Expression.Convert(result, nonNullableType);
                 }
-                else if(type == typeof(object))
+                else if (type == typeof(object))
                 {
-                    Debug.Assert(!needsNullableCheck, "If the requested type is object there is no special handling for null values returned from the reader.");
+                    Debug.Assert(
+                        !needsNullableCheck,
+                        "If the requested type is object there is no special handling for null values returned from the reader.");
 
                     // special case for an OSpace query where the requested type is object but the column type is of an enum type. In this case
                     // we want to return a boxed value of enum type instead a boxed value of the enum underlying type. We also need to handle null
                     // values to return DBNull to be consistent with behavior for primitive types (e.g. int)
-                    if (!IsValueLayer && TypeSemantics.IsEnumerationType(columnType))
+                    if (!IsValueLayer
+                        && TypeSemantics.IsEnumerationType(columnType))
                     {
                         result = Expression.Condition(
-                                    Emit_Reader_IsDBNull(ordinal),
-                                        result,
-                                        Expression.Convert(Expression.Convert(result, TypeSystem.GetNonNullableType(DetermineClrType(columnType.EdmType))), typeof(object)));
+                            Emit_Reader_IsDBNull(ordinal),
+                            result,
+                            Expression.Convert(
+                                Expression.Convert(result, TypeSystem.GetNonNullableType(DetermineClrType(columnType.EdmType))),
+                                typeof(object)));
                     }
                 }
 
                 // (type)shaper.Reader.Get???(ordinal)
                 result = Emit_EnsureType(result, type);
-                
+
                 if (needsNullableCheck)
                 {
                     result = Emit_Conditional_NotDBNull(result, ordinal, type);
                 }
             }
 
-            Expression resultWithErrorHandling = Emit_Shaper_GetColumnValueWithErrorHandling(arg.RequestedType, ordinal, columnType);
+            var resultWithErrorHandling = Emit_Shaper_GetColumnValueWithErrorHandling(arg.RequestedType, ordinal, columnType);
             _currentCoordinatorScratchpad.AddExpressionWithErrorHandling(result, resultWithErrorHandling);
             return new TranslatorResult(result, type);
         }
 
         private static Expression Emit_Conditional_NotDBNull(Expression result, int ordinal, Type columnType)
         {
-            result = Expression.Condition(Emit_Reader_IsDBNull(ordinal),
-                                          Expression.Constant(TypeSystem.GetDefaultValue(columnType), columnType),
-                                          result);
+            result = Expression.Condition(
+                Emit_Reader_IsDBNull(ordinal),
+                Expression.Constant(TypeSystem.GetDefaultValue(columnType), columnType),
+                result);
             return result;
         }
 
@@ -2130,14 +2276,14 @@
             isNullable = false;
 
             // determine if this is a Nullable<T>
-            Type underlyingType = Nullable.GetUnderlyingType(type);
+            var underlyingType = Nullable.GetUnderlyingType(type);
             if (null != underlyingType)
             {
                 isNullable = true;
                 type = underlyingType;
             }
-            
-            TypeCode typeCode = Type.GetTypeCode(type);
+
+            var typeCode = Type.GetTypeCode(type);
 
             switch (typeCode)
             {
@@ -2178,7 +2324,8 @@
                         // Guid doesn't have a type code
                         result = DbDataReader_GetGuid;
                     }
-                    else if (typeof(TimeSpan) == type ||
+                    else if (typeof(TimeSpan) == type
+                             ||
                              typeof(DateTimeOffset) == type)
                     {
                         // TimeSpan and DateTimeOffset don't have a type code or a specific

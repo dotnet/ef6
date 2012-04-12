@@ -1,22 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Entity.Core.EntityModel;
-using System.Diagnostics;
-using System.Text;
-using System.Xml.Serialization;
-using System.Xml;
-using System.Xml.Schema;
-using System.IO;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Globalization;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Common;
+    using System.Diagnostics;
+
     internal class CacheForPrimitiveTypes
     {
         #region Fields
+
         // The primitive type kind is a list of enum which the EDM model 
         // Every specific instantiation of the model should map their 
         // primitive types to the edm primitive types.
@@ -27,10 +19,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // Value for the cache: List<PrimitiveType>.  A list is used because there an be multiple types mapping to the
         // same primitive type kind.  For example, sqlserver has multiple string types.
 
-        private List<PrimitiveType>[] _primitiveTypeMap = new List<PrimitiveType>[EdmConstants.NumPrimitiveTypes];
+        private readonly List<PrimitiveType>[] _primitiveTypeMap = new List<PrimitiveType>[EdmConstants.NumPrimitiveTypes];
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Add the given primitive type to the primitive type cache
         /// </summary>
@@ -38,7 +32,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal void Add(PrimitiveType type)
         {
             // Get to the list
-            List<PrimitiveType> primitiveTypes = EntityUtil.CheckArgumentOutOfRange(_primitiveTypeMap, (int)type.PrimitiveTypeKind, "primitiveTypeKind");
+            var primitiveTypes = EntityUtil.CheckArgumentOutOfRange(_primitiveTypeMap, (int)type.PrimitiveTypeKind, "primitiveTypeKind");
 
             // If there isn't a list for the given model type, create one and add it
             if (primitiveTypes == null)
@@ -65,8 +59,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             type = null;
 
             // Now, see if we have any types for this model type, if so, loop through to find the best matching one
-            List<PrimitiveType> primitiveTypes = EntityUtil.CheckArgumentOutOfRange(_primitiveTypeMap, (int)primitiveTypeKind, "primitiveTypeKind");
-            if ((null != primitiveTypes) && (0 < primitiveTypes.Count))
+            var primitiveTypes = EntityUtil.CheckArgumentOutOfRange(_primitiveTypeMap, (int)primitiveTypeKind, "primitiveTypeKind");
+            if ((null != primitiveTypes)
+                && (0 < primitiveTypes.Count))
             {
                 if (primitiveTypes.Count == 1)
                 {
@@ -76,7 +71,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 if (facets == null)
                 {
-                    FacetDescription[] facetDescriptions = EdmProviderManifest.GetInitialFacetDescriptions(primitiveTypeKind);
+                    var facetDescriptions = EdmProviderManifest.GetInitialFacetDescriptions(primitiveTypeKind);
                     if (facetDescriptions == null)
                     {
                         type = primitiveTypes[0];
@@ -84,19 +79,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     }
 
                     Debug.Assert(facetDescriptions.Length > 0);
-                    facets = CacheForPrimitiveTypes.CreateInitialFacets(facetDescriptions);
+                    facets = CreateInitialFacets(facetDescriptions);
                 }
 
                 Debug.Assert(type == null, "type must be null here");
-                bool isMaxLengthSentinel = false;
+                var isMaxLengthSentinel = false;
 
                 // Create a dictionary of facets for easy lookup
-                foreach (Facet facet in facets)
+                foreach (var facet in facets)
                 {
                     if ((primitiveTypeKind == PrimitiveTypeKind.String ||
                          primitiveTypeKind == PrimitiveTypeKind.Binary) &&
                         facet.Value != null &&
-                        facet.Name == EdmProviderManifest.MaxLengthFacetName &&
+                        facet.Name == DbProviderManifest.MaxLengthFacetName
+                        &&
                         Helper.IsUnboundedFacetValue(facet))
                     {
                         // MaxLength has the sentinel value. So this facet need not be added.
@@ -105,20 +101,22 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     }
                 }
 
-                int maxLength = 0;
+                var maxLength = 0;
                 // Find a primitive type with the matching constraint
-                foreach (PrimitiveType primitiveType in primitiveTypes)
+                foreach (var primitiveType in primitiveTypes)
                 {
                     if (isMaxLengthSentinel)
                     {
                         if (type == null)
                         {
                             type = primitiveType;
-                            maxLength = Helper.GetFacet(primitiveType.FacetDescriptions, EdmProviderManifest.MaxLengthFacetName).MaxValue.Value;
+                            maxLength =
+                                Helper.GetFacet(primitiveType.FacetDescriptions, DbProviderManifest.MaxLengthFacetName).MaxValue.Value;
                         }
                         else
                         {
-                            int newMaxLength = Helper.GetFacet(primitiveType.FacetDescriptions, EdmProviderManifest.MaxLengthFacetName).MaxValue.Value;
+                            var newMaxLength =
+                                Helper.GetFacet(primitiveType.FacetDescriptions, DbProviderManifest.MaxLengthFacetName).MaxValue.Value;
                             if (newMaxLength > maxLength)
                             {
                                 type = primitiveType;
@@ -144,9 +142,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Debug.Assert(facetDescriptions != null && facetDescriptions.Length > 0);
 
-            Facet[] facets = new Facet[facetDescriptions.Length];
+            var facets = new Facet[facetDescriptions.Length];
 
-            for (int i = 0; i < facetDescriptions.Length; ++i)
+            for (var i = 0; i < facetDescriptions.Length; ++i)
             {
                 switch (facetDescriptions[i].FacetName)
                 {
@@ -183,10 +181,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Get the list of the primitive types for the given dataspace
         /// </summary>
         /// <returns></returns>
-        internal System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType> GetTypes()
+        internal ReadOnlyCollection<PrimitiveType> GetTypes()
         {
-            List<PrimitiveType> primitiveTypes = new List<PrimitiveType>();
-            foreach (List<PrimitiveType> types in _primitiveTypeMap)
+            var primitiveTypes = new List<PrimitiveType>();
+            foreach (var types in _primitiveTypeMap)
             {
                 if (null != types)
                 {
@@ -195,6 +193,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             return primitiveTypes.AsReadOnly();
         }
+
         #endregion
     }
 }

@@ -1,19 +1,16 @@
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Diagnostics;
-using System.Collections.ObjectModel;
-using System.Data.Entity.Core.Spatial;
-using System.Threading;
-using System.Linq;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Spatial;
+    using System.Threading;
+    using System.Xml;
+
     internal class ClrProviderManifest : DbProviderManifest
     {
         private const int s_PrimitiveTypeCount = 17;
-        private System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType> _primitiveTypes;
-        private static ClrProviderManifest _instance = new ClrProviderManifest();
+        private ReadOnlyCollection<PrimitiveType> _primitiveTypes;
+        private static readonly ClrProviderManifest _instance = new ClrProviderManifest();
 
         /// <summary>
         /// A private constructor to prevent other places from instantiating this class
@@ -27,10 +24,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal static ClrProviderManifest Instance
         {
-            get
-            {
-                return _instance;
-            }
+            get { return _instance; }
         }
 
         /// <summary>
@@ -40,7 +34,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get { return EdmConstants.ClrPrimitiveTypeNamespace; }
         }
-                
+
         /// <summary>
         /// Returns the primitive type corresponding to the given CLR type
         /// </summary>
@@ -57,7 +51,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 primitiveType = _primitiveTypes[(int)resolvedTypeKind];
                 return true;
             }
-            
+
             return false;
         }
 
@@ -75,7 +69,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 // As an optimization, short-circuit when the provided type has a known type code.
                 switch (Type.GetTypeCode(clrType))
                 {
-                    // PrimitiveTypeKind.Binary = byte[] = TypeCode.Object
+                        // PrimitiveTypeKind.Binary = byte[] = TypeCode.Object
                     case TypeCode.Boolean:
                         primitiveTypeKind = PrimitiveTypeKind.Boolean;
                         break;
@@ -85,16 +79,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     case TypeCode.DateTime:
                         primitiveTypeKind = PrimitiveTypeKind.DateTime;
                         break;
-                    // PrimitiveTypeKind.DateTimeOffset = System.DateTimeOffset = TypeCode.Object
+                        // PrimitiveTypeKind.DateTimeOffset = System.DateTimeOffset = TypeCode.Object
                     case TypeCode.Decimal:
                         primitiveTypeKind = PrimitiveTypeKind.Decimal;
                         break;
                     case TypeCode.Double:
                         primitiveTypeKind = PrimitiveTypeKind.Double;
                         break;
-                    // PrimitiveTypeKind.Geography = System.Data.Entity.Core.Spatial.DbGeometry (or subtype) = TypeCode.Object
-                    // PrimitiveTypeKind.Geometry = System.Data.Entity.Core.Spatial.DbGeometry (or subtype) = TypeCode.Object
-                    // PrimitiveTypeKind.Guid = System.Guid = TypeCode.Object
+                        // PrimitiveTypeKind.Geography = System.Data.Entity.Core.Spatial.DbGeometry (or subtype) = TypeCode.Object
+                        // PrimitiveTypeKind.Geometry = System.Data.Entity.Core.Spatial.DbGeometry (or subtype) = TypeCode.Object
+                        // PrimitiveTypeKind.Guid = System.Guid = TypeCode.Object
                     case TypeCode.Int16:
                         primitiveTypeKind = PrimitiveTypeKind.Int16;
                         break;
@@ -113,7 +107,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     case TypeCode.String:
                         primitiveTypeKind = PrimitiveTypeKind.String;
                         break;
-                    // PrimitiveTypeKind.Time = System.TimeSpan = TypeCode.Object
+                        // PrimitiveTypeKind.Time = System.TimeSpan = TypeCode.Object
                     case TypeCode.Object:
                         {
                             if (typeof(byte[]) == clrType)
@@ -124,12 +118,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
                             {
                                 primitiveTypeKind = PrimitiveTypeKind.DateTimeOffset;
                             }
-                            // DbGeography/Geometry are abstract so subtypes must be allowed
-                            else if (typeof(System.Data.Entity.Core.Spatial.DbGeography).IsAssignableFrom(clrType))
+                                // DbGeography/Geometry are abstract so subtypes must be allowed
+                            else if (typeof(DbGeography).IsAssignableFrom(clrType))
                             {
                                 primitiveTypeKind = PrimitiveTypeKind.Geography;
                             }
-                            else if (typeof(System.Data.Entity.Core.Spatial.DbGeometry).IsAssignableFrom(clrType))
+                            else if (typeof(DbGeometry).IsAssignableFrom(clrType))
                             {
                                 primitiveTypeKind = PrimitiveTypeKind.Geometry;
                             }
@@ -162,7 +156,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Returns all the functions in this provider manifest
         /// </summary>
         /// <returns>A collection of functions</returns>
-        public override System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction> GetStoreFunctions()
+        public override ReadOnlyCollection<EdmFunction> GetStoreFunctions()
         {
             return Helper.EmptyEdmFunctionReadOnlyCollection;
         }
@@ -172,12 +166,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="type">the type to return FacetDescriptions for.</param>
         /// <returns>The FacetDescriptions for the type given.</returns>
-        public override System.Collections.ObjectModel.ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType type)
+        public override ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType type)
         {
-            if (Helper.IsPrimitiveType(type) && ((PrimitiveType)type).DataSpace == DataSpace.OSpace)
+            if (Helper.IsPrimitiveType(type)
+                && (type).DataSpace == DataSpace.OSpace)
             {
                 // we don't have our own facets, just defer to the edm primitive type facets
-                PrimitiveType basePrimitive = (PrimitiveType)type.BaseType;
+                var basePrimitive = (PrimitiveType)type.BaseType;
                 return basePrimitive.ProviderManifest.GetFacetDescriptions(basePrimitive);
             }
 
@@ -194,13 +189,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return;
             }
 
-            PrimitiveType[] primitiveTypes = new PrimitiveType[s_PrimitiveTypeCount];
+            var primitiveTypes = new PrimitiveType[s_PrimitiveTypeCount];
             primitiveTypes[(int)PrimitiveTypeKind.Binary] = CreatePrimitiveType(typeof(Byte[]), PrimitiveTypeKind.Binary);
             primitiveTypes[(int)PrimitiveTypeKind.Boolean] = CreatePrimitiveType(typeof(Boolean), PrimitiveTypeKind.Boolean);
             primitiveTypes[(int)PrimitiveTypeKind.Byte] = CreatePrimitiveType(typeof(Byte), PrimitiveTypeKind.Byte);
             primitiveTypes[(int)PrimitiveTypeKind.DateTime] = CreatePrimitiveType(typeof(DateTime), PrimitiveTypeKind.DateTime);
             primitiveTypes[(int)PrimitiveTypeKind.Time] = CreatePrimitiveType(typeof(TimeSpan), PrimitiveTypeKind.Time);
-            primitiveTypes[(int)PrimitiveTypeKind.DateTimeOffset] = CreatePrimitiveType(typeof(DateTimeOffset), PrimitiveTypeKind.DateTimeOffset);
+            primitiveTypes[(int)PrimitiveTypeKind.DateTimeOffset] = CreatePrimitiveType(
+                typeof(DateTimeOffset), PrimitiveTypeKind.DateTimeOffset);
             primitiveTypes[(int)PrimitiveTypeKind.Decimal] = CreatePrimitiveType(typeof(Decimal), PrimitiveTypeKind.Decimal);
             primitiveTypes[(int)PrimitiveTypeKind.Double] = CreatePrimitiveType(typeof(Double), PrimitiveTypeKind.Double);
             primitiveTypes[(int)PrimitiveTypeKind.Geography] = CreatePrimitiveType(typeof(DbGeography), PrimitiveTypeKind.Geography);
@@ -213,10 +209,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             primitiveTypes[(int)PrimitiveTypeKind.Single] = CreatePrimitiveType(typeof(Single), PrimitiveTypeKind.Single);
             primitiveTypes[(int)PrimitiveTypeKind.String] = CreatePrimitiveType(typeof(String), PrimitiveTypeKind.String);
 
-            System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType> readOnlyTypes = new System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType>(primitiveTypes);
+            var readOnlyTypes = new ReadOnlyCollection<PrimitiveType>(primitiveTypes);
 
             // Set the result to _primitiveTypes at the end
-            Interlocked.CompareExchange<System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType>>(ref _primitiveTypes, readOnlyTypes, null);
+            Interlocked.CompareExchange(ref _primitiveTypes, readOnlyTypes, null);
         }
 
         /// <summary>
@@ -227,17 +223,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private PrimitiveType CreatePrimitiveType(Type clrType, PrimitiveTypeKind primitiveTypeKind)
         {
             // Figures out the base type
-            PrimitiveType baseType = MetadataItem.EdmProviderManifest.GetPrimitiveType(primitiveTypeKind);
-            PrimitiveType primitiveType = new PrimitiveType(clrType, baseType, this);
+            var baseType = MetadataItem.EdmProviderManifest.GetPrimitiveType(primitiveTypeKind);
+            var primitiveType = new PrimitiveType(clrType, baseType, this);
             primitiveType.SetReadOnly();
             return primitiveType;
         }
 
-
-        public override System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType> GetStoreTypes()
+        public override ReadOnlyCollection<PrimitiveType> GetStoreTypes()
         {
             InitializePrimitiveTypes();
-            return this._primitiveTypes;
+            return _primitiveTypes;
         }
 
         public override TypeUsage GetEdmType(TypeUsage storeType)
@@ -257,7 +252,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="informationType">The name of the information to be retrieved.</param>
         /// <returns>An XmlReader at the begining of the information requested.</returns>
-        protected override System.Xml.XmlReader GetDbInformation(string informationType)
+        protected override XmlReader GetDbInformation(string informationType)
         {
             throw new NotImplementedException();
         }

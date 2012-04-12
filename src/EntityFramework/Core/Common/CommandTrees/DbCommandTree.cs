@@ -4,10 +4,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Core.Common.CommandTrees.Internal;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics;
+    using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
-    using System.Linq;
     using System.Text.RegularExpressions;
 
     /// <summary>
@@ -26,11 +25,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// DbCommandTree is the abstract base type for the Delete, Query, Insert and Update DbCommandTree types.
     /// </summary>
     public abstract class DbCommandTree
-    {      
+    {
         // Metadata collection
         private readonly MetadataWorkspace _metadata;
         private readonly DataSpace _dataSpace;
-                
+
         /// <summary>
         /// Initializes a new command tree with a given metadata workspace.
         /// </summary>
@@ -42,16 +41,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             EntityUtil.CheckArgumentNull(metadata, "metadata");
 
             // Ensure that the data space value is valid
-            if (!DbCommandTree.IsValidDataSpace(dataSpace))
+            if (!IsValidDataSpace(dataSpace))
             {
-                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.Cqt_CommandTree_InvalidDataSpace, "dataSpace");
+                throw EntityUtil.Argument(Strings.Cqt_CommandTree_InvalidDataSpace, "dataSpace");
             }
 
             //
             // Create the tree's metadata workspace and initalize commonly used types.
             //
-            MetadataWorkspace effectiveMetadata = new MetadataWorkspace();
-                
+            var effectiveMetadata = new MetadataWorkspace();
+
             //While EdmItemCollection and StorageitemCollections are required
             //ObjectItemCollection may or may not be registered on the workspace yet.
             //So register the ObjectItemCollection if it exists.
@@ -59,29 +58,26 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             if (metadata.TryGetItemCollection(DataSpace.OSpace, out objectItemCollection))
             {
                 effectiveMetadata.RegisterItemCollection(objectItemCollection);
-            }                
+            }
             effectiveMetadata.RegisterItemCollection(metadata.GetItemCollection(DataSpace.CSpace));
             effectiveMetadata.RegisterItemCollection(metadata.GetItemCollection(DataSpace.CSSpace));
             effectiveMetadata.RegisterItemCollection(metadata.GetItemCollection(DataSpace.SSpace));
 
-            this._metadata = effectiveMetadata;
-            this._dataSpace = dataSpace;
+            _metadata = effectiveMetadata;
+            _dataSpace = dataSpace;
         }
-                                        
+
         /// <summary>
         /// Gets the name and corresponding type of each parameter that can be referenced within this command tree.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public IEnumerable<KeyValuePair<string, TypeUsage>> Parameters
         {
-            get
-            {
-                return this.GetParameters();
-            }
+            get { return GetParameters(); }
         }
-                
+
         #region Internal Implementation
-        
+
         /// <summary>
         /// Gets the kind of this command tree.
         /// </summary>
@@ -92,17 +88,23 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </summary>
         /// <returns></returns>
         internal abstract IEnumerable<KeyValuePair<string, TypeUsage>> GetParameters();
-        
+
         /// <summary>
         /// Gets the metadata workspace used by this command tree.
         /// </summary>
-        internal MetadataWorkspace MetadataWorkspace { get { return _metadata; } }
+        internal MetadataWorkspace MetadataWorkspace
+        {
+            get { return _metadata; }
+        }
 
         /// <summary>
         /// Gets the data space in which metadata used by this command tree must reside.
         /// </summary>
-        internal DataSpace DataSpace { get { return _dataSpace; } }
-                
+        internal DataSpace DataSpace
+        {
+            get { return _dataSpace; }
+        }
+
         #region Dump/Print Support
 
         internal void Dump(ExpressionDumper dumper)
@@ -112,17 +114,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             //
             // First dump standard information - the DataSpace of the command tree and its parameters
             //
-            Dictionary<string, object> attrs = new Dictionary<string, object>();
-            attrs.Add("DataSpace", this.DataSpace);
-            dumper.Begin(this.GetType().Name, attrs);
+            var attrs = new Dictionary<string, object>();
+            attrs.Add("DataSpace", DataSpace);
+            dumper.Begin(GetType().Name, attrs);
 
             //
             // The name and type of each Parameter in turn is added to the output
             //
             dumper.Begin("Parameters", null);
-            foreach (KeyValuePair<string, TypeUsage> param in this.Parameters)
+            foreach (var param in Parameters)
             {
-                Dictionary<string, object> paramAttrs = new Dictionary<string, object>();
+                var paramAttrs = new Dictionary<string, object>();
                 paramAttrs.Add("Name", param.Key);
                 dumper.Begin("Parameter", paramAttrs);
                 dumper.Dump(param.Value, "ParameterType");
@@ -133,12 +135,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             //
             // Delegate to the derived type's implementation that dumps the structure of the command tree
             //
-            this.DumpStructure(dumper);
+            DumpStructure(dumper);
 
             //
             // Matching call to End to correspond with the call to Begin above
             //
-            dumper.End(this.GetType().Name);
+            dumper.End(GetType().Name);
         }
 
         internal abstract void DumpStructure(ExpressionDumper dumper);
@@ -152,18 +154,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             //
             // Create a new MemoryStream that the XML dumper should write to.
             //
-            MemoryStream stream = new MemoryStream();
+            var stream = new MemoryStream();
 
             //
             // Create the dumper
             //
-            XmlExpressionDumper dumper = new XmlExpressionDumper(stream);
+            var dumper = new XmlExpressionDumper(stream);
 
             //
             // Dump this tree and then close the XML dumper so that the end document tag is written
             // and the output is flushed to the stream.
             //
-            this.Dump(dumper);
+            Dump(dumper);
             dumper.Close();
 
             //
@@ -175,7 +177,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         internal string Print()
         {
-            return this.PrintTree(new ExpressionPrinter());
+            return PrintTree(new ExpressionPrinter());
         }
 
         internal abstract string PrintTree(ExpressionPrinter printer);
@@ -194,8 +196,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return (!StringUtil.IsNullOrEmptyOrWhiteSpace(name) &&
                     _paramNameRegex.IsMatch(name));
         }
+
         private static readonly Regex _paramNameRegex = new Regex("^([A-Za-z])([A-Za-z0-9_])*$");
-                
+
         #endregion
     }
 }

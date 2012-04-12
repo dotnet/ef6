@@ -1,43 +1,47 @@
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Diagnostics;
+    using System.Linq;
+
     internal sealed class EdmProviderManifestFunctionBuilder
     {
         private readonly List<EdmFunction> functions = new List<EdmFunction>();
         private readonly TypeUsage[] primitiveTypes;
 
-        internal EdmProviderManifestFunctionBuilder(System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType> edmPrimitiveTypes)
+        internal EdmProviderManifestFunctionBuilder(ReadOnlyCollection<PrimitiveType> edmPrimitiveTypes)
         {
             Debug.Assert(edmPrimitiveTypes != null, "Primitive types should not be null");
 
             // Initialize all the various parameter types. We do not want to create new instance of parameter types
             // again and again for perf reasons
-            TypeUsage[] primitiveTypeUsages = new TypeUsage[edmPrimitiveTypes.Count];
-            foreach (PrimitiveType edmType in edmPrimitiveTypes)
+            var primitiveTypeUsages = new TypeUsage[edmPrimitiveTypes.Count];
+            foreach (var edmType in edmPrimitiveTypes)
             {
-                Debug.Assert((int)edmType.PrimitiveTypeKind < primitiveTypeUsages.Length && (int)edmType.PrimitiveTypeKind >= 0, "Invalid PrimitiveTypeKind value?");
-                Debug.Assert(primitiveTypeUsages[(int)edmType.PrimitiveTypeKind] == null, "Duplicate PrimitiveTypeKind value in EDM primitive types?");
+                Debug.Assert(
+                    (int)edmType.PrimitiveTypeKind < primitiveTypeUsages.Length && (int)edmType.PrimitiveTypeKind >= 0,
+                    "Invalid PrimitiveTypeKind value?");
+                Debug.Assert(
+                    primitiveTypeUsages[(int)edmType.PrimitiveTypeKind] == null, "Duplicate PrimitiveTypeKind value in EDM primitive types?");
 
                 primitiveTypeUsages[(int)edmType.PrimitiveTypeKind] = TypeUsage.Create(edmType);
             }
 
-            this.primitiveTypes = primitiveTypeUsages;
+            primitiveTypes = primitiveTypeUsages;
         }
 
-        internal System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction> ToFunctionCollection()
+        internal ReadOnlyCollection<EdmFunction> ToFunctionCollection()
         {
-            return this.functions.AsReadOnly();
+            return functions.AsReadOnly();
         }
 
         internal static void ForAllBasePrimitiveTypes(Action<PrimitiveTypeKind> forEachType)
         {
-            for (int idx = 0; idx < EdmConstants.NumPrimitiveTypes; idx++)
+            for (var idx = 0; idx < EdmConstants.NumPrimitiveTypes; idx++)
             {
-                PrimitiveTypeKind typeKind = (PrimitiveTypeKind)idx;
-                if (!Helper.IsStrongSpatialTypeKind(typeKind)) 
+                var typeKind = (PrimitiveTypeKind)idx;
+                if (!Helper.IsStrongSpatialTypeKind(typeKind))
                 {
                     forEachType(typeKind);
                 }
@@ -46,7 +50,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal static void ForTypes(IEnumerable<PrimitiveTypeKind> typeKinds, Action<PrimitiveTypeKind> forEachType)
         {
-            foreach (PrimitiveTypeKind kind in typeKinds)
+            foreach (var kind in typeKinds)
             {
                 forEachType(kind);
             }
@@ -54,126 +58,157 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal void AddAggregate(string aggregateFunctionName, PrimitiveTypeKind collectionArgumentElementTypeKind)
         {
-            this.AddAggregate(collectionArgumentElementTypeKind, aggregateFunctionName, collectionArgumentElementTypeKind);
+            AddAggregate(collectionArgumentElementTypeKind, aggregateFunctionName, collectionArgumentElementTypeKind);
         }
 
-        internal void AddAggregate(PrimitiveTypeKind returnTypeKind, string aggregateFunctionName, PrimitiveTypeKind collectionArgumentElementTypeKind)
+        internal void AddAggregate(
+            PrimitiveTypeKind returnTypeKind, string aggregateFunctionName, PrimitiveTypeKind collectionArgumentElementTypeKind)
         {
-            Debug.Assert(!string.IsNullOrEmpty(aggregateFunctionName) && !string.IsNullOrWhiteSpace(aggregateFunctionName), "Aggregate function name should be valid");
+            Debug.Assert(
+                !string.IsNullOrEmpty(aggregateFunctionName) && !string.IsNullOrWhiteSpace(aggregateFunctionName),
+                "Aggregate function name should be valid");
 
-            FunctionParameter returnParameter = CreateReturnParameter(returnTypeKind);
-            FunctionParameter collectionParameter = CreateAggregateParameter(collectionArgumentElementTypeKind);
+            var returnParameter = CreateReturnParameter(returnTypeKind);
+            var collectionParameter = CreateAggregateParameter(collectionArgumentElementTypeKind);
 
-            EdmFunction function = new EdmFunction(aggregateFunctionName,
+            var function = new EdmFunction(
+                aggregateFunctionName,
                 EdmConstants.EdmNamespace,
                 DataSpace.CSpace,
                 new EdmFunctionPayload
-                {
-                    IsAggregate = true,
-                    IsBuiltIn = true,
-                    ReturnParameters = new FunctionParameter[] {returnParameter},
-                    Parameters = new FunctionParameter[1] { collectionParameter },
-                    IsFromProviderManifest = true,
-                });
+                    {
+                        IsAggregate = true,
+                        IsBuiltIn = true,
+                        ReturnParameters = new[] { returnParameter },
+                        Parameters = new FunctionParameter[1] { collectionParameter },
+                        IsFromProviderManifest = true,
+                    });
 
             function.SetReadOnly();
 
-            this.functions.Add(function);
+            functions.Add(function);
         }
 
         internal void AddFunction(PrimitiveTypeKind returnType, string functionName)
         {
-            this.AddFunction(returnType, functionName, new KeyValuePair<string, PrimitiveTypeKind>[] { });
+            AddFunction(returnType, functionName, new KeyValuePair<string, PrimitiveTypeKind>[] { });
         }
 
-        internal void AddFunction(PrimitiveTypeKind returnType, string functionName, PrimitiveTypeKind argumentTypeKind, string argumentName)
+        internal void AddFunction(
+            PrimitiveTypeKind returnType, string functionName, PrimitiveTypeKind argumentTypeKind, string argumentName)
         {
-            this.AddFunction(returnType, functionName, new[] { new KeyValuePair<string, PrimitiveTypeKind>(argumentName, argumentTypeKind) });
+            AddFunction(returnType, functionName, new[] { new KeyValuePair<string, PrimitiveTypeKind>(argumentName, argumentTypeKind) });
         }
 
-        internal void AddFunction(PrimitiveTypeKind returnType, string functionName, PrimitiveTypeKind argument1TypeKind, string argument1Name, PrimitiveTypeKind argument2TypeKind, string argument2Name)
+        internal void AddFunction(
+            PrimitiveTypeKind returnType, string functionName, PrimitiveTypeKind argument1TypeKind, string argument1Name,
+            PrimitiveTypeKind argument2TypeKind, string argument2Name)
         {
-            this.AddFunction(returnType, functionName, 
-                new[] { new KeyValuePair<string, PrimitiveTypeKind>(argument1Name, argument1TypeKind),
-                        new KeyValuePair<string, PrimitiveTypeKind>(argument2Name, argument2TypeKind)});
+            AddFunction(
+                returnType, functionName,
+                new[]
+                    {
+                        new KeyValuePair<string, PrimitiveTypeKind>(argument1Name, argument1TypeKind),
+                        new KeyValuePair<string, PrimitiveTypeKind>(argument2Name, argument2TypeKind)
+                    });
         }
 
-        internal void AddFunction(PrimitiveTypeKind returnType, string functionName, PrimitiveTypeKind argument1TypeKind, string argument1Name, PrimitiveTypeKind argument2TypeKind, string argument2Name, PrimitiveTypeKind argument3TypeKind, string argument3Name)
+        internal void AddFunction(
+            PrimitiveTypeKind returnType, string functionName, PrimitiveTypeKind argument1TypeKind, string argument1Name,
+            PrimitiveTypeKind argument2TypeKind, string argument2Name, PrimitiveTypeKind argument3TypeKind, string argument3Name)
         {
-            this.AddFunction(returnType, functionName,
-                new[] { new KeyValuePair<string, PrimitiveTypeKind>(argument1Name, argument1TypeKind),
+            AddFunction(
+                returnType, functionName,
+                new[]
+                    {
+                        new KeyValuePair<string, PrimitiveTypeKind>(argument1Name, argument1TypeKind),
                         new KeyValuePair<string, PrimitiveTypeKind>(argument2Name, argument2TypeKind),
-                        new KeyValuePair<string, PrimitiveTypeKind>(argument3Name, argument3TypeKind)});
+                        new KeyValuePair<string, PrimitiveTypeKind>(argument3Name, argument3TypeKind)
+                    });
         }
 
-        internal void AddFunction(PrimitiveTypeKind returnType, string functionName, PrimitiveTypeKind argument1TypeKind, string argument1Name,
-                                                                                     PrimitiveTypeKind argument2TypeKind, string argument2Name,
-                                                                                     PrimitiveTypeKind argument3TypeKind, string argument3Name,
-                                                                                     PrimitiveTypeKind argument4TypeKind, string argument4Name,
-                                                                                     PrimitiveTypeKind argument5TypeKind, string argument5Name,
-                                                                                     PrimitiveTypeKind argument6TypeKind, string argument6Name)
+        internal void AddFunction(
+            PrimitiveTypeKind returnType, string functionName, PrimitiveTypeKind argument1TypeKind, string argument1Name,
+            PrimitiveTypeKind argument2TypeKind, string argument2Name,
+            PrimitiveTypeKind argument3TypeKind, string argument3Name,
+            PrimitiveTypeKind argument4TypeKind, string argument4Name,
+            PrimitiveTypeKind argument5TypeKind, string argument5Name,
+            PrimitiveTypeKind argument6TypeKind, string argument6Name)
         {
-            this.AddFunction(returnType, functionName,
-                new[] { new KeyValuePair<string, PrimitiveTypeKind>(argument1Name, argument1TypeKind),
+            AddFunction(
+                returnType, functionName,
+                new[]
+                    {
+                        new KeyValuePair<string, PrimitiveTypeKind>(argument1Name, argument1TypeKind),
                         new KeyValuePair<string, PrimitiveTypeKind>(argument2Name, argument2TypeKind),
                         new KeyValuePair<string, PrimitiveTypeKind>(argument3Name, argument3TypeKind),
                         new KeyValuePair<string, PrimitiveTypeKind>(argument4Name, argument4TypeKind),
                         new KeyValuePair<string, PrimitiveTypeKind>(argument5Name, argument5TypeKind),
-                        new KeyValuePair<string, PrimitiveTypeKind>(argument6Name, argument6TypeKind)});
+                        new KeyValuePair<string, PrimitiveTypeKind>(argument6Name, argument6TypeKind)
+                    });
         }
 
-        internal void AddFunction(PrimitiveTypeKind returnType, string functionName, PrimitiveTypeKind argument1TypeKind, string argument1Name,
-                                                                                     PrimitiveTypeKind argument2TypeKind, string argument2Name,
-                                                                                     PrimitiveTypeKind argument3TypeKind, string argument3Name,
-                                                                                     PrimitiveTypeKind argument4TypeKind, string argument4Name,
-                                                                                     PrimitiveTypeKind argument5TypeKind, string argument5Name,
-                                                                                     PrimitiveTypeKind argument6TypeKind, string argument6Name,
-                                                                                     PrimitiveTypeKind argument7TypeKind, string argument7Name)
+        internal void AddFunction(
+            PrimitiveTypeKind returnType, string functionName, PrimitiveTypeKind argument1TypeKind, string argument1Name,
+            PrimitiveTypeKind argument2TypeKind, string argument2Name,
+            PrimitiveTypeKind argument3TypeKind, string argument3Name,
+            PrimitiveTypeKind argument4TypeKind, string argument4Name,
+            PrimitiveTypeKind argument5TypeKind, string argument5Name,
+            PrimitiveTypeKind argument6TypeKind, string argument6Name,
+            PrimitiveTypeKind argument7TypeKind, string argument7Name)
         {
-            this.AddFunction(returnType, functionName,
-                new[] { new KeyValuePair<string, PrimitiveTypeKind>(argument1Name, argument1TypeKind),
+            AddFunction(
+                returnType, functionName,
+                new[]
+                    {
+                        new KeyValuePair<string, PrimitiveTypeKind>(argument1Name, argument1TypeKind),
                         new KeyValuePair<string, PrimitiveTypeKind>(argument2Name, argument2TypeKind),
                         new KeyValuePair<string, PrimitiveTypeKind>(argument3Name, argument3TypeKind),
                         new KeyValuePair<string, PrimitiveTypeKind>(argument4Name, argument4TypeKind),
                         new KeyValuePair<string, PrimitiveTypeKind>(argument5Name, argument5TypeKind),
                         new KeyValuePair<string, PrimitiveTypeKind>(argument6Name, argument6TypeKind),
-                        new KeyValuePair<string, PrimitiveTypeKind>(argument7Name, argument7TypeKind)});
+                        new KeyValuePair<string, PrimitiveTypeKind>(argument7Name, argument7TypeKind)
+                    });
         }
 
-        private void AddFunction(PrimitiveTypeKind returnType, string functionName, KeyValuePair<string, PrimitiveTypeKind>[] parameterDefinitions)
+        private void AddFunction(
+            PrimitiveTypeKind returnType, string functionName, KeyValuePair<string, PrimitiveTypeKind>[] parameterDefinitions)
         {
-            FunctionParameter returnParameter = CreateReturnParameter(returnType);
-            FunctionParameter[] parameters = parameterDefinitions.Select(paramDef => CreateParameter(paramDef.Value, paramDef.Key)).ToArray();
+            var returnParameter = CreateReturnParameter(returnType);
+            var parameters = parameterDefinitions.Select(paramDef => CreateParameter(paramDef.Value, paramDef.Key)).ToArray();
 
-            EdmFunction function = new EdmFunction(functionName,
+            var function = new EdmFunction(
+                functionName,
                 EdmConstants.EdmNamespace,
                 DataSpace.CSpace,
                 new EdmFunctionPayload
-                {
-                    IsBuiltIn = true,
-                    ReturnParameters = new FunctionParameter[] {returnParameter},
-                    Parameters = parameters,
-                    IsFromProviderManifest = true,
-                });
+                    {
+                        IsBuiltIn = true,
+                        ReturnParameters = new[] { returnParameter },
+                        Parameters = parameters,
+                        IsFromProviderManifest = true,
+                    });
 
             function.SetReadOnly();
 
-            this.functions.Add(function);
+            functions.Add(function);
         }
 
         private FunctionParameter CreateParameter(PrimitiveTypeKind primitiveParameterType, string parameterName)
         {
-            return new FunctionParameter(parameterName, this.primitiveTypes[(int)primitiveParameterType], ParameterMode.In);
+            return new FunctionParameter(parameterName, primitiveTypes[(int)primitiveParameterType], ParameterMode.In);
         }
 
         private FunctionParameter CreateAggregateParameter(PrimitiveTypeKind collectionParameterTypeElementTypeKind)
         {
-            return new FunctionParameter("collection", TypeUsage.Create(this.primitiveTypes[(int)collectionParameterTypeElementTypeKind].EdmType.GetCollectionType()), ParameterMode.In);
+            return new FunctionParameter(
+                "collection", TypeUsage.Create(primitiveTypes[(int)collectionParameterTypeElementTypeKind].EdmType.GetCollectionType()),
+                ParameterMode.In);
         }
 
         private FunctionParameter CreateReturnParameter(PrimitiveTypeKind primitiveReturnType)
         {
-            return new FunctionParameter(EdmConstants.ReturnType, this.primitiveTypes[(int)primitiveReturnType], ParameterMode.ReturnValue);
+            return new FunctionParameter(EdmConstants.ReturnType, primitiveTypes[(int)primitiveReturnType], ParameterMode.ReturnValue);
         }
     }
 }

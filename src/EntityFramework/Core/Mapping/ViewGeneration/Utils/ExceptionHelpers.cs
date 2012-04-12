@@ -1,17 +1,13 @@
-using System.Text;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
-using System.Diagnostics;
-using System.Data.Entity.Core.Common.Utils;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
 {
+    using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
 
     // Miscellaneous helper routines for generating mapping exceptions
     internal static class ExceptionHelpers
     {
         internal static void ThrowMappingException(ErrorLog.Record errorRecord, ConfigViewGenerator config)
         {
-            InternalMappingException exception = new InternalMappingException(errorRecord.ToUserString(), errorRecord);
+            var exception = new InternalMappingException(errorRecord.ToUserString(), errorRecord);
             if (config.IsNormalTracing)
             {
                 exception.ErrorLog.PrintTrace();
@@ -21,7 +17,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
 
         internal static void ThrowMappingException(ErrorLog errorLog, ConfigViewGenerator config)
         {
-            InternalMappingException exception = new InternalMappingException(errorLog.ToUserString(), errorLog);
+            var exception = new InternalMappingException(errorLog.ToUserString(), errorLog);
             if (config.IsNormalTracing)
             {
                 exception.ErrorLog.PrintTrace();

@@ -1,24 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Text;
-using System.Data.SqlClient;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees;
-
 namespace System.Data.Entity.Core.SqlClient.SqlGen
 {
+    using System.Globalization;
+
     /// <summary>
     /// TopClause represents the a TOP expression in a SqlSelectStatement. 
     /// It has a count property, which indicates how many TOP rows should be selected and a 
     /// boolen WithTies property.
     /// </summary>
-    class TopClause : ISqlFragment
+    internal class TopClause : ISqlFragment
     {
-        ISqlFragment topCount;
-        bool withTies;
+        private readonly ISqlFragment topCount;
+        private readonly bool withTies;
 
         /// <summary>
         /// Do we need to add a WITH_TIES to the top statement
@@ -54,7 +46,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="withTies"></param>
         internal TopClause(int topCount, bool withTies)
         {
-            SqlBuilder sqlBuilder = new SqlBuilder();
+            var sqlBuilder = new SqlBuilder();
             sqlBuilder.Append(topCount.ToString(CultureInfo.InvariantCulture));
             this.topCount = sqlBuilder;
             this.withTies = withTies;
@@ -73,21 +65,23 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         {
             writer.Write("TOP ");
 
-            if (sqlGenerator.SqlVersion != SqlVersion.Sql8)
+            if (sqlGenerator.SqlVersion
+                != SqlVersion.Sql8)
             {
                 writer.Write("(");
             }
 
-            this.TopCount.WriteSql(writer, sqlGenerator);
+            TopCount.WriteSql(writer, sqlGenerator);
 
-            if (sqlGenerator.SqlVersion != SqlVersion.Sql8)
+            if (sqlGenerator.SqlVersion
+                != SqlVersion.Sql8)
             {
                 writer.Write(")");
             }
 
             writer.Write(" ");
 
-            if (this.WithTies)
+            if (WithTies)
             {
                 writer.Write("WITH TIES ");
             }

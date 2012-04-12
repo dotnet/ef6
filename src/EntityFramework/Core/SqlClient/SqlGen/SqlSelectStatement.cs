@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Data.Entity.Core.Common.CommandTrees;
-
 namespace System.Data.Entity.Core.SqlClient.SqlGen
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Globalization;
+
     /// <summary>
     /// A SqlSelectStatement represents a canonical SQL SELECT statement.
     /// It has fields for the 5 main clauses
@@ -41,34 +40,22 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
     /// </summary>
     internal sealed class SqlSelectStatement : ISqlFragment
     {
-       
         /// <summary>
         /// Whether the columns ouput by this sql statement were renamed from what given in the command tree.
         /// </summary>
-        internal bool OutputColumnsRenamed
-        {
-            get;
-            set;
-        }
-        
+        internal bool OutputColumnsRenamed { get; set; }
+
         /// <summary>
         /// A dictionary of output columns
         /// </summary>
-        internal Dictionary<string, Symbol> OutputColumns
-        {
-            get;
-            set;
-        }
+        internal Dictionary<string, Symbol> OutputColumns { get; set; }
 
-        internal List<Symbol> AllJoinExtents
-        {
-            get;
-            // We have a setter as well, even though this is a list,
+        internal List<Symbol> AllJoinExtents { get; // We have a setter as well, even though this is a list,
             // since we use this field only in special cases.
-            set;
-        }
+            set; }
 
         private List<Symbol> fromExtents;
+
         internal List<Symbol> FromExtents
         {
             get
@@ -82,6 +69,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         }
 
         private Dictionary<Symbol, bool> outerExtents;
+
         internal Dictionary<Symbol, bool> OuterExtents
         {
             get
@@ -95,19 +83,21 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         }
 
         private readonly SqlSelectClauseBuilder select;
+
         internal SqlSelectClauseBuilder Select
         {
             get { return select; }
         }
 
         private readonly SqlBuilder from = new SqlBuilder();
+
         internal SqlBuilder From
         {
             get { return from; }
         }
 
-
         private SqlBuilder where;
+
         internal SqlBuilder Where
         {
             get
@@ -121,6 +111,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         }
 
         private SqlBuilder groupBy;
+
         internal SqlBuilder GroupBy
         {
             get
@@ -134,6 +125,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         }
 
         private SqlBuilder orderBy;
+
         public SqlBuilder OrderBy
         {
             get
@@ -148,17 +140,15 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
         //indicates whether it is the top most select statement, 
         // if not Order By should be omitted unless there is a corresponding TOP
-        internal bool IsTopMost
-        {
-            get;
-            set;
-        }
+        internal bool IsTopMost { get; set; }
 
         #region Internal Constructor
+
         internal SqlSelectStatement()
         {
-            this.select = new SqlSelectClauseBuilder(delegate() { return this.IsTopMost; });
+            @select = new SqlSelectClauseBuilder(delegate { return IsTopMost; });
         }
+
         #endregion
 
         #region ISqlFragment Members
@@ -185,43 +175,51 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             // Create a list of the aliases used by the outer extents
             // JoinSymbols have to be treated specially.
             List<string> outerExtentAliases = null;
-            if ((null != outerExtents) && (0 < outerExtents.Count))
+            if ((null != outerExtents)
+                && (0 < outerExtents.Count))
             {
-                foreach (Symbol outerExtent in outerExtents.Keys)
+                foreach (var outerExtent in outerExtents.Keys)
                 {
-                    JoinSymbol joinSymbol = outerExtent as JoinSymbol;
+                    var joinSymbol = outerExtent as JoinSymbol;
                     if (joinSymbol != null)
                     {
-                        foreach (Symbol symbol in joinSymbol.FlattenedExtentList)
+                        foreach (var symbol in joinSymbol.FlattenedExtentList)
                         {
-                            if (null == outerExtentAliases) { outerExtentAliases = new List<string>(); }
+                            if (null == outerExtentAliases)
+                            {
+                                outerExtentAliases = new List<string>();
+                            }
                             outerExtentAliases.Add(symbol.NewName);
                         }
                     }
                     else
                     {
-                        if (null == outerExtentAliases) { outerExtentAliases = new List<string>(); }
+                        if (null == outerExtentAliases)
+                        {
+                            outerExtentAliases = new List<string>();
+                        }
                         outerExtentAliases.Add(outerExtent.NewName);
                     }
                 }
-            }        
+            }
 
             // An then rename each of the FromExtents we have
             // If AllJoinExtents is non-null - it has precedence.
             // The new name is derived from the old name - we append an increasing int.
-            List<Symbol> extentList = this.AllJoinExtents ?? this.fromExtents;
+            var extentList = AllJoinExtents ?? fromExtents;
             if (null != extentList)
             {
-                foreach (Symbol fromAlias in extentList)
+                foreach (var fromAlias in extentList)
                 {
-                    if ((null != outerExtentAliases) && outerExtentAliases.Contains(fromAlias.Name))
+                    if ((null != outerExtentAliases)
+                        && outerExtentAliases.Contains(fromAlias.Name))
                     {
-                        int i = sqlGenerator.AllExtentNames[fromAlias.Name];
+                        var i = sqlGenerator.AllExtentNames[fromAlias.Name];
                         string newName;
                         do
                         {
                             ++i;
-                            newName = fromAlias.Name + i.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                            newName = fromAlias.Name + i.ToString(CultureInfo.InvariantCulture);
                         }
                         while (sqlGenerator.AllExtentNames.ContainsKey(newName));
                         sqlGenerator.AllExtentNames[fromAlias.Name] = i;
@@ -234,40 +232,47 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
                     // Add the current alias to the list, so that the extents
                     // that follow do not collide with me.
-                    if (null == outerExtentAliases) { outerExtentAliases = new List<string>(); }
+                    if (null == outerExtentAliases)
+                    {
+                        outerExtentAliases = new List<string>();
+                    }
                     outerExtentAliases.Add(fromAlias.NewName);
                 }
             }
+
             #endregion
 
             // Increase the indent, so that the Sql statement is nested by one tab.
             writer.Indent += 1; // ++ can be confusing in this context
 
-            this.select.WriteSql(writer, sqlGenerator);
+            @select.WriteSql(writer, sqlGenerator);
 
             writer.WriteLine();
             writer.Write("FROM ");
-            this.From.WriteSql(writer, sqlGenerator);
+            From.WriteSql(writer, sqlGenerator);
 
-            if ((null != this.where) && !this.Where.IsEmpty)
+            if ((null != @where)
+                && !Where.IsEmpty)
             {
                 writer.WriteLine();
                 writer.Write("WHERE ");
-                this.Where.WriteSql(writer, sqlGenerator);
+                Where.WriteSql(writer, sqlGenerator);
             }
 
-            if ((null != this.groupBy) && !this.GroupBy.IsEmpty)
+            if ((null != groupBy)
+                && !GroupBy.IsEmpty)
             {
                 writer.WriteLine();
                 writer.Write("GROUP BY ");
-                this.GroupBy.WriteSql(writer, sqlGenerator);
+                GroupBy.WriteSql(writer, sqlGenerator);
             }
 
-            if ((null != this.orderBy) && !this.OrderBy.IsEmpty && (this.IsTopMost || this.Select.Top != null))
+            if ((null != orderBy) && !OrderBy.IsEmpty
+                && (IsTopMost || Select.Top != null))
             {
                 writer.WriteLine();
                 writer.Write("ORDER BY ");
-                this.OrderBy.WriteSql(writer, sqlGenerator);
+                OrderBy.WriteSql(writer, sqlGenerator);
             }
 
             --writer.Indent;

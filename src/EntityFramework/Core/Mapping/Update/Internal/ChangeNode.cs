@@ -1,9 +1,10 @@
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Collections.Generic;
-using System.Text;
-using System.Globalization;
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Globalization;
+    using System.Text;
+
     /// <summary>
     /// This class encapsulates changes propagated to a node in an update mapping view.
     /// It contains lists of deleted and inserted rows. Key intersections betweens rows
@@ -27,6 +28,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     internal class ChangeNode
     {
         #region Constructors
+
         /// <summary>
         /// Constructs a change node containing changes belonging to the specified collection
         /// schema definition.
@@ -36,58 +38,67 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             m_elementType = elementType;
         }
+
         #endregion
 
         #region Fields
-        private TypeUsage m_elementType;
-        private List<PropagatorResult> m_inserted = new List<PropagatorResult>();
-        private List<PropagatorResult> m_deleted = new List<PropagatorResult>();
-        private PropagatorResult m_placeholder;
+
+        private readonly TypeUsage m_elementType;
+        private readonly List<PropagatorResult> m_inserted = new List<PropagatorResult>();
+        private readonly List<PropagatorResult> m_deleted = new List<PropagatorResult>();
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets the type of the rows contained in this node. This type corresponds (not coincidentally)
         /// to the type of an expression in an update mapping view.
         /// </summary>
-        internal TypeUsage ElementType { get { return m_elementType; } }
+        internal TypeUsage ElementType
+        {
+            get { return m_elementType; }
+        }
 
         /// <summary>
         /// Gets a list of rows to be inserted.
         /// </summary>
-        internal List<PropagatorResult> Inserted { get { return m_inserted; } }
+        internal List<PropagatorResult> Inserted
+        {
+            get { return m_inserted; }
+        }
 
         /// <summary>
         /// Gets a list of rows to be deleted.
         /// </summary>
-        internal List<PropagatorResult> Deleted { get { return m_deleted; } }
+        internal List<PropagatorResult> Deleted
+        {
+            get { return m_deleted; }
+        }
 
         /// <summary>
         /// Gets or sets a version of a record at this node with default record. The record has the type 
         /// of the node we are visiting.
         /// </summary>
-        internal PropagatorResult Placeholder
-        {
-            get { return m_placeholder; }
-            set { m_placeholder = value; }
-        }
+        internal PropagatorResult Placeholder { get; set; }
+
         #endregion
 
 #if DEBUG
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
 
             builder.AppendLine("{");
             builder.AppendFormat(CultureInfo.InvariantCulture, "    ElementType = {0}", ElementType).AppendLine();
             builder.AppendLine("    Inserted = {");
-            foreach (PropagatorResult insert in Inserted)
+            foreach (var insert in Inserted)
             {
                 builder.Append("        ").AppendLine(insert.ToString());
             }
             builder.AppendLine("    }");
             builder.AppendLine("    Deleted = {");
-            foreach (PropagatorResult delete in Deleted)
+            foreach (var delete in Deleted)
             {
                 builder.Append("        ").AppendLine(delete.ToString());
             }

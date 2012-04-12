@@ -1,17 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Diagnostics;
-using System.Xml;
-using System.Data;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Reflection;
-using System.IO;
-using System.Globalization;
-
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Xml;
 
     internal abstract class Property : SchemaElement
     {
@@ -27,7 +17,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <summary>
         /// Gets the Type of the property
         /// </summary>
-        public abstract SchemaType Type { get;}
+        public abstract SchemaType Type { get; }
 
         protected override bool HandleElement(XmlReader reader)
         {
@@ -35,7 +25,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             {
                 return true;
             }
-            else if (Schema.DataModel == SchemaDataModelOption.EntityDataModel)
+            else if (Schema.DataModel
+                     == SchemaDataModelOption.EntityDataModel)
             {
                 if (CanHandleElement(reader, XmlConstants.ValueAnnotation))
                 {

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Data.Entity.Core.Objects.DataClasses;
-
-namespace System.Data.Entity.Core.Objects.Internal
+﻿namespace System.Data.Entity.Core.Objects.Internal
 {
+    using System.Data.Entity.Core.Objects.DataClasses;
+
     /// <summary>
     /// A strategy interface that defines methods used for different types of change tracking.
     /// Implementors of this interface are used by the EntityWrapper class.

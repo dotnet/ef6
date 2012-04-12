@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     /// <summary>
@@ -10,6 +6,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public abstract class SimpleType : EdmType
     {
         #region Constructors
+
         /// <summary>
         /// The default constructor for SimpleType
         /// </summary>
@@ -30,6 +27,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             : base(name, namespaceName, dataSpace)
         {
         }
+
         #endregion
     }
 }

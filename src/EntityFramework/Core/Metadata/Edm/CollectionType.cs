@@ -1,17 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Text;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Text;
+
     /// <summary>
     /// Represents the Edm Collection Type
     /// </summary>
     public sealed class CollectionType : EdmType
     {
         #region Constructors
+
         /// <summary>
         /// The constructor for constructing a CollectionType object with the element type it contains
         /// </summary>
@@ -20,7 +17,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal CollectionType(EdmType elementType)
             : this(TypeUsage.Create(elementType))
         {
-            this.DataSpace = elementType.DataSpace;
+            DataSpace = elementType.DataSpace;
         }
 
         /// <summary>
@@ -29,23 +26,30 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="elementType">The element type that this collection type contains</param>
         /// <exception cref="System.ArgumentNullException">Thrown if the argument elementType is null</exception>
         internal CollectionType(TypeUsage elementType)
-            : base(GetIdentity(EntityUtil.GenericCheckArgumentNull(elementType, "elementType")), 
-                    EdmConstants.TransientNamespace, elementType.EdmType.DataSpace)
+            : base(GetIdentity(EntityUtil.GenericCheckArgumentNull(elementType, "elementType")),
+                EdmConstants.TransientNamespace, elementType.EdmType.DataSpace)
         {
             _typeUsage = elementType;
             SetReadOnly();
         }
+
         #endregion
 
         #region Fields
+
         private readonly TypeUsage _typeUsage;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the kind of the type
         /// </summary>
-        public override BuiltInTypeKind BuiltInTypeKind { get { return BuiltInTypeKind.CollectionType; } }
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
+            get { return BuiltInTypeKind.CollectionType; }
+        }
 
         /// <summary>
         /// The type of the element that this collection type contains
@@ -53,14 +57,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.TypeUsage, false)]
         public TypeUsage TypeUsage
         {
-            get
-            {
-                return _typeUsage;
-            }
+            get { return _typeUsage; }
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Constructs the name of the collection type
         /// </summary>
@@ -68,7 +71,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>The identity of the resulting collection type</returns>
         private static string GetIdentity(TypeUsage typeUsage)
         {
-            StringBuilder builder = new StringBuilder(50);
+            var builder = new StringBuilder(50);
             builder.Append("collection[");
             typeUsage.BuildIdentity(builder);
             builder.Append("]");
@@ -83,15 +86,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal override bool EdmEquals(MetadataItem item)
         {
             // short-circuit if this and other are reference equivalent
-            if (Object.ReferenceEquals(this, item)) { return true; }
+            if (ReferenceEquals(this, item))
+            {
+                return true;
+            }
 
             // check type of item
-            if (null == item || BuiltInTypeKind.CollectionType != item.BuiltInTypeKind) { return false; }
-            CollectionType other = (CollectionType)item;
+            if (null == item
+                || BuiltInTypeKind.CollectionType != item.BuiltInTypeKind)
+            {
+                return false;
+            }
+            var other = (CollectionType)item;
 
             // compare type usage
-            return this.TypeUsage.EdmEquals(other.TypeUsage);
+            return TypeUsage.EdmEquals(other.TypeUsage);
         }
+
         #endregion
     }
 }

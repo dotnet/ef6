@@ -1,19 +1,17 @@
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity.Core.Mapping.ViewGeneration;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Query.InternalTrees;
-using System.Data.Entity.Core.Query.PlanCompiler;
-using System.Diagnostics;
-using System.Linq;
-
 namespace System.Data.Entity.Core.Mapping
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Mapping.ViewGeneration;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Query.InternalTrees;
+    using System.Data.Entity.Core.Query.PlanCompiler;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
 
     /// <summary>
     /// Represents a mapping from a model function import to a store composable function.
@@ -21,51 +19,65 @@ namespace System.Data.Entity.Core.Mapping
     internal class FunctionImportMappingComposable : FunctionImportMapping
     {
         #region Constructors
+
         internal FunctionImportMappingComposable(
             EdmFunction functionImport,
             EdmFunction targetFunction,
             List<Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>> structuralTypeMappings,
             EdmProperty[] targetFunctionKeys,
-            StorageMappingItemCollection mappingItemCollection) 
+            StorageMappingItemCollection mappingItemCollection)
             : base(functionImport, targetFunction)
         {
             EntityUtil.CheckArgumentNull(mappingItemCollection, "mappingItemCollection");
             Debug.Assert(functionImport.IsComposableAttribute, "functionImport.IsComposableAttribute");
             Debug.Assert(targetFunction.IsComposableAttribute, "targetFunction.IsComposableAttribute");
-            Debug.Assert(functionImport.EntitySet == null || structuralTypeMappings != null, "Function import returning entities must have structuralTypeMappings.");
-            Debug.Assert(structuralTypeMappings == null || structuralTypeMappings.Count > 0, "Non-null structuralTypeMappings must not be empty.");
+            Debug.Assert(
+                functionImport.EntitySet == null || structuralTypeMappings != null,
+                "Function import returning entities must have structuralTypeMappings.");
+            Debug.Assert(
+                structuralTypeMappings == null || structuralTypeMappings.Count > 0, "Non-null structuralTypeMappings must not be empty.");
             EdmType resultType;
             Debug.Assert(
                 structuralTypeMappings != null ||
-                MetadataHelper.TryGetFunctionImportReturnType<EdmType>(functionImport, 0, out resultType) && TypeSemantics.IsScalarType(resultType),
+                MetadataHelper.TryGetFunctionImportReturnType(functionImport, 0, out resultType) && TypeSemantics.IsScalarType(resultType),
                 "Either type mappings should be specified or the function import should be Collection(Scalar).");
-            Debug.Assert(functionImport.EntitySet == null || targetFunctionKeys != null, "Keys must be inferred for a function import returning entities.");
+            Debug.Assert(
+                functionImport.EntitySet == null || targetFunctionKeys != null,
+                "Keys must be inferred for a function import returning entities.");
             Debug.Assert(targetFunctionKeys == null || targetFunctionKeys.Length > 0, "Keys must be null or non-empty.");
 
             m_mappingItemCollection = mappingItemCollection;
             // We will use these parameters to target s-space function calls in the generated command tree. 
             // Since enums don't exist in s-space we need to use the underlying type.
-            m_commandParameters = functionImport.Parameters.Select(p => TypeHelpers.GetPrimitiveTypeUsageForScalar(p.TypeUsage).Parameter(p.Name)).ToArray();
+            m_commandParameters =
+                functionImport.Parameters.Select(p => TypeHelpers.GetPrimitiveTypeUsageForScalar(p.TypeUsage).Parameter(p.Name)).ToArray();
             m_structuralTypeMappings = structuralTypeMappings;
             m_targetFunctionKeys = targetFunctionKeys;
         }
+
         #endregion
 
         #region Fields
+
         private readonly StorageMappingItemCollection m_mappingItemCollection;
+
         /// <summary>
         /// Command parameter refs created from m_edmFunction parameters.
         /// Used as arguments to target (s-space) function calls in the generated command tree.
         /// </summary>
         private readonly DbParameterReferenceExpression[] m_commandParameters;
+
         /// <summary>
         /// Result mapping as entity type hierarchy.
         /// </summary>
-        private readonly List<Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>> m_structuralTypeMappings;
+        private readonly List<Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>>
+            m_structuralTypeMappings;
+
         /// <summary>
         /// Keys inside the result set of the target function. Inferred based on the mapping (using c-space entity type keys).
         /// </summary>
         private readonly EdmProperty[] m_targetFunctionKeys;
+
         /// <summary>
         /// ITree template. Requires function argument substitution during function view expansion.
         /// </summary>
@@ -74,30 +86,36 @@ namespace System.Data.Entity.Core.Mapping
         #endregion
 
         #region Properties/Methods
+
         internal EdmProperty[] TvfKeys
         {
             get { return m_targetFunctionKeys; }
         }
 
         #region GetInternalTree(...) implementation
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "projectOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "projectOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal Node GetInternalTree(Command targetIqtCommand, IList<Node> targetIqtArguments)
         {
             if (m_internalTreeNode == null)
             {
                 var viewGenErrors = new List<EdmSchemaError>();
                 DiscriminatorMap discriminatorMap;
-                DbQueryCommandTree tree = GenerateFunctionView(out discriminatorMap);
+                var tree = GenerateFunctionView(out discriminatorMap);
                 if (viewGenErrors.Count > 0)
                 {
                     throw new MappingException(Helper.CombineErrorMessage(viewGenErrors));
                 }
                 Debug.Assert(tree != null, "tree != null");
-                
+
                 // Convert this into an ITree first
-                Command itree = ITreeGenerator.Generate(tree, discriminatorMap);
+                var itree = ITreeGenerator.Generate(tree, discriminatorMap);
                 var rootProject = itree.Root; // PhysicalProject(RelInput)
-                PlanCompiler.Assert(rootProject.Op.OpType == OpType.PhysicalProject, "Expected a physical projectOp at the root of the tree - found " + rootProject.Op.OpType);
+                PlanCompiler.Assert(
+                    rootProject.Op.OpType == OpType.PhysicalProject,
+                    "Expected a physical projectOp at the root of the tree - found " + rootProject.Op.OpType);
                 var rootProjectOp = (PhysicalProjectOp)rootProject.Op;
                 Debug.Assert(rootProjectOp.Outputs.Count == 1, "rootProjectOp.Outputs.Count == 1");
                 var rootInput = rootProject.Child0; // the RelInput in PhysicalProject(RelInput)
@@ -106,23 +124,25 @@ namespace System.Data.Entity.Core.Mapping
                 itree.DisableVarVecEnumCaching();
 
                 // Function import returns a collection, so convert it to a scalar by wrapping into CollectOp.
-                Node relNode = rootInput;
-                Var relVar = rootProjectOp.Outputs[0];
+                var relNode = rootInput;
+                var relVar = rootProjectOp.Outputs[0];
                 // ProjectOp does not implement Type property, so get the type from the column map.
-                TypeUsage functionViewType = rootProjectOp.ColumnMap.Type;
-                if (!Command.EqualTypes(functionViewType, this.FunctionImport.ReturnParameter.TypeUsage))
+                var functionViewType = rootProjectOp.ColumnMap.Type;
+                if (!Command.EqualTypes(functionViewType, FunctionImport.ReturnParameter.TypeUsage))
                 {
-                    Debug.Assert(TypeSemantics.IsPromotableTo(functionViewType, this.FunctionImport.ReturnParameter.TypeUsage), "Mapping expression result type must be promotable to the c-space function return type.");
+                    Debug.Assert(
+                        TypeSemantics.IsPromotableTo(functionViewType, FunctionImport.ReturnParameter.TypeUsage),
+                        "Mapping expression result type must be promotable to the c-space function return type.");
 
                     // Build "relNode = Project(relNode, SoftCast(relVar))"
-                    CollectionType expectedCollectionType = (CollectionType)this.FunctionImport.ReturnParameter.TypeUsage.EdmType;
+                    var expectedCollectionType = (CollectionType)FunctionImport.ReturnParameter.TypeUsage.EdmType;
                     var expectedElementType = expectedCollectionType.TypeUsage;
 
-                    Node varRefNode = itree.CreateNode(itree.CreateVarRefOp(relVar));
-                    Node castNode = itree.CreateNode(itree.CreateSoftCastOp(expectedElementType), varRefNode);
-                    Node varDefListNode = itree.CreateVarDefListNode(castNode, out relVar);
+                    var varRefNode = itree.CreateNode(itree.CreateVarRefOp(relVar));
+                    var castNode = itree.CreateNode(itree.CreateSoftCastOp(expectedElementType), varRefNode);
+                    var varDefListNode = itree.CreateVarDefListNode(castNode, out relVar);
 
-                    ProjectOp projectOp = itree.CreateProjectOp(relVar);
+                    var projectOp = itree.CreateProjectOp(relVar);
                     relNode = itree.CreateNode(projectOp, relNode, varDefListNode);
                 }
 
@@ -133,10 +153,10 @@ namespace System.Data.Entity.Core.Mapping
 
             // Prepare argument replacement dictionary
             Debug.Assert(m_commandParameters.Length == targetIqtArguments.Count, "m_commandParameters.Length == targetIqtArguments.Count");
-            Dictionary<string, Node> viewArguments = new Dictionary<string, Node>(m_commandParameters.Length);
-            for (int i = 0; i < m_commandParameters.Length; ++i)
+            var viewArguments = new Dictionary<string, Node>(m_commandParameters.Length);
+            for (var i = 0; i < m_commandParameters.Length; ++i)
             {
-                var commandParam = (DbParameterReferenceExpression)m_commandParameters[i];
+                var commandParam = m_commandParameters[i];
                 var argumentNode = targetIqtArguments[i];
 
                 // If function import parameter is of enum type, the argument value for it will be of enum type. We however have 
@@ -145,11 +165,13 @@ namespace System.Data.Entity.Core.Mapping
                 if (TypeSemantics.IsEnumerationType(argumentNode.Op.Type))
                 {
                     argumentNode = targetIqtCommand.CreateNode(
-                                        targetIqtCommand.CreateSoftCastOp(TypeHelpers.CreateEnumUnderlyingTypeUsage(argumentNode.Op.Type)),
-                                        argumentNode);
+                        targetIqtCommand.CreateSoftCastOp(TypeHelpers.CreateEnumUnderlyingTypeUsage(argumentNode.Op.Type)),
+                        argumentNode);
                 }
 
-                Debug.Assert(TypeSemantics.IsPromotableTo(argumentNode.Op.Type, commandParam.ResultType), "Argument type must be promotable to parameter type.");
+                Debug.Assert(
+                    TypeSemantics.IsPromotableTo(argumentNode.Op.Type, commandParam.ResultType),
+                    "Argument type must be promotable to parameter type.");
 
                 viewArguments.Add(commandParam.ParameterName, argumentNode);
             }
@@ -159,7 +181,7 @@ namespace System.Data.Entity.Core.Mapping
 
         private sealed class FunctionViewOpCopier : OpCopier
         {
-            private Dictionary<string, Node> m_viewArguments;
+            private readonly Dictionary<string, Node> m_viewArguments;
 
             private FunctionViewOpCopier(Command cmd, Dictionary<string, Node> viewArguments)
                 : base(cmd)
@@ -173,6 +195,7 @@ namespace System.Data.Entity.Core.Mapping
             }
 
             #region Visitor Members
+
             public override Node Visit(VarRefOp op, Node n)
             {
                 // The original function view has store function calls with arguments represented as command parameter refs.
@@ -183,45 +206,52 @@ namespace System.Data.Entity.Core.Mapping
                 // The search and replace is not performed on the argument nodes themselves. This is important because it guarantees
                 // that we are not replacing unrelated (possibly user-defined) parameter refs that accidentally have the matching names.
                 Node argNode;
-                if (op.Var.VarType == VarType.Parameter && m_viewArguments.TryGetValue(((ParameterVar)op.Var).ParameterName, out argNode))
+                if (op.Var.VarType == VarType.Parameter
+                    && m_viewArguments.TryGetValue(((ParameterVar)op.Var).ParameterName, out argNode))
                 {
                     // Just copy the argNode, do not reapply this visitor. We do not want search and replace inside the argNode. See comment above.
-                    return OpCopier.Copy(m_destCmd, argNode);
+                    return Copy(m_destCmd, argNode);
                 }
                 else
                 {
                     return base.Visit(op, n);
                 }
             }
+
             #endregion
         }
+
         #endregion
 
         #region GenerateFunctionView(...) implementation
+
         #region GenerateFunctionView
+
         internal DbQueryCommandTree GenerateFunctionView(out DiscriminatorMap discriminatorMap)
         {
             discriminatorMap = null;
 
             // Prepare the direct call of the store function as StoreFunction(@EdmFunc_p1, ..., @EdmFunc_pN).
             // Note that function call arguments are command parameters created from the m_edmFunction parameters.
-            Debug.Assert(this.TargetFunction != null, "this.TargetFunction != null");
-            DbExpression storeFunctionInvoke = this.TargetFunction.Invoke(GetParametersForTargetFunctionCall());
+            Debug.Assert(TargetFunction != null, "this.TargetFunction != null");
+            DbExpression storeFunctionInvoke = TargetFunction.Invoke(GetParametersForTargetFunctionCall());
 
             // Generate the query expression producing c-space result from s-space function call(s).
             DbExpression queryExpression;
             if (m_structuralTypeMappings != null)
             {
                 queryExpression = GenerateStructuralTypeResultMappingView(storeFunctionInvoke, out discriminatorMap);
-                Debug.Assert(queryExpression == null ||
-                    TypeSemantics.IsPromotableTo(queryExpression.ResultType, this.FunctionImport.ReturnParameter.TypeUsage),
+                Debug.Assert(
+                    queryExpression == null ||
+                    TypeSemantics.IsPromotableTo(queryExpression.ResultType, FunctionImport.ReturnParameter.TypeUsage),
                     "TypeSemantics.IsPromotableTo(queryExpression.ResultType, this.FunctionImport.ReturnParameter.TypeUsage)");
             }
             else
             {
                 queryExpression = GenerateScalarResultMappingView(storeFunctionInvoke);
-                Debug.Assert(queryExpression == null ||
-                    TypeSemantics.IsEqual(queryExpression.ResultType, this.FunctionImport.ReturnParameter.TypeUsage),
+                Debug.Assert(
+                    queryExpression == null ||
+                    TypeSemantics.IsEqual(queryExpression.ResultType, FunctionImport.ReturnParameter.TypeUsage),
                     "TypeSemantics.IsEqual(queryExpression.ResultType, this.FunctionImport.ReturnParameter.TypeUsage)");
             }
 
@@ -232,34 +262,45 @@ namespace System.Data.Entity.Core.Mapping
             }
 
             // Generate parameterized command, where command parameters are semantically the c-space function parameters.
-            return DbQueryCommandTree.FromValidExpression(m_mappingItemCollection.Workspace, TargetPerspective.TargetPerspectiveDataSpace, queryExpression);
+            return DbQueryCommandTree.FromValidExpression(
+                m_mappingItemCollection.Workspace, TargetPerspective.TargetPerspectiveDataSpace, queryExpression);
         }
 
         private IEnumerable<DbExpression> GetParametersForTargetFunctionCall()
         {
-            Debug.Assert(this.FunctionImport.Parameters.Count == m_commandParameters.Length, "this.FunctionImport.Parameters.Count == m_commandParameters.Length");
-            Debug.Assert(this.TargetFunction.Parameters.Count == m_commandParameters.Length, "this.TargetFunction.Parameters.Count == m_commandParameters.Length");
-            foreach (var targetParameter in this.TargetFunction.Parameters)
+            Debug.Assert(
+                FunctionImport.Parameters.Count == m_commandParameters.Length,
+                "this.FunctionImport.Parameters.Count == m_commandParameters.Length");
+            Debug.Assert(
+                TargetFunction.Parameters.Count == m_commandParameters.Length,
+                "this.TargetFunction.Parameters.Count == m_commandParameters.Length");
+            foreach (var targetParameter in TargetFunction.Parameters)
             {
-                Debug.Assert(this.FunctionImport.Parameters.Contains(targetParameter.Name), "this.FunctionImport.Parameters.Contains(targetParameter.Name)");
-                var functionImportParameter = this.FunctionImport.Parameters.Single(p => p.Name == targetParameter.Name);
-                yield return m_commandParameters[this.FunctionImport.Parameters.IndexOf(functionImportParameter)];
+                Debug.Assert(
+                    FunctionImport.Parameters.Contains(targetParameter.Name),
+                    "this.FunctionImport.Parameters.Contains(targetParameter.Name)");
+                var functionImportParameter = FunctionImport.Parameters.Single(p => p.Name == targetParameter.Name);
+                yield return m_commandParameters[FunctionImport.Parameters.IndexOf(functionImportParameter)];
             }
         }
 
         #endregion
 
         #region GenerateStructuralTypeResultMappingView
-        private DbExpression GenerateStructuralTypeResultMappingView(DbExpression storeFunctionInvoke, out DiscriminatorMap discriminatorMap)
+
+        private DbExpression GenerateStructuralTypeResultMappingView(
+            DbExpression storeFunctionInvoke, out DiscriminatorMap discriminatorMap)
         {
-            Debug.Assert(m_structuralTypeMappings != null && m_structuralTypeMappings.Count > 0, "m_structuralTypeMappings != null && m_structuralTypeMappings.Count > 0");
+            Debug.Assert(
+                m_structuralTypeMappings != null && m_structuralTypeMappings.Count > 0,
+                "m_structuralTypeMappings != null && m_structuralTypeMappings.Count > 0");
 
             discriminatorMap = null;
 
             // Process explicit structural type mappings. The mapping is based on the direct call of the store function 
             // wrapped into a projection constructing the mapped structural types.
 
-            DbExpression queryExpression = storeFunctionInvoke;
+            var queryExpression = storeFunctionInvoke;
 
             if (m_structuralTypeMappings.Count == 1)
             {
@@ -290,13 +331,15 @@ namespace System.Data.Entity.Core.Mapping
                 // Make sure type projection is performed over a closed set where each row is guaranteed to produce a known type.
                 // To do this, filter the store function output using the type conditions.
                 Debug.Assert(m_structuralTypeMappings.All(m => m.Item2.Count > 0), "In multi-type mapping each type must have conditions.");
-                List<DbExpression> structuralTypePredicates = m_structuralTypeMappings.Select(m => GenerateStructuralTypeConditionsPredicate(m.Item2, binding.Variable)).ToList();
-                queryExpression = binding.Filter(Helpers.BuildBalancedTreeInPlace(
-                    structuralTypePredicates.ToArray(), // clone, otherwise BuildBalancedTreeInPlace will change it
-                    (prev, next) => prev.Or(next)));
+                var structuralTypePredicates =
+                    m_structuralTypeMappings.Select(m => GenerateStructuralTypeConditionsPredicate(m.Item2, binding.Variable)).ToList();
+                queryExpression = binding.Filter(
+                    Helpers.BuildBalancedTreeInPlace(
+                        structuralTypePredicates.ToArray(), // clone, otherwise BuildBalancedTreeInPlace will change it
+                        (prev, next) => prev.Or(next)));
                 binding = queryExpression.BindAs("row");
 
-                List<DbExpression> structuralTypeMappingViews = new List<DbExpression>(m_structuralTypeMappings.Count);
+                var structuralTypeMappingViews = new List<DbExpression>(m_structuralTypeMappings.Count);
                 foreach (var mapping in m_structuralTypeMappings)
                 {
                     var type = mapping.Item1;
@@ -312,8 +355,11 @@ namespace System.Data.Entity.Core.Mapping
                         structuralTypeMappingViews.Add(structuralTypeMappingView);
                     }
                 }
-                Debug.Assert(structuralTypeMappingViews.Count == structuralTypePredicates.Count, "structuralTypeMappingViews.Count == structuralTypePredicates.Count");
-                if (structuralTypeMappingViews.Count != m_structuralTypeMappings.Count)
+                Debug.Assert(
+                    structuralTypeMappingViews.Count == structuralTypePredicates.Count,
+                    "structuralTypeMappingViews.Count == structuralTypePredicates.Count");
+                if (structuralTypeMappingViews.Count
+                    != m_structuralTypeMappings.Count)
                 {
                     return null;
                 }
@@ -326,7 +372,7 @@ namespace System.Data.Entity.Core.Mapping
 
                 queryExpression = binding.Project(typeConstructors);
 
-                if (DiscriminatorMap.TryCreateDiscriminatorMap(this.FunctionImport.EntitySet, queryExpression, out discriminatorMap))
+                if (DiscriminatorMap.TryCreateDiscriminatorMap(FunctionImport.EntitySet, queryExpression, out discriminatorMap))
                 {
                     Debug.Assert(discriminatorMap != null, "discriminatorMap == null after it has been created");
                 }
@@ -335,13 +381,14 @@ namespace System.Data.Entity.Core.Mapping
             return queryExpression;
         }
 
-        private static DbExpression GenerateStructuralTypeMappingView(StructuralType structuralType, List<StoragePropertyMapping> propertyMappings, DbExpression row)
+        private static DbExpression GenerateStructuralTypeMappingView(
+            StructuralType structuralType, List<StoragePropertyMapping> propertyMappings, DbExpression row)
         {
             // Generate property views.
             var properties = TypeHelpers.GetAllStructuralMembers(structuralType);
             Debug.Assert(properties.Count == propertyMappings.Count, "properties.Count == propertyMappings.Count");
             var constructorArgs = new List<DbExpression>(properties.Count);
-            for (int i = 0; i < propertyMappings.Count; ++i)
+            for (var i = 0; i < propertyMappings.Count; ++i)
             {
                 var propertyMapping = propertyMappings[i];
                 Debug.Assert(properties[i].EdmEquals(propertyMapping.EdmProperty), "properties[i].EdmEquals(propertyMapping.EdmProperty)");
@@ -351,7 +398,8 @@ namespace System.Data.Entity.Core.Mapping
                     constructorArgs.Add(propertyMappingView);
                 }
             }
-            if (constructorArgs.Count != propertyMappings.Count)
+            if (constructorArgs.Count
+                != propertyMappings.Count)
             {
                 return null;
             }
@@ -362,21 +410,23 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        private static DbExpression GenerateStructuralTypeConditionsPredicate(List<StorageConditionPropertyMapping> conditions, DbExpression row)
+        private static DbExpression GenerateStructuralTypeConditionsPredicate(
+            List<StorageConditionPropertyMapping> conditions, DbExpression row)
         {
             Debug.Assert(conditions.Count > 0, "conditions.Count > 0");
-            DbExpression predicate = Helpers.BuildBalancedTreeInPlace(conditions.Select(c => GeneratePredicate(c, row)).ToArray(), (prev, next) => prev.And(next));
+            var predicate = Helpers.BuildBalancedTreeInPlace(
+                conditions.Select(c => GeneratePredicate(c, row)).ToArray(), (prev, next) => prev.And(next));
             return predicate;
         }
 
         private static DbExpression GeneratePredicate(StorageConditionPropertyMapping condition, DbExpression row)
         {
             Debug.Assert(condition.EdmProperty == null, "C-side conditions are not supported in function mappings.");
-            DbExpression columnRef = GenerateColumnRef(row, condition.ColumnProperty);
+            var columnRef = GenerateColumnRef(row, condition.ColumnProperty);
 
             if (condition.IsNull.HasValue)
             {
-                return condition.IsNull.Value ? (DbExpression)columnRef.IsNull() : (DbExpression)columnRef.IsNull().Not();
+                return condition.IsNull.Value ? columnRef.IsNull() : (DbExpression)columnRef.IsNull().Not();
             }
             else
             {
@@ -393,7 +443,7 @@ namespace System.Data.Entity.Core.Mapping
 
         private static DbExpression GenerateScalarPropertyMappingView(EdmProperty edmProperty, EdmProperty columnProperty, DbExpression row)
         {
-            DbExpression accessorExpr = GenerateColumnRef(row, columnProperty);
+            var accessorExpr = GenerateColumnRef(row, columnProperty);
             if (!TypeSemantics.IsEqual(accessorExpr.ResultType, edmProperty.TypeUsage))
             {
                 accessorExpr = accessorExpr.CastTo(edmProperty.TypeUsage);
@@ -408,15 +458,17 @@ namespace System.Data.Entity.Core.Mapping
             Debug.Assert(rowType.Properties.Contains(column.Name), "Column name must be resolvable in the TVF result type.");
             return row.Property(column.Name);
         }
+
         #endregion
 
         #region GenerateScalarResultMappingView
+
         private DbExpression GenerateScalarResultMappingView(DbExpression storeFunctionInvoke)
         {
-            DbExpression queryExpression = storeFunctionInvoke;
+            var queryExpression = storeFunctionInvoke;
 
             CollectionType functionImportReturnType;
-            if (!MetadataHelper.TryGetFunctionImportReturnCollectionType(this.FunctionImport, 0, out functionImportReturnType))
+            if (!MetadataHelper.TryGetFunctionImportReturnCollectionType(FunctionImport, 0, out functionImportReturnType))
             {
                 Debug.Fail("Failed to get the result type of the function import.");
             }
@@ -428,23 +480,27 @@ namespace System.Data.Entity.Core.Mapping
             var column = rowType.Properties[0];
 
             Func<DbExpression, DbExpression> scalarView = (DbExpression row) =>
-            {
-                var propertyAccess = row.Property(column);
-                if (TypeSemantics.IsEqual(functionImportReturnType.TypeUsage, column.TypeUsage))
-                {
-                    return propertyAccess;
-                }
-                else
-                {
-                    return propertyAccess.CastTo(functionImportReturnType.TypeUsage);
-                }
-            };
+                                                              {
+                                                                  var propertyAccess = row.Property(column);
+                                                                  if (TypeSemantics.IsEqual(
+                                                                      functionImportReturnType.TypeUsage, column.TypeUsage))
+                                                                  {
+                                                                      return propertyAccess;
+                                                                  }
+                                                                  else
+                                                                  {
+                                                                      return propertyAccess.CastTo(functionImportReturnType.TypeUsage);
+                                                                  }
+                                                              };
 
             queryExpression = queryExpression.Select(row => scalarView(row));
             return queryExpression;
         }
+
         #endregion
+
         #endregion
+
         #endregion
     }
 }

@@ -1,17 +1,13 @@
-using System.Data.SqlClient;
-
 namespace System.Data.Entity.Core.Common
 {
     using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Spatial;
     using System.Data.Entity.Core.SqlClient;
     using System.Data.Entity.Resources;
+    using System.Data.SqlClient;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.IO;
     using System.Reflection;
     using System.Xml;
 
@@ -21,7 +17,7 @@ namespace System.Data.Entity.Core.Common
     /// factory;
     /// </summary>
     [CLSCompliant(false)]
-    abstract public class DbProviderServices
+    public abstract class DbProviderServices
     {
         /// <summary>
         /// Create a Command Definition object given a command tree.
@@ -35,9 +31,9 @@ namespace System.Data.Entity.Core.Common
         {
             EntityUtil.CheckArgumentNull(commandTree, "commandTree");
             ValidateDataSpace(commandTree);
-            StoreItemCollection storeMetadata = (StoreItemCollection)commandTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
+            var storeMetadata = (StoreItemCollection)commandTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
             Debug.Assert(storeMetadata.StoreProviderManifest != null, "StoreItemCollection has null StoreProviderManifest?");
-            
+
             return CreateDbCommandDefinition(storeMetadata.StoreProviderManifest, commandTree);
         }
 
@@ -85,7 +81,8 @@ namespace System.Data.Entity.Core.Common
         {
             Debug.Assert(commandTree != null, "Ensure command tree is non-null before calling ValidateDataSpace");
 
-            if (commandTree.DataSpace != DataSpace.SSpace)
+            if (commandTree.DataSpace
+                != DataSpace.SSpace)
             {
                 throw EntityUtil.ProviderIncompatible(Strings.ProviderRequiresStoreCommandTree);
             }
@@ -96,9 +93,10 @@ namespace System.Data.Entity.Core.Common
         /// </summary>
         /// <param name="commandTree">command tree for the statement</param>
         /// <returns>a command object</returns>
-        internal virtual DbCommand CreateCommand(DbCommandTree commandTree) {
-            DbCommandDefinition commandDefinition = CreateCommandDefinition(commandTree);
-            DbCommand command = commandDefinition.CreateCommand();
+        internal virtual DbCommand CreateCommand(DbCommandTree commandTree)
+        {
+            var commandDefinition = CreateCommandDefinition(commandTree);
+            var command = commandDefinition.CreateCommand();
             return command;
         }
 
@@ -110,10 +108,11 @@ namespace System.Data.Entity.Core.Common
         /// </summary>
         /// <param name="prototype">the prototype command</param>
         /// <returns>an executable command definition object</returns>
-        public virtual DbCommandDefinition CreateCommandDefinition(DbCommand prototype) {
+        public virtual DbCommandDefinition CreateCommandDefinition(DbCommand prototype)
+        {
             return DbCommandDefinition.CreateCommandDefinition(prototype);
         }
-                
+
         /// <summary>
         /// Retrieve the provider manifest token based on the specified connection.
         /// </summary>
@@ -124,10 +123,11 @@ namespace System.Data.Entity.Core.Common
         /// <remarks>
         /// This method simply delegates to the provider's implementation of GetDbProviderManifestToken.
         /// </remarks>
-        public string GetProviderManifestToken(DbConnection connection) {
+        public string GetProviderManifestToken(DbConnection connection)
+        {
             try
             {
-                string providerManifestToken = GetDbProviderManifestToken(connection);
+                var providerManifestToken = GetDbProviderManifestToken(connection);
                 if (providerManifestToken == null)
                 {
                     throw EntityUtil.ProviderIncompatible(Strings.ProviderDidNotReturnAProviderManifestToken);
@@ -150,10 +150,11 @@ namespace System.Data.Entity.Core.Common
 
         protected abstract string GetDbProviderManifestToken(DbConnection connection);
 
-        public DbProviderManifest GetProviderManifest(string manifestToken) {
+        public DbProviderManifest GetProviderManifest(string manifestToken)
+        {
             try
             {
-                DbProviderManifest providerManifest = GetDbProviderManifest(manifestToken);
+                var providerManifest = GetDbProviderManifest(manifestToken);
                 if (providerManifest == null)
                 {
                     throw EntityUtil.ProviderIncompatible(Strings.ProviderDidNotReturnAProviderManifest);
@@ -167,8 +168,9 @@ namespace System.Data.Entity.Core.Common
             }
             catch (Exception e)
             {
-                if (EntityUtil.IsCatchableExceptionType(e)) {
-                    throw EntityUtil.ProviderIncompatible(System.Data.Entity.Resources.Strings.ProviderDidNotReturnAProviderManifest, e);
+                if (EntityUtil.IsCatchableExceptionType(e))
+                {
+                    throw EntityUtil.ProviderIncompatible(Strings.ProviderDidNotReturnAProviderManifest, e);
                 }
                 throw;
             }
@@ -180,7 +182,7 @@ namespace System.Data.Entity.Core.Common
         {
             try
             {
-                DbSpatialDataReader spatialReader = GetDbSpatialDataReader(fromReader, manifestToken);
+                var spatialReader = GetDbSpatialDataReader(fromReader, manifestToken);
                 if (spatialReader == null)
                 {
                     throw EntityUtil.ProviderIncompatible(Strings.ProviderDidNotReturnSpatialServices);
@@ -196,7 +198,7 @@ namespace System.Data.Entity.Core.Common
             {
                 if (EntityUtil.IsCatchableExceptionType(e))
                 {
-                    throw EntityUtil.ProviderIncompatible(System.Data.Entity.Resources.Strings.ProviderDidNotReturnSpatialServices, e);
+                    throw EntityUtil.ProviderIncompatible(Strings.ProviderDidNotReturnSpatialServices, e);
                 }
                 throw;
             }
@@ -206,7 +208,7 @@ namespace System.Data.Entity.Core.Common
         {
             try
             {
-                DbSpatialServices spatialServices = DbGetSpatialServices(manifestToken);
+                var spatialServices = DbGetSpatialServices(manifestToken);
                 if (spatialServices == null)
                 {
                     throw EntityUtil.ProviderIncompatible(Strings.ProviderDidNotReturnSpatialServices);
@@ -222,7 +224,7 @@ namespace System.Data.Entity.Core.Common
             {
                 if (EntityUtil.IsCatchableExceptionType(e))
                 {
-                    throw EntityUtil.ProviderIncompatible(System.Data.Entity.Resources.Strings.ProviderDidNotReturnSpatialServices, e);
+                    throw EntityUtil.ProviderIncompatible(Strings.ProviderDidNotReturnSpatialServices, e);
                 }
                 throw;
             }
@@ -245,7 +247,7 @@ namespace System.Data.Entity.Core.Common
             Debug.Assert(parameter != null, "Validate parameter before calling SetParameterValue");
             Debug.Assert(parameterType != null, "Validate parameterType before calling SetParameterValue");
 
-            this.SetDbParameterValue(parameter, parameterType, value);
+            SetDbParameterValue(parameter, parameterType, value);
         }
 
         protected virtual void SetDbParameterValue(DbParameter parameter, TypeUsage parameterType, object value)
@@ -261,7 +263,8 @@ namespace System.Data.Entity.Core.Common
         /// </summary>
         /// <param name="connection">The DbConnection to use</param>
         /// <returns>An instance of DbProviderServices</returns>
-        public static DbProviderServices GetProviderServices(DbConnection connection) {
+        public static DbProviderServices GetProviderServices(DbConnection connection)
+        {
             return GetProviderServices(GetProviderFactory(connection));
         }
 
@@ -288,18 +291,20 @@ namespace System.Data.Entity.Core.Common
         public static DbProviderFactory GetProviderFactory(DbConnection connection)
         {
             EntityUtil.CheckArgumentNull(connection, "connection");
-            DbProviderFactory factory = DbProviderFactories.GetFactory(connection);
+            var factory = DbProviderFactories.GetFactory(connection);
             if (factory == null)
             {
-                throw EntityUtil.ProviderIncompatible(System.Data.Entity.Resources.Strings.EntityClient_ReturnedNullOnProviderMethod(
+                throw EntityUtil.ProviderIncompatible(
+                    Strings.EntityClient_ReturnedNullOnProviderMethod(
                         "get_ProviderFactory",
                         connection.GetType().ToString()));
             }
-            Debug.Assert(factory != null, "Should have thrown on null"); 
+            Debug.Assert(factory != null, "Should have thrown on null");
             return factory;
         }
 
-        internal static DbProviderServices GetProviderServices(DbProviderFactory factory) {
+        internal static DbProviderServices GetProviderServices(DbProviderFactory factory)
+        {
             EntityUtil.CheckArgumentNull(factory, "factory");
 
             // Special case SQL client so that it will work with System.Data from .NET 4.0 even without
@@ -309,16 +314,19 @@ namespace System.Data.Entity.Core.Common
                 return SqlProviderServices.Instance;
             }
 
-            IServiceProvider serviceProvider = factory as IServiceProvider;
-            if (serviceProvider == null) {
-                throw EntityUtil.ProviderIncompatible(System.Data.Entity.Resources.Strings.EntityClient_DoesNotImplementIServiceProvider(
-                    factory.GetType().ToString()));
+            var serviceProvider = factory as IServiceProvider;
+            if (serviceProvider == null)
+            {
+                throw EntityUtil.ProviderIncompatible(
+                    Strings.EntityClient_DoesNotImplementIServiceProvider(
+                        factory.GetType().ToString()));
             }
 
-            DbProviderServices providerServices = serviceProvider.GetService(typeof(DbProviderServices)) as DbProviderServices;
-            if (providerServices == null) {
+            var providerServices = serviceProvider.GetService(typeof(DbProviderServices)) as DbProviderServices;
+            if (providerServices == null)
+            {
                 throw EntityUtil.ProviderIncompatible(
-                    System.Data.Entity.Resources.Strings.EntityClient_ReturnedNullOnProviderMethod(
+                    Strings.EntityClient_ReturnedNullOnProviderMethod(
                         "GetService",
                         factory.GetType().ToString()));
             }
@@ -330,13 +338,15 @@ namespace System.Data.Entity.Core.Common
         /// Return an XML reader which represents the CSDL description
         /// </summary>
         /// <returns>An XmlReader that represents the CSDL description</returns>
-        internal static XmlReader GetConceptualSchemaDefinition(string csdlName) {
-            return DbProviderServices.GetXmlResource("System.Data.Resources.DbProviderServices." + csdlName + ".csdl");
+        internal static XmlReader GetConceptualSchemaDefinition(string csdlName)
+        {
+            return GetXmlResource("System.Data.Resources.DbProviderServices." + csdlName + ".csdl");
         }
 
-        internal static XmlReader GetXmlResource(string resourceName) {
-            Assembly executingAssembly = Assembly.GetExecutingAssembly();
-            Stream stream = executingAssembly.GetManifestResourceStream(resourceName);
+        internal static XmlReader GetXmlResource(string resourceName)
+        {
+            var executingAssembly = Assembly.GetExecutingAssembly();
+            var stream = executingAssembly.GetManifestResourceStream(resourceName);
             return XmlReader.Create(stream, null, resourceName);
         }
 
@@ -357,7 +367,7 @@ namespace System.Data.Entity.Core.Common
         /// </returns>
         public string CreateDatabaseScript(string providerManifestToken, StoreItemCollection storeItemCollection)
         {
-           return DbCreateDatabaseScript(providerManifestToken, storeItemCollection);
+            return DbCreateDatabaseScript(providerManifestToken, storeItemCollection);
         }
 
         protected virtual string DbCreateDatabaseScript(string providerManifestToken, StoreItemCollection storeItemCollection)
@@ -404,7 +414,6 @@ namespace System.Data.Entity.Core.Common
             throw EntityUtil.ProviderIncompatible(Strings.ProviderDoesNotSupportDatabaseExists);
         }
 
-
         /// <summary>
         /// Deletes all store objects specified in the store item collection from the database and the database itself.
         /// </summary>
@@ -421,5 +430,4 @@ namespace System.Data.Entity.Core.Common
             throw EntityUtil.ProviderIncompatible(Strings.ProviderDoesNotSupportDeleteDatabase);
         }
     }
-
 }

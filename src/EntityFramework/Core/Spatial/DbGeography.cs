@@ -1,12 +1,10 @@
-using System.Data.Entity.Core.Common.Internal;
-using System.Data.Entity.Core.Spatial.Internal;
-using System.Diagnostics;
-using System.Globalization;
-using System.Runtime.Serialization;
-
 namespace System.Data.Entity.Core.Spatial
 {
+    using System.Data.Entity.Core.Spatial.Internal;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
+    using System.Runtime.Serialization;
 
     [DataContract]
     [Serializable]
@@ -20,19 +18,25 @@ namespace System.Data.Entity.Core.Spatial
             Debug.Assert(spatialServices != null, "Spatial services are required");
             Debug.Assert(spatialProviderValue != null, "Provider value is required");
 
-            this.spatialSvcs = spatialServices;
-            this.providerValue = spatialProviderValue;
+            spatialSvcs = spatialServices;
+            providerValue = spatialProviderValue;
         }
 
         /// <summary>
         /// Gets the default coordinate system id (SRID) for geography values (WGS 84)
         /// </summary>
-        public static int DefaultCoordinateSystemId { get { return 4326; /* WGS 84 */ } }
+        public static int DefaultCoordinateSystemId
+        {
+            get { return 4326; /* WGS 84 */ }
+        }
 
         /// <summary>
         /// Gets a representation of this DbGeography value that is specific to the underlying provider that constructed it.
         /// </summary>
-        public object ProviderValue { get { return this.providerValue; } }
+        public object ProviderValue
+        {
+            get { return providerValue; }
+        }
 
         /// <summary>
         /// Gets or sets a data contract serializable well known representation of this DbGeography value.
@@ -40,17 +44,17 @@ namespace System.Data.Entity.Core.Spatial
         [DataMember(Name = "Geography")]
         public DbGeographyWellKnownValue WellKnownValue
         {
-            get { return this.spatialSvcs.CreateWellKnownValue(this); }
+            get { return spatialSvcs.CreateWellKnownValue(this); }
             set
             {
-                if (this.spatialSvcs != null)
+                if (spatialSvcs != null)
                 {
                     throw SpatialExceptions.WellKnownValueSerializationPropertyNotDirectlySettable();
                 }
 
-                DbSpatialServices resolvedServices = DbSpatialServices.Default;
-                this.providerValue = resolvedServices.CreateProviderValue(value);
-                this.spatialSvcs = resolvedServices;
+                var resolvedServices = DbSpatialServices.Default;
+                providerValue = resolvedServices.CreateProviderValue(value);
+                spatialSvcs = resolvedServices;
             }
         }
 
@@ -132,10 +136,14 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeography value as defined by the well known binary value with the specified coordinate system identifier.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiLineWellKnownBinary"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public static DbGeography MultiLineFromBinary(byte[] multiLineWellKnownBinary, int coordinateSystemId)
         {
             multiLineWellKnownBinary.CheckNull("multiLineWellKnownBinary");
@@ -150,10 +158,14 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeography value as defined by the well known binary value with the specified coordinate system identifier.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPointWellKnownBinary"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public static DbGeography MultiPointFromBinary(byte[] multiPointWellKnownBinary, int coordinateSystemId)
         {
             multiPointWellKnownBinary.CheckNull("multiPointWellKnownBinary");
@@ -168,8 +180,10 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeography value as defined by the well known binary value with the specified coordinate system identifier.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPolygonWellKnownBinary"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public static DbGeography MultiPolygonFromBinary(byte[] multiPolygonWellKnownBinary, int coordinateSystemId)
         {
             multiPolygonWellKnownBinary.CheckNull("multiPolygonWellKnownBinary");
@@ -302,10 +316,14 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeography value as defined by the well known text value with the specified coordinate system identifier.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiLineWellKnownText"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public static DbGeography MultiLineFromText(string multiLineWellKnownText, int coordinateSystemId)
         {
             multiLineWellKnownText.CheckNull("multiLineWellKnownText");
@@ -320,10 +338,14 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeography value as defined by the well known text value with the specified coordinate system identifier.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPointWellKnownText"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public static DbGeography MultiPointFromText(string multiPointWellKnownText, int coordinateSystemId)
         {
             multiPointWellKnownText.CheckNull("multiPointWellKnownText");
@@ -338,8 +360,10 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeography value as defined by the well known text value with the specified coordinate system identifier.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPolygonWellKnownText"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public static DbGeography MultiPolygonFromText(string multiPolygonWellKnownText, int coordinateSystemId)
         {
             multiPolygonWellKnownText.CheckNull("multiPolygonWellKnownText");
@@ -367,23 +391,35 @@ namespace System.Data.Entity.Core.Spatial
         /// </summary>
         /// Gets the Spatial Reference System Identifier (Coordinate System Id) of the spatial reference system used by this DbGeography value.
         /// </summary>
-        public int CoordinateSystemId { get { return this.spatialSvcs.GetCoordinateSystemId(this); } }
+        public int CoordinateSystemId
+        {
+            get { return spatialSvcs.GetCoordinateSystemId(this); }
+        }
 
         /// <summary>
         /// Gets the dimension of the given <see cref="DbGeography"/> value or, if the value is a collections, the largest element dimension.
         /// </summary>
-        public int Dimension { get { return this.spatialSvcs.GetDimension(this); } }
+        public int Dimension
+        {
+            get { return spatialSvcs.GetDimension(this); }
+        }
 
         /// </summary>
         /// Gets the spatial type name, as a string, of this DbGeography value.
         /// </summary>
-        public string SpatialTypeName { get { return this.spatialSvcs.GetSpatialTypeName(this); } }
+        public string SpatialTypeName
+        {
+            get { return spatialSvcs.GetSpatialTypeName(this); }
+        }
 
         /// </summary>
         /// Gets a Boolean value indicating whether this DbGeography value represents the empty geography.
         /// </summary>
-        public bool   IsEmpty { get { return this.spatialSvcs.GetIsEmpty(this); } }
-                
+        public bool IsEmpty
+        {
+            get { return spatialSvcs.GetIsEmpty(this); }
+        }
+
         #endregion
 
         #region Geography Well Known Format Conversion
@@ -392,27 +428,39 @@ namespace System.Data.Entity.Core.Spatial
         /// Generates the well known text representation of this DbGeography value.  Includes only Longitude and Latitude for points.
         /// </summary>
         /// <returns>A string containing the well known text representation of this DbGeography value.</returns>
-        public string AsText() { return this.spatialSvcs.AsText(this); }
+        public string AsText()
+        {
+            return spatialSvcs.AsText(this);
+        }
 
         /// <summary>
         /// Generates the well known text representation of this DbGeography value.  Includes Longitude, Latitude, Elevation (Z) and Measure (M) for points.
         /// </summary>
         /// <returns>A string containing the well known text representation of this DbGeography value.</returns>
-        internal string AsTextIncludingElevationAndMeasure() { return this.spatialSvcs.AsTextIncludingElevationAndMeasure(this); }
+        internal string AsTextIncludingElevationAndMeasure()
+        {
+            return spatialSvcs.AsTextIncludingElevationAndMeasure(this);
+        }
 
         /// <summary>
         /// Generates the well known binary representation of this DbGeography value.
         /// </summary>
         /// <returns>A byte array containing the well known binary representation of this DbGeography value.</returns>
-        public byte[] AsBinary() { return this.spatialSvcs.AsBinary(this); }
-        
+        public byte[] AsBinary()
+        {
+            return spatialSvcs.AsBinary(this);
+        }
+
         // Non-OGC
         /// <summary>
         /// Generates the Geography Markup Language (GML) representation of this DbGeography value.
         /// </summary>
         /// <returns>A string containing the GML representation of this DbGeography value.</returns>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Gml")]
-        public string AsGml() { return this.spatialSvcs.AsGml(this); }
+        public string AsGml()
+        {
+            return spatialSvcs.AsGml(this);
+        }
 
         #endregion
 
@@ -427,7 +475,7 @@ namespace System.Data.Entity.Core.Spatial
         public bool SpatialEquals(DbGeography other)
         {
             other.CheckNull("other");
-            return this.spatialSvcs.SpatialEquals(this, other);
+            return spatialSvcs.SpatialEquals(this, other);
         }
 
         /// <summary>
@@ -439,7 +487,7 @@ namespace System.Data.Entity.Core.Spatial
         public bool Disjoint(DbGeography other)
         {
             other.CheckNull("other");
-            return this.spatialSvcs.Disjoint(this, other);
+            return spatialSvcs.Disjoint(this, other);
         }
 
         /// <summary>
@@ -451,7 +499,7 @@ namespace System.Data.Entity.Core.Spatial
         public bool Intersects(DbGeography other)
         {
             other.CheckNull("other");
-            return this.spatialSvcs.Intersects(this, other);
+            return spatialSvcs.Intersects(this, other);
         }
 
         #endregion
@@ -469,8 +517,8 @@ namespace System.Data.Entity.Core.Spatial
             if (!distance.HasValue)
             {
                 throw EntityUtil.ArgumentNull("distance");
-            } 
-            return this.spatialSvcs.Buffer(this, distance.Value);
+            }
+            return spatialSvcs.Buffer(this, distance.Value);
         }
 
         /// <summary>
@@ -482,7 +530,7 @@ namespace System.Data.Entity.Core.Spatial
         public double? Distance(DbGeography other)
         {
             other.CheckNull("other");
-            return this.spatialSvcs.Distance(this, other);
+            return spatialSvcs.Distance(this, other);
         }
 
         /// <summary>
@@ -494,7 +542,7 @@ namespace System.Data.Entity.Core.Spatial
         public DbGeography Intersection(DbGeography other)
         {
             other.CheckNull("other");
-            return this.spatialSvcs.Intersection(this, other);
+            return spatialSvcs.Intersection(this, other);
         }
 
         /// <summary>
@@ -506,7 +554,7 @@ namespace System.Data.Entity.Core.Spatial
         public DbGeography Union(DbGeography other)
         {
             other.CheckNull("other");
-            return this.spatialSvcs.Union(this, other);
+            return spatialSvcs.Union(this, other);
         }
 
         /// <summary>
@@ -518,7 +566,7 @@ namespace System.Data.Entity.Core.Spatial
         public DbGeography Difference(DbGeography other)
         {
             other.CheckNull("other");
-            return this.spatialSvcs.Difference(this, other);
+            return spatialSvcs.Difference(this, other);
         }
 
         /// <summary>
@@ -530,7 +578,7 @@ namespace System.Data.Entity.Core.Spatial
         public DbGeography SymmetricDifference(DbGeography other)
         {
             other.CheckNull("other");
-            return this.spatialSvcs.SymmetricDifference(this, other);
+            return spatialSvcs.SymmetricDifference(this, other);
         }
 
         #endregion
@@ -541,7 +589,10 @@ namespace System.Data.Entity.Core.Spatial
         /// Gets the number of elements in this DbGeography value, if it represents a geography collection.
         /// <returns>The number of elements in this geography value, if it represents a collection of other geography values; otherwise <c>null</c>.</returns>
         /// </summary>
-        public int? ElementCount { get { return this.spatialSvcs.GetElementCount(this); } }
+        public int? ElementCount
+        {
+            get { return spatialSvcs.GetElementCount(this); }
+        }
 
         /// <summary>
         /// Returns an element of this DbGeography value from a specific position, if it represents a geography collection.
@@ -550,7 +601,7 @@ namespace System.Data.Entity.Core.Spatial
         /// </summary>
         public DbGeography ElementAt(int index)
         {
-            return this.spatialSvcs.ElementAt(this, index);
+            return spatialSvcs.ElementAt(this, index);
         }
 
         #endregion
@@ -561,25 +612,37 @@ namespace System.Data.Entity.Core.Spatial
         /// Gets the Latitude coordinate of this DbGeography value, if it represents a point.
         /// <returns>The Latitude coordinate value of this geography value, if it represents a point; otherwise <c>null</c>.</returns>
         /// </summary>
-        public double? Latitude { get { return this.spatialSvcs.GetLatitude(this); } }
+        public double? Latitude
+        {
+            get { return spatialSvcs.GetLatitude(this); }
+        }
 
         /// <summary>
         /// Gets the Longitude coordinate of this DbGeography value, if it represents a point.
         /// <returns>The Longitude coordinate value of this geography value, if it represents a point; otherwise <c>null</c>.</returns>
         /// </summary>
-        public double? Longitude { get { return this.spatialSvcs.GetLongitude(this); } }
+        public double? Longitude
+        {
+            get { return spatialSvcs.GetLongitude(this); }
+        }
 
         /// <summary>
         /// Gets the elevation (Z coordinate) of this DbGeography value, if it represents a point.
         /// <returns>The elevation (Z coordinate) value of this geography value, if it represents a point; otherwise <c>null</c>.</returns>
         /// </summary>
-         public double? Elevation { get { return this.spatialSvcs.GetElevation(this); } }
+        public double? Elevation
+        {
+            get { return spatialSvcs.GetElevation(this); }
+        }
 
         /// <summary>
         /// Gets the M (Measure) coordinate of this DbGeography value, if it represents a point.
         /// <returns>The M (Measure) coordinate value of this geography value, if it represents a point; otherwise <c>null</c>.</returns>
         /// </summary>
-        public double? Measure { get { return this.spatialSvcs.GetMeasure(this); } }
+        public double? Measure
+        {
+            get { return spatialSvcs.GetMeasure(this); }
+        }
 
         #endregion
 
@@ -588,22 +651,34 @@ namespace System.Data.Entity.Core.Spatial
         /// <summary>
         /// Gets a nullable double value that indicates the length of this DbGeography value, which may be null if this value does not represent a curve.
         /// </summary>
-        public double? Length { get { return this.spatialSvcs.GetLength(this); } }
+        public double? Length
+        {
+            get { return spatialSvcs.GetLength(this); }
+        }
 
         /// <summary>
         /// Gets a DbGeography value representing the start point of this value, which may be null if this DbGeography value does not represent a curve.
         /// </summary>
-        public DbGeography StartPoint { get { return this.spatialSvcs.GetStartPoint(this); } }
+        public DbGeography StartPoint
+        {
+            get { return spatialSvcs.GetStartPoint(this); }
+        }
 
         /// <summary>
         /// Gets a DbGeography value representing the start point of this value, which may be null if this DbGeography value does not represent a curve.
         /// </summary>
-        public DbGeography EndPoint { get { return this.spatialSvcs.GetEndPoint(this); } }
+        public DbGeography EndPoint
+        {
+            get { return spatialSvcs.GetEndPoint(this); }
+        }
 
         /// <summary>
         /// Gets a nullable Boolean value indicating whether this DbGeography value is closed, which may be null if this value does not represent a curve.
         /// </summary>
-        public bool? IsClosed { get { return this.spatialSvcs.GetIsClosed(this); } }
+        public bool? IsClosed
+        {
+            get { return spatialSvcs.GetIsClosed(this); }
+        }
 
         #endregion
 
@@ -613,7 +688,10 @@ namespace System.Data.Entity.Core.Spatial
         /// Gets the number of points in this DbGeography value, if it represents a linestring or linear ring.
         /// <returns>The number of elements in this geography value, if it represents a linestring or linear ring; otherwise <c>null</c>.</returns>
         /// </summary>
-        public int? PointCount { get { return this.spatialSvcs.GetPointCount(this); } }
+        public int? PointCount
+        {
+            get { return spatialSvcs.GetPointCount(this); }
+        }
 
         /// <summary>
         /// Returns an element of this DbGeography value from a specific position, if it represents a linestring or linear ring.
@@ -622,7 +700,7 @@ namespace System.Data.Entity.Core.Spatial
         /// </summary>
         public DbGeography PointAt(int index)
         {
-            return this.spatialSvcs.PointAt(this, index);
+            return spatialSvcs.PointAt(this, index);
         }
 
         #endregion
@@ -632,18 +710,24 @@ namespace System.Data.Entity.Core.Spatial
         /// <summary>
         /// Gets a nullable double value that indicates the area of this DbGeography value, which may be null if this value does not represent a surface.
         /// </summary>
-        public double? Area { get { return this.spatialSvcs.GetArea(this); } }
+        public double? Area
+        {
+            get { return spatialSvcs.GetArea(this); }
+        }
 
         #endregion
 
         #region ToString
+
         /// <summary>
         /// Returns a string representation of the geography value.
         /// </summary>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "SRID={1};{0}", this.WellKnownValue.WellKnownText ?? base.ToString(), this.CoordinateSystemId);
+            return string.Format(
+                CultureInfo.InvariantCulture, "SRID={1};{0}", WellKnownValue.WellKnownText ?? base.ToString(), CoordinateSystemId);
         }
+
         #endregion
     }
 }

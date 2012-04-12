@@ -13,15 +13,6 @@
 !!                                                                           !!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
-/*-----------------------------------------------------------------------------
-// <copyright file="CqlGrammar.y" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-//
-// @owner  almineev
-// @backupOwner simoncav
-//---------------------------------------------------------------------------*/
-
 using System;
 using System.Data.Common.EntitySql.AST;
 using System.Data.Entity;

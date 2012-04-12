@@ -1,9 +1,11 @@
-﻿using System.Data.Entity.Core.Metadata.Edm;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace System.Data.Entity.Core.Query.InternalTrees
+﻿namespace System.Data.Entity.Core.Query.InternalTrees
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Mapping.ViewGeneration;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Linq;
+
     /// <summary>
     /// Describes user-defined discriminator metadata (e.g. for a basic TPH mapping). Encapsulates
     /// relevant data from System.Data.Entity.Core.Mapping.ViewGenerabetion.DiscriminatorMap (that is to say,
@@ -15,11 +17,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     /// </summary>
     internal class ExplicitDiscriminatorMap
     {
-        private readonly System.Collections.ObjectModel.ReadOnlyCollection<KeyValuePair<object, EntityType>> m_typeMap;
+        private readonly ReadOnlyCollection<KeyValuePair<object, EntityType>> m_typeMap;
         private readonly EdmMember m_discriminatorProperty;
-        private readonly System.Collections.ObjectModel.ReadOnlyCollection<EdmProperty> m_properties;
+        private readonly ReadOnlyCollection<EdmProperty> m_properties;
 
-        internal ExplicitDiscriminatorMap(System.Data.Entity.Core.Mapping.ViewGeneration.DiscriminatorMap template)
+        internal ExplicitDiscriminatorMap(DiscriminatorMap template)
         {
             m_typeMap = template.TypeMap;
             m_discriminatorProperty = template.Discriminator.Property;
@@ -30,7 +32,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         /// Maps from discriminator value to type.
         /// </summary>
-        internal System.Collections.ObjectModel.ReadOnlyCollection<KeyValuePair<object, EntityType>> TypeMap
+        internal ReadOnlyCollection<KeyValuePair<object, EntityType>> TypeMap
         {
             get { return m_typeMap; }
         }
@@ -43,11 +45,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             get { return m_discriminatorProperty; }
         }
 
-
         /// <summary>
         /// All properties for the type hierarchy.
         /// </summary>
-        internal System.Collections.ObjectModel.ReadOnlyCollection<EdmProperty> Properties
+        internal ReadOnlyCollection<EdmProperty> Properties
         {
             get { return m_properties; }
         }
@@ -58,7 +59,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal object GetTypeId(EntityType entityType)
         {
             object result = null;
-            foreach (var discriminatorTypePair in this.TypeMap)
+            foreach (var discriminatorTypePair in TypeMap)
             {
                 if (discriminatorTypePair.Value.EdmEquals(entityType))
                 {

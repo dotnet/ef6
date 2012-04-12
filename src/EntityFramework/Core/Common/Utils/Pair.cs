@@ -1,51 +1,46 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using System.Linq;
-
-
-namespace System.Data.Entity.Core.Common.Utils
+﻿namespace System.Data.Entity.Core.Common.Utils
 {
+    using System.Collections.Generic;
+    using System.Text;
+
     internal class Pair<TFirst, TSecond> : InternalBase
     {
         #region Fields
+
         private readonly TFirst first;
         private readonly TSecond second;
 
         #endregion
 
         #region Constructor
+
         internal Pair(TFirst first, TSecond second)
         {
             this.first = first;
             this.second = second;
         }
+
         #endregion
 
         #region Properties
+
         internal TFirst First
         {
-            get
-            {
-                return first;
-            }
+            get { return first; }
         }
 
         internal TSecond Second
         {
-            get
-            {
-                return second;
-            }
+            get { return second; }
         }
-        #endregion 
+
+        #endregion
 
         #region Methods
+
         public override int GetHashCode()
         {
-            return (first.GetHashCode()<<5) ^ second.GetHashCode();
+            return (first.GetHashCode() << 5) ^ second.GetHashCode();
         }
 
         public bool Equals(Pair<TFirst, TSecond> other)
@@ -55,26 +50,30 @@ namespace System.Data.Entity.Core.Common.Utils
 
         public override bool Equals(object other)
         {
-            Pair<TFirst, TSecond> otherPair = other as Pair<TFirst, TSecond>;
+            var otherPair = other as Pair<TFirst, TSecond>;
 
             return (otherPair != null && Equals(otherPair));
         }
+
         #endregion
 
         #region InternalBase
+
         internal override void ToCompactString(StringBuilder builder)
         {
             builder.Append("<");
-            builder.Append(first.ToString());
-            builder.Append(", "+second.ToString());
+            builder.Append(first);
+            builder.Append(", " + second);
             builder.Append(">");
         }
-        #endregion
 
+        #endregion
 
         internal class PairComparer : IEqualityComparer<Pair<TFirst, TSecond>>
         {
-            private PairComparer() { }
+            private PairComparer()
+            {
+            }
 
             internal static readonly PairComparer Instance = new PairComparer();
             private static readonly EqualityComparer<TFirst> firstComparer = EqualityComparer<TFirst>.Default;
@@ -91,7 +90,4 @@ namespace System.Data.Entity.Core.Common.Utils
             }
         }
     }
-
-    
-
 }

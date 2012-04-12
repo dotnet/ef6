@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
@@ -16,6 +17,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     internal sealed class UpdateCompiler
     {
         #region Constructors
+
         /// <summary>
         /// Initialize an update compiler.
         /// </summary>
@@ -24,11 +26,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             m_translator = translator;
         }
+
         #endregion
 
         #region Fields
+
         internal readonly UpdateTranslator m_translator;
         private const string s_targetVarName = "target";
+
         #endregion
 
         /// <summary>
@@ -40,18 +45,19 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         internal UpdateCommand BuildDeleteCommand(PropagatorResult oldRow, TableChangeProcessor processor)
         {
             // If we're deleting a row, the row must always be touched
-            bool rowMustBeTouched = true;
+            var rowMustBeTouched = true;
 
             // Initialize DML command tree
-            DbExpressionBinding target = GetTarget(processor);
+            var target = GetTarget(processor);
 
             // Create delete predicate
-            DbExpression predicate = BuildPredicate(target, oldRow, null, processor, ref rowMustBeTouched);
-            DbDeleteCommandTree commandTree = new DbDeleteCommandTree(m_translator.MetadataWorkspace, DataSpace.SSpace, target, predicate);
+            var predicate = BuildPredicate(target, oldRow, null, processor, ref rowMustBeTouched);
+            var commandTree = new DbDeleteCommandTree(m_translator.MetadataWorkspace, DataSpace.SSpace, target, predicate);
 
             // Set command
             // Initialize delete command
-            UpdateCommand command = new DynamicUpdateCommand(processor, m_translator, ModificationOperator.Delete, oldRow, null, commandTree, null);
+            UpdateCommand command = new DynamicUpdateCommand(
+                processor, m_translator, ModificationOperator.Delete, oldRow, null, commandTree, null);
 
             return command;
         }
@@ -63,19 +69,20 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="newRow">New value for the row being updated.</param>
         /// <param name="processor">Context for the table containing row.</param>
         /// <returns>Update command.</returns>
-        internal UpdateCommand BuildUpdateCommand(PropagatorResult oldRow,
+        internal UpdateCommand BuildUpdateCommand(
+            PropagatorResult oldRow,
             PropagatorResult newRow, TableChangeProcessor processor)
         {
             // If we're updating a row, the row may not need to be touched (e.g., no concurrency validation required)
-            bool rowMustBeTouched = false;
+            var rowMustBeTouched = false;
 
-            DbExpressionBinding target = GetTarget(processor);
+            var target = GetTarget(processor);
 
             // Create set clauses and returning parameter
             Dictionary<int, string> outputIdentifiers;
             DbExpression returning;
-            List<DbModificationClause> setClauses = new List<DbModificationClause>();
-            foreach (DbModificationClause clause in BuildSetClauses(
+            var setClauses = new List<DbModificationClause>();
+            foreach (var clause in BuildSetClauses(
                 target, newRow, oldRow, processor, /* insertMode */ false, out outputIdentifiers, out returning,
                 ref rowMustBeTouched))
             {
@@ -83,17 +90,19 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             // Construct predicate identifying the row to modify
-            DbExpression predicate = BuildPredicate(target, oldRow, newRow, processor, ref rowMustBeTouched);
-            
+            var predicate = BuildPredicate(target, oldRow, newRow, processor, ref rowMustBeTouched);
+
             if (0 == setClauses.Count)
             {
                 if (rowMustBeTouched)
                 {
-                    List<IEntityStateEntry> stateEntries = new List<IEntityStateEntry>();
-                    stateEntries.AddRange(SourceInterpreter.GetAllStateEntries(
-                        oldRow, m_translator, processor.Table));
-                    stateEntries.AddRange(SourceInterpreter.GetAllStateEntries(
-                        newRow, m_translator, processor.Table));
+                    var stateEntries = new List<IEntityStateEntry>();
+                    stateEntries.AddRange(
+                        SourceInterpreter.GetAllStateEntries(
+                            oldRow, m_translator, processor.Table));
+                    stateEntries.AddRange(
+                        SourceInterpreter.GetAllStateEntries(
+                            newRow, m_translator, processor.Table));
                     if (stateEntries.All(it => (it.State == EntityState.Unchanged)))
                     {
                         rowMustBeTouched = false;
@@ -109,11 +118,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             // Initialize DML command tree
-            DbUpdateCommandTree commandTree =
-                new DbUpdateCommandTree(m_translator.MetadataWorkspace, DataSpace.SSpace, target, predicate, setClauses.AsReadOnly(), returning);
+            var commandTree =
+                new DbUpdateCommandTree(
+                    m_translator.MetadataWorkspace, DataSpace.SSpace, target, predicate, setClauses.AsReadOnly(), returning);
 
             // Create command
-            UpdateCommand command = new DynamicUpdateCommand(processor, m_translator, ModificationOperator.Update, oldRow, newRow, commandTree, outputIdentifiers);
+            UpdateCommand command = new DynamicUpdateCommand(
+                processor, m_translator, ModificationOperator.Update, oldRow, newRow, commandTree, outputIdentifiers);
 
             return command;
         }
@@ -127,25 +138,27 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         internal UpdateCommand BuildInsertCommand(PropagatorResult newRow, TableChangeProcessor processor)
         {
             // Bind the insert target
-            DbExpressionBinding target = GetTarget(processor);
+            var target = GetTarget(processor);
 
             // Create set clauses and returning parameter
             Dictionary<int, string> outputIdentifiers;
             DbExpression returning;
-            bool rowMustBeTouched = true; // for inserts, the row must always be touched
-            List<DbModificationClause> setClauses = new List<DbModificationClause>();
-            foreach (DbModificationClause clause in BuildSetClauses(target, newRow, null, processor, /* insertMode */ true, out outputIdentifiers,
+            var rowMustBeTouched = true; // for inserts, the row must always be touched
+            var setClauses = new List<DbModificationClause>();
+            foreach (var clause in BuildSetClauses(
+                target, newRow, null, processor, /* insertMode */ true, out outputIdentifiers,
                 out returning, ref rowMustBeTouched))
             {
                 setClauses.Add(clause);
             }
 
             // Initialize DML command tree
-            DbInsertCommandTree commandTree =
+            var commandTree =
                 new DbInsertCommandTree(m_translator.MetadataWorkspace, DataSpace.SSpace, target, setClauses.AsReadOnly(), returning);
 
             // Create command
-            UpdateCommand command = new DynamicUpdateCommand(processor, m_translator, ModificationOperator.Insert, null, newRow, commandTree, outputIdentifiers);
+            UpdateCommand command = new DynamicUpdateCommand(
+                processor, m_translator, ModificationOperator.Insert, null, newRow, commandTree, outputIdentifiers);
 
             return command;
         }
@@ -171,39 +184,43 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="rowMustBeTouched">Indicates whether the row must be touched 
         /// because it produces a value (e.g. computed)</param>
         /// <returns>Column value pairs.</returns>
-        private IEnumerable<DbModificationClause> BuildSetClauses(DbExpressionBinding target, PropagatorResult row,
-            PropagatorResult originalRow, TableChangeProcessor processor, bool insertMode, out Dictionary<int, string> outputIdentifiers, out DbExpression returning,
+        private IEnumerable<DbModificationClause> BuildSetClauses(
+            DbExpressionBinding target, PropagatorResult row,
+            PropagatorResult originalRow, TableChangeProcessor processor, bool insertMode, out Dictionary<int, string> outputIdentifiers,
+            out DbExpression returning,
             ref bool rowMustBeTouched)
         {
-            Dictionary<EdmProperty, PropagatorResult> setClauses = new Dictionary<EdmProperty, PropagatorResult>();
-            List<KeyValuePair<string, DbExpression>> returningArguments = new List<KeyValuePair<string, DbExpression>>();
+            var setClauses = new Dictionary<EdmProperty, PropagatorResult>();
+            var returningArguments = new List<KeyValuePair<string, DbExpression>>();
             outputIdentifiers = new Dictionary<int, string>();
 
             // Determine which flags indicate a property should be omitted from the set list.
-            PropagatorFlags omitMask = insertMode ? PropagatorFlags.NoFlags :
-                PropagatorFlags.Preserve | PropagatorFlags.Unknown;
+            var omitMask = insertMode
+                               ? PropagatorFlags.NoFlags
+                               : PropagatorFlags.Preserve | PropagatorFlags.Unknown;
 
-            for (int propertyOrdinal = 0; propertyOrdinal < processor.Table.ElementType.Properties.Count; propertyOrdinal++)
+            for (var propertyOrdinal = 0; propertyOrdinal < processor.Table.ElementType.Properties.Count; propertyOrdinal++)
             {
-                EdmProperty property = processor.Table.ElementType.Properties[propertyOrdinal];
+                var property = processor.Table.ElementType.Properties[propertyOrdinal];
 
                 // Type members and result values are ordinally aligned
-                PropagatorResult propertyResult = row.GetMemberValue(propertyOrdinal);
+                var propertyResult = row.GetMemberValue(propertyOrdinal);
 
-                if (PropagatorResult.NullIdentifier != propertyResult.Identifier)
+                if (PropagatorResult.NullIdentifier
+                    != propertyResult.Identifier)
                 {
                     // retrieve principal value
                     propertyResult = propertyResult.ReplicateResultWithNewValue(
                         m_translator.KeyManager.GetPrincipalValue(propertyResult));
                 }
 
-                bool omitFromSetList = false;
+                var omitFromSetList = false;
 
                 Debug.Assert(propertyResult.IsSimple);
 
                 // Determine if this is a key value
-                bool isKey = false;
-                for (int i = 0; i < processor.KeyOrdinals.Length; i++)
+                var isKey = false;
+                for (var i = 0; i < processor.KeyOrdinals.Length; i++)
                 {
                     if (processor.KeyOrdinals[i] == propertyOrdinal)
                     {
@@ -213,7 +230,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 }
 
                 // check if this value should be omitted
-                PropagatorFlags flags = PropagatorFlags.NoFlags;
+                var flags = PropagatorFlags.NoFlags;
                 if (!insertMode && isKey)
                 {
                     // Keys are only set for inserts
@@ -228,41 +245,44 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 }
 
                 // Determine if this value is server-generated
-                StoreGeneratedPattern genPattern = MetadataHelper.GetStoreGeneratedPattern(property);
-                bool isServerGen = genPattern == StoreGeneratedPattern.Computed ||
-                    (insertMode && genPattern == StoreGeneratedPattern.Identity);
+                var genPattern = MetadataHelper.GetStoreGeneratedPattern(property);
+                var isServerGen = genPattern == StoreGeneratedPattern.Computed ||
+                                  (insertMode && genPattern == StoreGeneratedPattern.Identity);
                 if (isServerGen)
                 {
-                    DbPropertyExpression propertyExpression = target.Variable.Property(property);
+                    var propertyExpression = target.Variable.Property(property);
                     returningArguments.Add(new KeyValuePair<string, DbExpression>(property.Name, propertyExpression));
 
                     // check if this is a server generated identifier
-                    int identifier = propertyResult.Identifier;
+                    var identifier = propertyResult.Identifier;
                     if (PropagatorResult.NullIdentifier != identifier)
                     {
                         if (m_translator.KeyManager.HasPrincipals(identifier))
                         {
-                            throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.Update_GeneratedDependent(property.Name));
+                            throw EntityUtil.InvalidOperation(Strings.Update_GeneratedDependent(property.Name));
                         }
                         outputIdentifiers.Add(identifier, property.Name);
 
                         // If this property maps an identifier (in the update pipeline) it may
                         // also be a store key. If so, the pattern had better be "Identity"
                         // since otherwise we're dealing with a mutable key.
-                        if (genPattern != StoreGeneratedPattern.Identity &&
+                        if (genPattern != StoreGeneratedPattern.Identity
+                            &&
                             processor.IsKeyProperty(propertyOrdinal))
                         {
-                            throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.Update_NotSupportedComputedKeyColumn(
-                                EdmProviderManifest.StoreGeneratedPatternFacetName,
-                                XmlConstants.Computed,
-                                XmlConstants.Identity,
-                                property.Name,
-                                property.DeclaringType.FullName));
+                            throw EntityUtil.NotSupported(
+                                Strings.Update_NotSupportedComputedKeyColumn(
+                                    EdmProviderManifest.StoreGeneratedPatternFacetName,
+                                    XmlConstants.Computed,
+                                    XmlConstants.Identity,
+                                    property.Name,
+                                    property.DeclaringType.FullName));
                         }
                     }
                 }
 
-                if (PropagatorFlags.NoFlags != (flags & (omitMask)))
+                if (PropagatorFlags.NoFlags
+                    != (flags & (omitMask)))
                 {
                     // column value matches "omit" pattern, therefore should not be set
                     omitFromSetList = true;
@@ -279,20 +299,22 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 }
 
                 // make the user is not updating an identity value
-                if (!omitFromSetList && !insertMode && genPattern == StoreGeneratedPattern.Identity)
+                if (!omitFromSetList && !insertMode
+                    && genPattern == StoreGeneratedPattern.Identity)
                 {
                     //throw the error only if the value actually changed
                     Debug.Assert(originalRow != null, "Updated records should have a original row");
-                    PropagatorResult originalPropertyResult = originalRow.GetMemberValue(propertyOrdinal);
+                    var originalPropertyResult = originalRow.GetMemberValue(propertyOrdinal);
                     Debug.Assert(originalPropertyResult.IsSimple, "Server Gen property that is not primitive?");
                     Debug.Assert(propertyResult.IsSimple, "Server Gen property that is not primitive?");
 
                     if (!ByValueEqualityComparer.Default.Equals(originalPropertyResult.GetSimpleValue(), propertyResult.GetSimpleValue()))
                     {
-                        throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.Update_ModifyingIdentityColumn(
-                            XmlConstants.Identity,
-                            property.Name,
-                            property.DeclaringType.FullName));
+                        throw EntityUtil.InvalidOperation(
+                            Strings.Update_ModifyingIdentityColumn(
+                                XmlConstants.Identity,
+                                property.Name,
+                                property.DeclaringType.FullName));
                     }
                     else
                     {
@@ -300,7 +322,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     }
                 }
 
-                if (!omitFromSetList) { setClauses.Add(property, propertyResult); }
+                if (!omitFromSetList)
+                {
+                    setClauses.Add(property, propertyResult);
+                }
             }
 
             // Construct returning projection
@@ -314,14 +339,15 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             // Construct clauses corresponding to the set clauses
-            List<DbModificationClause> result = new List<DbModificationClause>(setClauses.Count);
-            foreach (KeyValuePair<EdmProperty, PropagatorResult> setClause in setClauses)
+            var result = new List<DbModificationClause>(setClauses.Count);
+            foreach (var setClause in setClauses)
             {
-                EdmProperty property = setClause.Key;
+                var property = setClause.Key;
 
-                result.Add(new DbSetClause(
-                    GeneratePropertyExpression(target, setClause.Key),
-                    GenerateValueExpression(setClause.Key, setClause.Value)));
+                result.Add(
+                    new DbSetClause(
+                        GeneratePropertyExpression(target, setClause.Key),
+                        GenerateValueExpression(setClause.Key, setClause.Value)));
             }
 
             return result;
@@ -344,22 +370,24 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="rowMustBeTouched">Output parameter indicating whether a row must be touched
         /// (whether it's being modified or not) because it contains a concurrency value</param>
         /// <returns>Column/value pairs.</returns>
-        private DbExpression BuildPredicate(DbExpressionBinding target, PropagatorResult referenceRow, PropagatorResult current,
+        private DbExpression BuildPredicate(
+            DbExpressionBinding target, PropagatorResult referenceRow, PropagatorResult current,
             TableChangeProcessor processor, ref bool rowMustBeTouched)
         {
-            Dictionary<EdmProperty, PropagatorResult> whereClauses = new Dictionary<EdmProperty, PropagatorResult>();
+            var whereClauses = new Dictionary<EdmProperty, PropagatorResult>();
 
             // add all concurrency tokens (note that keys are always concurrency tokens as well)
-            int propertyOrdinal = 0;
-            foreach (EdmProperty member in processor.Table.ElementType.Properties)
+            var propertyOrdinal = 0;
+            foreach (var member in processor.Table.ElementType.Properties)
             {
                 // members and result values are ordinally aligned
-                PropagatorResult expectedValue = referenceRow.GetMemberValue(propertyOrdinal);
-                PropagatorResult newValue = null == current ? null : current.GetMemberValue(propertyOrdinal);
+                var expectedValue = referenceRow.GetMemberValue(propertyOrdinal);
+                var newValue = null == current ? null : current.GetMemberValue(propertyOrdinal);
 
                 // check if the rowMustBeTouched value should be set to true (if it isn't already
                 // true and we've come across a concurrency value)
-                if (!rowMustBeTouched &&
+                if (!rowMustBeTouched
+                    &&
                     (HasFlag(expectedValue, PropagatorFlags.ConcurrencyValue) ||
                      HasFlag(newValue, PropagatorFlags.ConcurrencyValue)))
                 {
@@ -367,7 +395,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 }
 
                 // determine if this is a concurrency value
-                if (!whereClauses.ContainsKey(member) && // don't add to the set clause twice
+                if (!whereClauses.ContainsKey(member)
+                    && // don't add to the set clause twice
                     (HasFlag(expectedValue, PropagatorFlags.ConcurrencyValue | PropagatorFlags.Key) ||
                      HasFlag(newValue, PropagatorFlags.ConcurrencyValue | PropagatorFlags.Key))) // tagged as concurrency value
                 {
@@ -378,11 +407,17 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             // Build a binary AND expression tree from the clauses
             DbExpression predicate = null;
-            foreach (KeyValuePair<EdmProperty, PropagatorResult> clause in whereClauses)
+            foreach (var clause in whereClauses)
             {
-                DbExpression clauseExpression = GenerateEqualityExpression(target, clause.Key, clause.Value);
-                if (null == predicate) { predicate = clauseExpression; }
-                else { predicate = predicate.And(clauseExpression); }
+                var clauseExpression = GenerateEqualityExpression(target, clause.Key, clause.Value);
+                if (null == predicate)
+                {
+                    predicate = clauseExpression;
+                }
+                else
+                {
+                    predicate = predicate.And(clauseExpression);
+                }
             }
 
             Debug.Assert(null != predicate, "some predicate term must exist");
@@ -397,9 +432,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             Debug.Assert(null != target && null != property && null != value);
 
-            DbExpression propertyExpression = GeneratePropertyExpression(target, property);
-            DbExpression valueExpression = GenerateValueExpression(property, value);
-            if (valueExpression.ExpressionKind == DbExpressionKind.Null)
+            var propertyExpression = GeneratePropertyExpression(target, property);
+            var valueExpression = GenerateValueExpression(property, value);
+            if (valueExpression.ExpressionKind
+                == DbExpressionKind.Null)
             {
                 return propertyExpression.IsNull();
             }
@@ -424,15 +460,15 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             if (value.IsNull)
             {
-                return DbExpressionBuilder.Null(Helper.GetModelTypeUsage(property));
+                return Helper.GetModelTypeUsage(property).Null();
             }
-            object principalValue = m_translator.KeyManager.GetPrincipalValue(value);
+            var principalValue = m_translator.KeyManager.GetPrincipalValue(value);
 
             if (Convert.IsDBNull(principalValue))
             {
                 // although the result may be marked non-null (because it is an identifier) it is possible
                 // there is no corresponding real value for the property yet
-                return DbExpressionBuilder.Null(Helper.GetModelTypeUsage(property));
+                return Helper.GetModelTypeUsage(property).Null();
             }
             else
             {
@@ -448,8 +484,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 Debug.Assert(Nullable.GetUnderlyingType(principalValue.GetType()) == null, "Unexpected nullable type.");
 
-                TypeUsage propertyType = Helper.GetModelTypeUsage(property);
-                Type principalType = principalValue.GetType();
+                var propertyType = Helper.GetModelTypeUsage(property);
+                var principalType = principalValue.GetType();
 
                 if (principalType.IsEnum)
                 {
@@ -463,7 +499,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     principalValue = Convert.ChangeType(principalValue, columnClrEquivalentType, CultureInfo.InvariantCulture);
                 }
 
-                return DbExpressionBuilder.Constant(propertyType, principalValue);
+                return propertyType.Constant(principalValue);
             }
         }
 
@@ -471,7 +507,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // Requires: input is set
         private static bool HasFlag(PropagatorResult input, PropagatorFlags flags)
         {
-            if (null == input) { return false; }
+            if (null == input)
+            {
+                return false;
+            }
             return (PropagatorFlags.NoFlags != (flags & input.PropagatorFlags));
         }
 

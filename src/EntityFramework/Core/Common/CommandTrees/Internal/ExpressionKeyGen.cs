@@ -1,13 +1,10 @@
 namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 {
-    using System;
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Common;
-    using System.Data.Common;
-    using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Spatial;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -37,17 +34,21 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             }
         }
 
-        private ExpressionKeyGen() { }
+        private ExpressionKeyGen()
+        {
+        }
 
         #region Fields
+
         private readonly StringBuilder _key = new StringBuilder();
 
-        private static string[] _exprKindNames = InitializeExprKindNames();
+        private static readonly string[] _exprKindNames = InitializeExprKindNames();
+
         private static string[] InitializeExprKindNames()
         {
 #if DEBUG
             var values = Enum.GetValues(typeof(DbExpressionKind)).Cast<int>().ToArray();
-            for (int i = 0; i < values.Length; ++i)
+            for (var i = 0; i < values.Length; ++i)
             {
                 // If there are gaps, then we need to change the algorithm for building _exprKindNames.
                 Debug.Assert(i == values[i], "Are there any gaps in DbExpressionKind members?");
@@ -96,8 +97,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             // Out of these four sources, ##2, 3 and 4 provide stable names in the sense that the same conversion by ExpressionConverted
             // will produce the same variable names for the same linq query. It is assumed that unless there is a code defect, 
             // ELinq queries will contain variables from the stable sources only, so this check is debug only.
-            var _notSupportedVarNames = new Regex("^" + ExpressionBuilder.DbExpressionBuilder.AliasGenerator.Prefix + "[0-9]+");
-            Debug.Assert(_notSupportedVarNames.Match(varName).Success == false, "ExpressionKeyGen does not support variables generated using default expression builder alias generator.");
+            var _notSupportedVarNames = new Regex("^" + DbExpressionBuilder.AliasGenerator.Prefix + "[0-9]+");
+            Debug.Assert(
+                _notSupportedVarNames.Match(varName).Success == false,
+                "ExpressionKeyGen does not support variables generated using default expression builder alias generator.");
 #endif
             _key.Append('\'');
             _key.Append(varName.Replace("'", "''"));
@@ -177,14 +180,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbExpression e)
         {
-            throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.Cqt_General_UnsupportedExpression(e.GetType().FullName));
+            throw EntityUtil.NotSupported(Strings.Cqt_General_UnsupportedExpression(e.GetType().FullName));
         }
 
         public override void Visit(DbConstantExpression e)
         {
             Debug.Assert(TypeSemantics.IsScalarType(e.ResultType), "Non-scalar type constant expressions are not supported.");
             var primitive = TypeHelpers.GetPrimitiveTypeUsageForScalar(e.ResultType);
-            
+
             switch (((PrimitiveType)primitive.EdmType).PrimitiveTypeKind)
             {
                 case PrimitiveTypeKind.Binary:
@@ -192,7 +195,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
                     if (byteArray != null)
                     {
                         _key.Append("'");
-                        foreach (byte b in byteArray)
+                        foreach (var b in byteArray)
                         {
                             _key.AppendFormat("{0:X2}", b);
                         }
@@ -464,7 +467,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         {
             VisitExprKind(e.ExpressionKind);
             _key.Append('(');
-            for (int idx = 0; idx < e.When.Count; idx++)
+            for (var idx = 0; idx < e.When.Count; idx++)
             {
                 _key.Append("WHEN:(");
                 e.When[idx].Accept(this);
@@ -490,7 +493,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             }
             if (e.HasRelatedEntityReferences)
             {
-                foreach (DbRelatedEntityRef relatedRef in e.RelatedEntityReferences)
+                foreach (var relatedRef in e.RelatedEntityReferences)
                 {
                     _key.Append("RE(A(");
                     _key.Append(relatedRef.SourceEnd.DeclaringType.Identity);
@@ -695,6 +698,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             e.Predicate.Accept(this);
             _key.Append("))");
         }
+
         #endregion
     }
 }

@@ -1,7 +1,7 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
-    using System;
     using System.Collections.Generic;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
@@ -12,6 +12,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     internal class OpCopier : BasicOpVisitorOfNode
     {
         #region (pseudo) Public API
+
         internal static Node Copy(Command cmd, Node n)
         {
             VarMap varMap;
@@ -30,11 +31,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal static Node Copy(Command cmd, Node node, VarList varList, out VarList newVarList)
         {
             VarMap varMap;
-            Node newNode = Copy(cmd, node, out varMap);
+            var newNode = Copy(cmd, node, out varMap);
             newVarList = Command.CreateVarList();
-            foreach (Var v in varList)
+            foreach (var v in varList)
             {
-                Var newVar = varMap[v];
+                var newVar = varMap[v];
                 newVarList.Add(newVar);
             }
             return newNode;
@@ -42,17 +43,18 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         internal static Node Copy(Command cmd, Node n, out VarMap varMap)
         {
-            OpCopier oc = new OpCopier(cmd);
-            Node newNode = oc.CopyNode(n);
+            var oc = new OpCopier(cmd);
+            var newNode = oc.CopyNode(n);
             varMap = oc.m_varMap;
             return newNode;
         }
 
         internal static List<SortKey> Copy(Command cmd, List<SortKey> sortKeys)
         {
-            OpCopier oc = new OpCopier(cmd);
+            var oc = new OpCopier(cmd);
             return oc.Copy(sortKeys);
         }
+
         #endregion
 
         // WARNING
@@ -60,18 +62,24 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         // WARNING
 
         #region Private State
-        private Command m_srcCmd;
+
+        private readonly Command m_srcCmd;
         protected Command m_destCmd;
         // Map of var to cloned Var
         protected VarMap m_varMap;
+
         #endregion
 
         #region Constructors (private)
+
         /// <summary>
         /// Constructor. Allows for cloning of nodes within the same command
         /// </summary>
         /// <param name="cmd">The command</param>
-        protected OpCopier(Command cmd) : this(cmd, cmd) {}
+        protected OpCopier(Command cmd)
+            : this(cmd, cmd)
+        {
+        }
 
         /// <summary>
         /// Constructor. Allows for cloning of nodes across commands
@@ -84,6 +92,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             m_destCmd = destCommand;
             m_varMap = new VarMap();
         }
+
         #endregion
 
         #region Private State Management
@@ -112,7 +121,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             //
             if (m_destCmd != m_srcCmd)
             {
-                throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.UnknownVar, 6); 
+                throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.UnknownVar, 6);
             }
 
             //
@@ -141,7 +150,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             // Map the corresponding columns of the table
             // Now set up the column map
-            for (int i = 0; i < oldTable.Columns.Count; i++)
+            for (var i = 0; i < oldTable.Columns.Count; i++)
             {
                 SetMappedVar(oldTable.Columns[i], newTable.Columns[i]);
             }
@@ -155,9 +164,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>output mapped vars</returns>
         private IEnumerable<Var> MapVars(IEnumerable<Var> vars)
         {
-            foreach (Var v in vars)
+            foreach (var v in vars)
             {
-                Var mappedVar = GetMappedVar(v);
+                var mappedVar = GetMappedVar(v);
                 yield return mappedVar;
             }
         }
@@ -170,7 +179,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>a mapped varvec</returns>
         private VarVec Copy(VarVec vars)
         {
-            VarVec newVarVec = m_destCmd.CreateVarVec(MapVars(vars));
+            var newVarVec = m_destCmd.CreateVarVec(MapVars(vars));
             return newVarVec;
         }
 
@@ -183,7 +192,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>mapped varlist</returns>
         private VarList Copy(VarList varList)
         {
-            VarList newVarList = Command.CreateVarList(MapVars(varList));
+            var newVarList = Command.CreateVarList(MapVars(varList));
             return newVarList;
         }
 
@@ -198,7 +207,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                 GetMappedVar(sortKey.Var),
                 sortKey.AscendingSort,
                 sortKey.Collation
-            );
+                );
         }
 
         /// <summary>
@@ -208,8 +217,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>A new list containing clones of the specified SortKeys</returns>
         private List<SortKey> Copy(List<SortKey> sortKeys)
         {
-            List<SortKey> newSortKeys = new List<SortKey>();
-            foreach (SortKey k in sortKeys)
+            var newSortKeys = new List<SortKey>();
+            foreach (var k in sortKeys)
             {
                 newSortKeys.Add(Copy(k));
             }
@@ -227,7 +236,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>A new Node that is a copy of the specified Node</returns>
         protected Node CopyNode(Node n)
         {
-            return n.Op.Accept<Node>(this, n);
+            return n.Op.Accept(this, n);
         }
 
         /// <summary>
@@ -237,8 +246,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>A new list containing copies of the specified Node's children</returns>
         private List<Node> ProcessChildren(Node n)
         {
-            List<Node> children = new List<Node>();
-            foreach (Node chi in n.Children)
+            var children = new List<Node>();
+            foreach (var chi in n.Children)
             {
                 children.Add(CopyNode(chi));
             }
@@ -255,6 +264,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return m_destCmd.CreateNode(op, ProcessChildren(original));
         }
+
         #endregion
 
         #region IOpVisitor<Node> Members
@@ -268,7 +278,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <exception cref="NotSupportedException">By design to indicate that the Op was not recognized and is therefore unsupported</exception>
         public override Node Visit(Op op, Node n)
         {
-            throw new NotSupportedException(System.Data.Entity.Resources.Strings.Iqt_General_UnsupportedOp(op.GetType().FullName));
+            throw new NotSupportedException(Strings.Iqt_General_UnsupportedOp(op.GetType().FullName));
         }
 
         #region ScalarOps
@@ -281,7 +291,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>A copy of the original Node that references a copy of the original Op</returns>
         public override Node Visit(ConstantOp op, Node n)
         {
-            ConstantBaseOp newOp = m_destCmd.CreateConstantOp(op.Type, op.Value);
+            var newOp = m_destCmd.CreateConstantOp(op.Type, op.Value);
             return m_destCmd.CreateNode(newOp);
         }
 
@@ -315,7 +325,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>A copy of the original Node that references a copy of the original Op</returns>
         public override Node Visit(InternalConstantOp op, Node n)
         {
-            InternalConstantOp newOp = m_destCmd.CreateInternalConstantOp(op.Type, op.Value);
+            var newOp = m_destCmd.CreateInternalConstantOp(op.Type, op.Value);
             return m_destCmd.CreateNode(newOp);
         }
 
@@ -327,7 +337,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>A copy of the original Node that references a copy of the original Op</returns>
         public override Node Visit(NullSentinelOp op, Node n)
         {
-            NullSentinelOp newOp = m_destCmd.CreateNullSentinelOp();
+            var newOp = m_destCmd.CreateNullSentinelOp();
             return m_destCmd.CreateNode(newOp);
         }
 
@@ -448,7 +458,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>A copy of the original Node that references a copy of the original Op</returns>        
         public override Node Visit(DiscriminatedNewEntityOp op, Node n)
         {
-            return CopyDefault(m_destCmd.CreateDiscriminatedNewEntityOp(op.Type, op.DiscriminatorMap, op.EntitySet, op.RelationshipProperties), n);
+            return
+                CopyDefault(
+                    m_destCmd.CreateDiscriminatedNewEntityOp(op.Type, op.DiscriminatorMap, op.EntitySet, op.RelationshipProperties), n);
         }
 
         /// <summary>
@@ -497,7 +509,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             // outside this subtree (and it is therefore safe to use it).
             Var newVar;
             if (!m_varMap.TryGetValue(op.Var, out newVar))
+            {
                 newVar = op.Var;
+            }
             // no children for a VarRef
             return m_destCmd.CreateNode(m_destCmd.CreateVarRefOp(newVar));
         }
@@ -532,7 +546,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>A copy of the original Node that references a copy of the original Op</returns>
         public override Node Visit(TreatOp op, Node n)
         {
-            TreatOp newTreatOp = op.IsFakeTreat ? m_destCmd.CreateFakeTreatOp(op.Type) : m_destCmd.CreateTreatOp(op.Type);
+            var newTreatOp = op.IsFakeTreat ? m_destCmd.CreateFakeTreatOp(op.Type) : m_destCmd.CreateTreatOp(op.Type);
             return CopyDefault(newTreatOp, n);
         }
 
@@ -589,9 +603,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         public override Node Visit(IsOfOp op, Node n)
         {
             if (op.IsOfOnly)
+            {
                 return CopyDefault(m_destCmd.CreateIsOfOnlyOp(op.IsOfType), n);
+            }
             else
+            {
                 return CopyDefault(m_destCmd.CreateIsOfOp(op.IsOfType), n);
+            }
         }
 
         /// <summary>
@@ -662,7 +680,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         public override Node Visit(ScanTableOp op, Node n)
         {
             // First create a new ScanTableOp based on the metadata of the existing Op
-            ScanTableOp newScan = m_destCmd.CreateScanTableOp(op.Table.TableMetadata);
+            var newScan = m_destCmd.CreateScanTableOp(op.Table.TableMetadata);
             // Map the corresponding tables/columns
             MapTable(newScan.Table, op.Table);
 
@@ -680,13 +698,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         public override Node Visit(ScanViewOp op, Node n)
         {
             // First create a new ScanViewOp based on the metadata of the existing Op
-            ScanViewOp newScan = m_destCmd.CreateScanViewOp(op.Table.TableMetadata);
+            var newScan = m_destCmd.CreateScanViewOp(op.Table.TableMetadata);
             // Map the corresponding tables/columns
             MapTable(newScan.Table, op.Table);
 
             // Create the new node
             Debug.Assert(n.HasChild0);
-            List<Node> children = ProcessChildren(n);
+            var children = ProcessChildren(n);
             return m_destCmd.CreateNode(newScan, children);
         }
 
@@ -699,14 +717,14 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         public override Node Visit(UnnestOp op, Node n)
         {
             // Visit the Node's children and map their Vars
-            List<Node> children = ProcessChildren(n);
+            var children = ProcessChildren(n);
 
             // Get the mapped unnest-var
-            Var mappedVar = GetMappedVar(op.Var);
+            var mappedVar = GetMappedVar(op.Var);
 
             // Create a new unnestOp
-            Table newTable = m_destCmd.CreateTableInstance(op.Table.TableMetadata);
-            UnnestOp newUnnest = m_destCmd.CreateUnnestOp(mappedVar, newTable);
+            var newTable = m_destCmd.CreateTableInstance(op.Table.TableMetadata);
+            var newUnnest = m_destCmd.CreateUnnestOp(mappedVar, newTable);
 
             // Map the corresponding tables/columns
             MapTable(newUnnest.Table, op.Table);
@@ -724,13 +742,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         public override Node Visit(ProjectOp op, Node n)
         {
             // Visit the Node's children and map their Vars
-            List<Node> children = ProcessChildren(n);
+            var children = ProcessChildren(n);
 
             // Copy the ProjectOp's VarSet
-            VarVec newVarSet = Copy(op.Outputs);
+            var newVarSet = Copy(op.Outputs);
 
             // Create a new ProjectOp based on the copied VarSet
-            ProjectOp newProject = m_destCmd.CreateProjectOp(newVarSet);
+            var newProject = m_destCmd.CreateProjectOp(newVarSet);
 
             // Return a new Node that references the copied ProjectOp and has the copied child Nodes as its children
             return m_destCmd.CreateNode(newProject, children);
@@ -756,13 +774,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         public override Node Visit(SortOp op, Node n)
         {
             // Visit the Node's children and map their Vars
-            List<Node> children = ProcessChildren(n);
+            var children = ProcessChildren(n);
 
             // Copy the SortOp's SortKeys
-            List<SortKey> newSortKeys = Copy(op.Keys);
+            var newSortKeys = Copy(op.Keys);
 
             // Create a new SortOp that uses the copied SortKeys
-            SortOp newSortOp = m_destCmd.CreateSortOp(newSortKeys);
+            var newSortOp = m_destCmd.CreateSortOp(newSortKeys);
 
             // Return a new Node that references the copied SortOp and has the copied child Nodes as its children
             return m_destCmd.CreateNode(newSortOp, children);
@@ -777,13 +795,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         public override Node Visit(ConstrainedSortOp op, Node n)
         {
             // Visit the Node's children and map their Vars
-            List<Node> children = ProcessChildren(n);
+            var children = ProcessChildren(n);
 
             // Copy the ConstrainedSortOp's SortKeys
-            List<SortKey> newSortKeys = Copy(op.Keys);
+            var newSortKeys = Copy(op.Keys);
 
             // Create a new ConstrainedSortOp that uses the copied SortKeys and the original Op's WithTies value
-            ConstrainedSortOp newSortOp = m_destCmd.CreateConstrainedSortOp(newSortKeys, op.WithTies);
+            var newSortOp = m_destCmd.CreateConstrainedSortOp(newSortKeys, op.WithTies);
 
             // Return a new Node that references the copied SortOp and has the copied child Nodes as its children
             return m_destCmd.CreateNode(newSortOp, children);
@@ -798,10 +816,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         public override Node Visit(GroupByOp op, Node n)
         {
             // Visit the Node's children and map their Vars
-            List<Node> children = ProcessChildren(n);
+            var children = ProcessChildren(n);
 
             // Create a new GroupByOp that uses copies of the Key and Output VarSets of the original GroupByOp
-            GroupByOp newGroupOp = m_destCmd.CreateGroupByOp(Copy(op.Keys), Copy(op.Outputs));
+            var newGroupOp = m_destCmd.CreateGroupByOp(Copy(op.Keys), Copy(op.Outputs));
 
             // Return a new Node that references the copied GroupByOp and has the copied child Nodes as its children
             return m_destCmd.CreateNode(newGroupOp, children);
@@ -816,10 +834,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         public override Node Visit(GroupByIntoOp op, Node n)
         {
             // Visit the Node's children and map their Vars
-            List<Node> children = ProcessChildren(n);
+            var children = ProcessChildren(n);
 
             // Create a new GroupByOp that uses copies of the Key and Output VarSets of the original GroupByOp
-            GroupByIntoOp newGroupOp = m_destCmd.CreateGroupByIntoOp(Copy(op.Keys), Copy(op.Inputs),  Copy(op.Outputs));
+            var newGroupOp = m_destCmd.CreateGroupByIntoOp(Copy(op.Keys), Copy(op.Inputs), Copy(op.Outputs));
 
             // Return a new Node that references the copied GroupByOp and has the copied child Nodes as its children
             return m_destCmd.CreateNode(newGroupOp, children);
@@ -900,13 +918,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         private Node CopySetOp(SetOp op, Node n)
         {
             // Visit the Node's children and map their Vars
-            List<Node> children = ProcessChildren(n);
+            var children = ProcessChildren(n);
 
-            VarMap leftMap = new VarMap();
-            VarMap rightMap = new VarMap();
+            var leftMap = new VarMap();
+            var rightMap = new VarMap();
 
-            
-            foreach (KeyValuePair<Var, Var> kv in op.VarMap[0])
+            foreach (var kv in op.VarMap[0])
             {
                 // Create a new output Var that is a copy of the original output Var
                 Var outputVar = m_destCmd.CreateSetOpVar(kv.Key.Type);
@@ -920,12 +937,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             SetOp newSetOp = null;
-            switch(op.OpType)
+            switch (op.OpType)
             {
                 case OpType.UnionAll:
                     {
-                        Var branchDiscriminator = ((UnionAllOp)op).BranchDiscriminator;
-                        if (null != branchDiscriminator) 
+                        var branchDiscriminator = ((UnionAllOp)op).BranchDiscriminator;
+                        if (null != branchDiscriminator)
                         {
                             branchDiscriminator = GetMappedVar(branchDiscriminator);
                         }
@@ -997,13 +1014,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         public override Node Visit(DistinctOp op, Node n)
         {
             // Visit the Node's children and map their Vars
-            List<Node> children = ProcessChildren(n);
+            var children = ProcessChildren(n);
 
             // Copy the DistinctOp's Keys
-            VarVec newDistinctKeys = Copy(op.Keys);
+            var newDistinctKeys = Copy(op.Keys);
 
             // Create a new DistinctOp that uses the copied keys
-            DistinctOp newDistinctOp = m_destCmd.CreateDistinctOp(newDistinctKeys);
+            var newDistinctOp = m_destCmd.CreateDistinctOp(newDistinctKeys);
 
             // Return a new Node that references the copied DistinctOp and has the copied child Nodes as its children
             return m_destCmd.CreateNode(newDistinctOp, children);
@@ -1022,6 +1039,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #endregion
 
         #region AncillaryOps
+
         /// <summary>
         /// Copies a VarDefOp
         /// </summary>
@@ -1031,7 +1049,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         public override Node Visit(VarDefOp op, Node n)
         {
             // First create a new Var
-            List<Node> children = ProcessChildren(n);
+            var children = ProcessChildren(n);
             Debug.Assert(op.Var.VarType == VarType.Computed, "Unexpected VarType");
             Var newVar = m_destCmd.CreateComputedVar(op.Var.Type);
             SetMappedVar(op.Var, newVar);
@@ -1048,12 +1066,15 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return CopyDefault(m_destCmd.CreateVarDefListOp(), n);
         }
+
         #endregion
 
         #region RulePatternOps
+
         #endregion
 
         #region PhysicalOps
+
         private ColumnMap Copy(ColumnMap columnMap)
         {
             return ColumnMapCopier.Copy(columnMap, m_varMap);
@@ -1068,15 +1089,15 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         public override Node Visit(PhysicalProjectOp op, Node n)
         {
             // Visit the Node's children and map their Vars
-            List<Node> children = ProcessChildren(n);
+            var children = ProcessChildren(n);
 
             // Copy the ProjectOp's VarSet
-            VarList newVarList = Copy(op.Outputs);
+            var newVarList = Copy(op.Outputs);
 
-            SimpleCollectionColumnMap newColumnMap = Copy(op.ColumnMap) as SimpleCollectionColumnMap;
-            Debug.Assert(newColumnMap != null, "Coping of a physical project's columnMap did not return a SimpleCollectionColumnMap" );
+            var newColumnMap = Copy(op.ColumnMap) as SimpleCollectionColumnMap;
+            Debug.Assert(newColumnMap != null, "Coping of a physical project's columnMap did not return a SimpleCollectionColumnMap");
             // Create a new ProjectOp based on the copied VarSet
-            PhysicalProjectOp newProject = m_destCmd.CreatePhysicalProjectOp(newVarList, newColumnMap);
+            var newProject = m_destCmd.CreatePhysicalProjectOp(newVarList, newColumnMap);
 
             // Return a new Node that references the copied ProjectOp and has the copied child Nodes as its children
             return m_destCmd.CreateNode(newProject, children);
@@ -1084,43 +1105,45 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         private Node VisitNestOp(Node n)
         {
-            NestBaseOp op = n.Op as NestBaseOp;
-            SingleStreamNestOp ssnOp = op as SingleStreamNestOp;
+            var op = n.Op as NestBaseOp;
+            var ssnOp = op as SingleStreamNestOp;
             Debug.Assert(op != null);
 
             // Visit the Node's children and map their Vars
-            List<Node> newChildren = ProcessChildren(n);
+            var newChildren = ProcessChildren(n);
 
             Var newDiscriminator = null;
             if (ssnOp != null)
             {
                 newDiscriminator = GetMappedVar(ssnOp.Discriminator);
             }
-            List<CollectionInfo> newCollectionInfoList = new List<CollectionInfo>();
-            foreach (CollectionInfo ci in op.CollectionInfo)
+            var newCollectionInfoList = new List<CollectionInfo>();
+            foreach (var ci in op.CollectionInfo)
             {
-                ColumnMap newColumnMap = Copy(ci.ColumnMap);
+                var newColumnMap = Copy(ci.ColumnMap);
 
                 Var newCollectionVar = m_destCmd.CreateComputedVar(ci.CollectionVar.Type);
                 SetMappedVar(ci.CollectionVar, newCollectionVar);
 
-                VarList newFlattendElementVars = Copy(ci.FlattenedElementVars);
-                VarVec newKeys = Copy(ci.Keys);
-                List<SortKey> newSortKeys = Copy(ci.SortKeys);
-                CollectionInfo newCollectionInfo = Command.CreateCollectionInfo(newCollectionVar, newColumnMap, newFlattendElementVars, newKeys, newSortKeys, ci.DiscriminatorValue);
+                var newFlattendElementVars = Copy(ci.FlattenedElementVars);
+                var newKeys = Copy(ci.Keys);
+                var newSortKeys = Copy(ci.SortKeys);
+                var newCollectionInfo = Command.CreateCollectionInfo(
+                    newCollectionVar, newColumnMap, newFlattendElementVars, newKeys, newSortKeys, ci.DiscriminatorValue);
                 newCollectionInfoList.Add(newCollectionInfo);
             }
 
-            VarVec newOutputs = Copy(op.Outputs);
+            var newOutputs = Copy(op.Outputs);
 
             NestBaseOp newOp = null;
-            List<SortKey> newPrefixSortKeys = Copy(op.PrefixSortKeys);
+            var newPrefixSortKeys = Copy(op.PrefixSortKeys);
             if (ssnOp != null)
             {
-                VarVec newKeys = Copy(ssnOp.Keys);
+                var newKeys = Copy(ssnOp.Keys);
                 // Copy the SortOp's SortKeys
-                List<SortKey> newPostfixSortKeys = Copy(ssnOp.PostfixSortKeys);
-                newOp = m_destCmd.CreateSingleStreamNestOp(newKeys, newPrefixSortKeys, newPostfixSortKeys, newOutputs, newCollectionInfoList, newDiscriminator);
+                var newPostfixSortKeys = Copy(ssnOp.PostfixSortKeys);
+                newOp = m_destCmd.CreateSingleStreamNestOp(
+                    newKeys, newPrefixSortKeys, newPostfixSortKeys, newOutputs, newCollectionInfoList, newDiscriminator);
             }
             else
             {
@@ -1151,6 +1174,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return VisitNestOp(n);
         }
+
         #endregion
 
         #endregion

@@ -2,27 +2,31 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Xml;
 
     /// <summary>
     /// Summary description for Documentation.
     /// </summary>
-    internal sealed class DocumentationElement: SchemaElement
+    internal sealed class DocumentationElement : SchemaElement
     {
         #region Instance Fields
-        Documentation _metdataDocumentation = new Documentation();
+
+        private readonly Documentation _metdataDocumentation = new Documentation();
+
         #endregion
 
-
         #region Public Methods
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="parentElement"></param>
         public DocumentationElement(SchemaElement parentElement)
-        :   base(parentElement)
+            : base(parentElement)
         {
         }
+
         #endregion
 
         #region Public Properties
@@ -39,10 +43,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             }
         }
 
-
         #endregion
 
         #region Protected Properties
+
         protected override bool HandleElement(XmlReader reader)
         {
             if (base.HandleElement(reader))
@@ -61,16 +65,17 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             }
             return false;
         }
+
         #endregion
 
         #region Private Methods
 
         protected override bool HandleText(XmlReader reader)
         {
-            string text = reader.Value;
+            var text = reader.Value;
             if (!StringUtil.IsNullOrEmptyOrWhiteSpace(text))
             {
-                AddError(ErrorCode.UnexpectedXmlElement, EdmSchemaErrorSeverity.Error, System.Data.Entity.Resources.Strings.InvalidDocumentationBothTextAndStructure);
+                AddError(ErrorCode.UnexpectedXmlElement, EdmSchemaErrorSeverity.Error, Strings.InvalidDocumentationBothTextAndStructure);
             }
             return true;
         }
@@ -81,7 +86,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"></param>
         private void HandleSummaryElement(XmlReader reader)
         {
-            TextElement text = new TextElement(this);
+            var text = new TextElement(this);
 
             text.Parse(reader);
 
@@ -94,13 +99,13 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"></param>
         private void HandleLongDescriptionElement(XmlReader reader)
         {
-
-            TextElement text = new TextElement(this);
+            var text = new TextElement(this);
 
             text.Parse(reader);
 
             _metdataDocumentation.LongDescription = text.Value;
         }
+
         #endregion
     }
 }

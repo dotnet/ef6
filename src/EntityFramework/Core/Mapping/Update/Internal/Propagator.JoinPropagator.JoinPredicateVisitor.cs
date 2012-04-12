@@ -1,9 +1,10 @@
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Collections.ObjectModel;
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Diagnostics;
+
     internal partial class Propagator
     {
         private partial class JoinPropagator
@@ -22,6 +23,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             private class JoinConditionVisitor : UpdateExpressionVisitor<object>
             {
                 #region Constructors
+
                 /// <summary>
                 /// Initializes a join predicate visitor. The visitor will populate the given property
                 /// lists with expressions describing the left and right hand side of equi-join
@@ -32,23 +34,30 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     m_leftKeySelectors = new List<DbExpression>();
                     m_rightKeySelectors = new List<DbExpression>();
                 }
+
                 #endregion
 
                 #region Fields
+
                 private readonly List<DbExpression> m_leftKeySelectors;
                 private readonly List<DbExpression> m_rightKeySelectors;
                 private static readonly string s_visitorName = typeof(JoinConditionVisitor).FullName;
+
                 #endregion
 
                 #region Properties
-                override protected string VisitorName
+
+                protected override string VisitorName
                 {
                     get { return s_visitorName; }
                 }
+
                 #endregion
 
                 #region Methods
+
                 #region Static helper methods
+
                 /// <summary>
                 /// Determine properties from the left and right inputs to an equi-join participating
                 /// in predicate.
@@ -65,14 +74,16 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 /// </code>
                 /// See Walker class for an explanation of this coding pattern.
                 /// </remarks>
-                static internal void GetKeySelectors(DbExpression joinCondition, out ReadOnlyCollection<DbExpression> leftKeySelectors, out ReadOnlyCollection<DbExpression> rightKeySelectors)
+                internal static void GetKeySelectors(
+                    DbExpression joinCondition, out ReadOnlyCollection<DbExpression> leftKeySelectors,
+                    out ReadOnlyCollection<DbExpression> rightKeySelectors)
                 {
                     EntityUtil.CheckArgumentNull(joinCondition, "joinCondition");
 
                     // Constructs a new predicate visitor, which implements a visitor for expression nodes
                     // and returns no values. This visitor instead builds up a list of properties as leaves
                     // of the join predicate are visited.
-                    JoinConditionVisitor visitor = new JoinConditionVisitor();
+                    var visitor = new JoinConditionVisitor();
 
                     // Walk the predicate using the predicate visitor.
                     joinCondition.Accept(visitor);
@@ -81,12 +92,15 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     leftKeySelectors = visitor.m_leftKeySelectors.AsReadOnly();
                     rightKeySelectors = visitor.m_rightKeySelectors.AsReadOnly();
 
-                    Debug.Assert(leftKeySelectors.Count == rightKeySelectors.Count,
+                    Debug.Assert(
+                        leftKeySelectors.Count == rightKeySelectors.Count,
                         "(Update/JoinPropagator) The equi-join must have an equal number of left and right properties");
                 }
+
                 #endregion
 
                 #region Visitor implementation
+
                 /// <summary>
                 /// Visit and node after its children have visited. There is nothing to do here
                 /// because only leaf equality nodes contain properties extracted by this visitor.
@@ -112,7 +126,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 {
                     EntityUtil.CheckArgumentNull(node, "node");
 
-                    if (DbExpressionKind.Equals == node.ExpressionKind)
+                    if (DbExpressionKind.Equals
+                        == node.ExpressionKind)
                     {
                         m_leftKeySelectors.Add(node.Left);
                         m_rightKeySelectors.Add(node.Right);
@@ -123,7 +138,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         throw ConstructNotSupportedException(node);
                     }
                 }
+
                 #endregion
+
                 #endregion
             }
         }

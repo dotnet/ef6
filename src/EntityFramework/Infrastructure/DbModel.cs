@@ -1,7 +1,6 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Edm.Db.Mapping;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     /// <summary>

@@ -1,14 +1,9 @@
 namespace System.Data.Entity.Core.Common.QueryCache
 {
-    using System;
     using System.Collections.Generic;
-    using System.Data.Entity.Core.EntityClient;
-    using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Objects.Internal;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
-    using System.Data.Entity.Core.Common.Internal.Materialization;
 
     /// <summary>
     /// Provides Query Execution Plan Caching Service 
@@ -20,28 +15,28 @@ namespace System.Data.Entity.Core.Common.QueryCache
     internal class QueryCacheManager : IDisposable
     {
         #region Constants/Default values for configuration parameters
-        
+
         /// <summary>
         /// Default Soft maximum number of entries in the cache
         /// Default value: 1000
         /// </summary>
-        const int DefaultMaxNumberOfEntries = 1000;
+        private const int DefaultMaxNumberOfEntries = 1000;
 
         /// <summary>
         /// Default high mark for starting sweeping process
         /// default value: 80% of MaxNumberOfEntries
         /// </summary>
-        const float DefaultHighMarkPercentageFactor = 0.8f; // 80% of MaxLimit
+        private const float DefaultHighMarkPercentageFactor = 0.8f; // 80% of MaxLimit
 
         /// <summary>
         /// Recycler timer period
         /// </summary>
-        const int DefaultRecyclerPeriodInMilliseconds = 60 * 1000;
+        private const int DefaultRecyclerPeriodInMilliseconds = 60 * 1000;
 
         #endregion
 
         #region Fields
-        
+
         /// <summary>
         /// cache lock object
         /// </summary>
@@ -68,7 +63,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         private readonly EvictionTimer _evictionTimer;
 
         #endregion
-        
+
         #region Construction and Initialization
 
         /// <summary>
@@ -104,22 +99,23 @@ namespace System.Data.Entity.Core.Common.QueryCache
             //
             // Load hardcoded defaults
             //
-            this._maxNumberOfEntries = maximumSize;
+            _maxNumberOfEntries = maximumSize;
 
             //
             // set sweeping high mark trigger value
             //
-            this._sweepingTriggerHighMark = (int)(_maxNumberOfEntries * loadFactor);
+            _sweepingTriggerHighMark = (int)(_maxNumberOfEntries * loadFactor);
 
             //
             // Initialize Recycler
             //
-            this._evictionTimer = new EvictionTimer(this, recycleMillis);           
+            _evictionTimer = new EvictionTimer(this, recycleMillis);
         }
-                
+
         #endregion
 
         #region 'External' interface
+
         /// <summary>
         /// Adds new entry to the cache using "abstract" cache context and
         /// value; returns an existing entry if the key is already in the
@@ -176,7 +172,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
             // invoke internal lookup
             //
             QueryCacheEntry qEntry = null;
-            bool bHit = TryInternalCacheLookup(key, out qEntry);
+            var bHit = TryInternalCacheLookup(key, out qEntry);
 
             //
             // if it is a hit, 'extract' the entry strong type cache value
@@ -199,23 +195,24 @@ namespace System.Data.Entity.Core.Common.QueryCache
                 _cacheData.Clear();
             }
         }
+
         #endregion
 
         #region Private Members
-        
+
         /// <summary>
         /// lookup service
         /// </summary>
         /// <param name="queryCacheKey"></param>
         /// <param name="queryCacheEntry"></param>
         /// <returns>true if cache hit, false if cache miss</returns>
-        private bool TryInternalCacheLookup( QueryCacheKey queryCacheKey, out QueryCacheEntry queryCacheEntry )
+        private bool TryInternalCacheLookup(QueryCacheKey queryCacheKey, out QueryCacheEntry queryCacheEntry)
         {
             Debug.Assert(null != queryCacheKey, "queryCacheKey must not be null");
 
             queryCacheEntry = null;
 
-            bool bHit = false;
+            var bHit = false;
 
             //
             // lock the cache for the minimal possible period
@@ -235,10 +232,9 @@ namespace System.Data.Entity.Core.Common.QueryCache
                 //
                 queryCacheEntry.QueryCacheKey.UpdateHit();
             }
-            
+
             return bHit;
         }
-
 
         /// <summary>
         /// Recycler handler. This method is called directly by the eviction timer.
@@ -254,7 +250,8 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// <summary>
         /// Aging factor
         /// </summary>
-        private static readonly int[] _agingFactor = {1,1,2,4,8,16};
+        private static readonly int[] _agingFactor = { 1, 1, 2, 4, 8, 16 };
+
         private static readonly int AgingMaxIndex = _agingFactor.Length - 1;
 
         /// <summary>
@@ -263,13 +260,13 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// </summary>
         private void SweepCache()
         {
-            if (!this._evictionTimer.Suspend())
+            if (!_evictionTimer.Suspend())
             {
                 // Return of false from .Suspend means that the manager and timer have been disposed.
                 return;
             }
 
-            bool disabledEviction = false;
+            var disabledEviction = false;
             lock (_cacheDataLock)
             {
                 //
@@ -281,9 +278,9 @@ namespace System.Data.Entity.Core.Common.QueryCache
                     // sweep the cache
                     //
                     uint evictedEntriesCount = 0;
-                    List<QueryCacheKey> cacheKeys = new List<QueryCacheKey>(_cacheData.Count);
+                    var cacheKeys = new List<QueryCacheKey>(_cacheData.Count);
                     cacheKeys.AddRange(_cacheData.Keys);
-                    for (int i = 0; i < cacheKeys.Count; i++)
+                    for (var i = 0; i < cacheKeys.Count; i++)
                     {
                         //
                         // if entry was not used in the last time window, then evict the entry
@@ -293,12 +290,12 @@ namespace System.Data.Entity.Core.Common.QueryCache
                             _cacheData.Remove(cacheKeys[i]);
                             evictedEntriesCount++;
                         }
-                        //
-                        // otherwise, age the entry in a progressive scheme
-                        //
+                            //
+                            // otherwise, age the entry in a progressive scheme
+                            //
                         else
                         {
-                            int agingIndex = unchecked(cacheKeys[i].AgingIndex + 1);
+                            var agingIndex = unchecked(cacheKeys[i].AgingIndex + 1);
                             if (agingIndex > AgingMaxIndex)
                             {
                                 agingIndex = AgingMaxIndex;
@@ -317,14 +314,14 @@ namespace System.Data.Entity.Core.Common.QueryCache
 
             if (!disabledEviction)
             {
-                this._evictionTimer.Resume();
+                _evictionTimer.Resume();
             }
         }
-              
+
         #endregion
 
         #region IDisposable Members
-        
+
         /// <summary>
         /// Dispose instance
         /// </summary>
@@ -335,9 +332,9 @@ namespace System.Data.Entity.Core.Common.QueryCache
             // have a finalizer, but it does no harm, protects against the case where a finalizer is added
             // in the future, and prevents an FxCop warning.
             GC.SuppressFinalize(this);
-            if (this._evictionTimer.Stop())
+            if (_evictionTimer.Stop())
             {
-                this.Clear();
+                Clear();
             }
         }
 
@@ -364,8 +361,8 @@ namespace System.Data.Entity.Core.Common.QueryCache
 
             internal EvictionTimer(QueryCacheManager cacheManager, int recyclePeriod)
             {
-                this._cacheManager = cacheManager;
-                this._period = recyclePeriod;
+                _cacheManager = cacheManager;
+                _period = recyclePeriod;
             }
 
             internal void Start()
@@ -374,11 +371,11 @@ namespace System.Data.Entity.Core.Common.QueryCache
                 {
                     if (_timer == null)
                     {
-                        this._timer = new Timer(QueryCacheManager.CacheRecyclerHandler, _cacheManager, _period, _period);
+                        _timer = new Timer(CacheRecyclerHandler, _cacheManager, _period, _period);
                     }
                 }
             }
-                        
+
             /// <summary>
             /// Permanently stops the eviction timer.
             /// It will no longer generate periodic callbacks and further calls to <see cref="Suspend"/>, <see cref="Resume"/>, or <see cref="Stop"/>,
@@ -396,10 +393,10 @@ namespace System.Data.Entity.Core.Common.QueryCache
             {
                 lock (_sync)
                 {
-                    if (this._timer != null)
+                    if (_timer != null)
                     {
-                        this._timer.Dispose();
-                        this._timer = null;
+                        _timer.Dispose();
+                        _timer = null;
                         return true;
                     }
                     else
@@ -425,9 +422,9 @@ namespace System.Data.Entity.Core.Common.QueryCache
             {
                 lock (_sync)
                 {
-                    if (this._timer != null)
+                    if (_timer != null)
                     {
-                        this._timer.Change(Timeout.Infinite, Timeout.Infinite);
+                        _timer.Change(Timeout.Infinite, Timeout.Infinite);
                         return true;
                     }
                     else
@@ -447,9 +444,9 @@ namespace System.Data.Entity.Core.Common.QueryCache
             {
                 lock (_sync)
                 {
-                    if (this._timer != null)
+                    if (_timer != null)
                     {
-                        this._timer.Change(this._period, this._period);
+                        _timer.Change(_period, _period);
                     }
                 }
             }

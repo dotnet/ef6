@@ -1,9 +1,10 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
@@ -19,6 +20,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public abstract class ItemCollection : ReadOnlyMetadataCollection<GlobalItem>
     {
         #region Constructors
+
         /// <summary>
         /// The default constructor for ItemCollection
         /// </summary>
@@ -27,37 +29,38 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             _space = dataspace;
         }
+
         #endregion
 
         #region Fields
+
         private readonly DataSpace _space;
-        private Dictionary<string, System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction>> _functionLookUpTable;
+        private Dictionary<string, ReadOnlyCollection<EdmFunction>> _functionLookUpTable;
         private Memoizer<Type, ICollection> _itemsCache;
         private int _itemCount;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Dataspace associated with ItemCollection
         /// </summary>
         public DataSpace DataSpace
         {
-            get
-            {
-                return this._space;
-            }
+            get { return _space; }
         }
 
         /// <summary>
         /// Return the function lookUpTable
         /// </summary>
-        internal Dictionary<string, System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction>> FunctionLookUpTable
+        internal Dictionary<string, ReadOnlyCollection<EdmFunction>> FunctionLookUpTable
         {
             get
             {
                 if (_functionLookUpTable == null)
                 {
-                    Dictionary<string, System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction>> functionLookUpTable = PopulateFunctionLookUpTable(this);
+                    var functionLookUpTable = PopulateFunctionLookUpTable(this);
                     Interlocked.CompareExchange(ref _functionLookUpTable, functionLookUpTable, null);
                 }
 
@@ -68,6 +71,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Adds an item to the collection 
         /// </summary>
@@ -79,7 +83,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal void AddInternal(GlobalItem item)
         {
             Debug.Assert(item.IsReadOnly, "The item is not readonly, it should be by the time it is added to the item collection");
-            Debug.Assert(item.DataSpace == this.DataSpace);
+            Debug.Assert(item.DataSpace == DataSpace);
             base.Source.Add(item);
         }
 
@@ -95,10 +99,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
 #if DEBUG
             // We failed to add, so undo the setting of the ItemCollection reference
-            foreach (GlobalItem item in items)
+            foreach (var item in items)
             {
                 Debug.Assert(item.IsReadOnly, "The item is not readonly, it should be by the time it is added to the item collection");
-                Debug.Assert(item.DataSpace == this.DataSpace);
+                Debug.Assert(item.DataSpace == DataSpace);
             }
 
 #endif
@@ -121,7 +125,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the Collection does not have an item with the given identity</exception>
         public T GetItem<T>(string identity) where T : GlobalItem
         {
-            return this.GetItem<T>(identity, false /*ignoreCase*/);
+            return GetItem<T>(identity, false /*ignoreCase*/);
         }
 
         /// <summary>
@@ -136,7 +140,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">if identity argument is null</exception>
         public bool TryGetItem<T>(string identity, out T item) where T : GlobalItem
         {
-            return this.TryGetItem<T>(identity, false /*ignorecase*/, out item);
+            return TryGetItem(identity, false /*ignorecase*/, out item);
         }
 
         /// <summary>
@@ -171,7 +175,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public T GetItem<T>(string identity, bool ignoreCase) where T : GlobalItem
         {
             T item;
-            if (TryGetItem<T>(identity, ignoreCase, out item))
+            if (TryGetItem(identity, ignoreCase, out item))
             {
                 return item;
             }
@@ -184,24 +188,25 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public virtual System.Collections.ObjectModel.ReadOnlyCollection<T> GetItems<T>() where T : GlobalItem
+        public virtual ReadOnlyCollection<T> GetItems<T>() where T : GlobalItem
         {
-            Memoizer<Type, ICollection> currentValueForItemCache = _itemsCache;
+            var currentValueForItemCache = _itemsCache;
             // initialize the memoizer, update the _itemCache and _itemCount
-            if (_itemsCache == null || this._itemCount != this.Count)
+            if (_itemsCache == null
+                || _itemCount != Count)
             {
-                Memoizer<Type, ICollection> itemsCache =
-                               new Memoizer<Type, ICollection>(InternalGetItems, null);
+                var itemsCache =
+                    new Memoizer<Type, ICollection>(InternalGetItems, null);
                 Interlocked.CompareExchange(ref _itemsCache, itemsCache, currentValueForItemCache);
-                
-                this._itemCount = this.Count;
+
+                _itemCount = Count;
             }
 
             Debug.Assert(_itemsCache != null, "check the initialization of the Memoizer");
 
             // use memoizer so that it won't create a new list every time this method get called
-            ICollection items = this._itemsCache.Evaluate(typeof(T));
-            System.Collections.ObjectModel.ReadOnlyCollection<T> returnItems = items as System.Collections.ObjectModel.ReadOnlyCollection<T>;
+            var items = _itemsCache.Evaluate(typeof(T));
+            var returnItems = items as ReadOnlyCollection<T>;
 
             return returnItems;
         }
@@ -209,18 +214,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         internal ICollection InternalGetItems(Type type)
         {
-            MethodInfo mi = typeof(ItemCollection).GetMethod("GenericGetItems", BindingFlags.NonPublic | BindingFlags.Static);
-            MethodInfo genericMi = mi.MakeGenericMethod(type);
+            var mi = typeof(ItemCollection).GetMethod("GenericGetItems", BindingFlags.NonPublic | BindingFlags.Static);
+            var genericMi = mi.MakeGenericMethod(type);
 
             return genericMi.Invoke(null, new object[] { this }) as ICollection;
         }
 
-        private static System.Collections.ObjectModel.ReadOnlyCollection<TItem> GenericGetItems<TItem>(ItemCollection collection) where TItem : GlobalItem
+        private static ReadOnlyCollection<TItem> GenericGetItems<TItem>(ItemCollection collection) where TItem : GlobalItem
         {
-            List<TItem> list = new List<TItem>();
-            foreach (GlobalItem item in collection)
+            var list = new List<TItem>();
+            foreach (var item in collection)
             {
-                TItem stronglyTypedItem = item as TItem;
+                var stronglyTypedItem = item as TItem;
                 if (stronglyTypedItem != null)
                 {
                     list.Add(stronglyTypedItem);
@@ -228,7 +233,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             return list.AsReadOnly();
         }
-
 
         /// <summary>
         /// Search for a type metadata with the specified name and namespace name in the given space.
@@ -240,7 +244,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the ItemCollection for this space does not have a type with the given name and namespaceName</exception>
         public EdmType GetType(string name, string namespaceName)
         {
-            return this.GetType(name, namespaceName, false /*ignoreCase*/);
+            return GetType(name, namespaceName, false /*ignoreCase*/);
         }
 
         /// <summary>
@@ -253,7 +257,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">if name or namespaceName argument is null</exception>
         public bool TryGetType(string name, string namespaceName, out EdmType type)
         {
-            return this.TryGetType(name, namespaceName, false /*ignoreCase*/, out type);
+            return TryGetType(name, namespaceName, false /*ignoreCase*/, out type);
         }
 
         /// <summary>
@@ -296,9 +300,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="functionName">The full name of the function</param>
         /// <returns>A collection of all the functions with the given name in the given data space</returns>
         /// <exception cref="System.ArgumentNullException">Thrown if functionaName argument passed in is null</exception>
-        public System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction> GetFunctions(string functionName)
+        public ReadOnlyCollection<EdmFunction> GetFunctions(string functionName)
         {
-            return this.GetFunctions(functionName, false /*ignoreCase*/);
+            return GetFunctions(functionName, false /*ignoreCase*/);
         }
 
         /// <summary>
@@ -308,9 +312,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="ignoreCase">true for case-insensitive lookup</param>
         /// <returns>A collection of all the functions with the given name in the given data space</returns>
         /// <exception cref="System.ArgumentNullException">Thrown if functionaName argument passed in is null</exception>
-        public System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction> GetFunctions(string functionName, bool ignoreCase)
+        public ReadOnlyCollection<EdmFunction> GetFunctions(string functionName, bool ignoreCase)
         {
-            return GetFunctions(this.FunctionLookUpTable, functionName, ignoreCase);
+            return GetFunctions(FunctionLookUpTable, functionName, ignoreCase);
         }
 
         /// <summary>
@@ -322,11 +326,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="ignoreCase"></param>
         /// <returns></returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected static System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction> GetFunctions(
-            Dictionary<string, System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction>> functionCollection,
+        protected static ReadOnlyCollection<EdmFunction> GetFunctions(
+            Dictionary<string, ReadOnlyCollection<EdmFunction>> functionCollection,
             string functionName, bool ignoreCase)
         {
-            System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction> functionOverloads;
+            ReadOnlyCollection<EdmFunction> functionOverloads;
 
             if (functionCollection.TryGetValue(functionName, out functionOverloads))
             {
@@ -341,17 +345,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return Helper.EmptyEdmFunctionReadOnlyCollection;
         }
 
-        internal static System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction> GetCaseSensitiveFunctions(
-            System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction> functionOverloads,
+        internal static ReadOnlyCollection<EdmFunction> GetCaseSensitiveFunctions(
+            ReadOnlyCollection<EdmFunction> functionOverloads,
             string functionName)
         {
             // For case-sensitive match, first check if there are anything with a different case
             // its very rare to have functions with different case. So optimizing the case where all
             // functions are of same case
             // Else create a new list with the functions with the exact name
-            List<EdmFunction> caseSensitiveFunctionOverloads = new List<EdmFunction>(functionOverloads.Count);
+            var caseSensitiveFunctionOverloads = new List<EdmFunction>(functionOverloads.Count);
 
-            for (int i = 0; i < functionOverloads.Count; i++)
+            for (var i = 0; i < functionOverloads.Count; i++)
             {
                 if (functionOverloads[i].FullName == functionName)
                 {
@@ -360,7 +364,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             // If there are no functions with different case, just return the collection
-            if (caseSensitiveFunctionOverloads.Count != functionOverloads.Count)
+            if (caseSensitiveFunctionOverloads.Count
+                != functionOverloads.Count)
             {
                 functionOverloads = caseSensitiveFunctionOverloads.AsReadOnly();
             }
@@ -382,10 +387,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             EntityUtil.GenericCheckArgumentNull(functionName, "functionName");
             EntityUtil.GenericCheckArgumentNull(parameterTypes, "parameterTypes");
-            string functionIdentity = EdmFunction.BuildIdentity(functionName, parameterTypes);
+            var functionIdentity = EdmFunction.BuildIdentity(functionName, parameterTypes);
             GlobalItem item = null;
             function = null;
-            if (TryGetValue(functionIdentity, ignoreCase, out item) && Helper.IsEdmFunction(item))
+            if (TryGetValue(functionIdentity, ignoreCase, out item)
+                && Helper.IsEdmFunction(item))
             {
                 function = (EdmFunction)item;
                 return true;
@@ -402,7 +408,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public EntityContainer GetEntityContainer(string name)
         {
             EntityUtil.GenericCheckArgumentNull(name, "name");
-            return this.GetEntityContainer(name, false /*ignoreCase*/);
+            return GetEntityContainer(name, false /*ignoreCase*/);
         }
 
         /// <summary>
@@ -414,7 +420,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public bool TryGetEntityContainer(string name, out EntityContainer entityContainer)
         {
             EntityUtil.GenericCheckArgumentNull(name, "name");
-            return this.TryGetEntityContainer(name, false /*ignoreCase*/, out entityContainer);
+            return TryGetEntityContainer(name, false /*ignoreCase*/, out entityContainer);
         }
 
         /// <summary>
@@ -427,7 +433,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if no entity container with the given name is found</exception>
         public EntityContainer GetEntityContainer(string name, bool ignoreCase)
         {
-            EntityContainer container = GetValue(name, ignoreCase) as EntityContainer;
+            var container = GetValue(name, ignoreCase) as EntityContainer;
             if (null != container)
             {
                 return container;
@@ -446,7 +452,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             EntityUtil.GenericCheckArgumentNull(name, "name");
             GlobalItem item = null;
-            if (TryGetValue(name, ignoreCase, out item) && Helper.IsEntityContainer(item))
+            if (TryGetValue(name, ignoreCase, out item)
+                && Helper.IsEntityContainer(item))
             {
                 entityContainer = (EntityContainer)item;
                 return true;
@@ -463,7 +470,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal virtual PrimitiveType GetMappedPrimitiveType(PrimitiveTypeKind primitiveTypeKind)
         {
             //The method needs to be overloaded on methods that support this
-            throw System.Data.Entity.Resources.Error.NotSupported();
+            throw Error.NotSupported();
         }
 
         /// <summary>
@@ -476,14 +483,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>true if the collections are equivalent; false otherwise</returns>
         internal virtual bool MetadataEquals(ItemCollection other)
         {
-            return Object.ReferenceEquals(this, other);
+            return ReferenceEquals(this, other);
         }
 
-        static private Dictionary<string, System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction>> PopulateFunctionLookUpTable(ItemCollection itemCollection)
+        private static Dictionary<string, ReadOnlyCollection<EdmFunction>> PopulateFunctionLookUpTable(ItemCollection itemCollection)
         {
             var tempFunctionLookUpTable = new Dictionary<string, List<EdmFunction>>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (EdmFunction function in itemCollection.GetItems<EdmFunction>())
+            foreach (var function in itemCollection.GetItems<EdmFunction>())
             {
                 List<EdmFunction> functionList;
                 if (!tempFunctionLookUpTable.TryGetValue(function.FullName, out functionList))
@@ -494,15 +501,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 functionList.Add(function);
             }
 
-            var functionLookUpTable = new Dictionary<string, System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction>>(StringComparer.OrdinalIgnoreCase);
-            foreach (List<EdmFunction> functionList in tempFunctionLookUpTable.Values)
+            var functionLookUpTable = new Dictionary<string, ReadOnlyCollection<EdmFunction>>(StringComparer.OrdinalIgnoreCase);
+            foreach (var functionList in tempFunctionLookUpTable.Values)
             {
-                functionLookUpTable.Add(functionList[0].FullName, new System.Collections.ObjectModel.ReadOnlyCollection<EdmFunction>(functionList.ToArray()));
+                functionLookUpTable.Add(functionList[0].FullName, new ReadOnlyCollection<EdmFunction>(functionList.ToArray()));
             }
 
             return functionLookUpTable;
         }
 
         #endregion
-    }//---- ItemCollection
-}//---- 
+    }
+
+//---- ItemCollection
+}
+
+//---- 

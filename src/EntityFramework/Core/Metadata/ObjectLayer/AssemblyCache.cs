@@ -1,42 +1,50 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity.Core.Common.Utils;
-using System.Diagnostics;
-using System.Reflection;
-
-namespace System.Data.Entity.Core.Metadata.Edm
+﻿namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Diagnostics;
+    using System.Reflection;
+
     internal static class AssemblyCache
     {
         // Global Assembly Cache
-        private readonly static Dictionary<Assembly, ImmutableAssemblyCacheEntry> s_globalAssemblyCache = new Dictionary<Assembly, ImmutableAssemblyCacheEntry>();
-        private static object _assemblyCacheLock = new object();
+        private static readonly Dictionary<Assembly, ImmutableAssemblyCacheEntry> s_globalAssemblyCache =
+            new Dictionary<Assembly, ImmutableAssemblyCacheEntry>();
+
+        private static readonly object _assemblyCacheLock = new object();
 
         //List of assemblies having view gen attribute. We cache these things if we discover
         //these assemblies while looking for O-space metadata.
-        private static IList<Assembly> s_viewGenAssemblies = new ThreadSafeList<Assembly>();
+        private static readonly IList<Assembly> s_viewGenAssemblies = new ThreadSafeList<Assembly>();
 
         internal static LockedAssemblyCache AquireLockedAssemblyCache()
         {
             return new LockedAssemblyCache(_assemblyCacheLock, s_globalAssemblyCache);
         }
-        
-        internal static void LoadAssembly(Assembly assembly, bool loadReferencedAssemblies,
+
+        internal static void LoadAssembly(
+            Assembly assembly, bool loadReferencedAssemblies,
             KnownAssembliesSet knownAssemblies, out Dictionary<string, EdmType> typesInLoading, out List<EdmItemError> errors)
         {
             object loaderCookie = null;
             LoadAssembly(assembly, loadReferencedAssemblies, knownAssemblies, null, null, ref loaderCookie, out typesInLoading, out errors);
         }
 
-        internal static void LoadAssembly(Assembly assembly, bool loadReferencedAssemblies,
-            KnownAssembliesSet knownAssemblies, EdmItemCollection edmItemCollection, Action<String> logLoadMessage, ref object loaderCookie, out Dictionary<string, EdmType> typesInLoading, out List<EdmItemError> errors)
+        internal static void LoadAssembly(
+            Assembly assembly, bool loadReferencedAssemblies,
+            KnownAssembliesSet knownAssemblies, EdmItemCollection edmItemCollection, Action<String> logLoadMessage, ref object loaderCookie,
+            out Dictionary<string, EdmType> typesInLoading, out List<EdmItemError> errors)
         {
-            Debug.Assert(loaderCookie == null || loaderCookie is Func<Assembly, ObjectItemLoadingSessionData, ObjectItemAssemblyLoader>, "This is a bad loader cookie");
+            Debug.Assert(
+                loaderCookie == null || loaderCookie is Func<Assembly, ObjectItemLoadingSessionData, ObjectItemAssemblyLoader>,
+                "This is a bad loader cookie");
             typesInLoading = null;
             errors = null;
 
-            using (LockedAssemblyCache lockedAssemblyCache = AssemblyCache.AquireLockedAssemblyCache())
+            using (var lockedAssemblyCache = AquireLockedAssemblyCache())
             {
-                ObjectItemLoadingSessionData loadingData = new ObjectItemLoadingSessionData(knownAssemblies, lockedAssemblyCache, edmItemCollection, logLoadMessage, loaderCookie);
+                var loadingData = new ObjectItemLoadingSessionData(
+                    knownAssemblies, lockedAssemblyCache, edmItemCollection, logLoadMessage, loaderCookie);
 
                 LoadAssembly(assembly, loadReferencedAssemblies, loadingData);
                 loaderCookie = loadingData.LoaderCookie;
@@ -47,7 +55,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     // do the validation for the all the new types
                     // Now, perform validation on all the new types
-                    EdmValidator validator = new EdmValidator();
+                    var validator = new EdmValidator();
                     validator.SkipReadOnlyItems = true;
                     validator.Validate(loadingData.TypesInLoading.Values, loadingData.EdmItemErrors);
                     // Update the global cache if there are no errors
@@ -60,8 +68,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                             // provided.  cspace will have a cache of it's own for assemblies
                             UpdateCache(lockedAssemblyCache, loadingData.AssembliesLoaded);
                         }
-                        else if (loadingData.EdmItemCollection != null && 
-                                ObjectItemAssemblyLoader.IsConventionLoader(loadingData.ObjectItemAssemblyLoaderFactory))
+                        else if (loadingData.EdmItemCollection != null
+                                 &&
+                                 ObjectItemAssemblyLoader.IsConventionLoader(loadingData.ObjectItemAssemblyLoaderFactory))
                         {
                             UpdateCache(loadingData.EdmItemCollection, loadingData.AssembliesLoaded);
                         }
@@ -70,7 +79,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 if (loadingData.TypesInLoading.Count > 0)
                 {
-                    foreach (EdmType edmType in loadingData.TypesInLoading.Values)
+                    foreach (var edmType in loadingData.TypesInLoading.Values)
                     {
                         edmType.SetReadOnly();
                     }
@@ -86,21 +95,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             // Check if the assembly is already loaded
             KnownAssemblyEntry entry;
-            bool shouldLoadReferences = false;
-            if (loadingData.KnownAssemblies.TryGetKnownAssembly(assembly, loadingData.ObjectItemAssemblyLoaderFactory, loadingData.EdmItemCollection, out entry))
+            var shouldLoadReferences = false;
+            if (loadingData.KnownAssemblies.TryGetKnownAssembly(
+                assembly, loadingData.ObjectItemAssemblyLoaderFactory, loadingData.EdmItemCollection, out entry))
             {
                 shouldLoadReferences = !entry.ReferencedAssembliesAreLoaded && loadReferencedAssemblies;
             }
             else
             {
-                ObjectItemAssemblyLoader loader = ObjectItemAssemblyLoader.CreateLoader(assembly, loadingData);
+                var loader = ObjectItemAssemblyLoader.CreateLoader(assembly, loadingData);
                 loader.Load();
                 shouldLoadReferences = loadReferencedAssemblies;
             }
 
             if (shouldLoadReferences)
             {
-                if (entry == null && loadingData.KnownAssemblies.TryGetKnownAssembly(assembly, loadingData.ObjectItemAssemblyLoaderFactory, loadingData.EdmItemCollection, out entry) ||
+                if (entry == null
+                    &&
+                    loadingData.KnownAssemblies.TryGetKnownAssembly(
+                        assembly, loadingData.ObjectItemAssemblyLoaderFactory, loadingData.EdmItemCollection, out entry)
+                    ||
                     entry != null)
                 {
                     entry.ReferencedAssembliesAreLoaded = true;
@@ -115,7 +129,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 // After the given assembly has been loaded, check on the flag in _knownAssemblies to see if it has already
                 // been recursively loaded. The flag can be true if it was already loaded before this function was called
-                foreach (Assembly referencedAssembly in MetadataAssemblyHelper.GetNonSystemReferencedAssemblies(assembly))
+                foreach (var referencedAssembly in MetadataAssemblyHelper.GetNonSystemReferencedAssemblies(assembly))
                 {
                     // filter out "known" assemblies to prevent unnecessary loading
                     // recursive call
@@ -123,7 +137,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
             }
         }
-
 
         private static void UpdateCache(EdmItemCollection edmItemCollection, Dictionary<Assembly, MutableAssemblyCacheEntry> assemblies)
         {
@@ -133,11 +146,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     entry.Key, new ImmutableAssemblyCacheEntry(entry.Value));
             }
         }
-        
+
         private static void UpdateCache(LockedAssemblyCache lockedAssemblyCache, Dictionary<Assembly, MutableAssemblyCacheEntry> assemblies)
         {
-            
-            foreach (KeyValuePair<Assembly, MutableAssemblyCacheEntry> entry in assemblies)
+            foreach (var entry in assemblies)
             {
                 // Add all the assemblies from the loading context to the global cache
                 lockedAssemblyCache.Add(entry.Key, new ImmutableAssemblyCacheEntry(entry.Value));
@@ -146,10 +158,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal static IList<Assembly> ViewGenerationAssemblies
         {
-            get
-            {
-                return s_viewGenAssemblies;
-            }
+            get { return s_viewGenAssemblies; }
         }
     }
 }

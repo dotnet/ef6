@@ -1,8 +1,6 @@
 ﻿namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
-    using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
     using System.Text;
@@ -14,9 +12,10 @@
     /// </summary>
     internal class CollectionTypeElement : ModelFunctionTypeElement
     {
-        private ModelFunctionTypeElement _typeSubElement = null;
-        
+        private ModelFunctionTypeElement _typeSubElement;
+
         #region constructor
+
         /// <summary>
         /// 
         /// </summary>
@@ -24,8 +23,8 @@
         internal CollectionTypeElement(SchemaElement parentElement)
             : base(parentElement)
         {
-
         }
+
         #endregion
 
         internal ModelFunctionTypeElement SubElement
@@ -54,10 +53,14 @@
 
             string type;
             if (!Utils.GetString(Schema, reader, out type))
+            {
                 return;
+            }
 
             if (!Utils.ValidateDottedName(Schema, reader, type))
+            {
                 return;
+            }
 
             _unresolvedType = type;
         }
@@ -87,7 +90,6 @@
 
             return false;
         }
-
 
         protected void HandleCollectionTypeElement(XmlReader reader)
         {
@@ -134,16 +136,14 @@
 
             // Can't be "else if" because element could have attribute AND sub-element, 
             // in which case semantic validation won't work unless it has resolved both (so _type is not null)
-            if( _unresolvedType != null) 
+            if (_unresolvedType != null)
             {
                 base.ResolveTopLevelNames();
             }
-
         }
 
         internal override void WriteIdentity(StringBuilder builder)
         {
-
             if (!string.IsNullOrWhiteSpace(UnresolvedType))
             {
                 builder.Append("Collection(" + UnresolvedType + ")");
@@ -163,18 +163,19 @@
                 return _typeUsage;
             }
             Debug.Assert(_typeSubElement != null, "For attributes typeusage should have been resolved");
-            
+
             if (_typeSubElement != null)
             {
-                CollectionType collectionType = new CollectionType(_typeSubElement.GetTypeUsage());
+                var collectionType = new CollectionType(_typeSubElement.GetTypeUsage());
 
-                collectionType.AddMetadataProperties(this.OtherContent);
+                collectionType.AddMetadataProperties(OtherContent);
                 _typeUsage = TypeUsage.Create(collectionType);
             }
             return _typeUsage;
         }
 
-        internal override bool ResolveNameAndSetTypeUsage(Converter.ConversionCache convertedItemCache, Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
+        internal override bool ResolveNameAndSetTypeUsage(
+            Converter.ConversionCache convertedItemCache, Dictionary<SchemaElement, GlobalItem> newGlobalItems)
         {
             if (_typeUsage == null)
             {
@@ -190,9 +191,10 @@
                         _typeUsage = TypeUsage.Create(new CollectionType(_typeUsageBuilder.TypeUsage));
                         return true;
                     }
-                    else  //Try to resolve edm type. If not now, it will resolve in the second pass
+                    else //Try to resolve edm type. If not now, it will resolve in the second pass
                     {
-                        EdmType edmType = (EdmType)Converter.LoadSchemaElement(_type, _type.Schema.ProviderManifest, convertedItemCache, newGlobalItems);
+                        var edmType =
+                            (EdmType)Converter.LoadSchemaElement(_type, _type.Schema.ProviderManifest, convertedItemCache, newGlobalItems);
                         if (edmType != null)
                         {
                             _typeUsageBuilder.ValidateAndSetTypeUsage(edmType, false); //use typeusagebuilder so dont lose facet information

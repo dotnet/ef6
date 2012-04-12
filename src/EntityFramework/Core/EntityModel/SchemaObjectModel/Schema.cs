@@ -1,11 +1,8 @@
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
-    using System.Data.Common;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
@@ -13,35 +10,35 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
+    using System.Reflection;
+    using System.Security;
     using System.Xml;
     using System.Xml.Schema;
 
     /// <summary>
     /// class representing the Schema element in the schema
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("Namespace={Namespace}, PublicKeyToken={PublicKeyToken}, Version={Version}")]
+    [DebuggerDisplay("Namespace={Namespace}, PublicKeyToken={PublicKeyToken}, Version={Version}")]
     internal class Schema : SchemaElement
     {
-
         #region Instance Fields
+
         private const int RootDepth = 2;
         // if adding properties also add to InitializeObject()!
         private List<EdmSchemaError> _errors = new List<EdmSchemaError>();
         // We need to keep track of functions seperately, since we can't deduce the strong name of the function, 
         // until we have resolved the parameter names. Hence we keep track of functions seperately and add them
         // to the schema types list, in the validate phase
-        private List<Function> _functions = null;
+        private List<Function> _functions;
 
-        private AliasResolver _aliasResolver = null;
-        private string _location = null;
-        private string _alias = null;
-        protected string _namespaceName = null;
-        private string _schemaXmlNamespace = null;
-        private List<SchemaType> _schemaTypes = null;
+        private AliasResolver _aliasResolver;
+        private string _location;
+        protected string _namespaceName;
+        private List<SchemaType> _schemaTypes;
 
-        private int _depth = 0; // recursion depth in Parse used by *Handlers to know which hander set to set
+        private int _depth; // recursion depth in Parse used by *Handlers to know which hander set to set
         private double _schemaVersion = XmlConstants.UndefinedVersion;
-        private SchemaManager _schemaManager;
+        private readonly SchemaManager _schemaManager;
 
         private bool? _useStrongSpatialTypes;
 
@@ -97,11 +94,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             {
                 // user specified a stream to read from, read from it.
                 // The Uri is just used to identify the stream in errors.
-                XmlReaderSettings readerSettings = CreateXmlReaderSettings();
+                var readerSettings = CreateXmlReaderSettings();
                 var wrappedReader = XmlReader.Create(sourceReader, readerSettings);
                 return InternalParse(wrappedReader, sourceLocation);
             }
-            catch (System.IO.IOException ex)
+            catch (IOException ex)
             {
                 AddError(ErrorCode.IOException, EdmSchemaErrorSeverity.Error, sourceReader, ex);
             }
@@ -129,72 +126,78 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             {
                 // to make life simpler, we skip down to the first/root element, unless we're
                 // already there
-                if (sourceReader.NodeType != XmlNodeType.Element)
+                if (sourceReader.NodeType
+                    != XmlNodeType.Element)
                 {
-                    while (sourceReader.Read() && sourceReader.NodeType != XmlNodeType.Element)
+                    while (sourceReader.Read()
+                           && sourceReader.NodeType != XmlNodeType.Element)
                     {
                     }
                 }
                 GetPositionInfo(sourceReader);
 
-                List<string> expectedNamespaces = SomSchemaSetHelper.GetPrimarySchemaNamespaces(DataModel);
+                var expectedNamespaces = SomSchemaSetHelper.GetPrimarySchemaNamespaces(DataModel);
 
                 // the root element needs to be either TDL or Schema in our namespace
                 if (sourceReader.EOF)
                 {
                     if (sourceLocation != null)
                     {
-                        AddError(ErrorCode.EmptyFile, EdmSchemaErrorSeverity.Error, System.Data.Entity.Resources.Strings.EmptyFile(sourceLocation));
+                        AddError(ErrorCode.EmptyFile, EdmSchemaErrorSeverity.Error, Strings.EmptyFile(sourceLocation));
                     }
                     else
                     {
-                        AddError(ErrorCode.EmptyFile, EdmSchemaErrorSeverity.Error, System.Data.Entity.Resources.Strings.EmptySchemaTextReader);
+                        AddError(ErrorCode.EmptyFile, EdmSchemaErrorSeverity.Error, Strings.EmptySchemaTextReader);
                     }
                 }
                 else if (!expectedNamespaces.Contains(sourceReader.NamespaceURI))
                 {
                     Func<object, object, object, string> messageFormat = Strings.UnexpectedRootElement;
                     if (string.IsNullOrEmpty(sourceReader.NamespaceURI))
+                    {
                         messageFormat = Strings.UnexpectedRootElementNoNamespace;
-                    String expectedNamespacesString =  Helper.GetCommaDelimitedString(expectedNamespaces);
-                    AddError(ErrorCode.UnexpectedXmlElement, EdmSchemaErrorSeverity.Error, messageFormat(sourceReader.NamespaceURI, sourceReader.LocalName, expectedNamespacesString));
+                    }
+                    var expectedNamespacesString = Helper.GetCommaDelimitedString(expectedNamespaces);
+                    AddError(
+                        ErrorCode.UnexpectedXmlElement, EdmSchemaErrorSeverity.Error,
+                        messageFormat(sourceReader.NamespaceURI, sourceReader.LocalName, expectedNamespacesString));
                 }
                 else
                 {
-                    this.SchemaXmlNamespace = sourceReader.NamespaceURI;
+                    SchemaXmlNamespace = sourceReader.NamespaceURI;
                     if (DataModel == SchemaDataModelOption.EntityDataModel)
                     {
-                        if (this.SchemaXmlNamespace == XmlConstants.ModelNamespace_1)
+                        if (SchemaXmlNamespace == XmlConstants.ModelNamespace_1)
                         {
                             SchemaVersion = XmlConstants.EdmVersionForV1;
                         }
-                        else if (this.SchemaXmlNamespace == XmlConstants.ModelNamespace_1_1)
+                        else if (SchemaXmlNamespace == XmlConstants.ModelNamespace_1_1)
                         {
                             SchemaVersion = XmlConstants.EdmVersionForV1_1;
                         }
-                        else if (this.SchemaXmlNamespace == XmlConstants.ModelNamespace_2)
+                        else if (SchemaXmlNamespace == XmlConstants.ModelNamespace_2)
                         {
                             SchemaVersion = XmlConstants.EdmVersionForV2;
                         }
                         else
                         {
-                            Debug.Assert(this.SchemaXmlNamespace == XmlConstants.ModelNamespace_3, "Unknown namespace in CSDL");
+                            Debug.Assert(SchemaXmlNamespace == XmlConstants.ModelNamespace_3, "Unknown namespace in CSDL");
                             SchemaVersion = XmlConstants.EdmVersionForV3;
                         }
                     }
                     else if (DataModel == SchemaDataModelOption.ProviderDataModel)
                     {
-                        if (this.SchemaXmlNamespace == XmlConstants.TargetNamespace_1)
+                        if (SchemaXmlNamespace == XmlConstants.TargetNamespace_1)
                         {
                             SchemaVersion = XmlConstants.StoreVersionForV1;
                         }
-                        else if (this.SchemaXmlNamespace == XmlConstants.TargetNamespace_2)
+                        else if (SchemaXmlNamespace == XmlConstants.TargetNamespace_2)
                         {
                             SchemaVersion = XmlConstants.StoreVersionForV2;
                         }
                         else
                         {
-                            Debug.Assert(this.SchemaXmlNamespace == XmlConstants.TargetNamespace_3, "Unknown namespace in SSDL");
+                            Debug.Assert(SchemaXmlNamespace == XmlConstants.TargetNamespace_3, "Unknown namespace in SSDL");
                             SchemaVersion = XmlConstants.StoreVersionForV3;
                         }
                     }
@@ -209,7 +212,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                             sourceReader.Read();
                             break;
                         default:
-                            AddError(ErrorCode.UnexpectedXmlElement, EdmSchemaErrorSeverity.Error, System.Data.Entity.Resources.Strings.UnexpectedRootElement(sourceReader.NamespaceURI, sourceReader.LocalName, SchemaXmlNamespace));
+                            AddError(
+                                ErrorCode.UnexpectedXmlElement, EdmSchemaErrorSeverity.Error,
+                                Strings.UnexpectedRootElement(sourceReader.NamespaceURI, sourceReader.LocalName, SchemaXmlNamespace));
                             break;
                     }
                 }
@@ -218,15 +223,15 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             {
                 AddError(ErrorCode.InternalError, EdmSchemaErrorSeverity.Error, ex.Message);
             }
-            catch (System.UnauthorizedAccessException ex)
+            catch (UnauthorizedAccessException ex)
             {
                 AddError(ErrorCode.UnauthorizedAccessException, EdmSchemaErrorSeverity.Error, sourceReader, ex);
             }
-            catch (System.IO.IOException ex)
+            catch (IOException ex)
             {
                 AddError(ErrorCode.IOException, EdmSchemaErrorSeverity.Error, sourceReader, ex);
             }
-            catch (System.Security.SecurityException ex)
+            catch (SecurityException ex)
             {
                 AddError(ErrorCode.SecurityError, EdmSchemaErrorSeverity.Error, sourceReader, ex);
             }
@@ -240,7 +245,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         internal static XmlReaderSettings CreateEdmStandardXmlReaderSettings()
         {
-            XmlReaderSettings readerSettings = new XmlReaderSettings();
+            var readerSettings = new XmlReaderSettings();
 
             readerSettings.CheckCharacters = true;
             readerSettings.CloseInput = false;
@@ -253,24 +258,24 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             // remove flags
             // the ProcessInlineSchema, and ProcessSchemaLocation flags must be removed for the same
             // xsd schema to be used on multiple threads
-            readerSettings.ValidationFlags &= ~System.Xml.Schema.XmlSchemaValidationFlags.ProcessIdentityConstraints;
-            readerSettings.ValidationFlags &= ~System.Xml.Schema.XmlSchemaValidationFlags.ProcessSchemaLocation;
-            readerSettings.ValidationFlags &= ~System.Xml.Schema.XmlSchemaValidationFlags.ProcessInlineSchema;
+            readerSettings.ValidationFlags &= ~XmlSchemaValidationFlags.ProcessIdentityConstraints;
+            readerSettings.ValidationFlags &= ~XmlSchemaValidationFlags.ProcessSchemaLocation;
+            readerSettings.ValidationFlags &= ~XmlSchemaValidationFlags.ProcessInlineSchema;
 
             return readerSettings;
         }
 
         private XmlReaderSettings CreateXmlReaderSettings()
         {
-            XmlReaderSettings readerSettings = CreateEdmStandardXmlReaderSettings();
+            var readerSettings = CreateEdmStandardXmlReaderSettings();
 
             // add flags
-            readerSettings.ValidationFlags |= System.Xml.Schema.XmlSchemaValidationFlags.ReportValidationWarnings;
+            readerSettings.ValidationFlags |= XmlSchemaValidationFlags.ReportValidationWarnings;
 
-            readerSettings.ValidationEventHandler += new System.Xml.Schema.ValidationEventHandler(OnSchemaValidationEvent);
+            readerSettings.ValidationEventHandler += OnSchemaValidationEvent;
             readerSettings.ValidationType = ValidationType.Schema;
 
-            XmlSchemaSet schemaSet = SomSchemaSetHelper.GetSchemaSet(DataModel);
+            var schemaSet = SomSchemaSetHelper.GetSchemaSet(DataModel);
 
             // Do not use readerSetting.Schemas.Add(schemaSet)
             // you must use the line below for this to work in 
@@ -278,7 +283,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             readerSettings.Schemas = schemaSet;
 
             return readerSettings;
-
         }
 
         /// <summary>
@@ -286,43 +290,50 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         /// <param name="sender">the validating reader</param>
         /// <param name="e">information about the validation error</param>
-        internal void OnSchemaValidationEvent(object sender, System.Xml.Schema.ValidationEventArgs e)
+        internal void OnSchemaValidationEvent(object sender, ValidationEventArgs e)
         {
             Debug.Assert(e != null);
-            XmlReader reader = sender as XmlReader;
-            if (reader != null && !IsValidateableXmlNamespace(reader.NamespaceURI, reader.NodeType == XmlNodeType.Attribute))
+            var reader = sender as XmlReader;
+            if (reader != null
+                && !IsValidateableXmlNamespace(reader.NamespaceURI, reader.NodeType == XmlNodeType.Attribute))
             {
                 //For V1 Schemas, we never returned errors for elements in custom namespaces.
                 //But the behavior is not totally correct since the error might have occured inside a known namespace
                 //even though the element that the reader pointing to is in a custom namespace. But if we fix that, it would
                 //cause lot of breaking changes for V1 customers since we can not change the xsd for them.
                 //For attributes, we can ignore the errors always since attributes are unordered and custom attributes should always be allowed.
-                if ((this.SchemaVersion == XmlConstants.EdmVersionForV1) || (this.SchemaVersion == XmlConstants.EdmVersionForV1_1))
+                if ((SchemaVersion == XmlConstants.EdmVersionForV1)
+                    || (SchemaVersion == XmlConstants.EdmVersionForV1_1))
                 {
                     return;
                 }
                 // For V2 Schemas that have custom namespaces, the only thing we would not catch are warnings.
                 //We also need to ignore any errors reported on custom namespace since they would become annotations.
-                Debug.Assert(this.SchemaVersion >= XmlConstants.EdmVersionForV2 || SchemaVersion == XmlConstants.UndefinedVersion, "Have you added a new Edm Version?");
-                if ( (reader.NodeType == XmlNodeType.Attribute) || (e.Severity == System.Xml.Schema.XmlSeverityType.Warning))
+                Debug.Assert(
+                    SchemaVersion >= XmlConstants.EdmVersionForV2 || SchemaVersion == XmlConstants.UndefinedVersion,
+                    "Have you added a new Edm Version?");
+                if ((reader.NodeType == XmlNodeType.Attribute)
+                    || (e.Severity == XmlSeverityType.Warning))
                 {
                     return;
-                }                
+                }
             }
 
             //Ignore the warnings for attributes in V2 since we would see warnings for undeclared attributes in empty namespace
             //that are on elements in custom namespace. For undeclared attributes in known namespace, we would see errors.
-            if ((this.SchemaVersion >= XmlConstants.EdmVersionForV2) && (reader.NodeType == XmlNodeType.Attribute)
-                && (e.Severity == System.Xml.Schema.XmlSeverityType.Warning))
+            if ((SchemaVersion >= XmlConstants.EdmVersionForV2) && (reader.NodeType == XmlNodeType.Attribute)
+                && (e.Severity == XmlSeverityType.Warning))
             {
                 return;
             }
 
-            EdmSchemaErrorSeverity severity = EdmSchemaErrorSeverity.Error;
-            if (e.Severity == System.Xml.Schema.XmlSeverityType.Warning)
+            var severity = EdmSchemaErrorSeverity.Error;
+            if (e.Severity
+                == XmlSeverityType.Warning)
+            {
                 severity = EdmSchemaErrorSeverity.Warning;
+            }
             AddError(ErrorCode.XmlError, severity, e.Exception.LineNumber, e.Exception.LinePosition, e.Message);
-
         }
 
         public bool IsParseableXmlNamespace(string xmlNamespaceUri, bool isAttribute)
@@ -336,7 +347,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             if (_parseableXmlNamespaces == null)
             {
                 _parseableXmlNamespaces = new HashSet<string>();
-                foreach (var schemaResource in XmlSchemaResource.GetMetadataSchemaResourceMap(this.SchemaVersion).Values)
+                foreach (var schemaResource in XmlSchemaResource.GetMetadataSchemaResourceMap(SchemaVersion).Values)
                 {
                     _parseableXmlNamespaces.Add(schemaResource.NamespaceUri);
                 }
@@ -345,9 +356,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             return _parseableXmlNamespaces.Contains(xmlNamespaceUri);
         }
 
+        private HashSet<string> _validatableXmlNamespaces;
+        private HashSet<string> _parseableXmlNamespaces;
 
-        HashSet<string> _validatableXmlNamespaces;
-        HashSet<string> _parseableXmlNamespaces;
         public bool IsValidateableXmlNamespace(string xmlNamespaceUri, bool isAttribute)
         {
             if (string.IsNullOrEmpty(xmlNamespaceUri) && isAttribute)
@@ -356,15 +367,15 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 return true;
             }
 
-            if(_validatableXmlNamespaces == null)
+            if (_validatableXmlNamespaces == null)
             {
-                HashSet<string> validatableXmlNamespaces = new HashSet<string>();
-                double schemaVersion = SchemaVersion == XmlConstants.UndefinedVersion ? XmlConstants.SchemaVersionLatest : SchemaVersion;
+                var validatableXmlNamespaces = new HashSet<string>();
+                var schemaVersion = SchemaVersion == XmlConstants.UndefinedVersion ? XmlConstants.SchemaVersionLatest : SchemaVersion;
                 foreach (var schemaResource in XmlSchemaResource.GetMetadataSchemaResourceMap(schemaVersion).Values)
                 {
                     AddAllSchemaResourceNamespaceNames(validatableXmlNamespaces, schemaResource);
                 }
-                
+
                 if (SchemaVersion == XmlConstants.UndefinedVersion)
                 {
                     // we are getting called before the version is set
@@ -379,13 +390,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private static void AddAllSchemaResourceNamespaceNames(HashSet<string> hashSet, XmlSchemaResource schemaResource)
         {
             hashSet.Add(schemaResource.NamespaceUri);
-            foreach(var import in schemaResource.ImportedSchemas)
+            foreach (var import in schemaResource.ImportedSchemas)
             {
                 AddAllSchemaResourceNamespaceNames(hashSet, import);
             }
         }
-
-
 
         internal override void ResolveTopLevelNames()
         {
@@ -399,7 +408,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 element.ResolveTopLevelNames();
             }
 
-            foreach (Function function in Functions)
+            foreach (var function in Functions)
             {
                 function.ResolveTopLevelNames();
             }
@@ -413,7 +422,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 element.ResolveSecondLevelNames();
             }
 
-            foreach (Function function in Functions)
+            foreach (var function in Functions)
             {
                 function.ResolveSecondLevelNames();
             }
@@ -427,31 +436,34 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             if (String.IsNullOrEmpty(Namespace))
             {
-                AddError(ErrorCode.MissingNamespaceAttribute, EdmSchemaErrorSeverity.Error, System.Data.Entity.Resources.Strings.MissingNamespaceAttribute);
+                AddError(ErrorCode.MissingNamespaceAttribute, EdmSchemaErrorSeverity.Error, Strings.MissingNamespaceAttribute);
                 return;
             }
 
             // Also check for alias to be system namespace
-            if (!String.IsNullOrEmpty(Alias) && EdmItemCollection.IsSystemNamespace(ProviderManifest, Alias))
+            if (!String.IsNullOrEmpty(Alias)
+                && EdmItemCollection.IsSystemNamespace(ProviderManifest, Alias))
             {
-                AddError(ErrorCode.CannotUseSystemNamespaceAsAlias, EdmSchemaErrorSeverity.Error,
-                    System.Data.Entity.Resources.Strings.CannotUseSystemNamespaceAsAlias(Alias));
+                AddError(
+                    ErrorCode.CannotUseSystemNamespaceAsAlias, EdmSchemaErrorSeverity.Error,
+                    Strings.CannotUseSystemNamespaceAsAlias(Alias));
             }
 
             // Check whether the schema namespace is a system namespace. We set the provider manifest to edm provider manifest
             // if we need to check for system namespace. Otherwise, it will be set to null (if we are loading edm provider manifest)
-            if (ProviderManifest != null &&
+            if (ProviderManifest != null
+                &&
                 EdmItemCollection.IsSystemNamespace(ProviderManifest, Namespace))
             {
-                AddError(ErrorCode.SystemNamespace, EdmSchemaErrorSeverity.Error, System.Data.Entity.Resources.Strings.SystemNamespaceEncountered(Namespace));
+                AddError(ErrorCode.SystemNamespace, EdmSchemaErrorSeverity.Error, Strings.SystemNamespaceEncountered(Namespace));
             }
 
-            foreach (SchemaElement schemaType in this.SchemaTypes)
+            foreach (SchemaElement schemaType in SchemaTypes)
             {
                 schemaType.Validate();
             }
 
-            foreach (Function function in this.Functions)
+            foreach (var function in Functions)
             {
                 AddFunctionType(function);
                 function.Validate();
@@ -465,23 +477,15 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <summary>
         /// The namespaceUri of the winfs xml namespace
         /// </summary>
-        internal string SchemaXmlNamespace
-        {
-            get
-            {
-                return _schemaXmlNamespace;
-            }
-            private set
-            {
-                _schemaXmlNamespace = value;
-            }
-        }
+        internal string SchemaXmlNamespace { get; private set; }
 
         internal DbProviderManifest ProviderManifest
         {
             get
             {
-                return _schemaManager.GetProviderManifest((string message, ErrorCode code, EdmSchemaErrorSeverity severity)=>AddError(code, severity, message));
+                return
+                    _schemaManager.GetProviderManifest(
+                        (string message, ErrorCode code, EdmSchemaErrorSeverity severity) => AddError(code, severity, message));
             }
         }
 
@@ -490,43 +494,22 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         internal double SchemaVersion
         {
-            get
-            {
-                return _schemaVersion;
-            }
-            set
-            {
-                _schemaVersion = value;
-            }
+            get { return _schemaVersion; }
+            set { _schemaVersion = value; }
         }
 
         /// <summary>
         /// Alias for the schema (null if none)
         /// </summary>
-        internal virtual string Alias
-        {
-            get
-            {
-                return _alias;
-            }
-            private set
-            {
-                _alias = value;
-            }
-        }
+        internal virtual string Alias { get; private set; }
+
         /// <summary>
         /// Namespace of the schema
         /// </summary>
         internal virtual string Namespace
         {
-            get
-            {
-                return _namespaceName;
-            }
-            private set
-            {
-                _namespaceName = value;
-            }
+            get { return _namespaceName; }
+            private set { _namespaceName = value; }
         }
 
         /// <summary>
@@ -534,17 +517,12 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         internal string Location
         {
-            get
-            {
-                return _location;
-            }
-            private set
-            {
-                _location = value;
-            }
+            get { return _location; }
+            private set { _location = value; }
         }
 
         private MetadataProperty _schemaSourceProperty;
+
         internal MetadataProperty SchemaSource
         {
             get
@@ -552,10 +530,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 if (_schemaSourceProperty == null)
                 {
                     // create the System MetadataProperty for the SchemaSource
-                    _schemaSourceProperty = new MetadataProperty("SchemaSource",
-                                        EdmProviderManifest.Instance.GetPrimitiveType(PrimitiveTypeKind.String),
-                                        false, // IsCollection
-                                        _location != null ? _location : string.Empty);
+                    _schemaSourceProperty = new MetadataProperty(
+                        "SchemaSource",
+                        EdmProviderManifest.Instance.GetPrimitiveType(PrimitiveTypeKind.String),
+                        false, // IsCollection
+                        _location != null ? _location : string.Empty);
                 }
 
                 return _schemaSourceProperty;
@@ -582,11 +561,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         public override string FQName
         {
-            get
-            {
-                return Namespace;
-            }
+            get { return Namespace; }
         }
+
         private List<Function> Functions
         {
             get
@@ -602,6 +579,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #endregion
 
         #region Protected Properties
+
         protected override bool HandleElement(XmlReader reader)
         {
             if (base.HandleElement(reader))
@@ -656,7 +634,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 }
             }
 
-            if (DataModel == SchemaDataModelOption.EntityDataModel ||
+            if (DataModel == SchemaDataModelOption.EntityDataModel
+                ||
                 DataModel == SchemaDataModelOption.ProviderDataModel)
             {
                 if (CanHandleElement(reader, XmlConstants.EntityContainer))
@@ -708,7 +687,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 return true;
             }
 
-            if (namespaceUri == null && localName == XmlConstants.Name)
+            if (namespaceUri == null
+                && localName == XmlConstants.Name)
             {
                 return false;
             }
@@ -748,7 +728,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                     HandleProviderManifestTokenAttribute(reader);
                     return true;
                 }
-                else if (reader.NamespaceURI == XmlConstants.AnnotationNamespace && reader.LocalName == XmlConstants.UseStrongSpatialTypes)
+                else if (reader.NamespaceURI == XmlConstants.AnnotationNamespace
+                         && reader.LocalName == XmlConstants.UseStrongSpatialTypes)
                 {
                     HandleUseStrongSpatialTypesAnnotation(reader);
                     return true;
@@ -760,12 +741,12 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #endregion
 
         #region Internal Methods
+
         /// <summary>
         /// Called when all attributes for the schema element have been handled
         /// </summary>
         protected override void HandleAttributesComplete()
         {
-
             if (_depth < RootDepth)
             {
                 return;
@@ -773,7 +754,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             else if (_depth == RootDepth)
             {
                 // only call when done with the root element
-                _schemaManager.EnsurePrimitiveSchemaIsLoaded(this.SchemaVersion);
+                _schemaManager.EnsurePrimitiveSchemaIsLoaded(SchemaVersion);
             }
 
             base.HandleAttributesComplete();
@@ -810,17 +791,18 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             string actualQualification;
             string unqualifiedTypeName;
             Utils.ExtractNamespaceAndName(typeName, out actualQualification, out unqualifiedTypeName);
-            string definingQualification = actualQualification;
+            var definingQualification = actualQualification;
 
             if (definingQualification == null)
             {
-                definingQualification = this.ProviderManifest == null ? this._namespaceName : this.ProviderManifest.NamespaceName;
+                definingQualification = ProviderManifest == null ? _namespaceName : ProviderManifest.NamespaceName;
             }
 
             string namespaceName;
             // First check if there is an alias defined by this name. For primitive type namespace, we do not need to resolve
             // any alias, since that's a reserved keyword and we don't allow alias with that name
-            if (actualQualification == null || !AliasResolver.TryResolveAlias(definingQualification, out namespaceName))
+            if (actualQualification == null
+                || !AliasResolver.TryResolveAlias(definingQualification, out namespaceName))
             {
                 namespaceName = definingQualification;
             }
@@ -832,39 +814,49 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 if (actualQualification == null)
                 {
                     // Every type except the primitive type must be qualified
-                    usingElement.AddError(ErrorCode.NotInNamespace, EdmSchemaErrorSeverity.Error, System.Data.Entity.Resources.Strings.NotNamespaceQualified(typeName));
+                    usingElement.AddError(ErrorCode.NotInNamespace, EdmSchemaErrorSeverity.Error, Strings.NotNamespaceQualified(typeName));
                 }
                 else if (!SchemaManager.IsValidNamespaceName(namespaceName))
                 {
-                    usingElement.AddError(ErrorCode.BadNamespace, EdmSchemaErrorSeverity.Error, System.Data.Entity.Resources.Strings.BadNamespaceOrAlias(actualQualification));
+                    usingElement.AddError(
+                        ErrorCode.BadNamespace, EdmSchemaErrorSeverity.Error, Strings.BadNamespaceOrAlias(actualQualification));
                 }
                 else
                 {
                     // if the type name was alias qualified
                     if (namespaceName != definingQualification)
                     {
-                        usingElement.AddError(ErrorCode.NotInNamespace, EdmSchemaErrorSeverity.Error, System.Data.Entity.Resources.Strings.NotInNamespaceAlias(unqualifiedTypeName, namespaceName, definingQualification));
+                        usingElement.AddError(
+                            ErrorCode.NotInNamespace, EdmSchemaErrorSeverity.Error,
+                            Strings.NotInNamespaceAlias(unqualifiedTypeName, namespaceName, definingQualification));
                     }
                     else
                     {
-                        usingElement.AddError(ErrorCode.NotInNamespace, EdmSchemaErrorSeverity.Error, System.Data.Entity.Resources.Strings.NotInNamespaceNoAlias(unqualifiedTypeName, namespaceName));
+                        usingElement.AddError(
+                            ErrorCode.NotInNamespace, EdmSchemaErrorSeverity.Error,
+                            Strings.NotInNamespaceNoAlias(unqualifiedTypeName, namespaceName));
                     }
                 }
                 return false;
             }
-            // For ssdl and provider manifest, make sure that the type is present in this schema or primitive schema
-            else if (this.DataModel != SchemaDataModelOption.EntityDataModel && type.Schema != this && type.Schema != this.SchemaManager.PrimitiveSchema)
+                // For ssdl and provider manifest, make sure that the type is present in this schema or primitive schema
+            else if (DataModel != SchemaDataModelOption.EntityDataModel && type.Schema != this
+                     && type.Schema != SchemaManager.PrimitiveSchema)
             {
-                Debug.Assert(type.Namespace != this.Namespace, "Using element is not allowed in the schema of ssdl and provider manifest");
-                usingElement.AddError(ErrorCode.InvalidNamespaceOrAliasSpecified, EdmSchemaErrorSeverity.Error, System.Data.Entity.Resources.Strings.InvalidNamespaceOrAliasSpecified(actualQualification));
+                Debug.Assert(type.Namespace != Namespace, "Using element is not allowed in the schema of ssdl and provider manifest");
+                usingElement.AddError(
+                    ErrorCode.InvalidNamespaceOrAliasSpecified, EdmSchemaErrorSeverity.Error,
+                    Strings.InvalidNamespaceOrAliasSpecified(actualQualification));
                 return false;
             }
 
             return true;
         }
+
         #endregion
 
         #region Internal Properties
+
         /// <summary>
         /// List containing the current schema and all referenced schemas. Used for alias and namespace lookup.
         /// </summary>
@@ -886,10 +878,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         internal SchemaDataModelOption DataModel
         {
-            get
-            {
-                return SchemaManager.DataModel;
-            }
+            get { return SchemaManager.DataModel; }
         }
 
         /// <summary>
@@ -897,17 +886,18 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         internal SchemaManager SchemaManager
         {
-            get
-            {
-                return _schemaManager;
-            }
+            get { return _schemaManager; }
         }
 
-        internal bool UseStrongSpatialTypes { get { return _useStrongSpatialTypes ?? true; } }
+        internal bool UseStrongSpatialTypes
+        {
+            get { return _useStrongSpatialTypes ?? true; }
+        }
 
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Handler for the Namespace attribute
         /// </summary>
@@ -916,13 +906,14 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(reader != null);
 
-            ReturnValue<string> returnValue = HandleDottedNameAttribute(reader, Namespace);
+            var returnValue = HandleDottedNameAttribute(reader, Namespace);
             if (!returnValue.Succeeded)
+            {
                 return;
+            }
 
             Namespace = returnValue.Value;
         }
-
 
         /// <summary>
         /// Handler for the Alias attribute
@@ -933,7 +924,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             Debug.Assert(reader != null);
 
             Alias = HandleUndottedNameAttribute(reader, Alias);
-
         }
 
         /// <summary>
@@ -944,8 +934,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(reader != null);
 
-            string provider = reader.Value;
-            _schemaManager.ProviderNotification(provider, 
+            var provider = reader.Value;
+            _schemaManager.ProviderNotification(
+                provider,
                 (string message, ErrorCode code, EdmSchemaErrorSeverity severity) => AddError(code, severity, reader, message));
         }
 
@@ -957,8 +948,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(reader != null);
 
-            string providerManifestToken = reader.Value;
-            _schemaManager.ProviderManifestTokenNotification(providerManifestToken, 
+            var providerManifestToken = reader.Value;
+            _schemaManager.ProviderManifestTokenNotification(
+                providerManifestToken,
                 (string message, ErrorCode code, EdmSchemaErrorSeverity severity) => AddError(code, severity, reader, message));
         }
 
@@ -966,10 +958,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(reader != null);
 
-            bool isStrict = false;
-            if (this.HandleBoolAttribute(reader, ref isStrict))
+            var isStrict = false;
+            if (HandleBoolAttribute(reader, ref isStrict))
             {
-                this._useStrongSpatialTypes = isStrict;
+                _useStrongSpatialTypes = isStrict;
             }
         }
 
@@ -979,7 +971,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"></param>
         private void HandleUsingElement(XmlReader reader)
         {
-            UsingElement referencedNamespace = new UsingElement(this);
+            var referencedNamespace = new UsingElement(this);
             referencedNamespace.Parse(reader);
             AliasResolver.Add(referencedNamespace);
         }
@@ -992,7 +984,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(reader != null);
 
-            SchemaEnumType enumType = new SchemaEnumType(this);
+            var enumType = new SchemaEnumType(this);
             enumType.Parse(reader);
 
             TryAddType(enumType, doNotAddErrorForEmptyName: true);
@@ -1017,7 +1009,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             }
         }
 
-
         /// <summary>
         /// Handler for the EntityType element
         /// </summary>
@@ -1026,11 +1017,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(reader != null);
 
-            SchemaEntityType itemType = new SchemaEntityType(this);
+            var itemType = new SchemaEntityType(this);
 
             itemType.Parse(reader);
 
-            TryAddType(itemType, true/*doNotAddErrorForEmptyName*/);
+            TryAddType(itemType, true /*doNotAddErrorForEmptyName*/);
         }
 
         /// <summary>
@@ -1041,11 +1032,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(reader != null);
 
-            TypeElement type = new TypeElement(this);
+            var type = new TypeElement(this);
 
             type.Parse(reader);
 
-            TryAddType(type, true/*doNotAddErrorForEmptyName*/);
+            TryAddType(type, true /*doNotAddErrorForEmptyName*/);
         }
 
         /// <summary>
@@ -1056,23 +1047,22 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(reader != null);
 
-            Function function = new Function(this);
+            var function = new Function(this);
 
             function.Parse(reader);
 
-            this.Functions.Add(function);
+            Functions.Add(function);
         }
-
 
         private void HandleModelFunctionElement(XmlReader reader)
         {
             Debug.Assert(reader != null);
 
-            ModelFunction function = new ModelFunction(this);
+            var function = new ModelFunction(this);
 
             function.Parse(reader);
 
-            this.Functions.Add(function);
+            Functions.Add(function);
         }
 
         /// <summary>
@@ -1083,12 +1073,13 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(reader != null);
 
-            Relationship relationship = new Relationship(this, RelationshipKind.Association);
+            var relationship = new Relationship(this, RelationshipKind.Association);
 
             relationship.Parse(reader);
 
-            TryAddType(relationship, true/*doNotAddErrorForEmptyName*/);
+            TryAddType(relationship, true /*doNotAddErrorForEmptyName*/);
         }
+
         /// <summary>
         /// Handler for the InlineType element
         /// </summary>
@@ -1097,11 +1088,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(reader != null);
 
-            SchemaComplexType complexType = new SchemaComplexType(this);
+            var complexType = new SchemaComplexType(this);
 
             complexType.Parse(reader);
 
-            TryAddType(complexType, true/*doNotAddErrorForEmptyName*/);
+            TryAddType(complexType, true /*doNotAddErrorForEmptyName*/);
         }
 
         /// <summary>
@@ -1112,9 +1103,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(reader != null);
 
-            EntityContainer type = new EntityContainer(this);
+            var type = new EntityContainer(this);
             type.Parse(reader);
-            TryAddContainer(type, true/*doNotAddErrorForEmptyName*/);
+            TryAddContainer(type, true /*doNotAddErrorForEmptyName*/);
         }
 
         /// <summary>
@@ -1123,7 +1114,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns>old error list</returns>
         private List<EdmSchemaError> ResetErrors()
         {
-            List<EdmSchemaError> errors = _errors;
+            var errors = _errors;
             _errors = new List<EdmSchemaError>();
 
             return errors;
@@ -1131,40 +1122,45 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         protected void TryAddType(SchemaType schemaType, bool doNotAddErrorForEmptyName)
         {
-            this.SchemaManager.SchemaTypes.Add(schemaType, doNotAddErrorForEmptyName,
+            SchemaManager.SchemaTypes.Add(
+                schemaType, doNotAddErrorForEmptyName,
                 Strings.TypeNameAlreadyDefinedDuplicate);
-            this.SchemaTypes.Add(schemaType);
+            SchemaTypes.Add(schemaType);
         }
 
         protected void TryAddContainer(SchemaType schemaType, bool doNotAddErrorForEmptyName)
         {
-            this.SchemaManager.SchemaTypes.Add(schemaType, doNotAddErrorForEmptyName,
+            SchemaManager.SchemaTypes.Add(
+                schemaType, doNotAddErrorForEmptyName,
                 Strings.EntityContainerAlreadyExists);
-            this.SchemaTypes.Add(schemaType);
+            SchemaTypes.Add(schemaType);
         }
 
         protected void AddFunctionType(Function function)
         {
-            string space = DataModel == SchemaDataModelOption.EntityDataModel ? "Conceptual" : "Storage";
+            var space = DataModel == SchemaDataModelOption.EntityDataModel ? "Conceptual" : "Storage";
 
-            if (this.SchemaVersion >= XmlConstants.EdmVersionForV2 && this.SchemaManager.SchemaTypes.ContainsKey(function.FQName))
+            if (SchemaVersion >= XmlConstants.EdmVersionForV2
+                && SchemaManager.SchemaTypes.ContainsKey(function.FQName))
             {
-                function.AddError(ErrorCode.AlreadyDefined, EdmSchemaErrorSeverity.Error,
-                    System.Data.Entity.Resources.Strings.AmbiguousFunctionAndType(function.FQName, space));
+                function.AddError(
+                    ErrorCode.AlreadyDefined, EdmSchemaErrorSeverity.Error,
+                    Strings.AmbiguousFunctionAndType(function.FQName, space));
             }
             else
             {
-                AddErrorKind error = this.SchemaManager.SchemaTypes.TryAdd(function);
+                var error = SchemaManager.SchemaTypes.TryAdd(function);
                 Debug.Assert(error != AddErrorKind.MissingNameError, "Function identity can never be null while adding global functions");
 
                 if (error != AddErrorKind.Succeeded)
                 {
-                    function.AddError(ErrorCode.AlreadyDefined, EdmSchemaErrorSeverity.Error,
-                        System.Data.Entity.Resources.Strings.AmbiguousFunctionOverload(function.FQName, space));
+                    function.AddError(
+                        ErrorCode.AlreadyDefined, EdmSchemaErrorSeverity.Error,
+                        Strings.AmbiguousFunctionOverload(function.FQName, space));
                 }
                 else
                 {
-                    this.SchemaTypes.Add(function);
+                    SchemaTypes.Add(function);
                 }
             }
         }
@@ -1173,18 +1169,16 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         #region Private Properties
 
-
         #endregion
-
 
         private static class SomSchemaSetHelper
         {
-            private static Memoizer<SchemaDataModelOption, XmlSchemaSet> _cachedSchemaSets =
+            private static readonly Memoizer<SchemaDataModelOption, XmlSchemaSet> _cachedSchemaSets =
                 new Memoizer<SchemaDataModelOption, XmlSchemaSet>(ComputeSchemaSet, EqualityComparer<SchemaDataModelOption>.Default);
 
             internal static List<string> GetPrimarySchemaNamespaces(SchemaDataModelOption dataModel)
             {
-                List<string> namespaces = new List<string>();
+                var namespaces = new List<string>();
                 if (dataModel == SchemaDataModelOption.EntityDataModel)
                 {
                     namespaces.Add(XmlConstants.ModelNamespace_1);
@@ -1213,19 +1207,19 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
             private static XmlSchemaSet ComputeSchemaSet(SchemaDataModelOption dataModel)
             {
-                List<string> namespaceNames = GetPrimarySchemaNamespaces(dataModel);
+                var namespaceNames = GetPrimarySchemaNamespaces(dataModel);
                 Debug.Assert(namespaceNames.Count > 0, "Unknown Datamodel");
 
-                XmlSchemaSet schemaSet = new XmlSchemaSet();
+                var schemaSet = new XmlSchemaSet();
                 // remove the default XmlResolver which will look on 
                 // disk for the referenced schemas that we already provided
                 schemaSet.XmlResolver = null;
                 var schemaResourceMap = XmlSchemaResource.GetMetadataSchemaResourceMap(XmlConstants.SchemaVersionLatest);
-                HashSet<string> schemasAlreadyAdded = new HashSet<string>();
-                foreach (string namespaceName in namespaceNames)
+                var schemasAlreadyAdded = new HashSet<string>();
+                foreach (var namespaceName in namespaceNames)
                 {
                     Debug.Assert(schemaResourceMap.ContainsKey(namespaceName), "the namespace name is not one we have a schema set for");
-                    XmlSchemaResource schemaResource = schemaResourceMap[namespaceName];
+                    var schemaResource = schemaResourceMap[namespaceName];
                     AddXmlSchemaToSet(schemaSet, schemaResource, schemasAlreadyAdded);
                 }
                 schemaSet.Compile();
@@ -1233,7 +1227,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 return schemaSet;
             }
 
-            private static void AddXmlSchemaToSet(XmlSchemaSet schemaSet, XmlSchemaResource schemaResource, HashSet<string> schemasAlreadyAdded)
+            private static void AddXmlSchemaToSet(
+                XmlSchemaSet schemaSet, XmlSchemaResource schemaResource, HashSet<string> schemasAlreadyAdded)
             {
                 // loop through the children to do a depth first load
                 foreach (var import in schemaResource.ImportedSchemas)
@@ -1243,8 +1238,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
                 if (!schemasAlreadyAdded.Contains(schemaResource.NamespaceUri))
                 {
-                    Stream xsdStream = GetResourceStream(schemaResource.ResourceName);
-                    XmlSchema schema = XmlSchema.Read(xsdStream, null);
+                    var xsdStream = GetResourceStream(schemaResource.ResourceName);
+                    var schema = XmlSchema.Read(xsdStream, null);
                     schemaSet.Add(schema);
                     schemasAlreadyAdded.Add(schemaResource.NamespaceUri);
                 }
@@ -1255,13 +1250,15 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 Debug.Assert(resourceName != null, "resourceName cannot be null");
 
                 Stream resourceStream = null;
-                System.Reflection.Assembly executingAssembly = System.Reflection.Assembly.GetExecutingAssembly();
+                var executingAssembly = Assembly.GetExecutingAssembly();
                 if (executingAssembly != null)
                 {
                     resourceStream = executingAssembly.GetManifestResourceStream(resourceName);
                 }
 
-                Debug.Assert(resourceStream != null, string.Format(CultureInfo.CurrentCulture, "Unable to load the resource {0} from assembly resources.", resourceName));
+                Debug.Assert(
+                    resourceStream != null,
+                    string.Format(CultureInfo.CurrentCulture, "Unable to load the resource {0} from assembly resources.", resourceName));
 
                 return resourceStream;
             }

@@ -1,12 +1,10 @@
-using System.Data.Entity.Core.Common.Internal;
-using System.Data.Entity.Core.Spatial.Internal;
-using System.Diagnostics;
-using System.Runtime.Serialization;
-using System.Globalization;
-
 namespace System.Data.Entity.Core.Spatial
 {
+    using System.Data.Entity.Core.Spatial.Internal;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
+    using System.Runtime.Serialization;
 
     [DataContract]
     [Serializable]
@@ -20,19 +18,25 @@ namespace System.Data.Entity.Core.Spatial
             Debug.Assert(spatialServices != null, "Spatial services are required");
             Debug.Assert(spatialProviderValue != null, "Provider value is required");
 
-            this.spatialSvcs = spatialServices;
-            this.providerValue = spatialProviderValue;
+            spatialSvcs = spatialServices;
+            providerValue = spatialProviderValue;
         }
 
         /// <summary>
         /// Gets the default coordinate system id (SRID) for geometry values.
         /// </summary>
-        public static int DefaultCoordinateSystemId { get { return 0; } }
+        public static int DefaultCoordinateSystemId
+        {
+            get { return 0; }
+        }
 
         /// <summary>
         /// Gets a representation of this DbGeometry value that is specific to the underlying provider that constructed it.
         /// </summary>
-        public object ProviderValue { get { return this.providerValue; } }
+        public object ProviderValue
+        {
+            get { return providerValue; }
+        }
 
         /// <summary>
         /// Gets or sets a data contract serializable well known representation of this DbGeometry value.
@@ -40,17 +44,17 @@ namespace System.Data.Entity.Core.Spatial
         [DataMember(Name = "Geometry")]
         public DbGeometryWellKnownValue WellKnownValue
         {
-            get { return this.spatialSvcs.CreateWellKnownValue(this); }
+            get { return spatialSvcs.CreateWellKnownValue(this); }
             set
             {
-                if (this.spatialSvcs != null)
+                if (spatialSvcs != null)
                 {
                     throw SpatialExceptions.WellKnownValueSerializationPropertyNotDirectlySettable();
                 }
 
-                DbSpatialServices resolvedServices = DbSpatialServices.Default;
-                this.providerValue = resolvedServices.CreateProviderValue(value);
-                this.spatialSvcs = resolvedServices;
+                var resolvedServices = DbSpatialServices.Default;
+                providerValue = resolvedServices.CreateProviderValue(value);
+                spatialSvcs = resolvedServices;
             }
         }
 
@@ -132,10 +136,14 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiLineWellKnownBinary"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public static DbGeometry MultiLineFromBinary(byte[] multiLineWellKnownBinary, int coordinateSystemId)
         {
             multiLineWellKnownBinary.CheckNull("multiLineWellKnownBinary");
@@ -150,10 +158,14 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPointWellKnownBinary"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public static DbGeometry MultiPointFromBinary(byte[] multiPointWellKnownBinary, int coordinateSystemId)
         {
             multiPointWellKnownBinary.CheckNull("multiPointWellKnownBinary");
@@ -168,8 +180,10 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPolygonWellKnownBinary"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public static DbGeometry MultiPolygonFromBinary(byte[] multiPolygonWellKnownBinary, int coordinateSystemId)
         {
             multiPolygonWellKnownBinary.CheckNull("multiPolygonWellKnownBinary");
@@ -302,10 +316,14 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiLineWellKnownText"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiLine",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public static DbGeometry MultiLineFromText(string multiLineWellKnownText, int coordinateSystemId)
         {
             multiLineWellKnownText.CheckNull("multiLineWellKnownText");
@@ -320,10 +338,14 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPointWellKnownText"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "multiPoint",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public static DbGeometry MultiPointFromText(string multiPointWellKnownText, int coordinateSystemId)
         {
             multiPointWellKnownText.CheckNull("multiPointWellKnownText");
@@ -338,8 +360,10 @@ namespace System.Data.Entity.Core.Spatial
         /// <returns>A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="multiPolygonWellKnownText"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Match OGC, EDM")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi", Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Match OGC, EDM")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
+            Justification = "Match OGC, EDM")]
         public static DbGeometry MultiPolygonFromText(string multiPolygonWellKnownText, int coordinateSystemId)
         {
             multiPolygonWellKnownText.CheckNull("multiPolygonWellKnownText");
@@ -367,42 +391,66 @@ namespace System.Data.Entity.Core.Spatial
         /// </summary>
         /// Gets the coordinate system identifier (SRID) of the coordinate system used by this DbGeometry value.
         /// </summary>
-        public int CoordinateSystemId { get { return this.spatialSvcs.GetCoordinateSystemId(this); } }
+        public int CoordinateSystemId
+        {
+            get { return spatialSvcs.GetCoordinateSystemId(this); }
+        }
 
         /// </summary>
         /// Gets the boundary of this DbGeometry value.
         /// </summary>
-        public DbGeometry Boundary { get { return this.spatialSvcs.GetBoundary(this); } }
+        public DbGeometry Boundary
+        {
+            get { return spatialSvcs.GetBoundary(this); }
+        }
 
         /// <summary>
         /// Gets the dimension of the given <see cref="DbGeometry"/> value or, if the value is a collection, the dimension of its largest element.
         /// </summary>
-        public int        Dimension { get { return this.spatialSvcs.GetDimension(this); } }
+        public int Dimension
+        {
+            get { return spatialSvcs.GetDimension(this); }
+        }
 
         /// <summary>
         /// Gets the envelope (minimum bounding box) of this DbGeometry value, as a geometry value.
         /// </summary>
-        public DbGeometry Envelope { get { return this.spatialSvcs.GetEnvelope(this); } }
+        public DbGeometry Envelope
+        {
+            get { return spatialSvcs.GetEnvelope(this); }
+        }
 
         /// </summary>
         /// Gets the spatial type name, as a string, of this DbGeometry value.
         /// </summary>
-        public string     SpatialTypeName { get { return this.spatialSvcs.GetSpatialTypeName(this); } }
+        public string SpatialTypeName
+        {
+            get { return spatialSvcs.GetSpatialTypeName(this); }
+        }
 
         /// </summary>
         /// Gets a Boolean value indicating whether this DbGeometry value represents the empty geometry.
         /// </summary>
-        public bool IsEmpty { get { return this.spatialSvcs.GetIsEmpty(this); } }
- 
+        public bool IsEmpty
+        {
+            get { return spatialSvcs.GetIsEmpty(this); }
+        }
+
         /// </summary>
         /// Gets a Boolean value indicating whether this DbGeometry is simple.
         /// </summary>
-        public bool IsSimple { get { return this.spatialSvcs.GetIsSimple(this); } }
+        public bool IsSimple
+        {
+            get { return spatialSvcs.GetIsSimple(this); }
+        }
 
         /// </summary>
         /// Gets a Boolean value indicating whether this DbGeometry value is considered valid.
         /// </summary>
-        public bool       IsValid { get { return this.spatialSvcs.GetIsValid(this); } }
+        public bool IsValid
+        {
+            get { return spatialSvcs.GetIsValid(this); }
+        }
 
         #endregion
 
@@ -412,27 +460,39 @@ namespace System.Data.Entity.Core.Spatial
         /// Generates the well known text representation of this DbGeometry value.  Includes only X and Y coordinates for points.
         /// </summary>
         /// <returns>A string containing the well known text representation of this DbGeometry value.</returns>
-        public string AsText() { return this.spatialSvcs.AsText(this); }
+        public string AsText()
+        {
+            return spatialSvcs.AsText(this);
+        }
 
         /// <summary>
         /// Generates the well known text representation of this DbGeometry value.  Includes X coordinate, Y coordinate, Elevation (Z) and Measure (M) for points.
         /// </summary>
         /// <returns>A string containing the well known text representation of this DbGeometry value.</returns>
-        internal string AsTextIncludingElevationAndMeasure() { return this.spatialSvcs.AsTextIncludingElevationAndMeasure(this); }
+        internal string AsTextIncludingElevationAndMeasure()
+        {
+            return spatialSvcs.AsTextIncludingElevationAndMeasure(this);
+        }
 
         /// <summary>
         /// Generates the well known binary representation of this DbGeometry value.
         /// </summary>
         /// <returns>A byte array containing the well known binary representation of this DbGeometry value.</returns>
-        public byte[] AsBinary() { return this.spatialSvcs.AsBinary(this); }
-        
+        public byte[] AsBinary()
+        {
+            return spatialSvcs.AsBinary(this);
+        }
+
         // Non-OGC
         /// <summary>
         /// Generates the Geography Markup Language (GML) representation of this DbGeometry value.
         /// </summary>
         /// <returns>A string containing the GML representation of this DbGeometry value.</returns>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Gml")]
-        public string AsGml() { return this.spatialSvcs.AsGml(this); }
+        public string AsGml()
+        {
+            return spatialSvcs.AsGml(this);
+        }
 
         #endregion
 
@@ -447,7 +507,7 @@ namespace System.Data.Entity.Core.Spatial
         public bool SpatialEquals(DbGeometry other)
         {
             other.CheckNull("other");
-            return this.spatialSvcs.SpatialEquals(this, other);
+            return spatialSvcs.SpatialEquals(this, other);
         }
 
         /// <summary>
@@ -459,7 +519,7 @@ namespace System.Data.Entity.Core.Spatial
         public bool Disjoint(DbGeometry other)
         {
             other.CheckNull("other");
-            return this.spatialSvcs.Disjoint(this, other);
+            return spatialSvcs.Disjoint(this, other);
         }
 
         /// <summary>
@@ -471,7 +531,7 @@ namespace System.Data.Entity.Core.Spatial
         public bool Intersects(DbGeometry other)
         {
             other.CheckNull("other");
-            return this.spatialSvcs.Intersects(this, other);
+            return spatialSvcs.Intersects(this, other);
         }
 
         /// <summary>
@@ -480,10 +540,10 @@ namespace System.Data.Entity.Core.Spatial
         /// <param name="other">The geometry value that should be compared with this geometry value.</param>
         /// <returns><c>true</c> if <paramref name="other"/> touches this geometry value; otherwise <c>false</c>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="other"/> is null.</exception>
-        public bool Touches(DbGeometry other) 
+        public bool Touches(DbGeometry other)
         {
             other.CheckNull("other");
-            return this.spatialSvcs.Touches(this, other);
+            return spatialSvcs.Touches(this, other);
         }
 
         /// <summary>
@@ -495,7 +555,7 @@ namespace System.Data.Entity.Core.Spatial
         public bool Crosses(DbGeometry other)
         {
             other.CheckNull("other");
-            return this.spatialSvcs.Crosses(this, other);
+            return spatialSvcs.Crosses(this, other);
         }
 
         /// <summary>
@@ -507,7 +567,7 @@ namespace System.Data.Entity.Core.Spatial
         public bool Within(DbGeometry other)
         {
             other.CheckNull("other");
-            return this.spatialSvcs.Within(this, other);
+            return spatialSvcs.Within(this, other);
         }
 
         /// <summary>
@@ -519,7 +579,7 @@ namespace System.Data.Entity.Core.Spatial
         public bool Contains(DbGeometry other)
         {
             other.CheckNull("other");
-            return this.spatialSvcs.Contains(this, other);
+            return spatialSvcs.Contains(this, other);
         }
 
         /// <summary>
@@ -531,9 +591,9 @@ namespace System.Data.Entity.Core.Spatial
         public bool Overlaps(DbGeometry other)
         {
             other.CheckNull("other");
-            return this.spatialSvcs.Overlaps(this, other);
+            return spatialSvcs.Overlaps(this, other);
         }
-        
+
         /// <summary>
         /// Determines whether this DbGeometry value spatially relates to the specified DbGeometry argument according to the
         /// given Dimensionally Extended Nine-Intersection Model (DE-9IM) intersection pattern.
@@ -546,7 +606,7 @@ namespace System.Data.Entity.Core.Spatial
         {
             other.CheckNull("other");
             matrix.CheckNull("matrix");
-            return this.spatialSvcs.Relate(this, other, matrix);
+            return spatialSvcs.Relate(this, other, matrix);
         }
 
         #endregion
@@ -565,7 +625,7 @@ namespace System.Data.Entity.Core.Spatial
             {
                 throw EntityUtil.ArgumentNull("distance");
             }
-            return this.spatialSvcs.Buffer(this, distance.Value);
+            return spatialSvcs.Buffer(this, distance.Value);
         }
 
         /// <summary>
@@ -577,13 +637,16 @@ namespace System.Data.Entity.Core.Spatial
         public double? Distance(DbGeometry other)
         {
             other.CheckNull("other");
-            return this.spatialSvcs.Distance(this, other);
+            return spatialSvcs.Distance(this, other);
         }
 
         /// <summary>
         /// Gets the convex hull of this DbGeometry value as another DbGeometry value.
         /// </summary>
-        public DbGeometry ConvexHull { get { return this.spatialSvcs.GetConvexHull(this); } }
+        public DbGeometry ConvexHull
+        {
+            get { return spatialSvcs.GetConvexHull(this); }
+        }
 
         /// <summary>
         /// Computes the intersection of this DbGeometry value and another DbGeometry value.
@@ -594,7 +657,7 @@ namespace System.Data.Entity.Core.Spatial
         public DbGeometry Intersection(DbGeometry other)
         {
             other.CheckNull("other");
-            return this.spatialSvcs.Intersection(this, other);
+            return spatialSvcs.Intersection(this, other);
         }
 
         /// <summary>
@@ -606,7 +669,7 @@ namespace System.Data.Entity.Core.Spatial
         public DbGeometry Union(DbGeometry other)
         {
             other.CheckNull("other");
-            return this.spatialSvcs.Union(this, other);
+            return spatialSvcs.Union(this, other);
         }
 
         /// <summary>
@@ -618,7 +681,7 @@ namespace System.Data.Entity.Core.Spatial
         public DbGeometry Difference(DbGeometry other)
         {
             other.CheckNull("other");
-            return this.spatialSvcs.Difference(this, other);
+            return spatialSvcs.Difference(this, other);
         }
 
         /// <summary>
@@ -630,7 +693,7 @@ namespace System.Data.Entity.Core.Spatial
         public DbGeometry SymmetricDifference(DbGeometry other)
         {
             other.CheckNull("other");
-            return this.spatialSvcs.SymmetricDifference(this, other);
+            return spatialSvcs.SymmetricDifference(this, other);
         }
 
         #endregion
@@ -641,7 +704,10 @@ namespace System.Data.Entity.Core.Spatial
         /// Gets the number of elements in this DbGeometry value, if it represents a geometry collection.
         /// <returns>The number of elements in this geometry value, if it represents a collection of other geometry values; otherwise <c>null</c>.</returns>
         /// </summary>
-        public int? ElementCount { get { return this.spatialSvcs.GetElementCount(this); } }
+        public int? ElementCount
+        {
+            get { return spatialSvcs.GetElementCount(this); }
+        }
 
         /// <summary>
         /// Returns an element of this DbGeometry value from a specific position, if it represents a geometry collection.
@@ -650,7 +716,7 @@ namespace System.Data.Entity.Core.Spatial
         /// </summary>
         public DbGeometry ElementAt(int index)
         {
-            return this.spatialSvcs.ElementAt(this, index);
+            return spatialSvcs.ElementAt(this, index);
         }
 
         #endregion
@@ -661,25 +727,37 @@ namespace System.Data.Entity.Core.Spatial
         /// Gets the X coordinate of this DbGeometry value, if it represents a point.
         /// <returns>The X coordinate value of this geometry value, if it represents a point; otherwise <c>null</c>.</returns>
         /// </summary>
-        public double? XCoordinate { get { return this.spatialSvcs.GetXCoordinate(this); } }
+        public double? XCoordinate
+        {
+            get { return spatialSvcs.GetXCoordinate(this); }
+        }
 
         /// <summary>
         /// Gets the Y coordinate of this DbGeometry value, if it represents a point.
         /// <returns>The Y coordinate value of this geometry value, if it represents a point; otherwise <c>null</c>.</returns>
         /// </summary>
-        public double? YCoordinate { get { return this.spatialSvcs.GetYCoordinate(this); } }
+        public double? YCoordinate
+        {
+            get { return spatialSvcs.GetYCoordinate(this); }
+        }
 
         /// <summary>
         /// Gets the elevation (Z coordinate) of this DbGeometry value, if it represents a point.
         /// <returns>The elevation (Z coordinate) of this geometry value, if it represents a point; otherwise <c>null</c>.</returns>
         /// </summary>
-        public double? Elevation { get { return this.spatialSvcs.GetElevation(this); } }
+        public double? Elevation
+        {
+            get { return spatialSvcs.GetElevation(this); }
+        }
 
         /// <summary>
         /// Gets the Measure (M coordinate) of this DbGeometry value, if it represents a point.
         /// <returns>The Measure (M coordinate) value of this geometry value, if it represents a point; otherwise <c>null</c>.</returns>
         /// </summary>
-        public double? Measure { get { return this.spatialSvcs.GetMeasure(this); } }
+        public double? Measure
+        {
+            get { return spatialSvcs.GetMeasure(this); }
+        }
 
         #endregion
 
@@ -688,27 +766,42 @@ namespace System.Data.Entity.Core.Spatial
         /// <summary>
         /// Gets a nullable double value that indicates the length of this DbGeometry value, which may be null if this value does not represent a curve.
         /// </summary>
-        public double? Length { get { return this.spatialSvcs.GetLength(this); } }
+        public double? Length
+        {
+            get { return spatialSvcs.GetLength(this); }
+        }
 
         /// <summary>
         /// Gets a DbGeometry value representing the start point of this value, which may be null if this DbGeometry value does not represent a curve.
         /// </summary>
-        public DbGeometry StartPoint { get { return this.spatialSvcs.GetStartPoint(this); } }
+        public DbGeometry StartPoint
+        {
+            get { return spatialSvcs.GetStartPoint(this); }
+        }
 
         /// <summary>
         /// Gets a DbGeometry value representing the start point of this value, which may be null if this DbGeometry value does not represent a curve.
         /// </summary>
-        public DbGeometry EndPoint { get { return this.spatialSvcs.GetEndPoint(this); } }
+        public DbGeometry EndPoint
+        {
+            get { return spatialSvcs.GetEndPoint(this); }
+        }
 
         /// <summary>
         /// Gets a nullable Boolean value indicating whether this DbGeometry value is closed, which may be null if this value does not represent a curve.
         /// </summary>
-        public bool? IsClosed { get { return this.spatialSvcs.GetIsClosed(this); } }
+        public bool? IsClosed
+        {
+            get { return spatialSvcs.GetIsClosed(this); }
+        }
 
         /// <summary>
         /// Gets a nullable Boolean value indicating whether this DbGeometry value is a ring, which may be null if this value does not represent a curve.
         /// </summary>
-        public bool? IsRing { get { return this.spatialSvcs.GetIsRing(this); } }
+        public bool? IsRing
+        {
+            get { return spatialSvcs.GetIsRing(this); }
+        }
 
         #endregion
 
@@ -718,7 +811,10 @@ namespace System.Data.Entity.Core.Spatial
         /// Gets the number of points in this DbGeometry value, if it represents a linestring or linear ring.
         /// <returns>The number of elements in this geometry value, if it represents a linestring or linear ring; otherwise <c>null</c>.</returns>
         /// </summary>
-        public int? PointCount { get { return this.spatialSvcs.GetPointCount(this); } }
+        public int? PointCount
+        {
+            get { return spatialSvcs.GetPointCount(this); }
+        }
 
         /// <summary>
         /// Returns an element of this DbGeometry value from a specific position, if it represents a linestring or linear ring.
@@ -727,7 +823,7 @@ namespace System.Data.Entity.Core.Spatial
         /// </summary>
         public DbGeometry PointAt(int index)
         {
-            return this.spatialSvcs.PointAt(this, index);
+            return spatialSvcs.PointAt(this, index);
         }
 
         #endregion
@@ -737,18 +833,28 @@ namespace System.Data.Entity.Core.Spatial
         /// <summary>
         /// Gets a nullable double value that indicates the area of this DbGeometry value, which may be null if this value does not represent a surface.
         /// </summary>
-        public double? Area { get { return this.spatialSvcs.GetArea(this); } }
+        public double? Area
+        {
+            get { return spatialSvcs.GetArea(this); }
+        }
 
         /// <summary>
         /// Gets the DbGeometry value that represents the centroid of this DbGeometry value, which may be null if this value does not represent a surface.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Centroid", Justification = "Naming convention prescribed by OGC specification")]
-        public DbGeometry Centroid { get { return this.spatialSvcs.GetCentroid(this); } }
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Centroid",
+            Justification = "Naming convention prescribed by OGC specification")]
+        public DbGeometry Centroid
+        {
+            get { return spatialSvcs.GetCentroid(this); }
+        }
 
         /// <summary>
         /// Gets a point on the surface of this DbGeometry value, which may be null if this value does not represent a surface.
         /// </summary>
-        public DbGeometry PointOnSurface { get { return this.spatialSvcs.GetPointOnSurface(this); } }
+        public DbGeometry PointOnSurface
+        {
+            get { return spatialSvcs.GetPointOnSurface(this); }
+        }
 
         #endregion
 
@@ -757,13 +863,19 @@ namespace System.Data.Entity.Core.Spatial
         /// <summary>
         /// Gets the DbGeometry value that represents the exterior ring of this DbGeometry value, which may be null if this value does not represent a polygon.
         /// </summary>
-        public DbGeometry ExteriorRing { get { return this.spatialSvcs.GetExteriorRing(this); } }
+        public DbGeometry ExteriorRing
+        {
+            get { return spatialSvcs.GetExteriorRing(this); }
+        }
 
         /// <summary>
         /// Gets the number of interior rings in this DbGeometry value, if it represents a polygon.
         /// <returns>The number of elements in this geometry value, if it represents a polygon; otherwise <c>null</c>.</returns>
         /// </summary>
-        public int? InteriorRingCount { get { return this.spatialSvcs.GetInteriorRingCount(this); } }
+        public int? InteriorRingCount
+        {
+            get { return spatialSvcs.GetInteriorRingCount(this); }
+        }
 
         /// <summary>
         /// Returns an interior ring from this DbGeometry value at a specific position, if it represents a polygon.
@@ -772,19 +884,22 @@ namespace System.Data.Entity.Core.Spatial
         /// </summary>
         public DbGeometry InteriorRingAt(int index)
         {
-            return this.spatialSvcs.InteriorRingAt(this, index);
+            return spatialSvcs.InteriorRingAt(this, index);
         }
 
         #endregion
 
         #region ToString
+
         /// <summary>
         /// Returns a string representation of the geometry value.
         /// </summary>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "SRID={1};{0}", this.WellKnownValue.WellKnownText ?? base.ToString(), this.CoordinateSystemId);
+            return string.Format(
+                CultureInfo.InvariantCulture, "SRID={1};{0}", WellKnownValue.WellKnownText ?? base.ToString(), CoordinateSystemId);
         }
+
         #endregion
     }
 }

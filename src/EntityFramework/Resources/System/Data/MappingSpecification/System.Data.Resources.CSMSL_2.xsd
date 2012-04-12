@@ -1,30 +1,25 @@
 <?xml version="1.0"?>
+
 <!-- XSD for CS( CDM <-> Storage ) space mapping. -->
-<xs:schema xmlns:tns="http://schemas.microsoft.com/ado/2008/09/mapping/cs" 
-           attributeFormDefault="unqualified" 
-           elementFormDefault="qualified" 
-           targetNamespace="http://schemas.microsoft.com/ado/2008/09/mapping/cs" 
-           xmlns:csmsl="http://schemas.microsoft.com/ado/2008/09/mapping/cs" 
-           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:tns="http://schemas.microsoft.com/ado/2008/09/mapping/cs" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/ado/2008/09/mapping/cs" xmlns:csmsl="http://schemas.microsoft.com/ado/2008/09/mapping/cs" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
   <xs:annotation>
     <xs:documentation xml:lang="en">
       Common Data Model Schema Definition Language.
-      Copyright (c) Microsoft Corp. All rights reserved.
     </xs:documentation>
   </xs:annotation>
   
   <!-- Root Level element for CS Mapping -->
-  <xs:element name="Mapping" type="csmsl:TMapping"/>
+  <xs:element name="Mapping" type="csmsl:TMapping" />
 
   <!-- Type of Root level mapping elements-->
   <xs:complexType name="TMapping">
     <!-- Top level Mapping element can have Alias elements followed by 
          EntityContainer Mapping element-->
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="Alias" type="csmsl:TAlias"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Alias" type="csmsl:TAlias" />
       <!-- For now we will allow only one EntityContainerMapping to be mapped per MSL File.-->
-      <xs:element name="EntityContainerMapping" type="csmsl:TEntityContainerMapping"/>
+      <xs:element name="EntityContainerMapping" type="csmsl:TEntityContainerMapping" />
     </xs:sequence>
     <!-- Space represents the space that the mapping occurs. For CS Mapping
          it always has to be "C-S"-->
@@ -53,9 +48,9 @@
   <xs:complexType name="TEntityContainerMapping">
     <xs:sequence>
       <xs:choice maxOccurs="unbounded">
-        <xs:element minOccurs="0" name="EntitySetMapping" type="csmsl:TEntitySetMapping"/>
-        <xs:element minOccurs="0" name="AssociationSetMapping" type="csmsl:TAssociationSetMapping"/>
-        <xs:element minOccurs="0" name="FunctionImportMapping" type="csmsl:TFunctionImportMapping"/>
+        <xs:element minOccurs="0" name="EntitySetMapping" type="csmsl:TEntitySetMapping" />
+        <xs:element minOccurs="0" name="AssociationSetMapping" type="csmsl:TAssociationSetMapping" />
+        <xs:element minOccurs="0" name="FunctionImportMapping" type="csmsl:TFunctionImportMapping" />
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="CdmEntityContainer" type="csmsl:TSimpleIdentifier" use="required" />
@@ -66,18 +61,18 @@
   <!-- Type for FunctionImport Mapping element -->
   <xs:complexType name="TFunctionImportMapping">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="1" name="ResultMapping" type="csmsl:TFunctionImportMappingResultMapping"/>
+      <xs:element minOccurs="0" maxOccurs="1" name="ResultMapping" type="csmsl:TFunctionImportMappingResultMapping" />
     </xs:sequence>
-    <xs:attribute name="FunctionName" type="xs:string" use="required"/>
-    <xs:attribute name="FunctionImportName" type="csmsl:TSimpleIdentifier" use="required"/>
+    <xs:attribute name="FunctionName" type="xs:string" use="required" />
+    <xs:attribute name="FunctionImportName" type="csmsl:TSimpleIdentifier" use="required" />
   </xs:complexType>
   
   <!-- Type for FunctionImport/ResultMapping element -->
   <xs:complexType name="TFunctionImportMappingResultMapping">
     <xs:choice>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="EntityTypeMapping" type="csmsl:TFunctionImportEntityTypeMapping"/>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="ComplexTypeMapping" type="csmsl:TFunctionImportComplexTypeMapping"/>
-    </xs:choice>    
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="EntityTypeMapping" type="csmsl:TFunctionImportEntityTypeMapping" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ComplexTypeMapping" type="csmsl:TFunctionImportComplexTypeMapping" />
+    </xs:choice>
   </xs:complexType>
 
   <!-- Type for FunctionImport EntityTypeMapping element-->
@@ -93,15 +88,15 @@
     <xs:choice>
       <xs:choice>
         <xs:sequence>
-          <xs:element name="QueryView" type="csmsl:TQueryView" minOccurs="0" maxOccurs="unbounded"/>
-    
-          <xs:element name="EntityTypeMapping" type="csmsl:TEntityTypeMapping" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="QueryView" type="csmsl:TQueryView" minOccurs="0" maxOccurs="unbounded" />
+
+          <xs:element name="EntityTypeMapping" type="csmsl:TEntityTypeMapping" minOccurs="0" maxOccurs="unbounded" />
         </xs:sequence>
         <xs:sequence>
-          <xs:element name="MappingFragment" type="csmsl:TMappingFragment" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="MappingFragment" type="csmsl:TMappingFragment" minOccurs="0" maxOccurs="unbounded" />
         </xs:sequence>
       </xs:choice>
-      <xs:group ref="csmsl:TPropertyGroup"/>
+      <xs:group ref="csmsl:TPropertyGroup" />
     </xs:choice>
     <xs:attribute name="Name" type="csmsl:TSimpleIdentifier" use="required" />
     <xs:attribute name="TypeName" type="xs:string" use="optional" />
@@ -112,10 +107,10 @@
   <!-- Type for AssociationSetMapping element-->
   <xs:complexType name="TAssociationSetMapping">
     <xs:sequence>
-      <xs:element name="QueryView" type="xs:string" minOccurs="0" maxOccurs="1"/>          
-      <xs:element name="EndProperty" type="csmsl:TEndProperty" minOccurs="0" maxOccurs="2"/>
-      <xs:element name="Condition" type="csmsl:TCondition" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="ModificationFunctionMapping" type="csmsl:TAssociationSetModificationFunctionMapping" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="QueryView" type="xs:string" minOccurs="0" maxOccurs="1" />
+      <xs:element name="EndProperty" type="csmsl:TEndProperty" minOccurs="0" maxOccurs="2" />
+      <xs:element name="Condition" type="csmsl:TCondition" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="ModificationFunctionMapping" type="csmsl:TAssociationSetModificationFunctionMapping" minOccurs="0" maxOccurs="1" />
     </xs:sequence>
     <xs:attribute name="Name" type="csmsl:TSimpleIdentifier" use="required" />
     <xs:attribute name="TypeName" type="csmsl:TQualifiedName" use="optional" />
@@ -125,8 +120,8 @@
   <!-- Type for EntityTypeMapping element-->
   <xs:complexType name="TEntityTypeMapping">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="MappingFragment" type="csmsl:TMappingFragment"/>
-      <xs:element minOccurs="0" maxOccurs="1" name="ModificationFunctionMapping" type="csmsl:TEntityTypeModificationFunctionMapping"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MappingFragment" type="csmsl:TMappingFragment" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ModificationFunctionMapping" type="csmsl:TEntityTypeModificationFunctionMapping" />
     </xs:sequence>
     <xs:attribute name="TypeName" type="xs:string" use="required" />
   </xs:complexType>
@@ -142,7 +137,7 @@
   
   <!-- Type for MappingFragment Element-->
   <xs:complexType name="TMappingFragment">
-    <xs:group ref="csmsl:TPropertyGroup" minOccurs="1" maxOccurs="1"/>
+    <xs:group ref="csmsl:TPropertyGroup" minOccurs="1" maxOccurs="1" />
     <xs:attribute name="StoreEntitySet" type="xs:string" use="required" />
     <xs:attribute name="MakeColumnsDistinct" type="xs:boolean" use="optional" />
   </xs:complexType>
@@ -150,50 +145,50 @@
   <!-- Type for EntityTypeMapping/ModificationFunctionMapping element -->
   <xs:complexType name="TEntityTypeModificationFunctionMapping">
     <xs:all>
-      <xs:element minOccurs="0" maxOccurs="1" name="DeleteFunction" type="csmsl:TEntityTypeModificationFunction"/>
-      <xs:element minOccurs="0" maxOccurs="1" name="InsertFunction" type="csmsl:TEntityTypeModificationFunctionWithResult"/>
-      <xs:element minOccurs="0" maxOccurs="1" name="UpdateFunction" type="csmsl:TEntityTypeModificationFunctionWithResult"/>
+      <xs:element minOccurs="0" maxOccurs="1" name="DeleteFunction" type="csmsl:TEntityTypeModificationFunction" />
+      <xs:element minOccurs="0" maxOccurs="1" name="InsertFunction" type="csmsl:TEntityTypeModificationFunctionWithResult" />
+      <xs:element minOccurs="0" maxOccurs="1" name="UpdateFunction" type="csmsl:TEntityTypeModificationFunctionWithResult" />
     </xs:all>
   </xs:complexType>
   
   <!-- Type for AssociationSetMapping/ModificationFunctionMapping element -->
   <xs:complexType name="TAssociationSetModificationFunctionMapping">
     <xs:all>
-      <xs:element minOccurs="0" maxOccurs="1" name="DeleteFunction" type="csmsl:TAssociationSetModificationFunction"/>
-      <xs:element minOccurs="0" maxOccurs="1" name="InsertFunction" type="csmsl:TAssociationSetModificationFunction"/>
+      <xs:element minOccurs="0" maxOccurs="1" name="DeleteFunction" type="csmsl:TAssociationSetModificationFunction" />
+      <xs:element minOccurs="0" maxOccurs="1" name="InsertFunction" type="csmsl:TAssociationSetModificationFunction" />
     </xs:all>
   </xs:complexType>
 
   <!-- Type for entity type DeleteFunction -->
   <xs:complexType name="TEntityTypeModificationFunction">
-    <xs:group ref="csmsl:TEntityTypeFunctionMappingPropertyGroup" minOccurs="1" maxOccurs="1"/>
-    <xs:attribute name="FunctionName" type="xs:string" use="required"/>
-    <xs:attribute name="RowsAffectedParameter" type="xs:string" use="optional"/>
+    <xs:group ref="csmsl:TEntityTypeFunctionMappingPropertyGroup" minOccurs="1" maxOccurs="1" />
+    <xs:attribute name="FunctionName" type="xs:string" use="required" />
+    <xs:attribute name="RowsAffectedParameter" type="xs:string" use="optional" />
   </xs:complexType>
 
   <!-- Extensions to modification function for entity type InsertFunction and UpdateFunction -->
   <xs:complexType name="TEntityTypeModificationFunctionWithResult">
     <xs:complexContent>
       <xs:extension base="csmsl:TEntityTypeModificationFunction">
-        <xs:group ref="csmsl:TResultBindingGroup" minOccurs="1" maxOccurs="1"/>
+        <xs:group ref="csmsl:TResultBindingGroup" minOccurs="1" maxOccurs="1" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
 
   <!-- Type for association set DeleteFunction and InsertFunction -->
   <xs:complexType name="TAssociationSetModificationFunction">
-    <xs:group ref="csmsl:TAssociationSetFunctionMappingPropertyGroup" minOccurs="1" maxOccurs="1"/>
-    <xs:attribute name="FunctionName" type="xs:string" use="required"/>
-    <xs:attribute name="RowsAffectedParameter" type="xs:string" use="optional"/>
+    <xs:group ref="csmsl:TAssociationSetFunctionMappingPropertyGroup" minOccurs="1" maxOccurs="1" />
+    <xs:attribute name="FunctionName" type="xs:string" use="required" />
+    <xs:attribute name="RowsAffectedParameter" type="xs:string" use="optional" />
   </xs:complexType>
 
   <!-- Grouping for entity type function mappings -->
   <xs:group name="TEntityTypeFunctionMappingPropertyGroup">
     <xs:sequence>
       <xs:choice maxOccurs="unbounded">
-        <xs:element minOccurs="0" name="ScalarProperty" type="csmsl:TFunctionMappingScalarProperty"/>
-        <xs:element minOccurs="0" name="AssociationEnd" type="csmsl:TFunctionMappingAssociationEnd"/>
-        <xs:element minOccurs="0" name="ComplexProperty" type="csmsl:TFunctionMappingComplexProperty"/>
+        <xs:element minOccurs="0" name="ScalarProperty" type="csmsl:TFunctionMappingScalarProperty" />
+        <xs:element minOccurs="0" name="AssociationEnd" type="csmsl:TFunctionMappingAssociationEnd" />
+        <xs:element minOccurs="0" name="ComplexProperty" type="csmsl:TFunctionMappingComplexProperty" />
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -202,56 +197,56 @@
   <xs:group name="TAssociationSetFunctionMappingPropertyGroup">
     <xs:sequence>
       <xs:choice maxOccurs="unbounded">
-        <xs:element minOccurs="1" name="EndProperty" type="csmsl:TFunctionMappingEndProperty"/>
+        <xs:element minOccurs="1" name="EndProperty" type="csmsl:TFunctionMappingEndProperty" />
       </xs:choice>
     </xs:sequence>
   </xs:group>
 
   <!-- Type for function mapping end property -->
   <xs:complexType name="TFunctionMappingEndProperty">
-    <xs:group ref="csmsl:TFunctionMappingAssociationEndPropertyGroup" minOccurs="1" maxOccurs="1"/>
-    <xs:attribute name="Name" type="csmsl:TSimpleIdentifier" use="required"/>
+    <xs:group ref="csmsl:TFunctionMappingAssociationEndPropertyGroup" minOccurs="1" maxOccurs="1" />
+    <xs:attribute name="Name" type="csmsl:TSimpleIdentifier" use="required" />
   </xs:complexType>
 
   <!-- Type for function mapping scalar property -->
   <xs:complexType name="TFunctionMappingScalarProperty">
-    <xs:attribute name="ParameterName" type="xs:string" use="required"/>
-    <xs:attribute name="Name" type="csmsl:TSimpleIdentifier" use="required"/>
-    <xs:attribute name="Version" type="csmsl:TVersion" use="optional"/>
+    <xs:attribute name="ParameterName" type="xs:string" use="required" />
+    <xs:attribute name="Name" type="csmsl:TSimpleIdentifier" use="required" />
+    <xs:attribute name="Version" type="csmsl:TVersion" use="optional" />
   </xs:complexType>
 
   <!-- Type for function mapping result binding -->
   <xs:complexType name="TResultBinding">
-    <xs:attribute name="ColumnName" type="xs:string" use="required"/>
-    <xs:attribute name="Name" type="csmsl:TSimpleIdentifier" use="required"/>
+    <xs:attribute name="ColumnName" type="xs:string" use="required" />
+    <xs:attribute name="Name" type="csmsl:TSimpleIdentifier" use="required" />
   </xs:complexType>
 
   <!-- Type for function mapping association end -->
   <xs:complexType name="TFunctionMappingAssociationEnd">
-    <xs:group ref="csmsl:TFunctionMappingAssociationEndPropertyGroup" minOccurs="1" maxOccurs="1"/>
-    <xs:attribute name="AssociationSet" type="csmsl:TSimpleIdentifier" use="required"/>
-    <xs:attribute name="From" type="csmsl:TSimpleIdentifier" use="required"/>
-    <xs:attribute name="To" type="csmsl:TSimpleIdentifier" use="required"/>
+    <xs:group ref="csmsl:TFunctionMappingAssociationEndPropertyGroup" minOccurs="1" maxOccurs="1" />
+    <xs:attribute name="AssociationSet" type="csmsl:TSimpleIdentifier" use="required" />
+    <xs:attribute name="From" type="csmsl:TSimpleIdentifier" use="required" />
+    <xs:attribute name="To" type="csmsl:TSimpleIdentifier" use="required" />
   </xs:complexType>
 
   <!-- Grouping for property bindings in function mapping end property -->
   <xs:group name="TFunctionMappingAssociationEndPropertyGroup">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="ScalarProperty" type="csmsl:TFunctionMappingScalarProperty"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ScalarProperty" type="csmsl:TFunctionMappingScalarProperty" />
     </xs:sequence>
   </xs:group>
 
   <!-- Type for function mapping complex property -->
   <xs:complexType name="TFunctionMappingComplexProperty">
-    <xs:group ref="csmsl:TFunctionMappingComplexPropertyPropertyGroup" minOccurs="1" maxOccurs="1"/>
-    <xs:attribute name="Name" type="csmsl:TSimpleIdentifier" use="required"/>
-    <xs:attribute name="TypeName" type="xs:string" use="required"/>
+    <xs:group ref="csmsl:TFunctionMappingComplexPropertyPropertyGroup" minOccurs="1" maxOccurs="1" />
+    <xs:attribute name="Name" type="csmsl:TSimpleIdentifier" use="required" />
+    <xs:attribute name="TypeName" type="xs:string" use="required" />
   </xs:complexType>  
 
   <!-- Grouping for result bindings in function mappings -->
   <xs:group name="TResultBindingGroup">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="ResultBinding" type="csmsl:TResultBinding"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ResultBinding" type="csmsl:TResultBinding" />
     </xs:sequence>
   </xs:group>
 
@@ -259,8 +254,8 @@
   <xs:group name="TFunctionMappingComplexPropertyPropertyGroup">
     <xs:sequence>
       <xs:choice maxOccurs="unbounded">
-        <xs:element minOccurs="0" name="ScalarProperty" type="csmsl:TFunctionMappingScalarProperty"/>
-        <xs:element minOccurs="0" name="ComplexProperty" type="csmsl:TFunctionMappingComplexProperty"/>
+        <xs:element minOccurs="0" name="ScalarProperty" type="csmsl:TFunctionMappingScalarProperty" />
+        <xs:element minOccurs="0" name="ComplexProperty" type="csmsl:TFunctionMappingComplexProperty" />
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -272,9 +267,9 @@
   <xs:group name="TPropertyGroup">
     <xs:sequence>
       <xs:choice maxOccurs="unbounded">
-        <xs:element minOccurs="0" name="ComplexProperty" type="csmsl:TComplexProperty"/>
-        <xs:element minOccurs="0" name="ScalarProperty" type="csmsl:TScalarProperty"/>
-        <xs:element minOccurs="0" name="Condition" type="csmsl:TCondition"/>
+        <xs:element minOccurs="0" name="ComplexProperty" type="csmsl:TComplexProperty" />
+        <xs:element minOccurs="0" name="ScalarProperty" type="csmsl:TScalarProperty" />
+        <xs:element minOccurs="0" name="Condition" type="csmsl:TCondition" />
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -297,7 +292,7 @@
   <!-- Type for End Property Elements in Association Maps -->
   <xs:complexType name="TEndProperty">
     <xs:sequence>
-      <xs:element maxOccurs="unbounded" name="ScalarProperty" type="csmsl:TScalarProperty"/>
+      <xs:element maxOccurs="unbounded" name="ScalarProperty" type="csmsl:TScalarProperty" />
     </xs:sequence>
     <xs:attribute name="Name" type="csmsl:TSimpleIdentifier" use="required" />
   </xs:complexType>
@@ -306,10 +301,10 @@
   <xs:complexType name="TComplexProperty">
     <xs:sequence>
       <xs:choice maxOccurs="unbounded">
-        <xs:element name="ScalarProperty" type="csmsl:TScalarProperty"/>
-        <xs:element name="ComplexProperty" type="csmsl:TComplexProperty"/>
-        <xs:element name="ComplexTypeMapping" type="csmsl:TComplexTypeMapping"/>
-        <xs:element name="Condition" type="csmsl:TCondition"/>
+        <xs:element name="ScalarProperty" type="csmsl:TScalarProperty" />
+        <xs:element name="ComplexProperty" type="csmsl:TComplexProperty" />
+        <xs:element name="ComplexTypeMapping" type="csmsl:TComplexTypeMapping" />
+        <xs:element name="Condition" type="csmsl:TCondition" />
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="Name" type="csmsl:TSimpleIdentifier" use="required" />
@@ -321,9 +316,9 @@
   <xs:complexType name="TComplexTypeMapping">
     <xs:sequence>
       <xs:choice maxOccurs="unbounded">
-        <xs:element name="ScalarProperty" type="csmsl:TScalarProperty"/>
-        <xs:element name="ComplexProperty" type="csmsl:TComplexProperty"/>
-        <xs:element name="Condition" type="csmsl:TCondition"/>
+        <xs:element name="ScalarProperty" type="csmsl:TScalarProperty" />
+        <xs:element name="ComplexProperty" type="csmsl:TComplexProperty" />
+        <xs:element name="Condition" type="csmsl:TCondition" />
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="TypeName" type="xs:string" use="optional" />
@@ -341,8 +336,8 @@
       -->
   <xs:simpleType name="TSimpleIdentifier">
     <xs:restriction base="xs:token">
-        <!-- The below pattern represents the allowed identifiers in ECMA specification -->
-        <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}"/>
+      <!-- The below pattern represents the allowed identifiers in ECMA specification -->
+      <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}" />
     </xs:restriction>
   </xs:simpleType>
 
@@ -352,16 +347,16 @@
       -->
   <xs:simpleType name="TQualifiedName">
     <xs:restriction base="xs:token">
-        <!-- The below pattern represents the allowed identifiers in ECMA specification plus the '.' for namespace qualification  -->
-         <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}(\.[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}"/>
+      <!-- The below pattern represents the allowed identifiers in ECMA specification plus the '.' for namespace qualification  -->
+      <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}(\.[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}" />
     </xs:restriction>
   </xs:simpleType>
 
   <!--Definition for Version, which can 'original' or 'current' as its value-->
   <xs:simpleType name="TVersion">
     <xs:restriction base="xs:token">
-      <xs:enumeration value="Original"/>
-      <xs:enumeration value="Current"/>
+      <xs:enumeration value="Original" />
+      <xs:enumeration value="Current" />
     </xs:restriction>
   </xs:simpleType>
 

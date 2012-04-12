@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     /// <summary>
@@ -11,8 +6,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public sealed class FunctionParameter : MetadataItem
     {
         internal static Func<FunctionParameter, SafeLink<EdmFunction>> DeclaringFunctionLinker = fp => fp._declaringFunction;
-        
+
         #region Constructors
+
         /// <summary>
         /// The constructor for FunctionParameter taking in a name and a TypeUsage object
         /// </summary>
@@ -25,23 +21,30 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             EntityUtil.CheckStringArgument(name, "name");
             EntityUtil.GenericCheckArgumentNull(typeUsage, "typeUsage");
-            _name = name;            
+            _name = name;
             _typeUsage = typeUsage;
             SetParameterMode(parameterMode);
         }
+
         #endregion
 
         #region Fields
+
         private readonly TypeUsage _typeUsage;
         private readonly string _name;
         private readonly SafeLink<EdmFunction> _declaringFunction = new SafeLink<EdmFunction>();
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the kind of the type
         /// </summary>
-        public override BuiltInTypeKind BuiltInTypeKind { get { return BuiltInTypeKind.FunctionParameter; } }
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
+            get { return BuiltInTypeKind.FunctionParameter; }
+        }
 
         /// <summary>
         /// Gets/Sets the mode of this parameter
@@ -51,10 +54,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.ParameterMode, false)]
         public ParameterMode Mode
         {
-            get
-            {
-                return GetParameterMode();
-            }
+            get { return GetParameterMode(); }
         }
 
         /// <summary>
@@ -62,10 +62,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal override string Identity
         {
-            get
-            {
-                return _name;
-            }
+            get { return _name; }
         }
 
         /// <summary>
@@ -74,10 +71,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public String Name
         {
-            get
-            {
-                return _name;
-            }
+            get { return _name; }
         }
 
         /// <summary>
@@ -87,10 +81,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.TypeUsage, false)]
         public TypeUsage TypeUsage
         {
-            get
-            {
-                return _typeUsage;
-            }
+            get { return _typeUsage; }
         }
 
         /// <summary>
@@ -98,14 +89,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         public EdmFunction DeclaringFunction
         {
-            get
-            {
-                return _declaringFunction.Value;
-            }
+            get { return _declaringFunction.Value; }
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Overriding System.Object.ToString to provide better String representation 
         /// for this type.
@@ -114,7 +104,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             return Name;
         }
-
 
         /// <summary>
         /// Sets the member to read only mode. Once this is done, there are no changes
@@ -128,6 +117,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 // TypeUsage is always readonly, no reason to set it
             }
         }
+
         #endregion
     }
 }

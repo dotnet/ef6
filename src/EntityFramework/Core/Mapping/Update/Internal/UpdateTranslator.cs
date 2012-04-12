@@ -1,22 +1,16 @@
-using System.Collections.Generic;
-using System.Data.Entity.Core.Objects;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Threading;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.EntityClient;
-using System.Data.Entity.Core.Spatial;
-using System.Globalization;
-using System.Data.Entity;
-using System.Linq;
-
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
+    using System.Collections.Generic;
+    using System.Data.Common;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.Linq;
 
     /// <summary>
     /// This class performs to following tasks to persist C-Space changes to the store:
@@ -31,6 +25,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     internal partial class UpdateTranslator
     {
         #region Constructors
+
         /// <summary>
         /// Constructs a grouper based on the contents of the given entity state manager.
         /// </summary>
@@ -38,7 +33,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="metadataWorkspace">Metadata workspace.</param>
         /// <param name="connection">Map connection</param>
         /// <param name="commandTimeout">Timeout for update commands; null means 'use provider default'</param>
-        private UpdateTranslator(IEntityStateManager stateManager, MetadataWorkspace metadataWorkspace, EntityConnection connection, int? commandTimeout)
+        private UpdateTranslator(
+            IEntityStateManager stateManager, MetadataWorkspace metadataWorkspace, EntityConnection connection, int? commandTimeout)
         {
             EntityUtil.CheckArgumentNull(stateManager, "stateManager");
             EntityUtil.CheckArgumentNull(metadataWorkspace, "metadataWorkspace");
@@ -67,7 +63,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             m_commandTimeout = commandTimeout;
 
             // metadata cache
-            m_extractorMetadata = new Dictionary<Tuple<EntitySetBase, StructuralType>, ExtractorMetadata>(); ;
+            m_extractorMetadata = new Dictionary<Tuple<EntitySetBase, StructuralType>, ExtractorMetadata>();
+            ;
 
             // key management
             KeyManager = new KeyManager(this);
@@ -77,6 +74,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         #endregion
 
         #region Fields
+
         // propagation state
         private readonly Dictionary<EntitySetBase, ChangeNode> m_changes;
         private readonly Dictionary<EntitySetBase, List<ExtractedStateEntry>> m_functionChanges;
@@ -107,6 +105,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets workspace used in this session.
         /// </summary>
@@ -120,7 +119,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// referential-integrity/foreign key constraints)
         /// </summary>
         internal readonly KeyManager KeyManager;
-        
+
         /// <summary>
         /// Gets the view loader metadata wrapper for the current workspace.
         /// </summary>
@@ -146,9 +145,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         internal readonly IEqualityComparer<CompositeKey> KeyComparer;
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Registers any referential constraints contained in the state entry (so that
         /// constrained members have the same identifier values). Only processes relationships
@@ -159,37 +160,45 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             if (stateEntry.IsRelationship)
             {
-                AssociationSet associationSet = (AssociationSet)stateEntry.EntitySet;
+                var associationSet = (AssociationSet)stateEntry.EntitySet;
                 if (0 < associationSet.ElementType.ReferentialConstraints.Count)
                 {
-                    DbDataRecord record = stateEntry.State == EntityState.Added ?
-                        (DbDataRecord)stateEntry.CurrentValues : stateEntry.OriginalValues;
-                    foreach (ReferentialConstraint constraint in associationSet.ElementType.ReferentialConstraints)
+                    var record = stateEntry.State == EntityState.Added
+                                     ? stateEntry.CurrentValues
+                                     : stateEntry.OriginalValues;
+                    foreach (var constraint in associationSet.ElementType.ReferentialConstraints)
                     {
                         // retrieve keys at the ends
-                        EntityKey principalKey = (EntityKey)record[constraint.FromRole.Name];
-                        EntityKey dependentKey = (EntityKey)record[constraint.ToRole.Name];
+                        var principalKey = (EntityKey)record[constraint.FromRole.Name];
+                        var dependentKey = (EntityKey)record[constraint.ToRole.Name];
 
                         // associate keys, where the from side 'owns' the to side
-                        using (ReadOnlyMetadataCollection<EdmProperty>.Enumerator principalPropertyEnum = constraint.FromProperties.GetEnumerator())
-                        using (ReadOnlyMetadataCollection<EdmProperty>.Enumerator dependentPropertyEnum = constraint.ToProperties.GetEnumerator())
+                        using (var principalPropertyEnum = constraint.FromProperties.GetEnumerator())
                         {
-                            while (principalPropertyEnum.MoveNext() && dependentPropertyEnum.MoveNext())
+                            using (var dependentPropertyEnum = constraint.ToProperties.GetEnumerator())
                             {
-                                int principalKeyMemberCount;
-                                int dependentKeyMemberCount;
+                                while (principalPropertyEnum.MoveNext()
+                                       && dependentPropertyEnum.MoveNext())
+                                {
+                                    int principalKeyMemberCount;
+                                    int dependentKeyMemberCount;
 
-                                // get offsets for from and to key properties
-                                int principalOffset = GetKeyMemberOffset(constraint.FromRole, principalPropertyEnum.Current,
-                                    out principalKeyMemberCount);
-                                int dependentOffset = GetKeyMemberOffset(constraint.ToRole, dependentPropertyEnum.Current,
-                                    out dependentKeyMemberCount);
+                                    // get offsets for from and to key properties
+                                    var principalOffset = GetKeyMemberOffset(
+                                        constraint.FromRole, principalPropertyEnum.Current,
+                                        out principalKeyMemberCount);
+                                    var dependentOffset = GetKeyMemberOffset(
+                                        constraint.ToRole, dependentPropertyEnum.Current,
+                                        out dependentKeyMemberCount);
 
-                                int principalIdentifier = this.KeyManager.GetKeyIdentifierForMemberOffset(principalKey, principalOffset, principalKeyMemberCount);
-                                int dependentIdentifier = this.KeyManager.GetKeyIdentifierForMemberOffset(dependentKey, dependentOffset, dependentKeyMemberCount);
+                                    var principalIdentifier = KeyManager.GetKeyIdentifierForMemberOffset(
+                                        principalKey, principalOffset, principalKeyMemberCount);
+                                    var dependentIdentifier = KeyManager.GetKeyIdentifierForMemberOffset(
+                                        dependentKey, dependentOffset, dependentKeyMemberCount);
 
-                                // register equivalence of identifiers
-                                this.KeyManager.AddReferentialConstraint(stateEntry, dependentIdentifier, principalIdentifier);
+                                    // register equivalence of identifiers
+                                    KeyManager.AddReferentialConstraint(stateEntry, dependentIdentifier, principalIdentifier);
+                                }
                             }
                         }
                     }
@@ -197,11 +206,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
             else if (!stateEntry.IsKeyEntry)
             {
-                if (stateEntry.State == EntityState.Added || stateEntry.State == EntityState.Modified)
+                if (stateEntry.State == EntityState.Added
+                    || stateEntry.State == EntityState.Modified)
                 {
                     RegisterEntityReferentialConstraints(stateEntry, true);
                 }
-                if (stateEntry.State == EntityState.Deleted || stateEntry.State == EntityState.Modified)
+                if (stateEntry.State == EntityState.Deleted
+                    || stateEntry.State == EntityState.Modified)
                 {
                     RegisterEntityReferentialConstraints(stateEntry, false);
                 }
@@ -210,35 +221,36 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         private void RegisterEntityReferentialConstraints(IEntityStateEntry stateEntry, bool currentValues)
         {
-            IExtendedDataRecord record = currentValues
-                ? (IExtendedDataRecord)stateEntry.CurrentValues
-                : (IExtendedDataRecord)stateEntry.OriginalValues;
-            EntitySet entitySet = (EntitySet)stateEntry.EntitySet;
-            EntityKey dependentKey = stateEntry.EntityKey;
+            var record = currentValues
+                             ? stateEntry.CurrentValues
+                             : (IExtendedDataRecord)stateEntry.OriginalValues;
+            var entitySet = (EntitySet)stateEntry.EntitySet;
+            var dependentKey = stateEntry.EntityKey;
 
             foreach (var foreignKey in entitySet.ForeignKeyDependents)
             {
-                AssociationSet associationSet = foreignKey.Item1;
-                ReferentialConstraint constraint = foreignKey.Item2;
-                EntityType dependentType = MetadataHelper.GetEntityTypeForEnd((AssociationEndMember)constraint.ToRole);
+                var associationSet = foreignKey.Item1;
+                var constraint = foreignKey.Item2;
+                var dependentType = MetadataHelper.GetEntityTypeForEnd((AssociationEndMember)constraint.ToRole);
                 if (dependentType.IsAssignableFrom(record.DataRecordInfo.RecordType.EdmType))
                 {
                     EntityKey principalKey = null;
 
                     // First, check for an explicit reference
-                    if (!currentValues || !m_stateManager.TryGetReferenceKey(dependentKey, (AssociationEndMember)constraint.FromRole, out principalKey))
+                    if (!currentValues
+                        || !m_stateManager.TryGetReferenceKey(dependentKey, (AssociationEndMember)constraint.FromRole, out principalKey))
                     {
                         // build a key based on the foreign key values
-                        EntityType principalType = MetadataHelper.GetEntityTypeForEnd((AssociationEndMember)constraint.FromRole);
-                        bool hasNullValue = false;
-                        object[] keyValues = new object[principalType.KeyMembers.Count];
+                        var principalType = MetadataHelper.GetEntityTypeForEnd((AssociationEndMember)constraint.FromRole);
+                        var hasNullValue = false;
+                        var keyValues = new object[principalType.KeyMembers.Count];
                         for (int i = 0, n = keyValues.Length; i < n; i++)
                         {
-                            EdmProperty keyMember = (EdmProperty)principalType.KeyMembers[i];
+                            var keyMember = (EdmProperty)principalType.KeyMembers[i];
 
                             // Find corresponding foreign key value
-                            int constraintOrdinal = constraint.FromProperties.IndexOf((EdmProperty)keyMember);
-                            int recordOrdinal = record.GetOrdinal(constraint.ToProperties[constraintOrdinal].Name);
+                            var constraintOrdinal = constraint.FromProperties.IndexOf(keyMember);
+                            var recordOrdinal = record.GetOrdinal(constraint.ToProperties[constraintOrdinal].Name);
                             if (record.IsDBNull(recordOrdinal))
                             {
                                 hasNullValue = true;
@@ -249,7 +261,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                         if (!hasNullValue)
                         {
-                            EntitySet principalSet = associationSet.AssociationSetEnds[constraint.FromRole.Name].EntitySet;
+                            var principalSet = associationSet.AssociationSetEnds[constraint.FromRole.Name].EntitySet;
                             if (1 == keyValues.Length)
                             {
                                 principalKey = new EntityKey(principalSet, keyValues[0]);
@@ -270,13 +282,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         {
                             // nothing to do. the principal key will resolve to the existing entity
                         }
-                        else if (currentValues && this.KeyManager.TryGetTempKey(principalKey, out tempKey))
+                        else if (currentValues && KeyManager.TryGetTempKey(principalKey, out tempKey))
                         {
                             // if we aren't dealing with current values, we cannot resolve to a temp key (original values
                             // cannot indicate a relationship to an 'added' entity).
                             if (null == tempKey)
                             {
-                                throw EntityUtil.Update(Strings.Update_AmbiguousForeignKey(constraint.ToRole.DeclaringType.FullName), null, stateEntry);
+                                throw EntityUtil.Update(
+                                    Strings.Update_AmbiguousForeignKey(constraint.ToRole.DeclaringType.FullName), null, stateEntry);
                             }
                             else
                             {
@@ -296,24 +309,29 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             int principalKeyMemberCount;
 
                             // get offsets for from and to key properties
-                            int principalOffset = GetKeyMemberOffset(constraint.FromRole, principalProperty, out principalKeyMemberCount);
-                            int principalIdentifier = this.KeyManager.GetKeyIdentifierForMemberOffset(principalKey, principalOffset, principalKeyMemberCount);
+                            var principalOffset = GetKeyMemberOffset(constraint.FromRole, principalProperty, out principalKeyMemberCount);
+                            var principalIdentifier = KeyManager.GetKeyIdentifierForMemberOffset(
+                                principalKey, principalOffset, principalKeyMemberCount);
                             int dependentIdentifier;
 
                             if (entitySet.ElementType.KeyMembers.Contains(dependentProperty))
                             {
                                 int dependentKeyMemberCount;
-                                int dependentOffset = GetKeyMemberOffset(constraint.ToRole, dependentProperty,
+                                var dependentOffset = GetKeyMemberOffset(
+                                    constraint.ToRole, dependentProperty,
                                     out dependentKeyMemberCount);
-                                dependentIdentifier = this.KeyManager.GetKeyIdentifierForMemberOffset(dependentKey, dependentOffset, dependentKeyMemberCount);
+                                dependentIdentifier = KeyManager.GetKeyIdentifierForMemberOffset(
+                                    dependentKey, dependentOffset, dependentKeyMemberCount);
                             }
                             else
                             {
-                                dependentIdentifier = this.KeyManager.GetKeyIdentifierForMember(dependentKey, dependentProperty.Name, currentValues);
+                                dependentIdentifier = KeyManager.GetKeyIdentifierForMember(
+                                    dependentKey, dependentProperty.Name, currentValues);
                             }
 
                             // don't allow the user to insert or update an entity that refers to a deleted principal
-                            if (currentValues && null != existingPrincipal && existingPrincipal.State == EntityState.Deleted &&
+                            if (currentValues && null != existingPrincipal && existingPrincipal.State == EntityState.Deleted
+                                &&
                                 (stateEntry.State == EntityState.Added || stateEntry.State == EntityState.Modified))
                             {
                                 throw EntityUtil.Update(
@@ -324,7 +342,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             }
 
                             // register equivalence of identifiers
-                            this.KeyManager.AddReferentialConstraint(stateEntry, dependentIdentifier, principalIdentifier);
+                            KeyManager.AddReferentialConstraint(stateEntry, dependentIdentifier, principalIdentifier);
                         }
                     }
                 }
@@ -336,12 +354,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             Debug.Assert(null != role);
             Debug.Assert(null != property);
-            Debug.Assert(BuiltInTypeKind.RefType == role.TypeUsage.EdmType.BuiltInTypeKind,
+            Debug.Assert(
+                BuiltInTypeKind.RefType == role.TypeUsage.EdmType.BuiltInTypeKind,
                 "relationship ends must be of RefType");
-            RefType endType = (RefType)role.TypeUsage.EdmType;
-            Debug.Assert(BuiltInTypeKind.EntityType == endType.ElementType.BuiltInTypeKind,
+            var endType = (RefType)role.TypeUsage.EdmType;
+            Debug.Assert(
+                BuiltInTypeKind.EntityType == endType.ElementType.BuiltInTypeKind,
                 "relationship ends must reference EntityType");
-            EntityType entityType = (EntityType)endType.ElementType;
+            var entityType = (EntityType)endType.ElementType;
             keyMemberCount = entityType.KeyMembers.Count;
             return entityType.KeyMembers.IndexOf(property);
         }
@@ -365,45 +385,45 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         internal static Int32 Update(IEntityStateManager stateManager, IEntityAdapter adapter)
         {
             // provider/connection details
-            EntityConnection connection = (EntityConnection)adapter.Connection;
-            MetadataWorkspace metadataWorkspace = connection.GetMetadataWorkspace();
-            int? commandTimeout = adapter.CommandTimeout;
+            var connection = (EntityConnection)adapter.Connection;
+            var metadataWorkspace = connection.GetMetadataWorkspace();
+            var commandTimeout = adapter.CommandTimeout;
 
-            UpdateTranslator translator = new UpdateTranslator(stateManager, metadataWorkspace, connection, commandTimeout);
-                
+            var translator = new UpdateTranslator(stateManager, metadataWorkspace, connection, commandTimeout);
+
             // tracks values for identifiers in this session
-            Dictionary<int, object> identifierValues = new Dictionary<int, object>();
+            var identifierValues = new Dictionary<int, object>();
 
             // tracks values for generated values in this session
-            List<KeyValuePair<PropagatorResult, object>> generatedValues = new List<KeyValuePair<PropagatorResult, object>>();
+            var generatedValues = new List<KeyValuePair<PropagatorResult, object>>();
 
-            IEnumerable<UpdateCommand> orderedCommands = translator.ProduceCommands();
+            var orderedCommands = translator.ProduceCommands();
 
             // used to track the source of commands being processed in case an exception is thrown
             UpdateCommand source = null;
             try
             {
-                foreach (UpdateCommand command in orderedCommands)
+                foreach (var command in orderedCommands)
                 {
                     // Remember the data sources so that we can throw meaningful exception
                     source = command;
-                    long rowsAffected = command.Execute(translator, connection, identifierValues, generatedValues);
+                    var rowsAffected = command.Execute(translator, connection, identifierValues, generatedValues);
                     translator.ValidateRowsAffected(rowsAffected, source);
                 }
             }
             catch (Exception e)
             {
                 // we should not be wrapping all exceptions
-                if (UpdateTranslator.RequiresContext(e))
+                if (RequiresContext(e))
                 {
-                    throw EntityUtil.Update(System.Data.Entity.Resources.Strings.Update_GeneralExecutionException, e, translator.DetermineStateEntriesFromSource(source));
+                    throw EntityUtil.Update(Strings.Update_GeneralExecutionException, e, translator.DetermineStateEntriesFromSource(source));
                 }
                 throw;
             }
 
             translator.BackPropagateServerGen(generatedValues);
 
-            int totalStateEntries = translator.AcceptChanges(adapter);
+            var totalStateEntries = translator.AcceptChanges(adapter);
 
             return totalStateEntries;
         }
@@ -416,12 +436,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             // check constraints
             m_constraintValidator.ValidateConstraints();
-            this.KeyManager.ValidateReferentialIntegrityGraphAcyclic();
-            
+            KeyManager.ValidateReferentialIntegrityGraphAcyclic();
+
             // gather all commands (aggregate in a dependency orderer to determine operation order
-            IEnumerable<UpdateCommand> dynamicCommands = this.ProduceDynamicCommands();
-            IEnumerable<UpdateCommand> functionCommands = this.ProduceFunctionCommands();
-            UpdateCommandOrderer orderer = new UpdateCommandOrderer(dynamicCommands.Concat(functionCommands), this);
+            var dynamicCommands = ProduceDynamicCommands();
+            var functionCommands = ProduceFunctionCommands();
+            var orderer = new UpdateCommandOrderer(dynamicCommands.Concat(functionCommands), this);
             IEnumerable<UpdateCommand> orderedCommands;
             IEnumerable<UpdateCommand> remainder;
             if (!orderer.TryTopologicalSort(out orderedCommands, out remainder))
@@ -461,29 +481,31 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // values, backpropagates to the relevant state entries
         private void BackPropagateServerGen(List<KeyValuePair<PropagatorResult, object>> generatedValues)
         {
-            foreach (KeyValuePair<PropagatorResult, object> generatedValue in generatedValues)
+            foreach (var generatedValue in generatedValues)
             {
                 PropagatorResult context;
 
                 // check if a redirect to "owner" result is possible
-                if (PropagatorResult.NullIdentifier == generatedValue.Key.Identifier ||
-                    !KeyManager.TryGetIdentifierOwner(generatedValue.Key.Identifier, out context))                
+                if (PropagatorResult.NullIdentifier == generatedValue.Key.Identifier
+                    ||
+                    !KeyManager.TryGetIdentifierOwner(generatedValue.Key.Identifier, out context))
                 {
                     // otherwise, just use the straightforward context
                     context = generatedValue.Key;
                 }
 
-                object value = generatedValue.Value;
-                if (context.Identifier == PropagatorResult.NullIdentifier)
+                var value = generatedValue.Value;
+                if (context.Identifier
+                    == PropagatorResult.NullIdentifier)
                 {
                     SetServerGenValue(context, value);
                 }
                 else
                 {
                     // check if we need to back propagate this value to any other positions (e.g. for foreign keys)
-                    foreach (int dependent in this.KeyManager.GetDependents(context.Identifier))
+                    foreach (var dependent in KeyManager.GetDependents(context.Identifier))
                     {
-                        if (this.KeyManager.TryGetIdentifierOwner(dependent, out context))
+                        if (KeyManager.TryGetIdentifierOwner(dependent, out context))
                         {
                             SetServerGenValue(context, value);
                         }
@@ -494,13 +516,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         private static void SetServerGenValue(PropagatorResult context, object value)
         {
-            if (context.RecordOrdinal != PropagatorResult.NullOrdinal)
+            if (context.RecordOrdinal
+                != PropagatorResult.NullOrdinal)
             {
-                CurrentValueRecord targetRecord = context.Record;
+                var targetRecord = context.Record;
 
                 // determine if type compensation is required
-                IExtendedDataRecord recordWithMetadata = (IExtendedDataRecord)targetRecord;
-                EdmMember member = recordWithMetadata.DataRecordInfo.FieldMetadata[context.RecordOrdinal].FieldType;
+                IExtendedDataRecord recordWithMetadata = targetRecord;
+                var member = recordWithMetadata.DataRecordInfo.FieldMetadata[context.RecordOrdinal].FieldType;
 
                 value = value ?? DBNull.Value; // records expect DBNull rather than null
                 value = AlignReturnValue(value, member, context);
@@ -520,12 +543,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             if (DBNull.Value.Equals(value))
             {
                 // check if there is a nullability constraint on the value
-                if (BuiltInTypeKind.EdmProperty == member.BuiltInTypeKind &&
+                if (BuiltInTypeKind.EdmProperty == member.BuiltInTypeKind
+                    &&
                     !((EdmProperty)member).Nullable)
                 {
-                    throw EntityUtil.Update(System.Data.Entity.Resources.Strings.Update_NullReturnValueForNonNullableMember(
-                        member.Name, 
-                        member.DeclaringType.FullName), null);
+                    throw EntityUtil.Update(
+                        Strings.Update_NullReturnValueForNonNullableMember(
+                            member.Name,
+                            member.DeclaringType.FullName), null);
                 }
             }
             else if (!Helper.IsSpatialType(member.TypeUsage))
@@ -534,17 +559,18 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 Type clrEnumType = null;
                 if (Helper.IsEnumType(member.TypeUsage.EdmType))
                 {
-                    PrimitiveType underlyingType = Helper.AsPrimitive(member.TypeUsage.EdmType);
+                    var underlyingType = Helper.AsPrimitive(member.TypeUsage.EdmType);
                     clrEnumType = context.Record.GetFieldType(context.RecordOrdinal);
                     clrType = underlyingType.ClrEquivalentType;
-                    Debug.Assert(clrEnumType.IsEnum); 
+                    Debug.Assert(clrEnumType.IsEnum);
                 }
                 else
                 {
                     // convert the value to the appropriate CLR type
-                    Debug.Assert(BuiltInTypeKind.PrimitiveType == member.TypeUsage.EdmType.BuiltInTypeKind,
+                    Debug.Assert(
+                        BuiltInTypeKind.PrimitiveType == member.TypeUsage.EdmType.BuiltInTypeKind,
                         "we only allow return values that are instances of EDM primitive or enum types");
-                    PrimitiveType primitiveType = (PrimitiveType)member.TypeUsage.EdmType;
+                    var primitiveType = (PrimitiveType)member.TypeUsage.EdmType;
                     clrType = primitiveType.ClrEquivalentType;
                 }
 
@@ -559,14 +585,15 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 catch (Exception e)
                 {
                     // we should not be wrapping all exceptions
-                    if (UpdateTranslator.RequiresContext(e)) 
+                    if (RequiresContext(e))
                     {
-                        Type userClrType = clrEnumType ?? clrType;
-                        throw EntityUtil.Update(System.Data.Entity.Resources.Strings.Update_ReturnValueHasUnexpectedType(
-                            value.GetType().FullName,
-                            userClrType.FullName,
-                            member.Name,
-                            member.DeclaringType.FullName), e);
+                        var userClrType = clrEnumType ?? clrType;
+                        throw EntityUtil.Update(
+                            Strings.Update_ReturnValueHasUnexpectedType(
+                                value.GetType().FullName,
+                                userClrType.FullName,
+                                member.Name,
+                                member.DeclaringType.FullName), e);
                     }
                     throw;
                 }
@@ -583,11 +610,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns>Number of state entries affected.</returns>
         private int AcceptChanges(IEntityAdapter adapter)
         {
-            int affectedCount = 0;
-            foreach (IEntityStateEntry stateEntry in m_stateEntries)
+            var affectedCount = 0;
+            foreach (var stateEntry in m_stateEntries)
             {
                 // only count and accept changes for state entries that are being explicitly modified
-                if (EntityState.Unchanged != stateEntry.State)
+                if (EntityState.Unchanged
+                    != stateEntry.State)
                 {
                     if (adapter.AcceptChangesDuringUpdate)
                     {
@@ -626,40 +654,41 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private IEnumerable<UpdateCommand> ProduceDynamicCommands()
         {
             // Initialize DBCommand update compiler
-            UpdateCompiler updateCompiler = new UpdateCompiler(this);
-            
-            // Determine affected
-            Set<EntitySet> tables = new Set<EntitySet>();
+            var updateCompiler = new UpdateCompiler(this);
 
-            foreach (EntitySetBase extent in GetDynamicModifiedExtents())
+            // Determine affected
+            var tables = new Set<EntitySet>();
+
+            foreach (var extent in GetDynamicModifiedExtents())
             {
-                Set<EntitySet> affectedTables = m_viewLoader.GetAffectedTables(extent, m_metadataWorkspace);
+                var affectedTables = m_viewLoader.GetAffectedTables(extent, m_metadataWorkspace);
                 //Since these extents don't have Functions defined for update operations,
                 //the affected tables should be provided via MSL.
                 //If we dont find any throw an exception
                 if (affectedTables.Count == 0)
                 {
-                    throw EntityUtil.Update(System.Data.Entity.Resources.Strings.Update_MappingNotFound(
-                        extent.Name), null /*stateEntries*/);
+                    throw EntityUtil.Update(
+                        Strings.Update_MappingNotFound(
+                            extent.Name), null /*stateEntries*/);
                 }
 
-                foreach (EntitySet table in affectedTables)
+                foreach (var table in affectedTables)
                 {
                     tables.Add(table);
                 }
             }
 
             // Determine changes to apply to each table
-            foreach (EntitySet table in tables)
+            foreach (var table in tables)
             {
-                DbQueryCommandTree umView = m_connection.GetMetadataWorkspace().GetCqtView(table);
-                
+                var umView = m_connection.GetMetadataWorkspace().GetCqtView(table);
+
                 // Propagate changes to root of tree (at which point they are S-Space changes)
-                ChangeNode changeNode = Propagator.Propagate(this, table, umView);
-                
+                var changeNode = Propagator.Propagate(this, table, umView);
+
                 // Process changes for the table
-                TableChangeProcessor change = new TableChangeProcessor(table);
-                foreach (UpdateCommand command in change.CompileCommands(changeNode, updateCompiler))
+                var change = new TableChangeProcessor(table);
+                foreach (var command in change.CompileCommands(changeNode, updateCompiler))
                 {
                     yield return command;
                 }
@@ -669,35 +698,38 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // Generates and caches a command definition for the given function
         internal DbCommandDefinition GenerateCommandDefinition(StorageModificationFunctionMapping functionMapping)
         {
-            if (null == m_modificationFunctionCommandDefinitions) 
-            { 
-                m_modificationFunctionCommandDefinitions = new Dictionary<StorageModificationFunctionMapping,DbCommandDefinition>();
+            if (null == m_modificationFunctionCommandDefinitions)
+            {
+                m_modificationFunctionCommandDefinitions = new Dictionary<StorageModificationFunctionMapping, DbCommandDefinition>();
             }
             DbCommandDefinition commandDefinition;
             if (!m_modificationFunctionCommandDefinitions.TryGetValue(functionMapping, out commandDefinition))
             {
                 // synthesize a RowType for this mapping
                 TypeUsage resultType = null;
-                if (null != functionMapping.ResultBindings && 0 < functionMapping.ResultBindings.Count)
+                if (null != functionMapping.ResultBindings
+                    && 0 < functionMapping.ResultBindings.Count)
                 {
-                    List<EdmProperty> properties = new List<EdmProperty>(functionMapping.ResultBindings.Count);
-                    foreach (StorageModificationFunctionResultBinding resultBinding in functionMapping.ResultBindings)
+                    var properties = new List<EdmProperty>(functionMapping.ResultBindings.Count);
+                    foreach (var resultBinding in functionMapping.ResultBindings)
                     {
                         properties.Add(new EdmProperty(resultBinding.ColumnName, resultBinding.Property.TypeUsage));
                     }
-                    RowType rowType = new RowType(properties);
-                    CollectionType collectionType = new CollectionType(rowType);
+                    var rowType = new RowType(properties);
+                    var collectionType = new CollectionType(rowType);
                     resultType = TypeUsage.Create(collectionType);
                 }
 
                 // add function parameters
-                IEnumerable<KeyValuePair<string, TypeUsage>> functionParams =
-                    functionMapping.Function.Parameters.Select(paramInfo => new KeyValuePair<string, TypeUsage>(paramInfo.Name, paramInfo.TypeUsage));
-                
+                var functionParams =
+                    functionMapping.Function.Parameters.Select(
+                        paramInfo => new KeyValuePair<string, TypeUsage>(paramInfo.Name, paramInfo.TypeUsage));
+
                 // construct DbFunctionCommandTree including implict return type
-                DbFunctionCommandTree tree = new DbFunctionCommandTree(m_metadataWorkspace, DataSpace.SSpace,
+                var tree = new DbFunctionCommandTree(
+                    m_metadataWorkspace, DataSpace.SSpace,
                     functionMapping.Function, resultType, functionParams);
-                                
+
                 commandDefinition = m_providerServices.CreateCommandDefinition(tree);
             }
             return commandDefinition;
@@ -706,18 +738,18 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // Produces all function commands in a safe order
         private IEnumerable<UpdateCommand> ProduceFunctionCommands()
         {
-            foreach (EntitySetBase extent in GetFunctionModifiedExtents())
+            foreach (var extent in GetFunctionModifiedExtents())
             {
                 // Get a handle on the appropriate translator
-                ModificationFunctionMappingTranslator translator = m_viewLoader.GetFunctionMappingTranslator(extent, m_metadataWorkspace);
+                var translator = m_viewLoader.GetFunctionMappingTranslator(extent, m_metadataWorkspace);
 
                 if (null != translator)
                 {
                     // Compile commands
-                    foreach (ExtractedStateEntry stateEntry in GetExtentFunctionModifications(extent))
+                    foreach (var stateEntry in GetExtentFunctionModifications(extent))
                     {
-                        FunctionUpdateCommand command = translator.Translate(this, stateEntry);
-                        if (null != command) 
+                        var command = translator.Translate(this, stateEntry);
+                        if (null != command)
                         {
                             yield return command;
                         }
@@ -752,15 +784,15 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             Debug.Assert(null != remainder && remainder.Count() > 0, "must provide non-empty remainder");
 
-            HashSet<IEntityStateEntry> stateEntries = new HashSet<IEntityStateEntry>();
+            var stateEntries = new HashSet<IEntityStateEntry>();
 
-            foreach (UpdateCommand command in remainder)
+            foreach (var command in remainder)
             {
                 stateEntries.UnionWith(command.GetStateEntries(this));
             }
 
             // throw exception containing all related state entries
-            throw EntityUtil.Update(System.Data.Entity.Resources.Strings.Update_ConstraintCycle, null, stateEntries);
+            throw EntityUtil.Update(Strings.Update_ConstraintCycle, null, stateEntries);
         }
 
         /// <summary>
@@ -771,22 +803,23 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         internal DbCommand CreateCommand(DbModificationCommandTree commandTree)
         {
             DbCommand command;
-            Debug.Assert(null != m_providerServices, "constructor ensures either the command definition " +
-                    "builder or provider service is available");
+            Debug.Assert(
+                null != m_providerServices, "constructor ensures either the command definition " +
+                                            "builder or provider service is available");
             Debug.Assert(null != m_connection.StoreConnection, "EntityAdapter.Update ensures the store connection is set");
-            try 
+            try
             {
                 command = m_providerServices.CreateCommand(commandTree);
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
                 // we should not be wrapping all exceptions
-                if (UpdateTranslator.RequiresContext(e))
+                if (RequiresContext(e))
                 {
                     // we don't wan't folks to have to know all the various types of exceptions that can 
                     // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
                     // the inner exception of it.
-                    throw EntityUtil.CommandCompilation(System.Data.Entity.Resources.Strings.EntityClient_CommandDefinitionPreparationFailed, e);
+                    throw EntityUtil.CommandCompilation(Strings.EntityClient_CommandDefinitionPreparationFailed, e);
                 }
                 throw;
             }
@@ -814,13 +847,17 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         internal static bool RequiresContext(Exception e)
         {
             // if the exception isn't catchable, never wrap
-            if (!EntityUtil.IsCatchableExceptionType(e)) { return false; }
+            if (!EntityUtil.IsCatchableExceptionType(e))
+            {
+                return false;
+            }
 
             // update and incompatible provider exceptions already contain the necessary context
             return !(e is UpdateException) && !(e is ProviderIncompatibleException);
         }
 
         #region Private initialization methods
+
         /// <summary>
         /// Retrieve all modified entries from the state manager.
         /// </summary>
@@ -828,27 +865,29 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             // do a first pass over added entries to register 'by value' entity key targets that may be resolved as 
             // via a foreign key
-            foreach (IEntityStateEntry addedEntry in m_stateManager.GetEntityStateEntries(EntityState.Added))
+            foreach (var addedEntry in m_stateManager.GetEntityStateEntries(EntityState.Added))
             {
-                if (!addedEntry.IsRelationship && !addedEntry.IsKeyEntry)
+                if (!addedEntry.IsRelationship
+                    && !addedEntry.IsKeyEntry)
                 {
-                    this.KeyManager.RegisterKeyValueForAddedEntity(addedEntry);
+                    KeyManager.RegisterKeyValueForAddedEntity(addedEntry);
                 }
             }
 
             // do a second pass over entries to register referential integrity constraints
             // for server-generation
-            foreach (IEntityStateEntry modifiedEntry in m_stateManager.GetEntityStateEntries(EntityState.Modified | EntityState.Added | EntityState.Deleted))
+            foreach (
+                var modifiedEntry in m_stateManager.GetEntityStateEntries(EntityState.Modified | EntityState.Added | EntityState.Deleted))
             {
                 RegisterReferentialConstraints(modifiedEntry);
             }
 
-            foreach (IEntityStateEntry modifiedEntry in m_stateManager.GetEntityStateEntries(EntityState.Modified | EntityState.Added | EntityState.Deleted))
+            foreach (
+                var modifiedEntry in m_stateManager.GetEntityStateEntries(EntityState.Modified | EntityState.Added | EntityState.Deleted))
             {
                 LoadStateEntry(modifiedEntry);
             }
         }
-
 
         /// <summary>
         /// Retrieve all required/optional/value entries into the state manager. These are entries that --
@@ -856,16 +895,17 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// </summary>
         private void PullUnchangedEntriesFromStateManager()
         {
-            foreach (KeyValuePair<EntityKey, AssociationSet> required in m_requiredEntities)
+            foreach (var required in m_requiredEntities)
             {
-                EntityKey key = required.Key;
+                var key = required.Key;
 
                 if (!m_knownEntityKeys.Contains(key))
                 {
                     // pull the value into the translator if we don't already it
                     IEntityStateEntry requiredEntry;
 
-                    if (m_stateManager.TryGetEntityStateEntry(key, out requiredEntry) && !requiredEntry.IsKeyEntry)
+                    if (m_stateManager.TryGetEntityStateEntry(key, out requiredEntry)
+                        && !requiredEntry.IsKeyEntry)
                     {
                         // load the object as a no-op update
                         LoadStateEntry(requiredEntry);
@@ -873,18 +913,20 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     else
                     {
                         // throw an exception
-                        throw EntityUtil.UpdateMissingEntity(required.Value.Name, TypeHelpers.GetFullName(key.EntityContainerName, key.EntitySetName));
+                        throw EntityUtil.UpdateMissingEntity(
+                            required.Value.Name, TypeHelpers.GetFullName(key.EntityContainerName, key.EntitySetName));
                     }
                 }
             }
 
-            foreach (EntityKey key in m_optionalEntities)
+            foreach (var key in m_optionalEntities)
             {
                 if (!m_knownEntityKeys.Contains(key))
                 {
                     IEntityStateEntry optionalEntry;
 
-                    if (m_stateManager.TryGetEntityStateEntry(key, out optionalEntry) && !optionalEntry.IsKeyEntry)
+                    if (m_stateManager.TryGetEntityStateEntry(key, out optionalEntry)
+                        && !optionalEntry.IsKeyEntry)
                     {
                         // load the object as a no-op update
                         LoadStateEntry(optionalEntry);
@@ -892,7 +934,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 }
             }
 
-            foreach (EntityKey key in m_includedValueEntities)
+            foreach (var key in m_includedValueEntities)
             {
                 if (!m_knownEntityKeys.Contains(key))
                 {
@@ -901,7 +943,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     if (m_stateManager.TryGetEntityStateEntry(key, out valueEntry))
                     {
                         // Convert state entry so that its values are known to the update pipeline.
-                        var result = m_recordConverter.ConvertCurrentValuesToPropagatorResult(valueEntry, ModifiedPropertiesBehavior.NoneModified);
+                        var result = m_recordConverter.ConvertCurrentValuesToPropagatorResult(
+                            valueEntry, ModifiedPropertiesBehavior.NoneModified);
                     }
                 }
             }
@@ -915,21 +958,21 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             EntityUtil.CheckArgumentNull(stateEntry, "stateEntry");
 
-            EntitySetBase extent = stateEntry.EntitySet;
-            if (null == extent) 
+            var extent = stateEntry.EntitySet;
+            if (null == extent)
             {
                 throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.InvalidStateEntry, 1);
             }
 
             // Determine the key. May be null if the state entry does not represent an entity.
-            EntityKey entityKey = stateEntry.EntityKey;
+            var entityKey = stateEntry.EntityKey;
             IExtendedDataRecord record = null;
 
             // verify the structure of the entry values
             if (0 != ((EntityState.Added | EntityState.Modified | EntityState.Unchanged) & stateEntry.State))
             {
                 // added, modified and unchanged entries have current values
-                record = (IExtendedDataRecord)stateEntry.CurrentValues;
+                record = stateEntry.CurrentValues;
                 ValidateRecord(extent, record);
             }
             if (0 != ((EntityState.Modified | EntityState.Deleted | EntityState.Unchanged) & stateEntry.State))
@@ -941,20 +984,20 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             Debug.Assert(null != record, "every state entry must contain a record");
 
             // check for required ends of relationships
-            AssociationSet associationSet = extent as AssociationSet;
+            var associationSet = extent as AssociationSet;
             if (null != associationSet)
             {
-                AssociationSetMetadata associationSetMetadata = m_viewLoader.GetAssociationSetMetadata(associationSet, m_metadataWorkspace);
+                var associationSetMetadata = m_viewLoader.GetAssociationSetMetadata(associationSet, m_metadataWorkspace);
 
                 if (associationSetMetadata.HasEnds)
                 {
-                    foreach (FieldMetadata field in record.DataRecordInfo.FieldMetadata)
+                    foreach (var field in record.DataRecordInfo.FieldMetadata)
                     {
                         // ends of relationship record must be EntityKeys
-                        EntityKey end = (EntityKey)record.GetValue(field.Ordinal);
+                        var end = (EntityKey)record.GetValue(field.Ordinal);
 
                         // ends of relationships must have AssociationEndMember metadata
-                        AssociationEndMember endMetadata = (AssociationEndMember)field.FieldType;
+                        var endMetadata = (AssociationEndMember)field.FieldType;
 
                         if (associationSetMetadata.RequiredEnds.Contains(endMetadata))
                         {
@@ -987,7 +1030,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             // add to the list of entries being tracked
             m_stateEntries.Add(stateEntry);
-            if (null != (object)entityKey) { m_knownEntityKeys.Add(entityKey); }
+            if (null != (object)entityKey)
+            {
+                m_knownEntityKeys.Add(entityKey);
+            }
         }
 
         /// <summary>
@@ -1002,7 +1048,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             // Note: an entity is ancillary iff. it is unchanged (otherwise it is tracked as a "standard" changed entity)
             IEntityStateEntry endEntry;
             if (m_stateManager.TryGetEntityStateEntry(key, out endEntry) && // make sure the entity is tracked
-                !endEntry.IsKeyEntry && // make sure the entity is not a stub
+                !endEntry.IsKeyEntry
+                && // make sure the entity is not a stub
                 endEntry.State == EntityState.Unchanged) // if the entity is being modified, it's already included anyways
             {
                 keySet.Add(key);
@@ -1015,7 +1062,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             DataRecordInfo recordInfo;
             if ((null == record) ||
-                (null == (recordInfo = record.DataRecordInfo)) ||
+                (null == (recordInfo = record.DataRecordInfo))
+                ||
                 (null == recordInfo.RecordType))
             {
                 throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.InvalidStateEntry, 2);
@@ -1030,7 +1078,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private static void VerifyExtent(MetadataWorkspace workspace, EntitySetBase extent)
         {
             // get the container to which the given extent belongs
-            EntityContainer actualContainer = extent.EntityContainer;
+            var actualContainer = extent.EntityContainer;
 
             // try to retrieve the container in the given workspace
             EntityContainer referenceContainer = null;
@@ -1039,18 +1087,19 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 workspace.TryGetEntityContainer(
                     actualContainer.Name, actualContainer.DataSpace, out referenceContainer);
             }
-            
+
             // determine if the given extent lives in a container from the given workspace
             // (the item collections for each container are reference equivalent when they are declared in the
             // same item collection)
-            if (null == actualContainer || null == referenceContainer ||
-                !Object.ReferenceEquals(actualContainer, referenceContainer)) 
+            if (null == actualContainer || null == referenceContainer
+                ||
+                !ReferenceEquals(actualContainer, referenceContainer))
             {
                 // FUTURE(CMeek):: We use reference equality to determine if two containers have compatible
                 // Metadata. This is overly strict in some scenarios. At present, Metadata does not expose
                 // any services to determine compatibility, so for now this is the best we can do. In most
                 // scenarios, Metadata caching ensures the same container is returned anyways.
-                throw EntityUtil.Update(System.Data.Entity.Resources.Strings.Update_WorkspaceMismatch, null);
+                throw EntityUtil.Update(Strings.Update_WorkspaceMismatch, null);
             }
         }
 
@@ -1063,16 +1112,16 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             ValidateAndRegisterStateEntry(stateEntry);
 
             // use data structure internal to the update pipeline instead of the raw state entry
-            ExtractedStateEntry extractedStateEntry = new ExtractedStateEntry(this, stateEntry);
+            var extractedStateEntry = new ExtractedStateEntry(this, stateEntry);
 
             // figure out if this state entry is being handled by a function (stored procedure) or
             // through dynamic SQL
-            EntitySetBase extent = stateEntry.EntitySet;
+            var extent = stateEntry.EntitySet;
             if (null == m_viewLoader.GetFunctionMappingTranslator(extent, m_metadataWorkspace))
             {
                 // if there is no function mapping, register a ChangeNode (used for update
                 // propagation and dynamic SQL generation)
-                ChangeNode changeNode = GetExtentModifications(extent);
+                var changeNode = GetExtentModifications(extent);
                 if (null != extractedStateEntry.Original)
                 {
                     changeNode.Deleted.Add(extractedStateEntry.Original);
@@ -1086,12 +1135,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 // for function updates, store off the extracted state entry in its entirety
                 // (used when producing FunctionUpdateCommands)
-                List<ExtractedStateEntry> functionEntries = GetExtentFunctionModifications(extent);
+                var functionEntries = GetExtentFunctionModifications(extent);
                 functionEntries.Add(extractedStateEntry);
             }
         }
-
-
 
         /// <summary>
         /// Retrieve a change node for an extent. If none exists, creates and registers a new one.
@@ -1113,7 +1160,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             return changeNode;
         }
-        
+
         /// <summary>
         /// Retrieve a list of state entries being processed by custom user functions.
         /// </summary>
@@ -1134,7 +1181,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             return entries;
         }
+
         #endregion
+
         #endregion
     }
 

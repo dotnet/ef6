@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using System.Data.Entity.Core.Metadata.Edm;
+namespace System.Data.Entity.Core.Mapping
+{
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Linq;
+    using System.Text;
 
-namespace System.Data.Entity.Core.Mapping {
     /// <summary>
     /// Represents the Mapping metadata for an AssociationSet in CS space.
     /// </summary>
@@ -24,8 +23,10 @@ namespace System.Data.Entity.Core.Mapping {
     /// above example. And it is possible to access the AssociationTypeMap underneath it.
     /// There will be only one TypeMap under AssociationSetMap.
     /// </example>
-    internal class StorageAssociationSetMapping : StorageSetMapping {
+    internal class StorageAssociationSetMapping : StorageSetMapping
+    {
         #region Constructors
+
         /// <summary>
         /// Construct a new AssociationSetMapping object
         /// </summary>
@@ -33,19 +34,25 @@ namespace System.Data.Entity.Core.Mapping {
         ///                      change this to Extent instead of MemberMetadata.</param>
         /// <param name="entityContainerMapping">The entityContainerMapping mapping that contains this Set mapping</param>
         internal StorageAssociationSetMapping(AssociationSet extent, StorageEntityContainerMapping entityContainerMapping)
-            : base(extent, entityContainerMapping) {
+            : base(extent, entityContainerMapping)
+        {
         }
+
         #endregion
 
         #region Fields
+
         private StorageAssociationSetModificationFunctionMapping m_modificationFunctionMapping;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets or sets function mapping information for this association set. May be null.
         /// </summary>
-        internal StorageAssociationSetModificationFunctionMapping ModificationFunctionMapping {
+        internal StorageAssociationSetModificationFunctionMapping ModificationFunctionMapping
+        {
             get { return m_modificationFunctionMapping; }
             set { m_modificationFunctionMapping = value; }
         }
@@ -54,13 +61,15 @@ namespace System.Data.Entity.Core.Mapping {
         {
             get
             {
-                if ((this.TypeMappings.Count != 0) && (this.TypeMappings.First().MappingFragments.Count != 0))
+                if ((TypeMappings.Count != 0)
+                    && (TypeMappings.First().MappingFragments.Count != 0))
                 {
-                    return this.TypeMappings.First().MappingFragments.First().TableSet;
+                    return TypeMappings.First().MappingFragments.First().TableSet;
                 }
                 return null;
             }
         }
+
         #endregion
 
         #region Methods
@@ -71,24 +80,26 @@ namespace System.Data.Entity.Core.Mapping {
         /// Will be removed shortly.
         /// </summary>
         /// <param name="index"></param>
-        internal override void Print(int index) {
+        internal override void Print(int index)
+        {
             StorageEntityContainerMapping.GetPrettyPrintString(ref index);
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("AssociationSetMapping");
             sb.Append("   ");
             sb.Append("Name:");
-            sb.Append(this.Set.Name);
-            if (this.QueryView != null)
+            sb.Append(Set.Name);
+            if (QueryView != null)
             {
                 sb.Append("   ");
                 sb.Append("Query View:");
-                sb.Append(this.QueryView);
+                sb.Append(QueryView);
             }
             Console.WriteLine(sb.ToString());
-            foreach (StorageTypeMapping typeMapping in TypeMappings) {
+            foreach (var typeMapping in TypeMappings)
+            {
                 typeMapping.Print(index + 5);
             }
-            if(m_modificationFunctionMapping != null)
+            if (m_modificationFunctionMapping != null)
             {
                 m_modificationFunctionMapping.Print(index + 5);
             }

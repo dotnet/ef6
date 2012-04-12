@@ -1,17 +1,13 @@
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common.Utils;
-using System.Text;
-using System.Linq;
-using System.Diagnostics;
-using System.Collections.ObjectModel;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.Utils.Boolean;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Validation;
-using System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using System.Text;
 
     // This class essentially stores a cell but in a special form. When we
     // are generating a view for an extent, we denote the extent's side (C or
@@ -30,35 +26,37 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     //   the cell
     internal class LeftCellWrapper : InternalBase
     {
-
         #region Fields
+
         internal static readonly IEqualityComparer<LeftCellWrapper> BoolEqualityComparer = new BoolWrapperComparer();
 
-        private Set<MemberPath> m_attributes;// project: attributes computed by
+        private readonly Set<MemberPath> m_attributes; // project: attributes computed by
 
         // Expr (projected attributes that get set)
-        private MemberMaps m_memberMaps;
-        private CellQuery m_leftCellQuery; // expression that computes this portion
-        private CellQuery m_rightCellQuery; // expression that computes this portion
-        
-        private HashSet<Cell> m_mergedCells; // Cells that this LeftCellWrapper (MergedCell) wraps.
-                                             // At first it starts off with a single cell and during cell merging
-                                             // cells from both LeftCellWrappers are concatenated.
-        private ViewTarget m_viewTarget;
-        private FragmentQuery m_leftFragmentQuery; // Fragment query corresponding to the left cell query of the cell
-        
+        private readonly MemberMaps m_memberMaps;
+        private readonly CellQuery m_leftCellQuery; // expression that computes this portion
+        private readonly CellQuery m_rightCellQuery; // expression that computes this portion
+
+        private readonly HashSet<Cell> m_mergedCells; // Cells that this LeftCellWrapper (MergedCell) wraps.
+        // At first it starts off with a single cell and during cell merging
+        // cells from both LeftCellWrappers are concatenated.
+        private readonly ViewTarget m_viewTarget;
+        private readonly FragmentQuery m_leftFragmentQuery; // Fragment query corresponding to the left cell query of the cell
+
         internal static readonly IComparer<LeftCellWrapper> Comparer = new LeftCellWrapperComparer();
         internal static readonly IComparer<LeftCellWrapper> OriginalCellIdComparer = new CellIdComparer();
+
         #endregion
 
-
         #region Constructor
+
         // effects: Creates a LeftCellWrapper of the form:
         // Project[attrs] (Select[var IN {domain}] (Extent)) = cellquery
         // memberMaps is the set of maps used for producing the query or update views
-        internal LeftCellWrapper(ViewTarget viewTarget, Set<MemberPath> attrs,
-                                 FragmentQuery fragmentQuery,
-                                 CellQuery leftCellQuery, CellQuery rightCellQuery, MemberMaps memberMaps, IEnumerable<Cell> inputCells)
+        internal LeftCellWrapper(
+            ViewTarget viewTarget, Set<MemberPath> attrs,
+            FragmentQuery fragmentQuery,
+            CellQuery leftCellQuery, CellQuery rightCellQuery, MemberMaps memberMaps, IEnumerable<Cell> inputCells)
         {
             m_leftFragmentQuery = fragmentQuery;
             m_rightCellQuery = rightCellQuery;
@@ -69,14 +67,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_mergedCells = new HashSet<Cell>(inputCells);
         }
 
-        internal LeftCellWrapper(ViewTarget viewTarget, Set<MemberPath> attrs,
-                                 FragmentQuery fragmentQuery,
-                                 CellQuery leftCellQuery, CellQuery rightCellQuery, MemberMaps memberMaps, Cell inputCell)
-            : this(viewTarget, attrs, fragmentQuery, leftCellQuery, rightCellQuery, memberMaps, Enumerable.Repeat(inputCell, 1)) { }
+        internal LeftCellWrapper(
+            ViewTarget viewTarget, Set<MemberPath> attrs,
+            FragmentQuery fragmentQuery,
+            CellQuery leftCellQuery, CellQuery rightCellQuery, MemberMaps memberMaps, Cell inputCell)
+            : this(viewTarget, attrs, fragmentQuery, leftCellQuery, rightCellQuery, memberMaps, Enumerable.Repeat(inputCell, 1))
+        {
+        }
 
         #endregion
-
-
 
         #region Properties
 
@@ -94,10 +93,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // effects: Returns the original cell number from which the wrapper came
         internal string OriginalCellNumberString
         {
-            get
-            {
-                return StringUtil.ToSeparatedString(m_mergedCells.Select(cell => cell.CellNumberAsString), "+", "");
-            }
+            get { return StringUtil.ToSeparatedString(m_mergedCells.Select(cell => cell.CellNumberAsString), "+", ""); }
         }
 
         // effects: Returns the right domain map associated with the right query 
@@ -106,7 +102,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             get { return m_memberMaps.RightDomainMap; }
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"), Conditional("DEBUG")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        [Conditional("DEBUG")]
         internal void AssertHasUniqueCell()
         {
             Debug.Assert(m_mergedCells.Count == 1);
@@ -139,14 +136,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             get { return m_leftCellQuery; }
         }
 
-
         // effects: Returns the extent for which the wrapper was built
         internal EntitySetBase LeftExtent
         {
-            get
-            {
-                return m_mergedCells.First().GetLeftQuery(m_viewTarget).Extent;
-            }
+            get { return m_mergedCells.First().GetLeftQuery(m_viewTarget).Extent; }
         }
 
         // effects: Returns the extent of the right cellquery
@@ -154,7 +147,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get
             {
-                EntitySetBase result = m_rightCellQuery.Extent;
+                var result = m_rightCellQuery.Extent;
                 Debug.Assert(result != null, "Bad root value in join tree");
                 return result;
             }
@@ -167,9 +160,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // effects: Yields the input cells in wrappers
         internal static IEnumerable<Cell> GetInputCellsForWrappers(IEnumerable<LeftCellWrapper> wrappers)
         {
-            foreach (LeftCellWrapper wrapper in wrappers)
+            foreach (var wrapper in wrappers)
             {
-                foreach (Cell cell in wrapper.m_mergedCells)
+                foreach (var cell in wrapper.m_mergedCells)
                 {
                     yield return cell;
                 }
@@ -181,10 +174,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             if (RightExtent is AssociationSet)
             {
-                Set<AssociationEndMember> ends = GetEndsForTablePrimaryKey();
+                var ends = GetEndsForTablePrimaryKey();
                 if (ends.Count == 1)
                 {
-                    AssociationSetEnd setEnd = ((AssociationSet)RightExtent).AssociationSetEnds[ends.First().Name];
+                    var setEnd = ((AssociationSet)RightExtent).AssociationSetEnds[ends.First().Name];
                     return new RoleBoolean(setEnd);
                 }
             }
@@ -195,15 +188,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // rightcellQueries of the wrappers
         internal static string GetExtentListAsUserString(IEnumerable<LeftCellWrapper> wrappers)
         {
-            Set<EntitySetBase> extents = new Set<EntitySetBase>(EqualityComparer<EntitySetBase>.Default);
-            foreach (LeftCellWrapper wrapper in wrappers)
+            var extents = new Set<EntitySetBase>(EqualityComparer<EntitySetBase>.Default);
+            foreach (var wrapper in wrappers)
             {
                 extents.Add(wrapper.RightExtent);
             }
 
-            StringBuilder builder = new StringBuilder();
-            bool isFirst = true;
-            foreach (EntitySetBase extent in extents)
+            var builder = new StringBuilder();
+            var isFirst = true;
+            foreach (var extent in extents)
             {
                 if (isFirst == false)
                 {
@@ -231,17 +224,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         // effects: Writes m_cellWrappers to builder
-        internal static void WrappersToStringBuilder(StringBuilder builder, List<LeftCellWrapper> wrappers,
-                                                     string header)
+        internal static void WrappersToStringBuilder(
+            StringBuilder builder, List<LeftCellWrapper> wrappers,
+            string header)
         {
             builder.AppendLine()
-                   .Append(header)
-                   .AppendLine();
+                .Append(header)
+                .AppendLine();
             // Sort them according to the original cell number
-            LeftCellWrapper[] cellWrappers = wrappers.ToArray();
-            Array.Sort(cellWrappers, LeftCellWrapper.OriginalCellIdComparer);
+            var cellWrappers = wrappers.ToArray();
+            Array.Sort(cellWrappers, OriginalCellIdComparer);
 
-            foreach (LeftCellWrapper wrapper in cellWrappers)
+            foreach (var wrapper in cellWrappers)
             {
                 wrapper.ToCompactString(builder);
                 builder.Append(" = ");
@@ -249,7 +243,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 builder.AppendLine();
             }
         }
-
 
         // requires: RightCellQuery.Extent corresponds to a relationship set
         // effects: Returns the ends to which the key of the corresponding
@@ -261,16 +254,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // returns both ends
         private Set<AssociationEndMember> GetEndsForTablePrimaryKey()
         {
-            CellQuery rightQuery = RightCellQuery;
-            Set<AssociationEndMember> result = new Set<AssociationEndMember>(EqualityComparer<AssociationEndMember>.Default);
+            var rightQuery = RightCellQuery;
+            var result = new Set<AssociationEndMember>(EqualityComparer<AssociationEndMember>.Default);
             // Get the key slots for the table (they are in the slotMap) and
             // check for that slot on the C-side
-            foreach (int keySlot in m_memberMaps.ProjectedSlotMap.KeySlots)
+            foreach (var keySlot in m_memberMaps.ProjectedSlotMap.KeySlots)
             {
-                MemberProjectedSlot slot = (MemberProjectedSlot)rightQuery.ProjectedSlotAt(keySlot);
-                MemberPath path = slot.MemberPath;
+                var slot = (MemberProjectedSlot)rightQuery.ProjectedSlotAt(keySlot);
+                var path = slot.MemberPath;
                 // See what end it maps to in the relationSet
-                AssociationEndMember endMember = (AssociationEndMember)path.RootEdmMember;
+                var endMember = (AssociationEndMember)path.RootEdmMember;
                 Debug.Assert(endMember != null, "Element in path before scalar path is not end property?");
                 result.Add(endMember);
             }
@@ -278,36 +271,37 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return result;
         }
 
-
         internal MemberProjectedSlot GetLeftSideMappedSlotForRightSideMember(MemberPath member)
         {
-            int projectedPosition = RightCellQuery.GetProjectedPosition(new MemberProjectedSlot(member));
+            var projectedPosition = RightCellQuery.GetProjectedPosition(new MemberProjectedSlot(member));
             if (projectedPosition == -1)
             {
                 return null;
             }
 
-            ProjectedSlot slot = LeftCellQuery.ProjectedSlotAt(projectedPosition);
+            var slot = LeftCellQuery.ProjectedSlotAt(projectedPosition);
 
-            if (slot == null || slot is ConstantProjectedSlot)
+            if (slot == null
+                || slot is ConstantProjectedSlot)
             {
                 return null;
             }
 
-            return slot as MemberProjectedSlot;            
+            return slot as MemberProjectedSlot;
         }
 
         internal MemberProjectedSlot GetRightSideMappedSlotForLeftSideMember(MemberPath member)
         {
-            int projectedPosition = LeftCellQuery.GetProjectedPosition(new MemberProjectedSlot(member));
+            var projectedPosition = LeftCellQuery.GetProjectedPosition(new MemberProjectedSlot(member));
             if (projectedPosition == -1)
             {
                 return null;
             }
 
-            ProjectedSlot slot = RightCellQuery.ProjectedSlotAt(projectedPosition);
+            var slot = RightCellQuery.ProjectedSlotAt(projectedPosition);
 
-            if (slot == null || slot is ConstantProjectedSlot)
+            if (slot == null
+                || slot is ConstantProjectedSlot)
             {
                 return null;
             }
@@ -330,27 +324,29 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #endregion
 
         #region Equality Comparer class
+
         // This class compares wrappers based on the Right Where Clause and
         // Extent -- needed for the boolean engine
         private class BoolWrapperComparer : IEqualityComparer<LeftCellWrapper>
         {
-
             public bool Equals(LeftCellWrapper left, LeftCellWrapper right)
             {
                 // Quick check with references
-                if (object.ReferenceEquals(left, right))
+                if (ReferenceEquals(left, right))
                 {
                     // Gets the Null and Undefined case as well
                     return true;
                 }
                 // One of them is non-null at least
-                if (left == null || right == null)
+                if (left == null
+                    || right == null)
                 {
                     return false;
                 }
                 // Both are non-null at this point
-                bool whereClauseEqual = BoolExpression.EqualityComparer.Equals(left.RightCellQuery.WhereClause,
-                                                                               right.RightCellQuery.WhereClause);
+                var whereClauseEqual = BoolExpression.EqualityComparer.Equals(
+                    left.RightCellQuery.WhereClause,
+                    right.RightCellQuery.WhereClause);
 
                 return left.RightExtent.Equals(right.RightExtent) && whereClauseEqual;
             }
@@ -360,18 +356,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return BoolExpression.EqualityComparer.GetHashCode(wrapper.RightCellQuery.WhereClause) ^ wrapper.RightExtent.GetHashCode();
             }
         }
+
         #endregion
 
         #region Comparer
+
         // A class that compares two cell wrappers. Useful for guiding heuristics
         // and to ensure that the largest selection domain (i.e., the number of
         // multiconstants in "mc in {...}") is first in the list
         private class LeftCellWrapperComparer : IComparer<LeftCellWrapper>
         {
-
             public int Compare(LeftCellWrapper x, LeftCellWrapper y)
             {
-
                 // More attributes first -- so that we get most attributes
                 // with very few intersections (when we use the sortings for
                 // that). When we are subtracting, attributes are not important
@@ -380,11 +376,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 // since the former might have got extended to include all attributes whose value is determined
                 // by the WHERE clause (e.g., if we have WHERE ProductName='Camera' we can assume ProductName is projected)
 
-                if (x.FragmentQuery.Attributes.Count > y.FragmentQuery.Attributes.Count)
+                if (x.FragmentQuery.Attributes.Count
+                    > y.FragmentQuery.Attributes.Count)
                 {
                     return -1;
                 }
-                else if (x.FragmentQuery.Attributes.Count < y.FragmentQuery.Attributes.Count)
+                else if (x.FragmentQuery.Attributes.Count
+                         < y.FragmentQuery.Attributes.Count)
                 {
                     return 1;
                 }
@@ -396,7 +394,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // A class that compares two cell wrappers based on original cell number
         internal class CellIdComparer : IComparer<LeftCellWrapper>
         {
-
             public int Compare(LeftCellWrapper x, LeftCellWrapper y)
             {
                 return StringComparer.Ordinal.Compare(x.OriginalCellNumberString, y.OriginalCellNumberString);

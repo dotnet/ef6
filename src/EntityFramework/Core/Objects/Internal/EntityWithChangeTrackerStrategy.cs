@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Data.Entity.Core.Objects.DataClasses;
-using System.Diagnostics;
-
-namespace System.Data.Entity.Core.Objects.Internal
+﻿namespace System.Data.Entity.Core.Objects.Internal
 {
+    using System.Data.Entity.Core.Objects.DataClasses;
+
     /// <summary>
     /// Implementation of the change tracking strategy for entities that support change trackers.
     /// These are typically entities that implement IEntityWithChangeTracker.
     /// </summary>
     internal sealed class EntityWithChangeTrackerStrategy : IChangeTrackingStrategy
     {
-        private IEntityWithChangeTracker _entity;
+        private readonly IEntityWithChangeTracker _entity;
 
         /// <summary>
         /// Constructs a strategy object that will cause the change tracker to be set onto the
@@ -33,7 +29,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         // See IChangeTrackingStrategy documentation
         public void TakeSnapshot(EntityEntry entry)
         {
-            if (entry != null && entry.RequiresComplexChangeTracking)
+            if (entry != null
+                && entry.RequiresComplexChangeTracking)
             {
                 entry.TakeSnapshot(true);
             }
@@ -49,11 +46,11 @@ namespace System.Data.Entity.Core.Objects.Internal
         public void UpdateCurrentValueRecord(object value, EntityEntry entry)
         {
             // Has change tracker, but may or may not be a proxy
-            bool isProxy = entry.WrappedEntity.IdentityType != _entity.GetType();
+            var isProxy = entry.WrappedEntity.IdentityType != _entity.GetType();
             entry.UpdateRecordWithoutSetModified(value, entry.CurrentValues);
             if (isProxy)
             {
-                entry.DetectChangesInProperties(true);      // detect only complex property changes
+                entry.DetectChangesInProperties(true); // detect only complex property changes
             }
         }
     }

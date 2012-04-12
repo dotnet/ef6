@@ -1,8 +1,5 @@
 namespace System.Data.Entity.Core.Common.EntitySql
 {
-    using System;
-    using System.Globalization;
-  
     /// <summary>
     /// Represents eSQL compilation options.
     /// </summary>
@@ -37,18 +34,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         internal StringComparer NameComparer
         {
-            get
-            {
-                return this.NameComparisonCaseInsensitive ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
-            }
+            get { return NameComparisonCaseInsensitive ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal; }
         }
 
         internal bool NameComparisonCaseInsensitive
         {
-            get
-            {
-                return this.ParserCompilationMode == CompilationMode.RestrictedViewGenerationMode ? false : true;
-            }
+            get { return ParserCompilationMode == CompilationMode.RestrictedViewGenerationMode ? false : true; }
         }
     }
 }

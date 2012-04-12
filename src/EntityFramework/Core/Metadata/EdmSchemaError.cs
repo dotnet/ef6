@@ -1,7 +1,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
+    using System.Data.Entity.Resources;
+    using System.Globalization;
 
     /// <summary>
     /// This class encapsulates the error information for a schema error that was encountered.
@@ -10,23 +10,27 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public sealed class EdmSchemaError : EdmError
     {
         #region Instance Fields
-        private int _errorCode = 0;
+
+        private int _errorCode;
         private EdmSchemaErrorSeverity _severity = EdmSchemaErrorSeverity.Warning;
-        private string _schemaLocation = null;
+        private string _schemaLocation;
         private int _line = -1;
         private int _column = -1;
         private string _stackTrace = string.Empty;
+
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Constructs a EdmSchemaError object.
         /// </summary>
         /// <param name="message">The explanation of the error.</param>
         /// <param name="errorCode">The code associated with this error.</param>
         /// <param name="severity">The severity of the error.</param>
-        internal EdmSchemaError(string message, int errorCode, EdmSchemaErrorSeverity severity) :
-            this(message, errorCode, severity, null)
+        internal EdmSchemaError(string message, int errorCode, EdmSchemaErrorSeverity severity)
+            :
+                this(message, errorCode, severity, null)
         {
         }
 
@@ -67,22 +71,25 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="lineNumber"></param>
         /// <param name="sourceColumn"></param>
         /// <param name="exception">The exception that caused the error to be filed.</param>
-        internal EdmSchemaError(string message, int errorCode, EdmSchemaErrorSeverity severity, string schemaLocation, int line, int column, Exception exception)
+        internal EdmSchemaError(
+            string message, int errorCode, EdmSchemaErrorSeverity severity, string schemaLocation, int line, int column, Exception exception)
             : base(message)
         {
-            if (severity < EdmSchemaErrorSeverity.Warning || severity > EdmSchemaErrorSeverity.Error)
+            if (severity < EdmSchemaErrorSeverity.Warning
+                || severity > EdmSchemaErrorSeverity.Error)
             {
-                throw new ArgumentOutOfRangeException("severity", severity, System.Data.Entity.Resources.Strings.ArgumentOutOfRange(severity));
+                throw new ArgumentOutOfRangeException("severity", severity, Strings.ArgumentOutOfRange(severity));
             }
 
             Initialize(errorCode, severity, schemaLocation, line, column, exception);
         }
 
-        private void Initialize(int errorCode, EdmSchemaErrorSeverity severity, string schemaLocation, int line, int column, Exception exception)
+        private void Initialize(
+            int errorCode, EdmSchemaErrorSeverity severity, string schemaLocation, int line, int column, Exception exception)
         {
             if (errorCode < 0)
             {
-                throw new ArgumentOutOfRangeException("errorCode", errorCode, System.Data.Entity.Resources.Strings.ArgumentOutOfRangeExpectedPostiveNumber(errorCode));
+                throw new ArgumentOutOfRangeException("errorCode", errorCode, Strings.ArgumentOutOfRangeExpectedPostiveNumber(errorCode));
             }
 
             _errorCode = errorCode;
@@ -107,27 +114,30 @@ namespace System.Data.Entity.Core.Metadata.Edm
             switch (Severity)
             {
                 case EdmSchemaErrorSeverity.Error:
-                    severity = System.Data.Entity.Resources.Strings.GeneratorErrorSeverityError;
+                    severity = Strings.GeneratorErrorSeverityError;
                     break;
                 case EdmSchemaErrorSeverity.Warning:
-                    severity = System.Data.Entity.Resources.Strings.GeneratorErrorSeverityWarning;
+                    severity = Strings.GeneratorErrorSeverityWarning;
                     break;
                 default:
-                    severity = System.Data.Entity.Resources.Strings.GeneratorErrorSeverityUnknown;
+                    severity = Strings.GeneratorErrorSeverityUnknown;
                     break;
             }
 
-            if (String.IsNullOrEmpty(SchemaName) && Line < 0 && Column < 0)
+            if (String.IsNullOrEmpty(SchemaName) && Line < 0
+                && Column < 0)
             {
-                text = String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0} {1:0000}: {2}",
+                text = String.Format(
+                    CultureInfo.CurrentCulture, "{0} {1:0000}: {2}",
                     severity,
                     ErrorCode,
                     Message);
             }
             else
             {
-                text = String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0}({1},{2}) : {3} {4:0000}: {5}",
-                    (SchemaName == null) ? System.Data.Entity.Resources.Strings.SourceUriUnknown : SchemaName,
+                text = String.Format(
+                    CultureInfo.CurrentCulture, "{0}({1},{2}) : {3} {4:0000}: {5}",
+                    (SchemaName == null) ? Strings.SourceUriUnknown : SchemaName,
                     Line,
                     Column,
                     severity,
@@ -137,18 +147,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             return text;
         }
+
         #endregion
 
         #region Public Properties
+
         /// <summary>
         /// Gets the ErrorCode.
         /// </summary>
         public int ErrorCode
         {
-            get
-            {
-                return _errorCode;
-            }
+            get { return _errorCode; }
         }
 
         /// <summary>
@@ -156,14 +165,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         public EdmSchemaErrorSeverity Severity
         {
-            get
-            {
-                return _severity;
-            }
-            set
-            {
-                _severity = value;
-            }
+            get { return _severity; }
+            set { _severity = value; }
         }
 
         /// <summary>
@@ -171,10 +174,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         public int Line
         {
-            get
-            {
-                return _line;
-            }
+            get { return _line; }
         }
 
         /// <summary>
@@ -182,10 +182,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         public int Column
         {
-            get
-            {
-                return _column;
-            }
+            get { return _column; }
         }
 
         /// <summary>
@@ -193,10 +190,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         public string SchemaLocation
         {
-            get
-            {
-                return _schemaLocation;
-            }
+            get { return _schemaLocation; }
         }
 
         /// <summary>
@@ -204,10 +198,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         public string SchemaName
         {
-            get
-            {
-                return GetNameFromSchemaLocation(SchemaLocation);
-            }
+            get { return GetNameFromSchemaLocation(SchemaLocation); }
         }
 
         /// <summary>
@@ -216,11 +207,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <value></value>
         public string StackTrace
         {
-            get
-            {
-                return _stackTrace;
-            }
+            get { return _stackTrace; }
         }
+
         #endregion
 
         private static string GetNameFromSchemaLocation(string schemaLocation)
@@ -230,8 +219,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return schemaLocation;
             }
 
-            int pos = Math.Max(schemaLocation.LastIndexOf('/'), schemaLocation.LastIndexOf('\\'));
-            int start = pos + 1;
+            var pos = Math.Max(schemaLocation.LastIndexOf('/'), schemaLocation.LastIndexOf('\\'));
+            var start = pos + 1;
             if (pos < 0)
             {
                 return schemaLocation;

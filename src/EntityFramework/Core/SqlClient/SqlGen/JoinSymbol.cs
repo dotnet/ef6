@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
-using System.Data.SqlClient;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees;
-
 namespace System.Data.Entity.Core.SqlClient.SqlGen
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Metadata.Edm;
+
     /// <summary>
     /// A Join symbol is a special kind of Symbol.
     /// It has to carry additional information
@@ -31,6 +26,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
     internal sealed class JoinSymbol : Symbol
     {
         private List<Symbol> columnList;
+
         internal List<Symbol> ColumnList
         {
             get
@@ -44,13 +40,15 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             set { columnList = value; }
         }
 
-        private List<Symbol> extentList;
+        private readonly List<Symbol> extentList;
+
         internal List<Symbol> ExtentList
         {
             get { return extentList; }
         }
 
         private List<Symbol> flattenedExtentList;
+
         internal List<Symbol> FlattenedExtentList
         {
             get
@@ -64,28 +62,24 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             set { flattenedExtentList = value; }
         }
 
-        private Dictionary<string, Symbol> nameToExtent;
+        private readonly Dictionary<string, Symbol> nameToExtent;
+
         internal Dictionary<string, Symbol> NameToExtent
         {
             get { return nameToExtent; }
         }
 
-        private bool isNestedJoin;
-        internal bool IsNestedJoin
-        {
-            get { return isNestedJoin; }
-            set { isNestedJoin = value; }
-        }
+        internal bool IsNestedJoin { get; set; }
 
         public JoinSymbol(string name, TypeUsage type, List<Symbol> extents)
             : base(name, type)
         {
             extentList = new List<Symbol>(extents.Count);
             nameToExtent = new Dictionary<string, Symbol>(extents.Count, StringComparer.OrdinalIgnoreCase);
-            foreach (Symbol symbol in extents)
+            foreach (var symbol in extents)
             {
-                this.nameToExtent[symbol.Name] = symbol;
-                this.ExtentList.Add(symbol);
+                nameToExtent[symbol.Name] = symbol;
+                ExtentList.Add(symbol);
             }
         }
     }

@@ -1,6 +1,5 @@
 ﻿namespace System.Data.Entity.Migrations.History
 {
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
 
     internal class HistoryContextBase<TContext> : DbContext

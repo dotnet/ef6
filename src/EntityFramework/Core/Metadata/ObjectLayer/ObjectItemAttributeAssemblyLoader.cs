@@ -1,7 +1,7 @@
 ﻿namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
@@ -19,25 +19,31 @@
 
         // list of unresolved navigation properties
         private readonly List<Action> _unresolvedNavigationProperties = new List<Action>();
-        private new MutableAssemblyCacheEntry CacheEntry { get { return (MutableAssemblyCacheEntry)base.CacheEntry; } }
-        private List<Action> _referenceResolutions = new List<Action>();
+
+        private new MutableAssemblyCacheEntry CacheEntry
+        {
+            get { return (MutableAssemblyCacheEntry)base.CacheEntry; }
+        }
+
+        private readonly List<Action> _referenceResolutions = new List<Action>();
 
         #endregion
 
         #region Constructor
+
         internal ObjectItemAttributeAssemblyLoader(Assembly assembly, ObjectItemLoadingSessionData sessionData)
-            :base(assembly, new MutableAssemblyCacheEntry(), sessionData)
+            : base(assembly, new MutableAssemblyCacheEntry(), sessionData)
         {
             Debug.Assert(Create == sessionData.ObjectItemAssemblyLoaderFactory, "Why is there a different factory creating this class");
-
         }
+
         #endregion
 
         #region Methods
 
         internal override void OnLevel1SessionProcessing()
         {
-            foreach (Action resolve in _referenceResolutions)
+            foreach (var resolve in _referenceResolutions)
             {
                 resolve();
             }
@@ -45,11 +51,12 @@
 
         internal override void OnLevel2SessionProcessing()
         {
-            foreach (Action resolve in _unresolvedNavigationProperties)
+            foreach (var resolve in _unresolvedNavigationProperties)
             {
                 resolve();
             }
         }
+
         /// <summary>
         /// Loads the given assembly and all the other referencd assemblies in the cache. If the assembly was already present
         /// then it loads from the cache
@@ -58,8 +65,12 @@
         /// <returns>true if the assembly was already loaded in the cache</returns>
         internal override void Load()
         {
-            Debug.Assert(IsSchemaAttributePresent(SourceAssembly), "LoadAssembly shouldn't be called with assembly having no schema attribute");
-            Debug.Assert(!SessionData.KnownAssemblies.Contains(SourceAssembly, SessionData.ObjectItemAssemblyLoaderFactory, SessionData.EdmItemCollection), "InternalLoadAssemblyFromCache: This assembly must not be present in the list of known assemblies");
+            Debug.Assert(
+                IsSchemaAttributePresent(SourceAssembly), "LoadAssembly shouldn't be called with assembly having no schema attribute");
+            Debug.Assert(
+                !SessionData.KnownAssemblies.Contains(
+                    SourceAssembly, SessionData.ObjectItemAssemblyLoaderFactory, SessionData.EdmItemCollection),
+                "InternalLoadAssemblyFromCache: This assembly must not be present in the list of known assemblies");
 
             base.Load();
         }
@@ -68,6 +79,7 @@
         {
             SessionData.AssembliesLoaded.Add(SourceAssembly, CacheEntry);
         }
+
         /// <summary>
         /// Check to see if the type is already loaded - either in the typesInLoading, or ObjectItemCollection or
         /// in the global cache
@@ -77,35 +89,39 @@
         /// <returns></returns>
         private bool TryGetLoadedType(Type clrType, out EdmType edmType)
         {
-            if (SessionData.TypesInLoading.TryGetValue(clrType.FullName, out edmType) ||
+            if (SessionData.TypesInLoading.TryGetValue(clrType.FullName, out edmType)
+                ||
                 TryGetCachedEdmType(clrType, out edmType))
             {
                 // Check to make sure the CLR type we got is the same as the given one
                 if (edmType.ClrType != clrType)
                 {
-                    SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.NewTypeConflictsWithExistingType(
-                                                clrType.AssemblyQualifiedName, edmType.ClrType.AssemblyQualifiedName)));
+                    SessionData.EdmItemErrors.Add(
+                        new EdmItemError(
+                            Strings.NewTypeConflictsWithExistingType(
+                                clrType.AssemblyQualifiedName, edmType.ClrType.AssemblyQualifiedName)));
                     edmType = null;
                     return false;
                 }
                 return true;
             }
 
-
             // Let's check to see if this type is a ref type, a nullable type, or a collection type, these are the types that
             // we need to take special care of them
             if (clrType.IsGenericType)
             {
-                Type genericType = clrType.GetGenericTypeDefinition();
+                var genericType = clrType.GetGenericTypeDefinition();
 
                 // Try to resolve the element type into a type object
                 EdmType elementType;
                 if (!TryGetLoadedType(clrType.GetGenericArguments()[0], out elementType))
-                    return false;
-
-                if (typeof(System.Collections.IEnumerable).IsAssignableFrom(clrType))
                 {
-                    EntityType entityType = elementType as EntityType;
+                    return false;
+                }
+
+                if (typeof(IEnumerable).IsAssignableFrom(clrType))
+                {
+                    var entityType = elementType as EntityType;
                     if (entityType == null)
                     {
                         // return null and let the caller deal with the error handling
@@ -121,23 +137,26 @@
                 return true;
             }
 
-
             edmType = null;
             return false;
         }
-        
+
         private bool TryGetCachedEdmType(Type clrType, out EdmType edmType)
         {
-            Debug.Assert(!SessionData.TypesInLoading.ContainsKey(clrType.FullName), "This should be called only after looking in typesInLoading");
-            Debug.Assert(SessionData.EdmItemErrors.Count > 0 || // had an error during loading
-                        clrType.GetCustomAttributes(typeof(EdmTypeAttribute), false /*inherit*/).Length == 0 || // not a type we track
-                        SourceAssembly != clrType.Assembly, // not from this assembly
-                        "Given that we don't have any error, if the type is part of this assembly, it should not be loaded from the cache");
+            Debug.Assert(
+                !SessionData.TypesInLoading.ContainsKey(clrType.FullName), "This should be called only after looking in typesInLoading");
+            Debug.Assert(
+                SessionData.EdmItemErrors.Count > 0 || // had an error during loading
+                clrType.GetCustomAttributes(typeof(EdmTypeAttribute), false /*inherit*/).Length == 0 || // not a type we track
+                SourceAssembly != clrType.Assembly, // not from this assembly
+                "Given that we don't have any error, if the type is part of this assembly, it should not be loaded from the cache");
 
             ImmutableAssemblyCacheEntry immutableCacheEntry;
             if (SessionData.LockedAssemblyCache.TryGetValue(clrType.Assembly, out immutableCacheEntry))
             {
-                Debug.Assert(SessionData.KnownAssemblies.Contains(clrType.Assembly, SessionData.LoaderCookie, SessionData.EdmItemCollection), "We should only be loading things directly from the cache if they are already in the collection");
+                Debug.Assert(
+                    SessionData.KnownAssemblies.Contains(clrType.Assembly, SessionData.LoaderCookie, SessionData.EdmItemCollection),
+                    "We should only be loading things directly from the cache if they are already in the collection");
                 return immutableCacheEntry.TryGetEdmType(clrType.FullName, out edmType);
             }
 
@@ -146,6 +165,7 @@
         }
 
         #endregion
+
         /// <summary>
         /// Loads the set of types from the given assembly and adds it to the given list of types
         /// </summary>
@@ -157,7 +177,7 @@
             LoadRelationshipTypes();
 
             // Loop through each type in the assembly and process it
-            foreach (Type type in EntityUtil.GetTypesSpecial(SourceAssembly))
+            foreach (var type in EntityUtil.GetTypesSpecial(SourceAssembly))
             {
                 // If the type doesn't have the same EdmTypeAttribute defined, then it's not a special type
                 // that we care about, skip it.
@@ -171,7 +191,7 @@
                 // failing at a much later point of OC type mapping lookup with a super generic error message
                 if (type.IsGenericType)
                 {
-                    SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.GenericTypeNotSupported(type.FullName)));
+                    SessionData.EdmItemErrors.Add(new EdmItemError(Strings.GenericTypeNotSupported(type.FullName)));
                     continue;
                 }
 
@@ -197,7 +217,9 @@
         /// <param name="context"></param>
         private void LoadRelationshipTypes()
         {
-            foreach (EdmRelationshipAttribute roleAttribute in SourceAssembly.GetCustomAttributes(typeof(EdmRelationshipAttribute), false /*inherit*/))
+            foreach (
+                EdmRelationshipAttribute roleAttribute in
+                    SourceAssembly.GetCustomAttributes(typeof(EdmRelationshipAttribute), false /*inherit*/))
             {
                 // Check if there is an entry already with this name
                 if (TryFindNullParametersInRelationshipAttribute(roleAttribute))
@@ -206,54 +228,64 @@
                     continue;
                 }
 
-                bool errorEncountered = false;
+                var errorEncountered = false;
 
                 // return error if the role names are the same
-                if (roleAttribute.Role1Name == roleAttribute.Role2Name)
+                if (roleAttribute.Role1Name
+                    == roleAttribute.Role2Name)
                 {
-                    SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.SameRoleNameOnRelationshipAttribute(roleAttribute.RelationshipName, roleAttribute.Role2Name)));
+                    SessionData.EdmItemErrors.Add(
+                        new EdmItemError(
+                            Strings.SameRoleNameOnRelationshipAttribute(roleAttribute.RelationshipName, roleAttribute.Role2Name)));
                     errorEncountered = true;
                 }
 
-
                 if (!errorEncountered)
                 {
-                    AssociationType associationType = new AssociationType(roleAttribute.RelationshipName, roleAttribute.RelationshipNamespaceName, roleAttribute.IsForeignKey, DataSpace.OSpace);
+                    var associationType = new AssociationType(
+                        roleAttribute.RelationshipName, roleAttribute.RelationshipNamespaceName, roleAttribute.IsForeignKey,
+                        DataSpace.OSpace);
                     SessionData.TypesInLoading.Add(associationType.FullName, associationType);
                     TrackClosure(roleAttribute.Role1Type);
                     TrackClosure(roleAttribute.Role2Type);
 
                     // prevent lifting of loop vars
-                    string r1Name = roleAttribute.Role1Name;
-                    Type r1Type = roleAttribute.Role1Type;
-                    RelationshipMultiplicity r1Multiplicity = roleAttribute.Role1Multiplicity;
-                    AddTypeResolver(() =>
+                    var r1Name = roleAttribute.Role1Name;
+                    var r1Type = roleAttribute.Role1Type;
+                    var r1Multiplicity = roleAttribute.Role1Multiplicity;
+                    AddTypeResolver(
+                        () =>
                         ResolveAssociationEnd(associationType, r1Name, r1Type, r1Multiplicity));
 
                     // prevent lifting of loop vars
-                    string r2Name = roleAttribute.Role2Name;
-                    Type r2Type = roleAttribute.Role2Type;
-                    RelationshipMultiplicity r2Multiplicity = roleAttribute.Role2Multiplicity;
-                    AddTypeResolver(() =>
+                    var r2Name = roleAttribute.Role2Name;
+                    var r2Type = roleAttribute.Role2Type;
+                    var r2Multiplicity = roleAttribute.Role2Multiplicity;
+                    AddTypeResolver(
+                        () =>
                         ResolveAssociationEnd(associationType, r2Name, r2Type, r2Multiplicity));
 
                     // get assembly entry and add association type to the list of types in the assembly
-                    Debug.Assert(!CacheEntry.ContainsType(associationType.FullName), "Relationship type must not be present in the list of types");
+                    Debug.Assert(
+                        !CacheEntry.ContainsType(associationType.FullName), "Relationship type must not be present in the list of types");
                     CacheEntry.TypesInAssembly.Add(associationType);
                 }
             }
         }
 
-        private void ResolveAssociationEnd(AssociationType associationType, string roleName, Type clrType, RelationshipMultiplicity multiplicity)
+        private void ResolveAssociationEnd(
+            AssociationType associationType, string roleName, Type clrType, RelationshipMultiplicity multiplicity)
         {
             EntityType entityType;
             if (!TryGetRelationshipEndEntityType(clrType, out entityType))
             {
-                SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.RoleTypeInEdmRelationshipAttributeIsInvalidType(associationType.Name, roleName, clrType)));
+                SessionData.EdmItemErrors.Add(
+                    new EdmItemError(Strings.RoleTypeInEdmRelationshipAttributeIsInvalidType(associationType.Name, roleName, clrType)));
                 return;
             }
             associationType.AddKeyMember(new AssociationEndMember(roleName, entityType.GetReferenceType(), multiplicity));
         }
+
         /// <summary>
         /// Load metadata of the given type - when you call this method, you should check and make sure that the type has
         /// edm attribute. If it doesn't,we won't load the type and it will be returned as null
@@ -269,7 +301,7 @@
 
             EdmType edmType = null;
 
-            EdmTypeAttribute[] typeAttributes = (EdmTypeAttribute[])clrType.GetCustomAttributes(typeof(EdmTypeAttribute), false /*inherit*/);
+            var typeAttributes = (EdmTypeAttribute[])clrType.GetCustomAttributes(typeof(EdmTypeAttribute), false /*inherit*/);
 
             // the CLR doesn't allow types to have duplicate/multiple attribute declarations
 
@@ -277,28 +309,34 @@
             {
                 if (clrType.IsNested)
                 {
-                    SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.NestedClassNotSupported(clrType.FullName, clrType.Assembly.FullName)));
+                    SessionData.EdmItemErrors.Add(
+                        new EdmItemError(Strings.NestedClassNotSupported(clrType.FullName, clrType.Assembly.FullName)));
                     return;
                 }
-                EdmTypeAttribute typeAttribute = typeAttributes[0];
-                string cspaceTypeName = String.IsNullOrEmpty(typeAttribute.Name) ? clrType.Name : typeAttribute.Name;
-                if (String.IsNullOrEmpty(typeAttribute.NamespaceName) && clrType.Namespace == null)
+                var typeAttribute = typeAttributes[0];
+                var cspaceTypeName = String.IsNullOrEmpty(typeAttribute.Name) ? clrType.Name : typeAttribute.Name;
+                if (String.IsNullOrEmpty(typeAttribute.NamespaceName)
+                    && clrType.Namespace == null)
                 {
                     SessionData.EdmItemErrors.Add(new EdmItemError(Strings.Validator_TypeHasNoNamespace));
                     return;
                 }
 
-                string cspaceNamespaceName = String.IsNullOrEmpty(typeAttribute.NamespaceName) ? clrType.Namespace : typeAttribute.NamespaceName;
+                var cspaceNamespaceName = String.IsNullOrEmpty(typeAttribute.NamespaceName)
+                                              ? clrType.Namespace
+                                              : typeAttribute.NamespaceName;
 
-                if (typeAttribute.GetType() == typeof(EdmEntityTypeAttribute))
+                if (typeAttribute.GetType()
+                    == typeof(EdmEntityTypeAttribute))
                 {
                     edmType = new ClrEntityType(clrType, cspaceNamespaceName, cspaceTypeName);
                 }
-                else if(typeAttribute.GetType() == typeof(EdmComplexTypeAttribute))
+                else if (typeAttribute.GetType()
+                         == typeof(EdmComplexTypeAttribute))
                 {
                     edmType = new ClrComplexType(clrType, cspaceNamespaceName, cspaceTypeName);
                 }
-                else 
+                else
                 {
                     Debug.Assert(typeAttribute is EdmEnumTypeAttribute, "Invalid type attribute encountered");
 
@@ -324,7 +362,8 @@
                 return;
             }
 
-            Debug.Assert(!CacheEntry.ContainsType(edmType.Identity), "This type must not be already present in the list of types for this assembly");
+            Debug.Assert(
+                !CacheEntry.ContainsType(edmType.Identity), "This type must not be already present in the list of types for this assembly");
             // Also add this to the list of the types for this assembly
             CacheEntry.TypesInAssembly.Add(edmType);
 
@@ -357,61 +396,72 @@
         private EdmType ResolveBaseType(Type type)
         {
             EdmType edmType;
-            if (type.GetCustomAttributes(typeof(EdmEntityTypeAttribute), false).Length > 0 && TryGetLoadedType(type, out edmType))
+            if (type.GetCustomAttributes(typeof(EdmEntityTypeAttribute), false).Length > 0
+                && TryGetLoadedType(type, out edmType))
             {
                 return edmType;
             }
-            return null;            
+            return null;
         }
 
         private bool TryFindNullParametersInRelationshipAttribute(EdmRelationshipAttribute roleAttribute)
         {
             if (roleAttribute.RelationshipName == null)
             {
-                SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.NullRelationshipNameforEdmRelationshipAttribute(SourceAssembly.FullName)));
+                SessionData.EdmItemErrors.Add(
+                    new EdmItemError(Strings.NullRelationshipNameforEdmRelationshipAttribute(SourceAssembly.FullName)));
                 return true;
             }
 
-            bool nullsFound = false;
+            var nullsFound = false;
 
             if (roleAttribute.RelationshipNamespaceName == null)
             {
-                SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.NullParameterForEdmRelationshipAttribute(
-                    "RelationshipNamespaceName", roleAttribute.RelationshipName)));
+                SessionData.EdmItemErrors.Add(
+                    new EdmItemError(
+                        Strings.NullParameterForEdmRelationshipAttribute(
+                            "RelationshipNamespaceName", roleAttribute.RelationshipName)));
                 nullsFound = true;
             }
 
             if (roleAttribute.Role1Name == null)
             {
-                SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.NullParameterForEdmRelationshipAttribute(
-                    "Role1Name", roleAttribute.RelationshipName)));
+                SessionData.EdmItemErrors.Add(
+                    new EdmItemError(
+                        Strings.NullParameterForEdmRelationshipAttribute(
+                            "Role1Name", roleAttribute.RelationshipName)));
                 nullsFound = true;
             }
 
             if (roleAttribute.Role1Type == null)
             {
-                SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.NullParameterForEdmRelationshipAttribute(
-                    "Role1Type", roleAttribute.RelationshipName)));
+                SessionData.EdmItemErrors.Add(
+                    new EdmItemError(
+                        Strings.NullParameterForEdmRelationshipAttribute(
+                            "Role1Type", roleAttribute.RelationshipName)));
                 nullsFound = true;
             }
 
             if (roleAttribute.Role2Name == null)
             {
-                SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.NullParameterForEdmRelationshipAttribute(
-                    "Role2Name", roleAttribute.RelationshipName)));
+                SessionData.EdmItemErrors.Add(
+                    new EdmItemError(
+                        Strings.NullParameterForEdmRelationshipAttribute(
+                            "Role2Name", roleAttribute.RelationshipName)));
                 nullsFound = true;
             }
 
             if (roleAttribute.Role2Type == null)
             {
-                SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.NullParameterForEdmRelationshipAttribute(
-                    "Role2Type", roleAttribute.RelationshipName)));
+                SessionData.EdmItemErrors.Add(
+                    new EdmItemError(
+                        Strings.NullParameterForEdmRelationshipAttribute(
+                            "Role2Type", roleAttribute.RelationshipName)));
                 nullsFound = true;
             }
 
             return nullsFound;
         }
-
 
         private bool TryGetRelationshipEndEntityType(Type type, out EntityType entityType)
         {
@@ -422,7 +472,8 @@
             }
 
             EdmType edmType;
-            if (!TryGetLoadedType(type, out edmType) || !Helper.IsEntityType(edmType))
+            if (!TryGetLoadedType(type, out edmType)
+                || !Helper.IsEntityType(edmType))
             {
                 entityType = null;
                 return false;
@@ -441,12 +492,12 @@
         {
             // Look at both public, internal, and private instanced properties declared at this type, inherited members
             // are not looked at.  Internal and private properties are also looked at because they are also schematized fields
-            PropertyInfo[] properties = structuralType.ClrType.GetProperties(PropertyReflectionBindingFlags);
+            var properties = structuralType.ClrType.GetProperties(PropertyReflectionBindingFlags);
 
-            foreach (PropertyInfo property in properties)
+            foreach (var property in properties)
             {
                 EdmMember newMember = null;
-                bool isEntityKeyProperty = false; //used for EdmScalarProperties only
+                var isEntityKeyProperty = false; //used for EdmScalarProperties only
 
                 // EdmScalarPropertyAttribute, EdmComplexPropertyAttribute and EdmRelationshipNavigationPropertyAttribute
                 // are all EdmPropertyAttributes that we need to process. If the current property is not an EdmPropertyAttribute
@@ -454,16 +505,17 @@
                 if (property.IsDefined(typeof(EdmRelationshipNavigationPropertyAttribute), false))
                 {
                     // keep the loop var from being lifted
-                    PropertyInfo pi = property;
-                    _unresolvedNavigationProperties.Add(() =>
-                            ResolveNavigationProperty(structuralType, pi));
+                    var pi = property;
+                    _unresolvedNavigationProperties.Add(
+                        () =>
+                        ResolveNavigationProperty(structuralType, pi));
                 }
                 else if (property.IsDefined(typeof(EdmScalarPropertyAttribute), false))
                 {
                     if ((Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType).IsEnum)
                     {
                         TrackClosure(property.PropertyType);
-                        PropertyInfo local = property;
+                        var local = property;
                         AddTypeResolver(() => ResolveEnumTypeProperty(structuralType, local));
                     }
                     else
@@ -475,7 +527,7 @@
                 {
                     TrackClosure(property.PropertyType);
                     // keep loop var from being lifted
-                    PropertyInfo local = property;
+                    var local = property;
                     AddTypeResolver(() => ResolveComplexTypeProperty(structuralType, local));
                 }
 
@@ -503,12 +555,14 @@
 
         internal void ResolveNavigationProperty(StructuralType declaringType, PropertyInfo propertyInfo)
         {
-            Debug.Assert(propertyInfo.IsDefined(typeof(EdmRelationshipNavigationPropertyAttribute), false), "The property must have navigation property defined");
+            Debug.Assert(
+                propertyInfo.IsDefined(typeof(EdmRelationshipNavigationPropertyAttribute), false),
+                "The property must have navigation property defined");
 
             // EdmScalarPropertyAttribute, EdmComplexPropertyAttribute and EdmRelationshipNavigationPropertyAttribute
             // are all EdmPropertyAttributes that we need to process. If the current property is not an EdmPropertyAttribute
             // we will just ignore it and skip to the next property.
-            object[] relationshipPropertyAttributes = propertyInfo.GetCustomAttributes(typeof(EdmRelationshipNavigationPropertyAttribute), false);
+            var relationshipPropertyAttributes = propertyInfo.GetCustomAttributes(typeof(EdmRelationshipNavigationPropertyAttribute), false);
 
             Debug.Assert(relationshipPropertyAttributes.Length == 1, "There should be exactly one property for every navigation property");
 
@@ -522,11 +576,17 @@
             // We can't just rely on checking for a generic because it can lead to a scenario where we report that the type parameter is invalid
             // when really it's the main generic type. That is more confusing than reporting the full name and letting the user determine the problem.
             EdmType propertyType;
-            if (!TryGetLoadedType(propertyInfo.PropertyType, out propertyType) || !(propertyType.BuiltInTypeKind == BuiltInTypeKind.EntityType || propertyType.BuiltInTypeKind == BuiltInTypeKind.CollectionType))
+            if (!TryGetLoadedType(propertyInfo.PropertyType, out propertyType)
+                ||
+                !(propertyType.BuiltInTypeKind == BuiltInTypeKind.EntityType
+                  || propertyType.BuiltInTypeKind == BuiltInTypeKind.CollectionType))
             {
                 // Once an error is detected the property does not need to be validated further, just add to the errors
                 // collection and continue with the next property. The failure will cause an exception to be thrown later during validation of all of the types.
-                SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.Validator_OSpace_InvalidNavPropReturnType(propertyInfo.Name, propertyInfo.DeclaringType.FullName, propertyInfo.PropertyType.FullName)));
+                SessionData.EdmItemErrors.Add(
+                    new EdmItemError(
+                        Strings.Validator_OSpace_InvalidNavPropReturnType(
+                            propertyInfo.Name, propertyInfo.DeclaringType.FullName, propertyInfo.PropertyType.FullName)));
                 return;
             }
             // else we have a valid EntityType or CollectionType that contains EntityType. ResolveNonSchemaType enforces that a collection type
@@ -534,55 +594,66 @@
 
             // Expecting EdmRelationshipNavigationPropertyAttribute to have AllowMultiple=False, so only look at first element in the attribute array
 
-            EdmRelationshipNavigationPropertyAttribute attribute = (EdmRelationshipNavigationPropertyAttribute)relationshipPropertyAttributes[0];
+            var attribute = (EdmRelationshipNavigationPropertyAttribute)relationshipPropertyAttributes[0];
 
             EdmMember member = null;
             EdmType type;
-            if (SessionData.TypesInLoading.TryGetValue(attribute.RelationshipNamespaceName + "." + attribute.RelationshipName, out type) &&
+            if (SessionData.TypesInLoading.TryGetValue(attribute.RelationshipNamespaceName + "." + attribute.RelationshipName, out type)
+                &&
                 Helper.IsAssociationType(type))
             {
-                AssociationType relationshipType = (AssociationType)type;
+                var relationshipType = (AssociationType)type;
                 if (relationshipType != null)
                 {
                     // The return value of this property has been verified, so create the property now
-                    NavigationProperty navigationProperty = new NavigationProperty(propertyInfo.Name, TypeUsage.Create(propertyType), propertyInfo);
+                    var navigationProperty = new NavigationProperty(propertyInfo.Name, TypeUsage.Create(propertyType), propertyInfo);
                     navigationProperty.RelationshipType = relationshipType;
                     member = navigationProperty;
 
-                    if (relationshipType.Members[0].Name == attribute.TargetRoleName)
+                    if (relationshipType.Members[0].Name
+                        == attribute.TargetRoleName)
                     {
                         navigationProperty.ToEndMember = (RelationshipEndMember)relationshipType.Members[0];
                         navigationProperty.FromEndMember = (RelationshipEndMember)relationshipType.Members[1];
                     }
-                    else if (relationshipType.Members[1].Name == attribute.TargetRoleName)
+                    else if (relationshipType.Members[1].Name
+                             == attribute.TargetRoleName)
                     {
                         navigationProperty.ToEndMember = (RelationshipEndMember)relationshipType.Members[1];
                         navigationProperty.FromEndMember = (RelationshipEndMember)relationshipType.Members[0];
                     }
                     else
                     {
-                        SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.TargetRoleNameInNavigationPropertyNotValid(
-                                                    propertyInfo.Name, propertyInfo.DeclaringType.FullName, attribute.TargetRoleName, attribute.RelationshipName)));
+                        SessionData.EdmItemErrors.Add(
+                            new EdmItemError(
+                                Strings.TargetRoleNameInNavigationPropertyNotValid(
+                                    propertyInfo.Name, propertyInfo.DeclaringType.FullName, attribute.TargetRoleName,
+                                    attribute.RelationshipName)));
                         member = null;
                     }
 
-                    if (member != null &&
+                    if (member != null
+                        &&
                         ((RefType)navigationProperty.FromEndMember.TypeUsage.EdmType).ElementType.ClrType != declaringType.ClrType)
                     {
-                        SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.NavigationPropertyRelationshipEndTypeMismatch(
-                                                    declaringType.FullName,
-                                                    navigationProperty.Name,
-                                                    relationshipType.FullName,
-                                                    navigationProperty.FromEndMember.Name,
-                                                    ((RefType)navigationProperty.FromEndMember.TypeUsage.EdmType).ElementType.ClrType)));
+                        SessionData.EdmItemErrors.Add(
+                            new EdmItemError(
+                                Strings.NavigationPropertyRelationshipEndTypeMismatch(
+                                    declaringType.FullName,
+                                    navigationProperty.Name,
+                                    relationshipType.FullName,
+                                    navigationProperty.FromEndMember.Name,
+                                    ((RefType)navigationProperty.FromEndMember.TypeUsage.EdmType).ElementType.ClrType)));
                         member = null;
                     }
                 }
             }
             else
             {
-                SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.RelationshipNameInNavigationPropertyNotValid(
-                                            propertyInfo.Name, propertyInfo.DeclaringType.FullName, attribute.RelationshipName)));
+                SessionData.EdmItemErrors.Add(
+                    new EdmItemError(
+                        Strings.RelationshipNameInNavigationPropertyNotValid(
+                            propertyInfo.Name, propertyInfo.DeclaringType.FullName, attribute.RelationshipName)));
             }
 
             if (member != null)
@@ -590,7 +661,6 @@
                 declaringType.AddMember(member);
             }
         }
-
 
         /// <summary>
         /// Load the property with scalar property attribute.
@@ -616,21 +686,28 @@
             {
                 // This property does not need to be validated further, just add to the errors collection and continue with the next property
                 // This failure will cause an exception to be thrown later during validation of all of the types
-                SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.Validator_OSpace_ScalarPropertyNotPrimitive(property.Name, property.DeclaringType.FullName, property.PropertyType.FullName)));
+                SessionData.EdmItemErrors.Add(
+                    new EdmItemError(
+                        Strings.Validator_OSpace_ScalarPropertyNotPrimitive(
+                            property.Name, property.DeclaringType.FullName, property.PropertyType.FullName)));
             }
             else
             {
-                object[] attrs = property.GetCustomAttributes(typeof(EdmScalarPropertyAttribute), false);
+                var attrs = property.GetCustomAttributes(typeof(EdmScalarPropertyAttribute), false);
 
                 Debug.Assert(attrs.Length == 1, "Every property can exactly have one ScalarProperty Attribute");
                 // Expecting EdmScalarPropertyAttribute to have AllowMultiple=False, so only look at first element in the attribute array
                 isEntityKeyProperty = ((EdmScalarPropertyAttribute)attrs[0]).EntityKeyProperty;
-                bool isNullable = ((EdmScalarPropertyAttribute)attrs[0]).IsNullable;
+                var isNullable = ((EdmScalarPropertyAttribute)attrs[0]).IsNullable;
 
-                member = new EdmProperty(property.Name,
-                    TypeUsage.Create(primitiveType, new FacetValues { Nullable = isNullable }),
+                member = new EdmProperty(
+                    property.Name,
+                    TypeUsage.Create(
+                        primitiveType, new FacetValues
+                                           {
+                                               Nullable = isNullable
+                                           }),
                     property, clrType.TypeHandle);
-
             }
             return member;
         }
@@ -645,33 +722,40 @@
             Debug.Assert(declaringType != null, "type != null");
             Debug.Assert(clrProperty != null, "clrProperty != null");
             Debug.Assert(
-                (Nullable.GetUnderlyingType(clrProperty.PropertyType) ?? clrProperty.PropertyType).IsEnum, 
+                (Nullable.GetUnderlyingType(clrProperty.PropertyType) ?? clrProperty.PropertyType).IsEnum,
                 "This method should be called for enums only");
 
             EdmType propertyType;
 
-            if (!TryGetLoadedType(clrProperty.PropertyType, out propertyType) || !Helper.IsEnumType(propertyType))
+            if (!TryGetLoadedType(clrProperty.PropertyType, out propertyType)
+                || !Helper.IsEnumType(propertyType))
             {
                 SessionData.EdmItemErrors.Add(
                     new EdmItemError(
-                        System.Data.Entity.Resources.Strings.Validator_OSpace_ScalarPropertyNotPrimitive(
+                        Strings.Validator_OSpace_ScalarPropertyNotPrimitive(
                             clrProperty.Name,
                             clrProperty.DeclaringType.FullName,
                             clrProperty.PropertyType.FullName)));
             }
             else
             {
-                var edmScalarPropertyAttribute = (EdmScalarPropertyAttribute)clrProperty.GetCustomAttributes(typeof(EdmScalarPropertyAttribute), false).Single();
+                var edmScalarPropertyAttribute =
+                    (EdmScalarPropertyAttribute)clrProperty.GetCustomAttributes(typeof(EdmScalarPropertyAttribute), false).Single();
 
-                EdmProperty enumProperty = new EdmProperty(
+                var enumProperty = new EdmProperty(
                     clrProperty.Name,
-                    TypeUsage.Create(propertyType, new FacetValues() { Nullable = edmScalarPropertyAttribute.IsNullable }),
+                    TypeUsage.Create(
+                        propertyType, new FacetValues
+                                          {
+                                              Nullable = edmScalarPropertyAttribute.IsNullable
+                                          }),
                     clrProperty,
                     declaringType.ClrType.TypeHandle);
 
                 declaringType.AddMember(enumProperty);
 
-                if (declaringType.BuiltInTypeKind == BuiltInTypeKind.EntityType && edmScalarPropertyAttribute.EntityKeyProperty)
+                if (declaringType.BuiltInTypeKind == BuiltInTypeKind.EntityType
+                    && edmScalarPropertyAttribute.EntityKeyProperty)
                 {
                     ((EntityType)declaringType).AddKeyMember(enumProperty);
                 }
@@ -680,39 +764,46 @@
 
         private void ResolveComplexTypeProperty(StructuralType type, PropertyInfo clrProperty)
         {
-
             // Load the property type and create a new property object
             EdmType propertyType;
             // If the type could not be loaded it's definitely not a complex type, so that's an error
             // If it could be loaded but is not a complex type that's an error as well
-            if (!TryGetLoadedType(clrProperty.PropertyType, out propertyType) || propertyType.BuiltInTypeKind != BuiltInTypeKind.ComplexType)
+            if (!TryGetLoadedType(clrProperty.PropertyType, out propertyType)
+                || propertyType.BuiltInTypeKind != BuiltInTypeKind.ComplexType)
             {
                 // This property does not need to be validated further, just add to the errors collection and continue with the next property
                 // This failure will cause an exception to be thrown later during validation of all of the types
-                SessionData.EdmItemErrors.Add(new EdmItemError(System.Data.Entity.Resources.Strings.Validator_OSpace_ComplexPropertyNotComplex(clrProperty.Name, clrProperty.DeclaringType.FullName, clrProperty.PropertyType.FullName)));
+                SessionData.EdmItemErrors.Add(
+                    new EdmItemError(
+                        Strings.Validator_OSpace_ComplexPropertyNotComplex(
+                            clrProperty.Name, clrProperty.DeclaringType.FullName, clrProperty.PropertyType.FullName)));
             }
             else
             {
-                EdmProperty newProperty = new EdmProperty(clrProperty.Name,
-                    TypeUsage.Create(propertyType, new FacetValues { Nullable = false }),
+                var newProperty = new EdmProperty(
+                    clrProperty.Name,
+                    TypeUsage.Create(
+                        propertyType, new FacetValues
+                                          {
+                                              Nullable = false
+                                          }),
                     clrProperty, type.ClrType.TypeHandle);
 
                 type.AddMember(newProperty);
             }
-
         }
 
         private void TrackClosure(Type type)
         {
-
             if (SourceAssembly != type.Assembly &&
                 !CacheEntry.ClosureAssemblies.Contains(type.Assembly) &&
-                IsSchemaAttributePresent(type.Assembly) &&
+                IsSchemaAttributePresent(type.Assembly)
+                &&
                 !(type.IsGenericType &&
                   (
-                    EntityUtil.IsAnICollection(type) || // EntityCollection<>, List<>, ICollection<>
-                    type.GetGenericTypeDefinition() == typeof(System.Data.Entity.Core.Objects.DataClasses.EntityReference<>) ||
-                    type.GetGenericTypeDefinition() == typeof(System.Nullable<>)
+                      EntityUtil.IsAnICollection(type) || // EntityCollection<>, List<>, ICollection<>
+                      type.GetGenericTypeDefinition() == typeof(EntityReference<>) ||
+                      type.GetGenericTypeDefinition() == typeof(Nullable<>)
                   )
                  )
                 )
@@ -722,7 +813,7 @@
 
             if (type.IsGenericType)
             {
-                foreach (Type genericArgument in type.GetGenericArguments())
+                foreach (var genericArgument in type.GetGenericArguments())
                 {
                     TrackClosure(genericArgument);
                 }
@@ -736,7 +827,7 @@
 
         internal static ObjectItemAssemblyLoader Create(Assembly assembly, ObjectItemLoadingSessionData sessionData)
         {
-            if (ObjectItemAttributeAssemblyLoader.IsSchemaAttributePresent(assembly))
+            if (IsSchemaAttributePresent(assembly))
             {
                 return new ObjectItemAttributeAssemblyLoader(assembly, sessionData);
             }
@@ -745,6 +836,5 @@
                 return new ObjectItemNoOpAssemblyLoader(assembly, sessionData);
             }
         }
-
     }
 }

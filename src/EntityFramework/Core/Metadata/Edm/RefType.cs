@@ -1,40 +1,44 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Text;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Text;
+
     /// <summary>
     /// Class representing a ref type
     /// </summary>
     public sealed class RefType : EdmType
     {
         #region Constructors
+
         /// <summary>
         /// The constructor for constructing a RefType object with the entity type it references
         /// </summary>
         /// <param name="entityType">The entity type that this ref type references</param>
         /// <exception cref="System.ArgumentNullException">Thrown if entityType argument is null</exception>
         internal RefType(EntityType entityType)
-            : base(GetIdentity(EntityUtil.GenericCheckArgumentNull(entityType, "entityType")), 
-            EdmConstants.TransientNamespace, entityType.DataSpace)
+            : base(GetIdentity(EntityUtil.GenericCheckArgumentNull(entityType, "entityType")),
+                EdmConstants.TransientNamespace, entityType.DataSpace)
         {
             _elementType = entityType;
             SetReadOnly();
         }
+
         #endregion
 
         #region Fields
+
         private readonly EntityTypeBase _elementType;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the kind of the type
         /// </summary>
-        public override BuiltInTypeKind BuiltInTypeKind { get { return BuiltInTypeKind.RefType; } }
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
+            get { return BuiltInTypeKind.RefType; }
+        }
 
         /// <summary>
         /// The entity type that this ref type references
@@ -42,14 +46,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.EntityTypeBase, false)]
         public EntityTypeBase ElementType
         {
-            get
-            {
-                return _elementType;
-            }
+            get { return _elementType; }
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Constructs the name of the collection type
         /// </summary>
@@ -57,12 +60,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>The identity of the resulting ref type</returns>
         private static string GetIdentity(EntityTypeBase entityTypeBase)
         {
-            StringBuilder builder = new StringBuilder(50);
+            var builder = new StringBuilder(50);
             builder.Append("reference[");
             entityTypeBase.BuildIdentity(builder);
             builder.Append("]");
             return builder.ToString();
         }
+
         #endregion
     }
 }

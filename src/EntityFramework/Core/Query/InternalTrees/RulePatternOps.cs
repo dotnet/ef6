@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Globalization;
-
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     /// <summary>
@@ -14,18 +9,27 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// The singleton instance of this class
         /// </summary>
         internal static readonly LeafOp Instance = new LeafOp();
+
         internal static readonly LeafOp Pattern = Instance;
 
         /// <summary>
         /// 0 children
         /// </summary>
-        internal override int Arity { get { return 0; } }
+        internal override int Arity
+        {
+            get { return 0; }
+        }
 
         #region constructors
+
         /// <summary>
         /// Niladic constructor
         /// </summary>
-        private LeafOp() : base(OpType.Leaf) { }
+        private LeafOp()
+            : base(OpType.Leaf)
+        {
+        }
+
         #endregion
     }
 }

@@ -1,20 +1,18 @@
 namespace System.Data.Entity.Core.Objects.ELinq
 {
+    using System.Collections;
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Common;
-    using System.Data.Common;
     using System.Data.Entity.Core.Common.Internal.Materialization;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using System.Security;
-    using System.Security.Permissions;
     using System.Threading;
 
     /// <summary>
@@ -24,7 +22,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
     internal abstract class InitializerMetadata : IEquatable<InitializerMetadata>
     {
         internal readonly Type ClrType;
-        internal static readonly MethodInfo UserExpressionMarker = typeof(InitializerMetadata).GetMethod("MarkAsUserExpression", BindingFlags.NonPublic | BindingFlags.Static);
+
+        internal static readonly MethodInfo UserExpressionMarker = typeof(InitializerMetadata).GetMethod(
+            "MarkAsUserExpression", BindingFlags.NonPublic | BindingFlags.Static);
+
         private static long s_identifier;
         internal readonly string Identity;
         private static readonly string s_identifierPrefix = typeof(InitializerMetadata).Name;
@@ -43,7 +44,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         internal static bool TryGetInitializerMetadata(TypeUsage typeUsage, out InitializerMetadata initializerMetadata)
         {
             initializerMetadata = null;
-            if (BuiltInTypeKind.RowType == typeUsage.EdmType.BuiltInTypeKind)
+            if (BuiltInTypeKind.RowType
+                == typeUsage.EdmType.BuiltInTypeKind)
             {
                 initializerMetadata = ((RowType)typeUsage.EdmType).InitializerMetadata;
             }
@@ -58,7 +60,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         // Initializes an initializer for a MemberInit expression
-        internal static InitializerMetadata CreateProjectionInitializer(EdmItemCollection itemCollection, MemberInitExpression initExpression)
+        internal static InitializerMetadata CreateProjectionInitializer(
+            EdmItemCollection itemCollection, MemberInitExpression initExpression)
         {
             return itemCollection.GetCanonicalInitializerMetadata(new ProjectionInitializerMetadata(initExpression));
         }
@@ -76,7 +79,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         // Creates metadata for entity collection materialization
-        internal static InitializerMetadata CreateEntityCollectionInitializer(EdmItemCollection itemCollection, Type type, NavigationProperty navigationProperty)
+        internal static InitializerMetadata CreateEntityCollectionInitializer(
+            EdmItemCollection itemCollection, Type type, NavigationProperty navigationProperty)
         {
             return itemCollection.GetCanonicalInitializerMetadata(new EntityCollectionInitializerMetadata(type, navigationProperty));
         }
@@ -91,7 +95,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         internal virtual void AppendColumnMapKey(ColumnMapKeyBuilder builder)
         {
             // by default, the type is sufficient (more information is needed for EntityCollection and initializers)
-            builder.Append("CLR-", this.ClrType);
+            builder.Append("CLR-", ClrType);
         }
 
         public override bool Equals(object obj)
@@ -103,13 +107,22 @@ namespace System.Data.Entity.Core.Objects.ELinq
         public bool Equals(InitializerMetadata other)
         {
             Debug.Assert(null != other, "must not use a null key");
-            if (object.ReferenceEquals(this, other)) { return true; }
-            if (this.Kind != other.Kind) { return false; }
-            if (!this.ClrType.Equals(other.ClrType)) { return false; }
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+            if (Kind != other.Kind)
+            {
+                return false;
+            }
+            if (!ClrType.Equals(other.ClrType))
+            {
+                return false;
+            }
             return IsStructurallyEquivalent(other);
         }
 
-        [SuppressMessage("Microsoft.Usage", "CA2303", Justification="ClrType is not expected to be an Embedded Interop Type.")]
+        [SuppressMessage("Microsoft.Usage", "CA2303", Justification = "ClrType is not expected to be an Embedded Interop Type.")]
         public override int GetHashCode()
         {
             return ClrType.GetHashCode();
@@ -123,7 +136,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         {
             return true;
         }
-        
+
         /// <summary>
         /// Produces an expression initializing an instance of ClrType (given emitters for input
         /// columns)
@@ -143,7 +156,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <returns></returns>
         protected static List<Expression> GetPropertyReaders(List<TranslatorResult> propertyTranslatorResults)
         {
-            List<Expression> propertyReaders = propertyTranslatorResults.Select(s => s.UnwrappedExpression).ToList();
+            var propertyReaders = propertyTranslatorResults.Select(s => s.UnwrappedExpression).ToList();
             return propertyReaders;
         }
 
@@ -180,18 +193,18 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 {
                     yield break;
                 }
-                foreach (T member in _group)
+                foreach (var member in _group)
                 {
                     yield return member;
                 }
             }
 
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            IEnumerator IEnumerable.GetEnumerator()
             {
                 return ((IEnumerable<T>)this).GetEnumerator();
             }
         }
-        
+
         /// <summary>
         /// Metadata for grouping initializer.
         /// </summary>
@@ -202,7 +215,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
             {
             }
 
-            internal override InitializerMetadataKind Kind { get { return InitializerMetadataKind.Grouping; } }
+            internal override InitializerMetadataKind Kind
+            {
+                get { return InitializerMetadataKind.Grouping; }
+            }
 
             internal override Expression Emit(Translator translator, List<TranslatorResult> propertyTranslatorResults)
             {
@@ -210,16 +226,18 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 // new Grouping<K, T>(children[0], children[1])
 
                 // Collect information...
-                Debug.Assert(ClrType.IsGenericType &&
+                Debug.Assert(
+                    ClrType.IsGenericType &&
                     typeof(IGrouping<,>).Equals(ClrType.GetGenericTypeDefinition()));
                 Debug.Assert(propertyTranslatorResults.Count == 2);
-                Type keyType = this.ClrType.GetGenericArguments()[0];
-                Type groupElementType = this.ClrType.GetGenericArguments()[1];
-                Type groupType = typeof(Grouping<,>).MakeGenericType(keyType, groupElementType);
-                ConstructorInfo constructor = groupType.GetConstructors().Single();
+                var keyType = ClrType.GetGenericArguments()[0];
+                var groupElementType = ClrType.GetGenericArguments()[1];
+                var groupType = typeof(Grouping<,>).MakeGenericType(keyType, groupElementType);
+                var constructor = groupType.GetConstructors().Single();
 
                 // new Grouping<K, T>(children[0], children[1])
-                Expression newGrouping = Expression.Convert(Expression.New(constructor, GetPropertyReaders(propertyTranslatorResults)), this.ClrType);
+                Expression newGrouping = Expression.Convert(
+                    Expression.New(constructor, GetPropertyReaders(propertyTranslatorResults)), ClrType);
 
                 return newGrouping;
             }
@@ -227,10 +245,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
             internal override IEnumerable<Type> GetChildTypes()
             {
                 // Collect information...
-                Debug.Assert(ClrType.IsGenericType &&
+                Debug.Assert(
+                    ClrType.IsGenericType &&
                     typeof(IGrouping<,>).Equals(ClrType.GetGenericTypeDefinition()));
-                Type keyType = this.ClrType.GetGenericArguments()[0];
-                Type groupElementType = this.ClrType.GetGenericArguments()[1];
+                var keyType = ClrType.GetGenericArguments()[0];
+                var groupElementType = ClrType.GetGenericArguments()[1];
 
                 // key
                 yield return keyType;
@@ -253,31 +272,37 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             private readonly NewExpression _newExpression;
 
-            internal override InitializerMetadataKind Kind { get { return InitializerMetadataKind.ProjectionNew; } }
+            internal override InitializerMetadataKind Kind
+            {
+                get { return InitializerMetadataKind.ProjectionNew; }
+            }
 
             protected override bool IsStructurallyEquivalent(InitializerMetadata other)
-            {                
+            {
                 // caller must ensure the type matches                
-                ProjectionNewMetadata otherProjection = (ProjectionNewMetadata)other;
-                if (this._newExpression.Members == null && otherProjection._newExpression.Members == null)
+                var otherProjection = (ProjectionNewMetadata)other;
+                if (_newExpression.Members == null
+                    && otherProjection._newExpression.Members == null)
                 {
                     return true;
                 }
 
-                if (this._newExpression.Members == null || otherProjection._newExpression.Members == null)
+                if (_newExpression.Members == null
+                    || otherProjection._newExpression.Members == null)
                 {
                     return false;
                 }
 
-                if (this._newExpression.Members.Count != otherProjection._newExpression.Members.Count)
+                if (_newExpression.Members.Count
+                    != otherProjection._newExpression.Members.Count)
                 {
                     return false;
                 }
 
-                for (int i = 0; i < this._newExpression.Members.Count; i++)
+                for (var i = 0; i < _newExpression.Members.Count; i++)
                 {
-                    MemberInfo thisMember = this._newExpression.Members[i];
-                    MemberInfo otherMember = otherProjection._newExpression.Members[i];
+                    var thisMember = _newExpression.Members[i];
+                    var otherMember = otherProjection._newExpression.Members[i];
                     if (!thisMember.Equals(otherMember))
                     {
                         return false;
@@ -293,7 +318,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 // _newExpression(children)
 
                 // (ClrType)null
-                Expression nullProjection = Expression.Constant(null, this.ClrType);
+                Expression nullProjection = Expression.Constant(null, ClrType);
 
                 // _newExpression with members rebound
                 Expression newProjection = Expression.New(_newExpression.Constructor, GetPropertyReaders(propertyTranslatorResults));
@@ -326,11 +351,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 : base(newExpression)
             {
             }
+
             internal override Expression Emit(Translator translator, List<TranslatorResult> propertyReaders)
             {
                 // ignore sentinel column
                 return base.Emit(translator, new List<TranslatorResult>());
             }
+
             internal override IEnumerable<Type> GetChildTypes()
             {
                 // ignore sentinel column
@@ -352,21 +379,25 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             private readonly MemberInitExpression _initExpression;
 
-            internal override InitializerMetadataKind Kind { get { return InitializerMetadataKind.ProjectionInitializer; } }
+            internal override InitializerMetadataKind Kind
+            {
+                get { return InitializerMetadataKind.ProjectionInitializer; }
+            }
 
             protected override bool IsStructurallyEquivalent(InitializerMetadata other)
             {
                 // caller must ensure the type matches
-                ProjectionInitializerMetadata otherProjection = (ProjectionInitializerMetadata)other;
-                if (this._initExpression.Bindings.Count != otherProjection._initExpression.Bindings.Count)
+                var otherProjection = (ProjectionInitializerMetadata)other;
+                if (_initExpression.Bindings.Count
+                    != otherProjection._initExpression.Bindings.Count)
                 {
                     return false;
                 }
 
-                for (int i = 0; i < this._initExpression.Bindings.Count; i++)
+                for (var i = 0; i < _initExpression.Bindings.Count; i++)
                 {
-                    MemberBinding thisBinding = this._initExpression.Bindings[i];
-                    MemberBinding otherBinding = otherProjection._initExpression.Bindings[i];
+                    var thisBinding = _initExpression.Bindings[i];
+                    var otherBinding = otherProjection._initExpression.Bindings[i];
                     if (!thisBinding.Member.Equals(otherBinding.Member))
                     {
                         return false;
@@ -382,15 +413,16 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 // _initExpression(children)
 
                 // create member bindings (where values are taken from children)
-                MemberBinding[] memberBindings = new MemberBinding[_initExpression.Bindings.Count];
-                MemberBinding[] constantMemberBindings = new MemberBinding[memberBindings.Length];
-                for (int i = 0; i < memberBindings.Length; i++)
+                var memberBindings = new MemberBinding[_initExpression.Bindings.Count];
+                var constantMemberBindings = new MemberBinding[memberBindings.Length];
+                for (var i = 0; i < memberBindings.Length; i++)
                 {
-                    MemberBinding originalBinding = _initExpression.Bindings[i];
-                    Expression value = propertyReaders[i].UnwrappedExpression;
+                    var originalBinding = _initExpression.Bindings[i];
+                    var value = propertyReaders[i].UnwrappedExpression;
                     MemberBinding newBinding = Expression.Bind(originalBinding.Member, value);
-                    MemberBinding constantBinding = Expression.Bind(originalBinding.Member, Expression.Constant(
-                        TypeSystem.GetDefaultValue(value.Type), value.Type));
+                    MemberBinding constantBinding = Expression.Bind(
+                        originalBinding.Member, Expression.Constant(
+                            TypeSystem.GetDefaultValue(value.Type), value.Type));
                     memberBindings[i] = newBinding;
                     constantMemberBindings[i] = constantBinding;
                 }
@@ -439,7 +471,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             private readonly NavigationProperty _navigationProperty;
 
-            internal override InitializerMetadataKind Kind { get { return InitializerMetadataKind.EntityCollection; } }
+            internal override InitializerMetadataKind Kind
+            {
+                get { return InitializerMetadataKind.EntityCollection; }
+            }
 
             /// <summary>
             /// Make sure the other metadata instance generates the same property
@@ -449,36 +484,41 @@ namespace System.Data.Entity.Core.Objects.ELinq
             protected override bool IsStructurallyEquivalent(InitializerMetadata other)
             {
                 // caller must ensure the type matches
-                EntityCollectionInitializerMetadata otherInitializer = (EntityCollectionInitializerMetadata)other;
-                return this._navigationProperty.Equals(otherInitializer._navigationProperty);
+                var otherInitializer = (EntityCollectionInitializerMetadata)other;
+                return _navigationProperty.Equals(otherInitializer._navigationProperty);
             }
 
-            private static readonly MethodInfo s_createEntityCollectionMethod = typeof(EntityCollectionInitializerMetadata).GetMethod("CreateEntityCollection",
-                BindingFlags.Static | BindingFlags.Public);
+            private static readonly MethodInfo s_createEntityCollectionMethod =
+                typeof(EntityCollectionInitializerMetadata).GetMethod(
+                    "CreateEntityCollection",
+                    BindingFlags.Static | BindingFlags.Public);
 
             internal override Expression Emit(Translator translator, List<TranslatorResult> propertyTranslatorResults)
             {
                 Debug.Assert(propertyTranslatorResults.Count > 1, "no properties?");
                 Debug.Assert(propertyTranslatorResults[1] is CollectionTranslatorResult, "not a collection?");
 
-                Type elementType = GetElementType();
-                MethodInfo createEntityCollectionMethod = s_createEntityCollectionMethod.MakeGenericMethod(elementType);
+                var elementType = GetElementType();
+                var createEntityCollectionMethod = s_createEntityCollectionMethod.MakeGenericMethod(elementType);
 
                 Expression shaper = Translator.Shaper_Parameter;
-                Expression owner = propertyTranslatorResults[0].Expression;
+                var owner = propertyTranslatorResults[0].Expression;
 
-                CollectionTranslatorResult collectionResult = propertyTranslatorResults[1] as CollectionTranslatorResult;
+                var collectionResult = propertyTranslatorResults[1] as CollectionTranslatorResult;
 
-                Expression coordinator = collectionResult.ExpressionToGetCoordinator;
+                var coordinator = collectionResult.ExpressionToGetCoordinator;
 
                 // CreateEntityCollection(shaper, owner, elements, relationshipName, targetRoleName)
-                Expression result = Expression.Call(createEntityCollectionMethod,
-                    shaper, owner, coordinator, Expression.Constant(_navigationProperty.RelationshipType.FullName), Expression.Constant(_navigationProperty.ToEndMember.Name));
+                Expression result = Expression.Call(
+                    createEntityCollectionMethod,
+                    shaper, owner, coordinator, Expression.Constant(_navigationProperty.RelationshipType.FullName),
+                    Expression.Constant(_navigationProperty.ToEndMember.Name));
 
                 return result;
             }
 
-            public static EntityCollection<T> CreateEntityCollection<T>(IEntityWrapper wrappedOwner, Coordinator<T> coordinator, string relationshipName, string targetRoleName)
+            public static EntityCollection<T> CreateEntityCollection<T>(
+                IEntityWrapper wrappedOwner, Coordinator<T> coordinator, string relationshipName, string targetRoleName)
                 where T : class
             {
                 if (null == wrappedOwner.Entity)
@@ -487,7 +527,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
                 else
                 {
-                    EntityCollection<T> result = wrappedOwner.RelationshipManager.GetRelatedCollection<T>(relationshipName, targetRoleName);
+                    var result = wrappedOwner.RelationshipManager.GetRelatedCollection<T>(relationshipName, targetRoleName);
                     // register a handler for deferred loading (when the nested result has been consumed)
                     coordinator.RegisterCloseHandler((readerState, elements) => result.Load(elements, readerState.MergeOption));
                     return result;
@@ -496,11 +536,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             internal override IEnumerable<Type> GetChildTypes()
             {
-                Type elementType = GetElementType();
+                var elementType = GetElementType();
                 yield return null; // defer in determining entity type...
                 yield return typeof(IEnumerable<>).MakeGenericType(elementType);
             }
-
 
             internal override void AppendColumnMapKey(ColumnMapKeyBuilder builder)
             {
@@ -516,13 +555,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 Type elementType;
                 if (!EntityUtil.TryGetICollectionElementType(ClrType, out elementType))
                 {
-                    throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.ELinq_UnexpectedTypeForNavigationProperty(
-                        _navigationProperty,
-                        typeof(EntityCollection<>), typeof(ICollection<>),
-                        ClrType));
+                    throw EntityUtil.InvalidOperation(
+                        Strings.ELinq_UnexpectedTypeForNavigationProperty(
+                            _navigationProperty,
+                            typeof(EntityCollection<>), typeof(ICollection<>),
+                            ClrType));
                 }
                 return elementType;
-            }            
+            }
         }
     }
 

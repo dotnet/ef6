@@ -1,16 +1,16 @@
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using System.Data.Entity.Core.Common.Utils;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Linq;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
-    using DomainBoolExpr    = System.Data.Entity.Core.Common.Utils.Boolean.BoolExpr<System.Data.Entity.Core.Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Text;
+    using DomainBoolExpr =
+        System.Data.Entity.Core.Common.Utils.Boolean.BoolExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
 
     /// <summary>
     /// A class that denotes the boolean expression: "varType in values".
@@ -19,12 +19,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     internal class TypeRestriction : MemberRestriction
     {
         #region Constructors
+
         /// <summary>
         /// Creates an incomplete type restriction of the form "<paramref name="member"/> in <paramref name="values"/>".
         /// </summary>
         internal TypeRestriction(MemberPath member, IEnumerable<EdmType> values)
             : base(new MemberProjectedSlot(member), CreateTypeConstants(values))
-        { }
+        {
+        }
 
         /// <summary>
         /// Creates an incomplete type restriction of the form "<paramref name="member"/> = <paramref name="value"/>".
@@ -40,31 +42,34 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// </summary>
         internal TypeRestriction(MemberProjectedSlot slot, Domain domain)
             : base(slot, domain)
-        { }
+        {
+        }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Requires: <see cref="MemberRestriction.IsComplete"/> is true.
         /// </summary>
         internal override DomainBoolExpr FixRange(Set<Constant> range, MemberDomainMap memberDomainMap)
         {
             Debug.Assert(IsComplete, "Ranges are fixed only for complete type restrictions.");
-            IEnumerable<Constant> possibleValues = memberDomainMap.GetDomain(RestrictedMemberSlot.MemberPath);
+            var possibleValues = memberDomainMap.GetDomain(RestrictedMemberSlot.MemberPath);
             BoolLiteral newLiteral = new TypeRestriction(RestrictedMemberSlot, new Domain(range, possibleValues));
             return newLiteral.GetDomainBoolExpression(memberDomainMap);
         }
 
         internal override BoolLiteral RemapBool(Dictionary<MemberPath, MemberPath> remap)
         {
-            MemberProjectedSlot newVar = (MemberProjectedSlot)this.RestrictedMemberSlot.RemapSlot(remap);
-            return new TypeRestriction(newVar, this.Domain);
+            var newVar = RestrictedMemberSlot.RemapSlot(remap);
+            return new TypeRestriction(newVar, Domain);
         }
 
         internal override MemberRestriction CreateCompleteMemberRestriction(IEnumerable<Constant> possibleValues)
         {
-            Debug.Assert(!this.IsComplete, "CreateCompleteMemberRestriction must be called only for incomplete restrictions.");
-            return new TypeRestriction(this.RestrictedMemberSlot, new Domain(this.Domain.Values, possibleValues));
+            Debug.Assert(!IsComplete, "CreateCompleteMemberRestriction must be called only for incomplete restrictions.");
+            return new TypeRestriction(RestrictedMemberSlot, new Domain(Domain.Values, possibleValues));
         }
 
         internal override StringBuilder AsEsql(StringBuilder builder, string blockAlias, bool skipIsNotNull)
@@ -72,15 +77,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             // Add Cql of the form "(T.A IS OF (ONLY Person) OR .....)"
 
             // Important to enclose all the OR statements in parens.
-            if (this.Domain.Count > 1)
+            if (Domain.Count > 1)
             {
                 builder.Append('(');
             }
 
-            bool isFirst = true;
-            foreach (Constant constant in this.Domain.Values)
+            var isFirst = true;
+            foreach (var constant in Domain.Values)
             {
-                TypeConstant typeConstant = constant as TypeConstant;
+                var typeConstant = constant as TypeConstant;
                 Debug.Assert(typeConstant != null || constant.IsNull(), "Constants for type checks must be type constants or NULLs");
 
                 if (isFirst == false)
@@ -88,16 +93,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                     builder.Append(" OR ");
                 }
                 isFirst = false;
-                if (Helper.IsRefType(this.RestrictedMemberSlot.MemberPath.EdmType))
+                if (Helper.IsRefType(RestrictedMemberSlot.MemberPath.EdmType))
                 {
                     builder.Append("Deref(");
-                    this.RestrictedMemberSlot.MemberPath.AsEsql(builder, blockAlias);
+                    RestrictedMemberSlot.MemberPath.AsEsql(builder, blockAlias);
                     builder.Append(')');
                 }
                 else
                 {
                     // non-reference type
-                    this.RestrictedMemberSlot.MemberPath.AsEsql(builder, blockAlias);
+                    RestrictedMemberSlot.MemberPath.AsEsql(builder, blockAlias);
                 }
                 if (constant.IsNull())
                 {
@@ -122,22 +127,22 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         internal override DbExpression AsCqt(DbExpression row, bool skipIsNotNull)
         {
-            DbExpression cqt = this.RestrictedMemberSlot.MemberPath.AsCqt(row);
+            var cqt = RestrictedMemberSlot.MemberPath.AsCqt(row);
 
-            if (Helper.IsRefType(this.RestrictedMemberSlot.MemberPath.EdmType))
+            if (Helper.IsRefType(RestrictedMemberSlot.MemberPath.EdmType))
             {
                 cqt = cqt.Deref();
             }
 
-            if (this.Domain.Count == 1)
+            if (Domain.Count == 1)
             {
                 // Single value
-                cqt = cqt.IsOfOnly(TypeUsage.Create(((TypeConstant)this.Domain.Values.Single()).EdmType));
+                cqt = cqt.IsOfOnly(TypeUsage.Create(((TypeConstant)Domain.Values.Single()).EdmType));
             }
             else
             {
                 // Multiple values: build list of var IsOnOnly(t1), var = IsOnOnly(t1), ..., then OR them all.
-                List<DbExpression> operands = this.Domain.Values.Select(t => (DbExpression)cqt.IsOfOnly(TypeUsage.Create(((TypeConstant)t).EdmType))).ToList();
+                var operands = Domain.Values.Select(t => (DbExpression)cqt.IsOfOnly(TypeUsage.Create(((TypeConstant)t).EdmType))).ToList();
                 cqt = Helpers.BuildBalancedTreeInPlace(operands, (prev, next) => prev.Or(next));
             }
 
@@ -169,10 +174,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 builder.Append(" is type ");
             }
 
-            bool isFirst = true;
-            foreach (Constant constant in Domain.Values)
+            var isFirst = true;
+            foreach (var constant in Domain.Values)
             {
-                TypeConstant typeConstant = constant as TypeConstant;
+                var typeConstant = constant as TypeConstant;
                 Debug.Assert(typeConstant != null || constant.IsNull(), "Constants for type checks must be type constants or NULLs");
 
                 if (isFirst == false)
@@ -204,7 +209,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// </summary>
         private static IEnumerable<Constant> CreateTypeConstants(IEnumerable<EdmType> types)
         {
-            foreach (EdmType type in types)
+            foreach (var type in types)
             {
                 if (type == null)
                 {
@@ -216,9 +221,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 }
             }
         }
+
         #endregion
 
         #region String methods
+
         internal override void ToCompactString(StringBuilder builder)
         {
             builder.Append("type(");
@@ -227,6 +234,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             StringUtil.ToCommaSeparatedStringSorted(builder, Domain.Values);
             builder.Append(")");
         }
+
         #endregion
     }
 }

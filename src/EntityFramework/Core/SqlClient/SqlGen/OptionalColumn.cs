@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.SqlClient.SqlGen
 {
     /// <summary>
@@ -13,6 +9,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
     internal sealed class OptionalColumn
     {
         #region Private State
+
         private readonly SymbolUsageManager m_usageManager;
 
         // The SqlBuilder that contains the column building blocks (e.g: "c.X as X1")
@@ -20,9 +17,11 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
         // The symbol representing the optional column
         private readonly Symbol m_symbol;
+
         #endregion
 
         #region Internal Methods
+
         /// <summary>
         /// Append to the "fragment" representing this column
         /// </summary>
@@ -33,16 +32,19 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
         internal void MarkAsUsed()
         {
-            this.m_usageManager.MarkAsUsed(this.m_symbol);
+            m_usageManager.MarkAsUsed(m_symbol);
         }
+
         #endregion
 
         #region Constructor
+
         internal OptionalColumn(SymbolUsageManager usageManager, Symbol symbol)
         {
-            this.m_usageManager = usageManager;
-            this.m_symbol = symbol;
+            m_usageManager = usageManager;
+            m_symbol = symbol;
         }
+
         #endregion
 
         #region Internal members
@@ -63,6 +65,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             }
             return false;
         }
+
         #endregion
     }
 }

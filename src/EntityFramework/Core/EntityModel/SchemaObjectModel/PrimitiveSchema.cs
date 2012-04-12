@@ -1,9 +1,8 @@
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Common;
-    using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Linq;
     using System.Xml;
 
@@ -17,26 +16,29 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Schema = this;
 
-            DbProviderManifest providerManifest = ProviderManifest;
+            var providerManifest = ProviderManifest;
             if (providerManifest == null)
             {
-                AddError(new EdmSchemaError(System.Data.Entity.Resources.Strings.FailedToRetrieveProviderManifest,
-                                                   (int)ErrorCode.FailedToRetrieveProviderManifest,
-                                                   EdmSchemaErrorSeverity.Error));
+                AddError(
+                    new EdmSchemaError(
+                        Strings.FailedToRetrieveProviderManifest,
+                        (int)ErrorCode.FailedToRetrieveProviderManifest,
+                        EdmSchemaErrorSeverity.Error));
             }
             else
             {
                 IList<PrimitiveType> primitiveTypes = providerManifest.GetStoreTypes();
 
                 // EDM Spatial types are only available to V3 and above CSDL.
-                if (schemaManager.DataModel == SchemaDataModelOption.EntityDataModel &&
+                if (schemaManager.DataModel == SchemaDataModelOption.EntityDataModel
+                    &&
                     schemaManager.SchemaVersion < XmlConstants.EdmVersionForV3)
                 {
                     primitiveTypes = primitiveTypes.Where(t => !Helper.IsSpatialType(t))
-                                                   .ToList();
+                        .ToList();
                 }
 
-                foreach (PrimitiveType entry in primitiveTypes)
+                foreach (var entry in primitiveTypes)
                 {
                     TryAddType(new ScalarType(this, entry.Name, entry), false /*doNotAddErrorForEmptyName*/);
                 }
@@ -49,10 +51,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         internal override string Alias
         {
-            get
-            {
-                return ProviderManifest.NamespaceName;
-            }
+            get { return ProviderManifest.NamespaceName; }
         }
 
         /// <summary>

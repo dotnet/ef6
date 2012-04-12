@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace System.Data.Entity.Core.SqlClient.SqlGen
+﻿namespace System.Data.Entity.Core.SqlClient.SqlGen
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Used for wrapping a boolean value as an object.
     /// </summary>
     internal class BoolWrapper
     {
-        internal bool Value {get; set;}
+        internal bool Value { get; set; }
 
         internal BoolWrapper()
         {
-            this.Value = false;
+            Value = false;
         }
     }
 
@@ -47,11 +46,12 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         internal void Add(Symbol sourceSymbol, Symbol symbolToAdd)
         {
             BoolWrapper wrapper;
-            if (sourceSymbol == null || !this.optionalColumnUsage.TryGetValue(sourceSymbol, out wrapper))
+            if (sourceSymbol == null
+                || !optionalColumnUsage.TryGetValue(sourceSymbol, out wrapper))
             {
                 wrapper = new BoolWrapper();
             }
-            this.optionalColumnUsage.Add(symbolToAdd, wrapper);
+            optionalColumnUsage.Add(symbolToAdd, wrapper);
         }
 
         internal void MarkAsUsed(Symbol key)

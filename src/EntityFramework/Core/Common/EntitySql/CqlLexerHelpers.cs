@@ -1,13 +1,11 @@
 namespace System.Data.Entity.Core.Common.EntitySql
 {
-    using System;
-    using System.Data.Entity.Resources;
-    using System.Globalization;
     using System.Collections.Generic;
-    using System.Text.RegularExpressions;
+    using System.Data.Entity.Core.Common.EntitySql.AST;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
-    using System.Text;
-    using System.Data.Entity;
+    using System.IO;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     /// Represents eSQL error context.
@@ -40,36 +38,44 @@ namespace System.Data.Entity.Core.Common.EntitySql
     /// </summary>
     internal sealed partial class CqlLexer
     {
-        static readonly StringComparer _stringComparer = StringComparer.OrdinalIgnoreCase;
-        static Dictionary<string, short> _keywords;
-        static HashSet<string> _invalidAliasNames;
-        static HashSet<string> _invalidInlineFunctionNames;
-        static Dictionary<string, short> _operators;
-        static Dictionary<string, short> _punctuators;
-        static HashSet<string> _canonicalFunctionNames;
-        static Regex _reDateTimeValue;
-        static Regex _reTimeValue;
-        static Regex _reDateTimeOffsetValue;
-        private const string _datetimeValueRegularExpression = @"^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}([ ])+[0-9]{1,2}:[0-9]{1,2}(:[0-9]{1,2}(\.[0-9]{1,7})?)?$";
+        private static readonly StringComparer _stringComparer = StringComparer.OrdinalIgnoreCase;
+        private static Dictionary<string, short> _keywords;
+        private static HashSet<string> _invalidAliasNames;
+        private static HashSet<string> _invalidInlineFunctionNames;
+        private static Dictionary<string, short> _operators;
+        private static Dictionary<string, short> _punctuators;
+        private static HashSet<string> _canonicalFunctionNames;
+        private static Regex _reDateTimeValue;
+        private static Regex _reTimeValue;
+        private static Regex _reDateTimeOffsetValue;
+
+        private const string _datetimeValueRegularExpression =
+            @"^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}([ ])+[0-9]{1,2}:[0-9]{1,2}(:[0-9]{1,2}(\.[0-9]{1,7})?)?$";
+
         private const string _timeValueRegularExpression = @"^[0-9]{1,2}:[0-9]{1,2}(:[0-9]{1,2}(\.[0-9]{1,7})?)?$";
-        private const string _datetimeOffsetValueRegularExpression = @"^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}([ ])+[0-9]{1,2}:[0-9]{1,2}(:[0-9]{1,2}(\.[0-9]{1,7})?)?([ ])*[\+-][0-9]{1,2}:[0-9]{1,2}$";
+
+        private const string _datetimeOffsetValueRegularExpression =
+            @"^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}([ ])+[0-9]{1,2}:[0-9]{1,2}(:[0-9]{1,2}(\.[0-9]{1,7})?)?([ ])*[\+-][0-9]{1,2}:[0-9]{1,2}$";
 
         private int _iPos;
         private int _lineNumber;
-        ParserOptions _parserOptions;
-        private string _query;
+        private ParserOptions _parserOptions;
+        private readonly string _query;
+
         /// <summary>
         /// set for DOT expressions
         /// </summary>
-        private bool _symbolAsIdentifierState = false;
+        private bool _symbolAsIdentifierState;
+
         /// <summary>
         /// set for AS expressions
         /// </summary>
-        private bool _symbolAsAliasIdentifierState = false;
+        private bool _symbolAsAliasIdentifierState;
+
         /// <summary>
         /// set for function definitions
         /// </summary>
-        private bool _symbolAsInlineFunctionNameState = false;
+        private bool _symbolAsInlineFunctionNameState;
 
         /// Defines the set of characters to be interpreted as mandatory line breaks
         /// according to UNICODE 5.0, section 5.8 Newline Guidelines.These are 'mandatory' 
@@ -80,12 +86,13 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// the start of the next line of query text. 
         /// NOTE that CR and CRLF is treated as a composite 'character' and was obviously and intentionaly 
         /// omitted in the character set bellow.
-        static readonly Char[] _newLineCharacters = { '\u000A' , // LF - line feed
-                                                      '\u0085' , // NEL - next line
-                                                      '\u000B' , // VT - vertical tab
-                                                      '\u2028' , // LS - line separator
-                                                      '\u2029'   // PS - paragraph separator
-                                                    };
+        private static readonly Char[] _newLineCharacters = {
+                                                                '\u000A', // LF - line feed
+                                                                '\u0085', // NEL - next line
+                                                                '\u000B', // VT - vertical tab
+                                                                '\u2028', // LS - line separator
+                                                                '\u2029' // PS - paragraph separator
+                                                            };
 
         /// <summary>
         /// Intializes scanner
@@ -100,7 +107,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             _query = query;
             _parserOptions = parserOptions;
-            yy_reader = new System.IO.StringReader(_query);
+            yy_reader = new StringReader(_query);
         }
 
         /// <summary>
@@ -109,7 +116,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <param name="tokenId">tokenid</param>
         /// <param name="tokenvalue">ast node</param>
         /// <returns></returns>
-        static internal Token NewToken(short tokenId, AST.Node tokenvalue)
+        internal static Token NewToken(short tokenId, Node tokenvalue)
         {
             return new Token(tokenId, tokenvalue);
         }
@@ -120,7 +127,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <param name="tokenId">tokenid</param>
         /// <param name="termToken">lexical value</param>
         /// <returns></returns>
-        static internal Token NewToken(short tokenId, TerminalToken termToken)
+        internal static Token NewToken(short tokenId, TerminalToken termToken)
         {
             return new Token(tokenId, termToken);
         }
@@ -130,10 +137,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         internal class Token
         {
-            private short _tokenId;
-            private object _tokenValue;
+            private readonly short _tokenId;
+            private readonly object _tokenValue;
 
-            internal Token(short tokenId, AST.Node tokenValue)
+            internal Token(short tokenId, Node tokenValue)
             {
                 _tokenId = tokenId;
                 _tokenValue = tokenValue;
@@ -161,8 +168,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         internal class TerminalToken
         {
-            string _token;
-            int _iPos;
+            private readonly string _token;
+            private readonly int _iPos;
 
             internal TerminalToken(string token, int iPos)
             {
@@ -184,9 +191,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
         internal static class yy_translate
         {
             internal static char translate(char c)
-            #region TRANSLATE
+
+                #region TRANSLATE
+
             {
-                if (Char.IsWhiteSpace(c) || Char.IsControl(c))
+                if (Char.IsWhiteSpace(c)
+                    || Char.IsControl(c))
                 {
                     if (IsNewLine(c))
                     {
@@ -200,7 +210,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     return c;
                 }
 
-                if (Char.IsLetter(c) || Char.IsSymbol(c) || Char.IsNumber(c))
+                if (Char.IsLetter(c) || Char.IsSymbol(c)
+                    || Char.IsNumber(c))
                 {
                     return 'a';
                 }
@@ -210,9 +221,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 // 
                 return '`';
             }
+
             #endregion
         }
-
 
         /// <summary>
         /// Returns current lexeme
@@ -247,7 +258,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <returns></returns>
         internal static bool IsReservedKeyword(string term)
         {
-            return CqlLexer.InternalKeywordDictionary.ContainsKey(term);
+            return InternalKeywordDictionary.ContainsKey(term);
         }
 
         /// <summary>
@@ -336,21 +347,23 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         #region MapIdentifierOrKeyword implementation details
+
         private bool IsEscapedIdentifier(string symbol, out Token identifierToken)
         {
-            if (symbol.Length > 1 && symbol[0] == '[')
+            if (symbol.Length > 1
+                && symbol[0] == '[')
             {
                 if (symbol[symbol.Length - 1] == ']')
                 {
-                    string name = symbol.Substring(1, symbol.Length - 2);
-                    AST.Identifier id = new AST.Identifier(name, true, _query, _iPos);
+                    var name = symbol.Substring(1, symbol.Length - 2);
+                    var id = new Identifier(name, true, _query, _iPos);
                     id.ErrCtx.ErrorContextInfo = EntityRes.CtxEscapedIdentifier;
                     identifierToken = NewToken(CqlParser.ESCAPED_IDENTIFIER, id);
                     return true;
                 }
                 else
                 {
-                    throw EntityUtil.EntitySqlError(_query, System.Data.Entity.Resources.Strings.InvalidEscapedIdentifier(symbol), _iPos);
+                    throw EntityUtil.EntitySqlError(_query, Strings.InvalidEscapedIdentifier(symbol), _iPos);
                 }
             }
             else
@@ -362,15 +375,16 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         private bool IsKeyword(string symbol, out Token terminalToken)
         {
-            Char lookAheadChar = GetLookAheadChar();
+            var lookAheadChar = GetLookAheadChar();
 
             if (!IsInSymbolAsIdentifierState(lookAheadChar) &&
-                !IsCanonicalFunctionCall(symbol, lookAheadChar) &&
-                CqlLexer.InternalKeywordDictionary.ContainsKey(symbol))
+                !IsCanonicalFunctionCall(symbol, lookAheadChar)
+                &&
+                InternalKeywordDictionary.ContainsKey(symbol))
             {
                 ResetSymbolAsIdentifierState(true);
 
-                short keywordID = CqlLexer.InternalKeywordDictionary[symbol];
+                var keywordID = InternalKeywordDictionary[symbol];
 
                 if (keywordID == CqlParser.AS)
                 {
@@ -406,27 +420,27 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         private bool IsCanonicalFunctionCall(string symbol, Char lookAheadChar)
         {
-            return lookAheadChar == '(' && CqlLexer.InternalCanonicalFunctionNames.Contains(symbol);
+            return lookAheadChar == '(' && InternalCanonicalFunctionNames.Contains(symbol);
         }
 
         private Token MapUnescapedIdentifier(string symbol)
         {
             // Validate before calling ResetSymbolAsIdentifierState(...) because it will reset _symbolAsInlineFunctionNameState
-            bool invalidIdentifier = CqlLexer.InternalInvalidAliasNames.Contains(symbol);
+            var invalidIdentifier = InternalInvalidAliasNames.Contains(symbol);
             if (_symbolAsInlineFunctionNameState)
             {
-                invalidIdentifier |= CqlLexer.InternalInvalidInlineFunctionNames.Contains(symbol);
+                invalidIdentifier |= InternalInvalidInlineFunctionNames.Contains(symbol);
             }
 
             ResetSymbolAsIdentifierState(true);
 
             if (invalidIdentifier)
             {
-                throw EntityUtil.EntitySqlError(_query, System.Data.Entity.Resources.Strings.InvalidAliasName(symbol), _iPos);
+                throw EntityUtil.EntitySqlError(_query, Strings.InvalidAliasName(symbol), _iPos);
             }
             else
             {
-                AST.Identifier id = new AST.Identifier(symbol, false, _query, _iPos);
+                var id = new Identifier(symbol, false, _query, _iPos);
                 id.ErrCtx.ErrorContextInfo = EntityRes.CtxIdentifier;
                 return NewToken(CqlParser.IDENTIFIER, id);
             }
@@ -438,8 +452,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private Char GetLookAheadChar()
         {
             yy_mark_end();
-            Char lookAheadChar = yy_advance();
-            while (lookAheadChar != YY_EOF && (Char.IsWhiteSpace(lookAheadChar) || IsNewLine(lookAheadChar)))
+            var lookAheadChar = yy_advance();
+            while (lookAheadChar != YY_EOF
+                   && (Char.IsWhiteSpace(lookAheadChar) || IsNewLine(lookAheadChar)))
             {
                 lookAheadChar = yy_advance();
             }
@@ -470,6 +485,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 _symbolAsInlineFunctionNameState = false;
             }
         }
+
         #endregion
 
         /// <summary>
@@ -485,7 +501,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
             else
             {
-                throw EntityUtil.EntitySqlError(_query, System.Data.Entity.Resources.Strings.InvalidOperatorSymbol, _iPos);
+                throw EntityUtil.EntitySqlError(_query, Strings.InvalidOperatorSymbol, _iPos);
             }
         }
 
@@ -509,7 +525,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
             else
             {
-                throw EntityUtil.EntitySqlError(_query, System.Data.Entity.Resources.Strings.InvalidPunctuatorSymbol, _iPos);
+                throw EntityUtil.EntitySqlError(_query, Strings.InvalidPunctuatorSymbol, _iPos);
             }
         }
 
@@ -525,7 +541,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             // In this case identifiers delimited by double quotation marks can be either eSQL reserved keywords
             // or can contain characters not usually allowed by the eSQL syntax rules for identifiers, 
             // so identifiers mapped here should be treated as escaped identifiers.
-            return NewLiteralToken(symbol, AST.LiteralKind.String);
+            return NewLiteralToken(symbol, LiteralKind.String);
         }
 
         /// <summary>
@@ -534,62 +550,62 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <param name="literal">literal</param>
         /// <param name="literalKind">literal kind</param>
         /// <returns>Literal Token</returns>
-        internal Token NewLiteralToken(string literal, AST.LiteralKind literalKind)
+        internal Token NewLiteralToken(string literal, LiteralKind literalKind)
         {
             Debug.Assert(!String.IsNullOrEmpty(literal), "literal must not be null or empty");
-            Debug.Assert(literalKind != AST.LiteralKind.Null, "literalKind must not be LiteralKind.Null");
+            Debug.Assert(literalKind != LiteralKind.Null, "literalKind must not be LiteralKind.Null");
 
-            string literalValue = literal;
+            var literalValue = literal;
             switch (literalKind)
             {
-                case AST.LiteralKind.Binary:
+                case LiteralKind.Binary:
                     literalValue = GetLiteralSingleQuotePayload(literal);
                     if (!IsValidBinaryValue(literalValue))
                     {
-                        throw EntityUtil.EntitySqlError(_query, System.Data.Entity.Resources.Strings.InvalidLiteralFormat("binary", literalValue), _iPos);
+                        throw EntityUtil.EntitySqlError(_query, Strings.InvalidLiteralFormat("binary", literalValue), _iPos);
                     }
                     break;
 
-                case AST.LiteralKind.String:
+                case LiteralKind.String:
                     if ('N' == literal[0])
                     {
-                        literalKind = AST.LiteralKind.UnicodeString;
+                        literalKind = LiteralKind.UnicodeString;
                     }
                     break;
 
-                case AST.LiteralKind.DateTime:
+                case LiteralKind.DateTime:
                     literalValue = GetLiteralSingleQuotePayload(literal);
                     if (!IsValidDateTimeValue(literalValue))
                     {
-                        throw EntityUtil.EntitySqlError(_query, System.Data.Entity.Resources.Strings.InvalidLiteralFormat("datetime", literalValue), _iPos);
+                        throw EntityUtil.EntitySqlError(_query, Strings.InvalidLiteralFormat("datetime", literalValue), _iPos);
                     }
                     break;
 
-                case AST.LiteralKind.Time:
+                case LiteralKind.Time:
                     literalValue = GetLiteralSingleQuotePayload(literal);
                     if (!IsValidTimeValue(literalValue))
                     {
-                        throw EntityUtil.EntitySqlError(_query, System.Data.Entity.Resources.Strings.InvalidLiteralFormat("time", literalValue), _iPos);
+                        throw EntityUtil.EntitySqlError(_query, Strings.InvalidLiteralFormat("time", literalValue), _iPos);
                     }
                     break;
-                case AST.LiteralKind.DateTimeOffset:
+                case LiteralKind.DateTimeOffset:
                     literalValue = GetLiteralSingleQuotePayload(literal);
                     if (!IsValidDateTimeOffsetValue(literalValue))
                     {
-                        throw EntityUtil.EntitySqlError(_query, System.Data.Entity.Resources.Strings.InvalidLiteralFormat("datetimeoffset", literalValue), _iPos);
+                        throw EntityUtil.EntitySqlError(_query, Strings.InvalidLiteralFormat("datetimeoffset", literalValue), _iPos);
                     }
                     break;
 
-                case AST.LiteralKind.Guid:
+                case LiteralKind.Guid:
                     literalValue = GetLiteralSingleQuotePayload(literal);
                     if (!IsValidGuidValue(literalValue))
                     {
-                        throw EntityUtil.EntitySqlError(_query, System.Data.Entity.Resources.Strings.InvalidLiteralFormat("guid", literalValue), _iPos);
+                        throw EntityUtil.EntitySqlError(_query, Strings.InvalidLiteralFormat("guid", literalValue), _iPos);
                     }
                     break;
             }
 
-            return NewToken(CqlParser.LITERAL, new AST.Literal(literalValue, literalKind, _query, _iPos));
+            return NewToken(CqlParser.LITERAL, new Literal(literalValue, literalKind, _query, _iPos));
         }
 
         /// <summary>
@@ -599,7 +615,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <returns>Parameter Token</returns>
         internal Token NewParameterToken(string param)
         {
-            return NewToken(CqlParser.PARAMETER, new AST.QueryParameter(param, _query, _iPos));
+            return NewToken(CqlParser.PARAMETER, new QueryParameter(param, _query, _iPos));
         }
 
         /// <summary>
@@ -608,7 +624,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         internal Token HandleEscapedIdentifiers()
         {
-            char ch = YYText[0];
+            var ch = YYText[0];
             while (ch != YY_EOF)
             {
                 if (ch == ']')
@@ -625,16 +641,17 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 ch = yy_advance();
             }
             Debug.Assert(ch == YY_EOF, "ch == YY_EOF");
-            throw EntityUtil.EntitySqlError(_query, System.Data.Entity.Resources.Strings.InvalidEscapedIdentifierUnbalanced(YYText), _iPos);
+            throw EntityUtil.EntitySqlError(_query, Strings.InvalidEscapedIdentifierUnbalanced(YYText), _iPos);
         }
 
         internal static bool IsLetterOrDigitOrUnderscore(string symbol, out bool isIdentifierASCII)
         {
             isIdentifierASCII = true;
-            for (int i = 0; i < symbol.Length; i++)
+            for (var i = 0; i < symbol.Length; i++)
             {
                 isIdentifierASCII = isIdentifierASCII && symbol[i] < 0x80;
-                if (!isIdentifierASCII && !IsLetter(symbol[i]) && !IsDigit(symbol[i]) && (symbol[i] != '_'))
+                if (!isIdentifierASCII && !IsLetter(symbol[i]) && !IsDigit(symbol[i])
+                    && (symbol[i] != '_'))
                 {
                     return false;
                 }
@@ -667,7 +684,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <returns></returns>
         internal static bool IsNewLine(Char c)
         {
-            for (int i = 0; i < _newLineCharacters.Length; i++)
+            for (var i = 0; i < _newLineCharacters.Length; i++)
             {
                 if (c == _newLineCharacters[i])
                 {
@@ -687,19 +704,20 @@ namespace System.Data.Entity.Core.Common.EntitySql
             Debug.Assert(-1 != literal.IndexOf('\''), "quoted literal value must have single quotes");
             Debug.Assert(-1 != literal.LastIndexOf('\''), "quoted literal value must have single quotes");
             Debug.Assert(literal.IndexOf('\'') != literal.LastIndexOf('\''), "quoted literal value must have 2 single quotes");
-            Debug.Assert(literal.Split(new char[] { '\'' }).Length == 3, "quoted literal value must have 2 single quotes");
+            Debug.Assert(literal.Split(new[] { '\'' }).Length == 3, "quoted literal value must have 2 single quotes");
 
             // NOTE: this is not a precondition validation. This validation is for security purposes based on the 
             // paranoid assumption that all input is evil. we should not see this exception under normal 
             // conditions.
-            if ((literal.Split(new char[] { '\'' }).Length != 3) || (-1 == literal.IndexOf('\'')) || (-1 == literal.LastIndexOf('\'')))
+            if ((literal.Split(new[] { '\'' }).Length != 3) || (-1 == literal.IndexOf('\''))
+                || (-1 == literal.LastIndexOf('\'')))
             {
-                throw EntityUtil.EntitySqlError(System.Data.Entity.Resources.Strings.MalformedSingleQuotePayload);
+                throw EntityUtil.EntitySqlError(Strings.MalformedSingleQuotePayload);
             }
 
-            int startIndex = literal.IndexOf('\'');
+            var startIndex = literal.IndexOf('\'');
 
-            string literalPayload = literal.Substring(startIndex + 1, literal.Length - (startIndex + 2));
+            var literalPayload = literal.Substring(startIndex + 1, literal.Length - (startIndex + 2));
 
             Debug.Assert(literalPayload.IndexOf('\'') == -1, "quoted literal payload must not have single quotes");
             Debug.Assert(literalPayload.LastIndexOf('\'') == -1, "quoted literal payload must not have single quotes");
@@ -707,9 +725,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             // NOTE: this is not a precondition validation. This validation is for security purposes based on the 
             // paranoid assumption that all input is evil. we should not see this exception under normal 
             // conditions.
-            if (literalPayload.Split(new char[] { '\'' }).Length != 1)
+            if (literalPayload.Split(new[] { '\'' }).Length != 1)
             {
-                throw EntityUtil.EntitySqlError(System.Data.Entity.Resources.Strings.MalformedSingleQuotePayload);
+                throw EntityUtil.EntitySqlError(Strings.MalformedSingleQuotePayload);
             }
 
             return literalPayload;
@@ -722,18 +740,19 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <returns></returns>
         private static bool IsValidGuidValue(string guidValue)
         {
-            int startIndex = 0;
-            int endIndex = guidValue.Length - 1;
+            var startIndex = 0;
+            var endIndex = guidValue.Length - 1;
             if ((endIndex - startIndex) + 1 != 36)
             {
                 return false;
             }
 
-            int i = 0;
-            bool bValid = true;
+            var i = 0;
+            var bValid = true;
             while (bValid && i < 36)
             {
-                if ((i == 8) || (i == 13) || (i == 18) || (i == 23))
+                if ((i == 8) || (i == 13) || (i == 18)
+                    || (i == 23))
                 {
                     bValid = (guidValue[startIndex + i] == '-');
                 }
@@ -760,8 +779,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 return true;
             }
 
-            int i = 0;
-            bool bValid = binaryValue.Length > 0;
+            var i = 0;
+            var bValid = binaryValue.Length > 0;
             while (bValid && i < binaryValue.Length)
             {
                 bValid = isHexDigit(binaryValue[i++]);
@@ -813,7 +832,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         {
             if (null == _reDateTimeOffsetValue)
             {
-                _reDateTimeOffsetValue = new Regex(_datetimeOffsetValueRegularExpression, RegexOptions.Singleline | RegexOptions.CultureInvariant);
+                _reDateTimeOffsetValue = new Regex(
+                    _datetimeOffsetValueRegularExpression, RegexOptions.Singleline | RegexOptions.CultureInvariant);
             }
             return _reDateTimeOffsetValue.IsMatch(datetimeOffsetValue);
         }
@@ -825,7 +845,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 if (null == _keywords)
                 {
                     #region Initializes eSQL keywords
-                    Dictionary<string, short> keywords = new Dictionary<string, short>(60, _stringComparer);
+
+                    var keywords = new Dictionary<string, short>(60, _stringComparer);
                     keywords.Add("all", CqlParser.ALL);
                     keywords.Add("and", CqlParser.AND);
                     keywords.Add("anyelement", CqlParser.ANYELEMENT);
@@ -896,11 +917,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     keywords.Add("where", CqlParser.WHERE);
                     keywords.Add("with", CqlParser.WITH);
                     _keywords = keywords;
+
                     #endregion
                 }
                 return _keywords;
             }
-
         }
 
         private static HashSet<string> InternalInvalidAliasNames
@@ -910,7 +931,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 if (null == _invalidAliasNames)
                 {
                     #region Initializes invalid aliases
-                    HashSet<string> invalidAliasName = new HashSet<string>(_stringComparer);
+
+                    var invalidAliasName = new HashSet<string>(_stringComparer);
                     invalidAliasName.Add("all");
                     invalidAliasName.Add("and");
                     invalidAliasName.Add("apply");
@@ -963,6 +985,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     invalidAliasName.Add("where");
                     invalidAliasName.Add("with");
                     _invalidAliasNames = invalidAliasName;
+
                     #endregion
                 }
                 return _invalidAliasNames;
@@ -976,7 +999,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 if (null == _invalidInlineFunctionNames)
                 {
                     #region Initializes invalid inline function names
-                    HashSet<string> invalidInlineFunctionNames = new HashSet<string>(_stringComparer);
+
+                    var invalidInlineFunctionNames = new HashSet<string>(_stringComparer);
                     invalidInlineFunctionNames.Add("anyelement");
                     invalidInlineFunctionNames.Add("element");
                     invalidInlineFunctionNames.Add("function");
@@ -988,6 +1012,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     invalidInlineFunctionNames.Add("top");
                     invalidInlineFunctionNames.Add("value");
                     _invalidInlineFunctionNames = invalidInlineFunctionNames;
+
                     #endregion
                 }
                 return _invalidInlineFunctionNames;
@@ -1001,7 +1026,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 if (null == _operators)
                 {
                     #region Initializes operator dictionary
-                    Dictionary<string, short> operators = new Dictionary<string, short>(16, _stringComparer);
+
+                    var operators = new Dictionary<string, short>(16, _stringComparer);
                     operators.Add("==", CqlParser.OP_EQ);
                     operators.Add("!=", CqlParser.OP_NEQ);
                     operators.Add("<>", CqlParser.OP_NEQ);
@@ -1018,6 +1044,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     operators.Add("/", CqlParser.FSLASH);
                     operators.Add("%", CqlParser.PERCENT);
                     _operators = operators;
+
                     #endregion
                 }
                 return _operators;
@@ -1031,7 +1058,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 if (null == _punctuators)
                 {
                     #region Initializes punctuators dictionary
-                    Dictionary<string, short> punctuators = new Dictionary<string, short>(16, _stringComparer);
+
+                    var punctuators = new Dictionary<string, short>(16, _stringComparer);
                     punctuators.Add(",", CqlParser.COMMA);
                     punctuators.Add(":", CqlParser.COLON);
                     punctuators.Add(".", CqlParser.DOT);
@@ -1045,6 +1073,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     punctuators.Add(";", CqlParser.SCOLON);
                     punctuators.Add("=", CqlParser.EQUAL);
                     _punctuators = punctuators;
+
                     #endregion
                 }
                 return _punctuators;
@@ -1057,7 +1086,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             {
                 if (null == _canonicalFunctionNames)
                 {
-                    HashSet<string> canonicalFunctionNames = new HashSet<string>(_stringComparer);
+                    var canonicalFunctionNames = new HashSet<string>(_stringComparer);
                     canonicalFunctionNames.Add("left");
                     canonicalFunctionNames.Add("right");
                     _canonicalFunctionNames = canonicalFunctionNames;

@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-
-namespace System.Data.Entity.Core.Objects
+﻿namespace System.Data.Entity.Core.Objects
 {
+    using System.Collections.Generic;
+    using System.ComponentModel;
+
     /// <summary>
     /// Defines the behavior required for objects that maintain a binding list exposed by ObjectView.
     /// </summary>

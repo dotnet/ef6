@@ -1,13 +1,13 @@
 ﻿namespace System.Data.Entity.Core.Objects.Internal
 {
-    using System;
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Linq.Expressions;
     using System.Reflection;
+    using Util = System.Data.Entity.Core.Common.Internal.Materialization.Util;
 
     /// <summary>
     /// Implementation of the property accessor strategy that gets and sets values on POCO entities.  That is,
@@ -15,10 +15,13 @@
     /// </summary>
     internal sealed class PocoPropertyAccessorStrategy : IPropertyAccessorStrategy
     {
-        private static readonly MethodInfo s_AddToCollectionGeneric = typeof(PocoPropertyAccessorStrategy).GetMethod("AddToCollection", BindingFlags.NonPublic | BindingFlags.Static);
-        private static readonly MethodInfo s_RemoveFromCollectionGeneric = typeof(PocoPropertyAccessorStrategy).GetMethod("RemoveFromCollection", BindingFlags.NonPublic | BindingFlags.Static);
+        private static readonly MethodInfo s_AddToCollectionGeneric = typeof(PocoPropertyAccessorStrategy).GetMethod(
+            "AddToCollection", BindingFlags.NonPublic | BindingFlags.Static);
 
-        private object _entity;
+        private static readonly MethodInfo s_RemoveFromCollectionGeneric =
+            typeof(PocoPropertyAccessorStrategy).GetMethod("RemoveFromCollection", BindingFlags.NonPublic | BindingFlags.Static);
+
+        private readonly object _entity;
 
         /// <summary>
         /// Constructs a strategy object to work with the given entity.
@@ -41,13 +44,14 @@
             {
                 if (relatedEnd.TargetAccessor.ValueGetter == null)
                 {
-                    Type type = GetDeclaringType(relatedEnd);
-                    PropertyInfo propertyInfo = EntityUtil.GetTopProperty(ref type, relatedEnd.TargetAccessor.PropertyName);
+                    var type = GetDeclaringType(relatedEnd);
+                    var propertyInfo = EntityUtil.GetTopProperty(ref type, relatedEnd.TargetAccessor.PropertyName);
                     if (propertyInfo == null)
                     {
-                        throw new EntityException(System.Data.Entity.Resources.Strings.PocoEntityWrapper_UnableToSetFieldOrProperty(relatedEnd.TargetAccessor.PropertyName, type.FullName));
+                        throw new EntityException(
+                            Strings.PocoEntityWrapper_UnableToSetFieldOrProperty(relatedEnd.TargetAccessor.PropertyName, type.FullName));
                     }
-                    EntityProxyFactory factory = new EntityProxyFactory();
+                    var factory = new EntityProxyFactory();
                     relatedEnd.TargetAccessor.ValueGetter = factory.CreateBaseGetter(type, propertyInfo);
                 }
                 try
@@ -56,7 +60,9 @@
                 }
                 catch (Exception ex)
                 {
-                    throw new EntityException(System.Data.Entity.Resources.Strings.PocoEntityWrapper_UnableToSetFieldOrProperty(relatedEnd.TargetAccessor.PropertyName, _entity.GetType().FullName), ex);
+                    throw new EntityException(
+                        Strings.PocoEntityWrapper_UnableToSetFieldOrProperty(
+                            relatedEnd.TargetAccessor.PropertyName, _entity.GetType().FullName), ex);
                 }
             }
             return navPropValue;
@@ -73,13 +79,14 @@
             {
                 if (relatedEnd.TargetAccessor.ValueSetter == null)
                 {
-                    Type type = GetDeclaringType(relatedEnd);
-                    PropertyInfo propertyInfo = EntityUtil.GetTopProperty(ref type, relatedEnd.TargetAccessor.PropertyName);
+                    var type = GetDeclaringType(relatedEnd);
+                    var propertyInfo = EntityUtil.GetTopProperty(ref type, relatedEnd.TargetAccessor.PropertyName);
                     if (propertyInfo == null)
                     {
-                        throw new EntityException(System.Data.Entity.Resources.Strings.PocoEntityWrapper_UnableToSetFieldOrProperty(relatedEnd.TargetAccessor.PropertyName, type.FullName));
+                        throw new EntityException(
+                            Strings.PocoEntityWrapper_UnableToSetFieldOrProperty(relatedEnd.TargetAccessor.PropertyName, type.FullName));
                     }
-                    EntityProxyFactory factory = new EntityProxyFactory();
+                    var factory = new EntityProxyFactory();
                     relatedEnd.TargetAccessor.ValueSetter = factory.CreateBaseSetter(type, propertyInfo);
                 }
                 try
@@ -88,7 +95,9 @@
                 }
                 catch (Exception ex)
                 {
-                    throw new EntityException(System.Data.Entity.Resources.Strings.PocoEntityWrapper_UnableToSetFieldOrProperty(relatedEnd.TargetAccessor.PropertyName, _entity.GetType().FullName), ex);
+                    throw new EntityException(
+                        Strings.PocoEntityWrapper_UnableToSetFieldOrProperty(
+                            relatedEnd.TargetAccessor.PropertyName, _entity.GetType().FullName), ex);
                 }
             }
         }
@@ -97,8 +106,8 @@
         {
             if (relatedEnd.NavigationProperty != null)
             {
-                EntityType declaringEntityType = (EntityType)relatedEnd.NavigationProperty.DeclaringType;
-                ObjectTypeMapping mapping = System.Data.Entity.Core.Common.Internal.Materialization.Util.GetObjectMapping(declaringEntityType, relatedEnd.WrappedOwner.Context.MetadataWorkspace);
+                var declaringEntityType = (EntityType)relatedEnd.NavigationProperty.DeclaringType;
+                var mapping = Util.GetObjectMapping(declaringEntityType, relatedEnd.WrappedOwner.Context.MetadataWorkspace);
                 return mapping.ClrType.ClrType;
             }
             else
@@ -110,21 +119,21 @@
         private static Type GetNavigationPropertyType(Type entityType, string propertyName)
         {
             Type navPropType;
-            PropertyInfo property = EntityUtil.GetTopProperty(entityType, propertyName);
+            var property = EntityUtil.GetTopProperty(entityType, propertyName);
             if (property != null)
             {
                 navPropType = property.PropertyType;
             }
             else
             {
-                FieldInfo field = entityType.GetField(propertyName);
+                var field = entityType.GetField(propertyName);
                 if (field != null)
                 {
                     navPropType = field.FieldType;
                 }
                 else
                 {
-                    throw new EntityException(System.Data.Entity.Resources.Strings.PocoEntityWrapper_UnableToSetFieldOrProperty(propertyName, entityType.FullName));
+                    throw new EntityException(Strings.PocoEntityWrapper_UnableToSetFieldOrProperty(propertyName, entityType.FullName));
                 }
             }
             return navPropType;
@@ -141,10 +150,10 @@
         // See IPropertyAccessorStrategy
         public void CollectionAdd(RelatedEnd relatedEnd, object value)
         {
-            object entity = _entity;
+            var entity = _entity;
             try
             {
-                object collection = GetNavigationPropertyValue(relatedEnd);
+                var collection = GetNavigationPropertyValue(relatedEnd);
                 if (collection == null)
                 {
                     collection = CollectionCreate(relatedEnd);
@@ -160,42 +169,44 @@
 
                 if (relatedEnd.TargetAccessor.CollectionAdd == null)
                 {
-                    relatedEnd.TargetAccessor.CollectionAdd = CreateCollectionAddFunction(entity.GetType(), relatedEnd.TargetAccessor.PropertyName);
+                    relatedEnd.TargetAccessor.CollectionAdd = CreateCollectionAddFunction(
+                        entity.GetType(), relatedEnd.TargetAccessor.PropertyName);
                 }
-
 
                 relatedEnd.TargetAccessor.CollectionAdd(collection, value);
             }
             catch (Exception ex)
             {
-                throw new EntityException(System.Data.Entity.Resources.Strings.PocoEntityWrapper_UnableToSetFieldOrProperty(relatedEnd.TargetAccessor.PropertyName, entity.GetType().FullName), ex);
+                throw new EntityException(
+                    Strings.PocoEntityWrapper_UnableToSetFieldOrProperty(relatedEnd.TargetAccessor.PropertyName, entity.GetType().FullName),
+                    ex);
             }
         }
 
         // Helper method to create delegate with property setter
         private static Action<object, object> CreateCollectionAddFunction(Type type, string propertyName)
         {
-            Type navPropType = GetNavigationPropertyType(type, propertyName);
-            Type elementType = EntityUtil.GetCollectionElementType(navPropType);
-            Type collectionType = typeof(ICollection<>).MakeGenericType(elementType);
+            var navPropType = GetNavigationPropertyType(type, propertyName);
+            var elementType = EntityUtil.GetCollectionElementType(navPropType);
+            var collectionType = typeof(ICollection<>).MakeGenericType(elementType);
 
-            MethodInfo addToCollection = s_AddToCollectionGeneric.MakeGenericMethod(elementType);
+            var addToCollection = s_AddToCollectionGeneric.MakeGenericMethod(elementType);
             return (Action<object, object>)addToCollection.Invoke(null, null);
-            
         }
 
         private static Action<object, object> AddToCollection<T>()
         {
             return (collectionArg, item) =>
-                {
-                    ICollection<T> collection = (ICollection<T>)collectionArg;
-                    Array array = collection as Array;
-                    if (array != null && array.IsFixedSize)
-                    {
-                        throw EntityUtil.CannotAddToFixedSizeArray(array);
-                    }
-                    collection.Add((T)item);
-                };
+                       {
+                           var collection = (ICollection<T>)collectionArg;
+                           var array = collection as Array;
+                           if (array != null
+                               && array.IsFixedSize)
+                           {
+                               throw EntityUtil.CannotAddToFixedSizeArray(array);
+                           }
+                           collection.Add((T)item);
+                       };
         }
 
         #endregion
@@ -205,10 +216,10 @@
         // See IPropertyAccessorStrategy
         public bool CollectionRemove(RelatedEnd relatedEnd, object value)
         {
-            object entity = _entity;
+            var entity = _entity;
             try
             {
-                object collection = GetNavigationPropertyValue(relatedEnd);
+                var collection = GetNavigationPropertyValue(relatedEnd);
                 if (collection != null)
                 {
                     // do not call Add if the collection is a RelatedEnd instance
@@ -219,7 +230,8 @@
 
                     if (relatedEnd.TargetAccessor.CollectionRemove == null)
                     {
-                        relatedEnd.TargetAccessor.CollectionRemove = CreateCollectionRemoveFunction(entity.GetType(), relatedEnd.TargetAccessor.PropertyName);
+                        relatedEnd.TargetAccessor.CollectionRemove = CreateCollectionRemoveFunction(
+                            entity.GetType(), relatedEnd.TargetAccessor.PropertyName);
                     }
 
                     return relatedEnd.TargetAccessor.CollectionRemove(collection, value);
@@ -227,7 +239,9 @@
             }
             catch (Exception ex)
             {
-                throw new EntityException(System.Data.Entity.Resources.Strings.PocoEntityWrapper_UnableToSetFieldOrProperty(relatedEnd.TargetAccessor.PropertyName, entity.GetType().FullName), ex);
+                throw new EntityException(
+                    Strings.PocoEntityWrapper_UnableToSetFieldOrProperty(relatedEnd.TargetAccessor.PropertyName, entity.GetType().FullName),
+                    ex);
             }
             return false;
         }
@@ -235,26 +249,27 @@
         // Helper method to create delegate with property setter
         private static Func<object, object, bool> CreateCollectionRemoveFunction(Type type, string propertyName)
         {
-            Type navPropType = GetNavigationPropertyType(type, propertyName);
-            Type elementType = EntityUtil.GetCollectionElementType(navPropType);
-            Type collectionType = typeof(ICollection<>).MakeGenericType(elementType);
+            var navPropType = GetNavigationPropertyType(type, propertyName);
+            var elementType = EntityUtil.GetCollectionElementType(navPropType);
+            var collectionType = typeof(ICollection<>).MakeGenericType(elementType);
 
-            MethodInfo removeFromCollection = s_RemoveFromCollectionGeneric.MakeGenericMethod(elementType);
+            var removeFromCollection = s_RemoveFromCollectionGeneric.MakeGenericMethod(elementType);
             return (Func<object, object, bool>)removeFromCollection.Invoke(null, null);
         }
 
         private static Func<object, object, bool> RemoveFromCollection<T>()
         {
             return (collectionArg, item) =>
-            {
-                ICollection<T> collection = (ICollection<T>)collectionArg;
-                Array array = collection as Array;
-                if (array != null && array.IsFixedSize)
-                {
-                    throw EntityUtil.CannotRemoveFromFixedSizeArray(array);
-                }
-                return collection.Remove((T)item);
-            };
+                       {
+                           var collection = (ICollection<T>)collectionArg;
+                           var array = collection as Array;
+                           if (array != null
+                               && array.IsFixedSize)
+                           {
+                               throw EntityUtil.CannotRemoveFromFixedSizeArray(array);
+                           }
+                           return collection.Remove((T)item);
+                       };
         }
 
         #endregion
@@ -272,13 +287,12 @@
             {
                 if (relatedEnd.TargetAccessor.CollectionCreate == null)
                 {
-                    Type entityType = _entity.GetType();
-                    string propName = relatedEnd.TargetAccessor.PropertyName;
-                    Type navPropType = GetNavigationPropertyType(entityType, propName);
+                    var entityType = _entity.GetType();
+                    var propName = relatedEnd.TargetAccessor.PropertyName;
+                    var navPropType = GetNavigationPropertyType(entityType, propName);
                     relatedEnd.TargetAccessor.CollectionCreate = CreateCollectionCreateDelegate(navPropType, propName);
                 }
                 return relatedEnd.TargetAccessor.CollectionCreate();
-
             }
         }
 
@@ -292,7 +306,8 @@
 
             if (typeToInstantiate == null)
             {
-                throw new EntityException(System.Data.Entity.Resources.Strings.PocoEntityWrapper_UnableToMaterializeArbitaryNavPropType(propName, navigationPropertyType));
+                throw new EntityException(
+                    Strings.PocoEntityWrapper_UnableToMaterializeArbitaryNavPropType(propName, navigationPropertyType));
             }
 
             return Expression.Lambda<Func<object>>(Expression.New(typeToInstantiate)).Compile();

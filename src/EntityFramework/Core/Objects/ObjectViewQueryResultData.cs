@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Metadata;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Objects.DataClasses;
-using System.Diagnostics;
-
-namespace System.Data.Entity.Core.Objects
+﻿namespace System.Data.Entity.Core.Objects
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Data.Common;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+
     /// <summary>
     /// Manages a binding list constructed from query results.
     /// </summary>
@@ -25,21 +21,21 @@ namespace System.Data.Entity.Core.Objects
     /// </remarks>
     internal sealed class ObjectViewQueryResultData<TElement> : IObjectViewData<TElement>
     {
-        private List<TElement> _bindingList;
+        private readonly List<TElement> _bindingList;
 
         /// <summary>
         /// ObjectContext used to add or delete objects when the list can be modified.
         /// </summary>
-        private ObjectContext _objectContext;
-        
+        private readonly ObjectContext _objectContext;
+
         /// <summary>
         /// If the TElement type is an Entity type of some kind,
         /// this field specifies the entity set to add entity objects.
         /// </summary>
-        private EntitySet _entitySet; 
+        private readonly EntitySet _entitySet;
 
-        private bool _canEditItems;
-        private bool _canModifyList;
+        private readonly bool _canEditItems;
+        private readonly bool _canModifyList;
 
         /// <summary>
         /// Construct a new instance of the ObjectViewQueryResultData class using the supplied query results.
@@ -60,9 +56,10 @@ namespace System.Data.Entity.Core.Objects
         /// If the TElement type is an Entity type of some kind,
         /// this field specifies the entity set to add entity objects.
         /// </param>
-        internal ObjectViewQueryResultData(IEnumerable queryResults, ObjectContext objectContext, bool forceReadOnlyList, EntitySet entitySet)
+        internal ObjectViewQueryResultData(
+            IEnumerable queryResults, ObjectContext objectContext, bool forceReadOnlyList, EntitySet entitySet)
         {
-            bool canTrackItemChanges = IsEditable(typeof(TElement));
+            var canTrackItemChanges = IsEditable(typeof(TElement));
 
             _objectContext = objectContext;
             _entitySet = entitySet;
@@ -146,7 +143,7 @@ namespace System.Data.Entity.Core.Objects
             EnsureEntitySet();
 
             Debug.Assert(_objectContext != null, "ObjectContext is null.");
-            
+
             // If called for AddNew operation, add item to binding list, pending addition to ObjectContext.
             if (!isAddNew)
             {
@@ -164,7 +161,7 @@ namespace System.Data.Entity.Core.Objects
 
             Debug.Assert(_objectContext != null, "ObjectContext is null.");
 
-            TElement item = _bindingList[index];
+            var item = _bindingList[index];
             _objectContext.AddObject(TypeHelpers.GetFullName(_entitySet), item);
         }
 
@@ -172,7 +169,7 @@ namespace System.Data.Entity.Core.Objects
         {
             while (0 < _bindingList.Count)
             {
-                TElement entity = _bindingList[_bindingList.Count - 1];
+                var entity = _bindingList[_bindingList.Count - 1];
 
                 Remove(entity, false);
             }
@@ -191,7 +188,7 @@ namespace System.Data.Entity.Core.Objects
             }
             else
             {
-                EntityEntry stateEntry = _objectContext.ObjectStateManager.FindEntityEntry(item);
+                var stateEntry = _objectContext.ObjectStateManager.FindEntityEntry(item);
 
                 if (stateEntry != null)
                 {
@@ -214,18 +211,20 @@ namespace System.Data.Entity.Core.Objects
 
             // Since event is coming from cache and it might be shared amoung different queries
             // we have to check to see if correct event is being handled.
-            if (e.Element.GetType().IsAssignableFrom(typeof(TElement)) &&
+            if (e.Element.GetType().IsAssignableFrom(typeof(TElement))
+                &&
                 _bindingList.Contains((TElement)(e.Element)))
             {
-                TElement item = (TElement)e.Element;
-                int itemIndex = _bindingList.IndexOf(item);
+                var item = (TElement)e.Element;
+                var itemIndex = _bindingList.IndexOf(item);
 
                 if (itemIndex >= 0) // Ignore entities that we don't know about.
                 {
                     // Only process "remove" events.
                     Debug.Assert(e.Action != CollectionChangeAction.Refresh, "Cache should never fire with refresh, it does not have clear");
 
-                    if (e.Action == CollectionChangeAction.Remove)
+                    if (e.Action
+                        == CollectionChangeAction.Remove)
                     {
                         _bindingList.Remove(item);
 

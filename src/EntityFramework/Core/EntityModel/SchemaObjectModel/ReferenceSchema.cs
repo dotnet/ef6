@@ -1,6 +1,5 @@
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
-    using System;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
     using System.Xml;
@@ -11,67 +10,46 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     internal class UsingElement : SchemaElement
     {
         #region Instance Fields
-        private string _alias = null;
-        private string _namespaceName = null;
+
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="parentElement"></param>
         internal UsingElement(Schema parentElement)
-        :   base(parentElement)
+            : base(parentElement)
         {
         }
 
         #endregion
 
         #region Public Properties
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual string Alias
-        {
-            get
-            {
-                return _alias;
-            }
-            private set
-            {
-                _alias = value;
-            }
-        }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual string NamespaceName
-        {
-            get
-            {
-                return _namespaceName;
-            }
-            private set
-            {
-                _namespaceName = value;
-            }
-        }
+        public virtual string Alias { get; private set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual string NamespaceName { get; private set; }
 
         /// <summary>
         /// 
         /// </summary>
         public override string FQName
         {
-            get
-            {
-                return null;
-            }
+            get { return null; }
         }
 
         #endregion
 
         #region Protected Properties
+
         /// <summary>
         /// 
         /// </summary>
@@ -82,14 +60,14 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 return true;
             }
 
-            if (namespaceUri == null && localName == XmlConstants.Name)
+            if (namespaceUri == null
+                && localName == XmlConstants.Name)
             {
                 return false;
             }
             return false;
-
         }
-        
+
         protected override bool HandleAttribute(XmlReader reader)
         {
             if (base.HandleAttribute(reader))
@@ -121,9 +99,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private void HandleNamespaceAttribute(XmlReader reader)
         {
             Debug.Assert(String.IsNullOrEmpty(NamespaceName), "Alias must be set only once");
-            ReturnValue<string> returnValue = HandleDottedNameAttribute(reader,NamespaceName);
-            if ( returnValue.Succeeded )
+            var returnValue = HandleDottedNameAttribute(reader, NamespaceName);
+            if (returnValue.Succeeded)
+            {
                 NamespaceName = returnValue.Value;
+            }
         }
 
         /// <summary>
@@ -135,6 +115,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             Debug.Assert(String.IsNullOrEmpty(Alias), "Alias must be set only once");
             Alias = HandleUndottedNameAttribute(reader, Alias);
         }
+
         #endregion
     }
 }

@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Resources;
 
     /// <summary>
     /// Abstract implementation of node visitor that allows the specification of visit methods
@@ -18,10 +19,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <summary>
         /// Gets the name of this visitor for debugging and tracing purposes.
         /// </summary>
-        protected abstract string VisitorName
-        {
-            get;
-        }
+        protected abstract string VisitorName { get; }
 
         /// <summary>
         /// Utility method to generate an exception when unsupported node types are encountered.
@@ -30,14 +28,16 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns>Not supported exception</returns>
         protected NotSupportedException ConstructNotSupportedException(DbExpression node)
         {
-            string nodeKind = null == node ? null :
-                node.ExpressionKind.ToString();
+            var nodeKind = null == node
+                               ? null
+                               : node.ExpressionKind.ToString();
 
             return EntityUtil.NotSupported(
-                System.Data.Entity.Resources.Strings.Update_UnsupportedExpressionKind(nodeKind, VisitorName));
+                Strings.Update_UnsupportedExpressionKind(nodeKind, VisitorName));
         }
 
         #region IExpressionVisitor<TReturn> Members
+
         public override TReturn Visit(DbExpression expression)
         {
             if (null != expression)
@@ -266,6 +266,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             throw ConstructNotSupportedException(expression);
         }
+
         #endregion
     }
 }

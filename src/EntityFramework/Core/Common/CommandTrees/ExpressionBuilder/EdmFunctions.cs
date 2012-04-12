@@ -1,12 +1,12 @@
 namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 {
-    using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
+    using System.Data.Entity.Core.Common.EntitySql;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
 
     /// <summary>
     /// Provides an API to construct <see cref="DbExpression"/>s that invoke canonical EDM functions, and allows that API to be accessed as extension methods on the expression type itself.
@@ -14,22 +14,22 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
     public static class EdmFunctions
     {
         #region Private Implementation
-                
+
         private static EdmFunction ResolveCanonicalFunction(string functionName, TypeUsage[] argumentTypes)
         {
             Debug.Assert(!string.IsNullOrEmpty(functionName), "Function name must not be null");
 
-            List<EdmFunction> functions = new List<EdmFunction>(
-                System.Linq.Enumerable.Where(
+            var functions = new List<EdmFunction>(
+                Enumerable.Where(
                     EdmProviderManifest.Instance.GetStoreFunctions(),
                     func => string.Equals(func.Name, functionName, StringComparison.Ordinal))
-            );
+                );
 
             EdmFunction foundFunction = null;
-            bool ambiguous = false;
+            var ambiguous = false;
             if (functions.Count > 0)
             {
-                foundFunction = EntitySql.FunctionOverloadResolver.ResolveFunctionOverloads(functions, argumentTypes, false, out ambiguous);
+                foundFunction = FunctionOverloadResolver.ResolveFunctionOverloads(functions, argumentTypes, false, out ambiguous);
                 if (ambiguous)
                 {
                     throw EntityUtil.Argument(Strings.Cqt_Function_CanonicalFunction_AmbiguousMatch(functionName));
@@ -46,15 +46,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 
         internal static DbFunctionExpression InvokeCanonicalFunction(string functionName, params DbExpression[] arguments)
         {
-            TypeUsage[] argumentTypes = new TypeUsage[arguments.Length];
-            for (int idx = 0; idx < arguments.Length; idx++)
+            var argumentTypes = new TypeUsage[arguments.Length];
+            for (var idx = 0; idx < arguments.Length; idx++)
             {
                 Debug.Assert(arguments[idx] != null, "Ensure arguments are non-null before calling InvokeCanonicalFunction");
                 argumentTypes[idx] = arguments[idx].ResultType;
             }
 
-            EdmFunction foundFunction = ResolveCanonicalFunction(functionName, argumentTypes);
-            return DbExpressionBuilder.Invoke(foundFunction, arguments);
+            var foundFunction = ResolveCanonicalFunction(functionName, argumentTypes);
+            return foundFunction.Invoke(arguments);
         }
 
         #endregion
@@ -130,7 +130,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             EntityUtil.CheckArgumentNull(collection, "collection");
             return InvokeCanonicalFunction("Min", collection);
         }
-                
+
         /// <summary>
         /// Creates a <see cref="DbFunctionExpression"/> that invokes the canonical 'Sum' function over the
         /// specified collection. The result type of the expression is the same as the element type of the collection.
@@ -242,7 +242,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             EntityUtil.CheckArgumentNull(searchedForString, "searchedForString");
             return InvokeCanonicalFunction("Contains", searchedString, searchedForString);
         }
-                
+
         /// <summary>
         /// Creates a <see cref="DbFunctionExpression"/> that invokes the canonical 'EndsWith' function with the
         /// specified arguments, which must each have a string result type. The result type of the expression is
@@ -328,7 +328,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             EntityUtil.CheckArgumentNull(replacement, "replacement");
             return InvokeCanonicalFunction("Replace", stringArgument, toReplace, replacement);
         }
-                
+
         /// <summary>
         /// Creates a <see cref="DbFunctionExpression"/> that invokes the canonical 'Reverse' function with the
         /// specified argument, which must have a string result type. The result type of the expression is
@@ -360,7 +360,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             EntityUtil.CheckArgumentNull(length, "length");
             return InvokeCanonicalFunction("Right", stringArgument, length);
         }
-                
+
         /// <summary>
         /// Creates a <see cref="DbFunctionExpression"/> that invokes the canonical 'StartsWith' function with the
         /// specified arguments, which must each have a string result type. The result type of the expression is
@@ -429,7 +429,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             EntityUtil.CheckArgumentNull(stringArgument, "stringArgument");
             return InvokeCanonicalFunction("ToUpper", stringArgument);
         }
-                        
+
         /// <summary>
         /// Creates a <see cref="DbFunctionExpression"/> that invokes the canonical 'Trim' function with the
         /// specified argument, which must have a string result type. The result type of the expression is
@@ -478,7 +478,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #endregion
 
         #region Date/Time member access methods - Year, Month, Day, DayOfYear, Hour, Minute, Second, Millisecond, GetTotalOffsetMinutes
-        
+
         /// <summary>
         /// Creates a <see cref="DbFunctionExpression"/> that invokes the canonical 'Year' function with the
         /// specified argument, which must have a DateTime or DateTimeOffset result type. The result type of
@@ -673,7 +673,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <returns>A new DbFunctionExpression that returns a new DateTime based on the specified values.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="year"/>, <paramref name="month"/>, <paramref name="day"/>, <paramref name="hour"/>, <paramref name="minute"/>, or <paramref name="second"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'CreateDateTime' function accepts arguments with the result types of <paramref name="year"/>, <paramref name="month"/>, <paramref name="day"/>, <paramref name="hour"/>, <paramref name="minute"/>, and <paramref name="second"/>.</exception>
-        public static DbFunctionExpression CreateDateTime(DbExpression year, DbExpression month, DbExpression day, DbExpression hour, DbExpression minute, DbExpression second)
+        public static DbFunctionExpression CreateDateTime(
+            DbExpression year, DbExpression month, DbExpression day, DbExpression hour, DbExpression minute, DbExpression second)
         {
             EntityUtil.CheckArgumentNull(year, "year");
             EntityUtil.CheckArgumentNull(month, "month");
@@ -699,7 +700,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <returns>A new DbFunctionExpression that returns a new DateTimeOffset based on the specified values.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="year"/>, <paramref name="month"/>, <paramref name="day"/>, <paramref name="hour"/>, <paramref name="minute"/>, <paramref name="second"/> or <paramref name="timeZoneOffset"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'CreateDateTimeOffset' function accepts arguments with the result types of <paramref name="year"/>, <paramref name="month"/>, <paramref name="day"/>, <paramref name="hour"/>, <paramref name="minute"/>, <paramref name="second"/> and <paramref name="timeZoneOffset"/>.</exception>
-        public static DbFunctionExpression CreateDateTimeOffset(DbExpression year, DbExpression month, DbExpression day, DbExpression hour, DbExpression minute, DbExpression second, DbExpression timeZoneOffset)
+        public static DbFunctionExpression CreateDateTimeOffset(
+            DbExpression year, DbExpression month, DbExpression day, DbExpression hour, DbExpression minute, DbExpression second,
+            DbExpression timeZoneOffset)
         {
             EntityUtil.CheckArgumentNull(year, "year");
             EntityUtil.CheckArgumentNull(month, "month");
@@ -729,9 +732,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             EntityUtil.CheckArgumentNull(second, "second");
             return InvokeCanonicalFunction("CreateTime", hour, minute, second);
         }
-                
+
         #endregion
-        
+
         #region Date/Time addition - AddYears, AddMonths, AddDays, AddHours, AddMinutes, AddSeconds, AddMilliseconds, AddMicroseconds, AddNanoseconds
 
         /// <summary>
@@ -888,7 +891,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         #endregion
-        
+
         #region Date/Time difference - DiffYears, DiffMonths, DiffDays, DiffHours, DiffMinutes, DiffSeconds, DiffMilliseconds, DiffMicroseconds, DiffNanoseconds
 
         /// <summary>

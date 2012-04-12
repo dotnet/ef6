@@ -1,6 +1,6 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
-    using System;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Globalization;
 
@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
     {
         private readonly LiteralKind _literalKind;
         private string _originalValue;
-        private bool _wasValueComputed = false;
+        private bool _wasValueComputed;
         private object _computedValue;
         private Type _type;
         private static readonly Byte[] _emptyByteArray = new byte[0];
@@ -51,7 +51,10 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// Static factory to create boolean literals by value only.
         /// </summary>
         /// <param name="value"></param>
-        internal static Literal NewBooleanLiteral(bool value) { return new Literal(value); }
+        internal static Literal NewBooleanLiteral(bool value)
+        {
+            return new Literal(value);
+        }
 
         private Literal(bool boolLiteral)
             : base(null, 0)
@@ -59,7 +62,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             _wasValueComputed = true;
             _originalValue = String.Empty;
             _computedValue = boolLiteral;
-            _type = typeof(System.Boolean);
+            _type = typeof(Boolean);
         }
 
         /// <summary>
@@ -67,10 +70,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         internal bool IsNumber
         {
-            get
-            {
-                return (_literalKind == LiteralKind.Number);
-            }
+            get { return (_literalKind == LiteralKind.Number); }
         }
 
         /// <summary>
@@ -78,10 +78,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         internal bool IsSignedNumber
         {
-            get
-            {
-                return IsNumber && (_originalValue[0] == '-' || _originalValue[0] == '+');
-            }
+            get { return IsNumber && (_originalValue[0] == '-' || _originalValue[0] == '+'); }
         }
 
         /// <summary>
@@ -92,10 +89,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </remarks>
         internal bool IsString
         {
-            get
-            {
-                return _literalKind == LiteralKind.String || _literalKind == LiteralKind.UnicodeString;
-            }
+            get { return _literalKind == LiteralKind.String || _literalKind == LiteralKind.UnicodeString; }
         }
 
         /// <summary>
@@ -106,10 +100,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </remarks>
         internal bool IsUnicodeString
         {
-            get
-            {
-                return _literalKind == LiteralKind.UnicodeString;
-            }
+            get { return _literalKind == LiteralKind.UnicodeString; }
         }
 
         /// <summary>
@@ -120,10 +111,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </remarks>
         internal bool IsNullLiteral
         {
-            get
-            {
-                return _literalKind == LiteralKind.Null;
-            }
+            get { return _literalKind == LiteralKind.Null; }
         }
 
         /// <summary>
@@ -131,10 +119,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         internal string OriginalValue
         {
-            get
-            {
-                return _originalValue;
-            }
+            get { return _originalValue; }
         }
 
         /// <summary>
@@ -142,14 +127,15 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         internal void PrefixSign(string sign)
         {
-            System.Diagnostics.Debug.Assert(IsNumber && !IsSignedNumber);
-            System.Diagnostics.Debug.Assert(sign[0] == '-' || sign[0] == '+', "sign symbol must be + or -");
-            System.Diagnostics.Debug.Assert(_computedValue == null);
+            Debug.Assert(IsNumber && !IsSignedNumber);
+            Debug.Assert(sign[0] == '-' || sign[0] == '+', "sign symbol must be + or -");
+            Debug.Assert(_computedValue == null);
 
             _originalValue = sign + _originalValue;
         }
 
         #region Computed members
+
         /// <summary>
         /// Returns literal converted value.
         /// </summary>
@@ -181,6 +167,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                 return _type;
             }
         }
+
         #endregion
 
         private void ComputeValue()
@@ -232,8 +219,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                         break;
 
                     default:
-                        throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.LiteralTypeNotSupported(_literalKind.ToString()));
-
+                        throw EntityUtil.NotSupported(Strings.LiteralTypeNotSupported(_literalKind.ToString()));
                 }
 
                 _type = IsNullLiteral ? null : _computedValue.GetType();
@@ -241,15 +227,17 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         #region Conversion Helpers
-        static char[] numberSuffixes = new char[] { 'U', 'u', 'L', 'l', 'F', 'f', 'M', 'm', 'D', 'd' };
-        static char[] floatTokens = new char[] { '.', 'E', 'e' };
+
+        private static readonly char[] numberSuffixes = new[] { 'U', 'u', 'L', 'l', 'F', 'f', 'M', 'm', 'D', 'd' };
+        private static readonly char[] floatTokens = new[] { '.', 'E', 'e' };
+
         private static object ConvertNumericLiteral(ErrorContext errCtx, string numericString)
         {
-            int k = numericString.IndexOfAny(numberSuffixes);
+            var k = numericString.IndexOfAny(numberSuffixes);
             if (-1 != k)
             {
-                string suffix = numericString.Substring(k).ToUpperInvariant();
-                string numberPart = numericString.Substring(0, numericString.Length - suffix.Length);
+                var suffix = numericString.Substring(k).ToUpperInvariant();
+                var numberPart = numericString.Substring(0, numericString.Length - suffix.Length);
                 switch (suffix)
                 {
                     case "U":
@@ -257,7 +245,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                             UInt32 value;
                             if (!UInt32.TryParse(numberPart, NumberStyles.Integer, CultureInfo.InvariantCulture, out value))
                             {
-                                throw EntityUtil.EntitySqlError(errCtx, System.Data.Entity.Resources.Strings.CannotConvertNumericLiteral(numericString, "unsigned int"));
+                                throw EntityUtil.EntitySqlError(errCtx, Strings.CannotConvertNumericLiteral(numericString, "unsigned int"));
                             }
                             return value;
                         }
@@ -268,7 +256,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                             long value;
                             if (!Int64.TryParse(numberPart, NumberStyles.Integer, CultureInfo.InvariantCulture, out value))
                             {
-                                throw EntityUtil.EntitySqlError(errCtx, System.Data.Entity.Resources.Strings.CannotConvertNumericLiteral(numericString, "long"));
+                                throw EntityUtil.EntitySqlError(errCtx, Strings.CannotConvertNumericLiteral(numericString, "long"));
                             }
                             return value;
                         }
@@ -280,7 +268,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                             UInt64 value;
                             if (!UInt64.TryParse(numberPart, NumberStyles.Integer, CultureInfo.InvariantCulture, out value))
                             {
-                                throw EntityUtil.EntitySqlError(errCtx, System.Data.Entity.Resources.Strings.CannotConvertNumericLiteral(numericString, "unsigned long"));
+                                throw EntityUtil.EntitySqlError(errCtx, Strings.CannotConvertNumericLiteral(numericString, "unsigned long"));
                             }
                             return value;
                         }
@@ -291,7 +279,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                             Single value;
                             if (!Single.TryParse(numberPart, NumberStyles.Float, CultureInfo.InvariantCulture, out value))
                             {
-                                throw EntityUtil.EntitySqlError(errCtx, System.Data.Entity.Resources.Strings.CannotConvertNumericLiteral(numericString, "float"));
+                                throw EntityUtil.EntitySqlError(errCtx, Strings.CannotConvertNumericLiteral(numericString, "float"));
                             }
                             return value;
                         }
@@ -300,9 +288,12 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                     case "M":
                         {
                             Decimal value;
-                            if (!Decimal.TryParse(numberPart, NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out value))
+                            if (
+                                !Decimal.TryParse(
+                                    numberPart, NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture,
+                                    out value))
                             {
-                                throw EntityUtil.EntitySqlError(errCtx, System.Data.Entity.Resources.Strings.CannotConvertNumericLiteral(numericString, "decimal"));
+                                throw EntityUtil.EntitySqlError(errCtx, Strings.CannotConvertNumericLiteral(numericString, "decimal"));
                             }
                             return value;
                         }
@@ -313,12 +304,11 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                             Double value;
                             if (!Double.TryParse(numberPart, NumberStyles.Float, CultureInfo.InvariantCulture, out value))
                             {
-                                throw EntityUtil.EntitySqlError(errCtx, System.Data.Entity.Resources.Strings.CannotConvertNumericLiteral(numericString, "double"));
+                                throw EntityUtil.EntitySqlError(errCtx, Strings.CannotConvertNumericLiteral(numericString, "double"));
                             }
                             return value;
                         }
                         ;
-
                 }
             }
 
@@ -333,13 +323,13 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         private static object DefaultNumericConversion(string numericString, ErrorContext errCtx)
         {
-
-            if (-1 != numericString.IndexOfAny(floatTokens))
+            if (-1
+                != numericString.IndexOfAny(floatTokens))
             {
                 Double value;
                 if (!Double.TryParse(numericString, NumberStyles.Float, CultureInfo.InvariantCulture, out value))
                 {
-                    throw EntityUtil.EntitySqlError(errCtx, System.Data.Entity.Resources.Strings.CannotConvertNumericLiteral(numericString, "double"));
+                    throw EntityUtil.EntitySqlError(errCtx, Strings.CannotConvertNumericLiteral(numericString, "double"));
                 }
 
                 return value;
@@ -355,12 +345,11 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                 Int64 int64Value;
                 if (!Int64.TryParse(numericString, NumberStyles.Integer, CultureInfo.InvariantCulture, out int64Value))
                 {
-                    throw EntityUtil.EntitySqlError(errCtx, System.Data.Entity.Resources.Strings.CannotConvertNumericLiteral(numericString, "long"));
+                    throw EntityUtil.EntitySqlError(errCtx, Strings.CannotConvertNumericLiteral(numericString, "long"));
                 }
 
                 return int64Value;
             }
-
         }
 
         /// <summary>
@@ -368,10 +357,10 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         private static bool ConvertBooleanLiteralValue(ErrorContext errCtx, string booleanLiteralValue)
         {
-            bool result = false;
+            var result = false;
             if (!Boolean.TryParse(booleanLiteralValue, out result))
             {
-                throw EntityUtil.EntitySqlError(errCtx, System.Data.Entity.Resources.Strings.InvalidLiteralFormat("Boolean", booleanLiteralValue));
+                throw EntityUtil.EntitySqlError(errCtx, Strings.InvalidLiteralFormat("Boolean", booleanLiteralValue));
             }
             return result;
         }
@@ -384,27 +373,28 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             Debug.Assert(stringLiteralValue.Length >= 2);
             Debug.Assert(isUnicode == ('N' == stringLiteralValue[0]), "invalid string literal value");
 
-            int startIndex = (isUnicode ? 2 : 1);
-            char delimiter = stringLiteralValue[startIndex - 1];
+            var startIndex = (isUnicode ? 2 : 1);
+            var delimiter = stringLiteralValue[startIndex - 1];
 
             // NOTE: this is not a precondition validation. This validation is for security purposes based on the 
             // paranoid assumption that all input is evil. we should not see this exception under normal 
             // conditions.
-            if (delimiter != '\'' && delimiter != '\"')
+            if (delimiter != '\''
+                && delimiter != '\"')
             {
-                throw EntityUtil.EntitySqlError(System.Data.Entity.Resources.Strings.MalformedStringLiteralPayload);
+                throw EntityUtil.EntitySqlError(Strings.MalformedStringLiteralPayload);
             }
 
-            string result = "";
+            var result = "";
 
             // NOTE: this is not a precondition validation. This validation is for security purposes based on the 
             // paranoid assumption that all input is evil. we should not see this exception under normal 
             // conditions.
-            int before = stringLiteralValue.Split(new char[] { delimiter }).Length - 1;
+            var before = stringLiteralValue.Split(new[] { delimiter }).Length - 1;
             Debug.Assert(before % 2 == 0, "must have an even number of delimiters in the string literal");
             if (0 != (before % 2))
             {
-                throw EntityUtil.EntitySqlError(System.Data.Entity.Resources.Strings.MalformedStringLiteralPayload);
+                throw EntityUtil.EntitySqlError(Strings.MalformedStringLiteralPayload);
             }
 
             //
@@ -416,11 +406,11 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             // NOTE: this is not a precondition validation. This validation is for security purposes based on the 
             // paranoid assumption that all input is evil. we should not see this exception under normal 
             // conditions.
-            int after = result.Split(new char[] { delimiter }).Length - 1;
+            var after = result.Split(new[] { delimiter }).Length - 1;
             Debug.Assert(after == (before - 2) / 2);
             if ((after != ((before - 2) / 2)))
             {
-                throw EntityUtil.EntitySqlError(System.Data.Entity.Resources.Strings.MalformedStringLiteralPayload);
+                throw EntityUtil.EntitySqlError(Strings.MalformedStringLiteralPayload);
             }
 
             return result;
@@ -438,19 +428,19 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                 return _emptyByteArray;
             }
 
-            int startIndex = 0;
-            int endIndex = binaryLiteralValue.Length - 1;
+            var startIndex = 0;
+            var endIndex = binaryLiteralValue.Length - 1;
             Debug.Assert(startIndex <= endIndex, "startIndex <= endIndex");
-            int binaryStringLen = endIndex - startIndex + 1;
-            int byteArrayLen = binaryStringLen / 2;
-            bool hasOddBytes = 0 != (binaryStringLen % 2);
+            var binaryStringLen = endIndex - startIndex + 1;
+            var byteArrayLen = binaryStringLen / 2;
+            var hasOddBytes = 0 != (binaryStringLen % 2);
             if (hasOddBytes)
             {
                 byteArrayLen++;
             }
 
-            byte[] binaryValue = new byte[byteArrayLen];
-            int arrayIndex = 0;
+            var binaryValue = new byte[byteArrayLen];
+            var arrayIndex = 0;
             if (hasOddBytes)
             {
                 binaryValue[arrayIndex++] = (byte)HexDigitToBinaryValue(binaryLiteralValue[startIndex++]);
@@ -458,7 +448,10 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
 
             while (startIndex < endIndex)
             {
-                binaryValue[arrayIndex++] = (byte)((HexDigitToBinaryValue(binaryLiteralValue[startIndex++]) << 4) | HexDigitToBinaryValue(binaryLiteralValue[startIndex++]));
+                binaryValue[arrayIndex++] =
+                    (byte)
+                    ((HexDigitToBinaryValue(binaryLiteralValue[startIndex++]) << 4)
+                     | HexDigitToBinaryValue(binaryLiteralValue[startIndex++]));
             }
 
             return binaryValue;
@@ -470,23 +463,34 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         private static int HexDigitToBinaryValue(char hexChar)
         {
-            if (hexChar >= '0' && hexChar <= '9') return (int)(hexChar - '0');
-            if (hexChar >= 'A' && hexChar <= 'F') return (int)(hexChar - 'A') + 10;
-            if (hexChar >= 'a' && hexChar <= 'f') return (int)(hexChar - 'a') + 10;
+            if (hexChar >= '0'
+                && hexChar <= '9')
+            {
+                return (hexChar - '0');
+            }
+            if (hexChar >= 'A'
+                && hexChar <= 'F')
+            {
+                return (hexChar - 'A') + 10;
+            }
+            if (hexChar >= 'a'
+                && hexChar <= 'f')
+            {
+                return (hexChar - 'a') + 10;
+            }
             Debug.Assert(false, "Invalid Hexadecimal Digit");
             throw EntityUtil.ArgumentOutOfRange("hexadecimal digit is not valid");
         }
 
-
-        static readonly char[] _datetimeSeparators = new char[] { ' ', ':', '-', '.' };
-        static readonly char[] _datetimeOffsetSeparators = new char[] { ' ', ':', '-', '.', '+', '-' };
+        private static readonly char[] _datetimeSeparators = new[] { ' ', ':', '-', '.' };
+        private static readonly char[] _datetimeOffsetSeparators = new[] { ' ', ':', '-', '.', '+', '-' };
 
         /// <summary>
         /// Converts datetime literal value.
         /// </summary>
         private static DateTime ConvertDateTimeLiteralValue(string datetimeLiteralValue)
         {
-            string[] datetimeParts = datetimeLiteralValue.Split(_datetimeSeparators, StringSplitOptions.RemoveEmptyEntries);
+            var datetimeParts = datetimeLiteralValue.Split(_datetimeSeparators, StringSplitOptions.RemoveEmptyEntries);
 
             Debug.Assert(datetimeParts.Length >= 5, "datetime literal value must have at least 5 parts");
 
@@ -507,14 +511,14 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             Debug.Assert(minute >= 0 && minute <= 59);
             Debug.Assert(second >= 0 && second <= 59);
             Debug.Assert(ticks >= 0 && ticks <= 9999999);
-            DateTime dateTime = new DateTime(year, month, day, hour, minute, second, 0);
+            var dateTime = new DateTime(year, month, day, hour, minute, second, 0);
             dateTime = dateTime.AddTicks(ticks);
             return dateTime;
         }
 
         private static DateTimeOffset ConvertDateTimeOffsetLiteralValue(ErrorContext errCtx, string datetimeLiteralValue)
         {
-            string[] datetimeParts = datetimeLiteralValue.Split(_datetimeOffsetSeparators, StringSplitOptions.RemoveEmptyEntries);
+            var datetimeParts = datetimeLiteralValue.Split(_datetimeOffsetSeparators, StringSplitOptions.RemoveEmptyEntries);
 
             Debug.Assert(datetimeParts.Length >= 7, "datetime literal value must have at least 7 parts");
 
@@ -527,7 +531,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             int second;
             int ticks;
             //Copy the time parts into a different array since the last two parts will be handled in this method.
-            string[] timeParts = new String[datetimeParts.Length - 2];
+            var timeParts = new String[datetimeParts.Length - 2];
             Array.Copy(datetimeParts, timeParts, datetimeParts.Length - 2);
             GetTimeParts(datetimeLiteralValue, timeParts, 3, out hour, out minute, out second, out ticks);
 
@@ -538,16 +542,17 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             Debug.Assert(minute >= 0 && minute <= 59);
             Debug.Assert(second >= 0 && second <= 59);
             Debug.Assert(ticks >= 0 && ticks <= 9999999);
-            int offsetHours = Int32.Parse(datetimeParts[datetimeParts.Length - 2], NumberStyles.Integer, CultureInfo.InvariantCulture);
-            int offsetMinutes = Int32.Parse(datetimeParts[datetimeParts.Length - 1], NumberStyles.Integer, CultureInfo.InvariantCulture);
-            TimeSpan offsetTimeSpan = new TimeSpan(offsetHours, offsetMinutes, 0);
+            var offsetHours = Int32.Parse(datetimeParts[datetimeParts.Length - 2], NumberStyles.Integer, CultureInfo.InvariantCulture);
+            var offsetMinutes = Int32.Parse(datetimeParts[datetimeParts.Length - 1], NumberStyles.Integer, CultureInfo.InvariantCulture);
+            var offsetTimeSpan = new TimeSpan(offsetHours, offsetMinutes, 0);
 
             //If DateTimeOffset had a negative offset, we should negate the timespan
-            if (datetimeLiteralValue.IndexOf('+') == -1)
+            if (datetimeLiteralValue.IndexOf('+')
+                == -1)
             {
                 offsetTimeSpan = offsetTimeSpan.Negate();
             }
-            DateTime dateTime = new DateTime(year, month, day, hour, minute, second, 0);
+            var dateTime = new DateTime(year, month, day, hour, minute, second, 0);
             dateTime = dateTime.AddTicks(ticks);
 
             try
@@ -556,7 +561,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             }
             catch (ArgumentOutOfRangeException e)
             {
-                throw EntityUtil.EntitySqlError(errCtx, System.Data.Entity.Resources.Strings.InvalidDateTimeOffsetLiteral(datetimeLiteralValue), e);
+                throw EntityUtil.EntitySqlError(errCtx, Strings.InvalidDateTimeOffsetLiteral(datetimeLiteralValue), e);
             }
         }
 
@@ -565,7 +570,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         private static TimeSpan ConvertTimeLiteralValue(string datetimeLiteralValue)
         {
-            string[] datetimeParts = datetimeLiteralValue.Split(_datetimeSeparators, StringSplitOptions.RemoveEmptyEntries);
+            var datetimeParts = datetimeLiteralValue.Split(_datetimeSeparators, StringSplitOptions.RemoveEmptyEntries);
 
             Debug.Assert(datetimeParts.Length >= 2, "time literal value must have at least 2 parts");
 
@@ -579,22 +584,24 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             Debug.Assert(minute >= 0 && minute <= 59);
             Debug.Assert(second >= 0 && second <= 59);
             Debug.Assert(ticks >= 0 && ticks <= 9999999);
-            TimeSpan ts = new TimeSpan(hour, minute, second);
+            var ts = new TimeSpan(hour, minute, second);
             ts = ts.Add(new TimeSpan(ticks));
             return ts;
         }
 
-        private static void GetTimeParts(string datetimeLiteralValue, string[] datetimeParts, int timePartStartIndex, out int hour, out int minute, out int second, out int ticks)
+        private static void GetTimeParts(
+            string datetimeLiteralValue, string[] datetimeParts, int timePartStartIndex, out int hour, out int minute, out int second,
+            out int ticks)
         {
             hour = Int32.Parse(datetimeParts[timePartStartIndex], NumberStyles.Integer, CultureInfo.InvariantCulture);
             if (hour > 23)
             {
-                throw EntityUtil.EntitySqlError(System.Data.Entity.Resources.Strings.InvalidHour(datetimeParts[timePartStartIndex], datetimeLiteralValue));
+                throw EntityUtil.EntitySqlError(Strings.InvalidHour(datetimeParts[timePartStartIndex], datetimeLiteralValue));
             }
             minute = Int32.Parse(datetimeParts[++timePartStartIndex], NumberStyles.Integer, CultureInfo.InvariantCulture);
             if (minute > 59)
             {
-                throw EntityUtil.EntitySqlError(System.Data.Entity.Resources.Strings.InvalidMinute(datetimeParts[timePartStartIndex], datetimeLiteralValue));
+                throw EntityUtil.EntitySqlError(Strings.InvalidMinute(datetimeParts[timePartStartIndex], datetimeLiteralValue));
             }
             second = 0;
             ticks = 0;
@@ -604,39 +611,40 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                 second = Int32.Parse(datetimeParts[timePartStartIndex], NumberStyles.Integer, CultureInfo.InvariantCulture);
                 if (second > 59)
                 {
-                    throw EntityUtil.EntitySqlError(System.Data.Entity.Resources.Strings.InvalidSecond(datetimeParts[timePartStartIndex], datetimeLiteralValue));
+                    throw EntityUtil.EntitySqlError(Strings.InvalidSecond(datetimeParts[timePartStartIndex], datetimeLiteralValue));
                 }
                 timePartStartIndex++;
                 if (datetimeParts.Length > timePartStartIndex)
                 {
                     //We need fractional time part to be seven digits
-                    string ticksString = datetimeParts[timePartStartIndex].PadRight(7, '0');
+                    var ticksString = datetimeParts[timePartStartIndex].PadRight(7, '0');
                     ticks = Int32.Parse(ticksString, NumberStyles.Integer, CultureInfo.InvariantCulture);
                 }
-
             }
         }
 
         private static void GetDateParts(string datetimeLiteralValue, string[] datetimeParts, out int year, out int month, out int day)
         {
             year = Int32.Parse(datetimeParts[0], NumberStyles.Integer, CultureInfo.InvariantCulture);
-            if (year < 1 || year > 9999)
+            if (year < 1
+                || year > 9999)
             {
-                throw EntityUtil.EntitySqlError(System.Data.Entity.Resources.Strings.InvalidYear(datetimeParts[0], datetimeLiteralValue));
+                throw EntityUtil.EntitySqlError(Strings.InvalidYear(datetimeParts[0], datetimeLiteralValue));
             }
             month = Int32.Parse(datetimeParts[1], NumberStyles.Integer, CultureInfo.InvariantCulture);
-            if (month < 1 || month > 12)
+            if (month < 1
+                || month > 12)
             {
-                throw EntityUtil.EntitySqlError(System.Data.Entity.Resources.Strings.InvalidMonth(datetimeParts[1], datetimeLiteralValue));
+                throw EntityUtil.EntitySqlError(Strings.InvalidMonth(datetimeParts[1], datetimeLiteralValue));
             }
             day = Int32.Parse(datetimeParts[2], NumberStyles.Integer, CultureInfo.InvariantCulture);
             if (day < 1)
             {
-                throw EntityUtil.EntitySqlError(System.Data.Entity.Resources.Strings.InvalidDay(datetimeParts[2], datetimeLiteralValue));
+                throw EntityUtil.EntitySqlError(Strings.InvalidDay(datetimeParts[2], datetimeLiteralValue));
             }
             if (day > DateTime.DaysInMonth(year, month))
             {
-                throw EntityUtil.EntitySqlError(System.Data.Entity.Resources.Strings.InvalidDayInMonth(datetimeParts[2], datetimeParts[1], datetimeLiteralValue));
+                throw EntityUtil.EntitySqlError(Strings.InvalidDayInMonth(datetimeParts[2], datetimeParts[1], datetimeLiteralValue));
             }
         }
 
@@ -647,6 +655,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         {
             return new Guid(guidLiteralValue);
         }
+
         #endregion
     }
 }

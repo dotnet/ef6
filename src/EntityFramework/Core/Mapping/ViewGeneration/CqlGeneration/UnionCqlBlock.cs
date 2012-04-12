@@ -1,35 +1,39 @@
-using System.Collections.Generic;
-using System.Text;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using System.Data.Entity.Core.Common.Utils;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
+    using System.Diagnostics;
+    using System.Text;
+
     /// <summary>
     /// Represents Union nodes in the <see cref="CqlBlock"/> tree.
     /// </summary>
     internal sealed class UnionCqlBlock : CqlBlock
     {
         #region Constructor
+
         /// <summary>
         /// Creates a union block with SELECT (<paramref name="slotInfos"/>), FROM (<paramref name="children"/>), WHERE (true), AS (<paramref name="blockAliasNum"/>).
         /// </summary>
         internal UnionCqlBlock(SlotInfo[] slotInfos, List<CqlBlock> children, CqlIdentifiers identifiers, int blockAliasNum)
             : base(slotInfos, children, BoolExpression.True, identifiers, blockAliasNum)
-        { }
+        {
+        }
+
         #endregion
 
         #region Methods
+
         internal override StringBuilder AsEsql(StringBuilder builder, bool isTopLevel, int indentLevel)
         {
-            Debug.Assert(this.Children.Count > 0, "UnionCqlBlock: Children collection must not be empty");
+            Debug.Assert(Children.Count > 0, "UnionCqlBlock: Children collection must not be empty");
 
             // Simply get the Cql versions of the children and add the union operator between them.
-            bool isFirst = true;
-            foreach (CqlBlock child in Children)
+            var isFirst = true;
+            foreach (var child in Children)
             {
                 if (false == isFirst)
                 {
@@ -47,14 +51,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
 
         internal override DbExpression AsCqt(bool isTopLevel)
         {
-            Debug.Assert(this.Children.Count > 0, "UnionCqlBlock: Children collection must not be empty");
-            DbExpression cqt = this.Children[0].AsCqt(isTopLevel);
-            for (int i = 1; i < this.Children.Count; ++i)
+            Debug.Assert(Children.Count > 0, "UnionCqlBlock: Children collection must not be empty");
+            var cqt = Children[0].AsCqt(isTopLevel);
+            for (var i = 1; i < Children.Count; ++i)
             {
-                cqt = cqt.UnionAll(this.Children[i].AsCqt(isTopLevel));
+                cqt = cqt.UnionAll(Children[i].AsCqt(isTopLevel));
             }
             return cqt;
         }
+
         #endregion
     }
 }

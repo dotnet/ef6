@@ -1,7 +1,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
-    using System.Data.Entity;
+    using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.IO;
@@ -15,15 +15,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     internal abstract class MetadataArtifactLoader
     {
-        protected readonly static string resPathPrefix    = @"res://";
-        protected readonly static string resPathSeparator = @"/";
-        protected readonly static string altPathSeparator = @"\";
-        protected readonly static string wildcard         = @"*";
+        protected static readonly string resPathPrefix = @"res://";
+        protected static readonly string resPathSeparator = @"/";
+        protected static readonly string altPathSeparator = @"\";
+        protected static readonly string wildcard = @"*";
 
         /// <summary>
         /// Read-only access to the resource/file path
         /// </summary>
-        public abstract string Path{ get; }
+        public abstract string Path { get; }
+
         public abstract void CollectFilePermissionPaths(List<string> paths, DataSpace spaceToGet);
 
         /// <summary>
@@ -50,13 +51,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file name which is a Machine resource
         [ResourceConsumption(ResourceScope.Machine)] //For Create method call. But the path is not created in this method.
-        public static MetadataArtifactLoader Create(string path,
-                                                    ExtensionCheck extensionCheck,
-                                                    string validExtension,
-                                                    ICollection<string> uriRegistry)
+        public static MetadataArtifactLoader Create(
+            string path,
+            ExtensionCheck extensionCheck,
+            string validExtension,
+            ICollection<string> uriRegistry)
         {
             return Create(path, extensionCheck, validExtension, uriRegistry, new DefaultAssemblyResolver());
         }
+
         /// <summary>
         /// Factory method to create an artifact loader. This is where an appropriate
         /// subclass of MetadataArtifactLoader is created, depending on the kind of
@@ -70,25 +73,27 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A concrete instance of an artifact loader.</returns>
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file name which is a Machine resource
         [ResourceConsumption(ResourceScope.Machine)] //For CheckArtifactExtension method call. But the path is not created in this method.
-        internal static MetadataArtifactLoader Create(string path, 
-                                                    ExtensionCheck extensionCheck,
-                                                    string validExtension,
-                                                    ICollection<string> uriRegistry, 
-                                                    MetadataArtifactAssemblyResolver resolver)
+        internal static MetadataArtifactLoader Create(
+            string path,
+            ExtensionCheck extensionCheck,
+            string validExtension,
+            ICollection<string> uriRegistry,
+            MetadataArtifactAssemblyResolver resolver)
         {
             Debug.Assert(path != null);
             Debug.Assert(resolver != null);
 
             // res:// -based artifacts
             //
-            if (MetadataArtifactLoader.PathStartsWithResPrefix(path))
+            if (PathStartsWithResPrefix(path))
             {
-                return MetadataArtifactLoaderCompositeResource.CreateResourceLoader(path, extensionCheck, validExtension, uriRegistry, resolver);
+                return MetadataArtifactLoaderCompositeResource.CreateResourceLoader(
+                    path, extensionCheck, validExtension, uriRegistry, resolver);
             }
 
             // Files and Folders
             //
-            string normalizedPath = MetadataArtifactLoader.NormalizeFilePaths(path);
+            var normalizedPath = NormalizeFilePaths(path);
             if (Directory.Exists(normalizedPath))
             {
                 return new MetadataArtifactLoaderCompositeFile(normalizedPath, uriRegistry);
@@ -102,10 +107,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         break;
 
                     case ExtensionCheck.All:
-                        if (!MetadataArtifactLoader.IsValidArtifact(normalizedPath))
+                        if (!IsValidArtifact(normalizedPath))
                         {
                             throw EntityUtil.Metadata(Strings.InvalidMetadataPath);
-                        } 
+                        }
                         break;
                 }
 
@@ -133,7 +138,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="validExtension">An acceptable extension for the file</param>
         /// <returns>An instance of MetadataArtifactLoader</returns>
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file names which are a Machine resource
-        [ResourceConsumption(ResourceScope.Machine)] //For CreateCompositeFromFilePaths method call. But the path is not created in this method.
+        [ResourceConsumption(ResourceScope.Machine)]
+        //For CreateCompositeFromFilePaths method call. But the path is not created in this method.
         public static MetadataArtifactLoader CreateCompositeFromFilePaths(IEnumerable<string> filePaths, string validExtension)
         {
             Debug.Assert(!string.IsNullOrEmpty(validExtension));
@@ -143,7 +149,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file names which are a Machine resource
         [ResourceConsumption(ResourceScope.Machine)] //For Create method call. But the paths are not created in this method.
-        internal static MetadataArtifactLoader CreateCompositeFromFilePaths(IEnumerable<string> filePaths, string validExtension, MetadataArtifactAssemblyResolver resolver)
+        internal static MetadataArtifactLoader CreateCompositeFromFilePaths(
+            IEnumerable<string> filePaths, string validExtension, MetadataArtifactAssemblyResolver resolver)
         {
             ExtensionCheck extensionCheck;
             if (string.IsNullOrEmpty(validExtension))
@@ -154,34 +161,36 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 extensionCheck = ExtensionCheck.Specific;
             }
-            
-            List<MetadataArtifactLoader> loaders = new List<MetadataArtifactLoader>();
+
+            var loaders = new List<MetadataArtifactLoader>();
 
             // The following set is used to remove duplicate paths from the incoming array
-            HashSet<string> uriRegistry = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var uriRegistry = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            foreach(string path in filePaths)
+            foreach (var path in filePaths)
             {
                 if (string.IsNullOrEmpty(path))
                 {
-                    throw EntityUtil.Metadata(System.Data.Entity.Resources.Strings.NotValidInputPath,
-                                              EntityUtil.CollectionParameterElementIsNullOrEmpty("filePaths"));
+                    throw EntityUtil.Metadata(
+                        Strings.NotValidInputPath,
+                        EntityUtil.CollectionParameterElementIsNullOrEmpty("filePaths"));
                 }
 
-                string trimedPath = path.Trim();
+                var trimedPath = path.Trim();
                 if (trimedPath.Length > 0)
                 {
-                    loaders.Add(MetadataArtifactLoader.Create(
-                                            trimedPath,
-                                            extensionCheck,
-                                            validExtension,
-                                            uriRegistry,
-                                            resolver)
-                                        );
+                    loaders.Add(
+                        Create(
+                            trimedPath,
+                            extensionCheck,
+                            validExtension,
+                            uriRegistry,
+                            resolver)
+                        );
                 }
             }
 
-            return MetadataArtifactLoader.Create(loaders);
+            return Create(loaders);
         }
 
         /// <summary>
@@ -192,9 +201,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>An instance of MetadataArtifactLoader</returns>
         public static MetadataArtifactLoader CreateCompositeFromXmlReaders(IEnumerable<XmlReader> xmlReaders)
         {
-            List<MetadataArtifactLoader> loaders = new List<MetadataArtifactLoader>();
+            var loaders = new List<MetadataArtifactLoader>();
 
-            foreach (XmlReader reader in xmlReaders)
+            foreach (var reader in xmlReaders)
             {
                 if (reader == null)
                 {
@@ -204,7 +213,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 loaders.Add(new MetadataArtifactLoaderXmlReaderWrapper(reader));
             }
 
-            return MetadataArtifactLoader.Create(loaders);
+            return Create(loaders);
         }
 
         /// <summary>
@@ -217,7 +226,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Debug.Assert(!string.IsNullOrEmpty(path));
             Debug.Assert(!string.IsNullOrEmpty(validExtension));
 
-            string extension = GetExtension(path);
+            var extension = GetExtension(path);
             if (!extension.Equals(validExtension, StringComparison.OrdinalIgnoreCase))
             {
                 throw EntityUtil.Metadata(Strings.InvalidFileExtension(path, extension, validExtension));
@@ -230,7 +239,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of strings identifying paths to all resources</returns>
         public virtual List<string> GetOriginalPaths()
         {
-            return new List<string>(new string[] { Path });
+            return new List<string>(new[] { Path });
         }
 
         /// <summary>
@@ -241,21 +250,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A List of strings identifying paths to all artifacts for a specific DataSpace</returns>
         public virtual List<string> GetOriginalPaths(DataSpace spaceToGet)
         {
-            List<string> list = new List<string>();
-            if (MetadataArtifactLoader.IsArtifactOfDataSpace(Path, spaceToGet))
+            var list = new List<string>();
+            if (IsArtifactOfDataSpace(Path, spaceToGet))
             {
                 list.Add(Path);
             }
             return list;
         }
 
-        public virtual bool IsComposite 
+        public virtual bool IsComposite
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
         }
+
         /// <summary>
         /// Get paths to all artifacts
         /// </summary>
@@ -273,6 +280,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             return GetReaders(null);
         }
+
         /// <summary>
         /// Get XmlReaders for all resources
         /// </summary>
@@ -294,7 +302,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>true if the path represents a resource location</returns>
         internal static bool PathStartsWithResPrefix(string path)
         {
-            return path.StartsWith(MetadataArtifactLoader.resPathPrefix, StringComparison.OrdinalIgnoreCase);
+            return path.StartsWith(resPathPrefix, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -307,7 +315,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Debug.Assert(!string.IsNullOrEmpty(resource));
 
-            string extn = GetExtension(resource);
+            var extn = GetExtension(resource);
             if (!string.IsNullOrEmpty(extn))
             {
                 return string.Compare(extn, XmlConstants.CSpaceSchemaExtension, StringComparison.OrdinalIgnoreCase) == 0;
@@ -325,7 +333,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Debug.Assert(!string.IsNullOrEmpty(resource));
 
-            string extn = GetExtension(resource);
+            var extn = GetExtension(resource);
             if (!string.IsNullOrEmpty(extn))
             {
                 return string.Compare(extn, XmlConstants.SSpaceSchemaExtension, StringComparison.OrdinalIgnoreCase) == 0;
@@ -343,7 +351,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Debug.Assert(!string.IsNullOrEmpty(resource));
 
-            string extn = GetExtension(resource);
+            var extn = GetExtension(resource);
             if (!string.IsNullOrEmpty(extn))
             {
                 return string.Compare(extn, XmlConstants.CSSpaceSchemaExtension, StringComparison.OrdinalIgnoreCase) == 0;
@@ -356,16 +364,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // and when they do, Path.GetExtension throws and ArgumentException
         private static string GetExtension(string resource)
         {
-            if(String.IsNullOrEmpty(resource))
+            if (String.IsNullOrEmpty(resource))
+            {
                 return string.Empty;
+            }
 
-            int pos = resource.LastIndexOf('.');
+            var pos = resource.LastIndexOf('.');
             if (pos < 0)
+            {
                 return string.Empty;
+            }
 
             return resource.Substring(pos);
         }
-
 
         /// <summary>
         /// Helper method to determine whether a resource identifies a valid artifact.
@@ -376,14 +387,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Debug.Assert(!string.IsNullOrEmpty(resource));
 
-            string extn = GetExtension(resource);
+            var extn = GetExtension(resource);
             if (!string.IsNullOrEmpty(extn))
             {
                 return (
-                    string.Compare(extn, XmlConstants.CSpaceSchemaExtension, StringComparison.OrdinalIgnoreCase) == 0 ||
-                    string.Compare(extn, XmlConstants.SSpaceSchemaExtension, StringComparison.OrdinalIgnoreCase) == 0 ||
-                    string.Compare(extn, XmlConstants.CSSpaceSchemaExtension, StringComparison.OrdinalIgnoreCase) == 0
-                );
+                           string.Compare(extn, XmlConstants.CSpaceSchemaExtension, StringComparison.OrdinalIgnoreCase) == 0 ||
+                           string.Compare(extn, XmlConstants.SSpaceSchemaExtension, StringComparison.OrdinalIgnoreCase) == 0 ||
+                           string.Compare(extn, XmlConstants.CSSpaceSchemaExtension, StringComparison.OrdinalIgnoreCase) == 0
+                       );
             }
             return false;
         }
@@ -398,13 +409,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         protected static bool IsArtifactOfDataSpace(string resource, DataSpace dataSpace)
         {
             if (dataSpace == DataSpace.CSpace)
-                return MetadataArtifactLoader.IsCSpaceArtifact(resource);
+            {
+                return IsCSpaceArtifact(resource);
+            }
 
             if (dataSpace == DataSpace.SSpace)
-                return MetadataArtifactLoader.IsSSpaceArtifact(resource);
+            {
+                return IsSSpaceArtifact(resource);
+            }
 
             if (dataSpace == DataSpace.CSSpace)
-                return MetadataArtifactLoader.IsCSSpaceArtifact(resource);
+            {
+                return IsCSSpaceArtifact(resource);
+            }
 
             Debug.Assert(false, "Invalid DataSpace specified.");
             return false;
@@ -421,9 +438,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>The normalized file path</returns>
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file name which is a Machine resource
         [ResourceConsumption(ResourceScope.Machine)] //For Path.GetFullPath method call. But the path is not created in this method.
-        static internal string NormalizeFilePaths(string path)
+        internal static string NormalizeFilePaths(string path)
         {
-            bool getFullPath = true;    // used to determine whether we need to invoke GetFullPath()
+            var getFullPath = true; // used to determine whether we need to invoke GetFullPath()
 
             if (!String.IsNullOrEmpty(path))
             {
@@ -434,14 +451,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 //
                 if (path.StartsWith(EdmConstants.WebHomeSymbol, StringComparison.Ordinal))
                 {
-                    AspProxy aspProxy = new AspProxy();
+                    var aspProxy = new AspProxy();
                     path = aspProxy.MapWebPath(path);
                     getFullPath = false;
                 }
 
-                if (path.Length == 2 && path[1] == System.IO.Path.VolumeSeparatorChar)
+                if (path.Length == 2
+                    && path[1] == IO.Path.VolumeSeparatorChar)
                 {
-                    path = path + System.IO.Path.DirectorySeparatorChar;
+                    path = path + IO.Path.DirectorySeparatorChar;
                 }
                 else
                 {
@@ -449,9 +467,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     // expand. Note that ExpandDataDirectory() won't process the path unless
                     // it begins with the macro.
                     //
-                    string fullPath = System.Data.Entity.Core.EntityClient.DbConnectionOptions.ExpandDataDirectory(
-                            System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder.MetadataParameterName,   // keyword ("Metadata")
-                            path                                                                            // value
+                    var fullPath = DbConnectionOptions.ExpandDataDirectory(
+                        EntityConnectionStringBuilder.MetadataParameterName, // keyword ("Metadata")
+                        path // value
                         );
 
                     // ExpandDataDirectory() returns null if it doesn't find the macro in its
@@ -468,25 +486,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 if (getFullPath)
                 {
-                    path = System.IO.Path.GetFullPath(path);
+                    path = IO.Path.GetFullPath(path);
                 }
             }
             catch (ArgumentException e)
             {
-                throw EntityUtil.Metadata(System.Data.Entity.Resources.Strings.NotValidInputPath, e);
+                throw EntityUtil.Metadata(Strings.NotValidInputPath, e);
             }
             catch (NotSupportedException e)
             {
-                throw EntityUtil.Metadata(System.Data.Entity.Resources.Strings.NotValidInputPath, e);
+                throw EntityUtil.Metadata(Strings.NotValidInputPath, e);
             }
             catch (PathTooLongException)
             {
-                throw EntityUtil.Metadata(System.Data.Entity.Resources.Strings.NotValidInputPath);
+                throw EntityUtil.Metadata(Strings.NotValidInputPath);
             }
 
             return path;
         }
-
-
     }
 }

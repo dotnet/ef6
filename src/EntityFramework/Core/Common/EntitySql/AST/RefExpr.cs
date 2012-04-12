@@ -1,10 +1,5 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
-    using System;
-    using System.Globalization;
-    using System.Collections;
-    using System.Collections.Generic;
-
     /// <summary>
     /// Represents REF(expr) expression.
     /// </summary>
@@ -34,7 +29,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
     /// </summary>
     internal sealed class DerefExpr : Node
     {
-        private Node _argExpr;
+        private readonly Node _argExpr;
 
         /// <summary>
         /// Initializes DEREF expression node.

@@ -1,14 +1,12 @@
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity.Core.Spatial;
-using System.Diagnostics;
-using System.Linq;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Spatial;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
 
     /// <summary>
     /// Class representing a primitive type
@@ -16,6 +14,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public sealed class PrimitiveType : SimpleType
     {
         #region constructors
+
         /// <summary>
         /// Initializes a new instance of PrimitiveType
         /// </summary>      
@@ -35,17 +34,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="baseType">The primitive type that this type is derived from</param>
         /// <param name="providerManifest">The ProviderManifest of the provider of this type</param>
         /// <exception cref="System.ArgumentNullException">Thrown if name, namespaceName, version, baseType or providerManifest arguments are null</exception>
-        internal PrimitiveType(string name,
-                             string namespaceName,
-                             DataSpace dataSpace,
-                             PrimitiveType baseType,
-                             DbProviderManifest providerManifest)
+        internal PrimitiveType(
+            string name,
+            string namespaceName,
+            DataSpace dataSpace,
+            PrimitiveType baseType,
+            DbProviderManifest providerManifest)
             : base(name, namespaceName, dataSpace)
         {
             EntityUtil.GenericCheckArgumentNull(baseType, "baseType");
             EntityUtil.GenericCheckArgumentNull(providerManifest, "providerManifest");
 
-            this.BaseType = baseType;
+            BaseType = baseType;
 
             Initialize(this, baseType.PrimitiveTypeKind, providerManifest);
         }
@@ -56,31 +56,38 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="clrType">The CLR type object for this primitive type</param>
         /// <param name="baseType">The base type for this primitive type</param>
         /// <param name="providerManifest">The ProviderManifest of the provider of this type</param>
-        internal PrimitiveType(Type clrType,
-                               PrimitiveType baseType,
-                               DbProviderManifest providerManifest)
+        internal PrimitiveType(
+            Type clrType,
+            PrimitiveType baseType,
+            DbProviderManifest providerManifest)
             : this(EntityUtil.GenericCheckArgumentNull(clrType, "clrType").Name, clrType.Namespace,
-            DataSpace.OSpace, baseType, providerManifest)
+                DataSpace.OSpace, baseType, providerManifest)
         {
             Debug.Assert(clrType == ClrEquivalentType, "not equivalent to ClrEquivalentType");
         }
+
         #endregion
 
         #region Fields
+
         private PrimitiveTypeKind _primitiveTypeKind;
         private DbProviderManifest _providerManifest;
+
         #endregion
 
-
         #region Properties
+
         /// <summary>
         /// Returns the kind of the type
         /// </summary>
-        public override BuiltInTypeKind BuiltInTypeKind { get { return BuiltInTypeKind.PrimitiveType; } }
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
+            get { return BuiltInTypeKind.PrimitiveType; }
+        }
 
         /// <summary>
         /// </summary>
-        internal override System.Type ClrType
+        internal override Type ClrType
         {
             get { return ClrEquivalentType; }
         }
@@ -92,14 +99,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.PrimitiveTypeKind, false)]
         public PrimitiveTypeKind PrimitiveTypeKind
         {
-            get
-            {
-                return _primitiveTypeKind;
-            }
-            internal set
-            {
-                _primitiveTypeKind = value;
-            }
+            get { return _primitiveTypeKind; }
+            internal set { _primitiveTypeKind = value; }
         }
 
         /// <summary>
@@ -110,7 +111,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                Debug.Assert(_providerManifest != null, "This primitive type should have been added to a manifest, which should have set this");
+                Debug.Assert(
+                    _providerManifest != null, "This primitive type should have been added to a manifest, which should have set this");
                 return _providerManifest;
             }
             set
@@ -124,12 +126,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Gets the FacetDescriptions for this type
         /// </summary>
         /// <returns>The FacetDescritions for this type.</returns>
-        public System.Collections.ObjectModel.ReadOnlyCollection<FacetDescription> FacetDescriptions
+        public ReadOnlyCollection<FacetDescription> FacetDescriptions
         {
-            get
-            {
-                return ProviderManifest.GetFacetDescriptions(this);
-            }
+            get { return ProviderManifest.GetFacetDescriptions(this); }
         }
 
         /// <summary>
@@ -194,13 +193,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return null;
             }
         }
+
         #endregion
 
         #region Methods
+
         internal override IEnumerable<FacetDescription> GetAssociatedFacetDescriptions()
         {
             // return all general facets and facets associated with this type
-            return base.GetAssociatedFacetDescriptions().Concat(this.FacetDescriptions);
+            return base.GetAssociatedFacetDescriptions().Concat(FacetDescriptions);
         }
 
         /// <summary>
@@ -209,9 +210,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="primitiveType">The primitive type to initialize</param>
         /// <param name="primitiveTypeKind">The primitive type kind of this primitive type</param>
         /// <param name="providerManifest">The ProviderManifest of the provider of this type</param>
-        internal static void Initialize(PrimitiveType primitiveType,
-                                                      PrimitiveTypeKind primitiveTypeKind,
-                                                      DbProviderManifest providerManifest)
+        internal static void Initialize(
+            PrimitiveType primitiveType,
+            PrimitiveTypeKind primitiveTypeKind,
+            DbProviderManifest providerManifest)
         {
             primitiveType._primitiveTypeKind = primitiveTypeKind;
             primitiveType._providerManifest = providerManifest;
@@ -227,22 +229,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns></returns>
         public EdmType GetEdmPrimitiveType()
         {
-            return MetadataItem.EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind);
+            return EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind);
         }
 
         /// <summary>
         /// Returns the list of EDM primitive types
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        public static System.Collections.ObjectModel.ReadOnlyCollection<PrimitiveType> GetEdmPrimitiveTypes()
+        public static ReadOnlyCollection<PrimitiveType> GetEdmPrimitiveTypes()
         {
             return EdmProviderManifest.GetStoreTypes();
         }
 
         public static PrimitiveType GetEdmPrimitiveType(PrimitiveTypeKind primitiveTypeKind)
         {
-            return MetadataItem.EdmProviderManifest.GetPrimitiveType(primitiveTypeKind);
+            return EdmProviderManifest.GetPrimitiveType(primitiveTypeKind);
         }
+
         #endregion
     }
 }

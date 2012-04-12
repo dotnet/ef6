@@ -1,9 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.SqlClient.SqlGen
 {
+    using System.Collections.Generic;
+    using System.Diagnostics;
+
     /// <summary>
     /// This class is used for building the SELECT clause of a Sql Statement
     /// It is used to gather information about required and optional columns
@@ -27,7 +26,9 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
     internal class SqlSelectClauseBuilder : SqlBuilder
     {
         #region Fields and Properties
+
         private List<OptionalColumn> m_optionalColumns;
+
         internal void AddOptionalColumn(OptionalColumn column)
         {
             if (m_optionalColumns == null)
@@ -38,6 +39,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         }
 
         private TopClause m_top;
+
         internal TopClause Top
         {
             get { return m_top; }
@@ -51,28 +53,27 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <summary>
         /// Do we need to add a DISTINCT at the beginning of the SELECT
         /// </summary>
-        internal bool IsDistinct
-        {
-            get;
-            set;
-        }
+        internal bool IsDistinct { get; set; }
 
         /// <summary>
         /// Whether any columns have been specified.
         /// </summary>
         public override bool IsEmpty
         {
-            get { return (base.IsEmpty) && (this.m_optionalColumns == null || this.m_optionalColumns.Count == 0); }
+            get { return (base.IsEmpty) && (m_optionalColumns == null || m_optionalColumns.Count == 0); }
         }
 
         private readonly Func<bool> m_isPartOfTopMostStatement;
+
         #endregion
 
         #region Constructor
+
         internal SqlSelectClauseBuilder(Func<bool> isPartOfTopMostStatement)
         {
-            this.m_isPartOfTopMostStatement = isPartOfTopMostStatement;
+            m_isPartOfTopMostStatement = isPartOfTopMostStatement;
         }
+
         #endregion
 
         #region ISqlFragment Members
@@ -100,20 +101,20 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 writer.Write("DISTINCT ");
             }
 
-            if (this.Top != null)
+            if (Top != null)
             {
-                this.Top.WriteSql(writer, sqlGenerator);
+                Top.WriteSql(writer, sqlGenerator);
             }
 
-            if (this.IsEmpty)
+            if (IsEmpty)
             {
-                Debug.Assert(false);  // we have removed all possibilities of SELECT *.
+                Debug.Assert(false); // we have removed all possibilities of SELECT *.
                 writer.Write("*");
             }
             else
             {
                 //Print the optional columns if any
-                bool printedAny = WriteOptionalColumns(writer, sqlGenerator);
+                var printedAny = WriteOptionalColumns(writer, sqlGenerator);
 
                 if (!base.IsEmpty)
                 {
@@ -123,11 +124,11 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                     }
                     base.WriteSql(writer, sqlGenerator);
                 }
-                //If no optional columns were printed and there were no other columns, 
-                // print at least the first optional column
+                    //If no optional columns were printed and there were no other columns, 
+                    // print at least the first optional column
                 else if (!printedAny)
                 {
-                    this.m_optionalColumns[0].MarkAsUsed();
+                    m_optionalColumns[0].MarkAsUsed();
                     m_optionalColumns[0].WriteSqlIfUsed(writer, sqlGenerator, "");
                 }
             }
@@ -147,22 +148,22 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns>Whether at least one column got written</returns>
         private bool WriteOptionalColumns(SqlWriter writer, SqlGenerator sqlGenerator)
         {
-            if (this.m_optionalColumns == null)
+            if (m_optionalColumns == null)
             {
                 return false;
             }
 
             if (m_isPartOfTopMostStatement() || IsDistinct)
             {
-                foreach (OptionalColumn column in this.m_optionalColumns)
+                foreach (var column in m_optionalColumns)
                 {
                     column.MarkAsUsed();
                 }
             }
 
-            string separator = "";
-            bool printedAny = false;
-            foreach (OptionalColumn column in this.m_optionalColumns)
+            var separator = "";
+            var printedAny = false;
+            foreach (var column in m_optionalColumns)
             {
                 if (column.WriteSqlIfUsed(writer, sqlGenerator, separator))
                 {
@@ -172,6 +173,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             }
             return printedAny;
         }
+
         #endregion
     }
 }

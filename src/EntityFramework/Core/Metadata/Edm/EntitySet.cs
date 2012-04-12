@@ -1,19 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using System.Threading;
-using System.Data.Entity.Core.Common.Utils;
-using System.Collections.ObjectModel;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Diagnostics;
+    using System.Threading;
+
     /// <summary>
     /// concrete Class for representing a entity set
     /// </summary>
     public class EntitySet : EntitySetBase
     {
         #region Constructors
+
         /// <summary>
         /// The constructor for constructing the EntitySet with a given name and an entity type
         /// </summary>
@@ -27,30 +26,34 @@ namespace System.Data.Entity.Core.Metadata.Edm
             : base(name, schema, table, definingQuery, entityType)
         {
         }
+
         #endregion
 
         #region Fields
+
         private ReadOnlyCollection<Tuple<AssociationSet, ReferentialConstraint>> _foreignKeyDependents;
         private ReadOnlyCollection<Tuple<AssociationSet, ReferentialConstraint>> _foreignKeyPrincipals;
         private volatile bool _hasForeignKeyRelationships;
         private volatile bool _hasIndependentRelationships;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the kind of the type
         /// </summary>
-        public override BuiltInTypeKind BuiltInTypeKind { get { return BuiltInTypeKind.EntitySet; } }
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
+            get { return BuiltInTypeKind.EntitySet; }
+        }
 
         /// <summary>
         /// Gets/Sets the entity type of this entity set
         /// </summary>
         public new EntityType ElementType
         {
-            get
-            {
-                return (EntityType)base.ElementType;
-            }
+            get { return (EntityType)base.ElementType; }
         }
 
         /// <summary>
@@ -118,27 +121,30 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #endregion
 
         #region Methods
+
         private void InitializeForeignKeyLists()
         {
             var dependents = new List<Tuple<AssociationSet, ReferentialConstraint>>();
             var principals = new List<Tuple<AssociationSet, ReferentialConstraint>>();
-            bool foundFkRelationship = false;
-            bool foundIndependentRelationship = false;
-            foreach (AssociationSet associationSet in MetadataHelper.GetAssociationsForEntitySet(this))
+            var foundFkRelationship = false;
+            var foundIndependentRelationship = false;
+            foreach (var associationSet in MetadataHelper.GetAssociationsForEntitySet(this))
             {
                 if (associationSet.ElementType.IsForeignKey)
                 {
                     foundFkRelationship = true;
                     Debug.Assert(associationSet.ElementType.ReferentialConstraints.Count == 1, "Expected exactly one constraint for FK");
-                    ReferentialConstraint constraint = associationSet.ElementType.ReferentialConstraints[0];
-                    if (constraint.ToRole.GetEntityType().IsAssignableFrom(this.ElementType) ||
-                        this.ElementType.IsAssignableFrom(constraint.ToRole.GetEntityType()))
+                    var constraint = associationSet.ElementType.ReferentialConstraints[0];
+                    if (constraint.ToRole.GetEntityType().IsAssignableFrom(ElementType)
+                        ||
+                        ElementType.IsAssignableFrom(constraint.ToRole.GetEntityType()))
                     {
                         // Dependents
                         dependents.Add(new Tuple<AssociationSet, ReferentialConstraint>(associationSet, constraint));
                     }
-                    if (constraint.FromRole.GetEntityType().IsAssignableFrom(this.ElementType) ||
-                        this.ElementType.IsAssignableFrom(constraint.FromRole.GetEntityType()))
+                    if (constraint.FromRole.GetEntityType().IsAssignableFrom(ElementType)
+                        ||
+                        ElementType.IsAssignableFrom(constraint.FromRole.GetEntityType()))
                     {
                         // Principals
                         principals.Add(new Tuple<AssociationSet, ReferentialConstraint>(associationSet, constraint));
@@ -159,6 +165,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Interlocked.CompareExchange(ref _foreignKeyDependents, readOnlyDependents, null);
             Interlocked.CompareExchange(ref _foreignKeyPrincipals, readOnlyPrincipals, null);
         }
+
         #endregion
     }
 }

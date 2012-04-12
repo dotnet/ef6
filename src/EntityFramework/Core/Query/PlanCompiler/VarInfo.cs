@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
-
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
 // to prevent from simple mistakes during development (e.g. method argument validation 
 // in cases where it was you who created the variables or the variables had already been validated or 
@@ -15,23 +12,20 @@ using System.Collections.Generic;
 // or the tree was built/rewritten not the way we thought it was.
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
-
-using System.Globalization;
-
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
 using md = System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Query.InternalTrees;
-using System.Data.Entity.Core.Query.PlanCompiler;
 
-namespace System.Data.Entity.Core.Query.PlanCompiler {
+namespace System.Data.Entity.Core.Query.PlanCompiler
+{
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Query.InternalTrees;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Kind of VarInfo
     /// </summary>
     internal enum VarInfoKind
-    {   
+    {
         /// <summary>
         /// The VarInfo is of <see cref="PrimitiveTypeVarInfo"/> type.
         /// </summary>
@@ -45,14 +39,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler {
         /// <summary>
         /// The VarInfo is of <see cref="CollectionVarInfo"/> type.
         /// </summary>
-        CollectionVarInfo 
+        CollectionVarInfo
     }
 
     /// <summary>
     /// Information about a Var and its replacement
     /// </summary>
-    internal abstract class VarInfo {
-
+    internal abstract class VarInfo
+    {
         /// <summary>
         /// Gets <see cref="VarInfoKind"/> for this <see cref="VarInfo"/>.
         /// </summary>
@@ -61,7 +55,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler {
         /// <summary>
         /// Get the list of new Vars introduced by this VarInfo
         /// </summary>
-        internal virtual List<Var> NewVars { get { return null; } }
+        internal virtual List<Var> NewVars
+        {
+            get { return null; }
+        }
     }
 
     /// <summary>
@@ -69,14 +66,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler {
     /// Each such Var is replaced by a Var with a new "mapped" type - the "mapped" type
     /// is simply a collection type where the element type has been "mapped"
     /// </summary>
-    internal class CollectionVarInfo : VarInfo {
-        private List<Var> m_newVars; // always a singleton list
+    internal class CollectionVarInfo : VarInfo
+    {
+        private readonly List<Var> m_newVars; // always a singleton list
 
         /// <summary>
         /// Create a CollectionVarInfo
         /// </summary>
         /// <param name="newVar"></param>
-        internal CollectionVarInfo(Var newVar) {
+        internal CollectionVarInfo(Var newVar)
+        {
             m_newVars = new List<Var>();
             m_newVars.Add(newVar);
         }
@@ -84,17 +83,26 @@ namespace System.Data.Entity.Core.Query.PlanCompiler {
         /// <summary>
         /// Get the newVar
         /// </summary>
-        internal Var NewVar { get { return m_newVars[0]; } }
+        internal Var NewVar
+        {
+            get { return m_newVars[0]; }
+        }
 
         /// <summary>
         /// Gets <see cref="VarInfoKind"/> for this <see cref="VarInfo"/>. Always <see cref="VarInfoKind.CollectionVarInfo"/>.
         /// </summary>
-        internal override VarInfoKind Kind { get { return VarInfoKind.CollectionVarInfo; } }
+        internal override VarInfoKind Kind
+        {
+            get { return VarInfoKind.CollectionVarInfo; }
+        }
 
         /// <summary>
         /// Get the list of all NewVars - just one really
         /// </summary>
-        internal override List<Var> NewVars { get { return m_newVars; } }
+        internal override List<Var> NewVars
+        {
+            get { return m_newVars; }
+        }
     }
 
     /// <summary>
@@ -102,14 +110,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler {
     /// and how it can be replaced. This is targeted towards Vars of complex/record/
     /// entity/ref types, and the goal is to replace all such Vars in this module. 
     /// </summary>
-    internal class StructuredVarInfo : VarInfo {
-
+    internal class StructuredVarInfo : VarInfo
+    {
         private Dictionary<md.EdmProperty, Var> m_propertyToVarMap;
-        List<Var> m_newVars;
-        bool m_newVarsIncludeNullSentinelVar;
-        List<md.EdmProperty> m_newProperties;
-        md.RowType m_newType;
-        md.TypeUsage m_newTypeUsage;
+        private readonly List<Var> m_newVars;
+        private readonly bool m_newVarsIncludeNullSentinelVar;
+        private readonly List<md.EdmProperty> m_newProperties;
+        private readonly md.RowType m_newType;
+        private readonly md.TypeUsage m_newTypeUsage;
 
         /// <summary>
         /// Constructor
@@ -118,8 +126,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler {
         /// <param name="newVars">List of vars to replace current Var</param>
         /// <param name="newTypeProperties">List of properties in the "flat" record type</param>
         /// <param name="newVarsIncludeNullSentinelVar">Do the new vars include a var that represents a null sentinel either for this type or for any nested type</param>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        internal StructuredVarInfo(md.RowType newType, List<Var> newVars, List<md.EdmProperty> newTypeProperties, bool newVarsIncludeNullSentinelVar)
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        internal StructuredVarInfo(
+            md.RowType newType, List<Var> newVars, List<md.EdmProperty> newTypeProperties, bool newVarsIncludeNullSentinelVar)
         {
             PlanCompiler.Assert(newVars.Count == newTypeProperties.Count, "count mismatch");
             // I see a few places where this is legal
@@ -146,14 +156,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler {
         /// - for example, the "Vars" property of ProjectOp and other similar 
         /// locations.
         /// </summary>
-        internal override List<Var> NewVars { get { return m_newVars; } }
+        internal override List<Var> NewVars
+        {
+            get { return m_newVars; }
+        }
 
         /// <summary>
         /// The Fields property is matched 1-1 with the NewVars property, and
         /// specifies the properties of the record type corresponding to the 
         /// original VarType
         /// </summary>
-        internal List<md.EdmProperty> Fields { get { return m_newProperties; } }
+        internal List<md.EdmProperty> Fields
+        {
+            get { return m_newProperties; }
+        }
 
         /// <summary>
         /// Indicates whether any of the vars in NewVars 'derives'
@@ -163,7 +179,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler {
         /// sorting operation that includes null sentinels. This indication is later 
         /// used by transformation rules. 
         /// </summary>
-        internal bool NewVarsIncludeNullSentinelVar { get { return m_newVarsIncludeNullSentinelVar; } }
+        internal bool NewVarsIncludeNullSentinelVar
+        {
+            get { return m_newVarsIncludeNullSentinelVar; }
+        }
 
         /// <summary>
         /// Get the Var corresponding to a specific property
@@ -171,8 +190,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler {
         /// <param name="p">the requested property</param>
         /// <param name="v">the corresponding Var</param>
         /// <returns>true, if the Var was found</returns>
-        internal bool TryGetVar(md.EdmProperty p, out Var v) {
-            if (m_propertyToVarMap == null) {
+        internal bool TryGetVar(md.EdmProperty p, out Var v)
+        {
+            if (m_propertyToVarMap == null)
+            {
                 InitPropertyToVarMap();
             }
             return m_propertyToVarMap.TryGetValue(p, out v);
@@ -182,21 +203,30 @@ namespace System.Data.Entity.Core.Query.PlanCompiler {
         /// The NewType property describes the new "flattened" record type
         /// that is a replacement for the original type of the Var
         /// </summary>
-        internal md.RowType NewType { get { return m_newType; } }
+        internal md.RowType NewType
+        {
+            get { return m_newType; }
+        }
 
         /// <summary>
         /// Returns the NewType wrapped in a TypeUsage
         /// </summary>
-        internal md.TypeUsage NewTypeUsage { get { return m_newTypeUsage; } }
+        internal md.TypeUsage NewTypeUsage
+        {
+            get { return m_newTypeUsage; }
+        }
 
         /// <summary>
         /// Initialize mapping from properties to the corresponding Var
         /// </summary>
-        private void InitPropertyToVarMap() {
-            if (m_propertyToVarMap == null) {
+        private void InitPropertyToVarMap()
+        {
+            if (m_propertyToVarMap == null)
+            {
                 m_propertyToVarMap = new Dictionary<md.EdmProperty, Var>();
                 IEnumerator<Var> newVarEnumerator = m_newVars.GetEnumerator();
-                foreach (md.EdmProperty prop in m_newProperties) {
+                foreach (var prop in m_newProperties)
+                {
                     newVarEnumerator.MoveNext();
                     m_propertyToVarMap.Add(prop, newVarEnumerator.Current);
                 }
@@ -210,7 +240,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler {
     /// </summary>
     internal class PrimitiveTypeVarInfo : VarInfo
     {
-        private List<Var> m_newVars; // always a singleton list
+        private readonly List<Var> m_newVars; // always a singleton list
 
         /// <summary>
         /// Initializes a new instance of <see cref="PrimitiveTypeVarInfo"/> class.
@@ -220,14 +250,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler {
         /// </param>
         internal PrimitiveTypeVarInfo(Var newVar)
         {
-            System.Diagnostics.Debug.Assert(newVar != null, "newVar != null");
-            m_newVars = new List<Var>() { newVar };
+            Debug.Assert(newVar != null, "newVar != null");
+            m_newVars = new List<Var>
+                            {
+                                newVar
+                            };
         }
 
         /// <summary>
         /// Gets the newVar.
         /// </summary>
-        internal Var NewVar { get { return m_newVars[0]; } }
+        internal Var NewVar
+        {
+            get { return m_newVars[0]; }
+        }
 
         /// <summary>
         /// Gets <see cref="VarInfoKind"/> for this <see cref="VarInfo"/>. Always <see cref="VarInfoKind.CollectionVarInfo"/>.
@@ -240,20 +276,25 @@ namespace System.Data.Entity.Core.Query.PlanCompiler {
         /// <summary>
         /// Gets the list of all NewVars. The list contains always just one element.
         /// </summary>
-        internal override List<Var> NewVars { get { return m_newVars; } }
+        internal override List<Var> NewVars
+        {
+            get { return m_newVars; }
+        }
     }
 
     /// <summary>
     /// The VarInfo map maintains a mapping from Vars to their corresponding VarInfo
     /// It is logically a Dictionary
     /// </summary>
-    internal class VarInfoMap {
-        private Dictionary<Var, VarInfo> m_map;
+    internal class VarInfoMap
+    {
+        private readonly Dictionary<Var, VarInfo> m_map;
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        internal VarInfoMap() {
+        internal VarInfoMap()
+        {
             m_map = new Dictionary<Var, VarInfo>();
         }
 
@@ -266,7 +307,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler {
         /// <param name="newProperties">Flattened Properties </param>
         /// <param name="newVarsIncludeNullSentinelVar">Do the new vars include a var that represents a null sentinel either for this type or for any nested type</param>
         /// <returns>the VarInfo</returns>
-        internal VarInfo CreateStructuredVarInfo(Var v, md.RowType newType, List<Var> newVars, List<md.EdmProperty> newProperties, bool newVarsIncludeNullSentinelVar)
+        internal VarInfo CreateStructuredVarInfo(
+            Var v, md.RowType newType, List<Var> newVars, List<md.EdmProperty> newProperties, bool newVarsIncludeNullSentinelVar)
         {
             VarInfo varInfo = new StructuredVarInfo(newType, newVars, newProperties, newVarsIncludeNullSentinelVar);
             m_map.Add(v, varInfo);
@@ -291,7 +333,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler {
         /// <param name="v">The collection-typed Var</param>
         /// <param name="newVar">the new Var</param>
         /// <returns>the VarInfo</returns>
-        internal VarInfo CreateCollectionVarInfo(Var v, Var newVar) {
+        internal VarInfo CreateCollectionVarInfo(Var v, Var newVar)
+        {
             VarInfo varInfo = new CollectionVarInfo(newVar);
             m_map.Add(v, varInfo);
             return varInfo;
@@ -303,11 +346,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler {
         /// <param name="v">Current variable of primitive or enum type.</param>
         /// <param name="newVar">The new variable replacing <paramref name="v"/>.</param>
         /// <returns><see cref="PrimitiveTypeVarInfo"/> for <paramref name="v"/>.</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal VarInfo CreatePrimitiveTypeVarInfo(Var v, Var newVar)
         {
-            System.Diagnostics.Debug.Assert(v != null, "v != null");
-            System.Diagnostics.Debug.Assert(newVar != null, "newVar != null");
+            Debug.Assert(v != null, "v != null");
+            Debug.Assert(newVar != null, "newVar != null");
 
             PlanCompiler.Assert(md.TypeSemantics.IsScalarType(v.Type), "The current variable should be of primitive or enum type.");
             PlanCompiler.Assert(md.TypeSemantics.IsScalarType(newVar.Type), "The new variable should be of primitive or enum type.");
@@ -323,7 +367,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler {
         /// <param name="v">The Var</param>
         /// <param name="varInfo">the corresponding VarInfo</param>
         /// <returns></returns>
-        internal bool TryGetVarInfo(Var v, out VarInfo varInfo) {
+        internal bool TryGetVarInfo(Var v, out VarInfo varInfo)
+        {
             return m_map.TryGetValue(v, out varInfo);
         }
     }

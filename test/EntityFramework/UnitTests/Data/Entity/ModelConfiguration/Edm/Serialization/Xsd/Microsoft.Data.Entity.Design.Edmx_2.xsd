@@ -5,7 +5,6 @@
   <xs:annotation>
     <xs:documentation xml:lang="en">
       Entity Data Model Designer Schema
-      Copyright (c) Microsoft Corp. All rights reserved.
     </xs:documentation>
   </xs:annotation>
 

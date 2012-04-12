@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Diagnostics;
-using System.Reflection;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     /// <summary>
@@ -13,6 +6,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public sealed class MetadataProperty : MetadataItem
     {
         #region Constructors
+
         /// <summary>
         /// The constructor for MetadataProperty taking in a name, a TypeUsage object, and a value for the attribute
         /// </summary>
@@ -53,30 +47,34 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             _propertyKind = PropertyKind.System;
         }
+
         #endregion
 
         #region Fields
-        private string _name;
-        private PropertyKind _propertyKind;
-        private object _value;
-        private TypeUsage _typeUsage;
+
+        private readonly string _name;
+        private readonly PropertyKind _propertyKind;
+        private readonly object _value;
+        private readonly TypeUsage _typeUsage;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the kind of the type
         /// </summary>
-        public override BuiltInTypeKind BuiltInTypeKind { get { return BuiltInTypeKind.MetadataProperty; } }
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
+            get { return BuiltInTypeKind.MetadataProperty; }
+        }
 
         /// <summary>
         /// Gets the identity of this item
         /// </summary>
         internal override string Identity
         {
-            get
-            {
-                return Name;
-            }
+            get { return Name; }
         }
 
         /// <summary>
@@ -102,7 +100,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get
             {
                 // Check if we're redirecting to an MetadataItem system property
-                MetadataPropertyValue redirectValue = _value as MetadataPropertyValue;
+                var redirectValue = _value as MetadataPropertyValue;
                 if (null != redirectValue)
                 {
                     return redirectValue.GetValue();
@@ -121,14 +119,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.TypeUsage, false)]
         public TypeUsage TypeUsage
         {
-            get
-            {
-                return _typeUsage;
-            }
+            get { return _typeUsage; }
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Sets this item to be readonly, once this is set, the item will never be writable again.
         /// </summary>
@@ -147,11 +144,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         public PropertyKind PropertyKind
         {
-            get
-            {
-                return _propertyKind;
-            }
+            get { return _propertyKind; }
         }
+
         #endregion
     }
 }

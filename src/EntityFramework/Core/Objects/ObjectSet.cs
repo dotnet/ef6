@@ -1,12 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Globalization;
-using System.Diagnostics;
-
-namespace System.Data.Entity.Core.Objects
+﻿namespace System.Data.Entity.Core.Objects
 {
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
 
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public class ObjectSet<TEntity> : ObjectQuery<TEntity>, IObjectSet<TEntity>
@@ -15,6 +12,7 @@ namespace System.Data.Entity.Core.Objects
         private readonly EntitySet _entitySet;
 
         #region Internal Constructors
+
         /// <summary>
         /// Creates a new ObjectSet that has a base ObjectQuery with the CommandText that represents
         /// all of the entities in the specified EntitySet. 
@@ -30,22 +28,23 @@ namespace System.Data.Entity.Core.Objects
             Debug.Assert(context != null, "ObjectSet constructor requires a non-null ObjectContext");
             _entitySet = entitySet;
         }
+
         #endregion
 
         #region Public Properties
+
         /// <summary>
         /// Provides metadata for the EntitySet that is represented by the ObjectSet
         /// </summary>
         public EntitySet EntitySet
         {
-            get
-            {
-                return _entitySet;
-            }
+            get { return _entitySet; }
         }
+
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Adds an object to the ObjectContext using the EntitySet referenced by this ObjectSet.
         /// See ObjectContext.AddObject for more details.
@@ -54,7 +53,7 @@ namespace System.Data.Entity.Core.Objects
         public void AddObject(TEntity entity)
         {
             // this method is expected to behave exactly like ObjectContext.AddObject -- see devnote at the top of this class
-            this.Context.AddObject(FullyQualifiedEntitySetName, entity);
+            Context.AddObject(FullyQualifiedEntitySetName, entity);
         }
 
         /// <summary>
@@ -65,7 +64,7 @@ namespace System.Data.Entity.Core.Objects
         public void Attach(TEntity entity)
         {
             // this method is expected to behave exactly like ObjectContext.AttachTo -- see devnote at the top of this class
-            this.Context.AttachTo(FullyQualifiedEntitySetName, entity);
+            Context.AttachTo(FullyQualifiedEntitySetName, entity);
         }
 
         /// <summary>
@@ -79,7 +78,7 @@ namespace System.Data.Entity.Core.Objects
             // this method is expected to behave exactly like ObjectContext.DeleteObject -- see devnote at the top of this class
             // Note that in this case we use an internal DeleteObject overload so we can have the context validate
             // the EntitySet after it verifies that the specified object is in the context at all.
-            this.Context.DeleteObject(entity, EntitySet);
+            Context.DeleteObject(entity, EntitySet);
         }
 
         /// <summary>
@@ -93,7 +92,7 @@ namespace System.Data.Entity.Core.Objects
             // this method is expected to behave exactly like ObjectContext.Detach -- see devnote at the top of this class
             // Note that in this case we use an internal Detach overload so we can have the context validate
             // the EntitySet after it verifies that the specified object is in the context at all.
-            this.Context.Detach(entity, EntitySet);
+            Context.Detach(entity, EntitySet);
         }
 
         /// <summary>
@@ -104,7 +103,7 @@ namespace System.Data.Entity.Core.Objects
         public TEntity ApplyCurrentValues(TEntity currentEntity)
         {
             // this method is expected to behave exactly like ObjectContext.ApplyCurrentValues -- see devnote at the top of this class
-            return this.Context.ApplyCurrentValues<TEntity>(FullyQualifiedEntitySetName, currentEntity);
+            return Context.ApplyCurrentValues(FullyQualifiedEntitySetName, currentEntity);
         }
 
         /// <summary>
@@ -115,7 +114,7 @@ namespace System.Data.Entity.Core.Objects
         public TEntity ApplyOriginalValues(TEntity originalEntity)
         {
             // this method is expected to behave exactly like ObjectContext.ApplyOriginalValues -- see devnote at the top of this class
-            return this.Context.ApplyOriginalValues<TEntity>(FullyQualifiedEntitySetName, originalEntity);
+            return Context.ApplyOriginalValues(FullyQualifiedEntitySetName, originalEntity);
         }
 
         /// <summary>
@@ -128,7 +127,7 @@ namespace System.Data.Entity.Core.Objects
         /// </returns>
         public TEntity CreateObject()
         {
-            return this.Context.CreateObject<TEntity>();
+            return Context.CreateObject<TEntity>();
         }
 
         /// <summary>
@@ -141,12 +140,13 @@ namespace System.Data.Entity.Core.Objects
         /// </returns>
         public T CreateObject<T>() where T : class, TEntity
         {
-            return this.Context.CreateObject<T>();
+            return Context.CreateObject<T>();
         }
-        
+
         #endregion
 
         #region Private Properties
+
         // Used
         private string FullyQualifiedEntitySetName
         {
@@ -157,6 +157,7 @@ namespace System.Data.Entity.Core.Objects
                 return string.Format(CultureInfo.InvariantCulture, "{0}.{1}", _entitySet.EntityContainer.Name, _entitySet.Name);
             }
         }
+
         #endregion
     }
 }

@@ -1,8 +1,8 @@
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Xml;
 
@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         /// <param name="parentElement">Reference to the schema element.</param>
         public ReferentialConstraintRoleElement(ReferentialConstraint parentElement)
-            : base( parentElement )
+            : base(parentElement)
         {
         }
 
@@ -37,10 +37,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         public IRelationshipEnd End
         {
-            get
-            {
-                return _end;
-            }
+            get { return _end; }
         }
 
         protected override bool HandleElement(XmlReader reader)
@@ -75,16 +72,16 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"></param>
         private void HandlePropertyRefElement(XmlReader reader)
         {
-            PropertyRefElement property = new PropertyRefElement(ParentElement);
+            var property = new PropertyRefElement(ParentElement);
             property.Parse(reader);
-            this.RoleProperties.Add(property);
+            RoleProperties.Add(property);
         }
 
         private void HandleRoleAttribute(XmlReader reader)
         {
             string roleName;
             Utils.GetString(Schema, reader, out roleName);
-            this.Name = roleName;
+            Name = roleName;
         }
 
         /// <summary>
@@ -92,14 +89,15 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         internal override void ResolveTopLevelNames()
         {
-            Debug.Assert(!String.IsNullOrEmpty(this.Name), "RoleName should never be empty");
-            IRelationship relationship = (IRelationship)this.ParentElement.ParentElement;
+            Debug.Assert(!String.IsNullOrEmpty(Name), "RoleName should never be empty");
+            var relationship = (IRelationship)ParentElement.ParentElement;
 
-            if (!relationship.TryGetEnd(this.Name, out _end))
+            if (!relationship.TryGetEnd(Name, out _end))
             {
-                AddError(ErrorCode.InvalidRoleInRelationshipConstraint,
-                         EdmSchemaErrorSeverity.Error,
-                         System.Data.Entity.Resources.Strings.InvalidEndRoleInRelationshipConstraint(this.Name, relationship.Name));
+                AddError(
+                    ErrorCode.InvalidRoleInRelationshipConstraint,
+                    EdmSchemaErrorSeverity.Error,
+                    Strings.InvalidEndRoleInRelationshipConstraint(Name, relationship.Name));
 
                 return;
             }
@@ -111,7 +109,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 // an error has already been added for this
                 return;
             }
-
         }
 
         internal override void Validate()
@@ -119,16 +116,19 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             base.Validate();
             // we can't resolve these names until validate because they will reference properties and types
             // that may not be resolved when this objects ResolveNames gets called
-            Debug.Assert(_roleProperties != null, "xsd should have verified that there should be atleast one property ref element in referential role element");
-            foreach (PropertyRefElement property in _roleProperties)
+            Debug.Assert(
+                _roleProperties != null,
+                "xsd should have verified that there should be atleast one property ref element in referential role element");
+            foreach (var property in _roleProperties)
             {
-                if (!property.ResolveNames((SchemaEntityType)_end.Type))
+                if (!property.ResolveNames(_end.Type))
                 {
-                    AddError(ErrorCode.InvalidPropertyInRelationshipConstraint,
-                            EdmSchemaErrorSeverity.Error,
-                            System.Data.Entity.Resources.Strings.InvalidPropertyInRelationshipConstraint(
-                                          property.Name,
-                                          this.Name));
+                    AddError(
+                        ErrorCode.InvalidPropertyInRelationshipConstraint,
+                        EdmSchemaErrorSeverity.Error,
+                        Strings.InvalidPropertyInRelationshipConstraint(
+                            property.Name,
+                            Name));
                 }
             }
         }

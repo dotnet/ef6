@@ -1,8 +1,8 @@
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -15,7 +15,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     public class DefaultExpressionVisitor : DbExpressionVisitor<DbExpression>
     {
-        private readonly Dictionary<DbVariableReferenceExpression, DbVariableReferenceExpression> varMappings = new Dictionary<DbVariableReferenceExpression, DbVariableReferenceExpression>();
+        private readonly Dictionary<DbVariableReferenceExpression, DbVariableReferenceExpression> varMappings =
+            new Dictionary<DbVariableReferenceExpression, DbVariableReferenceExpression>();
 
         protected DefaultExpressionVisitor()
         {
@@ -37,33 +38,33 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         protected virtual void OnExitScope()
         {
         }
-                
+
         protected virtual DbExpression VisitExpression(DbExpression expression)
         {
             DbExpression newValue = null;
             if (expression != null)
             {
-                newValue = expression.Accept<DbExpression>(this);
+                newValue = expression.Accept(this);
             }
-            
+
             return newValue;
         }
-                
+
         protected virtual IList<DbExpression> VisitExpressionList(IList<DbExpression> list)
         {
-            return VisitList(list, this.VisitExpression);
+            return VisitList(list, VisitExpression);
         }
 
         protected virtual DbExpressionBinding VisitExpressionBinding(DbExpressionBinding binding)
         {
-            DbExpressionBinding result = binding;
+            var result = binding;
             if (binding != null)
             {
-                DbExpression newInput = this.VisitExpression(binding.Expression);
-                if (!object.ReferenceEquals(binding.Expression, newInput))
+                var newInput = VisitExpression(binding.Expression);
+                if (!ReferenceEquals(binding.Expression, newInput))
                 {
                     result = CqtBuilder.BindAs(newInput, binding.VariableName);
-                    this.RebindVariable(binding.Variable, result.Variable);
+                    RebindVariable(binding.Variable, result.Variable);
                 }
             }
             return result;
@@ -71,20 +72,20 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         protected virtual IList<DbExpressionBinding> VisitExpressionBindingList(IList<DbExpressionBinding> list)
         {
-            return VisitList(list, this.VisitExpressionBinding);
+            return VisitList(list, VisitExpressionBinding);
         }
 
         protected virtual DbGroupExpressionBinding VisitGroupExpressionBinding(DbGroupExpressionBinding binding)
         {
-            DbGroupExpressionBinding result = binding;
+            var result = binding;
             if (binding != null)
             {
-                DbExpression newInput = this.VisitExpression(binding.Expression);
-                if (!object.ReferenceEquals(binding.Expression, newInput))
+                var newInput = VisitExpression(binding.Expression);
+                if (!ReferenceEquals(binding.Expression, newInput))
                 {
                     result = CqtBuilder.GroupBindAs(newInput, binding.VariableName, binding.GroupVariableName);
-                    this.RebindVariable(binding.Variable, result.Variable);
-                    this.RebindVariable(binding.GroupVariable, result.GroupVariable);
+                    RebindVariable(binding.Variable, result.Variable);
+                    RebindVariable(binding.GroupVariable, result.GroupVariable);
                 }
             }
             return result;
@@ -92,19 +93,23 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         protected virtual DbSortClause VisitSortClause(DbSortClause clause)
         {
-            DbSortClause result = clause;
+            var result = clause;
             if (clause != null)
             {
-                DbExpression newExpression = this.VisitExpression(clause.Expression);
-                if (!object.ReferenceEquals(clause.Expression, newExpression))
+                var newExpression = VisitExpression(clause.Expression);
+                if (!ReferenceEquals(clause.Expression, newExpression))
                 {
                     if (!string.IsNullOrEmpty(clause.Collation))
                     {
-                        result = (clause.Ascending ? CqtBuilder.ToSortClause(newExpression, clause.Collation) : CqtBuilder.ToSortClauseDescending(newExpression, clause.Collation));
+                        result = (clause.Ascending
+                                      ? CqtBuilder.ToSortClause(newExpression, clause.Collation)
+                                      : CqtBuilder.ToSortClauseDescending(newExpression, clause.Collation));
                     }
                     else
                     {
-                        result = (clause.Ascending ? CqtBuilder.ToSortClause(newExpression) : CqtBuilder.ToSortClauseDescending(newExpression));
+                        result = (clause.Ascending
+                                      ? CqtBuilder.ToSortClause(newExpression)
+                                      : CqtBuilder.ToSortClauseDescending(newExpression));
                     }
                 }
             }
@@ -113,34 +118,35 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         protected virtual IList<DbSortClause> VisitSortOrder(IList<DbSortClause> sortOrder)
         {
-            return VisitList(sortOrder, this.VisitSortClause);
+            return VisitList(sortOrder, VisitSortClause);
         }
 
         protected virtual DbAggregate VisitAggregate(DbAggregate aggregate)
         {
             // Currently only function or group aggregate are possible
-            DbFunctionAggregate functionAggregate = aggregate as DbFunctionAggregate;
+            var functionAggregate = aggregate as DbFunctionAggregate;
             if (functionAggregate != null)
             {
                 return VisitFunctionAggregate(functionAggregate);
             }
 
-            DbGroupAggregate groupAggregate = (DbGroupAggregate)aggregate;
+            var groupAggregate = (DbGroupAggregate)aggregate;
             return VisitGroupAggregate(groupAggregate);
         }
 
         protected virtual DbFunctionAggregate VisitFunctionAggregate(DbFunctionAggregate aggregate)
         {
-            DbFunctionAggregate result = aggregate;
+            var result = aggregate;
             if (aggregate != null)
             {
-                EdmFunction newFunction = this.VisitFunction(aggregate.Function);
-                IList<DbExpression> newArguments = this.VisitExpressionList(aggregate.Arguments);
+                var newFunction = VisitFunction(aggregate.Function);
+                var newArguments = VisitExpressionList(aggregate.Arguments);
 
                 Debug.Assert(newArguments.Count == 1, "Function aggregate had more than one argument?");
 
-                if (!object.ReferenceEquals(aggregate.Function, newFunction) ||
-                    !object.ReferenceEquals(aggregate.Arguments, newArguments))
+                if (!ReferenceEquals(aggregate.Function, newFunction)
+                    ||
+                    !ReferenceEquals(aggregate.Arguments, newArguments))
                 {
                     if (aggregate.Distinct)
                     {
@@ -157,13 +163,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         protected virtual DbGroupAggregate VisitGroupAggregate(DbGroupAggregate aggregate)
         {
-            DbGroupAggregate result = aggregate;
+            var result = aggregate;
             if (aggregate != null)
             {
-                IList<DbExpression> newArguments = this.VisitExpressionList(aggregate.Arguments);
+                var newArguments = VisitExpressionList(aggregate.Arguments);
                 Debug.Assert(newArguments.Count == 1, "Group aggregate had more than one argument?");
 
-                if (!object.ReferenceEquals(aggregate.Arguments, newArguments))
+                if (!ReferenceEquals(aggregate.Arguments, newArguments))
                 {
                     result = CqtBuilder.GroupAggregate(newArguments[0]);
                 }
@@ -175,26 +181,28 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             EntityUtil.CheckArgumentNull(lambda, "lambda");
 
-            DbLambda result = lambda;
-            IList<DbVariableReferenceExpression> newFormals = VisitList(lambda.Variables, varRef =>
-                {
-                    TypeUsage newVarType = this.VisitTypeUsage(varRef.ResultType);
-                    if (!object.ReferenceEquals(varRef.ResultType, newVarType))
-                    {
-                        return CqtBuilder.Variable(newVarType, varRef.VariableName);
-                    }
-                    else
-                    {
-                        return varRef;
-                    }
-                }
-            );
-            this.EnterScope(newFormals.ToArray()); // ToArray: Don't pass the List instance directly to OnEnterScope
-            DbExpression newBody = this.VisitExpression(lambda.Body);
-            this.ExitScope();
+            var result = lambda;
+            var newFormals = VisitList(
+                lambda.Variables, varRef =>
+                                      {
+                                          var newVarType = VisitTypeUsage(varRef.ResultType);
+                                          if (!ReferenceEquals(varRef.ResultType, newVarType))
+                                          {
+                                              return CqtBuilder.Variable(newVarType, varRef.VariableName);
+                                          }
+                                          else
+                                          {
+                                              return varRef;
+                                          }
+                                      }
+                );
+            EnterScope(newFormals.ToArray()); // ToArray: Don't pass the List instance directly to OnEnterScope
+            var newBody = VisitExpression(lambda.Body);
+            ExitScope();
 
-            if (!object.ReferenceEquals(lambda.Variables, newFormals) ||
-                !object.ReferenceEquals(lambda.Body, newBody))
+            if (!ReferenceEquals(lambda.Variables, newFormals)
+                ||
+                !ReferenceEquals(lambda.Body, newBody))
             {
                 result = CqtBuilder.Lambda(newBody, newFormals);
             }
@@ -202,32 +210,48 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         // Metadata 'Visitor' methods
-        protected virtual EdmType VisitType(EdmType type) { return type; }
-        protected virtual TypeUsage VisitTypeUsage(TypeUsage type) { return type; }
-        protected virtual EntitySetBase VisitEntitySet(EntitySetBase entitySet) { return entitySet; }
-        protected virtual EdmFunction VisitFunction(EdmFunction functionMetadata) { return functionMetadata; }
-                
+        protected virtual EdmType VisitType(EdmType type)
+        {
+            return type;
+        }
+
+        protected virtual TypeUsage VisitTypeUsage(TypeUsage type)
+        {
+            return type;
+        }
+
+        protected virtual EntitySetBase VisitEntitySet(EntitySetBase entitySet)
+        {
+            return entitySet;
+        }
+
+        protected virtual EdmFunction VisitFunction(EdmFunction functionMetadata)
+        {
+            return functionMetadata;
+        }
+
         #region Private Implementation
 
         private void NotifyIfChanged(DbExpression originalExpression, DbExpression newExpression)
         {
-            if (!object.ReferenceEquals(originalExpression, newExpression))
+            if (!ReferenceEquals(originalExpression, newExpression))
             {
-                this.OnExpressionReplaced(originalExpression, newExpression);
+                OnExpressionReplaced(originalExpression, newExpression);
             }
         }
 
         private static IList<TElement> VisitList<TElement>(IList<TElement> list, Func<TElement, TElement> map)
         {
-            IList<TElement> result = list;
-            if(list != null)
+            var result = list;
+            if (list != null)
             {
                 List<TElement> newList = null;
-                for (int idx = 0; idx < list.Count; idx++)
+                for (var idx = 0; idx < list.Count; idx++)
                 {
-                    TElement newElement = map(list[idx]);
-                    if (newList == null &&
-                        !object.ReferenceEquals(list[idx], newElement))
+                    var newElement = map(list[idx]);
+                    if (newList == null
+                        &&
+                        !ReferenceEquals(list[idx], newElement))
                     {
                         newList = new List<TElement>(list);
                         result = newList;
@@ -245,8 +269,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         private DbExpression VisitUnary(DbUnaryExpression expression, Func<DbExpression, DbExpression> callback)
         {
             DbExpression result = expression;
-            DbExpression newArgument = this.VisitExpression(expression.Argument);
-            if (!object.ReferenceEquals(expression.Argument, newArgument))
+            var newArgument = VisitExpression(expression.Argument);
+            if (!ReferenceEquals(expression.Argument, newArgument))
             {
                 result = callback(newArgument);
             }
@@ -254,15 +278,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
-        private DbExpression VisitTypeUnary(DbUnaryExpression expression, TypeUsage type, Func<DbExpression, TypeUsage, DbExpression> callback)
+        private DbExpression VisitTypeUnary(
+            DbUnaryExpression expression, TypeUsage type, Func<DbExpression, TypeUsage, DbExpression> callback)
         {
             DbExpression result = expression;
 
-            DbExpression newArgument = this.VisitExpression(expression.Argument);
-            TypeUsage newType = this.VisitTypeUsage(type);
+            var newArgument = VisitExpression(expression.Argument);
+            var newType = VisitTypeUsage(type);
 
-            if (!object.ReferenceEquals(expression.Argument, newArgument) ||
-                !object.ReferenceEquals(type, newType))
+            if (!ReferenceEquals(expression.Argument, newArgument)
+                ||
+                !ReferenceEquals(type, newType))
             {
                 result = callback(newArgument, newType);
             }
@@ -274,10 +300,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             DbExpression result = expression;
 
-            DbExpression newLeft = this.VisitExpression(expression.Left);
-            DbExpression newRight = this.VisitExpression(expression.Right);
-            if (!object.ReferenceEquals(expression.Left, newLeft) ||
-                !object.ReferenceEquals(expression.Right, newRight))
+            var newLeft = VisitExpression(expression.Left);
+            var newRight = VisitExpression(expression.Right);
+            if (!ReferenceEquals(expression.Left, newLeft)
+                ||
+                !ReferenceEquals(expression.Right, newRight))
             {
                 result = callback(newLeft, newRight);
             }
@@ -287,14 +314,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         private DbRelatedEntityRef VisitRelatedEntityRef(DbRelatedEntityRef entityRef)
         {
-            RelationshipEndMember newSource; 
+            RelationshipEndMember newSource;
             RelationshipEndMember newTarget;
             VisitRelationshipEnds(entityRef.SourceEnd, entityRef.TargetEnd, out newSource, out newTarget);
-            DbExpression newTargetRef = this.VisitExpression(entityRef.TargetEntityReference);
+            var newTargetRef = VisitExpression(entityRef.TargetEntityReference);
 
-            if (!object.ReferenceEquals(entityRef.SourceEnd, newSource) ||
-                !object.ReferenceEquals(entityRef.TargetEnd, newTarget) ||
-                !object.ReferenceEquals(entityRef.TargetEntityReference, newTargetRef))
+            if (!ReferenceEquals(entityRef.SourceEnd, newSource) ||
+                !ReferenceEquals(entityRef.TargetEnd, newTarget)
+                ||
+                !ReferenceEquals(entityRef.TargetEntityReference, newTargetRef))
             {
                 return CqtBuilder.CreateRelatedEntityRef(newSource, newTarget, newTargetRef);
             }
@@ -304,11 +332,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
         }
 
-        private void VisitRelationshipEnds(RelationshipEndMember source, RelationshipEndMember target, out RelationshipEndMember newSource, out RelationshipEndMember newTarget)
+        private void VisitRelationshipEnds(
+            RelationshipEndMember source, RelationshipEndMember target, out RelationshipEndMember newSource,
+            out RelationshipEndMember newTarget)
         {
             // TODO: EdmEquals does not ensure both types are from the same metadataworkspace
             Debug.Assert(source.DeclaringType.EdmEquals(target.DeclaringType), "Relationship ends not declared by same relationship type?");
-            RelationshipType mappedType = (RelationshipType)this.VisitType(target.DeclaringType);
+            var mappedType = (RelationshipType)VisitType(target.DeclaringType);
 
             newSource = mappedType.RelationshipEndMembers[source.Name];
             newTarget = mappedType.RelationshipEndMembers[target.Name];
@@ -316,9 +346,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         private DbExpression VisitTerminal(DbExpression expression, Func<TypeUsage, DbExpression> reconstructor)
         {
-            DbExpression result = expression;
-            TypeUsage newType = this.VisitTypeUsage(expression.ResultType);
-            if (!object.ReferenceEquals(expression.ResultType, newType))
+            var result = expression;
+            var newType = VisitTypeUsage(expression.ResultType);
+            if (!ReferenceEquals(expression.ResultType, newType))
             {
                 result = reconstructor(newType);
             }
@@ -339,29 +369,30 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             // continue to be valid.
             //
             if (!from.VariableName.Equals(to.VariableName, StringComparison.Ordinal) ||
-                !object.ReferenceEquals(from.ResultType.EdmType, to.ResultType.EdmType) ||
+                !ReferenceEquals(from.ResultType.EdmType, to.ResultType.EdmType)
+                ||
                 !from.ResultType.EdmEquals(to.ResultType))
             {
-                this.varMappings[from] = to;
-                this.OnVariableRebound(from, to);
+                varMappings[from] = to;
+                OnVariableRebound(from, to);
             }
         }
 
         private DbExpressionBinding VisitExpressionBindingEnterScope(DbExpressionBinding binding)
         {
-            DbExpressionBinding result = this.VisitExpressionBinding(binding);
-            this.OnEnterScope(new[] { result.Variable });
+            var result = VisitExpressionBinding(binding);
+            OnEnterScope(new[] { result.Variable });
             return result;
         }
 
         private void EnterScope(params DbVariableReferenceExpression[] scopeVars)
         {
-            this.OnEnterScope(scopeVars);
+            OnEnterScope(scopeVars);
         }
 
         private void ExitScope()
         {
-            this.OnExitScope();
+            OnExitScope();
         }
 
         #endregion
@@ -372,7 +403,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             EntityUtil.CheckArgumentNull(expression, "expression");
 
-            throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.Cqt_General_UnsupportedExpression(expression.GetType().FullName));
+            throw EntityUtil.NotSupported(Strings.Cqt_General_UnsupportedExpression(expression.GetType().FullName));
         }
 
         public override DbExpression Visit(DbConstantExpression expression)
@@ -383,7 +414,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             // DbExpressionBuilder.Constant must clone immutable values (byte[]).
             return VisitTerminal(expression, newType => CqtBuilder.Constant(newType, expression.GetValue()));
         }
-                
+
         public override DbExpression Visit(DbNullExpression expression)
         {
             EntityUtil.CheckArgumentNull(expression, "expression");
@@ -397,7 +428,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
             DbExpression result = expression;
             DbVariableReferenceExpression newRef;
-            if (this.varMappings.TryGetValue(expression, out newRef))
+            if (varMappings.TryGetValue(expression, out newRef))
             {
                 result = newRef;
             }
@@ -417,28 +448,30 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             EntityUtil.CheckArgumentNull(expression, "expression");
 
             DbExpression result = expression;
-            IList<DbExpression> newArguments = this.VisitExpressionList(expression.Arguments);
-            EdmFunction newFunction = this.VisitFunction(expression.Function);
-            if (!object.ReferenceEquals(expression.Arguments, newArguments) ||
-                !object.ReferenceEquals(expression.Function, newFunction))
+            var newArguments = VisitExpressionList(expression.Arguments);
+            var newFunction = VisitFunction(expression.Function);
+            if (!ReferenceEquals(expression.Arguments, newArguments)
+                ||
+                !ReferenceEquals(expression.Function, newFunction))
             {
                 result = CqtBuilder.Invoke(newFunction, newArguments);
             }
-            
+
             NotifyIfChanged(expression, result);
             return result;
         }
-        
+
         public override DbExpression Visit(DbLambdaExpression expression)
         {
             EntityUtil.CheckArgumentNull(expression, "expression");
 
             DbExpression result = expression;
-            IList<DbExpression> newArguments = this.VisitExpressionList(expression.Arguments);
-            DbLambda newLambda = this.VisitLambda(expression.Lambda);
-            
-            if (!object.ReferenceEquals(expression.Arguments, newArguments) ||
-                !object.ReferenceEquals(expression.Lambda, newLambda))
+            var newArguments = VisitExpressionList(expression.Arguments);
+            var newLambda = VisitLambda(expression.Lambda);
+
+            if (!ReferenceEquals(expression.Arguments, newArguments)
+                ||
+                !ReferenceEquals(expression.Lambda, newLambda))
             {
                 result = CqtBuilder.Invoke(newLambda, newArguments);
             }
@@ -451,8 +484,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             EntityUtil.CheckArgumentNull(expression, "expression");
 
             DbExpression result = expression;
-            DbExpression newInstance = this.VisitExpression(expression.Instance);
-            if (!object.ReferenceEquals(expression.Instance, newInstance))
+            var newInstance = VisitExpression(expression.Instance);
+            if (!ReferenceEquals(expression.Instance, newInstance))
             {
                 result = CqtBuilder.Property(newInstance, expression.Property.Name);
             }
@@ -464,25 +497,25 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             EntityUtil.CheckArgumentNull(expression, "expression");
 
-            switch(expression.ExpressionKind)
+            switch (expression.ExpressionKind)
             {
                 case DbExpressionKind.Equals:
-                    return this.VisitBinary(expression, CqtBuilder.Equal);
+                    return VisitBinary(expression, CqtBuilder.Equal);
 
                 case DbExpressionKind.NotEquals:
-                    return this.VisitBinary(expression, CqtBuilder.NotEqual);
+                    return VisitBinary(expression, CqtBuilder.NotEqual);
 
                 case DbExpressionKind.GreaterThan:
-                    return this.VisitBinary(expression, CqtBuilder.GreaterThan);
+                    return VisitBinary(expression, CqtBuilder.GreaterThan);
 
                 case DbExpressionKind.GreaterThanOrEquals:
-                    return this.VisitBinary(expression, CqtBuilder.GreaterThanOrEqual);
+                    return VisitBinary(expression, CqtBuilder.GreaterThanOrEqual);
 
                 case DbExpressionKind.LessThan:
-                    return this.VisitBinary(expression, CqtBuilder.LessThan);
+                    return VisitBinary(expression, CqtBuilder.LessThan);
 
                 case DbExpressionKind.LessThanOrEquals:
-                    return this.VisitBinary(expression, CqtBuilder.LessThanOrEqual);
+                    return VisitBinary(expression, CqtBuilder.LessThanOrEqual);
 
                 default:
                     throw EntityUtil.NotSupported();
@@ -495,31 +528,33 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
             DbExpression result = expression;
 
-            DbExpression newArgument = this.VisitExpression(expression.Argument);
-            DbExpression newPattern = this.VisitExpression(expression.Pattern);
-            DbExpression newEscape = this.VisitExpression(expression.Escape);
+            var newArgument = VisitExpression(expression.Argument);
+            var newPattern = VisitExpression(expression.Pattern);
+            var newEscape = VisitExpression(expression.Escape);
 
-            if (!object.ReferenceEquals(expression.Argument, newArgument) ||
-                !object.ReferenceEquals(expression.Pattern, newPattern) ||
-                !object.ReferenceEquals(expression.Escape, newEscape))
+            if (!ReferenceEquals(expression.Argument, newArgument) ||
+                !ReferenceEquals(expression.Pattern, newPattern)
+                ||
+                !ReferenceEquals(expression.Escape, newEscape))
             {
                 result = CqtBuilder.Like(newArgument, newPattern, newEscape);
             }
             NotifyIfChanged(expression, result);
             return result;
         }
-        
+
         public override DbExpression Visit(DbLimitExpression expression)
         {
             EntityUtil.CheckArgumentNull(expression, "expression");
 
             DbExpression result = expression;
 
-            DbExpression newArgument = this.VisitExpression(expression.Argument);
-            DbExpression newLimit = this.VisitExpression(expression.Limit);
-            
-            if (!object.ReferenceEquals(expression.Argument, newArgument) ||
-                !object.ReferenceEquals(expression.Limit, newLimit))
+            var newArgument = VisitExpression(expression.Argument);
+            var newLimit = VisitExpression(expression.Limit);
+
+            if (!ReferenceEquals(expression.Argument, newArgument)
+                ||
+                !ReferenceEquals(expression.Limit, newLimit))
             {
                 Debug.Assert(!expression.WithTies, "Limit.WithTies == true?");
                 result = CqtBuilder.Limit(newArgument, newLimit);
@@ -532,19 +567,20 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             EntityUtil.CheckArgumentNull(expression, "expression");
 
-            return VisitUnary(expression, exp =>
-                {
-                    if(TypeSemantics.IsRowType(exp.ResultType))
-                    {
-                        // TODO: Remove this special, non-public, overload that derived classes cannot access
-                        return CqtBuilder.CreateIsNullExpressionAllowingRowTypeArgument(exp);
-                    }
-                    else
-                    {
-                        return CqtBuilder.IsNull(exp);
-                    }
-                }
-            );
+            return VisitUnary(
+                expression, exp =>
+                                {
+                                    if (TypeSemantics.IsRowType(exp.ResultType))
+                                    {
+                                        // TODO: Remove this special, non-public, overload that derived classes cannot access
+                                        return CqtBuilder.CreateIsNullExpressionAllowingRowTypeArgument(exp);
+                                    }
+                                    else
+                                    {
+                                        return CqtBuilder.IsNull(exp);
+                                    }
+                                }
+                );
         }
 
         public override DbExpression Visit(DbArithmeticExpression expression)
@@ -552,10 +588,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             EntityUtil.CheckArgumentNull(expression, "expression");
 
             DbExpression result = expression;
-            IList<DbExpression> newArguments = this.VisitExpressionList(expression.Arguments);
-            if (!object.ReferenceEquals(expression.Arguments, newArguments))
+            var newArguments = VisitExpressionList(expression.Arguments);
+            if (!ReferenceEquals(expression.Arguments, newArguments))
             {
-                switch(expression.ExpressionKind)
+                switch (expression.ExpressionKind)
                 {
                     case DbExpressionKind.Divide:
                         result = CqtBuilder.Divide(newArguments[0], newArguments[1]);
@@ -667,20 +703,21 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             EntityUtil.CheckArgumentNull(expression, "expression");
 
-            return this.VisitTypeUnary(expression, expression.ResultType, CqtBuilder.TreatAs);
+            return VisitTypeUnary(expression, expression.ResultType, CqtBuilder.TreatAs);
         }
 
         public override DbExpression Visit(DbIsOfExpression expression)
         {
             EntityUtil.CheckArgumentNull(expression, "expression");
 
-            if (expression.ExpressionKind == DbExpressionKind.IsOfOnly)
+            if (expression.ExpressionKind
+                == DbExpressionKind.IsOfOnly)
             {
-                return this.VisitTypeUnary(expression, expression.OfType, CqtBuilder.IsOfOnly);
+                return VisitTypeUnary(expression, expression.OfType, CqtBuilder.IsOfOnly);
             }
             else
             {
-                return this.VisitTypeUnary(expression, expression.OfType, CqtBuilder.IsOf);
+                return VisitTypeUnary(expression, expression.OfType, CqtBuilder.IsOf);
             }
         }
 
@@ -688,7 +725,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             EntityUtil.CheckArgumentNull(expression, "expression");
 
-            return this.VisitTypeUnary(expression, expression.ResultType, CqtBuilder.CastTo);
+            return VisitTypeUnary(expression, expression.ResultType, CqtBuilder.CastTo);
         }
 
         public override DbExpression Visit(DbCaseExpression expression)
@@ -697,31 +734,33 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
             DbExpression result = expression;
 
-            IList<DbExpression> newWhens = this.VisitExpressionList(expression.When);
-            IList<DbExpression> newThens = this.VisitExpressionList(expression.Then);
-            DbExpression newElse = this.VisitExpression(expression.Else);
+            var newWhens = VisitExpressionList(expression.When);
+            var newThens = VisitExpressionList(expression.Then);
+            var newElse = VisitExpression(expression.Else);
 
-            if (!object.ReferenceEquals(expression.When, newWhens) ||
-                !object.ReferenceEquals(expression.Then, newThens) ||
-                !object.ReferenceEquals(expression.Else, newElse))
+            if (!ReferenceEquals(expression.When, newWhens) ||
+                !ReferenceEquals(expression.Then, newThens)
+                ||
+                !ReferenceEquals(expression.Else, newElse))
             {
                 result = CqtBuilder.Case(newWhens, newThens, newElse);
             }
             NotifyIfChanged(expression, result);
             return result;
         }
-        
+
         public override DbExpression Visit(DbOfTypeExpression expression)
         {
             EntityUtil.CheckArgumentNull(expression, "expression");
 
-            if (expression.ExpressionKind == DbExpressionKind.OfTypeOnly)
+            if (expression.ExpressionKind
+                == DbExpressionKind.OfTypeOnly)
             {
-                return this.VisitTypeUnary(expression, expression.OfType, CqtBuilder.OfTypeOnly);
+                return VisitTypeUnary(expression, expression.OfType, CqtBuilder.OfTypeOnly);
             }
             else
             {
-                return this.VisitTypeUnary(expression, expression.OfType, CqtBuilder.OfType);
+                return VisitTypeUnary(expression, expression.OfType, CqtBuilder.OfType);
             }
         }
 
@@ -730,14 +769,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             EntityUtil.CheckArgumentNull(expression, "expression");
 
             DbExpression result = expression;
-            TypeUsage newType = this.VisitTypeUsage(expression.ResultType);
-            IList<DbExpression> newArguments = this.VisitExpressionList(expression.Arguments);
-            bool unchanged = (object.ReferenceEquals(expression.ResultType, newType) && object.ReferenceEquals(expression.Arguments, newArguments));
+            var newType = VisitTypeUsage(expression.ResultType);
+            var newArguments = VisitExpressionList(expression.Arguments);
+            var unchanged = (ReferenceEquals(expression.ResultType, newType) && ReferenceEquals(expression.Arguments, newArguments));
             if (expression.HasRelatedEntityReferences)
             {
-                IList<DbRelatedEntityRef> newRefs = VisitList(expression.RelatedEntityReferences, this.VisitRelatedEntityRef);
-                if (!unchanged ||
-                    !object.ReferenceEquals(expression.RelatedEntityReferences, newRefs))
+                var newRefs = VisitList(expression.RelatedEntityReferences, VisitRelatedEntityRef);
+                if (!unchanged
+                    ||
+                    !ReferenceEquals(expression.RelatedEntityReferences, newRefs))
                 {
                     result = CqtBuilder.CreateNewEntityWithRelationshipsExpression((EntityType)newType.EdmType, newArguments, newRefs);
                 }
@@ -746,7 +786,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             {
                 if (!unchanged)
                 {
-                    result = CqtBuilder.New(newType, System.Linq.Enumerable.ToArray(newArguments));
+                    result = CqtBuilder.New(newType, newArguments.ToArray());
                 }
             }
             NotifyIfChanged(expression, result);
@@ -759,14 +799,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
             DbExpression result = expression;
 
-            EntityType targetType = (EntityType)TypeHelpers.GetEdmType<RefType>(expression.ResultType).ElementType;
+            var targetType = (EntityType)TypeHelpers.GetEdmType<RefType>(expression.ResultType).ElementType;
 
-            DbExpression newArgument = this.VisitExpression(expression.Argument);
-            EntityType newType = (EntityType)this.VisitType(targetType);
-            EntitySet newSet = (EntitySet)this.VisitEntitySet(expression.EntitySet);
-            if (!object.ReferenceEquals(expression.Argument, newArgument) ||
-                !object.ReferenceEquals(targetType, newType) ||
-                !object.ReferenceEquals(expression.EntitySet, newSet))
+            var newArgument = VisitExpression(expression.Argument);
+            var newType = (EntityType)VisitType(targetType);
+            var newSet = (EntitySet)VisitEntitySet(expression.EntitySet);
+            if (!ReferenceEquals(expression.Argument, newArgument) ||
+                !ReferenceEquals(targetType, newType)
+                ||
+                !ReferenceEquals(expression.EntitySet, newSet))
             {
                 result = CqtBuilder.RefFromKey(newSet, newArgument, newType);
             }
@@ -783,11 +824,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             RelationshipEndMember newFrom;
             RelationshipEndMember newTo;
             VisitRelationshipEnds(expression.NavigateFrom, expression.NavigateTo, out newFrom, out newTo);
-            DbExpression newNavSource = this.VisitExpression(expression.NavigationSource);
+            var newNavSource = VisitExpression(expression.NavigationSource);
 
-            if (!object.ReferenceEquals(expression.NavigateFrom, newFrom) ||
-                !object.ReferenceEquals(expression.NavigateTo, newTo) ||
-                !object.ReferenceEquals(expression.NavigationSource, newNavSource))
+            if (!ReferenceEquals(expression.NavigateFrom, newFrom) ||
+                !ReferenceEquals(expression.NavigateTo, newTo)
+                ||
+                !ReferenceEquals(expression.NavigationSource, newNavSource))
             {
                 result = CqtBuilder.Navigate(newNavSource, newFrom, newTo);
             }
@@ -799,21 +841,21 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             EntityUtil.CheckArgumentNull(expression, "expression");
 
-            return this.VisitUnary(expression, CqtBuilder.Deref);
+            return VisitUnary(expression, CqtBuilder.Deref);
         }
 
         public override DbExpression Visit(DbRefKeyExpression expression)
         {
             EntityUtil.CheckArgumentNull(expression, "expression");
 
-            return this.VisitUnary(expression, CqtBuilder.GetRefKey);
+            return VisitUnary(expression, CqtBuilder.GetRefKey);
         }
 
         public override DbExpression Visit(DbEntityRefExpression expression)
         {
             EntityUtil.CheckArgumentNull(expression, "expression");
 
-            return this.VisitUnary(expression, CqtBuilder.GetEntityRef);
+            return VisitUnary(expression, CqtBuilder.GetEntityRef);
         }
 
         public override DbExpression Visit(DbScanExpression expression)
@@ -822,44 +864,46 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
             DbExpression result = expression;
 
-            EntitySetBase newSet = this.VisitEntitySet(expression.Target);
-            if (!object.ReferenceEquals(expression.Target, newSet))
+            var newSet = VisitEntitySet(expression.Target);
+            if (!ReferenceEquals(expression.Target, newSet))
             {
                 result = CqtBuilder.Scan(newSet);
             }
             NotifyIfChanged(expression, result);
             return result;
         }
-                
+
         public override DbExpression Visit(DbFilterExpression expression)
         {
             EntityUtil.CheckArgumentNull(expression, "expression");
 
             DbExpression result = expression;
 
-            DbExpressionBinding input = this.VisitExpressionBindingEnterScope(expression.Input);
-            DbExpression predicate = this.VisitExpression(expression.Predicate);
-            this.ExitScope();
-            if (!object.ReferenceEquals(expression.Input, input) ||
-                !object.ReferenceEquals(expression.Predicate, predicate))
+            var input = VisitExpressionBindingEnterScope(expression.Input);
+            var predicate = VisitExpression(expression.Predicate);
+            ExitScope();
+            if (!ReferenceEquals(expression.Input, input)
+                ||
+                !ReferenceEquals(expression.Predicate, predicate))
             {
                 result = CqtBuilder.Filter(input, predicate);
             }
             NotifyIfChanged(expression, result);
             return result;
         }
-        
+
         public override DbExpression Visit(DbProjectExpression expression)
         {
             EntityUtil.CheckArgumentNull(expression, "expression");
 
             DbExpression result = expression;
 
-            DbExpressionBinding input = this.VisitExpressionBindingEnterScope(expression.Input);
-            DbExpression projection = this.VisitExpression(expression.Projection);
-            this.ExitScope();
-            if (!object.ReferenceEquals(expression.Input, input) ||
-                !object.ReferenceEquals(expression.Projection, projection))
+            var input = VisitExpressionBindingEnterScope(expression.Input);
+            var projection = VisitExpression(expression.Projection);
+            ExitScope();
+            if (!ReferenceEquals(expression.Input, input)
+                ||
+                !ReferenceEquals(expression.Projection, projection))
             {
                 result = CqtBuilder.Project(input, projection);
             }
@@ -873,8 +917,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
             DbExpression result = expression;
 
-            IList<DbExpressionBinding> newInputs = this.VisitExpressionBindingList(expression.Inputs);
-            if (!object.ReferenceEquals(expression.Inputs, newInputs))
+            var newInputs = VisitExpressionBindingList(expression.Inputs);
+            if (!ReferenceEquals(expression.Inputs, newInputs))
             {
                 result = CqtBuilder.CrossJoin(newInputs);
             }
@@ -888,28 +932,33 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
             DbExpression result = expression;
 
-            DbExpressionBinding newLeft = this.VisitExpressionBinding(expression.Left);
-            DbExpressionBinding newRight = this.VisitExpressionBinding(expression.Right);
-            
-            this.EnterScope(newLeft.Variable, newRight.Variable);
-            DbExpression newCondition = this.VisitExpression(expression.JoinCondition);
-            this.ExitScope();
+            var newLeft = VisitExpressionBinding(expression.Left);
+            var newRight = VisitExpressionBinding(expression.Right);
 
-            if (!object.ReferenceEquals(expression.Left, newLeft) ||
-                !object.ReferenceEquals(expression.Right, newRight) ||
-                !object.ReferenceEquals(expression.JoinCondition, newCondition))
+            EnterScope(newLeft.Variable, newRight.Variable);
+            var newCondition = VisitExpression(expression.JoinCondition);
+            ExitScope();
+
+            if (!ReferenceEquals(expression.Left, newLeft) ||
+                !ReferenceEquals(expression.Right, newRight)
+                ||
+                !ReferenceEquals(expression.JoinCondition, newCondition))
             {
-                if (DbExpressionKind.InnerJoin == expression.ExpressionKind)
+                if (DbExpressionKind.InnerJoin
+                    == expression.ExpressionKind)
                 {
                     result = CqtBuilder.InnerJoin(newLeft, newRight, newCondition);
                 }
-                else if (DbExpressionKind.LeftOuterJoin == expression.ExpressionKind)
+                else if (DbExpressionKind.LeftOuterJoin
+                         == expression.ExpressionKind)
                 {
                     result = CqtBuilder.LeftOuterJoin(newLeft, newRight, newCondition);
                 }
                 else
                 {
-                    Debug.Assert(expression.ExpressionKind == DbExpressionKind.FullOuterJoin, "DbJoinExpression had ExpressionKind other than InnerJoin, LeftOuterJoin or FullOuterJoin?");
+                    Debug.Assert(
+                        expression.ExpressionKind == DbExpressionKind.FullOuterJoin,
+                        "DbJoinExpression had ExpressionKind other than InnerJoin, LeftOuterJoin or FullOuterJoin?");
                     result = CqtBuilder.FullOuterJoin(newLeft, newRight, newCondition);
                 }
             }
@@ -923,20 +972,24 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
             DbExpression result = expression;
 
-            DbExpressionBinding newInput = this.VisitExpressionBindingEnterScope(expression.Input);
-            DbExpressionBinding newApply = this.VisitExpressionBinding(expression.Apply);
-            this.ExitScope();
+            var newInput = VisitExpressionBindingEnterScope(expression.Input);
+            var newApply = VisitExpressionBinding(expression.Apply);
+            ExitScope();
 
-            if (!object.ReferenceEquals(expression.Input, newInput) ||
-                !object.ReferenceEquals(expression.Apply, newApply))
+            if (!ReferenceEquals(expression.Input, newInput)
+                ||
+                !ReferenceEquals(expression.Apply, newApply))
             {
-                if (DbExpressionKind.CrossApply == expression.ExpressionKind)
+                if (DbExpressionKind.CrossApply
+                    == expression.ExpressionKind)
                 {
                     result = CqtBuilder.CrossApply(newInput, newApply);
                 }
                 else
                 {
-                    Debug.Assert(expression.ExpressionKind == DbExpressionKind.OuterApply, "DbApplyExpression had ExpressionKind other than CrossApply or OuterApply?");
+                    Debug.Assert(
+                        expression.ExpressionKind == DbExpressionKind.OuterApply,
+                        "DbApplyExpression had ExpressionKind other than CrossApply or OuterApply?");
                     result = CqtBuilder.OuterApply(newInput, newApply);
                 }
             }
@@ -950,19 +1003,20 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
             DbExpression result = expression;
 
-            DbGroupExpressionBinding newInput = this.VisitGroupExpressionBinding(expression.Input);
-            this.EnterScope(newInput.Variable);
-            IList<DbExpression> newKeys = this.VisitExpressionList(expression.Keys);
-            this.ExitScope();
-            this.EnterScope(newInput.GroupVariable);
-            IList<DbAggregate> newAggs = VisitList(expression.Aggregates, this.VisitAggregate);
-            this.ExitScope();
+            var newInput = VisitGroupExpressionBinding(expression.Input);
+            EnterScope(newInput.Variable);
+            var newKeys = VisitExpressionList(expression.Keys);
+            ExitScope();
+            EnterScope(newInput.GroupVariable);
+            var newAggs = VisitList(expression.Aggregates, VisitAggregate);
+            ExitScope();
 
-            if (!object.ReferenceEquals(expression.Input, newInput) ||
-                !object.ReferenceEquals(expression.Keys, newKeys) ||
-                !object.ReferenceEquals(expression.Aggregates, newAggs))
+            if (!ReferenceEquals(expression.Input, newInput) ||
+                !ReferenceEquals(expression.Keys, newKeys)
+                ||
+                !ReferenceEquals(expression.Aggregates, newAggs))
             {
-                RowType groupOutput =
+                var groupOutput =
                     TypeHelpers.GetEdmType<RowType>(TypeHelpers.GetEdmType<CollectionType>(expression.ResultType).TypeUsage);
 
                 var boundKeys = groupOutput.Properties.Take(newKeys.Count).Select(p => p.Name).Zip(newKeys).ToList();
@@ -973,21 +1027,22 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             NotifyIfChanged(expression, result);
             return result;
         }
-                
+
         public override DbExpression Visit(DbSkipExpression expression)
         {
             EntityUtil.CheckArgumentNull(expression, "expression");
 
             DbExpression result = expression;
 
-            DbExpressionBinding newInput = this.VisitExpressionBindingEnterScope(expression.Input);
-            IList<DbSortClause> newSortOrder = this.VisitSortOrder(expression.SortOrder);
-            this.ExitScope();
-            DbExpression newCount = this.VisitExpression(expression.Count);
+            var newInput = VisitExpressionBindingEnterScope(expression.Input);
+            var newSortOrder = VisitSortOrder(expression.SortOrder);
+            ExitScope();
+            var newCount = VisitExpression(expression.Count);
 
-            if (!object.ReferenceEquals(expression.Input, newInput) ||
-                !object.ReferenceEquals(expression.SortOrder, newSortOrder) ||
-                !object.ReferenceEquals(expression.Count, newCount))
+            if (!ReferenceEquals(expression.Input, newInput) ||
+                !ReferenceEquals(expression.SortOrder, newSortOrder)
+                ||
+                !ReferenceEquals(expression.Count, newCount))
             {
                 result = CqtBuilder.Skip(newInput, newSortOrder, newCount);
             }
@@ -1001,12 +1056,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
             DbExpression result = expression;
 
-            DbExpressionBinding newInput = this.VisitExpressionBindingEnterScope(expression.Input);
-            IList<DbSortClause> newSortOrder = this.VisitSortOrder(expression.SortOrder);
-            this.ExitScope();
+            var newInput = VisitExpressionBindingEnterScope(expression.Input);
+            var newSortOrder = VisitSortOrder(expression.SortOrder);
+            ExitScope();
 
-            if (!object.ReferenceEquals(expression.Input, newInput) ||
-                !object.ReferenceEquals(expression.SortOrder, newSortOrder))
+            if (!ReferenceEquals(expression.Input, newInput)
+                ||
+                !ReferenceEquals(expression.SortOrder, newSortOrder))
             {
                 result = CqtBuilder.Sort(newInput, newSortOrder);
             }
@@ -1020,20 +1076,24 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
             DbExpression result = expression;
 
-            DbExpressionBinding input = this.VisitExpressionBindingEnterScope(expression.Input);
-            DbExpression predicate = this.VisitExpression(expression.Predicate);
-            this.ExitScope();
+            var input = VisitExpressionBindingEnterScope(expression.Input);
+            var predicate = VisitExpression(expression.Predicate);
+            ExitScope();
 
-            if (!object.ReferenceEquals(expression.Input, input) ||
-                !object.ReferenceEquals(expression.Predicate, predicate))
+            if (!ReferenceEquals(expression.Input, input)
+                ||
+                !ReferenceEquals(expression.Predicate, predicate))
             {
-                if (DbExpressionKind.All == expression.ExpressionKind)
+                if (DbExpressionKind.All
+                    == expression.ExpressionKind)
                 {
                     result = CqtBuilder.All(input, predicate);
                 }
                 else
                 {
-                    Debug.Assert(expression.ExpressionKind == DbExpressionKind.Any, "DbQuantifierExpression had ExpressionKind other than All or Any?");
+                    Debug.Assert(
+                        expression.ExpressionKind == DbExpressionKind.Any,
+                        "DbQuantifierExpression had ExpressionKind other than All or Any?");
                     result = CqtBuilder.Any(input, predicate);
                 }
             }

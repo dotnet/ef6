@@ -1,8 +1,5 @@
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-
 #pragma warning disable 3015 // no accessible constructors which use only CLS-compliant types
 
     /// <summary>
@@ -11,7 +8,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     /// The metadata system expects this and will only look at the first of each of these attributes, even if there are more.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public abstract class EdmPropertyAttribute: System.Attribute
+    public abstract class EdmPropertyAttribute : Attribute
     {
         /// <summary>
         /// Only allow derived attributes from this assembly

@@ -1,12 +1,12 @@
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
-    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -86,14 +86,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         internal bool NodeVisited
         {
-            get
-            {
-                return _nodeVisited;
-            }
-            set
-            {
-                _nodeVisited = value;
-            }
+            get { return _nodeVisited; }
+            set { _nodeVisited = value; }
         }
 
         /// <summary>
@@ -136,7 +130,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         public static RelationshipManager Create(IEntityWithRelationships owner)
         {
             EntityUtil.CheckArgumentNull(owner, "owner");
-            RelationshipManager rm = new RelationshipManager();
+            var rm = new RelationshipManager();
             rm._owner = owner;
             return rm;
         }
@@ -160,10 +154,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         internal void SetWrappedOwner(IEntityWrapper wrappedOwner, object expectedOwner)
         {
             _wrappedOwner = wrappedOwner;
-            Debug.Assert(_owner != null || !(wrappedOwner.Entity is IEntityWithRelationships), "_owner should only be null if entity is not IEntityWithRelationships");
+            Debug.Assert(
+                _owner != null || !(wrappedOwner.Entity is IEntityWithRelationships),
+                "_owner should only be null if entity is not IEntityWithRelationships");
             // We need to check that the RelationshipManager created by the entity has the correct owner set,
             // since the entity can pass any value into RelationshipManager.Create().
-            if (_owner != null && !Object.ReferenceEquals(expectedOwner, _owner))
+            if (_owner != null
+                && !ReferenceEquals(expectedOwner, _owner))
             {
                 throw EntityUtil.InvalidRelationshipManagerOwner();
             }
@@ -172,7 +169,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             {
                 // Not using defensive copy here since SetWrappedOwner should not cause change in underlying
                 // _relationships collection.
-                foreach (RelatedEnd relatedEnd in _relationships)
+                foreach (var relatedEnd in _relationships)
                 {
                     relatedEnd.SetWrappedOwner(wrappedOwner);
                 }
@@ -193,8 +190,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="sourceRoleMultiplicity">Multiplicity of the source role. RelationshipMultiplicity.OneToOne and RelationshipMultiplicity.Zero are both
         /// accepted for a reference end, and RelationshipMultiplicity.Many is accepted for a collection</param>
         /// <returns>Collection of related entities of type TTargetEntity</returns>
-        internal EntityCollection<TTargetEntity> GetRelatedCollection<TSourceEntity, TTargetEntity>(string relationshipName,
-            string sourceRoleName, string targetRoleName, NavigationPropertyAccessor sourceAccessor, NavigationPropertyAccessor targetAccessor,
+        internal EntityCollection<TTargetEntity> GetRelatedCollection<TSourceEntity, TTargetEntity>(
+            string relationshipName,
+            string sourceRoleName, string targetRoleName, NavigationPropertyAccessor sourceAccessor,
+            NavigationPropertyAccessor targetAccessor,
             RelationshipMultiplicity sourceRoleMultiplicity, RelatedEnd existingRelatedEnd)
             where TSourceEntity : class
             where TTargetEntity : class
@@ -216,8 +215,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 }
                 else
                 {
-                    RelationshipNavigation navigation = new RelationshipNavigation(relationshipName, sourceRoleName, targetRoleName, sourceAccessor, targetAccessor);
-                    return CreateRelatedEnd<TSourceEntity, TTargetEntity>(navigation, sourceRoleMultiplicity, RelationshipMultiplicity.Many, existingRelatedEnd) as EntityCollection<TTargetEntity>;
+                    var navigation = new RelationshipNavigation(
+                        relationshipName, sourceRoleName, targetRoleName, sourceAccessor, targetAccessor);
+                    return
+                        CreateRelatedEnd<TSourceEntity, TTargetEntity>(
+                            navigation, sourceRoleMultiplicity, RelationshipMultiplicity.Many, existingRelatedEnd) as
+                        EntityCollection<TTargetEntity>;
                 }
             }
             else
@@ -232,12 +235,16 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     _relationships.Remove(relatedEnd);
                 }
 
-                RelationshipNavigation navigation = new RelationshipNavigation(relationshipName, sourceRoleName, targetRoleName, sourceAccessor, targetAccessor);
-                var collection = CreateRelatedEnd<TSourceEntity, TTargetEntity>(navigation, sourceRoleMultiplicity, RelationshipMultiplicity.Many, existingRelatedEnd) as EntityCollection<TTargetEntity>;
+                var navigation = new RelationshipNavigation(
+                    relationshipName, sourceRoleName, targetRoleName, sourceAccessor, targetAccessor);
+                var collection =
+                    CreateRelatedEnd<TSourceEntity, TTargetEntity>(
+                        navigation, sourceRoleMultiplicity, RelationshipMultiplicity.Many, existingRelatedEnd) as
+                    EntityCollection<TTargetEntity>;
 
                 if (collection != null)
                 {
-                    bool doCleanup = true;
+                    var doCleanup = true;
                     try
                     {
                         RemergeCollections(previousCollection, collection);
@@ -265,20 +272,21 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <typeparam name="TTargetEntity"></typeparam>
         /// <param name="previousCollection">The previous EntityCollection containing items that have already had fixup performed</param>
         /// <param name="collection">The new EntityCollection</param>
-        private static void RemergeCollections<TTargetEntity>(EntityCollection<TTargetEntity> previousCollection,
+        private static void RemergeCollections<TTargetEntity>(
+            EntityCollection<TTargetEntity> previousCollection,
             EntityCollection<TTargetEntity> collection)
-                where TTargetEntity : class
+            where TTargetEntity : class
         {
             Debug.Assert(collection != null, "collection is null");
             // If there is a previousCollection, we only need to merge the items that are 
             // in the collection but not in the previousCollection
             // Ensure that all of the items in the previousCollection are already in the new collection
 
-            int relatedEntityCount = 0;
+            var relatedEntityCount = 0;
 
             // We will be modifing the collection's enumerator, so we need to make a copy of it
-            List<IEntityWrapper> tempEntities = new List<IEntityWrapper>(collection.CountInternal);
-            foreach (IEntityWrapper wrappedEntity in collection.GetWrappedEntities())
+            var tempEntities = new List<IEntityWrapper>(collection.CountInternal);
+            foreach (var wrappedEntity in collection.GetWrappedEntities())
             {
                 tempEntities.Add(wrappedEntity);
             }
@@ -287,9 +295,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // If the previousCollection already contained the entity, no additional work is needed
             // If the previousCollection did not contain the entity,
             //   then remove it from the collection and re-add it to force relationship fixup
-            foreach (IEntityWrapper wrappedEntity in tempEntities)
+            foreach (var wrappedEntity in tempEntities)
             {
-                bool requiresMerge = true;
+                var requiresMerge = true;
                 if (previousCollection != null)
                 {
                     // There is no need to merge and do fixup if the entity was already in the previousCollection because
@@ -310,7 +318,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
 
             // Ensure that all of the items in the previousCollection are already in the new collection
-            if (previousCollection != null && relatedEntityCount != previousCollection.CountInternal)
+            if (previousCollection != null
+                && relatedEntityCount != previousCollection.CountInternal)
             {
                 throw EntityUtil.CannotRemergeCollections();
             }
@@ -328,8 +337,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="sourceRoleMultiplicity">Multiplicity of the source role. RelationshipMultiplicity.OneToOne and RelationshipMultiplicity.Zero are both
         /// accepted for a reference end, and RelationshipMultiplicity.Many is accepted for a collection</param>
         /// <returns>Reference for related entity of type TTargetEntity</returns>
-        internal EntityReference<TTargetEntity> GetRelatedReference<TSourceEntity, TTargetEntity>(string relationshipName,
-            string sourceRoleName, string targetRoleName, NavigationPropertyAccessor sourceAccessor, NavigationPropertyAccessor targetAccessor,
+        internal EntityReference<TTargetEntity> GetRelatedReference<TSourceEntity, TTargetEntity>(
+            string relationshipName,
+            string sourceRoleName, string targetRoleName, NavigationPropertyAccessor sourceAccessor,
+            NavigationPropertyAccessor targetAccessor,
             RelationshipMultiplicity sourceRoleMultiplicity, RelatedEnd existingRelatedEnd)
             where TSourceEntity : class
             where TTargetEntity : class
@@ -349,8 +360,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
             else
             {
-                RelationshipNavigation navigation = new RelationshipNavigation(relationshipName, sourceRoleName, targetRoleName, sourceAccessor, targetAccessor);
-                return CreateRelatedEnd<TSourceEntity, TTargetEntity>(navigation, sourceRoleMultiplicity, RelationshipMultiplicity.One, existingRelatedEnd) as EntityReference<TTargetEntity>;
+                var navigation = new RelationshipNavigation(
+                    relationshipName, sourceRoleName, targetRoleName, sourceAccessor, targetAccessor);
+                return
+                    CreateRelatedEnd<TSourceEntity, TTargetEntity>(
+                        navigation, sourceRoleMultiplicity, RelationshipMultiplicity.One, existingRelatedEnd) as
+                    EntityReference<TTargetEntity>;
             }
         }
 
@@ -363,21 +378,23 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         internal RelatedEnd GetRelatedEnd(string navigationProperty, bool throwArgumentException = false)
         {
-            IEntityWrapper wrappedOwner = WrappedOwner;
+            var wrappedOwner = WrappedOwner;
             Debug.Assert(wrappedOwner.Entity != null, "Entity is null");
             Debug.Assert(wrappedOwner.Context != null, "Context is null");
             Debug.Assert(wrappedOwner.Context.MetadataWorkspace != null, "MetadataWorkspace is null");
             Debug.Assert(wrappedOwner.Context.Perspective != null, "Perspective is null");
 
-            EntityType entityType = wrappedOwner.Context.MetadataWorkspace.GetItem<EntityType>(wrappedOwner.IdentityType.FullName, DataSpace.OSpace);
+            var entityType = wrappedOwner.Context.MetadataWorkspace.GetItem<EntityType>(
+                wrappedOwner.IdentityType.FullName, DataSpace.OSpace);
             EdmMember member;
-            if (!wrappedOwner.Context.Perspective.TryGetMember(entityType, navigationProperty, false, out member) ||
+            if (!wrappedOwner.Context.Perspective.TryGetMember(entityType, navigationProperty, false, out member)
+                ||
                 !(member is NavigationProperty))
             {
-                var message = System.Data.Entity.Resources.Strings.RelationshipManager_NavigationPropertyNotFound(navigationProperty);
-                throw throwArgumentException ? (Exception)new ArgumentException(message) : (Exception)new InvalidOperationException(message);
+                var message = Strings.RelationshipManager_NavigationPropertyNotFound(navigationProperty);
+                throw throwArgumentException ? new ArgumentException(message) : (Exception)new InvalidOperationException(message);
             }
-            NavigationProperty navProp = (NavigationProperty)member;
+            var navProp = (NavigationProperty)member;
             return GetRelatedEndInternal(navProp.RelationshipType.FullName, navProp.ToEndMember.Name);
         }
 
@@ -402,10 +419,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             EntityUtil.CheckArgumentNull(relationshipName, "relationshipName");
             EntityUtil.CheckArgumentNull(targetRoleName, "targetRoleName");
 
-            IEntityWrapper wrappedOwner = WrappedOwner;
-            if (wrappedOwner.Context == null && wrappedOwner.RequiresRelationshipChangeTracking)
+            var wrappedOwner = WrappedOwner;
+            if (wrappedOwner.Context == null
+                && wrappedOwner.RequiresRelationshipChangeTracking)
             {
-                throw new InvalidOperationException(System.Data.Entity.Resources.Strings.RelationshipManager_CannotGetRelatEndForDetachedPocoEntity);
+                throw new InvalidOperationException(Strings.RelationshipManager_CannotGetRelatEndForDetachedPocoEntity);
             }
 
             RelatedEnd relatedEnd = null;
@@ -423,7 +441,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                                   select end).FirstOrDefault();
                 }
 
-                if (relatedEnd == null && !EntityProxyFactory.TryGetAssociationTypeFromProxyInfo(wrappedOwner, relationshipName, targetRoleName, out associationType))
+                if (relatedEnd == null
+                    &&
+                    !EntityProxyFactory.TryGetAssociationTypeFromProxyInfo(
+                        wrappedOwner, relationshipName, targetRoleName, out associationType))
                 {
                     // If the end still cannot be found, throw an exception
                     throw UnableToGetMetadata(WrappedOwner, relationshipName);
@@ -439,12 +460,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return relatedEnd;
         }
 
-        private RelatedEnd GetRelatedEndInternal(string relationshipName, string targetRoleName, RelatedEnd existingRelatedEnd, AssociationType relationship)
+        private RelatedEnd GetRelatedEndInternal(
+            string relationshipName, string targetRoleName, RelatedEnd existingRelatedEnd, AssociationType relationship)
         {
             return GetRelatedEndInternal(relationshipName, targetRoleName, existingRelatedEnd, relationship, true);
         }
 
-        private RelatedEnd GetRelatedEndInternal(string relationshipName, string targetRoleName, RelatedEnd existingRelatedEnd, AssociationType relationship, bool throwOnError)
+        private RelatedEnd GetRelatedEndInternal(
+            string relationshipName, string targetRoleName, RelatedEnd existingRelatedEnd, AssociationType relationship, bool throwOnError)
         {
             Debug.Assert(relationshipName != null, "null relationshipNameFromUser");
             Debug.Assert(targetRoleName != null, "null targetRoleName");
@@ -482,15 +505,18 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
 
             // Validate that the source type matches the type of the owner
-            EntityType sourceEntityType = MetadataHelper.GetEntityTypeForEnd(sourceEnd);
-            Debug.Assert(sourceEntityType.DataSpace == DataSpace.OSpace && sourceEntityType.ClrType != null, "sourceEntityType must contain an ospace type");
-            Type sourceType = sourceEntityType.ClrType;
-            IEntityWrapper wrappedOwner = WrappedOwner;
+            var sourceEntityType = MetadataHelper.GetEntityTypeForEnd(sourceEnd);
+            Debug.Assert(
+                sourceEntityType.DataSpace == DataSpace.OSpace && sourceEntityType.ClrType != null,
+                "sourceEntityType must contain an ospace type");
+            var sourceType = sourceEntityType.ClrType;
+            var wrappedOwner = WrappedOwner;
             if (!(sourceType.IsAssignableFrom(wrappedOwner.IdentityType)))
             {
                 if (throwOnError)
                 {
-                    throw EntityUtil.OwnerIsNotSourceType(wrappedOwner.IdentityType.FullName, sourceType.FullName, sourceEnd.Name, relationshipName);
+                    throw EntityUtil.OwnerIsNotSourceType(
+                        wrappedOwner.IdentityType.FullName, sourceType.FullName, sourceEnd.Name, relationshipName);
                 }
             }
             else if (VerifyRelationship(relationship, sourceEnd.Name, throwOnError))
@@ -512,7 +538,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="entityReference"></param>
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public void InitializeRelatedReference<TTargetEntity>(string relationshipName, string targetRoleName, EntityReference<TTargetEntity> entityReference)
+        public void InitializeRelatedReference<TTargetEntity>(
+            string relationshipName, string targetRoleName, EntityReference<TTargetEntity> entityReference)
             where TTargetEntity : class
         {
             EntityUtil.CheckArgumentNull(relationshipName, "relationshipName");
@@ -524,8 +551,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 throw EntityUtil.ReferenceAlreadyInitialized();
             }
 
-            IEntityWrapper wrappedOwner = WrappedOwner;
-            if (wrappedOwner.Context != null && wrappedOwner.MergeOption != MergeOption.NoTracking)
+            var wrappedOwner = WrappedOwner;
+            if (wrappedOwner.Context != null
+                && wrappedOwner.MergeOption != MergeOption.NoTracking)
             {
                 throw EntityUtil.RelationshipManagerAttached();
             }
@@ -533,7 +561,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // We need the CSpace-qualified name in order to determine if this relationship already exists, so look it up.
             // If the relationship doesn't exist, we will use this type information to determine how to initialize the reference
             relationshipName = PrependNamespaceToRelationshipName(relationshipName);
-            AssociationType relationship = GetRelationshipType(wrappedOwner.IdentityType, relationshipName);
+            var relationship = GetRelationshipType(wrappedOwner.IdentityType, relationshipName);
 
             RelatedEnd relatedEnd;
             if (TryGetCachedRelatedEnd(relationshipName, targetRoleName, out relatedEnd))
@@ -548,7 +576,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 _relationships.Remove(relatedEnd);
             }
 
-            EntityReference<TTargetEntity> reference = GetRelatedEndInternal(relationshipName, targetRoleName, entityReference, relationship) as EntityReference<TTargetEntity>;
+            var reference =
+                GetRelatedEndInternal(relationshipName, targetRoleName, entityReference, relationship) as EntityReference<TTargetEntity>;
             if (reference == null)
             {
                 throw EntityUtil.ExpectedReferenceGotCollection(typeof(TTargetEntity).Name, targetRoleName, relationshipName);
@@ -566,7 +595,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="entityCollection"></param>
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public void InitializeRelatedCollection<TTargetEntity>(string relationshipName, string targetRoleName, EntityCollection<TTargetEntity> entityCollection)
+        public void InitializeRelatedCollection<TTargetEntity>(
+            string relationshipName, string targetRoleName, EntityCollection<TTargetEntity> entityCollection)
             where TTargetEntity : class
         {
             EntityUtil.CheckArgumentNull(relationshipName, "relationshipName");
@@ -578,8 +608,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 throw EntityUtil.CollectionAlreadyInitialized();
             }
 
-            IEntityWrapper wrappedOwner = WrappedOwner;
-            if (wrappedOwner.Context != null && wrappedOwner.MergeOption != MergeOption.NoTracking)
+            var wrappedOwner = WrappedOwner;
+            if (wrappedOwner.Context != null
+                && wrappedOwner.MergeOption != MergeOption.NoTracking)
             {
                 throw EntityUtil.CollectionRelationshipManagerAttached();
             }
@@ -587,9 +618,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // We need the CSpace-qualified name in order to determine if this relationship already exists, so look it up.
             // If the relationship doesn't exist, we will use this type information to determine how to initialize the reference
             relationshipName = PrependNamespaceToRelationshipName(relationshipName);
-            AssociationType relationship = GetRelationshipType(wrappedOwner.IdentityType, relationshipName);
+            var relationship = GetRelationshipType(wrappedOwner.IdentityType, relationshipName);
 
-            EntityCollection<TTargetEntity> collection = GetRelatedEndInternal(relationshipName, targetRoleName, entityCollection, relationship) as EntityCollection<TTargetEntity>;
+            var collection =
+                GetRelatedEndInternal(relationshipName, targetRoleName, entityCollection, relationship) as EntityCollection<TTargetEntity>;
             if (collection == null)
             {
                 throw EntityUtil.ExpectedCollectionGotReference(typeof(TTargetEntity).Name, targetRoleName, relationshipName);
@@ -611,26 +643,25 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             if (!relationshipName.Contains('.'))
             {
-                string identityName = WrappedOwner.IdentityType.FullName;
-                ObjectItemCollection objectItemCollection = GetObjectItemCollection(WrappedOwner);
+                var identityName = WrappedOwner.IdentityType.FullName;
+                var objectItemCollection = GetObjectItemCollection(WrappedOwner);
                 EdmType entityType = null;
                 if (objectItemCollection != null)
                 {
-                    objectItemCollection.TryGetItem<EdmType>(identityName, out entityType);
+                    objectItemCollection.TryGetItem(identityName, out entityType);
                 }
                 else
                 {
-                    Dictionary<string, EdmType> types = ObjectItemCollection.LoadTypesExpensiveWay(WrappedOwner.IdentityType.Assembly);
+                    var types = ObjectItemCollection.LoadTypesExpensiveWay(WrappedOwner.IdentityType.Assembly);
                     if (types != null)
                     {
                         types.TryGetValue(identityName, out entityType);
                     }
-
                 }
-                ClrEntityType clrEntityType = entityType as ClrEntityType;
+                var clrEntityType = entityType as ClrEntityType;
                 if (clrEntityType != null)
                 {
-                    string ns = clrEntityType.CSpaceNamespaceName;
+                    var ns = clrEntityType.CSpaceNamespaceName;
                     Debug.Assert(!string.IsNullOrEmpty(ns), "Expected non-empty namespace for type.");
 
                     return ns + "." + relationshipName;
@@ -644,7 +675,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         private static ObjectItemCollection GetObjectItemCollection(IEntityWrapper wrappedOwner)
         {
-            if (wrappedOwner.Context != null && wrappedOwner.Context.MetadataWorkspace != null)
+            if (wrappedOwner.Context != null
+                && wrappedOwner.Context.MetadataWorkspace != null)
             {
                 return (ObjectItemCollection)wrappedOwner.Context.MetadataWorkspace.GetItemCollection(DataSpace.OSpace);
             }
@@ -658,10 +690,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             DefaultObjectMappingItemCollection mappings;
             Map map;
-            if (TryGetObjectMappingItemCollection(WrappedOwner, out mappings) &&
+            if (TryGetObjectMappingItemCollection(WrappedOwner, out mappings)
+                &&
                 mappings.TryGetMap(WrappedOwner.IdentityType.FullName, DataSpace.OSpace, out map))
             {
-                ObjectTypeMapping objectMap = (ObjectTypeMapping)map;
+                var objectMap = (ObjectTypeMapping)map;
                 if (Helper.IsEntityType(objectMap.EdmType))
                 {
                     entityType = (EntityType)objectMap.EdmType;
@@ -676,9 +709,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         /// Trys to get an DefaultObjectMappingItemCollection and returns false if it can't be found.
         /// </summary>
-        private static bool TryGetObjectMappingItemCollection(IEntityWrapper wrappedOwner, out DefaultObjectMappingItemCollection collection)
+        private static bool TryGetObjectMappingItemCollection(
+            IEntityWrapper wrappedOwner, out DefaultObjectMappingItemCollection collection)
         {
-            if (wrappedOwner.Context != null && wrappedOwner.Context.MetadataWorkspace != null)
+            if (wrappedOwner.Context != null
+                && wrappedOwner.Context.MetadataWorkspace != null)
             {
                 collection = (DefaultObjectMappingItemCollection)wrappedOwner.Context.MetadataWorkspace.GetItemCollection(DataSpace.OCSpace);
                 return collection != null;
@@ -688,11 +723,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return false;
         }
 
-
-
-        internal static bool TryGetRelationshipType(IEntityWrapper wrappedOwner, Type entityClrType, string relationshipName, out AssociationType associationType)
+        internal static bool TryGetRelationshipType(
+            IEntityWrapper wrappedOwner, Type entityClrType, string relationshipName, out AssociationType associationType)
         {
-            ObjectItemCollection objectItemCollection = GetObjectItemCollection(wrappedOwner);
+            var objectItemCollection = GetObjectItemCollection(wrappedOwner);
             if (objectItemCollection != null)
             {
                 associationType = objectItemCollection.GetRelationshipType(relationshipName);
@@ -717,7 +751,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         internal static Exception UnableToGetMetadata(IEntityWrapper wrappedOwner, string relationshipName)
         {
-            ArgumentException argException = EntityUtil.UnableToFindRelationshipTypeInMetadata(relationshipName, "relationshipName");
+            var argException = EntityUtil.UnableToFindRelationshipTypeInMetadata(relationshipName, "relationshipName");
             if (EntityProxyFactory.IsProxyType(wrappedOwner.Entity.GetType()))
             {
                 return EntityUtil.ProxyMetadataIsUnavailable(wrappedOwner.IdentityType, argException);
@@ -730,18 +764,18 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         private IEnumerable<AssociationEndMember> GetAllTargetEnds(EntityType ownerEntityType, EntitySet ownerEntitySet)
         {
-            foreach (AssociationSet assocSet in MetadataHelper.GetAssociationsForEntitySet(ownerEntitySet))
+            foreach (var assocSet in MetadataHelper.GetAssociationsForEntitySet(ownerEntitySet))
             {
-                EntityType end2EntityType = ((AssociationType)assocSet.ElementType).AssociationEndMembers[1].GetEntityType();
+                var end2EntityType = (assocSet.ElementType).AssociationEndMembers[1].GetEntityType();
                 if (end2EntityType.IsAssignableFrom(ownerEntityType))
                 {
-                    yield return ((AssociationType)assocSet.ElementType).AssociationEndMembers[0];
+                    yield return (assocSet.ElementType).AssociationEndMembers[0];
                 }
                 // not "else" because of associations between the same entity sets
-                EntityType end1EntityType = ((AssociationType)assocSet.ElementType).AssociationEndMembers[0].GetEntityType();
+                var end1EntityType = (assocSet.ElementType).AssociationEndMembers[0].GetEntityType();
                 if (end1EntityType.IsAssignableFrom(ownerEntityType))
                 {
-                    yield return ((AssociationType)assocSet.ElementType).AssociationEndMembers[1];
+                    yield return (assocSet.ElementType).AssociationEndMembers[1];
                 }
             }
         }
@@ -756,7 +790,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>The OSpace EntityType that represents this CLR type</returns>
         private IEnumerable<AssociationEndMember> GetAllTargetEnds(Type entityClrType)
         {
-            ObjectItemCollection objectItemCollection = GetObjectItemCollection(WrappedOwner);
+            var objectItemCollection = GetObjectItemCollection(WrappedOwner);
 
             IEnumerable<AssociationType> associations = null;
             if (objectItemCollection != null)
@@ -770,18 +804,20 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 associations = ObjectItemCollection.GetAllRelationshipTypesExpensiveWay(entityClrType.Assembly);
             }
 
-            foreach (AssociationType association in associations)
+            foreach (var association in associations)
             {
                 // Check both ends for the presence of the source CLR type
-                RefType referenceType = association.AssociationEndMembers[0].TypeUsage.EdmType as RefType;
-                if (referenceType != null && referenceType.ElementType.ClrType.IsAssignableFrom(entityClrType))
+                var referenceType = association.AssociationEndMembers[0].TypeUsage.EdmType as RefType;
+                if (referenceType != null
+                    && referenceType.ElementType.ClrType.IsAssignableFrom(entityClrType))
                 {
                     // Return the target end
                     yield return association.AssociationEndMembers[1];
                 }
 
                 referenceType = association.AssociationEndMembers[1].TypeUsage.EdmType as RefType;
-                if (referenceType != null && referenceType.ElementType.ClrType.IsAssignableFrom(entityClrType))
+                if (referenceType != null
+                    && referenceType.ElementType.ClrType.IsAssignableFrom(entityClrType))
                 {
                     // Return the target end
                     yield return association.AssociationEndMembers[0];
@@ -790,13 +826,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             yield break;
         }
 
-
         private bool VerifyRelationship(AssociationType relationship, string sourceEndName, bool throwOnError)
         {
-            IEntityWrapper wrappedOwner = WrappedOwner;
+            var wrappedOwner = WrappedOwner;
             if (wrappedOwner.Context == null)
             {
-                return true;// if not added to cache, can not decide- for now
+                return true; // if not added to cache, can not decide- for now
             }
 
             EntityKey ownerKey = null;
@@ -809,20 +844,21 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             TypeUsage associationTypeUsage;
             AssociationSet association = null;
-            bool isVerified = true;
+            var isVerified = true;
 
             // First, get the CSpace association type from the relationship name, since the helper method looks up
             // association set in the CSpace, since there is no Entity Container in the OSpace
-            if (wrappedOwner.Context.Perspective.TryGetTypeByName(relationship.FullName, false/*ignoreCase*/, out associationTypeUsage))
+            if (wrappedOwner.Context.Perspective.TryGetTypeByName(relationship.FullName, false /*ignoreCase*/, out associationTypeUsage))
             {
                 //Get the entity container first
-                EntityContainer entityContainer = wrappedOwner.Context.MetadataWorkspace.GetEntityContainer(
+                var entityContainer = wrappedOwner.Context.MetadataWorkspace.GetEntityContainer(
                     ownerKey.EntityContainerName, DataSpace.CSpace);
                 EntitySet entitySet;
 
                 // Get the association set from the entity container, given the association type it refers to, and the entity set
                 // name that the source end refers to
-                association = MetadataHelper.GetAssociationsForEntitySetAndAssociationType(entityContainer, ownerKey.EntitySetName,
+                association = MetadataHelper.GetAssociationsForEntitySetAndAssociationType(
+                    entityContainer, ownerKey.EntitySetName,
                     (AssociationType)associationTypeUsage.EdmType, sourceEndName, out entitySet);
 
                 if (association == null)
@@ -838,7 +874,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 }
                 else
                 {
-                    Debug.Assert(association.AssociationSetEnds[sourceEndName].EntitySet == entitySet, "AssociationSetEnd does have the matching EntitySet");
+                    Debug.Assert(
+                        association.AssociationSetEnds[sourceEndName].EntitySet == entitySet,
+                        "AssociationSetEnd does have the matching EntitySet");
                 }
             }
             return isVerified;
@@ -855,7 +893,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         public EntityCollection<TTargetEntity> GetRelatedCollection<TTargetEntity>(string relationshipName, string targetRoleName)
             where TTargetEntity : class
         {
-            EntityCollection<TTargetEntity> collection = GetRelatedEndInternal(PrependNamespaceToRelationshipName(relationshipName), targetRoleName) as EntityCollection<TTargetEntity>;
+            var collection =
+                GetRelatedEndInternal(PrependNamespaceToRelationshipName(relationshipName), targetRoleName) as
+                EntityCollection<TTargetEntity>;
             if (collection == null)
             {
                 throw EntityUtil.ExpectedCollectionGotReference(typeof(TTargetEntity).Name, targetRoleName, relationshipName);
@@ -874,7 +914,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         public EntityReference<TTargetEntity> GetRelatedReference<TTargetEntity>(string relationshipName, string targetRoleName)
             where TTargetEntity : class
         {
-            EntityReference<TTargetEntity> reference = GetRelatedEndInternal(PrependNamespaceToRelationshipName(relationshipName), targetRoleName) as EntityReference<TTargetEntity>;
+            var reference =
+                GetRelatedEndInternal(PrependNamespaceToRelationshipName(relationshipName), targetRoleName) as
+                EntityReference<TTargetEntity>;
             if (reference == null)
             {
                 throw EntityUtil.ExpectedReferenceGotCollection(typeof(TTargetEntity).Name, targetRoleName, relationshipName);
@@ -920,20 +962,25 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="targetRoleMultiplicity">Multiplicity of the target role</param>
         /// <param name="existingRelatedEnd">An existing related end to initialize instead of creating a new one</param>
         /// <returns>new EntityCollection or EntityReference, depending on the specified target multiplicity</returns>
-        internal RelatedEnd CreateRelatedEnd<TSourceEntity, TTargetEntity>(RelationshipNavigation navigation, RelationshipMultiplicity sourceRoleMultiplicity, RelationshipMultiplicity targetRoleMultiplicity, RelatedEnd existingRelatedEnd)
+        internal RelatedEnd CreateRelatedEnd<TSourceEntity, TTargetEntity>(
+            RelationshipNavigation navigation, RelationshipMultiplicity sourceRoleMultiplicity,
+            RelationshipMultiplicity targetRoleMultiplicity, RelatedEnd existingRelatedEnd)
             where TSourceEntity : class
             where TTargetEntity : class
         {
-            IRelationshipFixer relationshipFixer = new RelationshipFixer<TSourceEntity, TTargetEntity>(sourceRoleMultiplicity, targetRoleMultiplicity);
+            IRelationshipFixer relationshipFixer = new RelationshipFixer<TSourceEntity, TTargetEntity>(
+                sourceRoleMultiplicity, targetRoleMultiplicity);
             RelatedEnd relatedEnd = null;
-            IEntityWrapper wrappedOwner = WrappedOwner;
+            var wrappedOwner = WrappedOwner;
             switch (targetRoleMultiplicity)
             {
                 case RelationshipMultiplicity.ZeroOrOne:
                 case RelationshipMultiplicity.One:
                     if (existingRelatedEnd != null)
                     {
-                        Debug.Assert(wrappedOwner.Context == null || wrappedOwner.MergeOption == MergeOption.NoTracking, "Expected null context when initializing an existing related end");
+                        Debug.Assert(
+                            wrappedOwner.Context == null || wrappedOwner.MergeOption == MergeOption.NoTracking,
+                            "Expected null context when initializing an existing related end");
                         existingRelatedEnd.InitializeRelatedEnd(wrappedOwner, navigation, relationshipFixer);
                         relatedEnd = existingRelatedEnd;
                     }
@@ -945,7 +992,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 case RelationshipMultiplicity.Many:
                     if (existingRelatedEnd != null)
                     {
-                        Debug.Assert(wrappedOwner.Context == null || wrappedOwner.MergeOption == MergeOption.NoTracking, "Expected null context or NoTracking when initializing an existing related end");
+                        Debug.Assert(
+                            wrappedOwner.Context == null || wrappedOwner.MergeOption == MergeOption.NoTracking,
+                            "Expected null context or NoTracking when initializing an existing related end");
                         existingRelatedEnd.InitializeRelatedEnd(wrappedOwner, navigation, relationshipFixer);
                         relatedEnd = existingRelatedEnd;
                     }
@@ -977,17 +1026,19 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public IEnumerable<IRelatedEnd> GetAllRelatedEnds()
         {
-            IEntityWrapper wrappedOwner = WrappedOwner;
+            var wrappedOwner = WrappedOwner;
 
             EntityType entityType;
-            if (wrappedOwner.Context != null && wrappedOwner.Context.MetadataWorkspace != null && TryGetOwnerEntityType(out entityType))
+            if (wrappedOwner.Context != null && wrappedOwner.Context.MetadataWorkspace != null
+                && TryGetOwnerEntityType(out entityType))
             {
                 // For attached scenario:
                 // MEST: This returns RelatedEnds representing AssociationTypes which belongs to AssociationSets 
                 // which have one end of EntitySet of wrappedOwner.Entity's EntitySet
                 Debug.Assert(wrappedOwner.EntityKey != null, "null entityKey on a attached entity");
-                EntitySet entitySet = wrappedOwner.Context.GetEntitySet(wrappedOwner.EntityKey.EntitySetName, wrappedOwner.EntityKey.EntityContainerName);
-                foreach (AssociationEndMember endMember in GetAllTargetEnds(entityType, entitySet))
+                var entitySet = wrappedOwner.Context.GetEntitySet(
+                    wrappedOwner.EntityKey.EntitySetName, wrappedOwner.EntityKey.EntityContainerName);
+                foreach (var endMember in GetAllTargetEnds(entityType, entitySet))
                 {
                     yield return GetRelatedEnd(endMember.DeclaringType.FullName, endMember.Name);
                 }
@@ -1001,7 +1052,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 // but it's not possible because we don't know to which EntitySet the wrappedOwner.Entity belongs.
                 if (wrappedOwner.Entity != null)
                 {
-                    foreach (AssociationEndMember endMember in GetAllTargetEnds(wrappedOwner.IdentityType))
+                    foreach (var endMember in GetAllTargetEnds(wrappedOwner.IdentityType))
                     {
                         yield return GetRelatedEnd(endMember.DeclaringType.FullName, endMember.Name);
                     }
@@ -1012,22 +1063,24 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Browsable(false)]
-        [OnSerializingAttribute]
+        [OnSerializing]
         [SuppressMessage("Microsoft.Usage", "CA2238:ImplementSerializationMethodsCorrectly")]
         public void OnSerializing(StreamingContext context)
         {
-            IEntityWrapper wrappedOwner = WrappedOwner;
+            var wrappedOwner = WrappedOwner;
             if (!(wrappedOwner.Entity is IEntityWithRelationships))
             {
-                throw new InvalidOperationException(System.Data.Entity.Resources.Strings.RelatedEnd_CannotSerialize("RelationshipManager"));
+                throw new InvalidOperationException(Strings.RelatedEnd_CannotSerialize("RelationshipManager"));
             }
             // If we are attached to a context we need to go fixup the detached entity key on any EntityReferences
-            if (wrappedOwner.Context != null && wrappedOwner.MergeOption != MergeOption.NoTracking)
+            if (wrappedOwner.Context != null
+                && wrappedOwner.MergeOption != MergeOption.NoTracking)
             {
                 foreach (RelatedEnd relatedEnd in GetAllRelatedEnds())
                 {
-                    EntityReference reference = relatedEnd as EntityReference;
-                    if (reference != null && reference.EntityKey != null)
+                    var reference = relatedEnd as EntityReference;
+                    if (reference != null
+                        && reference.EntityKey != null)
                     {
                         reference.DetachedEntityKey = reference.EntityKey;
                     }
@@ -1053,13 +1106,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             if (null != _relationships)
             {
-                bool doCleanup = true;
+                var doCleanup = true;
                 try
                 {
                     // Create a copy of this list because with self references, the set of relationships can change
-                    foreach (RelatedEnd relatedEnd in Relationships)
+                    foreach (var relatedEnd in Relationships)
                     {
-                        relatedEnd.Include(/*addRelationshipAsUnchanged*/false, doAttach);
+                        relatedEnd.Include( /*addRelationshipAsUnchanged*/false, doAttach);
                     }
                     doCleanup = false;
                 }
@@ -1069,10 +1122,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     // is done on the Owner entity and all its relating entities.
                     if (doCleanup)
                     {
-                        IEntityWrapper wrappedOwner = WrappedOwner;
-                        Debug.Assert(wrappedOwner.Context != null && wrappedOwner.Context.ObjectStateManager != null, "Null context or ObjectStateManager");
+                        var wrappedOwner = WrappedOwner;
+                        Debug.Assert(
+                            wrappedOwner.Context != null && wrappedOwner.Context.ObjectStateManager != null,
+                            "Null context or ObjectStateManager");
 
-                        TransactionManager transManager = wrappedOwner.Context.ObjectStateManager.TransactionManager;
+                        var transManager = wrappedOwner.Context.ObjectStateManager.TransactionManager;
 
                         // The graph being attached is connected to graph already existing in the OSM only through "promoted" relationships
                         // (relationships which originally existed only in OSM between key entries and entity entries but later were
@@ -1088,7 +1143,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
                         Debug.Assert(doAttach == (transManager.IsAttachTracking), "In attach the recovery collection should be not null");
 
-                        if (transManager.IsAttachTracking &&
+                        if (transManager.IsAttachTracking
+                            &&
                             transManager.PromotedKeyEntries.TryGetValue(wrappedOwner.Entity, out entry))
                         {
                             // This is executed only in the cleanup code from ObjectContext.AttachTo()
@@ -1110,12 +1166,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         internal static void RemoveRelatedEntitiesFromObjectStateManager(IEntityWrapper wrappedEntity)
         {
             Debug.Assert(wrappedEntity != null, "IEntityWrapper instance is null.");
-            foreach (RelatedEnd relatedEnd in wrappedEntity.RelationshipManager.Relationships)
+            foreach (var relatedEnd in wrappedEntity.RelationshipManager.Relationships)
             {
                 // only some of the related ends may have gotten attached, so just skip the ones that weren't
                 if (relatedEnd.ObjectContext != null)
                 {
-                    Debug.Assert(!relatedEnd.UsingNoTracking, "Shouldn't be touching the state manager with entities that were retrieved with NoTracking");
+                    Debug.Assert(
+                        !relatedEnd.UsingNoTracking,
+                        "Shouldn't be touching the state manager with entities that were retrieved with NoTracking");
                     relatedEnd.Exclude();
                     relatedEnd.DetachContext();
                 }
@@ -1129,7 +1187,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             if (null != _relationships)
             {
-                foreach (RelatedEnd relatedEnd in Relationships)
+                foreach (var relatedEnd in Relationships)
                 {
                     relatedEnd.RemoveAll();
                 }
@@ -1148,22 +1206,23 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 // end up removing a relationship before we have suceeded in nulling all the FK values
                 // for that relationship.
                 var dependentEndsToProcess = new List<EntityReference>();
-                foreach (RelatedEnd relatedEnd in Relationships)
+                foreach (var relatedEnd in Relationships)
                 {
                     if (relatedEnd.IsForeignKey)
                     {
-                        foreach (IEntityWrapper dependent in relatedEnd.GetWrappedEntities())
+                        foreach (var dependent in relatedEnd.GetWrappedEntities())
                         {
                             var dependentEnd = relatedEnd.GetOtherEndOfRelationship(dependent);
                             if (dependentEnd.IsDependentEndOfReferentialConstraint(checkIdentifying: false))
                             {
-                                Debug.Assert(dependentEnd is EntityReference, "Dependent end in FK relationship should always be a reference.");
+                                Debug.Assert(
+                                    dependentEnd is EntityReference, "Dependent end in FK relationship should always be a reference.");
                                 dependentEndsToProcess.Add((EntityReference)dependentEnd);
                             }
                         }
                     }
                 }
-                foreach (EntityReference dependentEnd in dependentEndsToProcess)
+                foreach (var dependentEnd in dependentEndsToProcess)
                 {
                     dependentEnd.NullAllForeignKeys();
                 }
@@ -1177,7 +1236,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             if (null != _relationships)
             {
-                foreach (RelatedEnd relatedEnd in Relationships)
+                foreach (var relatedEnd in Relationships)
                 {
                     relatedEnd.DetachAll(ownerEntityState);
                 }
@@ -1211,16 +1270,17 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // includeOwnValues is false only when this method is called from ObjectStateEntry.AcceptChanges()
         // Parmeter "visited" is a set containig entities which were already visited during traversing the graph.
         // If _owner already exists in the set, it means that there is a cycle in the graph of relationships with RI Constraints.
-        internal void RetrieveReferentialConstraintProperties(out Dictionary<string, KeyValuePair<object, IntBox>> properties, HashSet<object> visited, bool includeOwnValues)
+        internal void RetrieveReferentialConstraintProperties(
+            out Dictionary<string, KeyValuePair<object, IntBox>> properties, HashSet<object> visited, bool includeOwnValues)
         {
-            IEntityWrapper wrappedOwner = WrappedOwner;
+            var wrappedOwner = WrappedOwner;
             Debug.Assert(wrappedOwner.Entity != null);
             Debug.Assert(visited != null);
 
             // Dictionary< propertyName, <propertyValue, counter>>
             properties = new Dictionary<string, KeyValuePair<object, IntBox>>();
 
-            EntityKey ownerKey = wrappedOwner.EntityKey;
+            var ownerKey = wrappedOwner.EntityKey;
             Debug.Assert((object)ownerKey != null);
 
             // If the key is temporary, get values of referential constraint properties from principal entities
@@ -1230,7 +1290,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 List<string> propertiesToRetrieve;
                 bool propertiesToPropagateExist; // not used
 
-                this.FindNamesOfReferentialConstraintProperties(out propertiesToRetrieve, out propertiesToPropagateExist, skipFK: false);
+                FindNamesOfReferentialConstraintProperties(out propertiesToRetrieve, out propertiesToPropagateExist, skipFK: false);
 
                 if (propertiesToRetrieve != null)
                 {
@@ -1242,7 +1302,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     {
                         // Not using defensive copy here since RetrieveReferentialConstraintProperties should not cause change in underlying
                         // _relationships collection.
-                        foreach (RelatedEnd relatedEnd in _relationships)
+                        foreach (var relatedEnd in _relationships)
                         {
                             // NOTE: If the following call throws UnableToRetrieveReferentialConstraintProperties,
                             //       it means that properties couldn't be found in indirectly related entities,
@@ -1263,7 +1323,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         // Properties couldn't be found in entities in collections or refrences.
                         // Try to find missing properties in related key entries.
                         // This process is slow but it is not a common case.
-                        EntityEntry entry = wrappedOwner.Context.ObjectStateManager.FindEntityEntry(ownerKey);
+                        var entry = wrappedOwner.Context.ObjectStateManager.FindEntityEntry(ownerKey);
                         Debug.Assert(entry != null, "Owner entry not found in the object state manager");
                         entry.RetrieveReferentialConstraintPropertiesFromKeyEntries(properties);
 
@@ -1284,30 +1344,31 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             {
                 // NOTE this part is never executed when the method is called from ObjectStateManager.AcceptChanges(),
                 //      so we don't try to "retrieve" properties from the the same (callers) entity.
-                EntityEntry entry = wrappedOwner.Context.ObjectStateManager.FindEntityEntry(ownerKey);
+                var entry = wrappedOwner.Context.ObjectStateManager.FindEntityEntry(ownerKey);
                 Debug.Assert(entry != null, "Owner entry not found in the object state manager");
                 entry.GetOtherKeyProperties(properties);
             }
         }
 
         // properties dictionary contains name of property, its value and coutner saying how many times this property was retrieved from principal entities
-        private static bool CheckIfAllPropertiesWereRetrieved(Dictionary<string, KeyValuePair<object, IntBox>> properties, List<string> propertiesToRetrieve)
+        private static bool CheckIfAllPropertiesWereRetrieved(
+            Dictionary<string, KeyValuePair<object, IntBox>> properties, List<string> propertiesToRetrieve)
         {
             Debug.Assert(properties != null);
             Debug.Assert(propertiesToRetrieve != null);
 
-            bool isSuccess = true;
+            var isSuccess = true;
 
-            List<int> countersCopy = new List<int>();
+            var countersCopy = new List<int>();
             ICollection<KeyValuePair<object, IntBox>> values = properties.Values;
 
             // Create copy of counters (needed in case of failure)
-            foreach (KeyValuePair<object, IntBox> valueCounterPair in values)
+            foreach (var valueCounterPair in values)
             {
                 countersCopy.Add(valueCounterPair.Value.Value);
             }
 
-            foreach (string name in propertiesToRetrieve)
+            foreach (var name in propertiesToRetrieve)
             {
                 if (!properties.ContainsKey(name))
                 {
@@ -1315,7 +1376,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     break;
                 }
 
-                KeyValuePair<object, IntBox> valueCounterPair = properties[name];
+                var valueCounterPair = properties[name];
                 valueCounterPair.Value.Value = valueCounterPair.Value.Value - 1;
                 if (valueCounterPair.Value.Value < 0)
                 {
@@ -1327,7 +1388,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // Check if all the coutners equal 0
             if (isSuccess)
             {
-                foreach (KeyValuePair<object, IntBox> valueCounterPair in values)
+                foreach (var valueCounterPair in values)
                 {
                     if (valueCounterPair.Value.Value != 0)
                     {
@@ -1341,7 +1402,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             if (!isSuccess)
             {
                 IEnumerator<int> enumerator = countersCopy.GetEnumerator();
-                foreach (KeyValuePair<object, IntBox> valueCounterPair in values)
+                foreach (var valueCounterPair in values)
                 {
                     enumerator.MoveNext();
                     valueCounterPair.Value.Value = enumerator.Current;
@@ -1351,7 +1412,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return isSuccess;
         }
 
-
         // Check consistency between properties of current entity and Principal entities
         // If some of Principal entities don't exist or some property cannot be checked - this is violation of RI Constraints
         internal void CheckReferentialConstraintProperties(EntityEntry ownerEntry)
@@ -1359,15 +1419,16 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             Debug.Assert(ownerEntry != null);
 
             List<string> propertiesToRetrieve; // used to check if the owner is a dependent end of some RI Constraint
-            bool propertiesToPropagateExist;   // used to check if the owner is a principal end of some RI Constraint
-            this.FindNamesOfReferentialConstraintProperties(out propertiesToRetrieve, out propertiesToPropagateExist, skipFK: false);
+            bool propertiesToPropagateExist; // used to check if the owner is a principal end of some RI Constraint
+            FindNamesOfReferentialConstraintProperties(out propertiesToRetrieve, out propertiesToPropagateExist, skipFK: false);
 
-            if ((propertiesToRetrieve != null || propertiesToPropagateExist) &&
+            if ((propertiesToRetrieve != null || propertiesToPropagateExist)
+                &&
                 _relationships != null)
             {
                 // Not using defensive copy here since CheckReferentialConstraintProperties should not cause change in underlying
                 // _relationships collection.
-                foreach (RelatedEnd relatedEnd in _relationships)
+                foreach (var relatedEnd in _relationships)
                 {
                     if (!relatedEnd.CheckReferentialConstraintProperties(ownerEntry))
                     {
@@ -1387,7 +1448,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // entities will not result in serialization of the RelationshipManager or its related objects.
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Browsable(false)]
-        [OnDeserialized()]
+        [OnDeserialized]
         [SuppressMessage("Microsoft.Usage", "CA2238:ImplementSerializationMethodsCorrectly")]
         public void OnDeserialized(StreamingContext context)
         {
@@ -1410,10 +1471,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             {
                 // Not using defensive copy here since loop should not cause change in underlying
                 // _relationships collection.
-                foreach (RelatedEnd end in _relationships)
+                foreach (var end in _relationships)
                 {
-                    RelationshipNavigation relNav = end.RelationshipNavigation;
-                    if (relNav.RelationshipName == relationshipName && relNav.To == targetRoleName)
+                    var relNav = end.RelationshipNavigation;
+                    if (relNav.RelationshipName == relationshipName
+                        && relNav.To == targetRoleName)
                     {
                         relatedEnd = end;
                         return true;
@@ -1427,26 +1489,27 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // Returned lists are never null.
         // NOTE This method will be removed when bug 505935 is solved
         // Returns true if any FK relationships were skipped so that they can be checked again after fixup
-        internal bool FindNamesOfReferentialConstraintProperties(out List<string> propertiesToRetrieve, out bool propertiesToPropagateExist, bool skipFK)
+        internal bool FindNamesOfReferentialConstraintProperties(
+            out List<string> propertiesToRetrieve, out bool propertiesToPropagateExist, bool skipFK)
         {
-            IEntityWrapper wrappedOwner = WrappedOwner;
+            var wrappedOwner = WrappedOwner;
             Debug.Assert(wrappedOwner.Entity != null);
-            EntityKey ownerKey = wrappedOwner.EntityKey;
+            var ownerKey = wrappedOwner.EntityKey;
             EntityUtil.CheckEntityKeyNull(ownerKey);
 
             propertiesToRetrieve = null;
             propertiesToPropagateExist = false;
 
             EntityUtil.CheckContextNull(wrappedOwner.Context);
-            EntitySet entitySet = ownerKey.GetEntitySet(wrappedOwner.Context.MetadataWorkspace);
+            var entitySet = ownerKey.GetEntitySet(wrappedOwner.Context.MetadataWorkspace);
             Debug.Assert(entitySet != null, "Unable to find entity set");
 
             // Get association types in which current entity's type is one of the ends.
-            List<AssociationSet> associations = MetadataHelper.GetAssociationsForEntitySet(entitySet);
+            var associations = MetadataHelper.GetAssociationsForEntitySet(entitySet);
 
-            bool skippedFK = false;
+            var skippedFK = false;
             // Find key property names which are part of referential integrity constraints
-            foreach (AssociationSet association in associations)
+            foreach (var association in associations)
             {
                 // NOTE ReferentialConstraints collection currently can contain 0 or 1 element
                 if (skipFK && association.ElementType.IsForeignKey)
@@ -1455,20 +1518,22 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 }
                 else
                 {
-                    foreach (ReferentialConstraint constraint in association.ElementType.ReferentialConstraints)
+                    foreach (var constraint in association.ElementType.ReferentialConstraints)
                     {
-                        if (constraint.ToRole.TypeUsage.EdmType == entitySet.ElementType.GetReferenceType())
+                        if (constraint.ToRole.TypeUsage.EdmType
+                            == entitySet.ElementType.GetReferenceType())
                         {
                             // lazy creation of the list
                             propertiesToRetrieve = propertiesToRetrieve ?? new List<string>();
-                            foreach (EdmProperty property in constraint.ToProperties)
+                            foreach (var property in constraint.ToProperties)
                             {
                                 propertiesToRetrieve.Add(property.Name);
                             }
                         }
                         // There are schemas, in which relationship has the same entitySet on both ends
                         // that is why following 'if' statement is not inside of 'else' of previous 'if' statement
-                        if (constraint.FromRole.TypeUsage.EdmType == entitySet.ElementType.GetReferenceType())
+                        if (constraint.FromRole.TypeUsage.EdmType
+                            == entitySet.ElementType.GetReferenceType())
                         {
                             propertiesToPropagateExist = true;
                         }
@@ -1485,9 +1550,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>True if entity is the owner of this RelationshipManager, otherwise false</returns>
         internal bool IsOwner(IEntityWrapper wrappedEntity)
         {
-            IEntityWrapper wrappedOwner = WrappedOwner;
+            var wrappedOwner = WrappedOwner;
             Debug.Assert(wrappedEntity != null, "IEntityWrapper instance is null.");
-            return Object.ReferenceEquals(wrappedEntity.Entity, wrappedOwner.Entity);
+            return ReferenceEquals(wrappedEntity.Entity, wrappedOwner.Entity);
         }
 
         /// <summary>
@@ -1509,12 +1574,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 // an exception to be thrown.  This is all a bit messy, but it's the best we could do given that
                 // GetAllRelatedEnds was implemented in 3.5sp1 without taking MEST into account.
                 // Note that the Relationships property makes a copy so we can modify the list while iterating
-                foreach (RelatedEnd relatedEnd in Relationships)
+                foreach (var relatedEnd in Relationships)
                 {
                     EdmType relationshipType;
                     RelationshipSet relationshipSet;
                     relatedEnd.FindRelationshipSet(context, entitySet, out relationshipType, out relationshipSet);
-                    if (relationshipSet != null || !relatedEnd.IsEmpty())
+                    if (relationshipSet != null
+                        || !relatedEnd.IsEmpty())
                     {
                         relatedEnd.AttachContext(context, entitySet, mergeOption);
                     }
@@ -1536,10 +1602,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             Debug.Assert(null != entitySet, "entitySet");
             if (null != _relationships)
             {
-                foreach (RelatedEnd relatedEnd in Relationships)
+                foreach (var relatedEnd in Relationships)
                 {
                     relatedEnd.AttachContext(context, entitySet, mergeOption);
-                    foreach (IEntityWrapper wrappedEntity in relatedEnd.GetWrappedEntities())
+                    foreach (var wrappedEntity in relatedEnd.GetWrappedEntities())
                     {
                         wrappedEntity.ResetContext(context, relatedEnd.GetTargetEntitySetFromRelationshipSet(), mergeOption);
                     }
@@ -1556,7 +1622,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             {
                 // Not using defensive copy here since DetachContext should not cause change in underlying
                 // _relationships collection.
-                foreach (RelatedEnd relatedEnd in _relationships)
+                foreach (var relatedEnd in _relationships)
                 {
                     relatedEnd.DetachContext();
                 }
@@ -1570,13 +1636,15 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         [Conditional("DEBUG")]
         internal void VerifyIsNotRelated()
         {
-            if (this._relationships != null)
+            if (_relationships != null)
             {
-                foreach (var r in this._relationships)
+                foreach (var r in _relationships)
                 {
                     if (!r.IsEmpty())
                     {
-                        Debug.Assert(false, "Cannot change a state of a Deleted entity if the entity has other than deleted relationships with other entities.");
+                        Debug.Assert(
+                            false,
+                            "Cannot change a state of a Deleted entity if the entity has other than deleted relationships with other entities.");
                     }
                 }
             }

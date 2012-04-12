@@ -16,6 +16,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         internal static readonly IEqualityComparer<ProjectedSlot> EqualityComparer = new Comparer();
 
         #region Virtual members
+
         /// <summary>
         /// Returns true if this is semantically equivalent to <paramref name="right"/>.
         /// </summary>
@@ -36,7 +37,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         public override bool Equals(object obj)
         {
-            ProjectedSlot right = obj as ProjectedSlot;
+            var right = obj as ProjectedSlot;
             if (obj == null)
             {
                 return false;
@@ -56,7 +57,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// </summary>
         internal virtual ProjectedSlot DeepQualify(CqlBlock block)
         {
-            QualifiedSlot result = new QualifiedSlot(block, this);
+            var result = new QualifiedSlot(block, this);
             return result;
         }
 
@@ -81,9 +82,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// Given the slot and the input <paramref name="row"/>, generates CQT corresponding to the slot.
         /// </summary>
         internal abstract DbExpression AsCqt(DbExpression row, MemberPath outputMember);
+
         #endregion
 
         #region Other Methods
+
         /// <summary>
         /// Given fields in <paramref name="slots1"/> and <paramref name="slots2"/>, remap and merge them.
         /// </summary>
@@ -110,10 +113,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             Debug.Assert(slots1.Length == slots2.Length, "Merged slots of two cells must be same size");
             slots = new ProjectedSlot[slots1.Length];
 
-            for (int i = 0; i < slots.Length; i++)
+            for (var i = 0; i < slots.Length; i++)
             {
-                ProjectedSlot slot1 = slots1[i];
-                ProjectedSlot slot2 = slots2[i];
+                var slot1 = slots1[i];
+                var slot2 = slots2[i];
                 if (slot1 == null)
                 {
                     slots[i] = slot2;
@@ -128,18 +131,19 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                     // members or one of them is a constant
                     // Note: if both are constants (even different constants)
                     // it does not matter which one we pick because the CASE statement will override it
-                    MemberProjectedSlot memberSlot1 = slot1 as MemberProjectedSlot;
-                    MemberProjectedSlot memberSlot2 = slot2 as MemberProjectedSlot;
+                    var memberSlot1 = slot1 as MemberProjectedSlot;
+                    var memberSlot2 = slot2 as MemberProjectedSlot;
 
-                    if (memberSlot1 != null && memberSlot2 != null &&
-                       false == EqualityComparer.Equals(memberSlot1, memberSlot2))
+                    if (memberSlot1 != null && memberSlot2 != null
+                        &&
+                        false == EqualityComparer.Equals(memberSlot1, memberSlot2))
                     {
                         // Illegal combination of slots; non-constant fields disagree
                         return false;
                     }
 
                     // If one of them is a field we have to get the field
-                    ProjectedSlot pickedSlot = (memberSlot1 != null) ? slot1 : slot2;
+                    var pickedSlot = (memberSlot1 != null) ? slot1 : slot2;
                     slots[i] = pickedSlot;
                 }
             }
@@ -149,6 +153,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #endregion
 
         #region Comparer class
+
         /// <summary>
         /// A class that can compare slots based on their contents.
         /// </summary>
@@ -160,14 +165,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             public bool Equals(ProjectedSlot left, ProjectedSlot right)
             {
                 // Quick check with references
-                if (object.ReferenceEquals(left, right))
+                if (ReferenceEquals(left, right))
                 {
                     // Gets the Null and Undefined case as well
                     return true;
                 }
                 // One of them is non-null at least. So if the other one is
                 // null, we cannot be equal
-                if (left == null || right == null)
+                if (left == null
+                    || right == null)
                 {
                     return false;
                 }
@@ -181,6 +187,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return key.GetHash();
             }
         }
+
         #endregion
     }
 }

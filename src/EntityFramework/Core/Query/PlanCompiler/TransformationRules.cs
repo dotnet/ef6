@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
-
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
 // to prevent from simple mistakes during development (e.g. method argument validation 
 // in cases where it was you who created the variables or the variables had already been validated or 
@@ -17,14 +13,16 @@ using System.Collections.ObjectModel;
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
 
-using System.Globalization;
-using System.Linq;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Query.InternalTrees;
-
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using System.Text;
 
     internal class TransformationRulesContext : RuleProcessingContext
     {
@@ -34,13 +32,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// Whether any rule was applied that may have caused modifications such that projection pruning 
         /// may be useful
         /// </summary>
-        internal bool ProjectionPrunningRequired { get { return this.m_projectionPrunningRequired; } }
+        internal bool ProjectionPrunningRequired
+        {
+            get { return m_projectionPrunningRequired; }
+        }
 
         /// <summary>
         /// Whether any rule was applied that may have caused modifications such that reapplying
         /// the nullability rules may be useful
         /// </summary>
-        internal bool ReapplyNullabilityRules { get { return this.m_reapplyNullabilityRules; } }
+        internal bool ReapplyNullabilityRules
+        {
+            get { return m_reapplyNullabilityRules; }
+        }
 
         /// <summary>
         /// Remap the given subree using the current remapper
@@ -48,7 +52,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="subTree"></param>
         internal void RemapSubtree(Node subTree)
         {
-            this.m_remapper.RemapSubtree(subTree);
+            m_remapper.RemapSubtree(subTree);
         }
 
         /// <summary>
@@ -77,19 +81,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="node">Current subtree to process</param>
         /// <param name="varMap"></param>
         /// <returns>The updated subtree</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "scalarOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "scalarOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal Node ReMap(Node node, Dictionary<Var, Node> varMap)
         {
             PlanCompiler.Assert(node.Op.IsScalarOp, "Expected a scalarOp: Found " + Dump.AutoString.ToString(node.Op.OpType));
 
             // Replace varRefOps by the corresponding expression in the map, if any
-            if (node.Op.OpType == OpType.VarRef)
+            if (node.Op.OpType
+                == OpType.VarRef)
             {
-                VarRefOp varRefOp = node.Op as VarRefOp;
+                var varRefOp = node.Op as VarRefOp;
                 Node newNode = null;
                 if (varMap.TryGetValue(varRefOp.Var, out newNode))
                 {
-                    newNode = this.Copy(newNode);
+                    newNode = Copy(newNode);
                     return newNode;
                 }
                 else
@@ -99,13 +106,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             // Simply process the result of the children.
-            for (int i = 0; i < node.Children.Count; i++)
+            for (var i = 0; i < node.Children.Count; i++)
             {
                 node.Children[i] = ReMap(node.Children[i], varMap);
             }
 
             // We may have changed something deep down
-            this.Command.RecomputeNodeInfo(node);
+            Command.RecomputeNodeInfo(node);
             return node;
         }
 
@@ -117,14 +124,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>the copy of the subtree</returns>
         internal Node Copy(Node node)
         {
-            if (node.Op.OpType == OpType.VarRef)
+            if (node.Op.OpType
+                == OpType.VarRef)
             {
-                VarRefOp op = node.Op as VarRefOp;
-                return this.Command.CreateNode(this.Command.CreateVarRefOp(op.Var));
+                var op = node.Op as VarRefOp;
+                return Command.CreateNode(Command.CreateVarRefOp(op.Var));
             }
             else
             {
-                return OpCopier.Copy(this.Command, node);
+                return OpCopier.Copy(Command, node);
             }
         }
 
@@ -135,7 +143,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>true, if the subtree contains only ScalarOps</returns>
         internal bool IsScalarOpTree(Node node)
         {
-            int nodeCount = 0;
+            var nodeCount = 0;
             return IsScalarOpTree(node, null, ref nodeCount);
         }
 
@@ -149,12 +157,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         internal bool IsNonNullable(Var var)
         {
-            foreach (Node relOpAncestor in m_relOpAncestors)
+            foreach (var relOpAncestor in m_relOpAncestors)
             {
                 // Rules applied to the children of the relOpAncestor may have caused it change. 
                 // Thus, if the node is used, it has to have its node info recomputed
                 Command.RecomputeNodeInfo(relOpAncestor);
-                ExtendedNodeInfo nodeInfo = Command.GetExtendedNodeInfo(relOpAncestor);
+                var nodeInfo = Command.GetExtendedNodeInfo(relOpAncestor);
                 if (nodeInfo.NonNullableVisibleDefinitions.IsSet(var))
                 {
                     return true;
@@ -185,27 +193,29 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             get
             {
                 //Is there a sort that includes null sentinels
-                if (this.m_compilerState.HasSortingOnNullSentinels)
+                if (m_compilerState.HasSortingOnNullSentinels)
                 {
                     return false;
                 }
 
                 //Is any of the ancestors Distinct, GroupBy, Intersect or Except
-                if (this.m_relOpAncestors.Any(a => IsOpNotSafeForNullSentinelValueChange(a.Op.OpType)))
+                if (m_relOpAncestors.Any(a => IsOpNotSafeForNullSentinelValueChange(a.Op.OpType)))
                 {
                     return false;
                 }
 
                 // Is the null sentinel defined in the left child of an apply and if so, 
                 // does the right hand side have any Distinct, GroupBy, Intersect or Except.
-                var applyAncestors = this.m_relOpAncestors.Where(a =>
-                         a.Op.OpType == OpType.CrossApply ||
-                         a.Op.OpType == OpType.OuterApply);
+                var applyAncestors = m_relOpAncestors.Where(
+                    a =>
+                    a.Op.OpType == OpType.CrossApply ||
+                    a.Op.OpType == OpType.OuterApply);
 
                 //If the sentinel comes from the right hand side it is ok.
-                foreach (Node applyAncestor in applyAncestors)
+                foreach (var applyAncestor in applyAncestors)
                 {
-                    if (!this.m_relOpAncestors.Contains(applyAncestor.Child1) && HasOpNotSafeForNullSentinelValueChange(applyAncestor.Child1))
+                    if (!m_relOpAncestors.Contains(applyAncestor.Child1)
+                        && HasOpNotSafeForNullSentinelValueChange(applyAncestor.Child1))
                     {
                         return false;
                     }
@@ -222,9 +232,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         internal static bool IsOpNotSafeForNullSentinelValueChange(OpType optype)
         {
             return optype == OpType.Distinct ||
-                    optype == OpType.GroupBy ||
-                    optype == OpType.Intersect ||
-                    optype == OpType.Except;
+                   optype == OpType.GroupBy ||
+                   optype == OpType.Intersect ||
+                   optype == OpType.Except;
         }
 
         /// <summary>
@@ -239,7 +249,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 return true;
             }
-            foreach (Node child in n.Children)
+            foreach (var child in n.Children)
             {
                 if (HasOpNotSafeForNullSentinelValueChange(child))
                 {
@@ -257,12 +267,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="node">current subtree</param>
         /// <param name="varRefMap">dictionary of var refcounts to fill in</param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "varRef"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "varRef")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal bool IsScalarOpTree(Node node, Dictionary<Var, int> varRefMap)
         {
             PlanCompiler.Assert(varRefMap != null, "Null varRef map");
 
-            int nodeCount = 0;
+            var nodeCount = 0;
             return IsScalarOpTree(node, varRefMap, ref nodeCount);
         }
 
@@ -281,17 +293,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="varDefListNode">The varDefListOp subtree</param>
         /// <param name="varRefMap">ref counts for each referenced var</param>
         /// <returns>mapping from Var->replacement xpressions</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "varDef"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "varDef")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal Dictionary<Var, Node> GetVarMap(Node varDefListNode, Dictionary<Var, int> varRefMap)
         {
-            VarDefListOp varDefListOp = (VarDefListOp)varDefListNode.Op;
+            var varDefListOp = (VarDefListOp)varDefListNode.Op;
 
-            Dictionary<Var, Node> varMap = new Dictionary<Var, Node>();
-            foreach (Node chi in varDefListNode.Children)
+            var varMap = new Dictionary<Var, Node>();
+            foreach (var chi in varDefListNode.Children)
             {
-                VarDefOp varDefOp = (VarDefOp)chi.Op;
-                int nonLeafNodeCount = 0;
-                int refCount = 0;
+                var varDefOp = (VarDefOp)chi.Op;
+                var nonLeafNodeCount = 0;
+                var refCount = 0;
                 if (!IsScalarOpTree(chi.Child0, null, ref nonLeafNodeCount))
                 {
                     return null;
@@ -305,7 +319,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // 
                 if ((nonLeafNodeCount > 100) &&
                     (varRefMap != null) &&
-                    varRefMap.TryGetValue(varDefOp.Var, out refCount) &&
+                    varRefMap.TryGetValue(varDefOp.Var, out refCount)
+                    &&
                     (refCount > 2))
                 {
                     return null;
@@ -336,17 +351,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         internal Node BuildNullIfExpression(Var conditionVar, Node expr)
         {
-            VarRefOp varRefOp = this.Command.CreateVarRefOp(conditionVar);
-            Node varRefNode = this.Command.CreateNode(varRefOp);
-            Node whenNode = this.Command.CreateNode(this.Command.CreateConditionalOp(OpType.IsNull), varRefNode);
-            Node elseNode = expr;
-            Node thenNode = this.Command.CreateNode(this.Command.CreateNullOp(elseNode.Op.Type));
-            Node caseNode = this.Command.CreateNode(this.Command.CreateCaseOp(elseNode.Op.Type), whenNode, thenNode, elseNode);
+            var varRefOp = Command.CreateVarRefOp(conditionVar);
+            var varRefNode = Command.CreateNode(varRefOp);
+            var whenNode = Command.CreateNode(Command.CreateConditionalOp(OpType.IsNull), varRefNode);
+            var elseNode = expr;
+            var thenNode = Command.CreateNode(Command.CreateNullOp(elseNode.Op.Type));
+            var caseNode = Command.CreateNode(Command.CreateCaseOp(elseNode.Op.Type), whenNode, thenNode, elseNode);
 
             return caseNode;
         }
 
         #region Rule Interactions
+
         /// <summary>
         /// Shut off filter pushdown for this subtree
         /// </summary>
@@ -374,11 +390,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         internal static bool TryGetInt32Var(IEnumerable<Var> varList, out Var int32Var)
         {
-            foreach (Var v in varList)
+            foreach (var v in varList)
             {
                 // Any Int32 var regardless of the fasets will do
-                System.Data.Entity.Core.Metadata.Edm.PrimitiveTypeKind typeKind;
-                if (System.Data.Entity.Core.Common.TypeHelpers.TryGetPrimitiveTypeKind(v.Type, out typeKind) && typeKind == System.Data.Entity.Core.Metadata.Edm.PrimitiveTypeKind.Int32)
+                PrimitiveTypeKind typeKind;
+                if (TypeHelpers.TryGetPrimitiveTypeKind(v.Type, out typeKind)
+                    && typeKind == PrimitiveTypeKind.Int32)
                 {
                     int32Var = v;
                     return true;
@@ -393,6 +410,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #region constructors
+
         internal TransformationRulesContext(PlanCompiler compilerState)
             : base(compilerState.Command)
         {
@@ -405,24 +423,27 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #region private state
+
         private readonly PlanCompiler m_compilerState;
         private readonly VarRemapper m_remapper;
         private readonly Dictionary<Node, Node> m_suppressions;
         private readonly VarVec m_remappedVars;
-        private bool m_projectionPrunningRequired = false;
-        private bool m_reapplyNullabilityRules = false;
-        private Stack<Node> m_relOpAncestors = new Stack<Node>();
+        private bool m_projectionPrunningRequired;
+        private bool m_reapplyNullabilityRules;
+        private readonly Stack<Node> m_relOpAncestors = new Stack<Node>();
 #if DEBUG
         /// <summary>
         /// Used to see all the applied rules. 
         /// One way to use it is to put a conditional breakpoint at the end of
         /// PostProcessSubTree with the condition m_relOpAncestors.Count == 0
         /// </summary>
-        internal readonly System.Text.StringBuilder appliedRules = new System.Text.StringBuilder();
+        internal readonly StringBuilder appliedRules = new StringBuilder();
 #endif
+
         #endregion
 
         #region RuleProcessingContext Overrides
+
         /// <summary>
         /// Callback function to invoke *before* rules are applied. 
         /// Calls the VarRemapper to update any Vars in this node, and recomputes 
@@ -453,10 +474,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 return;
             }
 
-            NodeInfo nodeInfo = this.Command.GetNodeInfo(subTree);
+            var nodeInfo = Command.GetNodeInfo(subTree);
 
             //We need to do remapping only if m_remappedVars overlaps with nodeInfo.ExternalReferences
-            foreach (Var v in nodeInfo.ExternalReferences)
+            foreach (var v in nodeInfo.ExternalReferences)
             {
                 if (m_remappedVars.IsSet(v))
                 {
@@ -470,14 +491,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// If the given node has a RelOp it is popped from the relOp ancestors stack.
         /// </summary>
         /// <param name="subtree"></param>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "RelOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "RelOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal override void PostProcessSubTree(Node subtree)
         {
             if (subtree.Op.IsRelOp)
             {
                 PlanCompiler.Assert(m_relOpAncestors.Count != 0, "The RelOp ancestors stack is empty when post processing a RelOp subtree");
-                Node poppedNode = m_relOpAncestors.Pop();
-                PlanCompiler.Assert(Object.ReferenceEquals(subtree, poppedNode), "The popped ancestor is not equal to the root of the subtree being post processed");
+                var poppedNode = m_relOpAncestors.Pop();
+                PlanCompiler.Assert(
+                    ReferenceEquals(subtree, poppedNode), "The popped ancestor is not equal to the root of the subtree being post processed");
             }
         }
 
@@ -491,7 +515,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="n"></param>
         /// <param name="rule">the rule that was applied</param>
-        internal override void PostProcess(Node n, InternalTrees.Rule rule)
+        internal override void PostProcess(Node n, Rule rule)
         {
             if (rule != null)
             {
@@ -499,13 +523,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 appliedRules.Append(rule.MethodName);
                 appliedRules.AppendLine();
 #endif
-                if (!this.m_projectionPrunningRequired && TransformationRules.RulesRequiringProjectionPruning.Contains(rule))
+                if (!m_projectionPrunningRequired
+                    && TransformationRules.RulesRequiringProjectionPruning.Contains(rule))
                 {
-                    this.m_projectionPrunningRequired = true;
+                    m_projectionPrunningRequired = true;
                 }
-                if (!this.m_reapplyNullabilityRules && TransformationRules.RulesRequiringNullabilityRulesToBeReapplied.Contains(rule))
+                if (!m_reapplyNullabilityRules
+                    && TransformationRules.RulesRequiringNullabilityRulesToBeReapplied.Contains(rule))
                 {
-                    this.m_reapplyNullabilityRules = true;
+                    m_reapplyNullabilityRules = true;
                 }
                 Command.RecomputeNodeInfo(n);
             }
@@ -518,12 +544,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         internal override int GetHashCode(Node node)
         {
-            NodeInfo nodeInfo = Command.GetNodeInfo(node);
+            var nodeInfo = Command.GetNodeInfo(node);
             return nodeInfo.HashValue;
         }
+
         #endregion
 
         #region private methods
+
         /// <summary>
         /// Check to see if the current subtree is a scalar-op subtree (ie) does
         /// the subtree only comprise of scalarOps?
@@ -553,9 +581,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 nonLeafNodeCount++;
             }
 
-            if (varRefMap != null && node.Op.OpType == OpType.VarRef)
+            if (varRefMap != null
+                && node.Op.OpType == OpType.VarRef)
             {
-                VarRefOp varRefOp = (VarRefOp)node.Op;
+                var varRefOp = (VarRefOp)node.Op;
                 int refCount;
                 if (!varRefMap.TryGetValue(varRefOp.Var, out refCount))
                 {
@@ -568,7 +597,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 varRefMap[varRefOp.Var] = refCount;
             }
 
-            foreach (Node chi in node.Children)
+            foreach (var chi in node.Children)
             {
                 if (!IsScalarOpTree(chi, varRefMap, ref nonLeafNodeCount))
                 {
@@ -577,6 +606,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             return true;
         }
+
         #endregion
     }
 
@@ -589,50 +619,54 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// A lookup table for built from all rules
         /// The lookup table is an array indexed by OpType and each entry has a list of rules.
         /// </summary>
-        internal static readonly ReadOnlyCollection<ReadOnlyCollection<InternalTrees.Rule>> AllRulesTable = BuildLookupTableForRules(AllRules);
+        internal static readonly ReadOnlyCollection<ReadOnlyCollection<Rule>> AllRulesTable = BuildLookupTableForRules(AllRules);
 
         /// <summary>
         /// A lookup table for built only from ProjectRules
         /// The lookup table is an array indexed by OpType and each entry has a list of rules.
         /// </summary>
-        internal static readonly ReadOnlyCollection<ReadOnlyCollection<InternalTrees.Rule>> ProjectRulesTable = BuildLookupTableForRules(ProjectOpRules.Rules);
-
+        internal static readonly ReadOnlyCollection<ReadOnlyCollection<Rule>> ProjectRulesTable =
+            BuildLookupTableForRules(ProjectOpRules.Rules);
 
         /// <summary>
         /// A lookup table built only from rules that use key info
         /// The lookup table is an array indexed by OpType and each entry has a list of rules.
         /// </summary>
-        internal static readonly ReadOnlyCollection<ReadOnlyCollection<InternalTrees.Rule>> PostJoinEliminationRulesTable = BuildLookupTableForRules(PostJoinEliminationRules);
+        internal static readonly ReadOnlyCollection<ReadOnlyCollection<Rule>> PostJoinEliminationRulesTable =
+            BuildLookupTableForRules(PostJoinEliminationRules);
 
         /// <summary>
         /// A lookup table built only from rules that rely on nullability of vars and other rules 
         /// that may be able to perform simplificatios if these have been applied.
         /// The lookup table is an array indexed by OpType and each entry has a list of rules.
         /// </summary>
-        internal static readonly ReadOnlyCollection<ReadOnlyCollection<InternalTrees.Rule>> NullabilityRulesTable = BuildLookupTableForRules(NullabilityRules);
+        internal static readonly ReadOnlyCollection<ReadOnlyCollection<Rule>> NullabilityRulesTable =
+            BuildLookupTableForRules(NullabilityRules);
 
         /// <summary>
         /// A look-up table of rules that may cause modifications such that projection pruning may be useful
         /// after they have been applied.
         /// </summary>
-        internal static readonly HashSet<InternalTrees.Rule> RulesRequiringProjectionPruning = InitializeRulesRequiringProjectionPruning();
+        internal static readonly HashSet<Rule> RulesRequiringProjectionPruning = InitializeRulesRequiringProjectionPruning();
 
         /// <summary>
         /// A look-up table of rules that may cause modifications such that reapplying the nullability rules
         /// may be useful after they have been applied.
         /// </summary>
-        internal static readonly HashSet<InternalTrees.Rule> RulesRequiringNullabilityRulesToBeReapplied = InitializeRulesRequiringNullabilityRulesToBeReapplied();
-
+        internal static readonly HashSet<Rule> RulesRequiringNullabilityRulesToBeReapplied =
+            InitializeRulesRequiringNullabilityRulesToBeReapplied();
 
         #region private state maintenance
-        private static List<InternalTrees.Rule> allRules;
-        private static List<InternalTrees.Rule> AllRules
+
+        private static List<Rule> allRules;
+
+        private static List<Rule> AllRules
         {
             get
             {
                 if (allRules == null)
                 {
-                    allRules = new List<InternalTrees.Rule>();
+                    allRules = new List<Rule>();
                     allRules.AddRange(ScalarOpRules.Rules);
                     allRules.AddRange(FilterOpRules.Rules);
                     allRules.AddRange(ProjectOpRules.Rules);
@@ -649,15 +683,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
-        private static List<InternalTrees.Rule> postJoinEliminationRules;
-        private static List<InternalTrees.Rule> PostJoinEliminationRules
+        private static List<Rule> postJoinEliminationRules;
+
+        private static List<Rule> PostJoinEliminationRules
         {
             get
             {
                 if (postJoinEliminationRules == null)
                 {
-                    postJoinEliminationRules = new List<InternalTrees.Rule>();
-                    postJoinEliminationRules.AddRange(ProjectOpRules.Rules); //these don't use key info per-se, but can help after the distinct op rules.
+                    postJoinEliminationRules = new List<Rule>();
+                    postJoinEliminationRules.AddRange(ProjectOpRules.Rules);
+                        //these don't use key info per-se, but can help after the distinct op rules.
                     postJoinEliminationRules.AddRange(DistinctOpRules.Rules);
                     postJoinEliminationRules.AddRange(FilterOpRules.Rules);
                     postJoinEliminationRules.AddRange(JoinOpRules.Rules);
@@ -667,14 +703,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
-        private static List<InternalTrees.Rule> nullabilityRules;
-        private static List<InternalTrees.Rule> NullabilityRules
+        private static List<Rule> nullabilityRules;
+
+        private static List<Rule> NullabilityRules
         {
             get
             {
                 if (nullabilityRules == null)
                 {
-                    nullabilityRules = new List<InternalTrees.Rule>();
+                    nullabilityRules = new List<Rule>();
                     nullabilityRules.Add(ScalarOpRules.Rule_IsNullOverVarRef);
                     nullabilityRules.Add(ScalarOpRules.Rule_AndOverConstantPred1);
                     nullabilityRules.Add(ScalarOpRules.Rule_AndOverConstantPred2);
@@ -685,41 +722,41 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
-        private static ReadOnlyCollection<ReadOnlyCollection<InternalTrees.Rule>> BuildLookupTableForRules(IEnumerable<InternalTrees.Rule> rules)
+        private static ReadOnlyCollection<ReadOnlyCollection<Rule>> BuildLookupTableForRules(IEnumerable<Rule> rules)
         {
-            ReadOnlyCollection<InternalTrees.Rule> NoRules = new ReadOnlyCollection<InternalTrees.Rule>(new InternalTrees.Rule[0]);
+            var NoRules = new ReadOnlyCollection<Rule>(new Rule[0]);
 
-            List<InternalTrees.Rule>[] lookupTable = new List<InternalTrees.Rule>[(int)OpType.MaxMarker];
+            var lookupTable = new List<Rule>[(int)OpType.MaxMarker];
 
-            foreach (InternalTrees.Rule rule in rules)
+            foreach (var rule in rules)
             {
-                List<InternalTrees.Rule> opRules = lookupTable[(int)rule.RuleOpType];
+                var opRules = lookupTable[(int)rule.RuleOpType];
                 if (opRules == null)
                 {
-                    opRules = new List<InternalTrees.Rule>();
+                    opRules = new List<Rule>();
                     lookupTable[(int)rule.RuleOpType] = opRules;
                 }
                 opRules.Add(rule);
             }
 
-            ReadOnlyCollection<InternalTrees.Rule>[] rulesPerType = new ReadOnlyCollection<InternalTrees.Rule>[lookupTable.Length];
-            for (int i = 0; i < lookupTable.Length; ++i)
+            var rulesPerType = new ReadOnlyCollection<Rule>[lookupTable.Length];
+            for (var i = 0; i < lookupTable.Length; ++i)
             {
                 if (null != lookupTable[i])
                 {
-                    rulesPerType[i] = new ReadOnlyCollection<InternalTrees.Rule>(lookupTable[i].ToArray());
+                    rulesPerType[i] = new ReadOnlyCollection<Rule>(lookupTable[i].ToArray());
                 }
                 else
                 {
                     rulesPerType[i] = NoRules;
                 }
             }
-            return new ReadOnlyCollection<ReadOnlyCollection<InternalTrees.Rule>>(rulesPerType);
+            return new ReadOnlyCollection<ReadOnlyCollection<Rule>>(rulesPerType);
         }
 
-        private static HashSet<InternalTrees.Rule> InitializeRulesRequiringProjectionPruning()
+        private static HashSet<Rule> InitializeRulesRequiringProjectionPruning()
         {
-            HashSet<InternalTrees.Rule> rulesRequiringProjectionPruning = new HashSet<InternalTrees.Rule>();
+            var rulesRequiringProjectionPruning = new HashSet<Rule>();
 
             rulesRequiringProjectionPruning.Add(ApplyOpRules.Rule_OuterApplyOverProject);
 
@@ -740,17 +777,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return rulesRequiringProjectionPruning;
         }
 
-        private static HashSet<InternalTrees.Rule> InitializeRulesRequiringNullabilityRulesToBeReapplied()
+        private static HashSet<Rule> InitializeRulesRequiringNullabilityRulesToBeReapplied()
         {
-            HashSet<InternalTrees.Rule> rulesRequiringNullabilityRulesToBeReapplied = new HashSet<InternalTrees.Rule>();
+            var rulesRequiringNullabilityRulesToBeReapplied = new HashSet<Rule>();
 
             rulesRequiringNullabilityRulesToBeReapplied.Add(FilterOpRules.Rule_FilterOverLeftOuterJoin);
 
             return rulesRequiringNullabilityRulesToBeReapplied;
         }
-        
-        #endregion
 
+        #endregion
 
         /// <summary>
         /// Apply the rules that belong to the specified group to the given query tree.
@@ -759,7 +795,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="rulesGroup"></param>
         internal static bool Process(PlanCompiler compilerState, TransformationRulesGroup rulesGroup)
         {
-            ReadOnlyCollection<ReadOnlyCollection<InternalTrees.Rule>> rulesTable = null;
+            ReadOnlyCollection<ReadOnlyCollection<Rule>> rulesTable = null;
             switch (rulesGroup)
             {
                 case TransformationRulesGroup.All:
@@ -772,7 +808,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     rulesTable = ProjectRulesTable;
                     break;
             }
-           
+
             // If any rule has been applied after which reapplying nullability rules may be useful,
             // reapply nullability rules.
             bool projectionPrunningRequired;
@@ -792,10 +828,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="rulesTable"></param>
         /// <param name="projectionPruningRequired">is projection pruning  required after the rule application</param>
         /// <returns>Whether any rule has been applied after which reapplying nullability rules may be useful</returns>
-        private static bool Process(PlanCompiler compilerState, ReadOnlyCollection<ReadOnlyCollection<InternalTrees.Rule>> rulesTable, out bool projectionPruningRequired)
+        private static bool Process(
+            PlanCompiler compilerState, ReadOnlyCollection<ReadOnlyCollection<Rule>> rulesTable, out bool projectionPruningRequired)
         {
-            RuleProcessor ruleProcessor = new RuleProcessor();
-            TransformationRulesContext context = new TransformationRulesContext(compilerState);
+            var ruleProcessor = new RuleProcessor();
+            var context = new TransformationRulesContext(compilerState);
             compilerState.Command.Root = ruleProcessor.ApplyRulesToSubtree(context, rulesTable, compilerState.Command.Root);
             projectionPruningRequired = context.ProjectionPrunningRequired;
             return context.ReapplyNullabilityRules;
@@ -813,14 +850,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     }
 
     #region ScalarOpRules
+
     /// <summary>
     /// Transformation rules for ScalarOps
     /// </summary>
     internal static class ScalarOpRules
     {
         #region CaseOp Rules
+
         internal static readonly SimpleRule Rule_SimplifyCase = new SimpleRule(OpType.Case, ProcessSimplifyCase);
         internal static readonly SimpleRule Rule_FlattenCase = new SimpleRule(OpType.Case, ProcessFlattenCase);
+
         /// <summary>
         /// We perform the following simple transformation for CaseOps. If every single
         /// then/else expression in the CaseOp is equivalent, then we can simply replace
@@ -833,9 +873,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="caseOpNode">The current subtree for the CaseOp</param>
         /// <param name="newNode">the (possibly) modified subtree</param>
         /// <returns>true, if we performed any transformations</returns>
-        static bool ProcessSimplifyCase(RuleProcessingContext context, Node caseOpNode, out Node newNode)
+        private static bool ProcessSimplifyCase(RuleProcessingContext context, Node caseOpNode, out Node newNode)
         {
-            CaseOp caseOp = (CaseOp)caseOpNode.Op;
+            var caseOp = (CaseOp)caseOpNode.Op;
             newNode = caseOpNode;
 
             //
@@ -873,13 +913,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private static bool ProcessSimplifyCase_Collapse(Node caseOpNode, out Node newNode)
         {
             newNode = caseOpNode;
-            Node firstThenNode = caseOpNode.Child1;
-            Node elseNode = caseOpNode.Children[caseOpNode.Children.Count - 1];
+            var firstThenNode = caseOpNode.Child1;
+            var elseNode = caseOpNode.Children[caseOpNode.Children.Count - 1];
             if (!firstThenNode.IsEquivalent(elseNode))
             {
                 return false;
             }
-            for (int i = 3; i < caseOpNode.Children.Count - 1; i += 2)
+            for (var i = 3; i < caseOpNode.Children.Count - 1; i += 2)
             {
                 if (!caseOpNode.Children[i].IsEquivalent(firstThenNode))
                 {
@@ -907,13 +947,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="caseOpNode">Current subtree</param>
         /// <param name="newNode">the new subtree</param>
         /// <returns>true, if there was a transformation</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        private static bool ProcessSimplifyCase_EliminateWhenClauses(RuleProcessingContext context, CaseOp caseOp, Node caseOpNode, out Node newNode)
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        private static bool ProcessSimplifyCase_EliminateWhenClauses(
+            RuleProcessingContext context, CaseOp caseOp, Node caseOpNode, out Node newNode)
         {
             List<Node> newNodeArgs = null;
             newNode = caseOpNode;
 
-            for (int i = 0; i < caseOpNode.Children.Count; )
+            for (var i = 0; i < caseOpNode.Children.Count;)
             {
                 // Special handling for the else clause
                 if (i == caseOpNode.Children.Count - 1)
@@ -924,7 +966,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     // that converts SoftCasts that could affect the result type of the query into
                     // a real cast or a trivial case statement, to preserve the result type.
                     // This is tracked by SQL PT Work Item #300003327.
-                    if (OpType.SoftCast == caseOpNode.Children[i].Op.OpType)
+                    if (OpType.SoftCast
+                        == caseOpNode.Children[i].Op.OpType)
                     {
                         return false;
                     }
@@ -939,13 +982,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // If the current then clause is a SoftCast then we do not attempt to simplify
                 // the case operation, since this may change the result type.
                 // Again, this really belongs in the CTreeGenerator as per SQL PT Work Item #300003327.
-                if (OpType.SoftCast == caseOpNode.Children[i + 1].Op.OpType)
+                if (OpType.SoftCast
+                    == caseOpNode.Children[i + 1].Op.OpType)
                 {
                     return false;
                 }
 
                 // Check to see if the when clause is a ConstantPredicate
-                if (caseOpNode.Children[i].Op.OpType != OpType.ConstantPredicate)
+                if (caseOpNode.Children[i].Op.OpType
+                    != OpType.ConstantPredicate)
                 {
                     if (newNodeArgs != null)
                     {
@@ -957,12 +1002,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
 
                 // Found a when-clause which is a constant predicate
-                ConstantPredicateOp constPred = (ConstantPredicateOp)caseOpNode.Children[i].Op;
+                var constPred = (ConstantPredicateOp)caseOpNode.Children[i].Op;
                 // Create the newArgs list, if we haven't done so already
                 if (newNodeArgs == null)
                 {
                     newNodeArgs = new List<Node>();
-                    for (int j = 0; j < i; j++)
+                    for (var j = 0; j < i; j++)
                     {
                         newNodeArgs.Add(caseOpNode.Children[j]);
                     }
@@ -1029,11 +1074,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="caseOpNode">current subtree</param>
         /// <param name="newNode">new subtree</param>
         /// <returns>true, if we performed a transformation</returns>
-        static bool ProcessFlattenCase(RuleProcessingContext context, Node caseOpNode, out Node newNode)
+        private static bool ProcessFlattenCase(RuleProcessingContext context, Node caseOpNode, out Node newNode)
         {
             newNode = caseOpNode;
-            Node elseChild = caseOpNode.Children[caseOpNode.Children.Count - 1];
-            if (elseChild.Op.OpType != OpType.Case)
+            var elseChild = caseOpNode.Children[caseOpNode.Children.Count - 1];
+            if (elseChild.Op.OpType
+                != OpType.Case)
             {
                 return false;
             }
@@ -1054,11 +1100,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #region EqualsOverConstant Rules
+
         internal static readonly PatternMatchRule Rule_EqualsOverConstant =
-            new PatternMatchRule(new Node(ComparisonOp.PatternEq,
-                                          new Node(InternalConstantOp.Pattern),
-                                          new Node(InternalConstantOp.Pattern)),
-                                 ProcessComparisonsOverConstant);
+            new PatternMatchRule(
+                new Node(
+                    ComparisonOp.PatternEq,
+                    new Node(InternalConstantOp.Pattern),
+                    new Node(InternalConstantOp.Pattern)),
+                ProcessComparisonsOverConstant);
+
         /// <summary>
         /// Convert an Equals(X, Y) to a "true" predicate if X=Y, or a "false" predicate if X!=Y
         /// Convert a NotEquals(X,Y) in the reverse fashion
@@ -1067,8 +1117,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="node">current node</param>
         /// <param name="newNode">possibly modified subtree</param>
         /// <returns>true, if transformation was successful</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        static bool ProcessComparisonsOverConstant(RuleProcessingContext context, Node node, out Node newNode)
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        private static bool ProcessComparisonsOverConstant(RuleProcessingContext context, Node node, out Node newNode)
         {
             newNode = node;
             PlanCompiler.Assert(node.Op.OpType == OpType.EQ || node.Op.OpType == OpType.NE, "unexpected comparison op type?");
@@ -1079,14 +1130,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 return false;
             }
-            bool result = (node.Op.OpType == OpType.EQ) ? (bool)comparisonStatus : !((bool)comparisonStatus);
-            ConstantPredicateOp newOp = context.Command.CreateConstantPredicateOp(result);
+            var result = (node.Op.OpType == OpType.EQ) ? (bool)comparisonStatus : !((bool)comparisonStatus);
+            var newOp = context.Command.CreateConstantPredicateOp(result);
             newNode = context.Command.CreateNode(newOp);
             return true;
         }
+
         #endregion
 
         #region LikeOp Rules
+
         private static bool? MatchesPattern(string str, string pattern)
         {
             // What we're trying to see is if the pattern is something that ends with a '%'
@@ -1095,20 +1148,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Make sure that the terminal character of the pattern is a '%' character. Also
             // ensure that this character does not occur anywhere else. And finally, ensure
             // that the pattern is atmost one character longer than the string itself
-            int wildCardIndex = pattern.IndexOf('%');
+            var wildCardIndex = pattern.IndexOf('%');
             if ((wildCardIndex == -1) ||
-                (wildCardIndex != pattern.Length - 1) ||
+                (wildCardIndex != pattern.Length - 1)
+                ||
                 (pattern.Length > str.Length + 1))
             {
                 return null;
             }
 
-            bool match = true;
+            var match = true;
 
-            int i = 0;
+            var i = 0;
             for (i = 0; i < str.Length && i < pattern.Length - 1; i++)
             {
-                if (pattern[i] != str[i])
+                if (pattern[i]
+                    != str[i])
                 {
                     match = false;
                     break;
@@ -1119,27 +1174,30 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         internal static readonly PatternMatchRule Rule_LikeOverConstants =
-            new PatternMatchRule(new Node(LikeOp.Pattern,
-                                          new Node(InternalConstantOp.Pattern),
-                                          new Node(InternalConstantOp.Pattern),
-                                          new Node(NullOp.Pattern)),
-                                 ProcessLikeOverConstant);
-        static bool ProcessLikeOverConstant(RuleProcessingContext context, Node n, out Node newNode)
+            new PatternMatchRule(
+                new Node(
+                    LikeOp.Pattern,
+                    new Node(InternalConstantOp.Pattern),
+                    new Node(InternalConstantOp.Pattern),
+                    new Node(NullOp.Pattern)),
+                ProcessLikeOverConstant);
+
+        private static bool ProcessLikeOverConstant(RuleProcessingContext context, Node n, out Node newNode)
         {
             newNode = n;
-            InternalConstantOp patternOp = (InternalConstantOp)n.Child1.Op;
-            InternalConstantOp strOp = (InternalConstantOp)n.Child0.Op;
+            var patternOp = (InternalConstantOp)n.Child1.Op;
+            var strOp = (InternalConstantOp)n.Child0.Op;
 
-            string str = (string)strOp.Value;
-            string pattern = (string)patternOp.Value;
+            var str = (string)strOp.Value;
+            var pattern = (string)patternOp.Value;
 
-            bool? match = MatchesPattern((string)strOp.Value, (string)patternOp.Value);
+            var match = MatchesPattern((string)strOp.Value, (string)patternOp.Value);
             if (match == null)
             {
                 return false;
             }
 
-            ConstantPredicateOp constOp = context.Command.CreateConstantPredicateOp((bool)match);
+            var constOp = context.Command.CreateConstantPredicateOp((bool)match);
             newNode = context.Command.CreateNode(constOp);
             return true;
         }
@@ -1147,30 +1205,46 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #region LogicalOp (and,or,not) Rules
+
         internal static readonly PatternMatchRule Rule_AndOverConstantPred1 =
-            new PatternMatchRule(new Node(ConditionalOp.PatternAnd,
-                                          new Node(LeafOp.Pattern),
-                                          new Node(ConstantPredicateOp.Pattern)),
-                                 ProcessAndOverConstantPredicate1);
+            new PatternMatchRule(
+                new Node(
+                    ConditionalOp.PatternAnd,
+                    new Node(LeafOp.Pattern),
+                    new Node(ConstantPredicateOp.Pattern)),
+                ProcessAndOverConstantPredicate1);
+
         internal static readonly PatternMatchRule Rule_AndOverConstantPred2 =
-            new PatternMatchRule(new Node(ConditionalOp.PatternAnd,
-                                          new Node(ConstantPredicateOp.Pattern),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessAndOverConstantPredicate2);
+            new PatternMatchRule(
+                new Node(
+                    ConditionalOp.PatternAnd,
+                    new Node(ConstantPredicateOp.Pattern),
+                    new Node(LeafOp.Pattern)),
+                ProcessAndOverConstantPredicate2);
+
         internal static readonly PatternMatchRule Rule_OrOverConstantPred1 =
-            new PatternMatchRule(new Node(ConditionalOp.PatternOr,
-                                          new Node(LeafOp.Pattern),
-                                          new Node(ConstantPredicateOp.Pattern)),
-                                 ProcessOrOverConstantPredicate1);
+            new PatternMatchRule(
+                new Node(
+                    ConditionalOp.PatternOr,
+                    new Node(LeafOp.Pattern),
+                    new Node(ConstantPredicateOp.Pattern)),
+                ProcessOrOverConstantPredicate1);
+
         internal static readonly PatternMatchRule Rule_OrOverConstantPred2 =
-            new PatternMatchRule(new Node(ConditionalOp.PatternOr,
-                                          new Node(ConstantPredicateOp.Pattern),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessOrOverConstantPredicate2);
+            new PatternMatchRule(
+                new Node(
+                    ConditionalOp.PatternOr,
+                    new Node(ConstantPredicateOp.Pattern),
+                    new Node(LeafOp.Pattern)),
+                ProcessOrOverConstantPredicate2);
+
         internal static readonly PatternMatchRule Rule_NotOverConstantPred =
-            new PatternMatchRule(new Node(ConditionalOp.PatternNot,
-                                          new Node(ConstantPredicateOp.Pattern)),
-                                 ProcessNotOverConstantPredicate);
+            new PatternMatchRule(
+                new Node(
+                    ConditionalOp.PatternNot,
+                    new Node(ConstantPredicateOp.Pattern)),
+                ProcessNotOverConstantPredicate);
+
         /// <summary>
         /// Transform 
         ///   AND(x, true) => x;
@@ -1185,13 +1259,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="otherNode">The other child of the LogOp (possibly null)</param>
         /// <param name="newNode">new subtree</param>
         /// <returns>transformation status</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "OpType"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "constantPredicateOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        static bool ProcessLogOpOverConstant(RuleProcessingContext context, Node node,
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "OpType")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "constantPredicateOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        private static bool ProcessLogOpOverConstant(
+            RuleProcessingContext context, Node node,
             Node constantPredicateNode, Node otherNode,
             out Node newNode)
         {
             PlanCompiler.Assert(constantPredicateNode != null, "null constantPredicateOp?");
-            ConstantPredicateOp pred = (ConstantPredicateOp)constantPredicateNode.Op;
+            var pred = (ConstantPredicateOp)constantPredicateNode.Op;
 
             switch (node.Op.OpType)
             {
@@ -1213,37 +1291,49 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return true;
         }
 
-        static bool ProcessAndOverConstantPredicate1(RuleProcessingContext context, Node node, out Node newNode)
+        private static bool ProcessAndOverConstantPredicate1(RuleProcessingContext context, Node node, out Node newNode)
         {
             return ProcessLogOpOverConstant(context, node, node.Child1, node.Child0, out newNode);
         }
-        static bool ProcessAndOverConstantPredicate2(RuleProcessingContext context, Node node, out Node newNode)
+
+        private static bool ProcessAndOverConstantPredicate2(RuleProcessingContext context, Node node, out Node newNode)
         {
             return ProcessLogOpOverConstant(context, node, node.Child0, node.Child1, out newNode);
         }
-        static bool ProcessOrOverConstantPredicate1(RuleProcessingContext context, Node node, out Node newNode)
+
+        private static bool ProcessOrOverConstantPredicate1(RuleProcessingContext context, Node node, out Node newNode)
         {
             return ProcessLogOpOverConstant(context, node, node.Child1, node.Child0, out newNode);
         }
-        static bool ProcessOrOverConstantPredicate2(RuleProcessingContext context, Node node, out Node newNode)
+
+        private static bool ProcessOrOverConstantPredicate2(RuleProcessingContext context, Node node, out Node newNode)
         {
             return ProcessLogOpOverConstant(context, node, node.Child0, node.Child1, out newNode);
         }
-        static bool ProcessNotOverConstantPredicate(RuleProcessingContext context, Node node, out Node newNode)
+
+        private static bool ProcessNotOverConstantPredicate(RuleProcessingContext context, Node node, out Node newNode)
         {
             return ProcessLogOpOverConstant(context, node, node.Child0, null, out newNode);
         }
+
         #endregion
 
         #region IsNull Rules
+
         internal static readonly PatternMatchRule Rule_IsNullOverConstant =
-            new PatternMatchRule(new Node(ConditionalOp.PatternIsNull,
-                                          new Node(InternalConstantOp.Pattern)),
-                                 ProcessIsNullOverConstant);
+            new PatternMatchRule(
+                new Node(
+                    ConditionalOp.PatternIsNull,
+                    new Node(InternalConstantOp.Pattern)),
+                ProcessIsNullOverConstant);
+
         internal static readonly PatternMatchRule Rule_IsNullOverNullSentinel =
-            new PatternMatchRule(new Node(ConditionalOp.PatternIsNull,
-                                          new Node(NullSentinelOp.Pattern)),
-                                 ProcessIsNullOverConstant);
+            new PatternMatchRule(
+                new Node(
+                    ConditionalOp.PatternIsNull,
+                    new Node(NullSentinelOp.Pattern)),
+                ProcessIsNullOverConstant);
+
         /// <summary>
         /// Convert a 
         ///    IsNull(constant) 
@@ -1254,16 +1344,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="isNullNode"></param>
         /// <param name="newNode">new subtree</param>
         /// <returns></returns>
-        static bool ProcessIsNullOverConstant(RuleProcessingContext context, Node isNullNode, out Node newNode)
+        private static bool ProcessIsNullOverConstant(RuleProcessingContext context, Node isNullNode, out Node newNode)
         {
             newNode = context.Command.CreateNode(context.Command.CreateFalseOp());
             return true;
         }
 
         internal static readonly PatternMatchRule Rule_IsNullOverNull =
-            new PatternMatchRule(new Node(ConditionalOp.PatternIsNull,
-                                          new Node(NullOp.Pattern)),
-                         ProcessIsNullOverNull);
+            new PatternMatchRule(
+                new Node(
+                    ConditionalOp.PatternIsNull,
+                    new Node(NullOp.Pattern)),
+                ProcessIsNullOverNull);
+
         /// <summary>
         /// Convert an IsNull(null) to just the 'true' predicate
         /// </summary>
@@ -1271,18 +1364,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="isNullNode"></param>
         /// <param name="newNode">new subtree</param>
         /// <returns></returns>
-        static bool ProcessIsNullOverNull(RuleProcessingContext context, Node isNullNode, out Node newNode)
+        private static bool ProcessIsNullOverNull(RuleProcessingContext context, Node isNullNode, out Node newNode)
         {
             newNode = context.Command.CreateNode(context.Command.CreateTrueOp());
             return true;
         }
+
         #endregion
 
         #region CastOp(NullOp) Rule
+
         internal static readonly PatternMatchRule Rule_NullCast = new PatternMatchRule(
-                                                            new Node(CastOp.Pattern,
-                                                                    new Node(NullOp.Pattern)),
-                                                            ProcessNullCast);
+            new Node(
+                CastOp.Pattern,
+                new Node(NullOp.Pattern)),
+            ProcessNullCast);
 
         /// <summary>
         /// eliminates nested null casts into a single cast of the outermost cast type.
@@ -1292,18 +1388,23 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="castNullOp"></param>
         /// <param name="newNode">modified subtree</param>
         /// <returns></returns>
-        static bool ProcessNullCast(RuleProcessingContext context, Node castNullOp, out Node newNode)
+        private static bool ProcessNullCast(RuleProcessingContext context, Node castNullOp, out Node newNode)
         {
             newNode = context.Command.CreateNode(context.Command.CreateNullOp(castNullOp.Op.Type));
             return true;
         }
+
         #endregion
 
         #region IsNull over VarRef
+
         internal static readonly PatternMatchRule Rule_IsNullOverVarRef =
-            new PatternMatchRule(new Node(ConditionalOp.PatternIsNull,
-                                          new Node(VarRefOp.Pattern)),
-                                 ProcessIsNullOverVarRef);
+            new PatternMatchRule(
+                new Node(
+                    ConditionalOp.PatternIsNull,
+                    new Node(VarRefOp.Pattern)),
+                ProcessIsNullOverVarRef);
+
         /// <summary>
         /// Convert a 
         ///    IsNull(VarRef(v)) 
@@ -1316,16 +1417,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="isNullNode"></param>
         /// <param name="newNode">new subtree</param>
         /// <returns></returns>
-        static bool ProcessIsNullOverVarRef(RuleProcessingContext context, Node isNullNode, out Node newNode)
+        private static bool ProcessIsNullOverVarRef(RuleProcessingContext context, Node isNullNode, out Node newNode)
         {
-            Command command = context.Command;
-            TransformationRulesContext trc = (TransformationRulesContext)context;
+            var command = context.Command;
+            var trc = (TransformationRulesContext)context;
 
-            Var v = ((VarRefOp)isNullNode.Child0.Op).Var;
-                    
+            var v = ((VarRefOp)isNullNode.Child0.Op).Var;
+
             if (trc.IsNonNullable(v))
             {
-
                 newNode = command.CreateNode(context.Command.CreateFalseOp());
                 return true;
             }
@@ -1335,36 +1435,43 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 return false;
             }
         }
-        #endregion 
+
+        #endregion
 
         #region All ScalarOp Rules
-        internal static readonly InternalTrees.Rule[] Rules = new InternalTrees.Rule[] {
-            Rule_SimplifyCase,
-            Rule_FlattenCase,
-            Rule_LikeOverConstants,
-            Rule_EqualsOverConstant,
-            Rule_AndOverConstantPred1,
-            Rule_AndOverConstantPred2,
-            Rule_OrOverConstantPred1,
-            Rule_OrOverConstantPred2,
-            Rule_NotOverConstantPred,
-            Rule_IsNullOverConstant,
-            Rule_IsNullOverNullSentinel,
-            Rule_IsNullOverNull,
-            Rule_NullCast,
-            Rule_IsNullOverVarRef,
-        };
+
+        internal static readonly Rule[] Rules = new Rule[]
+                                                    {
+                                                        Rule_SimplifyCase,
+                                                        Rule_FlattenCase,
+                                                        Rule_LikeOverConstants,
+                                                        Rule_EqualsOverConstant,
+                                                        Rule_AndOverConstantPred1,
+                                                        Rule_AndOverConstantPred2,
+                                                        Rule_OrOverConstantPred1,
+                                                        Rule_OrOverConstantPred2,
+                                                        Rule_NotOverConstantPred,
+                                                        Rule_IsNullOverConstant,
+                                                        Rule_IsNullOverNullSentinel,
+                                                        Rule_IsNullOverNull,
+                                                        Rule_NullCast,
+                                                        Rule_IsNullOverVarRef,
+                                                    };
+
         #endregion
     }
+
     #endregion
 
     #region Filter Rules
+
     /// <summary>
     /// Transformation rules for FilterOps
     /// </summary>
     internal static class FilterOpRules
     {
         #region Helpers
+
         /// <summary>
         /// Split up a predicate into 2 parts - the pushdown and the non-pushdown predicate. 
         /// 
@@ -1388,21 +1495,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>part of the predicate that can be pushed down</returns>
         private static Node GetPushdownPredicate(Command command, Node filterNode, VarVec columns, out Node nonPushdownPredicateNode)
         {
-            Node pushdownPredicateNode = filterNode.Child1;
+            var pushdownPredicateNode = filterNode.Child1;
             nonPushdownPredicateNode = null;
-            ExtendedNodeInfo filterNodeInfo = command.GetExtendedNodeInfo(filterNode);
-            if (columns == null && filterNodeInfo.ExternalReferences.IsEmpty)
+            var filterNodeInfo = command.GetExtendedNodeInfo(filterNode);
+            if (columns == null
+                && filterNodeInfo.ExternalReferences.IsEmpty)
             {
                 return pushdownPredicateNode;
             }
 
             if (columns == null)
             {
-                ExtendedNodeInfo inputNodeInfo = command.GetExtendedNodeInfo(filterNode.Child0);
+                var inputNodeInfo = command.GetExtendedNodeInfo(filterNode.Child0);
                 columns = inputNodeInfo.Definitions;
             }
 
-            Predicate predicate = new Predicate(command, pushdownPredicateNode);
+            var predicate = new Predicate(command, pushdownPredicateNode);
             Predicate nonPushdownPredicate;
             predicate = predicate.GetSingleTablePredicates(columns, out nonPushdownPredicate);
             pushdownPredicateNode = predicate.BuildAndTree();
@@ -1413,13 +1521,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #region FilterOverFilter
+
         internal static readonly PatternMatchRule Rule_FilterOverFilter =
-            new PatternMatchRule(new Node(FilterOp.Pattern,
-                                          new Node(FilterOp.Pattern,
-                                                   new Node(LeafOp.Pattern),
-                                                   new Node(LeafOp.Pattern)),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessFilterOverFilter);
+            new PatternMatchRule(
+                new Node(
+                    FilterOp.Pattern,
+                    new Node(
+                        FilterOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern)),
+                    new Node(LeafOp.Pattern)),
+                ProcessFilterOverFilter);
+
         /// <summary>
         /// Convert Filter(Filter(X, p1), p2) => Filter(X, (p1 and p2))
         /// </summary>
@@ -1427,25 +1540,31 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="filterNode">FilterOp node</param>
         /// <param name="newNode">modified subtree</param>
         /// <returns>transformed subtree</returns>
-        static bool ProcessFilterOverFilter(RuleProcessingContext context, Node filterNode, out Node newNode)
+        private static bool ProcessFilterOverFilter(RuleProcessingContext context, Node filterNode, out Node newNode)
         {
-            Node newAndNode = context.Command.CreateNode(
+            var newAndNode = context.Command.CreateNode(
                 context.Command.CreateConditionalOp(OpType.And),
                 filterNode.Child0.Child1, filterNode.Child1);
 
             newNode = context.Command.CreateNode(context.Command.CreateFilterOp(), filterNode.Child0.Child0, newAndNode);
             return true;
         }
+
         #endregion
 
         #region FilterOverProject
+
         internal static readonly PatternMatchRule Rule_FilterOverProject =
-            new PatternMatchRule(new Node(FilterOp.Pattern,
-                                          new Node(ProjectOp.Pattern,
-                                                   new Node(LeafOp.Pattern),
-                                                   new Node(LeafOp.Pattern)),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessFilterOverProject);
+            new PatternMatchRule(
+                new Node(
+                    FilterOp.Pattern,
+                    new Node(
+                        ProjectOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern)),
+                    new Node(LeafOp.Pattern)),
+                ProcessFilterOverProject);
+
         /// <summary>
         /// Convert Filter(Project(X, ...), p) => Project(Filter(X, p'), ...)
         /// </summary>
@@ -1453,26 +1572,27 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="filterNode">FilterOp subtree</param>
         /// <param name="newNode">modified subtree</param>
         /// <returns>transformed subtree</returns>
-        static bool ProcessFilterOverProject(RuleProcessingContext context, Node filterNode, out Node newNode)
+        private static bool ProcessFilterOverProject(RuleProcessingContext context, Node filterNode, out Node newNode)
         {
             newNode = filterNode;
-            Node predicateNode = filterNode.Child1;
+            var predicateNode = filterNode.Child1;
 
             //
             // If the filter is a constant predicate, then don't push the filter below the
             // project
             //
-            if (predicateNode.Op.OpType == OpType.ConstantPredicate)
+            if (predicateNode.Op.OpType
+                == OpType.ConstantPredicate)
             {
                 // There's a different rule to process this case. Simply return
                 return false;
             }
 
-            TransformationRulesContext trc = (TransformationRulesContext)context;
+            var trc = (TransformationRulesContext)context;
             //
             // check to see that this is a simple predicate
             //
-            Dictionary<Var, int> varRefMap = new Dictionary<Var, int>();
+            var varRefMap = new Dictionary<Var, int>();
             if (!trc.IsScalarOpTree(predicateNode, varRefMap))
             {
                 return false;
@@ -1480,8 +1600,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // check to see if all expressions in the project can be inlined
             //
-            Node projectNode = filterNode.Child0;
-            Dictionary<Var, Node> varMap = trc.GetVarMap(projectNode.Child1, varRefMap);
+            var projectNode = filterNode.Child0;
+            var varMap = trc.GetVarMap(projectNode.Child1, varRefMap);
             if (varMap == null)
             {
                 return false;
@@ -1490,41 +1610,55 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Try to remap the predicate in terms of the definitions of the Vars
             //
-            Node remappedPredicateNode = trc.ReMap(predicateNode, varMap);
+            var remappedPredicateNode = trc.ReMap(predicateNode, varMap);
 
             //
             // Now push the filter below the project
             //
-            Node newFilterNode = trc.Command.CreateNode(trc.Command.CreateFilterOp(), projectNode.Child0, remappedPredicateNode);
-            Node newProjectNode = trc.Command.CreateNode(projectNode.Op, newFilterNode, projectNode.Child1);
+            var newFilterNode = trc.Command.CreateNode(trc.Command.CreateFilterOp(), projectNode.Child0, remappedPredicateNode);
+            var newProjectNode = trc.Command.CreateNode(projectNode.Op, newFilterNode, projectNode.Child1);
 
             newNode = newProjectNode;
             return true;
         }
+
         #endregion
 
         #region FilterOverSetOp
+
         internal static readonly PatternMatchRule Rule_FilterOverUnionAll =
-            new PatternMatchRule(new Node(FilterOp.Pattern,
-                                          new Node(UnionAllOp.Pattern,
-                                                   new Node(LeafOp.Pattern),
-                                                   new Node(LeafOp.Pattern)),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessFilterOverSetOp);
+            new PatternMatchRule(
+                new Node(
+                    FilterOp.Pattern,
+                    new Node(
+                        UnionAllOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern)),
+                    new Node(LeafOp.Pattern)),
+                ProcessFilterOverSetOp);
+
         internal static readonly PatternMatchRule Rule_FilterOverIntersect =
-            new PatternMatchRule(new Node(FilterOp.Pattern,
-                                          new Node(IntersectOp.Pattern,
-                                                   new Node(LeafOp.Pattern),
-                                                   new Node(LeafOp.Pattern)),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessFilterOverSetOp);
+            new PatternMatchRule(
+                new Node(
+                    FilterOp.Pattern,
+                    new Node(
+                        IntersectOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern)),
+                    new Node(LeafOp.Pattern)),
+                ProcessFilterOverSetOp);
+
         internal static readonly PatternMatchRule Rule_FilterOverExcept =
-            new PatternMatchRule(new Node(FilterOp.Pattern,
-                                          new Node(ExceptOp.Pattern,
-                                                   new Node(LeafOp.Pattern),
-                                                   new Node(LeafOp.Pattern)),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessFilterOverSetOp);
+            new PatternMatchRule(
+                new Node(
+                    FilterOp.Pattern,
+                    new Node(
+                        ExceptOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern)),
+                    new Node(LeafOp.Pattern)),
+                ProcessFilterOverSetOp);
+
         /// <summary>
         /// Transform Filter(UnionAll(X1, X2), p) => UnionAll(Filter(X1, p1), Filter(X, p2))
         ///           Filter(Intersect(X1, X2), p) => Intersect(Filter(X1, p1), Filter(X2, p2))
@@ -1535,17 +1669,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="filterNode">FilterOp subtree</param>
         /// <param name="newNode">modified subtree</param>
         /// <returns>true, if successful transformation</returns>
-        static bool ProcessFilterOverSetOp(RuleProcessingContext context, Node filterNode, out Node newNode)
+        private static bool ProcessFilterOverSetOp(RuleProcessingContext context, Node filterNode, out Node newNode)
         {
             newNode = filterNode;
-            TransformationRulesContext trc = (TransformationRulesContext)context;
+            var trc = (TransformationRulesContext)context;
 
             //
             // Identify parts of the filter predicate that can be pushed down, and parts that
             // cannot be. If nothing can be pushed down, then return
             // 
             Node nonPushdownPredicate;
-            Node pushdownPredicate = GetPushdownPredicate(trc.Command, filterNode, null, out nonPushdownPredicate);
+            var pushdownPredicate = GetPushdownPredicate(trc.Command, filterNode, null, out nonPushdownPredicate);
             if (pushdownPredicate == null)
             {
                 return false;
@@ -1560,23 +1694,24 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Now push the predicate (the part that can be pushed down) into each of the
             // branches (as appropriate)
             // 
-            Node setOpNode = filterNode.Child0;
-            SetOp setOp = (SetOp)setOpNode.Op;
-            List<Node> newSetOpChildren = new List<Node>();
-            int branchId = 0;
-            foreach (VarMap varMap in setOp.VarMap)
+            var setOpNode = filterNode.Child0;
+            var setOp = (SetOp)setOpNode.Op;
+            var newSetOpChildren = new List<Node>();
+            var branchId = 0;
+            foreach (var varMap in setOp.VarMap)
             {
                 // For exceptOp, the filter should only be pushed below the zeroth child
-                if (setOp.OpType == OpType.Except && branchId == 1)
+                if (setOp.OpType == OpType.Except
+                    && branchId == 1)
                 {
                     newSetOpChildren.Add(setOpNode.Child1);
                     break;
                 }
 
-                Dictionary<Var, Node> remapMap = new Dictionary<Var, Node>();
-                foreach (KeyValuePair<Var, Var> kv in varMap)
+                var remapMap = new Dictionary<Var, Node>();
+                foreach (var kv in varMap)
                 {
-                    Node varRefNode = trc.Command.CreateNode(trc.Command.CreateVarRefOp(kv.Value));
+                    var varRefNode = trc.Command.CreateNode(trc.Command.CreateVarRefOp(kv.Value));
                     remapMap.Add(kv.Key, varRefNode);
                 }
 
@@ -1585,16 +1720,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // Make a copy of the predicate first - except if we're dealing with the last
                 // branch, in which case, we can simply reuse the predicate
                 //
-                Node predicateNode = pushdownPredicate;
-                if (branchId == 0 && filterNode.Op.OpType != OpType.Except)
+                var predicateNode = pushdownPredicate;
+                if (branchId == 0
+                    && filterNode.Op.OpType != OpType.Except)
                 {
                     predicateNode = trc.Copy(predicateNode);
                 }
-                Node newPredicateNode = trc.ReMap(predicateNode, remapMap);
+                var newPredicateNode = trc.ReMap(predicateNode, remapMap);
                 trc.Command.RecomputeNodeInfo(newPredicateNode);
 
                 // create a new filter node below the setOp child
-                Node newFilterNode = trc.Command.CreateNode(
+                var newFilterNode = trc.Command.CreateNode(
                     trc.Command.CreateFilterOp(),
                     setOpNode.Children[branchId],
                     newPredicateNode);
@@ -1602,7 +1738,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
                 branchId++;
             }
-            Node newSetOpNode = trc.Command.CreateNode(setOpNode.Op, newSetOpChildren);
+            var newSetOpNode = trc.Command.CreateNode(setOpNode.Op, newSetOpChildren);
 
             //
             // We've now pushed down the relevant parts of the filter below the SetOps
@@ -1619,15 +1755,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             return true;
         }
+
         #endregion
 
         #region FilterOverDistinct
+
         internal static readonly PatternMatchRule Rule_FilterOverDistinct =
-            new PatternMatchRule(new Node(FilterOp.Pattern,
-                                  new Node(DistinctOp.Pattern,
-                                           new Node(LeafOp.Pattern)),
-                                  new Node(LeafOp.Pattern)),
-                         ProcessFilterOverDistinct);
+            new PatternMatchRule(
+                new Node(
+                    FilterOp.Pattern,
+                    new Node(
+                        DistinctOp.Pattern,
+                        new Node(LeafOp.Pattern)),
+                    new Node(LeafOp.Pattern)),
+                ProcessFilterOverDistinct);
+
         /// <summary>
         /// Transforms Filter(Distinct(x), p) => Filter(Distinct(Filter(X, p1), p2)
         ///    where p2 is the part of the filter that can be pushed down, while p1 represents
@@ -1637,7 +1779,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="filterNode">FilterOp subtree</param>
         /// <param name="newNode">modified subtree</param>
         /// <returns>Transformation status</returns>
-        static bool ProcessFilterOverDistinct(RuleProcessingContext context, Node filterNode, out Node newNode)
+        private static bool ProcessFilterOverDistinct(RuleProcessingContext context, Node filterNode, out Node newNode)
         {
             newNode = filterNode;
             //
@@ -1645,7 +1787,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // and the part that can't. If there is no part that can be pushed down, simply return
             // 
             Node nonPushdownPredicate;
-            Node pushdownPredicate = GetPushdownPredicate(context.Command, filterNode, null, out nonPushdownPredicate);
+            var pushdownPredicate = GetPushdownPredicate(context.Command, filterNode, null, out nonPushdownPredicate);
             if (pushdownPredicate == null)
             {
                 return false;
@@ -1655,9 +1797,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Create a new filter node below the current distinct node for the predicate
             // that can be pushed down - create a new distinct node as well
             // 
-            Node distinctNode = filterNode.Child0;
-            Node pushdownFilterNode = context.Command.CreateNode(context.Command.CreateFilterOp(), distinctNode.Child0, pushdownPredicate);
-            Node newDistinctNode = context.Command.CreateNode(distinctNode.Op, pushdownFilterNode);
+            var distinctNode = filterNode.Child0;
+            var pushdownFilterNode = context.Command.CreateNode(context.Command.CreateFilterOp(), distinctNode.Child0, pushdownPredicate);
+            var newDistinctNode = context.Command.CreateNode(distinctNode.Op, pushdownFilterNode);
 
             //
             // If we have a predicate part that cannot be pushed down, build up a new 
@@ -1673,17 +1815,23 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             return true;
         }
+
         #endregion
 
         #region FilterOverGroupBy
+
         internal static readonly PatternMatchRule Rule_FilterOverGroupBy =
-            new PatternMatchRule(new Node(FilterOp.Pattern,
-                                  new Node(GroupByOp.Pattern,
-                                           new Node(LeafOp.Pattern),
-                                           new Node(LeafOp.Pattern),
-                                           new Node(LeafOp.Pattern)),
-                                  new Node(LeafOp.Pattern)),
-                         ProcessFilterOverGroupBy);
+            new PatternMatchRule(
+                new Node(
+                    FilterOp.Pattern,
+                    new Node(
+                        GroupByOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern)),
+                    new Node(LeafOp.Pattern)),
+                ProcessFilterOverGroupBy);
+
         /// <summary>
         /// Transforms Filter(GroupBy(X, k1.., a1...), p) => 
         ///            Filter(GroupBy(Filter(X, p1'), k1..., a1...), p2)
@@ -1696,15 +1844,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="filterNode">Current FilterOp subtree</param>
         /// <param name="newNode">modified subtree</param>
         /// <returns>Transformation status</returns>
-        static bool ProcessFilterOverGroupBy(RuleProcessingContext context, Node filterNode, out Node newNode)
+        private static bool ProcessFilterOverGroupBy(RuleProcessingContext context, Node filterNode, out Node newNode)
         {
             newNode = filterNode;
-            Node groupByNode = filterNode.Child0;
-            GroupByOp groupByOp = (GroupByOp)groupByNode.Op;
-            TransformationRulesContext trc = (TransformationRulesContext)context;
+            var groupByNode = filterNode.Child0;
+            var groupByOp = (GroupByOp)groupByNode.Op;
+            var trc = (TransformationRulesContext)context;
 
             // Check to see that we have a simple predicate
-            Dictionary<Var, int> varRefMap = new Dictionary<Var, int>();
+            var varRefMap = new Dictionary<Var, int>();
             if (!trc.IsScalarOpTree(filterNode.Child1, varRefMap))
             {
                 return false;
@@ -1717,7 +1865,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // If nothing can be pushed below, quit now
             // 
             Node nonPushdownPredicate;
-            Node pushdownPredicate = GetPushdownPredicate(context.Command, filterNode, groupByOp.Keys, out nonPushdownPredicate);
+            var pushdownPredicate = GetPushdownPredicate(context.Command, filterNode, groupByOp.Keys, out nonPushdownPredicate);
             if (pushdownPredicate == null)
             {
                 return false;
@@ -1728,18 +1876,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // that any references to variables defined locally by the groupBy are fixed up
             // Make sure that the predicate is not too complex to remap
             //
-            Dictionary<Var, Node> varMap = trc.GetVarMap(groupByNode.Child1, varRefMap);
+            var varMap = trc.GetVarMap(groupByNode.Child1, varRefMap);
             if (varMap == null)
             {
                 return false; // complex expressions
             }
-            Node remappedPushdownPredicate = trc.ReMap(pushdownPredicate, varMap);
+            var remappedPushdownPredicate = trc.ReMap(pushdownPredicate, varMap);
 
             //
             // Push the filter below the groupBy now
             //
-            Node subFilterNode = trc.Command.CreateNode(trc.Command.CreateFilterOp(), groupByNode.Child0, remappedPushdownPredicate);
-            Node newGroupByNode = trc.Command.CreateNode(groupByNode.Op, subFilterNode, groupByNode.Child1, groupByNode.Child2);
+            var subFilterNode = trc.Command.CreateNode(trc.Command.CreateFilterOp(), groupByNode.Child0, remappedPushdownPredicate);
+            var newGroupByNode = trc.Command.CreateNode(groupByNode.Op, subFilterNode, groupByNode.Child1, groupByNode.Child2);
 
             //
             // If there was any part of the original predicate that could not be pushed down,
@@ -1756,32 +1904,46 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             return true;
         }
+
         #endregion
 
         #region FilterOverJoin
+
         internal static readonly PatternMatchRule Rule_FilterOverCrossJoin =
-            new PatternMatchRule(new Node(FilterOp.Pattern,
-                                  new Node(CrossJoinOp.Pattern,
-                                           new Node(LeafOp.Pattern),
-                                           new Node(LeafOp.Pattern)),
-                                  new Node(LeafOp.Pattern)),
-                         ProcessFilterOverJoin);
+            new PatternMatchRule(
+                new Node(
+                    FilterOp.Pattern,
+                    new Node(
+                        CrossJoinOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern)),
+                    new Node(LeafOp.Pattern)),
+                ProcessFilterOverJoin);
+
         internal static readonly PatternMatchRule Rule_FilterOverInnerJoin =
-            new PatternMatchRule(new Node(FilterOp.Pattern,
-                                  new Node(InnerJoinOp.Pattern,
-                                           new Node(LeafOp.Pattern),
-                                           new Node(LeafOp.Pattern),
-                                           new Node(LeafOp.Pattern)),
-                                  new Node(LeafOp.Pattern)),
-                         ProcessFilterOverJoin);
+            new PatternMatchRule(
+                new Node(
+                    FilterOp.Pattern,
+                    new Node(
+                        InnerJoinOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern)),
+                    new Node(LeafOp.Pattern)),
+                ProcessFilterOverJoin);
+
         internal static readonly PatternMatchRule Rule_FilterOverLeftOuterJoin =
-            new PatternMatchRule(new Node(FilterOp.Pattern,
-                                  new Node(LeftOuterJoinOp.Pattern,
-                                           new Node(LeafOp.Pattern),
-                                           new Node(LeafOp.Pattern),
-                                           new Node(LeafOp.Pattern)),
-                                  new Node(LeafOp.Pattern)),
-                         ProcessFilterOverJoin);
+            new PatternMatchRule(
+                new Node(
+                    FilterOp.Pattern,
+                    new Node(
+                        LeftOuterJoinOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern)),
+                    new Node(LeafOp.Pattern)),
+                ProcessFilterOverJoin);
+
         /// <summary>
         /// Transform Filter()
         /// </summary>
@@ -1789,11 +1951,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="filterNode">Current FilterOp subtree</param>
         /// <param name="newNode">Modified subtree</param>
         /// <returns>Transformation status</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-InnerJoin"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        static bool ProcessFilterOverJoin(RuleProcessingContext context, Node filterNode, out Node newNode)
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-InnerJoin")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        private static bool ProcessFilterOverJoin(RuleProcessingContext context, Node filterNode, out Node newNode)
         {
             newNode = filterNode;
-            TransformationRulesContext trc = (TransformationRulesContext)context;
+            var trc = (TransformationRulesContext)context;
 
             //
             // Have we shut off filter pushdown for this node? Return
@@ -1803,12 +1967,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 return false;
             }
 
-            Node joinNode = filterNode.Child0;
-            Op joinOp = joinNode.Op;
-            Node leftInputNode = joinNode.Child0;
-            Node rightInputNode = joinNode.Child1;
-            Command command = trc.Command;
-            bool needsTransformation = false;
+            var joinNode = filterNode.Child0;
+            var joinOp = joinNode.Op;
+            var leftInputNode = joinNode.Child0;
+            var rightInputNode = joinNode.Child1;
+            var command = trc.Command;
+            var needsTransformation = false;
 
             //
             // If we're dealing with an outer-join, first check to see if the current 
@@ -1816,9 +1980,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // If it doesn't then we can convert the outer join into an inner join,
             // and then continue with the rest of our processing here
             // 
-            ExtendedNodeInfo rightTableNodeInfo = command.GetExtendedNodeInfo(rightInputNode);
-            Predicate predicate = new Predicate(command, filterNode.Child1);
-            if (joinOp.OpType == OpType.LeftOuterJoin)
+            var rightTableNodeInfo = command.GetExtendedNodeInfo(rightInputNode);
+            var predicate = new Predicate(command, filterNode.Child1);
+            if (joinOp.OpType
+                == OpType.LeftOuterJoin)
             {
                 if (!predicate.PreservesNulls(rightTableNodeInfo.Definitions, true))
                 {
@@ -1826,7 +1991,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     needsTransformation = true;
                 }
             }
-            ExtendedNodeInfo leftTableInfo = command.GetExtendedNodeInfo(leftInputNode);
+            var leftTableInfo = command.GetExtendedNodeInfo(leftInputNode);
 
             //
             // Check to see if the predicate contains any "single-table-filters". In those
@@ -1837,17 +2002,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // the join input is a ScanTable (or some other cases), then it doesn't help us.
             // 
             Node leftSingleTablePredicateNode = null;
-            if (leftInputNode.Op.OpType != OpType.ScanTable)
+            if (leftInputNode.Op.OpType
+                != OpType.ScanTable)
             {
-                Predicate leftSingleTablePredicates = predicate.GetSingleTablePredicates(leftTableInfo.Definitions, out predicate);
+                var leftSingleTablePredicates = predicate.GetSingleTablePredicates(leftTableInfo.Definitions, out predicate);
                 leftSingleTablePredicateNode = leftSingleTablePredicates.BuildAndTree();
             }
 
             Node rightSingleTablePredicateNode = null;
-            if ((rightInputNode.Op.OpType != OpType.ScanTable) &&
+            if ((rightInputNode.Op.OpType != OpType.ScanTable)
+                &&
                 (joinOp.OpType != OpType.LeftOuterJoin))
             {
-                Predicate rightSingleTablePredicates = predicate.GetSingleTablePredicates(rightTableNodeInfo.Definitions, out predicate);
+                var rightSingleTablePredicates = predicate.GetSingleTablePredicates(rightTableNodeInfo.Definitions, out predicate);
                 rightSingleTablePredicateNode = rightSingleTablePredicates.BuildAndTree();
             }
 
@@ -1857,9 +2024,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // We can only do this for inner joins and cross joins - not for LOJs
             //
             Node newJoinPredicateNode = null;
-            if (joinOp.OpType == OpType.CrossJoin || joinOp.OpType == OpType.InnerJoin)
+            if (joinOp.OpType == OpType.CrossJoin
+                || joinOp.OpType == OpType.InnerJoin)
             {
-                Predicate joinPredicate = predicate.GetJoinPredicates(leftTableInfo.Definitions, rightTableNodeInfo.Definitions, out predicate);
+                var joinPredicate = predicate.GetJoinPredicates(leftTableInfo.Definitions, rightTableNodeInfo.Definitions, out predicate);
                 newJoinPredicateNode = joinPredicate.BuildAndTree();
             }
 
@@ -1883,7 +2051,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             if (newJoinPredicateNode != null)
             {
                 needsTransformation = true;
-                if (joinOp.OpType == OpType.CrossJoin)
+                if (joinOp.OpType
+                    == OpType.CrossJoin)
                 {
                     joinOp = command.CreateInnerJoinOp();
                 }
@@ -1911,7 +2080,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // 
             // Finally build up a new join node
             // 
-            if (joinOp.OpType == OpType.CrossJoin)
+            if (joinOp.OpType
+                == OpType.CrossJoin)
             {
                 newJoinNode = command.CreateNode(joinOp, leftInputNode, rightInputNode);
             }
@@ -1923,7 +2093,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Build up a new filterNode above this join node. But only if we have a filter left
             // 
-            Node newFilterPredicateNode = predicate.BuildAndTree();
+            var newFilterPredicateNode = predicate.BuildAndTree();
             if (newFilterPredicateNode == null)
             {
                 newNode = newJoinNode;
@@ -1934,16 +2104,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             return true;
         }
+
         #endregion
 
         #region Filter over OuterApply
+
         internal static readonly PatternMatchRule Rule_FilterOverOuterApply =
-            new PatternMatchRule(new Node(FilterOp.Pattern,
-                                  new Node(OuterApplyOp.Pattern,
-                                           new Node(LeafOp.Pattern),
-                                           new Node(LeafOp.Pattern)),
-                                  new Node(LeafOp.Pattern)),
-                         ProcessFilterOverOuterApply);
+            new PatternMatchRule(
+                new Node(
+                    FilterOp.Pattern,
+                    new Node(
+                        OuterApplyOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern)),
+                    new Node(LeafOp.Pattern)),
+                ProcessFilterOverOuterApply);
+
         /// <summary>
         /// Convert Filter(OuterApply(X,Y), p) into 
         ///    Filter(CrossApply(X,Y), p)
@@ -1953,25 +2129,25 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="filterNode">Filter node</param>
         /// <param name="newNode">modified subtree</param>
         /// <returns>transformation status</returns>
-        static bool ProcessFilterOverOuterApply(RuleProcessingContext context, Node filterNode, out Node newNode)
+        private static bool ProcessFilterOverOuterApply(RuleProcessingContext context, Node filterNode, out Node newNode)
         {
             newNode = filterNode;
-            Node applyNode = filterNode.Child0;
-            Op applyOp = applyNode.Op;
-            Node applyRightInputNode = applyNode.Child1;
-            TransformationRulesContext trc = (TransformationRulesContext)context;
-            Command command = trc.Command;
+            var applyNode = filterNode.Child0;
+            var applyOp = applyNode.Op;
+            var applyRightInputNode = applyNode.Child1;
+            var trc = (TransformationRulesContext)context;
+            var command = trc.Command;
 
             //
             // Check to see if the current predicate preserves nulls for the right table. 
             // If it doesn't then we can convert the outer apply into a cross-apply,
             // 
-            ExtendedNodeInfo rightTableNodeInfo = command.GetExtendedNodeInfo(applyRightInputNode);
-            Predicate predicate = new Predicate(command, filterNode.Child1);
+            var rightTableNodeInfo = command.GetExtendedNodeInfo(applyRightInputNode);
+            var predicate = new Predicate(command, filterNode.Child1);
             if (!predicate.PreservesNulls(rightTableNodeInfo.Definitions, true))
             {
-                Node newApplyNode = command.CreateNode(command.CreateCrossApplyOp(), applyNode.Child0, applyRightInputNode);
-                Node newFilterNode = command.CreateNode(command.CreateFilterOp(), newApplyNode, filterNode.Child1);
+                var newApplyNode = command.CreateNode(command.CreateCrossApplyOp(), applyNode.Child0, applyRightInputNode);
+                var newFilterNode = command.CreateNode(command.CreateFilterOp(), newApplyNode, filterNode.Child1);
                 newNode = newFilterNode;
                 return true;
             }
@@ -1982,11 +2158,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #region FilterWithConstantPredicate
+
         internal static readonly PatternMatchRule Rule_FilterWithConstantPredicate =
-            new PatternMatchRule(new Node(FilterOp.Pattern,
-                          new Node(LeafOp.Pattern),
-                          new Node(ConstantPredicateOp.Pattern)),
-                 ProcessFilterWithConstantPredicate);
+            new PatternMatchRule(
+                new Node(
+                    FilterOp.Pattern,
+                    new Node(LeafOp.Pattern),
+                    new Node(ConstantPredicateOp.Pattern)),
+                ProcessFilterWithConstantPredicate);
+
         /// <summary>
         /// Convert 
         ///    Filter(X, true)  => X
@@ -1997,11 +2177,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="n">Current subtree</param>
         /// <param name="newNode">modified subtree</param>
         /// <returns>transformation status</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        static bool ProcessFilterWithConstantPredicate(RuleProcessingContext context, Node n, out Node newNode)
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        private static bool ProcessFilterWithConstantPredicate(RuleProcessingContext context, Node n, out Node newNode)
         {
             newNode = n;
-            ConstantPredicateOp predOp = (ConstantPredicateOp)n.Child1.Op;
+            var predOp = (ConstantPredicateOp)n.Child1.Op;
 
             // If we're dealing with a "true" predicate, then simply return the RelOp
             // input to the filter
@@ -2019,23 +2200,24 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // If the input is already a singlerowtableOp, then there's nothing 
             // further to do
             //
-            if (n.Child0.Op.OpType == OpType.SingleRowTable ||
+            if (n.Child0.Op.OpType == OpType.SingleRowTable
+                ||
                 (n.Child0.Op.OpType == OpType.Project &&
                  n.Child0.Child0.Op.OpType == OpType.SingleRowTable))
             {
                 return false;
             }
 
-            TransformationRulesContext trc = (TransformationRulesContext)context;
-            ExtendedNodeInfo childNodeInfo = trc.Command.GetExtendedNodeInfo(n.Child0);
-            List<Node> varDefNodeList = new List<Node>();
-            VarVec newVars = trc.Command.CreateVarVec();
-            foreach (Var v in childNodeInfo.Definitions)
+            var trc = (TransformationRulesContext)context;
+            var childNodeInfo = trc.Command.GetExtendedNodeInfo(n.Child0);
+            var varDefNodeList = new List<Node>();
+            var newVars = trc.Command.CreateVarVec();
+            foreach (var v in childNodeInfo.Definitions)
             {
-                NullOp nullConst = trc.Command.CreateNullOp(v.Type);
-                Node constNode = trc.Command.CreateNode(nullConst);
+                var nullConst = trc.Command.CreateNullOp(v.Type);
+                var constNode = trc.Command.CreateNode(nullConst);
                 Var computedVar;
-                Node varDefNode = trc.Command.CreateVarDefNode(constNode, out computedVar);
+                var varDefNode = trc.Command.CreateVarDefNode(constNode, out computedVar);
                 trc.AddVarMapping(v, computedVar);
                 newVars.Set(computedVar);
                 varDefNodeList.Add(varDefNode);
@@ -2043,20 +2225,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // If no vars have been selected out, add a dummy var
             if (newVars.IsEmpty)
             {
-                NullOp nullConst = trc.Command.CreateNullOp(trc.Command.BooleanType);
-                Node constNode = trc.Command.CreateNode(nullConst);
+                var nullConst = trc.Command.CreateNullOp(trc.Command.BooleanType);
+                var constNode = trc.Command.CreateNode(nullConst);
                 Var computedVar;
-                Node varDefNode = trc.Command.CreateVarDefNode(constNode, out computedVar);
+                var varDefNode = trc.Command.CreateVarDefNode(constNode, out computedVar);
                 newVars.Set(computedVar);
                 varDefNodeList.Add(varDefNode);
             }
 
-            Node singleRowTableNode = trc.Command.CreateNode(trc.Command.CreateSingleRowTableOp());
+            var singleRowTableNode = trc.Command.CreateNode(trc.Command.CreateSingleRowTableOp());
             n.Child0 = singleRowTableNode;
 
-            Node varDefListNode = trc.Command.CreateNode(trc.Command.CreateVarDefListOp(), varDefNodeList);
-            ProjectOp projectOp = trc.Command.CreateProjectOp(newVars);           
-            Node projectNode = trc.Command.CreateNode(projectOp, n, varDefListNode); 
+            var varDefListNode = trc.Command.CreateNode(trc.Command.CreateVarDefListOp(), varDefNodeList);
+            var projectOp = trc.Command.CreateProjectOp(newVars);
+            var projectNode = trc.Command.CreateNode(projectOp, n, varDefListNode);
 
             projectNode.Child0 = n;
             newNode = projectNode;
@@ -2066,39 +2248,48 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #region All FilterOp Rules
-        internal static readonly InternalTrees.Rule[] Rules = new InternalTrees.Rule[] {
-                 FilterOpRules.Rule_FilterWithConstantPredicate,     
-                 FilterOpRules.Rule_FilterOverCrossJoin,
-                 FilterOpRules.Rule_FilterOverDistinct,
-                 FilterOpRules.Rule_FilterOverExcept,
-                 FilterOpRules.Rule_FilterOverFilter,
-                 FilterOpRules.Rule_FilterOverGroupBy,
-                 FilterOpRules.Rule_FilterOverInnerJoin,
-                 FilterOpRules.Rule_FilterOverIntersect,
-                 FilterOpRules.Rule_FilterOverLeftOuterJoin,
-                 FilterOpRules.Rule_FilterOverProject,
-                 FilterOpRules.Rule_FilterOverUnionAll,
-                 FilterOpRules.Rule_FilterOverOuterApply,
-        };
+
+        internal static readonly Rule[] Rules = new Rule[]
+                                                    {
+                                                        Rule_FilterWithConstantPredicate,
+                                                        Rule_FilterOverCrossJoin,
+                                                        Rule_FilterOverDistinct,
+                                                        Rule_FilterOverExcept,
+                                                        Rule_FilterOverFilter,
+                                                        Rule_FilterOverGroupBy,
+                                                        Rule_FilterOverInnerJoin,
+                                                        Rule_FilterOverIntersect,
+                                                        Rule_FilterOverLeftOuterJoin,
+                                                        Rule_FilterOverProject,
+                                                        Rule_FilterOverUnionAll,
+                                                        Rule_FilterOverOuterApply,
+                                                    };
 
         #endregion
     }
+
     #endregion
 
     #region Project Rules
+
     /// <summary>
     /// Transformation rules for ProjectOp
     /// </summary>
     internal static class ProjectOpRules
     {
         #region ProjectOverProject
+
         internal static readonly PatternMatchRule Rule_ProjectOverProject =
-            new PatternMatchRule(new Node(ProjectOp.Pattern,
-                                          new Node(ProjectOp.Pattern,
-                                                   new Node(LeafOp.Pattern),
-                                                   new Node(LeafOp.Pattern)),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessProjectOverProject);
+            new PatternMatchRule(
+                new Node(
+                    ProjectOp.Pattern,
+                    new Node(
+                        ProjectOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern)),
+                    new Node(LeafOp.Pattern)),
+                ProcessProjectOverProject);
+
         /// <summary>
         /// Converts a Project(Project(X, c1,...), d1,...) => 
         ///            Project(X, d1', d2'...)
@@ -2108,19 +2299,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="projectNode">Current ProjectOp node</param>
         /// <param name="newNode">modified subtree</param>
         /// <returns>Transformation status</returns>
-        static bool ProcessProjectOverProject(RuleProcessingContext context, Node projectNode, out Node newNode)
+        private static bool ProcessProjectOverProject(RuleProcessingContext context, Node projectNode, out Node newNode)
         {
             newNode = projectNode;
-            ProjectOp projectOp = (ProjectOp)projectNode.Op;
-            Node varDefListNode = projectNode.Child1;
-            Node subProjectNode = projectNode.Child0;
-            ProjectOp subProjectOp = (ProjectOp)subProjectNode.Op;
-            TransformationRulesContext trc = (TransformationRulesContext)context;
+            var projectOp = (ProjectOp)projectNode.Op;
+            var varDefListNode = projectNode.Child1;
+            var subProjectNode = projectNode.Child0;
+            var subProjectOp = (ProjectOp)subProjectNode.Op;
+            var trc = (TransformationRulesContext)context;
 
             // If any of the defining expressions is not a scalar op tree, then simply
             // quit
-            Dictionary<Var, int> varRefMap = new Dictionary<Var, int>();
-            foreach (Node varDefNode in varDefListNode.Children)
+            var varRefMap = new Dictionary<Var, int>();
+            foreach (var varDefNode in varDefListNode.Children)
             {
                 if (!trc.IsScalarOpTree(varDefNode.Child0, varRefMap))
                 {
@@ -2128,17 +2319,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
             }
 
-            Dictionary<Var, Node> varMap = trc.GetVarMap(subProjectNode.Child1, varRefMap);
+            var varMap = trc.GetVarMap(subProjectNode.Child1, varRefMap);
             if (varMap == null)
             {
                 return false;
             }
 
             // create a new varDefList node...
-            Node newVarDefListNode = trc.Command.CreateNode(trc.Command.CreateVarDefListOp());
+            var newVarDefListNode = trc.Command.CreateNode(trc.Command.CreateVarDefListOp());
 
             // Remap any local definitions, I have
-            foreach (Node varDefNode in varDefListNode.Children)
+            foreach (var varDefNode in varDefListNode.Children)
             {
                 // update the defining expression
                 varDefNode.Child0 = trc.ReMap(varDefNode.Child0, varMap);
@@ -2147,10 +2338,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             // Now, pull up any definitions of the subProject that I publish myself
-            ExtendedNodeInfo projectNodeInfo = trc.Command.GetExtendedNodeInfo(projectNode);
-            foreach (Node chi in subProjectNode.Child1.Children)
+            var projectNodeInfo = trc.Command.GetExtendedNodeInfo(projectNode);
+            foreach (var chi in subProjectNode.Child1.Children)
             {
-                VarDefOp varDefOp = (VarDefOp)chi.Op;
+                var varDefOp = (VarDefOp)chi.Op;
                 if (projectNodeInfo.Definitions.IsSet(varDefOp.Var))
                 {
                     newVarDefListNode.Children.Add(chi);
@@ -2165,14 +2356,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             projectNode.Child1 = newVarDefListNode;
             return true;
         }
+
         #endregion
 
         #region ProjectWithNoLocalDefinitions
+
         internal static readonly PatternMatchRule Rule_ProjectWithNoLocalDefs =
-            new PatternMatchRule(new Node(ProjectOp.Pattern,
-                                          new Node(LeafOp.Pattern),
-                                          new Node(VarDefListOp.Pattern)),
-                                 ProcessProjectWithNoLocalDefinitions);
+            new PatternMatchRule(
+                new Node(
+                    ProjectOp.Pattern,
+                    new Node(LeafOp.Pattern),
+                    new Node(VarDefListOp.Pattern)),
+                ProcessProjectWithNoLocalDefinitions);
+
         /// <summary>
         /// Eliminate a ProjectOp that has no local definitions at all and 
         /// no external references, (ie) if Child1
@@ -2184,10 +2380,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="n">current subtree</param>
         /// <param name="newNode">transformed subtree</param>
         /// <returns>transformation status</returns>
-        static bool ProcessProjectWithNoLocalDefinitions(RuleProcessingContext context, Node n, out Node newNode)
+        private static bool ProcessProjectWithNoLocalDefinitions(RuleProcessingContext context, Node n, out Node newNode)
         {
             newNode = n;
-            NodeInfo nodeInfo = context.Command.GetNodeInfo(n);
+            var nodeInfo = context.Command.GetNodeInfo(n);
 
             // We cannot eliminate this node because it can break other rules, 
             // e.g. ProcessApplyOverAnything which relies on existance of external refs to substitute
@@ -2204,7 +2400,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #region ProjectOpWithSimpleVarRedefinitions
-        internal static readonly SimpleRule Rule_ProjectOpWithSimpleVarRedefinitions = new SimpleRule(OpType.Project, ProcessProjectWithSimpleVarRedefinitions);
+
+        internal static readonly SimpleRule Rule_ProjectOpWithSimpleVarRedefinitions = new SimpleRule(
+            OpType.Project, ProcessProjectWithSimpleVarRedefinitions);
+
         /// <summary>
         /// If the ProjectOp defines some computedVars, but those computedVars are simply 
         /// redefinitions of other Vars, then eliminate the computedVars. 
@@ -2218,32 +2417,33 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="n">current subtree</param>
         /// <param name="newNode">transformed subtree</param>
         /// <returns>transformation status</returns>
-        static bool ProcessProjectWithSimpleVarRedefinitions(RuleProcessingContext context, Node n, out Node newNode)
+        private static bool ProcessProjectWithSimpleVarRedefinitions(RuleProcessingContext context, Node n, out Node newNode)
         {
             newNode = n;
-            ProjectOp projectOp = (ProjectOp)n.Op;
+            var projectOp = (ProjectOp)n.Op;
 
             if (n.Child1.Children.Count == 0)
             {
                 return false;
             }
 
-            TransformationRulesContext trc = (TransformationRulesContext)context;
-            Command command = trc.Command;
+            var trc = (TransformationRulesContext)context;
+            var command = trc.Command;
 
-            ExtendedNodeInfo nodeInfo = command.GetExtendedNodeInfo(n);
+            var nodeInfo = command.GetExtendedNodeInfo(n);
 
             //
             // Check to see if any of the computed Vars defined by this ProjectOp
             // are simple redefinitions of other VarRefOps. Consider only those 
             // VarRefOps that are not "external" references
-            bool canEliminateSomeVars = false;
-            foreach (Node varDefNode in n.Child1.Children)
+            var canEliminateSomeVars = false;
+            foreach (var varDefNode in n.Child1.Children)
             {
-                Node definingExprNode = varDefNode.Child0;
-                if (definingExprNode.Op.OpType == OpType.VarRef)
+                var definingExprNode = varDefNode.Child0;
+                if (definingExprNode.Op.OpType
+                    == OpType.VarRef)
                 {
-                    VarRefOp varRefOp = (VarRefOp)definingExprNode.Op;
+                    var varRefOp = (VarRefOp)definingExprNode.Op;
                     if (!nodeInfo.ExternalReferences.IsSet(varRefOp.Var))
                     {
                         // this is a Var that we should remove 
@@ -2265,12 +2465,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
 
             // Lets now build up a new VarDefListNode
-            List<Node> newVarDefNodes = new List<Node>();
-            foreach (Node varDefNode in n.Child1.Children)
+            var newVarDefNodes = new List<Node>();
+            foreach (var varDefNode in n.Child1.Children)
             {
-                VarDefOp varDefOp = (VarDefOp)varDefNode.Op;
-                VarRefOp varRefOp = varDefNode.Child0.Op as VarRefOp;
-                if (varRefOp != null && !nodeInfo.ExternalReferences.IsSet(varRefOp.Var))
+                var varDefOp = (VarDefOp)varDefNode.Op;
+                var varRefOp = varDefNode.Child0.Op as VarRefOp;
+                if (varRefOp != null
+                    && !nodeInfo.ExternalReferences.IsSet(varRefOp.Var))
                 {
                     projectOp.Outputs.Clear(varDefOp.Var);
                     projectOp.Outputs.Set(varRefOp.Var);
@@ -2288,16 +2489,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //  (2) the rule Rule_ProjectWithNoLocalDefs, would do that later anyway.
 
             // Create a new vardeflist node, and set that as Child1 for the projectOp
-            Node newVarDefListNode = command.CreateNode(command.CreateVarDefListOp(), newVarDefNodes);
+            var newVarDefListNode = command.CreateNode(command.CreateVarDefListOp(), newVarDefNodes);
             n.Child1 = newVarDefListNode;
             return true; // some part of the subtree was modified
         }
 
-
         #endregion
 
         #region ProjectOpWithNullSentinel
-        internal static readonly SimpleRule Rule_ProjectOpWithNullSentinel = new SimpleRule(OpType.Project, ProcessProjectOpWithNullSentinel);
+
+        internal static readonly SimpleRule Rule_ProjectOpWithNullSentinel = new SimpleRule(
+            OpType.Project, ProcessProjectOpWithNullSentinel);
+
         /// <summary>
         /// Tries to remove null sentinel definitions by replacing them to vars that are guaranteed 
         /// to be non-nullable and of integer type, or with reference to other constants defined in the 
@@ -2324,31 +2527,39 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="n">current subtree</param>
         /// <param name="newNode">transformed subtree</param>
         /// <returns>transformation status</returns>
-        static bool ProcessProjectOpWithNullSentinel(RuleProcessingContext context, Node n, out Node newNode)
+        private static bool ProcessProjectOpWithNullSentinel(RuleProcessingContext context, Node n, out Node newNode)
         {
             newNode = n;
-            ProjectOp projectOp = (ProjectOp)n.Op;
-            Node varDefListNode = n.Child1;
+            var projectOp = (ProjectOp)n.Op;
+            var varDefListNode = n.Child1;
 
             if (varDefListNode.Children.Where(c => c.Child0.Op.OpType == OpType.NullSentinel).Count() == 0)
             {
                 return false;
             }
 
-            TransformationRulesContext trc = (TransformationRulesContext)context;
-            Command command = trc.Command;
-            ExtendedNodeInfo relOpInputNodeInfo = command.GetExtendedNodeInfo(n.Child0);
+            var trc = (TransformationRulesContext)context;
+            var command = trc.Command;
+            var relOpInputNodeInfo = command.GetExtendedNodeInfo(n.Child0);
             Var inputSentinel;
-            bool reusingConstantFromSameProjectAsSentinel = false;
+            var reusingConstantFromSameProjectAsSentinel = false;
 
-            bool canChangeNullSentinelValue = trc.CanChangeNullSentinelValue;
-            
-            if (!canChangeNullSentinelValue || !TransformationRulesContext.TryGetInt32Var(relOpInputNodeInfo.NonNullableDefinitions, out inputSentinel))
+            var canChangeNullSentinelValue = trc.CanChangeNullSentinelValue;
+
+            if (!canChangeNullSentinelValue
+                || !TransformationRulesContext.TryGetInt32Var(relOpInputNodeInfo.NonNullableDefinitions, out inputSentinel))
             {
                 reusingConstantFromSameProjectAsSentinel = true;
-                if (!canChangeNullSentinelValue || !TransformationRulesContext.TryGetInt32Var(n.Child1.Children.Where(child => child.Child0.Op.OpType == OpType.Constant || child.Child0.Op.OpType == OpType.InternalConstant).Select(child => ((VarDefOp)(child.Op)).Var), out inputSentinel))
+                if (!canChangeNullSentinelValue
+                    ||
+                    !TransformationRulesContext.TryGetInt32Var(
+                        n.Child1.Children.Where(
+                            child => child.Child0.Op.OpType == OpType.Constant || child.Child0.Op.OpType == OpType.InternalConstant).Select(
+                                child => ((VarDefOp)(child.Op)).Var), out inputSentinel))
                 {
-                    inputSentinel = n.Child1.Children.Where(child => child.Child0.Op.OpType == OpType.NullSentinel).Select(child => ((VarDefOp)(child.Op)).Var).FirstOrDefault();
+                    inputSentinel =
+                        n.Child1.Children.Where(child => child.Child0.Op.OpType == OpType.NullSentinel).Select(
+                            child => ((VarDefOp)(child.Op)).Var).FirstOrDefault();
                     if (inputSentinel == null)
                     {
                         return false;
@@ -2356,17 +2567,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
             }
 
-            bool modified = false;
-            
-            for (int i = n.Child1.Children.Count-1; i >= 0; i--)
+            var modified = false;
+
+            for (var i = n.Child1.Children.Count - 1; i >= 0; i--)
             {
-                Node varDefNode = n.Child1.Children[i];
-                Node definingExprNode = varDefNode.Child0;
-                if (definingExprNode.Op.OpType == OpType.NullSentinel)
-                { 
+                var varDefNode = n.Child1.Children[i];
+                var definingExprNode = varDefNode.Child0;
+                if (definingExprNode.Op.OpType
+                    == OpType.NullSentinel)
+                {
                     if (!reusingConstantFromSameProjectAsSentinel)
                     {
-                        VarRefOp varRefOp = command.CreateVarRefOp(inputSentinel);
+                        var varRefOp = command.CreateVarRefOp(inputSentinel);
                         varDefNode.Child0 = command.CreateNode(varRefOp);
                         command.RecomputeNodeInfo(varDefNode);
                         modified = true;
@@ -2385,43 +2597,58 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 command.RecomputeNodeInfo(n.Child1);
             }
-            return modified; 
+            return modified;
         }
+
         #endregion
 
         #region All ProjectOp Rules
+
         //The order of the rules is important
-        internal static readonly InternalTrees.Rule[] Rules = new InternalTrees.Rule[] {
-                 ProjectOpRules.Rule_ProjectOpWithNullSentinel,
-                 ProjectOpRules.Rule_ProjectOpWithSimpleVarRedefinitions,
-                 ProjectOpRules.Rule_ProjectOverProject,
-                 ProjectOpRules.Rule_ProjectWithNoLocalDefs,             
-        };
+        internal static readonly Rule[] Rules = new Rule[]
+                                                    {
+                                                        Rule_ProjectOpWithNullSentinel,
+                                                        Rule_ProjectOpWithSimpleVarRedefinitions,
+                                                        Rule_ProjectOverProject,
+                                                        Rule_ProjectWithNoLocalDefs,
+                                                    };
+
         #endregion
     }
+
     #endregion
 
     #region Apply Rules
+
     /// <summary>
     /// Transformation rules for ApplyOps - CrossApply, OuterApply
     /// </summary>
     internal static class ApplyOpRules
     {
         #region ApplyOverFilter
+
         internal static readonly PatternMatchRule Rule_CrossApplyOverFilter =
-            new PatternMatchRule(new Node(CrossApplyOp.Pattern,
-                                          new Node(LeafOp.Pattern),
-                                          new Node(FilterOp.Pattern,
-                                                   new Node(LeafOp.Pattern),
-                                                   new Node(LeafOp.Pattern))),
-                                 ProcessApplyOverFilter);
+            new PatternMatchRule(
+                new Node(
+                    CrossApplyOp.Pattern,
+                    new Node(LeafOp.Pattern),
+                    new Node(
+                        FilterOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern))),
+                ProcessApplyOverFilter);
+
         internal static readonly PatternMatchRule Rule_OuterApplyOverFilter =
-            new PatternMatchRule(new Node(OuterApplyOp.Pattern,
-                                          new Node(LeafOp.Pattern),
-                                          new Node(FilterOp.Pattern,
-                                                   new Node(LeafOp.Pattern),
-                                                   new Node(LeafOp.Pattern))),
-                                 ProcessApplyOverFilter);
+            new PatternMatchRule(
+                new Node(
+                    OuterApplyOp.Pattern,
+                    new Node(LeafOp.Pattern),
+                    new Node(
+                        FilterOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern))),
+                ProcessApplyOverFilter);
+
         /// <summary>
         /// Convert CrossApply(X, Filter(Y, p)) => InnerJoin(X, Y, p)
         ///         OuterApply(X, Filter(Y, p)) => LeftOuterJoin(X, Y, p)
@@ -2431,14 +2658,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="applyNode">Current ApplyOp</param>
         /// <param name="newNode">transformed subtree</param>
         /// <returns>Transformation status</returns>
-        static bool ProcessApplyOverFilter(RuleProcessingContext context, Node applyNode, out Node newNode)
+        private static bool ProcessApplyOverFilter(RuleProcessingContext context, Node applyNode, out Node newNode)
         {
             newNode = applyNode;
-            Node filterNode = applyNode.Child1;
-            Command command = context.Command;
+            var filterNode = applyNode.Child1;
+            var command = context.Command;
 
-            NodeInfo filterInputNodeInfo = command.GetNodeInfo(filterNode.Child0);
-            ExtendedNodeInfo applyLeftChildNodeInfo = command.GetExtendedNodeInfo(applyNode.Child0);
+            var filterInputNodeInfo = command.GetNodeInfo(filterNode.Child0);
+            var applyLeftChildNodeInfo = command.GetExtendedNodeInfo(applyNode.Child0);
 
             //
             // check to see if the inputNode to the FilterOp has any external references 
@@ -2457,7 +2684,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // filter predicate acting as the join condition
             //
             JoinBaseOp joinOp = null;
-            if (applyNode.Op.OpType == OpType.CrossApply)
+            if (applyNode.Op.OpType
+                == OpType.CrossApply)
             {
                 joinOp = command.CreateInnerJoinOp();
             }
@@ -2471,28 +2699,40 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         internal static readonly PatternMatchRule Rule_OuterApplyOverProjectInternalConstantOverFilter =
-             new PatternMatchRule(new Node(OuterApplyOp.Pattern,
-                                           new Node(LeafOp.Pattern),
-                                           new Node(ProjectOp.Pattern,
-                                                    new Node(FilterOp.Pattern,
-                                                             new Node(LeafOp.Pattern),
-                                                             new Node(LeafOp.Pattern)),
-                                                    new Node(VarDefListOp.Pattern,
-                                                             new Node(VarDefOp.Pattern,
-                                                                      new Node(InternalConstantOp.Pattern))))),
-                         ProcessOuterApplyOverDummyProjectOverFilter);
+            new PatternMatchRule(
+                new Node(
+                    OuterApplyOp.Pattern,
+                    new Node(LeafOp.Pattern),
+                    new Node(
+                        ProjectOp.Pattern,
+                        new Node(
+                            FilterOp.Pattern,
+                            new Node(LeafOp.Pattern),
+                            new Node(LeafOp.Pattern)),
+                        new Node(
+                            VarDefListOp.Pattern,
+                            new Node(
+                                VarDefOp.Pattern,
+                                new Node(InternalConstantOp.Pattern))))),
+                ProcessOuterApplyOverDummyProjectOverFilter);
 
         internal static readonly PatternMatchRule Rule_OuterApplyOverProjectNullSentinelOverFilter =
-           new PatternMatchRule(new Node(OuterApplyOp.Pattern,
-                                         new Node(LeafOp.Pattern),
-                                         new Node(ProjectOp.Pattern,
-                                                  new Node(FilterOp.Pattern,
-                                                           new Node(LeafOp.Pattern),
-                                                           new Node(LeafOp.Pattern)),
-                                                  new Node(VarDefListOp.Pattern,
-                                                           new Node(VarDefOp.Pattern,
-                                                                    new Node(NullSentinelOp.Pattern))))),
-                       ProcessOuterApplyOverDummyProjectOverFilter);
+            new PatternMatchRule(
+                new Node(
+                    OuterApplyOp.Pattern,
+                    new Node(LeafOp.Pattern),
+                    new Node(
+                        ProjectOp.Pattern,
+                        new Node(
+                            FilterOp.Pattern,
+                            new Node(LeafOp.Pattern),
+                            new Node(LeafOp.Pattern)),
+                        new Node(
+                            VarDefListOp.Pattern,
+                            new Node(
+                                VarDefOp.Pattern,
+                                new Node(NullSentinelOp.Pattern))))),
+                ProcessOuterApplyOverDummyProjectOverFilter);
 
         /// <summary>
         /// Convert OuterApply(X, Project(Filter(Y, p), constant)) => 
@@ -2509,24 +2749,25 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="applyNode">Current ApplyOp</param>
         /// <param name="newNode">transformed subtree</param>
         /// <returns>Transformation status</returns>
-        static bool ProcessOuterApplyOverDummyProjectOverFilter(RuleProcessingContext context, Node applyNode, out Node newNode)
+        private static bool ProcessOuterApplyOverDummyProjectOverFilter(RuleProcessingContext context, Node applyNode, out Node newNode)
         {
             newNode = applyNode;
-            Node projectNode = applyNode.Child1;
-            ProjectOp projectOp = (ProjectOp)projectNode.Op;
-            Node filterNode = projectNode.Child0;
-            Node filterInputNode = filterNode.Child0;
-            Command command = context.Command;
+            var projectNode = applyNode.Child1;
+            var projectOp = (ProjectOp)projectNode.Op;
+            var filterNode = projectNode.Child0;
+            var filterInputNode = filterNode.Child0;
+            var command = context.Command;
 
-            ExtendedNodeInfo filterInputNodeInfo = command.GetExtendedNodeInfo(filterInputNode);
-            ExtendedNodeInfo applyLeftChildNodeInfo = command.GetExtendedNodeInfo(applyNode.Child0);
+            var filterInputNodeInfo = command.GetExtendedNodeInfo(filterInputNode);
+            var applyLeftChildNodeInfo = command.GetExtendedNodeInfo(applyNode.Child0);
 
             //
             // Check if the outputs of the ProjectOp or the inputNode to the FilterOp 
             // have any external references to the left child of the ApplyOp. 
             // If they do, we simply return, we can't do much more here
             //
-            if (projectOp.Outputs.Overlaps(applyLeftChildNodeInfo.Definitions) || filterInputNodeInfo.ExternalReferences.Overlaps(applyLeftChildNodeInfo.Definitions))
+            if (projectOp.Outputs.Overlaps(applyLeftChildNodeInfo.Definitions)
+                || filterInputNodeInfo.ExternalReferences.Overlaps(applyLeftChildNodeInfo.Definitions))
             {
                 return false;
             }
@@ -2537,7 +2778,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // First, push the Project node down below the filter - but make sure that
             // all the Vars needed by the Filter are projected out 
             //
-            bool capWithProject = false;
+            var capWithProject = false;
             Node joinNodeRightInput = null;
 
             //
@@ -2548,7 +2789,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // building - and we'll need to make sure that the ProjectOp projects out
             // any vars that are required for the Filter in the first place
             //
-            TransformationRulesContext trc = (TransformationRulesContext)context;
+            var trc = (TransformationRulesContext)context;
             Var sentinelVar;
             bool sentinelIsInt32;
 
@@ -2561,12 +2802,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 sentinelVar = filterInputNodeInfo.NonNullableDefinitions.First;
                 sentinelIsInt32 = false;
             }
-          
+
             if (sentinelVar != null)
             {
                 capWithProject = true;
-                Node varDefNode = projectNode.Child1.Child0;
-                if (varDefNode.Child0.Op.OpType == OpType.NullSentinel && sentinelIsInt32 && trc.CanChangeNullSentinelValue)
+                var varDefNode = projectNode.Child1.Child0;
+                if (varDefNode.Child0.Op.OpType == OpType.NullSentinel && sentinelIsInt32
+                    && trc.CanChangeNullSentinelValue)
                 {
                     varDefNode.Child0 = context.Command.CreateNode(context.Command.CreateVarRefOp(sentinelVar));
                 }
@@ -2586,8 +2828,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // Make sure that every Var that is needed for the filter predicate
                 // is captured in the projectOp outputs list
                 //
-                NodeInfo filterPredicateNodeInfo = command.GetNodeInfo(filterNode.Child1);
-                foreach (Var v in filterPredicateNodeInfo.ExternalReferences)
+                var filterPredicateNodeInfo = command.GetNodeInfo(filterNode.Child1);
+                foreach (var v in filterPredicateNodeInfo.ExternalReferences)
                 {
                     if (filterInputNodeInfo.Definitions.IsSet(v))
                     {
@@ -2603,10 +2845,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // We can now simply convert the apply into an inner/leftouter join with the 
             // filter predicate acting as the join condition
             //
-            Node joinNode = command.CreateNode(command.CreateLeftOuterJoinOp(), applyNode.Child0, joinNodeRightInput, filterNode.Child1);
+            var joinNode = command.CreateNode(command.CreateLeftOuterJoinOp(), applyNode.Child0, joinNodeRightInput, filterNode.Child1);
             if (capWithProject)
             {
-                ExtendedNodeInfo joinNodeInfo = command.GetExtendedNodeInfo(joinNode);
+                var joinNodeInfo = command.GetExtendedNodeInfo(joinNode);
                 projectNode.Child0 = joinNode;
                 projectOp.Outputs.Or(joinNodeInfo.Definitions);
                 newNode = projectNode;
@@ -2617,16 +2859,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             return true;
         }
+
         #endregion
 
         #region ApplyOverProject
+
         internal static readonly PatternMatchRule Rule_CrossApplyOverProject =
-            new PatternMatchRule(new Node(CrossApplyOp.Pattern,
-                                          new Node(LeafOp.Pattern),
-                                          new Node(ProjectOp.Pattern,
-                                                   new Node(LeafOp.Pattern),
-                                                   new Node(LeafOp.Pattern))),
-                                 ProcessCrossApplyOverProject);
+            new PatternMatchRule(
+                new Node(
+                    CrossApplyOp.Pattern,
+                    new Node(LeafOp.Pattern),
+                    new Node(
+                        ProjectOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern))),
+                ProcessCrossApplyOverProject);
 
         /// <summary>
         /// Converts a CrossApply(X, Project(Y, ...)) => Project(CrossApply(X, Y), ...)
@@ -2636,17 +2883,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="applyNode">The ApplyOp subtree</param>
         /// <param name="newNode">transformed subtree</param>
         /// <returns>Transfomation status</returns>
-        static bool ProcessCrossApplyOverProject(RuleProcessingContext context, Node applyNode, out Node newNode)
+        private static bool ProcessCrossApplyOverProject(RuleProcessingContext context, Node applyNode, out Node newNode)
         {
             newNode = applyNode;
-            Node projectNode = applyNode.Child1;
-            ProjectOp projectOp = (ProjectOp)projectNode.Op as ProjectOp;
-            Command command = context.Command;
+            var projectNode = applyNode.Child1;
+            var projectOp = (ProjectOp)projectNode.Op;
+            var command = context.Command;
 
             // We can simply pull up the project over the apply; provided we make sure 
             // that all the definitions of the apply are represented in the projectOp
-            ExtendedNodeInfo applyNodeInfo = command.GetExtendedNodeInfo(applyNode);
-            VarVec vec = command.CreateVarVec(projectOp.Outputs);
+            var applyNodeInfo = command.GetExtendedNodeInfo(applyNode);
+            var vec = command.CreateVarVec(projectOp.Outputs);
             vec.Or(applyNodeInfo.Definitions);
             projectOp.Outputs.InitFrom(vec);
 
@@ -2660,12 +2907,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         internal static readonly PatternMatchRule Rule_OuterApplyOverProject =
-             new PatternMatchRule(new Node(OuterApplyOp.Pattern,
-                                           new Node(LeafOp.Pattern),
-                                           new Node(ProjectOp.Pattern,
-                                                    new Node(LeafOp.Pattern),
-                                                    new Node(LeafOp.Pattern))),
-                         ProcessOuterApplyOverProject);
+            new PatternMatchRule(
+                new Node(
+                    OuterApplyOp.Pattern,
+                    new Node(LeafOp.Pattern),
+                    new Node(
+                        ProjectOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern))),
+                ProcessOuterApplyOverProject);
+
         /// <summary>
         /// Converts a 
         ///     OuterApply(X, Project(Y, ...)) 
@@ -2701,16 +2952,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="applyNode">The ApplyOp subtree</param>
         /// <param name="newNode">transformed subtree</param>
         /// <returns>Transfomation status</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarDefOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        static bool ProcessOuterApplyOverProject(RuleProcessingContext context, Node applyNode, out Node newNode)
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarDefOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        private static bool ProcessOuterApplyOverProject(RuleProcessingContext context, Node applyNode, out Node newNode)
         {
             newNode = applyNode;
-            Node projectNode = applyNode.Child1;
-            Node varDefListNode = projectNode.Child1;
+            var projectNode = applyNode.Child1;
+            var varDefListNode = projectNode.Child1;
 
-            TransformationRulesContext trc = (TransformationRulesContext)context;
-            ExtendedNodeInfo inputNodeInfo = context.Command.GetExtendedNodeInfo(projectNode.Child0);
-            Var sentinelVar = inputNodeInfo.NonNullableDefinitions.First;
+            var trc = (TransformationRulesContext)context;
+            var inputNodeInfo = context.Command.GetExtendedNodeInfo(projectNode.Child0);
+            var sentinelVar = inputNodeInfo.NonNullableDefinitions.First;
 
             //
             // special case handling first - we'll end up in an infinite loop otherwise.
@@ -2718,18 +2971,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // it defines only 1 var - and the defining expression is simply a constant
             // 
             if (sentinelVar == null &&
-                varDefListNode.Children.Count == 1 &&
-                (varDefListNode.Child0.Child0.Op.OpType == OpType.InternalConstant || varDefListNode.Child0.Child0.Op.OpType == OpType.NullSentinel))
+                varDefListNode.Children.Count == 1
+                &&
+                (varDefListNode.Child0.Child0.Op.OpType == OpType.InternalConstant
+                 || varDefListNode.Child0.Child0.Op.OpType == OpType.NullSentinel))
             {
                 return false;
             }
 
-            Command command = context.Command;
+            var command = context.Command;
             Node dummyProjectNode = null;
             InternalConstantOp nullSentinelDefinitionOp = null;
 
             // get node information for the project's child
-            ExtendedNodeInfo projectInputNodeInfo = command.GetExtendedNodeInfo(projectNode.Child0);
+            var projectInputNodeInfo = command.GetExtendedNodeInfo(projectNode.Child0);
 
             //
             // Build up a dummy project node. 
@@ -2739,20 +2994,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
 
             // Dev10 #480443: If any of the definitions changes we need to recompute the node info.
-            bool anyVarDefChagned = false;
-            foreach (Node varDefNode in varDefListNode.Children)
+            var anyVarDefChagned = false;
+            foreach (var varDefNode in varDefListNode.Children)
             {
                 PlanCompiler.Assert(varDefNode.Op.OpType == OpType.VarDef, "Expected VarDefOp. Found " + varDefNode.Op.OpType + " instead");
-                VarRefOp varRefOp = varDefNode.Child0.Op as VarRefOp;
-                if (varRefOp == null || !projectInputNodeInfo.Definitions.IsSet(varRefOp.Var))
+                var varRefOp = varDefNode.Child0.Op as VarRefOp;
+                if (varRefOp == null
+                    || !projectInputNodeInfo.Definitions.IsSet(varRefOp.Var))
                 {
                     // do we need to build a dummy project node
                     if (sentinelVar == null)
                     {
                         nullSentinelDefinitionOp = command.CreateInternalConstantOp(command.IntegerType, 1);
-                        Node dummyConstantExpr = command.CreateNode(nullSentinelDefinitionOp);
-                        Node dummyProjectVarDefListNode = command.CreateVarDefListNode(dummyConstantExpr, out sentinelVar);
-                        ProjectOp dummyProjectOp = command.CreateProjectOp(sentinelVar);
+                        var dummyConstantExpr = command.CreateNode(nullSentinelDefinitionOp);
+                        var dummyProjectVarDefListNode = command.CreateVarDefListNode(dummyConstantExpr, out sentinelVar);
+                        var dummyProjectOp = command.CreateProjectOp(sentinelVar);
                         dummyProjectOp.Outputs.Or(projectInputNodeInfo.Definitions);
                         dummyProjectNode = command.CreateNode(dummyProjectOp, projectNode.Child0, dummyProjectVarDefListNode);
                     }
@@ -2762,9 +3018,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     // If the null sentinel was just created, and the local definition of the current project Node 
                     // is an internal constant equivalent to the null sentinel, it can be rewritten as a reference
                     // to the null sentinel.
-                    if (nullSentinelDefinitionOp != null && ((true == nullSentinelDefinitionOp.IsEquivalent(varDefNode.Child0.Op)) ||
-                        //The null sentinel has the same value of 1, thus it is safe.        
-                        varDefNode.Child0.Op.OpType == OpType.NullSentinel))
+                    if (nullSentinelDefinitionOp != null
+                        && (nullSentinelDefinitionOp.IsEquivalent(varDefNode.Child0.Op) ||
+                            //The null sentinel has the same value of 1, thus it is safe.        
+                            varDefNode.Child0.Op.OpType == OpType.NullSentinel))
                     {
                         currentDefinition = command.CreateNode(command.CreateVarRefOp(sentinelVar));
                     }
@@ -2795,26 +3052,33 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // the applyNode's definitions actually shows up in the new Project
             //
             projectNode.Child0 = applyNode;
-            ExtendedNodeInfo applyLeftChildNodeInfo = command.GetExtendedNodeInfo(applyNode.Child0);
-            ProjectOp projectOp = (ProjectOp)projectNode.Op;
+            var applyLeftChildNodeInfo = command.GetExtendedNodeInfo(applyNode.Child0);
+            var projectOp = (ProjectOp)projectNode.Op;
             projectOp.Outputs.Or(applyLeftChildNodeInfo.Definitions);
 
             newNode = projectNode;
             return true;
         }
+
         #endregion
 
         #region ApplyOverAnything
+
         internal static readonly PatternMatchRule Rule_CrossApplyOverAnything =
-            new PatternMatchRule(new Node(CrossApplyOp.Pattern,
-                                          new Node(LeafOp.Pattern),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessApplyOverAnything);
+            new PatternMatchRule(
+                new Node(
+                    CrossApplyOp.Pattern,
+                    new Node(LeafOp.Pattern),
+                    new Node(LeafOp.Pattern)),
+                ProcessApplyOverAnything);
+
         internal static readonly PatternMatchRule Rule_OuterApplyOverAnything =
-            new PatternMatchRule(new Node(OuterApplyOp.Pattern,
-                                          new Node(LeafOp.Pattern),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessApplyOverAnything);
+            new PatternMatchRule(
+                new Node(
+                    OuterApplyOp.Pattern,
+                    new Node(LeafOp.Pattern),
+                    new Node(LeafOp.Pattern)),
+                ProcessApplyOverAnything);
 
         /// <summary>
         /// Converts a CrossApply(X,Y) => CrossJoin(X,Y)
@@ -2825,23 +3089,24 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="applyNode">The ApplyOp subtree</param>
         /// <param name="newNode">transformed subtree</param>
         /// <returns>the transformation status</returns>
-        static bool ProcessApplyOverAnything(RuleProcessingContext context, Node applyNode, out Node newNode)
+        private static bool ProcessApplyOverAnything(RuleProcessingContext context, Node applyNode, out Node newNode)
         {
             newNode = applyNode;
-            Node applyLeftChild = applyNode.Child0;
-            Node applyRightChild = applyNode.Child1;
-            ApplyBaseOp applyOp = (ApplyBaseOp)applyNode.Op;
-            Command command = context.Command;
+            var applyLeftChild = applyNode.Child0;
+            var applyRightChild = applyNode.Child1;
+            var applyOp = (ApplyBaseOp)applyNode.Op;
+            var command = context.Command;
 
-            ExtendedNodeInfo applyRightChildNodeInfo = command.GetExtendedNodeInfo(applyRightChild);
-            ExtendedNodeInfo applyLeftChildNodeInfo = command.GetExtendedNodeInfo(applyLeftChild);
+            var applyRightChildNodeInfo = command.GetExtendedNodeInfo(applyRightChild);
+            var applyLeftChildNodeInfo = command.GetExtendedNodeInfo(applyLeftChild);
 
             //
             // If we're currently dealing with an OuterApply, and the right child is guaranteed
             // to produce at least one row, then we can convert the outer-apply into a cross apply
             //
-            bool convertedToCrossApply = false;
-            if (applyOp.OpType == OpType.OuterApply &&
+            var convertedToCrossApply = false;
+            if (applyOp.OpType == OpType.OuterApply
+                &&
                 applyRightChildNodeInfo.MinRows >= RowCount.One)
             {
                 applyOp = command.CreateCrossApplyOp();
@@ -2870,12 +3135,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // from the left. 
             // So, we simply convert the apply into an appropriate join Op
             //
-            if (applyOp.OpType == OpType.CrossApply)
+            if (applyOp.OpType
+                == OpType.CrossApply)
             {
                 //
                 // Convert "x CrossApply y" into "x CrossJoin y"
                 //
-                newNode = command.CreateNode(command.CreateCrossJoinOp(),
+                newNode = command.CreateNode(
+                    command.CreateCrossJoinOp(),
                     applyLeftChild, applyRightChild);
             }
             else // outer apply
@@ -2883,26 +3150,33 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 //
                 // Convert "x OA y" into "x LOJ y on (true)"
                 //
-                LeftOuterJoinOp joinOp = command.CreateLeftOuterJoinOp();
-                ConstantPredicateOp trueOp = command.CreateTrueOp();
-                Node trueNode = command.CreateNode(trueOp);
+                var joinOp = command.CreateLeftOuterJoinOp();
+                var trueOp = command.CreateTrueOp();
+                var trueNode = command.CreateNode(trueOp);
                 newNode = command.CreateNode(joinOp, applyLeftChild, applyRightChild, trueNode);
             }
             return true;
         }
+
         #endregion
 
         #region ApplyIntoScalarSubquery
+
         internal static readonly PatternMatchRule Rule_CrossApplyIntoScalarSubquery =
-            new PatternMatchRule(new Node(CrossApplyOp.Pattern,
-                                          new Node(LeafOp.Pattern),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessApplyIntoScalarSubquery);
+            new PatternMatchRule(
+                new Node(
+                    CrossApplyOp.Pattern,
+                    new Node(LeafOp.Pattern),
+                    new Node(LeafOp.Pattern)),
+                ProcessApplyIntoScalarSubquery);
+
         internal static readonly PatternMatchRule Rule_OuterApplyIntoScalarSubquery =
-            new PatternMatchRule(new Node(OuterApplyOp.Pattern,
-                                          new Node(LeafOp.Pattern),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessApplyIntoScalarSubquery);
+            new PatternMatchRule(
+                new Node(
+                    OuterApplyOp.Pattern,
+                    new Node(LeafOp.Pattern),
+                    new Node(LeafOp.Pattern)),
+                ProcessApplyIntoScalarSubquery);
 
         /// <summary>
         /// Converts a Apply(X,Y) => Project(X, Y1), where Y1 is a scalar subquery version of Y
@@ -2915,11 +3189,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="applyNode">The ApplyOp subtree</param>
         /// <param name="newNode">transformed subtree</param>
         /// <returns>the transformation status</returns>
-        static bool ProcessApplyIntoScalarSubquery(RuleProcessingContext context, Node applyNode, out Node newNode)
+        private static bool ProcessApplyIntoScalarSubquery(RuleProcessingContext context, Node applyNode, out Node newNode)
         {
-            Command command = context.Command;
-            ExtendedNodeInfo applyRightChildNodeInfo = command.GetExtendedNodeInfo(applyNode.Child1);
-            OpType applyKind = applyNode.Op.OpType;
+            var command = context.Command;
+            var applyRightChildNodeInfo = command.GetExtendedNodeInfo(applyNode.Child1);
+            var applyKind = applyNode.Op.OpType;
 
             if (!CanRewriteApply(applyNode.Child1, applyRightChildNodeInfo, applyKind))
             {
@@ -2928,26 +3202,26 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             // Create the project node over the original input with element over the apply as new projected var
-            ExtendedNodeInfo applyLeftChildNodeInfo = command.GetExtendedNodeInfo(applyNode.Child0);
+            var applyLeftChildNodeInfo = command.GetExtendedNodeInfo(applyNode.Child0);
 
-            Var oldVar = applyRightChildNodeInfo.Definitions.First;
+            var oldVar = applyRightChildNodeInfo.Definitions.First;
 
             // Project all the outputs from the left child
-            VarVec projectOpOutputs = command.CreateVarVec(applyLeftChildNodeInfo.Definitions);
+            var projectOpOutputs = command.CreateVarVec(applyLeftChildNodeInfo.Definitions);
 
             //
             // Remap the var defining tree to get it into a consistent state
             // and then remove all references to oldVar from it to avoid them being wrongly remapped to newVar 
             // in subsequent remappings.
             //
-            TransformationRulesContext trc = (TransformationRulesContext)context;
+            var trc = (TransformationRulesContext)context;
             trc.RemapSubtree(applyNode.Child1);
             VarDefinitionRemapper.RemapSubtree(applyNode.Child1, command, oldVar);
 
-            Node elementNode = command.CreateNode(command.CreateElementOp(oldVar.Type), applyNode.Child1);
+            var elementNode = command.CreateNode(command.CreateElementOp(oldVar.Type), applyNode.Child1);
 
             Var newVar;
-            Node varDefListNode = command.CreateVarDefListNode(elementNode, out newVar);
+            var varDefListNode = command.CreateVarDefListNode(elementNode, out newVar);
             projectOpOutputs.Set(newVar);
 
             newNode = command.CreateNode(
@@ -2980,13 +3254,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             //Check whether it produces at most one row
-            if (applyRightChildNodeInfo.MaxRows != RowCount.One)
+            if (applyRightChildNodeInfo.MaxRows
+                != RowCount.One)
             {
                 return false;
             }
 
             //For cross apply it must also return exactly one row
-            if (applyKind == OpType.CrossApply && (applyRightChildNodeInfo.MinRows != RowCount.One))
+            if (applyKind == OpType.CrossApply
+                && (applyRightChildNodeInfo.MinRows != RowCount.One))
             {
                 return false;
             }
@@ -3010,12 +3286,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         internal class OutputCountVisitor : BasicOpVisitorOfT<int>
         {
             #region Constructors
-            internal OutputCountVisitor()
-            {
-            }
+
             #endregion
 
             #region Public Methods
+
             /// <summary>
             /// Calculates the number of output columns for the subree 
             /// rooted at the given node
@@ -3024,7 +3299,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// <returns></returns>
             internal static int CountOutputs(Node node)
             {
-                OutputCountVisitor visitor = new OutputCountVisitor();
+                var visitor = new OutputCountVisitor();
                 return visitor.VisitNode(node);
             }
 
@@ -3033,6 +3308,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             #region Visitor Methods
 
             #region Helpers
+
             /// <summary>
             /// Visitor for children. Simply visit all children,
             /// and sum the number of their outputs.
@@ -3041,8 +3317,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// <returns></returns>
             internal new int VisitChildren(Node n)
             {
-                int result = 0;
-                foreach (Node child in n.Children)
+                var result = 0;
+                foreach (var child in n.Children)
                 {
                     result += VisitNode(child);
                 }
@@ -3124,6 +3400,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             #region TableOps
+
             /// <summary>
             /// ScanTableOp
             /// </summary>
@@ -3156,7 +3433,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 return VisitNode(n.Child0);
             }
+
             #endregion
+
             #endregion
 
             #endregion
@@ -3175,7 +3454,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             private VarDefinitionRemapper(Var oldVar, Command command)
                 : base(command)
             {
-                this.m_oldVar = oldVar;
+                m_oldVar = oldVar;
             }
 
             /// <summary>
@@ -3187,7 +3466,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// <param name="oldVar"></param>
             internal static void RemapSubtree(Node root, Command command, Var oldVar)
             {
-                VarDefinitionRemapper remapper = new VarDefinitionRemapper(oldVar, command);
+                var remapper = new VarDefinitionRemapper(oldVar, command);
                 remapper.RemapSubtree(root);
             }
 
@@ -3199,7 +3478,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// <param name="subTree"></param>
             internal override void RemapSubtree(Node subTree)
             {
-                foreach (Node chi in subTree.Children)
+                foreach (var chi in subTree.Children)
                 {
                     RemapSubtree(chi);
                 }
@@ -3236,9 +3515,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 if (op.Table.Columns.Contains(m_oldVar))
                 {
-                    ScanTableOp newScanTableOp = m_command.CreateScanTableOp(op.Table.TableMetadata);
-                    VarDefListOp varDefListOp = m_command.CreateVarDefListOp();
-                    for (int i = 0; i < op.Table.Columns.Count; i++)
+                    var newScanTableOp = m_command.CreateScanTableOp(op.Table.TableMetadata);
+                    var varDefListOp = m_command.CreateVarDefListOp();
+                    for (var i = 0; i < op.Table.Columns.Count; i++)
                     {
                         AddMapping(op.Table.Columns[i], newScanTableOp.Table.Columns[i]);
                     }
@@ -3264,7 +3543,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     RemapVarMapKey(op.VarMap[0], newVar);
                     RemapVarMapKey(op.VarMap[1], newVar);
                     AddMapping(m_oldVar, newVar);
-                }                
+                }
             }
 
             /// <summary>
@@ -3275,22 +3554,28 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// <param name="newVar"></param>
             private void RemapVarMapKey(VarMap varMap, Var newVar)
             {
-                Var value = varMap[m_oldVar];
+                var value = varMap[m_oldVar];
                 varMap.Remove(m_oldVar);
                 varMap.Add(newVar, value);
             }
         }
+
         #endregion
 
         #region CrossApply over LeftOuterJoin of SingleRowTable with anything and with constant predicate
+
         internal static readonly PatternMatchRule Rule_CrossApplyOverLeftOuterJoinOverSingleRowTable =
-            new PatternMatchRule(new Node(CrossApplyOp.Pattern,
-                new Node(LeafOp.Pattern),
-                new Node(LeftOuterJoinOp.Pattern,
-                                          new Node(SingleRowTableOp.Pattern),
-                                          new Node(LeafOp.Pattern),
-                                          new Node(ConstantPredicateOp.Pattern))),
-                                 ProcessCrossApplyOverLeftOuterJoinOverSingleRowTable);
+            new PatternMatchRule(
+                new Node(
+                    CrossApplyOp.Pattern,
+                    new Node(LeafOp.Pattern),
+                    new Node(
+                        LeftOuterJoinOp.Pattern,
+                        new Node(SingleRowTableOp.Pattern),
+                        new Node(LeafOp.Pattern),
+                        new Node(ConstantPredicateOp.Pattern))),
+                ProcessCrossApplyOverLeftOuterJoinOverSingleRowTable);
+
         /// <summary>
         /// Convert a CrossApply(X, LeftOuterJoin(SingleRowTable, Y, on true))
         ///    into just OuterApply(X, Y)
@@ -3299,13 +3584,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="joinNode">the join node</param>
         /// <param name="newNode">transformed subtree</param>
         /// <returns>transformation status</returns>
-        static bool ProcessCrossApplyOverLeftOuterJoinOverSingleRowTable(RuleProcessingContext context, Node applyNode, out Node newNode)
+        private static bool ProcessCrossApplyOverLeftOuterJoinOverSingleRowTable(
+            RuleProcessingContext context, Node applyNode, out Node newNode)
         {
             newNode = applyNode;
-            Node joinNode = applyNode.Child1;
+            var joinNode = applyNode.Child1;
 
             //Check the value of the predicate
-            ConstantPredicateOp joinPredicate = (ConstantPredicateOp)joinNode.Child2.Op;
+            var joinPredicate = (ConstantPredicateOp)joinNode.Child2.Op;
             if (joinPredicate.IsFalse)
             {
                 return false;
@@ -3315,71 +3601,98 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             applyNode.Child1 = joinNode.Child1;
             return true;
         }
+
         #endregion
 
         #region All ApplyOp Rules
-        internal static readonly InternalTrees.Rule[] Rules = new InternalTrees.Rule[] {
-                 ApplyOpRules.Rule_CrossApplyOverAnything,
-                 ApplyOpRules.Rule_CrossApplyOverFilter,
-                 ApplyOpRules.Rule_CrossApplyOverProject,
-                 ApplyOpRules.Rule_OuterApplyOverAnything,
-                 ApplyOpRules.Rule_OuterApplyOverProjectInternalConstantOverFilter,
-                 ApplyOpRules.Rule_OuterApplyOverProjectNullSentinelOverFilter,
-                 ApplyOpRules.Rule_OuterApplyOverProject,
-                 ApplyOpRules.Rule_OuterApplyOverFilter,
-                 ApplyOpRules.Rule_CrossApplyOverLeftOuterJoinOverSingleRowTable,
-                 ApplyOpRules.Rule_CrossApplyIntoScalarSubquery,
-                 ApplyOpRules.Rule_OuterApplyIntoScalarSubquery,
-        };
+
+        internal static readonly Rule[] Rules = new Rule[]
+                                                    {
+                                                        Rule_CrossApplyOverAnything,
+                                                        Rule_CrossApplyOverFilter,
+                                                        Rule_CrossApplyOverProject,
+                                                        Rule_OuterApplyOverAnything,
+                                                        Rule_OuterApplyOverProjectInternalConstantOverFilter,
+                                                        Rule_OuterApplyOverProjectNullSentinelOverFilter,
+                                                        Rule_OuterApplyOverProject,
+                                                        Rule_OuterApplyOverFilter,
+                                                        Rule_CrossApplyOverLeftOuterJoinOverSingleRowTable,
+                                                        Rule_CrossApplyIntoScalarSubquery,
+                                                        Rule_OuterApplyIntoScalarSubquery,
+                                                    };
+
         #endregion
     }
+
     #endregion
 
     #region Join Rules
+
     /// <summary>
     /// Transformation rules for JoinOps
     /// </summary>
     internal static class JoinOpRules
     {
         #region JoinOverProject
+
         internal static readonly PatternMatchRule Rule_CrossJoinOverProject1 =
-            new PatternMatchRule(new Node(CrossJoinOp.Pattern,
-                                          new Node(LeafOp.Pattern),
-                                          new Node(ProjectOp.Pattern,
-                                                   new Node(LeafOp.Pattern),
-                                                   new Node(LeafOp.Pattern))),
-                                 ProcessJoinOverProject);
+            new PatternMatchRule(
+                new Node(
+                    CrossJoinOp.Pattern,
+                    new Node(LeafOp.Pattern),
+                    new Node(
+                        ProjectOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern))),
+                ProcessJoinOverProject);
+
         internal static readonly PatternMatchRule Rule_CrossJoinOverProject2 =
-            new PatternMatchRule(new Node(CrossJoinOp.Pattern,
-                                          new Node(ProjectOp.Pattern,
-                                                   new Node(LeafOp.Pattern),
-                                                   new Node(LeafOp.Pattern)),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessJoinOverProject);
+            new PatternMatchRule(
+                new Node(
+                    CrossJoinOp.Pattern,
+                    new Node(
+                        ProjectOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern)),
+                    new Node(LeafOp.Pattern)),
+                ProcessJoinOverProject);
+
         internal static readonly PatternMatchRule Rule_InnerJoinOverProject1 =
-            new PatternMatchRule(new Node(InnerJoinOp.Pattern,
-                                          new Node(LeafOp.Pattern),
-                                          new Node(ProjectOp.Pattern,
-                                                   new Node(LeafOp.Pattern),
-                                                   new Node(LeafOp.Pattern)),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessJoinOverProject);
+            new PatternMatchRule(
+                new Node(
+                    InnerJoinOp.Pattern,
+                    new Node(LeafOp.Pattern),
+                    new Node(
+                        ProjectOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern)),
+                    new Node(LeafOp.Pattern)),
+                ProcessJoinOverProject);
+
         internal static readonly PatternMatchRule Rule_InnerJoinOverProject2 =
-            new PatternMatchRule(new Node(InnerJoinOp.Pattern,
-                                          new Node(ProjectOp.Pattern,
-                                                   new Node(LeafOp.Pattern),
-                                                   new Node(LeafOp.Pattern)),
-                                          new Node(LeafOp.Pattern),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessJoinOverProject);
+            new PatternMatchRule(
+                new Node(
+                    InnerJoinOp.Pattern,
+                    new Node(
+                        ProjectOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern)),
+                    new Node(LeafOp.Pattern),
+                    new Node(LeafOp.Pattern)),
+                ProcessJoinOverProject);
+
         internal static readonly PatternMatchRule Rule_OuterJoinOverProject2 =
-            new PatternMatchRule(new Node(LeftOuterJoinOp.Pattern,
-                                          new Node(ProjectOp.Pattern,
-                                                   new Node(LeafOp.Pattern),
-                                                   new Node(LeafOp.Pattern)),
-                                          new Node(LeafOp.Pattern),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessJoinOverProject);
+            new PatternMatchRule(
+                new Node(
+                    LeftOuterJoinOp.Pattern,
+                    new Node(
+                        ProjectOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern)),
+                    new Node(LeafOp.Pattern),
+                    new Node(LeafOp.Pattern)),
+                ProcessJoinOverProject);
+
         /// <summary>
         /// CrossJoin(Project(A), B) => Project(CrossJoin(A, B), modifiedvars)
         /// InnerJoin(Project(A), B, p) => Project(InnerJoin(A, B, p'), modifiedvars)
@@ -3389,17 +3702,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="joinNode">Current JoinOp tree to process</param>
         /// <param name="newNode">Transformed subtree</param>
         /// <returns>transformation status</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-LeftOuterJoin"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        static bool ProcessJoinOverProject(RuleProcessingContext context, Node joinNode, out Node newNode)
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-LeftOuterJoin")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        private static bool ProcessJoinOverProject(RuleProcessingContext context, Node joinNode, out Node newNode)
         {
             newNode = joinNode;
 
-            TransformationRulesContext trc = (TransformationRulesContext)context;
-            Command command = trc.Command;
+            var trc = (TransformationRulesContext)context;
+            var command = trc.Command;
 
-            Node joinConditionNode = joinNode.HasChild2 ? joinNode.Child2 : (Node)null;
-            Dictionary<Var, int> varRefMap = new Dictionary<Var, int>();
-            if (joinConditionNode != null && !trc.IsScalarOpTree(joinConditionNode, varRefMap))
+            var joinConditionNode = joinNode.HasChild2 ? joinNode.Child2 : null;
+            var varRefMap = new Dictionary<Var, int>();
+            if (joinConditionNode != null
+                && !trc.IsScalarOpTree(joinConditionNode, varRefMap))
             {
                 return false;
             }
@@ -3408,23 +3724,25 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             Node newProjectNode;
 
             // Now locate the ProjectOps
-            VarVec newVarSet = command.CreateVarVec();
-            List<Node> varDefNodes = new List<Node>();
+            var newVarSet = command.CreateVarVec();
+            var varDefNodes = new List<Node>();
 
             //
             // Try and handle "project" on both sides only if we're not dealing with 
             // an LOJ. 
             //
             if ((joinNode.Op.OpType != OpType.LeftOuterJoin) &&
-                (joinNode.Child0.Op.OpType == OpType.Project) &&
+                (joinNode.Child0.Op.OpType == OpType.Project)
+                &&
                 (joinNode.Child1.Op.OpType == OpType.Project))
             {
-                ProjectOp projectOp1 = (ProjectOp)joinNode.Child0.Op;
-                ProjectOp projectOp2 = (ProjectOp)joinNode.Child1.Op;
+                var projectOp1 = (ProjectOp)joinNode.Child0.Op;
+                var projectOp2 = (ProjectOp)joinNode.Child1.Op;
 
-                Dictionary<Var, Node> varMap1 = trc.GetVarMap(joinNode.Child0.Child1, varRefMap);
-                Dictionary<Var, Node> varMap2 = trc.GetVarMap(joinNode.Child1.Child1, varRefMap);
-                if (varMap1 == null || varMap2 == null)
+                var varMap1 = trc.GetVarMap(joinNode.Child0.Child1, varRefMap);
+                var varMap2 = trc.GetVarMap(joinNode.Child1.Child1, varRefMap);
+                if (varMap1 == null
+                    || varMap2 == null)
                 {
                     return false;
                 }
@@ -3441,25 +3759,27 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
 
                 newVarSet.InitFrom(projectOp1.Outputs);
-                foreach (Var v in projectOp2.Outputs)
+                foreach (var v in projectOp2.Outputs)
                 {
                     newVarSet.Set(v);
                 }
-                ProjectOp newProjectOp = command.CreateProjectOp(newVarSet);
+                var newProjectOp = command.CreateProjectOp(newVarSet);
                 varDefNodes.AddRange(joinNode.Child0.Child1.Children);
                 varDefNodes.AddRange(joinNode.Child1.Child1.Children);
-                Node varDefListNode = command.CreateNode(
+                var varDefListNode = command.CreateNode(
                     command.CreateVarDefListOp(),
                     varDefNodes);
-                newProjectNode = command.CreateNode(newProjectOp,
+                newProjectNode = command.CreateNode(
+                    newProjectOp,
                     newJoinNode, varDefListNode);
                 newNode = newProjectNode;
                 return true;
             }
 
-            int projectNodeIdx = -1;
-            int otherNodeIdx = -1;
-            if (joinNode.Child0.Op.OpType == OpType.Project)
+            var projectNodeIdx = -1;
+            var otherNodeIdx = -1;
+            if (joinNode.Child0.Op.OpType
+                == OpType.Project)
             {
                 projectNodeIdx = 0;
                 otherNodeIdx = 1;
@@ -3470,16 +3790,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 projectNodeIdx = 1;
                 otherNodeIdx = 0;
             }
-            Node projectNode = joinNode.Children[projectNodeIdx];
+            var projectNode = joinNode.Children[projectNodeIdx];
 
-            ProjectOp projectOp = projectNode.Op as ProjectOp;
-            Dictionary<Var, Node> varMap = trc.GetVarMap(projectNode.Child1, varRefMap);
+            var projectOp = projectNode.Op as ProjectOp;
+            var varMap = trc.GetVarMap(projectNode.Child1, varRefMap);
             if (varMap == null)
             {
                 return false;
             }
-            ExtendedNodeInfo otherChildInfo = command.GetExtendedNodeInfo(joinNode.Children[otherNodeIdx]);
-            VarVec vec = command.CreateVarVec(projectOp.Outputs);
+            var otherChildInfo = command.GetExtendedNodeInfo(joinNode.Children[otherNodeIdx]);
+            var vec = command.CreateVarVec(projectOp.Outputs);
             vec.Or(otherChildInfo.Definitions);
             projectOp.Outputs.InitFrom(vec);
             if (joinConditionNode != null)
@@ -3493,47 +3813,69 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             newNode = context.Command.CreateNode(projectOp, joinNode, projectNode.Child1);
             return true;
         }
+
         #endregion
 
         #region JoinOverFilter
+
         internal static readonly PatternMatchRule Rule_CrossJoinOverFilter1 =
-            new PatternMatchRule(new Node(CrossJoinOp.Pattern,
-                                          new Node(LeafOp.Pattern),
-                                          new Node(FilterOp.Pattern,
-                                                   new Node(LeafOp.Pattern),
-                                                   new Node(LeafOp.Pattern))),
-                                 ProcessJoinOverFilter);
+            new PatternMatchRule(
+                new Node(
+                    CrossJoinOp.Pattern,
+                    new Node(LeafOp.Pattern),
+                    new Node(
+                        FilterOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern))),
+                ProcessJoinOverFilter);
+
         internal static readonly PatternMatchRule Rule_CrossJoinOverFilter2 =
-            new PatternMatchRule(new Node(CrossJoinOp.Pattern,
-                                          new Node(FilterOp.Pattern,
-                                                   new Node(LeafOp.Pattern),
-                                                   new Node(LeafOp.Pattern)),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessJoinOverFilter);
+            new PatternMatchRule(
+                new Node(
+                    CrossJoinOp.Pattern,
+                    new Node(
+                        FilterOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern)),
+                    new Node(LeafOp.Pattern)),
+                ProcessJoinOverFilter);
+
         internal static readonly PatternMatchRule Rule_InnerJoinOverFilter1 =
-            new PatternMatchRule(new Node(InnerJoinOp.Pattern,
-                                          new Node(LeafOp.Pattern),
-                                          new Node(FilterOp.Pattern,
-                                                   new Node(LeafOp.Pattern),
-                                                   new Node(LeafOp.Pattern)),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessJoinOverFilter);
+            new PatternMatchRule(
+                new Node(
+                    InnerJoinOp.Pattern,
+                    new Node(LeafOp.Pattern),
+                    new Node(
+                        FilterOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern)),
+                    new Node(LeafOp.Pattern)),
+                ProcessJoinOverFilter);
+
         internal static readonly PatternMatchRule Rule_InnerJoinOverFilter2 =
-            new PatternMatchRule(new Node(InnerJoinOp.Pattern,
-                                          new Node(FilterOp.Pattern,
-                                                   new Node(LeafOp.Pattern),
-                                                   new Node(LeafOp.Pattern)),
-                                          new Node(LeafOp.Pattern),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessJoinOverFilter);
+            new PatternMatchRule(
+                new Node(
+                    InnerJoinOp.Pattern,
+                    new Node(
+                        FilterOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern)),
+                    new Node(LeafOp.Pattern),
+                    new Node(LeafOp.Pattern)),
+                ProcessJoinOverFilter);
+
         internal static readonly PatternMatchRule Rule_OuterJoinOverFilter2 =
-            new PatternMatchRule(new Node(LeftOuterJoinOp.Pattern,
-                                          new Node(FilterOp.Pattern,
-                                                   new Node(LeafOp.Pattern),
-                                                   new Node(LeafOp.Pattern)),
-                                          new Node(LeafOp.Pattern),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessJoinOverFilter);
+            new PatternMatchRule(
+                new Node(
+                    LeftOuterJoinOp.Pattern,
+                    new Node(
+                        FilterOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern)),
+                    new Node(LeafOp.Pattern),
+                    new Node(LeafOp.Pattern)),
+                ProcessJoinOverFilter);
+
         /// <summary>
         /// CrossJoin(Filter(A,p), B) => Filter(CrossJoin(A, B), p)
         /// CrossJoin(A, Filter(B,p)) => Filter(CrossJoin(A, B), p)
@@ -3551,24 +3893,26 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="joinNode">Current JoinOp tree to process</param>
         /// <param name="newNode">transformed subtree</param>
         /// <returns>transformation status</returns>
-        static bool ProcessJoinOverFilter(RuleProcessingContext context, Node joinNode, out Node newNode)
+        private static bool ProcessJoinOverFilter(RuleProcessingContext context, Node joinNode, out Node newNode)
         {
             newNode = joinNode;
-            TransformationRulesContext trc = (TransformationRulesContext)context;
-            Command command = trc.Command;
+            var trc = (TransformationRulesContext)context;
+            var command = trc.Command;
 
             Node predicateNode = null;
-            Node newLeftInput = joinNode.Child0;
+            var newLeftInput = joinNode.Child0;
             // get the predicate from the first filter
-            if (joinNode.Child0.Op.OpType == OpType.Filter)
+            if (joinNode.Child0.Op.OpType
+                == OpType.Filter)
             {
                 predicateNode = joinNode.Child0.Child1;
                 newLeftInput = joinNode.Child0.Child0; // bypass the filter
             }
 
             // get the predicate from the second filter
-            Node newRightInput = joinNode.Child1;
-            if (joinNode.Child1.Op.OpType == OpType.Filter && joinNode.Op.OpType != OpType.LeftOuterJoin)
+            var newRightInput = joinNode.Child1;
+            if (joinNode.Child1.Op.OpType == OpType.Filter
+                && joinNode.Op.OpType != OpType.LeftOuterJoin)
             {
                 if (predicateNode == null)
                 {
@@ -3593,7 +3937,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Create a new join node with the new inputs
             //
             Node newJoinNode;
-            if (joinNode.Op.OpType == OpType.CrossJoin)
+            if (joinNode.Op.OpType
+                == OpType.CrossJoin)
             {
                 newJoinNode = command.CreateNode(joinNode.Op, newLeftInput, newRightInput);
             }
@@ -3606,7 +3951,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // create a new filterOp with the combined predicates, and with the 
             // newjoinNode as the input
             //
-            FilterOp newFilterOp = command.CreateFilterOp();
+            var newFilterOp = command.CreateFilterOp();
             newNode = command.CreateNode(newFilterOp, newJoinNode, predicateNode);
 
             //
@@ -3615,26 +3960,36 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             trc.SuppressFilterPushdown(newNode);
             return true;
         }
+
         #endregion
 
         #region Join over SingleRowTable
+
         internal static readonly PatternMatchRule Rule_CrossJoinOverSingleRowTable1 =
-            new PatternMatchRule(new Node(CrossJoinOp.Pattern,
-                                          new Node(SingleRowTableOp.Pattern),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessJoinOverSingleRowTable);
+            new PatternMatchRule(
+                new Node(
+                    CrossJoinOp.Pattern,
+                    new Node(SingleRowTableOp.Pattern),
+                    new Node(LeafOp.Pattern)),
+                ProcessJoinOverSingleRowTable);
+
         internal static readonly PatternMatchRule Rule_CrossJoinOverSingleRowTable2 =
-            new PatternMatchRule(new Node(CrossJoinOp.Pattern,
-                                          new Node(LeafOp.Pattern),
-                                          new Node(SingleRowTableOp.Pattern)),
-                                 ProcessJoinOverSingleRowTable);
+            new PatternMatchRule(
+                new Node(
+                    CrossJoinOp.Pattern,
+                    new Node(LeafOp.Pattern),
+                    new Node(SingleRowTableOp.Pattern)),
+                ProcessJoinOverSingleRowTable);
 
         internal static readonly PatternMatchRule Rule_LeftOuterJoinOverSingleRowTable =
-           new PatternMatchRule(new Node(LeftOuterJoinOp.Pattern,
-                                         new Node(LeafOp.Pattern),
-                                         new Node(SingleRowTableOp.Pattern),
-                                         new Node(LeafOp.Pattern)),
-                                ProcessJoinOverSingleRowTable);
+            new PatternMatchRule(
+                new Node(
+                    LeftOuterJoinOp.Pattern,
+                    new Node(LeafOp.Pattern),
+                    new Node(SingleRowTableOp.Pattern),
+                    new Node(LeafOp.Pattern)),
+                ProcessJoinOverSingleRowTable);
+
         /// <summary>
         /// Convert a CrossJoin(SingleRowTable, X) or CrossJoin(X, SingleRowTable) or LeftOuterJoin(X, SingleRowTable)
         ///    into just "X"
@@ -3643,11 +3998,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="joinNode">the join node</param>
         /// <param name="newNode">transformed subtree</param>
         /// <returns>transformation status</returns>
-        static bool ProcessJoinOverSingleRowTable(RuleProcessingContext context, Node joinNode, out Node newNode)
+        private static bool ProcessJoinOverSingleRowTable(RuleProcessingContext context, Node joinNode, out Node newNode)
         {
             newNode = joinNode;
 
-            if (joinNode.Child0.Op.OpType == OpType.SingleRowTable)
+            if (joinNode.Child0.Op.OpType
+                == OpType.SingleRowTable)
             {
                 newNode = joinNode.Child1;
             }
@@ -3657,44 +4013,51 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             return true;
         }
+
         #endregion
 
         #region Misc
+
         #endregion
 
         #region All JoinOp Rules
-        internal static readonly InternalTrees.Rule[] Rules = new InternalTrees.Rule[] {
-            Rule_CrossJoinOverProject1,
-            Rule_CrossJoinOverProject2,
-            Rule_InnerJoinOverProject1,
-            Rule_InnerJoinOverProject2,
-            Rule_OuterJoinOverProject2,
 
-            Rule_CrossJoinOverFilter1,
-            Rule_CrossJoinOverFilter2,
-            Rule_InnerJoinOverFilter1,
-            Rule_InnerJoinOverFilter2,
-            Rule_OuterJoinOverFilter2,
-
-            Rule_CrossJoinOverSingleRowTable1,
-            Rule_CrossJoinOverSingleRowTable2,
-            Rule_LeftOuterJoinOverSingleRowTable,
-        };
+        internal static readonly Rule[] Rules = new Rule[]
+                                                    {
+                                                        Rule_CrossJoinOverProject1,
+                                                        Rule_CrossJoinOverProject2,
+                                                        Rule_InnerJoinOverProject1,
+                                                        Rule_InnerJoinOverProject2,
+                                                        Rule_OuterJoinOverProject2,
+                                                        Rule_CrossJoinOverFilter1,
+                                                        Rule_CrossJoinOverFilter2,
+                                                        Rule_InnerJoinOverFilter1,
+                                                        Rule_InnerJoinOverFilter2,
+                                                        Rule_OuterJoinOverFilter2,
+                                                        Rule_CrossJoinOverSingleRowTable1,
+                                                        Rule_CrossJoinOverSingleRowTable2,
+                                                        Rule_LeftOuterJoinOverSingleRowTable,
+                                                    };
 
         #endregion
     }
+
     #endregion
 
     #region SingleRowOp Rules
+
     /// <summary>
     /// Rules for SingleRowOp
     /// </summary>
     internal static class SingleRowOpRules
     {
         internal static readonly PatternMatchRule Rule_SingleRowOpOverAnything =
-            new PatternMatchRule(new Node(SingleRowOp.Pattern,
-                                     new Node(LeafOp.Pattern)),
-                                 ProcessSingleRowOpOverAnything);
+            new PatternMatchRule(
+                new Node(
+                    SingleRowOp.Pattern,
+                    new Node(LeafOp.Pattern)),
+                ProcessSingleRowOpOverAnything);
+
         /// <summary>
         /// Convert a 
         ///    SingleRowOp(X) => X
@@ -3704,15 +4067,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="singleRowNode">Current subtree</param>
         /// <param name="newNode">transformed subtree</param>
         /// <returns>Transformation status</returns>
-        static bool ProcessSingleRowOpOverAnything(RuleProcessingContext context, Node singleRowNode, out Node newNode)
+        private static bool ProcessSingleRowOpOverAnything(RuleProcessingContext context, Node singleRowNode, out Node newNode)
         {
             newNode = singleRowNode;
-            TransformationRulesContext trc = (TransformationRulesContext)context;
-            ExtendedNodeInfo childNodeInfo = context.Command.GetExtendedNodeInfo(singleRowNode.Child0);
+            var trc = (TransformationRulesContext)context;
+            var childNodeInfo = context.Command.GetExtendedNodeInfo(singleRowNode.Child0);
 
             // If the input to this Op can produce at most one row, then we don't need the
             // singleRowOp - simply return the input
-            if (childNodeInfo.MaxRows <= RowCount.One)
+            if (childNodeInfo.MaxRows
+                <= RowCount.One)
             {
                 newNode = singleRowNode.Child0;
                 return true;
@@ -3722,9 +4086,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // if the current node is a FilterOp, then try and determine if the FilterOp
             // produces one row at most
             //
-            if (singleRowNode.Child0.Op.OpType == OpType.Filter)
+            if (singleRowNode.Child0.Op.OpType
+                == OpType.Filter)
             {
-                Predicate predicate = new Predicate(context.Command, singleRowNode.Child0.Child1);
+                var predicate = new Predicate(context.Command, singleRowNode.Child0.Child1);
                 if (predicate.SatisfiesKey(childNodeInfo.Keys.KeyVars, childNodeInfo.Definitions))
                 {
                     childNodeInfo.MaxRows = RowCount.One;
@@ -3738,10 +4103,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         internal static readonly PatternMatchRule Rule_SingleRowOpOverProject =
-           new PatternMatchRule(new Node(SingleRowOp.Pattern,
-                             new Node(ProjectOp.Pattern,
-                                   new Node(LeafOp.Pattern), new Node(LeafOp.Pattern))),
-                         ProcessSingleRowOpOverProject);
+            new PatternMatchRule(
+                new Node(
+                    SingleRowOp.Pattern,
+                    new Node(
+                        ProjectOp.Pattern,
+                        new Node(LeafOp.Pattern), new Node(LeafOp.Pattern))),
+                ProcessSingleRowOpOverProject);
+
         /// <summary>
         /// Convert 
         ///    SingleRowOp(Project) => Project(SingleRowOp)
@@ -3750,11 +4119,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="singleRowNode">current subtree</param>
         /// <param name="newNode">transformeed subtree</param>
         /// <returns>transformation status</returns>
-        static bool ProcessSingleRowOpOverProject(RuleProcessingContext context, Node singleRowNode, out Node newNode)
+        private static bool ProcessSingleRowOpOverProject(RuleProcessingContext context, Node singleRowNode, out Node newNode)
         {
             newNode = singleRowNode;
-            Node projectNode = singleRowNode.Child0;
-            Node projectNodeInput = projectNode.Child0;
+            var projectNode = singleRowNode.Child0;
+            var projectNodeInput = projectNode.Child0;
 
             // Simply push the SingleRowOp below the ProjectOp
             singleRowNode.Child0 = projectNodeInput;
@@ -3766,25 +4135,33 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         #region All SingleRowOp Rules
-        internal static readonly InternalTrees.Rule[] Rules = new InternalTrees.Rule[] {
-            Rule_SingleRowOpOverAnything,
-            Rule_SingleRowOpOverProject,
-        };
+
+        internal static readonly Rule[] Rules = new Rule[]
+                                                    {
+                                                        Rule_SingleRowOpOverAnything,
+                                                        Rule_SingleRowOpOverProject,
+                                                    };
+
         #endregion
     }
+
     #endregion
 
     #region SetOp Rules
+
     /// <summary>
     /// SetOp Transformation Rules
     /// </summary>
     internal static class SetOpRules
     {
         #region SetOpOverFilters
+
         internal static readonly SimpleRule Rule_UnionAllOverEmptySet =
             new SimpleRule(OpType.UnionAll, ProcessSetOpOverEmptySet);
+
         internal static readonly SimpleRule Rule_IntersectOverEmptySet =
             new SimpleRule(OpType.Intersect, ProcessSetOpOverEmptySet);
+
         internal static readonly SimpleRule Rule_ExceptOverEmptySet =
             new SimpleRule(OpType.Except, ProcessSetOpOverEmptySet);
 
@@ -3814,18 +4191,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>transformation status</returns>
         private static bool ProcessSetOpOverEmptySet(RuleProcessingContext context, Node setOpNode, out Node newNode)
         {
-            bool leftChildIsEmptySet = context.Command.GetExtendedNodeInfo(setOpNode.Child0).MaxRows == RowCount.Zero;
-            bool rightChildIsEmptySet = context.Command.GetExtendedNodeInfo(setOpNode.Child1).MaxRows == RowCount.Zero;
+            var leftChildIsEmptySet = context.Command.GetExtendedNodeInfo(setOpNode.Child0).MaxRows == RowCount.Zero;
+            var rightChildIsEmptySet = context.Command.GetExtendedNodeInfo(setOpNode.Child1).MaxRows == RowCount.Zero;
 
-            if (!leftChildIsEmptySet && !rightChildIsEmptySet)
+            if (!leftChildIsEmptySet
+                && !rightChildIsEmptySet)
             {
                 newNode = setOpNode;
                 return false;
             }
-    
+
             int indexToReturn;
-            SetOp setOp = (SetOp)setOpNode.Op;
-            if (!rightChildIsEmptySet && setOp.OpType == OpType.UnionAll ||
+            var setOp = (SetOp)setOpNode.Op;
+            if (!rightChildIsEmptySet && setOp.OpType == OpType.UnionAll
+                ||
                 !leftChildIsEmptySet && setOp.OpType == OpType.Intersect)
             {
                 indexToReturn = 1;
@@ -3835,10 +4214,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 indexToReturn = 0;
             }
 
-            newNode = setOpNode.Children[indexToReturn];           
+            newNode = setOpNode.Children[indexToReturn];
 
-            TransformationRulesContext trc = (TransformationRulesContext)context;
-            foreach (KeyValuePair<Var, Var> kv in setOp.VarMap[indexToReturn])
+            var trc = (TransformationRulesContext)context;
+            foreach (var kv in setOp.VarMap[indexToReturn])
             {
                 trc.AddVarMapping(kv.Key, kv.Value);
             }
@@ -3848,23 +4227,31 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #region All SetOp Rules
-        internal static readonly InternalTrees.Rule[] Rules = new InternalTrees.Rule[] {
-            Rule_UnionAllOverEmptySet,
-            Rule_IntersectOverEmptySet,
-            Rule_ExceptOverEmptySet,
-        };
+
+        internal static readonly Rule[] Rules = new Rule[]
+                                                    {
+                                                        Rule_UnionAllOverEmptySet,
+                                                        Rule_IntersectOverEmptySet,
+                                                        Rule_ExceptOverEmptySet,
+                                                    };
+
         #endregion
     }
+
     #endregion
 
     #region GroupByOp Rules
+
     /// <summary>
     /// Transformation Rules for GroupByOps
     /// </summary>
     internal static class GroupByOpRules
     {
         #region GroupByOpWithSimpleVarRedefinitions
-        internal static readonly SimpleRule Rule_GroupByOpWithSimpleVarRedefinitions = new SimpleRule(OpType.GroupBy, ProcessGroupByWithSimpleVarRedefinitions);
+
+        internal static readonly SimpleRule Rule_GroupByOpWithSimpleVarRedefinitions = new SimpleRule(
+            OpType.GroupBy, ProcessGroupByWithSimpleVarRedefinitions);
+
         /// <summary>
         /// If the GroupByOp defines some computedVars as part of its keys, but those computedVars are simply 
         /// redefinitions of other Vars, then eliminate the computedVars. 
@@ -3878,33 +4265,34 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="n">current subtree</param>
         /// <param name="newNode">transformed subtree</param>
         /// <returns>transformation status</returns>
-        static bool ProcessGroupByWithSimpleVarRedefinitions(RuleProcessingContext context, Node n, out Node newNode)
+        private static bool ProcessGroupByWithSimpleVarRedefinitions(RuleProcessingContext context, Node n, out Node newNode)
         {
             newNode = n;
-            GroupByOp groupByOp = (GroupByOp)n.Op;
+            var groupByOp = (GroupByOp)n.Op;
             // no local keys? nothing to do
             if (n.Child1.Children.Count == 0)
             {
                 return false;
             }
 
-            TransformationRulesContext trc = (TransformationRulesContext)context;
-            Command command = trc.Command;
+            var trc = (TransformationRulesContext)context;
+            var command = trc.Command;
 
-            ExtendedNodeInfo nodeInfo = command.GetExtendedNodeInfo(n);
+            var nodeInfo = command.GetExtendedNodeInfo(n);
 
             //
             // Check to see if any of the computed Vars defined by this GroupByOp
             // are simple redefinitions of other VarRefOps. Consider only those 
             // VarRefOps that are not "external" references
             //
-            bool canEliminateSomeVars = false;
-            foreach (Node varDefNode in n.Child1.Children)
+            var canEliminateSomeVars = false;
+            foreach (var varDefNode in n.Child1.Children)
             {
-                Node definingExprNode = varDefNode.Child0;
-                if (definingExprNode.Op.OpType == OpType.VarRef)
+                var definingExprNode = varDefNode.Child0;
+                if (definingExprNode.Op.OpType
+                    == OpType.VarRef)
                 {
-                    VarRefOp varRefOp = (VarRefOp)definingExprNode.Op;
+                    var varRefOp = (VarRefOp)definingExprNode.Op;
                     if (!nodeInfo.ExternalReferences.IsSet(varRefOp.Var))
                     {
                         // this is a Var that we should remove 
@@ -3925,12 +4313,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
 
             // Lets now build up a new VarDefListNode
-            List<Node> newVarDefNodes = new List<Node>();
-            foreach (Node varDefNode in n.Child1.Children)
+            var newVarDefNodes = new List<Node>();
+            foreach (var varDefNode in n.Child1.Children)
             {
-                VarDefOp varDefOp = (VarDefOp)varDefNode.Op;
-                VarRefOp varRefOp = varDefNode.Child0.Op as VarRefOp;
-                if (varRefOp != null && !nodeInfo.ExternalReferences.IsSet(varRefOp.Var))
+                var varDefOp = (VarDefOp)varDefNode.Op;
+                var varRefOp = varDefNode.Child0.Op as VarRefOp;
+                if (varRefOp != null
+                    && !nodeInfo.ExternalReferences.IsSet(varRefOp.Var))
                 {
                     groupByOp.Outputs.Clear(varDefOp.Var);
                     groupByOp.Outputs.Set(varRefOp.Var);
@@ -3945,21 +4334,27 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             // Create a new vardeflist node, and set that as Child1 for the group by op
-            Node newVarDefListNode = command.CreateNode(command.CreateVarDefListOp(), newVarDefNodes);
+            var newVarDefListNode = command.CreateNode(command.CreateVarDefListOp(), newVarDefNodes);
             n.Child1 = newVarDefListNode;
             return true; // subtree modified
         }
+
         #endregion
 
         #region GroupByOverProject
+
         internal static readonly PatternMatchRule Rule_GroupByOverProject =
-            new PatternMatchRule(new Node(GroupByOp.Pattern,
-                                          new Node(ProjectOp.Pattern,
-                                                   new Node(LeafOp.Pattern),
-                                                   new Node(LeafOp.Pattern)),
-                                          new Node(LeafOp.Pattern),
-                                          new Node(LeafOp.Pattern)),
-                                 ProcessGroupByOverProject);
+            new PatternMatchRule(
+                new Node(
+                    GroupByOp.Pattern,
+                    new Node(
+                        ProjectOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern)),
+                    new Node(LeafOp.Pattern),
+                    new Node(LeafOp.Pattern)),
+                ProcessGroupByOverProject);
+
         /// <summary>
         /// Converts a GroupBy(Project(X, c1,..ck), agg1, agg2, .. aggm) => 
         ///            GroupBy(X, agg1', agg2', .. aggm')
@@ -3973,16 +4368,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="projectNode">Current ProjectOp node</param>
         /// <param name="newNode">modified subtree</param>
         /// <returns>Transformation status</returns>
-        static bool ProcessGroupByOverProject(RuleProcessingContext context, Node n, out Node newNode)
+        private static bool ProcessGroupByOverProject(RuleProcessingContext context, Node n, out Node newNode)
         {
             newNode = n;
-            GroupByOp op = (GroupByOp)n.Op;
-            Command command = ((TransformationRulesContext)context).Command;
-            Node projectNode = n.Child0;
-            Node projectNodeVarDefList = projectNode.Child1;
+            var op = (GroupByOp)n.Op;
+            var command = (context).Command;
+            var projectNode = n.Child0;
+            var projectNodeVarDefList = projectNode.Child1;
 
-            Node keys = n.Child1;
-            Node aggregates = n.Child2;
+            var keys = n.Child1;
+            var aggregates = n.Child2;
 
             // If there are any keys, we should not remove the inner project
             if (keys.Children.Count > 0)
@@ -3991,7 +4386,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             //Get a list of all defining vars
-            VarVec projectDefinitions = command.GetExtendedNodeInfo(projectNode).LocalDefinitions;
+            var projectDefinitions = command.GetExtendedNodeInfo(projectNode).LocalDefinitions;
 
             //If any of the defined vars is output, than we need the extra project anyway.
             if (op.Outputs.Overlaps(projectDefinitions))
@@ -3999,14 +4394,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 return false;
             }
 
-            bool createdNewProjectDefinitions = false;
+            var createdNewProjectDefinitions = false;
 
             //If there are any constants remove them from the list that needs to be tested,
             //These can safely be replaced
-            for (int i = 0; i < projectNodeVarDefList.Children.Count; i++)
+            for (var i = 0; i < projectNodeVarDefList.Children.Count; i++)
             {
-                Node varDefNode = projectNodeVarDefList.Children[i];
-                if (varDefNode.Child0.Op.OpType == OpType.Constant || varDefNode.Child0.Op.OpType == OpType.InternalConstant || varDefNode.Child0.Op.OpType == OpType.NullSentinel)
+                var varDefNode = projectNodeVarDefList.Children[i];
+                if (varDefNode.Child0.Op.OpType == OpType.Constant || varDefNode.Child0.Op.OpType == OpType.InternalConstant
+                    || varDefNode.Child0.Op.OpType == OpType.NullSentinel)
                 {
                     //We shouldn't modify the original project definitions, thus we copy it  
                     // the first time we encounter a constant
@@ -4026,11 +4422,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             //If we got here it means that all vars were either constants, or used at most once
             // Create a dictionary to be used for remapping the keys and the aggregates
-            Dictionary<Var, Node> varToDefiningNode = new Dictionary<Var, Node>(projectNodeVarDefList.Children.Count);
-            for (int j = 0; j < projectNodeVarDefList.Children.Count; j++)
+            var varToDefiningNode = new Dictionary<Var, Node>(projectNodeVarDefList.Children.Count);
+            for (var j = 0; j < projectNodeVarDefList.Children.Count; j++)
             {
-                Node varDefNode = projectNodeVarDefList.Children[j];
-                Var var = ((VarDefOp)varDefNode.Op).Var;
+                var varDefNode = projectNodeVarDefList.Children[j];
+                var var = ((VarDefOp)varDefNode.Op).Var;
                 varToDefiningNode.Add(var, varDefNode.Child0);
             }
 
@@ -4045,13 +4441,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal class VarRefReplacer : BasicOpVisitorOfNode
         {
-            private Dictionary<Var, Node> m_varReplacementTable;
-            private Command m_command;
+            private readonly Dictionary<Var, Node> m_varReplacementTable;
+            private readonly Command m_command;
 
             private VarRefReplacer(Dictionary<Var, Node> varReplacementTable, Command command)
             {
-                this.m_varReplacementTable = varReplacementTable;
-                this.m_command = command;
+                m_varReplacementTable = varReplacementTable;
+                m_command = command;
             }
 
             /// <summary>
@@ -4065,7 +4461,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// <returns></returns>
             internal static Node Replace(Dictionary<Var, Node> varReplacementTable, Node root, Command command)
             {
-                VarRefReplacer replacer = new VarRefReplacer(varReplacementTable, command);
+                var replacer = new VarRefReplacer(varReplacementTable, command);
                 return replacer.VisitNode(root);
             }
 
@@ -4089,7 +4485,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// <returns></returns>
             protected override Node VisitDefault(Node n)
             {
-                Node result = base.VisitDefault(n);
+                var result = base.VisitDefault(n);
                 m_command.RecomputeNodeInfo(result);
                 return result;
             }
@@ -4101,14 +4497,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal class VarRefUsageFinder : BasicOpVisitor
         {
-            private bool m_anyUsedMoreThenOnce = false;
-            private VarVec m_varVec;
-            private VarVec m_usedVars;
+            private bool m_anyUsedMoreThenOnce;
+            private readonly VarVec m_varVec;
+            private readonly VarVec m_usedVars;
 
             private VarRefUsageFinder(VarVec varVec, Command command)
             {
-                this.m_varVec = varVec;
-                this.m_usedVars = command.CreateVarVec();
+                m_varVec = varVec;
+                m_usedVars = command.CreateVarVec();
             }
 
             /// <summary>
@@ -4121,19 +4517,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// <returns></returns>
             internal static bool AnyVarUsedMoreThanOnce(VarVec varVec, Node root, Command command)
             {
-                VarRefUsageFinder usageFinder = new VarRefUsageFinder(varVec, command);
+                var usageFinder = new VarRefUsageFinder(varVec, command);
                 usageFinder.VisitNode(root);
                 return usageFinder.m_anyUsedMoreThenOnce;
             }
 
             public override void Visit(VarRefOp op, Node n)
             {
-                Var referencedVar = op.Var;
+                var referencedVar = op.Var;
                 if (m_varVec.IsSet(referencedVar))
                 {
                     if (m_usedVars.IsSet(referencedVar))
                     {
-                        this.m_anyUsedMoreThenOnce = true;
+                        m_anyUsedMoreThenOnce = true;
                     }
                     else
                     {
@@ -4152,15 +4548,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 base.VisitChildren(n);
             }
         }
+
         #endregion
 
         #region GroupByOpWithNoAggregates
+
         internal static readonly PatternMatchRule Rule_GroupByOpWithNoAggregates =
-            new PatternMatchRule(new Node(GroupByOp.Pattern,
-                                          new Node(LeafOp.Pattern),
-                                          new Node(LeafOp.Pattern),
-                                          new Node(VarDefListOp.Pattern)),
-                                 ProcessGroupByOpWithNoAggregates);        
+            new PatternMatchRule(
+                new Node(
+                    GroupByOp.Pattern,
+                    new Node(LeafOp.Pattern),
+                    new Node(LeafOp.Pattern),
+                    new Node(VarDefListOp.Pattern)),
+                ProcessGroupByOpWithNoAggregates);
+
         /// <summary>
         /// If the GroupByOp has no aggregates:
         /// 
@@ -4175,47 +4576,56 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="n">current subtree</param>
         /// <param name="newNode">transformed subtree</param>
         /// <returns>transformation status</returns>
-        static bool ProcessGroupByOpWithNoAggregates(RuleProcessingContext context, Node n, out Node newNode)
+        private static bool ProcessGroupByOpWithNoAggregates(RuleProcessingContext context, Node n, out Node newNode)
         {
-            Command command = context.Command;
-            GroupByOp op = (GroupByOp)n.Op;
+            var command = context.Command;
+            var op = (GroupByOp)n.Op;
 
-            ExtendedNodeInfo nodeInfo = command.GetExtendedNodeInfo(n.Child0);
-            ProjectOp newOp = command.CreateProjectOp(op.Keys);
+            var nodeInfo = command.GetExtendedNodeInfo(n.Child0);
+            var newOp = command.CreateProjectOp(op.Keys);
 
-            VarDefListOp varDefListOp = command.CreateVarDefListOp();
-            Node varDefListNode = command.CreateNode(varDefListOp);
+            var varDefListOp = command.CreateVarDefListOp();
+            var varDefListNode = command.CreateNode(varDefListOp);
 
             newNode = command.CreateNode(newOp, n.Child0, n.Child1);
-            
+
             //If we know the keys of the input and the list of keys includes them all, 
             // this is the result, otherwise add distinct
-            if (nodeInfo.Keys.NoKeys || !op.Keys.Subsumes(nodeInfo.Keys.KeyVars))
+            if (nodeInfo.Keys.NoKeys
+                || !op.Keys.Subsumes(nodeInfo.Keys.KeyVars))
             {
                 newNode = command.CreateNode(command.CreateDistinctOp(command.CreateVarVec(op.Keys)), newNode);
             }
-            return true;       
+            return true;
         }
+
         #endregion
 
         #region All GroupByOp Rules
-        internal static readonly InternalTrees.Rule[] Rules = new InternalTrees.Rule[] {
-                 GroupByOpRules.Rule_GroupByOpWithSimpleVarRedefinitions,
-                 GroupByOpRules.Rule_GroupByOverProject,
-                 GroupByOpRules.Rule_GroupByOpWithNoAggregates,
-        };
+
+        internal static readonly Rule[] Rules = new Rule[]
+                                                    {
+                                                        Rule_GroupByOpWithSimpleVarRedefinitions,
+                                                        Rule_GroupByOverProject,
+                                                        Rule_GroupByOpWithNoAggregates,
+                                                    };
+
         #endregion
     }
+
     #endregion
 
     #region Sorting Rules
+
     /// <summary>
     /// Transformation Rules for SortOp
     /// </summary>
     internal static class SortOpRules
     {
         #region SortOpOverAtMostOneRow
+
         internal static readonly SimpleRule Rule_SortOpOverAtMostOneRow = new SimpleRule(OpType.Sort, ProcessSortOpOverAtMostOneRow);
+
         /// <summary>
         /// If the SortOp's input is guaranteed to produce at most 1 row, remove the node with the SortOp:
         ///  Sort(X) => X, if X is guaranteed to produce no more than 1 row
@@ -4224,12 +4634,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="n">current subtree</param>
         /// <param name="newNode">transformed subtree</param>
         /// <returns>transformation status</returns>
-        static bool ProcessSortOpOverAtMostOneRow(RuleProcessingContext context, Node n, out Node newNode)
+        private static bool ProcessSortOpOverAtMostOneRow(RuleProcessingContext context, Node n, out Node newNode)
         {
-            ExtendedNodeInfo nodeInfo = ((TransformationRulesContext)context).Command.GetExtendedNodeInfo(n.Child0);
+            var nodeInfo = (context).Command.GetExtendedNodeInfo(n.Child0);
 
             //If the input has at most one row, omit the SortOp
-            if (nodeInfo.MaxRows == RowCount.Zero || nodeInfo.MaxRows == RowCount.One)
+            if (nodeInfo.MaxRows == RowCount.Zero
+                || nodeInfo.MaxRows == RowCount.One)
             {
                 newNode = n.Child0;
                 return true;
@@ -4239,12 +4650,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             newNode = n;
             return false;
         }
+
         #endregion
 
         #region All SortOp Rules
-        internal static readonly InternalTrees.Rule[] Rules = new InternalTrees.Rule[] {
-                 SortOpRules.Rule_SortOpOverAtMostOneRow,
-        };
+
+        internal static readonly Rule[] Rules = new Rule[]
+                                                    {
+                                                        Rule_SortOpOverAtMostOneRow,
+                                                    };
+
         #endregion
     }
 
@@ -4254,7 +4669,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal static class ConstrainedSortOpRules
     {
         #region ConstrainedSortOpOverEmptySet
-        internal static readonly SimpleRule Rule_ConstrainedSortOpOverEmptySet = new SimpleRule(OpType.ConstrainedSort, ProcessConstrainedSortOpOverEmptySet);
+
+        internal static readonly SimpleRule Rule_ConstrainedSortOpOverEmptySet = new SimpleRule(
+            OpType.ConstrainedSort, ProcessConstrainedSortOpOverEmptySet);
+
         /// <summary>
         /// If the ConstrainedSortOp's input is guaranteed to produce no rows, remove the ConstrainedSortOp completly:
         ///    CSort(EmptySet) => EmptySet
@@ -4263,12 +4681,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="n">current subtree</param>
         /// <param name="newNode">transformed subtree</param>
         /// <returns>transformation status</returns>
-        static bool ProcessConstrainedSortOpOverEmptySet(RuleProcessingContext context, Node n, out Node newNode)
+        private static bool ProcessConstrainedSortOpOverEmptySet(RuleProcessingContext context, Node n, out Node newNode)
         {
-            ExtendedNodeInfo nodeInfo = ((TransformationRulesContext)context).Command.GetExtendedNodeInfo(n.Child0);
+            var nodeInfo = (context).Command.GetExtendedNodeInfo(n.Child0);
 
             //If the input has no rows, remove the ConstraintSortOp node completly
-            if (nodeInfo.MaxRows == RowCount.Zero)
+            if (nodeInfo.MaxRows
+                == RowCount.Zero)
             {
                 newNode = n.Child0;
                 return true;
@@ -4277,24 +4696,32 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             newNode = n;
             return false;
         }
+
         #endregion
 
         #region All ConstrainedSortOp Rules
-        internal static readonly InternalTrees.Rule[] Rules = new InternalTrees.Rule[] {
-                 ConstrainedSortOpRules.Rule_ConstrainedSortOpOverEmptySet,
-        };
+
+        internal static readonly Rule[] Rules = new Rule[]
+                                                    {
+                                                        Rule_ConstrainedSortOpOverEmptySet,
+                                                    };
+
         #endregion
     }
+
     #endregion
 
     #region DistinctOp Rules
+
     /// <summary>
     /// Transformation Rules for DistinctOp
     /// </summary>
     internal static class DistinctOpRules
     {
         #region DistinctOpOfKeys
+
         internal static readonly SimpleRule Rule_DistinctOpOfKeys = new SimpleRule(OpType.Distinct, ProcessDistinctOpOfKeys);
+
         /// <summary>
         /// If the DistinctOp includes all all the keys of the input, than it is unnecessary.
         /// Distinct (X, distinct_keys) -> Project( X, distinct_keys) where distinct_keys includes all keys of X.
@@ -4303,22 +4730,23 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="n">current subtree</param>
         /// <param name="newNode">transformed subtree</param>
         /// <returns>transformation status</returns>
-        static bool ProcessDistinctOpOfKeys(RuleProcessingContext context, Node n, out Node newNode)
+        private static bool ProcessDistinctOpOfKeys(RuleProcessingContext context, Node n, out Node newNode)
         {
-            Command command = context.Command;
+            var command = context.Command;
 
-            ExtendedNodeInfo nodeInfo = command.GetExtendedNodeInfo(n.Child0);
+            var nodeInfo = command.GetExtendedNodeInfo(n.Child0);
 
-            DistinctOp op = (DistinctOp)n.Op;
+            var op = (DistinctOp)n.Op;
 
             //If we know the keys of the input and the list of distinct keys includes them all, omit the distinct
-            if (!nodeInfo.Keys.NoKeys && op.Keys.Subsumes(nodeInfo.Keys.KeyVars))
+            if (!nodeInfo.Keys.NoKeys
+                && op.Keys.Subsumes(nodeInfo.Keys.KeyVars))
             {
-                ProjectOp newOp = command.CreateProjectOp(op.Keys);
+                var newOp = command.CreateProjectOp(op.Keys);
 
                 //Create empty vardef list
-                VarDefListOp varDefListOp = command.CreateVarDefListOp();
-                Node varDefListNode = command.CreateNode(varDefListOp);
+                var varDefListOp = command.CreateVarDefListOp();
+                var varDefListNode = command.CreateNode(varDefListOp);
 
                 newNode = command.CreateNode(newOp, n.Child0, varDefListNode);
                 return true;
@@ -4328,13 +4756,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             newNode = n;
             return false;
         }
+
         #endregion
 
         #region All DistinctOp Rules
-        internal static readonly InternalTrees.Rule[] Rules = new InternalTrees.Rule[] {
-                 DistinctOpRules.Rule_DistinctOpOfKeys,
-        };
+
+        internal static readonly Rule[] Rules = new Rule[]
+                                                    {
+                                                        Rule_DistinctOpOfKeys,
+                                                    };
+
         #endregion
     }
+
     #endregion
 }

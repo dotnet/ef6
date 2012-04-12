@@ -1,7 +1,7 @@
 ﻿namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
-    using System.Data.Entity;
+    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Globalization;
@@ -12,10 +12,15 @@
     {
         // for root entities, entities with no base type, we will additionally look 
         // at properties on the clr base hierarchy.
-        private const BindingFlags RootEntityPropertyReflectionBindingFlags = PropertyReflectionBindingFlags & ~BindingFlags.DeclaredOnly | BindingFlags.FlattenHierarchy;
+        private const BindingFlags RootEntityPropertyReflectionBindingFlags =
+            PropertyReflectionBindingFlags & ~BindingFlags.DeclaredOnly | BindingFlags.FlattenHierarchy;
 
-        private new MutableAssemblyCacheEntry CacheEntry { get { return (MutableAssemblyCacheEntry)base.CacheEntry; } }
-        private List<Action> _referenceResolutions = new List<Action>();
+        private new MutableAssemblyCacheEntry CacheEntry
+        {
+            get { return (MutableAssemblyCacheEntry)base.CacheEntry; }
+        }
+
+        private readonly List<Action> _referenceResolutions = new List<Action>();
 
         internal ObjectItemConventionAssemblyLoader(Assembly assembly, ObjectItemLoadingSessionData sessionData)
             : base(assembly, new MutableAssemblyCacheEntry(), sessionData)
@@ -26,21 +31,24 @@
 
         protected override void LoadTypesFromAssembly()
         {
-            foreach (Type type in EntityUtil.GetTypesSpecial(SourceAssembly))
+            foreach (var type in EntityUtil.GetTypesSpecial(SourceAssembly))
             {
                 EdmType cspaceType;
                 if (TryGetCSpaceTypeMatch(type, out cspaceType))
                 {
-                    if (type.IsValueType && !type.IsEnum)
+                    if (type.IsValueType
+                        && !type.IsEnum)
                     {
-                        SessionData.LoadMessageLogger.LogLoadMessage(Strings.Validator_OSpace_Convention_Struct(cspaceType.FullName, type.FullName), cspaceType);
+                        SessionData.LoadMessageLogger.LogLoadMessage(
+                            Strings.Validator_OSpace_Convention_Struct(cspaceType.FullName, type.FullName), cspaceType);
                         continue;
                     }
 
                     EdmType ospaceType;
                     if (TryCreateType(type, cspaceType, out ospaceType))
                     {
-                        Debug.Assert(ospaceType is StructuralType || Helper.IsEnumType(ospaceType), "Only StructuralType or EnumType expected.");
+                        Debug.Assert(
+                            ospaceType is StructuralType || Helper.IsEnumType(ospaceType), "Only StructuralType or EnumType expected.");
 
                         CacheEntry.TypesInAssembly.Add(ospaceType);
                         // check for duplicates so we don't cause an ArgumentException, 
@@ -52,9 +60,11 @@
                         else
                         {
                             // at this point there is already a Clr Type that is structurally matched to this CSpace type, we throw exception
-                            EdmType previousOSpaceType = SessionData.CspaceToOspace[cspaceType];
+                            var previousOSpaceType = SessionData.CspaceToOspace[cspaceType];
                             SessionData.EdmItemErrors.Add(
-                                new EdmItemError(Strings.Validator_OSpace_Convention_AmbiguousClrType(cspaceType.Name, previousOSpaceType.ClrType.FullName, type.FullName)));
+                                new EdmItemError(
+                                    Strings.Validator_OSpace_Convention_AmbiguousClrType(
+                                        cspaceType.Name, previousOSpaceType.ClrType.FullName, type.FullName)));
                         }
                     }
                 }
@@ -68,7 +78,6 @@
                 SessionData.ObjectItemAssemblyLoaderFactory = null;
             }
         }
-
 
         protected override void AddToAssembliesLoaded()
         {
@@ -90,7 +99,8 @@
                 else
                 {
                     Debug.Assert(pair.Value > 1, "how did we get a negative count of types in the dictionary?");
-                    SessionData.EdmItemErrors.Add(new EdmItemError(Strings.Validator_OSpace_Convention_MultipleTypesWithSameName(type.Name)));
+                    SessionData.EdmItemErrors.Add(
+                        new EdmItemError(Strings.Validator_OSpace_Convention_MultipleTypesWithSameName(type.Name)));
                 }
             }
 
@@ -114,7 +124,8 @@
             newOSpaceType = null;
 
             // if one of the types is an enum while the other is not there is no match
-            if (Helper.IsEnumType(cspaceType) ^ type.IsEnum)
+            if (Helper.IsEnumType(cspaceType)
+                ^ type.IsEnum)
             {
                 SessionData.LoadMessageLogger.LogLoadMessage(
                     Strings.Validator_OSpace_Convention_SSpaceOSpaceTypeMismatch(cspaceType.FullName, cspaceType.FullName),
@@ -122,7 +133,7 @@
                 return false;
             }
 
-            if(Helper.IsEnumType(cspaceType))
+            if (Helper.IsEnumType(cspaceType))
             {
                 return TryCreateEnumType(type, (EnumType)cspaceType, out newOSpaceType);
             }
@@ -145,7 +156,7 @@
             Debug.Assert(type != null, "type != null");
             Debug.Assert(cspaceType != null, "cspaceType != null");
 
-            List<Action> referenceResolutionListForCurrentType = new List<Action>();
+            var referenceResolutionListForCurrentType = new List<Action>();
             newOSpaceType = null;
             Debug.Assert(TypesMatchByConvention(type, cspaceType), "The types passed as parameters don't match by convention.");
 
@@ -170,14 +181,15 @@
                 }
                 else
                 {
-                    string message = Strings.Validator_OSpace_Convention_BaseTypeIncompatible(type.BaseType.FullName, type.FullName, cspaceType.BaseType.FullName);
+                    var message = Strings.Validator_OSpace_Convention_BaseTypeIncompatible(
+                        type.BaseType.FullName, type.FullName, cspaceType.BaseType.FullName);
                     SessionData.LoadMessageLogger.LogLoadMessage(message, cspaceType);
                     return false;
                 }
             }
 
             // Load the properties for this type
-            if (!TryCreateMembers(type, (StructuralType)cspaceType, ospaceType, referenceResolutionListForCurrentType))
+            if (!TryCreateMembers(type, cspaceType, ospaceType, referenceResolutionListForCurrentType))
             {
                 return false;
             }
@@ -188,7 +200,7 @@
             // we only add the referenceResolution to the list unless we structrually matched this type
             foreach (var referenceResolution in referenceResolutionListForCurrentType)
             {
-                this._referenceResolutions.Add(referenceResolution);
+                _referenceResolutions.Add(referenceResolution);
             }
 
             newOSpaceType = ospaceType;
@@ -216,7 +228,8 @@
             newOSpaceType = null;
 
             // Check if the OSpace and CSpace enum type match
-            if (!UnderlyingEnumTypesMatch(enumType, cspaceEnumType) || !EnumMembersMatch(enumType, cspaceEnumType))
+            if (!UnderlyingEnumTypesMatch(enumType, cspaceEnumType)
+                || !EnumMembersMatch(enumType, cspaceEnumType))
             {
                 return false;
             }
@@ -247,12 +260,13 @@
             if (!ClrProviderManifest.Instance.TryGetPrimitiveType(enumType.GetEnumUnderlyingType(), out underlyingEnumType))
             {
                 SessionData.LoadMessageLogger.LogLoadMessage(
-                    Strings.Validator_UnsupportedEnumUnderlyingType(enumType.GetEnumUnderlyingType().FullName), 
+                    Strings.Validator_UnsupportedEnumUnderlyingType(enumType.GetEnumUnderlyingType().FullName),
                     cspaceEnumType);
 
                 return false;
             }
-            else if (underlyingEnumType.PrimitiveTypeKind != cspaceEnumType.UnderlyingType.PrimitiveTypeKind)
+            else if (underlyingEnumType.PrimitiveTypeKind
+                     != cspaceEnumType.UnderlyingType.PrimitiveTypeKind)
             {
                 SessionData.LoadMessageLogger.LogLoadMessage(
                     Strings.Validator_OSpace_Convention_NonMatchingUnderlyingTypes, cspaceEnumType);
@@ -275,7 +289,9 @@
             Debug.Assert(enumType.IsEnum, "expected enum OSpace type");
             Debug.Assert(cspaceEnumType != null, "cspaceEnumType != null");
             Debug.Assert(Helper.IsEnumType(cspaceEnumType), "Enum type expected");
-            Debug.Assert(cspaceEnumType.UnderlyingType.ClrEquivalentType == enumType.GetEnumUnderlyingType(), "underlying types should have already been checked");
+            Debug.Assert(
+                cspaceEnumType.UnderlyingType.ClrEquivalentType == enumType.GetEnumUnderlyingType(),
+                "underlying types should have already been checked");
 
             var enumUnderlyingType = enumType.GetEnumUnderlyingType();
 
@@ -290,10 +306,12 @@
 
             while (ospaceSortedEnumMemberNamesEnumerator.MoveNext())
             {
-                if (cspaceSortedEnumMemberEnumerator.Current.Name == ospaceSortedEnumMemberNamesEnumerator.Current &&
+                if (cspaceSortedEnumMemberEnumerator.Current.Name == ospaceSortedEnumMemberNamesEnumerator.Current
+                    &&
                     cspaceSortedEnumMemberEnumerator.Current.Value.Equals(
                         Convert.ChangeType(
-                            Enum.Parse(enumType, ospaceSortedEnumMemberNamesEnumerator.Current), enumUnderlyingType, CultureInfo.InvariantCulture)))
+                            Enum.Parse(enumType, ospaceSortedEnumMemberNamesEnumerator.Current), enumUnderlyingType,
+                            CultureInfo.InvariantCulture)))
                 {
                     if (!cspaceSortedEnumMemberEnumerator.MoveNext())
                     {
@@ -303,12 +321,12 @@
             }
 
             SessionData.LoadMessageLogger.LogLoadMessage(
-                System.Data.Entity.Resources.Strings.Mapping_Enum_OCMapping_MemberMismatch(
-                        enumType.FullName,
-                        cspaceSortedEnumMemberEnumerator.Current.Name,
-                        cspaceSortedEnumMemberEnumerator.Current.Value,
-                        cspaceEnumType.FullName), cspaceEnumType);
-                
+                Strings.Mapping_Enum_OCMapping_MemberMismatch(
+                    enumType.FullName,
+                    cspaceSortedEnumMemberEnumerator.Current.Name,
+                    cspaceSortedEnumMemberEnumerator.Current.Value,
+                    cspaceEnumType.FullName), cspaceEnumType);
+
             return false;
         }
 
@@ -316,7 +334,7 @@
         {
             CreateRelationships();
 
-            foreach (Action resolve in _referenceResolutions)
+            foreach (var resolve in _referenceResolutions)
             {
                 resolve();
             }
@@ -327,12 +345,12 @@
         private EdmType ResolveBaseType(StructuralType baseCSpaceType, Type type)
         {
             EdmType ospaceType;
-            bool foundValue = SessionData.CspaceToOspace.TryGetValue(baseCSpaceType, out ospaceType);
+            var foundValue = SessionData.CspaceToOspace.TryGetValue(baseCSpaceType, out ospaceType);
             if (!foundValue)
             {
-                string message =
+                var message =
                     SessionData.LoadMessageLogger.CreateErrorMessageWithTypeSpecificLoadLogs(
-                        Strings.Validator_OSpace_Convention_BaseTypeNotLoaded(type, baseCSpaceType), 
+                        Strings.Validator_OSpace_Convention_BaseTypeNotLoaded(type, baseCSpaceType),
                         baseCSpaceType);
                 SessionData.EdmItemErrors.Add(new EdmItemError(message));
             }
@@ -342,11 +360,12 @@
             return ospaceType;
         }
 
-        private bool TryCreateMembers(Type type, StructuralType cspaceType, StructuralType ospaceType, List<Action> referenceResolutionListForCurrentType)
+        private bool TryCreateMembers(
+            Type type, StructuralType cspaceType, StructuralType ospaceType, List<Action> referenceResolutionListForCurrentType)
         {
-            BindingFlags flags = cspaceType.BaseType == null ? RootEntityPropertyReflectionBindingFlags : PropertyReflectionBindingFlags;
+            var flags = cspaceType.BaseType == null ? RootEntityPropertyReflectionBindingFlags : PropertyReflectionBindingFlags;
 
-            PropertyInfo[] clrProperties = type.GetProperties(flags);
+            var clrProperties = type.GetProperties(flags);
 
             // required properties scalar properties first
             if (!TryFindAndCreatePrimitiveProperties(type, cspaceType, ospaceType, clrProperties))
@@ -354,7 +373,7 @@
                 return false;
             }
 
-            if(!TryFindAndCreateEnumProperties(type, cspaceType, ospaceType, clrProperties, referenceResolutionListForCurrentType))
+            if (!TryFindAndCreateEnumProperties(type, cspaceType, ospaceType, clrProperties, referenceResolutionListForCurrentType))
             {
                 return false;
             }
@@ -372,13 +391,17 @@
             return true;
         }
 
-        private bool TryFindComplexProperties(Type type, StructuralType cspaceType, StructuralType ospaceType, PropertyInfo[] clrProperties, List<Action> referenceResolutionListForCurrentType)
+        private bool TryFindComplexProperties(
+            Type type, StructuralType cspaceType, StructuralType ospaceType, PropertyInfo[] clrProperties,
+            List<Action> referenceResolutionListForCurrentType)
         {
-            List<KeyValuePair<EdmProperty, PropertyInfo>> typeClosureToTrack =
+            var typeClosureToTrack =
                 new List<KeyValuePair<EdmProperty, PropertyInfo>>();
-            foreach (EdmProperty cspaceProperty in cspaceType.GetDeclaredOnlyMembers<EdmProperty>().Where(m => Helper.IsComplexType(m.TypeUsage.EdmType)))
+            foreach (
+                var cspaceProperty in cspaceType.GetDeclaredOnlyMembers<EdmProperty>().Where(m => Helper.IsComplexType(m.TypeUsage.EdmType))
+                )
             {
-                PropertyInfo clrProperty = clrProperties.FirstOrDefault(p => MemberMatchesByConvention(p, cspaceProperty));
+                var clrProperty = clrProperties.FirstOrDefault(p => MemberMatchesByConvention(p, cspaceProperty));
                 if (clrProperty != null)
                 {
                     typeClosureToTrack.Add(
@@ -387,7 +410,7 @@
                 }
                 else
                 {
-                    string message = Strings.Validator_OSpace_Convention_MissingRequiredProperty(cspaceProperty.Name, type.FullName);
+                    var message = Strings.Validator_OSpace_Convention_MissingRequiredProperty(cspaceProperty.Name, type.FullName);
                     SessionData.LoadMessageLogger.LogLoadMessage(message, cspaceType);
                     return false;
                 }
@@ -406,17 +429,20 @@
             return true;
         }
 
-        private bool TryFindNavigationProperties(Type type, StructuralType cspaceType, StructuralType ospaceType, PropertyInfo[] clrProperties, List<Action> referenceResolutionListForCurrentType)
+        private bool TryFindNavigationProperties(
+            Type type, StructuralType cspaceType, StructuralType ospaceType, PropertyInfo[] clrProperties,
+            List<Action> referenceResolutionListForCurrentType)
         {
-            List<KeyValuePair<NavigationProperty, PropertyInfo>> typeClosureToTrack =
+            var typeClosureToTrack =
                 new List<KeyValuePair<NavigationProperty, PropertyInfo>>();
-            foreach (NavigationProperty cspaceProperty in cspaceType.GetDeclaredOnlyMembers<NavigationProperty>())
+            foreach (var cspaceProperty in cspaceType.GetDeclaredOnlyMembers<NavigationProperty>())
             {
-                PropertyInfo clrProperty = clrProperties.FirstOrDefault(p => NonPrimitiveMemberMatchesByConvention(p, cspaceProperty));
+                var clrProperty = clrProperties.FirstOrDefault(p => NonPrimitiveMemberMatchesByConvention(p, cspaceProperty));
                 if (clrProperty != null)
                 {
-                    bool needsSetter = cspaceProperty.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many;
-                    if (clrProperty.CanRead && (!needsSetter || clrProperty.CanWrite))
+                    var needsSetter = cspaceProperty.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many;
+                    if (clrProperty.CanRead
+                        && (!needsSetter || clrProperty.CanWrite))
                     {
                         typeClosureToTrack.Add(
                             new KeyValuePair<NavigationProperty, PropertyInfo>(
@@ -425,13 +451,13 @@
                 }
                 else
                 {
-                    string message = Strings.Validator_OSpace_Convention_MissingRequiredProperty(
+                    var message = Strings.Validator_OSpace_Convention_MissingRequiredProperty(
                         cspaceProperty.Name, type.FullName);
                     SessionData.LoadMessageLogger.LogLoadMessage(message, cspaceType);
                     return false;
                 }
             }
-            
+
             foreach (var typeToTrack in typeClosureToTrack)
             {
                 TrackClosure(typeToTrack.Value.PropertyType);
@@ -450,14 +476,14 @@
 
         private void TrackClosure(Type type)
         {
-
-            if (SourceAssembly != type.Assembly && 
-                !CacheEntry.ClosureAssemblies.Contains(type.Assembly) &&
-                !(type.IsGenericType && 
+            if (SourceAssembly != type.Assembly &&
+                !CacheEntry.ClosureAssemblies.Contains(type.Assembly)
+                &&
+                !(type.IsGenericType &&
                   (
-                    EntityUtil.IsAnICollection(type) || // EntityCollection<>, List<>, ICollection<>
-                    type.GetGenericTypeDefinition() == typeof(System.Data.Entity.Core.Objects.DataClasses.EntityReference<>) ||
-                    type.GetGenericTypeDefinition() == typeof(System.Nullable<>)
+                      EntityUtil.IsAnICollection(type) || // EntityCollection<>, List<>, ICollection<>
+                      type.GetGenericTypeDefinition() == typeof(EntityReference<>) ||
+                      type.GetGenericTypeDefinition() == typeof(Nullable<>)
                   )
                  )
                 )
@@ -467,7 +493,7 @@
 
             if (type.IsGenericType)
             {
-                foreach (Type genericArgument in type.GetGenericArguments())
+                foreach (var genericArgument in type.GetGenericArguments())
                 {
                     TrackClosure(genericArgument);
                 }
@@ -477,37 +503,44 @@
         private void CreateAndAddComplexType(Type type, StructuralType ospaceType, EdmProperty cspaceProperty, PropertyInfo clrProperty)
         {
             EdmType propertyType;
-            if (SessionData.CspaceToOspace.TryGetValue((StructuralType)cspaceProperty.TypeUsage.EdmType, out propertyType))
+            if (SessionData.CspaceToOspace.TryGetValue(cspaceProperty.TypeUsage.EdmType, out propertyType))
             {
                 Debug.Assert(propertyType is StructuralType, "Structural type expected.");
 
-                EdmProperty property = new EdmProperty(cspaceProperty.Name, TypeUsage.Create(propertyType, new FacetValues { Nullable = false }), clrProperty, type.TypeHandle);
+                var property = new EdmProperty(
+                    cspaceProperty.Name, TypeUsage.Create(
+                        propertyType, new FacetValues
+                                          {
+                                              Nullable = false
+                                          }), clrProperty, type.TypeHandle);
                 ospaceType.AddMember(property);
             }
             else
             {
-                string message =
+                var message =
                     SessionData.LoadMessageLogger.CreateErrorMessageWithTypeSpecificLoadLogs(
                         Strings.Validator_OSpace_Convention_MissingOSpaceType(cspaceProperty.TypeUsage.EdmType.FullName),
                         cspaceProperty.TypeUsage.EdmType);
                 SessionData.EdmItemErrors.Add(new EdmItemError(message));
             }
-
         }
 
-        private void CreateAndAddNavigationProperty(StructuralType cspaceType, StructuralType ospaceType, NavigationProperty cspaceProperty, PropertyInfo clrProperty)
+        private void CreateAndAddNavigationProperty(
+            StructuralType cspaceType, StructuralType ospaceType, NavigationProperty cspaceProperty, PropertyInfo clrProperty)
         {
             EdmType ospaceRelationship;
             if (SessionData.CspaceToOspace.TryGetValue(cspaceProperty.RelationshipType, out ospaceRelationship))
             {
                 Debug.Assert(ospaceRelationship is StructuralType, "Structural type expected.");
 
-                bool foundTarget = false;
+                var foundTarget = false;
                 EdmType targetType = null;
                 if (Helper.IsCollectionType(cspaceProperty.TypeUsage.EdmType))
                 {
                     EdmType findType;
-                    foundTarget = SessionData.CspaceToOspace.TryGetValue((StructuralType)((CollectionType)cspaceProperty.TypeUsage.EdmType).TypeUsage.EdmType, out findType);
+                    foundTarget =
+                        SessionData.CspaceToOspace.TryGetValue(
+                            ((CollectionType)cspaceProperty.TypeUsage.EdmType).TypeUsage.EdmType, out findType);
                     if (foundTarget)
                     {
                         Debug.Assert(findType is StructuralType, "Structural type expected.");
@@ -518,7 +551,7 @@
                 else
                 {
                     EdmType findType;
-                    foundTarget = SessionData.CspaceToOspace.TryGetValue((StructuralType)cspaceProperty.TypeUsage.EdmType, out findType);
+                    foundTarget = SessionData.CspaceToOspace.TryGetValue(cspaceProperty.TypeUsage.EdmType, out findType);
                     if (foundTarget)
                     {
                         Debug.Assert(findType is StructuralType, "Structural type expected.");
@@ -527,61 +560,73 @@
                     }
                 }
 
+                Debug.Assert(
+                    foundTarget,
+                    "Since the relationship will only be created if it can find the types for both ends, we will never fail to find one of the ends");
 
-                Debug.Assert(foundTarget, "Since the relationship will only be created if it can find the types for both ends, we will never fail to find one of the ends");
-
-                NavigationProperty navigationProperty = new NavigationProperty(cspaceProperty.Name, TypeUsage.Create(targetType), clrProperty);
+                var navigationProperty = new NavigationProperty(cspaceProperty.Name, TypeUsage.Create(targetType), clrProperty);
                 var relationshipType = (RelationshipType)ospaceRelationship;
                 navigationProperty.RelationshipType = relationshipType;
 
                 // we can use First because o-space relationships are created directly from 
                 // c-space relationship
-                navigationProperty.ToEndMember = (RelationshipEndMember)relationshipType.Members.First(e => e.Name == cspaceProperty.ToEndMember.Name);
-                navigationProperty.FromEndMember = (RelationshipEndMember)relationshipType.Members.First(e => e.Name == cspaceProperty.FromEndMember.Name);
+                navigationProperty.ToEndMember =
+                    (RelationshipEndMember)relationshipType.Members.First(e => e.Name == cspaceProperty.ToEndMember.Name);
+                navigationProperty.FromEndMember =
+                    (RelationshipEndMember)relationshipType.Members.First(e => e.Name == cspaceProperty.FromEndMember.Name);
                 ospaceType.AddMember(navigationProperty);
             }
             else
             {
-                EntityTypeBase missingType = cspaceProperty.RelationshipType.RelationshipEndMembers.Select(e => ((RefType)e.TypeUsage.EdmType).ElementType).First(e => e != cspaceType);
-                string message =
+                var missingType =
+                    cspaceProperty.RelationshipType.RelationshipEndMembers.Select(e => ((RefType)e.TypeUsage.EdmType).ElementType).First(
+                        e => e != cspaceType);
+                var message =
                     SessionData.LoadMessageLogger.CreateErrorMessageWithTypeSpecificLoadLogs(
-                        Strings.Validator_OSpace_Convention_RelationshipNotLoaded(cspaceProperty.RelationshipType.FullName, missingType.FullName),
+                        Strings.Validator_OSpace_Convention_RelationshipNotLoaded(
+                            cspaceProperty.RelationshipType.FullName, missingType.FullName),
                         missingType);
                 SessionData.EdmItemErrors.Add(new EdmItemError(message));
             }
         }
 
-        private bool TryFindAndCreatePrimitiveProperties(Type type, StructuralType cspaceType, StructuralType ospaceType, PropertyInfo[] clrProperties)
+        private bool TryFindAndCreatePrimitiveProperties(
+            Type type, StructuralType cspaceType, StructuralType ospaceType, PropertyInfo[] clrProperties)
         {
-            foreach (EdmProperty cspaceProperty in cspaceType.GetDeclaredOnlyMembers<EdmProperty>().Where(p => Helper.IsPrimitiveType(p.TypeUsage.EdmType)))
+            foreach (
+                var cspaceProperty in
+                    cspaceType.GetDeclaredOnlyMembers<EdmProperty>().Where(p => Helper.IsPrimitiveType(p.TypeUsage.EdmType)))
             {
-                PropertyInfo clrProperty = clrProperties.FirstOrDefault(p => MemberMatchesByConvention(p, cspaceProperty));
+                var clrProperty = clrProperties.FirstOrDefault(p => MemberMatchesByConvention(p, cspaceProperty));
                 if (clrProperty != null)
                 {
                     PrimitiveType propertyType;
                     if (TryGetPrimitiveType(clrProperty.PropertyType, out propertyType))
                     {
-                        if (clrProperty.CanRead && clrProperty.CanWrite)
+                        if (clrProperty.CanRead
+                            && clrProperty.CanWrite)
                         {
                             AddScalarMember(type, clrProperty, ospaceType, cspaceProperty, propertyType);
                         }
                         else
                         {
-                            string message = Strings.Validator_OSpace_Convention_ScalarPropertyMissginGetterOrSetter(clrProperty.Name, type.FullName, type.Assembly.FullName);
+                            var message = Strings.Validator_OSpace_Convention_ScalarPropertyMissginGetterOrSetter(
+                                clrProperty.Name, type.FullName, type.Assembly.FullName);
                             SessionData.LoadMessageLogger.LogLoadMessage(message, cspaceType);
                             return false;
                         }
                     }
                     else
                     {
-                        string message = Strings.Validator_OSpace_Convention_NonPrimitiveTypeProperty(clrProperty.Name, type.FullName, clrProperty.PropertyType.FullName);
+                        var message = Strings.Validator_OSpace_Convention_NonPrimitiveTypeProperty(
+                            clrProperty.Name, type.FullName, clrProperty.PropertyType.FullName);
                         SessionData.LoadMessageLogger.LogLoadMessage(message, cspaceType);
                         return false;
                     }
                 }
                 else
                 {
-                    string message = Strings.Validator_OSpace_Convention_MissingRequiredProperty(cspaceProperty.Name, type.FullName);
+                    var message = Strings.Validator_OSpace_Convention_MissingRequiredProperty(cspaceProperty.Name, type.FullName);
                     SessionData.LoadMessageLogger.LogLoadMessage(message, cspaceType);
                     return false;
                 }
@@ -589,20 +634,23 @@
             return true;
         }
 
-        private bool TryFindAndCreateEnumProperties(Type type, StructuralType cspaceType, StructuralType ospaceType, PropertyInfo[] clrProperties, List<Action> referenceResolutionListForCurrentType)
+        private bool TryFindAndCreateEnumProperties(
+            Type type, StructuralType cspaceType, StructuralType ospaceType, PropertyInfo[] clrProperties,
+            List<Action> referenceResolutionListForCurrentType)
         {
             var typeClosureToTrack = new List<KeyValuePair<EdmProperty, PropertyInfo>>();
 
-            foreach (EdmProperty cspaceProperty in cspaceType.GetDeclaredOnlyMembers<EdmProperty>().Where(p => Helper.IsEnumType(p.TypeUsage.EdmType)))
+            foreach (
+                var cspaceProperty in cspaceType.GetDeclaredOnlyMembers<EdmProperty>().Where(p => Helper.IsEnumType(p.TypeUsage.EdmType)))
             {
-                PropertyInfo clrProperty = clrProperties.FirstOrDefault(p => MemberMatchesByConvention(p, cspaceProperty));
+                var clrProperty = clrProperties.FirstOrDefault(p => MemberMatchesByConvention(p, cspaceProperty));
                 if (clrProperty != null)
                 {
                     typeClosureToTrack.Add(new KeyValuePair<EdmProperty, PropertyInfo>(cspaceProperty, clrProperty));
                 }
                 else
                 {
-                    string message = Strings.Validator_OSpace_Convention_MissingRequiredProperty(cspaceProperty.Name, type.FullName);
+                    var message = Strings.Validator_OSpace_Convention_MissingRequiredProperty(cspaceProperty.Name, type.FullName);
                     SessionData.LoadMessageLogger.LogLoadMessage(message, cspaceType);
                     return false;
                 }
@@ -633,15 +681,17 @@
             EdmType propertyType;
             if (SessionData.CspaceToOspace.TryGetValue(cspaceProperty.TypeUsage.EdmType, out propertyType))
             {
-                if (clrProperty.CanRead && clrProperty.CanWrite)
+                if (clrProperty.CanRead
+                    && clrProperty.CanWrite)
                 {
                     AddScalarMember(type, clrProperty, ospaceType, cspaceProperty, propertyType);
                 }
                 else
                 {
-                    string message =
+                    var message =
                         SessionData.LoadMessageLogger.CreateErrorMessageWithTypeSpecificLoadLogs(
-                            Strings.Validator_OSpace_Convention_ScalarPropertyMissginGetterOrSetter(clrProperty.Name, type.FullName, type.Assembly.FullName),
+                            Strings.Validator_OSpace_Convention_ScalarPropertyMissginGetterOrSetter(
+                                clrProperty.Name, type.FullName, type.Assembly.FullName),
                             cspaceProperty.TypeUsage.EdmType);
 
                     SessionData.EdmItemErrors.Add(new EdmItemError(message));
@@ -649,7 +699,7 @@
             }
             else
             {
-                string message =
+                var message =
                     SessionData.LoadMessageLogger.CreateErrorMessageWithTypeSpecificLoadLogs(
                         Strings.Validator_OSpace_Convention_MissingOSpaceType(cspaceProperty.TypeUsage.EdmType.FullName),
                         cspaceProperty.TypeUsage.EdmType);
@@ -662,14 +712,13 @@
         {
             if (SessionData.ConventionBasedRelationshipsAreLoaded)
             {
-                return;                
+                return;
             }
-            
-            
+
             SessionData.ConventionBasedRelationshipsAreLoaded = true;
 
             // find all the relationships
-            foreach (AssociationType cspaceAssociation in SessionData.EdmItemCollection.GetItems<AssociationType>())
+            foreach (var cspaceAssociation in SessionData.EdmItemCollection.GetItems<AssociationType>())
             {
                 Debug.Assert(cspaceAssociation.RelationshipEndMembers.Count == 2, "Relationships are assumed to have exactly two ends");
 
@@ -679,27 +728,31 @@
                     continue;
                 }
 
-                EdmType[] ospaceEndTypes = new EdmType[2];
-                if (SessionData.CspaceToOspace.TryGetValue(GetRelationshipEndType(cspaceAssociation.RelationshipEndMembers[0]), out ospaceEndTypes[0]) &&
-                    SessionData.CspaceToOspace.TryGetValue(GetRelationshipEndType(cspaceAssociation.RelationshipEndMembers[1]), out ospaceEndTypes[1]))
+                var ospaceEndTypes = new EdmType[2];
+                if (SessionData.CspaceToOspace.TryGetValue(
+                    GetRelationshipEndType(cspaceAssociation.RelationshipEndMembers[0]), out ospaceEndTypes[0])
+                    &&
+                    SessionData.CspaceToOspace.TryGetValue(
+                        GetRelationshipEndType(cspaceAssociation.RelationshipEndMembers[1]), out ospaceEndTypes[1]))
                 {
                     Debug.Assert(ospaceEndTypes[0] is StructuralType);
                     Debug.Assert(ospaceEndTypes[1] is StructuralType);
 
                     // if we can find both ends of the relationship, then create it
 
-                    AssociationType ospaceAssociation = new AssociationType(cspaceAssociation.Name, cspaceAssociation.NamespaceName, cspaceAssociation.IsForeignKey, DataSpace.OSpace);
-                    for (int i = 0; i < cspaceAssociation.RelationshipEndMembers.Count; i++)
+                    var ospaceAssociation = new AssociationType(
+                        cspaceAssociation.Name, cspaceAssociation.NamespaceName, cspaceAssociation.IsForeignKey, DataSpace.OSpace);
+                    for (var i = 0; i < cspaceAssociation.RelationshipEndMembers.Count; i++)
                     {
-                        EntityType ospaceEndType = (EntityType)ospaceEndTypes[i];
-                        RelationshipEndMember cspaceEnd = cspaceAssociation.RelationshipEndMembers[i];
+                        var ospaceEndType = (EntityType)ospaceEndTypes[i];
+                        var cspaceEnd = cspaceAssociation.RelationshipEndMembers[i];
 
-                        ospaceAssociation.AddKeyMember(new AssociationEndMember(cspaceEnd.Name, ospaceEndType.GetReferenceType(), cspaceEnd.RelationshipMultiplicity));
+                        ospaceAssociation.AddKeyMember(
+                            new AssociationEndMember(cspaceEnd.Name, ospaceEndType.GetReferenceType(), cspaceEnd.RelationshipMultiplicity));
                     }
                     CacheEntry.TypesInAssembly.Add(ospaceAssociation);
                     SessionData.TypesInLoading.Add(ospaceAssociation.FullName, ospaceAssociation);
-                    SessionData.CspaceToOspace.Add(cspaceAssociation, ospaceAssociation); 
-
+                    SessionData.CspaceToOspace.Add(cspaceAssociation, ospaceAssociation);
                 }
             }
         }
@@ -716,7 +769,8 @@
 
         private static bool NonPrimitiveMemberMatchesByConvention(PropertyInfo clrProperty, EdmMember cspaceMember)
         {
-            return !clrProperty.PropertyType.IsValueType && !clrProperty.PropertyType.IsAssignableFrom(typeof(string)) && clrProperty.Name == cspaceMember.Name;
+            return !clrProperty.PropertyType.IsValueType && !clrProperty.PropertyType.IsAssignableFrom(typeof(string))
+                   && clrProperty.Name == cspaceMember.Name;
         }
 
         internal static bool SessionContainsConventionParameters(ObjectItemLoadingSessionData sessionData)
@@ -729,7 +783,8 @@
             return type.Name == cspaceType.Name;
         }
 
-        private static void AddScalarMember(Type type, PropertyInfo clrProperty, StructuralType ospaceType, EdmProperty cspaceProperty, EdmType propertyType)
+        private static void AddScalarMember(
+            Type type, PropertyInfo clrProperty, StructuralType ospaceType, EdmProperty cspaceProperty, EdmType propertyType)
         {
             Debug.Assert(type != null, "type != null");
             Debug.Assert(clrProperty != null, "clrProperty != null");
@@ -741,15 +796,21 @@
 
             var cspaceType = cspaceProperty.DeclaringType;
 
-            bool isKeyMember = Helper.IsEntityType(cspaceType) && ((EntityType)cspaceType).KeyMemberNames.Contains(clrProperty.Name);
+            var isKeyMember = Helper.IsEntityType(cspaceType) && ((EntityType)cspaceType).KeyMemberNames.Contains(clrProperty.Name);
 
             // the property is nullable only if it is not a key and can actually be set to null (i.e. is not a value type or is a nullable value type)
-            bool nullableFacetValue = !isKeyMember && (!clrProperty.PropertyType.IsValueType || Nullable.GetUnderlyingType(clrProperty.PropertyType) != null);
+            var nullableFacetValue = !isKeyMember
+                                     &&
+                                     (!clrProperty.PropertyType.IsValueType || Nullable.GetUnderlyingType(clrProperty.PropertyType) != null);
 
-            EdmProperty ospaceProperty =
+            var ospaceProperty =
                 new EdmProperty(
                     cspaceProperty.Name,
-                    TypeUsage.Create(propertyType, new FacetValues { Nullable = nullableFacetValue }),
+                    TypeUsage.Create(
+                        propertyType, new FacetValues
+                                          {
+                                              Nullable = nullableFacetValue
+                                          }),
                     clrProperty,
                     type.TypeHandle);
 
@@ -762,7 +823,7 @@
                 ospaceType.AddMember(ospaceProperty);
             }
         }
-        
+
         internal static ObjectItemAssemblyLoader Create(Assembly assembly, ObjectItemLoadingSessionData sessionData)
         {
             if (!ObjectItemAttributeAssemblyLoader.IsSchemaAttributePresent(assembly))
@@ -772,7 +833,8 @@
             else
             {
                 // we were loading in convention mode, and ran into an assembly that can't be loaded by convention
-                sessionData.EdmItemErrors.Add(new EdmItemError(Strings.Validator_OSpace_Convention_AttributeAssemblyReferenced(assembly.FullName)));
+                sessionData.EdmItemErrors.Add(
+                    new EdmItemError(Strings.Validator_OSpace_Convention_AttributeAssemblyReferenced(assembly.FullName)));
                 return new ObjectItemNoOpAssemblyLoader(assembly, sessionData);
             }
         }

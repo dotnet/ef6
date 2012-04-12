@@ -1,9 +1,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.EntitySql.AST;
-    using System.Data.Entity;
     using System.Data.Entity.Resources;
     using System.Globalization;
 
@@ -15,12 +13,14 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private Node _parsedTree;
         private CqlLexer _lexer;
         private string _query;
-        private ParserOptions _parserOptions;
+        private readonly ParserOptions _parserOptions;
         private const string _internalYaccSyntaxErrorMessage = "syntax error";
+
         /// <summary>
         /// Contains inclusive count of method expressions.
         /// </summary>
         private uint _methodExprCounter;
+
         private Stack<uint> _methodExprCounterStack;
 
         internal CqlParser(ParserOptions parserOptions, bool debug)
@@ -46,9 +46,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
             // however this method is a convergence zone from multiple public entry points and it makes sense to
             // check for null once, here.
             EntityUtil.CheckArgumentNull(query, "query");
-            if (String.IsNullOrEmpty(query) || query.Trim().Length == 0)
+            if (String.IsNullOrEmpty(query)
+                || query.Trim().Length == 0)
             {
-                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.InvalidEmptyQueryTextArgument);
+                throw EntityUtil.Argument(Strings.InvalidEmptyQueryTextArgument);
             }
 
             _query = query;
@@ -68,9 +69,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
 #if ENTITYSQL_PARSER_YYDEBUG
-        /// <summary>
-        /// Enables/Disables yacc debugging.
-        /// </summary>
+    /// <summary>
+    /// Enables/Disables yacc debugging.
+    /// </summary>
         internal bool EnableDebug
         {
             get { return yydebug; }
@@ -107,11 +108,30 @@ namespace System.Data.Entity.Core.Common.EntitySql
         //
         // Conversion/Cast/Helpers
         //
-        private static Node AstNode(object o) { return ((Node)o); }
-        private static int AstNodePos( object o ) { return ((Node)o).ErrCtx.InputPosition; }
-        private static CqlLexer.TerminalToken Terminal( object o ) { return ((CqlLexer.TerminalToken)o); }
-        private static int TerminalPos( object o ) { return ((CqlLexer.TerminalToken)o).IPos; }
-        private static NodeList<T> ToNodeList<T>(object o) where T : Node { return ((NodeList<T>)o); }
+        private static Node AstNode(object o)
+        {
+            return ((Node)o);
+        }
+
+        private static int AstNodePos(object o)
+        {
+            return ((Node)o).ErrCtx.InputPosition;
+        }
+
+        private static CqlLexer.TerminalToken Terminal(object o)
+        {
+            return ((CqlLexer.TerminalToken)o);
+        }
+
+        private static int TerminalPos(object o)
+        {
+            return ((CqlLexer.TerminalToken)o).IPos;
+        }
+
+        private static NodeList<T> ToNodeList<T>(object o) where T : Node
+        {
+            return ((NodeList<T>)o);
+        }
 
         private short yylex()
         {
@@ -128,30 +148,32 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         private void yyerror_stackoverflow()
         {
-            yyerror(System.Data.Entity.Resources.Strings.StackOverflowInParser);
+            yyerror(Strings.StackOverflowInParser);
         }
 
-        private void yyerror( string s )
+        private void yyerror(string s)
         {
             if (s.Equals(_internalYaccSyntaxErrorMessage, StringComparison.Ordinal))
             {
-                int errorPosition = _lexer.IPos;
+                var errorPosition = _lexer.IPos;
                 string syntaxContextInfo = null;
-                string term = _lexer.YYText;
+                var term = _lexer.YYText;
                 if (!String.IsNullOrEmpty(term))
                 {
-                    syntaxContextInfo = System.Data.Entity.Resources.Strings.LocalizedTerm;
+                    syntaxContextInfo = Strings.LocalizedTerm;
                     ErrorContext errCtx = null;
-                    Node astNode = yylval as Node;
-                    if (null != astNode && (null != astNode.ErrCtx) && (!String.IsNullOrEmpty(astNode.ErrCtx.ErrorContextInfo)))
+                    var astNode = yylval as Node;
+                    if (null != astNode && (null != astNode.ErrCtx)
+                        && (!String.IsNullOrEmpty(astNode.ErrCtx.ErrorContextInfo)))
                     {
                         errCtx = astNode.ErrCtx;
-                        errorPosition = Math.Min(errorPosition, errorPosition - term.Length); 
+                        errorPosition = Math.Min(errorPosition, errorPosition - term.Length);
                     }
 
-                    if ((yylval is CqlLexer.TerminalToken) && CqlLexer.IsReservedKeyword(term) && !(astNode is Identifier))
+                    if ((yylval is CqlLexer.TerminalToken) && CqlLexer.IsReservedKeyword(term)
+                        && !(astNode is Identifier))
                     {
-                        syntaxContextInfo = System.Data.Entity.Resources.Strings.LocalizedKeyword;
+                        syntaxContextInfo = Strings.LocalizedKeyword;
                         term = term.ToUpperInvariant();
                         errorPosition = Math.Min(errorPosition, errorPosition - term.Length);
                     }
@@ -163,11 +185,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     syntaxContextInfo = String.Format(CultureInfo.CurrentCulture, "{0} '{1}'", syntaxContextInfo, term);
                 }
 
-                throw EntityUtil.EntitySqlError(_query, 
-                                     System.Data.Entity.Resources.Strings.GenericSyntaxError, 
-                                     errorPosition, 
-                                     syntaxContextInfo, 
-                                     false /* loadErrorContextInfoFromResource */);
+                throw EntityUtil.EntitySqlError(
+                    _query,
+                    Strings.GenericSyntaxError,
+                    errorPosition,
+                    syntaxContextInfo,
+                    false /* loadErrorContextInfoFromResource */);
             }
             throw EntityUtil.EntitySqlError(_query, s, _lexer.IPos);
         }
@@ -204,7 +227,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private uint EndMethodExprCounting()
         {
             // Save number of method expressions on the current level.
-            uint count = _methodExprCounter;
+            var count = _methodExprCounter;
 
             // Restore upper level counter and adjust it with the number of method expressions on the current level.
             _methodExprCounter += _methodExprCounterStack.Pop();

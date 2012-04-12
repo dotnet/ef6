@@ -1,7 +1,7 @@
-using System.Data.Entity.Core.Metadata.Edm;
-
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
+    using System.Data.Entity.Core.Metadata.Edm;
+
     [Serializable]
     internal class RelationshipFixer<TSourceEntity, TTargetEntity> : IRelationshipFixer
         where TSourceEntity : class
@@ -11,8 +11,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // a breaking change.  This includes changing the field type or field name of existing
         // serialized fields. If you need to make this kind of change, it may be possible, but it
         // will require some custom serialization/deserialization code.
-        RelationshipMultiplicity _sourceRoleMultiplicity;
-        RelationshipMultiplicity _targetRoleMultiplicity;
+        private readonly RelationshipMultiplicity _sourceRoleMultiplicity;
+        private readonly RelationshipMultiplicity _targetRoleMultiplicity;
 
         internal RelationshipFixer(RelationshipMultiplicity sourceRoleMultiplicity, RelationshipMultiplicity targetRoleMultiplicity)
         {
@@ -28,9 +28,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="relationshipManager">RelationshipManager to use for creating the new end</param>
         /// <returns>Reference to the new collection or reference on the other end of the relationship</returns>
         RelatedEnd IRelationshipFixer.CreateSourceEnd(RelationshipNavigation navigation, RelationshipManager relationshipManager)
-        {            
-            return relationshipManager.CreateRelatedEnd<TTargetEntity, TSourceEntity>(navigation, _targetRoleMultiplicity, _sourceRoleMultiplicity, /*existingRelatedEnd*/ null);
-        }        
+        {
+            return relationshipManager.CreateRelatedEnd<TTargetEntity, TSourceEntity>(
+                navigation, _targetRoleMultiplicity, _sourceRoleMultiplicity, /*existingRelatedEnd*/ null);
+        }
     }
-
 }

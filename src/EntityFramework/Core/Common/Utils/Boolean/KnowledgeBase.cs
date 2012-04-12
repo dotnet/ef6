@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Globalization;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
+    using System.Collections.Generic;
+    using System.Text;
+
     /// <summary>
     /// Data structure supporting storage of facts and proof (resolution) of queries given
     /// those facts.
@@ -45,7 +41,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// <param name="kb">The other knowledge base</param>
         internal void AddKnowledgeBase(KnowledgeBase<T_Identifier> kb)
         {
-            foreach (BoolExpr<T_Identifier> fact in kb._facts)
+            foreach (var fact in kb._facts)
             {
                 AddFact(fact);
             }
@@ -58,8 +54,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         internal virtual void AddFact(BoolExpr<T_Identifier> fact)
         {
             _facts.Add(fact);
-            Converter<T_Identifier> converter = new Converter<T_Identifier>(fact, _context);
-            Vertex factVertex = converter.Vertex;
+            var converter = new Converter<T_Identifier>(fact, _context);
+            var factVertex = converter.Vertex;
             _knowledge = _context.Solver.And(_knowledge, factVertex);
         }
 
@@ -89,9 +85,9 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.AppendLine("Facts:");
-            foreach (BoolExpr<T_Identifier> fact in _facts)
+            foreach (var fact in _facts)
             {
                 builder.Append("\t").AppendLine(fact.ToString());
             }
@@ -102,8 +98,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         // (fact appears as A --> B rather than !A + B)
         private class Implication : OrExpr<T_Identifier>
         {
-            BoolExpr<T_Identifier> _condition;
-            BoolExpr<T_Identifier> _implies;
+            private readonly BoolExpr<T_Identifier> _condition;
+            private readonly BoolExpr<T_Identifier> _implies;
 
             // (condition --> implies) iff. (!condition OR implies) 
             internal Implication(BoolExpr<T_Identifier> condition, BoolExpr<T_Identifier> implies)
@@ -123,8 +119,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         // (fact appears as A <--> B rather than (!A + B) . (A + !B))
         private class Equivalence : AndExpr<T_Identifier>
         {
-            BoolExpr<T_Identifier> _left;
-            BoolExpr<T_Identifier> _right;
+            private readonly BoolExpr<T_Identifier> _left;
+            private readonly BoolExpr<T_Identifier> _right;
 
             // (left iff. right) iff. (left --> right AND right --> left)
             internal Equivalence(BoolExpr<T_Identifier> left, BoolExpr<T_Identifier> right)

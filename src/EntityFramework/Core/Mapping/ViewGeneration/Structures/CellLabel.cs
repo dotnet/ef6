@@ -1,13 +1,9 @@
-using System.Data.Entity.Core.Common.Utils;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
-
     // A class that abstracts the notion of identifying table mapping
     // fragments or cells, e.g., line numbers, etc
     internal class CellLabel
     {
-
         #region Constructors
 
         /// <summary>
@@ -15,13 +11,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// </summary>
         internal CellLabel(CellLabel source)
         {
-            this.m_startLineNumber = source.m_startLineNumber;
-            this.m_startLinePosition = source.m_startLinePosition;
-            this.m_sourceLocation = source.m_sourceLocation;
+            m_startLineNumber = source.m_startLineNumber;
+            m_startLinePosition = source.m_startLinePosition;
+            m_sourceLocation = source.m_sourceLocation;
         }
 
-        internal CellLabel(StorageMappingFragment fragmentInfo) :
-            this(fragmentInfo.StartLineNumber, fragmentInfo.StartLinePosition, fragmentInfo.SourceLocation) { }
+        internal CellLabel(StorageMappingFragment fragmentInfo)
+            :
+                this(fragmentInfo.StartLineNumber, fragmentInfo.StartLinePosition, fragmentInfo.SourceLocation)
+        {
+        }
 
         internal CellLabel(int startLineNumber, int startLinePosition, string sourceLocation)
         {
@@ -33,9 +32,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #endregion
 
         #region Fields
-        private int m_startLineNumber;
-        private int m_startLinePosition;
-        private string m_sourceLocation;
+
+        private readonly int m_startLineNumber;
+        private readonly int m_startLinePosition;
+        private readonly string m_sourceLocation;
+
         #endregion
 
         #region Properties

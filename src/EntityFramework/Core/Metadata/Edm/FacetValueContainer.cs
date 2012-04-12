@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
-
-namespace System.Data.Entity.Core.Metadata.Edm
+﻿namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -30,9 +25,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// <typeparam name="T"></typeparam>
     internal struct FacetValueContainer<T>
     {
-        T _value;
-        bool _hasValue;
-        bool _isUnbounded;
+        private T _value;
+        private bool _hasValue;
+        private bool _isUnbounded;
 
         internal T Value
         {
@@ -52,17 +47,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         // don't add an implicit conversion from object because it will kill the compile time type checking.
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "unbounded")]
-        public static implicit operator FacetValueContainer<T>(System.Data.Entity.Core.Metadata.Edm.EdmConstants.Unbounded unbounded)
+        public static implicit operator FacetValueContainer<T>(EdmConstants.Unbounded unbounded)
         {
-            Debug.Assert(object.ReferenceEquals(unbounded, EdmConstants.UnboundedValue), "you must pass the unbounded value.  If you are trying to set null, use the T parameter overload");
-            FacetValueContainer<T> container = new FacetValueContainer<T>();
+            Debug.Assert(
+                ReferenceEquals(unbounded, EdmConstants.UnboundedValue),
+                "you must pass the unbounded value.  If you are trying to set null, use the T parameter overload");
+            var container = new FacetValueContainer<T>();
             container.SetUnbounded();
             return container;
         }
 
         public static implicit operator FacetValueContainer<T>(T value)
         {
-            FacetValueContainer<T> container = new FacetValueContainer<T>();
+            var container = new FacetValueContainer<T>();
             container.Value = value;
             return container;
         }
@@ -76,16 +73,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             else
             {
-                return (object)_value;
+                return _value;
             }
         }
 
         internal bool HasValue
         {
-            get
-            {
-                return _hasValue;
-            }
+            get { return _hasValue; }
         }
     }
 }

@@ -3,7 +3,6 @@
   <xs:annotation>
     <xs:documentation xml:lang="en">
       Entity Data Model Designer Schema
-      Copyright (c) Microsoft Corp. All rights reserved.
     </xs:documentation>
   </xs:annotation>
   <xs:import namespace="http://schemas.microsoft.com/ado/2006/04/codegeneration" schemaLocation="System.Data.Resources.CodeGenerationSchema.xsd" />

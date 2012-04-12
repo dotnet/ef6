@@ -2,7 +2,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Linq;
@@ -14,7 +13,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private const string BUILD_MANAGER_TYPE_NAME = @"System.Web.Compilation.BuildManager";
         private const string AspNetAssemblyName = "System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
         private Assembly _webAssembly;
-        private bool _triedLoadingWebAssembly = false;
+        private bool _triedLoadingWebAssembly;
 
         /// <summary>
         /// Determine whether we are inside an ASP.NET application.
@@ -30,7 +29,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             try
             {
-                string result = PrivateMapWebPath(EdmConstants.WebHomeSymbol);
+                var result = PrivateMapWebPath(EdmConstants.WebHomeSymbol);
                 return result != null;
             }
             catch (SecurityException)
@@ -51,9 +50,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 throw;
             }
         }
-
-
-
 
         private bool TryInitializeWebAssembly()
         {
@@ -81,25 +77,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 if (!EntityUtil.IsCatchableExceptionType(e))
                 {
-
-                    throw;  // StackOverflow, OutOfMemory, ...
+                    throw; // StackOverflow, OutOfMemory, ...
                 }
 
                 // It is possible that we are operating in an environment where
                 // System.Web is simply not available (for instance, inside SQL
                 // Server). Instead of throwing or rethrowing, we simply fail
                 // gracefully
-
             }
 
             return false;
         }
 
-        void InitializeWebAssembly()
+        private void InitializeWebAssembly()
         {
             if (!TryInitializeWebAssembly())
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.UnableToDetermineApplicationContext);
+                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext);
             }
         }
 
@@ -126,7 +120,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             path = PrivateMapWebPath(path);
             if (path == null)
             {
-                string errMsg = Strings.InvalidUseOfWebPath(EdmConstants.WebHomeSymbol);
+                var errMsg = Strings.InvalidUseOfWebPath(EdmConstants.WebHomeSymbol);
                 throw EntityUtil.InvalidOperation(errMsg);
             }
             return path;
@@ -144,9 +138,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             //
             try
             {
-                Type hostingEnvType = _webAssembly.GetType("System.Web.Hosting.HostingEnvironment", true);
+                var hostingEnvType = _webAssembly.GetType("System.Web.Hosting.HostingEnvironment", true);
 
-                MethodInfo miMapPath = hostingEnvType.GetMethod("MapPath");
+                var miMapPath = hostingEnvType.GetMethod("MapPath");
                 Debug.Assert(miMapPath != null, "Unpexpected missing member in type System.Web.Hosting.HostingEnvironment");
 
                 // Note:
@@ -159,31 +153,31 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             catch (TargetException e)
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.UnableToDetermineApplicationContext, e);
+                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext, e);
             }
             catch (ArgumentException e)
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.UnableToDetermineApplicationContext, e);
+                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext, e);
             }
             catch (TargetInvocationException e)
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.UnableToDetermineApplicationContext, e);
+                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext, e);
             }
             catch (TargetParameterCountException e)
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.UnableToDetermineApplicationContext, e);
+                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext, e);
             }
             catch (MethodAccessException e)
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.UnableToDetermineApplicationContext, e);
+                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext, e);
             }
             catch (MemberAccessException e)
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.UnableToDetermineApplicationContext, e);
+                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext, e);
             }
             catch (TypeLoadException e)
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.UnableToDetermineApplicationContext, e);
+                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext, e);
             }
         }
 
@@ -193,13 +187,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return TryGetBuildManagerType(out buildManager);
         }
 
-
         private bool TryGetBuildManagerType(out Type buildManager)
         {
             InitializeWebAssembly();
             buildManager = _webAssembly.GetType(BUILD_MANAGER_TYPE_NAME, false);
             return buildManager != null;
-
         }
 
         internal IEnumerable<Assembly> GetBuildManagerReferencedAssemblies()
@@ -212,13 +204,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Type buildManager;
             if (!TryGetBuildManagerType(out buildManager))
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.UnableToFindReflectedType(BUILD_MANAGER_TYPE_NAME, AspNetAssemblyName));
+                throw EntityUtil.InvalidOperation(Strings.UnableToFindReflectedType(BUILD_MANAGER_TYPE_NAME, AspNetAssemblyName));
             }
 
-            MethodInfo getRefAssembliesMethod = buildManager.GetMethod(
-                                                            @"GetReferencedAssemblies",
-                                                            BindingFlags.InvokeMethod | BindingFlags.Static | BindingFlags.Public
-                                                        );
+            var getRefAssembliesMethod = buildManager.GetMethod(
+                @"GetReferencedAssemblies",
+                BindingFlags.InvokeMethod | BindingFlags.Static | BindingFlags.Public
+                );
 
             if (getRefAssembliesMethod == null)
             {
@@ -238,15 +230,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             catch (TargetException e)
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.UnableToDetermineApplicationContext, e);
+                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext, e);
             }
             catch (TargetInvocationException e)
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.UnableToDetermineApplicationContext, e);
+                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext, e);
             }
             catch (MethodAccessException e)
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.UnableToDetermineApplicationContext, e);
+                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext, e);
             }
         }
     }

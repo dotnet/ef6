@@ -1,11 +1,9 @@
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Data;
-    using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
 
     /// <summary>
@@ -13,25 +11,15 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     /// </summary>
     internal sealed class RelationshipEndCollection : IList<IRelationshipEnd>
     {
-        private Dictionary<string,IRelationshipEnd> _endLookup = null;
-        private List<string> _keysInDefOrder = null;
-
-        /// <summary>
-        /// construct a RelationshipEndCollection
-        /// </summary>
-        public RelationshipEndCollection()
-        {
-        }
+        private Dictionary<string, IRelationshipEnd> _endLookup;
+        private List<string> _keysInDefOrder;
 
         /// <summary>
         /// How many RelationshipEnds are in the collection
         /// </summary>
         public int Count
         {
-            get
-            {
-                return KeysInDefOrder.Count;
-            }
+            get { return KeysInDefOrder.Count; }
         }
 
         /// <summary>
@@ -42,17 +30,21 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(end != null, "end parameter is null");
 
-            SchemaElement endElement = end as SchemaElement;
+            var endElement = end as SchemaElement;
             Debug.Assert(endElement != null, "end is not a SchemaElement");
 
             // this should have been caught before this, just ignore it
-            if ( !IsEndValid(end) )
+            if (!IsEndValid(end))
+            {
                 return;
+            }
 
-            if ( !ValidateUniqueName(endElement, end.Name))
+            if (!ValidateUniqueName(endElement, end.Name))
+            {
                 return;
+            }
 
-            EndLookup.Add(end.Name,end);
+            EndLookup.Add(end.Name, end);
             KeysInDefOrder.Add(end.Name);
         }
 
@@ -74,10 +66,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns></returns>
         private bool ValidateUniqueName(SchemaElement end, string name)
         {
-            if ( EndLookup.ContainsKey(name) )
+            if (EndLookup.ContainsKey(name))
             {
-                end.AddError( ErrorCode.AlreadyDefined, EdmSchemaErrorSeverity.Error,
-                    System.Data.Entity.Resources.Strings.EndNameAlreadyDefinedDuplicate(name));
+                end.AddError(
+                    ErrorCode.AlreadyDefined, EdmSchemaErrorSeverity.Error,
+                    Strings.EndNameAlreadyDefinedDuplicate(name));
                 return false;
             }
 
@@ -93,11 +86,13 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(end != null, "end parameter is null");
 
-            if ( !IsEndValid(end) )
+            if (!IsEndValid(end))
+            {
                 return false;
+            }
 
             KeysInDefOrder.Remove(end.Name);
-            bool wasInList = EndLookup.Remove(end.Name);
+            var wasInList = EndLookup.Remove(end.Name);
 
             return wasInList;
         }
@@ -126,14 +121,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         public IRelationshipEnd this[int index]
         {
-            get
-            {
-                return EndLookup[KeysInDefOrder[index]];
-            }
-            set
-            {
-                throw EntityUtil.NotSupported();
-            }
+            get { return EndLookup[KeysInDefOrder[index]]; }
+            set { throw EntityUtil.NotSupported(); }
         }
 
         /// <summary>
@@ -142,32 +131,34 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns>the enumerator</returns>
         public IEnumerator<IRelationshipEnd> GetEnumerator()
         {
-            return new Enumerator(EndLookup,KeysInDefOrder);
+            return new Enumerator(EndLookup, KeysInDefOrder);
         }
 
-        public bool TryGetEnd( string name, out IRelationshipEnd end )
+        public bool TryGetEnd(string name, out IRelationshipEnd end)
         {
-            return EndLookup.TryGetValue( name, out end );
+            return EndLookup.TryGetValue(name, out end);
         }
 
         /// <summary>
         /// get an un-typed enumerator for the collection
         /// </summary>
         /// <returns>the enumerator</returns>
-        IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            return new Enumerator(EndLookup,KeysInDefOrder);
+            return new Enumerator(EndLookup, KeysInDefOrder);
         }
 
         /// <summary>
         /// The data for the collection
         /// </summary>
-        private Dictionary<string,IRelationshipEnd> EndLookup
+        private Dictionary<string, IRelationshipEnd> EndLookup
         {
             get
             {
-                if ( _endLookup == null )
+                if (_endLookup == null)
+                {
                     _endLookup = new Dictionary<string, IRelationshipEnd>(StringComparer.Ordinal);
+                }
 
                 return _endLookup;
             }
@@ -180,8 +171,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             get
             {
-                if ( _keysInDefOrder == null )
+                if (_keysInDefOrder == null)
+                {
                     _keysInDefOrder = new List<string>();
+                }
 
                 return _keysInDefOrder;
             }
@@ -201,10 +194,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         public bool IsReadOnly
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
         }
 
         /// <summary>
@@ -241,11 +231,13 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         /// <param name="ends">array to copy to</param>
         /// <param name="index">The zero-based index in array at which copying begins.</param>
-        public void CopyTo(IRelationshipEnd[] ends, int index )
+        public void CopyTo(IRelationshipEnd[] ends, int index)
         {
-            Debug.Assert(ends.Length-index >= Count);
-            foreach ( IRelationshipEnd end in this )
+            Debug.Assert(ends.Length - index >= Count);
+            foreach (var end in this)
+            {
                 ends[index++] = end;
+            }
         }
 
         /// <summary>
@@ -255,7 +247,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private sealed class Enumerator : IEnumerator<IRelationshipEnd>
         {
             private List<string>.Enumerator _Enumerator;
-            private Dictionary<string,IRelationshipEnd> _Data = null;
+            private readonly Dictionary<string, IRelationshipEnd> _Data;
 
             /// <summary>
             /// construct the enumerator
@@ -284,21 +276,15 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             /// </summary>
             public IRelationshipEnd Current
             {
-                get
-                {
-                    return _Data[_Enumerator.Current];
-                }
+                get { return _Data[_Enumerator.Current]; }
             }
 
             /// <summary>
             /// get current relationship end from the enumerator
             /// </summary>
-            object System.Collections.IEnumerator.Current
+            object IEnumerator.Current
             {
-                get
-                {
-                    return _Data[_Enumerator.Current];
-                }
+                get { return _Data[_Enumerator.Current]; }
             }
 
             /// <summary>

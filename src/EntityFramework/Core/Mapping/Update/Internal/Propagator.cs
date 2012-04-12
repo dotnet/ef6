@@ -3,6 +3,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
 
     /// <summary>
@@ -34,6 +35,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     internal partial class Propagator : UpdateExpressionVisitor<ChangeNode>
     {
         #region Constructors
+
         /// <summary>
         /// Construct a new propagator.
         /// </summary>
@@ -49,15 +51,19 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             m_updateTranslator = parent;
             m_table = table;
         }
+
         #endregion
 
         #region Fields
+
         private readonly UpdateTranslator m_updateTranslator;
         private readonly EntitySet m_table;
         private static readonly string s_visitorName = typeof(Propagator).FullName;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets context for updates performed by this propagator.
         /// </summary>
@@ -66,13 +72,15 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             get { return m_updateTranslator; }
         }
 
-        override protected string VisitorName
+        protected override string VisitorName
         {
             get { return s_visitorName; }
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Propagate changes from C-Space (contained in <paramref name="parent" /> to the S-Space.
         /// </summary>
@@ -84,7 +92,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="table">Table for which updates are being produced.</param>
         /// <param name="umView">Update mapping view to propagate.</param>
         /// <returns>Changes in S-Space.</returns>
-        static internal ChangeNode Propagate(UpdateTranslator parent, EntitySet table, DbQueryCommandTree umView)
+        internal static ChangeNode Propagate(UpdateTranslator parent, EntitySet table, DbQueryCommandTree umView)
         {
             // Construct a new instance of a propagator, which implements a visitor interface
             // for expression nodes (nodes in the update mapping view) and returns changes nodes
@@ -104,8 +112,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns>Empty change node with the appropriate type for the view node.</returns>
         private static ChangeNode BuildChangeNode(DbExpression node)
         {
-            TypeUsage nodeType = node.ResultType;
-            TypeUsage elementType = MetadataHelper.GetElementType(nodeType);
+            var nodeType = node.ResultType;
+            var elementType = MetadataHelper.GetElementType(nodeType);
             return new ChangeNode(elementType);
         }
 
@@ -113,7 +121,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         public override ChangeNode Visit(DbCrossJoinExpression node)
         {
-            throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.Update_UnsupportedJoinType(node.ExpressionKind));
+            throw EntityUtil.NotSupported(Strings.Update_UnsupportedJoinType(node.ExpressionKind));
         }
 
         /// <summary>
@@ -127,25 +135,26 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             EntityUtil.CheckArgumentNull(node, "node");
 
-            if (DbExpressionKind.InnerJoin != node.ExpressionKind && DbExpressionKind.LeftOuterJoin != node.ExpressionKind)
+            if (DbExpressionKind.InnerJoin != node.ExpressionKind
+                && DbExpressionKind.LeftOuterJoin != node.ExpressionKind)
             {
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.Update_UnsupportedJoinType(node.ExpressionKind));
+                throw EntityUtil.NotSupported(Strings.Update_UnsupportedJoinType(node.ExpressionKind));
             }
 
             // There are precisely two inputs to the join which we treat as the left and right children.
-            DbExpression leftExpr = node.Left.Expression;
-            DbExpression rightExpr = node.Right.Expression;
+            var leftExpr = node.Left.Expression;
+            var rightExpr = node.Right.Expression;
 
             // Get the results of propagating changes to the left and right inputs to the join.
-            ChangeNode left = Visit(leftExpr);
-            ChangeNode right = Visit(rightExpr);
+            var left = Visit(leftExpr);
+            var right = Visit(rightExpr);
 
             // Construct a new join propagator, passing in the left and right results, the actual
             // join expression, and this parent propagator.
-            JoinPropagator evaluator = new JoinPropagator(left, right, node, this);
-            
+            var evaluator = new JoinPropagator(left, right, node, this);
+
             // Execute propagation.
-            ChangeNode result = evaluator.Propagate();
+            var result = evaluator.Propagate();
 
             return result;
         }
@@ -168,11 +177,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             EntityUtil.CheckArgumentNull(node, "node");
 
             // Initialize an empty change node result for the union all node
-            ChangeNode result = BuildChangeNode(node);
+            var result = BuildChangeNode(node);
 
             // Retrieve result of propagating changes to the left and right children.
-            ChangeNode left = Visit(node.Left);
-            ChangeNode right = Visit(node.Right);
+            var left = Visit(node.Left);
+            var right = Visit(node.Right);
 
             // Implement insertion propagation rule I(U) = I(L) union I(R)
             result.Inserted.AddRange(left.Inserted);
@@ -181,7 +190,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             // Implement deletion progation rule D(U) = D(L) union D(R)
             result.Deleted.AddRange(left.Deleted);
             result.Deleted.AddRange(right.Deleted);
-            
+
             // The choice of side for the placeholder is arbitrary, since CQTs enforce type compatibility 
             // for the left and right hand sides of the union.
             result.Placeholder = left.Placeholder;
@@ -206,19 +215,19 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             EntityUtil.CheckArgumentNull(node, "node");
 
             // Initialize an empty change node result for the projection node.
-            ChangeNode result = BuildChangeNode(node);
+            var result = BuildChangeNode(node);
 
             // Retrieve result of propagating changes to the input of the projection.
-            ChangeNode input = Visit(node.Input.Expression);
+            var input = Visit(node.Input.Expression);
 
             // Implement propagation rule for insert I(P) = Proj_f I(S)
-            foreach(PropagatorResult row in input.Inserted)
+            foreach (var row in input.Inserted)
             {
                 result.Inserted.Add(Project(node, row, result.ElementType));
             }
 
             // Implement propagation rule for delete D(P) = Proj_f D(S)
-            foreach(PropagatorResult row in input.Deleted)
+            foreach (var row in input.Deleted)
             {
                 result.Deleted.Add(Project(node, row, result.ElementType));
             }
@@ -244,24 +253,24 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             Debug.Assert(null != node.Projection, "CQT validates DbProjectExpression.Projection property");
 
-            DbNewInstanceExpression projection = node.Projection as DbNewInstanceExpression;
+            var projection = node.Projection as DbNewInstanceExpression;
 
             if (null == projection)
             {
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.Update_UnsupportedProjection(node.Projection.ExpressionKind));
+                throw EntityUtil.NotSupported(Strings.Update_UnsupportedProjection(node.Projection.ExpressionKind));
             }
 
             // Initialize empty structure containing space for every element of the projection.
-            PropagatorResult[] projectedValues = new PropagatorResult[projection.Arguments.Count];
+            var projectedValues = new PropagatorResult[projection.Arguments.Count];
 
             // Extract value from the input row for every projection argument requested.
-            for (int ordinal = 0; ordinal < projectedValues.Length; ordinal++)
+            for (var ordinal = 0; ordinal < projectedValues.Length; ordinal++)
             {
                 projectedValues[ordinal] = Evaluator.Evaluate(projection.Arguments[ordinal], row, this);
             }
 
             // Return a new row containing projected values.
-            PropagatorResult projectedRow = PropagatorResult.CreateStructuralValue(projectedValues, (StructuralType)resultType.EdmType, false);
+            var projectedRow = PropagatorResult.CreateStructuralValue(projectedValues, (StructuralType)resultType.EdmType, false);
 
             return projectedRow;
         }
@@ -281,10 +290,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             EntityUtil.CheckArgumentNull(node, "node");
 
             // Initialize an empty change node for this filter node.
-            ChangeNode result = BuildChangeNode(node);
+            var result = BuildChangeNode(node);
 
             // Retrieve result of propagating changes to the input of the filter.
-            ChangeNode input = Visit(node.Input.Expression);
+            var input = Visit(node.Input.Expression);
 
             // Implement insert propagation rule I(F) = Sigma_p I(S)
             result.Inserted.AddRange(Evaluator.Filter(node.Predicate, input.Inserted, this));
@@ -308,10 +317,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         public override ChangeNode Visit(DbScanExpression node)
         {
             EntityUtil.CheckArgumentNull(node, "node");
-            
+
             // Gets modifications requested for this extent from the grouper.
-            EntitySetBase extent = node.Target;
-            ChangeNode extentModifications = UpdateTranslator.GetExtentModifications(extent);
+            var extent = node.Target;
+            var extentModifications = UpdateTranslator.GetExtentModifications(extent);
 
             if (null == extentModifications.Placeholder)
             {
@@ -321,7 +330,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             return extentModifications;
         }
+
         #endregion
+
         #endregion
     }
 }

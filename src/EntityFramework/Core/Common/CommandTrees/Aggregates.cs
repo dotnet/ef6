@@ -1,14 +1,9 @@
-using System;
-using System.Data.Common;
-using System.Data.Entity.Core.Common;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees.Internal;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
-    using System.Diagnostics.CodeAnalysis;
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.CommandTrees.Internal;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
 
     /// <summary>
     /// Aggregates are pseudo-expressions. They look and feel like expressions, but 
@@ -26,8 +21,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             Debug.Assert(arguments != null, "DbAggregate.Arguments cannot be null");
             Debug.Assert(arguments.Count == 1, "DbAggregate requires a single argument");
 
-            this._type = resultType;
-            this._args = arguments;
+            _type = resultType;
+            _args = arguments;
         }
 
         /// <summary>
@@ -41,7 +36,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets the list of expressions that define the arguments to the aggregate.
         /// </summary>
-        public IList<DbExpression> Arguments { get { return _args; } }
+        public IList<DbExpression> Arguments
+        {
+            get { return _args; }
+        }
     }
 
     /// <summary>
@@ -60,8 +58,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// </summary>
     public sealed class DbFunctionAggregate : DbAggregate
     {
-        private bool _distinct;
-        EdmFunction _aggregateFunction;
+        private readonly bool _distinct;
+        private readonly EdmFunction _aggregateFunction;
 
         internal DbFunctionAggregate(TypeUsage resultType, DbExpressionList arguments, EdmFunction function, bool isDistinct)
             : base(resultType, arguments)
@@ -75,11 +73,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets a value indicating whether the aggregate function is applied in a distinct fashion
         /// </summary>
-        public bool Distinct { get { return _distinct; } }
+        public bool Distinct
+        {
+            get { return _distinct; }
+        }
 
         /// <summary>
         /// Gets the method metadata that specifies the aggregate function to invoke.
         /// </summary>
-        public EdmFunction Function { get { return _aggregateFunction; } }
+        public EdmFunction Function
+        {
+            get { return _aggregateFunction; }
+        }
     }
 }

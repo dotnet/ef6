@@ -1,12 +1,10 @@
-﻿using System.Reflection;
-using System.IO;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Linq;
-using System.Collections;
-
-namespace System.Data.Entity.Core.Metadata.Edm
+﻿namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Reflection;
+
     internal class DefaultAssemblyResolver : MetadataArtifactAssemblyResolver
     {
         internal override bool TryResolveAssemblyReference(AssemblyName refernceName, out Assembly assembly)
@@ -14,7 +12,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             assembly = ResolveAssembly(refernceName);
             return assembly != null;
         }
-
 
         internal override IEnumerable<Assembly> GetWildcardAssemblies()
         {
@@ -26,7 +23,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assembly assembly = null;
 
             // look in the already loaded assemblies
-            foreach (Assembly current in GetAlreadyLoadedNonSystemAssemblies())
+            foreach (var current in GetAlreadyLoadedNonSystemAssemblies())
             {
                 if (AssemblyName.ReferenceMatchesDefinition(referenceName, new AssemblyName(current.FullName)))
                 {
@@ -54,7 +51,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Debug.Assert(referenceName != null);
 
-            foreach (Assembly current in GetAllDiscoverableAssemblies())
+            foreach (var current in GetAllDiscoverableAssemblies())
             {
                 if (AssemblyName.ReferenceMatchesDefinition(referenceName, new AssemblyName(current.FullName)))
                 {
@@ -67,7 +64,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return false;
         }
 
-
         /// <summary>
         /// Return all assemblies loaded in the current AppDomain that are not signed
         /// with the Microsoft Key.
@@ -75,7 +71,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A list of assemblies</returns>
         private static IEnumerable<Assembly> GetAlreadyLoadedNonSystemAssemblies()
         {
-            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             return assemblies.Where(a => a != null && !MetadataAssemblyHelper.ShouldFilterAssembly(a));
         }
 
@@ -89,16 +85,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A list of assemblies</returns>
         private static IEnumerable<Assembly> GetAllDiscoverableAssemblies()
         {
-            Assembly assembly = Assembly.GetEntryAssembly();
-            HashSet<Assembly> assemblyList = new HashSet<Assembly>(
+            var assembly = Assembly.GetEntryAssembly();
+            var assemblyList = new HashSet<Assembly>(
                 AssemblyComparer.Instance);
 
-            foreach (Assembly loadedAssembly in GetAlreadyLoadedNonSystemAssemblies())
+            foreach (var loadedAssembly in GetAlreadyLoadedNonSystemAssemblies())
             {
                 assemblyList.Add(loadedAssembly);
             }
 
-            AspProxy aspProxy = new AspProxy();
+            var aspProxy = new AspProxy();
             if (!aspProxy.IsAspNetEnvironment())
             {
                 if (assembly == null)
@@ -108,7 +104,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 assemblyList.Add(assembly);
 
-                foreach (Assembly referenceAssembly in MetadataAssemblyHelper.GetNonSystemReferencedAssemblies(assembly))
+                foreach (var referenceAssembly in MetadataAssemblyHelper.GetNonSystemReferencedAssemblies(assembly))
                 {
                     assemblyList.Add(referenceAssembly);
                 }
@@ -118,11 +114,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (aspProxy.HasBuildManagerType())
             {
-                IEnumerable<Assembly> referencedAssemblies = aspProxy.GetBuildManagerReferencedAssemblies();
+                var referencedAssemblies = aspProxy.GetBuildManagerReferencedAssemblies();
                 // filter out system assemblies
                 if (referencedAssemblies != null)
                 {
-                    foreach (Assembly referencedAssembly in referencedAssemblies)
+                    foreach (var referencedAssembly in referencedAssemblies)
                     {
                         if (MetadataAssemblyHelper.ShouldFilterAssembly(referencedAssembly))
                         {
@@ -140,10 +136,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal sealed class AssemblyComparer : IEqualityComparer<Assembly>
         {
             // use singleton
-            private AssemblyComparer() { }
+            private AssemblyComparer()
+            {
+            }
 
-            private static AssemblyComparer _instance = new AssemblyComparer();
-            public static AssemblyComparer Instance{ get { return _instance; } }
+            private static readonly AssemblyComparer _instance = new AssemblyComparer();
+
+            public static AssemblyComparer Instance
+            {
+                get { return _instance; }
+            }
 
             /// <summary>
             /// if two assemblies have the same full name, we will consider them as the same.
@@ -157,13 +159,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             /// <returns></returns>
             public bool Equals(Assembly x, Assembly y)
             {
-                AssemblyName xname = new AssemblyName(x.FullName);
-                AssemblyName yname = new AssemblyName(y.FullName);
+                var xname = new AssemblyName(x.FullName);
+                var yname = new AssemblyName(y.FullName);
                 // return *true* when either the reference are the same 
                 // *or* the Assembly names are commutative equal
-                return object.ReferenceEquals(x, y)
-                    || (AssemblyName.ReferenceMatchesDefinition(xname, yname)
-                         && AssemblyName.ReferenceMatchesDefinition(yname, xname));
+                return ReferenceEquals(x, y)
+                       || (AssemblyName.ReferenceMatchesDefinition(xname, yname)
+                           && AssemblyName.ReferenceMatchesDefinition(yname, xname));
             }
 
             public int GetHashCode(Assembly assembly)

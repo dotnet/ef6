@@ -1,27 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity.Core.EntityClient;
-using System.Data.Entity.Core.Common.Internal.Materialization;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Linq;
-using System.Text;
-
-
-namespace System.Data.Entity.Core.Objects
+﻿namespace System.Data.Entity.Core.Objects
 {
-    internal class NextResultGenerator 
-    {
-        EntityCommand _entityCommand;
-        ReadOnlyMetadataCollection<EntitySet> _entitySets;
-        ObjectContext _context;
-        EdmType[] _edmTypes;
-        int _resultSetIndex;
-        MergeOption _mergeOption;
+    using System.Data.Common;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
 
-        internal NextResultGenerator(ObjectContext context, EntityCommand entityCommand, EdmType[] edmTypes, ReadOnlyMetadataCollection<EntitySet> entitySets, MergeOption mergeOption, int resultSetIndex)
+    internal class NextResultGenerator
+    {
+        private readonly EntityCommand _entityCommand;
+        private readonly ReadOnlyMetadataCollection<EntitySet> _entitySets;
+        private readonly ObjectContext _context;
+        private readonly EdmType[] _edmTypes;
+        private readonly int _resultSetIndex;
+        private readonly MergeOption _mergeOption;
+
+        internal NextResultGenerator(
+            ObjectContext context, EntityCommand entityCommand, EdmType[] edmTypes, ReadOnlyMetadataCollection<EntitySet> entitySets,
+            MergeOption mergeOption, int resultSetIndex)
         {
             _context = context;
             _entityCommand = entityCommand;
@@ -33,7 +29,7 @@ namespace System.Data.Entity.Core.Objects
 
         internal ObjectResult<TElement> GetNextResult<TElement>(DbDataReader storeReader)
         {
-            bool isNextResult = false;
+            var isNextResult = false;
             try
             {
                 isNextResult = storeReader.NextResult();
@@ -42,20 +38,21 @@ namespace System.Data.Entity.Core.Objects
             {
                 if (EntityUtil.IsCatchableExceptionType(e))
                 {
-                    throw EntityUtil.CommandExecution(System.Data.Entity.Resources.Strings.EntityClient_StoreReaderFailed, e);
+                    throw EntityUtil.CommandExecution(Strings.EntityClient_StoreReaderFailed, e);
                 }
                 throw;
             }
 
             if (isNextResult)
             {
-                EdmType edmType = _edmTypes[_resultSetIndex];
+                var edmType = _edmTypes[_resultSetIndex];
                 MetadataHelper.CheckFunctionImportReturnType<TElement>(edmType, _context.MetadataWorkspace);
-                return _context.MaterializedDataRecord<TElement>(_entityCommand, storeReader, _resultSetIndex, _entitySets, _edmTypes, _mergeOption);
+                return _context.MaterializedDataRecord<TElement>(
+                    _entityCommand, storeReader, _resultSetIndex, _entitySets, _edmTypes, _mergeOption);
             }
             else
             {
-                return null; 
+                return null;
             }
         }
     }

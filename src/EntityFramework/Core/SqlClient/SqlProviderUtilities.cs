@@ -1,22 +1,19 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
-
-namespace System.Data.Entity.Core.SqlClient 
+﻿namespace System.Data.Entity.Core.SqlClient
 {
+    using System.Collections.Generic;
+    using System.Data.Common;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
 
-    class SqlProviderUtilities
+    internal class SqlProviderUtilities
     {
         /// <summary>
         /// Requires that the given connection is of type  T. 
@@ -33,24 +30,25 @@ namespace System.Data.Entity.Core.SqlClient
         }
     }
 
-    sealed class SqlDdlBuilder
+    internal sealed class SqlDdlBuilder
     {
         private readonly StringBuilder unencodedStringBuilder = new StringBuilder();
         private readonly HashSet<EntitySet> ignoredEntitySets = new HashSet<EntitySet>();
 
         #region Pulblic Surface
+
         internal static string CreateObjectsScript(StoreItemCollection itemCollection, bool createSchemas)
         {
-            SqlDdlBuilder builder = new SqlDdlBuilder();
+            var builder = new SqlDdlBuilder();
 
-            foreach (EntityContainer container in itemCollection.GetItems<EntityContainer>())
+            foreach (var container in itemCollection.GetItems<EntityContainer>())
             {
                 var entitySets = container.BaseEntitySets.OfType<EntitySet>().OrderBy(s => s.Name);
 
                 if (createSchemas)
                 {
                     var schemas = new HashSet<string>(entitySets.Select(s => GetSchemaName(s)));
-                    foreach (string schema in schemas.OrderBy(s => s))
+                    foreach (var schema in schemas.OrderBy(s => s))
                     {
                         // don't bother creating default schema
                         if (schema != "dbo")
@@ -60,12 +58,12 @@ namespace System.Data.Entity.Core.SqlClient
                     }
                 }
 
-                foreach (EntitySet entitySet in container.BaseEntitySets.OfType<EntitySet>().OrderBy(s => s.Name))
+                foreach (var entitySet in container.BaseEntitySets.OfType<EntitySet>().OrderBy(s => s.Name))
                 {
                     builder.AppendCreateTable(entitySet);
                 }
 
-                foreach (AssociationSet associationSet in container.BaseEntitySets.OfType<AssociationSet>().OrderBy(s => s.Name))
+                foreach (var associationSet in container.BaseEntitySets.OfType<AssociationSet>().OrderBy(s => s.Name))
                 {
                     builder.AppendCreateForeignKeys(associationSet);
                 }
@@ -73,7 +71,8 @@ namespace System.Data.Entity.Core.SqlClient
             return builder.GetCommandText();
         }
 
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
         internal static string CreateDatabaseScript(string databaseName, string dataFileName, string logFileName)
         {
             var builder = new SqlDdlBuilder();
@@ -90,7 +89,8 @@ namespace System.Data.Entity.Core.SqlClient
             return builder.unencodedStringBuilder.ToString();
         }
 
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
         internal static string CreateDatabaseExistsScript(string databaseName, bool useDeprecatedSystemTable)
         {
             var builder = new SqlDdlBuilder();
@@ -101,7 +101,9 @@ namespace System.Data.Entity.Core.SqlClient
             return builder.unencodedStringBuilder.ToString();
         }
 
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "sysdatabases"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "sysdatabases")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
         private static void AppendSysDatabases(SqlDdlBuilder builder, bool useDeprecatedSystemTable)
         {
             if (useDeprecatedSystemTable)
@@ -114,7 +116,11 @@ namespace System.Data.Entity.Core.SqlClient
             }
         }
 
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "physicalname"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "databaseid"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "masterfiles"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "physicalname")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "databaseid")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "masterfiles")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
         internal static string CreateGetDatabaseNamesBasedOnFileNameScript(string databaseFileName, bool useDeprecatedSystemTable)
         {
             var builder = new SqlDdlBuilder();
@@ -139,7 +145,11 @@ namespace System.Data.Entity.Core.SqlClient
             return builder.unencodedStringBuilder.ToString();
         }
 
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "physicalname"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "masterfiles"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "sysdatabases"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "physicalname")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "masterfiles")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "sysdatabases")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
         internal static string CreateCountDatabasesBasedOnFileNameScript(string databaseFileName, bool useDeprecatedSystemTable)
         {
             var builder = new SqlDdlBuilder();
@@ -167,7 +177,8 @@ namespace System.Data.Entity.Core.SqlClient
             return builder.unencodedStringBuilder.ToString();
         }
 
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
         internal static string DropDatabaseScript(string databaseName)
         {
             var builder = new SqlDdlBuilder();
@@ -178,11 +189,13 @@ namespace System.Data.Entity.Core.SqlClient
 
         internal string GetCommandText()
         {
-            return this.unencodedStringBuilder.ToString();
+            return unencodedStringBuilder.ToString();
         }
+
         #endregion
 
         #region Private Methods
+
         private static string GetSchemaName(EntitySet entitySet)
         {
             return entitySet.Schema ?? entitySet.EntityContainer.Name;
@@ -193,7 +206,8 @@ namespace System.Data.Entity.Core.SqlClient
             return entitySet.Table ?? entitySet.Name;
         }
 
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
         private void AppendCreateForeignKeys(AssociationSet associationSet)
         {
             var constraint = associationSet.ElementType.ReferentialConstraints.Single();
@@ -201,7 +215,8 @@ namespace System.Data.Entity.Core.SqlClient
             var dependentEnd = associationSet.AssociationSetEnds[constraint.ToRole.Name];
 
             // If any of the participating entity sets was skipped, skip the association too
-            if (ignoredEntitySets.Contains(principalEnd.EntitySet) || ignoredEntitySets.Contains(dependentEnd.EntitySet))
+            if (ignoredEntitySets.Contains(principalEnd.EntitySet)
+                || ignoredEntitySets.Contains(dependentEnd.EntitySet))
             {
                 AppendSql("-- Ignoring association set with participating entity set with defining query: ");
                 AppendIdentifierEscapeNewLine(associationSet.Name);
@@ -219,7 +234,8 @@ namespace System.Data.Entity.Core.SqlClient
                 AppendSql("(");
                 AppendIdentifiers(constraint.FromProperties);
                 AppendSql(")");
-                if (principalEnd.CorrespondingAssociationEndMember.DeleteBehavior == OperationAction.Cascade)
+                if (principalEnd.CorrespondingAssociationEndMember.DeleteBehavior
+                    == OperationAction.Cascade)
                 {
                     AppendSql(" on delete cascade");
                 }
@@ -228,7 +244,8 @@ namespace System.Data.Entity.Core.SqlClient
             AppendNewLine();
         }
 
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
         private void AppendCreateTable(EntitySet entitySet)
         {
             // If the entity set has defining query, skip it
@@ -245,7 +262,7 @@ namespace System.Data.Entity.Core.SqlClient
                 AppendSql(" (");
                 AppendNewLine();
 
-                foreach (EdmProperty column in entitySet.ElementType.Properties)
+                foreach (var column in entitySet.ElementType.Properties)
                 {
                     AppendSql("    ");
                     AppendIdentifier(column.Name);
@@ -265,7 +282,9 @@ namespace System.Data.Entity.Core.SqlClient
             AppendNewLine();
         }
 
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "schemaid"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "schemaid")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
         private void AppendCreateSchema(string schema)
         {
             AppendSql("if (schema_id(");
@@ -273,7 +292,7 @@ namespace System.Data.Entity.Core.SqlClient
             AppendSql(") is null) exec(");
 
             // need to create a sub-command and escape it as a string literal as well...
-            SqlDdlBuilder schemaBuilder = new SqlDdlBuilder();
+            var schemaBuilder = new SqlDdlBuilder();
             schemaBuilder.AppendSql("create schema ");
             schemaBuilder.AppendIdentifier(schema);
 
@@ -287,11 +306,12 @@ namespace System.Data.Entity.Core.SqlClient
             AppendIdentifier(table, AppendIdentifier);
         }
 
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
         private void AppendIdentifier(EntitySet table, Action<string> AppendIdentifierEscape)
         {
-            string schemaName = GetSchemaName(table);
-            string tableName = GetTableName(table);
+            var schemaName = GetSchemaName(table);
+            var tableName = GetTableName(table);
             if (schemaName != null)
             {
                 AppendIdentifierEscape(schemaName);
@@ -300,7 +320,8 @@ namespace System.Data.Entity.Core.SqlClient
             AppendIdentifierEscape(tableName);
         }
 
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
         private void AppendStringLiteral(string literalValue)
         {
             AppendSql("N'" + literalValue.Replace("'", "''") + "'");
@@ -311,7 +332,8 @@ namespace System.Data.Entity.Core.SqlClient
             AppendJoin(properties, p => AppendIdentifier(p.Name), ", ");
         }
 
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
         private void AppendIdentifier(string identifier)
         {
             AppendSql("[" + identifier.Replace("]", "]]") + "]");
@@ -322,7 +344,8 @@ namespace System.Data.Entity.Core.SqlClient
             AppendIdentifier(identifier.Replace("\r", "\r--").Replace("\n", "\n--"));
         }
 
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
         private void AppendFileName(string path)
         {
             AppendSql("(name=");
@@ -334,8 +357,8 @@ namespace System.Data.Entity.Core.SqlClient
 
         private void AppendJoin<T>(IEnumerable<T> elements, Action<T> appendElement, string unencodedSeparator)
         {
-            bool first = true;
-            foreach (T element in elements)
+            var first = true;
+            foreach (var element in elements)
             {
                 if (first)
                 {
@@ -349,18 +372,21 @@ namespace System.Data.Entity.Core.SqlClient
             }
         }
 
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "newid"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "newid")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.SqlClient.SqlDdlBuilder.AppendSql(System.String)")]
         private void AppendType(EdmProperty column)
         {
-            TypeUsage type = column.TypeUsage;
+            var type = column.TypeUsage;
 
             // check for rowversion-like configurations
             Facet storeGenFacet;
-            bool isTimestamp = false;
+            var isTimestamp = false;
             if (type.EdmType.Name == "binary" &&
                 8 == type.GetMaxLength() &&
                 column.TypeUsage.Facets.TryGetValue("StoreGeneratedPattern", false, out storeGenFacet) &&
-                storeGenFacet.Value != null &&
+                storeGenFacet.Value != null
+                &&
                 StoreGeneratedPattern.Computed == (StoreGeneratedPattern)storeGenFacet.Value)
             {
                 isTimestamp = true;
@@ -368,14 +394,16 @@ namespace System.Data.Entity.Core.SqlClient
             }
             else
             {
-                string typeName = type.EdmType.Name;
+                var typeName = type.EdmType.Name;
                 // Special case: the EDM treats 'nvarchar(max)' as a type name, but SQL Server treats
                 // it as a type 'nvarchar' and a type qualifier. As such, we can't escape the entire
                 // type name as the EDM sees it.
                 const string maxSuffix = "(max)";
-                if (type.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType && typeName.EndsWith(maxSuffix, StringComparison.Ordinal))
+                if (type.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType
+                    && typeName.EndsWith(maxSuffix, StringComparison.Ordinal))
                 {
-                    Debug.Assert(new[] { "nvarchar(max)", "varchar(max)", "varbinary(max)" }.Contains(typeName),
+                    Debug.Assert(
+                        new[] { "nvarchar(max)", "varchar(max)", "varbinary(max)" }.Contains(typeName),
                         "no other known SQL Server primitive types types accept (max)");
                     AppendIdentifier(typeName.Substring(0, typeName.Length - maxSuffix.Length));
                     AppendSql("(max)");
@@ -409,10 +437,11 @@ namespace System.Data.Entity.Core.SqlClient
             }
             AppendSql(column.Nullable ? " null" : " not null");
 
-            if (!isTimestamp && column.TypeUsage.Facets.TryGetValue("StoreGeneratedPattern", false, out storeGenFacet) &&
+            if (!isTimestamp && column.TypeUsage.Facets.TryGetValue("StoreGeneratedPattern", false, out storeGenFacet)
+                &&
                 storeGenFacet.Value != null)
             {
-                StoreGeneratedPattern storeGenPattern = (StoreGeneratedPattern)storeGenFacet.Value;
+                var storeGenPattern = (StoreGeneratedPattern)storeGenFacet.Value;
                 if (storeGenPattern == StoreGeneratedPattern.Identity)
                 {
                     if (type.EdmType.Name == "uniqueidentifier")
@@ -428,6 +457,7 @@ namespace System.Data.Entity.Core.SqlClient
         }
 
         #region Access to underlying string builder
+
         /// <summary>
         /// Appends raw SQL into the string builder.
         /// </summary>
@@ -454,7 +484,9 @@ namespace System.Data.Entity.Core.SqlClient
         {
             unencodedStringBuilder.AppendFormat(CultureInfo.InvariantCulture, format, args);
         }
+
         #endregion
+
         #endregion
     }
 }

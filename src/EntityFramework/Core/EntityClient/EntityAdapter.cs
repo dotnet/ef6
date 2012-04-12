@@ -1,11 +1,9 @@
 namespace System.Data.Entity.Core.EntityClient
 {
-    using System.Data;
-    using System.Data.Entity.Core;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity.Core.Mapping.Update.Internal;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
 
     /// <summary>
@@ -15,28 +13,14 @@ namespace System.Data.Entity.Core.EntityClient
     {
         private bool _acceptChangesDuringUpdate = true;
         private EntityConnection _connection;
-        private Int32? _commandTimeout;
-
-        /// <summary>
-        /// Constructs the EntityAdapter object without a connection object
-        /// </summary>
-        public EntityAdapter()
-        {
-        }
 
         /// <summary>
         /// Gets or sets the map connection used by this adapter.
         /// </summary>
         DbConnection IEntityAdapter.Connection
         {
-            get
-            {
-                return this.Connection;
-            }
-            set
-            {
-                this.Connection = (EntityConnection)value;
-            }
+            get { return Connection; }
+            set { Connection = (EntityConnection)value; }
         }
 
         /// <summary>
@@ -44,14 +28,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public EntityConnection Connection
         {
-            get
-            {
-                return _connection;
-            }
-            set
-            {
-                _connection = value;
-            }
+            get { return _connection; }
+            set { _connection = value; }
         }
 
         /// <summary>
@@ -59,31 +37,15 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public bool AcceptChangesDuringUpdate
         {
-            get
-            {
-                return this._acceptChangesDuringUpdate;
-            }
-            set
-            {
-                this._acceptChangesDuringUpdate = value;
-            }
+            get { return _acceptChangesDuringUpdate; }
+            set { _acceptChangesDuringUpdate = value; }
         }
 
         /// <summary>
         /// Gets of sets the command timeout for update operations. If null, indicates that the default timeout
         /// for the provider should be used.
         /// </summary>
-        Int32? IEntityAdapter.CommandTimeout
-        {
-            get
-            {
-                return this._commandTimeout;
-            }
-            set
-            {
-                this._commandTimeout = value;
-            }
-        }
+        Int32? IEntityAdapter.CommandTimeout { get; set; }
 
         /// <summary>
         /// Persist modifications described in the given cache.
@@ -93,24 +55,29 @@ namespace System.Data.Entity.Core.EntityClient
         public Int32 Update(IEntityStateManager entityCache)
         {
             EntityUtil.CheckArgumentNull(entityCache, "entityCache");
-            if (!IsStateManagerDirty(entityCache)) { return 0; }
+            if (!IsStateManagerDirty(entityCache))
+            {
+                return 0;
+            }
 
             // Check that we have a connection before we proceed
             if (_connection == null)
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.EntityClient_NoConnectionForAdapter);
+                throw EntityUtil.InvalidOperation(Strings.EntityClient_NoConnectionForAdapter);
             }
 
             // Check that the store connection is available
-            if (_connection.StoreProviderFactory == null || this._connection.StoreConnection == null)
+            if (_connection.StoreProviderFactory == null
+                || _connection.StoreConnection == null)
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.EntityClient_NoStoreConnectionForUpdate);
+                throw EntityUtil.InvalidOperation(Strings.EntityClient_NoStoreConnectionForUpdate);
             }
 
             // Check that the connection is open before we proceed
-            if (ConnectionState.Open != _connection.State)
+            if (ConnectionState.Open
+                != _connection.State)
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.EntityClient_ClosedConnectionForUpdate);
+                throw EntityUtil.InvalidOperation(Strings.EntityClient_ClosedConnectionForUpdate);
             }
 
             return UpdateTranslator.Update(entityCache, this);
@@ -124,7 +91,7 @@ namespace System.Data.Entity.Core.EntityClient
         private static bool IsStateManagerDirty(IEntityStateManager entityCache)
         {
             Debug.Assert(null != entityCache);
-            bool hasChanges = false;
+            var hasChanges = false;
             // this call to GetCacheEntries is constant time (the ObjectStateManager implementation
             // maintains an explicit list of entries in each state)
             foreach (ObjectStateEntry entry in entityCache.GetEntityStateEntries(

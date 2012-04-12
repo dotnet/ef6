@@ -1,14 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Text;
-using System.Threading;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Threading;
 
     /// <summary>
     /// Represents the EDM Association Type
@@ -17,6 +11,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public sealed class AssociationType : RelationshipType
     {
         #region Constructors
+
         /// <summary>
         /// Initializes a new instance of Association Type with the given name, namespace, version and ends
         /// </summary>
@@ -25,28 +20,36 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="foreignKey">is this a foreign key (FK) relationship?</param>
         /// <param name="dataSpace">dataSpace in which this AssociationType belongs to</param>
         /// <exception cref="System.ArgumentNullException">Thrown if either the name, namespace or version attributes are null</exception>
-        internal AssociationType(string name,
-                                 string namespaceName,
-                                 bool foreignKey,
-                                 DataSpace dataSpace)
+        internal AssociationType(
+            string name,
+            string namespaceName,
+            bool foreignKey,
+            DataSpace dataSpace)
             : base(name, namespaceName, dataSpace)
         {
             _referentialConstraints = new ReadOnlyMetadataCollection<ReferentialConstraint>(new MetadataCollection<ReferentialConstraint>());
             _isForeignKey = foreignKey;
         }
+
         #endregion
 
         #region Fields
+
         private readonly ReadOnlyMetadataCollection<ReferentialConstraint> _referentialConstraints;
         private FilteredReadOnlyMetadataCollection<AssociationEndMember, EdmMember> _associationEndMembers;
         private readonly bool _isForeignKey;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the kind of the type
         /// </summary>
-        public override BuiltInTypeKind BuiltInTypeKind { get { return BuiltInTypeKind.AssociationType; } }
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
+            get { return BuiltInTypeKind.AssociationType; }
+        }
 
         /// <summary>
         /// Returns the list of ends for this association type
@@ -55,12 +58,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                Debug.Assert(IsReadOnly, "this is a wrapper around this.Members, don't call it during metadata loading, only call it after the metadata is set to read-only");
+                Debug.Assert(
+                    IsReadOnly,
+                    "this is a wrapper around this.Members, don't call it during metadata loading, only call it after the metadata is set to read-only");
                 if (null == _associationEndMembers)
                 {
-                    Interlocked.CompareExchange(ref _associationEndMembers,
+                    Interlocked.CompareExchange(
+                        ref _associationEndMembers,
                         new FilteredReadOnlyMetadataCollection<AssociationEndMember, EdmMember>(
-                            this.Members, Helper.IsAssociationEndMember), null);
+                            Members, Helper.IsAssociationEndMember), null);
                 }
                 return _associationEndMembers;
             }
@@ -72,10 +78,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.ReferentialConstraint, true)]
         public ReadOnlyMetadataCollection<ReferentialConstraint> ReferentialConstraints
         {
-            get
-            {
-                return _referentialConstraints;
-            }
+            get { return _referentialConstraints; }
         }
 
         /// <summary>
@@ -84,11 +87,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(PrimitiveTypeKind.Boolean, false)]
         public bool IsForeignKey
         {
-            get
-            {
-                return _isForeignKey;
-            }
+            get { return _isForeignKey; }
         }
+
         #endregion
 
         #region Methods
@@ -115,7 +116,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             if (!IsReadOnly)
             {
                 base.SetReadOnly();
-                this.ReferentialConstraints.Source.SetReadOnly();
+                ReferentialConstraints.Source.SetReadOnly();
             }
         }
 
@@ -125,8 +126,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="referentialConstraint"></param>
         internal void AddReferentialConstraint(ReferentialConstraint referentialConstraint)
         {
-            this.ReferentialConstraints.Source.Add(referentialConstraint);
+            ReferentialConstraints.Source.Add(referentialConstraint);
         }
+
         #endregion
     }
 }

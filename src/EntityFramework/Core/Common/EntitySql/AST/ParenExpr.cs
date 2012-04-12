@@ -1,6 +1,5 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
-    using System;
     using System.Diagnostics;
 
     /// <summary>
@@ -8,12 +7,12 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
     /// </summary>
     internal sealed class ParenExpr : Node
     {
-        private readonly AST.Node _expr;
+        private readonly Node _expr;
 
         /// <summary>
         /// Initializes paren expression.
         /// </summary>
-        internal ParenExpr(AST.Node expr)
+        internal ParenExpr(Node expr)
         {
             Debug.Assert(expr != null, "expr != null");
             _expr = expr;
@@ -22,7 +21,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// <summary>
         /// Returns the parenthesized expression.
         /// </summary>
-        internal AST.Node Expr
+        internal Node Expr
         {
             get { return _expr; }
         }

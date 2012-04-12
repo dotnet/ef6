@@ -1,8 +1,9 @@
-namespace System.Data.Entity.Core.EntityClient {
-
+namespace System.Data.Entity.Core.EntityClient
+{
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Common;
+    using System.Collections.ObjectModel;
     using System.Data.Common;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Mapping;
@@ -10,6 +11,7 @@ namespace System.Data.Entity.Core.EntityClient {
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Core.Query.PlanCompiler;
     using System.Data.Entity.Core.Query.ResultAssembly;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -19,8 +21,8 @@ namespace System.Data.Entity.Core.EntityClient {
     /// An aggregate Command Definition used by the EntityClient layers.  This is an aggregator
     /// object that represent information from multiple underlying provider commands.
     /// </summary>
-    sealed internal class EntityCommandDefinition : DbCommandDefinition {
-
+    internal sealed class EntityCommandDefinition : DbCommandDefinition
+    {
         #region internal state
 
         /// <summary>
@@ -36,7 +38,7 @@ namespace System.Data.Entity.Core.EntityClient {
         /// <summary>
         /// list of the parameters that the resulting command should have
         /// </summary>
-        private readonly System.Collections.ObjectModel.ReadOnlyCollection<EntityParameter> _parameters;
+        private readonly ReadOnlyCollection<EntityParameter> _parameters;
 
         /// <summary>
         /// Set of entity sets exposed in the command.
@@ -46,71 +48,85 @@ namespace System.Data.Entity.Core.EntityClient {
         #endregion
 
         #region constructors
+
         /// <summary>
         /// don't let this be constructed publicly;
         /// </summary>
         /// <exception cref="EntityCommandCompilationException">Cannot prepare the command definition for execution; consult the InnerException for more information.</exception>
         /// <exception cref="NotSupportedException">The ADO.NET Data Provider you are using does not support CommandTrees.</exception>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-        internal EntityCommandDefinition(DbProviderFactory storeProviderFactory, DbCommandTree commandTree) {
+        internal EntityCommandDefinition(DbProviderFactory storeProviderFactory, DbCommandTree commandTree)
+        {
             EntityUtil.CheckArgumentNull(storeProviderFactory, "storeProviderFactory");
             EntityUtil.CheckArgumentNull(commandTree, "commandTree");
 
-            DbProviderServices storeProviderServices = DbProviderServices.GetProviderServices(storeProviderFactory);
+            var storeProviderServices = DbProviderServices.GetProviderServices(storeProviderFactory);
 
-            try {
-                if (DbCommandTreeKind.Query == commandTree.CommandTreeKind) {
+            try
+            {
+                if (DbCommandTreeKind.Query
+                    == commandTree.CommandTreeKind)
+                {
                     // Next compile the plan for the command tree
-                    List<ProviderCommandInfo> mappedCommandList = new List<ProviderCommandInfo>();
+                    var mappedCommandList = new List<ProviderCommandInfo>();
                     ColumnMap columnMap;
                     int columnCount;
                     PlanCompiler.Compile(commandTree, out mappedCommandList, out columnMap, out columnCount, out _entitySets);
-                    _columnMapGenerators = new IColumnMapGenerator[] {new ConstantColumnMapGenerator(columnMap, columnCount)};
+                    _columnMapGenerators = new IColumnMapGenerator[] { new ConstantColumnMapGenerator(columnMap, columnCount) };
                     // Note: we presume that the first item in the ProviderCommandInfo is the root node;
-                    Debug.Assert(mappedCommandList.Count > 0, "empty providerCommandInfo collection and no exception?"); // this shouldn't ever happen.
+                    Debug.Assert(mappedCommandList.Count > 0, "empty providerCommandInfo collection and no exception?");
+                        // this shouldn't ever happen.
 
                     // Then, generate the store commands from the resulting command tree(s)
                     _mappedCommandDefinitions = new List<DbCommandDefinition>(mappedCommandList.Count);
 
-                    foreach (ProviderCommandInfo providerCommandInfo in mappedCommandList) {
-                        DbCommandDefinition providerCommandDefinition = storeProviderServices.CreateCommandDefinition(providerCommandInfo.CommandTree);
+                    foreach (var providerCommandInfo in mappedCommandList)
+                    {
+                        var providerCommandDefinition = storeProviderServices.CreateCommandDefinition(providerCommandInfo.CommandTree);
 
-                        if (null == providerCommandDefinition) {
-                            throw EntityUtil.ProviderIncompatible(System.Data.Entity.Resources.Strings.ProviderReturnedNullForCreateCommandDefinition);
+                        if (null == providerCommandDefinition)
+                        {
+                            throw EntityUtil.ProviderIncompatible(Strings.ProviderReturnedNullForCreateCommandDefinition);
                         }
                         _mappedCommandDefinitions.Add(providerCommandDefinition);
                     }
                 }
-                else {
-                    Debug.Assert(DbCommandTreeKind.Function == commandTree.CommandTreeKind, "only query and function command trees are supported");
-                    DbFunctionCommandTree entityCommandTree = (DbFunctionCommandTree)commandTree;
+                else
+                {
+                    Debug.Assert(
+                        DbCommandTreeKind.Function == commandTree.CommandTreeKind, "only query and function command trees are supported");
+                    var entityCommandTree = (DbFunctionCommandTree)commandTree;
 
                     // Retrieve mapping and metadata information for the function import.
-                    FunctionImportMappingNonComposable mapping = GetTargetFunctionMapping(entityCommandTree);
+                    var mapping = GetTargetFunctionMapping(entityCommandTree);
                     IList<FunctionParameter> returnParameters = entityCommandTree.EdmFunction.ReturnParameters;
-                    int resultSetCount = returnParameters.Count > 1 ? returnParameters.Count : 1;
+                    var resultSetCount = returnParameters.Count > 1 ? returnParameters.Count : 1;
                     _columnMapGenerators = new IColumnMapGenerator[resultSetCount];
-                    TypeUsage storeResultType = DetermineStoreResultType(mapping, 0, out _columnMapGenerators[0]);
-                    for (int i = 1; i < resultSetCount; i++)
+                    var storeResultType = DetermineStoreResultType(mapping, 0, out _columnMapGenerators[0]);
+                    for (var i = 1; i < resultSetCount; i++)
                     {
                         DetermineStoreResultType(mapping, i, out _columnMapGenerators[i]);
                     }
                     // Copy over parameters (this happens through a more indirect route in the plan compiler, but
                     // it happens nonetheless)
-                    List<KeyValuePair<string, TypeUsage>> providerParameters = new List<KeyValuePair<string, TypeUsage>>();
-                    foreach (KeyValuePair<string, TypeUsage> parameter in entityCommandTree.Parameters)
+                    var providerParameters = new List<KeyValuePair<string, TypeUsage>>();
+                    foreach (var parameter in entityCommandTree.Parameters)
                     {
                         providerParameters.Add(parameter);
                     }
 
                     // Construct store command tree usage.
-                    DbFunctionCommandTree providerCommandTree = new DbFunctionCommandTree(entityCommandTree.MetadataWorkspace, DataSpace.SSpace,
+                    var providerCommandTree = new DbFunctionCommandTree(
+                        entityCommandTree.MetadataWorkspace, DataSpace.SSpace,
                         mapping.TargetFunction, storeResultType, providerParameters);
-                                        
-                    DbCommandDefinition storeCommandDefinition = storeProviderServices.CreateCommandDefinition(providerCommandTree);
-                    _mappedCommandDefinitions = new List<DbCommandDefinition>(1) { storeCommandDefinition };
 
-                    EntitySet firstResultEntitySet = mapping.FunctionImport.EntitySets.FirstOrDefault();
+                    var storeCommandDefinition = storeProviderServices.CreateCommandDefinition(providerCommandTree);
+                    _mappedCommandDefinitions = new List<DbCommandDefinition>(1)
+                                                    {
+                                                        storeCommandDefinition
+                                                    };
+
+                    var firstResultEntitySet = mapping.FunctionImport.EntitySets.FirstOrDefault();
                     if (firstResultEntitySet != null)
                     {
                         _entitySets = new Set<EntitySet>();
@@ -120,26 +136,30 @@ namespace System.Data.Entity.Core.EntityClient {
                 }
 
                 // Finally, build a list of the parameters that the resulting command should have;
-                List<EntityParameter> parameterList = new List<EntityParameter>();
+                var parameterList = new List<EntityParameter>();
 
-                foreach (KeyValuePair<string, TypeUsage> queryParameter in commandTree.Parameters) {
-                    EntityParameter parameter = CreateEntityParameterFromQueryParameter(queryParameter);
+                foreach (var queryParameter in commandTree.Parameters)
+                {
+                    var parameter = CreateEntityParameterFromQueryParameter(queryParameter);
                     parameterList.Add(parameter);
                 }
 
-                _parameters = new System.Collections.ObjectModel.ReadOnlyCollection<EntityParameter>(parameterList);
+                _parameters = new ReadOnlyCollection<EntityParameter>(parameterList);
             }
-            catch (EntityCommandCompilationException) {
+            catch (EntityCommandCompilationException)
+            {
                 // No need to re-wrap EntityCommandCompilationException
                 throw;
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 // we should not be wrapping all exceptions
-                if (EntityUtil.IsCatchableExceptionType(e)) {
+                if (EntityUtil.IsCatchableExceptionType(e))
+                {
                     // we don't wan't folks to have to know all the various types of exceptions that can 
                     // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
                     // the inner exception of it.
-                    throw EntityUtil.CommandCompilation(System.Data.Entity.Resources.Strings.EntityClient_CommandDefinitionPreparationFailed, e);
+                    throw EntityUtil.CommandCompilation(Strings.EntityClient_CommandDefinitionPreparationFailed, e);
                 }
                 throw;
             }
@@ -148,24 +168,26 @@ namespace System.Data.Entity.Core.EntityClient {
         /// <summary>
         /// Determines the store type for a function import.
         /// </summary>
-        private static TypeUsage DetermineStoreResultType(FunctionImportMappingNonComposable mapping, int resultSetIndex, out IColumnMapGenerator columnMapGenerator) {
+        private static TypeUsage DetermineStoreResultType(
+            FunctionImportMappingNonComposable mapping, int resultSetIndex, out IColumnMapGenerator columnMapGenerator)
+        {
             // Determine column maps and infer result types for the mapped function. There are four varieties:
             // Collection(Entity)
             // Collection(PrimitiveType)
             // Collection(ComplexType)
             // No result type
-            TypeUsage storeResultType; 
+            TypeUsage storeResultType;
             {
                 StructuralType baseStructuralType;
-                EdmFunction functionImport = mapping.FunctionImport;
+                var functionImport = mapping.FunctionImport;
 
                 // Collection(Entity) or Collection(ComplexType)
-                if (MetadataHelper.TryGetFunctionImportReturnType<StructuralType>(functionImport, resultSetIndex, out baseStructuralType))
+                if (MetadataHelper.TryGetFunctionImportReturnType(functionImport, resultSetIndex, out baseStructuralType))
                 {
                     ValidateEdmResultType(baseStructuralType, functionImport);
 
                     //Note: Defensive check for historic reasons, we expect functionImport.EntitySets.Count > resultSetIndex 
-                    EntitySet entitySet = functionImport.EntitySets.Count > resultSetIndex ? functionImport.EntitySets[resultSetIndex] : null;
+                    var entitySet = functionImport.EntitySets.Count > resultSetIndex ? functionImport.EntitySets[resultSetIndex] : null;
 
                     columnMapGenerator = new FunctionColumnMapGenerator(mapping, resultSetIndex, entitySet, baseStructuralType);
 
@@ -175,28 +197,33 @@ namespace System.Data.Entity.Core.EntityClient {
                     storeResultType = mapping.GetExpectedTargetResultType(resultSetIndex);
                 }
 
-                // Collection(PrimitiveType)
+                    // Collection(PrimitiveType)
                 else
                 {
-                    FunctionParameter returnParameter = MetadataHelper.GetReturnParameter(functionImport, resultSetIndex);
-                    if (returnParameter != null && returnParameter.TypeUsage != null)
+                    var returnParameter = MetadataHelper.GetReturnParameter(functionImport, resultSetIndex);
+                    if (returnParameter != null
+                        && returnParameter.TypeUsage != null)
                     {
                         // Get metadata description of the return type 
                         storeResultType = returnParameter.TypeUsage;
-                        Debug.Assert(storeResultType.EdmType.BuiltInTypeKind == BuiltInTypeKind.CollectionType, "FunctionImport currently supports only collection result type");
-                        TypeUsage elementType = ((CollectionType)storeResultType.EdmType).TypeUsage;
-                        Debug.Assert(Helper.IsScalarType(elementType.EdmType) 
+                        Debug.Assert(
+                            storeResultType.EdmType.BuiltInTypeKind == BuiltInTypeKind.CollectionType,
+                            "FunctionImport currently supports only collection result type");
+                        var elementType = ((CollectionType)storeResultType.EdmType).TypeUsage;
+                        Debug.Assert(
+                            Helper.IsScalarType(elementType.EdmType)
                             , "FunctionImport supports only Collection(Entity), Collection(Enum) and Collection(Primitive)");
 
                         // Build collection column map where the first column of the store result is assumed
                         // to contain the primitive type values.
-                        ScalarColumnMap scalarColumnMap = new ScalarColumnMap(elementType, string.Empty, 0, 0);
-                        SimpleCollectionColumnMap collectionColumnMap = new SimpleCollectionColumnMap(storeResultType,
+                        var scalarColumnMap = new ScalarColumnMap(elementType, string.Empty, 0, 0);
+                        var collectionColumnMap = new SimpleCollectionColumnMap(
+                            storeResultType,
                             string.Empty, scalarColumnMap, null, null);
                         columnMapGenerator = new ConstantColumnMapGenerator(collectionColumnMap, 1);
                     }
 
-                    // No result type
+                        // No result type
                     else
                     {
                         storeResultType = null;
@@ -216,14 +243,17 @@ namespace System.Data.Entity.Core.EntityClient {
         {
             if (Helper.IsComplexType(resultType))
             {
-                ComplexType complexType = resultType as ComplexType;
+                var complexType = resultType as ComplexType;
                 Debug.Assert(null != complexType, "we should have a complex type here");
 
                 foreach (var property in complexType.Properties)
                 {
-                    if (property.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.ComplexType)
+                    if (property.TypeUsage.EdmType.BuiltInTypeKind
+                        == BuiltInTypeKind.ComplexType)
                     {
-                        throw new NotSupportedException(System.Data.Entity.Resources.Strings.ComplexTypeAsReturnTypeAndNestedComplexProperty(property.Name, complexType.Name, functionImport.FullName));
+                        throw new NotSupportedException(
+                            Strings.ComplexTypeAsReturnTypeAndNestedComplexProperty(
+                                property.Name, complexType.Name, functionImport.FullName));
                     }
                 }
             }
@@ -240,9 +270,11 @@ namespace System.Data.Entity.Core.EntityClient {
 
             // Find mapped store function.
             FunctionImportMapping targetFunctionMapping;
-            if (!functionCommandTree.MetadataWorkspace.TryGetFunctionImportMapping(functionCommandTree.EdmFunction, out targetFunctionMapping))
+            if (
+                !functionCommandTree.MetadataWorkspace.TryGetFunctionImportMapping(
+                    functionCommandTree.EdmFunction, out targetFunctionMapping))
             {
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.EntityClient_UnmappedFunctionImport(functionCommandTree.EdmFunction.FullName));
+                throw EntityUtil.InvalidOperation(Strings.EntityClient_UnmappedFunctionImport(functionCommandTree.EdmFunction.FullName));
             }
             return (FunctionImportMappingNonComposable)targetFunctionMapping;
         }
@@ -250,11 +282,13 @@ namespace System.Data.Entity.Core.EntityClient {
         #endregion
 
         #region public API
+
         /// <summary>
         /// Create a DbCommand object from the definition, that can be executed
         /// </summary>
         /// <returns></returns>
-        public override DbCommand CreateCommand() {
+        public override DbCommand CreateCommand()
+        {
             return new EntityCommand(this);
         }
 
@@ -265,7 +299,7 @@ namespace System.Data.Entity.Core.EntityClient {
         /// <summary>
         /// Creates ColumnMap for result assembly using the given reader.
         /// </summary>
-        internal ColumnMap CreateColumnMap(DbDataReader storeDataReader) 
+        internal ColumnMap CreateColumnMap(DbDataReader storeDataReader)
         {
             return CreateColumnMap(storeDataReader, 0);
         }
@@ -282,19 +316,17 @@ namespace System.Data.Entity.Core.EntityClient {
         /// Property to expose the known parameters for the query, so the Command objects 
         /// constructor can poplulate it's parameter collection from.
         /// </summary>
-        internal IEnumerable<EntityParameter> Parameters {
-            get {
-                return _parameters;
-            }
+        internal IEnumerable<EntityParameter> Parameters
+        {
+            get { return _parameters; }
         }
 
         /// <summary>
         /// Set of entity sets exposed in the command.
         /// </summary>
-        internal Set<EntitySet> EntitySets {
-            get { 
-                return _entitySets; 
-            }
+        internal Set<EntitySet> EntitySets
+        {
+            get { return _entitySets; }
         }
 
         /// <summary>
@@ -302,14 +334,15 @@ namespace System.Data.Entity.Core.EntityClient {
         /// </summary>
         /// <param name="queryParameter"></param>
         /// <returns></returns>
-        private static EntityParameter CreateEntityParameterFromQueryParameter(KeyValuePair<string, TypeUsage> queryParameter) {
+        private static EntityParameter CreateEntityParameterFromQueryParameter(KeyValuePair<string, TypeUsage> queryParameter)
+        {
             // We really can't have a parameter here that isn't a scalar type...
             Debug.Assert(TypeSemantics.IsScalarType(queryParameter.Value), "Non-scalar type used as query parameter type");
 
-            EntityParameter result = new EntityParameter();
+            var result = new EntityParameter();
             result.ParameterName = queryParameter.Key;
 
-            EntityCommandDefinition.PopulateParameterFromTypeUsage(result, queryParameter.Value, isOutParam: false);
+            PopulateParameterFromTypeUsage(result, queryParameter.Value, isOutParam: false);
 
             return result;
         }
@@ -330,8 +363,8 @@ namespace System.Data.Entity.Core.EntityClient {
                     parameter.EdmType = EdmProviderManifest.Instance.GetPrimitiveType(primitiveTypeKind);
                 }
             }
-            
-            DbCommandDefinition.PopulateParameterFromTypeUsage(parameter, type, isOutParam);            
+
+            DbCommandDefinition.PopulateParameterFromTypeUsage(parameter, type, isOutParam);
         }
 
         /// <summary>
@@ -344,30 +377,40 @@ namespace System.Data.Entity.Core.EntityClient {
         /// <returns></returns>
         /// <exception cref="InvalidOperationException">behavior must specify CommandBehavior.SequentialAccess</exception>
         /// <exception cref="InvalidOperationException">input parameters in the entityCommand.Parameters collection must have non-null values.</exception>
-        internal DbDataReader Execute(EntityCommand entityCommand, CommandBehavior behavior) {
-            if (CommandBehavior.SequentialAccess != (behavior & CommandBehavior.SequentialAccess)) {
+        internal DbDataReader Execute(EntityCommand entityCommand, CommandBehavior behavior)
+        {
+            if (CommandBehavior.SequentialAccess
+                != (behavior & CommandBehavior.SequentialAccess))
+            {
                 throw EntityUtil.MustUseSequentialAccess();
             }
 
-            DbDataReader storeDataReader = ExecuteStoreCommands(entityCommand, behavior);
+            var storeDataReader = ExecuteStoreCommands(entityCommand, behavior);
             DbDataReader result = null;
 
             // If we actually executed something, then go ahead and construct a bridge
             // data reader for it.
-            if (null != storeDataReader) {
-                try {
-                    ColumnMap columnMap = this.CreateColumnMap(storeDataReader, 0);
-                    if (null == columnMap) {
+            if (null != storeDataReader)
+            {
+                try
+                {
+                    var columnMap = CreateColumnMap(storeDataReader, 0);
+                    if (null == columnMap)
+                    {
                         // For a query with no result type (and therefore no column map), consume the reader.
                         // When the user requests Metadata for this reader, we return nothing.
                         CommandHelper.ConsumeReader(storeDataReader);
                         result = storeDataReader;
                     }
-                    else {
-                        result = BridgeDataReader.Create(storeDataReader, columnMap, entityCommand.Connection.GetMetadataWorkspace(), GetNextResultColumnMaps(storeDataReader));
+                    else
+                    {
+                        result = BridgeDataReader.Create(
+                            storeDataReader, columnMap, entityCommand.Connection.GetMetadataWorkspace(),
+                            GetNextResultColumnMaps(storeDataReader));
                     }
                 }
-                catch {
+                catch
+                {
                     // dispose of store reader if there is an error creating the BridgeDataReader
                     storeDataReader.Dispose();
                     throw;
@@ -378,9 +421,9 @@ namespace System.Data.Entity.Core.EntityClient {
 
         private IEnumerable<ColumnMap> GetNextResultColumnMaps(DbDataReader storeDataReader)
         {
-            for (int i = 1; i < _columnMapGenerators.Length; ++i)
+            for (var i = 1; i < _columnMapGenerators.Length; ++i)
             {
-                yield return this.CreateColumnMap(storeDataReader, i);
+                yield return CreateColumnMap(storeDataReader, i);
             }
         }
 
@@ -394,17 +437,18 @@ namespace System.Data.Entity.Core.EntityClient {
             // SQLPT #120007433 is the work item to implement MARS support, which we
             //                  need to do here, but since the PlanCompiler doesn't 
             //                  have it yet, neither do we...
-            if (1 != _mappedCommandDefinitions.Count) {
+            if (1 != _mappedCommandDefinitions.Count)
+            {
                 throw EntityUtil.NotSupported("MARS");
             }
 
-            EntityTransaction entityTransaction = CommandHelper.GetEntityTransaction(entityCommand);
+            var entityTransaction = CommandHelper.GetEntityTransaction(entityCommand);
 
-            DbCommandDefinition definition = _mappedCommandDefinitions[0];
-            DbCommand storeProviderCommand = definition.CreateCommand();
+            var definition = _mappedCommandDefinitions[0];
+            var storeProviderCommand = definition.CreateCommand();
 
             CommandHelper.SetStoreProviderCommandState(entityCommand, entityTransaction, storeProviderCommand);
-                        
+
             // Copy over the values from the map command to the store command; we 
             // assume that they were not renamed by either the plan compiler or SQL 
             // Generation.
@@ -418,24 +462,28 @@ namespace System.Data.Entity.Core.EntityClient {
             // parameters that we find in the EntityCommands parameters collection, so 
             // we won't damage anything the store provider did.
 
-            bool hasOutputParameters = false;
-            if (storeProviderCommand.Parameters != null)    // SQLBUDT 519066
+            var hasOutputParameters = false;
+            if (storeProviderCommand.Parameters != null) // SQLBUDT 519066
             {
-                DbProviderServices storeProviderServices = DbProviderServices.GetProviderServices(entityCommand.Connection.StoreProviderFactory);
+                var storeProviderServices = DbProviderServices.GetProviderServices(entityCommand.Connection.StoreProviderFactory);
 
-                foreach (DbParameter storeParameter in storeProviderCommand.Parameters) {
+                foreach (DbParameter storeParameter in storeProviderCommand.Parameters)
+                {
                     // I could just use the string indexer, but then if I didn't find it the
                     // consumer would get some ParameterNotFound exeception message and that
                     // wouldn't be very meaningful.  Instead, I use the IndexOf method and
                     // if I don't find it, it's not a big deal (The store provider must
                     // have added it).
-                    int parameterOrdinal = entityCommand.Parameters.IndexOf(storeParameter.ParameterName);
-                    if (-1 != parameterOrdinal) {
-                        EntityParameter entityParameter = entityCommand.Parameters[parameterOrdinal];
+                    var parameterOrdinal = entityCommand.Parameters.IndexOf(storeParameter.ParameterName);
+                    if (-1 != parameterOrdinal)
+                    {
+                        var entityParameter = entityCommand.Parameters[parameterOrdinal];
 
                         SyncParameterProperties(entityParameter, storeParameter, storeProviderServices);
 
-                        if (storeParameter.Direction != ParameterDirection.Input) {
+                        if (storeParameter.Direction
+                            != ParameterDirection.Input)
+                        {
                             hasOutputParameters = true;
                         }
                     }
@@ -445,21 +493,25 @@ namespace System.Data.Entity.Core.EntityClient {
             // If the EntityCommand has output parameters, we must synchronize parameter values when
             // the reader is closed. Tell the EntityCommand about the store command so that it knows
             // where to pull those values from.
-            if (hasOutputParameters) {
+            if (hasOutputParameters)
+            {
                 entityCommand.SetStoreProviderCommand(storeProviderCommand);
             }
 
             DbDataReader reader = null;
-            try {
+            try
+            {
                 reader = storeProviderCommand.ExecuteReader(behavior & ~CommandBehavior.SequentialAccess);
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 // we should not be wrapping all exceptions
-                if (EntityUtil.IsCatchableExceptionType(e)) {
+                if (EntityUtil.IsCatchableExceptionType(e))
+                {
                     // we don't wan't folks to have to know all the various types of exceptions that can 
                     // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
                     // the inner exception of it.
-                    throw EntityUtil.CommandExecution(System.Data.Entity.Resources.Strings.EntityClient_CommandDefinitionExecutionFailed, e);
+                    throw EntityUtil.CommandExecution(Strings.EntityClient_CommandDefinitionExecutionFailed, e);
                 }
                 throw;
             }
@@ -471,8 +523,10 @@ namespace System.Data.Entity.Core.EntityClient {
         /// </summary>
         /// <param name="entityParameter"></param>
         /// <param name="storeParameter"></param>
-        private static void SyncParameterProperties(EntityParameter entityParameter, DbParameter storeParameter, DbProviderServices storeProviderServices) {
-            IDbDataParameter dbDataParameter = (IDbDataParameter)storeParameter;
+        private static void SyncParameterProperties(
+            EntityParameter entityParameter, DbParameter storeParameter, DbProviderServices storeProviderServices)
+        {
+            IDbDataParameter dbDataParameter = storeParameter;
 
             // DBType is not currently syncable; it's part of the cache key anyway; this is because we can't guarantee
             // that the store provider will honor it -- (SqlClient doesn't...)
@@ -483,7 +537,7 @@ namespace System.Data.Entity.Core.EntityClient {
 
             // Give the store provider the opportunity to set the value before any parameter state has been copied from
             // the EntityParameter.
-            TypeUsage parameterTypeUsage = TypeHelpers.GetPrimitiveTypeUsageForScalar(entityParameter.GetTypeUsage());
+            var parameterTypeUsage = TypeHelpers.GetPrimitiveTypeUsageForScalar(entityParameter.GetTypeUsage());
             storeProviderServices.SetParameterValue(storeParameter, parameterTypeUsage, entityParameter.Value);
 
             // Override the store provider parameter state with any explicitly specified values from the EntityParameter.
@@ -513,18 +567,23 @@ namespace System.Data.Entity.Core.EntityClient {
         /// Return the string used by EntityCommand and ObjectQuery<T> ToTraceString"/>
         /// </summary>
         /// <returns></returns>
-        internal string ToTraceString() {
-            if (_mappedCommandDefinitions != null) {
-                if (_mappedCommandDefinitions.Count == 1) {
+        internal string ToTraceString()
+        {
+            if (_mappedCommandDefinitions != null)
+            {
+                if (_mappedCommandDefinitions.Count == 1)
+                {
                     // Gosh it sure would be nice if I could just get the inner commandText, but
                     // that would require more public surface area on DbCommandDefinition, or
                     // me to know about the inner object...
                     return _mappedCommandDefinitions[0].CreateCommand().CommandText;
                 }
-                else {
-                    StringBuilder sb = new StringBuilder();
-                    foreach (DbCommandDefinition commandDefinition in _mappedCommandDefinitions) {
-                        DbCommand mappedCommand = commandDefinition.CreateCommand();
+                else
+                {
+                    var sb = new StringBuilder();
+                    foreach (var commandDefinition in _mappedCommandDefinitions)
+                    {
+                        var mappedCommand = commandDefinition.CreateCommand();
                         sb.Append(mappedCommand.CommandText);
                     }
                     return sb.ToString();
@@ -536,10 +595,12 @@ namespace System.Data.Entity.Core.EntityClient {
         #endregion
 
         #region nested types
+
         /// <summary>
         /// Generates a column map given a data reader.
         /// </summary>
-        private interface IColumnMapGenerator {
+        private interface IColumnMapGenerator
+        {
             /// <summary>
             /// Given a data reader, returns column map.
             /// </summary>
@@ -552,18 +613,23 @@ namespace System.Data.Entity.Core.EntityClient {
         /// IColumnMapGenerator wrapping a constant instance of a column map (invariant with respect
         /// to the given DbDataReader)
         /// </summary>
-        private sealed class ConstantColumnMapGenerator : IColumnMapGenerator {
+        private sealed class ConstantColumnMapGenerator : IColumnMapGenerator
+        {
             private readonly ColumnMap _columnMap;
             private readonly int _fieldsRequired;
 
-            internal ConstantColumnMapGenerator(ColumnMap columnMap, int fieldsRequired) {
+            internal ConstantColumnMapGenerator(ColumnMap columnMap, int fieldsRequired)
+            {
                 _columnMap = columnMap;
                 _fieldsRequired = fieldsRequired;
             }
 
-            ColumnMap IColumnMapGenerator.CreateColumnMap(DbDataReader reader) {
-                if (null != reader && reader.FieldCount < _fieldsRequired) {
-                    throw EntityUtil.CommandExecution(System.Data.Entity.Resources.Strings.EntityClient_TooFewColumns);
+            ColumnMap IColumnMapGenerator.CreateColumnMap(DbDataReader reader)
+            {
+                if (null != reader
+                    && reader.FieldCount < _fieldsRequired)
+                {
+                    throw EntityUtil.CommandExecution(Strings.EntityClient_TooFewColumns);
                 }
                 return _columnMap;
             }
@@ -572,13 +638,15 @@ namespace System.Data.Entity.Core.EntityClient {
         /// <summary>
         /// Generates column maps for a non-composable function mapping.
         /// </summary>
-        private sealed class FunctionColumnMapGenerator : IColumnMapGenerator {
+        private sealed class FunctionColumnMapGenerator : IColumnMapGenerator
+        {
             private readonly FunctionImportMappingNonComposable _mapping;
             private readonly EntitySet _entitySet;
             private readonly StructuralType _baseStructuralType;
             private readonly int _resultSetIndex;
 
-            internal FunctionColumnMapGenerator(FunctionImportMappingNonComposable mapping, int resultSetIndex, EntitySet entitySet, StructuralType baseStructuralType)
+            internal FunctionColumnMapGenerator(
+                FunctionImportMappingNonComposable mapping, int resultSetIndex, EntitySet entitySet, StructuralType baseStructuralType)
             {
                 _mapping = mapping;
                 _entitySet = entitySet;
@@ -588,9 +656,11 @@ namespace System.Data.Entity.Core.EntityClient {
 
             ColumnMap IColumnMapGenerator.CreateColumnMap(DbDataReader reader)
             {
-                return ColumnMapFactory.CreateFunctionImportStructuralTypeColumnMap(reader, _mapping, _resultSetIndex, _entitySet, _baseStructuralType);
+                return ColumnMapFactory.CreateFunctionImportStructuralTypeColumnMap(
+                    reader, _mapping, _resultSetIndex, _entitySet, _baseStructuralType);
             }
         }
+
         #endregion
     }
 }

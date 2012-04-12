@@ -1,8 +1,6 @@
 namespace System.Data.Entity.Core.Common.EntitySql
 {
-    using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
@@ -18,10 +16,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// Resolves <paramref name="argTypes"/> against the list of function signatures.
         /// </summary>
         /// <returns>Funciton metadata</returns>
-        internal static EdmFunction ResolveFunctionOverloads(IList<EdmFunction> functionsMetadata,
-                                                             IList<TypeUsage> argTypes,
-                                                             bool isGroupAggregateFunction,
-                                                             out bool isAmbiguous)
+        internal static EdmFunction ResolveFunctionOverloads(
+            IList<EdmFunction> functionsMetadata,
+            IList<TypeUsage> argTypes,
+            bool isGroupAggregateFunction,
+            out bool isAmbiguous)
         {
             return ResolveFunctionOverloads(
                 functionsMetadata,
@@ -41,14 +40,15 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// Resolves <paramref name="argTypes"/> against the list of function signatures.
         /// </summary>
         /// <returns>Funciton metadata</returns>
-        internal static EdmFunction ResolveFunctionOverloads(IList<EdmFunction> functionsMetadata,
-                                                             IList<TypeUsage> argTypes,
-                                                             Func<TypeUsage, IEnumerable<TypeUsage>> flattenArgumentType,
-                                                             Func<TypeUsage, TypeUsage, IEnumerable<TypeUsage>> flattenParameterType,
-                                                             Func<TypeUsage, TypeUsage, bool> isPromotableTo,
-                                                             Func<TypeUsage, TypeUsage, bool> isStructurallyEqual,
-                                                             bool isGroupAggregateFunction,
-                                                             out bool isAmbiguous)
+        internal static EdmFunction ResolveFunctionOverloads(
+            IList<EdmFunction> functionsMetadata,
+            IList<TypeUsage> argTypes,
+            Func<TypeUsage, IEnumerable<TypeUsage>> flattenArgumentType,
+            Func<TypeUsage, TypeUsage, IEnumerable<TypeUsage>> flattenParameterType,
+            Func<TypeUsage, TypeUsage, bool> isPromotableTo,
+            Func<TypeUsage, TypeUsage, bool> isStructurallyEqual,
+            bool isGroupAggregateFunction,
+            out bool isAmbiguous)
         {
             return ResolveFunctionOverloads(
                 functionsMetadata,
@@ -87,8 +87,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             // Flatten argument list
             //
-            List<TypeUsage> argTypesFlat = new List<TypeUsage>(argTypes.Count);
-            foreach (TypeUsage argType in argTypes)
+            var argTypesFlat = new List<TypeUsage>(argTypes.Count);
+            foreach (var argType in argTypes)
             {
                 argTypesFlat.AddRange(flattenArgumentType(argType));
             }
@@ -98,22 +98,23 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             TFunctionMetadata bestCandidate = null;
             isAmbiguous = false;
-            List<int[]> ranks = new List<int[]>(functionsMetadata.Count);
+            var ranks = new List<int[]>(functionsMetadata.Count);
             int[] bestCandidateRank = null;
             for (int i = 0, maxTotalRank = int.MinValue; i < functionsMetadata.Count; i++)
             {
                 int totalRank;
                 int[] rank;
-                if (TryRankFunctionParameters(argTypes,
-                                              argTypesFlat,
-                                              getSignatureParams(functionsMetadata[i]),
-                                              getParameterTypeUsage,
-                                              getParameterMode,
-                                              flattenParameterType,
-                                              isPromotableTo,
-                                              isStructurallyEqual,
-                                              isGroupAggregateFunction,
-                                              out totalRank, out rank))
+                if (TryRankFunctionParameters(
+                    argTypes,
+                    argTypesFlat,
+                    getSignatureParams(functionsMetadata[i]),
+                    getParameterTypeUsage,
+                    getParameterMode,
+                    flattenParameterType,
+                    isPromotableTo,
+                    isStructurallyEqual,
+                    isGroupAggregateFunction,
+                    out totalRank, out rank))
                 {
                     if (totalRank == maxTotalRank)
                     {
@@ -136,9 +137,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             // If there is a best candidate, check it for ambiguity against composite ranks of other candidates
             // 
-            if (bestCandidate != null && 
-                !isAmbiguous && 
-                argTypesFlat.Count > 1 && // best candidate may be ambiguous only in the case of 2 or more arguments
+            if (bestCandidate != null &&
+                !isAmbiguous &&
+                argTypesFlat.Count > 1
+                && // best candidate may be ambiguous only in the case of 2 or more arguments
                 ranks.Count > 1)
             {
                 Debug.Assert(bestCandidateRank != null);
@@ -146,25 +148,27 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
                 // Search collection of composite ranks to see if there is an overload that would render the best candidate ambiguous
                 // 
-                isAmbiguous = ranks.Any(rank =>
-                {
-                    Debug.Assert(rank.Length == bestCandidateRank.Length, "composite ranks have different number of elements");
-
-                    if (!Object.ReferenceEquals(bestCandidateRank, rank)) // do not compare best cadnidate against itself
-                    {
-                        // All individual ranks of the best candidate must equal or better than the ranks of all other candidates,
-                        // otherwise we consider it ambigous, even though it has an unambigously best total rank.
-                        for (int i = 0; i < rank.Length; ++i)
+                isAmbiguous = ranks.Any(
+                    rank =>
                         {
-                            if (bestCandidateRank[i] < rank[i])
-                            {
-                                return true;
-                            }
-                        }
-                    }
+                            Debug.Assert(rank.Length == bestCandidateRank.Length, "composite ranks have different number of elements");
 
-                    return false;
-                });
+                            if (!ReferenceEquals(bestCandidateRank, rank)) // do not compare best cadnidate against itself
+                            {
+                                // All individual ranks of the best candidate must equal or better than the ranks of all other candidates,
+                                // otherwise we consider it ambigous, even though it has an unambigously best total rank.
+                                for (var i = 0; i < rank.Length; ++i)
+                                {
+                                    if (bestCandidateRank[i]
+                                        < rank[i])
+                                    {
+                                        return true;
+                                    }
+                                }
+                            }
+
+                            return false;
+                        });
             }
 
             return isAmbiguous ? null : bestCandidate;
@@ -181,22 +185,24 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <param name="getParameterMode">ParameterMode getter for the overload parameters</param>
         /// <param name="totalRank">returns total promotion rank of the overload, 0 if no arguments</param>
         /// <param name="parameterRanks">returns individual promotion ranks of the overload parameters, empty array if no arguments</param>
-        private static bool TryRankFunctionParameters<TFunctionParameterMetadata>(IList<TypeUsage> argumentList,
-                                                                                  IList<TypeUsage> flatArgumentList,
-                                                                                  IList<TFunctionParameterMetadata> overloadParamList,
-                                                                                  Func<TFunctionParameterMetadata, TypeUsage> getParameterTypeUsage,
-                                                                                  Func<TFunctionParameterMetadata, ParameterMode> getParameterMode,
-                                                                                  Func<TypeUsage, TypeUsage, IEnumerable<TypeUsage>> flattenParameterType,
-                                                                                  Func<TypeUsage, TypeUsage, bool> isPromotableTo,
-                                                                                  Func<TypeUsage, TypeUsage, bool> isStructurallyEqual,
-                                                                                  bool isGroupAggregateFunction,
-                                                                                  out int totalRank,
-                                                                                  out int[] parameterRanks)
+        private static bool TryRankFunctionParameters<TFunctionParameterMetadata>(
+            IList<TypeUsage> argumentList,
+            IList<TypeUsage> flatArgumentList,
+            IList<TFunctionParameterMetadata> overloadParamList,
+            Func<TFunctionParameterMetadata, TypeUsage> getParameterTypeUsage,
+            Func<TFunctionParameterMetadata, ParameterMode> getParameterMode,
+            Func<TypeUsage, TypeUsage, IEnumerable<TypeUsage>> flattenParameterType,
+            Func<TypeUsage, TypeUsage, bool> isPromotableTo,
+            Func<TypeUsage, TypeUsage, bool> isStructurallyEqual,
+            bool isGroupAggregateFunction,
+            out int totalRank,
+            out int[] parameterRanks)
         {
             totalRank = 0;
             parameterRanks = null;
 
-            if (argumentList.Count != overloadParamList.Count)
+            if (argumentList.Count
+                != overloadParamList.Count)
             {
                 return false;
             }
@@ -204,17 +210,18 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             // Check promotability and flatten the parameter types
             //
-            List<TypeUsage> flatOverloadParamList = new List<TypeUsage>(flatArgumentList.Count);
-            for (int i = 0; i < overloadParamList.Count; ++i)
+            var flatOverloadParamList = new List<TypeUsage>(flatArgumentList.Count);
+            for (var i = 0; i < overloadParamList.Count; ++i)
             {
-                TypeUsage argumentType = argumentList[i];
-                TypeUsage parameterType = getParameterTypeUsage(overloadParamList[i]);
+                var argumentType = argumentList[i];
+                var parameterType = getParameterTypeUsage(overloadParamList[i]);
 
                 //
                 // Parameter mode must match.
                 //
-                ParameterMode parameterMode = getParameterMode(overloadParamList[i]);
-                if (parameterMode != ParameterMode.In && parameterMode != ParameterMode.InOut)
+                var parameterMode = getParameterMode(overloadParamList[i]);
+                if (parameterMode != ParameterMode.In
+                    && parameterMode != ParameterMode.InOut)
                 {
                     return false;
                 }
@@ -255,9 +262,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             // Rank argument promotions
             //
             parameterRanks = new int[flatOverloadParamList.Count];
-            for (int i = 0; i < parameterRanks.Length; ++i)
+            for (var i = 0; i < parameterRanks.Length; ++i)
             {
-                int rank = GetPromotionRank(flatArgumentList[i], flatOverloadParamList[i], isPromotableTo, isStructurallyEqual);
+                var rank = GetPromotionRank(flatArgumentList[i], flatOverloadParamList[i], isPromotableTo, isStructurallyEqual);
                 totalRank += rank;
                 parameterRanks[i] = rank;
             }
@@ -271,10 +278,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <paramref name="fromType"/> must be promotable to <paramref name="toType"/>, otherwise internal error is thrown.
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "isPromotableTo")]
-        private static int GetPromotionRank(TypeUsage fromType,
-                                            TypeUsage toType,
-                                            Func<TypeUsage, TypeUsage, bool> isPromotableTo,
-                                            Func<TypeUsage, TypeUsage, bool> isStructurallyEqual)
+        private static int GetPromotionRank(
+            TypeUsage fromType,
+            TypeUsage toType,
+            Func<TypeUsage, TypeUsage, bool> isPromotableTo,
+            Func<TypeUsage, TypeUsage, bool> isStructurallyEqual)
         {
             //
             // Only promotable types are allowed at this point.
@@ -299,9 +307,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             // Handle primitive types
             //
-            PrimitiveType primitiveFromType = fromType.EdmType as PrimitiveType;
-            PrimitiveType primitiveToType = toType.EdmType as PrimitiveType;
-            if (primitiveFromType != null && primitiveToType != null)
+            var primitiveFromType = fromType.EdmType as PrimitiveType;
+            var primitiveToType = toType.EdmType as PrimitiveType;
+            if (primitiveFromType != null
+                && primitiveToType != null)
             {
                 if (Helper.AreSameSpatialUnionType(primitiveFromType, primitiveToType))
                 {
@@ -310,26 +319,30 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
                 IList<PrimitiveType> promotions = EdmProviderManifest.Instance.GetPromotionTypes(primitiveFromType);
 
-                int promotionIndex = promotions.IndexOf(primitiveToType);
+                var promotionIndex = promotions.IndexOf(primitiveToType);
 
                 if (promotionIndex < 0)
                 {
                     throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.FailedToGeneratePromotionRank, 1);
                 }
-                
+
                 return -promotionIndex;
             }
 
             //
             // Handle entity/relship types
             //
-            EntityTypeBase entityBaseFromType = fromType.EdmType as EntityTypeBase;
-            EntityTypeBase entityBaseToType = toType.EdmType as EntityTypeBase;
-            if (entityBaseFromType != null && entityBaseToType != null)
+            var entityBaseFromType = fromType.EdmType as EntityTypeBase;
+            var entityBaseToType = toType.EdmType as EntityTypeBase;
+            if (entityBaseFromType != null
+                && entityBaseToType != null)
             {
-                int promotionIndex = 0;
+                var promotionIndex = 0;
                 EdmType t;
-                for (t = entityBaseFromType; t != entityBaseToType && t != null; t = t.BaseType, ++promotionIndex);
+                for (t = entityBaseFromType; t != entityBaseToType && t != null; t = t.BaseType, ++promotionIndex)
+                {
+                    ;
+                }
 
                 if (t == null)
                 {

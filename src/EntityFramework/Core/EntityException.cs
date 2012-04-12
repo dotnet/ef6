@@ -1,6 +1,6 @@
 namespace System.Data.Entity.Core
 {
-    using System;
+    using System.Data.Entity.Resources;
     using System.Runtime.Serialization;
 
     /// <summary>
@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core
         /// Constructor with default message
         /// </summary>
         public EntityException() // required ctor
-            : base(System.Data.Entity.Resources.Strings.EntityClient_ProviderGeneralError)
+            : base(Strings.EntityClient_ProviderGeneralError)
         {
         }
 

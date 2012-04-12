@@ -1,9 +1,5 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
-    using System;
-    using System.Globalization;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Diagnostics;
 
     /// <summary>
@@ -54,15 +50,16 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             }
 
             _names = null;
-            Identifier leftIdenitifier = _leftExpr as Identifier;
+            var leftIdenitifier = _leftExpr as Identifier;
             if (leftIdenitifier != null)
             {
-                _names = new string[] { leftIdenitifier.Name, _identifier.Name };
+                _names = new[] { leftIdenitifier.Name, _identifier.Name };
             }
 
-            DotExpr leftDotExpr = _leftExpr as DotExpr;
+            var leftDotExpr = _leftExpr as DotExpr;
             string[] leftNames;
-            if (leftDotExpr != null && leftDotExpr.IsMultipartIdentifier(out leftNames))
+            if (leftDotExpr != null
+                && leftDotExpr.IsMultipartIdentifier(out leftNames))
             {
                 _names = new string[leftNames.Length + 1];
                 leftNames.CopyTo(_names, 0);

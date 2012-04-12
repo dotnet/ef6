@@ -1,10 +1,11 @@
-﻿using System.Linq.Expressions;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Reflection;
-namespace System.Data.Entity.Core.Objects.ELinq
+﻿namespace System.Data.Entity.Core.Objects.ELinq
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Spatial;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq.Expressions;
+    using System.Reflection;
 
     /// <summary>
     /// Replaces expression patterns produced by the compiler with approximations
@@ -54,11 +55,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // CODE(VB): x Is y
             // ORIGINAL: Equal(Convert(x, typeof(object)), Convert(y, typeof(object))
             // NORMALIZED: Equal(x, y)
-            if (b.NodeType == ExpressionType.Equal)
+            if (b.NodeType
+                == ExpressionType.Equal)
             {
-                Expression normalizedLeft = UnwrapObjectConvert(b.Left);
-                Expression normalizedRight = UnwrapObjectConvert(b.Right);
-                if (normalizedLeft != b.Left || normalizedRight != b.Right)
+                var normalizedLeft = UnwrapObjectConvert(b.Left);
+                var normalizedRight = UnwrapObjectConvert(b.Right);
+                if (normalizedLeft != b.Left
+                    || normalizedRight != b.Right)
                 {
                     b = CreateRelationalOperator(ExpressionType.Equal, normalizedLeft, normalizedRight);
                 }
@@ -68,9 +71,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // ORIGINAL: Equal(Microsoft.VisualBasic.CompilerServices.Operators.CompareString(x, y, False), 0)
             // NORMALIZED: Equal(x, y)
             Pattern pattern;
-            if (_patterns.TryGetValue(b.Left, out pattern) && pattern.Kind == PatternKind.Compare && IsConstantZero(b.Right))
+            if (_patterns.TryGetValue(b.Left, out pattern) && pattern.Kind == PatternKind.Compare
+                && IsConstantZero(b.Right))
             {
-                ComparePattern comparePattern = (ComparePattern)pattern;
+                var comparePattern = (ComparePattern)pattern;
                 // handle relational operators
                 BinaryExpression relationalExpression;
                 if (TryCreateRelationalOperator(b.NodeType, comparePattern.Left, comparePattern.Right, out relationalExpression))
@@ -91,13 +95,15 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private static Expression UnwrapObjectConvert(Expression input)
         {
             // recognize funcletized (already evaluated) Converts
-            if (input.NodeType == ExpressionType.Constant &&
-               input.Type == typeof(object))
+            if (input.NodeType == ExpressionType.Constant
+                &&
+                input.Type == typeof(object))
             {
-                ConstantExpression constant = (ConstantExpression)input;
+                var constant = (ConstantExpression)input;
 
                 // we will handle nulls later, so just bypass those
-                if (constant.Value != null &&
+                if (constant.Value != null
+                    &&
                     constant.Value.GetType() != typeof(object))
                 {
                     return Expression.Constant(constant.Value, constant.Value.GetType());
@@ -105,7 +111,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
 
             // unwrap object converts
-            while (ExpressionType.Convert == input.NodeType && typeof(object) == input.Type)
+            while (ExpressionType.Convert == input.NodeType
+                   && typeof(object) == input.Type)
             {
                 input = ((UnaryExpression)input).Operand;
             }
@@ -118,7 +125,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private static bool IsConstantZero(Expression expression)
         {
             return expression.NodeType == ExpressionType.Constant &&
-                ((ConstantExpression)expression).Value.Equals(0);
+                   ((ConstantExpression)expression).Value.Equals(0);
         }
 
         /// <summary>
@@ -221,7 +228,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
 
                 // check for static Equals method
-                if (m.Method.Name == "Equals" && m.Arguments.Count > 1)
+                if (m.Method.Name == "Equals"
+                    && m.Arguments.Count > 1)
                 {
                     // CODE(C#): Object.Equals(x, y)
                     // ORIGINAL: MethodCallExpression(<object.Equals>, x, y)
@@ -230,7 +238,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
 
                 // check for Microsoft.VisualBasic.CompilerServices.Operators.CompareString method
-                if (m.Method.Name == "CompareString" && m.Method.DeclaringType.FullName == "Microsoft.VisualBasic.CompilerServices.Operators")
+                if (m.Method.Name == "CompareString"
+                    && m.Method.DeclaringType.FullName == "Microsoft.VisualBasic.CompilerServices.Operators")
                 {
                     // CODE(VB): x = y; where x and y are strings, a part of the expression looks like:
                     // ORIGINAL: MethodCallExpression(Microsoft.VisualBasic.CompilerServices.Operators.CompareString(x, y, False)
@@ -239,7 +248,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
 
                 // check for static Compare method
-                if (m.Method.Name == "Compare" && m.Arguments.Count > 1 && m.Method.ReturnType == typeof(int))
+                if (m.Method.Name == "Compare" && m.Arguments.Count > 1
+                    && m.Method.ReturnType == typeof(int))
                 {
                     // CODE(C#): Class.Compare(x, y)
                     // ORIGINAL: MethodCallExpression(<Compare>, x, y)
@@ -250,11 +260,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
             else
             {
                 // check for instance Equals method
-                if (m.Method.Name == "Equals" && m.Arguments.Count > 0)
+                if (m.Method.Name == "Equals"
+                    && m.Arguments.Count > 0)
                 {
                     // type-specific Equals method on spatial types becomes a call to the 'STEquals' spatial canonical function, so should remain in the expression tree.
-                    Type parameterType = m.Method.GetParameters()[0].ParameterType;
-                    if (parameterType != typeof(System.Data.Entity.Core.Spatial.DbGeography) && parameterType != typeof(System.Data.Entity.Core.Spatial.DbGeometry))
+                    var parameterType = m.Method.GetParameters()[0].ParameterType;
+                    if (parameterType != typeof(DbGeography)
+                        && parameterType != typeof(DbGeometry))
                     {
                         // CODE(C#): x.Equals(y)
                         // ORIGINAL: MethodCallExpression(x, <Equals>, y)
@@ -264,7 +276,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
 
                 // check for instance CompareTo method
-                if (m.Method.Name == "CompareTo" && m.Arguments.Count == 1 && m.Method.ReturnType == typeof(int))
+                if (m.Method.Name == "CompareTo" && m.Arguments.Count == 1
+                    && m.Method.ReturnType == typeof(int))
                 {
                     // CODE(C#): x.CompareTo(y)
                     // ORIGINAL: MethodCallExpression(x.CompareTo(y))
@@ -273,9 +286,12 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
 
                 // check for List<> instance Contains method
-                if (m.Method.Name == "Contains" && m.Arguments.Count == 1) {
-                    Type declaringType = m.Method.DeclaringType;
-                    if (declaringType.IsGenericType && declaringType.GetGenericTypeDefinition() == typeof(List<>))
+                if (m.Method.Name == "Contains"
+                    && m.Arguments.Count == 1)
+                {
+                    var declaringType = m.Method.DeclaringType;
+                    if (declaringType.IsGenericType
+                        && declaringType.GetGenericTypeDefinition() == typeof(List<>))
                     {
                         // CODE(C#): List<T> x.Contains(y)
                         // ORIGINAL: MethodCallExpression(x.Contains(y))
@@ -284,7 +300,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         MethodInfo containsMethod;
                         if (ReflectionUtil.TryLookupMethod(SequenceMethod.Contains, out containsMethod))
                         {
-                            MethodInfo enumerableContainsMethod = containsMethod.MakeGenericMethod(declaringType.GetGenericArguments());
+                            var enumerableContainsMethod = containsMethod.MakeGenericMethod(declaringType.GetGenericArguments());
                             return Expression.Call(enumerableContainsMethod, m.Object, m.Arguments[0]);
                         }
                     }
@@ -294,8 +310,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // check for coalesce operators added by the VB compiler to predicate arguments
             return NormalizePredicateArgument(m);
         }
-
-
 
         /// <summary>
         /// Identifies and normalizes any predicate argument in the given call expression. If no changes
@@ -308,10 +322,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             int argumentOrdinal;
             Expression normalizedArgument;
-            if (HasPredicateArgument(callExpression, out argumentOrdinal) &&
+            if (HasPredicateArgument(callExpression, out argumentOrdinal)
+                &&
                 TryMatchCoalescePattern(callExpression.Arguments[argumentOrdinal], out normalizedArgument))
             {
-                List<Expression> normalizedArguments = new List<Expression>(callExpression.Arguments);
+                var normalizedArguments = new List<Expression>(callExpression.Arguments);
 
                 // replace the predicate argument with the normalized version
                 normalizedArguments[argumentOrdinal] = normalizedArgument;
@@ -337,13 +352,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private static bool HasPredicateArgument(MethodCallExpression callExpression, out int argumentOrdinal)
         {
             argumentOrdinal = default(int);
-            bool result = false;
+            var result = false;
 
             // It turns out all supported methods taking a predicate argument have it as the second
             // argument. As a result, we always set argumentOrdinal to 1 when there is a match and
             // we can safely ignore all methods taking fewer than 2 arguments
             SequenceMethod sequenceMethod;
-            if (2 <= callExpression.Arguments.Count &&
+            if (2 <= callExpression.Arguments.Count
+                &&
                 ReflectionUtil.TryIdentifySequenceMethod(callExpression.Method, out sequenceMethod))
             {
                 switch (sequenceMethod)
@@ -381,30 +397,34 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private static bool TryMatchCoalescePattern(Expression expression, out Expression normalized)
         {
             normalized = null;
-            bool result = false;
+            var result = false;
 
-            if (expression.NodeType == ExpressionType.Quote)
+            if (expression.NodeType
+                == ExpressionType.Quote)
             {
                 // try to normalize the quoted expression
-                UnaryExpression quote = (UnaryExpression)expression;
+                var quote = (UnaryExpression)expression;
                 if (TryMatchCoalescePattern(quote.Operand, out normalized))
                 {
                     result = true;
                     normalized = Expression.Quote(normalized);
                 }
             }
-            else if (expression.NodeType == ExpressionType.Lambda)
+            else if (expression.NodeType
+                     == ExpressionType.Lambda)
             {
-                LambdaExpression lambda = (LambdaExpression)expression;
+                var lambda = (LambdaExpression)expression;
 
                 // collapse coalesce lambda expressions
                 // CODE(VB): where a.NullableInt = 1
                 // ORIGINAL: Lambda(Coalesce(expr, Constant(false)), a)
                 // NORMALIZED: Lambda(expr, a)
-                if (lambda.Body.NodeType == ExpressionType.Coalesce && lambda.Body.Type == typeof(bool))
+                if (lambda.Body.NodeType == ExpressionType.Coalesce
+                    && lambda.Body.Type == typeof(bool))
                 {
-                    BinaryExpression coalesce = (BinaryExpression)lambda.Body;
-                    if (coalesce.Right.NodeType == ExpressionType.Constant && false.Equals(((ConstantExpression)coalesce.Right).Value))
+                    var coalesce = (BinaryExpression)lambda.Body;
+                    if (coalesce.Right.NodeType == ExpressionType.Constant
+                        && false.Equals(((ConstantExpression)coalesce.Right).Value))
                     {
                         normalized = Expression.Lambda(lambda.Type, Expression.Convert(coalesce.Left, typeof(bool)), lambda.Parameters);
                         result = true;
@@ -415,7 +435,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
             return result;
         }
 
-        private static readonly MethodInfo s_relationalOperatorPlaceholderMethod = typeof(LinqExpressionNormalizer).GetMethod("RelationalOperatorPlaceholder", BindingFlags.Static | BindingFlags.NonPublic);
+        private static readonly MethodInfo s_relationalOperatorPlaceholderMethod =
+            typeof(LinqExpressionNormalizer).GetMethod("RelationalOperatorPlaceholder", BindingFlags.Static | BindingFlags.NonPublic);
+
         /// <summary>
         /// This method exists solely to support creation of valid relational operator LINQ expressions that are not natively supported
         /// by the CLR (e.g. String > String). This method must not be invoked.
@@ -423,7 +445,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private static bool RelationalOperatorPlaceholder<TLeft, TRight>(TLeft left, TRight right)
         {
             Debug.Fail("This method should never be called. It exists merely to support creation of relational LINQ expressions.");
-            return object.ReferenceEquals(left, right);
+            return ReferenceEquals(left, right);
         }
 
         /// <summary>
@@ -445,7 +467,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// </summary>
         private static bool TryCreateRelationalOperator(ExpressionType op, Expression left, Expression right, out BinaryExpression result)
         {
-            MethodInfo relationalOperatorPlaceholderMethod = s_relationalOperatorPlaceholderMethod.MakeGenericMethod(left.Type, right.Type);
+            var relationalOperatorPlaceholderMethod = s_relationalOperatorPlaceholderMethod.MakeGenericMethod(left.Type, right.Type);
 
             switch (op)
             {
@@ -472,7 +494,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 case ExpressionType.GreaterThanOrEqual:
                     result = Expression.GreaterThanOrEqual(left, right, LiftToNull, relationalOperatorPlaceholderMethod);
                     return true;
- 
+
                 default:
                     result = null;
                     return false;
@@ -531,8 +553,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         {
             internal ComparePattern(Expression left, Expression right)
             {
-                this.Left = left;
-                this.Right = right;
+                Left = left;
+                Right = right;
             }
 
             /// <summary>
@@ -544,7 +566,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
             /// Gets right-hand argument to Compare operation.
             /// </summary>
             internal readonly Expression Right;
-
 
             internal override PatternKind Kind
             {

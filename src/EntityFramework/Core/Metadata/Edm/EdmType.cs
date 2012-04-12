@@ -1,14 +1,10 @@
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Globalization;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Text;
+    using System.Threading;
 
     /// <summary>
     /// Base EdmType class for all the model types
@@ -16,6 +12,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public abstract class EdmType : GlobalItem
     {
         #region Constructors
+
         /// <summary>
         /// Initializes a new instance of EdmType
         /// </summary>
@@ -33,48 +30,43 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="version">version of the type</param>
         /// <param name="dataSpace">dataSpace in which this type belongs to</param>
         /// <exception cref="System.ArgumentNullException">Thrown if either the name, namespace or version arguments are null</exception>
-        internal EdmType(string name,
-                         string namespaceName,
-                         DataSpace dataSpace)
+        internal EdmType(
+            string name,
+            string namespaceName,
+            DataSpace dataSpace)
         {
             EntityUtil.GenericCheckArgumentNull(name, "name");
             EntityUtil.GenericCheckArgumentNull(namespaceName, "namespaceName");
 
             // Initialize the item attributes
-            EdmType.Initialize(this,
-                               name,
-                               namespaceName,
-                               dataSpace,
-                               false,
-                               null);
+            Initialize(
+                this,
+                name,
+                namespaceName,
+                dataSpace,
+                false,
+                null);
         }
+
         #endregion
 
         #region Fields
+
         private CollectionType _collectionType;
-        private string _identity;
         private string _name;
         private string _namespace;
         private EdmType _baseType;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Direct accessor for the field Identity. The reason we need to do this is that for derived class,
         /// they want to cache things only when they are readonly. Plus they want to check for null before
         /// updating the value
         /// </summary>
-        internal string CacheIdentity
-        {
-            get
-            {
-                return _identity;
-            }
-            private set
-            {
-                _identity = value;
-            }
-        }
+        internal string CacheIdentity { get; private set; }
 
         /// <summary>
         /// Returns the identity of the edm type
@@ -83,13 +75,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                if (this.CacheIdentity == null)
+                if (CacheIdentity == null)
                 {
-                    StringBuilder builder = new StringBuilder(50);
+                    var builder = new StringBuilder(50);
                     BuildIdentity(builder);
-                    this.CacheIdentity = builder.ToString();
+                    CacheIdentity = builder.ToString();
                 }
-                return this.CacheIdentity;
+                return CacheIdentity;
             }
         }
 
@@ -99,14 +91,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public String Name
         {
-            get
-            {
-                return _name;
-            }
+            get { return _name; }
             internal set
             {
                 Debug.Assert(value != null, "The name should never be set to null");
-                _name = value; 
+                _name = value;
             }
         }
 
@@ -116,10 +105,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public String NamespaceName
         {
-            get
-            {
-                return _namespace;
-            }
+            get { return _namespace; }
             internal set
             {
                 Debug.Assert(value != null, "Namespace should never be set to null");
@@ -134,14 +120,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(PrimitiveTypeKind.Boolean, false)]
         public bool Abstract
         {
-            get
-            {
-                return GetFlag(MetadataFlags.IsAbstract);
-            }
-            internal set
-            {
-                SetFlag(MetadataFlags.IsAbstract, value);
-            }
+            get { return GetFlag(MetadataFlags.IsAbstract); }
+            internal set { SetFlag(MetadataFlags.IsAbstract, value); }
         }
 
         /// <summary>
@@ -152,17 +132,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.EdmType, false)]
         public EdmType BaseType
         {
-            get
-            {
-                return _baseType;
-            }
+            get { return _baseType; }
             internal set
             {
                 Util.ThrowIfReadOnly(this);
                 Debug.Assert(_baseType == null, "BaseType can't be set multiple times");
 
                 // Check to make sure there won't be a loop in the inheritance
-                EdmType type = value;
+                var type = value;
                 while (type != null)
                 {
                     Debug.Assert(type != this, "Cannot set the given type as base type because it would introduce a loop in inheritance");
@@ -171,11 +148,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
 
                 // Also if the base type is EntityTypeBase, make sure it doesn't have keys
-                Debug.Assert(value == null ||
-                             !Helper.IsEntityTypeBase(this) ||
-                             ((EntityTypeBase)this).KeyMembers.Count == 0 ||
-                             ((EntityTypeBase)value).KeyMembers.Count == 0,
-                             " For EntityTypeBase, both base type and derived types cannot have keys defined");
+                Debug.Assert(
+                    value == null ||
+                    !Helper.IsEntityTypeBase(this) ||
+                    ((EntityTypeBase)this).KeyMembers.Count == 0 ||
+                    ((EntityTypeBase)value).KeyMembers.Count == 0,
+                    " For EntityTypeBase, both base type and derived types cannot have keys defined");
 
                 _baseType = value;
             }
@@ -189,17 +167,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         public virtual string FullName
         {
-            get
-            {
-                return this.Identity;
-           }
+            get { return Identity; }
         }
 
         /// <summary>
         /// If OSpace, return the CLR Type else null
         /// </summary>
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called on instance that is in ReadOnly state</exception>
-        internal virtual System.Type ClrType
+        internal virtual Type ClrType
         {
             get { return null; }
         }
@@ -207,9 +182,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal override void BuildIdentity(StringBuilder builder)
         {
             // if we already know the identity, simply append it
-            if (null != this.CacheIdentity)
+            if (null != CacheIdentity)
             {
-                builder.Append(this.CacheIdentity);
+                builder.Append(CacheIdentity);
                 return;
             }
 
@@ -218,7 +193,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal static string CreateEdmTypeIdentity(string namespaceName, string name)
         {
-            string identity = string.Empty;
+            var identity = string.Empty;
             if (!string.IsNullOrEmpty(namespaceName))
             {
                 identity = namespaceName + ".";
@@ -227,12 +202,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             identity += name;
 
             return identity;
-            
         }
 
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Initialize the type. This method must be called since for bootstraping we only call the constructor. 
         /// This method will help us initialize the type
@@ -245,13 +220,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="isAbstract">If the type is abstract</param>
         /// <param name="isSealed">If the type is sealed</param>
         /// <param name="baseType">The base type for this type</param>
-        internal static void 
-            Initialize(EdmType type,
-                                        string name,
-                                        string namespaceName,
-                                        DataSpace dataSpace,
-                                        bool isAbstract,
-                                        EdmType baseType)
+        internal static void
+            Initialize(
+            EdmType type,
+            string name,
+            string namespaceName,
+            DataSpace dataSpace,
+            bool isAbstract,
+            EdmType baseType)
         {
             type._baseType = baseType;
             type._name = name;
@@ -266,7 +242,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         public override string ToString()
         {
-            return this.FullName;
+            return FullName;
         }
 
         /// <summary>
@@ -277,7 +253,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             if (_collectionType == null)
             {
-                Interlocked.CompareExchange<CollectionType>(ref _collectionType, new CollectionType(this), null);
+                Interlocked.CompareExchange(ref _collectionType, new CollectionType(this), null);
             }
 
             return _collectionType;
@@ -309,7 +285,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal virtual bool IsBaseTypeOf(EdmType otherType)
         {
             if (otherType == null)
+            {
                 return false;
+            }
             return otherType.IsSubtypeOf(this);
         }
 
@@ -332,7 +310,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 base.SetReadOnly();
 
-                EdmType baseType = BaseType;
+                var baseType = BaseType;
                 if (baseType != null)
                 {
                     baseType.SetReadOnly();
@@ -346,8 +324,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>Descriptions for all built-in facets for this type.</returns>
         internal virtual IEnumerable<FacetDescription> GetAssociatedFacetDescriptions()
         {
-            return MetadataItem.GetGeneralFacetDescriptions();
+            return GetGeneralFacetDescriptions();
         }
+
         #endregion
     }
 }

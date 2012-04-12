@@ -1,6 +1,5 @@
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
-    using System.Data.Entity;
     using System.Data.Entity.Resources;
 
     /// <summary>
@@ -15,6 +14,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     internal class RecordConverter
     {
         #region Constructors
+
         /// <summary>
         /// Initializes a new converter given a command tree context. Initializes a new record layout cache.
         /// </summary>
@@ -23,16 +23,20 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             m_updateTranslator = updateTranslator;
         }
+
         #endregion
 
         #region Fields
+
         /// <summary>
         /// Context used to produce expressions.
         /// </summary>
-        private UpdateTranslator m_updateTranslator;
+        private readonly UpdateTranslator m_updateTranslator;
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Converts original values in a state entry to a DbNewInstanceExpression. The record must be either an entity or 
         /// a relationship set instance.
@@ -43,9 +47,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="stateEntry">Gets state entry this record is associated with.</param>
         /// <param name="modifiedPropertiesBehavior">Indicates how to determine whether a property is modified.</param>
         /// <returns>New instance expression.</returns>
-        internal PropagatorResult ConvertOriginalValuesToPropagatorResult(IEntityStateEntry stateEntry, ModifiedPropertiesBehavior modifiedPropertiesBehavior)
+        internal PropagatorResult ConvertOriginalValuesToPropagatorResult(
+            IEntityStateEntry stateEntry, ModifiedPropertiesBehavior modifiedPropertiesBehavior)
         {
-            return ConvertStateEntryToPropagatorResult(stateEntry, useCurrentValues: false, modifiedPropertiesBehavior: modifiedPropertiesBehavior);
+            return ConvertStateEntryToPropagatorResult(
+                stateEntry, useCurrentValues: false, modifiedPropertiesBehavior: modifiedPropertiesBehavior);
         }
 
         /// <summary>
@@ -58,22 +64,27 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="stateEntry">Gets state entry this record is associated with.</param>
         /// <param name="modifiedPropertiesBehavior">Indicates how to determine whether a property is modified.</param>
         /// <returns>New instance expression.</returns>
-        internal PropagatorResult ConvertCurrentValuesToPropagatorResult(IEntityStateEntry stateEntry, ModifiedPropertiesBehavior modifiedPropertiesBehavior)
+        internal PropagatorResult ConvertCurrentValuesToPropagatorResult(
+            IEntityStateEntry stateEntry, ModifiedPropertiesBehavior modifiedPropertiesBehavior)
         {
-            return ConvertStateEntryToPropagatorResult(stateEntry, useCurrentValues: true, modifiedPropertiesBehavior: modifiedPropertiesBehavior);
+            return ConvertStateEntryToPropagatorResult(
+                stateEntry, useCurrentValues: true, modifiedPropertiesBehavior: modifiedPropertiesBehavior);
         }
 
-        private PropagatorResult ConvertStateEntryToPropagatorResult(IEntityStateEntry stateEntry, bool useCurrentValues, ModifiedPropertiesBehavior modifiedPropertiesBehavior)
+        private PropagatorResult ConvertStateEntryToPropagatorResult(
+            IEntityStateEntry stateEntry, bool useCurrentValues, ModifiedPropertiesBehavior modifiedPropertiesBehavior)
         {
             try
             {
                 EntityUtil.CheckArgumentNull(stateEntry, "stateEntry");
-                IExtendedDataRecord record = useCurrentValues
-                    ? EntityUtil.CheckArgumentNull(stateEntry.CurrentValues as IExtendedDataRecord, "stateEntry.CurrentValues")
-                    : EntityUtil.CheckArgumentNull(stateEntry.OriginalValues as IExtendedDataRecord, "stateEntry.OriginalValues");
+                var record = useCurrentValues
+                                 ? EntityUtil.CheckArgumentNull(stateEntry.CurrentValues as IExtendedDataRecord, "stateEntry.CurrentValues")
+                                 : EntityUtil.CheckArgumentNull(
+                                     stateEntry.OriginalValues as IExtendedDataRecord, "stateEntry.OriginalValues");
 
-                bool isModified = false; // the root of the state entry is unchanged because the type is static
-                return ExtractorMetadata.ExtractResultFromRecord(stateEntry, isModified, record, useCurrentValues, m_updateTranslator, modifiedPropertiesBehavior);
+                var isModified = false; // the root of the state entry is unchanged because the type is static
+                return ExtractorMetadata.ExtractResultFromRecord(
+                    stateEntry, isModified, record, useCurrentValues, m_updateTranslator, modifiedPropertiesBehavior);
             }
             catch (Exception e)
             {
@@ -84,6 +95,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 throw;
             }
         }
+
         #endregion
     }
 }

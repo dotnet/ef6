@@ -1,6 +1,5 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System.Collections.Generic;
     using System.Data.Entity.Core.Mapping;
     using System.Diagnostics;
 
@@ -12,6 +11,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private EntityContainer _defaultContainer;
 
         #region Constructors
+
         /// <summary>
         /// Creates a new instance of perspective class so that query can work
         /// ignorant of all spaces
@@ -21,9 +21,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             : base(metadataWorkspace, DataSpace.CSpace)
         {
         }
+
         #endregion //Constructors
 
         #region Methods
+
         /// <summary>
         /// Given a clrType attempt to return the corresponding target type from
         /// the worksapce
@@ -33,9 +35,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>true if a TypeUsage can be found for the target type</returns>
         internal bool TryGetType(Type clrType, out TypeUsage outTypeUsage)
         {
-            return TryGetTypeByName(clrType.FullName, 
-                                    false /*ignoreCase*/, 
-                                    out outTypeUsage);
+            return TryGetTypeByName(
+                clrType.FullName,
+                false /*ignoreCase*/,
+                out outTypeUsage);
         }
 
         /// <summary>
@@ -55,13 +58,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             outMember = null;
             Map map = null;
 
-            if (this.MetadataWorkspace.TryGetMap(type, DataSpace.OCSpace, out map))
+            if (MetadataWorkspace.TryGetMap(type, DataSpace.OCSpace, out map))
             {
-                ObjectTypeMapping objectTypeMap = map as ObjectTypeMapping;
+                var objectTypeMap = map as ObjectTypeMapping;
 
-                if (objectTypeMap!=null)
+                if (objectTypeMap != null)
                 {
-                    ObjectMemberMapping objPropertyMapping = objectTypeMap.GetMemberMapForClrMember(memberName, ignoreCase);
+                    var objPropertyMapping = objectTypeMap.GetMemberMapForClrMember(memberName, ignoreCase);
                     if (null != objPropertyMapping)
                     {
                         outMember = objPropertyMapping.EdmMember;
@@ -86,13 +89,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             // From ClrPerspective, we should not allow anything from SSpace. So make sure that the CSpace type does not
             // have the Target attribute
-            if (this.MetadataWorkspace.TryGetMap(fullName, DataSpace.OSpace, ignoreCase, DataSpace.OCSpace, out map))
+            if (MetadataWorkspace.TryGetMap(fullName, DataSpace.OSpace, ignoreCase, DataSpace.OCSpace, out map))
             {
                 // Check if it's primitive type, if so, then use the MetadataWorkspace to get the mapped primitive type
-                if (map.EdmItem.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType)
+                if (map.EdmItem.BuiltInTypeKind
+                    == BuiltInTypeKind.PrimitiveType)
                 {
                     // Reassign the variable with the provider primitive type, then create the type usage
-                    PrimitiveType primitiveType = this.MetadataWorkspace.GetMappedPrimitiveType(((PrimitiveType)map.EdmItem).PrimitiveTypeKind, DataSpace.CSpace);
+                    var primitiveType = MetadataWorkspace.GetMappedPrimitiveType(
+                        ((PrimitiveType)map.EdmItem).PrimitiveTypeKind, DataSpace.CSpace);
                     if (primitiveType != null)
                     {
                         typeUsage = EdmProviderManifest.Instance.GetCanonicalModelTypeUsage(primitiveType.PrimitiveTypeKind);
@@ -142,15 +147,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
             TypeUsage typeUsage = null;
             if (null != map)
             {
-                MetadataItem item = map.EdmItem;
-                EdmType edmItem = item as EdmType;
-                if (null != item && edmItem!=null)
+                var item = map.EdmItem;
+                var edmItem = item as EdmType;
+                if (null != item
+                    && edmItem != null)
                 {
                     typeUsage = TypeUsage.Create(edmItem);
                 }
             }
             return typeUsage;
         }
+
         #endregion
     }
 }

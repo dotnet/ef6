@@ -1,9 +1,9 @@
 namespace System.Data.Entity.Core.Common.EntitySql
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-    using System.Data.Entity;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
 
@@ -64,20 +64,22 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         #region GetEnumerator
+
         public Dictionary<string, ScopeEntry>.Enumerator GetEnumerator()
         {
             return _scopeEntries.GetEnumerator();
         }
 
-        System.Collections.Generic.IEnumerator<KeyValuePair<string, ScopeEntry>> System.Collections.Generic.IEnumerable<KeyValuePair<string, ScopeEntry>>.GetEnumerator()
+        IEnumerator<KeyValuePair<string, ScopeEntry>> IEnumerable<KeyValuePair<string, ScopeEntry>>.GetEnumerator()
         {
             return _scopeEntries.GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return _scopeEntries.GetEnumerator();
         }
+
         #endregion
     }
 
@@ -87,6 +89,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         GroupKeyDefinition,
         ProjectionItemDefinition,
         FreeVar,
+
         /// <summary>
         /// Represents a group input scope entry that should no longer be referenced. 
         /// </summary>
@@ -148,9 +151,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private DbExpression _varBasedExpression;
         private DbExpression _groupVarBasedExpression;
         private DbExpression _groupAggBasedExpression;
-        private bool _joinClauseLeftExpr = false;
 
-        internal SourceScopeEntry(DbVariableReferenceExpression varRef) : this(varRef, null) { }
+        internal SourceScopeEntry(DbVariableReferenceExpression varRef)
+            : this(varRef, null)
+        {
+        }
 
         internal SourceScopeEntry(DbVariableReferenceExpression varRef, string[] alternativeName)
             : base(ScopeEntryKind.SourceVar)
@@ -174,11 +179,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             get { return _groupAggBasedExpression; }
         }
 
-        internal bool IsJoinClauseLeftExpr
-        {
-            get { return _joinClauseLeftExpr; }
-            set { _joinClauseLeftExpr = value; }
-        }
+        internal bool IsJoinClauseLeftExpr { get; set; }
 
         string[] IGetAlternativeName.AlternativeName
         {
@@ -202,9 +203,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 _propRefs = new List<string>(2);
                 _propRefs.Add(((DbVariableReferenceExpression)_varBasedExpression).VariableName);
             }
-            
+
             _varBasedExpression = parentVarRef;
-            for (int i = _propRefs.Count - 1; i >= 0; --i)
+            for (var i = _propRefs.Count - 1; i >= 0; --i)
             {
                 _varBasedExpression = _varBasedExpression.Property(_propRefs[i]);
             }
@@ -244,7 +245,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         ///     - <see cref="IGroupExpressionExtendedInfo.GroupAggBasedExpression"/> off the <paramref name="groupAggRef"/> expression.
         /// This adjustment is reversable by <see cref="RollbackAdjustmentToGroupVar"/>(...).
         /// </summary>
-        internal void AdjustToGroupVar(DbVariableReferenceExpression parentVarRef, DbVariableReferenceExpression parentGroupVarRef, DbVariableReferenceExpression groupAggRef)
+        internal void AdjustToGroupVar(
+            DbVariableReferenceExpression parentVarRef, DbVariableReferenceExpression parentGroupVarRef,
+            DbVariableReferenceExpression groupAggRef)
         {
             // Adjustment is not reentrant.
             Debug.Assert(_groupVarBasedExpression == null, "_groupVarBasedExpression == null");
@@ -292,7 +295,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             _groupAggBasedExpression = groupAggRef;
             if (_propRefs != null)
             {
-                for (int i = _propRefs.Count - 2/*ignore the parentVarRef*/; i >= 0; --i)
+                for (var i = _propRefs.Count - 2 /*ignore the parentVarRef*/; i >= 0; --i)
                 {
                     _groupVarBasedExpression = _groupVarBasedExpression.Property(_propRefs[i]);
                     _groupAggBasedExpression = _groupAggBasedExpression.Property(_propRefs[i]);
@@ -319,7 +322,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
     internal sealed class InvalidGroupInputRefScopeEntry : ScopeEntry
     {
         internal InvalidGroupInputRefScopeEntry()
-            : base(ScopeEntryKind.InvalidGroupInputRef) { }
+            : base(ScopeEntryKind.InvalidGroupInputRef)
+        {
+        }
 
         internal override DbExpression GetExpression(string refName, ErrorContext errCtx)
         {
@@ -335,14 +340,15 @@ namespace System.Data.Entity.Core.Common.EntitySql
     {
         private readonly DbExpression _varBasedExpression;
         private readonly DbExpression _groupVarBasedExpression;
-        private readonly DbExpression _groupAggBasedExpression; 
+        private readonly DbExpression _groupAggBasedExpression;
         private readonly string[] _alternativeName;
 
         internal GroupKeyDefinitionScopeEntry(
-            DbExpression varBasedExpression, 
-            DbExpression groupVarBasedExpression, DbExpression 
-            groupAggBasedExpression, 
-            string[] alternativeName) : base(ScopeEntryKind.GroupKeyDefinition)
+            DbExpression varBasedExpression,
+            DbExpression groupVarBasedExpression, DbExpression
+                groupAggBasedExpression,
+            string[] alternativeName)
+            : base(ScopeEntryKind.GroupKeyDefinition)
         {
             _varBasedExpression = varBasedExpression;
             _groupVarBasedExpression = groupVarBasedExpression;
@@ -357,10 +363,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         DbExpression IGroupExpressionExtendedInfo.GroupVarBasedExpression
         {
-            get
-            {
-                return _groupVarBasedExpression;
-            }
+            get { return _groupVarBasedExpression; }
         }
 
         DbExpression IGroupExpressionExtendedInfo.GroupAggBasedExpression
@@ -452,10 +455,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         internal int CurrentScopeIndex
         {
-            get
-            {
-                return _scopes.Count - 1;
-            }
+            get { return _scopes.Count - 1; }
         }
 
         /// <summary>
@@ -463,10 +463,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         internal Scope CurrentScope
         {
-            get
-            {
-                return _scopes[CurrentScopeIndex];
-            }
+            get { return _scopes[CurrentScopeIndex]; }
         }
 
         /// <summary>
@@ -476,7 +473,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         {
             Debug.Assert(scopeIndex >= 0, "scopeIndex >= 0");
             Debug.Assert(scopeIndex <= CurrentScopeIndex, "scopeIndex <= CurrentScopeIndex");
-            if (0 > scopeIndex || scopeIndex > CurrentScopeIndex)
+            if (0 > scopeIndex
+                || scopeIndex > CurrentScopeIndex)
             {
                 throw EntityUtil.EntitySqlError(Strings.InvalidScopeIndex);
             }
@@ -495,12 +493,13 @@ namespace System.Data.Entity.Core.Common.EntitySql
             Debug.Assert(scopeIndex <= CurrentScopeIndex, "[PRE] savePoint.ScopeIndex <= CurrentScopeIndex");
             Debug.Assert(CurrentScopeIndex >= 0, "[PRE] CurrentScopeIndex >= 0");
 
-            if (scopeIndex > CurrentScopeIndex || scopeIndex < 0 || CurrentScopeIndex < 0)
+            if (scopeIndex > CurrentScopeIndex || scopeIndex < 0
+                || CurrentScopeIndex < 0)
             {
                 throw EntityUtil.EntitySqlError(Strings.InvalidSavePoint);
             }
 
-            int delta = CurrentScopeIndex - scopeIndex;
+            var delta = CurrentScopeIndex - scopeIndex;
             if (delta > 0)
             {
                 _scopes.RemoveRange(scopeIndex + 1, CurrentScopeIndex - scopeIndex);
@@ -511,7 +510,6 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             Debug.Assert(scopeIndex == CurrentScopeIndex, "[POST] savePoint.ScopeIndex == CurrentScopeIndex");
             Debug.Assert(CurrentScopeIndex >= 0, "[POST] CurrentScopeIndex >= 0");
-
         }
 
         /// <summary>

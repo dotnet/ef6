@@ -1,15 +1,14 @@
 namespace System.Data.Entity.Core.SqlClient.SqlGen
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
-    using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Spatial;
     using System.Data.Entity.Core.SqlClient.Internal;
+    using System.Data.Entity.Resources;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -22,7 +21,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
     /// SQL Server 2000 and SQL Server 2005.
     /// </summary>
     /// <remarks>
-    /// The translation is implemented as a visitor <see cref="DbExpressionVisitor{T}"/>
+    /// The translation is implemented as a visitor <see cref="DbExpressionVisitor{TResultType}"/>
     /// over the query tree.  It makes a single pass over the tree, collecting the sql
     /// fragments for the various nodes in the tree <see cref="ISqlFragment"/>.
     ///
@@ -202,6 +201,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
     internal sealed class SqlGenerator : DbExpressionVisitor<ISqlFragment>
     {
         #region Visitor parameter stacks
+
         /// <summary>
         /// Every relational node has to pass its SELECT statement to its children
         /// This allows them (DbVariableReferenceExpression eventually) to update the list of
@@ -238,7 +238,9 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         #endregion
 
         #region Global lists and state
-        Dictionary<string, int> allExtentNames;
+
+        private Dictionary<string, int> allExtentNames;
+
         internal Dictionary<string, int> AllExtentNames
         {
             get { return allExtentNames; }
@@ -247,13 +249,14 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         // For each column name, we store the last integer suffix that
         // was added to produce a unique column name.  This speeds up
         // the creation of the next unique name for this column name.
-        Dictionary<string, int> allColumnNames;
+        private Dictionary<string, int> allColumnNames;
+
         internal Dictionary<string, int> AllColumnNames
         {
             get { return allColumnNames; }
         }
 
-        readonly SymbolTable symbolTable = new SymbolTable();
+        private readonly SymbolTable symbolTable = new SymbolTable();
 
         /// <summary>
         /// VariableReferenceExpressions are allowed only as children of DbPropertyExpression
@@ -272,12 +275,13 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// The goal of the compensation is to have the store index picked up by the server.
         /// String constants are also compensated and the decision is local, unlike parameters.
         /// </summary>
-        private Dictionary<string, bool> _candidateParametersToForceNonUnicode = new Dictionary<string, bool>();
+        private readonly Dictionary<string, bool> _candidateParametersToForceNonUnicode = new Dictionary<string, bool>();
+
         /// <summary>
         /// Set and reset in DbComparisonExpression and DbLikeExpression visit methods. Maintains
         /// global state information that the children of these nodes are candidates for compensation.
         /// </summary>
-        private bool _forceNonUnicode = false;
+        private bool _forceNonUnicode;
 
         /// <summary>
         /// Set when it is is safe to ignore the unicode/non-unicode aspect. See <see cref="VisitIsNullExpression"/> for an example.
@@ -287,40 +291,51 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         #endregion
 
         #region Statics
-        
-        const byte defaultDecimalPrecision = 18;
-        static private readonly char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+
+        private const byte defaultDecimalPrecision = 18;
+        private static readonly char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
         // Define lists of functions that take string arugments and return strings.
-        static private readonly Set<string> _canonicalStringFunctionsOneArg = new Set<string>(new string[] { "Edm.Trim"    ,
-                                                                                           "Edm.RTrim"   ,
-                                                                                           "Edm.LTrim"            ,
-                                                                                           "Edm.Left"           ,
-                                                                                           "Edm.Right"  ,
-                                                                                           "Edm.Substring"           ,
-                                                                                           "Edm.ToLower"           ,
-                                                                                           "Edm.ToUpper"           ,
-                                                                                           "Edm.Reverse"           },
-                                                                        StringComparer.Ordinal).MakeReadOnly();
+        private static readonly Set<string> _canonicalStringFunctionsOneArg = new Set<string>(
+            new[]
+                {
+                    "Edm.Trim",
+                    "Edm.RTrim",
+                    "Edm.LTrim",
+                    "Edm.Left",
+                    "Edm.Right",
+                    "Edm.Substring",
+                    "Edm.ToLower",
+                    "Edm.ToUpper",
+                    "Edm.Reverse"
+                },
+            StringComparer.Ordinal).MakeReadOnly();
 
-        static private readonly Set<string> _canonicalStringFunctionsTwoArgs = new Set<string>(new string[] { "Edm.Concat" },
-                                                                StringComparer.Ordinal).MakeReadOnly();
+        private static readonly Set<string> _canonicalStringFunctionsTwoArgs = new Set<string>(
+            new[] { "Edm.Concat" },
+            StringComparer.Ordinal).MakeReadOnly();
 
-        static private readonly Set<string> _canonicalStringFunctionsThreeArgs = new Set<string>(new string[] { "Edm.Replace" },
-                                                                StringComparer.Ordinal).MakeReadOnly();
+        private static readonly Set<string> _canonicalStringFunctionsThreeArgs = new Set<string>(
+            new[] { "Edm.Replace" },
+            StringComparer.Ordinal).MakeReadOnly();
 
-        static private readonly Set<string> _storeStringFunctionsOneArg = new Set<string>(new string[] { "SqlServer.RTRIM"    ,
-                                                                                           "SqlServer.LTRIM"   ,
-                                                                                           "SqlServer.LEFT"           ,
-                                                                                           "SqlServer.RIGHT"  ,
-                                                                                           "SqlServer.SUBSTRING"           ,
-                                                                                           "SqlServer.LOWER"           ,
-                                                                                           "SqlServer.UPPER"           ,
-                                                                                           "SqlServer.REVERSE"           },
-                                                                        StringComparer.Ordinal).MakeReadOnly();
+        private static readonly Set<string> _storeStringFunctionsOneArg = new Set<string>(
+            new[]
+                {
+                    "SqlServer.RTRIM",
+                    "SqlServer.LTRIM",
+                    "SqlServer.LEFT",
+                    "SqlServer.RIGHT",
+                    "SqlServer.SUBSTRING",
+                    "SqlServer.LOWER",
+                    "SqlServer.UPPER",
+                    "SqlServer.REVERSE"
+                },
+            StringComparer.Ordinal).MakeReadOnly();
 
-        static private readonly Set<string> _storeStringFunctionsThreeArgs = new Set<string>(new string[] { "SqlServer.REPLACE" },
-                                                                StringComparer.Ordinal).MakeReadOnly();
+        private static readonly Set<string> _storeStringFunctionsThreeArgs = new Set<string>(
+            new[] { "SqlServer.REPLACE" },
+            StringComparer.Ordinal).MakeReadOnly();
 
         #endregion
 
@@ -329,23 +344,27 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <summary>
         /// The current SQL Server version
         /// </summary>
-        private SqlVersion sqlVersion;
-        internal SqlVersion SqlVersion 
+        private readonly SqlVersion sqlVersion;
+
+        internal SqlVersion SqlVersion
         {
             get { return sqlVersion; }
         }
+
         internal bool IsPreKatmai
         {
-            get { return SqlVersionUtils.IsPreKatmai(this.SqlVersion); }
+            get { return SqlVersionUtils.IsPreKatmai(SqlVersion); }
         }
 
         private MetadataWorkspace metadataWorkspace;
+
         internal MetadataWorkspace Workspace
         {
             get { return metadataWorkspace; }
         }
 
-        private TypeUsage integerType = null;
+        private TypeUsage integerType;
+
         internal TypeUsage IntegerType
         {
             get
@@ -359,26 +378,33 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         }
 
         private string defaultStringTypeName;
+
         internal string DefaultStringTypeName
         {
             get
             {
                 if (defaultStringTypeName == null)
                 {
-                    defaultStringTypeName = GetSqlPrimitiveType(TypeUsage.CreateStringTypeUsage(MetadataWorkspace.GetModelPrimitiveType(PrimitiveTypeKind.String), isUnicode: true, isFixedLength: false));
+                    defaultStringTypeName =
+                        GetSqlPrimitiveType(
+                            TypeUsage.CreateStringTypeUsage(
+                                MetadataWorkspace.GetModelPrimitiveType(PrimitiveTypeKind.String), isUnicode: true, isFixedLength: false));
                 }
                 return defaultStringTypeName;
             }
         }
 
         private StoreItemCollection _storeItemCollection;
+
         internal StoreItemCollection StoreItemCollection
         {
             get { return _storeItemCollection; }
         }
+
         #endregion
 
         #region Constructor
+
         /// <summary>
         /// Basic constructor. 
         /// </summary>
@@ -387,9 +413,11 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         {
             this.sqlVersion = sqlVersion;
         }
+
         #endregion
 
         #region Entry points
+
         /// <summary>
         /// General purpose static function that can be called from System.Data assembly
         /// </summary>
@@ -399,7 +427,9 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// to constants in the command tree. Used only in ModificationCommandTrees.</param>
         /// <param name="commandType">CommandType for generated command.</param>
         /// <returns>The string representing the SQL to be executed.</returns>
-        internal static string GenerateSql(DbCommandTree tree, SqlVersion sqlVersion, out List<SqlParameter> parameters, out CommandType commandType, out HashSet<string> paramsToForceNonUnicode)
+        internal static string GenerateSql(
+            DbCommandTree tree, SqlVersion sqlVersion, out List<SqlParameter> parameters, out CommandType commandType,
+            out HashSet<string> paramsToForceNonUnicode)
         {
             SqlGenerator sqlGen;
             commandType = CommandType.Text;
@@ -411,7 +441,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 case DbCommandTreeKind.Query:
                     sqlGen = new SqlGenerator(sqlVersion);
                     return sqlGen.GenerateSql((DbQueryCommandTree)tree, out paramsToForceNonUnicode);
-                    
+
                 case DbCommandTreeKind.Insert:
                     return DmlSqlGenerator.GenerateInsertSql((DbInsertCommandTree)tree, sqlVersion, out parameters);
 
@@ -437,7 +467,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         {
             Debug.Assert(tree.EdmFunction != null, "DbFunctionCommandTree function cannot be null");
 
-            EdmFunction function = tree.EdmFunction;
+            var function = tree.EdmFunction;
 
             if (String.IsNullOrEmpty(function.CommandTextAttribute))
             {
@@ -445,22 +475,24 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 commandType = CommandType.StoredProcedure;
 
                 // if the schema name is not explicitly given, it is assumed to be the metadata namespace
-                string schemaName = String.IsNullOrEmpty(function.Schema) ?
-                    function.NamespaceName : function.Schema;
+                var schemaName = String.IsNullOrEmpty(function.Schema)
+                                     ? function.NamespaceName
+                                     : function.Schema;
 
                 // if the function store name is not explicitly given, it is assumed to be the metadata name
-                string functionName = String.IsNullOrEmpty(function.StoreFunctionNameAttribute) ?
-                    function.Name : function.StoreFunctionNameAttribute;
+                var functionName = String.IsNullOrEmpty(function.StoreFunctionNameAttribute)
+                                       ? function.Name
+                                       : function.StoreFunctionNameAttribute;
 
                 // quote elements of function text
-                string quotedSchemaName = QuoteIdentifier(schemaName);
-                string quotedFunctionName = QuoteIdentifier(functionName);
+                var quotedSchemaName = QuoteIdentifier(schemaName);
+                var quotedFunctionName = QuoteIdentifier(functionName);
 
                 // separator
                 const string schemaSeparator = ".";
 
                 // concatenate elements of function text
-                string quotedFunctionText = quotedSchemaName + schemaSeparator + quotedFunctionName;
+                var quotedFunctionText = quotedSchemaName + schemaSeparator + quotedFunctionName;
 
                 return quotedFunctionText;
             }
@@ -471,9 +503,11 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 return function.CommandTextAttribute;
             }
         }
+
         #endregion
 
         #region Driver Methods
+
         /// <summary>
         /// Translate a command tree to a SQL string.
         ///
@@ -489,20 +523,20 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         {
             Debug.Assert(tree.Query != null, "DbQueryCommandTree Query cannot be null");
 
-            DbQueryCommandTree targetTree = tree;
+            var targetTree = tree;
 
             //If we are on Sql 8.0 rewrite the tree if needed
-            if (this.SqlVersion == SqlVersion.Sql8)
+            if (SqlVersion == SqlVersion.Sql8)
             {
                 if (Sql8ConformanceChecker.NeedsRewrite(tree.Query))
                 {
                     targetTree = Sql8ExpressionRewriter.Rewrite(tree);
                 }
             }
-            
-            this.metadataWorkspace = targetTree.MetadataWorkspace;
+
+            metadataWorkspace = targetTree.MetadataWorkspace;
             // needed in Private Type Helpers section bellow
-            _storeItemCollection = (StoreItemCollection)this.Workspace.GetItemCollection(DataSpace.SSpace);
+            _storeItemCollection = (StoreItemCollection)Workspace.GetItemCollection(DataSpace.SSpace);
 
             selectStatementStack = new Stack<SqlSelectStatement>();
             isParentAJoinStack = new Stack<bool>();
@@ -515,15 +549,14 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             ISqlFragment result;
             if (TypeSemantics.IsCollectionType(targetTree.Query.ResultType))
             {
-                SqlSelectStatement sqlStatement = VisitExpressionEnsureSqlStatement(targetTree.Query);
+                var sqlStatement = VisitExpressionEnsureSqlStatement(targetTree.Query);
                 Debug.Assert(sqlStatement != null, "The outer most sql statment is null");
                 sqlStatement.IsTopMost = true;
                 result = sqlStatement;
-
             }
             else
             {
-                SqlBuilder sqlBuilder = new SqlBuilder();
+                var sqlBuilder = new SqlBuilder();
                 sqlBuilder.Append("SELECT ");
                 sqlBuilder.Append(targetTree.Query.Accept(this));
 
@@ -540,7 +573,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             Debug.Assert(selectStatementStack.Count == 0);
             Debug.Assert(isParentAJoinStack.Count == 0);
 
-            paramsToForceNonUnicode = new HashSet<string>(_candidateParametersToForceNonUnicode.Where(p => p.Value).Select(q => q.Key).ToList());
+            paramsToForceNonUnicode =
+                new HashSet<string>(_candidateParametersToForceNonUnicode.Where(p => p.Value).Select(q => q.Key).ToList());
 
             return WriteSql(result);
         }
@@ -553,14 +587,15 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns>A string representing the SQL to be executed.</returns>
         private string WriteSql(ISqlFragment sqlStatement)
         {
-            StringBuilder builder = new StringBuilder(1024);
-            using (SqlWriter writer = new SqlWriter(builder))
+            var builder = new StringBuilder(1024);
+            using (var writer = new SqlWriter(builder))
             {
                 sqlStatement.WriteSql(writer, this);
             }
 
             return builder.ToString();
         }
+
         #endregion
 
         #region IExpressionVisitor Members
@@ -583,9 +618,9 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns>A <see cref="SqlSelectStatement"/>.</returns>
         public override ISqlFragment Visit(DbApplyExpression e)
         {
-            Debug.Assert(this.SqlVersion != SqlVersion.Sql8, "DbApplyExpression when translating for SQL Server 2000.");
+            Debug.Assert(SqlVersion != SqlVersion.Sql8, "DbApplyExpression when translating for SQL Server 2000.");
 
-            List<DbExpressionBinding> inputs = new List<DbExpressionBinding>();
+            var inputs = new List<DbExpressionBinding>();
             inputs.Add(e.Input);
             inputs.Add(e.Apply);
 
@@ -660,12 +695,12 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns>A <see cref="SqlBuilder"/></returns>
         public override ISqlFragment Visit(DbCaseExpression e)
         {
-            SqlBuilder result = new SqlBuilder();
+            var result = new SqlBuilder();
 
             Debug.Assert(e.When.Count == e.Then.Count);
 
             result.Append("CASE");
-            for (int i = 0; i < e.When.Count; ++i)
+            for (var i = 0; i < e.When.Count; ++i)
             {
                 result.Append(" WHEN (");
                 result.Append(e.When[i].Accept(this));
@@ -674,7 +709,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             }
             // REVIEW: e.Else = DbNullExpression is added by the parser if there is
             // no else clause.  So, we do not add an ELSE clause here.
-            if (e.Else != null && !(e.Else is DbNullExpression))
+            if (e.Else != null
+                && !(e.Else is DbNullExpression))
             {
                 result.Append(" ELSE ");
                 result.Append(e.Else.Accept(this));
@@ -698,7 +734,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             }
             else
             {
-                SqlBuilder result = new SqlBuilder();
+                var result = new SqlBuilder();
                 result.Append(" CAST( ");
                 result.Append(e.Argument.Accept(this));
                 result.Append(" AS ");
@@ -748,7 +784,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                     break;
 
                 default:
-                    Debug.Assert(false);  // The constructor should have prevented this
+                    Debug.Assert(false); // The constructor should have prevented this
                     throw EntityUtil.InvalidOperation(String.Empty);
             }
 
@@ -786,21 +822,22 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         private bool MatchPatternForForcingNonUnicode(DbExpression e)
         {
-            if (e.ExpressionKind == DbExpressionKind.Like)
+            if (e.ExpressionKind
+                == DbExpressionKind.Like)
             {
-                DbLikeExpression likeExpr = (DbLikeExpression)e;
+                var likeExpr = (DbLikeExpression)e;
                 return MatchSourcePatternForForcingNonUnicode(likeExpr.Argument) &&
-                    MatchTargetPatternForForcingNonUnicode(likeExpr.Pattern) &&
-                    MatchTargetPatternForForcingNonUnicode(likeExpr.Escape);
+                       MatchTargetPatternForForcingNonUnicode(likeExpr.Pattern) &&
+                       MatchTargetPatternForForcingNonUnicode(likeExpr.Escape);
             }
 
             // DBExpressionKind is any of (Equals, LessThan, LessThanOrEquals, GreaterThan, GreaterThanOrEquals, NotEquals)
-            DbComparisonExpression compareExpr = (DbComparisonExpression)e;
-            DbExpression left = compareExpr.Left;
-            DbExpression right = compareExpr.Right;
+            var compareExpr = (DbComparisonExpression)e;
+            var left = compareExpr.Left;
+            var right = compareExpr.Right;
 
             return (MatchSourcePatternForForcingNonUnicode(left) && MatchTargetPatternForForcingNonUnicode(right)) ||
-                    (MatchSourcePatternForForcingNonUnicode(right) && MatchTargetPatternForForcingNonUnicode(left));
+                   (MatchSourcePatternForForcingNonUnicode(right) && MatchTargetPatternForForcingNonUnicode(left));
         }
 
         /// <summary>
@@ -815,36 +852,40 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 return true;
             }
 
-            if (expr.ExpressionKind == DbExpressionKind.Function)
+            if (expr.ExpressionKind
+                == DbExpressionKind.Function)
             {
-                DbFunctionExpression functionExpr = (DbFunctionExpression)expr;
-                EdmFunction function = functionExpr.Function;
+                var functionExpr = (DbFunctionExpression)expr;
+                var function = functionExpr.Function;
 
-                if (!TypeHelpers.IsCanonicalFunction(function) && !SqlFunctionCallHandler.IsStoreFunction(function))
+                if (!TypeHelpers.IsCanonicalFunction(function)
+                    && !SqlFunctionCallHandler.IsStoreFunction(function))
                 {
                     return false;
                 }
 
                 // All string arguments to the function must be candidates to match target pattern.
-                String functionFullName = function.FullName;
-                bool ifQualifies = false;
+                var functionFullName = function.FullName;
+                var ifQualifies = false;
 
-                if (_canonicalStringFunctionsOneArg.Contains(functionFullName) ||
+                if (_canonicalStringFunctionsOneArg.Contains(functionFullName)
+                    ||
                     _storeStringFunctionsOneArg.Contains(functionFullName))
                 {
                     ifQualifies = MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[0]);
                 }
                 else if (_canonicalStringFunctionsTwoArgs.Contains(functionFullName))
                 {
-                    ifQualifies = ( MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[0]) && 
-                                    MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[1]) );
+                    ifQualifies = (MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[0]) &&
+                                   MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[1]));
                 }
-                else if (_canonicalStringFunctionsThreeArgs.Contains(functionFullName) ||
-                    _storeStringFunctionsThreeArgs.Contains(functionFullName))
+                else if (_canonicalStringFunctionsThreeArgs.Contains(functionFullName)
+                         ||
+                         _storeStringFunctionsThreeArgs.Contains(functionFullName))
                 {
-                    ifQualifies = ( MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[0]) &&
-                                    MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[1]) &&
-                                    MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[2]) );
+                    ifQualifies = (MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[0]) &&
+                                   MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[1]) &&
+                                   MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[2]));
                 }
                 return ifQualifies;
             }
@@ -861,8 +902,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         {
             bool isUnicode;
             return (argument.ExpressionKind == DbExpressionKind.Property) &&
-                 (TypeHelpers.TryGetIsUnicode(argument.ResultType, out isUnicode)) &&
-                 (!isUnicode);
+                   (TypeHelpers.TryGetIsUnicode(argument.ResultType, out isUnicode)) &&
+                   (!isUnicode);
         }
 
         /// <summary>
@@ -873,18 +914,18 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         private static bool IsConstParamOrNullExpressionUnicodeNotSpecified(DbExpression argument)
         {
             bool isUnicode;
-            DbExpressionKind expressionKind = argument.ExpressionKind;
-            TypeUsage type = argument.ResultType;
+            var expressionKind = argument.ExpressionKind;
+            var type = argument.ResultType;
 
             if (!TypeSemantics.IsPrimitiveType(type, PrimitiveTypeKind.String))
             {
                 return false;
             }
 
-            return  (expressionKind == DbExpressionKind.Constant || 
-                  expressionKind == DbExpressionKind.ParameterReference ||
-                  expressionKind == DbExpressionKind.Null) &&
-                 (!TypeHelpers.TryGetBooleanFacetValue(type, DbProviderManifest.UnicodeFacetName, out isUnicode));
+            return (expressionKind == DbExpressionKind.Constant ||
+                    expressionKind == DbExpressionKind.ParameterReference ||
+                    expressionKind == DbExpressionKind.Null) &&
+                   (!TypeHelpers.TryGetBooleanFacetValue(type, DbProviderManifest.UnicodeFacetName, out isUnicode));
         }
 
         /// <summary>
@@ -897,9 +938,9 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         private ISqlFragment VisitConstant(DbConstantExpression e, bool isCastOptional)
         {
             // Constants will be sent to the store as part of the generated TSQL, not as parameters
-            SqlBuilder result = new SqlBuilder();
+            var result = new SqlBuilder();
 
-            TypeUsage resultType = e.ResultType;
+            var resultType = e.ResultType;
             PrimitiveTypeKind typeKind;
             // Model Types can be (at the time of this implementation):
             //      Binary, Boolean, Byte, Date, DateTime, DateTimeOffset, Decimal, Double, Guid, Int16, Int32, Int64, Single, String, Time
@@ -930,9 +971,13 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
                     case PrimitiveTypeKind.DateTime:
                         result.Append("convert(");
-                        result.Append(this.IsPreKatmai ? "datetime" : "datetime2");
+                        result.Append(IsPreKatmai ? "datetime" : "datetime2");
                         result.Append(", ");
-                        result.Append(EscapeSingleQuote(((System.DateTime)e.Value).ToString(this.IsPreKatmai ? "yyyy-MM-dd HH:mm:ss.fff" : "yyyy-MM-dd HH:mm:ss.fffffff", CultureInfo.InvariantCulture), false /* IsUnicode */));
+                        result.Append(
+                            EscapeSingleQuote(
+                                ((DateTime)e.Value).ToString(
+                                    IsPreKatmai ? "yyyy-MM-dd HH:mm:ss.fff" : "yyyy-MM-dd HH:mm:ss.fffffff", CultureInfo.InvariantCulture),
+                                false /* IsUnicode */));
                         result.Append(", 121)");
                         break;
 
@@ -950,28 +995,31 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                         result.Append("convert(");
                         result.Append(e.ResultType.EdmType.Name);
                         result.Append(", ");
-                        result.Append(EscapeSingleQuote(((System.DateTimeOffset)e.Value).ToString("yyyy-MM-dd HH:mm:ss.fffffff zzz", CultureInfo.InvariantCulture), false /* IsUnicode */));
+                        result.Append(
+                            EscapeSingleQuote(
+                                ((DateTimeOffset)e.Value).ToString("yyyy-MM-dd HH:mm:ss.fffffff zzz", CultureInfo.InvariantCulture), false
+                                /* IsUnicode */));
                         result.Append(", 121)");
                         break;
 
                     case PrimitiveTypeKind.Decimal:
-                        string strDecimal = ((Decimal)e.Value).ToString(CultureInfo.InvariantCulture);                        
+                        var strDecimal = ((Decimal)e.Value).ToString(CultureInfo.InvariantCulture);
                         // if the decimal value has no decimal part, cast as decimal to preserve type
                         // if the number has precision > int64 max precision, it will be handled as decimal by sql server
                         // and does not need cast. if precision is lest then 20, then cast using Max(literal precision, sql default precision)
-                        bool needsCast = -1 == strDecimal.IndexOf('.') && (strDecimal.TrimStart(new char[] { '-' }).Length < 20);
-                  
-                        byte precision = (byte)Math.Max((Byte)strDecimal.Length, defaultDecimalPrecision);
+                        var needsCast = -1 == strDecimal.IndexOf('.') && (strDecimal.TrimStart(new[] { '-' }).Length < 20);
+
+                        var precision = Math.Max((Byte)strDecimal.Length, defaultDecimalPrecision);
                         Debug.Assert(precision > 0, "Precision must be greater than zero");
 
-                        string decimalType = "decimal(" + precision.ToString(CultureInfo.InvariantCulture) + ")";
+                        var decimalType = "decimal(" + precision.ToString(CultureInfo.InvariantCulture) + ")";
 
                         WrapWithCastIfNeeded(needsCast, strDecimal, decimalType, result);
                         break;
 
                     case PrimitiveTypeKind.Double:
                         {
-                            double doubleValue = (Double)e.Value;
+                            var doubleValue = (Double)e.Value;
                             AssertValidDouble(doubleValue);
                             WrapWithCastIfNeeded(true, doubleValue.ToString("R", CultureInfo.InvariantCulture), "float(53)", result);
                         }
@@ -999,7 +1047,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
                     case PrimitiveTypeKind.Single:
                         {
-                            float singleValue = (float)e.Value;
+                            var singleValue = (float)e.Value;
                             AssertValidSingle(singleValue);
                             WrapWithCastIfNeeded(true, singleValue.ToString("R", CultureInfo.InvariantCulture), "real", result);
                         }
@@ -1018,7 +1066,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
                     default:
                         // all known scalar types should been handled already.
-                        throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.NoStoreTypeForEdmType(resultType.Identity, ((PrimitiveType)(resultType.EdmType)).PrimitiveTypeKind));
+                        throw EntityUtil.NotSupported(
+                            Strings.NoStoreTypeForEdmType(resultType.Identity, ((PrimitiveType)(resultType.EdmType)).PrimitiveTypeKind));
                 }
             }
             else
@@ -1038,27 +1087,33 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             // a text, binary or GML representation of the spatial value can be extracted, the the corresponding function call
             // expression is built and processed.
             DbFunctionExpression functionExpression = null;
-            int? srid = spatialValue.CoordinateSystemId;
+            var srid = spatialValue.CoordinateSystemId;
             if (srid.HasValue)
             {
-                string wellKnownText = spatialValue.WellKnownText;
+                var wellKnownText = spatialValue.WellKnownText;
                 if (wellKnownText != null)
                 {
-                    functionExpression = (spatialValue.IsGeography ? SpatialEdmFunctions.GeographyFromText(wellKnownText, srid.Value) : SpatialEdmFunctions.GeometryFromText(wellKnownText, srid.Value));
+                    functionExpression = (spatialValue.IsGeography
+                                              ? SpatialEdmFunctions.GeographyFromText(wellKnownText, srid.Value)
+                                              : SpatialEdmFunctions.GeometryFromText(wellKnownText, srid.Value));
                 }
                 else
                 {
-                    byte[] wellKnownBinary = spatialValue.WellKnownBinary;
+                    var wellKnownBinary = spatialValue.WellKnownBinary;
                     if (wellKnownBinary != null)
                     {
-                        functionExpression = (spatialValue.IsGeography ? SpatialEdmFunctions.GeographyFromBinary(wellKnownBinary, srid.Value) : SpatialEdmFunctions.GeometryFromBinary(wellKnownBinary, srid.Value));
+                        functionExpression = (spatialValue.IsGeography
+                                                  ? SpatialEdmFunctions.GeographyFromBinary(wellKnownBinary, srid.Value)
+                                                  : SpatialEdmFunctions.GeometryFromBinary(wellKnownBinary, srid.Value));
                     }
                     else
                     {
-                        string gmlString = spatialValue.GmlString;
+                        var gmlString = spatialValue.GmlString;
                         if (gmlString != null)
                         {
-                            functionExpression = (spatialValue.IsGeography ? SpatialEdmFunctions.GeographyFromGml(gmlString, srid.Value) : SpatialEdmFunctions.GeometryFromGml(gmlString, srid.Value));
+                            functionExpression = (spatialValue.IsGeography
+                                                      ? SpatialEdmFunctions.GeographyFromGml(gmlString, srid.Value)
+                                                      : SpatialEdmFunctions.GeometryFromGml(gmlString, srid.Value));
                         }
                     }
                 }
@@ -1083,15 +1138,20 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         {
             if (double.IsNaN(value))
             {
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.SqlGen_TypedNaNNotSupported(Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Double)));
+                throw EntityUtil.NotSupported(
+                    Strings.SqlGen_TypedNaNNotSupported(Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Double)));
             }
-            else if(double.IsPositiveInfinity(value))
+            else if (double.IsPositiveInfinity(value))
             {
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.SqlGen_TypedPositiveInfinityNotSupported(Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Double), typeof(Double).Name));
+                throw EntityUtil.NotSupported(
+                    Strings.SqlGen_TypedPositiveInfinityNotSupported(
+                        Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Double), typeof(Double).Name));
             }
-            else if(double.IsNegativeInfinity(value))
+            else if (double.IsNegativeInfinity(value))
             {
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.SqlGen_TypedNegativeInfinityNotSupported(Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Double), typeof(Double).Name));
+                throw EntityUtil.NotSupported(
+                    Strings.SqlGen_TypedNegativeInfinityNotSupported(
+                        Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Double), typeof(Double).Name));
             }
         }
 
@@ -1104,15 +1164,20 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         {
             if (float.IsNaN(value))
             {
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.SqlGen_TypedNaNNotSupported(Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Single)));
+                throw EntityUtil.NotSupported(
+                    Strings.SqlGen_TypedNaNNotSupported(Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Single)));
             }
-            else if(float.IsPositiveInfinity(value))
+            else if (float.IsPositiveInfinity(value))
             {
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.SqlGen_TypedPositiveInfinityNotSupported(Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Single), typeof(Single).Name));
+                throw EntityUtil.NotSupported(
+                    Strings.SqlGen_TypedPositiveInfinityNotSupported(
+                        Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Single), typeof(Single).Name));
             }
-            else if(float.IsNegativeInfinity(value))
+            else if (float.IsNegativeInfinity(value))
             {
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.SqlGen_TypedNegativeInfinityNotSupported(Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Single), typeof(Single).Name));
+                throw EntityUtil.NotSupported(
+                    Strings.SqlGen_TypedNegativeInfinityNotSupported(
+                        Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Single), typeof(Single).Name));
             }
         }
 
@@ -1170,16 +1235,16 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns>A <see cref="SqlSelectStatement"/></returns>
         public override ISqlFragment Visit(DbDistinctExpression e)
         {
-            SqlSelectStatement result = VisitExpressionEnsureSqlStatement(e.Argument);
+            var result = VisitExpressionEnsureSqlStatement(e.Argument);
 
             if (!IsCompatible(result, e.ExpressionKind))
             {
                 Symbol fromSymbol;
-                TypeUsage inputType = TypeHelpers.GetElementTypeUsage(e.Argument.ResultType);
+                var inputType = TypeHelpers.GetElementTypeUsage(e.Argument.ResultType);
                 result = CreateNewSelectStatement(result, "distinct", inputType, out fromSymbol);
                 AddFromSymbol(result, "distinct", fromSymbol, false);
             }
-            
+
             result.Select.IsDistinct = true;
             return result;
         }
@@ -1194,7 +1259,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         {
             // ISSUE: What happens if the DbElementExpression is used as an input expression?
             // i.e. adding the '('  might not be right in all cases.
-            SqlBuilder result = new SqlBuilder();
+            var result = new SqlBuilder();
             result.Append("(");
             result.Append(VisitExpressionEnsureSqlStatement(e.Argument));
             result.Append(")");
@@ -1209,8 +1274,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         public override ISqlFragment Visit(DbExceptExpression e)
         {
-            Debug.Assert(this.SqlVersion != SqlVersion.Sql8, "DbExceptExpression when translating for SQL Server 2000.");
-        
+            Debug.Assert(SqlVersion != SqlVersion.Sql8, "DbExceptExpression when translating for SQL Server 2000.");
+
             return VisitSetOpExpression(e.Left, e.Right, "EXCEPT");
         }
 
@@ -1233,21 +1298,21 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// with the From field set.</returns>
         public override ISqlFragment Visit(DbScanExpression e)
         {
-            EntitySetBase target = e.Target;
+            var target = e.Target;
 
             // ISSUE: Should we just return a string all the time, and let
             // VisitInputExpression create the SqlSelectStatement?
-                        
+
             if (IsParentAJoin)
             {
-                SqlBuilder result = new SqlBuilder();
+                var result = new SqlBuilder();
                 result.Append(GetTargetTSql(target));
 
                 return result;
             }
             else
             {
-                SqlSelectStatement result = new SqlSelectStatement();
+                var result = new SqlSelectStatement();
                 result.From.Append(GetTargetTSql(target));
 
                 return result;
@@ -1265,25 +1330,25 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 if (null == entitySetBase.DefiningQuery)
                 {
                     // construct escaped T-SQL referencing entity set
-                    StringBuilder builder = new StringBuilder(50);
+                    var builder = new StringBuilder(50);
                     if (!string.IsNullOrEmpty(entitySetBase.Schema))
                     {
-                        builder.Append(SqlGenerator.QuoteIdentifier(entitySetBase.Schema));
+                        builder.Append(QuoteIdentifier(entitySetBase.Schema));
                         builder.Append(".");
                     }
                     else
                     {
-                        builder.Append(SqlGenerator.QuoteIdentifier(entitySetBase.EntityContainer.Name));
+                        builder.Append(QuoteIdentifier(entitySetBase.EntityContainer.Name));
                         builder.Append(".");
                     }
 
                     if (!string.IsNullOrEmpty(entitySetBase.Table))
                     {
-                        builder.Append(SqlGenerator.QuoteIdentifier(entitySetBase.Table));
+                        builder.Append(QuoteIdentifier(entitySetBase.Table));
                     }
                     else
                     {
-                        builder.Append(SqlGenerator.QuoteIdentifier(entitySetBase.Name));
+                        builder.Append(QuoteIdentifier(entitySetBase.Name));
                     }
                     entitySetBase.CachedProviderSql = builder.ToString();
                 }
@@ -1294,7 +1359,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             }
             return entitySetBase.CachedProviderSql;
         }
-                
+
         /// <summary>
         /// The bodies of <see cref="Visit(DbFilterExpression)"/>, <see cref="Visit(DbGroupByExpression)"/>,
         /// <see cref="Visit(DbProjectExpression)"/>, <see cref="Visit(DbSortExpression)"/> are similar.
@@ -1410,7 +1475,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         public override ISqlFragment Visit(DbGroupByExpression e)
         {
             Symbol fromSymbol;
-            SqlSelectStatement innerQuery = VisitInputExpression(e.Input.Expression,
+            var innerQuery = VisitInputExpression(
+                e.Input.Expression,
                 e.Input.VariableName, e.Input.VariableType, out fromSymbol);
 
             // GroupBy is compatible with Filter and OrderBy
@@ -1429,12 +1495,13 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
             // The enumerator is shared by both the keys and the aggregates,
             // so, we do not close it in between.
-            RowType groupByType = TypeHelpers.GetEdmType<RowType>(TypeHelpers.GetEdmType<CollectionType>(e.ResultType).TypeUsage);
+            var groupByType = TypeHelpers.GetEdmType<RowType>(TypeHelpers.GetEdmType<CollectionType>(e.ResultType).TypeUsage);
 
             //SQL Server does not support arbitrarily complex expressions inside aggregates, 
             // and requires keys to have reference to the input scope, 
             // so we check for the specific restrictions and if need we inject an inner query.
-            bool needsInnerQuery = GroupByAggregatesNeedInnerQuery(e.Aggregates, e.Input.GroupVariableName) || GroupByKeysNeedInnerQuery(e.Keys, e.Input.VariableName);
+            var needsInnerQuery = GroupByAggregatesNeedInnerQuery(e.Aggregates, e.Input.GroupVariableName)
+                                  || GroupByKeysNeedInnerQuery(e.Keys, e.Input.VariableName);
 
             SqlSelectStatement result;
             if (needsInnerQuery)
@@ -1453,16 +1520,16 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 members.MoveNext();
                 Debug.Assert(result.Select.IsEmpty);
 
-                string separator = "";
+                var separator = "";
 
-                foreach (DbExpression key in e.Keys)
+                foreach (var key in e.Keys)
                 {
-                    EdmProperty member = members.Current;
-                    string alias = QuoteIdentifier(member.Name);
+                    var member = members.Current;
+                    var alias = QuoteIdentifier(member.Name);
 
                     result.GroupBy.Append(separator);
 
-                    ISqlFragment keySql = key.Accept(this);
+                    var keySql = key.Accept(this);
 
                     if (!needsInnerQuery)
                     {
@@ -1493,7 +1560,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                         result.Select.Append(alias);
                         result.Select.Append(" AS ");
                         result.Select.Append(alias);
-                        
+
                         result.GroupBy.Append(alias);
                     }
 
@@ -1501,13 +1568,13 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                     members.MoveNext();
                 }
 
-                foreach (DbAggregate aggregate in e.Aggregates)
+                foreach (var aggregate in e.Aggregates)
                 {
-                    EdmProperty member = members.Current;
-                    string alias = QuoteIdentifier(member.Name);
+                    var member = members.Current;
+                    var alias = QuoteIdentifier(member.Name);
 
                     Debug.Assert(aggregate.Arguments.Count == 1);
-                    ISqlFragment translatedAggregateArgument = aggregate.Arguments[0].Accept(this);
+                    var translatedAggregateArgument = aggregate.Arguments[0].Accept(this);
 
                     object aggregateArgument;
 
@@ -1515,7 +1582,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                     {
                         //In this case the argument to the aggratete is reference to the one projected out by the
                         // inner query
-                        SqlBuilder wrappingAggregateArgument = new SqlBuilder();
+                        var wrappingAggregateArgument = new SqlBuilder();
                         wrappingAggregateArgument.Append(fromSymbol);
                         wrappingAggregateArgument.Append(".");
                         wrappingAggregateArgument.Append(alias);
@@ -1558,7 +1625,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         public override ISqlFragment Visit(DbIntersectExpression e)
         {
-            Debug.Assert(this.SqlVersion != SqlVersion.Sql8, "DbIntersectExpression when translating for SQL Server 2000.");
+            Debug.Assert(SqlVersion != SqlVersion.Sql8, "DbIntersectExpression when translating for SQL Server 2000.");
 
             return VisitSetOpExpression(e.Left, e.Right, "INTERSECT");
         }
@@ -1618,6 +1685,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         public override ISqlFragment Visit(DbJoinExpression e)
         {
             #region Map join type to a string
+
             string joinString;
             switch (e.ExpressionKind)
             {
@@ -1638,9 +1706,10 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                     joinString = null;
                     break;
             }
+
             #endregion
 
-            List<DbExpressionBinding> inputs = new List<DbExpressionBinding>(2);
+            var inputs = new List<DbExpressionBinding>(2);
             inputs.Add(e.Left);
             inputs.Add(e.Right);
 
@@ -1657,14 +1726,15 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             // Check if the LIKE expression is a candidate for compensation in order to optimize store performance.
             _forceNonUnicode = CheckIfForceNonUnicodeRequired(e);
 
-            SqlBuilder result = new SqlBuilder();
+            var result = new SqlBuilder();
             result.Append(e.Argument.Accept(this));
             result.Append(" LIKE ");
             result.Append(e.Pattern.Accept(this));
 
             // if the ESCAPE expression is a DbNullExpression, then that's tantamount to 
             // not having an ESCAPE at all
-            if (e.Escape.ExpressionKind != DbExpressionKind.Null)
+            if (e.Escape.ExpressionKind
+                != DbExpressionKind.Null)
             {
                 result.Append(" ESCAPE ");
                 result.Append(e.Escape.Accept(this));
@@ -1683,32 +1753,36 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns>A <see cref="SqlBuilder"/></returns>
         public override ISqlFragment Visit(DbLimitExpression e)
         {
-            Debug.Assert(e.Limit is DbConstantExpression || e.Limit is DbParameterReferenceExpression, "DbLimitExpression.Limit is of invalid expression type");
-            Debug.Assert(!((this.SqlVersion == SqlVersion.Sql8) && (e.Limit is DbParameterReferenceExpression)), "DbLimitExpression.Limit is DbParameterReferenceExpression for SQL Server 2000.");
+            Debug.Assert(
+                e.Limit is DbConstantExpression || e.Limit is DbParameterReferenceExpression,
+                "DbLimitExpression.Limit is of invalid expression type");
+            Debug.Assert(
+                !((SqlVersion == SqlVersion.Sql8) && (e.Limit is DbParameterReferenceExpression)),
+                "DbLimitExpression.Limit is DbParameterReferenceExpression for SQL Server 2000.");
 
-            SqlSelectStatement result = VisitExpressionEnsureSqlStatement(e.Argument, false, false);
+            var result = VisitExpressionEnsureSqlStatement(e.Argument, false, false);
             Symbol fromSymbol;
 
             if (!IsCompatible(result, e.ExpressionKind))
             {
-                TypeUsage inputType = TypeHelpers.GetElementTypeUsage(e.Argument.ResultType);
+                var inputType = TypeHelpers.GetElementTypeUsage(e.Argument.ResultType);
 
                 result = CreateNewSelectStatement(result, "top", inputType, out fromSymbol);
                 AddFromSymbol(result, "top", fromSymbol, false);
             }
 
-            ISqlFragment topCount = HandleCountExpression(e.Limit) ;
-            
+            var topCount = HandleCountExpression(e.Limit);
+
             result.Select.Top = new TopClause(topCount, e.WithTies);
             return result;
         }
 
 #if METHOD_EXPRESSION
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="e"></param>
-        /// <returns>A <see cref="SqlBuilder"/></returns>
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="e"></param>
+    /// <returns>A <see cref="SqlBuilder"/></returns>
         public override ISqlFragment Visit(MethodExpression e)
         {
             SqlBuilder result = new SqlBuilder();
@@ -1774,42 +1848,44 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         public override ISqlFragment Visit(DbNotExpression e)
         {
             // Flatten Not(Not(x)) to x.
-            DbNotExpression notExpression = e.Argument as DbNotExpression;
+            var notExpression = e.Argument as DbNotExpression;
             if (notExpression != null)
             {
                 return notExpression.Argument.Accept(this);
             }
 
-            DbIsEmptyExpression isEmptyExpression = e.Argument as DbIsEmptyExpression;
+            var isEmptyExpression = e.Argument as DbIsEmptyExpression;
             if (isEmptyExpression != null)
             {
                 return VisitIsEmptyExpression(isEmptyExpression, true);
             }
 
-            DbIsNullExpression isNullExpression = e.Argument as DbIsNullExpression;
+            var isNullExpression = e.Argument as DbIsNullExpression;
             if (isNullExpression != null)
             {
                 return VisitIsNullExpression(isNullExpression, true);
             }
 
-            DbComparisonExpression comparisonExpression = e.Argument as DbComparisonExpression;
+            var comparisonExpression = e.Argument as DbComparisonExpression;
             if (comparisonExpression != null)
             {
-                if (comparisonExpression.ExpressionKind == DbExpressionKind.Equals)
+                if (comparisonExpression.ExpressionKind
+                    == DbExpressionKind.Equals)
                 {
-                    bool forceNonUnicodeLocal = _forceNonUnicode; // Save flag
+                    var forceNonUnicodeLocal = _forceNonUnicode; // Save flag
                     // Don't try to optimize the comparison, if one of the sides isn't of type string.
                     if (TypeSemantics.IsPrimitiveType(comparisonExpression.Left.ResultType, PrimitiveTypeKind.String))
                     {
                         _forceNonUnicode = CheckIfForceNonUnicodeRequired(comparisonExpression);
                     }
-                    SqlBuilder binaryResult = VisitBinaryExpression(" <> ", DbExpressionKind.NotEquals, comparisonExpression.Left, comparisonExpression.Right);
+                    var binaryResult = VisitBinaryExpression(
+                        " <> ", DbExpressionKind.NotEquals, comparisonExpression.Left, comparisonExpression.Right);
                     _forceNonUnicode = forceNonUnicodeLocal; // Reset flag
                     return binaryResult;
                 }
             }
 
-            SqlBuilder result = new SqlBuilder();
+            var result = new SqlBuilder();
             result.Append(" NOT (");
             result.Append(e.Argument.Accept(this));
             result.Append(")");
@@ -1823,19 +1899,19 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns><see cref="SqlBuilder"/></returns>
         public override ISqlFragment Visit(DbNullExpression e)
         {
-            SqlBuilder result = new SqlBuilder();
-            
+            var result = new SqlBuilder();
+
             // always cast nulls - sqlserver doesn't like case expressions where the "then" clause is null
             result.Append("CAST(NULL AS ");
-            TypeUsage type = e.ResultType;
+            var type = e.ResultType;
 
             //
             // Use the narrowest type possible - especially for strings where we don't want 
             // to produce unicode strings always.
             //
             Debug.Assert(Helper.IsPrimitiveType(type.EdmType), "Type must be primitive type");
-            PrimitiveType primitiveType = type.EdmType as PrimitiveType;
-            switch(primitiveType.PrimitiveTypeKind)
+            var primitiveType = type.EdmType as PrimitiveType;
+            switch (primitiveType.PrimitiveTypeKind)
             {
                 case PrimitiveTypeKind.String:
                     result.Append("varchar(1)");
@@ -1890,7 +1966,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         private bool TryTranslateIntoIn(DbOrExpression e, out ISqlFragment sqlFragment)
         {
             var map = new KeyToListMap<DbExpression, DbExpression>(KeyFieldExpressionComparer.Singleton);
-            bool useInClause = HasBuiltMapForIn(e, map) && map.Keys.Count() > 0;
+            var useInClause = HasBuiltMapForIn(e, map) && map.Keys.Count() > 0;
 
             if (!useInClause)
             {
@@ -1899,7 +1975,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             }
 
             var sqlBuilder = new SqlBuilder();
-            bool firstKey = true;
+            var firstKey = true;
             foreach (var key in map.Keys)
             {
                 var values = map.ListForKey(key);
@@ -1913,21 +1989,22 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 }
 
                 var realValues = values.Where(v => v.ExpressionKind != DbExpressionKind.IsNull);
-                int realValueCount = realValues.Count();
+                var realValueCount = realValues.Count();
 
                 // 
                 // Should non-unicode be forced over the key or any of the values
                 // If the key qualifies as a source, we force it over the values that qualify as targets
                 // If all the values qualify as sources, we force it over the key
                 //
-                bool forceNonUnicodeOnQualifyingValues = false;
-                bool forceNonUnicodeOnKey =  false;
+                var forceNonUnicodeOnQualifyingValues = false;
+                var forceNonUnicodeOnKey = false;
                 if (TypeSemantics.IsPrimitiveType(key.ResultType, PrimitiveTypeKind.String))
                 {
                     forceNonUnicodeOnQualifyingValues = MatchSourcePatternForForcingNonUnicode(key);
-                    forceNonUnicodeOnKey = !forceNonUnicodeOnQualifyingValues && MatchTargetPatternForForcingNonUnicode(key) && realValues.All(v => MatchSourcePatternForForcingNonUnicode(v));                      
+                    forceNonUnicodeOnKey = !forceNonUnicodeOnQualifyingValues && MatchTargetPatternForForcingNonUnicode(key)
+                                           && realValues.All(v => MatchSourcePatternForForcingNonUnicode(v));
                 }
-                
+
                 if (realValueCount == 1)
                 {
                     // When only one value we leave it as an equality test
@@ -1944,8 +2021,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                     HandleInKey(sqlBuilder, key, forceNonUnicodeOnKey);
                     sqlBuilder.Append(" IN (");
 
-                    bool firstValue = true;
-                    foreach(var value in realValues)
+                    var firstValue = true;
+                    foreach (var value in realValues)
                     {
                         if (!firstValue)
                         {
@@ -1955,19 +2032,20 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                         {
                             firstValue = false;
                         }
-                        HandleInValue(sqlBuilder, value, key.ResultType.EdmType == value.ResultType.EdmType, forceNonUnicodeOnQualifyingValues);
+                        HandleInValue(
+                            sqlBuilder, value, key.ResultType.EdmType == value.ResultType.EdmType, forceNonUnicodeOnQualifyingValues);
                     }
                     sqlBuilder.Append(")");
                 }
 
                 // Deal with a null for this key
-                DbIsNullExpression isNullExpression = values.FirstOrDefault(v => v.ExpressionKind == DbExpressionKind.IsNull) as DbIsNullExpression;
+                var isNullExpression = values.FirstOrDefault(v => v.ExpressionKind == DbExpressionKind.IsNull) as DbIsNullExpression;
                 if (isNullExpression != null)
                 {
                     if (realValueCount > 0)
                     {
                         sqlBuilder.Append(" OR ");
-                    }                   
+                    }
                     sqlBuilder.Append(VisitIsNullExpression(isNullExpression, false)); // We never try to build IN with a NOT in the tree
                 }
             }
@@ -1978,7 +2056,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
         private void HandleInValue(SqlBuilder sqlBuilder, DbExpression value, bool isSameEdmType, bool forceNonUnicodeOnQualifyingValues)
         {
-            ForcingNonUnicode(() => ParenthesizeExpressionWithoutRedundantConstantCasts(value, sqlBuilder, isSameEdmType),
+            ForcingNonUnicode(
+                () => ParenthesizeExpressionWithoutRedundantConstantCasts(value, sqlBuilder, isSameEdmType),
                 forceNonUnicodeOnQualifyingValues && MatchTargetPatternForForcingNonUnicode(value));
         }
 
@@ -1989,7 +2068,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
         private void ForcingNonUnicode(Action action, bool forceNonUnicode)
         {
-            bool reset = false;
+            var reset = false;
             if (forceNonUnicode && !_forceNonUnicode)
             {
                 _forceNonUnicode = true;
@@ -2027,10 +2106,13 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// which is not normally possible given their lack of Equals and GetHashCode implementations
         /// for testing object value equality.
         /// </summary>
-        private class KeyFieldExpressionComparer: IEqualityComparer<DbExpression>
+        private class KeyFieldExpressionComparer : IEqualityComparer<DbExpression>
         {
             internal static readonly KeyFieldExpressionComparer Singleton = new KeyFieldExpressionComparer();
-            private KeyFieldExpressionComparer() { }
+
+            private KeyFieldExpressionComparer()
+            {
+            }
 
             /// <summary>
             /// Compare two DbExpressions to see if they are equal for the purposes of
@@ -2043,7 +2125,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             /// <returns>True if the types are allowed and equal, false otherwise</returns>
             public bool Equals(DbExpression x, DbExpression y)
             {
-                if (x.ExpressionKind != y.ExpressionKind)
+                if (x.ExpressionKind
+                    != y.ExpressionKind)
                 {
                     return false;
                 }
@@ -2053,7 +2136,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                         {
                             var first = (DbPropertyExpression)x;
                             var second = (DbPropertyExpression)y;
-                            return first.Property == second.Property && this.Equals(first.Instance, second.Instance);
+                            return first.Property == second.Property && Equals(first.Instance, second.Instance);
                         }
                     case DbExpressionKind.ParameterReference:
                         {
@@ -2069,7 +2152,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                         {
                             var first = (DbCastExpression)x;
                             var second = (DbCastExpression)y;
-                            return first.ResultType == second.ResultType && this.Equals(first.Argument, second.Argument);
+                            return first.ResultType == second.ResultType && Equals(first.Argument, second.Argument);
                         }
                 }
                 return false;
@@ -2083,7 +2166,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             /// <returns>Integer containing the hashcode</returns>
             public int GetHashCode(DbExpression obj)
             {
-                switch(obj.ExpressionKind)
+                switch (obj.ExpressionKind)
                 {
                     case DbExpressionKind.Property:
                         {
@@ -2117,8 +2200,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         private static bool IsKeyForIn(DbExpression e)
         {
             return (e.ExpressionKind == DbExpressionKind.Property
-                || e.ExpressionKind == DbExpressionKind.VariableReference
-                || e.ExpressionKind == DbExpressionKind.ParameterReference);
+                    || e.ExpressionKind == DbExpressionKind.VariableReference
+                    || e.ExpressionKind == DbExpressionKind.ParameterReference);
         }
 
         /// <summary>
@@ -2154,7 +2237,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         private bool HasBuiltMapForIn(DbExpression e, KeyToListMap<DbExpression, DbExpression> values)
         {
-            switch(e.ExpressionKind)
+            switch (e.ExpressionKind)
             {
                 case DbExpressionKind.Equals:
                     {
@@ -2193,7 +2276,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="e"></param>
         /// <returns>A <see cref="SqlBuilder"/></returns>
         public override ISqlFragment Visit(DbParameterReferenceExpression e)
-        {    
+        {
             // Update the dictionary value only if we are not inside a DbIsNullExpression.
             if (!_ignoreForceNonUnicodeFlag)
             {
@@ -2209,7 +2292,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 }
             }
 
-            SqlBuilder result = new SqlBuilder();
+            var result = new SqlBuilder();
             // Do not quote this name.
             // ISSUE: We are not checking that e.Name has no illegal characters. e.g. space
             result.Append("@" + e.ParameterName);
@@ -2226,10 +2309,10 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         public override ISqlFragment Visit(DbProjectExpression e)
         {
             Symbol fromSymbol;
-            SqlSelectStatement result = VisitInputExpression(e.Input.Expression, e.Input.VariableName, e.Input.VariableType, out fromSymbol);
+            var result = VisitInputExpression(e.Input.Expression, e.Input.VariableName, e.Input.VariableType, out fromSymbol);
 
             //#444002 Aliases need renaming only for Sql8 when there is Order By 
-            bool aliasesNeedRenaming = false;
+            var aliasesNeedRenaming = false;
 
             // Project is compatible with Filter
             // but not with Project, GroupBy
@@ -2237,7 +2320,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             {
                 result = CreateNewSelectStatement(result, e.Input.VariableName, e.Input.VariableType, out fromSymbol);
             }
-            else if ((this.SqlVersion == SqlVersion.Sql8) && !result.OrderBy.IsEmpty)
+            else if ((SqlVersion == SqlVersion.Sql8)
+                     && !result.OrderBy.IsEmpty)
             {
                 aliasesNeedRenaming = true;
             }
@@ -2251,7 +2335,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             // so we have to check it here.
             // We call VisitNewInstanceExpression instead of Visit(DbNewInstanceExpression), since
             // the latter throws.
-            DbNewInstanceExpression newInstanceExpression = e.Projection as DbNewInstanceExpression;
+            var newInstanceExpression = e.Projection as DbNewInstanceExpression;
             if (newInstanceExpression != null)
             {
                 Dictionary<string, Symbol> newColumns;
@@ -2299,18 +2383,18 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         {
             SqlBuilder result;
 
-            ISqlFragment instanceSql = e.Instance.Accept(this);
+            var instanceSql = e.Instance.Accept(this);
 
             // Since the DbVariableReferenceExpression is a proper child of ours, we can reset
             // isVarSingle.
-            DbVariableReferenceExpression VariableReferenceExpression = e.Instance as DbVariableReferenceExpression;
+            var VariableReferenceExpression = e.Instance as DbVariableReferenceExpression;
             if (VariableReferenceExpression != null)
             {
                 isVarRefSingle = false;
             }
 
             // We need to flatten, and have not yet seen the first nested SELECT statement.
-            JoinSymbol joinSymbol = instanceSql as JoinSymbol;
+            var joinSymbol = instanceSql as JoinSymbol;
             if (joinSymbol != null)
             {
                 Debug.Assert(joinSymbol.NameToExtent.ContainsKey(e.Property.Name));
@@ -2326,10 +2410,10 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
             // ---------------------------------------
             // We have seen the first nested SELECT statement, but not the column.
-            SymbolPair symbolPair = instanceSql as SymbolPair;
+            var symbolPair = instanceSql as SymbolPair;
             if (symbolPair != null)
             {
-                JoinSymbol columnJoinSymbol = symbolPair.Column as JoinSymbol;
+                var columnJoinSymbol = symbolPair.Column as JoinSymbol;
                 if (columnJoinSymbol != null)
                 {
                     symbolPair.Column = columnJoinSymbol.NameToExtent[e.Property.Name];
@@ -2345,7 +2429,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                         result = new SqlBuilder();
                         result.Append(symbolPair.Source);
                         result.Append(".");
-                        Symbol columnSymbol = symbolPair.Column.Columns[e.Property.Name];
+                        var columnSymbol = symbolPair.Column.Columns[e.Property.Name];
                         optionalColumnUsageManager.MarkAsUsed(columnSymbol);
                         result.Append(columnSymbol);
                         return result;
@@ -2358,9 +2442,10 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             result.Append(instanceSql);
             result.Append(".");
 
-            Symbol symbol = instanceSql as Symbol;
+            var symbol = instanceSql as Symbol;
             Symbol colSymbol;
-            if (symbol != null && symbol.OutputColumns.TryGetValue(e.Property.Name, out colSymbol))
+            if (symbol != null
+                && symbol.OutputColumns.TryGetValue(e.Property.Name, out colSymbol))
             {
                 optionalColumnUsageManager.MarkAsUsed(colSymbol);
                 if (symbol.OutputColumnsRenamed)
@@ -2389,10 +2474,11 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         public override ISqlFragment Visit(DbQuantifierExpression e)
         {
-            SqlBuilder result = new SqlBuilder();
+            var result = new SqlBuilder();
 
-            bool negatePredicate = (e.ExpressionKind == DbExpressionKind.All);
-            if (e.ExpressionKind == DbExpressionKind.Any)
+            var negatePredicate = (e.ExpressionKind == DbExpressionKind.All);
+            if (e.ExpressionKind
+                == DbExpressionKind.Any)
             {
                 result.Append("EXISTS (");
             }
@@ -2402,7 +2488,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 result.Append("NOT EXISTS (");
             }
 
-            SqlSelectStatement filter = VisitFilterExpression(e.Input, e.Predicate, negatePredicate);
+            var filter = VisitFilterExpression(e.Input, e.Predicate, negatePredicate);
             if (filter.Select.IsEmpty)
             {
                 AddDefaultColumns(filter);
@@ -2448,13 +2534,15 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns>A <see cref="SqlBuilder"/></returns>
         public override ISqlFragment Visit(DbSkipExpression e)
         {
-            Debug.Assert(this.SqlVersion != SqlVersion.Sql8, "DbSkipExpression when translating for SQL Server 2000.");
+            Debug.Assert(SqlVersion != SqlVersion.Sql8, "DbSkipExpression when translating for SQL Server 2000.");
 
-            Debug.Assert(e.Count is DbConstantExpression || e.Count is DbParameterReferenceExpression, "DbSkipExpression.Count is of invalid expression type");
+            Debug.Assert(
+                e.Count is DbConstantExpression || e.Count is DbParameterReferenceExpression,
+                "DbSkipExpression.Count is of invalid expression type");
 
             //Visit the input
             Symbol fromSymbol;
-            SqlSelectStatement input = VisitInputExpression(e.Input.Expression, e.Input.VariableName, e.Input.VariableType, out fromSymbol);
+            var input = VisitInputExpression(e.Input.Expression, e.Input.VariableName, e.Input.VariableType, out fromSymbol);
 
             // Skip is not compatible with anything that OrderBy is not compatible with, as well as with distinct
             if (!IsCompatible(input, e.ExpressionKind))
@@ -2469,14 +2557,14 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
             //Add the default columns
             Debug.Assert(input.Select.IsEmpty);
-            List<Symbol> inputColumns = AddDefaultColumns(input);
+            var inputColumns = AddDefaultColumns(input);
 
             input.Select.Append("row_number() OVER (ORDER BY ");
             AddSortKeys(input.Select, e.SortOrder);
             input.Select.Append(") AS ");
 
-            string row_numberName = "row_number";
-            Symbol row_numberSymbol = new Symbol(row_numberName, IntegerType);
+            var row_numberName = "row_number";
+            var row_numberSymbol = new Symbol(row_numberName, IntegerType);
             if (inputColumns.Any(c => String.Equals(c.Name, row_numberName, StringComparison.OrdinalIgnoreCase)))
             {
                 row_numberSymbol.NeedsRenaming = true;
@@ -2492,7 +2580,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             //See CreateNewSelectStatement, it is very similar
             //Future Enhancement (katicad): Refactor to avoid duplication with CreateNewSelectStatement if we 
             // don't switch to using ExtensionExpression here
-            SqlSelectStatement result = new SqlSelectStatement();
+            var result = new SqlSelectStatement();
             result.From.Append("( ");
             result.From.Append(input);
             result.From.AppendLine();
@@ -2500,15 +2588,15 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
             //Create a symbol for the input
             Symbol resultFromSymbol = null;
- 
+
             if (input.FromExtents.Count == 1)
             {
-                JoinSymbol oldJoinSymbol = input.FromExtents[0] as JoinSymbol;
+                var oldJoinSymbol = input.FromExtents[0] as JoinSymbol;
                 if (oldJoinSymbol != null)
                 {
                     // Note: input.FromExtents will not do, since it might
                     // just be an alias of joinSymbol, and we want an actual JoinSymbol.
-                    JoinSymbol newJoinSymbol = new JoinSymbol(e.Input.VariableName, e.Input.VariableType, oldJoinSymbol.ExtentList);
+                    var newJoinSymbol = new JoinSymbol(e.Input.VariableName, e.Input.VariableType, oldJoinSymbol.ExtentList);
                     // This indicates that the oldStatement is a blocking scope
                     // i.e. it hides/renames extent columns
                     newJoinSymbol.IsNestedJoin = true;
@@ -2539,7 +2627,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             result.Where.Append(HandleCountExpression(e.Count));
 
             AddSortKeys(result.OrderBy, e.SortOrder);
-            
+
             symbolTable.ExitScope();
             selectStatementStack.Pop();
 
@@ -2555,7 +2643,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         public override ISqlFragment Visit(DbSortExpression e)
         {
             Symbol fromSymbol;
-            SqlSelectStatement result = VisitInputExpression(e.Input.Expression, e.Input.VariableName, e.Input.VariableType, out fromSymbol);
+            var result = VisitInputExpression(e.Input.Expression, e.Input.VariableName, e.Input.VariableType, out fromSymbol);
 
             // OrderBy is compatible with Filter
             // and nothing else
@@ -2621,7 +2709,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             }
             isVarRefSingle = true; // This will be reset by DbPropertyExpression or MethodExpression
 
-            Symbol result = symbolTable.Lookup(e.VariableName);
+            var result = symbolTable.Lookup(e.VariableName);
             optionalColumnUsageManager.MarkAsUsed(result);
             if (!CurrentSelectStatement.FromExtents.Contains(result))
             {
@@ -2630,6 +2718,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
             return result;
         }
+
         #endregion
 
         #region Visitor Helper Methods
@@ -2644,8 +2733,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         private static SqlBuilder VisitAggregate(DbAggregate aggregate, object aggregateArgument)
         {
-            SqlBuilder aggregateResult = new SqlBuilder();
-            DbFunctionAggregate functionAggregate = aggregate as DbFunctionAggregate;
+            var aggregateResult = new SqlBuilder();
+            var functionAggregate = aggregate as DbFunctionAggregate;
 
             if (functionAggregate == null)
             {
@@ -2666,8 +2755,9 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
             aggregateResult.Append("(");
 
-            DbFunctionAggregate fnAggr = functionAggregate;
-            if ((null != fnAggr) && (fnAggr.Distinct))
+            var fnAggr = functionAggregate;
+            if ((null != fnAggr)
+                && (fnAggr.Distinct))
             {
                 aggregateResult.Append("DISTINCT ");
             }
@@ -2710,10 +2800,10 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         private SqlBuilder VisitBinaryExpression(string op, DbExpressionKind expressionKind, DbExpression left, DbExpression right)
         {
-            SqlBuilder result = new SqlBuilder();
+            var result = new SqlBuilder();
 
-            bool isFirst = true;
-            foreach (DbExpression argument in SqlGenerator.FlattenAssociativeExpression(expressionKind, left, right))
+            var isFirst = true;
+            foreach (var argument in FlattenAssociativeExpression(expressionKind, left, right))
             {
                 if (isFirst)
                 {
@@ -2738,15 +2828,16 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         private static IEnumerable<DbExpression> FlattenAssociativeExpression(DbExpressionKind kind, DbExpression left, DbExpression right)
         {
-            if(kind != DbExpressionKind.Or &&
-               kind != DbExpressionKind.And &&
-               kind != DbExpressionKind.Plus &&
-               kind != DbExpressionKind.Multiply)
+            if (kind != DbExpressionKind.Or &&
+                kind != DbExpressionKind.And &&
+                kind != DbExpressionKind.Plus
+                &&
+                kind != DbExpressionKind.Multiply)
             {
                 return new[] { left, right };
-            }             
+            }
 
-            List<DbExpression> argumentList = new List<DbExpression>();
+            var argumentList = new List<DbExpression>();
             ExtractAssociativeArguments(kind, argumentList, left);
             ExtractAssociativeArguments(kind, argumentList, right);
 
@@ -2762,28 +2853,29 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="expressionKind"></param>
         /// <param name="argumentList"></param>
         /// <param name="expression"></param>
-        private static void ExtractAssociativeArguments(DbExpressionKind expressionKind, List<DbExpression> argumentList, DbExpression expression)
+        private static void ExtractAssociativeArguments(
+            DbExpressionKind expressionKind, List<DbExpression> argumentList, DbExpression expression)
         {
-            IEnumerable<DbExpression> result = Helpers.GetLeafNodes(
-                expression, 
+            var result = Helpers.GetLeafNodes(
+                expression,
                 exp => exp.ExpressionKind != expressionKind,
                 exp =>
-                {
-                    //All associative expressions are binary, thus we must be dealing with a DbBinaryExpresson or 
-                    // a DbArithmeticExpression with 2 arguments.
-                    DbBinaryExpression binaryExpression = exp as DbBinaryExpression;
-                    if(binaryExpression != null)
                     {
-                        return new[] { binaryExpression.Left, binaryExpression.Right };
+                        //All associative expressions are binary, thus we must be dealing with a DbBinaryExpresson or 
+                        // a DbArithmeticExpression with 2 arguments.
+                        var binaryExpression = exp as DbBinaryExpression;
+                        if (binaryExpression != null)
+                        {
+                            return new[] { binaryExpression.Left, binaryExpression.Right };
+                        }
+                        var arithmeticExpression = (DbArithmeticExpression)exp;
+                        return arithmeticExpression.Arguments;
                     }
-                    DbArithmeticExpression arithmeticExpression = (DbArithmeticExpression)exp;
-                    return arithmeticExpression.Arguments;
-                }
-            );
+                );
 
             argumentList.AddRange(result);
         }
-        
+
         /// <summary>
         /// Private handler for comparison expressions - almost identical to VisitBinaryExpression.
         /// We special case constants, so that we don't emit unnecessary casts
@@ -2794,11 +2886,12 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         private SqlBuilder VisitComparisonExpression(string op, DbExpression left, DbExpression right)
         {
-            SqlBuilder result = new SqlBuilder();
+            var result = new SqlBuilder();
 
-            bool isCastOptional = left.ResultType.EdmType == right.ResultType.EdmType;
+            var isCastOptional = left.ResultType.EdmType == right.ResultType.EdmType;
 
-            if (left.ExpressionKind == DbExpressionKind.Constant)
+            if (left.ExpressionKind
+                == DbExpressionKind.Constant)
             {
                 result.Append(VisitConstant((DbConstantExpression)left, isCastOptional));
             }
@@ -2809,7 +2902,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
             result.Append(op);
 
-            if (right.ExpressionKind == DbExpressionKind.Constant)
+            if (right.ExpressionKind
+                == DbExpressionKind.Constant)
             {
                 result.Append(VisitConstant((DbConstantExpression)right, isCastOptional));
             }
@@ -2834,11 +2928,12 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="fromSymbol"></param>
         /// <returns>A <see cref="SqlSelectStatement"/> and the main fromSymbol
         /// for this select statement.</returns>
-        private SqlSelectStatement VisitInputExpression(DbExpression inputExpression,
+        private SqlSelectStatement VisitInputExpression(
+            DbExpression inputExpression,
             string inputVarName, TypeUsage inputVarType, out Symbol fromSymbol)
         {
             SqlSelectStatement result;
-            ISqlFragment sqlFragment = inputExpression.Accept(this);
+            var sqlFragment = inputExpression.Accept(this);
             result = sqlFragment as SqlSelectStatement;
 
             if (result == null)
@@ -2864,7 +2959,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 // we are reusing the select statement produced by a Join node
                 // we need to remove the original extents, and replace them with a
                 // new extent with just the Join symbol.
-                JoinSymbol joinSymbol = new JoinSymbol(inputVarName, inputVarType, result.FromExtents);
+                var joinSymbol = new JoinSymbol(inputVarName, inputVarType, result.FromExtents);
                 joinSymbol.FlattenedExtentList = result.AllJoinExtents;
 
                 fromSymbol = joinSymbol;
@@ -2881,9 +2976,9 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="e"></param>
         /// <param name="negate">Was the parent a DbNotExpression?</param>
         /// <returns></returns>
-        SqlBuilder VisitIsEmptyExpression(DbIsEmptyExpression e, bool negate)
+        private SqlBuilder VisitIsEmptyExpression(DbIsEmptyExpression e, bool negate)
         {
-            SqlBuilder result = new SqlBuilder();
+            var result = new SqlBuilder();
             if (!negate)
             {
                 result.Append(" NOT");
@@ -2896,7 +2991,6 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             return result;
         }
 
-
         /// <summary>
         /// Translate a NewInstance(Element(X)) expression into
         ///   "select top(1) * from X"
@@ -2907,15 +3001,16 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         {
             Debug.Assert(e.Arguments.Count <= 1);
 
-            if (e.Arguments.Count == 1 && e.Arguments[0].ExpressionKind == DbExpressionKind.Element)
+            if (e.Arguments.Count == 1
+                && e.Arguments[0].ExpressionKind == DbExpressionKind.Element)
             {
-                DbElementExpression elementExpr = e.Arguments[0] as DbElementExpression;
-                SqlSelectStatement result = VisitExpressionEnsureSqlStatement(elementExpr.Argument);
+                var elementExpr = e.Arguments[0] as DbElementExpression;
+                var result = VisitExpressionEnsureSqlStatement(elementExpr.Argument);
 
                 if (!IsCompatible(result, DbExpressionKind.Element))
                 {
                     Symbol fromSymbol;
-                    TypeUsage inputType = TypeHelpers.GetElementTypeUsage(elementExpr.Argument.ResultType);
+                    var inputType = TypeHelpers.GetElementTypeUsage(elementExpr.Argument.ResultType);
 
                     result = CreateNewSelectStatement(result, "element", inputType, out fromSymbol);
                     AddFromSymbol(result, "element", fromSymbol, false);
@@ -2924,14 +3019,13 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 return result;
             }
 
-
             // Otherwise simply build this out as a union-all ladder
-            CollectionType collectionType = TypeHelpers.GetEdmType<CollectionType>(e.ResultType);
+            var collectionType = TypeHelpers.GetEdmType<CollectionType>(e.ResultType);
             Debug.Assert(collectionType != null);
-            bool isScalarElement = TypeSemantics.IsPrimitiveType(collectionType.TypeUsage);
+            var isScalarElement = TypeSemantics.IsPrimitiveType(collectionType.TypeUsage);
 
-            SqlBuilder resultSql = new SqlBuilder();
-            string separator = "";
+            var resultSql = new SqlBuilder();
+            var separator = "";
 
             // handle empty table
             if (e.Arguments.Count == 0)
@@ -2942,7 +3036,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 resultSql.Append(") AS X FROM (SELECT 1) AS Y WHERE 1=0");
             }
 
-            foreach (DbExpression arg in e.Arguments)
+            foreach (var arg in e.Arguments)
             {
                 resultSql.Append(separator);
                 resultSql.Append(" SELECT ");
@@ -2966,8 +3060,9 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         private SqlBuilder VisitIsNullExpression(DbIsNullExpression e, bool negate)
         {
-            SqlBuilder result = new SqlBuilder();
-            if (e.Argument.ExpressionKind == DbExpressionKind.ParameterReference)
+            var result = new SqlBuilder();
+            if (e.Argument.ExpressionKind
+                == DbExpressionKind.ParameterReference)
             {
                 _ignoreForceNonUnicodeFlag = true;
             }
@@ -3009,7 +3104,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="joinString"></param>
         /// <param name="joinCondition"></param>
         /// <returns> A <see cref="SqlSelectStatement"/></returns>
-        private ISqlFragment VisitJoinExpression(IList<DbExpressionBinding> inputs, DbExpressionKind joinKind,
+        private ISqlFragment VisitJoinExpression(
+            IList<DbExpressionBinding> inputs, DbExpressionKind joinKind,
             string joinString, DbExpression joinCondition)
         {
             SqlSelectStatement result;
@@ -3033,12 +3129,12 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             // but the Join postprocessing is messy and prevents this reuse.
             symbolTable.EnterScope();
 
-            string separator = "";
-            bool isLeftMostInput = true;
-            int inputCount = inputs.Count;
-            for(int idx = 0; idx < inputCount; idx++)
+            var separator = "";
+            var isLeftMostInput = true;
+            var inputCount = inputs.Count;
+            for (var idx = 0; idx < inputCount; idx++)
             {
-                DbExpressionBinding input = inputs[idx];
+                var input = inputs[idx];
 
                 if (separator.Length != 0)
                 {
@@ -3047,19 +3143,19 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 result.From.Append(separator + " ");
                 // Change this if other conditions are required
                 // to force the child to produce a nested SqlStatement.
-                bool needsJoinContext = (input.Expression.ExpressionKind == DbExpressionKind.Scan)
-                                        || (isLeftMostInput &&
-                                            (IsJoinExpression(input.Expression)
-                                             || IsApplyExpression(input.Expression)))
-                                        ;
+                var needsJoinContext = (input.Expression.ExpressionKind == DbExpressionKind.Scan)
+                                       || (isLeftMostInput &&
+                                           (IsJoinExpression(input.Expression)
+                                            || IsApplyExpression(input.Expression)))
+                    ;
 
                 isParentAJoinStack.Push(needsJoinContext ? true : false);
                 // if the child reuses our select statement, it will append the from
                 // symbols to our FromExtents list.  So, we need to remember the
                 // start of the child's entries.
-                int fromSymbolStart = result.FromExtents.Count;
+                var fromSymbolStart = result.FromExtents.Count;
 
-                ISqlFragment fromExtentFragment = input.Expression.Accept(this);
+                var fromExtentFragment = input.Expression.Accept(this);
 
                 isParentAJoinStack.Pop();
 
@@ -3126,7 +3222,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="result"></param>
         /// <param name="input"></param>
         /// <param name="fromSymbolStart"></param>
-        private void ProcessJoinInputResult(ISqlFragment fromExtentFragment, SqlSelectStatement result,
+        private void ProcessJoinInputResult(
+            ISqlFragment fromExtentFragment, SqlSelectStatement result,
             DbExpressionBinding input, int fromSymbolStart)
         {
             Symbol fromSymbol = null;
@@ -3136,18 +3233,18 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 // The child has its own select statement, and is not reusing
                 // our select statement.
                 // This should look a lot like VisitInputExpression().
-                SqlSelectStatement sqlSelectStatement = fromExtentFragment as SqlSelectStatement;
+                var sqlSelectStatement = fromExtentFragment as SqlSelectStatement;
                 if (sqlSelectStatement != null)
                 {
                     if (sqlSelectStatement.Select.IsEmpty)
                     {
-                        List<Symbol> columns = AddDefaultColumns(sqlSelectStatement);
+                        var columns = AddDefaultColumns(sqlSelectStatement);
 
                         if (IsJoinExpression(input.Expression)
                             || IsApplyExpression(input.Expression))
                         {
-                            List<Symbol> extents = sqlSelectStatement.FromExtents;
-                            JoinSymbol newJoinSymbol = new JoinSymbol(input.VariableName, input.VariableType, extents);
+                            var extents = sqlSelectStatement.FromExtents;
+                            var newJoinSymbol = new JoinSymbol(input.VariableName, input.VariableType, extents);
                             newJoinSymbol.IsNestedJoin = true;
                             newJoinSymbol.ColumnList = columns;
 
@@ -3161,12 +3258,12 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                             // clone the join symbol, so that we "reuse" the
                             // join symbol.  Normally, we create a new symbol - see the next block
                             // of code.
-                            JoinSymbol oldJoinSymbol = sqlSelectStatement.FromExtents[0] as JoinSymbol;
+                            var oldJoinSymbol = sqlSelectStatement.FromExtents[0] as JoinSymbol;
                             if (oldJoinSymbol != null)
                             {
                                 // Note: sqlSelectStatement.FromExtents will not do, since it might
                                 // just be an alias of joinSymbol, and we want an actual JoinSymbol.
-                                JoinSymbol newJoinSymbol = new JoinSymbol(input.VariableName, input.VariableType, oldJoinSymbol.ExtentList);
+                                var newJoinSymbol = new JoinSymbol(input.VariableName, input.VariableType, oldJoinSymbol.ExtentList);
                                 // This indicates that the sqlSelectStatement is a blocking scope
                                 // i.e. it hides/renames extent columns
                                 newJoinSymbol.IsNestedJoin = true;
@@ -3177,13 +3274,17 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                             }
                             else
                             {
-                                fromSymbol = new Symbol(input.VariableName, input.VariableType, sqlSelectStatement.OutputColumns, sqlSelectStatement.OutputColumnsRenamed);
+                                fromSymbol = new Symbol(
+                                    input.VariableName, input.VariableType, sqlSelectStatement.OutputColumns,
+                                    sqlSelectStatement.OutputColumnsRenamed);
                             }
                         }
                     }
                     else
                     {
-                        fromSymbol = new Symbol(input.VariableName, input.VariableType, sqlSelectStatement.OutputColumns, sqlSelectStatement.OutputColumnsRenamed);
+                        fromSymbol = new Symbol(
+                            input.VariableName, input.VariableType, sqlSelectStatement.OutputColumns,
+                            sqlSelectStatement.OutputColumnsRenamed);
                     }
                     result.From.Append(" (");
                     result.From.Append(sqlSelectStatement);
@@ -3203,7 +3304,6 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                     fromSymbol = new Symbol(input.VariableName, input.VariableType);
                 }
 
-
                 AddFromSymbol(result, input.VariableName, fromSymbol);
                 result.AllJoinExtents.Add(fromSymbol);
             }
@@ -3213,13 +3313,13 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 // We are replacing the child's extents with a single Join symbol.
                 // The child's extents are all those following the index fromSymbolStart.
                 //
-                List<Symbol> extents = new List<Symbol>();
+                var extents = new List<Symbol>();
 
                 // We cannot call extents.AddRange, since the is no simple way to
                 // get the range of symbols fromSymbolStart..result.FromExtents.Count
                 // from result.FromExtents.
                 // We copy these symbols to create the JoinSymbol later.
-                for (int i = fromSymbolStart; i < result.FromExtents.Count; ++i)
+                for (var i = fromSymbolStart; i < result.FromExtents.Count; ++i)
                 {
                     extents.Add(result.FromExtents[i]);
                 }
@@ -3228,7 +3328,6 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 result.FromExtents.Add(fromSymbol);
                 // this Join Symbol does not have its own select statement, so we
                 // do not set IsNestedJoin
-
 
                 // We do not call AddFromSymbol(), since we do not want to add
                 // "AS alias" to the FROM clause- it has been done when the extent was added earlier.
@@ -3249,34 +3348,35 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="aliasesNeedRenaming"></param>
         /// <param name="newColumns"></param>
         /// <returns>A <see cref="SqlBuilder"/></returns>
-        private ISqlFragment VisitNewInstanceExpression(DbNewInstanceExpression e, bool aliasesNeedRenaming, out Dictionary<string, Symbol> newColumns)
+        private ISqlFragment VisitNewInstanceExpression(
+            DbNewInstanceExpression e, bool aliasesNeedRenaming, out Dictionary<string, Symbol> newColumns)
         {
-            SqlBuilder result = new SqlBuilder();
-            RowType rowType = e.ResultType.EdmType as RowType;
+            var result = new SqlBuilder();
+            var rowType = e.ResultType.EdmType as RowType;
 
             if (null != rowType)
             {
                 newColumns = new Dictionary<string, Symbol>(e.Arguments.Count);
 
-                ReadOnlyMetadataCollection<EdmProperty> members = rowType.Properties;
-                string separator = "";
-                for(int i = 0; i < e.Arguments.Count; ++i)
+                var members = rowType.Properties;
+                var separator = "";
+                for (var i = 0; i < e.Arguments.Count; ++i)
                 {
-                    DbExpression argument = e.Arguments[i];
+                    var argument = e.Arguments[i];
                     if (TypeSemantics.IsRowType(argument.ResultType))
                     {
                         // We do not support nested records or other complex objects.
                         throw EntityUtil.NotSupported();
                     }
 
-                    EdmProperty member = members[i];
+                    var member = members[i];
                     result.Append(separator);
                     result.AppendLine();
                     result.Append(argument.Accept(this));
                     result.Append(" AS ");
                     if (aliasesNeedRenaming)
                     {
-                        Symbol column = new Symbol(member.Name, member.TypeUsage);
+                        var column = new Symbol(member.Name, member.TypeUsage);
                         column.NeedsRenaming = true;
                         column.NewName = String.Concat("Internal_", member.Name);
                         result.Append(column);
@@ -3313,17 +3413,15 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <returns></returns>
         private ISqlFragment VisitSetOpExpression(DbExpression left, DbExpression right, string separator)
         {
+            var leftSelectStatement = VisitExpressionEnsureSqlStatement(left, true, true);
+            var rightSelectStatement = VisitExpressionEnsureSqlStatement(right, true, true);
 
-            SqlSelectStatement leftSelectStatement = VisitExpressionEnsureSqlStatement(left, true, true);
-            SqlSelectStatement rightSelectStatement = VisitExpressionEnsureSqlStatement(right, true, true);
-
-            SqlBuilder setStatement = new SqlBuilder();
+            var setStatement = new SqlBuilder();
             setStatement.Append(leftSelectStatement);
             setStatement.AppendLine();
             setStatement.Append(separator); // e.g. UNION ALL
             setStatement.AppendLine();
             setStatement.Append(rightSelectStatement);
-
 
             //This is the common scenario
             if (!leftSelectStatement.OutputColumnsRenamed)
@@ -3338,13 +3436,13 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 // then the output of the union all is renamed
                 // All this currenlty only happens for UNION ALL, because INTERSECT and
                 // EXCEPT get translated for SQL 8.0 before SqlGen.
-                SqlSelectStatement selectStatement = new SqlSelectStatement();
+                var selectStatement = new SqlSelectStatement();
                 selectStatement.From.Append("( ");
                 selectStatement.From.Append(setStatement);
                 selectStatement.From.AppendLine();
                 selectStatement.From.Append(") ");
 
-                Symbol fromSymbol = new Symbol("X", TypeHelpers.GetElementTypeUsage(left.ResultType), leftSelectStatement.OutputColumns, true);
+                var fromSymbol = new Symbol("X", TypeHelpers.GetElementTypeUsage(left.ResultType), leftSelectStatement.OutputColumns, true);
                 AddFromSymbol(selectStatement, null, fromSymbol, false);
 
                 return selectStatement;
@@ -3354,6 +3452,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         #endregion
 
         #region Other Helpers
+
         /// <summary>
         /// <see cref="AddDefaultColumns"/>
         /// Add the column names from the referenced extent/join to the
@@ -3383,20 +3482,22 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="columnList">Columns that have been added to the Select statement.
         /// This is created in <see cref="AddDefaultColumns"/>.</param>
         /// <param name="columnDictionary">A dictionary of the columns above.</param>
-        private void AddColumns(SqlSelectStatement selectStatement, Symbol symbol,
+        private void AddColumns(
+            SqlSelectStatement selectStatement, Symbol symbol,
             List<Symbol> columnList, Dictionary<string, Symbol> columnDictionary)
         {
-            JoinSymbol joinSymbol = symbol as JoinSymbol;
+            var joinSymbol = symbol as JoinSymbol;
             if (joinSymbol != null)
             {
                 if (!joinSymbol.IsNestedJoin)
                 {
                     // Recurse if the join symbol is a collection of flattened extents
-                    foreach (Symbol sym in joinSymbol.ExtentList)
+                    foreach (var sym in joinSymbol.ExtentList)
                     {
                         // if sym is ScalarType means we are at base case in the
                         // recursion and there are not columns to add, just skip
-                        if ((sym.Type == null) || TypeSemantics.IsPrimitiveType(sym.Type))
+                        if ((sym.Type == null)
+                            || TypeSemantics.IsPrimitiveType(sym.Type))
                         {
                             continue;
                         }
@@ -3406,7 +3507,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 }
                 else
                 {
-                    foreach (Symbol joinColumn in joinSymbol.ColumnList)
+                    foreach (var joinColumn in joinSymbol.ColumnList)
                     {
                         // we write tableName.columnName
                         // rather than tableName.columnName as alias
@@ -3417,7 +3518,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
                         //This is called from AddDefaultColumns. To avoid adding columns that may not be used later,
                         // we add an optional column, that will only be added if needed.
-                        OptionalColumn optionalColumn = CreateOptionalColumn(null, joinColumn);
+                        var optionalColumn = CreateOptionalColumn(null, joinColumn);
 
                         optionalColumn.Append(symbol);
                         optionalColumn.Append(".");
@@ -3472,17 +3573,18 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                     selectStatement.OutputColumns = new Dictionary<string, Symbol>();
                 }
 
-                if ((symbol.Type == null) || TypeSemantics.IsPrimitiveType(symbol.Type))
+                if ((symbol.Type == null)
+                    || TypeSemantics.IsPrimitiveType(symbol.Type))
                 {
                     AddColumn(selectStatement, symbol, columnList, columnDictionary, "X");
                 }
                 else
                 {
-                    foreach (EdmProperty property in TypeHelpers.GetProperties(symbol.Type))
+                    foreach (var property in TypeHelpers.GetProperties(symbol.Type))
                     {
                         AddColumn(selectStatement, symbol, columnList, columnDictionary, property.Name);
                     }
-               }
+                }
             }
         }
 
@@ -3512,7 +3614,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// This is created in <see cref="AddDefaultColumns"/>.</param>
         /// <param name="columnDictionary">A dictionary of the columns above.</param>
         /// <param name="columnName">The name of the column to be added.</param>
-        private void AddColumn(SqlSelectStatement selectStatement, Symbol symbol, 
+        private void AddColumn(
+            SqlSelectStatement selectStatement, Symbol symbol,
             List<Symbol> columnList, Dictionary<string, Symbol> columnDictionary, string columnName)
         {
             // Since all renaming happens in the second phase
@@ -3529,11 +3632,11 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             {
                 // we do not care about the types of columns, so we pass null
                 // when construction the symbol.
-                columnSymbol = ((inputSymbol != null) && symbol.OutputColumnsRenamed)? inputSymbol : new Symbol(columnName, null);
+                columnSymbol = ((inputSymbol != null) && symbol.OutputColumnsRenamed) ? inputSymbol : new Symbol(columnName, null);
                 symbol.Columns.Add(columnName, columnSymbol);
             }
 
-            OptionalColumn optionalColumn = CreateOptionalColumn(inputSymbol, columnSymbol);
+            var optionalColumn = CreateOptionalColumn(inputSymbol, columnSymbol);
 
             optionalColumn.Append(symbol);
             optionalColumn.Append(".");
@@ -3592,13 +3695,13 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             // This is the list of columns added in this select statement
             // This forms the "type" of the Select statement, if it has to
             // be expanded in another SELECT *
-            List<Symbol> columnList = new List<Symbol>();
+            var columnList = new List<Symbol>();
 
             // A lookup for the previous set of columns to aid column name
             // collision detection.
-            Dictionary<string, Symbol> columnDictionary = new Dictionary<string, Symbol>(StringComparer.OrdinalIgnoreCase);
+            var columnDictionary = new Dictionary<string, Symbol>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (Symbol symbol in selectStatement.FromExtents)
+            foreach (var symbol in selectStatement.FromExtents)
             {
                 AddColumns(selectStatement, symbol, columnList, columnDictionary);
             }
@@ -3659,7 +3762,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             // check if we are in a join context.
             // We do not want to add "AS alias" if it has been done already
             // e.g. when we are reusing the Sql statement.
-            if (selectStatement.FromExtents.Count == 0 || fromSymbol != selectStatement.FromExtents[0])
+            if (selectStatement.FromExtents.Count == 0
+                || fromSymbol != selectStatement.FromExtents[0])
             {
                 selectStatement.FromExtents.Add(fromSymbol);
                 selectStatement.From.Append(" AS ");
@@ -3684,8 +3788,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="sortKeys"></param>
         private void AddSortKeys(SqlBuilder orderByClause, IList<DbSortClause> sortKeys)
         {
-            string separator = "";
-            foreach (DbSortClause sortClause in sortKeys)
+            var separator = "";
+            foreach (var sortClause in sortKeys)
             {
                 orderByClause.Append(separator);
                 orderByClause.Append(sortClause.Expression.Accept(this));
@@ -3711,7 +3815,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="inputVarType"></param>
         /// <param name="fromSymbol"></param>
         /// <returns></returns>
-        private SqlSelectStatement CreateNewSelectStatement(SqlSelectStatement oldStatement,
+        private SqlSelectStatement CreateNewSelectStatement(
+            SqlSelectStatement oldStatement,
             string inputVarName, TypeUsage inputVarType, out Symbol fromSymbol)
         {
             return CreateNewSelectStatement(oldStatement, inputVarName, inputVarType, true, out fromSymbol);
@@ -3738,7 +3843,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="finalizeOldStatement"></param>
         /// <param name="fromSymbol"></param>
         /// <returns>A new select statement, with the old one as the from clause.</returns>
-        private SqlSelectStatement CreateNewSelectStatement(SqlSelectStatement oldStatement,
+        private SqlSelectStatement CreateNewSelectStatement(
+            SqlSelectStatement oldStatement,
             string inputVarName, TypeUsage inputVarType, bool finalizeOldStatement, out Symbol fromSymbol)
         {
             fromSymbol = null;
@@ -3746,7 +3852,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             // Finalize the old statement
             if (finalizeOldStatement && oldStatement.Select.IsEmpty)
             {
-                List<Symbol> columns = AddDefaultColumns(oldStatement);
+                var columns = AddDefaultColumns(oldStatement);
 
                 // Thid could not have been called from a join node.
                 Debug.Assert(oldStatement.FromExtents.Count == 1);
@@ -3755,12 +3861,12 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                 // clone the join symbol, so that we "reuse" the
                 // join symbol.  Normally, we create a new symbol - see the next block
                 // of code.
-                JoinSymbol oldJoinSymbol = oldStatement.FromExtents[0] as JoinSymbol;
+                var oldJoinSymbol = oldStatement.FromExtents[0] as JoinSymbol;
                 if (oldJoinSymbol != null)
                 {
                     // Note: oldStatement.FromExtents will not do, since it might
                     // just be an alias of joinSymbol, and we want an actual JoinSymbol.
-                    JoinSymbol newJoinSymbol = new JoinSymbol(inputVarName, inputVarType, oldJoinSymbol.ExtentList);
+                    var newJoinSymbol = new JoinSymbol(inputVarName, inputVarType, oldJoinSymbol.ExtentList);
                     // This indicates that the oldStatement is a blocking scope
                     // i.e. it hides/renames extent columns
                     newJoinSymbol.IsNestedJoin = true;
@@ -3777,12 +3883,11 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             }
 
             // Observe that the following looks like the body of Visit(ExtentExpression).
-            SqlSelectStatement selectStatement = new SqlSelectStatement();
+            var selectStatement = new SqlSelectStatement();
             selectStatement.From.Append("( ");
             selectStatement.From.Append(oldStatement);
             selectStatement.From.AppendLine();
             selectStatement.From.Append(") ");
-
 
             return selectStatement;
         }
@@ -3810,21 +3915,21 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         {
             Debug.Assert(type.EdmType.DataSpace == DataSpace.CSpace, "Type must be in cSpace");
 
-            TypeUsage storeTypeUsage = this._storeItemCollection.StoreProviderManifest.GetStoreType(type);
-            return GenerateSqlForStoreType(this.sqlVersion, storeTypeUsage);
+            var storeTypeUsage = _storeItemCollection.StoreProviderManifest.GetStoreType(type);
+            return GenerateSqlForStoreType(sqlVersion, storeTypeUsage);
         }
 
         internal static string GenerateSqlForStoreType(SqlVersion sqlVersion, TypeUsage storeTypeUsage)
         {
             Debug.Assert(Helper.IsPrimitiveType(storeTypeUsage.EdmType), "Type must be primitive type");
 
-            string typeName = storeTypeUsage.EdmType.Name;
-            bool hasFacet = false;
-            int maxLength = 0;
+            var typeName = storeTypeUsage.EdmType.Name;
+            var hasFacet = false;
+            var maxLength = 0;
             byte decimalPrecision = 0;
             byte decimalScale = 0;
 
-            PrimitiveTypeKind primitiveTypeKind = ((PrimitiveType)storeTypeUsage.EdmType).PrimitiveTypeKind;
+            var primitiveTypeKind = ((PrimitiveType)storeTypeUsage.EdmType).PrimitiveTypeKind;
 
             switch (primitiveTypeKind)
             {
@@ -3889,11 +3994,12 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         {
             ISqlFragment result;
 
-            if (e.ExpressionKind == DbExpressionKind.Constant)
+            if (e.ExpressionKind
+                == DbExpressionKind.Constant)
             {
                 //For constant expression we should not cast the value, 
                 // thus we don't go throught the default DbConstantExpression handling
-                SqlBuilder sqlBuilder = new SqlBuilder();
+                var sqlBuilder = new SqlBuilder();
                 sqlBuilder.Append(((DbConstantExpression)e).Value.ToString());
                 result = sqlBuilder;
             }
@@ -3911,7 +4017,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        static bool IsApplyExpression(DbExpression e)
+        private static bool IsApplyExpression(DbExpression e)
         {
             return (DbExpressionKind.CrossApply == e.ExpressionKind || DbExpressionKind.OuterApply == e.ExpressionKind);
         }
@@ -3923,7 +4029,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        static bool IsJoinExpression(DbExpression e)
+        private static bool IsJoinExpression(DbExpression e)
         {
             return (DbExpressionKind.CrossJoin == e.ExpressionKind ||
                     DbExpressionKind.FullOuterJoin == e.ExpressionKind ||
@@ -3969,23 +4075,23 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             {
                 case DbExpressionKind.Distinct:
                     return result.Select.Top == null
-                        // #494803: The projection after distinct may not project all 
-                        // columns used in the Order By
-                        // Improvement: Consider getting rid of the Order By instead
-                        && result.OrderBy.IsEmpty;
+                           // #494803: The projection after distinct may not project all 
+                           // columns used in the Order By
+                           // Improvement: Consider getting rid of the Order By instead
+                           && result.OrderBy.IsEmpty;
 
                 case DbExpressionKind.Filter:
                     return result.Select.IsEmpty
-                            && result.Where.IsEmpty
-                            && result.GroupBy.IsEmpty
-                            && result.Select.Top == null;
+                           && result.Where.IsEmpty
+                           && result.GroupBy.IsEmpty
+                           && result.Select.Top == null;
 
                 case DbExpressionKind.GroupBy:
                     return result.Select.IsEmpty
-                            && result.GroupBy.IsEmpty
-                            && result.OrderBy.IsEmpty
-                            && result.Select.Top == null
-                            && !result.Select.IsDistinct;
+                           && result.GroupBy.IsEmpty
+                           && result.OrderBy.IsEmpty
+                           && result.Select.Top == null
+                           && !result.Select.IsDistinct;
 
                 case DbExpressionKind.Limit:
                 case DbExpressionKind.Element:
@@ -3996,32 +4102,31 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                     // Otherwise we won't be able to sort an input, and project out only
                     // a subset of the input columns
                     return result.Select.IsEmpty
-                            && result.GroupBy.IsEmpty
-                            // SQLBUDT #513640 - If distinct is specified, the projection may affect
-                            // the cardinality of the results, thus a new statement must be started.
-                            && !result.Select.IsDistinct;
+                           && result.GroupBy.IsEmpty
+                           // SQLBUDT #513640 - If distinct is specified, the projection may affect
+                           // the cardinality of the results, thus a new statement must be started.
+                           && !result.Select.IsDistinct;
 
                 case DbExpressionKind.Skip:
                     return result.Select.IsEmpty
-                            && result.GroupBy.IsEmpty
-                            && result.OrderBy.IsEmpty
-                            && !result.Select.IsDistinct;
+                           && result.GroupBy.IsEmpty
+                           && result.OrderBy.IsEmpty
+                           && !result.Select.IsDistinct;
 
                 case DbExpressionKind.Sort:
                     return result.Select.IsEmpty
-                            && result.GroupBy.IsEmpty
-                            && result.OrderBy.IsEmpty
-                            // SQLBUDT #513640 - A Project may be on the top of the Sort, and if so, it would need
-                            // to be in the same statement as the Sort (see comment above for the Project case).
-                            // A Distinct in the same statement would prevent that, and therefore if Distinct is present,
-                            // we need to start a new statement. 
-                            && !result.Select.IsDistinct;
+                           && result.GroupBy.IsEmpty
+                           && result.OrderBy.IsEmpty
+                           // SQLBUDT #513640 - A Project may be on the top of the Sort, and if so, it would need
+                           // to be in the same statement as the Sort (see comment above for the Project case).
+                           // A Distinct in the same statement would prevent that, and therefore if Distinct is present,
+                           // we need to start a new statement. 
+                           && !result.Select.IsDistinct;
 
                 default:
                     Debug.Assert(false);
                     throw EntityUtil.InvalidOperation(String.Empty);
             }
-
         }
 
         /// <summary>
@@ -4071,7 +4176,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="addDefaultColumns"></param>
         /// <param name="markAllDefaultColumnsAsUsed"></param>
         /// <returns></returns>
-        private SqlSelectStatement VisitExpressionEnsureSqlStatement(DbExpression e, bool addDefaultColumns, bool markAllDefaultColumnsAsUsed)
+        private SqlSelectStatement VisitExpressionEnsureSqlStatement(
+            DbExpression e, bool addDefaultColumns, bool markAllDefaultColumnsAsUsed)
         {
             Debug.Assert(TypeSemantics.IsCollectionType(e.ResultType));
 
@@ -4087,7 +4193,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
                 default:
                     Symbol fromSymbol;
-                    string inputVarName = "c";  // any name will do - this is my random choice.
+                    var inputVarName = "c"; // any name will do - this is my random choice.
                     symbolTable.EnterScope();
 
                     TypeUsage type = null;
@@ -4110,7 +4216,6 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                             break;
                     }
 
-
                     result = VisitInputExpression(e, inputVarName, type, out fromSymbol);
                     AddFromSymbol(result, inputVarName, fromSymbol);
                     symbolTable.ExitScope();
@@ -4119,12 +4224,12 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
 
             if (addDefaultColumns && result.Select.IsEmpty)
             {
-                List<Symbol> defaultColumns = AddDefaultColumns(result);
+                var defaultColumns = AddDefaultColumns(result);
                 if (markAllDefaultColumnsAsUsed)
                 {
-                    foreach (Symbol symbol in defaultColumns)
+                    foreach (var symbol in defaultColumns)
                     {
-                        this.optionalColumnUsageManager.MarkAsUsed(symbol);
+                        optionalColumnUsageManager.MarkAsUsed(symbol);
                     }
                 }
             }
@@ -4145,7 +4250,8 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         private SqlSelectStatement VisitFilterExpression(DbExpressionBinding input, DbExpression predicate, bool negatePredicate)
         {
             Symbol fromSymbol;
-            SqlSelectStatement result = VisitInputExpression(input.Expression,
+            var result = VisitInputExpression(
+                input.Expression,
                 input.VariableName, input.VariableType, out fromSymbol);
 
             // Filter is compatible with OrderBy
@@ -4205,13 +4311,13 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
                     break;
             }
         }
-        
-        private static string ByteArrayToBinaryString( Byte[] binaryArray )
+
+        private static string ByteArrayToBinaryString(Byte[] binaryArray)
         {
-            StringBuilder sb = new StringBuilder( binaryArray.Length * 2 );
-            for (int i = 0 ; i < binaryArray.Length ; i++)
+            var sb = new StringBuilder(binaryArray.Length * 2);
+            for (var i = 0; i < binaryArray.Length; i++)
             {
-                sb.Append(hexDigits[(binaryArray[i]&0xF0) >>4]).Append(hexDigits[binaryArray[i]&0x0F]);
+                sb.Append(hexDigits[(binaryArray[i] & 0xF0) >> 4]).Append(hexDigits[binaryArray[i] & 0x0F]);
             }
             return sb.ToString();
         }
@@ -4219,7 +4325,7 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         private TypeUsage GetPrimitiveType(PrimitiveTypeKind modelType)
         {
             TypeUsage type = null;
-            PrimitiveType mappedType = this._storeItemCollection.GetMappedPrimitiveType(modelType);
+            var mappedType = _storeItemCollection.GetMappedPrimitiveType(modelType);
 
             Debug.Assert(mappedType != null, "Could not get type usage for primitive type");
 
@@ -4246,9 +4352,9 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="aggregates"></param>
         /// <param name="inputVarRefName"></param>
         /// <returns></returns>
-        static bool GroupByAggregatesNeedInnerQuery(IList<DbAggregate> aggregates, string inputVarRefName)
+        private static bool GroupByAggregatesNeedInnerQuery(IList<DbAggregate> aggregates, string inputVarRefName)
         {
-            foreach (DbAggregate aggregate in aggregates)
+            foreach (var aggregate in aggregates)
             {
                 Debug.Assert(aggregate.Arguments.Count == 1);
                 if (GroupByAggregateNeedsInnerQuery(aggregate.Arguments[0], inputVarRefName))
@@ -4286,9 +4392,9 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="keys"></param>
         /// <param name="inputVarRefName"></param>
         /// <returns></returns>
-        static bool GroupByKeysNeedInnerQuery(IList<DbExpression> keys, string inputVarRefName)
+        private static bool GroupByKeysNeedInnerQuery(IList<DbExpression> keys, string inputVarRefName)
         {
-            foreach (DbExpression key in keys)
+            foreach (var key in keys)
             {
                 if (GroupByKeyNeedsInnerQuery(key, inputVarRefName))
                 {
@@ -4334,42 +4440,45 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
             }
 
             //Skip a cast expression
-            if (expression.ExpressionKind == DbExpressionKind.Cast)
+            if (expression.ExpressionKind
+                == DbExpressionKind.Cast)
             {
-                DbCastExpression castExpression = (DbCastExpression)expression;
+                var castExpression = (DbCastExpression)expression;
                 return GroupByExpressionNeedsInnerQuery(castExpression.Argument, inputVarRefName, allowConstants);
             }
 
             //Allow Property(Property(...)), needed when the input is a join
-            if (expression.ExpressionKind == DbExpressionKind.Property)
+            if (expression.ExpressionKind
+                == DbExpressionKind.Property)
             {
-                DbPropertyExpression propertyExpression = (DbPropertyExpression)expression;
+                var propertyExpression = (DbPropertyExpression)expression;
                 return GroupByExpressionNeedsInnerQuery(propertyExpression.Instance, inputVarRefName, allowConstants);
             }
 
-            if (expression.ExpressionKind == DbExpressionKind.VariableReference)
+            if (expression.ExpressionKind
+                == DbExpressionKind.VariableReference)
             {
-                DbVariableReferenceExpression varRefExpression = expression as DbVariableReferenceExpression;
+                var varRefExpression = expression as DbVariableReferenceExpression;
                 return !varRefExpression.VariableName.Equals(inputVarRefName);
             }
 
             return true;
         }
-                
+
         /// <summary>
         /// Throws not supported exception if the server is pre-katmai
         /// </summary>
         /// <param name="primitiveTypeKind"></param>
         private void AssertKatmaiOrNewer(PrimitiveTypeKind primitiveTypeKind)
         {
-            AssertKatmaiOrNewer(this.sqlVersion, primitiveTypeKind);
+            AssertKatmaiOrNewer(sqlVersion, primitiveTypeKind);
         }
 
         private static void AssertKatmaiOrNewer(SqlVersion sqlVersion, PrimitiveTypeKind primitiveTypeKind)
         {
             if (SqlVersionUtils.IsPreKatmai(sqlVersion))
             {
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.SqlGen_PrimitiveTypeNotSupportedPriorSql10(primitiveTypeKind));
+                throw EntityUtil.NotSupported(Strings.SqlGen_PrimitiveTypeNotSupportedPriorSql10(primitiveTypeKind));
             }
         }
 
@@ -4379,15 +4488,14 @@ namespace System.Data.Entity.Core.SqlClient.SqlGen
         /// <param name="e"></param>
         internal void AssertKatmaiOrNewer(DbFunctionExpression e)
         {
-            if (this.IsPreKatmai)
+            if (IsPreKatmai)
             {
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.SqlGen_CanonicalFunctionNotSupportedPriorSql10(e.Function.Name));
+                throw EntityUtil.NotSupported(Strings.SqlGen_CanonicalFunctionNotSupportedPriorSql10(e.Function.Name));
             }
         }
 
         #endregion
-        
+
         #endregion
     }
 }
-

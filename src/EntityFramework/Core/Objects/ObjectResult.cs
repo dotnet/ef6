@@ -1,6 +1,5 @@
 namespace System.Data.Entity.Core.Objects
 {
-    using System;
     using System.Collections;
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
@@ -9,7 +8,8 @@ namespace System.Data.Entity.Core.Objects
     /// This class implements IEnumerable and IDisposable. Instance of this class
     /// is returned from ObjectQuery.Execute method.
     /// </summary>
-    [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface"), SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
+    [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public abstract class ObjectResult : IEnumerable, IDisposable, IListSource
     {
         internal ObjectResult()
@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumeratorInternal();
+            return GetEnumeratorInternal();
         }
 
         // ----------------------
@@ -31,9 +31,7 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IListSource.ContainsListCollection
         {
-            get
-            {
-                return false; // this means that the IList we return is the one which contains our actual data, it is not a collection
+            get { return false; // this means that the IList we return is the one which contains our actual data, it is not a collection
             }
         }
 
@@ -49,13 +47,10 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IList IListSource.GetList()
         {
-            return this.GetIListSourceListInternal();
+            return GetIListSourceListInternal();
         }
 
-        public abstract Type ElementType
-        {
-            get;
-        }
+        public abstract Type ElementType { get; }
 
         [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly")]
         public abstract void Dispose();
@@ -69,7 +64,7 @@ namespace System.Data.Entity.Core.Objects
         /// </returns>
         public ObjectResult<TElement> GetNextResult<TElement>()
         {
-            return this.GetNextResultInternal<TElement>();
+            return GetNextResultInternal<TElement>();
         }
 
         internal abstract IEnumerator GetEnumeratorInternal();

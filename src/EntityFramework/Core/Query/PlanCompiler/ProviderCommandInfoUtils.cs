@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
-
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
 // to prevent from simple mistakes during development (e.g. method argument validation 
 // in cases where it was you who created the variables or the variables had already been validated or 
@@ -15,16 +12,14 @@ using System.Collections.Generic;
 // or the tree was built/rewritten not the way we thought it was.
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
-
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
 using md = System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Query.InternalTrees;
-using System.Data.Entity.Core.Query.PlanCompiler;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -42,25 +37,27 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="command">The owning command, used for creating VarVecs, etc</param>
         /// <param name="node">The root of the sub-command for which a ProviderCommandInfo should be generated</param>
         /// <returns>The resulting ProviderCommandInfo</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "rowtype"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "rowtype")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal static ProviderCommandInfo Create(
             Command command,
             Node node)
         {
-            PhysicalProjectOp projectOp = node.Op as PhysicalProjectOp;
+            var projectOp = node.Op as PhysicalProjectOp;
             PlanCompiler.Assert(projectOp != null, "Expected root Op to be a physical Project");
 
             // build up the CQT
-            DbCommandTree ctree = CTreeGenerator.Generate(command, node);
-            DbQueryCommandTree cqtree = ctree as DbQueryCommandTree;
+            var ctree = CTreeGenerator.Generate(command, node);
+            var cqtree = ctree as DbQueryCommandTree;
             PlanCompiler.Assert(cqtree != null, "null query command tree");
 
             // Get the rowtype for the result cqt
-            md.CollectionType collType = TypeHelpers.GetEdmType<md.CollectionType>(cqtree.Query.ResultType);
+            var collType = TypeHelpers.GetEdmType<md.CollectionType>(cqtree.Query.ResultType);
             PlanCompiler.Assert(md.TypeSemantics.IsRowType(collType.TypeUsage), "command rowtype is not a record");
 
             // Build up a mapping from Vars to the corresponding output property/column
-            Dictionary<Var, md.EdmProperty> outputVarMap = BuildOutputVarMap(projectOp, collType.TypeUsage);
+            var outputVarMap = BuildOutputVarMap(projectOp, collType.TypeUsage);
 
             return new ProviderCommandInfo(ctree);
         }
@@ -68,16 +65,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Build up a mapping from Vars to the corresponding property of the output row type
         /// </summary>
         /// <param name="projectOp">the physical projectOp</param>
         /// <param name="outputType">output type</param>
         /// <returns>a map from Vars to the output type member</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "RowType"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "PhysicalProjectOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "RowType")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "PhysicalProjectOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private static Dictionary<Var, md.EdmProperty> BuildOutputVarMap(PhysicalProjectOp projectOp, md.TypeUsage outputType)
         {
-            Dictionary<Var, md.EdmProperty> outputVarMap = new Dictionary<Var, md.EdmProperty>();
+            var outputVarMap = new Dictionary<Var, md.EdmProperty>();
 
             PlanCompiler.Assert(md.TypeSemantics.IsRowType(outputType), "PhysicalProjectOp result type is not a RowType?");
 
@@ -85,8 +86,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             IEnumerator<Var> varEnumerator = projectOp.Outputs.GetEnumerator();
             while (true)
             {
-                bool foundProp = propertyEnumerator.MoveNext();
-                bool foundVar = varEnumerator.MoveNext();
+                var foundProp = propertyEnumerator.MoveNext();
+                var foundVar = varEnumerator.MoveNext();
                 if (foundProp != foundVar)
                 {
                     throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.ColumnCountMismatch, 1);

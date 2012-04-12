@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
-
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
 // to prevent from simple mistakes during development (e.g. method argument validation 
 // in cases where it was you who created the variables or the variables had already been validated or 
@@ -15,18 +12,15 @@ using System.Collections.Generic;
 // or the tree was built/rewritten not the way we thought it was.
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
-
-using System.Globalization;
-using System.Text;
-using System.Linq;
-
 using md = System.Data.Entity.Core.Metadata.Edm;
 using cqt = System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.Entity.Core.Query.InternalTrees;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
 
     /// <summary>
     /// The ProjectionPruner module is responsible for eliminating unnecessary column
@@ -51,12 +45,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal class ProjectionPruner : BasicOpVisitorOfNode
     {
         #region Nested Classes
+
         /// <summary>
         /// This class tracks down the vars that are referenced in the column map
         /// </summary>
         private class ColumnMapVarTracker : ColumnMapVisitor<VarVec>
         {
             #region public methods
+
             /// <summary>
             /// Find all vars that were referenced in the column map. Looks for VarRefColumnMap
             /// in the ColumnMap tree, and tracks those vars
@@ -68,20 +64,26 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// <param name="vec">the set of referenced columns</param>
             internal static void FindVars(ColumnMap columnMap, VarVec vec)
             {
-                ColumnMapVarTracker tracker = new ColumnMapVarTracker();
-                columnMap.Accept<VarVec>(tracker, vec);
+                var tracker = new ColumnMapVarTracker();
+                columnMap.Accept(tracker, vec);
                 return;
             }
+
             #endregion
 
             #region constructors
+
             /// <summary>
             /// Trivial constructor
             /// </summary>
-            private ColumnMapVarTracker() : base() { }
+            private ColumnMapVarTracker()
+            {
+            }
+
             #endregion
 
             #region overrides
+
             /// <summary>
             /// Handler for VarRefColumnMap. Simply adds the "var" to the set of referenced vars
             /// </summary>
@@ -92,15 +94,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 arg.Set(columnMap.Var);
                 base.Visit(columnMap, arg);
             }
+
             #endregion
         }
+
         #endregion
 
         #region private state
 
-        private PlanCompiler m_compilerState;
-        private Command m_command { get { return m_compilerState.Command; } }
-        private VarVec m_referencedVars; // the list of referenced vars in the query
+        private readonly PlanCompiler m_compilerState;
+
+        private Command m_command
+        {
+            get { return m_compilerState.Command; }
+        }
+
+        private readonly VarVec m_referencedVars; // the list of referenced vars in the query
 
         #endregion
 
@@ -139,7 +148,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>The processed, i.e. transformed node</returns>
         internal static Node Process(PlanCompiler compilerState, Node node)
         {
-            ProjectionPruner pruner = new ProjectionPruner(compilerState);
+            var pruner = new ProjectionPruner(compilerState);
             return pruner.Process(node);
         }
 
@@ -172,7 +181,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="varSet"></param>
         private void AddReference(IEnumerable<Var> varSet)
         {
-            foreach (Var v in varSet)
+            foreach (var v in varSet)
             {
                 AddReference(v);
             }
@@ -187,6 +196,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             return m_referencedVars.IsSet(v);
         }
+
         /// <summary>
         /// Is this var unreferenced? Duh
         /// </summary>
@@ -204,9 +214,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="varMap"></param>
         private void PruneVarMap(VarMap varMap)
         {
-            List<Var> unreferencedVars = new List<Var>();
+            var unreferencedVars = new List<Var>();
             // build up a list of unreferenced vars
-            foreach (Var v in varMap.Keys)
+            foreach (var v in varMap.Keys)
             {
                 if (!IsReferenced(v))
                 {
@@ -218,7 +228,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
             }
             // remove each of the corresponding entries from the varmap
-            foreach (Var v in unreferencedVars)
+            foreach (var v in unreferencedVars)
             {
                 varMap.Remove(v);
             }
@@ -256,6 +266,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             base.VisitChildrenReverse(n);
             m_command.RecomputeNodeInfo(n);
         }
+
         #endregion
 
         #region Visitor methods
@@ -277,7 +288,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>modified node</returns>
         public override Node Visit(VarDefListOp op, Node n)
         {
-
             // NOTE: It would be nice to optimize this to only create a new node 
             //       and new list, if we needed to eliminate some arguments, but
             //       I'm not sure that the effort to eliminate the allocations 
@@ -287,10 +297,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // Get rid of all the children that we don't care about (ie)
             // those VarDefOp's that haven't been referenced
-            List<Node> newChildren = new List<Node>();
-            foreach (Node chi in n.Children)
+            var newChildren = new List<Node>();
+            foreach (var chi in n.Children)
             {
-                VarDefOp varDefOp = chi.Op as VarDefOp;
+                var varDefOp = chi.Op as VarDefOp;
                 if (IsReferenced(varDefOp.Var))
                 {
                     newChildren.Add(VisitNode(chi));
@@ -409,7 +419,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         public override Node Visit(DistinctOp op, Node n)
         {
-            if (op.Keys.Count > 1 && n.Child0.Op.OpType == OpType.Project)
+            if (op.Keys.Count > 1
+                && n.Child0.Op.OpType == OpType.Project)
             {
                 RemoveRedundantConstantKeys(op.Keys, ((ProjectOp)n.Child0.Op).Outputs, n.Child0.Child1);
             }
@@ -431,7 +442,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         public override Node Visit(ElementOp op, Node n)
         {
-            ExtendedNodeInfo nodeInfo = m_command.GetExtendedNodeInfo(n.Child0);
+            var nodeInfo = m_command.GetExtendedNodeInfo(n.Child0);
             AddReference(nodeInfo.Definitions);
 
             n.Child0 = VisitNode(n.Child0); // visit the child
@@ -474,7 +485,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             // DevDiv#322980: Visit the vardeflist for aggregates and potentially group aggregates before removing 
             // redundant constant keys. This is because they may depend on (reference) the keys
-            for (int i = n.Children.Count - 1; i >= 2; i--)
+            for (var i = n.Children.Count - 1; i >= 2; i--)
             {
                 n.Children[i] = VisitNode(n.Children[i]);
             }
@@ -499,7 +510,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //SQLBUDT #543064: If there are no keys to start with
             // and none of the aggregates is referenced, the GroupBy
             // is equivalent to a SingleRowTableOp
-            if (op.Keys.Count == 0 && op.Outputs.Count == 0)
+            if (op.Keys.Count == 0
+                && op.Outputs.Count == 0)
             {
                 return m_command.CreateNode(m_command.CreateSingleRowTableOp());
             }
@@ -521,10 +533,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private void RemoveRedundantConstantKeys(VarVec keyVec, VarVec outputVec, Node varDefListNode)
         {
             //Find all the keys that are nulls and constants
-            List<Node> constantKeys = varDefListNode.Children.Where(d => d.Op.OpType == OpType.VarDef 
-                && PlanCompilerUtil.IsConstantBaseOp(d.Child0.Op.OpType)).ToList();
+            var constantKeys = varDefListNode.Children.Where(
+                d => d.Op.OpType == OpType.VarDef
+                     && PlanCompilerUtil.IsConstantBaseOp(d.Child0.Op.OpType)).ToList();
 
-            VarVec constantKeyVars = this.m_command.CreateVarVec(constantKeys.Select(d => ((VarDefOp)d.Op).Var));
+            var constantKeyVars = m_command.CreateVarVec(constantKeys.Select(d => ((VarDefOp)d.Op).Var));
 
             //Get the list of unreferenced  constant keys
             constantKeyVars.Minus(m_referencedVars);
@@ -538,8 +551,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //If no keys are left add one. 
             if (keyVec.Count == 0)
             {
-                Node keyNode = constantKeys.First();
-                Var keyVar = ((VarDefOp)keyNode.Op).Var;
+                var keyNode = constantKeys.First();
+                var keyVar = ((VarDefOp)keyNode.Op).Var;
                 keyVec.Set(keyVar);
                 outputVec.Set(keyVar);
                 varDefListNode.Children.Add(keyNode);
@@ -555,14 +568,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         public override Node Visit(GroupByIntoOp op, Node n)
         {
-            Node result = VisitGroupByOp(op, n);
+            var result = VisitGroupByOp(op, n);
 
             //Transform the GroupByInto into a GroupBy if all group aggregate vars were prunned out
-            if (result.Op.OpType == OpType.GroupByInto && n.Child3.Children.Count == 0)
+            if (result.Op.OpType == OpType.GroupByInto
+                && n.Child3.Children.Count == 0)
             {
-                GroupByIntoOp newOp = (GroupByIntoOp)result.Op;
+                var newOp = (GroupByIntoOp)result.Op;
 
-                result = m_command.CreateNode(m_command.CreateGroupByOp(newOp.Keys, newOp.Outputs),
+                result = m_command.CreateNode(
+                    m_command.CreateGroupByOp(newOp.Keys, newOp.Outputs),
                     result.Child0, result.Child1, result.Child2);
             }
             return result;
@@ -584,7 +599,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         protected override Node VisitJoinOp(JoinBaseOp op, Node n)
         {
             // Simply visit all children for a CrossJoin
-            if (n.Op.OpType == OpType.CrossJoin)
+            if (n.Op.OpType
+                == OpType.CrossJoin)
             {
                 VisitChildren(n);
                 return n;
@@ -619,7 +635,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>modified subtree</returns>
         public override Node Visit(ProjectOp op, Node n)
         {
-
             // Update my Vars - to remove "unreferenced" vars. Do this before visiting 
             // the children - the outputs of the ProjectOp are only consumed by upstream
             // consumers, and if a Var has not yet been referenced, its not needed upstream
@@ -641,7 +656,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "scanTable"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "scanTable")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(ScanTableOp op, Node n)
         {
             PlanCompiler.Assert(!n.HasChild0, "scanTable with an input?"); // no more views
@@ -667,7 +684,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             // Prune the outputs varset, except for Intersect and Except, which require 
             // all their outputs to compare, so don't bother pruning them.
-            if (OpType.Intersect == op.OpType || OpType.Except == op.OpType)
+            if (OpType.Intersect == op.OpType
+                || OpType.Except == op.OpType)
             {
                 AddReference(op.Outputs);
             }
@@ -677,7 +695,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Prune the varmaps. Identify which of the setOp vars have been
             // referenced, and eliminate those entries that don't show up. Additionally
             // mark all the other Vars as referenced
-            foreach (VarMap varMap in op.VarMap)
+            foreach (var varMap in op.VarMap)
             {
                 PruneVarMap(varMap);
             }
@@ -701,7 +719,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         protected override Node VisitSortOp(SortBaseOp op, Node n)
         {
             // first visit the sort keys
-            foreach (InternalTrees.SortKey sk in op.Keys)
+            foreach (var sk in op.Keys)
             {
                 AddReference(sk.Var);
             }
@@ -771,7 +789,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             // Ensure that the child is a projectOp, and has exactly one var. Mark 
             // that var as referenced always
-            ProjectOp projectOp = (ProjectOp)n.Child0.Op;
+            var projectOp = (ProjectOp)n.Child0.Op;
 
             //It is enougth to reference the first output, this usually is a simple constant
             AddReference(projectOp.Outputs.First);
@@ -779,6 +797,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             VisitChildren(n);
             return n;
         }
+
         #endregion
 
         #endregion

@@ -1,19 +1,5 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Data;
-    using System.Data.Entity.Core;
-    using System.Data.Entity.Core.Common;
-    using System.Data.Common;
-    using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Query.PlanCompiler;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Threading;
-
     /// <summary>
     /// Basic Visitor Design Pattern support for ColumnMap hierarchy;
     /// 
@@ -32,9 +18,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="columnMaps"></param>
         /// <param name="arg"></param>
         protected void VisitList<TListType>(TListType[] columnMaps, TArgType arg)
-                   where TListType : ColumnMap
+            where TListType : ColumnMap
         {
-            foreach (TListType columnMap in columnMaps)
+            foreach (var columnMap in columnMaps)
             {
                 columnMap.Accept(this, arg);
             }
@@ -46,7 +32,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         protected void VisitEntityIdentity(EntityIdentity entityIdentity, TArgType arg)
         {
-            DiscriminatedEntityIdentity dei = entityIdentity as DiscriminatedEntityIdentity;
+            var dei = entityIdentity as DiscriminatedEntityIdentity;
             if (null != dei)
             {
                 VisitEntityIdentity(dei, arg);
@@ -60,7 +46,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         protected virtual void VisitEntityIdentity(DiscriminatedEntityIdentity entityIdentity, TArgType arg)
         {
             entityIdentity.EntitySetColumnMap.Accept(this, arg);
-            foreach (SimpleColumnMap columnMap in entityIdentity.Keys)
+            foreach (var columnMap in entityIdentity.Keys)
             {
                 columnMap.Accept(this, arg);
             }
@@ -68,7 +54,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         protected virtual void VisitEntityIdentity(SimpleEntityIdentity entityIdentity, TArgType arg)
         {
-            foreach (SimpleColumnMap columnMap in entityIdentity.Keys)
+            foreach (var columnMap in entityIdentity.Keys)
             {
                 columnMap.Accept(this, arg);
             }
@@ -81,11 +67,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal virtual void Visit(ComplexTypeColumnMap columnMap, TArgType arg)
         {
             ColumnMap nullSentinel = columnMap.NullSentinel;
-            if (null != nullSentinel) 
+            if (null != nullSentinel)
             {
                 nullSentinel.Accept(this, arg);
             }
-            foreach (ColumnMap p in columnMap.Properties)
+            foreach (var p in columnMap.Properties)
             {
                 p.Accept(this, arg);
             }
@@ -94,11 +80,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal virtual void Visit(DiscriminatedCollectionColumnMap columnMap, TArgType arg)
         {
             columnMap.Discriminator.Accept(this, arg);
-            foreach (SimpleColumnMap fk in columnMap.ForeignKeys)
+            foreach (var fk in columnMap.ForeignKeys)
             {
                 fk.Accept(this, arg);
             }
-            foreach (SimpleColumnMap k in columnMap.Keys)
+            foreach (var k in columnMap.Keys)
             {
                 k.Accept(this, arg);
             }
@@ -108,7 +94,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal virtual void Visit(EntityColumnMap columnMap, TArgType arg)
         {
             VisitEntityIdentity(columnMap.EntityIdentity, arg);
-            foreach (ColumnMap p in columnMap.Properties)
+            foreach (var p in columnMap.Properties)
             {
                 p.Accept(this, arg);
             }
@@ -121,7 +107,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             {
                 cm.Accept(this, arg);
             }
-            foreach (ColumnMap p in columnMap.Properties)
+            foreach (var p in columnMap.Properties)
             {
                 p.Accept(this, arg);
             }
@@ -146,11 +132,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal virtual void Visit(RecordColumnMap columnMap, TArgType arg)
         {
             ColumnMap nullSentinel = columnMap.NullSentinel;
-            if (null != nullSentinel) 
+            if (null != nullSentinel)
             {
                 nullSentinel.Accept(this, arg);
             }
-            foreach (ColumnMap p in columnMap.Properties)
+            foreach (var p in columnMap.Properties)
             {
                 p.Accept(this, arg);
             }
@@ -167,11 +153,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         internal virtual void Visit(SimpleCollectionColumnMap columnMap, TArgType arg)
         {
-            foreach (SimpleColumnMap fk in columnMap.ForeignKeys)
+            foreach (var fk in columnMap.ForeignKeys)
             {
                 fk.Accept(this, arg);
             }
-            foreach (SimpleColumnMap k in columnMap.Keys)
+            foreach (var k in columnMap.Keys)
             {
                 k.Accept(this, arg);
             }
@@ -195,12 +181,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     /// <typeparam name="TResultType"></typeparam>
     internal abstract class ColumnMapVisitorWithResults<TResultType, TArgType>
     {
-
         #region EntityIdentity handling
 
         protected EntityIdentity VisitEntityIdentity(EntityIdentity entityIdentity, TArgType arg)
         {
-            DiscriminatedEntityIdentity dei = entityIdentity as DiscriminatedEntityIdentity;
+            var dei = entityIdentity as DiscriminatedEntityIdentity;
             if (null != dei)
             {
                 return VisitEntityIdentity(dei, arg);
@@ -247,5 +232,4 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #endregion
     }
-
 }

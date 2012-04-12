@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Data;
-using System.Data.Entity.Core.Objects.DataClasses;
-using System.Diagnostics;
-
-namespace System.Data.Entity.Core.Objects.Internal
+﻿namespace System.Data.Entity.Core.Objects.Internal
 {
     /// <summary>
     /// Implementor of IEntityKeyStrategy for getting and setting a key on an entity that does not
@@ -14,13 +7,6 @@ namespace System.Data.Entity.Core.Objects.Internal
     internal sealed class PocoEntityKeyStrategy : IEntityKeyStrategy
     {
         private EntityKey _key;
-
-        /// <summary>
-        /// Creates a new strategy object; no reference to the actual entity is required.
-        /// </summary>
-        public PocoEntityKeyStrategy()
-        {
-        }
 
         // See IEntityKeyStrategy
         public EntityKey GetEntityKey()

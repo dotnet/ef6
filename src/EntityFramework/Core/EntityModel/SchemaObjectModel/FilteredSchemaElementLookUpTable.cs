@@ -2,21 +2,23 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections;
     using System.Collections.Generic;
-    using System.Data;
-    using System.Data.Entity.Core;
+    using System.Data.Entity.Resources;
 
     /// <summary>
     /// Summary description for FilteredSchemaTypes.
     /// </summary>
-    internal sealed class FilteredSchemaElementLookUpTable<T,S> : IEnumerable<T>, ISchemaElementLookUpTable<T>
-    where T : S
-    where S : SchemaElement
+    internal sealed class FilteredSchemaElementLookUpTable<T, S> : IEnumerable<T>, ISchemaElementLookUpTable<T>
+        where T : S
+        where S : SchemaElement
     {
         #region Instance Fields
-        private SchemaElementLookUpTable<S> _lookUpTable = null;
+
+        private readonly SchemaElementLookUpTable<S> _lookUpTable;
+
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// 
         /// </summary>
@@ -39,9 +41,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// 
         /// </summary>
         /// <returns></returns>
-        IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            return  _lookUpTable.GetFilteredEnumerator<T>();
+            return _lookUpTable.GetFilteredEnumerator<T>();
         }
 
         /// <summary>
@@ -51,10 +53,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             get
             {
-                int count = 0;
-                foreach ( SchemaElement element  in _lookUpTable )
+                var count = 0;
+                foreach (SchemaElement element  in _lookUpTable)
                 {
-                    if ( element is T )
+                    if (element is T)
                     {
                         ++count;
                     }
@@ -62,6 +64,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 return count;
             }
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -69,10 +72,13 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns></returns>
         public bool ContainsKey(string key)
         {
-            if ( !_lookUpTable.ContainsKey(key) )
+            if (!_lookUpTable.ContainsKey(key))
+            {
                 return false;
+            }
             return _lookUpTable[key] as T != null;
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -80,17 +86,17 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             get
             {
-                S element = _lookUpTable[key];
-                if ( element == null )
+                var element = _lookUpTable[key];
+                if (element == null)
                 {
                     return null;
                 }
-                T elementAsT = element as T;
-                if ( elementAsT != null )
+                var elementAsT = element as T;
+                if (elementAsT != null)
                 {
                     return elementAsT;
                 }
-                throw EntityUtil.InvalidOperation(System.Data.Entity.Resources.Strings.UnexpectedTypeInCollection(element.GetType(),key));
+                throw EntityUtil.InvalidOperation(Strings.UnexpectedTypeInCollection(element.GetType(), key));
             }
         }
 
@@ -104,6 +110,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             return _lookUpTable.LookUpEquivalentKey(key) as T;
         }
 
-     #endregion
+        #endregion
     }
 }

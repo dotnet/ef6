@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
-
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
 // to prevent from simple mistakes during development (e.g. method argument validation 
 // in cases where it was you who created the variables or the variables had already been validated or 
@@ -15,19 +12,19 @@ using System.Collections.Generic;
 // or the tree was built/rewritten not the way we thought it was.
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
-
-using System.Globalization;
-using System.Linq;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
 using md = System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Query.InternalTrees;
-using System.Data.Entity.Core.Query.PlanCompiler;
-
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Query.InternalTrees;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
+    using System.Linq;
+    using SortKey = System.Data.Entity.Core.Query.InternalTrees.SortKey;
 
     /// <summary>
     /// The goal of this module is to eliminate all references to nominal types
@@ -63,8 +60,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal class NominalTypeEliminator : BasicOpVisitorOfNode
     {
-
         #region Nested Classes
+
         /// <summary>
         /// Describes an operation kind - for various property extractions
         /// </summary>
@@ -95,6 +92,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// </summary>
             All
         }
+
         #endregion
 
         #region private state
@@ -103,17 +101,23 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private readonly Dictionary<Node, PropertyRefList> m_nodePropertyMap;
         private readonly VarInfoMap m_varInfoMap;
         private readonly PlanCompiler m_compilerState;
-        private Command m_command { get { return m_compilerState.Command; } }
+
+        private Command m_command
+        {
+            get { return m_compilerState.Command; }
+        }
+
         private readonly StructuredTypeInfo m_typeInfo;
         private readonly Dictionary<md.EdmFunction, md.EdmProperty[]> m_tvfResultKeys;
-        private Dictionary<md.TypeUsage, md.TypeUsage> m_typeToNewTypeMap;
+        private readonly Dictionary<md.TypeUsage, md.TypeUsage> m_typeToNewTypeMap;
         private const string PrefixMatchCharacter = "%"; // This is ANSI-SQL defined, but it should probably be configurable.
 
         #endregion
 
         #region constructors
 
-        private NominalTypeEliminator(PlanCompiler compilerState,
+        private NominalTypeEliminator(
+            PlanCompiler compilerState,
             StructuredTypeInfo typeInfo,
             Dictionary<Var, PropertyRefList> varPropertyMap,
             Dictionary<Node, PropertyRefList> nodePropertyMap,
@@ -159,7 +163,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 #endif
 
             // Phase 2: actually eliminate nominal types
-            NominalTypeEliminator nte = new NominalTypeEliminator(
+            var nte = new NominalTypeEliminator(
                 compilerState, structuredTypeInfo, varPropertyMap, nodePropertyMap, tvfResultKeys);
             nte.Process();
 
@@ -176,25 +180,29 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 #endif
         }
 
-
         /// <summary>
         /// The real driver. Invokes the visitor to traverse the tree bottom-up,
         /// and modifies the tree along the way.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "PhysicalProjectOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "PhysicalProjectOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void Process()
         {
             // Replace command enum parameters with a counterpart whose type is the underlying enum type of the original parameter
             // Replace command strongly typed spatial parameters with a counterpart whose type is the underlying spatial union type of the original parameter
-            foreach (var paramVar in m_command.Vars.OfType<ParameterVar>().Where(v => md.TypeSemantics.IsEnumerationType(v.Type) || md.TypeSemantics.IsStrongSpatialType(v.Type)).ToArray())
+            foreach (
+                var paramVar in
+                    m_command.Vars.OfType<ParameterVar>().Where(
+                        v => md.TypeSemantics.IsEnumerationType(v.Type) || md.TypeSemantics.IsStrongSpatialType(v.Type)).ToArray())
             {
-                ParameterVar newVar = md.TypeSemantics.IsEnumerationType(paramVar.Type)
-                    ? m_command.ReplaceEnumParameterVar(paramVar)
-                    : m_command.ReplaceStrongSpatialParameterVar(paramVar);
+                var newVar = md.TypeSemantics.IsEnumerationType(paramVar.Type)
+                                 ? m_command.ReplaceEnumParameterVar(paramVar)
+                                 : m_command.ReplaceStrongSpatialParameterVar(paramVar);
                 m_varInfoMap.CreatePrimitiveTypeVarInfo(paramVar, newVar);
             }
 
-            Node rootNode = m_command.Root;
+            var rootNode = m_command.Root;
             PlanCompiler.Assert(rootNode.Op.OpType == OpType.PhysicalProject, "root node is not PhysicalProjectOp?");
             // invoke the visitor on the root node
             rootNode.Op.Accept(this, rootNode);
@@ -233,10 +241,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             md.CollectionType collectionType;
-            if (TypeHelpers.TryGetEdmType<md.CollectionType>(type, out collectionType))
+            if (TypeHelpers.TryGetEdmType(type, out collectionType))
             {
                 // If this is a collection type, then clone a new collection type
-                md.TypeUsage newElementType = GetNewType(collectionType.TypeUsage);
+                var newElementType = GetNewType(collectionType.TypeUsage);
                 newType = TypeUtils.CreateCollectionType(newElementType);
             }
             else if (TypeUtils.IsStructuredType(type))
@@ -284,10 +292,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         private Node BuildAccessor(Node input, md.EdmProperty property)
         {
-            Op inputOp = input.Op;
+            var inputOp = input.Op;
 
             // Special handling if the input is a NewRecordOp
-            NewRecordOp newRecordOp = inputOp as NewRecordOp;
+            var newRecordOp = inputOp as NewRecordOp;
             if (null != newRecordOp)
             {
                 int fieldPos;
@@ -303,14 +311,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             // special handling if the input is a null
-            if (inputOp.OpType == OpType.Null)
+            if (inputOp.OpType
+                == OpType.Null)
             {
                 return null;
             }
 
             // The default case: Simply return a new PropertyOp
-            PropertyOp newPropertyOp = m_command.CreatePropertyOp(property);
-            return m_command.CreateNode(newPropertyOp, this.Copy(input));
+            var newPropertyOp = m_command.CreatePropertyOp(property);
+            return m_command.CreateNode(newPropertyOp, Copy(input));
         }
 
         /// <summary>
@@ -322,7 +331,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         private Node BuildAccessorWithNulls(Node input, md.EdmProperty property)
         {
-            Node newNode = this.BuildAccessor(input, property);
+            var newNode = BuildAccessor(input, property);
             if (newNode == null)
             {
                 newNode = CreateNullConstantNode(md.Helper.GetModelTypeUsage(property));
@@ -360,7 +369,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="node">the input expression to "cast"</param>
         /// <param name="targetType">the target type</param>
         /// <returns>the "cast"ed expression</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SoftCast"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-ScalarOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SoftCast")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-ScalarOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node BuildSoftCast(Node node, md.TypeUsage targetType)
         {
             PlanCompiler.Assert(node.Op.IsScalarOp, "Attempting SoftCast around non-ScalarOp?");
@@ -369,11 +381,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 return node;
             }
             // Skip any castOps we may have created already
-            while (node.Op.OpType == OpType.SoftCast)
+            while (node.Op.OpType
+                   == OpType.SoftCast)
             {
                 node = node.Child0;
             }
-            Node newNode = m_command.CreateNode(m_command.CreateSoftCastOp(targetType), node);
+            var newNode = m_command.CreateNode(m_command.CreateSoftCastOp(targetType), node);
             return newNode;
         }
 
@@ -405,7 +418,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>Node for the typeid constant</returns>
         private Node CreateNullSentinelConstant()
         {
-            NullSentinelOp op = m_command.CreateNullSentinelOp();
+            var op = m_command.CreateNullSentinelOp();
             return m_command.CreateNode(op);
         }
 
@@ -416,7 +429,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>Node for the typeid constant</returns>
         private Node CreateTypeIdConstant(TypeInfo typeInfo)
         {
-            object value = typeInfo.TypeId;
+            var value = typeInfo.TypeId;
             md.TypeUsage typeIdType;
             if (typeInfo.RootType.DiscriminatorMap != null)
             {
@@ -426,7 +439,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 typeIdType = DefaultTypeIdType;
             }
-            InternalConstantOp op = m_command.CreateInternalConstantOp(typeIdType, value);
+            var op = m_command.CreateInternalConstantOp(typeIdType, value);
             return m_command.CreateNode(op);
         }
 
@@ -439,8 +452,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>Node for the typeid constant</returns>
         private Node CreateTypeIdConstantForPrefixMatch(TypeInfo typeInfo)
         {
-            string value = typeInfo.TypeId + PrefixMatchCharacter;
-            InternalConstantOp op = m_command.CreateInternalConstantOp(DefaultTypeIdType, value);
+            var value = typeInfo.TypeId + PrefixMatchCharacter;
+            var op = m_command.CreateInternalConstantOp(DefaultTypeIdType, value);
             return m_command.CreateNode(op);
         }
 
@@ -450,23 +463,30 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="typeInfo"></param>
         /// <param name="opKind"></param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "isNull"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IsNull"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "opKind"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "isNull")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IsNull")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "opKind")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private IEnumerable<PropertyRef> GetPropertyRefsForComparisonAndIsNull(TypeInfo typeInfo, OperationKind opKind)
         {
-            PlanCompiler.Assert(opKind == OperationKind.IsNull || opKind == OperationKind.Equality,
+            PlanCompiler.Assert(
+                opKind == OperationKind.IsNull || opKind == OperationKind.Equality,
                 "Unexpected opKind: " + opKind + "; Can only handle IsNull and Equality");
 
-            md.TypeUsage currentType = typeInfo.Type;
+            var currentType = typeInfo.Type;
 
             md.RowType recordType = null;
-            if (TypeHelpers.TryGetEdmType<md.RowType>(currentType, out recordType))
+            if (TypeHelpers.TryGetEdmType(currentType, out recordType))
             {
-                if (opKind == OperationKind.IsNull && typeInfo.HasNullSentinelProperty)
+                if (opKind == OperationKind.IsNull
+                    && typeInfo.HasNullSentinelProperty)
                 {
                     yield return NullSentinelPropertyRef.Instance;
                 }
                 else
-                    foreach (md.EdmProperty m in recordType.Properties)
+                {
+                    foreach (var m in recordType.Properties)
                     {
                         if (!TypeUtils.IsStructuredType(md.Helper.GetModelTypeUsage(m)))
                         {
@@ -474,24 +494,26 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                         }
                         else
                         {
-                            TypeInfo nestedTypeInfo = m_typeInfo.GetTypeInfo(md.Helper.GetModelTypeUsage(m));
-                            foreach (PropertyRef p in GetPropertyRefs(nestedTypeInfo, opKind))
+                            var nestedTypeInfo = m_typeInfo.GetTypeInfo(md.Helper.GetModelTypeUsage(m));
+                            foreach (var p in GetPropertyRefs(nestedTypeInfo, opKind))
                             {
-                                PropertyRef nestedPropertyRef = p.CreateNestedPropertyRef(m);
+                                var nestedPropertyRef = p.CreateNestedPropertyRef(m);
                                 yield return nestedPropertyRef;
                             }
                         }
                     }
+                }
                 yield break;
             }
 
             md.EntityType entityType = null;
-            if (TypeHelpers.TryGetEdmType<md.EntityType>(currentType, out entityType))
+            if (TypeHelpers.TryGetEdmType(currentType, out entityType))
             {
-                if (opKind == OperationKind.Equality ||
+                if (opKind == OperationKind.Equality
+                    ||
                     (opKind == OperationKind.IsNull && !typeInfo.HasTypeIdProperty))
                 {
-                    foreach (PropertyRef p in typeInfo.GetIdentityPropertyRefs())
+                    foreach (var p in typeInfo.GetIdentityPropertyRefs())
                     {
                         yield return p;
                     }
@@ -504,7 +526,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             md.ComplexType complexType = null;
-            if (TypeHelpers.TryGetEdmType<md.ComplexType>(currentType, out complexType))
+            if (TypeHelpers.TryGetEdmType(currentType, out complexType))
             {
                 PlanCompiler.Assert(opKind == OperationKind.IsNull, "complex types not equality-comparable");
                 PlanCompiler.Assert(typeInfo.HasNullSentinelProperty, "complex type with no null sentinel property: can't handle isNull");
@@ -513,9 +535,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             md.RefType refType = null;
-            if (TypeHelpers.TryGetEdmType<md.RefType>(currentType, out refType))
+            if (TypeHelpers.TryGetEdmType(currentType, out refType))
             {
-                foreach (PropertyRef p in typeInfo.GetAllPropertyRefs())
+                foreach (var p in typeInfo.GetAllPropertyRefs())
                 {
                     yield return p;
                 }
@@ -531,7 +553,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="typeInfo"></param>
         /// <param name="opKind"></param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GetPropertyRefs"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "OperationKind"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GetPropertyRefs")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "OperationKind")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private IEnumerable<PropertyRef> GetPropertyRefs(TypeInfo typeInfo, OperationKind opKind)
         {
             PlanCompiler.Assert(opKind != OperationKind.All, "unexpected attempt to GetPropertyRefs(...,OperationKind.All)");
@@ -584,14 +609,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             if (opKind == OperationKind.All)
             {
-                foreach (md.EdmProperty p in typeInfo.GetAllProperties())
+                foreach (var p in typeInfo.GetAllProperties())
                 {
                     yield return p;
                 }
             }
             else
             {
-                foreach (PropertyRef p in GetPropertyRefs(typeInfo, opKind))
+                foreach (var p in GetPropertyRefs(typeInfo, opKind))
                 {
                     yield return typeInfo.GetNewProperty(p);
                 }
@@ -610,15 +635,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="ignoreMissingProperties">Should we ignore missing properties</param>
         /// <param name="properties">Output: list of properties</param>
         /// <param name="values">Output: correspondng list of values</param>
-        private void GetPropertyValues(TypeInfo typeInfo, OperationKind opKind, Node input, bool ignoreMissingProperties,
+        private void GetPropertyValues(
+            TypeInfo typeInfo, OperationKind opKind, Node input, bool ignoreMissingProperties,
             out List<md.EdmProperty> properties, out List<Node> values)
         {
-
             values = new List<Node>();
             properties = new List<md.EdmProperty>();
-            foreach (md.EdmProperty prop in GetProperties(typeInfo, opKind))
+            foreach (var prop in GetProperties(typeInfo, opKind))
             {
-                KeyValuePair<md.EdmProperty, Node> kv = GetPropertyValue(input, prop, ignoreMissingProperties);
+                var kv = GetPropertyValue(input, prop, ignoreMissingProperties);
                 if (kv.Value != null)
                 {
                     properties.Add(kv.Key);
@@ -658,11 +683,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="keys">The list of input keys</param>
         /// <returns>An expanded list of keys. If there is nothing to expand it returns the original list.</returns>
-        private List<InternalTrees.SortKey> HandleSortKeys(List<InternalTrees.SortKey> keys)
+        private List<SortKey> HandleSortKeys(List<SortKey> keys)
         {
-            List<InternalTrees.SortKey> newSortKeys = new List<InternalTrees.SortKey>();
-            bool modified = false;
-            foreach (InternalTrees.SortKey k in keys)
+            var newSortKeys = new List<SortKey>();
+            var modified = false;
+            foreach (var k in keys)
             {
                 VarInfo varInfo;
                 if (!m_varInfoMap.TryGetVarInfo(k.Var, out varInfo))
@@ -671,22 +696,23 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
                 else
                 {
-                    StructuredVarInfo structuredVarInfo = varInfo as StructuredVarInfo;
-                    if (structuredVarInfo != null && structuredVarInfo.NewVarsIncludeNullSentinelVar)
+                    var structuredVarInfo = varInfo as StructuredVarInfo;
+                    if (structuredVarInfo != null
+                        && structuredVarInfo.NewVarsIncludeNullSentinelVar)
                     {
                         m_compilerState.HasSortingOnNullSentinels = true;
                     }
 
-                    foreach (Var v in varInfo.NewVars)
+                    foreach (var v in varInfo.NewVars)
                     {
-                        InternalTrees.SortKey newKey = Command.CreateSortKey(v, k.AscendingSort, k.Collation);
+                        var newKey = Command.CreateSortKey(v, k.AscendingSort, k.Collation);
                         newSortKeys.Add(newKey);
                     }
                     modified = true;
                 }
             }
 
-            List<InternalTrees.SortKey> result = modified ? newSortKeys : keys;
+            var result = modified ? newSortKeys : keys;
             return result;
         }
 
@@ -695,17 +721,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// The <paramref name="unnestNode"/> contains a TVF call. 
         /// Return new node with ProjectOp and <paramref name="newVars"/> representing the projection outputs.
         /// </summary>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        private Node CreateTVFProjection(Node unnestNode, List<Var> unnestOpTableColumns, TypeInfo unnestOpTableTypeInfo, out List<Var> newVars)
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        private Node CreateTVFProjection(
+            Node unnestNode, List<Var> unnestOpTableColumns, TypeInfo unnestOpTableTypeInfo, out List<Var> newVars)
         {
-            md.RowType originalRowType = unnestOpTableTypeInfo.Type.EdmType as md.RowType;
-            PlanCompiler.Assert(originalRowType != null, "Unexpected TVF return type (must be row): " + unnestOpTableTypeInfo.Type.ToString());
+            var originalRowType = unnestOpTableTypeInfo.Type.EdmType as md.RowType;
+            PlanCompiler.Assert(originalRowType != null, "Unexpected TVF return type (must be row): " + unnestOpTableTypeInfo.Type);
 
-            List<Var> convertToFlattenedTypeVars = new List<Var>();
-            List<Node> convertToFlattenedTypeVarDefs = new List<Node>();
-            PropertyRef[] propRefs = unnestOpTableTypeInfo.PropertyRefList.ToArray();
+            var convertToFlattenedTypeVars = new List<Var>();
+            var convertToFlattenedTypeVarDefs = new List<Node>();
+            var propRefs = unnestOpTableTypeInfo.PropertyRefList.ToArray();
 
-            Dictionary<md.EdmProperty, PropertyRef> flattenedTypePropertyToPropertyRef = new Dictionary<md.EdmProperty, PropertyRef>();
+            var flattenedTypePropertyToPropertyRef = new Dictionary<md.EdmProperty, PropertyRef>();
             foreach (var propRef in propRefs)
             {
                 flattenedTypePropertyToPropertyRef.Add(unnestOpTableTypeInfo.GetNewProperty(propRef), propRef);
@@ -716,17 +744,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 var propRef = flattenedTypePropertyToPropertyRef[flattenedTypeProperty];
 
                 Var var = null;
-                SimplePropertyRef simplePropRef = propRef as SimplePropertyRef;
+                var simplePropRef = propRef as SimplePropertyRef;
                 if (simplePropRef != null)
                 {
                     // Find the corresponding column in the TVF output and build a var ref to it.
-                    int columnIndex = originalRowType.Members.IndexOf(simplePropRef.Property);
+                    var columnIndex = originalRowType.Members.IndexOf(simplePropRef.Property);
                     PlanCompiler.Assert(columnIndex >= 0, "Can't find a column in the TVF result type");
-                    convertToFlattenedTypeVarDefs.Add(m_command.CreateVarDefNode(m_command.CreateNode(m_command.CreateVarRefOp(unnestOpTableColumns[columnIndex])), out var));
+                    convertToFlattenedTypeVarDefs.Add(
+                        m_command.CreateVarDefNode(
+                            m_command.CreateNode(m_command.CreateVarRefOp(unnestOpTableColumns[columnIndex])), out var));
                 }
                 else
                 {
-                    NullSentinelPropertyRef nullSentinelPropRef = propRef as NullSentinelPropertyRef;
+                    var nullSentinelPropRef = propRef as NullSentinelPropertyRef;
                     if (nullSentinelPropRef != null)
                     {
                         // Null sentinel does not exist in the TVF output, so build a new null sentinel expression.
@@ -742,10 +772,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             newVars = convertToFlattenedTypeVars;
 
             // Create Project(Unnest(Func()))
-            return m_command.CreateNode(m_command.CreateProjectOp(m_command.CreateVarVec(convertToFlattenedTypeVars)),
-                                        unnestNode,
-                                        m_command.CreateNode(m_command.CreateVarDefListOp(), convertToFlattenedTypeVarDefs));
+            return m_command.CreateNode(
+                m_command.CreateProjectOp(m_command.CreateVarVec(convertToFlattenedTypeVars)),
+                unnestNode,
+                m_command.CreateNode(m_command.CreateVarDefListOp(), convertToFlattenedTypeVarDefs));
         }
+
         #endregion
 
         #region Visitor methods
@@ -769,32 +801,36 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarDefOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarDefOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(VarDefListOp op, Node n)
         {
             VisitChildren(n);
 
-            List<Node> newChildren = new List<Node>();
+            var newChildren = new List<Node>();
 
-            foreach (Node chi in n.Children)
+            foreach (var chi in n.Children)
             {
                 PlanCompiler.Assert(chi.Op is VarDefOp, "VarDefOp expected");
 
-                VarDefOp varDefOp = (VarDefOp)chi.Op;
+                var varDefOp = (VarDefOp)chi.Op;
 
-                if (TypeUtils.IsStructuredType(varDefOp.Var.Type) || TypeUtils.IsCollectionType(varDefOp.Var.Type))
+                if (TypeUtils.IsStructuredType(varDefOp.Var.Type)
+                    || TypeUtils.IsCollectionType(varDefOp.Var.Type))
                 {
                     List<Node> newChiList;
                     md.TypeUsage x;
 
                     FlattenComputedVar((ComputedVar)varDefOp.Var, chi, out newChiList, out x);
 
-                    foreach (Node newChi in newChiList)
+                    foreach (var newChi in newChiList)
                     {
                         newChildren.Add(newChi);
                     }
                 }
-                else if (md.TypeSemantics.IsEnumerationType(varDefOp.Var.Type) || md.TypeSemantics.IsStrongSpatialType(varDefOp.Var.Type))
+                else if (md.TypeSemantics.IsEnumerationType(varDefOp.Var.Type)
+                         || md.TypeSemantics.IsStrongSpatialType(varDefOp.Var.Type))
                 {
                     newChildren.Add(FlattenEnumOrStrongSpatialVar(varDefOp, chi.Child0));
                 }
@@ -803,7 +839,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     newChildren.Add(chi);
                 }
             }
-            Node newVarDefListNode = m_command.CreateNode(n.Op, newChildren);
+            var newVarDefListNode = m_command.CreateNode(n.Op, newChildren);
             return newVarDefListNode;
         }
 
@@ -815,11 +851,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="newNodes">list of new nodes produced</param>
         /// <param name="newType"></param>
         /// <returns>VarInfo for this var</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void FlattenComputedVar(ComputedVar v, Node node, out List<Node> newNodes, out md.TypeUsage newType)
         {
             newNodes = new List<Node>();
-            Node definingExprNode = node.Child0; // defining expression for the VarDefOp
+            var definingExprNode = node.Child0; // defining expression for the VarDefOp
             newType = null;
 
             if (TypeUtils.IsCollectionType(v.Type))
@@ -827,21 +864,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 PlanCompiler.Assert(definingExprNode.Op.OpType != OpType.Function, "Flattening of TVF output is not allowed.");
                 newType = GetNewType(v.Type);
                 Var newVar;
-                Node newVarDefNode = m_command.CreateVarDefNode(definingExprNode, out newVar);
+                var newVarDefNode = m_command.CreateVarDefNode(definingExprNode, out newVar);
                 newNodes.Add(newVarDefNode);
                 m_varInfoMap.CreateCollectionVarInfo(v, newVar);
                 return;
             }
 
             // Get the "new" type for the Var
-            TypeInfo typeInfo = m_typeInfo.GetTypeInfo(v.Type);
+            var typeInfo = m_typeInfo.GetTypeInfo(v.Type);
             // Get a list of properties that we think are necessary 
-            PropertyRefList desiredProperties = m_varPropertyMap[v];
-            List<Var> newVars = new List<Var>();
-            List<md.EdmProperty> newProps = new List<md.EdmProperty>();
+            var desiredProperties = m_varPropertyMap[v];
+            var newVars = new List<Var>();
+            var newProps = new List<md.EdmProperty>();
             newNodes = new List<Node>();
             var hasNullSentinelVar = false;
-            foreach (PropertyRef p in typeInfo.PropertyRefList)
+            foreach (var p in typeInfo.PropertyRefList)
             {
                 // do I care for this property?
                 if (!desiredProperties.Contains(p))
@@ -849,7 +886,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     continue;
                 }
 
-                md.EdmProperty newProperty = typeInfo.GetNewProperty(p);
+                var newProperty = typeInfo.GetNewProperty(p);
 
                 //
                 // #479467 - Make sure that we build Vars for all properties - if
@@ -875,12 +912,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
                 // Create a new VarDefOp. 
                 Var newVar;
-                Node newVarDefNode = m_command.CreateVarDefNode(propAccessor, out newVar);
+                var newVarDefNode = m_command.CreateVarDefNode(propAccessor, out newVar);
                 newNodes.Add(newVarDefNode);
                 newVars.Add(newVar);
 
                 // Check if it is a null sentinel var
-                if (!hasNullSentinelVar && IsNullSentinelPropertyRef(p))
+                if (!hasNullSentinelVar
+                    && IsNullSentinelPropertyRef(p))
                 {
                     hasNullSentinelVar = true;
                 }
@@ -903,7 +941,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 return true;
             }
-            NestedPropertyRef nestedPropertyRef = propertyRef as NestedPropertyRef;
+            var nestedPropertyRef = propertyRef as NestedPropertyRef;
             if (nestedPropertyRef == null)
             {
                 return false;
@@ -919,11 +957,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>VarDefNode referencing the newly created Var.</returns>
         private Node FlattenEnumOrStrongSpatialVar(VarDefOp varDefOp, Node node)
         {
-            System.Diagnostics.Debug.Assert(varDefOp != null, "varDefOp != null");
-            System.Diagnostics.Debug.Assert(node != null, "node != null");
+            Debug.Assert(varDefOp != null, "varDefOp != null");
+            Debug.Assert(node != null, "node != null");
 
             Var newVar;
-            Node newVarDefNode = m_command.CreateVarDefNode(node, out newVar);
+            var newVarDefNode = m_command.CreateVarDefNode(node, out newVar);
             m_varInfoMap.CreatePrimitiveTypeVarInfo(varDefOp.Var, newVar);
 
             return newVarDefNode;
@@ -945,20 +983,26 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             VisitChildren(n);
 
             // flatten out the varset
-            VarList newVarList = FlattenVarList(op.Outputs);
+            var newVarList = FlattenVarList(op.Outputs);
             // reflect changes into my column map
-            SimpleCollectionColumnMap newColumnMap = ExpandColumnMap(op.ColumnMap);
-            PhysicalProjectOp newOp = m_command.CreatePhysicalProjectOp(newVarList, newColumnMap);
+            var newColumnMap = ExpandColumnMap(op.ColumnMap);
+            var newOp = m_command.CreatePhysicalProjectOp(newVarList, newColumnMap);
             n.Op = newOp;
 
             return n;
         }
 
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "NominalTypeEliminator"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarRefColumnMap"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SimpleCollectionColumnMap"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "NominalTypeEliminator")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarRefColumnMap")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SimpleCollectionColumnMap")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private SimpleCollectionColumnMap ExpandColumnMap(SimpleCollectionColumnMap columnMap)
         {
-            VarRefColumnMap varRefColumnMap = columnMap.Element as VarRefColumnMap;
-            PlanCompiler.Assert(varRefColumnMap != null, "Encountered a SimpleCollectionColumnMap element that is not VarRefColumnMap when expanding a column map in NominalTypeEliminator.");
+            var varRefColumnMap = columnMap.Element as VarRefColumnMap;
+            PlanCompiler.Assert(
+                varRefColumnMap != null,
+                "Encountered a SimpleCollectionColumnMap element that is not VarRefColumnMap when expanding a column map in NominalTypeEliminator.");
 
             // see if this var has changed in some fashion
             VarInfo varInfo;
@@ -973,17 +1017,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             if (TypeUtils.IsStructuredType(varRefColumnMap.Var.Type))
             {
-                TypeInfo typeInfo = m_typeInfo.GetTypeInfo(varRefColumnMap.Var.Type);
-                PlanCompiler.Assert(typeInfo.RootType.FlattenedType.Properties.Count == varInfo.NewVars.Count,
-                    "Var count mismatch; Expected " + typeInfo.RootType.FlattenedType.Properties.Count + "; got " + varInfo.NewVars.Count + " instead.");
+                var typeInfo = m_typeInfo.GetTypeInfo(varRefColumnMap.Var.Type);
+                PlanCompiler.Assert(
+                    typeInfo.RootType.FlattenedType.Properties.Count == varInfo.NewVars.Count,
+                    "Var count mismatch; Expected " + typeInfo.RootType.FlattenedType.Properties.Count + "; got " + varInfo.NewVars.Count
+                    + " instead.");
             }
 
             // "Process" this columnMap
-            ColumnMapProcessor processor = new ColumnMapProcessor(varRefColumnMap, varInfo, m_typeInfo);
-            ColumnMap newColumnMap = processor.ExpandColumnMap();
+            var processor = new ColumnMapProcessor(varRefColumnMap, varInfo, m_typeInfo);
+            var newColumnMap = processor.ExpandColumnMap();
 
             //Wrap it with a collection
-            SimpleCollectionColumnMap resultColumnMap = new SimpleCollectionColumnMap(TypeUtils.CreateCollectionType(newColumnMap.Type), newColumnMap.Name, newColumnMap, columnMap.Keys, columnMap.ForeignKeys);
+            var resultColumnMap = new SimpleCollectionColumnMap(
+                TypeUtils.CreateCollectionType(newColumnMap.Type), newColumnMap.Name, newColumnMap, columnMap.Keys, columnMap.ForeignKeys);
 
             return resultColumnMap;
         }
@@ -1000,7 +1047,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>flattened output var sequence</returns>
         private IEnumerable<Var> FlattenVars(IEnumerable<Var> vars)
         {
-            foreach (Var v in vars)
+            foreach (var v in vars)
             {
                 VarInfo varInfo;
 
@@ -1010,7 +1057,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
                 else
                 {
-                    foreach (Var newVar in varInfo.NewVars)
+                    foreach (var newVar in varInfo.NewVars)
                     {
                         yield return newVar;
                     }
@@ -1026,7 +1073,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>an "expanded" varset</returns>
         private VarVec FlattenVarSet(VarVec varSet)
         {
-            VarVec newVarSet = m_command.CreateVarVec(FlattenVars(varSet));
+            var newVarSet = m_command.CreateVarVec(FlattenVars(varSet));
             return newVarSet;
         }
 
@@ -1038,7 +1085,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>the new flattened varlist</returns>
         private VarList FlattenVarList(VarList varList)
         {
-            VarList newVarList = Command.CreateVarList(FlattenVars(varList));
+            var newVarList = Command.CreateVarList(FlattenVars(varList));
             return newVarList;
         }
 
@@ -1053,7 +1100,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             VisitChildren(n);
 
             // Simply flatten out all the Vars
-            VarVec newKeys = FlattenVarSet(op.Keys);
+            var newKeys = FlattenVarSet(op.Keys);
             n.Op = m_command.CreateDistinctOp(newKeys);
             return n;
         }
@@ -1075,10 +1122,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             VisitChildren(n);
 
             // update the output Vars and the key vars with the right sets
-            VarVec newKeys = FlattenVarSet(op.Keys);
-            VarVec newOutputs = FlattenVarSet(op.Outputs);
+            var newKeys = FlattenVarSet(op.Keys);
+            var newOutputs = FlattenVarSet(op.Outputs);
 
-            if (newKeys != op.Keys || newOutputs != op.Outputs)
+            if (newKeys != op.Keys
+                || newOutputs != op.Outputs)
             {
                 n.Op = m_command.CreateGroupByOp(newKeys, newOutputs);
             }
@@ -1103,11 +1151,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             VisitChildren(n);
 
             // update the output Vars and the key vars with the right sets
-            VarVec newKeys = FlattenVarSet(op.Keys);
-            VarVec newInputs = FlattenVarSet(op.Inputs);
-            VarVec newOutputs = FlattenVarSet(op.Outputs);
+            var newKeys = FlattenVarSet(op.Keys);
+            var newInputs = FlattenVarSet(op.Inputs);
+            var newOutputs = FlattenVarSet(op.Outputs);
 
-            if (newKeys != op.Keys || newInputs != op.Inputs || newOutputs != op.Outputs)
+            if (newKeys != op.Keys || newInputs != op.Inputs
+                || newOutputs != op.Outputs)
             {
                 n.Op = m_command.CreateGroupByIntoOp(newKeys, newInputs, newOutputs);
             }
@@ -1130,7 +1179,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             VisitChildren(n);
 
             // update the output Vars with the right set of information 
-            VarVec newVars = FlattenVarSet(op.Outputs);
+            var newVars = FlattenVarSet(op.Outputs);
 
             if (op.Outputs != newVars)
             {
@@ -1155,38 +1204,37 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>new subtree</returns>
         public override Node Visit(ScanTableOp op, Node n)
         {
+            var columnVar = op.Table.Columns[0];
+            var typeInfo = m_typeInfo.GetTypeInfo(columnVar.Type);
+            var newRowType = typeInfo.FlattenedType;
 
-            Var columnVar = op.Table.Columns[0];
-            TypeInfo typeInfo = m_typeInfo.GetTypeInfo(columnVar.Type);
-            md.RowType newRowType = typeInfo.FlattenedType;
-
-            List<md.EdmProperty> properties = new List<System.Data.Entity.Core.Metadata.Edm.EdmProperty>();
-            List<md.EdmMember> keyProperties = new List<System.Data.Entity.Core.Metadata.Edm.EdmMember>();
-            HashSet<string> declaredProps = new HashSet<string>();
+            var properties = new List<md.EdmProperty>();
+            var keyProperties = new List<md.EdmMember>();
+            var declaredProps = new HashSet<string>();
             foreach (md.EdmProperty p in TypeHelpers.GetAllStructuralMembers(columnVar.Type.EdmType))
             {
                 declaredProps.Add(p.Name);
             }
-            foreach (md.EdmProperty p in newRowType.Properties)
+            foreach (var p in newRowType.Properties)
             {
                 if (declaredProps.Contains(p.Name))
                 {
                     properties.Add(p);
                 }
             }
-            foreach (PropertyRef pref in typeInfo.GetKeyPropertyRefs())
+            foreach (var pref in typeInfo.GetKeyPropertyRefs())
             {
-                md.EdmProperty p = typeInfo.GetNewProperty(pref);
+                var p = typeInfo.GetNewProperty(pref);
                 keyProperties.Add(p);
             }
 
             //
             // Create a flattened table definition, and a table with that definiton;
             //
-            TableMD newTableMD = m_command.CreateFlatTableDefinition(properties, keyProperties, op.Table.TableMetadata.Extent);
-            Table newTable = m_command.CreateTableInstance(newTableMD);
+            var newTableMD = m_command.CreateFlatTableDefinition(properties, keyProperties, op.Table.TableMetadata.Extent);
+            var newTable = m_command.CreateTableInstance(newTableMD);
 
-            VarInfo varInfo = m_varInfoMap.CreateStructuredVarInfo(columnVar, newRowType, newTable.Columns, properties);
+            var varInfo = m_varInfoMap.CreateStructuredVarInfo(columnVar, newRowType, newTable.Columns, properties);
 
             n.Op = m_command.CreateScanTableOp(newTable);
             return n;
@@ -1204,12 +1252,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 case OpType.Project:
                     {
-                        ProjectOp projectOp = (ProjectOp)n.Op;
+                        var projectOp = (ProjectOp)n.Op;
                         return (projectOp.Outputs.Count == 1) ? projectOp.Outputs.First : null;
                     }
                 case OpType.ScanTable:
                     {
-                        ScanTableOp tableOp = (ScanTableOp)n.Op;
+                        var tableOp = (ScanTableOp)n.Op;
                         return (tableOp.Table.Columns.Count == 1) ? tableOp.Table.Columns[0] : null;
                     }
 
@@ -1223,19 +1271,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 case OpType.Intersect:
                 case OpType.Except:
                     {
-                        SetOp setOp = (SetOp)n.Op;
+                        var setOp = (SetOp)n.Op;
                         return (setOp.Outputs.Count == 1) ? setOp.Outputs.First : null;
                     }
 
                 case OpType.Unnest:
                     {
-                        UnnestOp unnestOp = (UnnestOp)n.Op;
+                        var unnestOp = (UnnestOp)n.Op;
                         return unnestOp.Table.Columns.Count == 1 ? unnestOp.Table.Columns[0] : null;
                     }
 
                 case OpType.Distinct:
                     {
-                        DistinctOp distinctOp = (DistinctOp)n.Op;
+                        var distinctOp = (DistinctOp)n.Op;
                         return (distinctOp.Keys.Count == 1) ? distinctOp.Keys.First : null;
                     }
 
@@ -1253,19 +1301,23 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op">the ScanViewOp</param>
         /// <param name="n">current subtree</param>
         /// <returns>the flattened view definition</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "inputVar"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "scanViewOp"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScanViewOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "inputVar")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "scanViewOp")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScanViewOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(ScanViewOp op, Node n)
         {
             //
             // Get the "single" var produced by the input
             //
-            Var inputVar = GetSingletonVar(n.Child0);
+            var inputVar = GetSingletonVar(n.Child0);
             PlanCompiler.Assert(inputVar != null, "cannot identify Var for the input node to the ScanViewOp");
             // and the table should have exactly one column
             PlanCompiler.Assert(op.Table.Columns.Count == 1, "table for scanViewOp has more than on column?");
-            Var columnVar = op.Table.Columns[0];
+            var columnVar = op.Table.Columns[0];
 
-            Node definingNode = VisitNode(n.Child0);
+            var definingNode = VisitNode(n.Child0);
 
             VarInfo varInfo;
             if (!m_varInfoMap.TryGetVarInfo(inputVar, out varInfo))
@@ -1273,9 +1325,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 PlanCompiler.Assert(false, "didn't find inputVar for scanViewOp?");
             }
             // we must be dealing with a structured column here
-            StructuredVarInfo svarInfo = (StructuredVarInfo)varInfo;
+            var svarInfo = (StructuredVarInfo)varInfo;
 
-            TypeInfo typeInfo = m_typeInfo.GetTypeInfo(columnVar.Type);
+            var typeInfo = m_typeInfo.GetTypeInfo(columnVar.Type);
 
             // if this view does not represent an entityset, then we're pretty much
             // done. We simply add a mapping from the columnVar to the list of flattened
@@ -1295,7 +1347,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             VisitChildren(n);
 
-            List<InternalTrees.SortKey> newSortKeys = HandleSortKeys(op.Keys);
+            var newSortKeys = HandleSortKeys(op.Keys);
 
             if (newSortKeys != op.Keys)
             {
@@ -1315,7 +1367,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns>new subtree</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "newUnnestVar"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "unnest"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "newUnnestVar")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "unnest")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(UnnestOp op, Node n)
         {
             // Visit the children first
@@ -1326,16 +1381,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             if (n.HasChild0)
             {
-                Node chi = n.Child0;
-                VarDefOp varDefOp = chi.Op as VarDefOp;
+                var chi = n.Child0;
+                var varDefOp = chi.Op as VarDefOp;
 
                 if (null != varDefOp)
                 {
                     if (TypeUtils.IsCollectionType(varDefOp.Var.Type))
                     {
-                        ComputedVar computedVar = (ComputedVar)varDefOp.Var;
+                        var computedVar = (ComputedVar)varDefOp.Var;
 
-                        if (chi.HasChild0 && chi.Child0.Op.OpType == OpType.Function)
+                        if (chi.HasChild0
+                            && chi.Child0.Op.OpType == OpType.Function)
                         {
                             // For a TVF function call use the original non-flattened variable:
                             // the function will not return properties described in the flattened type, there would be no null sentinel and 
@@ -1347,7 +1403,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                         else
                         {
                             // Flatten the computer var and add it to m_varInfoMap.
-                            List<Node> newChildren = new List<Node>();
+                            var newChildren = new List<Node>();
                             md.TypeUsage newType;
                             FlattenComputedVar(computedVar, chi, out newChildren, out newType);
                             PlanCompiler.Assert(newChildren.Count == 1, "Flattening unnest var produced more than one Var.");
@@ -1366,7 +1422,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // Fetch the new unnestVar that should have been prepared inside the FlattenComputedVar call above.
                 // If the new var info is not ready then the shape of the unnest or the variable type is incorrect.
                 VarInfo unnestVarInfo;
-                if (m_varInfoMap.TryGetVarInfo(op.Var, out unnestVarInfo) && unnestVarInfo.Kind == VarInfoKind.CollectionVarInfo)
+                if (m_varInfoMap.TryGetVarInfo(op.Var, out unnestVarInfo)
+                    && unnestVarInfo.Kind == VarInfoKind.CollectionVarInfo)
                 {
                     newUnnestVar = ((CollectionVarInfo)unnestVarInfo).NewVar;
                 }
@@ -1379,14 +1436,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // If the type of table column var representing the collection element is not structured, simply update the n.Op with the new var and return n.
             // Otherwise rebuild the UnnestOp based on the new flattened type of the new input var fetched above.
             // If the input var represents a TVF call, then wrap the newly rebuilt UnnestOp into a ProjectOp (see below for more details).
-            Var unnestTableColumnVar = op.Table.Columns[0];
+            var unnestTableColumnVar = op.Table.Columns[0];
             if (!TypeUtils.IsStructuredType(unnestTableColumnVar.Type))
             {
-                PlanCompiler.Assert(processingTVF == null, "TVFs returning a collection of values of a non-structured type are not supported");
+                PlanCompiler.Assert(
+                    processingTVF == null, "TVFs returning a collection of values of a non-structured type are not supported");
 
-                if (md.TypeSemantics.IsEnumerationType(unnestTableColumnVar.Type) || md.TypeSemantics.IsStrongSpatialType(unnestTableColumnVar.Type))
+                if (md.TypeSemantics.IsEnumerationType(unnestTableColumnVar.Type)
+                    || md.TypeSemantics.IsStrongSpatialType(unnestTableColumnVar.Type))
                 {
-                    UnnestOp unnestOp = m_command.CreateUnnestOp(newUnnestVar);
+                    var unnestOp = m_command.CreateUnnestOp(newUnnestVar);
                     m_varInfoMap.CreatePrimitiveTypeVarInfo(unnestTableColumnVar, unnestOp.Table.Columns[0]);
                     n.Op = unnestOp;
                 }
@@ -1419,7 +1478,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 //
                 // Get the flattened representation of the table column var type.
                 //
-                TypeInfo typeInfo = m_typeInfo.GetTypeInfo(unnestTableColumnVar.Type);
+                var typeInfo = m_typeInfo.GetTypeInfo(unnestTableColumnVar.Type);
 
                 TableMD newTableMetadata;
                 if (processingTVF != null)
@@ -1428,15 +1487,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     // The function will not return values according to the flattened type:
                     // there would be no null sentinel and row prop names will be as declared in the function signature.
                     // In the code below we create a projection over the function call that produces the flattened.
-                    md.RowType tvfReturnType = TypeHelpers.GetTvfReturnType(processingTVF);
-                    PlanCompiler.Assert(Command.EqualTypes(tvfReturnType, unnestTableColumnVar.Type.EdmType), "Unexpected TVF return type (row type is expected).");
+                    var tvfReturnType = TypeHelpers.GetTvfReturnType(processingTVF);
+                    PlanCompiler.Assert(
+                        Command.EqualTypes(tvfReturnType, unnestTableColumnVar.Type.EdmType),
+                        "Unexpected TVF return type (row type is expected).");
                     newTableMetadata = m_command.CreateFlatTableDefinition(tvfReturnType.Properties, GetTvfResultKeys(processingTVF), null);
                 }
                 else
                 {
                     newTableMetadata = m_command.CreateFlatTableDefinition(typeInfo.FlattenedType);
                 }
-                Table newTable = m_command.CreateTableInstance(newTableMetadata);
+                var newTable = m_command.CreateTableInstance(newTableMetadata);
 
                 // Update the current unnest node with the new UnnestOp based on the newUnnestVar and newTable.
                 n.Op = m_command.CreateUnnestOp(newUnnestVar, newTable);
@@ -1452,10 +1513,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
 
                 // Map the unnestTableColumnVar to the list of the new flattened vars.
-                m_varInfoMap.CreateStructuredVarInfo(unnestTableColumnVar,
-                                                     typeInfo.FlattenedType,
-                                                     newVars,
-                                                     typeInfo.FlattenedType.Properties.ToList<md.EdmProperty>());
+                m_varInfoMap.CreateStructuredVarInfo(
+                    unnestTableColumnVar,
+                    typeInfo.FlattenedType,
+                    newVars,
+                    typeInfo.FlattenedType.Properties.ToList());
             }
 
             return n;
@@ -1488,7 +1550,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             VisitChildren(n);
 
             // Now walk through the first VarMap, and identify the Vars that are needed
-            for (int i = 0; i < op.VarMap.Length; i++)
+            for (var i = 0; i < op.VarMap.Length; i++)
             {
                 List<ComputedVar> newComputedVars;
                 op.VarMap[i] = FlattenVarMap(op.VarMap[i], out newComputedVars);
@@ -1500,7 +1562,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // now get the set of Vars that we will actually need
             op.Outputs.Clear();
-            foreach (Var v in op.VarMap[0].Keys)
+            foreach (var v in op.VarMap[0].Keys)
             {
                 op.Outputs.Set(v);
             }
@@ -1520,7 +1582,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="varMap">the varmap for this child</param>
         /// <param name="newComputedVars">list of new Vars produced</param>
         /// <returns>new node for the setOpchild (if any)</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "newComputedVars"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "varMap"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "setOpChild"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "newComputedVars")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "varMap")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "setOpChild")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node FixupSetOpChild(Node setOpChild, VarMap varMap, List<ComputedVar> newComputedVars)
         {
             PlanCompiler.Assert(null != setOpChild, "null setOpChild?");
@@ -1529,22 +1595,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // Walk through the list of Vars that have no inner analog, and create 
             // a computed Var for each of them
-            VarVec newVarSet = m_command.CreateVarVec();
-            foreach (KeyValuePair<Var, Var> kv in varMap)
+            var newVarSet = m_command.CreateVarVec();
+            foreach (var kv in varMap)
             {
                 newVarSet.Set(kv.Value);
             }
 
-            List<Node> varDefOpNodes = new List<Node>();
+            var varDefOpNodes = new List<Node>();
             foreach (Var v in newComputedVars)
             {
-                VarDefOp varDefOp = m_command.CreateVarDefOp(v);
-                Node varDefOpNode = m_command.CreateNode(varDefOp, CreateNullConstantNode(v.Type));
+                var varDefOp = m_command.CreateVarDefOp(v);
+                var varDefOpNode = m_command.CreateNode(varDefOp, CreateNullConstantNode(v.Type));
                 varDefOpNodes.Add(varDefOpNode);
             }
-            Node varDefListNode = m_command.CreateNode(m_command.CreateVarDefListOp(), varDefOpNodes);
-            ProjectOp projectOp = m_command.CreateProjectOp(newVarSet);
-            Node projectNode = m_command.CreateNode(projectOp, setOpChild, varDefListNode);
+            var varDefListNode = m_command.CreateNode(m_command.CreateVarDefListOp(), varDefOpNodes);
+            var projectOp = m_command.CreateProjectOp(newVarSet);
+            var projectNode = m_command.CreateNode(projectOp, setOpChild, varDefListNode);
             return projectNode;
         }
 
@@ -1564,13 +1630,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="varMap">The VarMap to fixup</param>
         /// <param name="newComputedVars">list of any new computedVars that are created</param>
         /// <returns>a new VarMap</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarInfo"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarInfo")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private VarMap FlattenVarMap(VarMap varMap, out List<ComputedVar> newComputedVars)
         {
             newComputedVars = null;
 
-            VarMap newVarMap = new VarMap();
-            foreach (KeyValuePair<Var, Var> kv in varMap)
+            var newVarMap = new VarMap();
+            foreach (var kv in varMap)
             {
                 VarInfo innerVarInfo;
                 VarInfo outerVarInfo;
@@ -1591,28 +1659,31 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
                     // If this Var represents a collection type, then simply 
                     // replace the singleton Var
-                    if (outerVarInfo.Kind == VarInfoKind.CollectionVarInfo)
+                    if (outerVarInfo.Kind
+                        == VarInfoKind.CollectionVarInfo)
                     {
                         newVarMap.Add(((CollectionVarInfo)outerVarInfo).NewVar, ((CollectionVarInfo)innerVarInfo).NewVar);
                     }
-                    else if (outerVarInfo.Kind == VarInfoKind.PrimitiveTypeVarInfo)
+                    else if (outerVarInfo.Kind
+                             == VarInfoKind.PrimitiveTypeVarInfo)
                     {
                         newVarMap.Add(((PrimitiveTypeVarInfo)outerVarInfo).NewVar, ((PrimitiveTypeVarInfo)innerVarInfo).NewVar);
                     }
                     else
-                    { // structured type 
-                        System.Diagnostics.Debug.Assert(outerVarInfo.Kind == VarInfoKind.StructuredTypeVarInfo, "StructuredVarInfo expected");
+                    {
+                        // structured type 
+                        Debug.Assert(outerVarInfo.Kind == VarInfoKind.StructuredTypeVarInfo, "StructuredVarInfo expected");
 
-                        StructuredVarInfo outerSvarInfo = (StructuredVarInfo)outerVarInfo;
-                        StructuredVarInfo innerSvarInfo = (StructuredVarInfo)innerVarInfo;
+                        var outerSvarInfo = (StructuredVarInfo)outerVarInfo;
+                        var innerSvarInfo = (StructuredVarInfo)innerVarInfo;
 
                         // walk through each property, and find the innerVar corresponding
                         // to that property
-                        foreach (md.EdmProperty prop in outerSvarInfo.Fields)
+                        foreach (var prop in outerSvarInfo.Fields)
                         {
                             Var outerVar;
                             Var innerVar;
-                            bool ret = outerSvarInfo.TryGetVar(prop, out outerVar);
+                            var ret = outerSvarInfo.TryGetVar(prop, out outerVar);
                             PlanCompiler.Assert(ret, "Could not find VarInfo for prop " + prop.Name);
 
                             if (!innerSvarInfo.TryGetVar(prop, out innerVar))
@@ -1643,42 +1714,44 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             if (TypeUtils.IsCollectionType(v.Type))
             {
-                md.TypeUsage newType = GetNewType(v.Type);
+                var newType = GetNewType(v.Type);
                 Var newVar = m_command.CreateSetOpVar(newType);
                 return m_varInfoMap.CreateCollectionVarInfo(v, newVar);
             }
-            else if (md.TypeSemantics.IsEnumerationType(v.Type) || md.TypeSemantics.IsStrongSpatialType(v.Type))
+            else if (md.TypeSemantics.IsEnumerationType(v.Type)
+                     || md.TypeSemantics.IsStrongSpatialType(v.Type))
             {
-                md.TypeUsage newType = GetNewType(v.Type);
+                var newType = GetNewType(v.Type);
                 Var newVar = m_command.CreateSetOpVar(newType);
                 return m_varInfoMap.CreatePrimitiveTypeVarInfo(v, newVar);
             }
 
             // Get the "new" type for the Var
-            TypeInfo typeInfo = m_typeInfo.GetTypeInfo(v.Type);
+            var typeInfo = m_typeInfo.GetTypeInfo(v.Type);
             // Get a list of properties that we think are necessary 
-            PropertyRefList desiredProperties = m_varPropertyMap[v];
-            List<Var> newVars = new List<Var>();
-            List<md.EdmProperty> newProps = new List<md.EdmProperty>();
-            bool hasNullSentinelVar = false;
-            foreach (PropertyRef p in typeInfo.PropertyRefList)
+            var desiredProperties = m_varPropertyMap[v];
+            var newVars = new List<Var>();
+            var newProps = new List<md.EdmProperty>();
+            var hasNullSentinelVar = false;
+            foreach (var p in typeInfo.PropertyRefList)
             {
                 if (!desiredProperties.Contains(p))
                 {
                     continue;
                 }
-                md.EdmProperty newProperty = typeInfo.GetNewProperty(p);
+                var newProperty = typeInfo.GetNewProperty(p);
                 newProps.Add(newProperty);
-                SetOpVar newVar = m_command.CreateSetOpVar(md.Helper.GetModelTypeUsage(newProperty));
+                var newVar = m_command.CreateSetOpVar(md.Helper.GetModelTypeUsage(newProperty));
                 newVars.Add(newVar);
-             
+
                 // Check if it is a null sentinel var
-                if (!hasNullSentinelVar && IsNullSentinelPropertyRef(p))
+                if (!hasNullSentinelVar
+                    && IsNullSentinelPropertyRef(p))
                 {
                     hasNullSentinelVar = true;
                 }
             }
-            VarInfo varInfo = m_varInfoMap.CreateStructuredVarInfo(v, typeInfo.FlattenedType, newVars, newProps, hasNullSentinelVar);
+            var varInfo = m_varInfoMap.CreateStructuredVarInfo(v, typeInfo.FlattenedType, newVars, newProps, hasNullSentinelVar);
             return varInfo;
         }
 
@@ -1725,37 +1798,40 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "NullSentinelProperty"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "NullSentinelProperty")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(SoftCastOp op, Node n)
         {
-            md.TypeUsage inputTypeUsage = n.Child0.Op.Type;
-            md.TypeUsage oldType = op.Type;
+            var inputTypeUsage = n.Child0.Op.Type;
+            var oldType = op.Type;
 
             // Always think of your children first
             VisitChildren(n);
 
-            md.TypeUsage newType = GetNewType(oldType);
+            var newType = GetNewType(oldType);
 
             if (md.TypeSemantics.IsRowType(oldType))
             {
-                PlanCompiler.Assert(n.Child0.Op.OpType == OpType.NewRecord, "Expected a record constructor here. Found " + n.Child0.Op.OpType + " instead");
+                PlanCompiler.Assert(
+                    n.Child0.Op.OpType == OpType.NewRecord, "Expected a record constructor here. Found " + n.Child0.Op.OpType + " instead");
 
-                TypeInfo inputTypeInfo = m_typeInfo.GetTypeInfo(inputTypeUsage);
-                TypeInfo outputTypeInfo = m_typeInfo.GetTypeInfo(op.Type);
+                var inputTypeInfo = m_typeInfo.GetTypeInfo(inputTypeUsage);
+                var outputTypeInfo = m_typeInfo.GetTypeInfo(op.Type);
 
-                NewRecordOp newOp = m_command.CreateNewRecordOp(newType);
+                var newOp = m_command.CreateNewRecordOp(newType);
 
-                List<Node> newArgs = new List<Node>();
+                var newArgs = new List<Node>();
 
                 // We have to adjust for when we're supposed to add/remove null sentinels; 
                 // it is entirely possible that we may need to add multiple null sentinel
                 // columns (See SQLBUDT #549068 for an example).  
                 IEnumerator<md.EdmProperty> outputs = newOp.Properties.GetEnumerator();
-                int outputPropertyCount = newOp.Properties.Count;
+                var outputPropertyCount = newOp.Properties.Count;
                 outputs.MoveNext();
 
                 IEnumerator<Node> inputs = n.Child0.Children.GetEnumerator();
-                int inputPropertyCount = n.Child0.Children.Count;
+                var inputPropertyCount = n.Child0.Children.Count;
                 inputs.MoveNext();
 
                 // We know that all Null Sentinels are added on the left side, so we'll
@@ -1763,7 +1839,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // both the input and the output...
                 while (inputPropertyCount < outputPropertyCount)
                 {
-                    PlanCompiler.Assert(outputTypeInfo.HasNullSentinelProperty && !inputTypeInfo.HasNullSentinelProperty, "NullSentinelProperty mismatch on input?");
+                    PlanCompiler.Assert(
+                        outputTypeInfo.HasNullSentinelProperty && !inputTypeInfo.HasNullSentinelProperty,
+                        "NullSentinelProperty mismatch on input?");
 
                     // make up a null sentinel; the output requires it.
                     newArgs.Add(CreateNullSentinelConstant());
@@ -1775,7 +1853,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // we have the same number of columns...
                 while (inputPropertyCount > outputPropertyCount)
                 {
-                    PlanCompiler.Assert(!outputTypeInfo.HasNullSentinelProperty && inputTypeInfo.HasNullSentinelProperty, "NullSentinelProperty mismatch on output?");
+                    PlanCompiler.Assert(
+                        !outputTypeInfo.HasNullSentinelProperty && inputTypeInfo.HasNullSentinelProperty,
+                        "NullSentinelProperty mismatch on output?");
 
                     // remove the null sentinel; the output doesn't require it.
                     inputs.MoveNext();
@@ -1784,14 +1864,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
                 do
                 {
-                    md.EdmProperty p = outputs.Current;
-                    Node arg = BuildSoftCast(inputs.Current, md.Helper.GetModelTypeUsage(p));
+                    var p = outputs.Current;
+                    var arg = BuildSoftCast(inputs.Current, md.Helper.GetModelTypeUsage(p));
                     newArgs.Add(arg);
                     outputs.MoveNext();
                 }
                 while (inputs.MoveNext());
 
-                Node newNode = m_command.CreateNode(newOp, newArgs);
+                var newNode = m_command.CreateNode(newOp, newArgs);
                 return newNode;
             }
             else if (md.TypeSemantics.IsCollectionType(oldType))
@@ -1811,14 +1891,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             else
             {
-                PlanCompiler.Assert(md.TypeSemantics.IsNominalType(oldType) ||
+                PlanCompiler.Assert(
+                    md.TypeSemantics.IsNominalType(oldType) ||
                     md.TypeSemantics.IsReferenceType(oldType),
                     "Gasp! Not a nominal type or even a reference type");
                 // I'm dealing with a nominal type (entity, complex type) or
                 // a reference type here. Every type in the same hierarchy 
                 // must have been rationalized into the same type, and so, we
                 // won't need to do anything special
-                PlanCompiler.Assert(Command.EqualTypes(newType, n.Child0.Op.Type),
+                PlanCompiler.Assert(
+                    Command.EqualTypes(newType, n.Child0.Op.Type),
                     "Types are not equal");
                 return n.Child0;
             }
@@ -1830,7 +1912,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"><see cref="CastOp"/> operator.</param>
         /// <param name="n">Current node.</param>
         /// <returns>Visited, possible rewritten <paramref name="n"/>.</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(CastOp op, Node n)
         {
             // Visit children first to get rid of all the nominal types (including enums) in the subtree. 
@@ -1845,12 +1928,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 PlanCompiler.Assert(md.TypeSemantics.IsPrimitiveType(n.Child0.Op.Type), "Primitive type expected.");
                 var underlyingType = md.Helper.GetUnderlyingEdmTypeForEnumType(op.Type.EdmType);
                 return RewriteAsCastToUnderlyingType(underlyingType, op, n);
- 
             }
             if (md.TypeSemantics.IsSpatialType(op.Type))
             {
                 // We visited subtree so the result type of the cast argument should now be a union spatial type even if it was originally strong). 
-                PlanCompiler.Assert(md.TypeSemantics.IsPrimitiveType(n.Child0.Op.Type, md.PrimitiveTypeKind.Geography) || md.TypeSemantics.IsPrimitiveType(n.Child0.Op.Type, md.PrimitiveTypeKind.Geometry), "Union spatial type expected.");
+                PlanCompiler.Assert(
+                    md.TypeSemantics.IsPrimitiveType(n.Child0.Op.Type, md.PrimitiveTypeKind.Geography)
+                    || md.TypeSemantics.IsPrimitiveType(n.Child0.Op.Type, md.PrimitiveTypeKind.Geometry), "Union spatial type expected.");
                 var underlyingType = md.Helper.GetSpatialNormalizedPrimitiveType(op.Type.EdmType);
                 return RewriteAsCastToUnderlyingType(underlyingType, op, n);
             }
@@ -1862,7 +1946,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private Node RewriteAsCastToUnderlyingType(md.PrimitiveType underlyingType, CastOp op, Node n)
         {
             // if type of the argument and the underlying type match we can strip the Cast entirely
-            if (underlyingType.PrimitiveTypeKind == ((md.PrimitiveType)n.Child0.Op.Type.EdmType).PrimitiveTypeKind)
+            if (underlyingType.PrimitiveTypeKind
+                == ((md.PrimitiveType)n.Child0.Op.Type.EdmType).PrimitiveTypeKind)
             {
                 return n.Child0;
             }
@@ -1879,7 +1964,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"><see cref="ConstantOp"/> operator.</param>
         /// <param name="n">Current node.</param>
         /// <returns>Possible rewritten <paramref name="n"/>.</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(ConstantOp op, Node n)
         {
             PlanCompiler.Assert(n.Children.Count == 0, "Constant operations don't have children.");
@@ -1892,13 +1978,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // For enums the value can be specified either as enum (e.g. Color.Yellow) or as a number.
                 // We need the numeric value only so if it was not specified as a number we need to cast it to the 
                 // underlying enum type.
-                object constValue = op.Value.GetType().IsEnum ?
-                    Convert.ChangeType(op.Value, op.Value.GetType().GetEnumUnderlyingType(), CultureInfo.InvariantCulture) :
-                    op.Value;                   
+                var constValue = op.Value.GetType().IsEnum
+                                     ? Convert.ChangeType(
+                                         op.Value, op.Value.GetType().GetEnumUnderlyingType(), CultureInfo.InvariantCulture)
+                                     : op.Value;
 
                 return m_command.CreateNode(
-                        m_command.CreateConstantOp(
-                            TypeHelpers.CreateEnumUnderlyingTypeUsage(op.Type), constValue));
+                    m_command.CreateConstantOp(
+                        TypeHelpers.CreateEnumUnderlyingTypeUsage(op.Type), constValue));
             }
             if (md.TypeSemantics.IsStrongSpatialType(op.Type))
             {
@@ -1929,7 +2016,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             // Before visiting the children, check whether the case statment can be optimized 
             bool thenClauseIsNull;
-            bool canSimplifyPrecheck = PlanCompilerUtil.IsRowTypeCaseOpWithNullability(op, n, out thenClauseIsNull);
+            var canSimplifyPrecheck = PlanCompilerUtil.IsRowTypeCaseOpWithNullability(op, n, out thenClauseIsNull);
 
             VisitChildren(n);
 
@@ -1955,9 +2042,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // for enums we need to convert the result of the operation from 
             // the enum type to the underlying type of the enum type, and
             // for spatial types we must convert it to the underlying spatial union type.
-            if (TypeUtils.IsCollectionType(op.Type) || md.TypeSemantics.IsEnumerationType(op.Type) || md.TypeSemantics.IsStrongSpatialType(op.Type))
+            if (TypeUtils.IsCollectionType(op.Type) || md.TypeSemantics.IsEnumerationType(op.Type)
+                || md.TypeSemantics.IsStrongSpatialType(op.Type))
             {
-                md.TypeUsage newType = GetNewType(op.Type);
+                var newType = GetNewType(op.Type);
 
                 n.Op = m_command.CreateCaseOp(newType);
                 return n;
@@ -1966,8 +2054,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 // We've got a structured type, so the CaseOp is flattened out into 
                 // a NewRecordOp via the FlattenCaseOp method.
-                PropertyRefList desiredProperties = m_nodePropertyMap[n];
-                Node newNode = FlattenCaseOp(n, m_typeInfo.GetTypeInfo(op.Type), desiredProperties);
+                var desiredProperties = m_nodePropertyMap[n];
+                var newNode = FlattenCaseOp(n, m_typeInfo.GetTypeInfo(op.Type), desiredProperties);
                 return newNode;
             }
             else
@@ -1993,7 +2081,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="thenClauseIsNull"></param>
         /// <param name="rewrittenNode"></param>
         /// <returns>Whether a rewrite was done</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private bool TryRewriteCaseOp(Node n, bool thenClauseIsNull, out Node rewrittenNode)
         {
             rewrittenNode = n;
@@ -2004,26 +2093,28 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 return false;
             }
 
-            Node resultNode = thenClauseIsNull ? n.Child2 : n.Child1;
-            if (resultNode.Op.OpType != OpType.NewRecord)
+            var resultNode = thenClauseIsNull ? n.Child2 : n.Child1;
+            if (resultNode.Op.OpType
+                != OpType.NewRecord)
             {
                 return false;
             }
 
             //Rewrite the null sentinel, which is the first child of the resultNode
-            Node currentNullSentinel = resultNode.Child0;
-            md.TypeUsage integerType = this.m_command.IntegerType;
-            PlanCompiler.Assert(currentNullSentinel.Op.Type.EdmEquals(integerType), "Column that is expected to be a null sentinel is not of Integer type.");
+            var currentNullSentinel = resultNode.Child0;
+            var integerType = m_command.IntegerType;
+            PlanCompiler.Assert(
+                currentNullSentinel.Op.Type.EdmEquals(integerType), "Column that is expected to be a null sentinel is not of Integer type.");
 
-            CaseOp newCaseOp = m_command.CreateCaseOp(integerType);
-            List<Node> children = new List<Node>(3);
+            var newCaseOp = m_command.CreateCaseOp(integerType);
+            var children = new List<Node>(3);
 
             //The the 'when' from the case statement
             children.Add(n.Child0);
 
-            Node nullSentinelNullNode = m_command.CreateNode(m_command.CreateNullOp(integerType));
-            Node nullSentinelThenNode = thenClauseIsNull ? nullSentinelNullNode : currentNullSentinel;
-            Node nullSentinelElseNode = thenClauseIsNull ? currentNullSentinel : nullSentinelNullNode;
+            var nullSentinelNullNode = m_command.CreateNode(m_command.CreateNullOp(integerType));
+            var nullSentinelThenNode = thenClauseIsNull ? nullSentinelNullNode : currentNullSentinel;
+            var nullSentinelElseNode = thenClauseIsNull ? currentNullSentinel : nullSentinelNullNode;
             children.Add(nullSentinelThenNode);
             children.Add(nullSentinelElseNode);
 
@@ -2059,40 +2150,40 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             // Build up a type constructor - with only as many fields filled in 
             // as are desired. 
-            List<md.EdmProperty> fieldTypes = new List<md.EdmProperty>();
-            List<Node> fieldValues = new List<Node>();
+            var fieldTypes = new List<md.EdmProperty>();
+            var fieldValues = new List<Node>();
 
-            foreach (PropertyRef pref in typeInfo.PropertyRefList)
+            foreach (var pref in typeInfo.PropertyRefList)
             {
                 // Is this property desired later?
                 if (!desiredProperties.Contains(pref))
                 {
                     continue;
                 }
-                md.EdmProperty property = typeInfo.GetNewProperty(pref);
+                var property = typeInfo.GetNewProperty(pref);
 
                 // Build up an accessor for this property across each when/then clause
-                List<Node> caseChildren = new List<Node>();
-                for (int i = 0; i < n.Children.Count - 1; )
+                var caseChildren = new List<Node>();
+                for (var i = 0; i < n.Children.Count - 1;)
                 {
-                    Node whenNode = Copy(n.Children[i]);
+                    var whenNode = Copy(n.Children[i]);
                     caseChildren.Add(whenNode);
                     i++;
 
-                    Node propNode = BuildAccessorWithNulls(n.Children[i], property);
+                    var propNode = BuildAccessorWithNulls(n.Children[i], property);
                     caseChildren.Add(propNode);
                     i++;
                 }
-                Node elseNode = BuildAccessorWithNulls(n.Children[n.Children.Count - 1], property);
+                var elseNode = BuildAccessorWithNulls(n.Children[n.Children.Count - 1], property);
                 caseChildren.Add(elseNode);
 
-                Node caseNode = m_command.CreateNode(m_command.CreateCaseOp(md.Helper.GetModelTypeUsage(property)), caseChildren);
+                var caseNode = m_command.CreateNode(m_command.CreateCaseOp(md.Helper.GetModelTypeUsage(property)), caseChildren);
 
                 fieldTypes.Add(property);
                 fieldValues.Add(caseNode);
             }
 
-            NewRecordOp newRec = m_command.CreateNewRecordOp(typeInfo.FlattenedTypeUsage, fieldTypes);
+            var newRec = m_command.CreateNewRecordOp(typeInfo.FlattenedTypeUsage, fieldTypes);
             return m_command.CreateNode(newRec, fieldValues);
         }
 
@@ -2122,11 +2213,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(ComparisonOp op, Node n)
         {
-            md.TypeUsage child0Type = ((ScalarOp)n.Child0.Op).Type;
-            md.TypeUsage child1Type = ((ScalarOp)n.Child1.Op).Type;
+            var child0Type = (n.Child0.Op).Type;
+            var child1Type = (n.Child1.Op).Type;
 
             if (!TypeUtils.IsStructuredType(child0Type))
             {
@@ -2136,7 +2228,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             VisitChildren(n); // visit the children first
 
             // We're now dealing with a structured type
-            PlanCompiler.Assert(!(md.TypeSemantics.IsComplexType(child0Type) || md.TypeSemantics.IsComplexType(child1Type)), "complex type?"); // cannot be a complex type
+            PlanCompiler.Assert(
+                !(md.TypeSemantics.IsComplexType(child0Type) || md.TypeSemantics.IsComplexType(child1Type)), "complex type?");
+                // cannot be a complex type
             PlanCompiler.Assert(op.OpType == OpType.EQ || op.OpType == OpType.NE, "non-equality comparison of structured types?");
 
             //
@@ -2146,8 +2240,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // may involve the field types being different, the field names being different etc. - but
             // we may be assured that the order of the field types is fixed.
             //
-            TypeInfo child0TypeInfo = m_typeInfo.GetTypeInfo(child0Type);
-            TypeInfo child1TypeInfo = m_typeInfo.GetTypeInfo(child1Type);
+            var child0TypeInfo = m_typeInfo.GetTypeInfo(child0Type);
+            var child1TypeInfo = m_typeInfo.GetTypeInfo(child1Type);
             List<md.EdmProperty> properties1;
             List<md.EdmProperty> properties2;
             List<Node> values1;
@@ -2158,18 +2252,23 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             GetPropertyValues(child0TypeInfo, OperationKind.Equality, n.Child0, false, out properties1, out values1);
             GetPropertyValues(child1TypeInfo, OperationKind.Equality, n.Child1, false, out properties2, out values2);
 
-            PlanCompiler.Assert((properties1.Count == properties2.Count) && (values1.Count == values2.Count), "different shaped structured types?");
+            PlanCompiler.Assert(
+                (properties1.Count == properties2.Count) && (values1.Count == values2.Count), "different shaped structured types?");
 
             // Build up an and-chain of comparison ops on the property values
             Node andNode = null;
-            for (int i = 0; i < values1.Count; i++)
+            for (var i = 0; i < values1.Count; i++)
             {
-                ComparisonOp newCompOp = m_command.CreateComparisonOp(op.OpType);
-                Node newCompNode = m_command.CreateNode(newCompOp, values1[i], values2[i]);
+                var newCompOp = m_command.CreateComparisonOp(op.OpType);
+                var newCompNode = m_command.CreateNode(newCompOp, values1[i], values2[i]);
                 if (null == andNode)
+                {
                     andNode = newCompNode;
+                }
                 else
+                {
                     andNode = m_command.CreateNode(m_command.CreateConditionalOp(OpType.And), andNode, newCompNode);
+                }
             }
             return andNode;
         }
@@ -2182,10 +2281,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GetPropertyValues"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IsNull"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GetPropertyValues")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IsNull")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(ConditionalOp op, Node n)
         {
-            if (op.OpType != OpType.IsNull)
+            if (op.OpType
+                != OpType.IsNull)
             {
                 return VisitScalarOpDefault(op, n);
             }
@@ -2206,7 +2309,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // We do NOT support IsNull for Collections
             //
 
-            md.TypeUsage childOpType = ((ScalarOp)n.Child0.Op).Type;
+            var childOpType = (n.Child0.Op).Type;
 
             // Special cases are for structured types only 
             if (!TypeUtils.IsStructuredType(childOpType))
@@ -2217,7 +2320,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // visit the children first
             VisitChildren(n);
 
-            TypeInfo typeInfo = m_typeInfo.GetTypeInfo(childOpType);
+            var typeInfo = m_typeInfo.GetTypeInfo(childOpType);
 
             // Otherwise, build up an and-chain of is null checks for each appropriate
             // property - which should consist only of key properties for Entity types.
@@ -2225,16 +2328,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             List<Node> values = null;
             GetPropertyValues(typeInfo, OperationKind.IsNull, n.Child0, false, out properties, out values);
 
-            PlanCompiler.Assert(properties.Count == values.Count && properties.Count > 0, "No properties returned from GetPropertyValues(IsNull)?");
+            PlanCompiler.Assert(
+                properties.Count == values.Count && properties.Count > 0, "No properties returned from GetPropertyValues(IsNull)?");
 
             Node andNode = null;
-            foreach (Node propertyValue in values)
+            foreach (var propertyValue in values)
             {
-                Node isNullNode = m_command.CreateNode(m_command.CreateConditionalOp(OpType.IsNull), propertyValue);
+                var isNullNode = m_command.CreateNode(m_command.CreateConditionalOp(OpType.IsNull), propertyValue);
                 if (andNode == null)
+                {
                     andNode = isNullNode;
+                }
                 else
+                {
                     andNode = m_command.CreateNode(m_command.CreateConditionalOp(OpType.And), andNode, isNullNode);
+                }
             }
             return andNode;
         }
@@ -2250,7 +2358,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             VisitChildren(n);
 
-            List<InternalTrees.SortKey> newSortKeys = HandleSortKeys(op.Keys);
+            var newSortKeys = HandleSortKeys(op.Keys);
 
             if (newSortKeys != op.Keys)
             {
@@ -2290,13 +2398,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op">the GetRefKey/GetEntityKey op</param>
         /// <param name="n">current subtree</param>
         /// <returns>new expression subtree</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "fieldTypes"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "OpType"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GetEntityRef"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GetRefKey"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "fieldTypes")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "OpType")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GetEntityRef")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GetRefKey")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node FlattenGetKeyOp(ScalarOp op, Node n)
         {
-            PlanCompiler.Assert(op.OpType == OpType.GetEntityRef || op.OpType == OpType.GetRefKey, "Expecting GetEntityRef or GetRefKey ops");
+            PlanCompiler.Assert(
+                op.OpType == OpType.GetEntityRef || op.OpType == OpType.GetRefKey, "Expecting GetEntityRef or GetRefKey ops");
 
-            TypeInfo inputTypeInfo = m_typeInfo.GetTypeInfo(((ScalarOp)n.Child0.Op).Type);
-            TypeInfo outputTypeInfo = m_typeInfo.GetTypeInfo(op.Type);
+            var inputTypeInfo = m_typeInfo.GetTypeInfo((n.Child0.Op).Type);
+            var outputTypeInfo = m_typeInfo.GetTypeInfo(op.Type);
 
             // Visit the child - will flatten out the input ref/entity
             VisitChildren(n);
@@ -2307,29 +2421,34 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // Get the key properties for GetRefKey; get the Identity properties
             // for GetEntityRef
-            if (op.OpType == OpType.GetRefKey)
+            if (op.OpType
+                == OpType.GetRefKey)
             {
-                GetPropertyValues(inputTypeInfo, OperationKind.GetKeys, n.Child0, false /* ignore missing props */, out inputFieldTypes, out inputFieldValues);
+                GetPropertyValues(
+                    inputTypeInfo, OperationKind.GetKeys, n.Child0, false /* ignore missing props */, out inputFieldTypes,
+                    out inputFieldValues);
             }
             else
             {
-                PlanCompiler.Assert(op.OpType == OpType.GetEntityRef,
+                PlanCompiler.Assert(
+                    op.OpType == OpType.GetEntityRef,
                     "Expected OpType.GetEntityRef: Found " + op.OpType);
                 GetPropertyValues(inputTypeInfo, OperationKind.GetIdentity, n.Child0, false, out inputFieldTypes, out inputFieldValues);
             }
 
-            if (outputTypeInfo.HasNullSentinelProperty && !inputTypeInfo.HasNullSentinelProperty)
+            if (outputTypeInfo.HasNullSentinelProperty
+                && !inputTypeInfo.HasNullSentinelProperty)
             {
                 // Add a null sentinel column, the input doesn't have one but the output requires it.
                 inputFieldValues.Insert(0, CreateNullSentinelConstant());
             }
 
             // create an appropriate record constructor
-            List<md.EdmProperty> outputFieldTypes = new List<md.EdmProperty>(outputTypeInfo.FlattenedType.Properties);
+            var outputFieldTypes = new List<md.EdmProperty>(outputTypeInfo.FlattenedType.Properties);
             PlanCompiler.Assert(inputFieldValues.Count == outputFieldTypes.Count, "fieldTypes.Count mismatch?");
 
-            NewRecordOp rec = m_command.CreateNewRecordOp(outputTypeInfo.FlattenedTypeUsage, outputFieldTypes);
-            Node newNode = m_command.CreateNode(rec, inputFieldValues);
+            var rec = m_command.CreateNewRecordOp(outputTypeInfo.FlattenedTypeUsage, outputFieldTypes);
+            var newNode = m_command.CreateNode(rec, inputFieldValues);
             return newNode;
         }
 
@@ -2341,40 +2460,43 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="propertyRef"></param>
         /// <param name="throwIfMissing">ignore missing properties</param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "optype"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "optype")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node VisitPropertyOp(Op op, Node n, PropertyRef propertyRef, bool throwIfMissing)
         {
-            PlanCompiler.Assert(op.OpType == OpType.Property || op.OpType == OpType.RelProperty,
+            PlanCompiler.Assert(
+                op.OpType == OpType.Property || op.OpType == OpType.RelProperty,
                 "Unexpected optype: " + op.OpType);
 
-            md.TypeUsage inputType = n.Child0.Op.Type;
-            md.TypeUsage outputType = op.Type;
+            var inputType = n.Child0.Op.Type;
+            var outputType = op.Type;
 
             // First visit all my children
             VisitChildren(n);
 
             Node newNode = null;
-            TypeInfo inputTypeInfo = m_typeInfo.GetTypeInfo(inputType);
+            var inputTypeInfo = m_typeInfo.GetTypeInfo(inputType);
 
             if (TypeUtils.IsStructuredType(outputType))
             {
-                TypeInfo outputTypeInfo = m_typeInfo.GetTypeInfo(outputType);
-                List<md.EdmProperty> fieldTypes = new List<md.EdmProperty>();
-                List<Node> fieldValues = new List<Node>();
-                PropertyRefList expectedProperties = m_nodePropertyMap[n];
+                var outputTypeInfo = m_typeInfo.GetTypeInfo(outputType);
+                var fieldTypes = new List<md.EdmProperty>();
+                var fieldValues = new List<Node>();
+                var expectedProperties = m_nodePropertyMap[n];
 
-                foreach (PropertyRef npr in outputTypeInfo.PropertyRefList)
+                foreach (var npr in outputTypeInfo.PropertyRefList)
                 {
                     // Is this a property that's desired by my consumers?
                     if (expectedProperties.Contains(npr))
-                    {  
-                        PropertyRef newPropRef = npr.CreateNestedPropertyRef(propertyRef);
+                    {
+                        var newPropRef = npr.CreateNestedPropertyRef(propertyRef);
                         md.EdmProperty newNestedProp;
-                        
+
                         if (inputTypeInfo.TryGetNewProperty(newPropRef, throwIfMissing, out newNestedProp))
                         {
-                            md.EdmProperty outputNestedProp = outputTypeInfo.GetNewProperty(npr);
-                            Node field = BuildAccessor(n.Child0, newNestedProp);
+                            var outputNestedProp = outputTypeInfo.GetNewProperty(npr);
+                            var field = BuildAccessor(n.Child0, newNestedProp);
                             if (null != field)
                             {
                                 fieldTypes.Add(outputNestedProp);
@@ -2388,9 +2510,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             else
             {
-                md.EdmProperty newProp = inputTypeInfo.GetNewProperty(propertyRef);
+                var newProp = inputTypeInfo.GetNewProperty(propertyRef);
                 // Build an accessor over the new property
-                newNode = this.BuildAccessorWithNulls(n.Child0, newProp);
+                newNode = BuildAccessorWithNulls(n.Child0, newProp);
             }
             return newNode;
         }
@@ -2438,11 +2560,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "entitySetId"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "entitySetId")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(RefOp op, Node n)
         {
-            TypeInfo inputTypeInfo = m_typeInfo.GetTypeInfo(((ScalarOp)n.Child0.Op).Type);
-            TypeInfo outputTypeInfo = m_typeInfo.GetTypeInfo(op.Type);
+            var inputTypeInfo = m_typeInfo.GetTypeInfo((n.Child0.Op).Type);
+            var outputTypeInfo = m_typeInfo.GetTypeInfo(op.Type);
 
             // visit children now
             VisitChildren(n);
@@ -2453,39 +2577,52 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             GetPropertyValues(inputTypeInfo, OperationKind.All, n.Child0, false, out inputFields, out inputFieldValues);
 
             // Get my property list
-            List<md.EdmProperty> outputFields = new List<md.EdmProperty>(outputTypeInfo.FlattenedType.Properties);
+            var outputFields = new List<md.EdmProperty>(outputTypeInfo.FlattenedType.Properties);
 
             if (outputTypeInfo.HasEntitySetIdProperty)
             {
                 PlanCompiler.Assert(outputFields[0] == outputTypeInfo.EntitySetIdProperty, "OutputField0 must be the entitySetId property");
 
-                if (inputTypeInfo.HasNullSentinelProperty && !outputTypeInfo.HasNullSentinelProperty)
-                {  // realistically, REFs can't have null sentinels, but I'm being pedantic...
-                    PlanCompiler.Assert(outputFields.Count == inputFields.Count, "Mismatched field count: Expected " + inputFields.Count + "; Got " + outputFields.Count);
+                if (inputTypeInfo.HasNullSentinelProperty
+                    && !outputTypeInfo.HasNullSentinelProperty)
+                {
+                    // realistically, REFs can't have null sentinels, but I'm being pedantic...
+                    PlanCompiler.Assert(
+                        outputFields.Count == inputFields.Count,
+                        "Mismatched field count: Expected " + inputFields.Count + "; Got " + outputFields.Count);
                     RemoveNullSentinel(inputTypeInfo, inputFields, inputFieldValues);
                 }
                 else
                 {
-                    PlanCompiler.Assert(outputFields.Count == inputFields.Count + 1, "Mismatched field count: Expected " + (inputFields.Count + 1) + "; Got " + outputFields.Count);
+                    PlanCompiler.Assert(
+                        outputFields.Count == inputFields.Count + 1,
+                        "Mismatched field count: Expected " + (inputFields.Count + 1) + "; Got " + outputFields.Count);
                 }
 
                 // Now prepend a value for the entitysetid property and a value for this property
-                int entitySetId = m_typeInfo.GetEntitySetId(op.EntitySet);
-                inputFieldValues.Insert(0, m_command.CreateNode(m_command.CreateInternalConstantOp(md.Helper.GetModelTypeUsage(outputTypeInfo.EntitySetIdProperty), entitySetId)));
+                var entitySetId = m_typeInfo.GetEntitySetId(op.EntitySet);
+                inputFieldValues.Insert(
+                    0,
+                    m_command.CreateNode(
+                        m_command.CreateInternalConstantOp(md.Helper.GetModelTypeUsage(outputTypeInfo.EntitySetIdProperty), entitySetId)));
             }
             else
             {
-                if (inputTypeInfo.HasNullSentinelProperty && !outputTypeInfo.HasNullSentinelProperty)
-                { // realistically, REFs can't have null sentinels, but I'm being pedantic...
+                if (inputTypeInfo.HasNullSentinelProperty
+                    && !outputTypeInfo.HasNullSentinelProperty)
+                {
+                    // realistically, REFs can't have null sentinels, but I'm being pedantic...
                     RemoveNullSentinel(inputTypeInfo, inputFields, inputFieldValues);
                 }
 
-                PlanCompiler.Assert(outputFields.Count == inputFields.Count, "Mismatched field count: Expected " + inputFields.Count + "; Got " + outputFields.Count);
+                PlanCompiler.Assert(
+                    outputFields.Count == inputFields.Count,
+                    "Mismatched field count: Expected " + inputFields.Count + "; Got " + outputFields.Count);
             }
 
             // now build up a NewRecordConstructor with the appropriate info
-            NewRecordOp recOp = m_command.CreateNewRecordOp(outputTypeInfo.FlattenedTypeUsage, outputFields);
-            Node newNode = m_command.CreateNode(recOp, inputFieldValues);
+            var recOp = m_command.CreateNewRecordOp(outputTypeInfo.FlattenedTypeUsage, outputFields);
+            var newNode = m_command.CreateNode(recOp, inputFieldValues);
 
             return newNode;
         }
@@ -2494,7 +2631,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // columns (See SQLBUDT #553534 for an example).  Note that we shouldn't
         // have to add null sentinels here, since reference types won't be expecting
         // them (the fact that the key is null is good enough...)
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private static void RemoveNullSentinel(TypeInfo inputTypeInfo, List<md.EdmProperty> inputFields, List<Node> inputFieldValues)
         {
             PlanCompiler.Assert(inputFields[0] == inputTypeInfo.NullSentinelProperty, "InputField0 must be the null sentinel property");
@@ -2512,28 +2650,33 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op">the VarRefOp</param>
         /// <param name="n">the node</param>
         /// <returns>new subtree</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "varInfo"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "varInfo")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(VarRefOp op, Node n)
         {
             // Lookup my VarInfo
             VarInfo varInfo;
             if (!m_varInfoMap.TryGetVarInfo(op.Var, out varInfo))
             {
-                PlanCompiler.Assert(!TypeUtils.IsStructuredType(op.Type),
+                PlanCompiler.Assert(
+                    !TypeUtils.IsStructuredType(op.Type),
                     "No varInfo for a structured type var: Id = " + op.Var.Id + " Type = " + op.Type);
 
                 return n;
             }
 
-            if (varInfo.Kind == VarInfoKind.CollectionVarInfo)
+            if (varInfo.Kind
+                == VarInfoKind.CollectionVarInfo)
             {
                 n.Op = m_command.CreateVarRefOp(((CollectionVarInfo)varInfo).NewVar);
                 return n;
             }
-            else if (varInfo.Kind == VarInfoKind.PrimitiveTypeVarInfo)
+            else if (varInfo.Kind
+                     == VarInfoKind.PrimitiveTypeVarInfo)
             {
                 n.Op = m_command.CreateVarRefOp(((PrimitiveTypeVarInfo)varInfo).NewVar);
-                return n;                
+                return n;
             }
             else
             {
@@ -2541,16 +2684,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // We look up the VarInfo corresponding to the Var - which has a set of fields
                 // and the corresponding properties that we need to produce
 
-                StructuredVarInfo structuredVarInfo = (StructuredVarInfo)varInfo;
+                var structuredVarInfo = (StructuredVarInfo)varInfo;
 
-                NewRecordOp newOp = m_command.CreateNewRecordOp(structuredVarInfo.NewTypeUsage, structuredVarInfo.Fields);
-                List<Node> newNodeChildren = new List<Node>();
-                foreach (Var v in varInfo.NewVars)
+                var newOp = m_command.CreateNewRecordOp(structuredVarInfo.NewTypeUsage, structuredVarInfo.Fields);
+                var newNodeChildren = new List<Node>();
+                foreach (var v in varInfo.NewVars)
                 {
-                    VarRefOp newVarRefOp = m_command.CreateVarRefOp(v);
+                    var newVarRefOp = m_command.CreateVarRefOp(v);
                     newNodeChildren.Add(m_command.CreateNode(newVarRefOp));
                 }
-                Node newNode = m_command.CreateNode(newOp, newNodeChildren);
+                var newNode = m_command.CreateNode(newOp, newNodeChildren);
                 return newNode;
             }
         }
@@ -2605,17 +2748,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         private Node NormalizeTypeDiscriminatorValues(DiscriminatedNewEntityOp op, Node discriminator)
         {
-            TypeInfo typeInfo = m_typeInfo.GetTypeInfo(op.Type);
+            var typeInfo = m_typeInfo.GetTypeInfo(op.Type);
 
-            CaseOp normalizer = m_command.CreateCaseOp(typeInfo.RootType.TypeIdProperty.TypeUsage);
-            List<Node> children = new List<Node>(op.DiscriminatorMap.TypeMap.Count * 2 - 1);
-            for (int i = 0; i < op.DiscriminatorMap.TypeMap.Count; i++)
+            var normalizer = m_command.CreateCaseOp(typeInfo.RootType.TypeIdProperty.TypeUsage);
+            var children = new List<Node>(op.DiscriminatorMap.TypeMap.Count * 2 - 1);
+            for (var i = 0; i < op.DiscriminatorMap.TypeMap.Count; i++)
             {
-                object discriminatorValue = op.DiscriminatorMap.TypeMap[i].Key;
-                md.EntityType type = op.DiscriminatorMap.TypeMap[i].Value;
-                TypeInfo currentTypeInfo = m_typeInfo.GetTypeInfo(md.TypeUsage.Create(type));
+                var discriminatorValue = op.DiscriminatorMap.TypeMap[i].Key;
+                var type = op.DiscriminatorMap.TypeMap[i].Value;
+                var currentTypeInfo = m_typeInfo.GetTypeInfo(md.TypeUsage.Create(type));
 
-                Node normalizedDiscriminatorConstant = CreateTypeIdConstant(currentTypeInfo);
+                var normalizedDiscriminatorConstant = CreateTypeIdConstant(currentTypeInfo);
                 // for the last type, return the 'then' value
                 if (i == op.DiscriminatorMap.TypeMap.Count - 1)
                 {
@@ -2625,11 +2768,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 else
                 {
                     // WHEN discriminator = discriminatorValue THEN normalizedDiscriminatorValue
-                    ConstantBaseOp discriminatorValueOp = m_command.CreateConstantOp(md.Helper.GetModelTypeUsage(op.DiscriminatorMap.DiscriminatorProperty.TypeUsage),
-                                                                                     discriminatorValue);
-                    Node discriminatorConstant = m_command.CreateNode(discriminatorValueOp);
-                    ComparisonOp discriminatorPredicateOp = m_command.CreateComparisonOp(OpType.EQ);
-                    Node discriminatorPredicate = m_command.CreateNode(discriminatorPredicateOp, discriminator, discriminatorConstant);
+                    var discriminatorValueOp =
+                        m_command.CreateConstantOp(
+                            md.Helper.GetModelTypeUsage(op.DiscriminatorMap.DiscriminatorProperty.TypeUsage),
+                            discriminatorValue);
+                    var discriminatorConstant = m_command.CreateNode(discriminatorValueOp);
+                    var discriminatorPredicateOp = m_command.CreateComparisonOp(OpType.EQ);
+                    var discriminatorPredicate = m_command.CreateNode(discriminatorPredicateOp, discriminator, discriminatorConstant);
                     children.Add(discriminatorPredicate);
                     children.Add(normalizedDiscriminatorConstant);
                 }
@@ -2660,11 +2805,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private Node GetEntitySetIdExpr(md.EdmProperty entitySetIdProperty, NewEntityBaseOp op)
         {
             Node entitySetIdNode;
-            md.EntitySet entitySet = op.EntitySet as md.EntitySet;
+            var entitySet = op.EntitySet;
             if (entitySet != null)
             {
-                int entitySetId = m_typeInfo.GetEntitySetId(entitySet);
-                InternalConstantOp entitySetIdOp = m_command.CreateInternalConstantOp(md.Helper.GetModelTypeUsage(entitySetIdProperty), entitySetId);
+                var entitySetId = m_typeInfo.GetEntitySetId(entitySet);
+                var entitySetIdOp = m_command.CreateInternalConstantOp(md.Helper.GetModelTypeUsage(entitySetIdProperty), entitySetId);
                 entitySetIdNode = m_command.CreateNode(entitySetIdOp);
             }
             else
@@ -2686,29 +2831,36 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op">The NewRecordOp/NewInstanceOp</param>
         /// <param name="n">The current subtree</param>
         /// <returns>the new subtree</returns>
-        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "optype"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "optype")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node FlattenConstructor(ScalarOp op, Node n)
         {
-            PlanCompiler.Assert(op.OpType == OpType.NewInstance || op.OpType == OpType.NewRecord || op.OpType == OpType.DiscriminatedNewEntity || op.OpType == OpType.NewEntity,
+            PlanCompiler.Assert(
+                op.OpType == OpType.NewInstance || op.OpType == OpType.NewRecord || op.OpType == OpType.DiscriminatedNewEntity
+                || op.OpType == OpType.NewEntity,
                 "unexpected op: " + op.OpType + "?");
 
             // First visit all my children
             VisitChildren(n);
 
             // Find the new type corresponding to the type
-            TypeInfo typeInfo = m_typeInfo.GetTypeInfo(op.Type);
-            md.RowType flatType = typeInfo.FlattenedType;
-            NewEntityBaseOp newEntityOp = op as NewEntityBaseOp;
+            var typeInfo = m_typeInfo.GetTypeInfo(op.Type);
+            var flatType = typeInfo.FlattenedType;
+            var newEntityOp = op as NewEntityBaseOp;
 
             // Identify the fields
             IEnumerable opFields = null;
             DiscriminatedNewEntityOp discriminatedNewInstanceOp = null;
-            if (op.OpType == OpType.NewRecord)
+            if (op.OpType
+                == OpType.NewRecord)
             {
                 // Get only those fields that I have values for 
                 opFields = ((NewRecordOp)op).Properties;
             }
-            else if (op.OpType == OpType.DiscriminatedNewEntity)
+            else if (op.OpType
+                     == OpType.DiscriminatedNewEntity)
             {
                 // Get all properties projected by the discriminated new instance op
                 discriminatedNewInstanceOp = (DiscriminatedNewEntityOp)op;
@@ -2722,8 +2874,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // Next, walk through each of my field, and flatten out any field
             // that is structured.
-            List<md.EdmProperty> newFields = new List<md.EdmProperty>();
-            List<Node> newFieldValues = new List<Node>();
+            var newFields = new List<md.EdmProperty>();
+            var newFieldValues = new List<Node>();
 
             //
             // NOTE: we expect the type id property and the entityset id properties
@@ -2741,7 +2893,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 else
                 {
                     // first child in DiscriminatedNewInstanceOp is discriminator/typeid
-                    Node discriminator = n.Children[0];
+                    var discriminator = n.Children[0];
 
                     if (null == typeInfo.RootType.DiscriminatorMap)
                     {
@@ -2763,7 +2915,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 newFields.Add(typeInfo.EntitySetIdProperty);
 
                 PlanCompiler.Assert(newEntityOp != null, "unexpected optype:" + op.OpType);
-                Node entitySetIdNode = GetEntitySetIdExpr(typeInfo.EntitySetIdProperty, newEntityOp);
+                var entitySetIdNode = GetEntitySetIdExpr(typeInfo.EntitySetIdProperty, newEntityOp);
 
                 // Get the entity-set-id of the "current" entityset
                 newFieldValues.Add(entitySetIdNode);
@@ -2779,23 +2931,23 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // first child of discriminatedNewInstanceOp is the typeId; otherwise, the first child is the first property
             //
-            int childrenIndex = null == discriminatedNewInstanceOp ? 0 : 1;
+            var childrenIndex = null == discriminatedNewInstanceOp ? 0 : 1;
 
             foreach (md.EdmMember opField in opFields)
             {
-                Node fieldValue = n.Children[childrenIndex];
+                var fieldValue = n.Children[childrenIndex];
                 if (TypeUtils.IsStructuredType(md.Helper.GetModelTypeUsage(opField)))
                 {
                     // Flatten out nested type
-                    md.RowType nestedFlatType = m_typeInfo.GetTypeInfo(md.Helper.GetModelTypeUsage(opField)).FlattenedType;
+                    var nestedFlatType = m_typeInfo.GetTypeInfo(md.Helper.GetModelTypeUsage(opField)).FlattenedType;
 
                     // Find offset of opField in top-level flat type
-                    int nestedPropertyOffset = typeInfo.RootType.GetNestedStructureOffset(new SimplePropertyRef(opField));
+                    var nestedPropertyOffset = typeInfo.RootType.GetNestedStructureOffset(new SimplePropertyRef(opField));
 
-                    foreach (md.EdmProperty nestedProperty in nestedFlatType.Properties)
+                    foreach (var nestedProperty in nestedFlatType.Properties)
                     {
                         // Try to build up an accessor for this property from the input
-                        Node nestedPropertyValue = BuildAccessor(fieldValue, nestedProperty);
+                        var nestedPropertyValue = BuildAccessor(fieldValue, nestedProperty);
 
                         if (null != nestedPropertyValue)
                         {
@@ -2809,7 +2961,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 else
                 {
                     PropertyRef propRef = new SimplePropertyRef(opField);
-                    md.EdmProperty outputTypeProp = typeInfo.GetNewProperty(propRef);
+                    var outputTypeProp = typeInfo.GetNewProperty(propRef);
 
                     newFields.Add(outputTypeProp);
 
@@ -2825,18 +2977,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             if (newEntityOp != null)
             {
-                foreach (RelProperty relProp in newEntityOp.RelationshipProperties)
+                foreach (var relProp in newEntityOp.RelationshipProperties)
                 {
-                    Node fieldValue = n.Children[childrenIndex];
-                    md.RowType nestedFlatType = m_typeInfo.GetTypeInfo(relProp.ToEnd.TypeUsage).FlattenedType;
+                    var fieldValue = n.Children[childrenIndex];
+                    var nestedFlatType = m_typeInfo.GetTypeInfo(relProp.ToEnd.TypeUsage).FlattenedType;
 
                     // Find offset of opField in top-level flat type
-                    int nestedPropertyOffset = typeInfo.RootType.GetNestedStructureOffset(new RelPropertyRef(relProp));
+                    var nestedPropertyOffset = typeInfo.RootType.GetNestedStructureOffset(new RelPropertyRef(relProp));
 
-                    foreach (md.EdmProperty nestedProperty in nestedFlatType.Properties)
+                    foreach (var nestedProperty in nestedFlatType.Properties)
                     {
                         // Try to build up an accessor for this property from the input
-                        Node nestedPropertyValue = BuildAccessor(fieldValue, nestedProperty);
+                        var nestedPropertyValue = BuildAccessor(fieldValue, nestedProperty);
 
                         if (null != nestedPropertyValue)
                         {
@@ -2854,8 +3006,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // So, now we have the list of all fields that should make up the 
             // flat type.  Create a new node with them.
             //
-            NewRecordOp newOp = m_command.CreateNewRecordOp(typeInfo.FlattenedTypeUsage, newFields);
-            Node newNode = m_command.CreateNode(newOp, newFieldValues);
+            var newOp = m_command.CreateNewRecordOp(typeInfo.FlattenedTypeUsage, newFields);
+            var newNode = m_command.CreateNode(newOp, newFieldValues);
 
             return newNode;
         }
@@ -2874,7 +3026,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             if (!TypeUtils.IsStructuredType(op.Type))
             {
-                if(md.TypeSemantics.IsEnumerationType(op.Type))
+                if (md.TypeSemantics.IsEnumerationType(op.Type))
                 {
                     op.Type = TypeHelpers.CreateEnumUnderlyingTypeUsage(op.Type);
                 }
@@ -2887,10 +3039,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             // Find the new type corresponding to the type
-            TypeInfo typeInfo = m_typeInfo.GetTypeInfo(op.Type);
+            var typeInfo = m_typeInfo.GetTypeInfo(op.Type);
 
-            List<md.EdmProperty> newFields = new List<md.EdmProperty>();
-            List<Node> newFieldValues = new List<Node>();
+            var newFields = new List<md.EdmProperty>();
+            var newFieldValues = new List<Node>();
 
             // Add a typeid property if we need one
             if (typeInfo.HasTypeIdProperty)
@@ -2900,7 +3052,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 newFieldValues.Add(CreateNullConstantNode(typeIdType));
             }
 
-            NewRecordOp newRecordOp = new NewRecordOp(typeInfo.FlattenedTypeUsage, newFields);
+            var newRecordOp = new NewRecordOp(typeInfo.FlattenedTypeUsage, newFields);
             return m_command.CreateNode(newRecordOp, newFieldValues);
         }
 
@@ -2929,8 +3081,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 return n;
             }
-            TypeInfo typeInfo = m_typeInfo.GetTypeInfo(op.IsOfType);
-            Node newNode = CreateTypeComparisonOp(n.Child0, typeInfo, op.IsOfOnly);
+            var typeInfo = m_typeInfo.GetTypeInfo(op.IsOfType);
+            var newNode = CreateTypeComparisonOp(n.Child0, typeInfo, op.IsOfOnly);
             return newNode;
         }
 
@@ -2951,9 +3103,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // filter out useless treat operations
             // Treat(subtype-instance as superType)
             //
-            ScalarOp arg = (ScalarOp)n.Child0.Op;
+            var arg = (ScalarOp)n.Child0.Op;
             if (op.IsFakeTreat ||
-                md.TypeSemantics.IsStructurallyEqual(arg.Type, op.Type) ||
+                md.TypeSemantics.IsStructurallyEqual(arg.Type, op.Type)
+                ||
                 md.TypeSemantics.IsSubTypeOf(arg.Type, op.Type))
             {
                 return n.Child0;
@@ -2969,17 +3122,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // First, convert this into a CaseOp:
             //   case when e.TypeId like TypeIdValue then e else null end
             //
-            TypeInfo typeInfo = m_typeInfo.GetTypeInfo(op.Type);
-            Node likeNode = CreateTypeComparisonOp(n.Child0, typeInfo, false);
-            CaseOp caseOp = m_command.CreateCaseOp(typeInfo.FlattenedTypeUsage);
-            Node caseNode = m_command.CreateNode(caseOp, likeNode, n.Child0, CreateNullConstantNode(caseOp.Type));
+            var typeInfo = m_typeInfo.GetTypeInfo(op.Type);
+            var likeNode = CreateTypeComparisonOp(n.Child0, typeInfo, false);
+            var caseOp = m_command.CreateCaseOp(typeInfo.FlattenedTypeUsage);
+            var caseNode = m_command.CreateNode(caseOp, likeNode, n.Child0, CreateNullConstantNode(caseOp.Type));
 
             //
             // Now "flatten" out this Op into a constructor. But only get the
             // desired properties
             //
-            PropertyRefList desiredProperties = m_nodePropertyMap[n];
-            Node flattenedCaseNode = FlattenCaseOp(caseNode, typeInfo, desiredProperties);
+            var desiredProperties = m_nodePropertyMap[n];
+            var flattenedCaseNode = FlattenCaseOp(caseNode, typeInfo, desiredProperties);
             return flattenedCaseNode;
         }
 
@@ -2998,7 +3151,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>New comparison expression</returns>
         private Node CreateTypeComparisonOp(Node input, TypeInfo typeInfo, bool isExact)
         {
-            Node typeIdProperty = BuildTypeIdAccessor(input, typeInfo);
+            var typeIdProperty = BuildTypeIdAccessor(input, typeInfo);
             Node newNode = null;
 
             if (isExact)
@@ -3014,8 +3167,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
                 else
                 {
-                    Node typeIdConstantNode = CreateTypeIdConstantForPrefixMatch(typeInfo);
-                    LikeOp likeOp = m_command.CreateLikeOp();
+                    var typeIdConstantNode = CreateTypeIdConstantForPrefixMatch(typeInfo);
+                    var likeOp = m_command.CreateLikeOp();
                     newNode = m_command.CreateNode(likeOp, typeIdProperty, typeIdConstantNode, CreateNullConstantNode(DefaultTypeIdType));
                 }
             }
@@ -3032,18 +3185,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="typeInfo"></param>
         /// <param name="typeIdProperty"></param>
         /// <returns>type hierarchy check</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DiscriminatorMap"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DiscriminatorMap")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node CreateDisjunctiveTypeComparisonOp(TypeInfo typeInfo, Node typeIdProperty)
         {
             PlanCompiler.Assert(typeInfo.RootType.DiscriminatorMap != null, "should be used only for DiscriminatorMap type checks");
             // collect all non-abstract types in the given hierarchy
-            IEnumerable<TypeInfo> types = typeInfo.GetTypeHierarchy().Where(t => !t.Type.EdmType.Abstract);
+            var types = typeInfo.GetTypeHierarchy().Where(t => !t.Type.EdmType.Abstract);
 
             // generate a disjunction
             Node current = null;
-            foreach (TypeInfo type in types)
+            foreach (var type in types)
             {
-                Node typeComparisonNode = CreateTypeEqualsOp(type, typeIdProperty);
+                var typeComparisonNode = CreateTypeEqualsOp(type, typeIdProperty);
                 if (null == current)
                 {
                     current = typeComparisonNode;
@@ -3069,9 +3224,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>type equality check</returns>
         private Node CreateTypeEqualsOp(TypeInfo typeInfo, Node typeIdProperty)
         {
-            Node typeIdConstantNode = CreateTypeIdConstant(typeInfo);
-            ComparisonOp eqCompOp = m_command.CreateComparisonOp(OpType.EQ);
-            Node result = m_command.CreateNode(eqCompOp, typeIdProperty, typeIdConstantNode);
+            var typeIdConstantNode = CreateTypeIdConstant(typeInfo);
+            var eqCompOp = m_command.CreateComparisonOp(OpType.EQ);
+            var result = m_command.CreateNode(eqCompOp, typeIdProperty, typeIdConstantNode);
             return result;
         }
 

@@ -1,9 +1,7 @@
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
@@ -57,32 +55,36 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             internal EntitySetTranslator(StorageEntitySetMapping setMapping)
             {
-                Debug.Assert(null != setMapping && null != setMapping.ModificationFunctionMappings &&
+                Debug.Assert(
+                    null != setMapping && null != setMapping.ModificationFunctionMappings &&
                     0 < setMapping.ModificationFunctionMappings.Count, "set mapping must exist and must specify function mappings");
                 m_typeMappings = new Dictionary<EntityType, StorageEntityTypeModificationFunctionMapping>();
-                foreach (StorageEntityTypeModificationFunctionMapping typeMapping in setMapping.ModificationFunctionMappings)
+                foreach (var typeMapping in setMapping.ModificationFunctionMappings)
                 {
                     m_typeMappings.Add(typeMapping.EntityType, typeMapping);
                 }
             }
 
             internal override FunctionUpdateCommand Translate(
-                UpdateTranslator translator, 
+                UpdateTranslator translator,
                 ExtractedStateEntry stateEntry)
             {
                 var mapping = GetFunctionMapping(stateEntry);
-                StorageEntityTypeModificationFunctionMapping typeMapping = mapping.Item1;
-                StorageModificationFunctionMapping functionMapping = mapping.Item2;
-                EntityKey entityKey = stateEntry.Source.EntityKey;
+                var typeMapping = mapping.Item1;
+                var functionMapping = mapping.Item2;
+                var entityKey = stateEntry.Source.EntityKey;
 
-                var stateEntries = new HashSet<IEntityStateEntry> { stateEntry.Source };
+                var stateEntries = new HashSet<IEntityStateEntry>
+                                       {
+                                           stateEntry.Source
+                                       };
 
                 // gather all referenced association ends
                 var collocatedEntries =
                     // find all related entries corresponding to collocated association types
                     from end in functionMapping.CollocatedAssociationSetEnds
                     join candidateEntry in translator.GetRelationships(entityKey)
-                    on end.CorrespondingAssociationEndMember.DeclaringType equals candidateEntry.EntitySet.ElementType
+                        on end.CorrespondingAssociationEndMember.DeclaringType equals candidateEntry.EntitySet.ElementType
                     select Tuple.Create(end.CorrespondingAssociationEndMember, candidateEntry);
 
                 var currentReferenceEnds = new Dictionary<AssociationEndMember, IEntityStateEntry>();
@@ -90,9 +92,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 foreach (var candidate in collocatedEntries)
                 {
-                    ProcessReferenceCandidate(entityKey, stateEntries, currentReferenceEnds, originalReferenceEnds, candidate.Item1, candidate.Item2);
+                    ProcessReferenceCandidate(
+                        entityKey, stateEntries, currentReferenceEnds, originalReferenceEnds, candidate.Item1, candidate.Item2);
                 }
-                
+
                 // create function object
                 FunctionUpdateCommand command;
 
@@ -116,9 +119,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     // interpret all result bindings
                     if (null != functionMapping.ResultBindings)
                     {
-                        foreach (StorageModificationFunctionResultBinding resultBinding in functionMapping.ResultBindings)
+                        foreach (var resultBinding in functionMapping.ResultBindings)
                         {
-                            PropagatorResult result = stateEntry.Current.GetMemberValue(resultBinding.Property);
+                            var result = stateEntry.Current.GetMemberValue(resultBinding.Property);
                             command.AddResultColumn(translator, resultBinding.ColumnName, result);
                         }
                     }
@@ -128,29 +131,31 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             private static void ProcessReferenceCandidate(
-                EntityKey source, 
-                HashSet<IEntityStateEntry> stateEntries, 
-                Dictionary<AssociationEndMember, IEntityStateEntry> currentReferenceEnd, 
-                Dictionary<AssociationEndMember, IEntityStateEntry> originalReferenceEnd, 
+                EntityKey source,
+                HashSet<IEntityStateEntry> stateEntries,
+                Dictionary<AssociationEndMember, IEntityStateEntry> currentReferenceEnd,
+                Dictionary<AssociationEndMember, IEntityStateEntry> originalReferenceEnd,
                 AssociationEndMember endMember,
                 IEntityStateEntry candidateEntry)
             {
                 Func<DbDataRecord, int, EntityKey> getEntityKey = (record, ordinal) => (EntityKey)record[ordinal];
                 Action<DbDataRecord, Action<IEntityStateEntry>> findMatch = (record, registerTarget) =>
-                {
-                    // find the end corresponding to the 'to' end
-                    int toOrdinal = record.GetOrdinal(endMember.Name);
-                    Debug.Assert(-1 != toOrdinal, "to end of relationship doesn't exist in record");
+                                                                                {
+                                                                                    // find the end corresponding to the 'to' end
+                                                                                    var toOrdinal = record.GetOrdinal(endMember.Name);
+                                                                                    Debug.Assert(
+                                                                                        -1 != toOrdinal,
+                                                                                        "to end of relationship doesn't exist in record");
 
-                    // the 'from' end must be the other end
-                    int fromOrdinal = 0 == toOrdinal ? 1 : 0;
+                                                                                    // the 'from' end must be the other end
+                                                                                    var fromOrdinal = 0 == toOrdinal ? 1 : 0;
 
-                    if (getEntityKey(record, fromOrdinal) == source)
-                    {
-                        stateEntries.Add(candidateEntry);
-                        registerTarget(candidateEntry);
-                    }
-                };
+                                                                                    if (getEntityKey(record, fromOrdinal) == source)
+                                                                                    {
+                                                                                        stateEntries.Add(candidateEntry);
+                                                                                        registerTarget(candidateEntry);
+                                                                                    }
+                                                                                };
 
                 switch (candidateEntry.State)
                 {
@@ -158,10 +163,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         findMatch(
                             candidateEntry.CurrentValues,
                             (target) =>
-                            {
-                                currentReferenceEnd.Add(endMember, target);
-                                originalReferenceEnd.Add(endMember, target);
-                            });
+                                {
+                                    currentReferenceEnd.Add(endMember, target);
+                                    originalReferenceEnd.Add(endMember, target);
+                                });
                         break;
                     case EntityState.Added:
                         findMatch(
@@ -178,7 +183,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 }
             }
 
-            private Tuple<StorageEntityTypeModificationFunctionMapping, StorageModificationFunctionMapping> GetFunctionMapping(ExtractedStateEntry stateEntry)
+            private Tuple<StorageEntityTypeModificationFunctionMapping, StorageModificationFunctionMapping> GetFunctionMapping(
+                ExtractedStateEntry stateEntry)
             {
                 // choose mapping based on type and operation
                 StorageModificationFunctionMapping functionMapping;
@@ -191,21 +197,24 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 {
                     entityType = (EntityType)stateEntry.Original.StructuralType;
                 }
-                StorageEntityTypeModificationFunctionMapping typeMapping = m_typeMappings[entityType];
+                var typeMapping = m_typeMappings[entityType];
                 switch (stateEntry.State)
                 {
                     case EntityState.Added:
                         functionMapping = typeMapping.InsertFunctionMapping;
-                        EntityUtil.ValidateNecessaryModificationFunctionMapping(functionMapping, "Insert", stateEntry.Source, "EntityType", entityType.Name);
+                        EntityUtil.ValidateNecessaryModificationFunctionMapping(
+                            functionMapping, "Insert", stateEntry.Source, "EntityType", entityType.Name);
                         break;
                     case EntityState.Deleted:
                         functionMapping = typeMapping.DeleteFunctionMapping;
-                        EntityUtil.ValidateNecessaryModificationFunctionMapping(functionMapping, "Delete", stateEntry.Source, "EntityType", entityType.Name);
+                        EntityUtil.ValidateNecessaryModificationFunctionMapping(
+                            functionMapping, "Delete", stateEntry.Source, "EntityType", entityType.Name);
                         break;
                     case EntityState.Unchanged:
                     case EntityState.Modified:
                         functionMapping = typeMapping.UpdateFunctionMapping;
-                        EntityUtil.ValidateNecessaryModificationFunctionMapping(functionMapping, "Update", stateEntry.Source, "EntityType", entityType.Name);
+                        EntityUtil.ValidateNecessaryModificationFunctionMapping(
+                            functionMapping, "Update", stateEntry.Source, "EntityType", entityType.Name);
                         break;
                     default:
                         functionMapping = null;
@@ -217,10 +226,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             // Walks through all parameter bindings in the function mapping and binds the parameters to the
             // requested properties of the given state entry.
-            private static void BindFunctionParameters(UpdateTranslator translator, ExtractedStateEntry stateEntry, StorageModificationFunctionMapping functionMapping, FunctionUpdateCommand command, Dictionary<AssociationEndMember, IEntityStateEntry> currentReferenceEnds, Dictionary<AssociationEndMember, IEntityStateEntry> originalReferenceEnds)
+            private static void BindFunctionParameters(
+                UpdateTranslator translator, ExtractedStateEntry stateEntry, StorageModificationFunctionMapping functionMapping,
+                FunctionUpdateCommand command, Dictionary<AssociationEndMember, IEntityStateEntry> currentReferenceEnds,
+                Dictionary<AssociationEndMember, IEntityStateEntry> originalReferenceEnds)
             {
                 // bind all parameters
-                foreach (StorageModificationFunctionParameterBinding parameterBinding in functionMapping.ParameterBindings)
+                foreach (var parameterBinding in functionMapping.ParameterBindings)
                 {
                     PropagatorResult result;
 
@@ -228,18 +240,20 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     if (null != parameterBinding.MemberPath.AssociationSetEnd)
                     {
                         // find the relationship entry corresponding to the navigation
-                        AssociationEndMember endMember = parameterBinding.MemberPath.AssociationSetEnd.CorrespondingAssociationEndMember;
+                        var endMember = parameterBinding.MemberPath.AssociationSetEnd.CorrespondingAssociationEndMember;
                         IEntityStateEntry relationshipEntry;
-                        bool hasTarget = parameterBinding.IsCurrent
-                            ? currentReferenceEnds.TryGetValue(endMember, out relationshipEntry)
-                            : originalReferenceEnds.TryGetValue(endMember, out relationshipEntry);
+                        var hasTarget = parameterBinding.IsCurrent
+                                            ? currentReferenceEnds.TryGetValue(endMember, out relationshipEntry)
+                                            : originalReferenceEnds.TryGetValue(endMember, out relationshipEntry);
                         if (!hasTarget)
                         {
-                            if (endMember.RelationshipMultiplicity == RelationshipMultiplicity.One)
+                            if (endMember.RelationshipMultiplicity
+                                == RelationshipMultiplicity.One)
                             {
-                                string entitySetName = stateEntry.Source.EntitySet.Name;
-                                string associationSetName = parameterBinding.MemberPath.AssociationSetEnd.ParentAssociationSet.Name;
-                                throw EntityUtil.Update(Strings.Update_MissingRequiredRelationshipValue(entitySetName, associationSetName),
+                                var entitySetName = stateEntry.Source.EntitySet.Name;
+                                var associationSetName = parameterBinding.MemberPath.AssociationSetEnd.ParentAssociationSet.Name;
+                                throw EntityUtil.Update(
+                                    Strings.Update_MissingRequiredRelationshipValue(entitySetName, associationSetName),
                                     null,
                                     command.GetStateEntries(translator));
                             }
@@ -251,11 +265,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         else
                         {
                             // get the actual value
-                            PropagatorResult relationshipResult = parameterBinding.IsCurrent ?
-                                translator.RecordConverter.ConvertCurrentValuesToPropagatorResult(relationshipEntry, ModifiedPropertiesBehavior.AllModified) :
-                                translator.RecordConverter.ConvertOriginalValuesToPropagatorResult(relationshipEntry, ModifiedPropertiesBehavior.AllModified);
-                            PropagatorResult endResult = relationshipResult.GetMemberValue(endMember);
-                            EdmProperty keyProperty = (EdmProperty)parameterBinding.MemberPath.Members[0]; 
+                            var relationshipResult = parameterBinding.IsCurrent
+                                                         ? translator.RecordConverter.ConvertCurrentValuesToPropagatorResult(
+                                                             relationshipEntry, ModifiedPropertiesBehavior.AllModified)
+                                                         : translator.RecordConverter.ConvertOriginalValuesToPropagatorResult(
+                                                             relationshipEntry, ModifiedPropertiesBehavior.AllModified);
+                            var endResult = relationshipResult.GetMemberValue(endMember);
+                            var keyProperty = (EdmProperty)parameterBinding.MemberPath.Members[0];
                             result = endResult.GetMemberValue(keyProperty);
                         }
                     }
@@ -263,10 +279,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     {
                         // walk through the member path to find the appropriate propagator results
                         result = parameterBinding.IsCurrent ? stateEntry.Current : stateEntry.Original;
-                        for (int i = parameterBinding.MemberPath.Members.Count; i > 0;)
+                        for (var i = parameterBinding.MemberPath.Members.Count; i > 0;)
                         {
                             --i;
-                            EdmMember member = parameterBinding.MemberPath.Members[i];
+                            var member = parameterBinding.MemberPath.Members[i];
                             result = result.GetMemberValue(member);
                         }
                     }
@@ -294,46 +310,51 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             internal override FunctionUpdateCommand Translate(
-                UpdateTranslator translator, 
+                UpdateTranslator translator,
                 ExtractedStateEntry stateEntry)
             {
-                if (null == m_mapping) { return null; }
+                if (null == m_mapping)
+                {
+                    return null;
+                }
 
-                bool isInsert = EntityState.Added == stateEntry.State;
+                var isInsert = EntityState.Added == stateEntry.State;
 
                 EntityUtil.ValidateNecessaryModificationFunctionMapping(
-                    isInsert ? m_mapping.InsertFunctionMapping : m_mapping.DeleteFunctionMapping, 
-                    isInsert ? "Insert" : "Delete", 
+                    isInsert ? m_mapping.InsertFunctionMapping : m_mapping.DeleteFunctionMapping,
+                    isInsert ? "Insert" : "Delete",
                     stateEntry.Source, "AssociationSet", m_mapping.AssociationSet.Name);
 
                 // initialize a new command
-                StorageModificationFunctionMapping functionMapping = isInsert ? m_mapping.InsertFunctionMapping : m_mapping.DeleteFunctionMapping;
-                FunctionUpdateCommand command = new FunctionUpdateCommand(functionMapping, translator, new [] { stateEntry.Source }.ToList().AsReadOnly(), stateEntry);
+                var functionMapping = isInsert ? m_mapping.InsertFunctionMapping : m_mapping.DeleteFunctionMapping;
+                var command = new FunctionUpdateCommand(
+                    functionMapping, translator, new[] { stateEntry.Source }.ToList().AsReadOnly(), stateEntry);
 
                 // extract the relationship values from the state entry
                 PropagatorResult recordResult;
-                if (isInsert) 
+                if (isInsert)
                 {
                     recordResult = stateEntry.Current;
                 }
-                else 
-                { 
-                    recordResult = stateEntry.Original; 
+                else
+                {
+                    recordResult = stateEntry.Original;
                 }
 
                 // bind parameters
-                foreach (StorageModificationFunctionParameterBinding parameterBinding in functionMapping.ParameterBindings)
+                foreach (var parameterBinding in functionMapping.ParameterBindings)
                 {
                     // extract the relationship information
-                    Debug.Assert(2 == parameterBinding.MemberPath.Members.Count, "relationship parameter binding member " +
-                        "path should include the relationship end and key property only");
+                    Debug.Assert(
+                        2 == parameterBinding.MemberPath.Members.Count, "relationship parameter binding member " +
+                                                                        "path should include the relationship end and key property only");
 
-                    EdmProperty keyProperty = (EdmProperty)parameterBinding.MemberPath.Members[0];
-                    AssociationEndMember endMember = (AssociationEndMember)parameterBinding.MemberPath.Members[1];
+                    var keyProperty = (EdmProperty)parameterBinding.MemberPath.Members[0];
+                    var endMember = (AssociationEndMember)parameterBinding.MemberPath.Members[1];
 
                     // get the end member
-                    PropagatorResult endResult = recordResult.GetMemberValue(endMember);
-                    PropagatorResult keyResult = endResult.GetMemberValue(keyProperty);
+                    var endResult = recordResult.GetMemberValue(endMember);
+                    var keyResult = endResult.GetMemberValue(keyProperty);
 
                     command.SetParameterValue(keyResult, parameterBinding, translator);
                 }

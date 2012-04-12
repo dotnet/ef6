@@ -1,14 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-
-namespace System.Data.Entity.Core.Metadata.Edm
+﻿namespace System.Data.Entity.Core.Metadata.Edm
 {
-    internal partial class ImmutableAssemblyCacheEntry : AssemblyCacheEntry
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Reflection;
+
+    internal class ImmutableAssemblyCacheEntry : AssemblyCacheEntry
     {
         // types in "this" assembly
-        private readonly System.Collections.ObjectModel.ReadOnlyCollection<EdmType> _typesInAssembly;       
+        private readonly ReadOnlyCollection<EdmType> _typesInAssembly;
         // other assemblies referenced by types we care about in "this" assembly
-        private readonly System.Collections.ObjectModel.ReadOnlyCollection<Assembly> _closureAssemblies;
+        private readonly ReadOnlyCollection<Assembly> _closureAssemblies;
+
         internal ImmutableAssemblyCacheEntry(MutableAssemblyCacheEntry mutableEntry)
         {
             _typesInAssembly = new List<EdmType>(mutableEntry.TypesInAssembly).AsReadOnly();

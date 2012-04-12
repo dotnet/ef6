@@ -1,13 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Diagnostics;
-using System.Globalization;
-using System.Text;
-
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.Text;
+
     /// <summary>
     /// Types of variable
     /// </summary>
@@ -44,9 +43,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     /// </summary>
     internal abstract class Var
     {
-        int m_id;
-        VarType m_varType;
-        TypeUsage m_type;
+        private readonly int m_id;
+        private readonly VarType m_varType;
+        private readonly TypeUsage m_type;
 
         internal Var(int id, VarType varType, TypeUsage type)
         {
@@ -58,17 +57,26 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         /// Id of this var
         /// </summary>
-        internal int Id { get { return m_id; } }
+        internal int Id
+        {
+            get { return m_id; }
+        }
 
         /// <summary>
         /// Kind of Var
         /// </summary>
-        internal VarType VarType { get { return m_varType; } }
+        internal VarType VarType
+        {
+            get { return m_varType; }
+        }
 
         /// <summary>
         /// Datatype of this Var
         /// </summary>
-        internal TypeUsage Type { get { return m_type; } }
+        internal TypeUsage Type
+        {
+            get { return m_type; }
+        }
 
         /// <summary>
         /// Try to get the name of this Var. 
@@ -76,7 +84,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="name"></param>
         /// <returns></returns>
         internal virtual bool TryGetName(out string name)
-        { 
+        {
             name = null;
             return false;
         }
@@ -87,7 +95,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format(CultureInfo.InvariantCulture, "{0}", this.Id); ;
+            return String.Format(CultureInfo.InvariantCulture, "{0}", Id);
+            ;
         }
     }
 
@@ -96,7 +105,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     /// </summary>
     internal sealed class ParameterVar : Var
     {
-        string m_paramName;
+        private readonly string m_paramName;
 
         internal ParameterVar(int id, TypeUsage type, string paramName)
             : base(id, VarType.Parameter, type)
@@ -107,7 +116,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         /// Name of the parameter
         /// </summary>
-        internal string ParameterName { get { return m_paramName; } }
+        internal string ParameterName
+        {
+            get { return m_paramName; }
+        }
 
         /// <summary>
         /// Get the name of this Var
@@ -116,7 +128,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal override bool TryGetName(out string name)
         {
-            name = this.ParameterName;
+            name = ParameterName;
             return true;
         }
     }
@@ -126,8 +138,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     /// </summary>
     internal sealed class ColumnVar : Var
     {
-        ColumnMD m_columnMetadata;
-        Table m_table;
+        private readonly ColumnMD m_columnMetadata;
+        private readonly Table m_table;
 
         /// <summary>
         /// Constructor
@@ -145,12 +157,18 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         /// The table instance containing this column reference
         /// </summary>
-        internal Table Table { get { return m_table; } }
+        internal Table Table
+        {
+            get { return m_table; }
+        }
 
         /// <summary>
         /// The column metadata for this column
         /// </summary>
-        internal ColumnMD ColumnMetadata { get { return m_columnMetadata; } }
+        internal ColumnMD ColumnMetadata
+        {
+            get { return m_columnMetadata; }
+        }
 
         /// <summary>
         /// Get the name of this column var
@@ -169,7 +187,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     /// </summary>
     internal sealed class ComputedVar : Var
     {
-        internal ComputedVar(int id, TypeUsage type) : base(id, VarType.Computed, type)
+        internal ComputedVar(int id, TypeUsage type)
+            : base(id, VarType.Computed, type)
         {
         }
     }
@@ -179,7 +198,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     /// </summary>
     internal sealed class SetOpVar : Var
     {
-        internal SetOpVar(int id, TypeUsage type) : base(id, VarType.SetOp, type) { }
+        internal SetOpVar(int id, TypeUsage type)
+            : base(id, VarType.SetOp, type)
+        {
+        }
     }
 
     //
@@ -198,18 +220,22 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     internal class VarVec : IEnumerable<Var>
     {
         #region Nested Classes
+
         /// <summary>
         /// A VarVec enumerator is a specialized enumerator for a VarVec.
         /// </summary>
         internal class VarVecEnumerator : IEnumerator<Var>, IDisposable
         {
             #region private state
+
             private int m_position;
             private Command m_command;
             private BitArray m_bitArray;
+
             #endregion
 
             #region Constructors
+
             /// <summary>
             /// Constructs a new enumerator for the specified Vec
             /// </summary>
@@ -218,9 +244,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             {
                 Init(vec);
             }
+
             #endregion
 
             #region public surface
+
             /// <summary>
             /// Initialize the enumerator to enumerate over the supplied Vec
             /// </summary>
@@ -231,22 +259,26 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                 m_command = vec.m_command;
                 m_bitArray = vec.m_bitVector;
             }
+
             #endregion
 
             #region IEnumerator<Var> Members
+
             /// <summary>
             /// Get the Var at the current position
             /// </summary>
             public Var Current
             {
-                get { return (m_position >= 0 && m_position < m_bitArray.Count) ? m_command.GetVar(m_position) : (Var)null; }
+                get { return (m_position >= 0 && m_position < m_bitArray.Count) ? m_command.GetVar(m_position) : null; }
             }
+
             #endregion
 
             #region IEnumerator Members
+
             object IEnumerator.Current
             {
-                get { return Current;}
+                get { return Current; }
             }
 
             /// <summary>
@@ -273,9 +305,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             {
                 m_position = -1;
             }
+
             #endregion
 
             #region IDisposable Members
+
             /// <summary>
             /// Dispose of the current enumerator - return it to the Command
             /// </summary>
@@ -291,9 +325,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
             #endregion
         }
+
         #endregion
 
         #region public methods
+
         internal void Clear()
         {
             m_bitVector.Length = 0;
@@ -310,7 +346,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             Align(other);
             m_bitVector.Or(other.m_bitVector);
         }
-        
+
         /// <summary>
         /// Computes (this Minus other) by performing (this And (Not(other)))
         /// A temp VarVec is used and released at the end of the operation
@@ -318,10 +354,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="other"></param>
         internal void Minus(VarVec other)
         {
-            VarVec tmp = m_command.CreateVarVec(other);
+            var tmp = m_command.CreateVarVec(other);
             tmp.m_bitVector.Length = m_bitVector.Length;
             tmp.m_bitVector.Not();
-            this.And(tmp);
+            And(tmp);
             m_command.ReleaseVarVec(tmp);
         }
 
@@ -332,9 +368,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal bool Overlaps(VarVec other)
         {
-            VarVec otherCopy = m_command.CreateVarVec(other);
+            var otherCopy = m_command.CreateVarVec(other);
             otherCopy.And(this);
-            bool overlaps = !otherCopy.IsEmpty;
+            var overlaps = !otherCopy.IsEmpty;
             m_command.ReleaseVarVec(otherCopy);
             return overlaps;
         }
@@ -348,10 +384,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal bool Subsumes(VarVec other)
         {
-            for (int i = 0; i < other.m_bitVector.Count; i++)
+            for (var i = 0; i < other.m_bitVector.Count; i++)
             {
-                if (other.m_bitVector[i] && 
-                    ((i >= this.m_bitVector.Count) || !this.m_bitVector[i]))
+                if (other.m_bitVector[i]
+                    &&
+                    ((i >= m_bitVector.Count) || !m_bitVector[i]))
                 {
                     return false;
                 }
@@ -361,9 +398,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         internal void InitFrom(VarVec other)
         {
-            this.Clear();
-            this.m_bitVector.Length = other.m_bitVector.Length;
-            this.m_bitVector.Or(other.m_bitVector);
+            Clear();
+            m_bitVector.Length = other.m_bitVector.Length;
+            m_bitVector.Or(other.m_bitVector);
         }
 
         internal void InitFrom(IEnumerable<Var> other)
@@ -373,12 +410,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         internal void InitFrom(IEnumerable<Var> other, bool ignoreParameters)
         {
-            this.Clear();
-            foreach (Var v in other)
+            Clear();
+            foreach (var v in other)
             {
-                if (!ignoreParameters || (v.VarType != VarType.Parameter))
+                if (!ignoreParameters
+                    || (v.VarType != VarType.Parameter))
                 {
-                    this.Set(v);
+                    Set(v);
                 }
             }
         }
@@ -394,7 +432,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
 
         /// <summary>
@@ -404,9 +442,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             get
             {
-                int count = 0;
-                foreach (Var v in this)
+                var count = 0;
+                foreach (var v in this)
+                {
                     count++;
+                }
                 return count;
             }
         }
@@ -416,11 +456,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             Align(v.Id);
             return m_bitVector.Get(v.Id);
         }
+
         internal void Set(Var v)
         {
             Align(v.Id);
             m_bitVector.Set(v.Id, true);
         }
+
         internal void Clear(Var v)
         {
             Align(v.Id);
@@ -432,7 +474,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         internal bool IsEmpty
         {
-            get { return this.First == null;}
+            get { return First == null; }
         }
 
         /// <summary>
@@ -442,7 +484,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             get
             {
-                foreach (Var v in this)
+                foreach (var v in this)
                 {
                     return v;
                 }
@@ -458,8 +500,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns>a new VarVec</returns>
         internal VarVec Remap(Dictionary<Var, Var> varMap)
         {
-            VarVec newVec = m_command.CreateVarVec();
-            foreach (Var v in this)
+            var newVec = m_command.CreateVarVec();
+            foreach (var v in this)
             {
                 Var newVar;
                 if (!varMap.TryGetValue(v, out newVar))
@@ -474,27 +516,35 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #endregion
 
         #region constructors
+
         internal VarVec(Command command)
         {
             m_bitVector = new BitArray(64);
             m_command = command;
         }
+
         #endregion
 
         #region private methods
+
         private void Align(VarVec other)
         {
-            if (other.m_bitVector.Count == this.m_bitVector.Count)
-                return;
-            if (other.m_bitVector.Count > this.m_bitVector.Count)
+            if (other.m_bitVector.Count
+                == m_bitVector.Count)
             {
-                this.m_bitVector.Length = other.m_bitVector.Count;
+                return;
+            }
+            if (other.m_bitVector.Count
+                > m_bitVector.Count)
+            {
+                m_bitVector.Length = other.m_bitVector.Count;
             }
             else
             {
-                other.m_bitVector.Length = this.m_bitVector.Count;
+                other.m_bitVector.Length = m_bitVector.Count;
             }
         }
+
         private void Align(int idx)
         {
             if (idx >= m_bitVector.Count)
@@ -510,31 +560,35 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
-            string separator = String.Empty;
+            var sb = new StringBuilder();
+            var separator = String.Empty;
 
-            foreach (Var v in this)
+            foreach (var v in this)
             {
                 sb.AppendFormat(CultureInfo.InvariantCulture, "{0}{1}", separator, v.Id);
                 separator = ",";
             }
             return sb.ToString();
         }
+
         #endregion
 
         #region private state
-        private BitArray m_bitVector;
-        private Command m_command;
+
+        private readonly BitArray m_bitVector;
+        private readonly Command m_command;
+
         #endregion
 
         #region Clone
+
         /// <summary>
         /// Create a clone of this vec
         /// </summary>
         /// <returns></returns>
         public VarVec Clone()
         {
-            VarVec newVec = m_command.CreateVarVec();
+            var newVec = m_command.CreateVarVec();
             newVec.InitFrom(this);
             return newVec;
         }
@@ -549,16 +603,23 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     internal class VarList : List<Var>
     {
         #region constructors
+
         /// <summary>
         /// Trivial constructor
         /// </summary>
-        internal VarList() : base() { }
+        internal VarList()
+        {
+        }
 
         /// <summary>
         /// Not so trivial constructor
         /// </summary>
         /// <param name="vars"></param>
-        internal VarList(IEnumerable<Var> vars) : base(vars) { }
+        internal VarList(IEnumerable<Var> vars)
+            : base(vars)
+        {
+        }
+
         #endregion
 
         #region public methods
@@ -568,12 +629,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// provide a string representation for debugging.
         /// <returns></returns>
         /// </summary>
-        public override string ToString() 
+        public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
-            string separator = String.Empty;
+            var sb = new StringBuilder();
+            var separator = String.Empty;
 
-            foreach (Var v in this) 
+            foreach (var v in this)
             {
                 sb.AppendFormat(CultureInfo.InvariantCulture, "{0}{1}", separator, v.Id);
                 separator = ",";
@@ -584,19 +645,19 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #endregion
     }
 
-
     #region VarMap
+
     /// <summary>
     /// Helps map one variable to the next.
     /// </summary>
-    internal class VarMap: Dictionary<Var, Var>
+    internal class VarMap : Dictionary<Var, Var>
     {
         #region public surfaces
 
         internal VarMap GetReverseMap()
         {
-            VarMap reverseMap = new VarMap();
-            foreach (KeyValuePair<Var, Var> kv in this)
+            var reverseMap = new VarMap();
+            foreach (var kv in this)
             {
                 Var x;
                 // On the odd chance that a var is in the varMap more than once, the first one
@@ -609,13 +670,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
             return reverseMap;
         }
-        
+
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
-            string separator = string.Empty;
+            var sb = new StringBuilder();
+            var separator = string.Empty;
 
-            foreach (Var v in this.Keys)
+            foreach (var v in Keys)
             {
                 sb.AppendFormat(CultureInfo.InvariantCulture, "{0}({1},{2})", separator, v.Id, this[v].Id);
                 separator = ",";
@@ -626,8 +687,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #endregion
 
         #region constructors
-        internal VarMap() : base() { }
+
         #endregion
     }
+
     #endregion
 }

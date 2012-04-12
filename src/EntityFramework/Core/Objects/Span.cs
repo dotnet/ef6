@@ -2,6 +2,7 @@ namespace System.Data.Entity.Core.Objects
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Internal;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Text;
 
@@ -10,7 +11,7 @@ namespace System.Data.Entity.Core.Objects
     /// </summary>
     internal sealed class Span
     {
-        private List<SpanPath> _spanList;
+        private readonly List<SpanPath> _spanList;
         private string _cacheKey;
 
         internal Span()
@@ -80,8 +81,8 @@ namespace System.Data.Entity.Core.Objects
                 return span1;
             }
 
-            Span retSpan = span1.Clone();
-            foreach (SpanPath path in span2.SpanList)
+            var retSpan = span1.Clone();
+            foreach (var path in span2.SpanList)
             {
                 retSpan.AddSpanPath(path);
             }
@@ -98,24 +99,25 @@ namespace System.Data.Entity.Core.Objects
                     // If there is only a single Include path with a single property,
                     // then simply use the property name as the cache key rather than
                     // creating any new strings.
-                    if (_spanList.Count == 1 &&
-                       _spanList[0].Navigations.Count == 1)
+                    if (_spanList.Count == 1
+                        &&
+                        _spanList[0].Navigations.Count == 1)
                     {
                         _cacheKey = _spanList[0].Navigations[0];
                     }
                     else
                     {
-                        StringBuilder keyBuilder = new StringBuilder();
-                        for (int pathIdx = 0; pathIdx < _spanList.Count; pathIdx++)
+                        var keyBuilder = new StringBuilder();
+                        for (var pathIdx = 0; pathIdx < _spanList.Count; pathIdx++)
                         {
                             if (pathIdx > 0)
                             {
                                 keyBuilder.Append(";");
                             }
 
-                            SpanPath thisPath = _spanList[pathIdx];
+                            var thisPath = _spanList[pathIdx];
                             keyBuilder.Append(thisPath.Navigations[0]);
-                            for (int propIdx = 1; propIdx < thisPath.Navigations.Count; propIdx++)
+                            for (var propIdx = 1; propIdx < thisPath.Navigations.Count; propIdx++)
                             {
                                 keyBuilder.Append(".");
                                 keyBuilder.Append(thisPath.Navigations[propIdx]);
@@ -139,10 +141,10 @@ namespace System.Data.Entity.Core.Objects
             EntityUtil.CheckStringArgument(path, "path");
             if (path.Trim().Length == 0)
             {
-                throw new ArgumentException(System.Data.Entity.Resources.Strings.ObjectQuery_Span_WhiteSpacePath, "path");
+                throw new ArgumentException(Strings.ObjectQuery_Span_WhiteSpacePath, "path");
             }
-            
-            SpanPath spanPath = new SpanPath(ParsePath(path));
+
+            var spanPath = new SpanPath(ParsePath(path));
             AddSpanPath(spanPath);
             _cacheKey = null;
         }
@@ -153,9 +155,9 @@ namespace System.Data.Entity.Core.Objects
         /// <returns></returns>
         internal Span Clone()
         {
-            Span newSpan = new Span();
+            var newSpan = new Span();
             newSpan.SpanList.AddRange(_spanList);
-            newSpan._cacheKey = this._cacheKey;
+            newSpan._cacheKey = _cacheKey;
 
             return newSpan;
         }
@@ -179,10 +181,9 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="spanPath"></param>
         private bool ValidateSpanPath(SpanPath spanPath)
         {
-
             // Check for dupliacte entries
-            for (int i = 0; i < _spanList.Count; i++)
-            { 
+            for (var i = 0; i < _spanList.Count; i++)
+            {
                 // make sure spanPath is not a sub-path of anything already in the list
                 if (spanPath.IsSubPath(_spanList[i]))
                 {
@@ -194,8 +195,8 @@ namespace System.Data.Entity.Core.Objects
 
         private void RemoveExistingSubPaths(SpanPath spanPath)
         {
-            List<SpanPath> toDelete = new List<SpanPath>();
-            for (int i = 0; i < _spanList.Count; i++)
+            var toDelete = new List<SpanPath>();
+            for (var i = 0; i < _spanList.Count; i++)
             {
                 // make sure spanPath is not a sub-path of anything already in the list
                 if (_spanList[i].IsSubPath(spanPath))
@@ -204,7 +205,7 @@ namespace System.Data.Entity.Core.Objects
                 }
             }
 
-            foreach (SpanPath path in toDelete)
+            foreach (var path in toDelete)
             {
                 _spanList.Remove(path);
             }
@@ -226,12 +227,13 @@ namespace System.Data.Entity.Core.Objects
             public bool IsSubPath(SpanPath rhs)
             {
                 // this is a subpath of rhs if it has fewer paths, and all the path element values are equal
-                if (Navigations.Count > rhs.Navigations.Count)
+                if (Navigations.Count
+                    > rhs.Navigations.Count)
                 {
                     return false;
                 }
 
-                for (int i = 0; i < Navigations.Count; i++)
+                for (var i = 0; i < Navigations.Count; i++)
                 {
                     if (!Navigations[i].Equals(rhs.Navigations[i], StringComparison.OrdinalIgnoreCase))
                     {
@@ -245,9 +247,9 @@ namespace System.Data.Entity.Core.Objects
 
         private static List<string> ParsePath(string path)
         {
-            List<string> navigations = MultipartIdentifier.ParseMultipartIdentifier(path, "[", "]", '.');
+            var navigations = MultipartIdentifier.ParseMultipartIdentifier(path, "[", "]", '.');
 
-            for (int i = navigations.Count - 1; i >= 0; i--)
+            for (var i = navigations.Count - 1; i >= 0; i--)
             {
                 if (navigations[i] == null)
                 {
@@ -262,6 +264,5 @@ namespace System.Data.Entity.Core.Objects
             Debug.Assert(navigations.Count > 0, "Empty path found");
             return navigations;
         }
-    
     }
 }

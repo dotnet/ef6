@@ -1,24 +1,22 @@
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity;
-using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
-using System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting;
-using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting;
+    using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
     using System.Data.Entity.Resources;
-    using AttributeSet = Set<MemberPath>;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Text;
+    using AttributeSet = System.Data.Entity.Core.Common.Utils.Set<MemberPath>;
 
     // This class represents th intermediate nodes in the tree (non-leaf nodes)
     internal class OpCellTreeNode : CellTreeNode
     {
-
         #region Constructors
+
         // effects: Creates a node with operation opType and no children
         internal OpCellTreeNode(ViewgenContext context, CellTreeOpType opType)
             : base(context)
@@ -29,7 +27,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         internal OpCellTreeNode(ViewgenContext context, CellTreeOpType opType, params CellTreeNode[] children)
-            : this(context, opType, (IEnumerable<CellTreeNode>)children) { }
+            : this(context, opType, (IEnumerable<CellTreeNode>)children)
+        {
+        }
 
         // effects: Given a sequence of children node and the opType, creates
         // an OpCellTreeNode and returns it
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             : this(context, opType)
         {
             // Add the children one by one so that we can get the attrs etc fixed
-            foreach (CellTreeNode child in children)
+            foreach (var child in children)
             {
                 Add(child);
             }
@@ -46,16 +46,22 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #endregion
 
         #region Fields
-        private Set<MemberPath> m_attrs; // attributes from whole subtree below
-        private List<CellTreeNode> m_children;
-        private CellTreeOpType m_opType;
+
+        private readonly AttributeSet m_attrs; // attributes from whole subtree below
+        private readonly List<CellTreeNode> m_children;
+        private readonly CellTreeOpType m_opType;
         private FragmentQuery m_leftFragmentQuery;
         private FragmentQuery m_rightFragmentQuery;
+
         #endregion
 
         #region Properties
+
         // effects: See CellTreeNode.OpType
-        internal override CellTreeOpType OpType { get { return m_opType; } }
+        internal override CellTreeOpType OpType
+        {
+            get { return m_opType; }
+        }
 
         // Lazily create FragmentQuery when required
         internal override FragmentQuery LeftFragmentQuery
@@ -94,10 +100,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         // effects: See CellTreeNode.Attributes
-        internal override Set<MemberPath> Attributes { get { return m_attrs; } }
+        internal override AttributeSet Attributes
+        {
+            get { return m_attrs; }
+        }
 
         // effects: See CellTreeNode.Children
-        internal override List<CellTreeNode> Children { get { return m_children; } }
+        internal override List<CellTreeNode> Children
+        {
+            get { return m_children; }
+        }
 
         internal override int NumProjectedSlots
         {
@@ -117,9 +129,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return m_children[0].NumBoolSlots;
             }
         }
+
         #endregion
 
         #region Methods
+
         internal override TOutput Accept<TInput, TOutput>(SimpleCellTreeVisitor<TInput, TOutput> visitor, TInput param)
         {
             return visitor.VisitOpNode(this, param);
@@ -175,7 +189,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         // effects: Given the required slots by the parent,
         // generates a CqlBlock tree for the tree rooted below node
-        internal override CqlBlock ToCqlBlock(bool[] requiredSlots, CqlIdentifiers identifiers, ref int blockAliasNum,
+        internal override CqlBlock ToCqlBlock(
+            bool[] requiredSlots, CqlIdentifiers identifiers, ref int blockAliasNum,
             ref List<WithRelationship> withRelationships)
         {
             // Dispatch depending on whether we have a union node or join node
@@ -194,7 +209,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         internal override bool IsProjectedSlot(int slot)
         {
             // If any childtree projects it, return true
-            foreach (CellTreeNode childNode in Children)
+            foreach (var childNode in Children)
             {
                 if (childNode.IsProjectedSlot(slot))
                 {
@@ -203,48 +218,56 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
             return false;
         }
+
         #endregion
 
         #region Union CqlBLock Methods
+
         // requires: node corresponds to a Union node
         // effects: Given a union node and the slots required by the parent,
         // generates a CqlBlock for the subtree rooted at node
-        private CqlBlock UnionToCqlBlock(bool[] requiredSlots, CqlIdentifiers identifiers, ref int blockAliasNum, ref List<WithRelationship> withRelationships)
+        private CqlBlock UnionToCqlBlock(
+            bool[] requiredSlots, CqlIdentifiers identifiers, ref int blockAliasNum, ref List<WithRelationship> withRelationships)
         {
             Debug.Assert(OpType == CellTreeOpType.Union);
 
-            List<CqlBlock> children = new List<CqlBlock>();
-            List<Tuple<CqlBlock, SlotInfo>> additionalChildSlots = new List<Tuple<CqlBlock, SlotInfo>>();
+            var children = new List<CqlBlock>();
+            var additionalChildSlots = new List<Tuple<CqlBlock, SlotInfo>>();
 
-            int totalSlots = requiredSlots.Length;
-            foreach (CellTreeNode child in Children)
+            var totalSlots = requiredSlots.Length;
+            foreach (var child in Children)
             {
                 // Unlike Join, we pass the requiredSlots from the parent as the requirement.
-                bool[] childProjectedSlots = child.GetProjectedSlots();
+                var childProjectedSlots = child.GetProjectedSlots();
                 AndWith(childProjectedSlots, requiredSlots);
-                CqlBlock childBlock = child.ToCqlBlock(childProjectedSlots, identifiers, ref blockAliasNum, ref withRelationships);
-                for (int qualifiedSlotNumber = childProjectedSlots.Length; qualifiedSlotNumber < childBlock.Slots.Count; qualifiedSlotNumber++)
+                var childBlock = child.ToCqlBlock(childProjectedSlots, identifiers, ref blockAliasNum, ref withRelationships);
+                for (var qualifiedSlotNumber = childProjectedSlots.Length;
+                     qualifiedSlotNumber < childBlock.Slots.Count;
+                     qualifiedSlotNumber++)
                 {
                     additionalChildSlots.Add(Tuple.Create(childBlock, childBlock.Slots[qualifiedSlotNumber]));
                 }
 
                 // if required, but not projected, add NULL
-                SlotInfo[] paddedSlotInfo = new SlotInfo[childBlock.Slots.Count];
-                for (int slotNum = 0; slotNum < totalSlots; slotNum++)
+                var paddedSlotInfo = new SlotInfo[childBlock.Slots.Count];
+                for (var slotNum = 0; slotNum < totalSlots; slotNum++)
                 {
-                    if (requiredSlots[slotNum] && !childProjectedSlots[slotNum])
+                    if (requiredSlots[slotNum]
+                        && !childProjectedSlots[slotNum])
                     {
                         if (IsBoolSlot(slotNum))
                         {
-                            paddedSlotInfo[slotNum] = new SlotInfo(true /* is required */, true /* is projected */,
-                                                            new BooleanProjectedSlot(BoolExpression.False, identifiers, SlotToBoolIndex(slotNum)), null /* member path*/);
+                            paddedSlotInfo[slotNum] = new SlotInfo(
+                                true /* is required */, true /* is projected */,
+                                new BooleanProjectedSlot(BoolExpression.False, identifiers, SlotToBoolIndex(slotNum)), null /* member path*/);
                         }
                         else
                         {
                             // NULL as projected slot
-                            MemberPath memberPath = childBlock.MemberPath(slotNum);
-                            paddedSlotInfo[slotNum] = new SlotInfo(true /* is required */, true /* is projected */,
-                                                             new ConstantProjectedSlot(Constant.Null), memberPath);
+                            var memberPath = childBlock.MemberPath(slotNum);
+                            paddedSlotInfo[slotNum] = new SlotInfo(
+                                true /* is required */, true /* is projected */,
+                                new ConstantProjectedSlot(Constant.Null), memberPath);
                         }
                     }
                     else
@@ -254,30 +277,32 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 }
                 childBlock.Slots = new ReadOnlyCollection<SlotInfo>(paddedSlotInfo);
                 children.Add(childBlock);
-                Debug.Assert(totalSlots == child.NumBoolSlots + child.NumProjectedSlots,
+                Debug.Assert(
+                    totalSlots == child.NumBoolSlots + child.NumProjectedSlots,
                     "Number of required slots is different from what each node in the tree has?");
             }
 
             // We need to add the slots added by each child uniformly for others (as nulls) since this is a union operation.
             if (additionalChildSlots.Count != 0)
             {
-                foreach (CqlBlock childBlock in children)
+                foreach (var childBlock in children)
                 {
-                    SlotInfo[] childSlots = new SlotInfo[totalSlots + additionalChildSlots.Count];
+                    var childSlots = new SlotInfo[totalSlots + additionalChildSlots.Count];
                     childBlock.Slots.CopyTo(childSlots, 0);
-                    int index = totalSlots;
+                    var index = totalSlots;
                     foreach (var addtionalChildSlotInfo in additionalChildSlots)
                     {
                         var slotInfo = addtionalChildSlotInfo.Item2;
                         if (addtionalChildSlotInfo.Item1.Equals(childBlock))
                         {
-                            childSlots[index] = new SlotInfo(true /* is required */, true /* is projected */, slotInfo.SlotValue, slotInfo.OutputMember);
+                            childSlots[index] = new SlotInfo(
+                                true /* is required */, true /* is projected */, slotInfo.SlotValue, slotInfo.OutputMember);
                         }
                         else
                         {
-                            childSlots[index] = new SlotInfo(true /* is required */, true /* is projected */, 
+                            childSlots[index] = new SlotInfo(
+                                true /* is required */, true /* is projected */,
                                 new ConstantProjectedSlot(Constant.Null), slotInfo.OutputMember);
-
                         }
                         //move on to the next slot added by children.
                         index++;
@@ -287,21 +312,21 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
 
             // Create the slotInfos and then Union CqlBlock
-            SlotInfo[] slotInfos = new SlotInfo[totalSlots + additionalChildSlots.Count];
+            var slotInfos = new SlotInfo[totalSlots + additionalChildSlots.Count];
 
             // We pick the slot references from the first child, just as convention
             // In a union, values come from both sides
-            CqlBlock firstChild = children[0];
+            var firstChild = children[0];
 
-            for (int slotNum = 0; slotNum < totalSlots; slotNum++)
+            for (var slotNum = 0; slotNum < totalSlots; slotNum++)
             {
-                SlotInfo slotInfo = firstChild.Slots[slotNum];
+                var slotInfo = firstChild.Slots[slotNum];
                 // A required slot is somehow projected by a child in Union, so set isProjected to be the same as isRequired.
-                bool isRequired = requiredSlots[slotNum];
+                var isRequired = requiredSlots[slotNum];
                 slotInfos[slotNum] = new SlotInfo(isRequired, isRequired, slotInfo.SlotValue, slotInfo.OutputMember);
             }
 
-            for (int slotNum = totalSlots; slotNum < totalSlots + additionalChildSlots.Count; slotNum++)
+            for (var slotNum = totalSlots; slotNum < totalSlots + additionalChildSlots.Count; slotNum++)
             {
                 var aslot = firstChild.Slots[slotNum];
                 slotInfos[slotNum] = new SlotInfo(true, true, aslot.SlotValue, aslot.OutputMember);
@@ -310,55 +335,64 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             CqlBlock block = new UnionCqlBlock(slotInfos, children, identifiers, ++blockAliasNum);
             return block;
         }
+
         private static void AndWith(bool[] boolArray, bool[] another)
         {
             Debug.Assert(boolArray.Length == another.Length);
-            for (int i = 0; i < boolArray.Length; i++)
+            for (var i = 0; i < boolArray.Length; i++)
             {
                 boolArray[i] &= another[i];
             }
         }
+
         #endregion
 
         #region Join CqlBLock Methods
+
         // requires: node corresponds to an IJ, LOJ, FOJ node
         // effects: Given a union node and the slots required by the parent,
         // generates a CqlBlock for the subtree rooted at node
-        private CqlBlock JoinToCqlBlock(bool[] requiredSlots, CqlIdentifiers identifiers, ref int blockAliasNum, ref List<WithRelationship> withRelationships)
+        private CqlBlock JoinToCqlBlock(
+            bool[] requiredSlots, CqlIdentifiers identifiers, ref int blockAliasNum, ref List<WithRelationship> withRelationships)
         {
-            int totalSlots = requiredSlots.Length;
+            var totalSlots = requiredSlots.Length;
 
-            Debug.Assert(OpType == CellTreeOpType.IJ ||
-                         OpType == CellTreeOpType.LOJ ||
-                         OpType == CellTreeOpType.FOJ, "Only these join operations handled");
+            Debug.Assert(
+                OpType == CellTreeOpType.IJ ||
+                OpType == CellTreeOpType.LOJ ||
+                OpType == CellTreeOpType.FOJ, "Only these join operations handled");
 
-            List<CqlBlock> children = new List<CqlBlock>();
-            List<Tuple<QualifiedSlot, MemberPath>> additionalChildSlots = new List<Tuple<QualifiedSlot,MemberPath>>();
+            var children = new List<CqlBlock>();
+            var additionalChildSlots = new List<Tuple<QualifiedSlot, MemberPath>>();
 
             // First get the children nodes (FROM part)
-            foreach (CellTreeNode child in Children)
+            foreach (var child in Children)
             {
                 // Determine the slots that are projected by this child.
                 // These are the required slots as well - unlike Union, we do not need the child to project any extra nulls.
-                bool[] childProjectedSlots = child.GetProjectedSlots();
+                var childProjectedSlots = child.GetProjectedSlots();
                 AndWith(childProjectedSlots, requiredSlots);
-                CqlBlock childBlock = child.ToCqlBlock(childProjectedSlots, identifiers, ref blockAliasNum, ref withRelationships);
+                var childBlock = child.ToCqlBlock(childProjectedSlots, identifiers, ref blockAliasNum, ref withRelationships);
                 children.Add(childBlock);
-                for (int qualifiedSlotNumber = childProjectedSlots.Length; qualifiedSlotNumber < childBlock.Slots.Count; qualifiedSlotNumber++)
+                for (var qualifiedSlotNumber = childProjectedSlots.Length;
+                     qualifiedSlotNumber < childBlock.Slots.Count;
+                     qualifiedSlotNumber++)
                 {
-                    additionalChildSlots.Add(Tuple.Create(childBlock.QualifySlotWithBlockAlias(qualifiedSlotNumber), childBlock.MemberPath(qualifiedSlotNumber)));
+                    additionalChildSlots.Add(
+                        Tuple.Create(childBlock.QualifySlotWithBlockAlias(qualifiedSlotNumber), childBlock.MemberPath(qualifiedSlotNumber)));
                 }
-                Debug.Assert(totalSlots == child.NumBoolSlots + child.NumProjectedSlots,
+                Debug.Assert(
+                    totalSlots == child.NumBoolSlots + child.NumProjectedSlots,
                     "Number of required slots is different from what each node in the tree has?");
             }
 
             // Now get the slots that are projected out by this node (SELECT part)
-            SlotInfo[] slotInfos = new SlotInfo[totalSlots + additionalChildSlots.Count];
-            for (int slotNum = 0; slotNum < totalSlots; slotNum++)
+            var slotInfos = new SlotInfo[totalSlots + additionalChildSlots.Count];
+            for (var slotNum = 0; slotNum < totalSlots; slotNum++)
             {
                 // Note: this call could create a CaseStatementSlot (i.e., slotInfo.SlotValue is CaseStatementSlot)
                 // which uses "from" booleans that need to be projected by children
-                SlotInfo slotInfo = GetJoinSlotInfo(OpType, requiredSlots[slotNum], children, slotNum, identifiers);
+                var slotInfo = GetJoinSlotInfo(OpType, requiredSlots[slotNum], children, slotNum, identifiers);
                 slotInfos[slotNum] = slotInfo;
             }
 
@@ -369,13 +403,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
             // Generate the ON conditions: For each child, generate an ON
             // clause with the 0th child on the key fields
-            List<JoinCqlBlock.OnClause> onClauses = new List<JoinCqlBlock.OnClause>();
+            var onClauses = new List<JoinCqlBlock.OnClause>();
 
-            for (int i = 1; i < children.Count; i++)
+            for (var i = 1; i < children.Count; i++)
             {
-                CqlBlock child = children[i];
-                JoinCqlBlock.OnClause onClause = new JoinCqlBlock.OnClause();
-                foreach (int keySlotNum in this.KeySlots)
+                var child = children[i];
+                var onClause = new JoinCqlBlock.OnClause();
+                foreach (var keySlotNum in KeySlots)
                 {
                     if (ViewgenContext.Config.IsValidationEnabled)
                     {
@@ -384,10 +418,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                     }
                     else
                     {
-                        if (!child.IsProjected(keySlotNum) || !children[0].IsProjected(keySlotNum))
+                        if (!child.IsProjected(keySlotNum)
+                            || !children[0].IsProjected(keySlotNum))
                         {
-                            ErrorLog errorLog = new ErrorLog();
-                            errorLog.AddEntry(new ErrorLog.Record(ViewGenErrorCode.NoJoinKeyOrFKProvidedInMapping,
+                            var errorLog = new ErrorLog();
+                            errorLog.AddEntry(
+                                new ErrorLog.Record(
+                                    ViewGenErrorCode.NoJoinKeyOrFKProvidedInMapping,
                                     Strings.Viewgen_NoJoinKeyOrFK, ViewgenContext.AllWrappersForExtent, String.Empty));
                             ExceptionHelpers.ThrowMappingException(errorLog, ViewgenContext.Config);
                         }
@@ -408,23 +445,24 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // uses the type of the join operation (opType), whether the slot is
         // required by the parent or not (isRequiredSlot), the children of
         // this node (children) and the number of the slotNum
-        private SlotInfo GetJoinSlotInfo(CellTreeOpType opType, bool isRequiredSlot,
-                                         List<CqlBlock> children, int slotNum, CqlIdentifiers identifiers)
+        private SlotInfo GetJoinSlotInfo(
+            CellTreeOpType opType, bool isRequiredSlot,
+            List<CqlBlock> children, int slotNum, CqlIdentifiers identifiers)
         {
             if (false == isRequiredSlot)
             {
                 // The slot will not be used. So we can set the projected slot to be null
-                SlotInfo unrequiredSlotInfo = new SlotInfo(false, false, null, GetMemberPath(slotNum));
+                var unrequiredSlotInfo = new SlotInfo(false, false, null, GetMemberPath(slotNum));
                 return unrequiredSlotInfo;
             }
 
             // For a required slot, determine the child who is contributing to this value
-            int childDefiningSlot = -1;
+            var childDefiningSlot = -1;
             CaseStatement caseForOuterJoins = null;
 
-            for (int childNum = 0; childNum < children.Count; childNum++)
+            for (var childNum = 0; childNum < children.Count; childNum++)
             {
-                CqlBlock child = children[childNum];
+                var child = children[childNum];
                 if (false == child.IsProjected(slotNum))
                 {
                     continue;
@@ -458,7 +496,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                         Debug.Assert(false == IsBoolSlot(slotNum), "Boolean slots cannot come from two children");
                         if (caseForOuterJoins == null)
                         {
-                            MemberPath outputMember = GetMemberPath(slotNum);
+                            var outputMember = GetMemberPath(slotNum);
                             caseForOuterJoins = new CaseStatement(outputMember);
                             // Add the child that we had not added in the first shot
                             AddCaseForOuterJoins(caseForOuterJoins, children[childDefiningSlot], slotNum, identifiers);
@@ -469,12 +507,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 }
             }
 
-            MemberPath memberPath = GetMemberPath(slotNum);
+            var memberPath = GetMemberPath(slotNum);
             ProjectedSlot slot = null;
 
             // Generate the slot value -- case statement slot, or a qualified slot or null or false.
             // If case statement slot has nothing, treat it as null/empty.
-            if (caseForOuterJoins != null && (caseForOuterJoins.Clauses.Count > 0 || caseForOuterJoins.ElseValue != null))
+            if (caseForOuterJoins != null
+                && (caseForOuterJoins.Clauses.Count > 0 || caseForOuterJoins.ElseValue != null))
             {
                 caseForOuterJoins.Simplify();
                 slot = new CaseStatementProjectedSlot(caseForOuterJoins, null);
@@ -501,11 +540,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             // view generation uses 2-valued boolean logic.
             // They can become null in outer joins. We compensate for it by
             // adding AND NOT NULL condition on boolean slots coming from outer joins.
-            bool enforceNotNull = IsBoolSlot(slotNum) &&
-                                  ((opType == CellTreeOpType.LOJ && childDefiningSlot > 0) ||
-                                   opType == CellTreeOpType.FOJ);
+            var enforceNotNull = IsBoolSlot(slotNum) &&
+                                 ((opType == CellTreeOpType.LOJ && childDefiningSlot > 0) ||
+                                  opType == CellTreeOpType.FOJ);
             // We set isProjected to be true since we have come up with some value for it
-            SlotInfo slotInfo = new SlotInfo(true, true, slot, memberPath, enforceNotNull);
+            var slotInfo = new SlotInfo(true, true, slot, memberPath, enforceNotNull);
             return slotInfo;
         }
 
@@ -517,25 +556,28 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             // Picks the child with the non-constant slot first. If none, picks a non-null constant slot.
             // If not een that, picks any one
-            int result = -1;
-            for (int i = 0; i < children.Count; i++)
+            var result = -1;
+            for (var i = 0; i < children.Count; i++)
             {
-                CqlBlock child = children[i];
+                var child = children[i];
                 if (false == child.IsProjected(slotNum))
                 {
                     continue;
                 }
-                ProjectedSlot slot = child.SlotValue(slotNum);
-                ConstantProjectedSlot constantSlot = slot as ConstantProjectedSlot;
-                MemberProjectedSlot joinSlot = slot as MemberProjectedSlot;
+                var slot = child.SlotValue(slotNum);
+                var constantSlot = slot as ConstantProjectedSlot;
+                var joinSlot = slot as MemberProjectedSlot;
                 if (joinSlot != null)
-                { // Pick the non-constant slot
+                {
+                    // Pick the non-constant slot
                     result = i;
                 }
-                else if (constantSlot != null && constantSlot.CellConstant.IsNull())
+                else if (constantSlot != null
+                         && constantSlot.CellConstant.IsNull())
                 {
                     if (result == -1)
-                    { // In case, all are null
+                    {
+                        // In case, all are null
                         result = i;
                     }
                 }
@@ -555,39 +597,41 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             // Determine the cells that the slot comes from
             // and make an OR expression, e.g., WHEN _from0 or _from2 or ... THEN child[slotNum]
 
-            ProjectedSlot childSlot = child.SlotValue(slotNum);
-            ConstantProjectedSlot constantSlot = childSlot as ConstantProjectedSlot;
-            if (constantSlot != null && constantSlot.CellConstant.IsNull())
+            var childSlot = child.SlotValue(slotNum);
+            var constantSlot = childSlot as ConstantProjectedSlot;
+            if (constantSlot != null
+                && constantSlot.CellConstant.IsNull())
             {
                 // NULL being generated by a child - don't need to project
                 return;
             }
 
-            BoolExpression originBool = BoolExpression.False;
-            for (int i = 0; i < NumBoolSlots; i++)
+            var originBool = BoolExpression.False;
+            for (var i = 0; i < NumBoolSlots; i++)
             {
-                int boolSlotNum = BoolIndexToSlot(i);
+                var boolSlotNum = BoolIndexToSlot(i);
                 if (child.IsProjected(boolSlotNum))
                 {
                     // OR it to the expression
-                    QualifiedCellIdBoolean boolExpr = new QualifiedCellIdBoolean(child, identifiers, i);
+                    var boolExpr = new QualifiedCellIdBoolean(child, identifiers, i);
                     originBool = BoolExpression.CreateOr(originBool, BoolExpression.CreateLiteral(boolExpr, RightDomainMap));
                 }
             }
             // Qualify the slotNum with the child.CqlAlias for the THEN
-            QualifiedSlot slot = child.QualifySlotWithBlockAlias(slotNum);
+            var slot = child.QualifySlotWithBlockAlias(slotNum);
             caseForOuterJoins.AddWhenThen(originBool, slot);
         }
 
-        private static FragmentQuery GenerateFragmentQuery(IEnumerable<CellTreeNode> children, bool isLeft, ViewgenContext context, CellTreeOpType OpType)
+        private static FragmentQuery GenerateFragmentQuery(
+            IEnumerable<CellTreeNode> children, bool isLeft, ViewgenContext context, CellTreeOpType OpType)
         {
             Debug.Assert(children.Any());
-            FragmentQuery fragmentQuery = isLeft ? children.First().LeftFragmentQuery : children.First().RightFragmentQuery;
+            var fragmentQuery = isLeft ? children.First().LeftFragmentQuery : children.First().RightFragmentQuery;
 
-            FragmentQueryProcessor qp = isLeft ? context.LeftFragmentQP : context.RightFragmentQP;
+            var qp = isLeft ? context.LeftFragmentQP : context.RightFragmentQP;
             foreach (var child in children.Skip(1))
             {
-                FragmentQuery nextQuery = isLeft ? child.LeftFragmentQuery : child.RightFragmentQuery;
+                var nextQuery = isLeft ? child.LeftFragmentQuery : child.RightFragmentQuery;
                 switch (OpType)
                 {
                     case CellTreeOpType.IJ:
@@ -609,10 +653,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return fragmentQuery;
         }
 
-
         #endregion
 
         #region String methods
+
         /// <summary>
         /// Given the <paramref name="opType"/>, returns eSQL string corresponding to the op.
         /// </summary>
@@ -620,10 +664,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             switch (opType)
             {
-                case CellTreeOpType.FOJ:    return "FULL OUTER JOIN";
-                case CellTreeOpType.IJ:     return "INNER JOIN";
-                case CellTreeOpType.LOJ:    return "LEFT OUTER JOIN";
-                case CellTreeOpType.Union:  return "UNION ALL";
+                case CellTreeOpType.FOJ:
+                    return "FULL OUTER JOIN";
+                case CellTreeOpType.IJ:
+                    return "INNER JOIN";
+                case CellTreeOpType.LOJ:
+                    return "LEFT OUTER JOIN";
+                case CellTreeOpType.Union:
+                    return "UNION ALL";
                 default:
                     Debug.Fail("Unknown operator");
                     return null;
@@ -634,9 +682,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             //            Debug.Assert(m_children.Count > 1, "Tree not flattened?");
             stringBuilder.Append("(");
-            for (int i = 0; i < m_children.Count; i++)
+            for (var i = 0; i < m_children.Count; i++)
             {
-                CellTreeNode child = m_children[i];
+                var child = m_children[i];
                 child.ToCompactString(stringBuilder);
                 if (i != m_children.Count - 1)
                 {
@@ -645,6 +693,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
             stringBuilder.Append(")");
         }
+
         #endregion
     }
 }

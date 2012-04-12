@@ -1,12 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-
-namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
+﻿namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 {
-    internal class RewritingSimplifier<T_Tile> where T_Tile : class
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+
+    internal class RewritingSimplifier<T_Tile>
+        where T_Tile : class
     {
         private readonly T_Tile m_originalRewriting;
         private readonly T_Tile m_toAvoid;
@@ -14,8 +13,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         private readonly Dictionary<T_Tile, TileOpKind> m_usedViews = new Dictionary<T_Tile, TileOpKind>();
 
         // used for join/antisemijoin simplification
-        private RewritingSimplifier(T_Tile originalRewriting, T_Tile toAvoid, Dictionary<T_Tile, TileOpKind> usedViews,
-                                     RewritingProcessor<T_Tile> qp)
+        private RewritingSimplifier(
+            T_Tile originalRewriting, T_Tile toAvoid, Dictionary<T_Tile, TileOpKind> usedViews,
+            RewritingProcessor<T_Tile> qp)
         {
             m_originalRewriting = originalRewriting;
             m_toAvoid = toAvoid;
@@ -36,7 +36,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         // called for top query only
         internal static bool TrySimplifyUnionRewriting(ref T_Tile rewriting, T_Tile toFill, T_Tile toAvoid, RewritingProcessor<T_Tile> qp)
         {
-            RewritingSimplifier<T_Tile> simplifier = new RewritingSimplifier<T_Tile>(rewriting, toFill, toAvoid, qp);
+            var simplifier = new RewritingSimplifier<T_Tile>(rewriting, toFill, toAvoid, qp);
             // gather all unioned subqueries
             T_Tile simplifiedRewriting;
             if (simplifier.SimplifyRewriting(out simplifiedRewriting))
@@ -48,9 +48,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         }
 
         // modifies usedViews - removes all redundant views from it
-        internal static bool TrySimplifyJoinRewriting(ref T_Tile rewriting, T_Tile toAvoid, Dictionary<T_Tile, TileOpKind> usedViews, RewritingProcessor<T_Tile> qp)
+        internal static bool TrySimplifyJoinRewriting(
+            ref T_Tile rewriting, T_Tile toAvoid, Dictionary<T_Tile, TileOpKind> usedViews, RewritingProcessor<T_Tile> qp)
         {
-            RewritingSimplifier<T_Tile> simplifier = new RewritingSimplifier<T_Tile>(rewriting, toAvoid, usedViews, qp);
+            var simplifier = new RewritingSimplifier<T_Tile>(rewriting, toAvoid, usedViews, qp);
             T_Tile simplifiedRewriting;
             if (simplifier.SimplifyRewriting(out simplifiedRewriting))
             {
@@ -64,7 +65,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         {
             if (query != null)
             {
-                if (m_qp.GetOpKind(query) != TileOpKind.Union)
+                if (m_qp.GetOpKind(query)
+                    != TileOpKind.Union)
                 {
                     m_usedViews[query] = TileOpKind.Union;
                 }
@@ -79,7 +81,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         // isExactAnswer: matters for Intersections/Differences only
         private bool SimplifyRewriting(out T_Tile simplifiedRewriting)
         {
-            bool compacted = false;
+            var compacted = false;
             simplifiedRewriting = null;
             T_Tile simplifiedOnce;
             while (SimplifyRewritingOnce(out simplifiedOnce))
@@ -97,8 +99,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             // check whether removing one or multiple views from intersected and subtracted views
             // still (a) reduces extra tuples, and (b) has no missing tuples
             // First, try removing a subtracted view
-            HashSet<T_Tile> remainingViews = new HashSet<T_Tile>(m_usedViews.Keys);
-            foreach (T_Tile usedView in m_usedViews.Keys)
+            var remainingViews = new HashSet<T_Tile>(m_usedViews.Keys);
+            foreach (var usedView in m_usedViews.Keys)
             {
                 // pick an intersected view, and nail it down
                 switch (m_usedViews[usedView])
@@ -119,8 +121,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         }
 
         // remainingViews may contain either unions only or intersections + differences
-        private bool SimplifyRewritingOnce(T_Tile newRewriting, HashSet<T_Tile> remainingViews,
-                                           out T_Tile simplifiedRewriting)
+        private bool SimplifyRewritingOnce(
+            T_Tile newRewriting, HashSet<T_Tile> remainingViews,
+            out T_Tile simplifiedRewriting)
         {
             simplifiedRewriting = null;
             if (remainingViews.Count == 0)
@@ -130,11 +133,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             if (remainingViews.Count == 1)
             {
                 // determine the remaining view
-                T_Tile remainingView = remainingViews.First();
+                var remainingView = remainingViews.First();
 
                 // check whether rewriting obtained so far is good enough
                 // try disposing of this remaining view
-                bool isDisposable = false;
+                var isDisposable = false;
                 switch (m_usedViews[remainingView])
                 {
                     case TileOpKind.Union:
@@ -158,15 +161,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             // split remainingViews into two halves
             // Compute rewriting for first half. Call recursively on second half.
             // Then, compute rewriting for second half. Call recursively on first half.
-            int halfCount = remainingViews.Count / 2;
-            int count = 0;
-            T_Tile firstHalfRewriting = newRewriting;
-            T_Tile secondHalfRewriting = newRewriting;
-            HashSet<T_Tile> firstHalf = new HashSet<T_Tile>();
-            HashSet<T_Tile> secondHalf = new HashSet<T_Tile>();
-            foreach (T_Tile remainingView in remainingViews)
+            var halfCount = remainingViews.Count / 2;
+            var count = 0;
+            var firstHalfRewriting = newRewriting;
+            var secondHalfRewriting = newRewriting;
+            var firstHalf = new HashSet<T_Tile>();
+            var secondHalf = new HashSet<T_Tile>();
+            foreach (var remainingView in remainingViews)
             {
-                TileOpKind viewKind = m_usedViews[remainingView];
+                var viewKind = m_usedViews[remainingView];
                 // add to first half
                 if (count++ < halfCount)
                 {
@@ -181,7 +184,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             }
             // now, call recursively
             return SimplifyRewritingOnce(firstHalfRewriting, secondHalf, out simplifiedRewriting)
-                || SimplifyRewritingOnce(secondHalfRewriting, firstHalf, out simplifiedRewriting);
+                   || SimplifyRewritingOnce(secondHalfRewriting, firstHalf, out simplifiedRewriting);
         }
 
         private T_Tile GetRewritingHalf(T_Tile halfRewriting, T_Tile remainingView, TileOpKind viewKind)
@@ -189,12 +192,17 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             switch (viewKind)
             {
                 case TileOpKind.Join:
-                    halfRewriting = m_qp.Join(halfRewriting, remainingView); break;
+                    halfRewriting = m_qp.Join(halfRewriting, remainingView);
+                    break;
                 case TileOpKind.AntiSemiJoin:
-                    halfRewriting = m_qp.AntiSemiJoin(halfRewriting, remainingView); break;
+                    halfRewriting = m_qp.AntiSemiJoin(halfRewriting, remainingView);
+                    break;
                 case TileOpKind.Union:
-                    halfRewriting = m_qp.Union(halfRewriting, remainingView); break;
-                default: Debug.Fail("unexpected"); break;
+                    halfRewriting = m_qp.Union(halfRewriting, remainingView);
+                    break;
+                default:
+                    Debug.Fail("unexpected");
+                    break;
             }
             return halfRewriting;
         }

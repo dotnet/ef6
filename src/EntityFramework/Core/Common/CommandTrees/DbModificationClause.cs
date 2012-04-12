@@ -1,14 +1,7 @@
-using System;
-using System.Collections.Generic;
-
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Common.CommandTrees.Internal;
-using System.Data.Entity.Core.Common.Utils;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
-    using System.Diagnostics.CodeAnalysis;
+    using System.Data.Entity.Core.Common.CommandTrees.Internal;
+    using System.Data.Entity.Core.Common.Utils;
 
     /// <summary>
     /// Specifies a single clause in an insert or update modification operation, see

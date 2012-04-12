@@ -1,30 +1,31 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
-
-namespace System.Data.Entity.Core.Common.Utils
+﻿namespace System.Data.Entity.Core.Common.Utils
 {
-    internal class DisposableCollectionWrapper<T> : IDisposable, IEnumerable<T> where T : IDisposable
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+
+    internal class DisposableCollectionWrapper<T> : IDisposable, IEnumerable<T>
+        where T : IDisposable
     {
-        IEnumerable<T> _enumerable;
+        private readonly IEnumerable<T> _enumerable;
+
         internal DisposableCollectionWrapper(IEnumerable<T> enumerable)
         {
             Debug.Assert(enumerable != null, "don't pass in a null enumerable");
             _enumerable = enumerable;
         }
 
-        public void  Dispose()
+        public void Dispose()
         {
             // Technically, calling GC.SuppressFinalize is not required because the class does not
             // have a finalizer, but it does no harm, protects against the case where a finalizer is added
             // in the future, and prevents an FxCop warning.
             GC.SuppressFinalize(this);
-            if(_enumerable != null)
+            if (_enumerable != null)
             {
-                foreach(T item in _enumerable)
+                foreach (var item in _enumerable)
                 {
-                    if(item != null)
+                    if (item != null)
                     {
                         item.Dispose();
                     }
@@ -37,9 +38,9 @@ namespace System.Data.Entity.Core.Common.Utils
             return _enumerable.GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((System.Collections.IEnumerable)_enumerable).GetEnumerator();
+            return ((IEnumerable)_enumerable).GetEnumerator();
         }
     }
 }

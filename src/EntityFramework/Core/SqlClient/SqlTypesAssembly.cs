@@ -1,15 +1,16 @@
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity.Core.Spatial;
-using System.Diagnostics;
-using System.IO;
-using System.Linq.Expressions;
-using System.Reflection;
-
 namespace System.Data.Entity.Core.SqlClient
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Spatial;
     using System.Data.Entity.Core.SqlClient.Internal;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.IO;
+    using System.Linq.Expressions;
+    using System.Reflection;
+    using System.Xml;
 
     internal static class Expressions
     {
@@ -23,10 +24,11 @@ namespace System.Data.Entity.Core.SqlClient
             return Expression.Constant(null, nullType);
         }
 
-        internal static Expression<Func<TArg, TResult>> Lambda<TArg, TResult>(string argumentName, Func<ParameterExpression, Expression> createLambdaBodyGivenParameter)
+        internal static Expression<Func<TArg, TResult>> Lambda<TArg, TResult>(
+            string argumentName, Func<ParameterExpression, Expression> createLambdaBodyGivenParameter)
         {
-            ParameterExpression argParam = Expression.Parameter(typeof(TArg), argumentName);
-            Expression lambdaBody = createLambdaBodyGivenParameter(argParam);
+            var argParam = Expression.Parameter(typeof(TArg), argumentName);
+            var lambdaBody = createLambdaBodyGivenParameter(argParam);
             return Expression.Lambda<Func<TArg, TResult>>(lambdaBody, argParam);
         }
 
@@ -52,13 +54,13 @@ namespace System.Data.Entity.Core.SqlClient
 
             internal ConditionalExpressionBuilder(Expression conditionExpression, Expression ifTrueExpression)
             {
-                this.condition = conditionExpression;
-                this.ifTrueThen = ifTrueExpression;
+                condition = conditionExpression;
+                ifTrueThen = ifTrueExpression;
             }
 
             internal Expression Else(Expression resultIfFalse)
             {
-                return Expression.Condition(this.condition, ifTrueThen, resultIfFalse);
+                return Expression.Condition(condition, ifTrueThen, resultIfFalse);
             }
         }
 
@@ -69,8 +71,10 @@ namespace System.Data.Entity.Core.SqlClient
 
         internal static Expression Property<TPropertyType>(this Expression exp, string propertyName)
         {
-            PropertyInfo prop = exp.Type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public);
-            Debug.Assert(prop != null, "Type '" + exp.Type.FullName + "' does not declare a public instance property with the name '" + propertyName + "'");
+            var prop = exp.Type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public);
+            Debug.Assert(
+                prop != null,
+                "Type '" + exp.Type.FullName + "' does not declare a public instance property with the name '" + propertyName + "'");
 
             return Expression.Property(exp, prop);
         }
@@ -81,18 +85,18 @@ namespace System.Data.Entity.Core.SqlClient
     /// </summary>
     internal sealed class SqlTypesAssembly
     {
-        private static readonly System.Collections.ObjectModel.ReadOnlyCollection<string> preferredSqlTypesAssemblies = new List<string>()
-            {
-                "Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
-                "Microsoft.SqlServer.Types, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
-            }.AsReadOnly();
+        private static readonly ReadOnlyCollection<string> preferredSqlTypesAssemblies = new List<string>
+                                                                                             {
+                                                                                                 "Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
+                                                                                                 "Microsoft.SqlServer.Types, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
+                                                                                             }.AsReadOnly();
 
         private static SqlTypesAssembly BindToLatest()
         {
             Assembly sqlTypesAssembly = null;
-            foreach (string assemblyFullName in preferredSqlTypesAssemblies)
+            foreach (var assemblyFullName in preferredSqlTypesAssemblies)
             {
-                AssemblyName asmName = new AssemblyName(assemblyFullName);
+                var asmName = new AssemblyName(assemblyFullName);
                 try
                 {
                     sqlTypesAssembly = Assembly.Load(asmName);
@@ -103,7 +107,7 @@ namespace System.Data.Entity.Core.SqlClient
                 }
                 catch (FileLoadException)
                 {
-                } 
+                }
             }
 
             if (sqlTypesAssembly != null)
@@ -126,7 +130,7 @@ namespace System.Data.Entity.Core.SqlClient
 
         private static bool IsKnownAssembly(Assembly assembly)
         {
-            foreach (string knownAssemblyFullName in preferredSqlTypesAssemblies)
+            foreach (var knownAssemblyFullName in preferredSqlTypesAssemblies)
             {
                 if (EntityUtil.AssemblyNamesMatch(assembly.FullName, new AssemblyName(knownAssemblyFullName)))
                 {
@@ -136,95 +140,130 @@ namespace System.Data.Entity.Core.SqlClient
             return false;
         }
 
-        private static Singleton<SqlTypesAssembly> latestVersion = new Singleton<SqlTypesAssembly>(BindToLatest);
+        private static readonly Singleton<SqlTypesAssembly> latestVersion = new Singleton<SqlTypesAssembly>(BindToLatest);
 
         /// <summary>
         /// Returns the highest available version of the Microsoft.SqlServer.Types assembly that could be located using Assembly.Load; may return <c>null</c> if no version of the assembly could be found.
         /// </summary>
-        internal static SqlTypesAssembly Latest { get { return latestVersion.Value; } }
+        internal static SqlTypesAssembly Latest
+        {
+            get { return latestVersion.Value; }
+        }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private SqlTypesAssembly(Assembly sqlSpatialAssembly)
         {
             // Retrieve SQL Server spatial types and static constructor methods
-            Type sqlGeog = sqlSpatialAssembly.GetType("Microsoft.SqlServer.Types.SqlGeography", throwOnError: true);
-            Type sqlGeom = sqlSpatialAssembly.GetType("Microsoft.SqlServer.Types.SqlGeometry", throwOnError: true);
+            var sqlGeog = sqlSpatialAssembly.GetType("Microsoft.SqlServer.Types.SqlGeography", throwOnError: true);
+            var sqlGeom = sqlSpatialAssembly.GetType("Microsoft.SqlServer.Types.SqlGeometry", throwOnError: true);
 
             Debug.Assert(sqlGeog != null, "SqlGeography type was not properly retrieved?");
             Debug.Assert(sqlGeom != null, "SqlGeometry type was not properly retrieved?");
 
-            this.SqlGeographyType = sqlGeog;
-            this.sqlGeographyFromWKTString = CreateStaticConstructorDelegate<string>(sqlGeog, "STGeomFromText");
-            this.sqlGeographyFromWKBByteArray = CreateStaticConstructorDelegate<byte[]>(sqlGeog, "STGeomFromWKB");
-            this.sqlGeographyFromGMLReader = CreateStaticConstructorDelegate<System.Xml.XmlReader>(sqlGeog, "GeomFromGml");
+            SqlGeographyType = sqlGeog;
+            sqlGeographyFromWKTString = CreateStaticConstructorDelegate<string>(sqlGeog, "STGeomFromText");
+            sqlGeographyFromWKBByteArray = CreateStaticConstructorDelegate<byte[]>(sqlGeog, "STGeomFromWKB");
+            sqlGeographyFromGMLReader = CreateStaticConstructorDelegate<XmlReader>(sqlGeog, "GeomFromGml");
 
-            this.SqlGeometryType = sqlGeom;
-            this.sqlGeometryFromWKTString = CreateStaticConstructorDelegate<string>(sqlGeom, "STGeomFromText");
-            this.sqlGeometryFromWKBByteArray = CreateStaticConstructorDelegate<byte[]>(sqlGeom, "STGeomFromWKB");
-            this.sqlGeometryFromGMLReader = CreateStaticConstructorDelegate<System.Xml.XmlReader>(sqlGeom, "GeomFromGml");
+            SqlGeometryType = sqlGeom;
+            sqlGeometryFromWKTString = CreateStaticConstructorDelegate<string>(sqlGeom, "STGeomFromText");
+            sqlGeometryFromWKBByteArray = CreateStaticConstructorDelegate<byte[]>(sqlGeom, "STGeomFromWKB");
+            sqlGeometryFromGMLReader = CreateStaticConstructorDelegate<XmlReader>(sqlGeom, "GeomFromGml");
 
             // Retrieve SQL Server specific primitive types
-            MethodInfo asTextMethod = this.SqlGeometryType.GetMethod("STAsText", BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, null);
-            this.SqlCharsType = asTextMethod.ReturnType;
-            this.SqlStringType = this.SqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlString", throwOnError: true);
-            this.SqlBooleanType = this.SqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlBoolean", throwOnError: true);
-            this.SqlBytesType = this.SqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlBytes", throwOnError: true);
-            this.SqlDoubleType = this.SqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlDouble", throwOnError: true);
-            this.SqlInt32Type = this.SqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlInt32", throwOnError: true);
-            this.SqlXmlType = this.SqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlXml", throwOnError: true);
+            var asTextMethod = SqlGeometryType.GetMethod(
+                "STAsText", BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, null);
+            SqlCharsType = asTextMethod.ReturnType;
+            SqlStringType = SqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlString", throwOnError: true);
+            SqlBooleanType = SqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlBoolean", throwOnError: true);
+            SqlBytesType = SqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlBytes", throwOnError: true);
+            SqlDoubleType = SqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlDouble", throwOnError: true);
+            SqlInt32Type = SqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlInt32", throwOnError: true);
+            SqlXmlType = SqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlXml", throwOnError: true);
 
             // Create type conversion delegates to SQL Server types
-            this.sqlBytesFromByteArray = Expressions.Lambda<byte[], object>("binaryValue", bytesVal => BuildConvertToSqlBytes(bytesVal, this.SqlBytesType)).Compile();
-            this.sqlStringFromString = Expressions.Lambda<string, object>("stringValue", stringVal => BuildConvertToSqlString(stringVal, this.SqlStringType)).Compile();
-            this.sqlCharsFromString = Expressions.Lambda<string, object>("stringValue", stringVal => BuildConvertToSqlChars(stringVal, this.SqlCharsType)).Compile();
-            this.sqlXmlFromXmlReader = Expressions.Lambda<System.Xml.XmlReader, object>("readerVaue", readerVal => BuildConvertToSqlXml(readerVal, this.SqlXmlType)).Compile();
-            
+            sqlBytesFromByteArray =
+                Expressions.Lambda<byte[], object>("binaryValue", bytesVal => BuildConvertToSqlBytes(bytesVal, SqlBytesType)).Compile();
+            sqlStringFromString =
+                Expressions.Lambda<string, object>("stringValue", stringVal => BuildConvertToSqlString(stringVal, SqlStringType)).Compile();
+            sqlCharsFromString =
+                Expressions.Lambda<string, object>("stringValue", stringVal => BuildConvertToSqlChars(stringVal, SqlCharsType)).Compile();
+            sqlXmlFromXmlReader =
+                Expressions.Lambda<XmlReader, object>("readerVaue", readerVal => BuildConvertToSqlXml(readerVal, SqlXmlType)).Compile();
+
             // Create type conversion delegates from SQL Server types; all arguments are typed as 'object' and require Expression.Convert before use of members of the SQL Server type.
 
             // Explicit cast from SqlBoolean to bool
-            this.sqlBooleanToBoolean = Expressions.Lambda<object, bool>("sqlBooleanValue", sqlBoolVal => sqlBoolVal.ConvertTo(this.SqlBooleanType).ConvertTo<bool>()).Compile();
+            sqlBooleanToBoolean =
+                Expressions.Lambda<object, bool>("sqlBooleanValue", sqlBoolVal => sqlBoolVal.ConvertTo(SqlBooleanType).ConvertTo<bool>()).
+                    Compile();
 
             // Explicit cast from SqlBoolean to bool? for non-Null values; otherwise null
-            this.sqlBooleanToNullableBoolean = Expressions.Lambda<object, bool?>("sqlBooleanValue", sqlBoolVal =>
-                sqlBoolVal.ConvertTo(this.SqlBooleanType).Property<bool>("IsNull")
-                    .IfTrueThen(Expressions.Null<bool?>())
-                    .Else(sqlBoolVal.ConvertTo(this.SqlBooleanType).ConvertTo<bool>().ConvertTo<bool?>())).Compile();
+            sqlBooleanToNullableBoolean = Expressions.Lambda<object, bool?>(
+                "sqlBooleanValue", sqlBoolVal =>
+                                   sqlBoolVal.ConvertTo(SqlBooleanType).Property<bool>("IsNull")
+                                       .IfTrueThen(Expressions.Null<bool?>())
+                                       .Else(sqlBoolVal.ConvertTo(SqlBooleanType).ConvertTo<bool>().ConvertTo<bool?>())).Compile();
 
             // SqlBytes has instance byte[] property 'Value'
-            this.sqlBytesToByteArray = Expressions.Lambda<object, byte[]>("sqlBytesValue", sqlBytesVal => sqlBytesVal.ConvertTo(this.SqlBytesType).Property<byte[]>("Value")).Compile();
+            sqlBytesToByteArray =
+                Expressions.Lambda<object, byte[]>(
+                    "sqlBytesValue", sqlBytesVal => sqlBytesVal.ConvertTo(SqlBytesType).Property<byte[]>("Value")).Compile();
 
             // SqlChars -> SqlString, SqlString has instance string property 'Value'
-            this.sqlCharsToString = Expressions.Lambda<object, string>("sqlCharsValue", sqlCharsVal => sqlCharsVal.ConvertTo(this.SqlCharsType).Call("ToSqlString").Property<string>("Value")).Compile();
-            
+            sqlCharsToString =
+                Expressions.Lambda<object, string>(
+                    "sqlCharsValue", sqlCharsVal => sqlCharsVal.ConvertTo(SqlCharsType).Call("ToSqlString").Property<string>("Value")).
+                    Compile();
+
             // Explicit cast from SqlString to string
-            this.sqlStringToString = Expressions.Lambda<object, string>("sqlStringValue", sqlStringVal => sqlStringVal.ConvertTo(this.SqlStringType).Property<string>("Value")).Compile();
+            sqlStringToString =
+                Expressions.Lambda<object, string>(
+                    "sqlStringValue", sqlStringVal => sqlStringVal.ConvertTo(SqlStringType).Property<string>("Value")).Compile();
 
             // Explicit cast from SqlDouble to double
-            this.sqlDoubleToDouble = Expressions.Lambda<object, double>("sqlDoubleValue", sqlDoubleVal => sqlDoubleVal.ConvertTo(this.SqlDoubleType).ConvertTo<double>()).Compile();
+            sqlDoubleToDouble =
+                Expressions.Lambda<object, double>(
+                    "sqlDoubleValue", sqlDoubleVal => sqlDoubleVal.ConvertTo(SqlDoubleType).ConvertTo<double>()).Compile();
 
             // Explicit cast from SqlDouble to double? for non-Null values; otherwise null
-            this.sqlDoubleToNullableDouble = Expressions.Lambda<object, double?>("sqlDoubleValue", sqlDoubleVal =>
-                sqlDoubleVal.ConvertTo(this.SqlDoubleType).Property<bool>("IsNull")
-                    .IfTrueThen(Expressions.Null<double?>())
-                    .Else(sqlDoubleVal.ConvertTo(this.SqlDoubleType).ConvertTo<double>().ConvertTo<double?>())).Compile();
+            sqlDoubleToNullableDouble = Expressions.Lambda<object, double?>(
+                "sqlDoubleValue", sqlDoubleVal =>
+                                  sqlDoubleVal.ConvertTo(SqlDoubleType).Property<bool>("IsNull")
+                                      .IfTrueThen(Expressions.Null<double?>())
+                                      .Else(sqlDoubleVal.ConvertTo(SqlDoubleType).ConvertTo<double>().ConvertTo<double?>())).Compile();
 
             // Explicit cast from SqlInt32 to int
-            this.sqlInt32ToInt = Expressions.Lambda<object, int>("sqlInt32Value", sqlInt32Val => sqlInt32Val.ConvertTo(this.SqlInt32Type).ConvertTo<int>()).Compile();
+            sqlInt32ToInt =
+                Expressions.Lambda<object, int>("sqlInt32Value", sqlInt32Val => sqlInt32Val.ConvertTo(SqlInt32Type).ConvertTo<int>()).
+                    Compile();
 
             // Explicit cast from SqlInt32 to int? for non-Null values; otherwise null
-            this.sqlInt32ToNullableInt = Expressions.Lambda<object, int?>("sqlInt32Value", sqlInt32Val =>
-                sqlInt32Val.ConvertTo(this.SqlInt32Type).Property<bool>("IsNull")
-                    .IfTrueThen(Expressions.Null<int?>())
-                    .Else(sqlInt32Val.ConvertTo(this.SqlInt32Type).ConvertTo<int>().ConvertTo<int?>())).Compile();
+            sqlInt32ToNullableInt = Expressions.Lambda<object, int?>(
+                "sqlInt32Value", sqlInt32Val =>
+                                 sqlInt32Val.ConvertTo(SqlInt32Type).Property<bool>("IsNull")
+                                     .IfTrueThen(Expressions.Null<int?>())
+                                     .Else(sqlInt32Val.ConvertTo(SqlInt32Type).ConvertTo<int>().ConvertTo<int?>())).Compile();
 
             // SqlXml has instance string property 'Value'
-            this.sqlXmlToString = Expressions.Lambda<object, string>("sqlXmlValue", sqlXmlVal => sqlXmlVal.ConvertTo(this.SqlXmlType).Property<string>("Value")).Compile();
+            sqlXmlToString =
+                Expressions.Lambda<object, string>("sqlXmlValue", sqlXmlVal => sqlXmlVal.ConvertTo(SqlXmlType).Property<string>("Value")).
+                    Compile();
 
-            this.isSqlGeographyNull = Expressions.Lambda<object, bool>("sqlGeographyValue", sqlGeographyValue => sqlGeographyValue.ConvertTo(this.SqlGeographyType).Property<bool>("IsNull")).Compile();
-            this.isSqlGeometryNull = Expressions.Lambda<object, bool>("sqlGeometryValue", sqlGeometryValue => sqlGeometryValue.ConvertTo(this.SqlGeometryType).Property<bool>("IsNull")).Compile();
-            
-            this.geographyAsTextZMAsSqlChars = Expressions.Lambda<object, object>("sqlGeographyValue", sqlGeographyValue => sqlGeographyValue.ConvertTo(this.SqlGeographyType).Call("AsTextZM")).Compile();
-            this.geometryAsTextZMAsSqlChars = Expressions.Lambda<object, object>("sqlGeometryValue", sqlGeometryValue => sqlGeometryValue.ConvertTo(this.SqlGeometryType).Call("AsTextZM")).Compile();
+            isSqlGeographyNull =
+                Expressions.Lambda<object, bool>(
+                    "sqlGeographyValue", sqlGeographyValue => sqlGeographyValue.ConvertTo(SqlGeographyType).Property<bool>("IsNull")).
+                    Compile();
+            isSqlGeometryNull =
+                Expressions.Lambda<object, bool>(
+                    "sqlGeometryValue", sqlGeometryValue => sqlGeometryValue.ConvertTo(SqlGeometryType).Property<bool>("IsNull")).Compile();
+
+            geographyAsTextZMAsSqlChars =
+                Expressions.Lambda<object, object>(
+                    "sqlGeographyValue", sqlGeographyValue => sqlGeographyValue.ConvertTo(SqlGeographyType).Call("AsTextZM")).Compile();
+            geometryAsTextZMAsSqlChars =
+                Expressions.Lambda<object, object>(
+                    "sqlGeometryValue", sqlGeometryValue => sqlGeometryValue.ConvertTo(SqlGeometryType).Call("AsTextZM")).Compile();
         }
 
         #region 'Public' API
@@ -240,12 +279,14 @@ namespace System.Data.Entity.Core.SqlClient
         internal Type SqlXmlType { get; private set; }
 
         private readonly Func<object, bool> sqlBooleanToBoolean;
+
         internal bool SqlBooleanToBoolean(object sqlBooleanValue)
         {
-            return this.sqlBooleanToBoolean(sqlBooleanValue);
+            return sqlBooleanToBoolean(sqlBooleanValue);
         }
 
         private readonly Func<object, bool?> sqlBooleanToNullableBoolean;
+
         internal bool? SqlBooleanToNullableBoolean(object sqlBooleanValue)
         {
             if (sqlBooleanToBoolean == null)
@@ -253,16 +294,18 @@ namespace System.Data.Entity.Core.SqlClient
                 return null;
             }
 
-            return this.sqlBooleanToNullableBoolean(sqlBooleanValue);
+            return sqlBooleanToNullableBoolean(sqlBooleanValue);
         }
 
         private readonly Func<byte[], object> sqlBytesFromByteArray;
+
         internal object SqlBytesFromByteArray(byte[] binaryValue)
         {
             return sqlBytesFromByteArray(binaryValue);
         }
 
         private readonly Func<object, byte[]> sqlBytesToByteArray;
+
         internal byte[] SqlBytesToByteArray(object sqlBytesValue)
         {
             if (sqlBytesValue == null)
@@ -270,81 +313,91 @@ namespace System.Data.Entity.Core.SqlClient
                 return null;
             }
 
-            return this.sqlBytesToByteArray(sqlBytesValue);
+            return sqlBytesToByteArray(sqlBytesValue);
         }
 
         private readonly Func<string, object> sqlStringFromString;
+
         internal object SqlStringFromString(string stringValue)
         {
             return sqlStringFromString(stringValue);
         }
 
         private readonly Func<string, object> sqlCharsFromString;
+
         internal object SqlCharsFromString(string stringValue)
         {
             return sqlCharsFromString(stringValue);
         }
 
         private readonly Func<object, string> sqlCharsToString;
+
         internal string SqlCharsToString(object sqlCharsValue)
         {
             if (sqlCharsValue == null)
             {
                 return null;
             }
-            return this.sqlCharsToString(sqlCharsValue);
+            return sqlCharsToString(sqlCharsValue);
         }
 
         private readonly Func<object, string> sqlStringToString;
+
         internal string SqlStringToString(object sqlStringValue)
         {
             if (sqlStringValue == null)
             {
                 return null;
             }
-            return this.sqlStringToString(sqlStringValue);
+            return sqlStringToString(sqlStringValue);
         }
 
         private readonly Func<object, double> sqlDoubleToDouble;
+
         internal double SqlDoubleToDouble(object sqlDoubleValue)
         {
-            return this.sqlDoubleToDouble(sqlDoubleValue);
+            return sqlDoubleToDouble(sqlDoubleValue);
         }
 
         private readonly Func<object, double?> sqlDoubleToNullableDouble;
+
         internal double? SqlDoubleToNullableDouble(object sqlDoubleValue)
         {
             if (sqlDoubleValue == null)
             {
                 return null;
             }
-            return this.sqlDoubleToNullableDouble(sqlDoubleValue);
+            return sqlDoubleToNullableDouble(sqlDoubleValue);
         }
 
         private readonly Func<object, int> sqlInt32ToInt;
+
         internal int SqlInt32ToInt(object sqlInt32Value)
         {
-            return this.sqlInt32ToInt(sqlInt32Value);
+            return sqlInt32ToInt(sqlInt32Value);
         }
 
         private readonly Func<object, int?> sqlInt32ToNullableInt;
+
         internal int? SqlInt32ToNullableInt(object sqlInt32Value)
         {
             if (sqlInt32Value == null)
             {
                 return null;
             }
-            return this.sqlInt32ToNullableInt(sqlInt32Value);
+            return sqlInt32ToNullableInt(sqlInt32Value);
         }
 
-        private readonly Func<System.Xml.XmlReader, object> sqlXmlFromXmlReader;
+        private readonly Func<XmlReader, object> sqlXmlFromXmlReader;
+
         internal object SqlXmlFromString(string stringValue)
         {
-            System.Xml.XmlReader xmlReader = XmlReaderFromString(stringValue);
+            var xmlReader = XmlReaderFromString(stringValue);
             return sqlXmlFromXmlReader(xmlReader);
         }
 
         private readonly Func<object, string> sqlXmlToString;
+
         internal string SqlXmlToString(object sqlXmlValue)
         {
             if (sqlXmlValue == null)
@@ -356,6 +409,7 @@ namespace System.Data.Entity.Core.SqlClient
         }
 
         private readonly Func<object, bool> isSqlGeographyNull;
+
         internal bool IsSqlGeographyNull(object sqlGeographyValue)
         {
             if (sqlGeographyValue == null)
@@ -367,6 +421,7 @@ namespace System.Data.Entity.Core.SqlClient
         }
 
         private readonly Func<object, bool> isSqlGeometryNull;
+
         internal bool IsSqlGeometryNull(object sqlGeometryValue)
         {
             if (sqlGeometryValue == null)
@@ -378,6 +433,7 @@ namespace System.Data.Entity.Core.SqlClient
         }
 
         private readonly Func<object, object> geographyAsTextZMAsSqlChars;
+
         internal string GeographyAsTextZM(DbGeography geographyValue)
         {
             if (geographyValue == null)
@@ -385,12 +441,13 @@ namespace System.Data.Entity.Core.SqlClient
                 return null;
             }
 
-            object sqlGeographyValue = ConvertToSqlTypesGeography(geographyValue);
-            object chars = this.geographyAsTextZMAsSqlChars(sqlGeographyValue);
-            return this.SqlCharsToString(chars);
+            var sqlGeographyValue = ConvertToSqlTypesGeography(geographyValue);
+            var chars = geographyAsTextZMAsSqlChars(sqlGeographyValue);
+            return SqlCharsToString(chars);
         }
 
         private readonly Func<object, object> geometryAsTextZMAsSqlChars;
+
         internal string GeometryAsTextZM(DbGeometry geometryValue)
         {
             if (geometryValue == null)
@@ -398,21 +455,22 @@ namespace System.Data.Entity.Core.SqlClient
                 return null;
             }
 
-            object sqlGeometryValue = ConvertToSqlTypesGeometry(geometryValue);
-            object chars = this.geometryAsTextZMAsSqlChars(sqlGeometryValue);
-            return this.SqlCharsToString(chars);
+            var sqlGeometryValue = ConvertToSqlTypesGeometry(geometryValue);
+            var chars = geometryAsTextZMAsSqlChars(sqlGeometryValue);
+            return SqlCharsToString(chars);
         }
+
         #endregion
 
         #region Spatial Types and Spatial Factory Methods
 
         internal Type SqlGeographyType { get; private set; }
         internal Type SqlGeometryType { get; private set; }
-        
+
         internal object ConvertToSqlTypesGeography(DbGeography geographyValue)
         {
             geographyValue.CheckNull("geographyValue");
-            object result = GetSqlTypesSpatialValue(geographyValue.AsSpatialValue(), SqlGeographyType);
+            var result = GetSqlTypesSpatialValue(geographyValue.AsSpatialValue(), SqlGeographyType);
             return result;
         }
 
@@ -427,11 +485,11 @@ namespace System.Data.Entity.Core.SqlClient
             Debug.Assert(wellKnownText != null, "Validate WKT before calling SqlTypesGeographyFromText");
             return sqlGeographyFromWKTString(wellKnownText, srid);
         }
-                
+
         internal object ConvertToSqlTypesGeometry(DbGeometry geometryValue)
         {
             geometryValue.CheckNull("geometryValue");
-            object result = GetSqlTypesSpatialValue(geometryValue.AsSpatialValue(), SqlGeometryType);
+            var result = GetSqlTypesSpatialValue(geometryValue.AsSpatialValue(), SqlGeometryType);
             return result;
         }
 
@@ -456,37 +514,44 @@ namespace System.Data.Entity.Core.SqlClient
             Debug.Assert(spatialValue != null, "Ensure spatial value is non-null before calling GetSqlTypesSpatialValue");
 
             // If the specified value was created by this spatial services implementation, its underlying Microsoft.SqlServer.Types.SqlGeography value is available via the ProviderValue property.
-            object providerValue = spatialValue.ProviderValue;
-            if (providerValue != null && providerValue.GetType() == requiredProviderValueType)
+            var providerValue = spatialValue.ProviderValue;
+            if (providerValue != null
+                && providerValue.GetType() == requiredProviderValueType)
             {
                 return providerValue;
             }
 
             // Otherwise, attempt to retrieve a Well Known Binary, Well Known Text or GML (in descending order of preference) representation of the value that can be used to create an appropriate Microsoft.SqlServer.Types.SqlGeography/SqlGeometry value
 
-            int? srid = spatialValue.CoordinateSystemId;
+            var srid = spatialValue.CoordinateSystemId;
             if (srid.HasValue)
-            {                
+            {
                 // Well Known Binary (WKB)
-                byte[] binaryValue = spatialValue.WellKnownBinary;
+                var binaryValue = spatialValue.WellKnownBinary;
                 if (binaryValue != null)
                 {
-                    return (spatialValue.IsGeography ? sqlGeographyFromWKBByteArray(binaryValue, srid.Value) : sqlGeometryFromWKBByteArray(binaryValue, srid.Value));
+                    return (spatialValue.IsGeography
+                                ? sqlGeographyFromWKBByteArray(binaryValue, srid.Value)
+                                : sqlGeometryFromWKBByteArray(binaryValue, srid.Value));
                 }
 
                 // Well Known Text (WKT)
-                string textValue = spatialValue.WellKnownText;
+                var textValue = spatialValue.WellKnownText;
                 if (textValue != null)
                 {
-                    return (spatialValue.IsGeography ? sqlGeographyFromWKTString(textValue, srid.Value) : sqlGeometryFromWKTString(textValue, srid.Value));
+                    return (spatialValue.IsGeography
+                                ? sqlGeographyFromWKTString(textValue, srid.Value)
+                                : sqlGeometryFromWKTString(textValue, srid.Value));
                 }
 
                 // Geography Markup Language (GML), as a string
-                string gmlValue = spatialValue.GmlString;
+                var gmlValue = spatialValue.GmlString;
                 if (gmlValue != null)
                 {
                     var xmlReader = XmlReaderFromString(gmlValue);
-                    return (spatialValue.IsGeography ? sqlGeographyFromGMLReader(xmlReader, srid.Value) : sqlGeometryFromGMLReader(xmlReader, srid.Value));
+                    return (spatialValue.IsGeography
+                                ? sqlGeographyFromGMLReader(xmlReader, srid.Value)
+                                : sqlGeometryFromGMLReader(xmlReader, srid.Value));
                 }
             }
 
@@ -494,18 +559,18 @@ namespace System.Data.Entity.Core.SqlClient
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        private static System.Xml.XmlReader XmlReaderFromString(string stringValue)
+        private static XmlReader XmlReaderFromString(string stringValue)
         {
-            return System.Xml.XmlReader.Create(new System.IO.StringReader(stringValue));
+            return XmlReader.Create(new StringReader(stringValue));
         }
 
         private readonly Func<string, int, object> sqlGeographyFromWKTString;
         private readonly Func<byte[], int, object> sqlGeographyFromWKBByteArray;
-        private readonly Func<System.Xml.XmlReader, int, object> sqlGeographyFromGMLReader;
+        private readonly Func<XmlReader, int, object> sqlGeographyFromGMLReader;
 
         private readonly Func<string, int, object> sqlGeometryFromWKTString;
         private readonly Func<byte[], int, object> sqlGeometryFromWKBByteArray;
-        private readonly Func<System.Xml.XmlReader, int, object> sqlGeometryFromGMLReader;
+        private readonly Func<XmlReader, int, object> sqlGeometryFromGMLReader;
 
         #region Expression Compilation Helpers
 
@@ -516,22 +581,27 @@ namespace System.Data.Entity.Core.SqlClient
             var sridParam = Expression.Parameter(typeof(int));
             var staticCtorMethod = spatialType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static);
             Debug.Assert(staticCtorMethod != null, "Could not find method '" + methodName + "' on type '" + spatialType.FullName + "'");
-            Debug.Assert(staticCtorMethod.GetParameters().Length == 2 && staticCtorMethod.GetParameters()[1].ParameterType == typeof(int), "Static constructor method on '" + spatialType.FullName + "' does not match static constructor pattern?");
+            Debug.Assert(
+                staticCtorMethod.GetParameters().Length == 2 && staticCtorMethod.GetParameters()[1].ParameterType == typeof(int),
+                "Static constructor method on '" + spatialType.FullName + "' does not match static constructor pattern?");
 
-            Expression sqlData = BuildConvertToSqlType(dataParam, staticCtorMethod.GetParameters()[0].ParameterType);
+            var sqlData = BuildConvertToSqlType(dataParam, staticCtorMethod.GetParameters()[0].ParameterType);
 
-            var ex = Expression.Lambda<Func<TArg, int, object>>(Expression.Call(null, staticCtorMethod, sqlData, sridParam), dataParam, sridParam);
+            var ex = Expression.Lambda<Func<TArg, int, object>>(
+                Expression.Call(null, staticCtorMethod, sqlData, sridParam), dataParam, sridParam);
             var result = ex.Compile();
             return result;
         }
 
         private static Expression BuildConvertToSqlType(Expression toConvert, Type convertTo)
         {
-            if (toConvert.Type == typeof(byte[]))
+            if (toConvert.Type
+                == typeof(byte[]))
             {
                 return BuildConvertToSqlBytes(toConvert, convertTo);
             }
-            else if (toConvert.Type == typeof(string))
+            else if (toConvert.Type
+                     == typeof(string))
             {
                 if (convertTo.Name == "SqlString")
                 {
@@ -544,8 +614,10 @@ namespace System.Data.Entity.Core.SqlClient
             }
             else
             {
-                Debug.Assert(toConvert.Type == typeof(System.Xml.XmlReader), "Argument to static constructor method was not byte[], string or XmlReader?");
-                if (toConvert.Type == typeof(System.Xml.XmlReader))
+                Debug.Assert(
+                    toConvert.Type == typeof(XmlReader), "Argument to static constructor method was not byte[], string or XmlReader?");
+                if (toConvert.Type
+                    == typeof(XmlReader))
                 {
                     return BuildConvertToSqlXml(toConvert, convertTo);
                 }
@@ -558,7 +630,8 @@ namespace System.Data.Entity.Core.SqlClient
         {
             // dataParam:byte[] => new SqlBytes(dataParam)
             Debug.Assert(sqlBytesType.Name == "SqlBytes", "byte[] argument used with non-SqlBytes static constructor method?");
-            ConstructorInfo byteArrayCtor = sqlBytesType.GetConstructor(BindingFlags.Instance | BindingFlags.Public, null, new Type[] { toConvert.Type }, null);
+            var byteArrayCtor = sqlBytesType.GetConstructor(
+                BindingFlags.Instance | BindingFlags.Public, null, new[] { toConvert.Type }, null);
             Debug.Assert(byteArrayCtor != null, "SqlXml(System.IO.Stream) constructor not found?");
             Expression result = Expression.New(byteArrayCtor, toConvert);
             return result;
@@ -568,10 +641,12 @@ namespace System.Data.Entity.Core.SqlClient
         {
             // dataParam:String => new SqlChars(new SqlString(dataParam))
             Debug.Assert(sqlCharsType.Name == "SqlChars", "String argument used with non-SqlChars static constructor method?");
-            Type sqlString = sqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlString", throwOnError: true);
-            ConstructorInfo sqlCharsFromSqlStringCtor = sqlCharsType.GetConstructor(BindingFlags.Instance | BindingFlags.Public, null, new Type[] { sqlString }, null);
+            var sqlString = sqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlString", throwOnError: true);
+            var sqlCharsFromSqlStringCtor = sqlCharsType.GetConstructor(
+                BindingFlags.Instance | BindingFlags.Public, null, new[] { sqlString }, null);
             Debug.Assert(sqlCharsFromSqlStringCtor != null, "SqlXml(System.IO.Stream) constructor not found?");
-            ConstructorInfo sqlStringFromStringCtor = sqlString.GetConstructor(BindingFlags.Instance | BindingFlags.Public, null, new Type[] { typeof(string) }, null);
+            var sqlStringFromStringCtor = sqlString.GetConstructor(
+                BindingFlags.Instance | BindingFlags.Public, null, new[] { typeof(string) }, null);
             Expression result = Expression.New(sqlCharsFromSqlStringCtor, Expression.New(sqlStringFromStringCtor, toConvert));
             return result;
         }
@@ -580,7 +655,8 @@ namespace System.Data.Entity.Core.SqlClient
         {
             // dataParam:String => new SqlString(dataParam)
             Debug.Assert(sqlStringType.Name == "SqlString", "String argument used with non-SqlString static constructor method?");
-            ConstructorInfo sqlStringFromStringCtor = sqlStringType.GetConstructor(BindingFlags.Instance | BindingFlags.Public, null, new Type[] { typeof(string) }, null);
+            var sqlStringFromStringCtor = sqlStringType.GetConstructor(
+                BindingFlags.Instance | BindingFlags.Public, null, new[] { typeof(string) }, null);
             Debug.Assert(sqlStringFromStringCtor != null);
             Expression result = Expression.Convert(Expression.New(sqlStringFromStringCtor, toConvert), typeof(object));
             return result;
@@ -590,7 +666,7 @@ namespace System.Data.Entity.Core.SqlClient
         {
             // dataParam:Stream => new SqlXml(dataParam)
             Debug.Assert(sqlXmlType.Name == "SqlXml", "Stream argument used with non-SqlXml static constructor method?");
-            ConstructorInfo readerCtor = sqlXmlType.GetConstructor(BindingFlags.Instance | BindingFlags.Public, null, new Type[] { toConvert.Type }, null);
+            var readerCtor = sqlXmlType.GetConstructor(BindingFlags.Instance | BindingFlags.Public, null, new[] { toConvert.Type }, null);
             Debug.Assert(readerCtor != null, "SqlXml(System.Xml.XmlReader) constructor not found?");
             Expression result = Expression.New(readerCtor, toConvert);
             return result;

@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
-
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
 // to prevent from simple mistakes during development (e.g. method argument validation 
 // in cases where it was you who created the variables or the variables had already been validated or 
@@ -15,16 +12,13 @@ using System.Collections.Generic;
 // or the tree was built/rewritten not the way we thought it was.
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
-
-using System.Globalization;
-
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
 using md = System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Query.InternalTrees;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -56,7 +50,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     /// </summary>
     internal class PropertyPushdownHelper : BasicOpVisitor
     {
-
         #region private state
 
         private readonly Dictionary<Node, PropertyRefList> m_nodePropertyRefMap;
@@ -84,9 +77,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="itree">The query tree</param>
         /// <param name="varPropertyRefs">List of desired properties from each Var</param>
         /// <param name="nodePropertyRefs">List of desired properties from each node</param>
-        internal static void Process(Command itree, out Dictionary<Var, PropertyRefList> varPropertyRefs, out Dictionary<Node, PropertyRefList> nodePropertyRefs)
+        internal static void Process(
+            Command itree, out Dictionary<Var, PropertyRefList> varPropertyRefs, out Dictionary<Node, PropertyRefList> nodePropertyRefs)
         {
-            PropertyPushdownHelper pph = new PropertyPushdownHelper();
+            var pph = new PropertyPushdownHelper();
             pph.Process(itree.Root);
 
             varPropertyRefs = pph.m_varPropertyRefMap;
@@ -134,7 +128,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="propertyRefs">list of property references</param>
         private void AddPropertyRefs(Node node, PropertyRefList propertyRefs)
         {
-            PropertyRefList refs = GetPropertyRefList(node);
+            var refs = GetPropertyRefList(node);
             refs.Append(propertyRefs);
         }
 
@@ -161,7 +155,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="propertyRefs">desired properties</param>
         private void AddPropertyRefs(Var v, PropertyRefList propertyRefs)
         {
-            PropertyRefList currentRefs = GetPropertyRefList(v);
+            var currentRefs = GetPropertyRefList(v);
             currentRefs.Append(propertyRefs);
         }
 
@@ -177,7 +171,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         private static PropertyRefList GetIdentityProperties(md.EntityType type)
         {
-            PropertyRefList desiredProperties = GetKeyProperties(type);
+            var desiredProperties = GetKeyProperties(type);
             desiredProperties.Add(EntitySetIdPropertyRef.Instance);
             return desiredProperties;
         }
@@ -187,15 +181,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="entityType"></param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "EntityType"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-EdmProperty"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "EntityType")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-EdmProperty")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private static PropertyRefList GetKeyProperties(md.EntityType entityType)
         {
-            PropertyRefList desiredProperties = new PropertyRefList();
-            foreach (md.EdmMember p in entityType.KeyMembers)
+            var desiredProperties = new PropertyRefList();
+            foreach (var p in entityType.KeyMembers)
             {
-                md.EdmProperty edmP = p as md.EdmProperty;
+                var edmP = p as md.EdmProperty;
                 PlanCompiler.Assert(edmP != null, "EntityType had non-EdmProperty key member?");
-                SimplePropertyRef pRef = new SimplePropertyRef(edmP);
+                var pRef = new SimplePropertyRef(edmP);
                 desiredProperties.Add(pRef);
             }
             return desiredProperties;
@@ -239,10 +236,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         protected override void VisitDefault(Node n)
         {
             // for each child that is a complex type, simply ask for all properties
-            foreach (Node chi in n.Children)
+            foreach (var chi in n.Children)
             {
-                ScalarOp chiOp = chi.Op as ScalarOp;
-                if (chiOp != null && TypeUtils.IsStructuredType(chiOp.Type))
+                var chiOp = chi.Op as ScalarOp;
+                if (chiOp != null
+                    && TypeUtils.IsStructuredType(chiOp.Type))
                 {
                     AddPropertyRefs(chi, PropertyRefList.All);
                 }
@@ -272,7 +270,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             else if (md.TypeSemantics.IsNominalType(op.Type))
             {
-                PropertyRefList myProps = m_nodePropertyRefMap[n];
+                var myProps = m_nodePropertyRefMap[n];
                 childProps = myProps.Clone();
             }
             else if (md.TypeSemantics.IsRowType(op.Type))
@@ -301,13 +299,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override void Visit(CaseOp op, Node n)
         {
             // First find the properties that my parent expects from me
-            PropertyRefList pdProps = GetPropertyRefList(n);
+            var pdProps = GetPropertyRefList(n);
 
             // push down the same properties to my then/else clauses. 
             // the "when" clauses are irrelevant
-            for (int i = 1; i < n.Children.Count - 1; i += 2)
+            for (var i = 1; i < n.Children.Count - 1; i += 2)
             {
-                PropertyRefList cdProps = pdProps.Clone();
+                var cdProps = pdProps.Clone();
                 AddPropertyRefs(n.Children[i], cdProps);
             }
             AddPropertyRefs(n.Children[n.Children.Count - 1], pdProps.Clone());
@@ -332,29 +330,36 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op"></param>
         /// <param name="n"></param>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "childOpType"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "childOpType")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override void Visit(ComparisonOp op, Node n)
         {
             // Check to see if the children are structured types. Furthermore,
             // if the children are of entity types, then all we really need are
             // the key properties (and the entityset property)
             // For record and ref types, simply keep going
-            md.TypeUsage childOpType = (n.Child0.Op as ScalarOp).Type;
+            var childOpType = (n.Child0.Op as ScalarOp).Type;
 
             if (!TypeUtils.IsStructuredType(childOpType))
             {
                 VisitChildren(n);
             }
-            else if (md.TypeSemantics.IsRowType(childOpType) || md.TypeSemantics.IsReferenceType(childOpType))
+            else if (md.TypeSemantics.IsRowType(childOpType)
+                     || md.TypeSemantics.IsReferenceType(childOpType))
+            {
                 VisitDefault(n);
+            }
             else
             {
                 PlanCompiler.Assert(md.TypeSemantics.IsEntityType(childOpType), "unexpected childOpType?");
-                PropertyRefList desiredProperties = GetIdentityProperties(TypeHelpers.GetEdmType<md.EntityType>(childOpType));
+                var desiredProperties = GetIdentityProperties(TypeHelpers.GetEdmType<md.EntityType>(childOpType));
 
                 // Now push these set of properties to each child
-                foreach (Node chi in n.Children)
+                foreach (var chi in n.Children)
+                {
                     AddPropertyRefs(chi, desiredProperties);
+                }
 
                 // Visit the children
                 VisitChildren(n);
@@ -380,16 +385,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op"></param>
         /// <param name="n"></param>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScalarOp"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GetEntityRefOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScalarOp")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GetEntityRefOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override void Visit(GetEntityRefOp op, Node n)
         {
-            ScalarOp childOp = n.Child0.Op as ScalarOp;
+            var childOp = n.Child0.Op as ScalarOp;
             PlanCompiler.Assert(childOp != null, "input to GetEntityRefOp is not a ScalarOp?");
 
             // bug 428542 - the child is of the entity type; not this op
-            md.EntityType entityType = TypeHelpers.GetEdmType<md.EntityType>(childOp.Type);
+            var entityType = TypeHelpers.GetEdmType<md.EntityType>(childOp.Type);
 
-            PropertyRefList desiredProperties = GetIdentityProperties(entityType);
+            var desiredProperties = GetIdentityProperties(entityType);
             AddPropertyRefs(n.Child0, desiredProperties);
 
             VisitNode(n.Child0);
@@ -405,9 +413,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="n">Node to visit</param>
         public override void Visit(IsOfOp op, Node n)
         {
-
             // The only property I need from my child is the typeid property;
-            PropertyRefList childProps = new PropertyRefList();
+            var childProps = new PropertyRefList();
             childProps.Add(TypeIdPropertyRef.Instance);
             AddPropertyRefs(n.Child0, childProps);
 
@@ -423,7 +430,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="propertyRef">the property reference</param>
         private void VisitPropertyOp(Op op, Node n, PropertyRef propertyRef)
         {
-            PropertyRefList cdProps = new PropertyRefList();
+            var cdProps = new PropertyRefList();
             if (!TypeUtils.IsStructuredType(op.Type))
             {
                 cdProps.Add(propertyRef);
@@ -431,7 +438,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             else
             {
                 // Get the list of properties my parent expects from me. 
-                PropertyRefList pdProps = GetPropertyRefList(n);
+                var pdProps = GetPropertyRefList(n);
 
                 // Ask my child (which is really my container type) for each of these 
                 // properties
@@ -449,7 +456,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
                 else
                 {
-                    foreach (PropertyRef p in pdProps.Properties)
+                    foreach (var p in pdProps.Properties)
                     {
                         cdProps.Add(p.CreateNestedPropertyRef(propertyRef));
                     }
@@ -497,11 +504,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override void Visit(TreatOp op, Node n)
         {
             // First find the properties that my parent expects from me
-            PropertyRefList pdProps = GetPropertyRefList(n);
+            var pdProps = GetPropertyRefList(n);
 
             // Push down each of these, and in addition, push down the typeid property
             // to my child
-            PropertyRefList childProps = pdProps.Clone();
+            var childProps = pdProps.Clone();
             childProps.Add(TypeIdPropertyRef.Instance);
             AddPropertyRefs(n.Child0, childProps);
             VisitChildren(n);
@@ -520,7 +527,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             if (TypeUtils.IsStructuredType(op.Var.Type))
             {
                 // Get the properties that my parent expects from me. 
-                PropertyRefList myProps = GetPropertyRefList(n);
+                var myProps = GetPropertyRefList(n);
                 // Add this onto the list of properties expected from the var itself
                 AddPropertyRefs(op.Var, myProps);
             }
@@ -542,7 +549,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             if (TypeUtils.IsStructuredType(op.Var.Type))
             {
-                PropertyRefList myProps = GetPropertyRefList(op.Var);
+                var myProps = GetPropertyRefList(op.Var);
                 // Push this down to the expression defining the var
                 AddPropertyRefs(n.Child0, myProps);
             }
@@ -581,7 +588,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             VisitNode(n.Child0); // the left input
         }
 
-
         /// <summary>
         /// DistinctOp handling
         /// 
@@ -591,11 +597,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="n"></param>
         public override void Visit(DistinctOp op, Node n)
         {
-            foreach (Var v in op.Keys)
+            foreach (var v in op.Keys)
+            {
                 if (TypeUtils.IsStructuredType(v.Type))
                 {
                     AddPropertyRefs(v, PropertyRefList.All);
                 }
+            }
             VisitChildren(n);
         }
 
@@ -621,7 +629,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         protected override void VisitGroupByOp(GroupByBaseOp op, Node n)
         {
             // First "request" all properties for every key (that is a structured type)
-            foreach (Var v in op.Keys)
+            foreach (var v in op.Keys)
             {
                 if (TypeUtils.IsStructuredType(v.Type))
                 {
@@ -633,7 +641,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // the relop input in that order
             VisitChildrenReverse(n);
         }
-
 
         /// <summary>
         /// JoinOp handling
@@ -652,8 +659,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="n"></param>
         protected override void VisitJoinOp(JoinBaseOp op, Node n)
         {
-            if (n.Op.OpType == OpType.CrossJoin)
+            if (n.Op.OpType
+                == OpType.CrossJoin)
+            {
                 VisitChildren(n);
+            }
             else
             {
                 VisitNode(n.Child2); // the predicate first
@@ -673,13 +683,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             VisitNode(n.Child0); // then visit the relop input
         }
 
-
         /// <summary>
         /// ScanTableOp handler
         /// </summary>
         /// <param name="op"></param>
         /// <param name="n"></param>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "scanTableOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "scanTableOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override void Visit(ScanTableOp op, Node n)
         {
             PlanCompiler.Assert(!n.HasChild0, "scanTableOp with an input?");
@@ -693,14 +704,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op">current ScanViewOp</param>
         /// <param name="n">current node</param>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScanViewOp's"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScanViewOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScanViewOp's")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScanViewOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override void Visit(ScanViewOp op, Node n)
         {
             PlanCompiler.Assert(op.Table.Columns.Count == 1, "ScanViewOp with multiple columns?");
-            Var columnVar = op.Table.Columns[0];
-            PropertyRefList columnProps = GetPropertyRefList(columnVar);
+            var columnVar = op.Table.Columns[0];
+            var columnProps = GetPropertyRefList(columnVar);
 
-            Var inputVar = NominalTypeEliminator.GetSingletonVar(n.Child0);
+            var inputVar = NominalTypeEliminator.GetSingletonVar(n.Child0);
             PlanCompiler.Assert(inputVar != null, "cannot determine single Var from ScanViewOp's input");
 
             AddPropertyRefs(inputVar, columnProps.Clone());
@@ -721,8 +735,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="n"></param>
         protected override void VisitSetOp(SetOp op, Node n)
         {
-            foreach (VarMap varMap in op.VarMap)
-                foreach (KeyValuePair<Var, Var> kv in varMap)
+            foreach (var varMap in op.VarMap)
+            {
+                foreach (var kv in varMap)
                 {
                     if (TypeUtils.IsStructuredType(kv.Key.Type))
                     {
@@ -733,8 +748,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                         // We call GetPropertyRefList() always to initialize
                         // the map, even though we may not use it
                         // 
-                        PropertyRefList myProps = GetPropertyRefList(kv.Key);
-                        if (op.OpType == OpType.Intersect || op.OpType == OpType.Except)
+                        var myProps = GetPropertyRefList(kv.Key);
+                        if (op.OpType == OpType.Intersect
+                            || op.OpType == OpType.Except)
                         {
                             myProps = PropertyRefList.All;
                             // We "want" all properties even on the output of the setop
@@ -747,6 +763,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                         AddPropertyRefs(kv.Value, myProps);
                     }
                 }
+            }
             VisitChildren(n);
         }
 
@@ -762,13 +779,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         protected override void VisitSortOp(SortBaseOp op, Node n)
         {
             // foreach sort key, every single bit of the Var is needed
-            foreach (InternalTrees.SortKey sk in op.Keys)
+            foreach (var sk in op.Keys)
+            {
                 if (TypeUtils.IsStructuredType(sk.Var.Type))
+                {
                     AddPropertyRefs(sk.Var, PropertyRefList.All);
+                }
+            }
 
             // if the sort has any local definitions, process those first
             if (n.HasChild1)
+            {
                 VisitNode(n.Child1);
+            }
             // then process the relop input
             VisitNode(n.Child0);
         }
@@ -795,7 +818,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override void Visit(PhysicalProjectOp op, Node n)
         {
             // Insist that we need all properties from all the outputs
-            foreach (Var v in op.Outputs)
+            foreach (var v in op.Outputs)
             {
                 if (TypeUtils.IsStructuredType(v.Type))
                 {

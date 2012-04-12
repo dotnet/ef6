@@ -14,8 +14,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     // The WHERE clause is of the form X1 OR X2 OR ... where each Xi is a multiconstant
     internal abstract partial class CellTreeNode : InternalBase
     {
-
         #region Constructor
+
         // effects: Creates a cell tree node with a reference to projectedSlotMap for
         // deciphering the fields in this
         protected CellTreeNode(ViewgenContext context)
@@ -26,17 +26,21 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // effects: returns a copy of the tree below node
         internal CellTreeNode MakeCopy()
         {
-            DefaultCellTreeVisitor<bool> visitor = new DefaultCellTreeVisitor<bool>();
-            CellTreeNode result = Accept<bool, CellTreeNode>(visitor, true);
+            var visitor = new DefaultCellTreeVisitor<bool>();
+            var result = Accept(visitor, true);
             return result;
         }
+
         #endregion
 
         #region Fields
-        private ViewgenContext m_viewgenContext;
+
+        private readonly ViewgenContext m_viewgenContext;
+
         #endregion
 
         #region Properties
+
         // effects: Returns the operation being performed by this node
         internal abstract CellTreeOpType OpType { get; }
 
@@ -77,9 +81,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #endregion
 
         #region Abstract Methods
+
         // effects: Given a leaf cell node and the slots required by the parent, returns
         // a CqlBlock corresponding to the tree rooted at this
-        internal abstract CqlBlock ToCqlBlock(bool[] requiredSlots, CqlIdentifiers identifiers, ref int blockAliasNum,
+        internal abstract CqlBlock ToCqlBlock(
+            bool[] requiredSlots, CqlIdentifiers identifiers, ref int blockAliasNum,
             ref List<WithRelationship> withRelationships);
 
         // Effects: Returns true if slot at slot number "slot" is projected
@@ -90,9 +96,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // type for visitor methods.
         internal abstract TOutput Accept<TInput, TOutput>(CellTreeVisitor<TInput, TOutput> visitor, TInput param);
         internal abstract TOutput Accept<TInput, TOutput>(SimpleCellTreeVisitor<TInput, TOutput> visitor, TInput param);
+
         #endregion
 
         #region Visitor methods
+
         // effects: Given a cell tree node , removes unnecessary
         // "nesting" that occurs in the tree -- an unnecessary nesting
         // occurs when a node has exactly one child.
@@ -123,13 +131,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #endregion
 
         #region Helper methods, e.g., for slots and strings
+
         // effects: Returns true iff the Op (e.g., IJ) is associative, i.e.,
         // A OP (B OP C) is the same as (A OP B) OP C or A OP B OP C
         internal static bool IsAssociativeOp(CellTreeOpType opType)
         {
             // This is not true for LOJ and LASJ            
             return opType == CellTreeOpType.IJ || opType == CellTreeOpType.Union ||
-                opType == CellTreeOpType.FOJ;
+                   opType == CellTreeOpType.FOJ;
         }
 
         // effects: Returns an array of booleans where bool[i] is set to true
@@ -137,9 +146,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         internal bool[] GetProjectedSlots()
         {
             // Gets the information on the normal and the boolean slots
-            int totalSlots = ProjectedSlotMap.Count + NumBoolSlots;
-            bool[] slots = new bool[totalSlots];
-            for (int i = 0; i < totalSlots; i++)
+            var totalSlots = ProjectedSlotMap.Count + NumBoolSlots;
+            var slots = new bool[totalSlots];
+            for (var i = 0; i < totalSlots; i++)
             {
                 slots[i] = IsProjectedSlot(i);
             }
@@ -183,17 +192,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return ProjectedSlotMap.IsBoolSlot(slotNum, NumBoolSlots);
         }
 
-
         // effects: Returns the slot numbers corresponding to the key fields
         // in the m_projectedSlotMap
         protected IEnumerable<int> KeySlots
         {
             get
             {
-                int numMembers = ProjectedSlotMap.Count;
-                for (int slotNum = 0; slotNum < numMembers; slotNum++)
+                var numMembers = ProjectedSlotMap.Count;
+                for (var slotNum = 0; slotNum < numMembers; slotNum++)
                 {
-                    if (true == IsKeySlot(slotNum))
+                    if (IsKeySlot(slotNum))
                     {
                         yield return slotNum;
                     }
@@ -205,15 +213,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // the tree rooted at this
         internal override void ToFullString(StringBuilder builder)
         {
-            int blockAliasNum = 0;
+            var blockAliasNum = 0;
             // Get the required slots, get the block and then get the string
-            bool[] requiredSlots = GetProjectedSlots();
+            var requiredSlots = GetProjectedSlots();
             // Using empty identifiers over here since we do not use this for the actual CqlGeneration
-            CqlIdentifiers identifiers = new CqlIdentifiers();
-            List<WithRelationship> withRelationships = new List<WithRelationship>();
-            CqlBlock block = ToCqlBlock(requiredSlots, identifiers, ref blockAliasNum, ref withRelationships);
+            var identifiers = new CqlIdentifiers();
+            var withRelationships = new List<WithRelationship>();
+            var block = ToCqlBlock(requiredSlots, identifiers, ref blockAliasNum, ref withRelationships);
             block.AsEsql(builder, false, 1);
         }
+
         #endregion
     }
 }

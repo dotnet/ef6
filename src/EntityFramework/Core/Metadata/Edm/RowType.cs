@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Text;
-using System.Data.Entity.Core.Objects.ELinq;
-using System.Threading;
-using System.Diagnostics;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Objects.ELinq;
+    using System.Diagnostics;
+    using System.Text;
+    using System.Threading;
+
     /// <summary>
     /// Represents the Edm Row Type
     /// </summary>
@@ -17,8 +13,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     {
         private ReadOnlyMetadataCollection<EdmProperty> _properties;
         private readonly InitializerMetadata _initializerMetadata;
-    
+
         #region Constructors
+
         /// <summary>
         /// Initializes a new instance of RowType class with the given list of members
         /// </summary>
@@ -33,14 +30,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Initializes a RowType with the given members and initializer metadata 
         /// </summary>
         internal RowType(IEnumerable<EdmProperty> properties, InitializerMetadata initializerMetadata)
-            : base(GetRowTypeIdentityFromProperties(CheckProperties(properties), initializerMetadata), EdmConstants.TransientNamespace, (DataSpace)(-1))
+            : base(
+                GetRowTypeIdentityFromProperties(CheckProperties(properties), initializerMetadata), EdmConstants.TransientNamespace,
+                (DataSpace)(-1))
         {
             // Initialize the properties. 
             if (null != properties)
             {
-                foreach (EdmProperty property in properties)
+                foreach (var property in properties)
                 {
-                    this.AddProperty(property);
+                    AddProperty(property);
                 }
             }
 
@@ -51,10 +50,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             SetReadOnly();
         }
 
-
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets or sets LINQ initializer Metadata for this row type. If there is no associated
         /// initializer type, value is null.
@@ -67,7 +66,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Returns the kind of the type
         /// </summary>
-        public override BuiltInTypeKind BuiltInTypeKind { get { return BuiltInTypeKind.RowType; } }
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
+            get { return BuiltInTypeKind.RowType; }
+        }
 
         /// <summary>
         /// Returns the list of properties for this row type
@@ -80,17 +82,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                Debug.Assert(IsReadOnly, "this is a wrapper around this.Members, don't call it during metadata loading, only call it after the metadata is set to readonly");
+                Debug.Assert(
+                    IsReadOnly,
+                    "this is a wrapper around this.Members, don't call it during metadata loading, only call it after the metadata is set to readonly");
                 if (null == _properties)
                 {
-                    Interlocked.CompareExchange(ref _properties,
+                    Interlocked.CompareExchange(
+                        ref _properties,
                         new FilteredReadOnlyMetadataCollection<EdmProperty, EdmMember>(
-                            this.Members, Helper.IsEdmProperty), null);
+                            Members, Helper.IsEdmProperty), null);
                 }
                 return _properties;
             }
         }
-
 
         /// <summary>
         /// Adds a property
@@ -125,13 +129,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             // The row type identity is formed as follows:
             // "rowtype[" + a comma-separated list of property identities + "]"
-            StringBuilder identity = new StringBuilder("rowtype[");
+            var identity = new StringBuilder("rowtype[");
 
             if (null != properties)
             {
-                int i = 0;
+                var i = 0;
                 // For each property, append the type name and facets.
-                foreach (EdmProperty property in properties)
+                foreach (var property in properties)
                 {
                     if (i > 0)
                     {
@@ -155,13 +159,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return identity.ToString();
         }
 
-
         private static IEnumerable<EdmProperty> CheckProperties(IEnumerable<EdmProperty> properties)
         {
             if (null != properties)
             {
-                int i = 0;
-                foreach (EdmProperty prop in properties)
+                var i = 0;
+                foreach (var prop in properties)
                 {
                     if (prop == null)
                     {
@@ -176,13 +179,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     throw EntityUtil.ArgumentOutOfRange("properties");
                 }
                  */
-
             }
             return properties;
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// EdmEquals override verifying the equivalence of all members and their type usages.
         /// </summary>
@@ -191,23 +195,35 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal override bool EdmEquals(MetadataItem item)
         {
             // short-circuit if this and other are reference equivalent
-            if (Object.ReferenceEquals(this, item)) { return true; }
+            if (ReferenceEquals(this, item))
+            {
+                return true;
+            }
 
             // check type of item
-            if (null == item || BuiltInTypeKind.RowType != item.BuiltInTypeKind) { return false; }
-            RowType other = (RowType)item;
+            if (null == item
+                || BuiltInTypeKind.RowType != item.BuiltInTypeKind)
+            {
+                return false;
+            }
+            var other = (RowType)item;
 
             // check each row type has the same number of members
-            if (this.Members.Count != other.Members.Count) { return false; }
+            if (Members.Count
+                != other.Members.Count)
+            {
+                return false;
+            }
 
             // verify all members are equivalent
-            for (int ordinal = 0; ordinal < this.Members.Count; ordinal++)
+            for (var ordinal = 0; ordinal < Members.Count; ordinal++)
             {
-                EdmMember thisMember = this.Members[ordinal];
-                EdmMember otherMember = other.Members[ordinal];
+                var thisMember = Members[ordinal];
+                var otherMember = other.Members[ordinal];
 
                 // if members are different, return false
-                if (!thisMember.EdmEquals(otherMember) ||
+                if (!thisMember.EdmEquals(otherMember)
+                    ||
                     !thisMember.TypeUsage.EdmEquals(otherMember.TypeUsage))
                 {
                     return false;
@@ -216,6 +232,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             return true;
         }
+
         #endregion
     }
 }

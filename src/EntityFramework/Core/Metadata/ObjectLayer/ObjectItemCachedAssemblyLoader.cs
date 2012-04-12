@@ -4,9 +4,13 @@
 
     internal sealed class ObjectItemCachedAssemblyLoader : ObjectItemAssemblyLoader
     {
-        private new ImmutableAssemblyCacheEntry CacheEntry { get { return (ImmutableAssemblyCacheEntry)base.CacheEntry; } }
+        private new ImmutableAssemblyCacheEntry CacheEntry
+        {
+            get { return (ImmutableAssemblyCacheEntry)base.CacheEntry; }
+        }
 
-        internal ObjectItemCachedAssemblyLoader(Assembly assembly, ImmutableAssemblyCacheEntry cacheEntry, ObjectItemLoadingSessionData sessionData)
+        internal ObjectItemCachedAssemblyLoader(
+            Assembly assembly, ImmutableAssemblyCacheEntry cacheEntry, ObjectItemLoadingSessionData sessionData)
             : base(assembly, cacheEntry, sessionData)
         {
         }
@@ -17,10 +21,9 @@
             // so don't load it
         }
 
-
         protected override void LoadTypesFromAssembly()
         {
-            foreach (EdmType type in CacheEntry.TypesInAssembly)
+            foreach (var type in CacheEntry.TypesInAssembly)
             {
                 if (!SessionData.TypesInLoading.ContainsKey(type.Identity))
                 {
@@ -28,7 +31,5 @@
                 }
             }
         }
-
-
     }
 }

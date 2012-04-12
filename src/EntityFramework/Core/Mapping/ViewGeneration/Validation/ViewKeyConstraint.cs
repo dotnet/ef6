@@ -2,7 +2,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
     using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
@@ -12,28 +11,32 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
     // Class representing a key constraint on the view cell relations
     internal class ViewKeyConstraint : KeyConstraint<ViewCellRelation, ViewCellSlot>
     {
-
-
         #region Constructor
+
         //  effects: Constructs a key constraint for the given relation and keyslots
-        internal ViewKeyConstraint(ViewCellRelation relation, IEnumerable<ViewCellSlot> keySlots) :
-            base(relation, keySlots, ProjectedSlot.EqualityComparer)
+        internal ViewKeyConstraint(ViewCellRelation relation, IEnumerable<ViewCellSlot> keySlots)
+            :
+                base(relation, keySlots, ProjectedSlot.EqualityComparer)
         {
         }
+
         #endregion
 
         #region Properties
+
         // effects: Returns the cell corresponding to this constraint
         internal Cell Cell
         {
             get { return CellRelation.Cell; }
         }
+
         #endregion
 
         #region Methods
+
         internal bool Implies(ViewKeyConstraint second)
         {
-            if (false == Object.ReferenceEquals(CellRelation, second.CellRelation))
+            if (false == ReferenceEquals(CellRelation, second.CellRelation))
             {
                 return false;
             }
@@ -50,13 +53,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             // Check that each slot in KeySlots can be found in second.KeySlots if we take
             // slot equivalence into account
 
-            Set<ViewCellSlot> secondKeySlots = new Set<ViewCellSlot>(second.KeySlots);
+            var secondKeySlots = new Set<ViewCellSlot>(second.KeySlots);
 
-            foreach (ViewCellSlot firstSlot in KeySlots)
+            foreach (var firstSlot in KeySlots)
             {
-                bool found = false; // Need to find a match for firstSlot
+                var found = false; // Need to find a match for firstSlot
 
-                foreach (ViewCellSlot secondSlot in secondKeySlots)
+                foreach (var secondSlot in secondKeySlots)
                 {
                     if (ProjectedSlot.EqualityComparer.Equals(firstSlot.SSlot, secondSlot.SSlot))
                     {
@@ -67,9 +70,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                         // S-side key slots would typically be mapped to the same C-side slot.
                         // The latter is needed since the same S-side key slot could be mapped
                         // into two slots on the C-side that are connected via a ref constraint
-                        MemberPath path1 = firstSlot.CSlot.MemberPath;
-                        MemberPath path2 = secondSlot.CSlot.MemberPath;
-                        if (MemberPath.EqualityComparer.Equals(path1, path2) || path1.IsEquivalentViaRefConstraint(path2))
+                        var path1 = firstSlot.CSlot.MemberPath;
+                        var path2 = secondSlot.CSlot.MemberPath;
+                        if (MemberPath.EqualityComparer.Equals(path1, path2)
+                            || path1.IsEquivalentViaRefConstraint(path2))
                         {
                             secondKeySlots.Remove(secondSlot);
                             found = true;
@@ -81,7 +85,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 {
                     return false;
                 }
-
             }
 
             // The subsetting holds when referential constraints are taken into account
@@ -93,14 +96,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         // was not implied by the C key constraints
         internal static ErrorLog.Record GetErrorRecord(ViewKeyConstraint rightKeyConstraint)
         {
-            List<ViewCellSlot> keySlots = new List<ViewCellSlot>(rightKeyConstraint.KeySlots);
-            EntitySetBase table = keySlots[0].SSlot.MemberPath.Extent;
-            EntitySetBase cSet = keySlots[0].CSlot.MemberPath.Extent;
+            var keySlots = new List<ViewCellSlot>(rightKeyConstraint.KeySlots);
+            var table = keySlots[0].SSlot.MemberPath.Extent;
+            var cSet = keySlots[0].CSlot.MemberPath.Extent;
 
-            MemberPath tablePrefix = new MemberPath(table);
-            MemberPath cSetPrefix = new MemberPath(cSet);
+            var tablePrefix = new MemberPath(table);
+            var cSetPrefix = new MemberPath(cSet);
 
-            ExtentKey tableKey = ExtentKey.GetPrimaryKeyForEntityType(tablePrefix, (EntityType)table.ElementType);
+            var tableKey = ExtentKey.GetPrimaryKeyForEntityType(tablePrefix, (EntityType)table.ElementType);
             ExtentKey cSetKey = null;
             if (cSet is EntitySet)
             {
@@ -111,15 +114,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 cSetKey = ExtentKey.GetKeyForRelationType(cSetPrefix, (AssociationType)cSet.ElementType);
             }
 
-            string message = Strings.ViewGen_KeyConstraint_Violation(
-                                           table.Name,
-                                           ViewCellSlot.SlotsToUserString(rightKeyConstraint.KeySlots, false /*isFromCside*/),
-                                           tableKey.ToUserString(),
-                                           cSet.Name,
-                                           ViewCellSlot.SlotsToUserString(rightKeyConstraint.KeySlots, true /*isFromCside*/),
-                                           cSetKey.ToUserString());
+            var message = Strings.ViewGen_KeyConstraint_Violation(
+                table.Name,
+                ViewCellSlot.SlotsToUserString(rightKeyConstraint.KeySlots, false /*isFromCside*/),
+                tableKey.ToUserString(),
+                cSet.Name,
+                ViewCellSlot.SlotsToUserString(rightKeyConstraint.KeySlots, true /*isFromCside*/),
+                cSetKey.ToUserString());
 
-            string debugMessage = StringUtil.FormatInvariant("PROBLEM: Not implied {0}", rightKeyConstraint);
+            var debugMessage = StringUtil.FormatInvariant("PROBLEM: Not implied {0}", rightKeyConstraint);
             return new ErrorLog.Record(ViewGenErrorCode.KeyConstraintViolation, message, rightKeyConstraint.CellRelation.Cell, debugMessage);
         }
 
@@ -129,11 +132,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         internal static ErrorLog.Record GetErrorRecord(IEnumerable<ViewKeyConstraint> rightKeyConstraints)
         {
             ViewKeyConstraint rightKeyConstraint = null;
-            StringBuilder keyBuilder = new StringBuilder();
-            bool isFirst = true;
-            foreach (ViewKeyConstraint rightConstraint in rightKeyConstraints)
+            var keyBuilder = new StringBuilder();
+            var isFirst = true;
+            foreach (var rightConstraint in rightKeyConstraints)
             {
-                string keyMsg = ViewCellSlot.SlotsToUserString(rightConstraint.KeySlots, true /*isFromCside*/);
+                var keyMsg = ViewCellSlot.SlotsToUserString(rightConstraint.KeySlots, true /*isFromCside*/);
                 if (isFirst == false)
                 {
                     keyBuilder.Append("; ");
@@ -143,41 +146,46 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 rightKeyConstraint = rightConstraint;
             }
 
-            List<ViewCellSlot> keySlots = new List<ViewCellSlot>(rightKeyConstraint.KeySlots);
-            EntitySetBase table = keySlots[0].SSlot.MemberPath.Extent;
-            EntitySetBase cSet = keySlots[0].CSlot.MemberPath.Extent;
+            var keySlots = new List<ViewCellSlot>(rightKeyConstraint.KeySlots);
+            var table = keySlots[0].SSlot.MemberPath.Extent;
+            var cSet = keySlots[0].CSlot.MemberPath.Extent;
 
-            MemberPath tablePrefix = new MemberPath(table);
-            ExtentKey tableKey = ExtentKey.GetPrimaryKeyForEntityType(tablePrefix, (EntityType)table.ElementType);
+            var tablePrefix = new MemberPath(table);
+            var tableKey = ExtentKey.GetPrimaryKeyForEntityType(tablePrefix, (EntityType)table.ElementType);
 
             string message;
             if (cSet is EntitySet)
             {
-                message = System.Data.Entity.Resources.Strings.ViewGen_KeyConstraint_Update_Violation_EntitySet(keyBuilder.ToString(), cSet.Name,
-                                        tableKey.ToUserString(), table.Name);
+                message = Strings.ViewGen_KeyConstraint_Update_Violation_EntitySet(
+                    keyBuilder.ToString(), cSet.Name,
+                    tableKey.ToUserString(), table.Name);
             }
             else
             {
                 //For a 1:* or 0..1:* association, the * side has to be mapped to the
                 //key properties of the table. Fior this specific case, we give out a specific message
                 //that is specific for this case.
-                AssociationSet associationSet = (AssociationSet)cSet;
-                AssociationEndMember endMember = Helper.GetEndThatShouldBeMappedToKey(associationSet.ElementType);
-                if(endMember != null)
+                var associationSet = (AssociationSet)cSet;
+                var endMember = Helper.GetEndThatShouldBeMappedToKey(associationSet.ElementType);
+                if (endMember != null)
                 {
-                    message = System.Data.Entity.Resources.Strings.ViewGen_AssociationEndShouldBeMappedToKey(endMember.Name,
-                                        table.Name);
+                    message = Strings.ViewGen_AssociationEndShouldBeMappedToKey(
+                        endMember.Name,
+                        table.Name);
                 }
                 else
                 {
-                    message = System.Data.Entity.Resources.Strings.ViewGen_KeyConstraint_Update_Violation_AssociationSet(cSet.Name,
-                                        tableKey.ToUserString(), table.Name);
+                    message = Strings.ViewGen_KeyConstraint_Update_Violation_AssociationSet(
+                        cSet.Name,
+                        tableKey.ToUserString(), table.Name);
                 }
             }
 
-            string debugMessage = StringUtil.FormatInvariant("PROBLEM: Not implied {0}", rightKeyConstraint);
-            return new ErrorLog.Record(ViewGenErrorCode.KeyConstraintUpdateViolation, message, rightKeyConstraint.CellRelation.Cell, debugMessage);
+            var debugMessage = StringUtil.FormatInvariant("PROBLEM: Not implied {0}", rightKeyConstraint);
+            return new ErrorLog.Record(
+                ViewGenErrorCode.KeyConstraintUpdateViolation, message, rightKeyConstraint.CellRelation.Cell, debugMessage);
         }
+
         #endregion
     }
 }

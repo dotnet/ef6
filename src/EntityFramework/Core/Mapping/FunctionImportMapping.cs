@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Common.Utils.Boolean;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
@@ -22,8 +21,8 @@
     {
         internal FunctionImportMapping(EdmFunction functionImport, EdmFunction targetFunction)
         {
-            this.FunctionImport = EntityUtil.CheckArgumentNull(functionImport, "functionImport");
-            this.TargetFunction = EntityUtil.CheckArgumentNull(targetFunction, "targetFunction");
+            FunctionImport = EntityUtil.CheckArgumentNull(functionImport, "functionImport");
+            TargetFunction = EntityUtil.CheckArgumentNull(targetFunction, "targetFunction");
         }
 
         /// <summary>
@@ -51,31 +50,35 @@
             if (structuralTypeMappings.Count() == 0)
             {
                 // Initialize with defaults.
-                this.ReturnTypeColumnsRenameMapping = new Dictionary<string, FunctionImportReturnTypeStructuralTypeColumnRenameMapping>();
-                this.NormalizedEntityTypeMappings = new OM.ReadOnlyCollection<FunctionImportNormalizedEntityTypeMapping>(new List<FunctionImportNormalizedEntityTypeMapping>());
-                this.DiscriminatorColumns = new OM.ReadOnlyCollection<string>(new List<string>());
-                this.MappedEntityTypes = new OM.ReadOnlyCollection<EntityType>(new List<EntityType>());
+                ReturnTypeColumnsRenameMapping = new Dictionary<string, FunctionImportReturnTypeStructuralTypeColumnRenameMapping>();
+                NormalizedEntityTypeMappings =
+                    new OM.ReadOnlyCollection<FunctionImportNormalizedEntityTypeMapping>(
+                        new List<FunctionImportNormalizedEntityTypeMapping>());
+                DiscriminatorColumns = new OM.ReadOnlyCollection<string>(new List<string>());
+                MappedEntityTypes = new OM.ReadOnlyCollection<EntityType>(new List<EntityType>());
                 return;
             }
 
-            IEnumerable<FunctionImportEntityTypeMapping> entityTypeMappings = structuralTypeMappings.OfType<FunctionImportEntityTypeMapping>();
+            var entityTypeMappings = structuralTypeMappings.OfType<FunctionImportEntityTypeMapping>();
 
             // FunctionImportEntityTypeMapping
-            if (null != entityTypeMappings && null != entityTypeMappings.FirstOrDefault<FunctionImportEntityTypeMapping>())
+            if (null != entityTypeMappings
+                && null != entityTypeMappings.FirstOrDefault())
             {
-                var isOfTypeEntityTypeColumnsRenameMapping = new Dictionary<EntityType, OM.Collection<FunctionImportReturnTypePropertyMapping>>();
+                var isOfTypeEntityTypeColumnsRenameMapping =
+                    new Dictionary<EntityType, OM.Collection<FunctionImportReturnTypePropertyMapping>>();
                 var entityTypeColumnsRenameMapping = new Dictionary<EntityType, OM.Collection<FunctionImportReturnTypePropertyMapping>>();
                 var normalizedEntityTypeMappings = new List<FunctionImportNormalizedEntityTypeMapping>();
 
                 // Collect all mapped entity types.
-                this.MappedEntityTypes = entityTypeMappings
+                MappedEntityTypes = entityTypeMappings
                     .SelectMany(mapping => mapping.GetMappedEntityTypes(m_itemCollection))
                     .Distinct()
                     .ToList()
                     .AsReadOnly();
 
                 // Collect all discriminator columns.
-                this.DiscriminatorColumns = entityTypeMappings
+                DiscriminatorColumns = entityTypeMappings
                     .SelectMany(mapping => mapping.GetDiscriminatorColumns())
                     .Distinct()
                     .ToList()
@@ -102,10 +105,10 @@
                         condition => condition);
 
                     // Align conditions with discriminator columns.
-                    var columnMappings = new List<FunctionImportEntityTypeMappingCondition>(this.DiscriminatorColumns.Count);
-                    for (int i = 0; i < this.DiscriminatorColumns.Count; i++)
+                    var columnMappings = new List<FunctionImportEntityTypeMappingCondition>(DiscriminatorColumns.Count);
+                    for (var i = 0; i < DiscriminatorColumns.Count; i++)
                     {
-                        string discriminatorColumn = this.DiscriminatorColumns[i];
+                        var discriminatorColumn = DiscriminatorColumns[i];
                         FunctionImportEntityTypeMappingCondition mappingCondition;
                         if (columnMap.TryGetValue(discriminatorColumn, out mappingCondition))
                         {
@@ -119,22 +122,24 @@
                     }
 
                     // Create bit map for implied entity types.
-                    bool[] impliedEntityTypesBitMap = new bool[this.MappedEntityTypes.Count];
+                    var impliedEntityTypesBitMap = new bool[MappedEntityTypes.Count];
                     var impliedEntityTypesSet = new Set<EntityType>(entityTypeMapping.GetMappedEntityTypes(m_itemCollection));
-                    for (int i = 0; i < this.MappedEntityTypes.Count; i++)
+                    for (var i = 0; i < MappedEntityTypes.Count; i++)
                     {
-                        impliedEntityTypesBitMap[i] = impliedEntityTypesSet.Contains(this.MappedEntityTypes[i]);
+                        impliedEntityTypesBitMap[i] = impliedEntityTypesSet.Contains(MappedEntityTypes[i]);
                     }
 
                     // Construct normalized mapping.
-                    normalizedEntityTypeMappings.Add(new FunctionImportNormalizedEntityTypeMapping(this, columnMappings, new BitArray(impliedEntityTypesBitMap)));
+                    normalizedEntityTypeMappings.Add(
+                        new FunctionImportNormalizedEntityTypeMapping(this, columnMappings, new BitArray(impliedEntityTypesBitMap)));
 
                     // Construct the rename mappings by adding isTypeOf types and specific entity types to the corresponding lists.
                     foreach (var isOfType in entityTypeMapping.IsOfTypeEntityTypes)
                     {
                         if (!isOfTypeEntityTypeColumnsRenameMapping.Keys.Contains(isOfType))
                         {
-                            isOfTypeEntityTypeColumnsRenameMapping.Add(isOfType, new OM.Collection<FunctionImportReturnTypePropertyMapping>());
+                            isOfTypeEntityTypeColumnsRenameMapping.Add(
+                                isOfType, new OM.Collection<FunctionImportReturnTypePropertyMapping>());
                         }
                         foreach (var rename in entityTypeMapping.ColumnsRenameList)
                         {
@@ -154,37 +159,51 @@
                     }
                 }
 
-                this.ReturnTypeColumnsRenameMapping = new FunctionImportReturnTypeEntityTypeColumnsRenameBuilder(isOfTypeEntityTypeColumnsRenameMapping,
-                                                                                                                 entityTypeColumnsRenameMapping)
-                                                      .ColumnRenameMapping;
+                ReturnTypeColumnsRenameMapping =
+                    new FunctionImportReturnTypeEntityTypeColumnsRenameBuilder(
+                        isOfTypeEntityTypeColumnsRenameMapping,
+                        entityTypeColumnsRenameMapping)
+                        .ColumnRenameMapping;
 
-                this.NormalizedEntityTypeMappings = new OM.ReadOnlyCollection<FunctionImportNormalizedEntityTypeMapping>(
+                NormalizedEntityTypeMappings = new OM.ReadOnlyCollection<FunctionImportNormalizedEntityTypeMapping>(
                     normalizedEntityTypeMappings);
             }
             else
             {
                 // FunctionImportComplexTypeMapping
-                Debug.Assert(structuralTypeMappings.First() is FunctionImportComplexTypeMapping, "only two types can have renames, complexType and entityType");
-                IEnumerable<FunctionImportComplexTypeMapping> complexTypeMappings = structuralTypeMappings.Cast<FunctionImportComplexTypeMapping>();
+                Debug.Assert(
+                    structuralTypeMappings.First() is FunctionImportComplexTypeMapping,
+                    "only two types can have renames, complexType and entityType");
+                var complexTypeMappings = structuralTypeMappings.Cast<FunctionImportComplexTypeMapping>();
 
-                Debug.Assert(complexTypeMappings.Count() == 1, "how come there are more than 1, complex type cannot derive from other complex type");
+                Debug.Assert(
+                    complexTypeMappings.Count() == 1, "how come there are more than 1, complex type cannot derive from other complex type");
 
-                this.ReturnTypeColumnsRenameMapping = new Dictionary<string, FunctionImportReturnTypeStructuralTypeColumnRenameMapping>();
+                ReturnTypeColumnsRenameMapping = new Dictionary<string, FunctionImportReturnTypeStructuralTypeColumnRenameMapping>();
                 foreach (var rename in complexTypeMappings.First().ColumnsRenameList)
                 {
-                    FunctionImportReturnTypeStructuralTypeColumnRenameMapping columnRenameMapping = new FunctionImportReturnTypeStructuralTypeColumnRenameMapping(rename.CMember);
-                    columnRenameMapping.AddRename(new FunctionImportReturnTypeStructuralTypeColumn(
+                    var columnRenameMapping = new FunctionImportReturnTypeStructuralTypeColumnRenameMapping(rename.CMember);
+                    columnRenameMapping.AddRename(
+                        new FunctionImportReturnTypeStructuralTypeColumn(
                             rename.SColumn,
                             complexTypeMappings.First().ReturnType,
                             false,
                             rename.LineInfo));
-                    this.ReturnTypeColumnsRenameMapping.Add(rename.CMember, columnRenameMapping);
+                    ReturnTypeColumnsRenameMapping.Add(rename.CMember, columnRenameMapping);
                 }
 
                 // Initialize the entity mapping data as empty.
-                this.NormalizedEntityTypeMappings = new OM.ReadOnlyCollection<FunctionImportNormalizedEntityTypeMapping>(new List<FunctionImportNormalizedEntityTypeMapping>());
-                this.DiscriminatorColumns = new OM.ReadOnlyCollection<string>(new List<string>() { });
-                this.MappedEntityTypes = new OM.ReadOnlyCollection<EntityType>(new List<EntityType>() { });
+                NormalizedEntityTypeMappings =
+                    new OM.ReadOnlyCollection<FunctionImportNormalizedEntityTypeMapping>(
+                        new List<FunctionImportNormalizedEntityTypeMapping>());
+                DiscriminatorColumns = new OM.ReadOnlyCollection<string>(
+                    new List<string>
+                        {
+                        });
+                MappedEntityTypes = new OM.ReadOnlyCollection<EntityType>(
+                    new List<EntityType>
+                        {
+                        });
             }
         }
 
@@ -221,17 +240,17 @@
             KeyToListMap<EntityType, LineInfo> unreachableIsTypeOfs;
             GetUnreachableTypes(validateAmbiguity, out unreachableEntityTypes, out unreachableIsTypeOfs);
 
-            bool valid = true;
+            var valid = true;
             foreach (var unreachableEntityType in unreachableEntityTypes.KeyValuePairs)
             {
                 var lineInfo = unreachableEntityType.Value.First();
-                string lines = StringUtil.ToCommaSeparatedString(unreachableEntityType.Value.Select(li => li.LineNumber));
-                EdmSchemaError error = new EdmSchemaError(
+                var lines = StringUtil.ToCommaSeparatedString(unreachableEntityType.Value.Select(li => li.LineNumber));
+                var error = new EdmSchemaError(
                     Strings.Mapping_FunctionImport_UnreachableType(unreachableEntityType.Key.FullName, lines),
                     (int)StorageMappingErrorCode.MappingFunctionImportAmbiguousTypeConditions,
                     EdmSchemaErrorSeverity.Error,
                     sourceLocation,
-                    lineInfo.LineNumber, 
+                    lineInfo.LineNumber,
                     lineInfo.LinePosition);
                 errors.Add(error);
                 valid = false;
@@ -239,9 +258,10 @@
             foreach (var unreachableIsTypeOf in unreachableIsTypeOfs.KeyValuePairs)
             {
                 var lineInfo = unreachableIsTypeOf.Value.First();
-                string lines = StringUtil.ToCommaSeparatedString(unreachableIsTypeOf.Value.Select(li => li.LineNumber));
-                string isTypeOfDescription = StorageMslConstructs.IsTypeOf + unreachableIsTypeOf.Key.FullName + StorageMslConstructs.IsTypeOfTerminal;
-                EdmSchemaError error = new EdmSchemaError(
+                var lines = StringUtil.ToCommaSeparatedString(unreachableIsTypeOf.Value.Select(li => li.LineNumber));
+                var isTypeOfDescription = StorageMslConstructs.IsTypeOf + unreachableIsTypeOf.Key.FullName
+                                          + StorageMslConstructs.IsTypeOfTerminal;
+                var error = new EdmSchemaError(
                     Strings.Mapping_FunctionImport_UnreachableIsTypeOf(isTypeOfDescription, lines),
                     (int)StorageMappingErrorCode.MappingFunctionImportAmbiguousTypeConditions,
                     EdmSchemaErrorSeverity.Error,
@@ -271,16 +291,16 @@
         {
             // Contains, for each DiscriminatorColumn, a domain variable where the domain values are
             // integers representing the ordinal within discriminatorDomains.
-            DomainVariable<string, ValueCondition>[] variables = ConstructDomainVariables();
+            var variables = ConstructDomainVariables();
 
             // Convert type mapping conditions to decision diagram vertices.
             var converter = new DomainConstraintConversionContext<string, ValueCondition>();
-            Vertex[] mappingConditions = ConvertMappingConditionsToVertices(converter, variables);
+            var mappingConditions = ConvertMappingConditionsToVertices(converter, variables);
 
             // Find reachable types.
-            Set<EntityType> reachableTypes = validateAmbiguity ?
-                FindUnambiguouslyReachableTypes(converter, mappingConditions) :
-                FindReachableTypes(converter, mappingConditions);
+            var reachableTypes = validateAmbiguity
+                                     ? FindUnambiguouslyReachableTypes(converter, mappingConditions)
+                                     : FindReachableTypes(converter, mappingConditions);
 
             CollectUnreachableTypes(reachableTypes, out unreachableEntityTypes, out unreachableIsTypeOfs);
         }
@@ -288,8 +308,8 @@
         private DomainVariable<string, ValueCondition>[] ConstructDomainVariables()
         {
             // Determine domain for each discriminator column, including "other" and "null" placeholders.
-            var discriminatorDomains = new Set<ValueCondition>[this.DiscriminatorColumns.Count];
-            for (int i = 0; i < discriminatorDomains.Length; i++)
+            var discriminatorDomains = new Set<ValueCondition>[DiscriminatorColumns.Count];
+            for (var i = 0; i < discriminatorDomains.Length; i++)
             {
                 discriminatorDomains[i] = new Set<ValueCondition>();
                 discriminatorDomains[i].Add(ValueCondition.IsOther);
@@ -297,12 +317,13 @@
             }
 
             // Collect all domain values.
-            foreach (var typeMapping in this.NormalizedEntityTypeMappings)
+            foreach (var typeMapping in NormalizedEntityTypeMappings)
             {
-                for (int i = 0; i < this.DiscriminatorColumns.Count; i++)
+                for (var i = 0; i < DiscriminatorColumns.Count; i++)
                 {
                     var discriminatorValue = typeMapping.ColumnConditions[i];
-                    if (null != discriminatorValue &&
+                    if (null != discriminatorValue
+                        &&
                         !discriminatorValue.ConditionValue.IsNotNullCondition) // NotNull is a special range (everything but IsNull)
                     {
                         discriminatorDomains[i].Add(discriminatorValue.ConditionValue);
@@ -311,11 +332,11 @@
             }
 
             var discriminatorVariables = new DomainVariable<string, ValueCondition>[discriminatorDomains.Length];
-            for (int i = 0; i < discriminatorVariables.Length; i++)
+            for (var i = 0; i < discriminatorVariables.Length; i++)
             {
                 // domain variable is identified by the column name and takes all collected domain values
                 discriminatorVariables[i] = new DomainVariable<string, ValueCondition>(
-                    this.DiscriminatorColumns[i], discriminatorDomains[i].MakeReadOnly());
+                    DiscriminatorColumns[i], discriminatorDomains[i].MakeReadOnly());
             }
 
             return discriminatorVariables;
@@ -325,14 +346,14 @@
             ConversionContext<DomainConstraint<string, ValueCondition>> converter,
             DomainVariable<string, ValueCondition>[] variables)
         {
-            Vertex[] conditions = new Vertex[this.NormalizedEntityTypeMappings.Count];
-            for (int i = 0; i < conditions.Length; i++)
+            var conditions = new Vertex[NormalizedEntityTypeMappings.Count];
+            for (var i = 0; i < conditions.Length; i++)
             {
-                var typeMapping = this.NormalizedEntityTypeMappings[i];
+                var typeMapping = NormalizedEntityTypeMappings[i];
 
                 // create conjunction representing the condition
-                Vertex condition = Vertex.One;
-                for (int j = 0; j < this.DiscriminatorColumns.Count; j++)
+                var condition = Vertex.One;
+                for (var j = 0; j < DiscriminatorColumns.Count; j++)
                 {
                     var columnCondition = typeMapping.ColumnConditions[j];
                     if (null != columnCondition)
@@ -344,7 +365,7 @@
                             // covers other elements), so create a Not(value in {null}) condition
                             var isNull = new TermExpr<DomainConstraint<string, ValueCondition>>(
                                 new DomainConstraint<string, ValueCondition>(variables[j], ValueCondition.IsNull));
-                            Vertex isNullVertex = converter.TranslateTermToVertex(isNull);
+                            var isNullVertex = converter.TranslateTermToVertex(isNull);
                             condition = converter.Solver.And(condition, converter.Solver.Not(isNullVertex));
                         }
                         else
@@ -363,19 +384,20 @@
         /// <summary>
         /// Determines which types are produced by this mapping.
         /// </summary>
-        private Set<EntityType> FindReachableTypes(DomainConstraintConversionContext<string, ValueCondition> converter, Vertex[] mappingConditions)
+        private Set<EntityType> FindReachableTypes(
+            DomainConstraintConversionContext<string, ValueCondition> converter, Vertex[] mappingConditions)
         {
             // For each entity type, create a candidate function that evaluates to true given
             // discriminator assignments iff. all of that type's conditions evaluate to true
             // and its negative conditions evaluate to false.
-            Vertex[] candidateFunctions = new Vertex[this.MappedEntityTypes.Count];
-            for (int i = 0; i < candidateFunctions.Length; i++)
+            var candidateFunctions = new Vertex[MappedEntityTypes.Count];
+            for (var i = 0; i < candidateFunctions.Length; i++)
             {
                 // Seed the candidate function conjunction with 'true'.
-                Vertex candidateFunction = Vertex.One;
-                for (int j = 0; j < this.NormalizedEntityTypeMappings.Count; j++)
+                var candidateFunction = Vertex.One;
+                for (var j = 0; j < NormalizedEntityTypeMappings.Count; j++)
                 {
-                    var entityTypeMapping = this.NormalizedEntityTypeMappings[j];
+                    var entityTypeMapping = NormalizedEntityTypeMappings[j];
 
                     // Determine if this mapping is a positive or negative case for the current type.
                     if (entityTypeMapping.ImpliedEntityTypes[i])
@@ -392,19 +414,20 @@
 
             // Make sure that for each type there is an assignment that resolves to only that type.
             var reachableTypes = new Set<EntityType>();
-            for (int i = 0; i < candidateFunctions.Length; i++)
+            for (var i = 0; i < candidateFunctions.Length; i++)
             {
                 // Create a function that evaluates to true iff. the current candidate function is true
                 // and every other candidate function is false.
-                Vertex isExactlyThisTypeCondition = converter.Solver.And(
-                    candidateFunctions.Select((typeCondition, ordinal) => ordinal == i ?
-                        typeCondition :
-                        converter.Solver.Not(typeCondition)));
+                var isExactlyThisTypeCondition = converter.Solver.And(
+                    candidateFunctions.Select(
+                        (typeCondition, ordinal) => ordinal == i
+                                                        ? typeCondition
+                                                        : converter.Solver.Not(typeCondition)));
 
                 // If the above conjunction is satisfiable, it means some row configuration exists producing the type.
                 if (!isExactlyThisTypeCondition.IsZero())
                 {
-                    reachableTypes.Add(this.MappedEntityTypes[i]);
+                    reachableTypes.Add(MappedEntityTypes[i]);
                 }
             }
 
@@ -414,18 +437,19 @@
         /// <summary>
         /// Determines which types are produced by this mapping.
         /// </summary>
-        private Set<EntityType> FindUnambiguouslyReachableTypes(DomainConstraintConversionContext<string, ValueCondition> converter, Vertex[] mappingConditions)
+        private Set<EntityType> FindUnambiguouslyReachableTypes(
+            DomainConstraintConversionContext<string, ValueCondition> converter, Vertex[] mappingConditions)
         {
             // For each entity type, create a candidate function that evaluates to true given
             // discriminator assignments iff. all of that type's conditions evaluate to true.
-            Vertex[] candidateFunctions = new Vertex[this.MappedEntityTypes.Count];
-            for (int i = 0; i < candidateFunctions.Length; i++)
+            var candidateFunctions = new Vertex[MappedEntityTypes.Count];
+            for (var i = 0; i < candidateFunctions.Length; i++)
             {
                 // Seed the candidate function conjunction with 'true'.
-                Vertex candidateFunction = Vertex.One;
-                for (int j = 0; j < this.NormalizedEntityTypeMappings.Count; j++)
+                var candidateFunction = Vertex.One;
+                for (var j = 0; j < NormalizedEntityTypeMappings.Count; j++)
                 {
-                    var entityTypeMapping = this.NormalizedEntityTypeMappings[j];
+                    var entityTypeMapping = NormalizedEntityTypeMappings[j];
 
                     // Determine if this mapping is a positive or negative case for the current type.
                     if (entityTypeMapping.ImpliedEntityTypes[i])
@@ -438,7 +462,7 @@
 
             // Make sure that for each type with satisfiable candidateFunction all assignments for the type resolve to only that type.
             var unambigouslyReachableMap = new BitArray(candidateFunctions.Length, true);
-            for (int i = 0; i < candidateFunctions.Length; ++i)
+            for (var i = 0; i < candidateFunctions.Length; ++i)
             {
                 if (candidateFunctions[i].IsZero())
                 {
@@ -447,7 +471,7 @@
                 }
                 else
                 {
-                    for (int j = i + 1; j < candidateFunctions.Length; ++j)
+                    for (var j = i + 1; j < candidateFunctions.Length; ++j)
                     {
                         if (!converter.Solver.And(candidateFunctions[i], candidateFunctions[j]).IsZero())
                         {
@@ -459,24 +483,27 @@
                 }
             }
             var reachableTypes = new Set<EntityType>();
-            for (int i = 0; i < candidateFunctions.Length; ++i)
+            for (var i = 0; i < candidateFunctions.Length; ++i)
             {
                 if (unambigouslyReachableMap[i])
                 {
-                    reachableTypes.Add(this.MappedEntityTypes[i]);
+                    reachableTypes.Add(MappedEntityTypes[i]);
                 }
             }
 
             return reachableTypes;
         }
 
-        private void CollectUnreachableTypes(Set<EntityType> reachableTypes, out KeyToListMap<EntityType, LineInfo> entityTypes, out KeyToListMap<EntityType, LineInfo> isTypeOfEntityTypes)
+        private void CollectUnreachableTypes(
+            Set<EntityType> reachableTypes, out KeyToListMap<EntityType, LineInfo> entityTypes,
+            out KeyToListMap<EntityType, LineInfo> isTypeOfEntityTypes)
         {
             // Collect line infos for types in violation
             entityTypes = new KeyToListMap<EntityType, LineInfo>(EqualityComparer<EntityType>.Default);
             isTypeOfEntityTypes = new KeyToListMap<EntityType, LineInfo>(EqualityComparer<EntityType>.Default);
 
-            if (reachableTypes.Count == this.MappedEntityTypes.Count)
+            if (reachableTypes.Count
+                == MappedEntityTypes.Count)
             {
                 // All types are reachable; nothing to check
                 return;
@@ -486,9 +513,9 @@
             foreach (var isTypeOf in m_isTypeOfLineInfos.Keys)
             {
                 if (!MetadataHelper.GetTypeAndSubtypesOf(isTypeOf, m_itemCollection, false)
-                    .Cast<EntityType>()
-                    .Intersect(reachableTypes)
-                    .Any())
+                         .Cast<EntityType>()
+                         .Intersect(reachableTypes)
+                         .Any())
                 {
                     // no type in the hierarchy is reachable...
                     isTypeOfEntityTypes.AddRange(isTypeOf, m_isTypeOfLineInfos.EnumerateValues(isTypeOf));
@@ -508,7 +535,8 @@
 
     internal sealed class FunctionImportNormalizedEntityTypeMapping
     {
-        internal FunctionImportNormalizedEntityTypeMapping(FunctionImportStructuralTypeMappingKB parent, 
+        internal FunctionImportNormalizedEntityTypeMapping(
+            FunctionImportStructuralTypeMappingKB parent,
             List<FunctionImportEntityTypeMappingCondition> columnConditions, BitArray impliedEntityTypes)
         {
             // validate arguments
@@ -516,14 +544,16 @@
             EntityUtil.CheckArgumentNull(columnConditions, "discriminatorValues");
             EntityUtil.CheckArgumentNull(impliedEntityTypes, "impliedEntityTypes");
 
-            Debug.Assert(columnConditions.Count == parent.DiscriminatorColumns.Count,
+            Debug.Assert(
+                columnConditions.Count == parent.DiscriminatorColumns.Count,
                 "discriminator values must be ordinally aligned with discriminator columns");
-            Debug.Assert(impliedEntityTypes.Count == parent.MappedEntityTypes.Count,
+            Debug.Assert(
+                impliedEntityTypes.Count == parent.MappedEntityTypes.Count,
                 "implied entity types must be ordinally aligned with mapped entity types");
 
-            this.ColumnConditions = new OM.ReadOnlyCollection<FunctionImportEntityTypeMappingCondition>(columnConditions.ToList());
-            this.ImpliedEntityTypes = impliedEntityTypes;
-            this.ComplementImpliedEntityTypes = (new BitArray(this.ImpliedEntityTypes)).Not();
+            ColumnConditions = new OM.ReadOnlyCollection<FunctionImportEntityTypeMappingCondition>(columnConditions.ToList());
+            ImpliedEntityTypes = impliedEntityTypes;
+            ComplementImpliedEntityTypes = (new BitArray(ImpliedEntityTypes)).Not();
         }
 
         /// <summary>
@@ -545,8 +575,9 @@
 
         public override string ToString()
         {
-            return String.Format(CultureInfo.InvariantCulture, "Values={0}, Types={1}",
-                StringUtil.ToCommaSeparatedString(this.ColumnConditions), StringUtil.ToCommaSeparatedString(this.ImpliedEntityTypes));
+            return String.Format(
+                CultureInfo.InvariantCulture, "Values={0}, Types={1}",
+                StringUtil.ToCommaSeparatedString(ColumnConditions), StringUtil.ToCommaSeparatedString(ImpliedEntityTypes));
         }
     }
 
@@ -554,8 +585,8 @@
     {
         protected FunctionImportEntityTypeMappingCondition(string columnName, LineInfo lineInfo)
         {
-            this.ColumnName = EntityUtil.CheckArgumentNull(columnName, "columnName");
-            this.LineInfo = lineInfo;
+            ColumnName = EntityUtil.CheckArgumentNull(columnName, "columnName");
+            LineInfo = lineInfo;
         }
 
         internal readonly string ColumnName;
@@ -567,7 +598,7 @@
 
         public override string ToString()
         {
-            return this.ConditionValue.ToString();
+            return ConditionValue.ToString();
         }
     }
 
@@ -576,8 +607,8 @@
         internal FunctionImportEntityTypeMappingConditionValue(string columnName, XPathNavigator columnValue, LineInfo lineInfo)
             : base(columnName, lineInfo)
         {
-            this._xPathValue = EntityUtil.CheckArgumentNull(columnValue, "columnValue");
-            this._convertedValues = new Memoizer<Type, object>(this.GetConditionValue, null);
+            _xPathValue = EntityUtil.CheckArgumentNull(columnValue, "columnValue");
+            _convertedValues = new Memoizer<Type, object>(GetConditionValue, null);
         }
 
         private readonly XPathNavigator _xPathValue;
@@ -590,17 +621,18 @@
 
         internal override bool ColumnValueMatchesCondition(object columnValue)
         {
-            if (null == columnValue || Convert.IsDBNull(columnValue))
+            if (null == columnValue
+                || Convert.IsDBNull(columnValue))
             {
                 // only FunctionImportEntityTypeMappingConditionIsNull can match a null
                 // column value
                 return false;
             }
 
-            Type columnValueType = columnValue.GetType();
+            var columnValueType = columnValue.GetType();
 
             // check if we've interpreted this column type yet
-            object conditionValue = _convertedValues.Evaluate(columnValueType);
+            var conditionValue = _convertedValues.Evaluate(columnValueType);
             return ByValueEqualityComparer.Default.Equals(columnValue, conditionValue);
         }
 
@@ -608,21 +640,27 @@
         {
             return GetConditionValue(
                 columnValueType,
-                handleTypeNotComparable: () =>
-                {
-                    throw EntityUtil.CommandExecution(Strings.Mapping_FunctionImport_UnsupportedType(this.ColumnName, columnValueType.FullName));
-                },
-                handleInvalidConditionValue: () =>
-                {
-                    throw EntityUtil.CommandExecution(Strings.Mapping_FunctionImport_ConditionValueTypeMismatch(StorageMslConstructs.FunctionImportMappingElement, this.ColumnName, columnValueType.FullName));
-                });
+                handleTypeNotComparable:
+                    () =>
+                        {
+                            throw EntityUtil.CommandExecution(
+                                Strings.Mapping_FunctionImport_UnsupportedType(ColumnName, columnValueType.FullName));
+                        },
+                handleInvalidConditionValue:
+                    () =>
+                        {
+                            throw EntityUtil.CommandExecution(
+                                Strings.Mapping_FunctionImport_ConditionValueTypeMismatch(
+                                    StorageMslConstructs.FunctionImportMappingElement, ColumnName, columnValueType.FullName));
+                        });
         }
 
         internal object GetConditionValue(Type columnValueType, Action handleTypeNotComparable, Action handleInvalidConditionValue)
         {
             // Check that the type is supported and comparable.
             PrimitiveType primitiveType;
-            if (!ClrProviderManifest.Instance.TryGetPrimitiveType(columnValueType, out primitiveType) ||
+            if (!ClrProviderManifest.Instance.TryGetPrimitiveType(columnValueType, out primitiveType)
+                ||
                 !StorageMappingItemLoader.IsTypeSupportedForCondition(primitiveType.PrimitiveTypeKind))
             {
                 handleTypeNotComparable();
@@ -646,7 +684,7 @@
         internal FunctionImportEntityTypeMappingConditionIsNull(string columnName, bool isNull, LineInfo lineInfo)
             : base(columnName, lineInfo)
         {
-            this.IsNull = isNull;
+            IsNull = isNull;
         }
 
         internal readonly bool IsNull;
@@ -658,8 +696,8 @@
 
         internal override bool ColumnValueMatchesCondition(object columnValue)
         {
-            bool valueIsNull = null == columnValue || Convert.IsDBNull(columnValue);
-            return valueIsNull == this.IsNull;
+            var valueIsNull = null == columnValue || Convert.IsDBNull(columnValue);
+            return valueIsNull == IsNull;
         }
     }
 
@@ -677,9 +715,9 @@
         internal const string IsNotNullDescription = "NOT NULL";
         internal const string IsOtherDescription = "OTHER";
 
-        internal readonly static ValueCondition IsNull = new ValueCondition(IsNullDescription, true);
-        internal readonly static ValueCondition IsNotNull = new ValueCondition(IsNotNullDescription, true);
-        internal readonly static ValueCondition IsOther = new ValueCondition(IsOtherDescription, true);
+        internal static readonly ValueCondition IsNull = new ValueCondition(IsNullDescription, true);
+        internal static readonly ValueCondition IsNotNull = new ValueCondition(IsNotNullDescription, true);
+        internal static readonly ValueCondition IsOther = new ValueCondition(IsOtherDescription, true);
 
         private ValueCondition(string description, bool isSentinel)
         {
@@ -692,12 +730,15 @@
         {
         }
 
-        internal bool IsNotNullCondition { get { return object.ReferenceEquals(this, IsNotNull); } }
+        internal bool IsNotNullCondition
+        {
+            get { return ReferenceEquals(this, IsNotNull); }
+        }
 
         public bool Equals(ValueCondition other)
         {
-            return other.IsSentinel == this.IsSentinel &&
-                other.Description == this.Description;
+            return other.IsSentinel == IsSentinel &&
+                   other.Description == Description;
         }
 
         public override int GetHashCode()
@@ -707,11 +748,11 @@
 
         public override string ToString()
         {
-            return this.Description;
+            return Description;
         }
     }
 
-    internal sealed class LineInfo: IXmlLineInfo
+    internal sealed class LineInfo : IXmlLineInfo
     {
         private readonly bool m_hasLineInfo;
         private readonly int m_lineNumber;
@@ -719,7 +760,8 @@
 
         internal LineInfo(XPathNavigator nav)
             : this((IXmlLineInfo)nav)
-        { }
+        {
+        }
 
         internal LineInfo(IXmlLineInfo lineInfo)
         {
@@ -729,6 +771,7 @@
         }
 
         internal static readonly LineInfo Empty = new LineInfo();
+
         private LineInfo()
         {
             m_hasLineInfo = false;
@@ -737,10 +780,14 @@
         }
 
         public int LineNumber
-        { get { return m_lineNumber; } }
+        {
+            get { return m_lineNumber; }
+        }
 
         public int LinePosition
-        { get { return m_linePosition; } }
+        {
+            get { return m_linePosition; }
+        }
 
         public bool HasLineInfo()
         {

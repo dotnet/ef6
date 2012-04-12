@@ -1,24 +1,26 @@
-namespace System.Data.Entity.Core.SqlClient {
-
+namespace System.Data.Entity.Core.SqlClient
+{
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity;
+    using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Spatial;
+    using System.Data.Entity.Core.SqlClient.SqlGen;
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.IO;
     using System.Globalization;
+    using System.IO;
 
     /// <summary>
     /// The DbProviderServices implementation for the SqlClient provider for SQL Server.
     /// </summary>
-    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling"), CLSCompliant(false)]
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
+    [CLSCompliant(false)]
     public sealed class SqlProviderServices : DbProviderServices
     {
         /// <summary>
@@ -48,12 +50,13 @@ namespace System.Data.Entity.Core.SqlClient {
         /// <param name="commandTree">command tree for the statement</param>
         /// <returns>an exectable command definition object</returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree) {
+        protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
+        {
             Debug.Assert(providerManifest != null, "CreateCommandDefinition passed null provider manifest to CreateDbCommandDefinition?");
             Debug.Assert(commandTree != null, "CreateCommandDefinition did not validate commandTree argument?");
-                        
-            DbCommand prototype = CreateCommand(providerManifest, commandTree);
-            DbCommandDefinition result = this.CreateCommandDefinition(prototype);
+
+            var prototype = CreateCommand(providerManifest, commandTree);
+            var result = CreateCommandDefinition(prototype);
             return result;
         }
 
@@ -62,9 +65,10 @@ namespace System.Data.Entity.Core.SqlClient {
         /// </summary>
         /// <param name="commandTree">command tree for the statement</param>
         /// <returns>a command object</returns>
-        internal override DbCommand CreateCommand(DbCommandTree commandTree) {
+        internal override DbCommand CreateCommand(DbCommandTree commandTree)
+        {
             EntityUtil.CheckArgumentNull(commandTree, "commandTree");
-            StoreItemCollection storeMetadata = (StoreItemCollection)commandTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
+            var storeMetadata = (StoreItemCollection)commandTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
             Debug.Assert(storeMetadata.StoreProviderManifest != null, "StoreItemCollection has null StoreProviderManifest?");
 
             return CreateCommand(storeMetadata.StoreProviderManifest, commandTree);
@@ -76,68 +80,91 @@ namespace System.Data.Entity.Core.SqlClient {
         /// <param name="providerManifest">provider manifest</param>
         /// <param name="commandTree">command tree for the statement</param>
         /// <returns>a command object</returns>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope"), SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling"), SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
-        private static DbCommand CreateCommand(DbProviderManifest providerManifest, DbCommandTree commandTree) {
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
+        [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
+        private static DbCommand CreateCommand(DbProviderManifest providerManifest, DbCommandTree commandTree)
+        {
             EntityUtil.CheckArgumentNull(providerManifest, "providerManifest");
             EntityUtil.CheckArgumentNull(commandTree, "commandTree");
 
-            SqlProviderManifest sqlManifest = (providerManifest as SqlProviderManifest);
+            var sqlManifest = (providerManifest as SqlProviderManifest);
             if (sqlManifest == null)
             {
-                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.Mapping_Provider_WrongManifestType(typeof(SqlProviderManifest)));
+                throw EntityUtil.Argument(Strings.Mapping_Provider_WrongManifestType(typeof(SqlProviderManifest)));
             }
 
-            SqlVersion sqlVersion = sqlManifest.SqlVersion;
-            SqlCommand command = new SqlCommand();
+            var sqlVersion = sqlManifest.SqlVersion;
+            var command = new SqlCommand();
 
             List<SqlParameter> parameters;
             CommandType commandType;
             HashSet<string> paramsToForceNonUnicode;
-            command.CommandText = System.Data.Entity.Core.SqlClient.SqlGen.SqlGenerator.GenerateSql(commandTree, sqlVersion, out parameters, out commandType, out paramsToForceNonUnicode);
+            command.CommandText = SqlGenerator.GenerateSql(
+                commandTree, sqlVersion, out parameters, out commandType, out paramsToForceNonUnicode);
             command.CommandType = commandType;
 
             // Get the function (if any) implemented by the command tree since this influences our interpretation of parameters
             EdmFunction function = null;
-            if (commandTree.CommandTreeKind == DbCommandTreeKind.Function) {
+            if (commandTree.CommandTreeKind
+                == DbCommandTreeKind.Function)
+            {
                 function = ((DbFunctionCommandTree)commandTree).EdmFunction;
             }
             // Now make sure we populate the command's parameters from the CQT's parameters:
-            foreach (KeyValuePair<string, TypeUsage> queryParameter in commandTree.Parameters) {
+            foreach (var queryParameter in commandTree.Parameters)
+            {
                 SqlParameter parameter;
 
                 // Use the corresponding function parameter TypeUsage where available (currently, the SSDL facets and 
                 // type trump user-defined facets and type in the EntityCommand).
                 FunctionParameter functionParameter;
-                if (null != function && function.Parameters.TryGetValue(queryParameter.Key, false, out functionParameter)) {
+                if (null != function
+                    && function.Parameters.TryGetValue(queryParameter.Key, false, out functionParameter))
+                {
                     const bool preventTruncation = false;
-                    parameter = CreateSqlParameter(functionParameter.Name, functionParameter.TypeUsage, functionParameter.Mode, DBNull.Value, preventTruncation, sqlVersion);
+                    parameter = CreateSqlParameter(
+                        functionParameter.Name, functionParameter.TypeUsage, functionParameter.Mode, DBNull.Value, preventTruncation,
+                        sqlVersion);
                 }
-                else {
+                else
+                {
                     TypeUsage parameterType;
-                    if ( (paramsToForceNonUnicode != null) &&              //Reached when a Function Command Tree is passed an incorrect parameter name by the user.
-                         (paramsToForceNonUnicode.Contains(queryParameter.Key)) )
+                    if ((paramsToForceNonUnicode != null)
+                        && //Reached when a Function Command Tree is passed an incorrect parameter name by the user.
+                        (paramsToForceNonUnicode.Contains(queryParameter.Key)))
                     {
-                        parameterType = queryParameter.Value.ShallowCopy(new FacetValues { Unicode = false });
+                        parameterType = queryParameter.Value.ShallowCopy(
+                            new FacetValues
+                                {
+                                    Unicode = false
+                                });
                     }
                     else
                     {
                         parameterType = queryParameter.Value;
                     }
                     const bool preventTruncation = false;
-                    parameter = CreateSqlParameter(queryParameter.Key, parameterType, ParameterMode.In, DBNull.Value, preventTruncation, sqlVersion);
+                    parameter = CreateSqlParameter(
+                        queryParameter.Key, parameterType, ParameterMode.In, DBNull.Value, preventTruncation, sqlVersion);
                 }
                 command.Parameters.Add(parameter);
             }
 
             // Now add parameters added as part of SQL gen (note: this feature is only safe for DML SQL gen which
             // does not support user parameters, where there is no risk of name collision)
-            if (null != parameters && 0 < parameters.Count) {
+            if (null != parameters
+                && 0 < parameters.Count)
+            {
                 if (commandTree.CommandTreeKind != DbCommandTreeKind.Delete &&
-                    commandTree.CommandTreeKind != DbCommandTreeKind.Insert &&
-                    commandTree.CommandTreeKind != DbCommandTreeKind.Update) {
+                    commandTree.CommandTreeKind != DbCommandTreeKind.Insert
+                    &&
+                    commandTree.CommandTreeKind != DbCommandTreeKind.Update)
+                {
                     throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.SqlGenParametersNotPermitted);
                 }
-                foreach (SqlParameter parameter in parameters) {
+                foreach (var parameter in parameters)
+                {
                     command.Parameters.Add(parameter);
                 }
             }
@@ -150,14 +177,15 @@ namespace System.Data.Entity.Core.SqlClient {
             // Ensure a value that can be used with SqlParameter
             value = EnsureSqlParameterValue(value);
 
-            if (TypeSemantics.IsPrimitiveType(parameterType, PrimitiveTypeKind.String) ||
+            if (TypeSemantics.IsPrimitiveType(parameterType, PrimitiveTypeKind.String)
+                ||
                 TypeSemantics.IsPrimitiveType(parameterType, PrimitiveTypeKind.Binary))
             {
-                int? size = GetParameterSize(parameterType, ((parameter.Direction & ParameterDirection.Output) == ParameterDirection.Output));
-                if(!size.HasValue)
+                var size = GetParameterSize(parameterType, ((parameter.Direction & ParameterDirection.Output) == ParameterDirection.Output));
+                if (!size.HasValue)
                 {
                     // Remember the current Size
-                    int previousSize = parameter.Size;
+                    var previousSize = parameter.Size;
 
                     // Infer the Size from the value
                     parameter.Size = 0;
@@ -169,7 +197,7 @@ namespace System.Data.Entity.Core.SqlClient {
                         // because no MaxLength was specified in the TypeUsage and the provider is Sql8. 
                         // If the value's length is less than or equal to this preset size, then the Size value can be retained, 
                         // otherwise this preset size must be removed in favor of the Size inferred from the value itself.
-                                                
+
                         // If the inferred Size is less than the preset 'max' size, restore that preset size
                         if (parameter.Size < previousSize)
                         {
@@ -182,7 +210,7 @@ namespace System.Data.Entity.Core.SqlClient {
                         // provider is more recent than Sql8. However, it is more optimal to specify a non-max (-1) value for
                         // the size where possible, since 'max' parameters may prevent, for example, filter pushdown.
                         // (see Dev10#617447 for more details)
-                        int suggestedLength = GetNonMaxLength(((SqlParameter)parameter).SqlDbType);
+                        var suggestedLength = GetNonMaxLength(((SqlParameter)parameter).SqlDbType);
                         if (parameter.Size < suggestedLength)
                         {
                             parameter.Size = suggestedLength;
@@ -209,12 +237,14 @@ namespace System.Data.Entity.Core.SqlClient {
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        protected override string GetDbProviderManifestToken(DbConnection connection) {
+        protected override string GetDbProviderManifestToken(DbConnection connection)
+        {
             EntityUtil.CheckArgumentNull(connection, "connection");
 
-            SqlConnection sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
+            var sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
 
-            if (string.IsNullOrEmpty(sqlConnection.ConnectionString)) {
+            if (string.IsNullOrEmpty(sqlConnection.ConnectionString))
+            {
                 throw EntityUtil.Argument(Strings.UnableToDetermineStoreVersion);
             }
 
@@ -223,43 +253,40 @@ namespace System.Data.Entity.Core.SqlClient {
             // That failing, try using connection to master database (in case the database doesn't exist yet)
             try
             {
-                UsingConnection(sqlConnection, conn =>
-                {
-                    providerManifestToken = SqlVersionUtils.GetVersionHint(SqlVersionUtils.GetSqlVersion(conn));
-                });
+                UsingConnection(
+                    sqlConnection, conn => { providerManifestToken = SqlVersionUtils.GetVersionHint(SqlVersionUtils.GetSqlVersion(conn)); });
             }
             catch
             {
-                UsingMasterConnection(sqlConnection, conn =>
-                {
-                    providerManifestToken = SqlVersionUtils.GetVersionHint(SqlVersionUtils.GetSqlVersion(conn));
-                });
+                UsingMasterConnection(
+                    sqlConnection, conn => { providerManifestToken = SqlVersionUtils.GetVersionHint(SqlVersionUtils.GetSqlVersion(conn)); });
             }
             return providerManifestToken;
         }
 
-        protected override DbProviderManifest GetDbProviderManifest(string versionHint) {
-            if (string.IsNullOrEmpty(versionHint)) {
+        protected override DbProviderManifest GetDbProviderManifest(string versionHint)
+        {
+            if (string.IsNullOrEmpty(versionHint))
+            {
                 throw EntityUtil.Argument(Strings.UnableToDetermineStoreVersion);
             }
 
             return new SqlProviderManifest(versionHint);
         }
 
-        protected override Spatial.DbSpatialDataReader GetDbSpatialDataReader(DbDataReader fromReader, string versionHint) 
-        {    
+        protected override DbSpatialDataReader GetDbSpatialDataReader(DbDataReader fromReader, string versionHint)
+        {
             EntityUtil.CheckArgumentNull(fromReader, "fromReader");
 
             ValidateVersionHint(versionHint);
 
-            SqlDataReader underlyingReader = fromReader as SqlDataReader;
+            var underlyingReader = fromReader as SqlDataReader;
             if (underlyingReader == null)
             {
                 throw EntityUtil.ProviderIncompatible(Strings.SqlProvider_NeedSqlDataReader(fromReader.GetType()));
             }
 
-
-             return new SqlSpatialDataReader(underlyingReader);
+            return new SqlSpatialDataReader(underlyingReader);
         }
 
         protected override DbSpatialServices DbGetSpatialServices(string versionHint)
@@ -268,7 +295,7 @@ namespace System.Data.Entity.Core.SqlClient {
             return SqlSpatialServices.Instance;
         }
 
-        static void ValidateVersionHint(string versionHint)
+        private static void ValidateVersionHint(string versionHint)
         {
             if (string.IsNullOrEmpty(versionHint))
             {
@@ -276,7 +303,7 @@ namespace System.Data.Entity.Core.SqlClient {
             }
 
             // GetSqlVersion will throw ArgumentException if manifestToken is null, empty, or not recognized.
-            SqlVersion tokenVersion = SqlVersionUtils.GetSqlVersion(versionHint);
+            var tokenVersion = SqlVersionUtils.GetSqlVersion(versionHint);
 
             // SQL spatial support is only available for SQL Server 2008 and later
             if (tokenVersion < SqlVersion.Sql10)
@@ -284,7 +311,7 @@ namespace System.Data.Entity.Core.SqlClient {
                 throw EntityUtil.ProviderIncompatible(Strings.SqlProvider_Sql2008RequiredForSpatial);
             }
         }
-        
+
         internal static SqlTypesAssembly GetSqlTypesAssembly()
         {
             SqlTypesAssembly sqlTypes;
@@ -314,7 +341,9 @@ namespace System.Data.Entity.Core.SqlClient {
         /// <summary>
         /// Creates a SqlParameter given a name, type, and direction
         /// </summary>
-        internal static SqlParameter CreateSqlParameter(string name, TypeUsage type, ParameterMode mode, object value, bool preventTruncation, SqlVersion version) {
+        internal static SqlParameter CreateSqlParameter(
+            string name, TypeUsage type, ParameterMode mode, object value, bool preventTruncation, SqlVersion version)
+        {
             int? size;
             byte? precision;
             byte? scale;
@@ -322,21 +351,23 @@ namespace System.Data.Entity.Core.SqlClient {
 
             value = EnsureSqlParameterValue(value);
 
-            SqlParameter result = new SqlParameter(name, value);
+            var result = new SqlParameter(name, value);
 
             // .Direction
-            ParameterDirection direction = MetadataHelper.ParameterModeToParameterDirection(mode);
-            if (result.Direction != direction) {
+            var direction = MetadataHelper.ParameterModeToParameterDirection(mode);
+            if (result.Direction != direction)
+            {
                 result.Direction = direction;
             }
-            
+
             // .Size, .Precision, .Scale and .SqlDbType
             // output parameters are handled differently (we need to ensure there is space for return
             // values where the user has not given a specific Size/MaxLength)
-            bool isOutParam = mode != ParameterMode.In;
-            SqlDbType sqlDbType = GetSqlDbType(type, isOutParam, version, out size, out precision, out scale, out udtTypeName);
+            var isOutParam = mode != ParameterMode.In;
+            var sqlDbType = GetSqlDbType(type, isOutParam, version, out size, out precision, out scale, out udtTypeName);
 
-            if (result.SqlDbType != sqlDbType) {
+            if (result.SqlDbType != sqlDbType)
+            {
                 result.SqlDbType = sqlDbType;
             }
 
@@ -368,28 +399,33 @@ namespace System.Data.Entity.Core.SqlClient {
                     }
                 }
             }
-            else 
+            else
             {
-                PrimitiveTypeKind typeKind = MetadataHelper.GetPrimitiveTypeKind(type);
+                var typeKind = MetadataHelper.GetPrimitiveTypeKind(type);
                 if (typeKind == PrimitiveTypeKind.String)
                 {
                     result.Size = GetDefaultStringMaxLength(version, sqlDbType);
                 }
-                else if(typeKind == PrimitiveTypeKind.Binary)
+                else if (typeKind == PrimitiveTypeKind.Binary)
                 {
                     result.Size = GetDefaultBinaryMaxLength(version);
                 }
             }
-            if (precision.HasValue && (isOutParam || result.Precision != precision.Value)) {
+            if (precision.HasValue
+                && (isOutParam || result.Precision != precision.Value))
+            {
                 result.Precision = precision.Value;
             }
-            if (scale.HasValue && (isOutParam || result.Scale != scale.Value)) {
+            if (scale.HasValue
+                && (isOutParam || result.Scale != scale.Value))
+            {
                 result.Scale = scale.Value;
             }
 
             // .IsNullable
-            bool isNullable = TypeSemantics.IsNullable(type);
-            if (isOutParam || isNullable != result.IsNullable) {
+            var isNullable = TypeSemantics.IsNullable(type);
+            if (isOutParam || isNullable != result.IsNullable)
+            {
                 result.IsNullable = isNullable;
             }
 
@@ -407,20 +443,21 @@ namespace System.Data.Entity.Core.SqlClient {
         internal static object EnsureSqlParameterValue(object value)
         {
             if (value != null &&
-                value != DBNull.Value &&
+                value != DBNull.Value
+                &&
                 Type.GetTypeCode(value.GetType()) == TypeCode.Object)
             {
                 // If the parameter is being created based on an actual value (typically for constants found in DML expressions) then a DbGeography/DbGeometry
                 // value must be replaced by an an appropriate Microsoft.SqlServer.Types.SqlGeography/SqlGeometry instance. Since the DbGeography/DbGeometry
                 // value may not have been originally created by this SqlClient provider services implementation, just using the ProviderValue is not sufficient.
-                DbGeography geographyValue = value as DbGeography;
+                var geographyValue = value as DbGeography;
                 if (geographyValue != null)
                 {
                     value = GetSqlTypesAssembly().ConvertToSqlTypesGeography(geographyValue);
                 }
                 else
                 {
-                    DbGeometry geometryValue = value as DbGeometry;
+                    var geometryValue = value as DbGeometry;
                     if (geometryValue != null)
                     {
                         value = GetSqlTypesAssembly().ConvertToSqlTypesGeometry(geometryValue);
@@ -435,9 +472,11 @@ namespace System.Data.Entity.Core.SqlClient {
         /// Determines SqlDbType for the given primitive type. Extracts facet
         /// information as well.
         /// </summary>
-        private static SqlDbType GetSqlDbType(TypeUsage type, bool isOutParam, SqlVersion version, out int? size, out byte? precision, out byte? scale, out string udtName) {
+        private static SqlDbType GetSqlDbType(
+            TypeUsage type, bool isOutParam, SqlVersion version, out int? size, out byte? precision, out byte? scale, out string udtName)
+        {
             // only supported for primitive type
-            PrimitiveTypeKind primitiveTypeKind = MetadataHelper.GetPrimitiveTypeKind(type);
+            var primitiveTypeKind = MetadataHelper.GetPrimitiveTypeKind(type);
 
             size = default(int?);
             precision = default(byte?);
@@ -445,7 +484,8 @@ namespace System.Data.Entity.Core.SqlClient {
             udtName = default(string);
 
             // CONSIDER(CMeek):: add logic for Xml here
-            switch (primitiveTypeKind) {
+            switch (primitiveTypeKind)
+            {
                 case PrimitiveTypeKind.Binary:
                     // for output parameters, ensure there is space...
                     size = GetParameterSize(type, isOutParam);
@@ -458,24 +498,28 @@ namespace System.Data.Entity.Core.SqlClient {
                     return SqlDbType.TinyInt;
 
                 case PrimitiveTypeKind.Time:
-                    if (!SqlVersionUtils.IsPreKatmai(version)) {
+                    if (!SqlVersionUtils.IsPreKatmai(version))
+                    {
                         precision = GetKatmaiDateTimePrecision(type, isOutParam);
                     }
                     return SqlDbType.Time;
 
                 case PrimitiveTypeKind.DateTimeOffset:
-                    if (!SqlVersionUtils.IsPreKatmai(version)) {
+                    if (!SqlVersionUtils.IsPreKatmai(version))
+                    {
                         precision = GetKatmaiDateTimePrecision(type, isOutParam);
                     }
                     return SqlDbType.DateTimeOffset;
 
                 case PrimitiveTypeKind.DateTime:
                     //For katmai pick the type with max precision which is datetime2
-                    if (!SqlVersionUtils.IsPreKatmai(version)) {
+                    if (!SqlVersionUtils.IsPreKatmai(version))
+                    {
                         precision = GetKatmaiDateTimePrecision(type, isOutParam);
                         return SqlDbType.DateTime2;
                     }
-                    else {
+                    else
+                    {
                         return SqlDbType.DateTime;
                     }
 
@@ -531,23 +575,30 @@ namespace System.Data.Entity.Core.SqlClient {
         /// Determines preferred value for SqlParameter.Size. Returns null
         /// where there is no preference.
         /// </summary>
-        private static int? GetParameterSize(TypeUsage type, bool isOutParam) {
+        private static int? GetParameterSize(TypeUsage type, bool isOutParam)
+        {
             Facet maxLengthFacet;
-            if (type.Facets.TryGetValue(DbProviderManifest.MaxLengthFacetName, false, out maxLengthFacet) &&
-                null != maxLengthFacet.Value) {
-                if (maxLengthFacet.IsUnbounded) {
+            if (type.Facets.TryGetValue(DbProviderManifest.MaxLengthFacetName, false, out maxLengthFacet)
+                &&
+                null != maxLengthFacet.Value)
+            {
+                if (maxLengthFacet.IsUnbounded)
+                {
                     return -1;
                 }
-                else {
+                else
+                {
                     return (int?)maxLengthFacet.Value;
                 }
             }
-            else if (isOutParam) {
+            else if (isOutParam)
+            {
                 // if the parameter is a return/out/inout parameter, ensure there 
                 // is space for any value
                 return -1;
             }
-            else {
+            else
+            {
                 // no value
                 return default(int?);
             }
@@ -555,13 +606,15 @@ namespace System.Data.Entity.Core.SqlClient {
 
         private static int GetNonMaxLength(SqlDbType type)
         {
-            int result = -1;
-            if (type == SqlDbType.NChar || type == SqlDbType.NVarChar)
+            var result = -1;
+            if (type == SqlDbType.NChar
+                || type == SqlDbType.NVarChar)
             {
                 result = 4000;
             }
-            else if(type == SqlDbType.Char || type == SqlDbType.VarChar ||
-                    type == SqlDbType.Binary || type == SqlDbType.VarBinary)
+            else if (type == SqlDbType.Char || type == SqlDbType.VarChar ||
+                     type == SqlDbType.Binary
+                     || type == SqlDbType.VarBinary)
             {
                 result = 8000;
             }
@@ -573,7 +626,8 @@ namespace System.Data.Entity.Core.SqlClient {
             int result;
             if (version < SqlVersion.Sql9)
             {
-                if (type == SqlDbType.NChar || type == SqlDbType.NVarChar)
+                if (type == SqlDbType.NChar
+                    || type == SqlDbType.NVarChar)
                 {
                     result = 4000;
                 }
@@ -608,21 +662,25 @@ namespace System.Data.Entity.Core.SqlClient {
         /// returns null or the maximum available precision to avoid truncation (which can occur
         /// for output parameters).
         /// </summary>
-        private static byte? GetKatmaiDateTimePrecision(TypeUsage type, bool isOutParam) {
-            byte? defaultIfUndefined = isOutParam ? (byte?)7 : (byte?)null;
+        private static byte? GetKatmaiDateTimePrecision(TypeUsage type, bool isOutParam)
+        {
+            var defaultIfUndefined = isOutParam ? 7 : (byte?)null;
             return GetParameterPrecision(type, defaultIfUndefined);
         }
-        
+
         /// <summary>
         /// Returns SqlParameter.Precision where the type facet exists. Otherwise,
         /// returns null.
         /// </summary>
-        private static byte? GetParameterPrecision(TypeUsage type, byte? defaultIfUndefined) {
+        private static byte? GetParameterPrecision(TypeUsage type, byte? defaultIfUndefined)
+        {
             byte precision;
-            if (TypeHelpers.TryGetPrecision(type, out precision)) {
+            if (TypeHelpers.TryGetPrecision(type, out precision))
+            {
                 return precision;
             }
-            else {
+            else
+            {
                 return defaultIfUndefined;
             }
         }
@@ -631,12 +689,15 @@ namespace System.Data.Entity.Core.SqlClient {
         /// Returns SqlParameter.Scale where the type facet exists. Otherwise,
         /// returns null.
         /// </summary>
-        private static byte? GetScale(TypeUsage type) {
+        private static byte? GetScale(TypeUsage type)
+        {
             byte scale;
-            if (TypeHelpers.TryGetScale(type, out scale)) {
+            if (TypeHelpers.TryGetScale(type, out scale))
+            {
                 return scale;
             }
-            else {
+            else
+            {
                 return default(byte?);
             }
         }
@@ -645,31 +706,39 @@ namespace System.Data.Entity.Core.SqlClient {
         /// Chooses the appropriate SqlDbType for the given string type.
         /// </summary>
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
-        private static SqlDbType GetStringDbType(TypeUsage type) {
-            Debug.Assert(type.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType &&
+        private static SqlDbType GetStringDbType(TypeUsage type)
+        {
+            Debug.Assert(
+                type.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType &&
                 PrimitiveTypeKind.String == ((PrimitiveType)type.EdmType).PrimitiveTypeKind, "only valid for string type");
 
             SqlDbType dbType;
-            if (type.EdmType.Name.ToLowerInvariant() == "xml") {
+            if (type.EdmType.Name.ToLowerInvariant() == "xml")
+            {
                 dbType = SqlDbType.Xml;
             }
-            else {
+            else
+            {
                 // Specific type depends on whether the string is a unicode string and whether it is a fixed length string.
                 // By default, assume widest type (unicode) and most common type (variable length)
                 bool unicode;
                 bool fixedLength;
-                if (!TypeHelpers.TryGetIsFixedLength(type, out fixedLength)) {
+                if (!TypeHelpers.TryGetIsFixedLength(type, out fixedLength))
+                {
                     fixedLength = false;
                 }
 
-                if (!TypeHelpers.TryGetIsUnicode(type, out unicode)) {
+                if (!TypeHelpers.TryGetIsUnicode(type, out unicode))
+                {
                     unicode = true;
                 }
 
-                if (fixedLength) {
+                if (fixedLength)
+                {
                     dbType = (unicode ? SqlDbType.NChar : SqlDbType.Char);
                 }
-                else {
+                else
+                {
                     dbType = (unicode ? SqlDbType.NVarChar : SqlDbType.VarChar);
                 }
             }
@@ -679,13 +748,16 @@ namespace System.Data.Entity.Core.SqlClient {
         /// <summary>
         /// Chooses the appropriate SqlDbType for the given binary type.
         /// </summary>
-        private static SqlDbType GetBinaryDbType(TypeUsage type) {
-            Debug.Assert(type.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType &&
+        private static SqlDbType GetBinaryDbType(TypeUsage type)
+        {
+            Debug.Assert(
+                type.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType &&
                 PrimitiveTypeKind.Binary == ((PrimitiveType)type.EdmType).PrimitiveTypeKind, "only valid for binary type");
 
             // Specific type depends on whether the binary value is fixed length. By default, assume variable length.
             bool fixedLength;
-            if (!TypeHelpers.TryGetIsFixedLength(type, out fixedLength)) {
+            if (!TypeHelpers.TryGetIsFixedLength(type, out fixedLength))
+            {
                 fixedLength = false;
             }
 
@@ -696,7 +768,7 @@ namespace System.Data.Entity.Core.SqlClient {
         {
             EntityUtil.CheckArgumentNull(providerManifestToken, "providerManifestToken");
             EntityUtil.CheckArgumentNull(storeItemCollection, "storeItemCollection");
-            SqlVersion version = SqlVersionUtils.GetSqlVersion(providerManifestToken);
+            var version = SqlVersionUtils.GetSqlVersion(providerManifestToken);
             return CreateObjectsScript(version, storeItemCollection);
         }
 
@@ -716,20 +788,21 @@ namespace System.Data.Entity.Core.SqlClient {
             EntityUtil.CheckArgumentNull(connection, "connection");
             EntityUtil.CheckArgumentNull(storeItemCollection, "storeItemCollection");
 
-            SqlConnection sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
+            var sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
             string databaseName, dataFileName, logFileName;
             GetOrGenerateDatabaseNameAndGetFileNames(sqlConnection, out databaseName, out dataFileName, out logFileName);
-            string createDatabaseScript = SqlDdlBuilder.CreateDatabaseScript(databaseName, dataFileName, logFileName);
-            SqlVersion sqlVersion = GetSqlVersion(storeItemCollection);
+            var createDatabaseScript = SqlDdlBuilder.CreateDatabaseScript(databaseName, dataFileName, logFileName);
+            var sqlVersion = GetSqlVersion(storeItemCollection);
 
-            string createObjectsScript = CreateObjectsScript(sqlVersion, storeItemCollection);
+            var createObjectsScript = CreateObjectsScript(sqlVersion, storeItemCollection);
 
-            UsingMasterConnection(sqlConnection, conn =>
-            {
-                // create database
-                CreateCommand(conn, createDatabaseScript, commandTimeout).ExecuteNonQuery();
-            });
-            
+            UsingMasterConnection(
+                sqlConnection, conn =>
+                                   {
+                                       // create database
+                                       CreateCommand(conn, createDatabaseScript, commandTimeout).ExecuteNonQuery();
+                                   });
+
             // Create database already succeeded. If there is a failure from this point on, the user should be informed.
             try
             {
@@ -737,12 +810,13 @@ namespace System.Data.Entity.Core.SqlClient {
                 // invalid connection may now be valid.
                 SqlConnection.ClearPool(sqlConnection);
 
-                UsingConnection(sqlConnection, conn =>
-                {
-                    // create database objects
-                    CreateCommand(conn, createObjectsScript, commandTimeout).ExecuteNonQuery();
-                });
-            }  
+                UsingConnection(
+                    sqlConnection, conn =>
+                                       {
+                                           // create database objects
+                                           CreateCommand(conn, createObjectsScript, commandTimeout).ExecuteNonQuery();
+                                       });
+            }
             catch (Exception e)
             {
                 if (EntityUtil.IsCatchableExceptionType(e))
@@ -757,7 +831,9 @@ namespace System.Data.Entity.Core.SqlClient {
                         // The creation of the database succeeded, the creation of the database objects failed, and the dropping of the database failed.
                         if (EntityUtil.IsCatchableExceptionType(ie))
                         {
-                            throw new InvalidOperationException(Strings.SqlProvider_IncompleteCreateDatabase, new AggregateException(Strings.SqlProvider_IncompleteCreateDatabaseAggregate, e, ie));
+                            throw new InvalidOperationException(
+                                Strings.SqlProvider_IncompleteCreateDatabase,
+                                new AggregateException(Strings.SqlProvider_IncompleteCreateDatabaseAggregate, e, ie));
                         }
                         throw;
                     }
@@ -770,23 +846,24 @@ namespace System.Data.Entity.Core.SqlClient {
 
         private static SqlVersion GetSqlVersion(StoreItemCollection storeItemCollection)
         {
-            SqlProviderManifest sqlManifest = (storeItemCollection.StoreProviderManifest as SqlProviderManifest);
+            var sqlManifest = (storeItemCollection.StoreProviderManifest as SqlProviderManifest);
             if (sqlManifest == null)
             {
-                throw EntityUtil.Argument(System.Data.Entity.Resources.Strings.Mapping_Provider_WrongManifestType(typeof(SqlProviderManifest)));
+                throw EntityUtil.Argument(Strings.Mapping_Provider_WrongManifestType(typeof(SqlProviderManifest)));
             }
-            SqlVersion sqlVersion = sqlManifest.SqlVersion;
+            var sqlVersion = sqlManifest.SqlVersion;
             return sqlVersion;
         }
 
-        private static void GetOrGenerateDatabaseNameAndGetFileNames(SqlConnection sqlConnection, out string databaseName, out string dataFileName, out string logFileName)
+        private static void GetOrGenerateDatabaseNameAndGetFileNames(
+            SqlConnection sqlConnection, out string databaseName, out string dataFileName, out string logFileName)
         {
             Debug.Assert(sqlConnection != null);
 
             var connectionStringBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString);
-            
+
             // Get the file names
-            string attachDBFile = connectionStringBuilder.AttachDBFilename;
+            var attachDBFile = connectionStringBuilder.AttachDBFilename;
             if (string.IsNullOrEmpty(attachDBFile))
             {
                 dataFileName = null;
@@ -798,7 +875,7 @@ namespace System.Data.Entity.Core.SqlClient {
                 dataFileName = GetMdfFileName(attachDBFile);
                 logFileName = GetLdfFileName(dataFileName);
             }
-            
+
             // Get the database name
             if (!string.IsNullOrEmpty(connectionStringBuilder.InitialCatalog))
             {
@@ -832,10 +909,10 @@ namespace System.Data.Entity.Core.SqlClient {
         /// </summary>
         private static string GenerateDatabaseName(string mdfFileName)
         {
-            string toUpperFileName = mdfFileName.ToUpper(CultureInfo.InvariantCulture);
-            char [] strippedFileNameChars = Path.GetFileNameWithoutExtension(toUpperFileName).ToCharArray();
+            var toUpperFileName = mdfFileName.ToUpper(CultureInfo.InvariantCulture);
+            var strippedFileNameChars = Path.GetFileNameWithoutExtension(toUpperFileName).ToCharArray();
 
-            for (int iter = 0; iter < strippedFileNameChars.Length; iter++)
+            for (var iter = 0; iter < strippedFileNameChars.Length; iter++)
             {
                 if (!char.IsLetterOrDigit(strippedFileNameChars[iter]))
                 {
@@ -843,10 +920,12 @@ namespace System.Data.Entity.Core.SqlClient {
                 }
             }
 
-            string strippedFileName = new string(strippedFileNameChars);
+            var strippedFileName = new string(strippedFileNameChars);
             strippedFileName = strippedFileName.Length > 30 ? strippedFileName.Substring(0, 30) : strippedFileName;
 
-            string databaseName =  databaseName = String.Format(CultureInfo.InvariantCulture, "{0}_{1}", strippedFileName, Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture)); 
+            var databaseName =
+                String.Format(
+                    CultureInfo.InvariantCulture, "{0}_{1}", strippedFileName, Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
             return databaseName;
         }
 
@@ -858,9 +937,9 @@ namespace System.Data.Entity.Core.SqlClient {
         private static string GetMdfFileName(string attachDBFile)
         {
             Debug.Assert(!string.IsNullOrEmpty(attachDBFile));
-           
+
             //Handle the case when attachDBFilename starts with |DataDirectory|
-            string dataFileName = System.Data.Entity.Core.EntityClient.DbConnectionOptions.ExpandDataDirectory("AttachDBFilename", attachDBFile);
+            var dataFileName = DbConnectionOptions.ExpandDataDirectory("AttachDBFilename", attachDBFile);
 
             //Handle the other cases
             dataFileName = dataFileName ?? attachDBFile;
@@ -887,14 +966,15 @@ namespace System.Data.Entity.Core.SqlClient {
             EntityUtil.CheckArgumentNull(connection, "connection");
             EntityUtil.CheckArgumentNull(storeItemCollection, "storeItemCollection");
 
-            SqlConnection sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
+            var sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
             var connectionBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString);
 
-            if (string.IsNullOrEmpty(connectionBuilder.InitialCatalog) && string.IsNullOrEmpty(connectionBuilder.AttachDBFilename))
+            if (string.IsNullOrEmpty(connectionBuilder.InitialCatalog)
+                && string.IsNullOrEmpty(connectionBuilder.AttachDBFilename))
             {
-                throw EntityUtil.InvalidOperation(Strings.SqlProvider_DdlGeneration_MissingInitialCatalog);  
+                throw EntityUtil.InvalidOperation(Strings.SqlProvider_DdlGeneration_MissingInitialCatalog);
             }
-            
+
             if (!string.IsNullOrEmpty(connectionBuilder.InitialCatalog))
             {
                 if (CheckDatabaseExists(sqlConnection, commandTimeout, connectionBuilder.InitialCatalog))
@@ -903,7 +983,7 @@ namespace System.Data.Entity.Core.SqlClient {
                     return true;
                 }
             }
-            
+
             if (!string.IsNullOrEmpty(connectionBuilder.AttachDBFilename))
             {
                 try
@@ -918,15 +998,17 @@ namespace System.Data.Entity.Core.SqlClient {
                         return CheckDatabaseExists(sqlConnection, commandTimeout, connectionBuilder.InitialCatalog);
                     }
                     // Initial catalog not specified
-                    string fileName = GetMdfFileName(connectionBuilder.AttachDBFilename);                   
-                    bool databaseDoesNotExistInSysTables = false;
-                    UsingMasterConnection(sqlConnection, conn =>
-                    {
-                        SqlVersion sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
-                        string databaseExistsScript = SqlDdlBuilder.CreateCountDatabasesBasedOnFileNameScript(fileName, useDeprecatedSystemTable: sqlVersion == SqlVersion.Sql8);      
-                        int result = (int)CreateCommand(conn, databaseExistsScript, commandTimeout).ExecuteScalar();
-                        databaseDoesNotExistInSysTables = (result == 0);
-                    });
+                    var fileName = GetMdfFileName(connectionBuilder.AttachDBFilename);
+                    var databaseDoesNotExistInSysTables = false;
+                    UsingMasterConnection(
+                        sqlConnection, conn =>
+                                           {
+                                               var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
+                                               var databaseExistsScript = SqlDdlBuilder.CreateCountDatabasesBasedOnFileNameScript(
+                                                   fileName, useDeprecatedSystemTable: sqlVersion == SqlVersion.Sql8);
+                                               var result = (int)CreateCommand(conn, databaseExistsScript, commandTimeout).ExecuteScalar();
+                                               databaseDoesNotExistInSysTables = (result == 0);
+                                           });
                     if (databaseDoesNotExistInSysTables)
                     {
                         return false;
@@ -942,14 +1024,16 @@ namespace System.Data.Entity.Core.SqlClient {
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private static bool CheckDatabaseExists(SqlConnection sqlConnection, int? commandTimeout, string databaseName)
         {
-            bool databaseExistsInSysTables = false;
-            UsingMasterConnection(sqlConnection, conn =>
-            {
-                SqlVersion sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
-                string databaseExistsScript = SqlDdlBuilder.CreateDatabaseExistsScript(databaseName, useDeprecatedSystemTable: sqlVersion == SqlVersion.Sql8);
-                int result = (int)CreateCommand(conn, databaseExistsScript, commandTimeout).ExecuteScalar();
-                databaseExistsInSysTables = (result > 0);
-            });
+            var databaseExistsInSysTables = false;
+            UsingMasterConnection(
+                sqlConnection, conn =>
+                                   {
+                                       var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
+                                       var databaseExistsScript = SqlDdlBuilder.CreateDatabaseExistsScript(
+                                           databaseName, useDeprecatedSystemTable: sqlVersion == SqlVersion.Sql8);
+                                       var result = (int)CreateCommand(conn, databaseExistsScript, commandTimeout).ExecuteScalar();
+                                       databaseExistsInSysTables = (result > 0);
+                                   });
             return databaseExistsInSysTables;
         }
 
@@ -972,36 +1056,39 @@ namespace System.Data.Entity.Core.SqlClient {
         {
             EntityUtil.CheckArgumentNull(connection, "connection");
             EntityUtil.CheckArgumentNull(storeItemCollection, "storeItemCollection");
-            SqlConnection sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
+            var sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
 
             var connectionBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString);
-            string initialCatalog = connectionBuilder.InitialCatalog;
-            string attachDBFile = connectionBuilder.AttachDBFilename;
+            var initialCatalog = connectionBuilder.InitialCatalog;
+            var attachDBFile = connectionBuilder.AttachDBFilename;
 
             if (!string.IsNullOrEmpty(initialCatalog))
-            {          
+            {
                 DropDatabase(sqlConnection, commandTimeout, initialCatalog);
             }
 
-            // initial catalog not specified
+                // initial catalog not specified
             else if (!string.IsNullOrEmpty(attachDBFile))
             {
-                string fullFileName = GetMdfFileName(attachDBFile);
+                var fullFileName = GetMdfFileName(attachDBFile);
 
-                List<string> databaseNames = new List<string>();
-                UsingMasterConnection(sqlConnection, conn =>
-                {
-                    SqlVersion sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
-                    string getDatabaseNamesScript = SqlDdlBuilder.CreateGetDatabaseNamesBasedOnFileNameScript(fullFileName, sqlVersion == SqlVersion.Sql8);
-                    var command = CreateCommand(conn, getDatabaseNamesScript, commandTimeout);
-                    using (var reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            databaseNames.Add(reader.GetString(0));
-                        }
-                    }
-                });
+                var databaseNames = new List<string>();
+                UsingMasterConnection(
+                    sqlConnection, conn =>
+                                       {
+                                           var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
+                                           var getDatabaseNamesScript =
+                                               SqlDdlBuilder.CreateGetDatabaseNamesBasedOnFileNameScript(
+                                                   fullFileName, sqlVersion == SqlVersion.Sql8);
+                                           var command = CreateCommand(conn, getDatabaseNamesScript, commandTimeout);
+                                           using (var reader = command.ExecuteReader())
+                                           {
+                                               while (reader.Read())
+                                               {
+                                                   databaseNames.Add(reader.GetString(0));
+                                               }
+                                           }
+                                       });
                 if (databaseNames.Count > 0)
                 {
                     foreach (var databaseName in databaseNames)
@@ -1011,10 +1098,10 @@ namespace System.Data.Entity.Core.SqlClient {
                 }
                 else
                 {
-                  throw EntityUtil.InvalidOperation(Strings.SqlProvider_DdlGeneration_CannotDeleteDatabaseNoInitialCatalog);           
+                    throw EntityUtil.InvalidOperation(Strings.SqlProvider_DdlGeneration_CannotDeleteDatabaseNoInitialCatalog);
                 }
             }
-            // neither initial catalog nor attachDB file name are specified
+                // neither initial catalog nor attachDB file name are specified
             else
             {
                 throw EntityUtil.InvalidOperation(Strings.SqlProvider_DdlGeneration_MissingInitialCatalog);
@@ -1027,11 +1114,8 @@ namespace System.Data.Entity.Core.SqlClient {
             // clear the connection pool in case someone's holding on to the database still
             SqlConnection.ClearPool(sqlConnection);
 
-            string dropDatabaseScript = SqlDdlBuilder.DropDatabaseScript(databaseName);
-            UsingMasterConnection(sqlConnection, (conn) =>
-            {
-                CreateCommand(conn, dropDatabaseScript, commandTimeout).ExecuteNonQuery();
-            });
+            var dropDatabaseScript = SqlDdlBuilder.DropDatabaseScript(databaseName);
+            UsingMasterConnection(sqlConnection, (conn) => { CreateCommand(conn, dropDatabaseScript, commandTimeout).ExecuteNonQuery(); });
         }
 
         private static string CreateObjectsScript(SqlVersion version, StoreItemCollection storeItemCollection)
@@ -1039,7 +1123,8 @@ namespace System.Data.Entity.Core.SqlClient {
             return SqlDdlBuilder.CreateObjectsScript(storeItemCollection, createSchemas: version != SqlVersion.Sql8);
         }
 
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope"), SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         private static SqlCommand CreateCommand(SqlConnection sqlConnection, string commandText, int? commandTimeout)
         {
             Debug.Assert(sqlConnection != null);
@@ -1059,8 +1144,8 @@ namespace System.Data.Entity.Core.SqlClient {
         private static void UsingConnection(SqlConnection sqlConnection, Action<SqlConnection> act)
         {
             // remember the connection string so that we can reset it credentials are wiped
-            string holdConnectionString = sqlConnection.ConnectionString;
-            bool openingConnection = sqlConnection.State == ConnectionState.Closed;
+            var holdConnectionString = sqlConnection.ConnectionString;
+            var openingConnection = sqlConnection.State == ConnectionState.Closed;
             if (openingConnection)
             {
                 sqlConnection.Open();
@@ -1086,10 +1171,10 @@ namespace System.Data.Entity.Core.SqlClient {
         private static void UsingMasterConnection(SqlConnection sqlConnection, Action<SqlConnection> act)
         {
             var connectionBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString)
-            {
-                InitialCatalog = "master",
-                AttachDBFilename = string.Empty, // any AttachDB path specified is not relevant to master
-            };
+                                        {
+                                            InitialCatalog = "master",
+                                            AttachDBFilename = string.Empty, // any AttachDB path specified is not relevant to master
+                                        };
 
             try
             {
@@ -1101,7 +1186,8 @@ namespace System.Data.Entity.Core.SqlClient {
             catch (SqlException e)
             {
                 // if it appears that the credentials have been removed from the connection string, use an alternate explanation
-                if (!connectionBuilder.IntegratedSecurity &&
+                if (!connectionBuilder.IntegratedSecurity
+                    &&
                     (string.IsNullOrEmpty(connectionBuilder.UserID) || string.IsNullOrEmpty(connectionBuilder.Password)))
                 {
                     throw new InvalidOperationException(Strings.SqlProvider_CredentialsMissingForMasterConnection, e);
@@ -1109,6 +1195,5 @@ namespace System.Data.Entity.Core.SqlClient {
                 throw;
             }
         }
- 
     }
 }

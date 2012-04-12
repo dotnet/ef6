@@ -1,28 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Class representing a read-only wrapper around MetadataCollection
     /// </summary>
     /// <typeparam name="T">The type of items in this collection</typeparam>
-    public class ReadOnlyMetadataCollection<T> : System.Collections.ObjectModel.ReadOnlyCollection<T> where T : MetadataItem
+    public class ReadOnlyMetadataCollection<T> : ReadOnlyCollection<T>
+        where T : MetadataItem
     {
         #region Constructors
+
         /// <summary>
         /// The constructor for constructing a read-only metadata collection to wrap another MetadataCollection.
         /// </summary>
         /// <param name="collection">The metadata collection to wrap</param>
         /// <exception cref="System.ArgumentNullException">Thrown if collection argument is null</exception>
-        internal ReadOnlyMetadataCollection(IList<T> collection) : base(collection)
+        internal ReadOnlyMetadataCollection(IList<T> collection)
+            : base(collection)
         {
         }
+
         #endregion
 
         #region InnerClasses
+
         // On the surface, this Enumerator doesn't do anything but delegating to the underlying enumerator
 
         /// <summary>
@@ -43,7 +48,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             private int _nextIndex;
-            private IList<T> _parent;
+            private readonly IList<T> _parent;
             private T _current;
 
             /// <summary>
@@ -51,10 +56,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             /// </summary>
             public T Current
             {
-                get
-                {
-                    return _current;
-                }
+                get { return _current; }
             }
 
             /// <summary>
@@ -62,10 +64,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             /// </summary>
             object IEnumerator.Current
             {
-                get
-                {
-                    return this.Current;
-                }
+                get { return Current; }
             }
 
             /// <summary>
@@ -81,7 +80,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             /// <returns>True if the enumerator is moved</returns>
             public bool MoveNext()
             {
-                if ((uint)_nextIndex < (uint)_parent.Count)
+                if ((uint)_nextIndex
+                    < (uint)_parent.Count)
                 {
                     _current = _parent[_nextIndex];
                     _nextIndex++;
@@ -101,18 +101,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 _nextIndex = 0;
             }
         }
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets whether the collection is a readonly collection
         /// </summary>
         public bool IsReadOnly
         {
-            get
-            {
-                return true;
-            }
+            get { return true; }
         }
 
         /// <summary>
@@ -124,10 +123,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.NotSupportedException">Thrown if setter is called</exception>
         public virtual T this[string identity]
         {
-            get
-            {
-                return (((MetadataCollection<T>)this.Items)[identity]);
-            }
+            get { return (((MetadataCollection<T>)Items)[identity]); }
         }
 
         /// <summary>
@@ -135,14 +131,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal MetadataCollection<T> Source
         {
-            get
-            {
-                return (MetadataCollection<T>)this.Items;
-            }
+            get { return (MetadataCollection<T>)Items; }
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Gets an item from the collection with the given identity
         /// </summary>
@@ -153,7 +148,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the Collection does not have an item with the given identity</exception>
         public virtual T GetValue(string identity, bool ignoreCase)
         {
-            return ((MetadataCollection<T>)this.Items).GetValue(identity, ignoreCase);
+            return ((MetadataCollection<T>)Items).GetValue(identity, ignoreCase);
         }
 
         /// <summary>
@@ -165,7 +160,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if identity argument passed in is empty string</exception>
         public virtual bool Contains(string identity)
         {
-            return ((MetadataCollection<T>)this.Items).ContainsIdentity(identity);
+            return ((MetadataCollection<T>)Items).ContainsIdentity(identity);
         }
 
         /// <summary>
@@ -178,9 +173,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">if identity argument is null</exception>
         public virtual bool TryGetValue(string identity, bool ignoreCase, out T item)
         {
-            return ((MetadataCollection<T>)this.Items).TryGetValue(identity, ignoreCase, out item);
+            return ((MetadataCollection<T>)Items).TryGetValue(identity, ignoreCase, out item);
         }
-
 
         /// <summary>
         /// Gets the enumerator over this collection
@@ -188,7 +182,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns></returns>
         public new Enumerator GetEnumerator()
         {
-            return new Enumerator(this.Items);
+            return new Enumerator(Items);
         }
 
         /// <summary>

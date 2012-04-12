@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Linq;
 
@@ -41,11 +42,11 @@
             _translator = translator;
             _keyComparer = new ForeignKeyValueComparer(_translator.KeyComparer);
 
-            HashSet<EntitySet> tables = new HashSet<EntitySet>();
-            HashSet<EntityContainer> containers = new HashSet<EntityContainer>();
+            var tables = new HashSet<EntitySet>();
+            var containers = new HashSet<EntityContainer>();
 
             // add all vertices (one vertex for every command)
-            foreach (UpdateCommand command in commands)
+            foreach (var command in commands)
             {
                 if (null != command.Table)
                 {
@@ -53,7 +54,8 @@
                     containers.Add(command.Table.EntityContainer);
                 }
                 AddVertex(command);
-                if (command.Kind == UpdateCommandKind.Function)
+                if (command.Kind
+                    == UpdateCommandKind.Function)
                 {
                     _hasFunctionCommands = true;
                 }
@@ -71,18 +73,20 @@
             }
         }
 
-        private static void InitializeForeignKeyMaps(HashSet<EntityContainer> containers, HashSet<EntitySet> tables, out KeyToListMap<EntitySetBase, ReferentialConstraint> sourceMap, out KeyToListMap<EntitySetBase, ReferentialConstraint> targetMap)
+        private static void InitializeForeignKeyMaps(
+            HashSet<EntityContainer> containers, HashSet<EntitySet> tables, out KeyToListMap<EntitySetBase, ReferentialConstraint> sourceMap,
+            out KeyToListMap<EntitySetBase, ReferentialConstraint> targetMap)
         {
             sourceMap = new KeyToListMap<EntitySetBase, ReferentialConstraint>(EqualityComparer<EntitySetBase>.Default);
             targetMap = new KeyToListMap<EntitySetBase, ReferentialConstraint>(EqualityComparer<EntitySetBase>.Default);
 
             // Retrieve relationship ends from each container to populate edges in dependency
             // graph
-            foreach (EntityContainer container in containers)
+            foreach (var container in containers)
             {
-                foreach (EntitySetBase extent in container.BaseEntitySets)
+                foreach (var extent in container.BaseEntitySets)
                 {
-                    AssociationSet associationSet = extent as AssociationSet;
+                    var associationSet = extent as AssociationSet;
 
                     if (null != associationSet)
                     {
@@ -94,23 +98,32 @@
                         if (2 == ends.Count)
                         {
                             // source is equivalent to the "to" end of relationship, target is "from"
-                            AssociationType associationType = associationSet.ElementType;
-                            bool constraintFound = false;
+                            var associationType = associationSet.ElementType;
+                            var constraintFound = false;
                             ReferentialConstraint fkConstraint = null;
-                            foreach (ReferentialConstraint constraint in associationType.ReferentialConstraints)
+                            foreach (var constraint in associationType.ReferentialConstraints)
                             {
-                                if (constraintFound) { Debug.Fail("relationship set should have at most one constraint"); }
-                                else { constraintFound = true; }
+                                if (constraintFound)
+                                {
+                                    Debug.Fail("relationship set should have at most one constraint");
+                                }
+                                else
+                                {
+                                    constraintFound = true;
+                                }
                                 source = associationSet.AssociationSetEnds[constraint.ToRole.Name];
                                 target = associationSet.AssociationSetEnds[constraint.FromRole.Name];
                                 fkConstraint = constraint;
                             }
 
-                            Debug.Assert(constraintFound && null != target && null != source, "relationship set must have at least one constraint");
+                            Debug.Assert(
+                                constraintFound && null != target && null != source, "relationship set must have at least one constraint");
                             // only understand binary (foreign key) relationships between entity sets
-                            if (null != target && null != source)
+                            if (null != target
+                                && null != source)
                             {
-                                if (tables.Contains(target.EntitySet)&&
+                                if (tables.Contains(target.EntitySet)
+                                    &&
                                     tables.Contains(source.EntitySet))
                                 {
                                     // Remember metadata
@@ -133,10 +146,10 @@
         private void AddServerGenDependencies()
         {
             // Identify all "shared" output parameters (e.g., SQL Server identifiers)
-            Dictionary<int, UpdateCommand> predecessors = new Dictionary<int, UpdateCommand>();
-            foreach (UpdateCommand command in this.Vertices)
+            var predecessors = new Dictionary<int, UpdateCommand>();
+            foreach (var command in Vertices)
             {
-                foreach (int output in command.OutputIdentifiers)
+                foreach (var output in command.OutputIdentifiers)
                 {
                     try
                     {
@@ -146,15 +159,16 @@
                     {
                         // throw an exception indicating that a key value is generated in two locations
                         // in the store
-                        throw EntityUtil.Update(System.Data.Entity.Resources.Strings.Update_AmbiguousServerGenIdentifier, duplicateKey, command.GetStateEntries(_translator));
+                        throw EntityUtil.Update(
+                            Strings.Update_AmbiguousServerGenIdentifier, duplicateKey, command.GetStateEntries(_translator));
                     }
                 }
             }
 
             // Identify all dependent input parameters
-            foreach (UpdateCommand command in this.Vertices)
+            foreach (var command in Vertices)
             {
-                foreach (int input in command.InputIdentifiers)
+                foreach (var input in command.InputIdentifiers)
                 {
                     UpdateCommand from;
                     if (predecessors.TryGetValue(input, out from))
@@ -168,7 +182,7 @@
         // Adds edges to dependency graph based on foreign keys.
         private void AddForeignKeyDependencies()
         {
-            KeyToListMap<ForeignKeyValue, UpdateCommand> predecessors = DetermineForeignKeyPredecessors();
+            var predecessors = DetermineForeignKeyPredecessors();
             AddForeignKeyEdges(predecessors);
         }
 
@@ -182,13 +196,14 @@
         // cannot be deleted before their references.
         private void AddForeignKeyEdges(KeyToListMap<ForeignKeyValue, UpdateCommand> predecessors)
         {
-            foreach (DynamicUpdateCommand command in this.Vertices.OfType<DynamicUpdateCommand>())
+            foreach (var command in Vertices.OfType<DynamicUpdateCommand>())
             {
                 // register all source successors
-                if (ModificationOperator.Update == command.Operator ||
+                if (ModificationOperator.Update == command.Operator
+                    ||
                     ModificationOperator.Insert == command.Operator)
                 {
-                    foreach (ReferentialConstraint fkConstraint in _sourceMap.EnumerateValues(command.Table))
+                    foreach (var fkConstraint in _sourceMap.EnumerateValues(command.Table))
                     {
                         ForeignKeyValue fk;
                         if (ForeignKeyValue.TryCreateSourceKey(fkConstraint, command.CurrentValues, true, out fk))
@@ -198,10 +213,11 @@
                             // is a no-op)
                             ForeignKeyValue originalFK;
                             if (ModificationOperator.Update != command.Operator ||
-                                !ForeignKeyValue.TryCreateSourceKey(fkConstraint, command.OriginalValues, true, out originalFK) ||
+                                !ForeignKeyValue.TryCreateSourceKey(fkConstraint, command.OriginalValues, true, out originalFK)
+                                ||
                                 !_keyComparer.Equals(originalFK, fk))
                             {
-                                foreach (UpdateCommand predecessor in predecessors.EnumerateValues(fk))
+                                foreach (var predecessor in predecessors.EnumerateValues(fk))
                                 {
                                     // don't add self-edges for FK dependencies, since a single operation
                                     // in the store is atomic
@@ -216,10 +232,11 @@
                 }
 
                 // register all target successors
-                if (ModificationOperator.Update == command.Operator ||
+                if (ModificationOperator.Update == command.Operator
+                    ||
                     ModificationOperator.Delete == command.Operator)
                 {
-                    foreach (ReferentialConstraint fkConstraint in _targetMap.EnumerateValues(command.Table))
+                    foreach (var fkConstraint in _targetMap.EnumerateValues(command.Table))
                     {
                         ForeignKeyValue fk;
                         if (ForeignKeyValue.TryCreateTargetKey(fkConstraint, command.OriginalValues, false, out fk))
@@ -229,11 +246,11 @@
                             // is a no-op)
                             ForeignKeyValue currentFK;
                             if (ModificationOperator.Update != command.Operator ||
-                                !ForeignKeyValue.TryCreateTargetKey(fkConstraint, command.CurrentValues, false, out currentFK) ||
+                                !ForeignKeyValue.TryCreateTargetKey(fkConstraint, command.CurrentValues, false, out currentFK)
+                                ||
                                 !_keyComparer.Equals(currentFK, fk))
                             {
-
-                                foreach (UpdateCommand predecessor in predecessors.EnumerateValues(fk))
+                                foreach (var predecessor in predecessors.EnumerateValues(fk))
                                 {
                                     // don't add self-edges for FK dependencies, since a single operation
                                     // in the store is atomic
@@ -262,15 +279,16 @@
         // cannot be deleted before their references
         private KeyToListMap<ForeignKeyValue, UpdateCommand> DetermineForeignKeyPredecessors()
         {
-            KeyToListMap<ForeignKeyValue, UpdateCommand> predecessors = new KeyToListMap<ForeignKeyValue, UpdateCommand>(
+            var predecessors = new KeyToListMap<ForeignKeyValue, UpdateCommand>(
                 _keyComparer);
 
-            foreach (DynamicUpdateCommand command in this.Vertices.OfType<DynamicUpdateCommand>())
+            foreach (var command in Vertices.OfType<DynamicUpdateCommand>())
             {
-                if (ModificationOperator.Update == command.Operator ||
+                if (ModificationOperator.Update == command.Operator
+                    ||
                     ModificationOperator.Insert == command.Operator)
                 {
-                    foreach (ReferentialConstraint fkConstraint in _targetMap.EnumerateValues(command.Table))
+                    foreach (var fkConstraint in _targetMap.EnumerateValues(command.Table))
                     {
                         ForeignKeyValue fk;
                         if (ForeignKeyValue.TryCreateTargetKey(fkConstraint, command.CurrentValues, true, out fk))
@@ -280,7 +298,8 @@
                             // is a no-op)
                             ForeignKeyValue originalFK;
                             if (ModificationOperator.Update != command.Operator ||
-                                !ForeignKeyValue.TryCreateTargetKey(fkConstraint, command.OriginalValues, true, out originalFK) ||
+                                !ForeignKeyValue.TryCreateTargetKey(fkConstraint, command.OriginalValues, true, out originalFK)
+                                ||
                                 !_keyComparer.Equals(originalFK, fk))
                             {
                                 predecessors.Add(fk, command);
@@ -290,10 +309,11 @@
                 }
 
                 // register all source predecessors
-                if (ModificationOperator.Update == command.Operator ||
+                if (ModificationOperator.Update == command.Operator
+                    ||
                     ModificationOperator.Delete == command.Operator)
                 {
-                    foreach (ReferentialConstraint fkConstraint in _sourceMap.EnumerateValues(command.Table))
+                    foreach (var fkConstraint in _sourceMap.EnumerateValues(command.Table))
                     {
                         ForeignKeyValue fk;
                         if (ForeignKeyValue.TryCreateSourceKey(fkConstraint, command.OriginalValues, false, out fk))
@@ -303,7 +323,8 @@
                             // is a no-op)
                             ForeignKeyValue currentFK;
                             if (ModificationOperator.Update != command.Operator ||
-                                !ForeignKeyValue.TryCreateSourceKey(fkConstraint, command.CurrentValues, false, out currentFK) ||
+                                !ForeignKeyValue.TryCreateSourceKey(fkConstraint, command.CurrentValues, false, out currentFK)
+                                ||
                                 !_keyComparer.Equals(currentFK, fk))
                             {
                                 predecessors.Add(fk, command);
@@ -322,14 +343,15 @@
         /// </summary>
         private void AddModelDependencies()
         {
-            KeyToListMap<EntityKey, UpdateCommand> addedEntities = new KeyToListMap<EntityKey, UpdateCommand>(EqualityComparer<EntityKey>.Default);
-            KeyToListMap<EntityKey, UpdateCommand> deletedEntities = new KeyToListMap<EntityKey, UpdateCommand>(EqualityComparer<EntityKey>.Default);
-            KeyToListMap<EntityKey, UpdateCommand> addedRelationships = new KeyToListMap<EntityKey, UpdateCommand>(EqualityComparer<EntityKey>.Default);
-            KeyToListMap<EntityKey, UpdateCommand> deletedRelationships = new KeyToListMap<EntityKey, UpdateCommand>(EqualityComparer<EntityKey>.Default);
+            var addedEntities = new KeyToListMap<EntityKey, UpdateCommand>(EqualityComparer<EntityKey>.Default);
+            var deletedEntities = new KeyToListMap<EntityKey, UpdateCommand>(EqualityComparer<EntityKey>.Default);
+            var addedRelationships = new KeyToListMap<EntityKey, UpdateCommand>(EqualityComparer<EntityKey>.Default);
+            var deletedRelationships = new KeyToListMap<EntityKey, UpdateCommand>(EqualityComparer<EntityKey>.Default);
 
-            foreach (UpdateCommand command in this.Vertices)
+            foreach (var command in Vertices)
             {
-                command.GetRequiredAndProducedEntities(_translator, addedEntities, deletedEntities, addedRelationships, deletedRelationships);
+                command.GetRequiredAndProducedEntities(
+                    _translator, addedEntities, deletedEntities, addedRelationships, deletedRelationships);
             }
 
             // Add entities before adding dependent relationships
@@ -339,20 +361,22 @@
             AddModelDependencies(producedMap: deletedRelationships, requiredMap: deletedEntities);
         }
 
-        private void AddModelDependencies(KeyToListMap<EntityKey, UpdateCommand> producedMap, KeyToListMap<EntityKey, UpdateCommand> requiredMap)
+        private void AddModelDependencies(
+            KeyToListMap<EntityKey, UpdateCommand> producedMap, KeyToListMap<EntityKey, UpdateCommand> requiredMap)
         {
             foreach (var keyAndCommands in requiredMap.KeyValuePairs)
             {
-                EntityKey key = keyAndCommands.Key;
-                List<UpdateCommand> commandsRequiringKey = keyAndCommands.Value;
+                var key = keyAndCommands.Key;
+                var commandsRequiringKey = keyAndCommands.Value;
 
-                foreach (UpdateCommand commandProducingKey in producedMap.EnumerateValues(key))
+                foreach (var commandProducingKey in producedMap.EnumerateValues(key))
                 {
-                    foreach (UpdateCommand commandRequiringKey in commandsRequiringKey)
+                    foreach (var commandRequiringKey in commandsRequiringKey)
                     {
                         // command cannot depend on itself and only function commands
                         // need to worry about model dependencies (dynamic commands know about foreign keys)
-                        if (!object.ReferenceEquals(commandProducingKey, commandRequiringKey) &&
+                        if (!ReferenceEquals(commandProducingKey, commandRequiringKey)
+                            &&
                             (commandProducingKey.Kind == UpdateCommandKind.Function ||
                              commandRequiringKey.Kind == UpdateCommandKind.Function))
                         {
@@ -378,17 +402,19 @@
             /// is being pulled</param>
             /// <param name="isInsert">Indicates whether this is an insert dependency or a delete
             /// dependency</param>
-            private ForeignKeyValue(ReferentialConstraint metadata, PropagatorResult record,
+            private ForeignKeyValue(
+                ReferentialConstraint metadata, PropagatorResult record,
                 bool isTarget, bool isInsert)
             {
                 Metadata = metadata;
 
                 // construct key
-                IList<EdmProperty> keyProperties = isTarget ? metadata.FromProperties :
-                    metadata.ToProperties;
-                PropagatorResult[] keyValues = new PropagatorResult[keyProperties.Count];
-                bool hasNullMember = false;
-                for (int i = 0; i < keyValues.Length; i++)
+                IList<EdmProperty> keyProperties = isTarget
+                                                       ? metadata.FromProperties
+                                                       : metadata.ToProperties;
+                var keyValues = new PropagatorResult[keyProperties.Count];
+                var hasNullMember = false;
+                for (var i = 0; i < keyValues.Length; i++)
                 {
                     keyValues[i] = record.GetMemberValue(keyProperties[i]);
                     if (keyValues[i].IsNull)
@@ -420,7 +446,8 @@
             /// <param name="isInsert">Indicates whether the key value is being inserted or deleted</param>
             /// <param name="key">Outputs key object</param>
             /// <returns>true if the record contains key values for this constraint; false otherwise</returns>
-            internal static bool TryCreateTargetKey(ReferentialConstraint metadata, PropagatorResult record, bool isInsert, out ForeignKeyValue key)
+            internal static bool TryCreateTargetKey(
+                ReferentialConstraint metadata, PropagatorResult record, bool isInsert, out ForeignKeyValue key)
             {
                 key = new ForeignKeyValue(metadata, record, true, isInsert);
                 if (null == key.Key)
@@ -438,7 +465,8 @@
             /// <param name="isInsert">Indicates whether the key value is being inserted or deleted</param>
             /// <param name="key">Outputs key object</param>
             /// <returns>true if the record contains key values for this constraint; false otherwise</returns>
-            internal static bool TryCreateSourceKey(ReferentialConstraint metadata, PropagatorResult record, bool isInsert, out ForeignKeyValue key)
+            internal static bool TryCreateSourceKey(
+                ReferentialConstraint metadata, PropagatorResult record, bool isInsert, out ForeignKeyValue key)
             {
                 key = new ForeignKeyValue(metadata, record, false, isInsert);
                 if (null == key.Key)
@@ -479,7 +507,7 @@
             public bool Equals(ForeignKeyValue x, ForeignKeyValue y)
             {
                 return x.IsInsert == y.IsInsert && x.Metadata == y.Metadata &&
-                    _baseComparer.Equals(x.Key, y.Key);
+                       _baseComparer.Equals(x.Key, y.Key);
             }
 
             public int GetHashCode(ForeignKeyValue obj)

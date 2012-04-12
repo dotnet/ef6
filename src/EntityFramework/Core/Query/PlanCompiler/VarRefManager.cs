@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Diagnostics;
-using System.Data.Entity.Core.Query.InternalTrees;
-
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Query.InternalTrees;
+
     /// <summary>
     /// This is a halper module for <see cref="JoinElimination"/>
     /// The VarRefManager keeps track of the child-parent relationships in order to be able
@@ -16,12 +13,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal class VarRefManager
     {
         #region Internal State
-        private Dictionary<Node, Node> m_nodeToParentMap;   //child-parent mapping
-        private Dictionary<Node, int> m_nodeToSiblingNumber;   //the index of the given node among its siblings, i.e. 0 for a first child
-        Command m_command;
+
+        private readonly Dictionary<Node, Node> m_nodeToParentMap; //child-parent mapping
+
+        private readonly Dictionary<Node, int> m_nodeToSiblingNumber;
+                                               //the index of the given node among its siblings, i.e. 0 for a first child
+
+        private readonly Command m_command;
+
         #endregion
 
         #region Constructor
+
         /// <summary>
         /// Constructs a new VarRefManager given a command.
         /// </summary>
@@ -32,6 +35,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             m_nodeToSiblingNumber = new Dictionary<Node, int>();
             m_command = command;
         }
+
         #endregion
 
         #region Public Methods
@@ -42,8 +46,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="parent"></param>
         internal void AddChildren(Node parent)
         {
-            for(int i=0; i< parent.Children.Count; i++)
-            {                
+            for (var i = 0; i < parent.Children.Count; i++)
+            {
                 //We do not use add on purpose, we may be updating a child's parent after join elimination in a subtree
                 m_nodeToParentMap[parent.Children[i]] = parent;
                 m_nodeToSiblingNumber[parent.Children[i]] = i;
@@ -61,9 +65,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// of defining node's right relatives, with the exception of the relatives brunching at the given targetJoinNode. </returns>
         internal bool HasKeyReferences(VarVec keys, Node definingNode, Node targetJoinNode)
         {
-            Node currentChild = definingNode;
+            var currentChild = definingNode;
             Node parent;
-            bool continueUp = true;
+            var continueUp = true;
 
             while (continueUp & m_nodeToParentMap.TryGetValue(currentChild, out parent))
             {
@@ -76,7 +80,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     }
 
                     //Check all the siblings to the right
-                    for (int i = m_nodeToSiblingNumber[currentChild] + 1; i < parent.Children.Count; i++)
+                    for (var i = m_nodeToSiblingNumber[currentChild] + 1; i < parent.Children.Count; i++)
                     {
                         if (parent.Children[i].GetNodeInfo(m_command).ExternalReferences.Overlaps(keys))
                         {
@@ -92,6 +96,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Checks whether the given node has references to any of the vars in the given VarVec.
         /// It only checks the given node, not its children.
@@ -150,7 +155,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         private static bool HasVarReferences(VarList listToCheck, VarVec vars)
         {
-            foreach (Var var in vars)
+            foreach (var var in vars)
             {
                 if (listToCheck.Contains(var))
                 {
@@ -177,9 +182,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="listToCheck"></param>
         /// <param name="vars"></param>
         /// <returns></returns>
-        private static bool HasVarReferences(List<InternalTrees.SortKey> listToCheck, VarVec vars)
+        private static bool HasVarReferences(List<SortKey> listToCheck, VarVec vars)
         {
-            foreach (InternalTrees.SortKey key in listToCheck)
+            foreach (var key in listToCheck)
             {
                 if (vars.IsSet(key.Var))
                 {
@@ -199,7 +204,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         private static bool HasVarReferences(SetOp op, VarVec vars, int index)
         {
-            foreach (Var var in op.VarMap[index].Values)
+            foreach (var var in op.VarMap[index].Values)
             {
                 if (vars.IsSet(var))
                 {
@@ -208,6 +213,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             return false;
         }
+
         #endregion
     }
 }

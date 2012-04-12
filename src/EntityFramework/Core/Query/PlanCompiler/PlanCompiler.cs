@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
-
+// Please use PlanCompiler.Assert instead of Debug.Assert in this class...
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
 // to prevent from simple mistakes during development (e.g. method argument validation 
 // in cases where it was you who created the variables or the variables had already been validated or 
@@ -15,14 +12,15 @@ using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Ass
 // or the tree was built/rewritten not the way we thought it was.
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
-
 using cqt = System.Data.Entity.Core.Common.CommandTrees;
 using md = System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Query.InternalTrees;
-using System.Data.Entity.Core.Query.PlanCompiler;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Query.InternalTrees;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -53,7 +51,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     /// </summary>
     internal class PlanCompiler
     {
-
         #region private state
 
         /// <summary>
@@ -63,7 +60,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// value to set the Enabled property to true. If the BooleanSwitch constructor cannot find initial switch settings 
         /// in the configuration file, the Enabled property of the new switch is set to false by default.
         /// </summary>
-        private static BooleanSwitch _applyTransformationsRegardlessOfSize = new BooleanSwitch("System.Data.Entity.Core.EntityClient.IgnoreOptimizationLimit", "The Entity Framework should try to optimize the query regardless of its size");
+        private static readonly BooleanSwitch _applyTransformationsRegardlessOfSize =
+            new BooleanSwitch(
+                "System.Data.Entity.Core.EntityClient.IgnoreOptimizationLimit",
+                "The Entity Framework should try to optimize the query regardless of its size");
 
         /// <summary>
         /// Determines the maximum size of the query in terms of Iqt nodes for which we attempt to do transformation rules.
@@ -74,7 +74,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         /// The CTree we're compiling a plan for.
         /// </summary>
-        private cqt.DbCommandTree m_ctree;
+        private readonly cqt.DbCommandTree m_ctree;
 
         /// <summary>
         /// The ITree we're working on.
@@ -100,14 +100,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         /// Can transformation rules be applied
         /// </summary>
-        private Nullable<bool> m_mayApplyTransformationRules = null;
+        private bool? m_mayApplyTransformationRules;
 
-        /// <summary>
-        /// Does the command include any sort key that represents a null sentinel
-        /// This may only be set to true in NominalTypeElimination and is used
-        /// in Transformation Rules
-        /// </summary>
-        private bool m_hasSortingOnNullSentinels = false;
         #endregion
 
         #region constructors
@@ -136,7 +130,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             if (!condition)
             {
-                System.Diagnostics.Debug.Fail(message);
+                Debug.Fail(message);
 
                 // NOTE: I considered, at great length, whether to have the assertion message text 
                 //       included in the exception we throw; in the end, there really isn't a reliable
@@ -159,30 +153,31 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="resultColumnMap">column map for result assembly</param>
         /// <param name="entitySets">the entity sets referenced in this query</param>
         /// <returns>a compiled plan object</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        internal static void Compile(cqt.DbCommandTree ctree, out List<ProviderCommandInfo> providerCommands, out ColumnMap resultColumnMap, out int columnCount, out Common.Utils.Set<md.EntitySet> entitySets)
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        internal static void Compile(
+            cqt.DbCommandTree ctree, out List<ProviderCommandInfo> providerCommands, out ColumnMap resultColumnMap, out int columnCount,
+            out Set<md.EntitySet> entitySets)
         {
-            PlanCompiler.Assert(ctree != null, "Expected a valid, non-null Command Tree input");
-            PlanCompiler pc = new PlanCompiler(ctree);
+            Assert(ctree != null, "Expected a valid, non-null Command Tree input");
+            var pc = new PlanCompiler(ctree);
             pc.Compile(out providerCommands, out resultColumnMap, out columnCount, out entitySets);
         }
-
 
         /// <summary>
         /// Get the current command
         /// </summary>
-        internal Command Command { get { return m_command; } }
+        internal Command Command
+        {
+            get { return m_command; }
+        }
 
         /// <summary>
         /// Does the command include any sort key that represents a null sentinel
         /// This may only be set to true in NominalTypeElimination and is used
         /// in Transformation Rules
         /// </summary>
-        internal bool HasSortingOnNullSentinels 
-        {
-            get { return m_hasSortingOnNullSentinels; } 
-            set { m_hasSortingOnNullSentinels = value; }
-        }
+        internal bool HasSortingOnNullSentinels { get; set; }
 
         /// <summary>
         /// Keeps track of foreign key relationships. Needed by  Join Elimination
@@ -203,7 +198,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         /// Get the current plan compiler phase
         /// </summary>
-        internal PlanCompilerPhase Phase { get { return m_phase; } }
+        internal PlanCompilerPhase Phase
+        {
+            get { return m_phase; }
+        }
 
         /// <summary>
         /// Sets the current plan compiler trace function to <paramref name="traceCallback"/>, enabling plan compiler tracing
@@ -223,10 +221,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         private static Action<string, object> s_traceCallback;
 #endif
+
         /// <summary>
         /// The MetadataWorkspace
         /// </summary>
-        internal md.MetadataWorkspace MetadataWorkspace { get { return m_ctree.MetadataWorkspace; } }
+        internal md.MetadataWorkspace MetadataWorkspace
+        {
+            get { return m_ctree.MetadataWorkspace; }
+        }
 
         /// <summary>
         /// Is the specified phase needed for this query?
@@ -257,25 +259,27 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="providerCommands">list of provider commands</param>
         /// <param name="resultColumnMap">column map for the result</param>
         /// <param name="entitySets">the entity sets exposed in this query</param>
-        private void Compile(out List<ProviderCommandInfo> providerCommands, out ColumnMap resultColumnMap, out int columnCount, out Common.Utils.Set<md.EntitySet> entitySets)
+        private void Compile(
+            out List<ProviderCommandInfo> providerCommands, out ColumnMap resultColumnMap, out int columnCount,
+            out Set<md.EntitySet> entitySets)
         {
             Initialize(); // initialize the ITree
 
-            string beforePreProcessor = String.Empty;
-            string beforeAggregatePushdown = String.Empty;
-            string beforeNormalization = String.Empty;
-            string beforeNTE = String.Empty;
-            string beforeProjectionPruning1 = String.Empty;
-            string beforeNestPullup = String.Empty;
-            string beforeProjectionPruning2 = String.Empty;
-            string beforeTransformationRules1 = String.Empty;
-            string beforeProjectionPruning3 = String.Empty;
-            string beforeTransformationRules2 = String.Empty;
-            string beforeJoinElimination1 = String.Empty;
-            string beforeTransformationRules3 = String.Empty;
-            string beforeJoinElimination2 = String.Empty;
-            string beforeTransformationRules4 = String.Empty;
-            string beforeCodeGen = String.Empty;
+            var beforePreProcessor = String.Empty;
+            var beforeAggregatePushdown = String.Empty;
+            var beforeNormalization = String.Empty;
+            var beforeNTE = String.Empty;
+            var beforeProjectionPruning1 = String.Empty;
+            var beforeNestPullup = String.Empty;
+            var beforeProjectionPruning2 = String.Empty;
+            var beforeTransformationRules1 = String.Empty;
+            var beforeProjectionPruning3 = String.Empty;
+            var beforeTransformationRules2 = String.Empty;
+            var beforeJoinElimination1 = String.Empty;
+            var beforeTransformationRules3 = String.Empty;
+            var beforeJoinElimination2 = String.Empty;
+            var beforeTransformationRules4 = String.Empty;
+            var beforeCodeGen = String.Empty;
 
             //
             // We always need the pre-processor and the codegen phases.
@@ -284,14 +288,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // The "optional" phases are AggregatePushdown, Normalization, NTE, NestPullup and JoinElimination
             //
             m_neededPhases = (1 << (int)PlanCompilerPhase.PreProcessor) |
-                // (1 << (int)PlanCompilerPhase.AggregatePushdown) |
-                // (1 << (int)PlanCompilerPhase.Normalization) |
-                // (1 << (int)PlanCompilerPhase.NTE) |
-                (1 << (int)PlanCompilerPhase.ProjectionPruning) |
-                // (1 << (int)PlanCompilerPhase.NestPullup) |
-                (1 << (int)PlanCompilerPhase.Transformations) |
-                // (1 << (int)PlanCompilerPhase.JoinElimination) |
-                (1 << (int)PlanCompilerPhase.CodeGen);
+                             // (1 << (int)PlanCompilerPhase.AggregatePushdown) |
+                             // (1 << (int)PlanCompilerPhase.Normalization) |
+                             // (1 << (int)PlanCompilerPhase.NTE) |
+                             (1 << (int)PlanCompilerPhase.ProjectionPruning) |
+                             // (1 << (int)PlanCompilerPhase.NestPullup) |
+                             (1 << (int)PlanCompilerPhase.Transformations) |
+                             // (1 << (int)PlanCompilerPhase.JoinElimination) |
+                             (1 << (int)PlanCompilerPhase.CodeGen);
 
             // Perform any necessary preprocessing
             StructuredTypeInfo typeInfo;
@@ -341,7 +345,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Run transformations on the tree
             if (IsPhaseNeeded(PlanCompilerPhase.Transformations))
             {
-                bool projectionPrunningNeeded = ApplyTransformations(ref beforeTransformationRules1, TransformationRulesGroup.All);
+                var projectionPrunningNeeded = ApplyTransformations(ref beforeTransformationRules1, TransformationRulesGroup.All);
 
                 if (projectionPrunningNeeded)
                 {
@@ -355,7 +359,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             if (IsPhaseNeeded(PlanCompilerPhase.JoinElimination))
             {
                 beforeJoinElimination1 = SwitchToPhase(PlanCompilerPhase.JoinElimination);
-                bool modified = JoinElimination.Process(this);
+                var modified = JoinElimination.Process(this);
                 if (modified)
                 {
                     ApplyTransformations(ref beforeTransformationRules3, TransformationRulesGroup.PostJoinElimination);
@@ -374,7 +378,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
 #if DEBUG
             // GC.KeepAlive makes FxCop Grumpy.
-            int size = beforePreProcessor.Length;
+            var size = beforePreProcessor.Length;
             size = beforeAggregatePushdown.Length;
             size = beforeNormalization.Length;
             size = beforeNTE.Length;
@@ -418,7 +422,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "newPhase")]
         private string SwitchToPhase(PlanCompilerPhase newPhase)
         {
-            string iqtDumpResult = string.Empty;
+            var iqtDumpResult = string.Empty;
 
             m_phase = newPhase;
 #if DEBUG
@@ -469,34 +473,35 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // If the nextNodeId is less than MaxNodeCountForTransformations then we don't need to 
             // calculate the acutal node count, it must be less than  MaxNodeCountForTransformations
             //
-            if (_applyTransformationsRegardlessOfSize.Enabled || this.m_command.NextNodeId < MaxNodeCountForTransformations)
+            if (_applyTransformationsRegardlessOfSize.Enabled
+                || m_command.NextNodeId < MaxNodeCountForTransformations)
             {
                 return true;
             }
 
             //Compute the actual node count
-            int actualCount = NodeCounter.Count(this.m_command.Root);
+            var actualCount = NodeCounter.Count(m_command.Root);
             return (actualCount < MaxNodeCountForTransformations);
         }
 
         /// <summary>
         /// Converts the CTree into an ITree, and initializes the plan
         /// </summary>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void Initialize()
         {
             // Only support queries for now
-            cqt.DbQueryCommandTree cqtree = m_ctree as cqt.DbQueryCommandTree;
-            PlanCompiler.Assert(cqtree != null, "Unexpected command tree kind. Only query command tree is supported.");
+            var cqtree = m_ctree as cqt.DbQueryCommandTree;
+            Assert(cqtree != null, "Unexpected command tree kind. Only query command tree is supported.");
 
             // Generate the ITree
             m_command = ITreeGenerator.Generate(cqtree);
-            PlanCompiler.Assert(m_command != null, "Unable to generate internal tree from Command Tree");
+            Assert(m_command != null, "Unable to generate internal tree from Command Tree");
         }
 
         #endregion
     }
-
 
     /// <summary>
     /// Enum describing which phase of plan compilation we're currently in

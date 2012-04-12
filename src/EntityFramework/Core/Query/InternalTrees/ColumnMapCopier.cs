@@ -1,15 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Diagnostics;
-using System.Data.Entity.Core.Query.InternalTrees;
-using System.Data.Entity.Core.Query.PlanCompiler;
-using System.Linq;
-using System.Data.Entity.Core.Mapping;
-using System.Data.Entity.Core.Metadata.Edm;
-
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Query.PlanCompiler;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -36,13 +28,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     /// </summary>
     internal class ColumnMapCopier : ColumnMapVisitorWithResults<ColumnMap, VarMap>
     {
-
         #region Constructors
 
         /// <summary>
         /// Singleton instance for the "public" methods to use;
         /// </summary>
-        static private ColumnMapCopier Instance = new ColumnMapCopier();
+        private static readonly ColumnMapCopier Instance = new ColumnMapCopier();
 
         /// <summary>
         /// Constructor; no one should use this.
@@ -83,7 +74,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             // SQLBUDT #478509: Follow the chain of mapped vars, don't
             //                  just stop at the first one
-            Var replacementVar = originalVar;
+            var replacementVar = originalVar;
 
             while (replacementVarMap.TryGetValue(replacementVar, out originalVar))
             {
@@ -112,8 +103,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal TListType[] VisitList<TListType>(TListType[] tList, VarMap replacementVarMap)
             where TListType : ColumnMap
         {
-            TListType[] newTList = new TListType[tList.Length];
-            for(int i = 0; i < tList.Length; ++i) {
+            var newTList = new TListType[tList.Length];
+            for (var i = 0; i < tList.Length; ++i)
+            {
                 newTList[i] = (TListType)tList[i].Accept(this, replacementVarMap);
             }
             return newTList;
@@ -131,8 +123,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         protected override EntityIdentity VisitEntityIdentity(DiscriminatedEntityIdentity entityIdentity, VarMap replacementVarMap)
         {
-            SimpleColumnMap newEntitySetCol = (SimpleColumnMap)entityIdentity.EntitySetColumnMap.Accept(this, replacementVarMap);
-            SimpleColumnMap[] newKeys = VisitList(entityIdentity.Keys, replacementVarMap);
+            var newEntitySetCol = (SimpleColumnMap)entityIdentity.EntitySetColumnMap.Accept(this, replacementVarMap);
+            var newKeys = VisitList(entityIdentity.Keys, replacementVarMap);
             return new DiscriminatedEntityIdentity(newEntitySetCol, entityIdentity.EntitySetMap, newKeys);
         }
 
@@ -144,7 +136,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         protected override EntityIdentity VisitEntityIdentity(SimpleEntityIdentity entityIdentity, VarMap replacementVarMap)
         {
-            SimpleColumnMap[] newKeys = VisitList(entityIdentity.Keys, replacementVarMap);
+            var newKeys = VisitList(entityIdentity.Keys, replacementVarMap);
             return new SimpleEntityIdentity(entityIdentity.EntitySet, newKeys);
         }
 
@@ -158,12 +150,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal override ColumnMap Visit(ComplexTypeColumnMap columnMap, VarMap replacementVarMap)
         {
-            SimpleColumnMap newNullability = columnMap.NullSentinel;
+            var newNullability = columnMap.NullSentinel;
             if (null != newNullability)
             {
                 newNullability = (SimpleColumnMap)newNullability.Accept(this, replacementVarMap);
             }
-            ColumnMap[] fieldList = VisitList(columnMap.Properties, replacementVarMap);
+            var fieldList = VisitList(columnMap.Properties, replacementVarMap);
             return new ComplexTypeColumnMap(columnMap.Type, columnMap.Name, fieldList, newNullability);
         }
 
@@ -175,11 +167,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal override ColumnMap Visit(DiscriminatedCollectionColumnMap columnMap, VarMap replacementVarMap)
         {
-            ColumnMap newElementColumnMap = columnMap.Element.Accept(this, replacementVarMap);
-            SimpleColumnMap newDiscriminator = (SimpleColumnMap)columnMap.Discriminator.Accept(this, replacementVarMap);
-            SimpleColumnMap[] newKeys = VisitList(columnMap.Keys, replacementVarMap);
-            SimpleColumnMap[] newForeignKeys = VisitList(columnMap.ForeignKeys, replacementVarMap);
-            return new DiscriminatedCollectionColumnMap(columnMap.Type, columnMap.Name, newElementColumnMap, newKeys, newForeignKeys, newDiscriminator, columnMap.DiscriminatorValue);
+            var newElementColumnMap = columnMap.Element.Accept(this, replacementVarMap);
+            var newDiscriminator = (SimpleColumnMap)columnMap.Discriminator.Accept(this, replacementVarMap);
+            var newKeys = VisitList(columnMap.Keys, replacementVarMap);
+            var newForeignKeys = VisitList(columnMap.ForeignKeys, replacementVarMap);
+            return new DiscriminatedCollectionColumnMap(
+                columnMap.Type, columnMap.Name, newElementColumnMap, newKeys, newForeignKeys, newDiscriminator, columnMap.DiscriminatorValue);
         }
 
         /// <summary>
@@ -190,8 +183,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal override ColumnMap Visit(EntityColumnMap columnMap, VarMap replacementVarMap)
         {
-            EntityIdentity newEntityIdentity = VisitEntityIdentity(columnMap.EntityIdentity, replacementVarMap);
-            ColumnMap[] fieldList = VisitList(columnMap.Properties, replacementVarMap);
+            var newEntityIdentity = VisitEntityIdentity(columnMap.EntityIdentity, replacementVarMap);
+            var fieldList = VisitList(columnMap.Properties, replacementVarMap);
             return new EntityColumnMap(columnMap.Type, columnMap.Name, fieldList, newEntityIdentity);
         }
 
@@ -203,29 +196,31 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal override ColumnMap Visit(SimplePolymorphicColumnMap columnMap, VarMap replacementVarMap)
         {
-            SimpleColumnMap newDiscriminator = (SimpleColumnMap)columnMap.TypeDiscriminator.Accept(this, replacementVarMap);
+            var newDiscriminator = (SimpleColumnMap)columnMap.TypeDiscriminator.Accept(this, replacementVarMap);
 
-            Dictionary<object, TypedColumnMap> newTypeChoices = new Dictionary<object, TypedColumnMap>(columnMap.TypeChoices.Comparer);
-            foreach (KeyValuePair<object, TypedColumnMap> kv in columnMap.TypeChoices)
+            var newTypeChoices = new Dictionary<object, TypedColumnMap>(columnMap.TypeChoices.Comparer);
+            foreach (var kv in columnMap.TypeChoices)
             {
-                TypedColumnMap newMap = (TypedColumnMap)kv.Value.Accept(this, replacementVarMap);
+                var newMap = (TypedColumnMap)kv.Value.Accept(this, replacementVarMap);
                 newTypeChoices[kv.Key] = newMap;
             }
-            ColumnMap[] newBaseFieldList = VisitList(columnMap.Properties, replacementVarMap);
+            var newBaseFieldList = VisitList(columnMap.Properties, replacementVarMap);
             return new SimplePolymorphicColumnMap(columnMap.Type, columnMap.Name, newBaseFieldList, newDiscriminator, newTypeChoices);
         }
 
         /// <summary>
         /// MultipleDiscriminatorPolymorphicColumnMap
         /// </summary>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ColumnMapCopier")]
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "MultipleDiscriminatorPolymorphicColumnMap")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly",
+            MessageId = "MultipleDiscriminatorPolymorphicColumnMap")]
         internal override ColumnMap Visit(MultipleDiscriminatorPolymorphicColumnMap columnMap, VarMap replacementVarMap)
         {
             // At this time, we shouldn't ever see this type here; it's for SPROCS which don't use
             // the plan compiler.
-            System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(false, "unexpected MultipleDiscriminatorPolymorphicColumnMap in ColumnMapCopier");
+            PlanCompiler.Assert(false, "unexpected MultipleDiscriminatorPolymorphicColumnMap in ColumnMapCopier");
             return null;
         }
 
@@ -237,12 +232,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal override ColumnMap Visit(RecordColumnMap columnMap, VarMap replacementVarMap)
         {
-            SimpleColumnMap newNullability = columnMap.NullSentinel;
+            var newNullability = columnMap.NullSentinel;
             if (null != newNullability)
             {
                 newNullability = (SimpleColumnMap)newNullability.Accept(this, replacementVarMap);
             }
-            ColumnMap[] fieldList = VisitList(columnMap.Properties, replacementVarMap);
+            var fieldList = VisitList(columnMap.Properties, replacementVarMap);
             return new RecordColumnMap(columnMap.Type, columnMap.Name, fieldList, newNullability);
         }
 
@@ -254,7 +249,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal override ColumnMap Visit(RefColumnMap columnMap, VarMap replacementVarMap)
         {
-            EntityIdentity newEntityIdentity = VisitEntityIdentity(columnMap.EntityIdentity, replacementVarMap);
+            var newEntityIdentity = VisitEntityIdentity(columnMap.EntityIdentity, replacementVarMap);
             return new RefColumnMap(columnMap.Type, columnMap.Name, newEntityIdentity);
         }
 
@@ -277,9 +272,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal override ColumnMap Visit(SimpleCollectionColumnMap columnMap, VarMap replacementVarMap)
         {
-            ColumnMap newElementColumnMap = columnMap.Element.Accept(this, replacementVarMap);
-            SimpleColumnMap[] newKeys = VisitList(columnMap.Keys, replacementVarMap);
-            SimpleColumnMap[] newForeignKeys = VisitList(columnMap.ForeignKeys, replacementVarMap);
+            var newElementColumnMap = columnMap.Element.Accept(this, replacementVarMap);
+            var newKeys = VisitList(columnMap.Keys, replacementVarMap);
+            var newForeignKeys = VisitList(columnMap.ForeignKeys, replacementVarMap);
             return new SimpleCollectionColumnMap(columnMap.Type, columnMap.Name, newElementColumnMap, newKeys, newForeignKeys);
         }
 
@@ -291,7 +286,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal override ColumnMap Visit(VarRefColumnMap columnMap, VarMap replacementVarMap)
         {
-            Var replacementVar = GetReplacementVar(columnMap.Var, replacementVarMap);
+            var replacementVar = GetReplacementVar(columnMap.Var, replacementVarMap);
             return new VarRefColumnMap(columnMap.Type, columnMap.Name, replacementVar);
         }
 

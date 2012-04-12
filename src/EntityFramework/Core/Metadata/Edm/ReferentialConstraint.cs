@@ -1,16 +1,14 @@
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// This class describes referential constraint on the relationships
     /// </summary>
     public sealed class ReferentialConstraint : MetadataItem
     {
         #region Constructors
+
         /// <summary>
         /// Constructs a new constraint on the relationship
         /// </summary>
@@ -19,42 +17,49 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="toProperties">properties on entity type of from role which take part in the constraint</param>
         /// <param name="fromProperties">properties on entity type of to role which take part in the constraint</param>
         /// <exception cref="ArgumentNullException">Argument Null exception if any of the arguments is null</exception>
-        internal ReferentialConstraint(RelationshipEndMember fromRole,
-                                     RelationshipEndMember toRole,
-                                     IEnumerable<EdmProperty> fromProperties,
-                                     IEnumerable<EdmProperty> toProperties)
+        internal ReferentialConstraint(
+            RelationshipEndMember fromRole,
+            RelationshipEndMember toRole,
+            IEnumerable<EdmProperty> fromProperties,
+            IEnumerable<EdmProperty> toProperties)
         {
             _fromRole = EntityUtil.GenericCheckArgumentNull(fromRole, "fromRole");
             _toRole = EntityUtil.GenericCheckArgumentNull(toRole, "toRole");
-            _fromProperties = new ReadOnlyMetadataCollection<EdmProperty>(new MetadataCollection<EdmProperty>(
-                EntityUtil.GenericCheckArgumentNull(fromProperties, "fromProperties")));
-            _toProperties = new ReadOnlyMetadataCollection<EdmProperty>(new MetadataCollection<EdmProperty>(
-                EntityUtil.GenericCheckArgumentNull(toProperties, "toProperties")));
+            _fromProperties = new ReadOnlyMetadataCollection<EdmProperty>(
+                new MetadataCollection<EdmProperty>(
+                    EntityUtil.GenericCheckArgumentNull(fromProperties, "fromProperties")));
+            _toProperties = new ReadOnlyMetadataCollection<EdmProperty>(
+                new MetadataCollection<EdmProperty>(
+                    EntityUtil.GenericCheckArgumentNull(toProperties, "toProperties")));
         }
+
         #endregion
 
         #region Fields
-        private RelationshipEndMember _fromRole;
-        private RelationshipEndMember _toRole;
+
+        private readonly RelationshipEndMember _fromRole;
+        private readonly RelationshipEndMember _toRole;
         private readonly ReadOnlyMetadataCollection<EdmProperty> _fromProperties;
         private readonly ReadOnlyMetadataCollection<EdmProperty> _toProperties;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Returns the kind of the type
         /// </summary>
-        public override BuiltInTypeKind BuiltInTypeKind { get { return BuiltInTypeKind.ReferentialConstraint; } }
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
+            get { return BuiltInTypeKind.ReferentialConstraint; }
+        }
 
         /// <summary>
         /// Returns the identity for this constraint
         /// </summary>
         internal override string Identity
         {
-            get
-            {
-                return this.FromRole.Name + "_" + this.ToRole.Name;
-            }
+            get { return FromRole.Name + "_" + ToRole.Name; }
         }
 
         /// <summary>
@@ -65,10 +70,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.RelationshipEndMember, false)]
         public RelationshipEndMember FromRole
         {
-            get
-            {
-                return _fromRole;
-            }
+            get { return _fromRole; }
         }
 
         /// <summary>
@@ -79,10 +81,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.RelationshipEndMember, false)]
         public RelationshipEndMember ToRole
         {
-            get
-            {
-                return _toRole;
-            }
+            get { return _toRole; }
         }
 
         /// <summary>
@@ -91,10 +90,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.EdmProperty, true)]
         public ReadOnlyMetadataCollection<EdmProperty> FromProperties
         {
-            get
-            {
-                return _fromProperties;
-            }
+            get { return _fromProperties; }
         }
 
         /// <summary>
@@ -103,21 +99,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.EdmProperty, true)]
         public ReadOnlyMetadataCollection<EdmProperty> ToProperties
         {
-            get
-            {
-                return _toProperties;
-            }
+            get { return _toProperties; }
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Overriding System.Object.ToString to provide better String representation 
         /// for this type.
         /// </summary>
         public override string ToString()
         {
-            return this.FromRole.Name + "_" + this.ToRole.Name;
+            return FromRole.Name + "_" + ToRole.Name;
         }
 
         /// <summary>
@@ -129,21 +124,22 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 base.SetReadOnly();
 
-                RelationshipEndMember fromRole = FromRole;
+                var fromRole = FromRole;
                 if (fromRole != null)
                 {
                     fromRole.SetReadOnly();
                 }
 
-                RelationshipEndMember toRole = ToRole;
+                var toRole = ToRole;
                 if (toRole != null)
                 {
                     toRole.SetReadOnly();
                 }
-                this.FromProperties.Source.SetReadOnly();
-                this.ToProperties.Source.SetReadOnly();
+                FromProperties.Source.SetReadOnly();
+                ToProperties.Source.SetReadOnly();
             }
         }
+
         #endregion
     }
 }

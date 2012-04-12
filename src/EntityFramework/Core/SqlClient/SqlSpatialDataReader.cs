@@ -1,21 +1,18 @@
-using System.Data.Entity.Core.Common.Utils;
-using System.Data.Entity;
-using System.Data.Entity.Core.Spatial;
-using System.Data.SqlTypes;
-using System.Diagnostics;
-using System.IO;
-using System.Linq.Expressions;
-using System.Reflection;
-
 namespace System.Data.Entity.Core.SqlClient
 {
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Spatial;
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq.Expressions;
+    using System.Reflection;
 
     /// <summary>
     /// SqlClient specific implementation of <see cref="DbSpatialDataReader"/>
     /// </summary>
-    internal sealed partial class SqlSpatialDataReader : DbSpatialDataReader
+    internal sealed class SqlSpatialDataReader : DbSpatialDataReader
     {
         private readonly SqlDataReader reader;
         private const string geometrySqlType = "sys.geometry";
@@ -23,34 +20,40 @@ namespace System.Data.Entity.Core.SqlClient
 
         internal SqlSpatialDataReader(SqlDataReader underlyingReader)
         {
-            this.reader = underlyingReader;
+            reader = underlyingReader;
         }
 
         public override DbGeography GetGeography(int ordinal)
         {
             EnsureGeographyColumn(ordinal);
-            SqlBytes geogBytes = this.reader.GetSqlBytes(ordinal);
-            object providerValue = sqlGeographyFromBinaryReader.Value(new BinaryReader(geogBytes.Stream));
+            var geogBytes = reader.GetSqlBytes(ordinal);
+            var providerValue = sqlGeographyFromBinaryReader.Value(new BinaryReader(geogBytes.Stream));
             return SqlSpatialServices.Instance.GeographyFromProviderValue(providerValue);
         }
 
         public override DbGeometry GetGeometry(int ordinal)
         {
             EnsureGeometryColumn(ordinal);
- 	        SqlBytes geomBytes = this.reader.GetSqlBytes(ordinal);
-            object providerValue = sqlGeometryFromBinaryReader.Value(new BinaryReader(geomBytes.Stream));
+            var geomBytes = reader.GetSqlBytes(ordinal);
+            var providerValue = sqlGeometryFromBinaryReader.Value(new BinaryReader(geomBytes.Stream));
             return SqlSpatialServices.Instance.GeometryFromProviderValue(providerValue);
         }
 
-        private static readonly Singleton<Func<BinaryReader, object>> sqlGeographyFromBinaryReader = new Singleton<Func<BinaryReader, object>>(() => CreateBinaryReadDelegate(SqlProviderServices.GetSqlTypesAssembly().SqlGeographyType));
-        private static readonly Singleton<Func<BinaryReader, object>> sqlGeometryFromBinaryReader = new Singleton<Func<BinaryReader, object>>(() => CreateBinaryReadDelegate(SqlProviderServices.GetSqlTypesAssembly().SqlGeometryType));
+        private static readonly Singleton<Func<BinaryReader, object>> sqlGeographyFromBinaryReader =
+            new Singleton<Func<BinaryReader, object>>(
+                () => CreateBinaryReadDelegate(SqlProviderServices.GetSqlTypesAssembly().SqlGeographyType));
+
+        private static readonly Singleton<Func<BinaryReader, object>> sqlGeometryFromBinaryReader =
+            new Singleton<Func<BinaryReader, object>>(
+                () => CreateBinaryReadDelegate(SqlProviderServices.GetSqlTypesAssembly().SqlGeometryType));
 
         // test to ensure that the SQL column has the expected SQL type.   Don't use the CLR type to avoid having to worry about differences in 
         // type versions between the client and the database.  
         private void EnsureGeographyColumn(int ordinal)
         {
-            string fieldTypeName = this.reader.GetDataTypeName(ordinal);
-            if (!fieldTypeName.EndsWith(geographySqlType, StringComparison.Ordinal)) // Use EndsWith so that we just see the schema and type name, not the database name.
+            var fieldTypeName = reader.GetDataTypeName(ordinal);
+            if (!fieldTypeName.EndsWith(geographySqlType, StringComparison.Ordinal))
+                // Use EndsWith so that we just see the schema and type name, not the database name.
             {
                 throw new InvalidDataException(Strings.SqlProvider_InvalidGeographyColumn(fieldTypeName));
             }
@@ -58,8 +61,9 @@ namespace System.Data.Entity.Core.SqlClient
 
         private void EnsureGeometryColumn(int ordinal)
         {
-            string fieldTypeName = this.reader.GetDataTypeName(ordinal);
-            if (!fieldTypeName.EndsWith(geometrySqlType, StringComparison.Ordinal)) // Use EndsWith so that we just see the schema and type name, not the database name.
+            var fieldTypeName = reader.GetDataTypeName(ordinal);
+            if (!fieldTypeName.EndsWith(geometrySqlType, StringComparison.Ordinal))
+                // Use EndsWith so that we just see the schema and type name, not the database name.
             {
                 throw new InvalidDataException(Strings.SqlProvider_InvalidGeometryColumn(fieldTypeName));
             }
@@ -82,19 +86,20 @@ namespace System.Data.Entity.Core.SqlClient
 
             var readerParam = Expression.Parameter(typeof(BinaryReader));
             var binarySerializable = Expression.Variable(spatialType);
-            var readMethod = spatialType.GetMethod("Read", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(System.IO.BinaryReader) }, null);
+            var readMethod = spatialType.GetMethod(
+                "Read", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(BinaryReader) }, null);
 
             var ex = Expression.Lambda<Func<BinaryReader, object>>(
-                            Expression.Block(
-                                new[] { binarySerializable },
-                                Expression.Assign(binarySerializable, Expression.New(spatialType)),
-                                Expression.Call(binarySerializable, readMethod, readerParam),
-                                binarySerializable
-                            ),
-                            readerParam
-                        );
+                Expression.Block(
+                    new[] { binarySerializable },
+                    Expression.Assign(binarySerializable, Expression.New(spatialType)),
+                    Expression.Call(binarySerializable, readMethod, readerParam),
+                    binarySerializable
+                    ),
+                readerParam
+                );
 
-            Func<BinaryReader, object> result = ex.Compile();
+            var result = ex.Compile();
             return result;
         }
     }

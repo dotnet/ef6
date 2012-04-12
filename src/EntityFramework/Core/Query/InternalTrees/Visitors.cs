@@ -1,6 +1,6 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
-    using System;
+    using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using pc = System.Data.Entity.Core.Query.PlanCompiler; // To be able to use PlanCompiler.Assert instead of Debug.Assert in this class.
 
@@ -9,19 +9,15 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     /// </summary>
     internal abstract class BasicOpVisitor
     {
-        /// <summary>
-        /// Default constructor. 
-        /// </summary>
-        internal BasicOpVisitor() { }
-
         #region Visitor Helpers
+
         /// <summary>
         /// Visit the children of this Node
         /// </summary>
         /// <param name="n">The Node that references the Op</param>
         protected virtual void VisitChildren(Node n)
         {
-            foreach (Node chi in n.Children)
+            foreach (var chi in n.Children)
             {
                 VisitNode(chi);
             }
@@ -33,7 +29,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="n">The current node</param>
         protected virtual void VisitChildrenReverse(Node n)
         {
-            for (int i = n.Children.Count - 1; i >= 0; i--)
+            for (var i = n.Children.Count - 1; i >= 0; i--)
             {
                 VisitNode(n.Children[i]);
             }
@@ -47,6 +43,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             n.Op.Accept(this, n);
         }
+
         /// <summary>
         /// Default node visitor
         /// </summary>
@@ -95,6 +92,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             VisitRelOpDefault(op, n);
         }
+
         /// <summary>
         /// Default handler for all SetOps
         /// </summary>
@@ -124,6 +122,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             VisitRelOpDefault(op, n);
         }
+
         #endregion
 
         #region BasicOpVisitor Members
@@ -135,10 +134,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="n">The Node that references the Op</param>
         public virtual void Visit(Op op, Node n)
         {
-            throw new NotSupportedException(System.Data.Entity.Resources.Strings.Iqt_General_UnsupportedOp(op.GetType().FullName));
+            throw new NotSupportedException(Strings.Iqt_General_UnsupportedOp(op.GetType().FullName));
         }
 
         #region ScalarOps
+
         protected virtual void VisitScalarOpDefault(ScalarOp op, Node n)
         {
             VisitDefault(n);
@@ -373,6 +373,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             VisitScalarOpDefault(op, n);
         }
+
         /// <summary>
         /// Visitor pattern method for SoftCastOp
         /// </summary>
@@ -456,6 +457,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #endregion
 
         #region AncillaryOps
+
         protected virtual void VisitAncillaryOpDefault(AncillaryOp op, Node n)
         {
             VisitDefault(n);
@@ -703,6 +705,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #endregion
 
         #region PhysicalOps
+
         protected virtual void VisitPhysicalOpDefault(PhysicalOp op, Node n)
         {
             VisitDefault(n);
@@ -719,6 +722,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         #region NestOps
+
         /// <summary>
         /// Common handling for all nestOps
         /// </summary>
@@ -728,6 +732,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             VisitPhysicalOpDefault(op, n);
         }
+
         /// <summary>
         /// Visitor pattern method for SingleStreamNestOp
         /// </summary>
@@ -737,6 +742,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             VisitNestOp(op, n);
         }
+
         /// <summary>
         /// Visitor pattern method for MultistreamNestOp
         /// </summary>
@@ -746,7 +752,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             VisitNestOp(op, n);
         }
+
         #endregion
+
         #endregion
 
         #endregion
@@ -766,7 +774,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="n">The current node</param>
         protected virtual void VisitChildren(Node n)
         {
-            for (int i = 0; i < n.Children.Count; i++)
+            for (var i = 0; i < n.Children.Count; i++)
             {
                 VisitNode(n.Children[i]);
             }
@@ -778,7 +786,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="n">The current node</param>
         protected virtual void VisitChildrenReverse(Node n)
         {
-            for (int i = n.Children.Count - 1; i >= 0; i--)
+            for (var i = n.Children.Count - 1; i >= 0; i--)
             {
                 VisitNode(n.Children[i]);
             }
@@ -792,7 +800,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal TResultType VisitNode(Node n)
         {
             // Invoke the visitor
-            return n.Op.Accept<TResultType>(this, n);
+            return n.Op.Accept(this, n);
         }
 
         /// <summary>
@@ -812,7 +820,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// No processing yet for this node - raises an exception
         /// </summary>
         /// <param name="n"></param>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal virtual TResultType Unimplemented(Node n)
         {
             pc.PlanCompiler.Assert(false, "Not implemented op type");
@@ -920,6 +929,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return VisitNestOp(op, n);
         }
+
         /// <summary>
         /// MultiStreamNestOp
         /// </summary>
@@ -1131,7 +1141,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return VisitRelOpDefault(op, n);
         }
 
-
         /// <summary>
         /// GroupByOp
         /// </summary>
@@ -1166,6 +1175,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         #region TableOps
+
         /// <summary>
         /// Default handler for all TableOps
         /// </summary>
@@ -1176,6 +1186,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return VisitRelOpDefault(op, n);
         }
+
         /// <summary>
         /// ScanTableOp
         /// </summary>
@@ -1197,6 +1208,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return VisitTableOp(op, n);
         }
+
         #endregion
 
         /// <summary>
@@ -1580,6 +1592,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return VisitScalarOpDefault(op, n);
         }
+
         /// <summary>
         /// RelPropertyOp
         /// </summary>
@@ -1628,10 +1641,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return VisitScalarOpDefault(op, n);
         }
+
         public virtual TResultType Visit(NavigateOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
         }
+
         #endregion
     }
 
@@ -1649,7 +1664,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="n">The current node</param>
         protected override void VisitChildren(Node n)
         {
-            for (int i = 0; i < n.Children.Count; i++)
+            for (var i = 0; i < n.Children.Count; i++)
             {
                 n.Children[i] = VisitNode(n.Children[i]);
             }
@@ -1661,7 +1676,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="n">The current node</param>
         protected override void VisitChildrenReverse(Node n)
         {
-            for (int i = n.Children.Count - 1; i >= 0; i--)
+            for (var i = n.Children.Count - 1; i >= 0; i--)
             {
                 n.Children[i] = VisitNode(n.Children[i]);
             }
@@ -1728,6 +1743,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return VisitDefault(n);
         }
+
         #endregion
 
         #region ScalarOp Visitors
@@ -1744,7 +1760,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             return VisitDefault(n);
         }
-        #endregion
 
+        #endregion
     }
 }

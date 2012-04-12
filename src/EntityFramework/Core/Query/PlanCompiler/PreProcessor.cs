@@ -2,10 +2,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
-    using System.Data.Common;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Mapping.ViewGeneration;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Resources;
@@ -40,14 +39,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         internal void Merge(EntityTypeBase neededRootEntityType, bool includesSubtypes, ExplicitDiscriminatorMap discriminatorMap)
         {
             // If what we've found doesn't exactly match what we are looking for we have more work to do
-            if (RootEntityType != neededRootEntityType || IncludesSubTypes != includesSubtypes)
+            if (RootEntityType != neededRootEntityType
+                || IncludesSubTypes != includesSubtypes)
             {
-                if (!IncludesSubTypes || !includesSubtypes)
+                if (!IncludesSubTypes
+                    || !includesSubtypes)
                 {
                     // If either the original or the new map is from an of-type-only view we can't
                     // merge, we just have to not optimize this case.
                     DiscriminatorMap = null;
-
                 }
                 if (TypeSemantics.IsSubTypeOf(RootEntityType, neededRootEntityType))
                 {
@@ -74,6 +74,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal class PreProcessor : SubqueryTrackingVisitor
     {
         #region private state
+
         /// <summary>
         /// Tracks affinity of entity constructors to entity sets (aka scoped entity type constructors).
         /// Scan view ops and entityset-bound tvfs push corresponding entity sets so that their child nodes representing entity constructors could
@@ -93,22 +94,28 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         /// Helper for rel properties
         /// </summary>
-        private RelPropertyHelper m_relPropertyHelper;
+        private readonly RelPropertyHelper m_relPropertyHelper;
 
         // Track discriminator metadata.
         private bool m_suppressDiscriminatorMaps;
-        private readonly Dictionary<EntitySetBase, DiscriminatorMapInfo> m_discriminatorMaps = new Dictionary<EntitySetBase, DiscriminatorMapInfo>();
+
+        private readonly Dictionary<EntitySetBase, DiscriminatorMapInfo> m_discriminatorMaps =
+            new Dictionary<EntitySetBase, DiscriminatorMapInfo>();
+
         #endregion
 
         #region constructors
+
         private PreProcessor(PlanCompiler planCompilerState)
             : base(planCompilerState)
         {
             m_relPropertyHelper = new RelPropertyHelper(m_command.MetadataWorkspace, m_command.ReferencedRelProperties);
         }
+
         #endregion
 
         #region public methods
+
         /// <summary>
         /// The driver routine.
         /// </summary>
@@ -120,10 +127,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             out StructuredTypeInfo typeInfo,
             out Dictionary<EdmFunction, EdmProperty[]> tvfResultKeys)
         {
-            PreProcessor preProcessor = new PreProcessor(planCompilerState);
+            var preProcessor = new PreProcessor(planCompilerState);
             preProcessor.Process(out tvfResultKeys);
 
-            StructuredTypeInfo.Process(planCompilerState.Command,
+            StructuredTypeInfo.Process(
+                planCompilerState.Command,
                 preProcessor.m_referencedTypes,
                 preProcessor.m_referencedEntitySets,
                 preProcessor.m_freeFloatingEntityConstructorTypes,
@@ -138,6 +146,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region private methods
 
         #region driver
+
         internal void Process(out Dictionary<EdmFunction, EdmProperty[]> tvfResultKeys)
         {
             m_command.Root = VisitNode(m_command.Root);
@@ -145,7 +154,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Add any Vars that are of structured type - if the Vars aren't
             // referenced via a VarRefOp, we end up losing them...
             //
-            foreach (Var v in m_command.Vars)
+            foreach (var v in m_command.Vars)
             {
                 AddTypeReference(v.Type);
             }
@@ -161,12 +170,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // Find any structured types that are projected at the top level, and
                 // ensure that we can handle their nullability.
                 //
-                PhysicalProjectOp ppOp = (PhysicalProjectOp)m_command.Root.Op; // this better be the case or we have other problems.
+                var ppOp = (PhysicalProjectOp)m_command.Root.Op; // this better be the case or we have other problems.
                 ppOp.ColumnMap.Accept(StructuredTypeNullabilityAnalyzer.Instance, m_typesNeedingNullSentinel);
             }
 
             tvfResultKeys = m_tvfResultKeys;
         }
+
         #endregion
 
         #region private state maintenance - type and set information
@@ -190,7 +200,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="type">type to reference</param>
         private void AddTypeReference(TypeUsage type)
         {
-            if (TypeUtils.IsStructuredType(type) || TypeUtils.IsCollectionType(type) || TypeUtils.IsEnumerationType(type))
+            if (TypeUtils.IsStructuredType(type) || TypeUtils.IsCollectionType(type)
+                || TypeUtils.IsEnumerationType(type))
             {
                 m_referencedTypes.Add(type);
             }
@@ -207,13 +218,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>the list of relevant relationshipsets</returns>
         private List<RelationshipSet> GetRelationshipSets(RelationshipType relType)
         {
-            List<RelationshipSet> relSets = new List<RelationshipSet>();
-            foreach (EntityContainer entityContainer in m_referencedEntityContainers)
+            var relSets = new List<RelationshipSet>();
+            foreach (var entityContainer in m_referencedEntityContainers)
             {
-                foreach (EntitySetBase set in entityContainer.BaseEntitySets)
+                foreach (var set in entityContainer.BaseEntitySets)
                 {
-                    RelationshipSet relSet = set as RelationshipSet;
-                    if (relSet != null &&
+                    var relSet = set as RelationshipSet;
+                    if (relSet != null
+                        &&
                         relSet.ElementType.Equals(relType))
                     {
                         relSets.Add(relSet);
@@ -236,13 +248,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>list of all entitysets of the desired shape</returns>
         private List<EntitySet> GetEntitySets(TypeUsage entityType)
         {
-            List<EntitySet> sets = new List<EntitySet>();
-            foreach (EntityContainer container in m_referencedEntityContainers)
+            var sets = new List<EntitySet>();
+            foreach (var container in m_referencedEntityContainers)
             {
-                foreach (EntitySetBase baseSet in container.BaseEntitySets)
+                foreach (var baseSet in container.BaseEntitySets)
                 {
-                    EntitySet set = baseSet as EntitySet;
-                    if (set != null &&
+                    var set = baseSet as EntitySet;
+                    if (set != null
+                        &&
                         (set.ElementType.Equals(entityType.EdmType) ||
                          TypeSemantics.IsSubTypeOf(entityType.EdmType, set.ElementType) ||
                          TypeSemantics.IsSubTypeOf(set.ElementType, entityType.EdmType)))
@@ -268,15 +281,25 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Set to <c>null</c> on return if the generated view renders the type filter superfluous.
         /// </param>
         /// <returns>A node that is the root of the new expanded view</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScanTableOp"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ExpandView"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "EntitySet"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Common.Utils.TreeNode.#ctor(System.String,System.Data.Entity.Core.Common.Utils.TreeNode[])")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScanTableOp")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ExpandView")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "EntitySet")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Common.Utils.TreeNode.#ctor(System.String,System.Data.Entity.Core.Common.Utils.TreeNode[])"
+            )]
         private Node ExpandView(ScanTableOp scanTableOp, ref IsOfOp typeFilter)
         {
-            EntitySetBase entitySet = scanTableOp.Table.TableMetadata.Extent;
+            var entitySet = scanTableOp.Table.TableMetadata.Extent;
             PlanCompiler.Assert(entitySet != null, "The target of a ScanTableOp must reference an EntitySet to be used with ExpandView");
-            PlanCompiler.Assert(entitySet.EntityContainer.DataSpace == DataSpace.CSpace, "Store entity sets cannot have Query Mapping Views and should not be used with ExpandView");
+            PlanCompiler.Assert(
+                entitySet.EntityContainer.DataSpace == DataSpace.CSpace,
+                "Store entity sets cannot have Query Mapping Views and should not be used with ExpandView");
 
             if (typeFilter != null &&
-               !typeFilter.IsOfOnly &&
+                !typeFilter.IsOfOnly
+                &&
                 TypeSemantics.IsSubTypeOf(entitySet.ElementType, typeFilter.IsOfType.EdmType))
             {
                 //
@@ -294,9 +317,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // by the ScanTableOp. The actual method used to do this differs depending on whether the default
             // Query Mapping View is sufficient or a targeted view that only filters by element type is required.
             //
-            System.Data.Entity.Core.Mapping.ViewGeneration.GeneratedView definingQuery = null;
-            EntityTypeBase requiredType = scanTableOp.Table.TableMetadata.Extent.ElementType;
-            bool includeSubtypes = true;
+            GeneratedView definingQuery = null;
+            var requiredType = scanTableOp.Table.TableMetadata.Extent.ElementType;
+            var includeSubtypes = true;
             if (typeFilter != null)
             {
                 // 
@@ -343,7 +366,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // At this point we're guaranteed to have found a defining query for the view.
             // We're now going to convert this into an IQT, and then copy it into our own IQT.
             //
-            Node ret = definingQuery.GetInternalTree(m_command);
+            var ret = definingQuery.GetInternalTree(m_command);
 
             //
             // Make sure we're tracking what we've asked any discriminator maps to contain.
@@ -353,26 +376,27 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Build up a ScanViewOp to "cap" the defining query below
             //
-            ScanViewOp scanViewOp = m_command.CreateScanViewOp(scanTableOp.Table);
+            var scanViewOp = m_command.CreateScanViewOp(scanTableOp.Table);
             ret = m_command.CreateNode(scanViewOp, ret);
 
             return ret;
         }
-
 
         /// <summary>
         /// If the discrminator map we're already tracking for this type (in this entityset)
         /// isn't already rooted at our required type, then we have to suppress the use of 
         /// the descriminator maps when we constrct the structuredtypes; see SQLBUDT #615744
         /// </summary>
-        private void DetermineDiscriminatorMapUsage(Node viewNode, EntitySetBase entitySet, EntityTypeBase rootEntityType, bool includeSubtypes)
+        private void DetermineDiscriminatorMapUsage(
+            Node viewNode, EntitySetBase entitySet, EntityTypeBase rootEntityType, bool includeSubtypes)
         {
             ExplicitDiscriminatorMap discriminatorMap = null;
 
             // we expect the view to be capped with a project; we're just being careful here.
-            if (viewNode.Op.OpType == OpType.Project)
+            if (viewNode.Op.OpType
+                == OpType.Project)
             {
-                DiscriminatedNewEntityOp discriminatedNewEntityOp = viewNode.Child1.Child0.Child0.Op as DiscriminatedNewEntityOp;
+                var discriminatedNewEntityOp = viewNode.Child1.Child0.Child0.Op as DiscriminatedNewEntityOp;
 
                 if (null != discriminatedNewEntityOp)
                 {
@@ -400,6 +424,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #region NavigateOp rewrites
+
         /// <summary>
         /// Rewrites a NavigateOp tree in the following fashion
         ///   SELECT VALUE r.ToEnd
@@ -426,7 +451,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="navigateOp">the navigateOp</param>
         /// <param name="outputVar">the output var produced by the subquery (ONLY if the to-End is single-valued)</param>
         /// <returns>the resulting node</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "rel"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "rel")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node RewriteNavigateOp(Node navigateOpNode, NavigateOp navigateOp, out Var outputVar)
         {
             outputVar = null;
@@ -436,7 +463,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             if (!Helper.IsAssociationType(navigateOp.Relationship))
             {
-                throw EntityUtil.NotSupported(System.Data.Entity.Resources.Strings.Cqt_RelNav_NoCompositions);
+                throw EntityUtil.NotSupported(Strings.Cqt_RelNav_NoCompositions);
             }
 
             //
@@ -444,19 +471,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // is to the 1-end of the relationship, convert this into a RelPropertyOp instead - operating on the
             // input child to the GetEntityRefOp
             //
-            if (navigateOpNode.Child0.Op.OpType == OpType.GetEntityRef &&
+            if (navigateOpNode.Child0.Op.OpType == OpType.GetEntityRef
+                &&
                 (navigateOp.ToEnd.RelationshipMultiplicity == RelationshipMultiplicity.ZeroOrOne ||
-                navigateOp.ToEnd.RelationshipMultiplicity == RelationshipMultiplicity.One))
+                 navigateOp.ToEnd.RelationshipMultiplicity == RelationshipMultiplicity.One))
             {
-                PlanCompiler.Assert(m_command.IsRelPropertyReferenced(navigateOp.RelProperty),
+                PlanCompiler.Assert(
+                    m_command.IsRelPropertyReferenced(navigateOp.RelProperty),
                     "Unreferenced rel property? " + navigateOp.RelProperty);
                 Op relPropertyOp = m_command.CreateRelPropertyOp(navigateOp.RelProperty);
-                Node relPropertyNode = m_command.CreateNode(relPropertyOp,
+                var relPropertyNode = m_command.CreateNode(
+                    relPropertyOp,
                     navigateOpNode.Child0.Child0);
                 return relPropertyNode;
             }
 
-            List<RelationshipSet> relationshipSets = GetRelationshipSets(navigateOp.Relationship);
+            var relationshipSets = GetRelationshipSets(navigateOp.Relationship);
 
             //
             // Special case: when no relationshipsets can be found. Return NULL or an empty multiset,
@@ -467,7 +497,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // 
                 // If we're navigating to the 1-end of the relationship, then simply return a null constant
                 //
-                if (navigateOp.ToEnd.RelationshipMultiplicity != RelationshipMultiplicity.Many)
+                if (navigateOp.ToEnd.RelationshipMultiplicity
+                    != RelationshipMultiplicity.Many)
                 {
                     return m_command.CreateNode(m_command.CreateNullOp(navigateOp.Type));
                 }
@@ -480,14 +511,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Build up a UNION-ALL ladder over all the relationshipsets
             // 
-            List<Node> scanTableNodes = new List<Node>();
-            List<Var> scanTableVars = new List<Var>();
-            foreach (RelationshipSet relSet in relationshipSets)
+            var scanTableNodes = new List<Node>();
+            var scanTableVars = new List<Var>();
+            foreach (var relSet in relationshipSets)
             {
-                TableMD tableMD = Command.CreateTableDefinition(relSet);
-                ScanTableOp tableOp = m_command.CreateScanTableOp(tableMD);
-                Node branchNode = m_command.CreateNode(tableOp);
-                Var branchVar = tableOp.Table.Columns[0];
+                var tableMD = Command.CreateTableDefinition(relSet);
+                var tableOp = m_command.CreateScanTableOp(tableMD);
+                var branchNode = m_command.CreateNode(tableOp);
+                var branchVar = tableOp.Table.Columns[0];
                 scanTableVars.Add(branchVar);
                 scanTableNodes.Add(branchNode);
             }
@@ -499,21 +530,25 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Now build up the predicate
             //
-            Node targetEnd = m_command.CreateNode(m_command.CreatePropertyOp(navigateOp.ToEnd),
+            var targetEnd = m_command.CreateNode(
+                m_command.CreatePropertyOp(navigateOp.ToEnd),
                 m_command.CreateNode(m_command.CreateVarRefOp(unionAllVar)));
-            Node sourceEnd = m_command.CreateNode(m_command.CreatePropertyOp(navigateOp.FromEnd),
+            var sourceEnd = m_command.CreateNode(
+                m_command.CreatePropertyOp(navigateOp.FromEnd),
                 m_command.CreateNode(m_command.CreateVarRefOp(unionAllVar)));
-            Node predicateNode = m_command.BuildComparison(OpType.EQ, navigateOpNode.Child0, sourceEnd);
-            Node filterNode = m_command.CreateNode(m_command.CreateFilterOp(),
+            var predicateNode = m_command.BuildComparison(OpType.EQ, navigateOpNode.Child0, sourceEnd);
+            var filterNode = m_command.CreateNode(
+                m_command.CreateFilterOp(),
                 unionAllNode, predicateNode);
             Var projectVar;
-            Node projectNode = m_command.BuildProject(filterNode, targetEnd, out projectVar);
+            var projectNode = m_command.BuildProject(filterNode, targetEnd, out projectVar);
 
             //
             // Finally, some magic about single-valued vs collection-valued ends
             //
             Node ret;
-            if (navigateOp.ToEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many)
+            if (navigateOp.ToEnd.RelationshipMultiplicity
+                == RelationshipMultiplicity.Many)
             {
                 ret = m_command.BuildCollect(projectNode, projectVar);
             }
@@ -525,9 +560,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             return ret;
         }
+
         #endregion
 
         #region DerefOp Rewrites
+
         /// <summary>
         /// Build up a node tree that represents the set of instances from the given table that are at least
         /// of the specified type ("ofType"). If "ofType" is NULL, then all rows are returned
@@ -540,16 +577,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>the node tree</returns>
         private Node BuildOfTypeTable(EntitySetBase entitySet, TypeUsage ofType, out Var resultVar)
         {
-            TableMD tableMetadata = Command.CreateTableDefinition(entitySet);
-            ScanTableOp tableOp = m_command.CreateScanTableOp(tableMetadata);
-            Node tableNode = m_command.CreateNode(tableOp);
-            Var tableVar = tableOp.Table.Columns[0];
+            var tableMetadata = Command.CreateTableDefinition(entitySet);
+            var tableOp = m_command.CreateScanTableOp(tableMetadata);
+            var tableNode = m_command.CreateNode(tableOp);
+            var tableVar = tableOp.Table.Columns[0];
 
             Node resultNode;
             // 
             // Build a logical "oftype" expression - simply a filter predicate
             //
-            if ((ofType != null) && !entitySet.ElementType.EdmEquals(ofType.EdmType))
+            if ((ofType != null)
+                && !entitySet.ElementType.EdmEquals(ofType.EdmType))
             {
                 m_command.BuildOfTypeTree(tableNode, tableVar, ofType, true, out resultNode, out resultVar);
             }
@@ -589,8 +627,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns>the subquery described above</returns>
         private Node RewriteDerefOp(Node derefOpNode, DerefOp derefOp, out Var outputVar)
         {
-            TypeUsage entityType = derefOp.Type;
-            List<EntitySet> targetEntitySets = GetEntitySets(entityType);
+            var entityType = derefOp.Type;
+            var targetEntitySets = GetEntitySets(entityType);
             if (targetEntitySets.Count == 0)
             {
                 // We didn't find any entityset that could match this. Simply return a null-value
@@ -598,12 +636,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 return m_command.CreateNode(m_command.CreateNullOp(entityType));
             }
 
-            List<Node> scanTableNodes = new List<Node>();
-            List<Var> scanTableVars = new List<Var>();
-            foreach (EntitySet entitySet in targetEntitySets)
+            var scanTableNodes = new List<Node>();
+            var scanTableVars = new List<Var>();
+            foreach (var entitySet in targetEntitySets)
             {
                 Var tableVar;
-                Node tableNode = BuildOfTypeTable(entitySet, entityType, out tableVar);
+                var tableNode = BuildOfTypeTable(entitySet, entityType, out tableVar);
 
                 scanTableNodes.Add(tableNode);
                 scanTableVars.Add(tableVar);
@@ -615,11 +653,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Finally build up the key comparison predicate
             //
-            Node entityRefNode = m_command.CreateNode(
+            var entityRefNode = m_command.CreateNode(
                 m_command.CreateGetEntityRefOp(derefOpNode.Child0.Op.Type),
                 m_command.CreateNode(m_command.CreateVarRefOp(unionAllVar)));
-            Node keyComparisonPred = m_command.BuildComparison(OpType.EQ, derefOpNode.Child0, entityRefNode);
-            Node filterNode = m_command.CreateNode(
+            var keyComparisonPred = m_command.BuildComparison(OpType.EQ, derefOpNode.Child0, entityRefNode);
+            var filterNode = m_command.CreateNode(
                 m_command.CreateFilterOp(),
                 unionAllNode,
                 keyComparisonPred);
@@ -627,6 +665,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             outputVar = unionAllVar;
             return filterNode;
         }
+
         #endregion
 
         #region NavigationProperty Rewrites
@@ -639,15 +678,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="relationshipSet">the relationshipset</param>
         /// <param name="targetEnd">the destination end of the relationship traversal</param>
         /// <returns>the entityset corresponding to the target end</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private static EntitySetBase FindTargetEntitySet(RelationshipSet relationshipSet, RelationshipEndMember targetEnd)
         {
             EntitySetBase entitySet = null;
 
-            AssociationSet associationSet = (AssociationSet)relationshipSet;
+            var associationSet = (AssociationSet)relationshipSet;
             // find the corresponding entityset
             entitySet = null;
-            foreach (AssociationSetEnd e in associationSet.AssociationSetEnds)
+            foreach (var e in associationSet.AssociationSetEnds)
             {
                 if (e.CorrespondingAssociationEndMember.EdmEquals(targetEnd))
                 {
@@ -655,10 +695,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     break;
                 }
             }
-            PlanCompiler.Assert(entitySet != null, "Could not find entity set for relationship set " + relationshipSet + ";association end " + targetEnd);
+            PlanCompiler.Assert(
+                entitySet != null, "Could not find entity set for relationship set " + relationshipSet + ";association end " + targetEnd);
             return entitySet;
         }
-
 
         /// <summary>
         /// Builds up a join between the relationshipset and the entityset corresponding to its toEnd. In essence,
@@ -674,26 +714,29 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="rsVar">the var representing the relationship instance ("r") in the output subquery</param>
         /// <param name="esVar">the var representing the entity instance ("e") in the output subquery</param>
         /// <returns>the join subquery described above</returns>
-        private Node BuildJoinForNavProperty(RelationshipSet relSet, RelationshipEndMember end,
+        private Node BuildJoinForNavProperty(
+            RelationshipSet relSet, RelationshipEndMember end,
             out Var rsVar, out Var esVar)
         {
-            EntitySetBase entitySet = FindTargetEntitySet(relSet, end);
+            var entitySet = FindTargetEntitySet(relSet, end);
 
             //
             // Build out the ScanTable ops for the relationshipset and the entityset. Add the 
             //
-            Node asTableNode = BuildOfTypeTable(relSet, null, out rsVar);
-            Node esTableNode = BuildOfTypeTable(entitySet, TypeHelpers.GetElementTypeUsage(end.TypeUsage), out esVar);
+            var asTableNode = BuildOfTypeTable(relSet, null, out rsVar);
+            var esTableNode = BuildOfTypeTable(entitySet, TypeHelpers.GetElementTypeUsage(end.TypeUsage), out esVar);
 
             // 
             // Build up a join between the entityset and the associationset; join on the to-end
             //
-            Node joinPredicate = m_command.BuildComparison(OpType.EQ,
+            var joinPredicate = m_command.BuildComparison(
+                OpType.EQ,
                 m_command.CreateNode(m_command.CreateGetEntityRefOp(end.TypeUsage), m_command.CreateNode(m_command.CreateVarRefOp(esVar))),
                 m_command.CreateNode(m_command.CreatePropertyOp(end), m_command.CreateNode(m_command.CreateVarRefOp(rsVar)))
                 );
 
-            Node joinNode = m_command.CreateNode(m_command.CreateInnerJoinOp(),
+            var joinNode = m_command.CreateNode(
+                m_command.CreateInnerJoinOp(),
                 asTableNode, esTableNode, joinPredicate);
 
             return joinNode;
@@ -717,13 +760,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="sourceEntityNode">entity instance that we're starting the traversal from</param>
         /// <param name="resultType">type of the target entity</param>
         /// <returns>a rewritten subtree</returns>
-        private Node RewriteManyToOneNavigationProperty(RelProperty relProperty,
+        private Node RewriteManyToOneNavigationProperty(
+            RelProperty relProperty,
             Node sourceEntityNode, TypeUsage resultType)
         {
-            RelPropertyOp relPropertyOp = m_command.CreateRelPropertyOp(relProperty);
-            Node relPropertyNode = m_command.CreateNode(relPropertyOp, sourceEntityNode);
-            DerefOp derefOp = m_command.CreateDerefOp(resultType);
-            Node derefNode = m_command.CreateNode(derefOp, relPropertyNode);
+            var relPropertyOp = m_command.CreateRelPropertyOp(relProperty);
+            var relPropertyNode = m_command.CreateNode(relPropertyOp, sourceEntityNode);
+            var derefOp = m_command.CreateDerefOp(resultType);
+            var derefNode = m_command.CreateNode(derefOp, relPropertyNode);
 
             return derefNode;
         }
@@ -739,12 +783,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="relationshipSets">the list of relevant relationshipsets</param>
         /// <param name="sourceRefNode">node tree corresponding to the source entity ref</param>
         /// <returns>the rewritten subtree</returns>
-        private Node RewriteOneToManyNavigationProperty(RelProperty relProperty,
+        private Node RewriteOneToManyNavigationProperty(
+            RelProperty relProperty,
             List<RelationshipSet> relationshipSets,
             Node sourceRefNode)
         {
             Var outputVar;
-            Node ret = RewriteFromOneNavigationProperty(relProperty, relationshipSets, sourceRefNode, out outputVar);
+            var ret = RewriteFromOneNavigationProperty(relProperty, relationshipSets, sourceRefNode, out outputVar);
 
             // The return value is a collection, but used as a property, thus it needs to be capped with a collect
             ret = m_command.BuildCollect(ret, outputVar);
@@ -764,15 +809,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="relationshipSets">the list of relevant relationshipsets</param>
         /// <param name="sourceRefNode">node tree corresponding to the source entity ref</param>
         /// <returns>the rewritten subtree</returns>
-        private Node RewriteOneToOneNavigationProperty(RelProperty relProperty,
+        private Node RewriteOneToOneNavigationProperty(
+            RelProperty relProperty,
             List<RelationshipSet> relationshipSets,
             Node sourceRefNode)
         {
             Var outputVar;
-            Node ret = RewriteFromOneNavigationProperty(relProperty, relationshipSets, sourceRefNode, out outputVar);
+            var ret = RewriteFromOneNavigationProperty(relProperty, relationshipSets, sourceRefNode, out outputVar);
 
             ret = VisitNode(ret);
-            ret = AddSubqueryToParentRelOp(outputVar, ret); 
+            ret = AddSubqueryToParentRelOp(outputVar, ret);
 
             return ret;
         }
@@ -801,21 +847,25 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="sourceRefNode">node tree corresponding to the source entity ref</param>
         /// <param name="outputVar">the var representing the output</param>
         /// <returns>the rewritten subtree</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "rel"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        private Node RewriteFromOneNavigationProperty(RelProperty relProperty, List<RelationshipSet> relationshipSets, Node sourceRefNode, out Var outputVar)
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "rel")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        private Node RewriteFromOneNavigationProperty(
+            RelProperty relProperty, List<RelationshipSet> relationshipSets, Node sourceRefNode, out Var outputVar)
         {
             PlanCompiler.Assert(relationshipSets.Count > 0, "expected at least one relationship set here");
-            PlanCompiler.Assert(relProperty.FromEnd.RelationshipMultiplicity != RelationshipMultiplicity.Many,
+            PlanCompiler.Assert(
+                relProperty.FromEnd.RelationshipMultiplicity != RelationshipMultiplicity.Many,
                 "Expected source end multiplicity to be one. Found 'Many' instead " + relProperty);
- 
-            TypeUsage entityType = TypeHelpers.GetElementTypeUsage(relProperty.ToEnd.TypeUsage);
-            List<Node> scanTableNodes = new List<Node>(relationshipSets.Count);
-            List<Var> scanTableVars = new List<Var>(relationshipSets.Count);
-            foreach (RelationshipSet r in relationshipSets)
+
+            var entityType = TypeHelpers.GetElementTypeUsage(relProperty.ToEnd.TypeUsage);
+            var scanTableNodes = new List<Node>(relationshipSets.Count);
+            var scanTableVars = new List<Var>(relationshipSets.Count);
+            foreach (var r in relationshipSets)
             {
-                EntitySetBase entitySet = FindTargetEntitySet(r, relProperty.ToEnd);
+                var entitySet = FindTargetEntitySet(r, relProperty.ToEnd);
                 Var tableVar;
-                Node tableNode = BuildOfTypeTable(entitySet, entityType, out tableVar);
+                var tableNode = BuildOfTypeTable(entitySet, entityType, out tableVar);
 
                 scanTableNodes.Add(tableNode);
                 scanTableVars.Add(tableVar);
@@ -831,15 +881,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Now build up the appropriate filter. Select out the relproperty from the other end
             //
-            RelProperty inverseRelProperty = new RelProperty(relProperty.Relationship, relProperty.ToEnd, relProperty.FromEnd);
-            PlanCompiler.Assert(m_command.IsRelPropertyReferenced(inverseRelProperty),
+            var inverseRelProperty = new RelProperty(relProperty.Relationship, relProperty.ToEnd, relProperty.FromEnd);
+            PlanCompiler.Assert(
+                m_command.IsRelPropertyReferenced(inverseRelProperty),
                 "Unreferenced rel property? " + inverseRelProperty);
-            Node inverseRelPropertyNode = m_command.CreateNode(
+            var inverseRelPropertyNode = m_command.CreateNode(
                 m_command.CreateRelPropertyOp(inverseRelProperty),
                 m_command.CreateNode(m_command.CreateVarRefOp(outputVar)));
-            Node predicateNode = m_command.BuildComparison(OpType.EQ,
+            var predicateNode = m_command.BuildComparison(
+                OpType.EQ,
                 sourceRefNode, inverseRelPropertyNode);
-            Node ret = m_command.CreateNode(m_command.CreateFilterOp(), unionAllNode, predicateNode);
+            var ret = m_command.CreateNode(m_command.CreateFilterOp(), unionAllNode, predicateNode);
 
             return ret;
         }
@@ -870,25 +922,29 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="relationshipSets">list of relevant relationshipsets</param>
         /// <param name="sourceRefNode">source ref</param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        private Node RewriteManyToManyNavigationProperty(RelProperty relProperty,
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        private Node RewriteManyToManyNavigationProperty(
+            RelProperty relProperty,
             List<RelationshipSet> relationshipSets,
             Node sourceRefNode)
         {
             PlanCompiler.Assert(relationshipSets.Count > 0, "expected at least one relationship set here");
-            PlanCompiler.Assert(relProperty.ToEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many &&
+            PlanCompiler.Assert(
+                relProperty.ToEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many &&
                 relProperty.FromEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many,
-                "Expected target end multiplicity to be 'many'. Found " + relProperty + "; multiplicity = " + relProperty.ToEnd.RelationshipMultiplicity);
+                "Expected target end multiplicity to be 'many'. Found " + relProperty + "; multiplicity = "
+                + relProperty.ToEnd.RelationshipMultiplicity);
 
             Node ret = null;
 
-            List<Node> joinNodes = new List<Node>(relationshipSets.Count);
-            List<Var> outputVars = new List<Var>(relationshipSets.Count * 2);
-            foreach (RelationshipSet r in relationshipSets)
+            var joinNodes = new List<Node>(relationshipSets.Count);
+            var outputVars = new List<Var>(relationshipSets.Count * 2);
+            foreach (var r in relationshipSets)
             {
                 Var rsVar;
                 Var esVar;
-                Node joinNode = BuildJoinForNavProperty(r, relProperty.ToEnd, out rsVar, out esVar);
+                var joinNode = BuildJoinForNavProperty(r, relProperty.ToEnd, out rsVar, out esVar);
                 joinNodes.Add(joinNode);
                 outputVars.Add(rsVar);
                 outputVars.Add(esVar);
@@ -904,17 +960,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Now build out the filterOp over the left-side var
             //
-            Node rsSourceRefNode = m_command.CreateNode(m_command.CreatePropertyOp(relProperty.FromEnd),
+            var rsSourceRefNode = m_command.CreateNode(
+                m_command.CreatePropertyOp(relProperty.FromEnd),
                 m_command.CreateNode(m_command.CreateVarRefOp(unionAllVars[0])));
-            Node predicate = m_command.BuildComparison(OpType.EQ,
+            var predicate = m_command.BuildComparison(
+                OpType.EQ,
                 sourceRefNode, rsSourceRefNode);
-            Node filterNode = m_command.CreateNode(m_command.CreateFilterOp(),
+            var filterNode = m_command.CreateNode(
+                m_command.CreateFilterOp(),
                 unionAllNode, predicate);
 
             //
             // Finally, build out a project node that only projects out the entity side
             //
-            Node projectNode = m_command.BuildProject(filterNode, new Var[] { unionAllVars[1] }, new Node[] { });
+            var projectNode = m_command.BuildProject(filterNode, new[] { unionAllVars[1] }, new Node[] { });
 
             //
             // Build a collectOp over the project node
@@ -939,16 +998,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="sourceEntityNode">the input ref to start the traversal</param>
         /// <param name="resultType">the result type of the expression</param>
         /// <returns>the rewritten tree</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "rel"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        private Node RewriteNavigationProperty(NavigationProperty navProperty,
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "rel")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        private Node RewriteNavigationProperty(
+            NavigationProperty navProperty,
             Node sourceEntityNode, TypeUsage resultType)
         {
-            RelProperty relProperty = new RelProperty(navProperty.RelationshipType, navProperty.FromEndMember, navProperty.ToEndMember);
-            PlanCompiler.Assert(m_command.IsRelPropertyReferenced(relProperty) || (relProperty.ToEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many),
+            var relProperty = new RelProperty(navProperty.RelationshipType, navProperty.FromEndMember, navProperty.ToEndMember);
+            PlanCompiler.Assert(
+                m_command.IsRelPropertyReferenced(relProperty)
+                || (relProperty.ToEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many),
                 "Unreferenced rel property? " + relProperty);
 
             // Handle N:1
-            if ((relProperty.FromEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many) &&
+            if ((relProperty.FromEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many)
+                &&
                 (relProperty.ToEnd.RelationshipMultiplicity != RelationshipMultiplicity.Many))
             {
                 return RewriteManyToOneNavigationProperty(relProperty, sourceEntityNode, resultType);
@@ -958,11 +1023,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Find the list of all relationships that could satisfy this relationship
             // If we find no matching relationship set, simply return a null node / empty collection
             //
-            List<RelationshipSet> relationshipSets = GetRelationshipSets(relProperty.Relationship);
+            var relationshipSets = GetRelationshipSets(relProperty.Relationship);
             if (relationshipSets.Count == 0)
             {
                 // return an empty set / null node
-                if (relProperty.ToEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many)
+                if (relProperty.ToEnd.RelationshipMultiplicity
+                    == RelationshipMultiplicity.Many)
                 {
                     return m_command.CreateNode(m_command.CreateNewMultisetOp(resultType));
                 }
@@ -970,15 +1036,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             // Build out a ref over the source entity 
-            Node sourceRefNode = m_command.CreateNode(
+            var sourceRefNode = m_command.CreateNode(
                 m_command.CreateGetEntityRefOp(relProperty.FromEnd.TypeUsage),
                 sourceEntityNode);
 
             // Hanlde the 1:M and N:M cases
-            if (relProperty.ToEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many)
+            if (relProperty.ToEnd.RelationshipMultiplicity
+                == RelationshipMultiplicity.Many)
             {
                 // Handle N:M
-                if (relProperty.FromEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many)
+                if (relProperty.FromEnd.RelationshipMultiplicity
+                    == RelationshipMultiplicity.Many)
                 {
                     return RewriteManyToManyNavigationProperty(relProperty, relationshipSets, sourceRefNode);
                 }
@@ -987,7 +1055,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             // Handle 1:1
-            return RewriteOneToOneNavigationProperty(relProperty, relationshipSets,sourceRefNode);
+            return RewriteOneToOneNavigationProperty(relProperty, relationshipSets, sourceRefNode);
         }
 
         #endregion
@@ -1036,7 +1104,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             VisitScalarOpDefault(op, n);
 
-            Node ret = RewriteDerefOp(n, op, out outputVar);
+            var ret = RewriteDerefOp(n, op, out outputVar);
             ret = VisitNode(ret);
 
             if (outputVar != null)
@@ -1054,18 +1122,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op">the elementOp</param>
         /// <param name="n">current subtree</param>
         /// <returns>the Var from the subquery</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ElementOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ElementOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(ElementOp op, Node n)
         {
             VisitScalarOpDefault(op, n); // default processing
 
             // get to the subquery...
-            Node subQueryRelOp = n.Child0;
-            ProjectOp projectOp = (ProjectOp)subQueryRelOp.Op;
+            var subQueryRelOp = n.Child0;
+            var projectOp = (ProjectOp)subQueryRelOp.Op;
             PlanCompiler.Assert(projectOp.Outputs.Count == 1, "input to ElementOp has more than one output var?");
-            Var projectVar = projectOp.Outputs.First;
+            var projectVar = projectOp.Outputs.First;
 
-            Node ret = AddSubqueryToParentRelOp(projectVar, subQueryRelOp);
+            var ret = AddSubqueryToParentRelOp(projectVar, subQueryRelOp);
             return ret;
         }
 
@@ -1088,19 +1158,24 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "mentityTypeScopes"), SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "mentityTypeScopes")]
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(FunctionOp op, Node n)
         {
             if (op.Function.IsFunctionImport)
             {
-                PlanCompiler.Assert(op.Function.IsComposableAttribute, "Cannot process a non-composable function inside query tree composition.");
+                PlanCompiler.Assert(
+                    op.Function.IsComposableAttribute, "Cannot process a non-composable function inside query tree composition.");
 
                 FunctionImportMapping functionImportMapping = null;
                 if (!m_command.MetadataWorkspace.TryGetFunctionImportMapping(op.Function, out functionImportMapping))
                 {
-                    throw EntityUtil.Metadata(System.Data.Entity.Resources.Strings.EntityClient_UnmappedFunctionImport(op.Function.FullName));
+                    throw EntityUtil.Metadata(Strings.EntityClient_UnmappedFunctionImport(op.Function.FullName));
                 }
-                PlanCompiler.Assert(functionImportMapping is FunctionImportMappingComposable, "Composable function import must have corresponding mapping.");
+                PlanCompiler.Assert(
+                    functionImportMapping is FunctionImportMappingComposable, "Composable function import must have corresponding mapping.");
                 var functionImportMappingComposable = (FunctionImportMappingComposable)functionImportMapping;
 
                 // Visit children (function call arguments) before processing the function view.
@@ -1113,20 +1188,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 VisitChildren(n);
 
                 // Get the mapping view of the function.
-                Node ret = functionImportMappingComposable.GetInternalTree(m_command, n.Children);
-                
+                var ret = functionImportMappingComposable.GetInternalTree(m_command, n.Children);
+
                 // Push the entity type scope, if any, before processing the view.
                 if (op.Function.EntitySet != null)
                 {
                     m_entityTypeScopes.Push(op.Function.EntitySet);
                     AddEntitySetReference(op.Function.EntitySet);
-                    PlanCompiler.Assert(functionImportMappingComposable.TvfKeys != null && functionImportMappingComposable.TvfKeys.Length > 0, "Function imports returning entities must have inferred keys.");
+                    PlanCompiler.Assert(
+                        functionImportMappingComposable.TvfKeys != null && functionImportMappingComposable.TvfKeys.Length > 0,
+                        "Function imports returning entities must have inferred keys.");
                     if (!m_tvfResultKeys.ContainsKey(functionImportMappingComposable.TargetFunction))
                     {
                         m_tvfResultKeys.Add(functionImportMappingComposable.TargetFunction, functionImportMappingComposable.TvfKeys);
                     }
                 }
-                
+
                 // Rerun the processor over the resulting subtree.
                 ret = VisitNode(ret);
 
@@ -1144,7 +1221,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 PlanCompiler.Assert(op.Function.EntitySet == null, "Entity type scope is not supported on functions that aren't mapped.");
 
                 // If this is TVF or a collection aggregate, function NestPullUp and Normalization are needed.
-                if (TypeSemantics.IsCollectionType(op.Type) || PlanCompilerUtil.IsCollectionAggregateFunction(op, n))
+                if (TypeSemantics.IsCollectionType(op.Type)
+                    || PlanCompilerUtil.IsCollectionAggregateFunction(op, n))
                 {
                     m_compilerState.MarkPhaseAsNeeded(PlanCompilerPhase.NestPullup);
                     m_compilerState.MarkPhaseAsNeeded(PlanCompilerPhase.Normalization);
@@ -1198,7 +1276,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="n"></param>
         private void ProcessConditionalOp(ConditionalOp op, Node n)
         {
-            if (op.OpType == OpType.IsNull && TypeSemantics.IsRowType(n.Child0.Op.Type) || TypeSemantics.IsComplexType(n.Child0.Op.Type))
+            if (op.OpType == OpType.IsNull && TypeSemantics.IsRowType(n.Child0.Op.Type)
+                || TypeSemantics.IsComplexType(n.Child0.Op.Type))
             {
                 StructuredTypeNullabilityAnalyzer.MarkAsNeedingNullSentinel(m_typesNeedingNullSentinel, n.Child0.Op.Type);
             }
@@ -1212,29 +1291,31 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op">the Nav PropertyOp</param>
         private static void ValidateNavPropertyOp(PropertyOp op)
         {
-            NavigationProperty navProperty = (NavigationProperty)op.PropertyInfo;
+            var navProperty = (NavigationProperty)op.PropertyInfo;
 
             //
             // If the result of the expanded form of the navigation property is not compatible with
             // the declared type of the property, then the navigation property is invalid in the
             // context of this command tree's metadata workspace.
             //
-            TypeUsage resultType = navProperty.ToEndMember.TypeUsage;
+            var resultType = navProperty.ToEndMember.TypeUsage;
             if (TypeSemantics.IsReferenceType(resultType))
             {
                 resultType = TypeHelpers.GetElementTypeUsage(resultType);
             }
-            if (navProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many)
+            if (navProperty.ToEndMember.RelationshipMultiplicity
+                == RelationshipMultiplicity.Many)
             {
                 resultType = TypeUsage.Create(resultType.EdmType.GetCollectionType());
             }
             if (!TypeSemantics.IsStructurallyEqualOrPromotableTo(resultType, op.Type))
             {
-                throw EntityUtil.Metadata(System.Data.Entity.Resources.Strings.EntityClient_IncompatibleNavigationPropertyResult(
+                throw EntityUtil.Metadata(
+                    Strings.EntityClient_IncompatibleNavigationPropertyResult(
                         navProperty.DeclaringType.FullName,
                         navProperty.Name
-                    )
-                );
+                        )
+                    );
             }
         }
 
@@ -1257,14 +1338,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // for join elimination. 
             // The original out-of-order visitation was put in place to work around a bug that has been fixed.
             //
-            bool visitChildLater = IsNavigationPropertyOverVarRef(n.Child0);
+            var visitChildLater = IsNavigationPropertyOverVarRef(n.Child0);
             if (!visitChildLater)
             {
                 VisitScalarOpDefault(op, n);
             }
 
-            NavigationProperty navProperty = (NavigationProperty)op.PropertyInfo;
-            Node ret = RewriteNavigationProperty(navProperty, n.Child0, op.Type);
+            var navProperty = (NavigationProperty)op.PropertyInfo;
+            var ret = RewriteNavigationProperty(navProperty, n.Child0, op.Type);
             ret = VisitNode(ret);
 
             return ret;
@@ -1277,13 +1358,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         private static bool IsNavigationPropertyOverVarRef(Node n)
         {
-            if (n.Op.OpType != OpType.Property || (!Helper.IsNavigationProperty(((PropertyOp)n.Op).PropertyInfo)))
+            if (n.Op.OpType != OpType.Property
+                || (!Helper.IsNavigationProperty(((PropertyOp)n.Op).PropertyInfo)))
             {
                 return false;
             }
-            
-            Node currentNode = n.Child0;
-            if (currentNode.Op.OpType == OpType.SoftCast)
+
+            var currentNode = n.Child0;
+            if (currentNode.Op.OpType
+                == OpType.SoftCast)
             {
                 currentNode = currentNode.Child0;
             }
@@ -1376,7 +1459,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // For IsOfOnly(abstract type), suppress DiscriminatorMaps since no explicit type id is available for
             // abstract types.
-            if (op.IsOfOnly && op.IsOfType.EdmType.Abstract)
+            if (op.IsOfOnly
+                && op.IsOfType.EdmType.Abstract)
             {
                 m_suppressDiscriminatorMaps = true;
             }
@@ -1405,11 +1489,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             // Count sub types
-            int subTypeCount = 0;
-            foreach (EdmType subType in MetadataHelper.GetTypeAndSubtypesOf(testType, m_command.MetadataWorkspace, true /*includeAbstractTypes*/))
+            var subTypeCount = 0;
+            foreach (
+                var subType in MetadataHelper.GetTypeAndSubtypesOf(testType, m_command.MetadataWorkspace, true /*includeAbstractTypes*/))
             {
                 subTypeCount++;
-                if (2 == subTypeCount) { break; }
+                if (2 == subTypeCount)
+                {
+                    break;
+                }
             }
 
             return 1 == subTypeCount; // no children types
@@ -1437,31 +1525,31 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private Node RewriteIsOfAsIsNull(IsOfOp op, Node n)
         {
             // construct 'R is null' predicate
-            ConditionalOp isNullOp = m_command.CreateConditionalOp(OpType.IsNull);
-            Node isNullNode = m_command.CreateNode(isNullOp, n.Child0);
+            var isNullOp = m_command.CreateConditionalOp(OpType.IsNull);
+            var isNullNode = m_command.CreateNode(isNullOp, n.Child0);
 
             // Process the IsNull node to make sure a null sentinel gets added if needed
             ProcessConditionalOp(isNullOp, isNullNode);
 
             // construct 'not (R is null)' predicate
-            ConditionalOp notOp = m_command.CreateConditionalOp(OpType.Not);
-            Node notNode = m_command.CreateNode(notOp, isNullNode);
+            var notOp = m_command.CreateConditionalOp(OpType.Not);
+            var notNode = m_command.CreateNode(notOp, isNullNode);
 
             // construct 'True' result
-            ConstantBaseOp trueOp = m_command.CreateConstantOp(op.Type, true);
-            Node trueNode = m_command.CreateNode(trueOp);
+            var trueOp = m_command.CreateConstantOp(op.Type, true);
+            var trueNode = m_command.CreateNode(trueOp);
 
             // construct 'null' default result
-            NullOp nullOp = m_command.CreateNullOp(op.Type);
-            Node nullNode = m_command.CreateNode(nullOp);
+            var nullOp = m_command.CreateNullOp(op.Type);
+            var nullNode = m_command.CreateNode(nullOp);
 
             // create case statement
-            CaseOp caseOp = m_command.CreateCaseOp(op.Type);
-            Node caseNode = m_command.CreateNode(caseOp, notNode, trueNode, nullNode);
+            var caseOp = m_command.CreateCaseOp(op.Type);
+            var caseNode = m_command.CreateNode(caseOp, notNode, trueNode, nullNode);
 
             // create 'case = true' operator
-            ComparisonOp equalsOp = m_command.CreateComparisonOp(OpType.EQ);
-            Node equalsNode = m_command.CreateNode(equalsOp, caseNode, trueNode);
+            var equalsOp = m_command.CreateComparisonOp(OpType.EQ);
+            var equalsNode = m_command.CreateNode(equalsOp, caseNode, trueNode);
 
             return equalsNode;
         }
@@ -1487,7 +1575,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             VisitScalarOpDefault(op, n);
             Var outputVar;
-            Node ret = RewriteNavigateOp(n, op, out outputVar);
+            var ret = RewriteNavigateOp(n, op, out outputVar);
             ret = VisitNode(ret);
 
             // Move subquery to parent relop if necessary
@@ -1519,11 +1607,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         private static RelationshipSet FindRelationshipSet(EntitySetBase entitySet, RelProperty relProperty)
         {
-            foreach (EntitySetBase es in entitySet.EntityContainer.BaseEntitySets)
+            foreach (var es in entitySet.EntityContainer.BaseEntitySets)
             {
-                AssociationSet rs = es as AssociationSet;
+                var rs = es as AssociationSet;
                 if (rs != null &&
-                    rs.ElementType.EdmEquals(relProperty.Relationship) &&
+                    rs.ElementType.EdmEquals(relProperty.Relationship)
+                    &&
                     rs.AssociationSetEnds[relProperty.FromEnd.Identity].EntitySet.EdmEquals(entitySet))
                 {
                     return rs;
@@ -1540,10 +1629,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="type">the type in question</param>
         /// <param name="member">the member to lookup</param>
         /// <returns>the position of the member in the type (0-based)</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private static int FindPosition(EdmType type, EdmMember member)
         {
-            int pos = 0;
+            var pos = 0;
             foreach (EdmMember m in TypeHelpers.GetAllStructuralMembers(type))
             {
                 if (m.EdmEquals(member))
@@ -1570,25 +1660,29 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op">the entity constructor op</param>
         /// <param name="n">the corresponding subtree</param>
         /// <returns>the key expression</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "OpType"), SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "BuildKeyExpression"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "OpType")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "BuildKeyExpression")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node BuildKeyExpressionForNewEntityOp(Op op, Node n)
         {
-            PlanCompiler.Assert(op.OpType == OpType.NewEntity || op.OpType == OpType.DiscriminatedNewEntity,
+            PlanCompiler.Assert(
+                op.OpType == OpType.NewEntity || op.OpType == OpType.DiscriminatedNewEntity,
                 "BuildKeyExpression: Unexpected OpType:" + op.OpType);
-            int offset = (op.OpType == OpType.DiscriminatedNewEntity) ? 1 : 0;
-            EntityTypeBase entityType = (EntityTypeBase)op.Type.EdmType;
-            List<Node> keyFields = new List<Node>();
-            List<KeyValuePair<string, TypeUsage>> keyFieldTypes = new List<KeyValuePair<string, TypeUsage>>();
-            foreach (EdmMember k in entityType.KeyMembers)
+            var offset = (op.OpType == OpType.DiscriminatedNewEntity) ? 1 : 0;
+            var entityType = (EntityTypeBase)op.Type.EdmType;
+            var keyFields = new List<Node>();
+            var keyFieldTypes = new List<KeyValuePair<string, TypeUsage>>();
+            foreach (var k in entityType.KeyMembers)
             {
-                int pos = FindPosition(entityType, k) + offset;
+                var pos = FindPosition(entityType, k) + offset;
                 PlanCompiler.Assert(n.Children.Count > pos, "invalid position " + pos + "; total count = " + n.Children.Count);
                 keyFields.Add(n.Children[pos]);
                 keyFieldTypes.Add(new KeyValuePair<string, TypeUsage>(k.Name, k.TypeUsage));
             }
-            TypeUsage keyExprType = TypeHelpers.CreateRowTypeUsage(keyFieldTypes);
-            NewRecordOp keyOp = m_command.CreateNewRecordOp(keyExprType);
-            Node keyNode = m_command.CreateNode(keyOp, keyFields);
+            var keyExprType = TypeHelpers.CreateRowTypeUsage(keyFieldTypes);
+            var keyOp = m_command.CreateNewRecordOp(keyExprType);
+            var keyNode = m_command.CreateNode(keyOp, keyFields);
             return keyNode;
         }
 
@@ -1615,8 +1709,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="relProperty">the rel-property we're trying to build up</param>
         /// <param name="keyExpr">the "key" of the entity instance</param>
         /// <returns>the rel-property expression</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        private Node BuildRelPropertyExpression(EntitySetBase entitySet, RelProperty relProperty,
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        private Node BuildRelPropertyExpression(
+            EntitySetBase entitySet, RelProperty relProperty,
             Node keyExpr)
         {
             //
@@ -1628,31 +1724,34 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Find the relationship set corresponding to this entityset (and relProperty)
             // Return a null ref, if we can't find one
             //
-            RelationshipSet relSet = FindRelationshipSet(entitySet, relProperty);
+            var relSet = FindRelationshipSet(entitySet, relProperty);
             if (relSet == null)
             {
                 return m_command.CreateNode(m_command.CreateNullOp(relProperty.ToEnd.TypeUsage));
             }
 
-            ScanTableOp scanTableOp = m_command.CreateScanTableOp(Command.CreateTableDefinition(relSet));
-            PlanCompiler.Assert(scanTableOp.Table.Columns.Count == 1,
+            var scanTableOp = m_command.CreateScanTableOp(Command.CreateTableDefinition(relSet));
+            PlanCompiler.Assert(
+                scanTableOp.Table.Columns.Count == 1,
                 "Unexpected column count for table:" + scanTableOp.Table.TableMetadata.Extent + "=" + scanTableOp.Table.Columns.Count);
-            Var scanTableVar = scanTableOp.Table.Columns[0];
-            Node scanNode = m_command.CreateNode(scanTableOp);
+            var scanTableVar = scanTableOp.Table.Columns[0];
+            var scanNode = m_command.CreateNode(scanTableOp);
 
-            Node sourceEndNode = m_command.CreateNode(
+            var sourceEndNode = m_command.CreateNode(
                 m_command.CreatePropertyOp(relProperty.FromEnd),
                 m_command.CreateNode(m_command.CreateVarRefOp(scanTableVar)));
-            Node predicateNode = m_command.BuildComparison(OpType.EQ,
+            var predicateNode = m_command.BuildComparison(
+                OpType.EQ,
                 keyExpr,
                 m_command.CreateNode(m_command.CreateGetRefKeyOp(keyExpr.Op.Type), sourceEndNode));
-            Node filterNode = m_command.CreateNode(m_command.CreateFilterOp(),
+            var filterNode = m_command.CreateNode(
+                m_command.CreateFilterOp(),
                 scanNode, predicateNode);
 
             //
             // Process the node, and then add this as a subquery to the parent relop
             //
-            Node ret = VisitNode(filterNode);
+            var ret = VisitNode(filterNode);
             ret = AddSubqueryToParentRelOp(scanTableVar, ret);
 
             //
@@ -1678,12 +1777,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="prebuiltExpressions">the prebuilt rel-property expressions</param>
         /// <param name="keyExpr">the key of the entity instance</param>
         /// <returns>a list of rel-property expressions (lines up 1-1 with 'relPropertyList')</returns>
-        private IEnumerable<Node> BuildAllRelPropertyExpressions(EntitySetBase entitySet,
+        private IEnumerable<Node> BuildAllRelPropertyExpressions(
+            EntitySetBase entitySet,
             List<RelProperty> relPropertyList,
             Dictionary<RelProperty, Node> prebuiltExpressions,
             Node keyExpr)
         {
-            foreach (RelProperty r in relPropertyList)
+            foreach (var r in relPropertyList)
             {
                 Node relPropNode;
                 if (!prebuiltExpressions.TryGetValue(r, out relPropNode))
@@ -1701,18 +1801,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op">the NewEntityOp</param>
         /// <param name="n">the node tree corresponding to the op</param>
         /// <returns>rewritten tree</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(NewEntityOp op, Node n)
         {
             // If this is not an entity type constructor, or it's been already scoped, 
             // then just do the default processing.
-            if (op.Scoped || op.Type.EdmType.BuiltInTypeKind != BuiltInTypeKind.EntityType)
+            if (op.Scoped
+                || op.Type.EdmType.BuiltInTypeKind != BuiltInTypeKind.EntityType)
             {
                 return base.Visit(op, n);
             }
 
-            EntityType entityType = (EntityType)op.Type.EdmType;
-            EntitySet scope = GetCurrentEntityTypeScope();
+            var entityType = (EntityType)op.Type.EdmType;
+            var scope = GetCurrentEntityTypeScope();
 
             List<RelProperty> relProperties;
             List<Node> newChildren;
@@ -1725,9 +1827,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // If this Entity constructor is not within a view then there should not be any RelProps
                 // specified on the NewEntityOp - the eSQL WITH RELATIONSHIP clauses that would cause such
                 // RelProps to be added is only enabled when parsing in the user or generated view mode.
-                PlanCompiler.Assert(op.RelationshipProperties == null ||
-                                    op.RelationshipProperties.Count == 0,
-                                    "Related Entities cannot be specified for Entity constructors that are not part of the Query Mapping View for an Entity Set.");
+                PlanCompiler.Assert(
+                    op.RelationshipProperties == null ||
+                    op.RelationshipProperties.Count == 0,
+                    "Related Entities cannot be specified for Entity constructors that are not part of the Query Mapping View for an Entity Set.");
 
                 // Default processing.
                 VisitScalarOpDefault(op, n);
@@ -1749,9 +1852,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
                 // Remove pre-built rel property expressions that would not be needed to avoid 
                 // unnecessary adding references to types and entity sets during default processing
-                int j = op.RelationshipProperties.Count - 1;
-                List<RelProperty> copiedRelPropList = new List<RelProperty>(op.RelationshipProperties);
-                for (int i = n.Children.Count - 1; i >= entityType.Properties.Count; i--, j--)
+                var j = op.RelationshipProperties.Count - 1;
+                var copiedRelPropList = new List<RelProperty>(op.RelationshipProperties);
+                for (var i = n.Children.Count - 1; i >= entityType.Properties.Count; i--, j--)
                 {
                     if (!relProperties.Contains(op.RelationshipProperties[j]))
                     {
@@ -1767,14 +1870,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // Ok, now, I have to build out some relationship properties that 
                 // haven't been specified
                 //
-                Node keyExpr = BuildKeyExpressionForNewEntityOp(op, n);
+                var keyExpr = BuildKeyExpressionForNewEntityOp(op, n);
 
                 // 
                 // Find the list of rel properties that have already been specified
                 // 
-                Dictionary<RelProperty, Node> prebuiltRelPropertyExprs = new Dictionary<RelProperty, Node>();
+                var prebuiltRelPropertyExprs = new Dictionary<RelProperty, Node>();
                 j = 0;
-                for (int i = entityType.Properties.Count; i < n.Children.Count; i++, j++)
+                for (var i = entityType.Properties.Count; i < n.Children.Count; i++, j++)
                 {
                     prebuiltRelPropertyExprs[copiedRelPropList[j]] = n.Children[i];
                 }
@@ -1783,12 +1886,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // Next, rebuild the list of children - includes expressions for each rel property
                 //
                 newChildren = new List<Node>();
-                for (int i = 0; i < entityType.Properties.Count; i++)
+                for (var i = 0; i < entityType.Properties.Count; i++)
                 {
                     newChildren.Add(n.Children[i]);
                 }
 
-                foreach (Node relPropNode in BuildAllRelPropertyExpressions(scope, relProperties, prebuiltRelPropertyExprs, keyExpr))
+                foreach (var relPropNode in BuildAllRelPropertyExpressions(scope, relProperties, prebuiltRelPropertyExprs, keyExpr))
                 {
                     newChildren.Add(relPropNode);
                 }
@@ -1798,7 +1901,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Finally, build out the newOp.
             //
             Op newEntityOp = m_command.CreateScopedNewEntityOp(op.Type, relProperties, scope);
-            Node newNode = m_command.CreateNode(newEntityOp, newChildren);
+            var newNode = m_command.CreateNode(newEntityOp, newChildren);
             return newNode;
         }
 
@@ -1808,8 +1911,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         public override Node Visit(DiscriminatedNewEntityOp op, Node n)
         {
-            HashSet<RelProperty> relPropertyHashSet = new HashSet<RelProperty>();
-            List<RelProperty> relProperties = new List<RelProperty>();
+            var relPropertyHashSet = new HashSet<RelProperty>();
+            var relProperties = new List<RelProperty>();
             //
             // add references to each type produced by this node
             // Also, get the set of rel-properties for each of the types
@@ -1818,7 +1921,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 EntityTypeBase entityType = discriminatorTypePair.Value;
                 AddTypeReference(TypeUsage.Create(entityType));
-                foreach (RelProperty relProperty in m_relPropertyHelper.GetRelProperties(entityType))
+                foreach (var relProperty in m_relPropertyHelper.GetRelProperties(entityType))
                 {
                     relPropertyHashSet.Add(relProperty);
                 }
@@ -1831,18 +1934,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
 
             // first, build the key expression
-            Node keyExpr = BuildKeyExpressionForNewEntityOp(op, n);
+            var keyExpr = BuildKeyExpressionForNewEntityOp(op, n);
 
-            List<Node> newChildren = new List<Node>();
-            int firstRelPropertyNodeOffset = n.Children.Count - op.RelationshipProperties.Count;
-            for (int i = 0; i < firstRelPropertyNodeOffset; i++)
+            var newChildren = new List<Node>();
+            var firstRelPropertyNodeOffset = n.Children.Count - op.RelationshipProperties.Count;
+            for (var i = 0; i < firstRelPropertyNodeOffset; i++)
             {
                 newChildren.Add(n.Children[i]);
             }
             // 
             // Find the list of rel properties that have already been specified
             // 
-            Dictionary<RelProperty, Node> prebuiltRelPropertyExprs = new Dictionary<RelProperty, Node>();
+            var prebuiltRelPropertyExprs = new Dictionary<RelProperty, Node>();
             for (int i = firstRelPropertyNodeOffset, j = 0; i < n.Children.Count; i++, j++)
             {
                 prebuiltRelPropertyExprs[op.RelationshipProperties[j]] = n.Children[i];
@@ -1851,13 +1954,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Fill in the missing pieces
             //
-            foreach (Node relPropNode in BuildAllRelPropertyExpressions(op.EntitySet, relProperties, prebuiltRelPropertyExprs, keyExpr))
+            foreach (var relPropNode in BuildAllRelPropertyExpressions(op.EntitySet, relProperties, prebuiltRelPropertyExprs, keyExpr))
             {
                 newChildren.Add(relPropNode);
             }
 
             Op newEntityOp = m_command.CreateDiscriminatedNewEntityOp(op.Type, op.DiscriminatorMap, op.EntitySet, relProperties);
-            Node newNode = m_command.CreateNode(newEntityOp, newChildren);
+            var newNode = m_command.CreateNode(newEntityOp, newChildren);
 
             return newNode;
         }
@@ -1899,7 +2002,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             Node resultNode = null;
             Var resultVar = null;
 
-            CollectionType collectionType = TypeHelpers.GetEdmType<CollectionType>(op.Type);
+            var collectionType = TypeHelpers.GetEdmType<CollectionType>(op.Type);
 
             // 
             // Empty multiset constructors are simply converted into 
@@ -1907,65 +2010,66 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // 
             if (!n.HasChild0)
             {
-                Node singleRowTableNode = m_command.CreateNode(m_command.CreateSingleRowTableOp());
-                Node filterNode = m_command.CreateNode(m_command.CreateFilterOp(),
+                var singleRowTableNode = m_command.CreateNode(m_command.CreateSingleRowTableOp());
+                var filterNode = m_command.CreateNode(
+                    m_command.CreateFilterOp(),
                     singleRowTableNode,
                     m_command.CreateNode(m_command.CreateFalseOp()));
-                Node fakeChild = m_command.CreateNode(m_command.CreateNullOp(collectionType.TypeUsage));
+                var fakeChild = m_command.CreateNode(m_command.CreateNullOp(collectionType.TypeUsage));
                 Var newVar;
-                Node projectNode = m_command.BuildProject(filterNode, fakeChild, out newVar);
+                var projectNode = m_command.BuildProject(filterNode, fakeChild, out newVar);
 
                 resultNode = projectNode;
                 resultVar = newVar;
             }
 
-            //
-            // Multiset constructors with only one elment or with multiple elments all of 
-            //   which are constants or nulls are converted into: 
-            //    
-            // UnionAll(Project(SingleRowTable, e1), Project(SingleRowTable, e2), ...)
-            // 
-            // The degenerate case when the collection has only one element does not require an
-            // outer unionAll node
-            //
-            else if (n.Children.Count == 1 || AreAllConstantsOrNulls(n.Children))
+                //
+                // Multiset constructors with only one elment or with multiple elments all of 
+                //   which are constants or nulls are converted into: 
+                //    
+                // UnionAll(Project(SingleRowTable, e1), Project(SingleRowTable, e2), ...)
+                // 
+                // The degenerate case when the collection has only one element does not require an
+                // outer unionAll node
+                //
+            else if (n.Children.Count == 1
+                     || AreAllConstantsOrNulls(n.Children))
             {
-                List<Node> inputNodes = new List<Node>();
-                List<Var> inputVars = new List<Var>();
-                foreach (Node chi in n.Children)
+                var inputNodes = new List<Node>();
+                var inputVars = new List<Var>();
+                foreach (var chi in n.Children)
                 {
-                    Node singleRowTableNode = m_command.CreateNode(m_command.CreateSingleRowTableOp());
+                    var singleRowTableNode = m_command.CreateNode(m_command.CreateSingleRowTableOp());
                     Var newVar;
-                    Node projectNode = m_command.BuildProject(singleRowTableNode, chi, out newVar);
+                    var projectNode = m_command.BuildProject(singleRowTableNode, chi, out newVar);
                     inputNodes.Add(projectNode);
                     inputVars.Add(newVar);
                 }
                 // Build the union-all ladder
                 m_command.BuildUnionAllLadder(inputNodes, inputVars, out resultNode, out resultVar);
-
             }
-            //
-            //   All other cases:
-            //
-            //  select case when d = 0 then x when d = 1 then y else z end
-            //  from (  select 0 as d from single_row_table
-            //          union all 
-            //          select 1 as d from single_row_table
-            //          union all
-            //          select 2 as d  from single_row_table )
-            //
+                //
+                //   All other cases:
+                //
+                //  select case when d = 0 then x when d = 1 then y else z end
+                //  from (  select 0 as d from single_row_table
+                //          union all 
+                //          select 1 as d from single_row_table
+                //          union all
+                //          select 2 as d  from single_row_table )
+                //
             else
             {
-                List<Node> inputNodes = new List<Node>();
-                List<Var> inputVars = new List<Var>();
+                var inputNodes = new List<Node>();
+                var inputVars = new List<Var>();
                 //Create the union all lather first
-                for (int i = 0; i < n.Children.Count; i++)
+                for (var i = 0; i < n.Children.Count; i++)
                 {
-                    Node singleRowTableNode = m_command.CreateNode(m_command.CreateSingleRowTableOp());
+                    var singleRowTableNode = m_command.CreateNode(m_command.CreateSingleRowTableOp());
                     // the discriminator for this branch
-                    Node discriminatorNode = m_command.CreateNode(m_command.CreateInternalConstantOp(m_command.IntegerType, i));
+                    var discriminatorNode = m_command.CreateNode(m_command.CreateInternalConstantOp(m_command.IntegerType, i));
                     Var newVar;
-                    Node projectNode = m_command.BuildProject(singleRowTableNode, discriminatorNode, out newVar);
+                    var projectNode = m_command.BuildProject(singleRowTableNode, discriminatorNode, out newVar);
 
                     inputNodes.Add(projectNode);
                     inputVars.Add(newVar);
@@ -1974,14 +2078,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 m_command.BuildUnionAllLadder(inputNodes, inputVars, out resultNode, out resultVar);
 
                 //Now create the case statement for the projection
-                List<Node> caseArgNodes = new List<Node>(n.Children.Count * 2 + 1);
-                for (int i = 0; i < n.Children.Count; i++)
+                var caseArgNodes = new List<Node>(n.Children.Count * 2 + 1);
+                for (var i = 0; i < n.Children.Count; i++)
                 {
                     //For all but the last we need a when
                     if (i != (n.Children.Count - 1))
                     {
-                        ComparisonOp equalsOp = m_command.CreateComparisonOp(OpType.EQ);
-                        Node whenNode = m_command.CreateNode(equalsOp,
+                        var equalsOp = m_command.CreateComparisonOp(OpType.EQ);
+                        var whenNode = m_command.CreateNode(
+                            equalsOp,
                             m_command.CreateNode(m_command.CreateVarRefOp(resultVar)),
                             m_command.CreateNode(
                                 m_command.CreateConstantOp(m_command.IntegerType, i)));
@@ -1993,17 +2098,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
 
                 //Create the project
-                Node caseNode = m_command.CreateNode(m_command.CreateCaseOp(collectionType.TypeUsage), caseArgNodes);
+                var caseNode = m_command.CreateNode(m_command.CreateCaseOp(collectionType.TypeUsage), caseArgNodes);
                 resultNode = m_command.BuildProject(resultNode, caseNode, out resultVar);
             }
 
             // So, I've finally built up a complex query corresponding to the constructor.
             // Now, cap this with a physicalprojectOp, and then with a CollectOp
-            PhysicalProjectOp physicalProjectOp = m_command.CreatePhysicalProjectOp(resultVar);
-            Node physicalProjectNode = m_command.CreateNode(physicalProjectOp, resultNode);
+            var physicalProjectOp = m_command.CreatePhysicalProjectOp(resultVar);
+            var physicalProjectNode = m_command.CreateNode(physicalProjectOp, resultNode);
 
-            CollectOp collectOp = m_command.CreateCollectOp(op.Type);
-            Node collectNode = m_command.CreateNode(collectOp, physicalProjectNode);
+            var collectOp = m_command.CreateCollectOp(op.Type);
+            var collectNode = m_command.CreateNode(collectOp, physicalProjectNode);
 
             return VisitNode(collectNode);
         }
@@ -2015,9 +2120,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         private static bool AreAllConstantsOrNulls(List<Node> nodes)
         {
-            foreach (Node node in nodes)
+            foreach (var node in nodes)
             {
-                if (node.Op.OpType != OpType.Constant && node.Op.OpType != OpType.Null)
+                if (node.Op.OpType != OpType.Constant
+                    && node.Op.OpType != OpType.Null)
                 {
                     return false;
                 }
@@ -2045,14 +2151,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private void HandleTableOpMetadata(ScanTableBaseOp op)
         {
             // add to the list of referenced entitysets
-            EntitySet entitySet = op.Table.TableMetadata.Extent as EntitySet;
+            var entitySet = op.Table.TableMetadata.Extent as EntitySet;
             if (entitySet != null)
             {
                 // If entitySet is an association set, the appropriate entity set references will be registered inside Visit(RefOp, Node).
                 AddEntitySetReference(entitySet);
             }
 
-            TypeUsage elementType = TypeUsage.Create(op.Table.TableMetadata.Extent.ElementType);
+            var elementType = TypeUsage.Create(op.Table.TableMetadata.Extent.ElementType);
             // add to the list of structured types
             AddTypeReference(elementType);
         }
@@ -2080,7 +2186,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     if the scan target is expanded to a view that renders the type filter superfluous.
         /// </param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScanTableOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScanTableOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node ProcessScanTable(Node scanTableNode, ScanTableOp scanTableOp, ref IsOfOp typeFilter)
         {
             HandleTableOpMetadata(scanTableOp);
@@ -2093,7 +2201,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Get simple things out of the way. If we're dealing with an S-space entityset, 
             // simply return the node
             // 
-            if (scanTableOp.Table.TableMetadata.Extent.EntityContainer.DataSpace == DataSpace.SSpace)
+            if (scanTableOp.Table.TableMetadata.Extent.EntityContainer.DataSpace
+                == DataSpace.SSpace)
             {
                 return scanTableNode;
             }
@@ -2127,11 +2236,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "mentityTypeScopes"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "mentityTypeScopes")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(ScanViewOp op, Node n)
         {
-            bool entityTypeScopePushed = false;
-            if (op.Table.TableMetadata.Extent.BuiltInTypeKind == BuiltInTypeKind.EntitySet)
+            var entityTypeScopePushed = false;
+            if (op.Table.TableMetadata.Extent.BuiltInTypeKind
+                == BuiltInTypeKind.EntitySet)
             {
                 m_entityTypeScopes.Push((EntitySet)op.Table.TableMetadata.Extent);
                 entityTypeScopePushed = true;
@@ -2161,7 +2273,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         protected override Node VisitJoinOp(JoinBaseOp op, Node n)
         {
             // Only LeftOuterJoin and InnerJoin are handled by JoinElimination
-            if (op.OpType == OpType.InnerJoin || op.OpType == OpType.LeftOuterJoin)
+            if (op.OpType == OpType.InnerJoin
+                || op.OpType == OpType.LeftOuterJoin)
             {
                 m_compilerState.MarkPhaseAsNeeded(PlanCompilerPhase.JoinElimination);
             }
@@ -2195,13 +2308,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// We don't yet handle the TopN variant
         /// </summary>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SortOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SortOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private bool IsSortUnnecessary()
         {
-            Node ancestor = m_ancestors.Peek();
+            var ancestor = m_ancestors.Peek();
             PlanCompiler.Assert(ancestor != null, "unexpected SortOp as root node?");
 
-            if (ancestor.Op.OpType == OpType.PhysicalProject)
+            if (ancestor.Op.OpType
+                == OpType.PhysicalProject)
             {
                 return false;
             }
@@ -2223,7 +2339,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override Node Visit(SortOp op, Node n)
         {
             // can I eliminate this sort
-            if (this.IsSortUnnecessary())
+            if (IsSortUnnecessary())
             {
                 return VisitNode(n.Child0);
             }
@@ -2246,7 +2362,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // 
             // Is the predicate an IsOf predicate
             //
-            IsOfOp isOfOp = n.Child1.Op as IsOfOp;
+            var isOfOp = n.Child1.Op as IsOfOp;
             if (isOfOp == null)
             {
                 return false;
@@ -2254,16 +2370,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Is the Input RelOp a ScanTableOp
             //
-            ScanTableOp scanTableOp = n.Child0.Op as ScanTableOp;
-            if (scanTableOp == null || scanTableOp.Table.Columns.Count != 1)
+            var scanTableOp = n.Child0.Op as ScanTableOp;
+            if (scanTableOp == null
+                || scanTableOp.Table.Columns.Count != 1)
             {
                 return false;
             }
             //
             // Is the argument to the IsOfOp the single column of the table?
             //
-            VarRefOp varRefOp = n.Child1.Child0.Op as VarRefOp;
-            if (varRefOp == null || varRefOp.Var != scanTableOp.Table.Columns[0])
+            var varRefOp = n.Child1.Child0.Op as VarRefOp;
+            if (varRefOp == null
+                || varRefOp.Var != scanTableOp.Table.Columns[0])
             {
                 return false;
             }
@@ -2290,7 +2408,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             IsOfOp typeFilter;
             if (IsOfTypeOverScanTable(n, out typeFilter))
             {
-                Node ret = ProcessScanTable(n.Child0, (ScanTableOp)n.Child0.Op, ref typeFilter);
+                var ret = ProcessScanTable(n.Child0, (ScanTableOp)n.Child0.Op, ref typeFilter);
                 if (typeFilter != null)
                 {
                     n.Child1 = VisitNode(n.Child1);
@@ -2314,14 +2432,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"></param>
         /// <param name="n"></param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "projectOp"), SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "projectOp")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(ProjectOp op, Node n)
         {
             PlanCompiler.Assert(n.HasChild0, "projectOp without input?");
 
-            if (OpType.Sort == n.Child0.Op.OpType || OpType.ConstrainedSort == n.Child0.Op.OpType)
+            if (OpType.Sort == n.Child0.Op.OpType
+                || OpType.ConstrainedSort == n.Child0.Op.OpType)
             {
-                SortBaseOp sort = (SortBaseOp)n.Child0.Op;
+                var sort = (SortBaseOp)n.Child0.Op;
 
                 // Don't pullup the sort if it doesn't have any keys.
                 // An example of such sort is "ctx.Products.Take(1)".
@@ -2331,7 +2452,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     sortChildren.Add(n);
 
                     //A ConstrainedSort has two other children besides the input and it needs to keep them.  
-                    for (int i = 1; i < n.Child0.Children.Count; i++)
+                    for (var i = 1; i < n.Child0.Children.Count; i++)
                     {
                         sortChildren.Add(n.Child0.Children[i]);
                     }
@@ -2341,7 +2462,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
                     // Vars produced by the Sort input and used as SortKeys should be considered outputs
                     // of the ProjectOp that now operates over what was the Sort input.
-                    foreach (SortKey key in sort.Keys)
+                    foreach (var key in sort.Keys)
                     {
                         op.Outputs.Set(key.Var);
                     }
@@ -2354,7 +2475,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             // perform default processing
-            Node newNode = VisitRelOpDefault(op, n);
+            var newNode = VisitRelOpDefault(op, n);
             return newNode;
         }
 
@@ -2366,7 +2487,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         public override Node Visit(GroupByIntoOp op, Node n)
         {
-            this.m_compilerState.MarkPhaseAsNeeded(PlanCompilerPhase.AggregatePushdown);
+            m_compilerState.MarkPhaseAsNeeded(PlanCompilerPhase.AggregatePushdown);
             return base.Visit(op, n);
         }
 
@@ -2384,7 +2505,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     /// </summary>
     internal class StructuredTypeNullabilityAnalyzer : ColumnMapVisitor<HashSet<string>>
     {
-        static internal StructuredTypeNullabilityAnalyzer Instance = new StructuredTypeNullabilityAnalyzer();
+        internal static StructuredTypeNullabilityAnalyzer Instance = new StructuredTypeNullabilityAnalyzer();
 
         /// <summary>
         /// VarRefColumnMap
@@ -2411,7 +2532,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             else
             {
-                if (TypeSemantics.IsRowType(typeUsage) || TypeSemantics.IsComplexType(typeUsage))
+                if (TypeSemantics.IsRowType(typeUsage)
+                    || TypeSemantics.IsComplexType(typeUsage))
                 {
                     MarkAsNeedingNullSentinel(typesNeedingNullSentinel, typeUsage);
                 }
@@ -2433,5 +2555,4 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             typesNeedingNullSentinel.Add(typeUsage.EdmType.Identity);
         }
     }
-
 }

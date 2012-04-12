@@ -1,15 +1,7 @@
-using System;
-using System.ComponentModel;
-using System.Data;
-using System.Data.Entity.Core.Common;
-using System.Data.Common;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Objects;
-using System.Diagnostics;
-using System.Reflection;
-
 namespace System.Data.Entity.Core.Objects
 {
+    using System.Diagnostics;
+
     internal sealed class ObjectStateEntryDbUpdatableDataRecord : CurrentValueRecord
     {
         internal ObjectStateEntryDbUpdatableDataRecord(EntityEntry cacheEntry, StateManagerTypeMetadata metadata, object userObject)
@@ -26,10 +18,12 @@ namespace System.Data.Entity.Core.Objects
                 case EntityState.Added:
                     break;
                 default:
-                    Debug.Assert(false, "A CurrentValueRecord cannot be created for an entity object that is in a deleted or detached state.");
+                    Debug.Assert(
+                        false, "A CurrentValueRecord cannot be created for an entity object that is in a deleted or detached state.");
                     break;
             }
         }
+
         internal ObjectStateEntryDbUpdatableDataRecord(RelationshipEntry cacheEntry)
             : base(cacheEntry)
         {
@@ -41,10 +35,12 @@ namespace System.Data.Entity.Core.Objects
                 case EntityState.Added:
                     break;
                 default:
-                    Debug.Assert(false, "A CurrentValueRecord cannot be created for an entity object that is in a deleted or detached state.");
+                    Debug.Assert(
+                        false, "A CurrentValueRecord cannot be created for an entity object that is in a deleted or detached state.");
                     break;
             }
         }
+
         protected override object GetRecordValue(int ordinal)
         {
             if (_cacheEntry.IsRelationship)
@@ -53,9 +49,11 @@ namespace System.Data.Entity.Core.Objects
             }
             else
             {
-                return (_cacheEntry as EntityEntry).GetCurrentEntityValue(_metadata, ordinal, _userObject, ObjectStateValueRecord.CurrentUpdatable);
+                return (_cacheEntry as EntityEntry).GetCurrentEntityValue(
+                    _metadata, ordinal, _userObject, ObjectStateValueRecord.CurrentUpdatable);
             }
         }
+
         protected override void SetRecordValue(int ordinal, object value)
         {
             if (_cacheEntry.IsRelationship)

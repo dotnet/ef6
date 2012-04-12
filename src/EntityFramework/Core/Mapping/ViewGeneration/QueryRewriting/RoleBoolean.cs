@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
@@ -14,21 +13,27 @@
     internal sealed class RoleBoolean : TrueFalseLiteral
     {
         #region Constructor
+
         internal RoleBoolean(EntitySetBase extent)
         {
             m_metadataItem = extent;
         }
+
         internal RoleBoolean(AssociationSetEnd end)
         {
             m_metadataItem = end;
         }
+
         #endregion
 
         #region Fields
+
         private readonly MetadataItem m_metadataItem;
+
         #endregion
 
         #region BoolLiteral members
+
         /// <summary>
         /// Not supported in this class.
         /// </summary>
@@ -49,7 +54,7 @@
 
         internal override StringBuilder AsUserString(StringBuilder builder, string blockAlias, bool skipIsNotNull)
         {
-            AssociationSetEnd end = m_metadataItem as AssociationSetEnd;
+            var end = m_metadataItem as AssociationSetEnd;
             if (end != null)
             {
                 builder.Append(Strings.ViewGen_AssociationSet_AsUserString(blockAlias, end.Name, end.ParentAssociationSet));
@@ -63,7 +68,7 @@
 
         internal override StringBuilder AsNegatedUserString(StringBuilder builder, string blockAlias, bool skipIsNotNull)
         {
-            AssociationSetEnd end = m_metadataItem as AssociationSetEnd;
+            var end = m_metadataItem as AssociationSetEnd;
             if (end != null)
             {
                 builder.Append(Strings.ViewGen_AssociationSet_AsUserString_Negated(blockAlias, end.Name, end.ParentAssociationSet));
@@ -82,7 +87,7 @@
 
         protected override bool IsEqualTo(BoolLiteral right)
         {
-            RoleBoolean rightBoolean = right as RoleBoolean;
+            var rightBoolean = right as RoleBoolean;
             if (rightBoolean == null)
             {
                 return false;
@@ -99,21 +104,24 @@
         {
             return this;
         }
+
         #endregion
 
         #region Other Methods
+
         internal override void ToCompactString(StringBuilder builder)
         {
-            AssociationSetEnd end = m_metadataItem as AssociationSetEnd;
+            var end = m_metadataItem as AssociationSetEnd;
             if (end != null)
             {
                 builder.Append("InEnd:" + end.ParentAssociationSet + "_" + end.Name);
             }
             else
             {
-                builder.Append("InSet:" + m_metadataItem.ToString());
+                builder.Append("InSet:" + m_metadataItem);
             }
         }
+
         #endregion
     }
 }
