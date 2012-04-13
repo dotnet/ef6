@@ -2,7 +2,7 @@
 namespace System.Data.Entity.Migrations.Resources
 {
     using System.CodeDom.Compiler;
-	using System.Data.Entity.Core;
+    using System.Data.Entity.Core;
     using System.Globalization;
     using System.Resources;
     using System.Threading;
@@ -12,191 +12,158 @@ namespace System.Data.Entity.Migrations.Resources
     /// </summary>
     [GeneratedCode("Resources.PowerShell.tt", "1.0.0.0")]
     internal static class Strings
-    {   
+    {
         /// <summary>
         /// A string like "Specify the '-Verbose' flag to view the SQL statements being applied to the target database."
         /// </summary>
         internal static string UpdateDatabaseCommand_VerboseInstructions
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.UpdateDatabaseCommand_VerboseInstructions);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.UpdateDatabaseCommand_VerboseInstructions); }
+	    }
 
         /// <summary>
         /// A string like "The '-SourceMigration' parameter is only valid when using '-Script'."
         /// </summary>
         internal static string UpdateDatabaseCommand_SourceMigrationWithoutScript
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.UpdateDatabaseCommand_SourceMigrationWithoutScript);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.UpdateDatabaseCommand_SourceMigrationWithoutScript); }
+	    }
 
         /// <summary>
         /// A string like "No migrations have been applied to the target database."
         /// </summary>
         internal static string GetMigrationsCommand_NoHistory
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.GetMigrationsCommand_NoHistory);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.GetMigrationsCommand_NoHistory); }
+	    }
 
         /// <summary>
         /// A string like "Scaffolding migration '{0}'."
         /// </summary>
         internal static string LoggingGenerate(object p0)
         {
-            return EntityRes.GetString(EntityRes.LoggingGenerate, p0);
-        }
+		    return EntityRes.GetString(EntityRes.LoggingGenerate, p0);
+	    }
 
         /// <summary>
         /// A string like "Only the Designer Code for migration '{0}' was re-scaffolded. To re-scaffold the entire migration, use the -Force parameter."
         /// </summary>
         internal static string RescaffoldNoForce(object p0)
         {
-            return EntityRes.GetString(EntityRes.RescaffoldNoForce, p0);
-        }
+		    return EntityRes.GetString(EntityRes.RescaffoldNoForce, p0);
+	    }
 
         /// <summary>
         /// A string like "The Designer Code for this migration file includes a snapshot of your current Code First model. This snapshot is used to calculate the changes to your model when you scaffold the next migration. If you make additional changes to your model that you want to include in this migration, then you can re-scaffold it by running 'Add-Migration {0}' again."
         /// </summary>
         internal static string SnapshotBehindWarning(object p0)
         {
-            return EntityRes.GetString(EntityRes.SnapshotBehindWarning, p0);
-        }
+		    return EntityRes.GetString(EntityRes.SnapshotBehindWarning, p0);
+	    }
 
         /// <summary>
         /// A string like "Unable to generate an explicit migration because the following explicit migrations are pending: [{0}]. Apply the pending explicit migrations before attempting to generate a new explicit migration."
         /// </summary>
         internal static string MigrationsPendingException(object p0)
         {
-            return EntityRes.GetString(EntityRes.MigrationsPendingException, p0);
-        }
+		    return EntityRes.GetString(EntityRes.MigrationsPendingException, p0);
+	    }
 
         /// <summary>
         /// A string like "You can use the Add-Migration command to write the pending model changes to a code-based migration."
         /// </summary>
         internal static string AutomaticMigrationDisabledInfo
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.AutomaticMigrationDisabledInfo);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.AutomaticMigrationDisabledInfo); }
+	    }
 
         /// <summary>
         /// A string like "Edit the generated Configuration class to specify the context to enable migrations for."
         /// </summary>
         internal static string EnableMigrations_ManuallyEnterContext
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.EnableMigrations_ManuallyEnterContext);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.EnableMigrations_ManuallyEnterContext); }
+	    }
 
         /// <summary>
         /// A string like "No classes deriving from DbContext found in the current project."
         /// </summary>
         internal static string EnableMigrations_NoContexts
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.EnableMigrations_NoContexts);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.EnableMigrations_NoContexts); }
+	    }
 
         /// <summary>
         /// A string like "More than one class deriving from DbContext found in the current project."
         /// </summary>
         internal static string EnableMigrations_MultipleContexts
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.EnableMigrations_MultipleContexts);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.EnableMigrations_MultipleContexts); }
+	    }
 
         /// <summary>
         /// A string like "Error while searching for context type (specify -Verbose to see exception details)."
         /// </summary>
         internal static string EnableMigrations_ErrorFindingContexts
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.EnableMigrations_ErrorFindingContexts);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.EnableMigrations_ErrorFindingContexts); }
+	    }
 
         /// <summary>
         /// A string like "Code First Migrations enabled for project {0}."
         /// </summary>
         internal static string EnableMigrations_Success(object p0)
         {
-            return EntityRes.GetString(EntityRes.EnableMigrations_Success, p0);
-        }
+		    return EntityRes.GetString(EntityRes.EnableMigrations_Success, p0);
+	    }
 
         /// <summary>
         /// A string like "Checking if the context targets an existing database..."
         /// </summary>
         internal static string EnableMigrations_BeginInitialScaffold
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.EnableMigrations_BeginInitialScaffold);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.EnableMigrations_BeginInitialScaffold); }
+	    }
 
         /// <summary>
         /// A string like "Detected database created with a database initializer. Scaffolded migration '{0}' corresponding to existing database. To use an automatic migration instead, delete the Migrations folder and re-run Enable-Migrations specifying the -EnableAutomaticMigrations parameter."
         /// </summary>
         internal static string EnableMigrations_InitialScaffold(object p0)
         {
-            return EntityRes.GetString(EntityRes.EnableMigrations_InitialScaffold, p0);
-        }
+		    return EntityRes.GetString(EntityRes.EnableMigrations_InitialScaffold, p0);
+	    }
 
         /// <summary>
         /// A string like "Code First Migrations does not support web site projects."
         /// </summary>
         internal static string WebSiteProjectNotSupported
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.WebSiteProjectNotSupported);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.WebSiteProjectNotSupported); }
+	    }
 
         /// <summary>
         /// A string like "Retrieving migrations that have been applied to the target database."
         /// </summary>
         internal static string GetMigrationsCommand_Intro
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.GetMigrationsCommand_Intro);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.GetMigrationsCommand_Intro); }
+	    }
 
         /// <summary>
         /// A string like "Migrations have already been enabled in project '{0}'. To overwrite the existing migrations configuration, use the -Force parameter."
         /// </summary>
         internal static string MigrationsAlreadyEnabled(object p0)
         {
-            return EntityRes.GetString(EntityRes.MigrationsAlreadyEnabled, p0);
-        }
+		    return EntityRes.GetString(EntityRes.MigrationsAlreadyEnabled, p0);
+	    }
 
         /// <summary>
         /// A string like "Failed to add the Entity Framework 'defaultConnectionFactory' entry to the .config file '{0}' in the current project. The default SqlConnectionFactory configured for '.\\SQLEXPRESS' will be used unless you either add the 'defaultConnectionFactory' entry to the .config file manually or specify connection strings in code. See inner exception for details."
         /// </summary>
         internal static string SaveConnectionFactoryInConfigFailed(object p0)
         {
-            return EntityRes.GetString(EntityRes.SaveConnectionFactoryInConfigFailed, p0);
-        }
+		    return EntityRes.GetString(EntityRes.SaveConnectionFactoryInConfigFailed, p0);
+	    }
     } 
 
     /// <summary>
@@ -266,7 +233,7 @@ namespace System.Data.Entity.Migrations.Resources
         internal static Exception NotSupported()
         {
             return new NotSupportedException();
-        }        
+        }
     }
 
     /// <summary>
@@ -377,4 +344,3 @@ namespace System.Data.Entity.Migrations.Resources
         }
     }
 }
-

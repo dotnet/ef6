@@ -539,22 +539,18 @@ namespace System.Data.Entity.Core.Mapping
             if (edmMember.TypeUsage.EdmType.BuiltInTypeKind
                 != objectMember.TypeUsage.EdmType.BuiltInTypeKind)
             {
-                // use EntityRes.GetString(EntityRes. instead of Strings. because the generated method does not
-                // include all string parameters (6 rather than 8)
-                throw new MappingException(
-                    EntityRes.GetString(
-                        EntityRes.Mapping_Default_OCMapping_Member_Type_Mismatch,
+                throw Error.Mapping_Default_OCMapping_Member_Type_Mismatch(
                         edmMember.TypeUsage.EdmType.Name, edmMember.TypeUsage.EdmType.BuiltInTypeKind, edmMember.Name,
                         edmMember.DeclaringType.FullName,
                         objectMember.TypeUsage.EdmType.Name, objectMember.TypeUsage.EdmType.BuiltInTypeKind, objectMember.Name,
-                        objectMember.DeclaringType.FullName));
+                        objectMember.DeclaringType.FullName);
             }
 
             if (Helper.IsPrimitiveType(edmMember.TypeUsage.EdmType))
             {
                 var memberType = Helper.GetSpatialNormalizedPrimitiveType(edmMember.TypeUsage.EdmType);
 
-                //We expect the CLR prmitive type and their corresponding EDM primitive types to have the same primitive type kind( atleast for now)
+                // We expect the CLR prmitive type and their corresponding EDM primitive types to have the same primitive type kind (at least for now)
                 if (memberType.PrimitiveTypeKind
                     != ((PrimitiveType)objectMember.TypeUsage.EdmType).PrimitiveTypeKind)
                 {

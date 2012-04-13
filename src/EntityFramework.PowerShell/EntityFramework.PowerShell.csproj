@@ -106,7 +106,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.Entity" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -131,6 +130,9 @@
     </Compile>
     <Compile Include="..\EntityFramework\ModelConfiguration\Utilities\RuntimeFailureMethods.cs">
       <Link>Properties\RuntimeFailureMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\EntityFramework\Properties\Resources.PowerShell.cs">
+      <Link>Properties\Resources.PowerShell.cs</Link>
     </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
@@ -160,22 +162,6 @@
     <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="..\EntityFramework\Properties\Resources.cs">
       <Link>Properties\Resources.cs</Link>
-    </Compile>
-    <None Include="Properties\Resources.PowerShell.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Resources.PowerShell.cs</LastGenOutput>
-      <CustomToolNamespace>System.Data.Entity.Migrations</CustomToolNamespace>
-    </None>
-    <None Include="Properties\Resources.PowerShell.txt">
-      <DependentUpon>Resources.PowerShell.tt</DependentUpon>
-    </None>
-    <None Include="Properties\Resources.PowerShell.resources">
-      <DependentUpon>Resources.PowerShell.tt</DependentUpon>
-    </None>
-    <Compile Include="Properties\Resources.PowerShell.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.PowerShell.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

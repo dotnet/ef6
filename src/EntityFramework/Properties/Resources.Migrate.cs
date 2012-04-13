@@ -2,7 +2,7 @@
 namespace System.Data.Entity.Migrations.Console.Resources
 {
     using System.CodeDom.Compiler;
-	using System.Data.Entity.Core;
+    using System.Data.Entity.Core;
     using System.Globalization;
     using System.Resources;
     using System.Threading;
@@ -12,306 +12,246 @@ namespace System.Data.Entity.Migrations.Console.Resources
     /// </summary>
     [GeneratedCode("Resources.Migrate.tt", "1.0.0.0")]
     internal static class Strings
-    {   
+    {
         /// <summary>
         /// A string like "Code First Migrations Command Line Utility"
         /// </summary>
         internal static string MigrateTitle
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.MigrateTitle);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.MigrateTitle); }
+	    }
 
         /// <summary>
         /// A string like "Applies any pending migrations to the database."
         /// </summary>
         internal static string MigrateDescription
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.MigrateDescription);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.MigrateDescription); }
+	    }
 
         /// <summary>
         /// A string like "ERROR: {0}"
         /// </summary>
         internal static string ErrorMessage(object p0)
         {
-            return EntityRes.GetString(EntityRes.ErrorMessage, p0);
-        }
+		    return EntityRes.GetString(EntityRes.ErrorMessage, p0);
+	    }
 
         /// <summary>
         /// A string like "WARNING: {0}"
         /// </summary>
         internal static string WarningMessage(object p0)
         {
-            return EntityRes.GetString(EntityRes.WarningMessage, p0);
-        }
+		    return EntityRes.GetString(EntityRes.WarningMessage, p0);
+	    }
 
         /// <summary>
         /// A string like "VERBOSE: {0}"
         /// </summary>
         internal static string VerboseMessage(object p0)
         {
-            return EntityRes.GetString(EntityRes.VerboseMessage, p0);
-        }
+		    return EntityRes.GetString(EntityRes.VerboseMessage, p0);
+	    }
 
         /// <summary>
         /// A string like "Duplicate Command "{0}""
         /// </summary>
         internal static string DuplicateCommand(object p0)
         {
-            return EntityRes.GetString(EntityRes.DuplicateCommand, p0);
-        }
+		    return EntityRes.GetString(EntityRes.DuplicateCommand, p0);
+	    }
 
         /// <summary>
         /// A string like "Duplicate Parameter Index [{0}] on Property "{1}""
         /// </summary>
         internal static string DuplicateParameterIndex(object p0, object p1)
         {
-            return EntityRes.GetString(EntityRes.DuplicateParameterIndex, p0, p1);
-        }
+		    return EntityRes.GetString(EntityRes.DuplicateParameterIndex, p0, p1);
+	    }
 
         /// <summary>
         /// A string like "Out of order parameter "{0}" should have be at parameter index {1} but was found at {2}"
         /// </summary>
         internal static string ParameterOutOfOrder(object p0, object p1, object p2)
         {
-            return EntityRes.GetString(EntityRes.ParameterOutOfOrder, p0, p1, p2);
-        }
+		    return EntityRes.GetString(EntityRes.ParameterOutOfOrder, p0, p1, p2);
+	    }
 
         /// <summary>
         /// A string like ""{0}" is not a valid choice, valid keys are "{1}""
         /// </summary>
         internal static string InvalidKey(object p0, object p1)
         {
-            return EntityRes.GetString(EntityRes.InvalidKey, p0, p1);
-        }
+		    return EntityRes.GetString(EntityRes.InvalidKey, p0, p1);
+	    }
 
         /// <summary>
         /// A string like "Press any key to continue..."
         /// </summary>
         internal static string PressAnyKey
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.PressAnyKey);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.PressAnyKey); }
+	    }
 
         /// <summary>
         /// A string like "Unsupported property type {0}"
         /// </summary>
         internal static string UnsupportedPropertyType(object p0)
         {
-            return EntityRes.GetString(EntityRes.UnsupportedPropertyType, p0);
-        }
+		    return EntityRes.GetString(EntityRes.UnsupportedPropertyType, p0);
+	    }
 
         /// <summary>
         /// A string like "Invalid ParameterIndex value on property "{0}""
         /// </summary>
         internal static string InvalidPropertyParameterIndexValue(object p0)
         {
-            return EntityRes.GetString(EntityRes.InvalidPropertyParameterIndexValue, p0);
-        }
+		    return EntityRes.GetString(EntityRes.InvalidPropertyParameterIndexValue, p0);
+	    }
 
         /// <summary>
         /// A string like "assembly"
         /// </summary>
         internal static string AssemblyNameArgument
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.AssemblyNameArgument);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.AssemblyNameArgument); }
+	    }
 
         /// <summary>
         /// A string like "configurationType"
         /// </summary>
         internal static string ConfigurationTypeNameArgument
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.ConfigurationTypeNameArgument);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.ConfigurationTypeNameArgument); }
+	    }
 
         /// <summary>
         /// A string like "Specifies the name of the assembly that contains the migrations configuration type."
         /// </summary>
         internal static string AssemblyNameDescription
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.AssemblyNameDescription);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.AssemblyNameDescription); }
+	    }
 
         /// <summary>
         /// A string like "Specifies the name of the migrations configuration type. If omitted, Code First Migrations will attempt to locate a single migrations configuration type in the specified assembly."
         /// </summary>
         internal static string ConfigurationTypeNameDescription
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.ConfigurationTypeNameDescription);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.ConfigurationTypeNameDescription); }
+	    }
 
         /// <summary>
         /// A string like "Specifies the name of a particular migration to update the database to. If omitted, the current model will be used."
         /// </summary>
         internal static string TargetMigrationDescription
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.TargetMigrationDescription);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.TargetMigrationDescription); }
+	    }
 
         /// <summary>
         /// A string like "Specifies the working directory of your application."
         /// </summary>
         internal static string WorkingDirectoryDescription
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.WorkingDirectoryDescription);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.WorkingDirectoryDescription); }
+	    }
 
         /// <summary>
         /// A string like "Specifies the Web.config or App.config file of your application."
         /// </summary>
         internal static string ConfigurationFileDescription
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.ConfigurationFileDescription);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.ConfigurationFileDescription); }
+	    }
 
         /// <summary>
         /// A string like "Specifies the directory to use when resolving connection strings containing the |DataDirectory| substitution string."
         /// </summary>
         internal static string DataDirectoryDescription
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.DataDirectoryDescription);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.DataDirectoryDescription); }
+	    }
 
         /// <summary>
         /// A string like "Specifies the name of the connection string to use from the specified configuration file. If omitted, the context's default connection will be used."
         /// </summary>
         internal static string ConnectionStringNameDescription
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.ConnectionStringNameDescription);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.ConnectionStringNameDescription); }
+	    }
 
         /// <summary>
         /// A string like "Specifies the the connection string to use. If omitted, the context's default connection will be used."
         /// </summary>
         internal static string ConnectionStringDescription
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.ConnectionStringDescription);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.ConnectionStringDescription); }
+	    }
 
         /// <summary>
         /// A string like "Specifies the provider invariant name of the connection string."
         /// </summary>
         internal static string ConnectionProviderNameDescription
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.ConnectionProviderNameDescription);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.ConnectionProviderNameDescription); }
+	    }
 
         /// <summary>
         /// A string like "Indicates that automatic migrations which might incur data loss should be allowed."
         /// </summary>
         internal static string ForceDescription
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.ForceDescription);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.ForceDescription); }
+	    }
 
         /// <summary>
         /// A string like "Indicates that the executing SQL and additional diagnostic information should be output to the console window."
         /// </summary>
         internal static string VerboseDescription
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.VerboseDescription);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.VerboseDescription); }
+	    }
 
         /// <summary>
         /// A string like "Display this help message."
         /// </summary>
         internal static string HelpDescription
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.HelpDescription);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.HelpDescription); }
+	    }
 
         /// <summary>
         /// A string like "Only one of '{0}' and '{1}' can be assigned to."
         /// </summary>
         internal static string AmbiguousAttributeValues(object p0, object p1)
         {
-            return EntityRes.GetString(EntityRes.AmbiguousAttributeValues, p0, p1);
-        }
+		    return EntityRes.GetString(EntityRes.AmbiguousAttributeValues, p0, p1);
+	    }
 
         /// <summary>
         /// A string like "Only one of /connectionStringName or /connectionString can be specified."
         /// </summary>
         internal static string AmbiguousConnectionString
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.AmbiguousConnectionString);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.AmbiguousConnectionString); }
+	    }
 
         /// <summary>
         /// A string like "/connectionString and /connectionProviderName must be specified together."
         /// </summary>
         internal static string MissingConnectionInfo
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.MissingConnectionInfo);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.MissingConnectionInfo); }
+	    }
 
         /// <summary>
         /// A string like "Invalid ParameterIndex value"
         /// </summary>
         internal static string InvalidParameterIndexValue
         {
-            get
-            {
-                return EntityRes.GetString(EntityRes.InvalidParameterIndexValue);
-            }
-        }
+		    get { return EntityRes.GetString(EntityRes.InvalidParameterIndexValue); }
+	    }
     } 
 
     /// <summary>
@@ -381,7 +321,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         internal static Exception NotSupported()
         {
             return new NotSupportedException();
-        }        
+        }
     }
 
     /// <summary>
@@ -503,4 +443,3 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
     }
 }
-

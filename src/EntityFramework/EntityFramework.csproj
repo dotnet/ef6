@@ -947,6 +947,7 @@
     <Compile Include="Migrations\Sql\SqlServerMigrationSqlGenerator.cs" />
     <Compile Include="Migrations\Utilities\ConfigurationFileUpdater.cs" />
     <Compile Include="Migrations\Utilities\DatabaseCreator.cs" />
+<<<<<<< HEAD
     <Compile Include="Spatial\DbGeography.cs" />
     <Compile Include="Spatial\DbGeographyWellKnownValue.cs" />
     <Compile Include="Spatial\DbGeometry.cs" />
@@ -957,6 +958,18 @@
     <Compile Include="Spatial\ExtensionMethods.cs" />
     <Compile Include="Spatial\Internal\SpatialExceptions.cs" />
     <Compile Include="Spatial\SpatialHelpers.cs" />
+=======
+    <None Include="Properties\Resources.Migrate.cs">
+      <DependentUpon>Resources.Migrate.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </None>
+    <None Include="Properties\Resources.PowerShell.cs">
+      <DependentUpon>Resources.PowerShell.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </None>
+>>>>>>> Levaraging built-in .resources generator to avoid checking in the binary .resources files
     <Compile Include="Utilities\DynamicEqualityComparer.cs" />
     <Compile Include="Utilities\DynamicEqualityComparerLinqIntegration.cs" />
     <Compile Include="Migrations\Utilities\EmptyContext.cs" />
@@ -1377,11 +1390,30 @@
     <None Include="Core\Common\EntitySql\CqlLexer.l" />
     <None Include="Core\Common\EntitySql\GenerateParser.cmd" />
     <None Include="Core\Common\EntitySql\y" />
+    <None Include="Properties\Resources.Migrate.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Resources.Migrate.cs</LastGenOutput>
+      <CustomToolNamespace>System.Data.Entity.Migrations.Console</CustomToolNamespace>
+    </None>
+    <None Include="Properties\Resources.PowerShell.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Resources.PowerShell.cs</LastGenOutput>
+      <CustomToolNamespace>System.Data.Entity.Migrations</CustomToolNamespace>
+    </None>
     <None Include="Properties\Resources.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Resources.cs</LastGenOutput>
       <CustomToolNamespace>System.Data.Entity</CustomToolNamespace>
     </None>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.Migrate.resx">
+      <CustomToolNamespace>System.Data.Entity.Migrations.Console.Properties</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.PowerShell.resx">
+      <CustomToolNamespace>System.Data.Entity.Migrations.Properties</CustomToolNamespace>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\System\Data\EntityModel\System.Data.Resources.AnnotationSchema.xsd">
       <LogicalName>System.Data.Resources.AnnotationSchema.xsd</LogicalName>
     </EmbeddedResource>
@@ -1454,22 +1486,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Properties\Resources.txt">
-      <DependentUpon>Resources.tt</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\EntityFramework.PowerShell\Properties\Resources.PowerShell.resources">
-      <Link>Properties\Resources.PowerShell.resources</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\Migrate\Properties\Resources.Migrate.resources">
-      <Link>Properties\Resources.Migrate.resources</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resources">
-      <DependentUpon>Resources.tt</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

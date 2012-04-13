@@ -3,6 +3,7 @@ bin
 Bin
 obj
 App_Data
+TestResults
 *.user
 *.patch
 *.sln.cache
@@ -11,5 +12,6 @@ App_Data
 *.log
 *.exe
 *.dll
+*.resources
 packages
 EntityFramework.xml

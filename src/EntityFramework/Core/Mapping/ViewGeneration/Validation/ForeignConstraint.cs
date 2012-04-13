@@ -800,9 +800,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 Debug.Assert(childPaths != null, "child paths should be set");
                 Debug.Assert(parentPaths != null, "parent paths should be set");
                 Debug.Assert(errorParentCell != null, "errorParentCell should be set");
-                // using EntityRes. instead of Strings. because the generated method includes 6 instead of 9 parameters
-                var message = EntityRes.GetString(
-                    EntityRes.ViewGen_Foreign_Key_ColumnOrder_Incorrect,
+
+                var message = Strings.ViewGen_Foreign_Key_ColumnOrder_Incorrect(
                     ToUserString(),
                     MemberPath.PropertiesToUserString(ChildColumns, false),
                     ChildTable.Name,
