@@ -17,8 +17,8 @@
 
         <MakeDir Directories="$(OutputPath)" />
 
-        <Exec Command="&quot;$(NuGetExePath)&quot; pack EntityFramework\EntityFramework.nuspec -OutputDirectory &quot;$(OutputPath).&quot; -BasePath EntityFramework" />
-        <Exec Command="&quot;$(NuGetExePath)&quot; pack EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.nuspec -OutputDirectory &quot;$(OutputPath).&quot; -BasePath EntityFramework.SqlServerCompact" />
+        <Exec Command="&quot;$(NuGetExePath)&quot; pack EntityFramework\EntityFramework.nuspec -OutputDirectory &quot;$(OutputPath).&quot; -NoPackageAnalysis" />
+        <Exec Command="&quot;$(NuGetExePath)&quot; pack EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.nuspec -OutputDirectory &quot;$(OutputPath).&quot; -NoPackageAnalysis" />
     </Target>
     
 </Project>
