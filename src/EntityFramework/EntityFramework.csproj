@@ -947,7 +947,6 @@
     <Compile Include="Migrations\Sql\SqlServerMigrationSqlGenerator.cs" />
     <Compile Include="Migrations\Utilities\ConfigurationFileUpdater.cs" />
     <Compile Include="Migrations\Utilities\DatabaseCreator.cs" />
-<<<<<<< HEAD
     <Compile Include="Spatial\DbGeography.cs" />
     <Compile Include="Spatial\DbGeographyWellKnownValue.cs" />
     <Compile Include="Spatial\DbGeometry.cs" />
@@ -958,7 +957,6 @@
     <Compile Include="Spatial\ExtensionMethods.cs" />
     <Compile Include="Spatial\Internal\SpatialExceptions.cs" />
     <Compile Include="Spatial\SpatialHelpers.cs" />
-=======
     <None Include="Properties\Resources.Migrate.cs">
       <DependentUpon>Resources.Migrate.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -969,7 +967,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </None>
->>>>>>> Levaraging built-in .resources generator to avoid checking in the binary .resources files
     <Compile Include="Utilities\DynamicEqualityComparer.cs" />
     <Compile Include="Utilities\DynamicEqualityComparerLinqIntegration.cs" />
     <Compile Include="Migrations\Utilities\EmptyContext.cs" />
