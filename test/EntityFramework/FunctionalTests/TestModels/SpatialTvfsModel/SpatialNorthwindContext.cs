@@ -54,7 +54,7 @@
         public DbSet<WidgetWithLineString> LineStringWidgets { get; set; }
         public DbSet<WidgetWithPolygon> PolygonWidgets { get; set; }
 
-        [EdmFunction("SpatialNorthwindContext", "SuppliersWithinRange")]
+        [DbFunction("SpatialNorthwindContext", "SuppliersWithinRange")]
         public virtual IQueryable<SupplierWithLocation> SuppliersWithinRange(int? miles, DbGeography location)
         {
             var objectContext = ((IObjectContextAdapter)this).ObjectContext;
@@ -65,13 +65,13 @@
                                                                    new ObjectParameter("location", location));
         }
 
-        [EdmFunction("SpatialNorthwindContext", "SuppliersWithinRange")]
+        [DbFunction("SpatialNorthwindContext", "SuppliersWithinRange")]
         public static IQueryable<SupplierWithLocation> StaticSuppliersWithinRange(int? miles, DbGeography location)
         {
             throw new NotImplementedException("Should not be called by client code.");
         }
 
-        [EdmFunction("SpatialNorthwindContext", "SuppliersWithinRangeUsingPoint")]
+        [DbFunction("SpatialNorthwindContext", "SuppliersWithinRangeUsingPoint")]
         public virtual IQueryable<SupplierWithLocation> SuppliersWithinRangeUsingPoint(int? miles, DbGeography location)
         {
             var objectContext = ((IObjectContextAdapter)this).ObjectContext;
@@ -82,7 +82,7 @@
                                                                    new ObjectParameter("location", location));
         }
 
-        [EdmFunction("SpatialNorthwindContext", "SupplierLocationsWithinRange")]
+        [DbFunction("SpatialNorthwindContext", "SupplierLocationsWithinRange")]
         public virtual IQueryable<DbGeography> SupplierLocationsWithinRange(int? miles, DbGeography location)
         {
             var objectContext = ((IObjectContextAdapter)this).ObjectContext;

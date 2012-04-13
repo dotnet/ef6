@@ -164,12 +164,12 @@
     <Compile Include="Migrations\MappingScenarios.cs" />
     <Compile Include="Migrations\NoTestInfraScenarios.cs" />
     <Compile Include="Migrations\SeedingScenarios.cs" />
+    <Compile Include="Migrations\TestModel\DbContextTestExtensions.cs" />
     <Compile Include="Migrations\ToolingScenarios.cs" />
     <Compile Include="Migrations\TransactionScenarios.cs" />
-    <Compile Include="Migrations\TestModel\DbContextTestExtensions.cs" />
     <Compile Include="Migrations\TestModel\TestMigration.cs" />
     <Compile Include="Migrations\TestModel\TestModels.cs" />
-    <Compile Include="ProductivityApi\EntityFunctionScenarios.cs" />
+    <Compile Include="ProductivityApi\DbFunctionScenarios.cs" />
     <Compile Include="ProductivityApi\SimpleScenariosForLocalDb.cs" />
     <Compile Include="TestHelpers\DynamicAssembly.cs" />
     <Compile Include="CodeFirst\EnumsScenarioTests.cs" />

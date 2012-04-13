@@ -1,8 +1,8 @@
-namespace System.Data.Entity.Core.Objects
+namespace System.Data.Entity
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Objects.DataClasses;
-    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -13,7 +13,10 @@ namespace System.Data.Entity.Core.Objects
     /// Provides common language runtime (CLR) methods that expose EDM canonical functions
     /// for use in <see cref="DbContext"/> or <see cref="ObjectContext"/> LINQ to Entities queries.
     /// </summary>
-    public static class EntityFunctions
+    /// <remarks>
+    /// Note that this class was called EntityFunctions in some previous versions of Entity Framework.
+    /// </remarks>
+    public static class DbFunctions
     {
         /// <summary>
         /// When used as part of a LINQ to Entities query, this method invokes the canonical StDev EDM function to calculate 
@@ -25,7 +28,7 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The standard deviation.</returns>
-        [EdmFunction("Edm", "StDev")]
+        [DbFunction("Edm", "StDev")]
         public static double? StandardDeviation(IEnumerable<decimal> collection)
         {
             return BootstrapFunction<decimal, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -42,7 +45,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The standard deviation.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [EdmFunction("Edm", "StDev")]
+        [DbFunction("Edm", "StDev")]
         public static double? StandardDeviation(IEnumerable<decimal?> collection)
         {
             return BootstrapFunction<decimal?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -58,7 +61,7 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The standard deviation.</returns>
-        [EdmFunction("Edm", "StDev")]
+        [DbFunction("Edm", "StDev")]
         public static double? StandardDeviation(IEnumerable<double> collection)
         {
             return BootstrapFunction<double, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -75,7 +78,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The standard deviation.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [EdmFunction("Edm", "StDev")]
+        [DbFunction("Edm", "StDev")]
         public static double? StandardDeviation(IEnumerable<double?> collection)
         {
             return BootstrapFunction<double?, Double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -91,7 +94,7 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The standard deviation.</returns>
-        [EdmFunction("Edm", "StDev")]
+        [DbFunction("Edm", "StDev")]
         public static double? StandardDeviation(IEnumerable<int> collection)
         {
             return BootstrapFunction<int, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -108,7 +111,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The standard deviation.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [EdmFunction("Edm", "StDev")]
+        [DbFunction("Edm", "StDev")]
         public static double? StandardDeviation(IEnumerable<int?> collection)
         {
             return BootstrapFunction<int?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -124,7 +127,7 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The standard deviation.</returns>
-        [EdmFunction("Edm", "StDev")]
+        [DbFunction("Edm", "StDev")]
         public static double? StandardDeviation(IEnumerable<long> collection)
         {
             return BootstrapFunction<long, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -141,7 +144,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The standard deviation.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [EdmFunction("Edm", "StDev")]
+        [DbFunction("Edm", "StDev")]
         public static double? StandardDeviation(IEnumerable<long?> collection)
         {
             return BootstrapFunction<long?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -157,7 +160,7 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The standard deviation for the population.</returns>
-        [EdmFunction("Edm", "StDevP")]
+        [DbFunction("Edm", "StDevP")]
         public static double? StandardDeviationP(IEnumerable<decimal> collection)
         {
             return BootstrapFunction<decimal, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -174,7 +177,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The standard deviation for the population.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [EdmFunction("Edm", "StDevP")]
+        [DbFunction("Edm", "StDevP")]
         public static double? StandardDeviationP(IEnumerable<decimal?> collection)
         {
             return BootstrapFunction<decimal?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -190,7 +193,7 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The standard deviation for the population.</returns>
-        [EdmFunction("Edm", "StDevP")]
+        [DbFunction("Edm", "StDevP")]
         public static double? StandardDeviationP(IEnumerable<double> collection)
         {
             return BootstrapFunction<double, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -207,7 +210,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The standard deviation for the population.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [EdmFunction("Edm", "StDevP")]
+        [DbFunction("Edm", "StDevP")]
         public static double? StandardDeviationP(IEnumerable<double?> collection)
         {
             return BootstrapFunction<double?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -223,7 +226,7 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The standard deviation for the population.</returns>
-        [EdmFunction("Edm", "StDevP")]
+        [DbFunction("Edm", "StDevP")]
         public static double? StandardDeviationP(IEnumerable<int> collection)
         {
             return BootstrapFunction<int, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -240,7 +243,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The standard deviation for the population.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [EdmFunction("Edm", "StDevP")]
+        [DbFunction("Edm", "StDevP")]
         public static double? StandardDeviationP(IEnumerable<int?> collection)
         {
             return BootstrapFunction<int?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -256,7 +259,7 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The standard deviation for the population.</returns>
-        [EdmFunction("Edm", "StDevP")]
+        [DbFunction("Edm", "StDevP")]
         public static double? StandardDeviationP(IEnumerable<long> collection)
         {
             return BootstrapFunction<long, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -273,7 +276,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The standard deviation for the population.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [EdmFunction("Edm", "StDevP")]
+        [DbFunction("Edm", "StDevP")]
         public static double? StandardDeviationP(IEnumerable<long?> collection)
         {
             return BootstrapFunction<long?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -289,7 +292,7 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The variance.</returns>
-        [EdmFunction("Edm", "Var")]
+        [DbFunction("Edm", "Var")]
         public static double? Var(IEnumerable<decimal> collection)
         {
             return BootstrapFunction<decimal, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -306,7 +309,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The variance.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [EdmFunction("Edm", "Var")]
+        [DbFunction("Edm", "Var")]
         public static double? Var(IEnumerable<decimal?> collection)
         {
             return BootstrapFunction<decimal?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -322,7 +325,7 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The variance.</returns>
-        [EdmFunction("Edm", "Var")]
+        [DbFunction("Edm", "Var")]
         public static double? Var(IEnumerable<double> collection)
         {
             return BootstrapFunction<double, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -339,7 +342,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The variance.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [EdmFunction("Edm", "Var")]
+        [DbFunction("Edm", "Var")]
         public static double? Var(IEnumerable<double?> collection)
         {
             return BootstrapFunction<double?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -355,7 +358,7 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The variance.</returns>
-        [EdmFunction("Edm", "Var")]
+        [DbFunction("Edm", "Var")]
         public static double? Var(IEnumerable<int> collection)
         {
             return BootstrapFunction<int, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -372,7 +375,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The variance.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [EdmFunction("Edm", "Var")]
+        [DbFunction("Edm", "Var")]
         public static double? Var(IEnumerable<int?> collection)
         {
             return BootstrapFunction<int?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -388,7 +391,7 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The variance.</returns>
-        [EdmFunction("Edm", "Var")]
+        [DbFunction("Edm", "Var")]
         public static double? Var(IEnumerable<long> collection)
         {
             return BootstrapFunction<long, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -405,7 +408,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The variance.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [EdmFunction("Edm", "Var")]
+        [DbFunction("Edm", "Var")]
         public static double? Var(IEnumerable<long?> collection)
         {
             return BootstrapFunction<long?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -421,7 +424,7 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The variance for the population.</returns>
-        [EdmFunction("Edm", "VarP")]
+        [DbFunction("Edm", "VarP")]
         public static double? VarP(IEnumerable<decimal> collection)
         {
             return BootstrapFunction<decimal, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -438,7 +441,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The variance for the population.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [EdmFunction("Edm", "VarP")]
+        [DbFunction("Edm", "VarP")]
         public static double? VarP(IEnumerable<decimal?> collection)
         {
             return BootstrapFunction<decimal?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -454,7 +457,7 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The variance for the population.</returns>
-        [EdmFunction("Edm", "VarP")]
+        [DbFunction("Edm", "VarP")]
         public static double? VarP(IEnumerable<double> collection)
         {
             return BootstrapFunction<double, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -471,7 +474,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The variance for the population.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [EdmFunction("Edm", "VarP")]
+        [DbFunction("Edm", "VarP")]
         public static double? VarP(IEnumerable<double?> collection)
         {
             return BootstrapFunction<double?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -487,7 +490,7 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The variance for the population.</returns>
-        [EdmFunction("Edm", "VarP")]
+        [DbFunction("Edm", "VarP")]
         public static double? VarP(IEnumerable<int> collection)
         {
             return BootstrapFunction<int, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -504,7 +507,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The variance for the population.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [EdmFunction("Edm", "VarP")]
+        [DbFunction("Edm", "VarP")]
         public static double? VarP(IEnumerable<int?> collection)
         {
             return BootstrapFunction<int?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -520,7 +523,7 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The variance for the population.</returns>
-        [EdmFunction("Edm", "VarP")]
+        [DbFunction("Edm", "VarP")]
         public static double? VarP(IEnumerable<long> collection)
         {
             return BootstrapFunction<long, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -537,7 +540,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="collection">The collection over which to perform the calculation.</param>
         /// <returns>The variance for the population.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [EdmFunction("Edm", "VarP")]
+        [DbFunction("Edm", "VarP")]
         public static double? VarP(IEnumerable<long?> collection)
         {
             return BootstrapFunction<long?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
@@ -556,11 +559,11 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A string containing the number of characters asked for from the left of the input string.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "stringArgument")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "length")]
-        [EdmFunction("Edm", "Left")]
+        [DbFunction("Edm", "Left")]
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
         public static String Left(String stringArgument, long? length)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -576,11 +579,11 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A string containing the number of characters asked for from the right of the input string.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "length")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "stringArgument")]
-        [EdmFunction("Edm", "Right")]
+        [DbFunction("Edm", "Right")]
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
         public static String Right(String stringArgument, long? length)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -594,11 +597,11 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="stringArgument">The input string.</param>
         /// <returns>The input string with the order of the characters reversed.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "stringArgument")]
-        [EdmFunction("Edm", "Reverse")]
+        [DbFunction("Edm", "Reverse")]
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
         public static String Reverse(String stringArgument)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -613,10 +616,10 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="dateTimeOffsetArgument">The date/time value to use.</param>
         /// <returns>The offset of the input from UTC.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateTimeOffsetArgument")]
-        [EdmFunction("Edm", "GetTotalOffsetMinutes")]
+        [DbFunction("Edm", "GetTotalOffsetMinutes")]
         public static int? GetTotalOffsetMinutes(DateTimeOffset? dateTimeOffsetArgument)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -630,10 +633,10 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="dateValue">The date/time value to use.</param>
         /// <returns>The input date with the time portion cleared.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateValue")]
-        [EdmFunction("Edm", "TruncateTime")]
+        [DbFunction("Edm", "TruncateTime")]
         public static DateTimeOffset? TruncateTime(DateTimeOffset? dateValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -647,10 +650,10 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="dateValue">The date/time value to use.</param>
         /// <returns>The input date with the time portion cleared.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateValue")]
-        [EdmFunction("Edm", "TruncateTime")]
+        [DbFunction("Edm", "TruncateTime")]
         public static DateTime? TruncateTime(DateTime? dateValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -674,10 +677,10 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "hour")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "year")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "month")]
-        [EdmFunction("Edm", "CreateDateTime")]
+        [DbFunction("Edm", "CreateDateTime")]
         public static DateTime? CreateDateTime(int? year, Int32? month, Int32? day, Int32? hour, Int32? minute, double? second)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -703,11 +706,11 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "minute")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "day")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "year")]
-        [EdmFunction("Edm", "CreateDateTimeOffset")]
+        [DbFunction("Edm", "CreateDateTimeOffset")]
         public static DateTimeOffset? CreateDateTimeOffset(
             int? year, Int32? month, Int32? day, Int32? hour, Int32? minute, double? second, Int32? timeZoneOffset)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -725,10 +728,10 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "minute")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "hour")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "second")]
-        [EdmFunction("Edm", "CreateTime")]
+        [DbFunction("Edm", "CreateTime")]
         public static TimeSpan? CreateTime(int? hour, Int32? minute, double? second)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -744,10 +747,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting date/time.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateValue")]
-        [EdmFunction("Edm", "AddYears")]
+        [DbFunction("Edm", "AddYears")]
         public static DateTimeOffset? AddYears(DateTimeOffset? dateValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -763,10 +766,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting date/time.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
-        [EdmFunction("Edm", "AddYears")]
+        [DbFunction("Edm", "AddYears")]
         public static DateTime? AddYears(DateTime? dateValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -782,10 +785,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting date/time.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
-        [EdmFunction("Edm", "AddMonths")]
+        [DbFunction("Edm", "AddMonths")]
         public static DateTimeOffset? AddMonths(DateTimeOffset? dateValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -801,10 +804,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting date/time.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateValue")]
-        [EdmFunction("Edm", "AddMonths")]
+        [DbFunction("Edm", "AddMonths")]
         public static DateTime? AddMonths(DateTime? dateValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -820,10 +823,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting date/time.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateValue")]
-        [EdmFunction("Edm", "AddDays")]
+        [DbFunction("Edm", "AddDays")]
         public static DateTimeOffset? AddDays(DateTimeOffset? dateValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -839,10 +842,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting date/time.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateValue")]
-        [EdmFunction("Edm", "AddDays")]
+        [DbFunction("Edm", "AddDays")]
         public static DateTime? AddDays(DateTime? dateValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -858,10 +861,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting date/time.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
-        [EdmFunction("Edm", "AddHours")]
+        [DbFunction("Edm", "AddHours")]
         public static DateTimeOffset? AddHours(DateTimeOffset? timeValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -877,10 +880,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting date/time.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
-        [EdmFunction("Edm", "AddHours")]
+        [DbFunction("Edm", "AddHours")]
         public static DateTime? AddHours(DateTime? timeValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -896,10 +899,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting time span.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
-        [EdmFunction("Edm", "AddHours")]
+        [DbFunction("Edm", "AddHours")]
         public static TimeSpan? AddHours(TimeSpan? timeValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -915,10 +918,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting date/time.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
-        [EdmFunction("Edm", "AddMinutes")]
+        [DbFunction("Edm", "AddMinutes")]
         public static DateTimeOffset? AddMinutes(DateTimeOffset? timeValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -934,10 +937,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting date/time.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
-        [EdmFunction("Edm", "AddMinutes")]
+        [DbFunction("Edm", "AddMinutes")]
         public static DateTime? AddMinutes(DateTime? timeValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -953,10 +956,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting time span.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
-        [EdmFunction("Edm", "AddMinutes")]
+        [DbFunction("Edm", "AddMinutes")]
         public static TimeSpan? AddMinutes(TimeSpan? timeValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -972,10 +975,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting date/time.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
-        [EdmFunction("Edm", "AddSeconds")]
+        [DbFunction("Edm", "AddSeconds")]
         public static DateTimeOffset? AddSeconds(DateTimeOffset? timeValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -991,10 +994,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting date/time.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
-        [EdmFunction("Edm", "AddSeconds")]
+        [DbFunction("Edm", "AddSeconds")]
         public static DateTime? AddSeconds(DateTime? timeValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1010,10 +1013,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting time span.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
-        [EdmFunction("Edm", "AddSeconds")]
+        [DbFunction("Edm", "AddSeconds")]
         public static TimeSpan? AddSeconds(TimeSpan? timeValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1029,10 +1032,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting date/time.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
-        [EdmFunction("Edm", "AddMilliseconds")]
+        [DbFunction("Edm", "AddMilliseconds")]
         public static DateTimeOffset? AddMilliseconds(DateTimeOffset? timeValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1048,10 +1051,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting date/time.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
-        [EdmFunction("Edm", "AddMilliseconds")]
+        [DbFunction("Edm", "AddMilliseconds")]
         public static DateTime? AddMilliseconds(DateTime? timeValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1067,10 +1070,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting time span.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
-        [EdmFunction("Edm", "AddMilliseconds")]
+        [DbFunction("Edm", "AddMilliseconds")]
         public static TimeSpan? AddMilliseconds(TimeSpan? timeValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1086,10 +1089,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting date/time.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
-        [EdmFunction("Edm", "AddMicroseconds")]
+        [DbFunction("Edm", "AddMicroseconds")]
         public static DateTimeOffset? AddMicroseconds(DateTimeOffset? timeValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1105,10 +1108,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting date/time.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
-        [EdmFunction("Edm", "AddMicroseconds")]
+        [DbFunction("Edm", "AddMicroseconds")]
         public static DateTime? AddMicroseconds(DateTime? timeValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1124,10 +1127,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting time span.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
-        [EdmFunction("Edm", "AddMicroseconds")]
+        [DbFunction("Edm", "AddMicroseconds")]
         public static TimeSpan? AddMicroseconds(TimeSpan? timeValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1143,10 +1146,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting date/time.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
-        [EdmFunction("Edm", "AddNanoseconds")]
+        [DbFunction("Edm", "AddNanoseconds")]
         public static DateTimeOffset? AddNanoseconds(DateTimeOffset? timeValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1162,10 +1165,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting date/time.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
-        [EdmFunction("Edm", "AddNanoseconds")]
+        [DbFunction("Edm", "AddNanoseconds")]
         public static DateTime? AddNanoseconds(DateTime? timeValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1181,10 +1184,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A resulting time span.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
-        [EdmFunction("Edm", "AddNanoseconds")]
+        [DbFunction("Edm", "AddNanoseconds")]
         public static TimeSpan? AddNanoseconds(TimeSpan? timeValue, int? addValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1200,10 +1203,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of years between the first and second date/times.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateValue1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateValue2")]
-        [EdmFunction("Edm", "DiffYears")]
+        [DbFunction("Edm", "DiffYears")]
         public static int? DiffYears(DateTimeOffset? dateValue1, DateTimeOffset? dateValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1219,10 +1222,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of years between the first and second date/times.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateValue1")]
-        [EdmFunction("Edm", "DiffYears")]
+        [DbFunction("Edm", "DiffYears")]
         public static int? DiffYears(DateTime? dateValue1, DateTime? dateValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1238,10 +1241,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of months between the first and second date/times.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateValue1")]
-        [EdmFunction("Edm", "DiffMonths")]
+        [DbFunction("Edm", "DiffMonths")]
         public static int? DiffMonths(DateTimeOffset? dateValue1, DateTimeOffset? dateValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1257,10 +1260,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of months between the first and second date/times.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateValue1")]
-        [EdmFunction("Edm", "DiffMonths")]
+        [DbFunction("Edm", "DiffMonths")]
         public static int? DiffMonths(DateTime? dateValue1, DateTime? dateValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1276,10 +1279,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of days between the first and second date/times.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateValue1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateValue2")]
-        [EdmFunction("Edm", "DiffDays")]
+        [DbFunction("Edm", "DiffDays")]
         public static int? DiffDays(DateTimeOffset? dateValue1, DateTimeOffset? dateValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1295,10 +1298,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of days between the first and second date/times.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateValue1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateValue2")]
-        [EdmFunction("Edm", "DiffDays")]
+        [DbFunction("Edm", "DiffDays")]
         public static int? DiffDays(DateTime? dateValue1, DateTime? dateValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1314,10 +1317,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of hours between the first and second date/times.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
-        [EdmFunction("Edm", "DiffHours")]
+        [DbFunction("Edm", "DiffHours")]
         public static int? DiffHours(DateTimeOffset? timeValue1, DateTimeOffset? timeValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1333,10 +1336,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of hours between the first and second date/times.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
-        [EdmFunction("Edm", "DiffHours")]
+        [DbFunction("Edm", "DiffHours")]
         public static int? DiffHours(DateTime? timeValue1, DateTime? timeValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1352,10 +1355,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of hours between the first and second time spans.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
-        [EdmFunction("Edm", "DiffHours")]
+        [DbFunction("Edm", "DiffHours")]
         public static int? DiffHours(TimeSpan? timeValue1, TimeSpan? timeValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1371,10 +1374,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of minutes between the first and second date/times.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
-        [EdmFunction("Edm", "DiffMinutes")]
+        [DbFunction("Edm", "DiffMinutes")]
         public static int? DiffMinutes(DateTimeOffset? timeValue1, DateTimeOffset? timeValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1390,10 +1393,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of minutes between the first and second date/times.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
-        [EdmFunction("Edm", "DiffMinutes")]
+        [DbFunction("Edm", "DiffMinutes")]
         public static int? DiffMinutes(DateTime? timeValue1, DateTime? timeValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1409,10 +1412,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of minutes between the first and second time spans.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
-        [EdmFunction("Edm", "DiffMinutes")]
+        [DbFunction("Edm", "DiffMinutes")]
         public static int? DiffMinutes(TimeSpan? timeValue1, TimeSpan? timeValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1428,10 +1431,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of seconds between the first and second date/times.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
-        [EdmFunction("Edm", "DiffSeconds")]
+        [DbFunction("Edm", "DiffSeconds")]
         public static int? DiffSeconds(DateTimeOffset? timeValue1, DateTimeOffset? timeValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1447,10 +1450,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of seconds between the first and second date/times.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
-        [EdmFunction("Edm", "DiffSeconds")]
+        [DbFunction("Edm", "DiffSeconds")]
         public static int? DiffSeconds(DateTime? timeValue1, DateTime? timeValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1466,10 +1469,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of seconds between the first and second time spans.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
-        [EdmFunction("Edm", "DiffSeconds")]
+        [DbFunction("Edm", "DiffSeconds")]
         public static int? DiffSeconds(TimeSpan? timeValue1, TimeSpan? timeValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1485,10 +1488,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of milliseconds between the first and second date/times.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
-        [EdmFunction("Edm", "DiffMilliseconds")]
+        [DbFunction("Edm", "DiffMilliseconds")]
         public static int? DiffMilliseconds(DateTimeOffset? timeValue1, DateTimeOffset? timeValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1504,10 +1507,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of milliseconds between the first and second date/times.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
-        [EdmFunction("Edm", "DiffMilliseconds")]
+        [DbFunction("Edm", "DiffMilliseconds")]
         public static int? DiffMilliseconds(DateTime? timeValue1, DateTime? timeValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1523,10 +1526,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of milliseconds between the first and second time spans.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
-        [EdmFunction("Edm", "DiffMilliseconds")]
+        [DbFunction("Edm", "DiffMilliseconds")]
         public static int? DiffMilliseconds(TimeSpan? timeValue1, TimeSpan? timeValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1542,10 +1545,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of microseconds between the first and second date/times.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
-        [EdmFunction("Edm", "DiffMicroseconds")]
+        [DbFunction("Edm", "DiffMicroseconds")]
         public static int? DiffMicroseconds(DateTimeOffset? timeValue1, DateTimeOffset? timeValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1561,10 +1564,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of microseconds between the first and second date/times.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
-        [EdmFunction("Edm", "DiffMicroseconds")]
+        [DbFunction("Edm", "DiffMicroseconds")]
         public static int? DiffMicroseconds(DateTime? timeValue1, DateTime? timeValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1580,10 +1583,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of microseconds between the first and second time spans.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
-        [EdmFunction("Edm", "DiffMicroseconds")]
+        [DbFunction("Edm", "DiffMicroseconds")]
         public static int? DiffMicroseconds(TimeSpan? timeValue1, TimeSpan? timeValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1599,10 +1602,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of nanoseconds between the first and second date/times.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
-        [EdmFunction("Edm", "DiffNanoseconds")]
+        [DbFunction("Edm", "DiffNanoseconds")]
         public static int? DiffNanoseconds(DateTimeOffset? timeValue1, DateTimeOffset? timeValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1618,10 +1621,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of nanoseconds between the first and second date/times.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
-        [EdmFunction("Edm", "DiffNanoseconds")]
+        [DbFunction("Edm", "DiffNanoseconds")]
         public static int? DiffNanoseconds(DateTime? timeValue1, DateTime? timeValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1637,10 +1640,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of nanoseconds between the first and second time spans.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
-        [EdmFunction("Edm", "DiffNanoseconds")]
+        [DbFunction("Edm", "DiffNanoseconds")]
         public static int? DiffNanoseconds(TimeSpan? timeValue1, TimeSpan? timeValue2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1656,10 +1659,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The truncated value.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "digits")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "value")]
-        [EdmFunction("Edm", "Truncate")]
+        [DbFunction("Edm", "Truncate")]
         public static double? Truncate(Double? value, int? digits)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1675,10 +1678,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The truncated value.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "digits")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "value")]
-        [EdmFunction("Edm", "Truncate")]
+        [DbFunction("Edm", "Truncate")]
         public static decimal? Truncate(Decimal? value, int? digits)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1719,7 +1722,7 @@ namespace System.Data.Entity.Core.Objects
                 return asQueryable.Provider.Execute<TOut>(Expression.Call(method, Expression.Constant(collection)));
             }
 
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
     }
 }

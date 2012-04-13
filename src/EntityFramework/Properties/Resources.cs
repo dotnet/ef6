@@ -3142,27 +3142,27 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The specified method '{0}' on the type '{1}' cannot be translated into a LINQ to Entities store expression because the parameter {2} on its EdmFunction attribute is empty."
+        /// A string like "The specified method '{0}' on the type '{1}' cannot be translated into a LINQ to Entities store expression because the parameter {2} on its DbFunction attribute is empty."
         /// </summary>
-        internal static string ELinq_EdmFunctionAttributeParameterNameNotValid(object p0, object p1, object p2)
+        internal static string ELinq_DbFunctionAttributeParameterNameNotValid(object p0, object p1, object p2)
         {
-            return EntityRes.GetString(EntityRes.ELinq_EdmFunctionAttributeParameterNameNotValid, p0, p1, p2);
+            return EntityRes.GetString(EntityRes.ELinq_DbFunctionAttributeParameterNameNotValid, p0, p1, p2);
         }
 
         /// <summary>
-        /// A string like "The specified method '{0}' on the type '{1}' cannot be translated into a LINQ to Entities store expression because its return type does not match the return type of the function specified by its EdmFunction attribute."
+        /// A string like "The specified method '{0}' on the type '{1}' cannot be translated into a LINQ to Entities store expression because its return type does not match the return type of the function specified by its DbFunction attribute."
         /// </summary>
-        internal static string ELinq_EdmFunctionAttributedFunctionWithWrongReturnType(object p0, object p1)
+        internal static string ELinq_DbFunctionAttributedFunctionWithWrongReturnType(object p0, object p1)
         {
-            return EntityRes.GetString(EntityRes.ELinq_EdmFunctionAttributedFunctionWithWrongReturnType, p0, p1);
+            return EntityRes.GetString(EntityRes.ELinq_DbFunctionAttributedFunctionWithWrongReturnType, p0, p1);
         }
 
         /// <summary>
         /// A string like "This function can only be invoked from LINQ to Entities."
         /// </summary>
-        internal static string ELinq_EdmFunctionDirectCall
+        internal static string ELinq_DbFunctionDirectCall
         {
-            get { return EntityRes.GetString(EntityRes.ELinq_EdmFunctionDirectCall); }
+            get { return EntityRes.GetString(EntityRes.ELinq_DbFunctionDirectCall); }
         }
 
         /// <summary>
@@ -15267,9 +15267,9 @@ namespace System.Data.Entity.Resources
         internal const string ELinq_UnsupportedMergeAs = "ELinq_UnsupportedMergeAs";
         internal const string ELinq_MethodNotDirectlyCallable = "ELinq_MethodNotDirectlyCallable";
         internal const string ELinq_CycleDetected = "ELinq_CycleDetected";
-        internal const string ELinq_EdmFunctionAttributeParameterNameNotValid = "ELinq_EdmFunctionAttributeParameterNameNotValid";
-        internal const string ELinq_EdmFunctionAttributedFunctionWithWrongReturnType = "ELinq_EdmFunctionAttributedFunctionWithWrongReturnType";
-        internal const string ELinq_EdmFunctionDirectCall = "ELinq_EdmFunctionDirectCall";
+        internal const string ELinq_DbFunctionAttributeParameterNameNotValid = "ELinq_DbFunctionAttributeParameterNameNotValid";
+        internal const string ELinq_DbFunctionAttributedFunctionWithWrongReturnType = "ELinq_DbFunctionAttributedFunctionWithWrongReturnType";
+        internal const string ELinq_DbFunctionDirectCall = "ELinq_DbFunctionDirectCall";
         internal const string CompiledELinq_UnsupportedParameterTypes = "CompiledELinq_UnsupportedParameterTypes";
         internal const string CompiledELinq_UnsupportedNamedParameterType = "CompiledELinq_UnsupportedNamedParameterType";
         internal const string CompiledELinq_UnsupportedNamedParameterUseAsType = "CompiledELinq_UnsupportedNamedParameterUseAsType";

@@ -1,7 +1,6 @@
 namespace System.Data.Entity.Core.Objects.SqlClient
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -16,7 +15,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// <summary>
         /// Proxy for the function SqlServer.CHECKSUM_AGG
         /// </summary>
-        [EdmFunction("SqlServer", "CHECKSUM_AGG")]
+        [DbFunction("SqlServer", "CHECKSUM_AGG")]
         public static Int32? ChecksumAggregate(IEnumerable<Int32> arg)
         {
             var objectQuerySource = arg as ObjectQuery<Int32>;
@@ -26,14 +25,14 @@ namespace System.Data.Entity.Core.Objects.SqlClient
                     ((IQueryable)objectQuerySource).Provider.Execute<Int32?>(
                         Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), Expression.Constant(arg)));
             }
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.CHECKSUM_AGG
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [EdmFunction("SqlServer", "CHECKSUM_AGG")]
+        [DbFunction("SqlServer", "CHECKSUM_AGG")]
         public static Int32? ChecksumAggregate(IEnumerable<Int32?> arg)
         {
             var objectQuerySource = arg as ObjectQuery<Int32?>;
@@ -43,7 +42,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
                     ((IQueryable)objectQuerySource).Provider.Execute<Int32?>(
                         Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), Expression.Constant(arg)));
             }
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -51,20 +50,20 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Ascii")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "ASCII")]
+        [DbFunction("SqlServer", "ASCII")]
         public static Int32? Ascii(String arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.CHAR
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "CHAR")]
+        [DbFunction("SqlServer", "CHAR")]
         public static String Char(Int32? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -72,10 +71,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toSearch")]
-        [EdmFunction("SqlServer", "CHARINDEX")]
+        [DbFunction("SqlServer", "CHARINDEX")]
         public static Int32? CharIndex(String toSearch, String target)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -83,10 +82,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toSearch")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
-        [EdmFunction("SqlServer", "CHARINDEX")]
+        [DbFunction("SqlServer", "CHARINDEX")]
         public static Int32? CharIndex(Byte[] toSearch, Byte[] target)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -95,10 +94,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toSearch")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startLocation")]
-        [EdmFunction("SqlServer", "CHARINDEX")]
+        [DbFunction("SqlServer", "CHARINDEX")]
         public static Int32? CharIndex(String toSearch, String target, Int32? startLocation)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -107,10 +106,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startLocation")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toSearch")]
-        [EdmFunction("SqlServer", "CHARINDEX")]
+        [DbFunction("SqlServer", "CHARINDEX")]
         public static Int32? CharIndex(Byte[] toSearch, Byte[] target, Int32? startLocation)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -119,10 +118,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toSearch")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startLocation")]
-        [EdmFunction("SqlServer", "CHARINDEX")]
+        [DbFunction("SqlServer", "CHARINDEX")]
         public static Int64? CharIndex(String toSearch, String target, Int64? startLocation)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -131,10 +130,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toSearch")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startLocation")]
-        [EdmFunction("SqlServer", "CHARINDEX")]
+        [DbFunction("SqlServer", "CHARINDEX")]
         public static Int64? CharIndex(Byte[] toSearch, Byte[] target, Int64? startLocation)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -142,21 +141,21 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "string2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "string1")]
-        [EdmFunction("SqlServer", "DIFFERENCE")]
+        [DbFunction("SqlServer", "DIFFERENCE")]
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
         public static Int32? Difference(String string1, String string2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.NCHAR
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "NCHAR")]
+        [DbFunction("SqlServer", "NCHAR")]
         public static String NChar(Int32? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -164,22 +163,22 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "stringPattern")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
-        [EdmFunction("SqlServer", "PATINDEX")]
+        [DbFunction("SqlServer", "PATINDEX")]
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
         public static Int32? PatIndex(String stringPattern, String target)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.QUOTENAME
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "stringArg")]
-        [EdmFunction("SqlServer", "QUOTENAME")]
+        [DbFunction("SqlServer", "QUOTENAME")]
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
         public static String QuoteName(String stringArg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -187,11 +186,11 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "quoteCharacter")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "stringArg")]
-        [EdmFunction("SqlServer", "QUOTENAME")]
+        [DbFunction("SqlServer", "QUOTENAME")]
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
         public static String QuoteName(String stringArg, String quoteCharacter)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -199,50 +198,50 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "count")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
-        [EdmFunction("SqlServer", "REPLICATE")]
+        [DbFunction("SqlServer", "REPLICATE")]
         public static String Replicate(String target, Int32? count)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.SOUNDEX
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "SOUNDEX")]
+        [DbFunction("SqlServer", "SOUNDEX")]
         public static String SoundCode(String arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.SPACE
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "SPACE")]
+        [DbFunction("SqlServer", "SPACE")]
         public static String Space(Int32? arg1)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.STR
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "number")]
-        [EdmFunction("SqlServer", "STR")]
+        [DbFunction("SqlServer", "STR")]
         public static String StringConvert(Double? number)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.STR
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "number")]
-        [EdmFunction("SqlServer", "STR")]
+        [DbFunction("SqlServer", "STR")]
         public static String StringConvert(Decimal? number)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -250,10 +249,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "length")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "number")]
-        [EdmFunction("SqlServer", "STR")]
+        [DbFunction("SqlServer", "STR")]
         public static String StringConvert(Double? number, Int32? length)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -261,10 +260,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "number")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "length")]
-        [EdmFunction("SqlServer", "STR")]
+        [DbFunction("SqlServer", "STR")]
         public static String StringConvert(Decimal? number, Int32? length)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -273,10 +272,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "length")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "decimalArg")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "number")]
-        [EdmFunction("SqlServer", "STR")]
+        [DbFunction("SqlServer", "STR")]
         public static String StringConvert(Double? number, Int32? length, Int32? decimalArg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -285,10 +284,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "decimalArg")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "length")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "number")]
-        [EdmFunction("SqlServer", "STR")]
+        [DbFunction("SqlServer", "STR")]
         public static String StringConvert(Decimal? number, Int32? length, Int32? decimalArg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -298,81 +297,81 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "length")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "stringInput")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "stringReplacement")]
-        [EdmFunction("SqlServer", "STUFF")]
+        [DbFunction("SqlServer", "STUFF")]
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
         public static String Stuff(String stringInput, Int32? start, Int32? length, String stringReplacement)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.UNICODE
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "UNICODE")]
+        [DbFunction("SqlServer", "UNICODE")]
         public static Int32? Unicode(String arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.ACOS
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "ACOS")]
+        [DbFunction("SqlServer", "ACOS")]
         public static Double? Acos(Double? arg1)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.ACOS
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "ACOS")]
+        [DbFunction("SqlServer", "ACOS")]
         public static Double? Acos(Decimal? arg1)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.ASIN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "ASIN")]
+        [DbFunction("SqlServer", "ASIN")]
         public static Double? Asin(Double? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.ASIN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "ASIN")]
+        [DbFunction("SqlServer", "ASIN")]
         public static Double? Asin(Decimal? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.ATAN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "ATAN")]
+        [DbFunction("SqlServer", "ATAN")]
         public static Double? Atan(Double? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.ATAN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "ATAN")]
+        [DbFunction("SqlServer", "ATAN")]
         public static Double? Atan(Decimal? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -380,10 +379,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
-        [EdmFunction("SqlServer", "ATN2")]
+        [DbFunction("SqlServer", "ATN2")]
         public static Double? Atan2(Double? arg1, Double? arg2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -391,90 +390,90 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "ATN2")]
+        [DbFunction("SqlServer", "ATN2")]
         public static Double? Atan2(Decimal? arg1, Decimal? arg2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.COS
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "COS")]
+        [DbFunction("SqlServer", "COS")]
         public static Double? Cos(Double? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.COS
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "COS")]
+        [DbFunction("SqlServer", "COS")]
         public static Double? Cos(Decimal? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.COT
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "COT")]
+        [DbFunction("SqlServer", "COT")]
         public static Double? Cot(Double? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.COT
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "COT")]
+        [DbFunction("SqlServer", "COT")]
         public static Double? Cot(Decimal? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.DEGREES
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "DEGREES")]
+        [DbFunction("SqlServer", "DEGREES")]
         public static Int32? Degrees(Int32? arg1)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.DEGREES
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "DEGREES")]
+        [DbFunction("SqlServer", "DEGREES")]
         public static Int64? Degrees(Int64? arg1)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.DEGREES
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "DEGREES")]
+        [DbFunction("SqlServer", "DEGREES")]
         public static Decimal? Degrees(Decimal? arg1)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.DEGREES
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "DEGREES")]
+        [DbFunction("SqlServer", "DEGREES")]
         public static Double? Degrees(Double? arg1)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -482,10 +481,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Exp")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "EXP")]
+        [DbFunction("SqlServer", "EXP")]
         public static Double? Exp(Double? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -493,238 +492,238 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Exp")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "EXP")]
+        [DbFunction("SqlServer", "EXP")]
         public static Double? Exp(Decimal? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.LOG
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "LOG")]
+        [DbFunction("SqlServer", "LOG")]
         public static Double? Log(Double? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.LOG
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "LOG")]
+        [DbFunction("SqlServer", "LOG")]
         public static Double? Log(Decimal? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.LOG10
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "LOG10")]
+        [DbFunction("SqlServer", "LOG10")]
         public static Double? Log10(Double? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.LOG10
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "LOG10")]
+        [DbFunction("SqlServer", "LOG10")]
         public static Double? Log10(Decimal? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.PI
         /// </summary>
-        [EdmFunction("SqlServer", "PI")]
+        [DbFunction("SqlServer", "PI")]
         public static Double? Pi()
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.RADIANS
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "RADIANS")]
+        [DbFunction("SqlServer", "RADIANS")]
         public static Int32? Radians(Int32? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.RADIANS
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "RADIANS")]
+        [DbFunction("SqlServer", "RADIANS")]
         public static Int64? Radians(Int64? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.RADIANS
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "RADIANS")]
+        [DbFunction("SqlServer", "RADIANS")]
         public static Decimal? Radians(Decimal? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.RADIANS
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "RADIANS")]
+        [DbFunction("SqlServer", "RADIANS")]
         public static Double? Radians(Double? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.RAND
         /// </summary>
-        [EdmFunction("SqlServer", "RAND")]
+        [DbFunction("SqlServer", "RAND")]
         public static Double? Rand()
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.RAND
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "seed")]
-        [EdmFunction("SqlServer", "RAND")]
+        [DbFunction("SqlServer", "RAND")]
         public static Double? Rand(Int32? seed)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.SIGN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "SIGN")]
+        [DbFunction("SqlServer", "SIGN")]
         public static Int32? Sign(Int32? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.SIGN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "SIGN")]
+        [DbFunction("SqlServer", "SIGN")]
         public static Int64? Sign(Int64? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.SIGN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "SIGN")]
+        [DbFunction("SqlServer", "SIGN")]
         public static Decimal? Sign(Decimal? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.SIGN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "SIGN")]
+        [DbFunction("SqlServer", "SIGN")]
         public static Double? Sign(Double? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.SIN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "SIN")]
+        [DbFunction("SqlServer", "SIN")]
         public static Double? Sin(Decimal? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.SIN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "SIN")]
+        [DbFunction("SqlServer", "SIN")]
         public static Double? Sin(Double? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.SQRT
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "SQRT")]
+        [DbFunction("SqlServer", "SQRT")]
         public static Double? SquareRoot(Double? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.SQRT
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "SQRT")]
+        [DbFunction("SqlServer", "SQRT")]
         public static Double? SquareRoot(Decimal? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.SQUARE
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "SQUARE")]
+        [DbFunction("SqlServer", "SQUARE")]
         public static Double? Square(Double? arg1)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.SQUARE
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "SQUARE")]
+        [DbFunction("SqlServer", "SQUARE")]
         public static Double? Square(Decimal? arg1)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.TAN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "TAN")]
+        [DbFunction("SqlServer", "TAN")]
         public static Double? Tan(Double? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.TAN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "TAN")]
+        [DbFunction("SqlServer", "TAN")]
         public static Double? Tan(Decimal? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -733,10 +732,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "number")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "date")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
-        [EdmFunction("SqlServer", "DATEADD")]
+        [DbFunction("SqlServer", "DATEADD")]
         public static DateTime? DateAdd(String datePartArg, Double? number, DateTime? date)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -745,10 +744,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "time")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "number")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
-        [EdmFunction("SqlServer", "DATEADD")]
+        [DbFunction("SqlServer", "DATEADD")]
         public static TimeSpan? DateAdd(String datePartArg, Double? number, TimeSpan? time)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -757,10 +756,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "number")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dateTimeOffsetArg")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
-        [EdmFunction("SqlServer", "DATEADD")]
+        [DbFunction("SqlServer", "DATEADD")]
         public static DateTimeOffset? DateAdd(String datePartArg, Double? number, DateTimeOffset? dateTimeOffsetArg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -769,10 +768,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "date")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "number")]
-        [EdmFunction("SqlServer", "DATEADD")]
+        [DbFunction("SqlServer", "DATEADD")]
         public static DateTime? DateAdd(String datePartArg, Double? number, String date)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -781,10 +780,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "endDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
-        [EdmFunction("SqlServer", "DATEDIFF")]
+        [DbFunction("SqlServer", "DATEDIFF")]
         public static Int32? DateDiff(String datePartArg, DateTime? startDate, DateTime? endDate)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -793,10 +792,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "endDate")]
-        [EdmFunction("SqlServer", "DATEDIFF")]
+        [DbFunction("SqlServer", "DATEDIFF")]
         public static Int32? DateDiff(String datePartArg, DateTimeOffset? startDate, DateTimeOffset? endDate)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -805,10 +804,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "endDate")]
-        [EdmFunction("SqlServer", "DATEDIFF")]
+        [DbFunction("SqlServer", "DATEDIFF")]
         public static Int32? DateDiff(String datePartArg, TimeSpan? startDate, TimeSpan? endDate)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -817,10 +816,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "endDate")]
-        [EdmFunction("SqlServer", "DATEDIFF")]
+        [DbFunction("SqlServer", "DATEDIFF")]
         public static Int32? DateDiff(String datePartArg, String startDate, DateTime? endDate)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -829,10 +828,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "endDate")]
-        [EdmFunction("SqlServer", "DATEDIFF")]
+        [DbFunction("SqlServer", "DATEDIFF")]
         public static Int32? DateDiff(String datePartArg, String startDate, DateTimeOffset? endDate)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -841,10 +840,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "endDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
-        [EdmFunction("SqlServer", "DATEDIFF")]
+        [DbFunction("SqlServer", "DATEDIFF")]
         public static Int32? DateDiff(String datePartArg, String startDate, TimeSpan? endDate)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -853,10 +852,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "endDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startDate")]
-        [EdmFunction("SqlServer", "DATEDIFF")]
+        [DbFunction("SqlServer", "DATEDIFF")]
         public static Int32? DateDiff(String datePartArg, TimeSpan? startDate, String endDate)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -865,10 +864,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "endDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
-        [EdmFunction("SqlServer", "DATEDIFF")]
+        [DbFunction("SqlServer", "DATEDIFF")]
         public static Int32? DateDiff(String datePartArg, DateTime? startDate, String endDate)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -877,10 +876,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "endDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
-        [EdmFunction("SqlServer", "DATEDIFF")]
+        [DbFunction("SqlServer", "DATEDIFF")]
         public static Int32? DateDiff(String datePartArg, DateTimeOffset? startDate, String endDate)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -889,10 +888,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "endDate")]
-        [EdmFunction("SqlServer", "DATEDIFF")]
+        [DbFunction("SqlServer", "DATEDIFF")]
         public static Int32? DateDiff(String datePartArg, String startDate, String endDate)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -901,10 +900,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "endDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
-        [EdmFunction("SqlServer", "DATEDIFF")]
+        [DbFunction("SqlServer", "DATEDIFF")]
         public static Int32? DateDiff(String datePartArg, TimeSpan? startDate, DateTime? endDate)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -913,10 +912,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "endDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startDate")]
-        [EdmFunction("SqlServer", "DATEDIFF")]
+        [DbFunction("SqlServer", "DATEDIFF")]
         public static Int32? DateDiff(String datePartArg, TimeSpan? startDate, DateTimeOffset? endDate)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -925,10 +924,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "endDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
-        [EdmFunction("SqlServer", "DATEDIFF")]
+        [DbFunction("SqlServer", "DATEDIFF")]
         public static Int32? DateDiff(String datePartArg, DateTime? startDate, TimeSpan? endDate)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -937,10 +936,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "endDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startDate")]
-        [EdmFunction("SqlServer", "DATEDIFF")]
+        [DbFunction("SqlServer", "DATEDIFF")]
         public static Int32? DateDiff(String datePartArg, DateTimeOffset? startDate, TimeSpan? endDate)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -949,10 +948,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "endDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
-        [EdmFunction("SqlServer", "DATEDIFF")]
+        [DbFunction("SqlServer", "DATEDIFF")]
         public static Int32? DateDiff(String datePartArg, DateTime? startDate, DateTimeOffset? endDate)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -961,10 +960,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "endDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startDate")]
-        [EdmFunction("SqlServer", "DATEDIFF")]
+        [DbFunction("SqlServer", "DATEDIFF")]
         public static Int32? DateDiff(String datePartArg, DateTimeOffset? startDate, DateTime? endDate)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -972,10 +971,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "date")]
-        [EdmFunction("SqlServer", "DATENAME")]
+        [DbFunction("SqlServer", "DATENAME")]
         public static String DateName(String datePartArg, DateTime? date)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -983,10 +982,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "date")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
-        [EdmFunction("SqlServer", "DATENAME")]
+        [DbFunction("SqlServer", "DATENAME")]
         public static String DateName(String datePartArg, String date)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -994,10 +993,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "date")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
-        [EdmFunction("SqlServer", "DATENAME")]
+        [DbFunction("SqlServer", "DATENAME")]
         public static String DateName(String datePartArg, TimeSpan? date)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1005,10 +1004,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "date")]
-        [EdmFunction("SqlServer", "DATENAME")]
+        [DbFunction("SqlServer", "DATENAME")]
         public static String DateName(String datePartArg, DateTimeOffset? date)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1016,10 +1015,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "date")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
-        [EdmFunction("SqlServer", "DATEPART")]
+        [DbFunction("SqlServer", "DATEPART")]
         public static Int32? DatePart(String datePartArg, DateTime? date)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1027,10 +1026,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "date")]
-        [EdmFunction("SqlServer", "DATEPART")]
+        [DbFunction("SqlServer", "DATEPART")]
         public static Int32? DatePart(String datePartArg, DateTimeOffset? date)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1038,10 +1037,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "date")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
-        [EdmFunction("SqlServer", "DATEPART")]
+        [DbFunction("SqlServer", "DATEPART")]
         public static Int32? DatePart(String datePartArg, String date)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1049,210 +1048,210 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "date")]
-        [EdmFunction("SqlServer", "DATEPART")]
+        [DbFunction("SqlServer", "DATEPART")]
         public static Int32? DatePart(String datePartArg, TimeSpan? date)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.GETDATE
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        [EdmFunction("SqlServer", "GETDATE")]
+        [DbFunction("SqlServer", "GETDATE")]
         public static DateTime? GetDate()
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.GETUTCDATE
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        [EdmFunction("SqlServer", "GETUTCDATE")]
+        [DbFunction("SqlServer", "GETUTCDATE")]
         public static DateTime? GetUtcDate()
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.DATALENGTH
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "DATALENGTH")]
+        [DbFunction("SqlServer", "DATALENGTH")]
         public static Int32? DataLength(Boolean? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.DATALENGTH
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "DATALENGTH")]
+        [DbFunction("SqlServer", "DATALENGTH")]
         public static Int32? DataLength(Double? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.DATALENGTH
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "DATALENGTH")]
+        [DbFunction("SqlServer", "DATALENGTH")]
         public static Int32? DataLength(Decimal? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.DATALENGTH
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "DATALENGTH")]
+        [DbFunction("SqlServer", "DATALENGTH")]
         public static Int32? DataLength(DateTime? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.DATALENGTH
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "DATALENGTH")]
+        [DbFunction("SqlServer", "DATALENGTH")]
         public static Int32? DataLength(TimeSpan? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.DATALENGTH
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "DATALENGTH")]
+        [DbFunction("SqlServer", "DATALENGTH")]
         public static Int32? DataLength(DateTimeOffset? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.DATALENGTH
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "DATALENGTH")]
+        [DbFunction("SqlServer", "DATALENGTH")]
         public static Int32? DataLength(String arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.DATALENGTH
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "DATALENGTH")]
+        [DbFunction("SqlServer", "DATALENGTH")]
         public static Int32? DataLength(Byte[] arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.DATALENGTH
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "DATALENGTH")]
+        [DbFunction("SqlServer", "DATALENGTH")]
         public static Int32? DataLength(Guid? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.CHECKSUM
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(Boolean? arg1)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.CHECKSUM
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(Double? arg1)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.CHECKSUM
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(Decimal? arg1)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.CHECKSUM
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(String arg1)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.CHECKSUM
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(DateTime? arg1)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.CHECKSUM
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(TimeSpan? arg1)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.CHECKSUM
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(DateTimeOffset? arg1)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.CHECKSUM
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(Byte[] arg1)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.CHECKSUM
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(Guid? arg1)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1260,10 +1259,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(Boolean? arg1, Boolean? arg2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1271,10 +1270,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(Double? arg1, Double? arg2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1282,10 +1281,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(Decimal? arg1, Decimal? arg2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1293,10 +1292,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(String arg1, String arg2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1304,10 +1303,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(DateTime? arg1, DateTime? arg2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1315,10 +1314,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(TimeSpan? arg1, TimeSpan? arg2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1326,10 +1325,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(DateTimeOffset? arg1, DateTimeOffset? arg2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1337,10 +1336,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(Byte[] arg1, Byte[] arg2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1348,10 +1347,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(Guid? arg1, Guid? arg2)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1360,10 +1359,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg3")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(Boolean? arg1, Boolean? arg2, Boolean? arg3)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1372,10 +1371,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg3")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(Double? arg1, Double? arg2, Double? arg3)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1384,10 +1383,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg3")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(Decimal? arg1, Decimal? arg2, Decimal? arg3)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1396,10 +1395,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg3")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(String arg1, String arg2, String arg3)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1408,10 +1407,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg3")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(DateTime? arg1, DateTime? arg2, DateTime? arg3)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1420,10 +1419,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg3")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(DateTimeOffset? arg1, DateTimeOffset? arg2, DateTimeOffset? arg3)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1432,10 +1431,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg3")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(TimeSpan? arg1, TimeSpan? arg2, TimeSpan? arg3)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1444,10 +1443,10 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg3")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(Byte[] arg1, Byte[] arg2, Byte[] arg3)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -1456,76 +1455,76 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg3")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
-        [EdmFunction("SqlServer", "CHECKSUM")]
+        [DbFunction("SqlServer", "CHECKSUM")]
         public static Int32? Checksum(Guid? arg1, Guid? arg2, Guid? arg3)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.CURRENT_TIMESTAMP
         /// </summary>
-        [EdmFunction("SqlServer", "CURRENT_TIMESTAMP")]
+        [DbFunction("SqlServer", "CURRENT_TIMESTAMP")]
         public static DateTime? CurrentTimestamp()
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.CURRENT_USER
         /// </summary>
-        [EdmFunction("SqlServer", "CURRENT_USER")]
+        [DbFunction("SqlServer", "CURRENT_USER")]
         public static String CurrentUser()
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.HOST_NAME
         /// </summary>
-        [EdmFunction("SqlServer", "HOST_NAME")]
+        [DbFunction("SqlServer", "HOST_NAME")]
         public static String HostName()
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.USER_NAME
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "USER_NAME")]
+        [DbFunction("SqlServer", "USER_NAME")]
         public static String UserName(Int32? arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.USER_NAME
         /// </summary>
-        [EdmFunction("SqlServer", "USER_NAME")]
+        [DbFunction("SqlServer", "USER_NAME")]
         public static String UserName()
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.ISNUMERIC
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "ISNUMERIC")]
+        [DbFunction("SqlServer", "ISNUMERIC")]
         public static Int32? IsNumeric(String arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
         /// Proxy for the function SqlServer.ISDATE
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
-        [EdmFunction("SqlServer", "ISDATE")]
+        [DbFunction("SqlServer", "ISDATE")]
         public static Int32? IsDate(String arg)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_EdmFunctionDirectCall);
+            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
         }
     }
 }

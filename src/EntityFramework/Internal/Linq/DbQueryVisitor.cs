@@ -2,7 +2,6 @@ namespace System.Data.Entity.Internal.Linq
 {
     using System.Collections.Concurrent;
     using System.Data.Entity.Core.Objects;
-    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Infrastructure;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -48,7 +47,7 @@ namespace System.Data.Entity.Internal.Linq
                     // as a function.
                     var context = GetContextFromConstantExpression(memberExpression.Expression, memberExpression.Member);
                     if (context != null &&
-                        !node.Method.GetCustomAttributes(typeof(EdmFunctionAttribute), false).Any()
+                        !node.Method.GetCustomAttributes(typeof(DbFunctionAttribute), false).Any()
                         &&
                         node.Method.GetParameters().Length == 0)
                     {

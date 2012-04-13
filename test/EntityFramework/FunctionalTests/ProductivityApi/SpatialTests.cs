@@ -74,7 +74,7 @@
             }
         }
 
-        [EdmFunction("SpatialNorthwindContext", "SuppliersWithinRange")]
+        [DbFunction("SpatialNorthwindContext", "SuppliersWithinRange")]
         public static IQueryable<SupplierWithLocation> ArbitrarySuppliersWithinRange(int? miles, DbGeography location)
         {
             throw new NotImplementedException("Should not be called by client code.");

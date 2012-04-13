@@ -7,7 +7,6 @@
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Linq;
@@ -57,8 +56,8 @@
                 }
 
                 // check if this method has the FunctionAttribute (known proxy)
-                var functionAttribute = linq.Method.GetCustomAttributes(typeof(EdmFunctionAttribute), false)
-                    .Cast<EdmFunctionAttribute>().FirstOrDefault();
+                var functionAttribute = linq.Method.GetCustomAttributes(typeof(DbFunctionAttribute), false)
+                    .Cast<DbFunctionAttribute>().FirstOrDefault();
                 if (null != functionAttribute)
                 {
                     return s_functionCallTranslator.TranslateFunctionCall(parent, linq, functionAttribute);
@@ -650,7 +649,7 @@
             private sealed class FunctionCallTranslator
             {
                 internal CqtExpression TranslateFunctionCall(
-                    ExpressionConverter parent, MethodCallExpression call, EdmFunctionAttribute functionAttribute)
+                    ExpressionConverter parent, MethodCallExpression call, DbFunctionAttribute functionAttribute)
                 {
                     //Validate that the attribute parameters are not null or empty
                     ValidateFunctionAttributeParameter(call, functionAttribute.NamespaceName, "namespaceName");
@@ -796,7 +795,7 @@
                                 if (!clrReturnType.IsGenericType)
                                 {
                                     throw EntityUtil.NotSupported(
-                                        Strings.ELinq_EdmFunctionAttributedFunctionWithWrongReturnType(
+                                        Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
                                             call.Method, call.Method.DeclaringType));
                                 }
                                 var genericType = clrReturnType.GetGenericTypeDefinition();
@@ -804,7 +803,7 @@
                                     && (genericType != typeof(IQueryable<>)))
                                 {
                                     throw EntityUtil.NotSupported(
-                                        Strings.ELinq_EdmFunctionAttributedFunctionWithWrongReturnType(
+                                        Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
                                             call.Method, call.Method.DeclaringType));
                                 }
                                 var elementType = clrReturnType.GetGenericArguments()[0];
@@ -817,7 +816,7 @@
                                 if (clrReturnType != typeof(DbDataRecord))
                                 {
                                     throw EntityUtil.NotSupported(
-                                        Strings.ELinq_EdmFunctionAttributedFunctionWithWrongReturnType(
+                                        Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
                                             call.Method, call.Method.DeclaringType));
                                 }
                                 break;
@@ -827,7 +826,7 @@
                                 if (clrReturnType != typeof(EntityKey))
                                 {
                                     throw EntityUtil.NotSupported(
-                                        Strings.ELinq_EdmFunctionAttributedFunctionWithWrongReturnType(
+                                        Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
                                             call.Method, call.Method.DeclaringType));
                                 }
                                 break;
@@ -842,7 +841,7 @@
                                     if (toType != null)
                                     {
                                         throw EntityUtil.NotSupported(
-                                            Strings.ELinq_EdmFunctionAttributedFunctionWithWrongReturnType(
+                                            Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
                                                 call.Method, call.Method.DeclaringType));
                                     }
                                 }
@@ -853,7 +852,7 @@
                                 if (!TypeSemantics.IsPromotableTo(actualReturnType, expectedReturnType))
                                 {
                                     throw EntityUtil.NotSupported(
-                                        Strings.ELinq_EdmFunctionAttributedFunctionWithWrongReturnType(
+                                        Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
                                             call.Method, call.Method.DeclaringType));
                                 }
 
@@ -880,7 +879,7 @@
                     if (String.IsNullOrEmpty(parameterValue))
                     {
                         throw EntityUtil.NotSupported(
-                            Strings.ELinq_EdmFunctionAttributeParameterNameNotValid(call.Method, call.Method.DeclaringType, parameterName));
+                            Strings.ELinq_DbFunctionAttributeParameterNameNotValid(call.Method, call.Method.DeclaringType, parameterName));
                     }
                 }
             }
@@ -1024,7 +1023,7 @@
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(EntityFunctions).GetMethod(
+                        typeof(DbFunctions).GetMethod(
                             AsUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
                 }
             }
@@ -1039,7 +1038,7 @@
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(EntityFunctions).GetMethod(
+                        typeof(DbFunctions).GetMethod(
                             AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
                 }
             }

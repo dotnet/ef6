@@ -1,20 +1,23 @@
-﻿namespace System.Data.Entity.Core.Objects.DataClasses
+﻿namespace System.Data.Entity
 {
     /// <summary>
     /// Indicates that the given method is a proxy for an EDM function.
     /// </summary>
+    /// <remarks>
+    /// Note that this class was called EdmFunctionAttribute in some previous versions of Entity Framework.
+    /// </remarks>
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class EdmFunctionAttribute : Attribute
+    public sealed class DbFunctionAttribute : Attribute
     {
         private readonly string _namespaceName;
         private readonly string _functionName;
 
         /// <summary>
-        /// Creates a new EdmFunctionAttribute instance.
+        /// Creates a new DbFunctionAttribute instance.
         /// </summary>
         /// <param name="namespaceName">The namespace name of the EDM function represented by the attributed method</param>
         /// <param name="functionName">The function name of the EDM function represented by the attributed method</param>
-        public EdmFunctionAttribute(string namespaceName, string functionName)
+        public DbFunctionAttribute(string namespaceName, string functionName)
         {
             _namespaceName = namespaceName;
             _functionName = functionName;

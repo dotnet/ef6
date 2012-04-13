@@ -645,7 +645,6 @@
     <Compile Include="Core\Objects\DataClasses\EdmComplexTypeAttribute.cs" />
     <Compile Include="Core\Objects\DataClasses\EdmEntityTypeAttribute.cs" />
     <Compile Include="Core\Objects\DataClasses\EdmEnumTypeAttribute.cs" />
-    <Compile Include="Core\Objects\DataClasses\EdmFunctionAttribute.cs" />
     <Compile Include="Core\Objects\DataClasses\EdmPropertyAttribute.cs" />
     <Compile Include="Core\Objects\DataClasses\EdmRelationshipNavigationPropertyAttribute.cs" />
     <Compile Include="Core\Objects\DataClasses\EdmRelationshipRoleAttribute.cs" />
@@ -687,7 +686,6 @@
     <Compile Include="Core\Objects\ELinq\Translator.cs" />
     <Compile Include="Core\Objects\ELinq\TypeSystem.cs" />
     <Compile Include="Core\Objects\EntityEntry.cs" />
-    <Compile Include="Core\Objects\EntityFunctions.cs" />
     <Compile Include="Core\Objects\FieldDescriptor.cs" />
     <Compile Include="Core\Objects\Internal\BaseEntityWrapper.cs" />
     <Compile Include="Core\Objects\Internal\complextypematerializer.cs" />
@@ -839,6 +837,8 @@
     <Compile Include="Core\SqlClient\SqlTypesAssembly.cs" />
     <Compile Include="Core\SqlClient\SqlVersion.cs" />
     <Compile Include="Core\UpdateException.cs" />
+    <Compile Include="DbFunctionAttribute.cs" />
+    <Compile Include="DbFunctions.cs" />
     <Compile Include="Edm\EdmEnumType.cs" />
     <Compile Include="Edm\EdmEnumTypeMember.cs" />
     <Compile Include="EntityState.cs" />
