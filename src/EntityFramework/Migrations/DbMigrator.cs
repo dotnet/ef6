@@ -115,8 +115,8 @@ namespace System.Data.Entity.Migrations
                 _historyRepository = new HistoryRepository(_usersContextInfo.ConnectionString, _providerFactory);
                 _providerManifestToken = context.InternalContext.ModelProviderInfo != null
                                              ? context.InternalContext.ModelProviderInfo.ProviderManifestToken
-                                         // TODO: Not calling using extension method syntax here because of conflicts due to duplicate extension methods
-                                         // Should fix this post EF5.
+                    // TODO: Not calling using extension method syntax here because of conflicts due to duplicate extension methods
+                    // Should fix this post EF5.
                                              : DbProviderServices.GetProviderServices(connection).
                                                    GetProviderManifestTokenChecked(connection);
 
@@ -683,6 +683,8 @@ namespace System.Data.Entity.Migrations
                 {
                     command.CommandText = migrationStatement.Sql;
                     command.Transaction = transaction;
+                    ConfigureCommand(command);
+
                     command.ExecuteNonQuery();
                 }
             }
@@ -693,11 +695,20 @@ namespace System.Data.Entity.Migrations
                     using (var command = connection.CreateCommand())
                     {
                         command.CommandText = migrationStatement.Sql;
+                        ConfigureCommand(command);
 
                         connection.Open();
                         command.ExecuteNonQuery();
                     }
                 }
+            }
+        }
+
+        private void ConfigureCommand(DbCommand command)
+        {
+            if (_configuration.CommandTimeout.HasValue)
+            {
+                command.CommandTimeout = _configuration.CommandTimeout.Value;
             }
         }
 

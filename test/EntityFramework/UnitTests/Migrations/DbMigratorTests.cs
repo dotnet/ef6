@@ -10,6 +10,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
+    using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.SqlClient;
@@ -893,6 +894,46 @@ namespace System.Data.Entity.Migrations
             migrator.Update();
 
             Assert.True(DatabaseExists());
+        }
+    }
+
+    [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
+    public class DbMigratorTests_SqlClientOnly : DbTestCase
+    {
+        [MigrationsTheory]
+        public void ExecuteSql_should_honor_CommandTimeout()
+        {
+            var migrator = CreateMigrator<ShopContext_v1>();
+            migrator.Configuration.CommandTimeout = 1;
+            var migrationStatements = new[]
+                {
+                    new MigrationStatement { Sql = "WAITFOR DELAY '00:00:02'" }
+                };
+
+            var ex = Assert.Throws<SqlException>(
+                () => migrator.ExecuteStatements(migrationStatements));
+
+            Assert.Equal(-2, ex.Number);
+        }
+
+        [MigrationsTheory]
+        public void ExecuteSql_when_SuppressTransaction_should_honor_CommandTimeout()
+        {
+            var migrator = CreateMigrator<ShopContext_v1>();
+            migrator.Configuration.CommandTimeout = 1;
+            var migrationStatements = new[]
+                {
+                    new MigrationStatement
+                    {
+                        Sql = "WAITFOR DELAY '00:00:02'",
+                        SuppressTransaction = true
+                    }
+                };
+
+            var ex = Assert.Throws<SqlException>(
+                () => migrator.ExecuteStatements(migrationStatements));
+
+            Assert.Equal(-2, ex.Number);
         }
     }
 }

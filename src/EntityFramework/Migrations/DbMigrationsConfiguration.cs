@@ -157,6 +157,13 @@
             }
         }
 
+        /// <summary>
+        /// Gets or sets the timeout value used for the individual commands within a
+        /// migration. A null value indicates that the default value of the underlying
+        /// provider will be used.
+        /// </summary>
+        public int? CommandTimeout { get; set; }
+
         internal virtual void OnSeed(DbContext context)
         {
             Contract.Requires(context != null);
