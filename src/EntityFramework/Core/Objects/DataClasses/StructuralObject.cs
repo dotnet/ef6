@@ -2,7 +2,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 {
     using System.ComponentModel;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity.Core.Spatial;
+    using System.Data.Entity.Spatial;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
 
@@ -1474,7 +1474,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// Validates that the property is not null, and throws if it is
         /// </summary>
         /// <param name="value">
-        /// <see cref="System.Data.Entity.Core.Spatial.DbGeography"/> value to be checked.
+        /// <see cref="DbGeography"/> value to be checked.
         /// </param>
         /// <param name="isNullable">
         /// Flag indicating if this property is allowed to be null.
@@ -1501,7 +1501,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// Validates that the property is not null, and throws if it is
         /// </summary>
         /// <param name="value">
-        /// <see cref="System.Data.Entity.Core.Spatial.DbGeography"/> value to be checked.
+        /// <see cref="DbGeography"/> value to be checked.
         /// </param>
         /// <param name="isNullable">
         /// Flag indicating if this property is allowed to be null.
@@ -1518,7 +1518,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// Validates that the property is not null, and throws if it is
         /// </summary>
         /// <param name="value">
-        /// <see cref="System.Data.Entity.Core.Spatial.DbGeometry"/> value to be checked.
+        /// <see cref="DbGeometry"/> value to be checked.
         /// </param>
         /// <param name="isNullable">
         /// Flag indicating if this property is allowed to be null.
@@ -1545,7 +1545,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// Validates that the property is not null, and throws if it is
         /// </summary>
         /// <param name="value">
-        /// <see cref="System.Data.Entity.Core.Spatial.DbGeometry"/> value to be checked.
+        /// <see cref="DbGeometry"/> value to be checked.
         /// </param>
         /// <param name="isNullable">
         /// Flag indicating if this property is allowed to be null.

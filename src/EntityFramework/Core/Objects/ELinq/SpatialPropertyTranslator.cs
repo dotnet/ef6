@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Data.Entity.Core.Spatial;
+    using System.Data.Entity.Spatial;
     using System.Diagnostics;
     using System.Linq.Expressions;
     using System.Reflection;

@@ -2,7 +2,7 @@ namespace System.Data.Entity.ModelConfiguration.Utilities.UnitTests
 {
     using System.Collections.Generic;
     using System.Data.Entity.Edm;
-    using System.Data.Entity.Core.Spatial;
+    using System.Data.Entity.Spatial;
     using System.IO;
     using System.Reflection;
     using Xunit;

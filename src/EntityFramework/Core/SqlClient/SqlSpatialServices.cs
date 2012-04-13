@@ -2,9 +2,9 @@ namespace System.Data.Entity.Core.SqlClient
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity.Core.Spatial;
-    using System.Data.Entity.Core.Spatial.Internal;
     using System.Data.Entity.Core.SqlClient.Internal;
+    using System.Data.Entity.Spatial;
+    using System.Data.Entity.Spatial.Internal;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Reflection;

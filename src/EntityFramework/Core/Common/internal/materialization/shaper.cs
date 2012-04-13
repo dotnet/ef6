@@ -8,8 +8,8 @@
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Core.Objects.Internal;
-    using System.Data.Entity.Core.Spatial;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Spatial;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Reflection;

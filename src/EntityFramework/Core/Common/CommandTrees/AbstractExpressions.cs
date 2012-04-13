@@ -3,7 +3,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.ComponentModel;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Spatial;
+    using System.Data.Entity.Spatial;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;

@@ -46,8 +46,8 @@
                             .SequenceEqual(new[]
                                                {
                                                    "System",
-                                                   "System.Data.Entity.Core.Spatial",
-                                                   "System.Data.Entity.Migrations"
+                                                   "System.Data.Entity.Migrations",
+                                                   "System.Data.Entity.Spatial"
                                                }));
         }
 
@@ -64,8 +64,8 @@
                             .SequenceEqual(new[]
                                                {
                                                    "System",
-                                                   "System.Data.Entity.Core.Spatial",
-                                                   "System.Data.Entity.Migrations"
+                                                   "System.Data.Entity.Migrations",
+                                                   "System.Data.Entity.Spatial"
                                                }));
         }
 

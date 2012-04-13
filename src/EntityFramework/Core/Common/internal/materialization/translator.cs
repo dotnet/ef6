@@ -1158,7 +1158,7 @@
         }
 
         /// <summary>
-        /// Create expression to read a column value of type System.Data.Entity.Core.Spatial.DbGeography by delegating to the DbSpatialServices implementation of the underlying provider
+        /// Create expression to read a column value of type System.Data.Entity.Spatial.DbGeography by delegating to the DbSpatialServices implementation of the underlying provider
         /// </summary>
         private static Expression Emit_Shaper_GetGeographyColumnValue(int ordinal)
         {
@@ -1168,7 +1168,7 @@
         }
 
         /// <summary>
-        /// Create expression to read a column value of type System.Data.Entity.Core.Spatial.DbGeometry by delegating to the DbSpatialServices implementation of the underlying provider
+        /// Create expression to read a column value of type System.Data.Entity.Spatial.DbGeometry by delegating to the DbSpatialServices implementation of the underlying provider
         /// </summary>
         private static Expression Emit_Shaper_GetGeometryColumnValue(int ordinal)
         {

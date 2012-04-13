@@ -3,7 +3,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers.UnitTests
     using System.Collections.Generic;
     using System.Data.Entity.Edm.Common;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.Core.Spatial;
+    using System.Data.Entity.Spatial;
     using System.Linq;
     using System.Reflection;
     using Moq;

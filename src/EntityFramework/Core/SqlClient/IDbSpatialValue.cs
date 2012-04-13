@@ -1,7 +1,7 @@
 namespace System.Data.Entity.Core.SqlClient.Internal
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Spatial;
+    using System.Data.Entity.Spatial;
 
     /// <summary>
     /// Adapter interface to make working with instances of <see cref="DbGeometry"/> or <see cref="DbGeography"/> easier.  

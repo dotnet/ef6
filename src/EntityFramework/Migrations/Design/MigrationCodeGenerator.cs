@@ -45,7 +45,7 @@ namespace System.Data.Entity.Migrations.Design
             if (operations.OfType<AddColumnOperation>().Any(
                 o => o.Column.Type == PrimitiveTypeKind.Geography || o.Column.Type == PrimitiveTypeKind.Geometry))
             {
-                namespaces = namespaces.Concat(new[] { "System.Data.Entity.Core.Spatial" });
+                namespaces = namespaces.Concat(new[] { "System.Data.Entity.Spatial" });
             }
 
             return namespaces.Distinct().OrderBy(n => n);

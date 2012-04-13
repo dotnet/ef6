@@ -1,4 +1,4 @@
-namespace System.Data.Entity.Core.Spatial
+namespace System.Data.Entity.Spatial
 {
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.SqlClient;

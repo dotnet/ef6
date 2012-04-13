@@ -2,7 +2,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common;
-    using System.Data.Entity.Core.Spatial;
+    using System.Data.Entity.Spatial;
     using System.Threading;
     using System.Xml;
 
@@ -86,8 +86,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     case TypeCode.Double:
                         primitiveTypeKind = PrimitiveTypeKind.Double;
                         break;
-                        // PrimitiveTypeKind.Geography = System.Data.Entity.Core.Spatial.DbGeometry (or subtype) = TypeCode.Object
-                        // PrimitiveTypeKind.Geometry = System.Data.Entity.Core.Spatial.DbGeometry (or subtype) = TypeCode.Object
+                        // PrimitiveTypeKind.Geography = System.Data.Entity.Spatial.DbGeometry (or subtype) = TypeCode.Object
+                        // PrimitiveTypeKind.Geometry = System.Data.Entity.Spatial.DbGeometry (or subtype) = TypeCode.Object
                         // PrimitiveTypeKind.Guid = System.Guid = TypeCode.Object
                     case TypeCode.Int16:
                         primitiveTypeKind = PrimitiveTypeKind.Int16;

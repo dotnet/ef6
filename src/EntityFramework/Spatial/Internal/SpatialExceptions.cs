@@ -1,5 +1,6 @@
-﻿namespace System.Data.Entity.Core.Spatial.Internal
+﻿namespace System.Data.Entity.Spatial.Internal
 {
+    using System.Data.Entity.Core;
     using System.Data.Entity.Resources;
 
     internal static class SpatialExceptions

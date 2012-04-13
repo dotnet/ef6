@@ -4,8 +4,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Spatial;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Spatial;
     using System.Diagnostics;
 
     internal partial class Propagator

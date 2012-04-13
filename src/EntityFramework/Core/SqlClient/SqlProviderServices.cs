@@ -7,9 +7,9 @@ namespace System.Data.Entity.Core.SqlClient
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Spatial;
     using System.Data.Entity.Core.SqlClient.SqlGen;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Spatial;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;

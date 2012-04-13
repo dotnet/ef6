@@ -1,4 +1,4 @@
-﻿namespace System.Data.Entity.Core.Spatial
+﻿namespace System.Data.Entity.Spatial
 {
     using System.Data.Common;
     using System.Data.Entity.Core.Common;

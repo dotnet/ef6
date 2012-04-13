@@ -1,6 +1,6 @@
-﻿namespace System.Data.Entity.Core.Spatial
+﻿namespace System.Data.Entity.Spatial
 {
-    using System.Data.Entity.Core.Spatial.Internal;
+    using System.Data.Entity.Spatial.Internal;
 
     internal static class ExtensionMethods
     {

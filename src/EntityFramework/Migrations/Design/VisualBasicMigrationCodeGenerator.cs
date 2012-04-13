@@ -2,10 +2,10 @@ namespace System.Data.Entity.Migrations.Design
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Spatial;
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Utilities;
+    using System.Data.Entity.Spatial;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;

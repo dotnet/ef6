@@ -3,8 +3,8 @@ namespace System.Data.Entity.Core.SqlClient
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity.Core.Spatial;
     using System.Data.Entity.Core.SqlClient.Internal;
+    using System.Data.Entity.Spatial;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;

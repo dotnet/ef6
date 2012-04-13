@@ -1,4 +1,4 @@
-﻿namespace System.Data.Entity.Core.Spatial
+﻿namespace System.Data.Entity.Spatial
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;

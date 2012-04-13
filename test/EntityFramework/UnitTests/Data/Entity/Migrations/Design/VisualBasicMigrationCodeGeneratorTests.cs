@@ -3,7 +3,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Spatial;
+    using System.Data.Entity.Spatial;
     using System.IO;
     using Xunit;
 
@@ -617,8 +617,8 @@ End Namespace
 
             Assert.Equal(
                 @"Imports System
-Imports System.Data.Entity.Core.Spatial
 Imports System.Data.Entity.Migrations
+Imports System.Data.Entity.Spatial
 
 Namespace Foo
     Public Partial Class Bar
@@ -661,8 +661,8 @@ End Namespace
 
             Assert.Equal(
                 @"Imports System
-Imports System.Data.Entity.Core.Spatial
 Imports System.Data.Entity.Migrations
+Imports System.Data.Entity.Spatial
 
 Namespace Foo
     Public Partial Class Bar

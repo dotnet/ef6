@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Data.Entity;
-    using System.Data.Entity.Core.Spatial;
+    using System.Data.Entity.Spatial;
 
     public class SpatialNorthwindInitializer : DropCreateDatabaseAlways<SpatialNorthwindContext>
     {

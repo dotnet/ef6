@@ -1,6 +1,6 @@
 namespace System.Data.Entity.Migrations
 {
-    using System.Data.Entity.Core.Spatial;
+    using System.Data.Entity.Spatial;
     using System.Linq;
     using FunctionalTests.Model;
     using Xunit;

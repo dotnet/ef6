@@ -10,7 +10,7 @@
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects.DataClasses;
-    using System.Data.Entity.Core.Spatial;
+    using System.Data.Entity.Spatial;
     using System.Globalization;
     using System.Linq;
     using Xunit;

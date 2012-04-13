@@ -1,4 +1,4 @@
-﻿namespace System.Data.Entity.Core.Spatial
+﻿namespace System.Data.Entity.Spatial
 {
     /// <summary>
     /// A provider-independent service API for geospatial (Geometry/Geography) type support.
