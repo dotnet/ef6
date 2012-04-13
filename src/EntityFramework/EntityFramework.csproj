@@ -639,7 +639,6 @@
     <Compile Include="Core\Metadata\TypeSemantics.cs" />
     <Compile Include="Core\Metadata\XmlConstants.cs" />
     <Compile Include="Core\ObjectNotFoundException.cs" />
-    <Compile Include="Core\Objects\AdditionalEntityFunctions.cs" />
     <Compile Include="Core\Objects\CompiledQuery.cs" />
     <Compile Include="Core\Objects\DataClasses\ComplexObject.cs" />
     <Compile Include="Core\Objects\DataClasses\EdmComplexPropertyAttribute.cs" />
