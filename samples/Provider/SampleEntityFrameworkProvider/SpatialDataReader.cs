@@ -13,44 +13,10 @@ namespace SampleEntityFrameworkProvider
 {
     internal sealed class SqlSpatialDataReader : DbSpatialDataReader
     {
-        private static readonly Type sqlGeographyType;
-        private static readonly Type sqlGeometryType;
-
         private readonly SqlDataReader reader;
         
         static SqlSpatialDataReader()
         {
-            // find the latest version of Microsoft.SqlServer.Types assembly that contains Sql spatial types
-            var preferredSqlTypesAssemblies = new[] 
-            {                
-                "Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
-                "Microsoft.SqlServer.Types, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
-            };
-
-            Assembly sqlTypesAssembly = null;
-            foreach (string assemblyFullName in preferredSqlTypesAssemblies)
-            {
-                AssemblyName asmName = new AssemblyName(assemblyFullName);
-                try
-                {
-                    sqlTypesAssembly = Assembly.Load(asmName);
-                    break;
-                }
-                catch (FileNotFoundException)
-                {
-                }
-                catch (FileLoadException)
-                {
-                }
-            }
-
-            if (sqlTypesAssembly == null)
-            {
-                throw new InvalidOperationException("Microsoft.SqlServer.Types assembly not found");
-            }
-
-            sqlGeographyType = sqlTypesAssembly.GetType("Microsoft.SqlServer.Types.SqlGeography", throwOnError: true);
-            sqlGeometryType = sqlTypesAssembly.GetType("Microsoft.SqlServer.Types.SqlGeometry", throwOnError: true);
         }
 
         public SqlSpatialDataReader(SqlDataReader underlyingReader)
@@ -63,7 +29,7 @@ namespace SampleEntityFrameworkProvider
             EnsureGeographyColumn(ordinal);
 
             SqlBytes geographyBytes = this.reader.GetSqlBytes(ordinal);
-            dynamic geography = Activator.CreateInstance(sqlGeographyType);
+            dynamic geography = Activator.CreateInstance(SqlTypes.SqlGeographyType);
             geography.Read(new BinaryReader(geographyBytes.Stream));
 
             return SpatialServices.Instance.GeographyFromProviderValue(geography);
