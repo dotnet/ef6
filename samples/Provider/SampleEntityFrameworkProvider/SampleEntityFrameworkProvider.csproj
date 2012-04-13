@@ -81,6 +81,7 @@
     <Compile Include="SqlGeneration\SymbolPair.cs" />
     <Compile Include="SqlGeneration\SymbolTable.cs" />
     <Compile Include="SqlGeneration\TopClause.cs" />
+    <Compile Include="SqlTypes.cs" />
     <Compile Include="StoreVersion.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -10,6 +10,8 @@ namespace SampleEntityFrameworkProvider
     {
         internal static readonly SpatialServices Instance = new SpatialServices();
 
+        private const int DefaultCoordinateId = 4326;
+
         private SpatialServices()
         {
         }
@@ -39,7 +41,13 @@ namespace SampleEntityFrameworkProvider
 
         public override string AsGml(DbGeography geographyValue)
         {
-            throw new System.NotImplementedException();
+            if (geographyValue == null)
+            {
+                throw new ArgumentNullException("geographyValue");
+            }
+
+            dynamic providerValue = geographyValue.ProviderValue;
+            return providerValue.AsGml().Value;
         }
 
         public override string AsText(DbGeometry geometryValue)
@@ -60,7 +68,13 @@ namespace SampleEntityFrameworkProvider
 
         public override DbGeography Buffer(DbGeography geographyValue, double distance)
         {
-            throw new System.NotImplementedException();
+            if(geographyValue == null)
+            {
+                throw new ArgumentNullException("geographyValue");
+            }
+
+            dynamic providerValue = geographyValue.ProviderValue;
+            return GeographyFromProviderValue(providerValue.STBuffer(distance));
         }
 
         public override bool Contains(DbGeometry geometryValue, DbGeometry otherGeometry)
@@ -75,7 +89,26 @@ namespace SampleEntityFrameworkProvider
 
         public override object CreateProviderValue(DbGeographyWellKnownValue wellKnownValue)
         {
-            throw new System.NotImplementedException();
+            if(wellKnownValue.WellKnownText != null)
+            {
+                return InvokeStaticFunction(
+                    SqlTypes.SqlGeographyType,
+                    "STGeomFromText",
+                    SqlTypes.SqlCharsFromString(wellKnownValue.WellKnownText),
+                    wellKnownValue.CoordinateSystemId);
+            }
+            else if(wellKnownValue.WellKnownBinary != null)
+            {
+                return InvokeStaticFunction(
+                    SqlTypes.SqlGeographyType,
+                    "STGeomFromWKB",
+                    SqlTypes.SqlBytesFromByteArray(wellKnownValue.WellKnownBinary),
+                    wellKnownValue.CoordinateSystemId);
+            }
+            else
+            {
+                throw new ArgumentException("wellKnownValue");
+            }
         }
 
         public override DbGeometryWellKnownValue CreateWellKnownValue(DbGeometry geometryValue)
@@ -133,7 +166,14 @@ namespace SampleEntityFrameworkProvider
 
         public override double Distance(DbGeography geographyValue, DbGeography otherGeography)
         {
-            throw new System.NotImplementedException();
+            if (geographyValue == null)
+            {
+                throw new ArgumentNullException("geographyValue");
+            }
+
+            dynamic providerValue = geographyValue.ProviderValue;
+            dynamic otherProviderValue = otherGeography == null ? null : otherGeography.ProviderValue;
+            return providerValue.STDistance((dynamic)otherGeography.ProviderValue).Value;
         }
 
         public override DbGeometry ElementAt(DbGeometry geometryValue, int index)
@@ -158,7 +198,18 @@ namespace SampleEntityFrameworkProvider
 
         public override DbGeography GeographyFromBinary(byte[] wellKnownBinary, int coordinateSystemId)
         {
-            throw new System.NotImplementedException();
+            if (wellKnownBinary == null)
+            {
+                throw new ArgumentNullException("wellKnownBinary");
+            }
+
+            var providerValue = InvokeStaticFunction(
+                SqlTypes.SqlGeographyType,
+                "STGeomFromWKB",
+                SqlTypes.SqlBytesFromByteArray(wellKnownBinary),
+                coordinateSystemId);
+
+            return GeographyFromProviderValue(providerValue);
         }
 
         public override DbGeography GeographyFromBinary(byte[] wellKnownBinary)
@@ -168,7 +219,18 @@ namespace SampleEntityFrameworkProvider
 
         public override DbGeography GeographyFromGml(string geographyMarkup, int coordinateSystemId)
         {
-            throw new System.NotImplementedException();
+            if (geographyMarkup == null)
+            {
+                throw new ArgumentNullException("geographyMarkup");
+            }
+
+            var providerValue = InvokeStaticFunction(
+                SqlTypes.SqlGeographyType,
+                "GeomFromGml",
+                SqlTypes.SqlXmlFromString(geographyMarkup),
+                coordinateSystemId);
+
+            return GeographyFromProviderValue(providerValue);
         }
 
         public override DbGeography GeographyFromGml(string geographyMarkup)
@@ -186,12 +248,23 @@ namespace SampleEntityFrameworkProvider
 
         public override DbGeography GeographyFromText(string wellKnownText, int coordinateSystemId)
         {
-            throw new System.NotImplementedException();
+            if(wellKnownText == null)
+            {
+                throw new ArgumentNullException("wellKnownText");
+            }
+
+            var providerValue = InvokeStaticFunction(
+                SqlTypes.SqlGeographyType, 
+                "STGeomFromText",
+                SqlTypes.SqlCharsFromString(wellKnownText),
+                coordinateSystemId);
+
+            return GeographyFromProviderValue(providerValue);
         }
 
         public override DbGeography GeographyFromText(string wellKnownText)
         {
-            throw new System.NotImplementedException();
+            return GeographyFromText(wellKnownText, DefaultCoordinateId);
         }
 
         public override DbGeography GeographyLineFromBinary(byte[] lineWellKnownBinary, int coordinateSystemId)
@@ -492,7 +565,13 @@ namespace SampleEntityFrameworkProvider
 
         public override double? GetLatitude(DbGeography geographyValue)
         {
-            throw new System.NotImplementedException();
+            if(geographyValue == null)
+            {
+                throw new ArgumentNullException("geographyValue");
+            }
+
+            dynamic providerValue = geographyValue.ProviderValue;
+            return providerValue.Lat.Value;
         }
 
         public override double? GetLength(DbGeometry geometryValue)
@@ -507,7 +586,13 @@ namespace SampleEntityFrameworkProvider
 
         public override double? GetLongitude(DbGeography geographyValue)
         {
-            throw new System.NotImplementedException();
+            if (geographyValue == null)
+            {
+                throw new ArgumentNullException("geographyValue");
+            }
+
+            dynamic providerValue = geographyValue.ProviderValue;
+            return providerValue.Long.Value;
         }
 
         public override double? GetMeasure(DbGeometry geometryValue)
@@ -617,7 +702,14 @@ namespace SampleEntityFrameworkProvider
 
         public override bool SpatialEquals(DbGeography geographyValue, DbGeography otherGeography)
         {
-            throw new System.NotImplementedException();
+            if(geographyValue == null)
+            {
+                throw new ArgumentNullException("geographyValue");
+            }
+
+            dynamic providerValue = geographyValue.ProviderValue;
+            dynamic otherProviderValue = otherGeography == null ? null : otherGeography.ProviderValue;
+            return providerValue.STEquals(otherProviderValue).Value;
         }
 
         public override DbGeometry SymmetricDifference(DbGeometry geometryValue, DbGeometry otherGeometry)
@@ -651,5 +743,12 @@ namespace SampleEntityFrameworkProvider
         }
 
         #endregion
+
+        private static object InvokeStaticFunction(Type type, string functionName, params object[] parameters)
+        {
+            var methodInfo = type.GetMethod(functionName);
+            Debug.Assert(methodInfo != null, "methodInfo != null");
+            return methodInfo.Invoke(null, parameters);
+        }
     }
 }
