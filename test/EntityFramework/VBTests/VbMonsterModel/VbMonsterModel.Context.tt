@@ -2,7 +2,7 @@
 <#@ include file="EF.Utility.VB.ttinclude"#><#@
  output extension=".vb"#><#
 
-Const inputFile As String = "..\..\FunctionalTests\_TestModels\TemplateModels\Schemas\MonsterModel.csdl"
+Const inputFile As String = "..\..\FunctionalTests\TestModels\TemplateModels\Schemas\MonsterModel.csdl"
 Dim textTransform As DynamicTextTransformation = DynamicTextTransformation.Create(Me)
 Dim code As CodeGenerationTools = New CodeGenerationTools(Me)
 Dim ef As MetadataTools = New MetadataTools(Me)

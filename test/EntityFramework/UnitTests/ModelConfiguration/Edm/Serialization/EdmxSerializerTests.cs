@@ -59,7 +59,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization.UnitTests
         private static XmlSchemaSet LoadEdmxSchemaSet(int version)
         {
             const string resourcePath
-                = "UnitTests.Data.Entity.ModelConfiguration.Edm.Serialization.Xsd.";
+                = "System.Data.Entity.ModelConfiguration.Edm.Serialization.Xsd.";
 
             var schemaSet = new XmlSchemaSet();
             var assembly = Assembly.GetExecutingAssembly();
