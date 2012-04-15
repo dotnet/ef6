@@ -37,7 +37,13 @@ namespace SampleEntityFrameworkProvider
 
         public override DbGeometry GetGeometry(int ordinal)
         {
-            throw new NotImplementedException();
+            EnsureGeometryColumn(ordinal);
+
+            SqlBytes geometryBytes = this.reader.GetSqlBytes(ordinal);
+            dynamic geometry = Activator.CreateInstance(SqlTypes.SqlGeometryType);
+            geometry.Read(new BinaryReader(geometryBytes.Stream));
+
+            return SpatialServices.Instance.GeometryFromProviderValue(geometry);
         }
 
         private void EnsureGeographyColumn(int ordinal)

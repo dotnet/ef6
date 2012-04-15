@@ -219,22 +219,16 @@ namespace ProviderTests
             }
         }
 
-        /*
-
-        #region Provider Store Function
-        static void ProviderStoreFunctionQuery()
+        [Fact]
+        public void Verify_DbGeometry_can_be_materialized()
         {
-            Console.WriteLine("ProviderStoreFunctionQuery");
-            using (NorthwindEntities context = new NorthwindEntities())
+            using (var context = new NorthwindEntities())
             {
-                var query =
-                    from c in context.Customers
-                    where c.Address.City == "London"
-                    select SampleSqlFunctions.Stuff(c.CompanyName, 6, c.CompanyName.Length - 5, "... - Company");
-                ExecuteQuery(query);
+                var order = context.Orders.OrderBy(o => o.OrderID).First();
+
+                Assert.Equal(10248, order.OrderID);
+                Assert.Equal("POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))", order.ContainerSize.AsText());
             }
         }
-        #endregion
-*/
     }
 }
