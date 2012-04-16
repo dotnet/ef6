@@ -810,32 +810,6 @@
     <Compile Include="Core\Query\PlanCompiler\VarRemapper.cs" />
     <Compile Include="Core\Query\ResultAssembly\BridgeDataReader.cs" />
     <Compile Include="Core\Query\ResultAssembly\BridgeDataRecord.cs" />
-    <Compile Include="Core\SqlClient\IDbSpatialValue.cs" />
-    <Compile Include="Core\SqlClient\SqlGen\DmlSqlGenerator.cs" />
-    <Compile Include="Core\SqlClient\SqlGen\ISqlFragment.cs" />
-    <Compile Include="Core\SqlClient\SqlGen\JoinSymbol.cs" />
-    <Compile Include="Core\SqlClient\SqlGen\OptionalColumn.cs" />
-    <Compile Include="Core\SqlClient\SqlGen\Sql8ConformanceChecker.cs" />
-    <Compile Include="Core\SqlClient\SqlGen\Sql8ExpressionRewriter.cs" />
-    <Compile Include="Core\SqlClient\SqlGen\SqlBuilder.cs" />
-    <Compile Include="Core\SqlClient\SqlGen\SqlFunctionCallHandler.cs" />
-    <Compile Include="Core\SqlClient\SqlGen\SqlGenerator.cs" />
-    <Compile Include="Core\SqlClient\SqlGen\SqlSelectClauseBuilder.cs" />
-    <Compile Include="Core\SqlClient\SqlGen\SqlSelectStatement.cs" />
-    <Compile Include="Core\SqlClient\SqlGen\SqlWriter.cs" />
-    <Compile Include="Core\SqlClient\SqlGen\Symbol.cs" />
-    <Compile Include="Core\SqlClient\SqlGen\SymbolPair.cs" />
-    <Compile Include="Core\SqlClient\SqlGen\SymbolTable.cs" />
-    <Compile Include="Core\SqlClient\SqlGen\SymbolUsageManager.cs" />
-    <Compile Include="Core\SqlClient\SqlGen\TopClause.cs" />
-    <Compile Include="Core\SqlClient\SqlProviderManifest.cs" />
-    <Compile Include="Core\SqlClient\SqlProviderServices.cs" />
-    <Compile Include="Core\SqlClient\SqlProviderUtilities.cs" />
-    <Compile Include="Core\SqlClient\SqlSpatialDataReader.cs" />
-    <Compile Include="Core\SqlClient\SqlSpatialServices.cs" />
-    <Compile Include="Core\SqlClient\SqlSpatialServices.Generated.cs" />
-    <Compile Include="Core\SqlClient\SqlTypesAssembly.cs" />
-    <Compile Include="Core\SqlClient\SqlVersion.cs" />
     <Compile Include="Core\UpdateException.cs" />
     <Compile Include="DbFunctionAttribute.cs" />
     <Compile Include="DbFunctions.cs" />
@@ -1484,7 +1458,9 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Core\SqlClient\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

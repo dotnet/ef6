@@ -1,8 +1,8 @@
 namespace System.Data.Entity.Spatial
 {
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity.Core.SqlClient;
     using System.Diagnostics.CodeAnalysis;
+    using System.Reflection;
 
     /// <summary>
     /// A provider-independent service API for geospatial (Geometry/Geography) type support.
@@ -17,19 +17,39 @@ namespace System.Data.Entity.Spatial
             get { return defaultServices.Value; }
         }
 
-        // For CTP1 use the SQL types whenever they are available.   
-        // in future we will have to consider providing a more pluggable 
-        // story here so that users can specify what spatial services they want to use by default.
         private static DbSpatialServices LoadDefaultServices()
         {
-            if (SqlProviderServices.SqlTypesAssemblyIsAvailable)
+            // This code is used when some static method on DbGeography or DbGeometry is called in which
+            // case we are not using an context instance and don't have a provider available.
+            // What this code therefore does it try to provide some level of functionality by seeing if
+            // the SQL Server spatial types are available and, if so, using a these types to get the
+            // functionality needed for the static methods.
+            // If the SQL Server types are not available, then there is a fall-back to a default
+            // implementation that doesn't support everything.
+
+            // TODO
+            // Even if the the SQL Server types are not available, it may still be that a provider
+            // is available that doesn't depend on the SQL Server types. So this method should look in
+            // the app.config (when this info is there) to find the spatial provider and use that.
+
+            var sqlProviderServicesType = Type.GetType(
+                "System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+                throwOnError: true);
+
+            if ((bool)sqlProviderServicesType.GetProperty(
+                    "SqlTypesAssemblyIsAvailable",
+                    BindingFlags.Static | BindingFlags.NonPublic).GetValue(null))
             {
-                return SqlSpatialServices.Instance;
+                var sqlSpatialServicesType = Type.GetType(
+                    "System.Data.Entity.SqlServer.SqlSpatialServices, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+                    throwOnError: true);
+
+                return (DbSpatialServices)sqlSpatialServicesType.GetField(
+                    "Instance",
+                    BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
             }
-            else
-            {
-                return DefaultSpatialServices.Instance;
-            }
+
+            return DefaultSpatialServices.Instance;
         }
 
         #region Geography API

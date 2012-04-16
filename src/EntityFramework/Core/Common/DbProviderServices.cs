@@ -2,8 +2,8 @@ namespace System.Data.Entity.Core.Common
 {
     using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.SqlClient;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.SqlClient;
@@ -307,31 +307,27 @@ namespace System.Data.Entity.Core.Common
         {
             EntityUtil.CheckArgumentNull(factory, "factory");
 
-            // Special case SQL client so that it will work with System.Data from .NET 4.0 even without
-            // a binding redirect.
+            // TODO
+            // This is where the EF provider is returned. It is here that the initial changes
+            // to look-up the registered provider will be made. For now we are just loading the
+            // SQL Server provider by Reflection. We use Reflection because EF.dll does not have
+            // a reference to EF.SqlServer.dll.
+
             if (factory is SqlClientFactory)
             {
-                return SqlProviderServices.Instance;
+                var sqlProviderServicesType = Type.GetType(
+                    "System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+                    throwOnError: true);
+
+                return (DbProviderServices)sqlProviderServicesType.GetProperty("SingletonInstance").GetValue(null);
             }
 
-            var serviceProvider = factory as IServiceProvider;
-            if (serviceProvider == null)
+            if (factory is EntityProviderFactory)
             {
-                throw EntityUtil.ProviderIncompatible(
-                    Strings.EntityClient_DoesNotImplementIServiceProvider(
-                        factory.GetType().ToString()));
+                return EntityProviderServices.Instance;
             }
 
-            var providerServices = serviceProvider.GetService(typeof(DbProviderServices)) as DbProviderServices;
-            if (providerServices == null)
-            {
-                throw EntityUtil.ProviderIncompatible(
-                    Strings.EntityClient_ReturnedNullOnProviderMethod(
-                        "GetService",
-                        factory.GetType().ToString()));
-            }
-
-            return providerServices;
+            throw new NotSupportedException("TODO: Only the SQL Server provider is currently supported.");
         }
 
         /// <summary>

@@ -2,6 +2,7 @@
 {
     using System.CodeDom.Compiler;
     using System.Data.Entity.Migrations.Design;
+    using System.Data.Entity.SqlServer;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -11,172 +12,172 @@
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
     public class ToolingScenarios : DbTestCase, IUseFixture<ToolingFixture>
     {
-            private string _projectDir;
+        private string _projectDir;
 
         [MigrationsTheory]
-            public void Can_update()
+        public void Can_update()
+        {
+            ResetDatabase();
+
+            var logBuilder = new StringBuilder();
+
+            using (var facade = new ToolingFacade(
+                "ClassLibrary1",
+                "ClassLibrary1.Configuration",
+                _projectDir,
+                Path.Combine(_projectDir, "App.config"),
+                null,
+                null))
             {
-                ResetDatabase();
+                facade.LogInfoDelegate = m => logBuilder.AppendLine("INFO: " + m);
+                facade.LogVerboseDelegate = s => logBuilder.AppendLine("SQL: " + s);
 
-                var logBuilder = new StringBuilder();
+                facade.Update(null, false);
+            }
 
-                using (var facade = new ToolingFacade(
-                    "ClassLibrary1",
-                    "ClassLibrary1.Configuration",
-                    _projectDir,
-                    Path.Combine(_projectDir, "App.config"),
-                    null,
-                    null))
-                {
-                    facade.LogInfoDelegate = m => logBuilder.AppendLine("INFO: " + m);
-                    facade.LogVerboseDelegate = s => logBuilder.AppendLine("SQL: " + s);
-
-                    facade.Update(null, false);
-                }
-
-                var log = logBuilder.ToString();
+            var log = logBuilder.ToString();
             Assert.True(log.Contains("INFO: Applying automatic migration"));
             Assert.True(log.Contains("SQL: CREATE TABLE [Entities]"));
 
             Assert.True(DatabaseExists());
             Assert.True(TableExists("Entities"));
-            }
+        }
 
         [MigrationsTheory]
-            public void Can_script_update()
+        public void Can_script_update()
+        {
+            ResetDatabase();
+
+            var logBuilder = new StringBuilder();
+            string sql;
+
+            using (var facade = new ToolingFacade(
+                "ClassLibrary1",
+                "ClassLibrary1.Configuration",
+                _projectDir,
+                Path.Combine(_projectDir, "App.config"),
+                null,
+                null))
             {
-                ResetDatabase();
+                facade.LogInfoDelegate = m => logBuilder.AppendLine("INFO: " + m);
 
-                var logBuilder = new StringBuilder();
-                string sql;
-
-                using (var facade = new ToolingFacade(
-                    "ClassLibrary1",
-                    "ClassLibrary1.Configuration",
-                    _projectDir,
-                    Path.Combine(_projectDir, "App.config"),
-                    null,
-                    null))
-                {
-                    facade.LogInfoDelegate = m => logBuilder.AppendLine("INFO: " + m);
-
-                    sql = facade.ScriptUpdate(null, null, false);
-                }
+                sql = facade.ScriptUpdate(null, null, false);
+            }
 
             Assert.True(sql.Contains("CREATE TABLE [Entities]"));
 
-                var log = logBuilder.ToString();
+            var log = logBuilder.ToString();
             Assert.True(log.Contains("INFO: Applying automatic migration"));
-            }
+        }
 
         [MigrationsTheory]
-            public void Can_get_context_types()
+        public void Can_get_context_types()
+        {
+            ResetDatabase();
+
+            var logBuilder = new StringBuilder();
+
+            using (var facade = new ToolingFacade(
+                "ClassLibrary1",
+                configurationTypeName: null,
+                workingDirectory: _projectDir,
+                configurationFilePath: null,
+                dataDirectory: null,
+                connectionStringInfo: null))
             {
-                ResetDatabase();
-
-                var logBuilder = new StringBuilder();
-
-                using (var facade = new ToolingFacade(
-                    "ClassLibrary1",
-                    configurationTypeName: null,
-                    workingDirectory: _projectDir,
-                    configurationFilePath: null,
-                    dataDirectory: null,
-                    connectionStringInfo: null))
-                {
-                    var result = facade.GetContextTypes();
+                var result = facade.GetContextTypes();
 
                 Assert.Equal(1, result.Count());
                 Assert.Equal("ClassLibrary1.Context", result.Single());
-                }
             }
+        }
 
         [MigrationsTheory]
-            public void Can_scaffold_initial_create()
+        public void Can_scaffold_initial_create()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v1>();
+
+            var initialCreate = new MigrationScaffolder(migrator.Configuration).Scaffold("InitialCreate");
+
+            migrator = CreateMigrator<ShopContext_v1>(scaffoldedMigrations: initialCreate);
+
+            migrator.Update();
+
+            using (var facade = new ToolingFacade(
+                "ClassLibrary1",
+                "ClassLibrary1.Configuration",
+                _projectDir,
+                Path.Combine(_projectDir, "App.config"),
+                null,
+                null))
             {
-                ResetDatabase();
-
-                var migrator = CreateMigrator<ShopContext_v1>();
-
-                var initialCreate = new MigrationScaffolder(migrator.Configuration).Scaffold("InitialCreate");
-
-                migrator = CreateMigrator<ShopContext_v1>(scaffoldedMigrations: initialCreate);
-
-                migrator.Update();
-
-                using (var facade = new ToolingFacade(
-                    "ClassLibrary1",
-                    "ClassLibrary1.Configuration",
-                    _projectDir,
-                    Path.Combine(_projectDir, "App.config"),
-                    null,
-                    null))
-                {
-                    var scaffoldedMigration = facade.ScaffoldInitialCreate("cs", "ClassLibrary1");
+                var scaffoldedMigration = facade.ScaffoldInitialCreate("cs", "ClassLibrary1");
 
                 Assert.True(scaffoldedMigration.DesignerCode.Length > 1500);
                 Assert.Equal("cs", scaffoldedMigration.Language);
                 Assert.True(scaffoldedMigration.MigrationId.EndsWith("_InitialCreate"));
                 Assert.True(scaffoldedMigration.UserCode.Length > 500);
-                }
             }
+        }
 
-            [MigrationsTheory]
-            public void Can_scaffold_empty()
+        [MigrationsTheory]
+        public void Can_scaffold_empty()
+        {
+            using (var facade = new ToolingFacade(
+                "ClassLibrary1",
+                "ClassLibrary1.Configuration",
+                _projectDir,
+                Path.Combine(_projectDir, "App.config"),
+                null,
+                null))
             {
-                using (var facade = new ToolingFacade(
-                    "ClassLibrary1",
-                    "ClassLibrary1.Configuration",
-                    _projectDir,
-                    Path.Combine(_projectDir, "App.config"),
-                    null,
-                    null))
-                {
-                    var scaffoldedMigration = facade.Scaffold("Create", "cs", "ClassLibrary1", ignoreChanges: true);
+                var scaffoldedMigration = facade.Scaffold("Create", "cs", "ClassLibrary1", ignoreChanges: true);
 
-                    Assert.True(scaffoldedMigration.DesignerCode.Length > 1500);
-                    Assert.Equal("cs", scaffoldedMigration.Language);
-                    Assert.True(scaffoldedMigration.MigrationId.EndsWith("_Create"));
-                    Assert.True(scaffoldedMigration.UserCode.Length < 300);
-                }
+                Assert.True(scaffoldedMigration.DesignerCode.Length > 1500);
+                Assert.Equal("cs", scaffoldedMigration.Language);
+                Assert.True(scaffoldedMigration.MigrationId.EndsWith("_Create"));
+                Assert.True(scaffoldedMigration.UserCode.Length < 300);
             }
+        }
 
-            [MigrationsTheory]
-            public void Can_scaffold()
-            {
+        [MigrationsTheory]
+        public void Can_scaffold()
+        {
             ResetDatabase();
 
-                using (var facade = new ToolingFacade(
-                    "ClassLibrary1",
-                    "ClassLibrary1.Configuration",
-                    _projectDir,
-                    Path.Combine(_projectDir, "App.config"),
-                    null,
-                    null))
-                {
-                    var scaffoldedMigration = facade.Scaffold("Create", "cs", "ClassLibrary1", ignoreChanges: false);
+            using (var facade = new ToolingFacade(
+                "ClassLibrary1",
+                "ClassLibrary1.Configuration",
+                _projectDir,
+                Path.Combine(_projectDir, "App.config"),
+                null,
+                null))
+            {
+                var scaffoldedMigration = facade.Scaffold("Create", "cs", "ClassLibrary1", ignoreChanges: false);
 
                 Assert.True(scaffoldedMigration.DesignerCode.Length > 1500);
                 Assert.Equal("cs", scaffoldedMigration.Language);
                 Assert.True(scaffoldedMigration.MigrationId.EndsWith("_Create"));
                 Assert.True(scaffoldedMigration.UserCode.Length > 500);
-                }
             }
+        }
 
         [MigrationsTheory]
-            public void Can_scaffold_vb()
-            {
+        public void Can_scaffold_vb()
+        {
             ResetDatabase();
 
-                using (var facade = new ToolingFacade(
-                    "ClassLibrary1",
-                    "ClassLibrary1.Configuration",
-                    _projectDir,
-                    Path.Combine(_projectDir, "App.config"),
-                    null,
-                    null))
-                {
-                    var scaffoldedMigration = facade.Scaffold("Create", "vb", "ClassLibrary1", ignoreChanges: false);
+            using (var facade = new ToolingFacade(
+                "ClassLibrary1",
+                "ClassLibrary1.Configuration",
+                _projectDir,
+                Path.Combine(_projectDir, "App.config"),
+                null,
+                null))
+            {
+                var scaffoldedMigration = facade.Scaffold("Create", "vb", "ClassLibrary1", ignoreChanges: false);
 
                 Assert.True(scaffoldedMigration.DesignerCode.Length > 1900);
                 Assert.Equal("vb", scaffoldedMigration.Language);
@@ -204,6 +205,9 @@
 
             var entityFrameworkPath = new Uri(typeof(DbContext).Assembly.CodeBase).LocalPath;
             IOHelpers.CopyToDir(entityFrameworkPath, targetDir);
+
+            var entityFrameworkSqlServerPath = new Uri(typeof(SqlProviderServices).Assembly.CodeBase).LocalPath;
+            IOHelpers.CopyToDir(entityFrameworkSqlServerPath, targetDir);
 
             using (var compiler = new CSharpCodeProvider())
             {

@@ -1,10 +1,10 @@
 ﻿namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
 {
     using System;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.SqlServer;
 
     /// <summary>
     /// Used with the FakeSqlConnection class to fake provider info so that Code First can create SSDL
@@ -24,8 +24,7 @@
 
         protected override DbProviderManifest GetDbProviderManifest(string manifestToken)
         {
-            var manifestType = typeof(ObjectContext).Assembly.GetType("System.Data.Entity.Core.SqlClient.SqlProviderManifest");
-            return (DbProviderManifest)Activator.CreateInstance(manifestType, new object[] {manifestToken});
+            return new SqlProviderManifest(manifestToken);
         }
     }
 }
