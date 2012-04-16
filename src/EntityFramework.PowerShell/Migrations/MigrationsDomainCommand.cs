@@ -88,31 +88,23 @@
                 connectionStringInfo = new DbConnectionInfo(connectionString, connectionProviderName);
             }
 
-            return GetFacade(Project, StartUpProject, configurationTypeName, connectionStringInfo);
-        }
-
-        protected ToolingFacade GetFacade(
-            Project project, Project startupProject, string configurationTypeName, DbConnectionInfo connectionStringInfo)
-        {
-            Contract.Requires(project != null);
-            Contract.Requires(startupProject != null);
-
-            var assemblyName = project.GetTargetName();
-            var workingDirectory = startupProject.GetTargetDir();
+            var startUpProject = StartUpProject;
+            var assemblyName = Project.GetTargetName();
+            var workingDirectory = startUpProject.GetTargetDir();
 
             string configurationFile;
             string dataDirectory = null;
 
-            if (startupProject.IsWebProject())
+            if (startUpProject.IsWebProject())
             {
-                var startUpProjectDir = startupProject.GetProjectDir();
+                var startUpProjectDir = startUpProject.GetProjectDir();
 
-                configurationFile = startupProject.GetFileName("Web.config");
+                configurationFile = startUpProject.GetFileName("Web.config");
                 dataDirectory = Path.Combine(startUpProjectDir, "App_Data");
             }
             else
             {
-                configurationFile = startupProject.GetFileName("App.config");
+                configurationFile = startUpProject.GetFileName("App.config");
             }
 
             return new ToolingFacade(
@@ -122,11 +114,11 @@
                 configurationFile,
                 dataDirectory,
                 connectionStringInfo)
-                       {
-                           LogInfoDelegate = WriteLine,
-                           LogWarningDelegate = WriteWarning,
-                           LogVerboseDelegate = WriteVerbose
-                       };
+            {
+                LogInfoDelegate = WriteLine,
+                LogWarningDelegate = WriteWarning,
+                LogVerboseDelegate = WriteVerbose
+            };
         }
 
         private void Init()

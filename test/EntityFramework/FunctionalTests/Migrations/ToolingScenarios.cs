@@ -2,6 +2,7 @@
 {
     using System.CodeDom.Compiler;
     using System.Data.Entity.Migrations.Design;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.SqlServer;
     using System.IO;
     using System.Linq;
@@ -183,6 +184,24 @@
                 Assert.Equal("vb", scaffoldedMigration.Language);
                 Assert.True(scaffoldedMigration.MigrationId.EndsWith("_Create"));
                 Assert.True(scaffoldedMigration.UserCode.Length > 500);
+            }
+        }
+
+        [MigrationsTheory]
+        public void Wraps_assembly_not_found_exceptions()
+        {
+            const string unknownAssemblyName = "UnknownAssembly";
+
+            using (var facade = new ToolingFacade(
+                    unknownAssemblyName,
+                    "ClassLibrary1.Configuration",
+                    _projectDir,
+                    Path.Combine(_projectDir, "App.config"),
+                    null,
+                    null))
+            {
+                var ex = Assert.Throws<ToolingException>(() => facade.GetDatabaseMigrations());
+                Assert.Equal(Strings.ToolingFacade_AssemblyNotFound(unknownAssemblyName), ex.Message);
             }
         }
 

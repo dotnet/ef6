@@ -20,7 +20,9 @@
       <Word>ssdl</Word>
       <Word>msl</Word>
     </Recognized>
-    <Compound></Compound>
+    <Compound>
+      <Term CompoundAlternate="StartUp">startup</Term>
+    </Compound>
   </Words>
   <Acronyms>
     <CasingExceptions>

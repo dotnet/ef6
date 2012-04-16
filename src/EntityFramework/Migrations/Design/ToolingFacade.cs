@@ -421,7 +421,7 @@
             private DbMigrationsConfiguration FindConfiguration()
             {
                 var configurationTypeNameSpecified = !string.IsNullOrWhiteSpace(ConfigurationTypeName);
-                var assembly = Assembly.Load(AssemblyName);
+                var assembly = LoadAssembly();
 
                 Type configurationType = null;
 
@@ -497,6 +497,20 @@
                 Contract.Assert(configurationType != null);
 
                 return CreateConfiguration(configurationType);
+            }
+
+            protected Assembly LoadAssembly()
+            {
+                try
+                {
+                    return Assembly.Load(AssemblyName);
+                }
+                catch (FileNotFoundException ex)
+                {
+                    throw new MigrationsException(
+                        Strings.ToolingFacade_AssemblyNotFound(ex.FileName),
+                        ex);
+                }
             }
 
             private static DbMigrationsConfiguration CreateConfiguration(Type configurationType)
@@ -695,7 +709,7 @@
             [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
             protected override void RunCore()
             {
-                var assembly = Assembly.Load(AssemblyName);
+                var assembly = LoadAssembly();
 
                 var contextTypes = assembly.GetTypes()
                     .Where(t => typeof(DbContext).IsAssignableFrom(t)).Select(t => t.FullName)

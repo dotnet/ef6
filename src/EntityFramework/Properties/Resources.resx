@@ -262,6 +262,9 @@
     <value>No MigrationSqlGenerator found for provider '{0}'. Use the SetSqlGenerator method in the target migrations configuration class to register additional SQL generators.</value>
     <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
   </data>
+  <data name="ToolingFacade_AssemblyNotFound" xml:space="preserve">
+    <value>Could not load assembly '{0}'. (If you are using Code First Migrations inside Visual Studio this can happen if the startUp project for your solution does not reference the project that contains your migrations. You can either change the startUp project for your solution or use the -StartUpProjectName parameter.)</value>
+  </data>
   <data name="ArgumentIsNullOrWhitespace" xml:space="preserve">
     <value>The argument '{0}' cannot be null, empty or contain only white space.</value>
     <comment>## ExceptionType=ArgumentException</comment>

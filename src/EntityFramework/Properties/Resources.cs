@@ -342,6 +342,14 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        /// A string like "Could not load assembly '{0}'. (If you are using Code First Migrations inside Visual Studio this can happen if the startUp project for your solution does not reference the project that contains your migrations. You can either change the startUp project for your solution or use the -StartUpProjectName parameter.)"
+        /// </summary>
+        internal static string ToolingFacade_AssemblyNotFound(object p0)
+        {
+            return EntityRes.GetString(EntityRes.ToolingFacade_AssemblyNotFound, p0);
+        }
+
+        /// <summary>
         /// A string like "The argument '{0}' cannot be null, empty or contain only white space."
         /// </summary>
         internal static string ArgumentIsNullOrWhitespace(object p0)
@@ -14917,6 +14925,7 @@ namespace System.Data.Entity.Resources
         internal const string MigrationsNamespaceNotUnderRootNamespace = "MigrationsNamespaceNotUnderRootNamespace";
         internal const string UnableToDispatchAddOrUpdate = "UnableToDispatchAddOrUpdate";
         internal const string NoSqlGeneratorForProvider = "NoSqlGeneratorForProvider";
+        internal const string ToolingFacade_AssemblyNotFound = "ToolingFacade_AssemblyNotFound";
         internal const string ArgumentIsNullOrWhitespace = "ArgumentIsNullOrWhitespace";
         internal const string ArgumentPropertyIsNull = "ArgumentPropertyIsNull";
         internal const string PreconditionFailed = "PreconditionFailed";
