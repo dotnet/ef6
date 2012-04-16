@@ -230,5 +230,87 @@ namespace ProviderTests
                 Assert.Equal("POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))", order.ContainerSize.AsText());
             }
         }
+
+        [Fact]
+        public void Verify_DbGeography_instance_method_translated_correctly()
+        {
+            var seattleLocation = SpatialServices.Instance.GeographyFromText("POINT(-122.333056 47.609722)");
+
+            var expectedResults = new string[]
+                                      {
+                                          "BOTTM",
+                                          "LAUGB",
+                                          "LONEP",
+                                          "THEBI",
+                                          "TRAIH",
+                                          "WHITC",
+                                      };
+
+            using(var context = new NorthwindEntities())
+            {
+                var query = from c in context.Customers
+                            where c.Location.Distance(seattleLocation) < 250000 // 250 km
+                            select c;
+
+                var caseIdx = 0;
+                foreach(var customer in query)
+                {
+                    Assert.Equal(expectedResults[caseIdx++], customer.CustomerID);
+                }
+            }
+        }
+
+        [Fact]
+        public void Verify_DbGeography_instance_property_translated_correctly()
+        {
+            var expectedResults = new string[]
+                                      {
+                                          "BOTTM",
+                                          "LAUGB",
+                                          "LONEP",
+                                          "THEBI",
+                                          "TRAIH",
+                                          "WHITC",
+                                      };
+
+            using (var context = new NorthwindEntities())
+            {
+                var query = from c in context.Customers
+                            where c.Location.Latitude < 0
+                            select c;
+
+                Assert.Equal(9, query.Count());
+            }
+        }
+
+
+        [Fact]
+        public void Verify_DbGeometry_instance_method_translated_correctly()
+        {
+            var containerSize =
+                SpatialServices.Instance.GeometryFromText("POLYGON ((0 0, 9 0, 9 9, 0 9, 0 0))", 0);
+
+            using(var context = new NorthwindEntities())
+            {
+                var query = from o in context.Orders
+                            where o.ContainerSize.SpatialEquals(containerSize)
+                            select o;
+
+                Assert.Equal(73, query.Count());
+            }
+        }
+
+        [Fact]
+        public void Verify_DbGeometry_static_method_translated_correctly()
+        {
+            using (var context = new NorthwindEntities())
+            {
+                var query = from o in context.Orders
+                            where o.ContainerSize.SpatialEquals(DbGeometry.FromText("POLYGON ((0 0, 9 0, 9 9, 0 9, 0 0))", 0))
+                            select o;
+
+                Assert.Equal(73, query.Count());
+            }
+        }
     }
 }

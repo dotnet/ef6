@@ -28,7 +28,7 @@ namespace SampleEntityFrameworkProvider
         {
             EnsureGeographyColumn(ordinal);
 
-            SqlBytes geographyBytes = this.reader.GetSqlBytes(ordinal);
+            var geographyBytes = this.reader.GetSqlBytes(ordinal);
             dynamic geography = Activator.CreateInstance(SqlTypes.SqlGeographyType);
             geography.Read(new BinaryReader(geographyBytes.Stream));
 
@@ -39,7 +39,7 @@ namespace SampleEntityFrameworkProvider
         {
             EnsureGeometryColumn(ordinal);
 
-            SqlBytes geometryBytes = this.reader.GetSqlBytes(ordinal);
+            var geometryBytes = this.reader.GetSqlBytes(ordinal);
             dynamic geometry = Activator.CreateInstance(SqlTypes.SqlGeometryType);
             geometry.Read(new BinaryReader(geometryBytes.Stream));
 

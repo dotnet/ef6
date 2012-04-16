@@ -8,12 +8,15 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Data.Metadata.Edm;
 using System.Data.Common.CommandTrees;
 using System.Data;
+using System.Data.Common.CommandTrees.ExpressionBuilder;
+using System.Data.Spatial;
 
 namespace SampleEntityFrameworkProvider
 {
@@ -268,6 +271,12 @@ namespace SampleEntityFrameworkProvider
         static private readonly Dictionary<string, string> _functionNameToOperatorDictionary = InitializeFunctionNameToOperatorDictionary();
         static private readonly Dictionary<string, string> _dateAddFunctionNameToDatepartDictionary = InitializeDateAddFunctionNameToDatepartDictionary();
         static private readonly Dictionary<string, string> _dateDiffFunctionNameToDatepartDictionary = InitializeDateDiffFunctionNameToDatepartDictionary();
+        static private readonly Dictionary<string, FunctionHandler> _geographyFunctionNameToStaticMethodHandlerDictionary = InitializeGeographyStaticMethodFunctionsDictionary();
+        static private readonly Dictionary<string, string> _geographyFunctionNameToInstancePropertyNameDictionary = InitializeGeographyInstancePropertyFunctionsDictionary();
+        static private readonly Dictionary<string, string> _geographyRenamedInstanceMethodFunctionDictionary = InitializeRenamedGeographyInstanceMethodFunctions();
+        static private readonly Dictionary<string, FunctionHandler> _geometryFunctionNameToStaticMethodHandlerDictionary = InitializeGeometryStaticMethodFunctionsDictionary();
+        static private readonly Dictionary<string, string> _geometryFunctionNameToInstancePropertyNameDictionary = InitializeGeometryInstancePropertyFunctionsDictionary();
+        static private readonly Dictionary<string, string> _geometryRenamedInstanceMethodFunctionDictionary = InitializeRenamedGeometryInstanceMethodFunctions();
         static private readonly HashSet<string> _datepartKeywords = InitializeDatepartKeywords();
         static private readonly char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
         
@@ -454,6 +463,179 @@ namespace SampleEntityFrameworkProvider
             dateDiffFunctionNameToDatepartDictionary.Add("DiffMicroseconds", "microsecond");
             dateDiffFunctionNameToDatepartDictionary.Add("DiffNanoseconds", "nanosecond");
             return dateDiffFunctionNameToDatepartDictionary;
+        }
+
+        /// <summary>
+        /// Initalizes the mapping from names of canonical function that represent static geography methods to their corresponding
+        /// static method name, qualified with the 'geography::' prefix.
+        /// </summary>
+        /// <returns></returns>
+        private static Dictionary<string, FunctionHandler> InitializeGeographyStaticMethodFunctionsDictionary()
+        {
+            Dictionary<string, FunctionHandler> staticGeographyFunctions = new Dictionary<string, FunctionHandler>();
+
+            // Well Known Text constructors
+            staticGeographyFunctions.Add("GeographyFromText", HandleSpatialFromTextFunction);
+
+            // Well Known Binary constructors
+            staticGeographyFunctions.Add("GeographyFromBinary", HandleSpatialFromBinaryFunction);
+
+            // GML constructor (non-OGC)
+            staticGeographyFunctions.Add("GeographyFromGml", HandleSpatialFromGmlFunction);
+
+            return staticGeographyFunctions;
+        }
+
+        /// <summary>
+        /// Initalizes the mapping from names of canonical function that represent geography instance properties to their corresponding
+        /// store property name.
+        /// </summary>
+        /// <returns></returns>
+        private static Dictionary<string, string> InitializeGeographyInstancePropertyFunctionsDictionary()
+        {
+            Dictionary<string, string> instancePropGeographyFunctions = new Dictionary<string, string>();
+
+            instancePropGeographyFunctions.Add("CoordinateSystemId", "STSrid");
+            instancePropGeographyFunctions.Add("Latitude", "Lat");
+            instancePropGeographyFunctions.Add("Longitude", "Long");
+
+            return instancePropGeographyFunctions;
+        }
+
+        /// <summary>
+        /// Initalizes the mapping of canonical function name to instance method name for geography instance functions that differ in name from the sql server equivalent.
+        /// </summary>
+        /// <returns></returns>
+        private static Dictionary<string, string> InitializeRenamedGeographyInstanceMethodFunctions()
+        {
+            Dictionary<string, string> renamedInstanceMethodFunctions = new Dictionary<string, string>();
+
+            renamedInstanceMethodFunctions.Add("AsText", "STAsText");
+            renamedInstanceMethodFunctions.Add("AsBinary", "STAsBinary");
+            renamedInstanceMethodFunctions.Add("SpatialEquals", "STEquals");
+            renamedInstanceMethodFunctions.Add("SpatialBuffer", "STBuffer");
+            renamedInstanceMethodFunctions.Add("Distance", "STDistance");
+            renamedInstanceMethodFunctions.Add("Area", "STArea");
+
+            return renamedInstanceMethodFunctions;
+        }
+
+        /// <summary>
+        /// Initalizes the mapping from names of canonical function that represent static geometry methods to their corresponding
+        /// static method name, qualified with the 'geometry::' prefix.
+        /// </summary>
+        /// <returns></returns>
+        private static Dictionary<string, FunctionHandler> InitializeGeometryStaticMethodFunctionsDictionary()
+        {
+            Dictionary<string, FunctionHandler> staticGeometryFunctions = new Dictionary<string, FunctionHandler>();
+
+            // Well Known Text constructors
+            staticGeometryFunctions.Add("GeometryFromText", HandleSpatialFromTextFunction);
+
+            // Well Known Binary constructors
+            staticGeometryFunctions.Add("GeometryFromBinary", HandleSpatialFromBinaryFunction);
+
+            // GML constructor (non-OGC)
+            staticGeometryFunctions.Add("GeometryFromGml", HandleSpatialFromGmlFunction);
+
+            return staticGeometryFunctions;
+        }
+
+        /// <summary>
+        /// Initalizes the mapping from names of canonical function that represent geometry instance properties to their corresponding
+        /// store property name.
+        /// </summary>
+        /// <returns></returns>
+        private static Dictionary<string, string> InitializeGeometryInstancePropertyFunctionsDictionary()
+        {
+            Dictionary<string, string> instancePropGeometryFunctions = new Dictionary<string, string>();
+
+            instancePropGeometryFunctions.Add("CoordinateSystemId", "STSrid");
+            instancePropGeometryFunctions.Add("XCoordinate", "STX");
+            instancePropGeometryFunctions.Add("YCoordinate", "STY");
+
+            return instancePropGeometryFunctions;
+        }
+
+        /// <summary>
+        /// Initalizes the mapping of canonical function name to instance method name for geometry instance functions that differ in name from the sql server equivalent.
+        /// </summary>
+        /// <returns></returns>
+        private static Dictionary<string, string> InitializeRenamedGeometryInstanceMethodFunctions()
+        {
+            Dictionary<string, string> renamedInstanceMethodFunctions = new Dictionary<string, string>();
+
+            renamedInstanceMethodFunctions.Add("AsText", "STAsText");
+            renamedInstanceMethodFunctions.Add("AsBinary", "STAsBinary");
+            renamedInstanceMethodFunctions.Add("SpatialEquals", "STEquals");
+            renamedInstanceMethodFunctions.Add("SpatialBuffer", "STBuffer");
+            renamedInstanceMethodFunctions.Add("Distance", "STDistance");
+            renamedInstanceMethodFunctions.Add("Area", "STArea");
+
+            return renamedInstanceMethodFunctions;
+        }
+
+        private static ISqlFragment HandleSpatialFromTextFunction(SqlGenerator sqlgen, DbFunctionExpression functionExpression)
+        {
+            var functionNameWithSrid = (MetadataHelpers.IsPrimitiveType(functionExpression.ResultType, PrimitiveTypeKind.Geometry)
+                                            ? "geometry::STGeomFromText"
+                                            : "geography::STGeomFromText");
+            var functionNameWithoutSrid = (MetadataHelpers.IsPrimitiveType(functionExpression.ResultType, PrimitiveTypeKind.Geometry)
+                                               ? "geometry::Parse"
+                                               : "geography::Parse");
+
+            if (functionExpression.Arguments.Count == 2)
+            {
+                return sqlgen.HandleFunctionDefaultGivenName(functionExpression, functionNameWithSrid);
+            }
+            else
+            {
+                Debug.Assert(functionExpression.Arguments.Count == 1, "FromText function should have text or text + srid arguments only");
+                return sqlgen.HandleFunctionDefaultGivenName(functionExpression, functionNameWithoutSrid);
+            }
+        }
+
+        private static ISqlFragment HandleSpatialFromGmlFunction(SqlGenerator sqlgen, DbFunctionExpression functionExpression)
+        {
+            return HandleSpatialStaticMethodFunctionAppendSrid(
+                sqlgen, functionExpression,
+                (MetadataHelpers.IsPrimitiveType(functionExpression.ResultType, PrimitiveTypeKind.Geometry)
+                     ? "geometry::GeomFromGml"
+                     : "geography::GeomFromGml"));
+        }
+
+        private static ISqlFragment HandleSpatialFromBinaryFunction(SqlGenerator sqlgen, DbFunctionExpression functionExpression)
+        {
+            return HandleSpatialStaticMethodFunctionAppendSrid(
+                sqlgen, functionExpression,
+                (MetadataHelpers.IsPrimitiveType(functionExpression.ResultType, PrimitiveTypeKind.Geometry)
+                     ? "geometry::STGeomFromWKB"
+                     : "geography::STGeomFromWKB"));
+        }
+
+        private static readonly DbExpression defaultGeographySridExpression =
+            DbExpressionBuilder.Constant(DbGeography.DefaultCoordinateSystemId);
+
+        private static readonly DbExpression defaultGeometrySridExpression =
+            DbExpressionBuilder.Constant(DbGeometry.DefaultCoordinateSystemId);
+
+        private static ISqlFragment HandleSpatialStaticMethodFunctionAppendSrid(
+            SqlGenerator sqlgen, DbFunctionExpression functionExpression, string functionName)
+        {
+            if (functionExpression.Arguments.Count == 2)
+            {
+                return sqlgen.HandleFunctionDefaultGivenName(functionExpression, functionName);
+            }
+            else
+            {
+                var sridExpression = (MetadataHelpers.IsPrimitiveType(functionExpression.ResultType, PrimitiveTypeKind.Geometry)
+                                          ? defaultGeometrySridExpression
+                                          : defaultGeographySridExpression);
+                var result = new SqlBuilder();
+                result.Append(functionName);
+                sqlgen.WriteFunctionArguments(functionExpression.Arguments.Concat(new[] { sridExpression }), result);
+                return result;
+            }
         }
 
         #endregion
@@ -1151,24 +1333,30 @@ namespace SampleEntityFrameworkProvider
         /// FunctionName(arg1, arg2, ..., argn).
         /// We translate user-defined functions to NamespaceName.FunctionName(arg1, arg2, ..., argn).
         /// </summary>
-        /// <param name="e"></param>
+        /// <param name="functionExpression"></param>
         /// <returns>A <see cref="SqlBuilder"/></returns>
-        public override ISqlFragment Visit(DbFunctionExpression e)
+        public override ISqlFragment Visit(DbFunctionExpression functionExpression)
         {
             //
             // check if function requires special case processing, if so, delegates to it
             //
-            if (IsSpecialBuiltInFunction(e))
+            if (IsSpecialBuiltInFunction(functionExpression))
             {
-                return HandleSpecialBuiltInFunction(e);
+                return HandleSpecialBuiltInFunction(functionExpression);
             }
 
-            if (IsSpecialCanonicalFunction(e))
+            if (IsSpecialCanonicalFunction(functionExpression))
             {
-                return HandleSpecialCanonicalFunction(e);
+                return HandleSpecialCanonicalFunction(functionExpression);
             }
 
-            return HandleFunctionDefault(e);
+            PrimitiveTypeKind spatialTypeKind;
+            if (IsSpatialCanonicalFunction(functionExpression, out spatialTypeKind))
+            {
+                return HandleSpatialCanonicalFunction(functionExpression, spatialTypeKind);
+            }
+
+            return HandleFunctionDefault(functionExpression);
         }
 
         /// <summary>
@@ -2570,6 +2758,33 @@ namespace SampleEntityFrameworkProvider
         }
 
         /// <summary>
+        /// Determines whether the given function is a canonical function the translates
+        /// to a spatial (geography/geometry) property access or method call.
+        /// </summary>
+        private static bool IsSpatialCanonicalFunction(DbFunctionExpression e, out PrimitiveTypeKind spatialTypeKind)
+        {
+            if (MetadataHelpers.IsCanonicalFunction(e.Function))
+            {
+                if (MetadataHelpers.IsSpatialType(e.ResultType, out spatialTypeKind))
+                {
+                    return true;
+                }
+
+                foreach (FunctionParameter functionParameter in e.Function.Parameters)
+                {
+                    if (MetadataHelpers.IsSpatialType(functionParameter.TypeUsage, out spatialTypeKind))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            spatialTypeKind = default(PrimitiveTypeKind);
+            return false;
+        }
+
+
+        /// <summary>
         /// Default handling for functions
         /// Translates them to FunctionName(arg1, arg2, ..., argn)
         /// </summary>
@@ -2616,17 +2831,23 @@ namespace SampleEntityFrameworkProvider
 
             if (!isNiladicFunction)
             {
-                result.Append("(");
-                string separator = "";
-                foreach (DbExpression arg in e.Arguments)
-                {
-                    result.Append(separator);
-                    result.Append(arg.Accept(this));
-                    separator = ", ";                    
-                }
-                result.Append(")");
+                WriteFunctionArguments(e.Arguments, result);
             }
         }
+
+        private void WriteFunctionArguments(IEnumerable<DbExpression> functionArguments, SqlBuilder result)
+        {
+            result.Append("(");
+            string separator = "";
+            foreach (DbExpression arg in functionArguments)
+            {
+                result.Append(separator);
+                result.Append(arg.Accept(this));
+                separator = ", ";
+            }
+            result.Append(")");
+        }
+
 
         /// <summary>
         /// Handler for special built in functions
@@ -2660,6 +2881,93 @@ namespace SampleEntityFrameworkProvider
                 throw new InvalidOperationException("Special handling should be called only for functions in the list of special functions");
 
             return handlers[e.Function.Name](this, e);
+        }
+
+        private ISqlFragment HandleSpatialCanonicalFunction(DbFunctionExpression functionExpression, PrimitiveTypeKind spatialTypeKind)
+        {
+            Debug.Assert(spatialTypeKind == PrimitiveTypeKind.Geography || spatialTypeKind == PrimitiveTypeKind.Geometry, "Spatial function does not refer to a valid spatial primitive type kind?");
+            if (spatialTypeKind == PrimitiveTypeKind.Geography)
+            {
+                return HandleSpatialCanonicalFunction(functionExpression, _geographyFunctionNameToStaticMethodHandlerDictionary, _geographyFunctionNameToInstancePropertyNameDictionary, _geographyRenamedInstanceMethodFunctionDictionary);
+            }
+            else
+            {
+                return HandleSpatialCanonicalFunction(functionExpression, _geometryFunctionNameToStaticMethodHandlerDictionary, _geometryFunctionNameToInstancePropertyNameDictionary, _geometryRenamedInstanceMethodFunctionDictionary);
+            }
+        }
+
+        private ISqlFragment HandleSpatialCanonicalFunction(DbFunctionExpression functionExpression,
+                                                           Dictionary<string, FunctionHandler> staticMethodsMap,
+                                                           Dictionary<string, string> instancePropertiesMap,
+                                                           Dictionary<string, string> renamedInstanceMethodsMap)
+        {
+            FunctionHandler staticFunctionHandler;
+            string instancePropertyName;
+            if (staticMethodsMap.TryGetValue(functionExpression.Function.Name, out staticFunctionHandler))
+            {
+                return staticFunctionHandler(this, functionExpression);
+            }
+            else if (instancePropertiesMap.TryGetValue(functionExpression.Function.Name, out instancePropertyName))
+            {
+                Debug.Assert(functionExpression.Function.Parameters.Count > 0 && MetadataHelpers.IsSpatialType(functionExpression.Function.Parameters[0].TypeUsage), "Instance property function does not have instance parameter?");
+                return WriteInstanceFunctionCall(instancePropertyName, functionExpression, isPropertyAccess: true, castReturnTypeTo: null);
+            }
+            else
+            {
+                // Default translation pattern is instance method; the instance method name may differ from that of the spatial canonical function
+                Debug.Assert(functionExpression.Function.Parameters.Count > 0 && MetadataHelpers.IsSpatialType(functionExpression.Function.Parameters[0].TypeUsage), "Instance method function does not have instance parameter?");
+                string effectiveFunctionName;
+                if (!renamedInstanceMethodsMap.TryGetValue(functionExpression.Function.Name, out effectiveFunctionName))
+                {
+                    effectiveFunctionName = functionExpression.Function.Name;
+                }
+
+                // For AsGml() calls, the XML result must be cast to string to match the declared function result type.
+                string castResultType = null;
+                if (effectiveFunctionName == "AsGml")
+                {
+                    castResultType = "nvarchar(max)";
+                }
+                return WriteInstanceFunctionCall(effectiveFunctionName, functionExpression, isPropertyAccess: false, castReturnTypeTo: castResultType);
+            }
+        }
+
+        private ISqlFragment WriteInstanceFunctionCall(string functionName, DbFunctionExpression functionExpression, bool isPropertyAccess, string castReturnTypeTo)
+        {
+            Debug.Assert(!isPropertyAccess || functionExpression.Arguments.Count == 1, "Property accessor instance functions should have only the single instance argument");
+
+            SqlBuilder result = new SqlBuilder();
+            if (castReturnTypeTo != null)
+            {
+                result.Append(" CAST(");
+            }
+
+            DbExpression instanceExpression = functionExpression.Arguments[0];
+
+            // Write the instance - if this is another function call, it need not be enclosed in parentheses.
+            if (instanceExpression.ExpressionKind != DbExpressionKind.Function)
+            {
+                ParanthesizeExpressionIfNeeded(instanceExpression, result);
+            }
+            else
+            {
+                result.Append(instanceExpression.Accept(this));
+            }
+            result.Append(".");
+            result.Append(functionName);
+
+            if (!isPropertyAccess)
+            {
+                WriteFunctionArguments(functionExpression.Arguments.Skip(1), result);
+            }
+
+            if (castReturnTypeTo != null)
+            {
+                result.Append(" AS ");
+                result.Append(castReturnTypeTo);
+                result.Append(")");
+            }
+            return result;
         }
 
         /// <summary>

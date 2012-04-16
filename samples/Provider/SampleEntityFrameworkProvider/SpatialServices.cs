@@ -478,12 +478,18 @@ namespace SampleEntityFrameworkProvider
 
         public override double? GetArea(DbGeometry geometryValue)
         {
-            throw new System.NotImplementedException();
+            CheckParameterNotNull("geometryValue", geometryValue);
+
+            dynamic providerValue = geometryValue.ProviderValue;
+            return providerValue.STArea().Value;
         }
 
         public override double? GetArea(DbGeography geographyValue)
         {
-            throw new System.NotImplementedException();
+            CheckParameterNotNull("geographyValue", geographyValue);
+
+            dynamic providerValue = geographyValue.ProviderValue;
+            return providerValue.STArea().Value;
         }
 
         public override DbGeometry GetBoundary(DbGeometry geometryValue)

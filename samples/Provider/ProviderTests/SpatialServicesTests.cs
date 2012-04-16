@@ -31,6 +31,7 @@ namespace ProviderTests
         private readonly XDocument GeometryPointGml =
             XDocument.Parse("<Point xmlns=\"http://www.opengis.net/gml\"><pos>1 2</pos></Point>");
 
+        private const string PolygonWKT = "POLYGON ((0 0, 5 0, 5 5, 0 5, 0 0))";
 
         private const int DefaultCoordinateSystemId = 4326;
 
@@ -180,6 +181,13 @@ namespace ProviderTests
                     spatialServices.GeographyFromText(PointWKT)));
         }
 
+        [Fact]
+        public void Verify_DbGeography_Area_method()
+        {
+            var area = spatialServices.GetArea(spatialServices.GeographyFromText(PolygonWKT));
+            Assert.True(area > 307540516837.287 && area < 307540516837.289);
+        }
+
         #endregion
 
         #region DbGeometry tests
@@ -326,6 +334,12 @@ namespace ProviderTests
                 spatialServices.SpatialEquals(
                     spatialServices.GeometryFromText("POINT(2 1)"),
                     spatialServices.GeometryFromText(PointWKT)));
+        }
+
+        [Fact]
+        public void Verify_DbGeometry_Area_method()
+        {
+            Assert.Equal(25, spatialServices.GetArea(spatialServices.GeometryFromText(PolygonWKT)));
         }
 
         #endregion

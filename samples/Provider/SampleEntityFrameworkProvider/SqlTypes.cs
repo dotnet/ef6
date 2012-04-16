@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Spatial;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -79,6 +81,32 @@ namespace SampleEntityFrameworkProvider
             {
                 return SqlTypes.SqlXmlType.GetConstructor(new Type[] { typeof(XmlReader) }).Invoke(new object[] { reader });
             }
+        }
+
+        public static object ConvertToSqlTypesGeography(DbGeography geography)
+        {
+            Debug.Assert(geography != null, "geography != null");
+
+            var providerValue = geography.ProviderValue;
+            if (providerValue == null || providerValue.GetType() == SqlGeographyType)
+            {
+                return providerValue;
+            }
+         
+            // DbGeography value created by a different spatial services
+            throw new NotSupportedException("DbGeography values not backed by Sql Server spatial types are not supported.");
+        }
+
+        public static object ConvertToSqlTypesGeometry(DbGeometry geometry)
+        {
+            var providerValue = geometry.ProviderValue;
+            if (providerValue == null || providerValue.GetType() == SqlGeometryType)
+            {
+                return providerValue;
+            }
+
+            // DbGeography value created by a different spatial services
+            throw new NotSupportedException("DbGeometry values not backed by Sql Server spatial types are not supported.");
         }
     }
 }

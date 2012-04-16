@@ -24,6 +24,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.Common.CommandTrees;
 using System.Data.Metadata.Edm;
+using System.Data.Spatial;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
@@ -118,6 +119,12 @@ namespace SampleEntityFrameworkProvider
             }
 
             return command;
+        }
+
+        protected override void SetDbParameterValue(DbParameter parameter, TypeUsage parameterType, object value)
+        {
+            // Ensure a value that can be used with SqlParameter
+            parameter.Value = EnsureSqlParameterValue(value);
         }
 
         protected override string GetDbProviderManifestToken(DbConnection connection)
@@ -460,25 +467,21 @@ namespace SampleEntityFrameworkProvider
         {
             int? size;
 
+            value = EnsureSqlParameterValue(value);
+
             SqlParameter result = new SqlParameter(name, value);
 
             // .Direction
-            ParameterDirection direction = MetadataHelpers.ParameterModeToParameterDirection(mode);
-            if (result.Direction != direction)
-            {
-                result.Direction = direction;
-            }
+            result.Direction = MetadataHelpers.ParameterModeToParameterDirection(mode);
 
             // .Size and .SqlDbType
             // output parameters are handled differently (we need to ensure there is space for return
             // values where the user has not given a specific Size/MaxLength)
             bool isOutParam = mode != ParameterMode.In;
-            SqlDbType sqlDbType = GetSqlDbType(type, isOutParam, out size);
 
-            if (result.SqlDbType != sqlDbType)
-            {
-                result.SqlDbType = sqlDbType;
-            }
+            string udtTypeName;
+            result.SqlDbType = GetSqlDbType(type, isOutParam, out size, out udtTypeName);
+            result.UdtTypeName = udtTypeName;
 
             // Note that we overwrite 'facet' parameters where either the value is different or
             // there is an output parameter.
@@ -497,18 +500,49 @@ namespace SampleEntityFrameworkProvider
             return result;
         }
 
+        /// <summary>
+        /// Converts DbGeography/DbGeometry values to corresponding Sql Server spatial values.
+        /// </summary>
+        /// <param name="value">value to convert</param>
+        /// <returns>Sql Server spatial value for DbGeometry/DbGeography or <paramref name="value"/>.</returns>
+        internal static object EnsureSqlParameterValue(object value)
+        {
+            if (value != null &&
+                value != DBNull.Value &&
+                Type.GetTypeCode(value.GetType()) == TypeCode.Object)
+            {
+                // If the parameter is being created based on an actual value (typically for constants found in DML expressions) then a DbGeography/DbGeometry
+                // value must be replaced by an an appropriate Microsoft.SqlServer.Types.SqlGeography/SqlGeometry instance. Since the DbGeography/DbGeometry
+                // value may not have been originally created by this SqlClient provider services implementation, just using the ProviderValue is not sufficient.
+                DbGeography geographyValue = value as DbGeography;
+                if (geographyValue != null)
+                {
+                    value = SqlTypes.ConvertToSqlTypesGeography(geographyValue);
+                }
+                else
+                {
+                    DbGeometry geometryValue = value as DbGeometry;
+                    if (geometryValue != null)
+                    {
+                        value = SqlTypes.ConvertToSqlTypesGeometry(geometryValue);
+                    }
+                }
+            }
+
+            return value;
+        }
 
         /// <summary>
         /// Determines SqlDbType for the given primitive type. Extracts facet
         /// information as well.
         /// </summary>
-        private static SqlDbType GetSqlDbType(TypeUsage type, bool isOutParam, out int? size)
+        private static SqlDbType GetSqlDbType(TypeUsage type, bool isOutParam, out int? size, out string udtName)
         {
             // only supported for primitive type
             PrimitiveTypeKind primitiveTypeKind = MetadataHelpers.GetPrimitiveTypeKind(type);
 
             size = default(int?);
-
+            udtName = null;
 
             // TODO add logic for Xml here
             switch (primitiveTypeKind)
@@ -560,6 +594,18 @@ namespace SampleEntityFrameworkProvider
                 case PrimitiveTypeKind.String:
                     size = GetParameterSize(type, isOutParam);
                     return GetStringDbType(type);
+
+                case PrimitiveTypeKind.Geography:
+                    {
+                        udtName = "geography";
+                        return SqlDbType.Udt;
+                    }
+
+                case PrimitiveTypeKind.Geometry:
+                    {
+                        udtName = "geometry";
+                        return SqlDbType.Udt;
+                    }
 
                 default:
                     Debug.Fail("unknown PrimitiveTypeKind " + primitiveTypeKind);

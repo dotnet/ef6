@@ -215,6 +215,48 @@ namespace SampleEntityFrameworkProvider
             return false;
         }
 
+        internal static bool IsSpatialType(TypeUsage type)
+        {
+            PrimitiveTypeKind spatialTypeKind;
+            return IsSpatialType(type, out spatialTypeKind);    
+        }
+
+        internal static bool IsSpatialType(TypeUsage type, out PrimitiveTypeKind spatialType)
+        {
+            if (type.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType)
+            {
+                PrimitiveType primitiveType = (PrimitiveType)type.EdmType;
+                if (IsGeographicTypeKind(primitiveType.PrimitiveTypeKind) || IsGeometricTypeKind(primitiveType.PrimitiveTypeKind))
+                {
+                    spatialType = primitiveType.PrimitiveTypeKind;
+                    return true;
+                }
+            }
+
+            spatialType = default(PrimitiveTypeKind);
+            return false;
+        }
+
+        internal static bool IsGeometricTypeKind(PrimitiveTypeKind kind)
+        {
+            return kind == PrimitiveTypeKind.Geometry || IsStrongGeometricTypeKind(kind);
+        }
+
+        static bool IsStrongGeometricTypeKind(PrimitiveTypeKind kind)
+        {
+            return kind >= PrimitiveTypeKind.GeometryPoint && kind <= PrimitiveTypeKind.GeometryCollection;
+        }
+
+        internal static bool IsGeographicTypeKind(PrimitiveTypeKind kind)
+        {
+            return kind == PrimitiveTypeKind.Geography || IsStrongGeographicTypeKind(kind);
+        }
+
+        static bool IsStrongGeographicTypeKind(PrimitiveTypeKind kind)
+        {
+            return kind >= PrimitiveTypeKind.GeographyPoint && kind <= PrimitiveTypeKind.GeographyCollection;
+        }
+
         internal static DbType GetDbType(PrimitiveTypeKind primitiveType)
         {
             switch (primitiveType)
