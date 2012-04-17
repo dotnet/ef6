@@ -2,7 +2,10 @@ namespace System.Data.Entity.Core.Objects
 {
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
 
     /// <summary>
     /// 
@@ -88,6 +91,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="bufferIndex">The index in the destination buffer where copying will begin</param>
         /// <param name="length">The number of bytes to copy</param>
         /// <returns>The number of bytes copied</returns>
+        [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         public override long GetBytes(int i, long dataIndex, byte[] buffer, int bufferIndex, int length)
         {
             byte[] tempBuffer;
@@ -101,12 +105,14 @@ namespace System.Data.Entity.Core.Objects
             var byteCount = Math.Min(tempBuffer.Length - srcIndex, length);
             if (srcIndex < 0)
             {
-                throw EntityUtil.InvalidSourceBufferIndex(tempBuffer.Length, srcIndex, "dataIndex");
+                throw new ArgumentOutOfRangeException("dataIndex", Strings.ADP_InvalidSourceBufferIndex(
+                    tempBuffer.Length.ToString(CultureInfo.InvariantCulture), ((long)srcIndex).ToString(CultureInfo.InvariantCulture)));
             }
             else if ((bufferIndex < 0)
                      || (bufferIndex > 0 && bufferIndex >= buffer.Length))
             {
-                throw EntityUtil.InvalidDestinationBufferIndex(buffer.Length, bufferIndex, "bufferIndex");
+                throw new ArgumentOutOfRangeException("bufferIndex", Strings.ADP_InvalidDestinationBufferIndex(
+                    buffer.Length.ToString(CultureInfo.InvariantCulture), bufferIndex.ToString(CultureInfo.InvariantCulture)));
             }
 
             if (0 < byteCount)
@@ -115,7 +121,7 @@ namespace System.Data.Entity.Core.Objects
             }
             else if (length < 0)
             {
-                throw EntityUtil.InvalidDataLength(length);
+                throw new IndexOutOfRangeException(Strings.ADP_InvalidDataLength(((long)length).ToString(CultureInfo.InvariantCulture)));
             }
             else
             {
@@ -143,6 +149,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="bufferIndex">The index in the destination buffer where copying will begin</param>
         /// <param name="length">The number of chars to copy</param>
         /// <returns>The number of chars copied</returns>
+        [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         public override long GetChars(int i, long dataIndex, char[] buffer, int bufferIndex, int length)
         {
             char[] tempBuffer;
@@ -157,12 +164,14 @@ namespace System.Data.Entity.Core.Objects
             var charCount = Math.Min(tempBuffer.Length - srcIndex, length);
             if (srcIndex < 0)
             {
-                throw EntityUtil.InvalidSourceBufferIndex(tempBuffer.Length, srcIndex, "dataIndex");
+                throw new ArgumentOutOfRangeException("dataIndex", Strings.ADP_InvalidSourceBufferIndex(
+                    tempBuffer.Length.ToString(CultureInfo.InvariantCulture), ((long)srcIndex).ToString(CultureInfo.InvariantCulture)));
             }
             else if ((bufferIndex < 0)
                      || (bufferIndex > 0 && bufferIndex >= buffer.Length))
             {
-                throw EntityUtil.InvalidDestinationBufferIndex(buffer.Length, bufferIndex, "bufferIndex");
+                throw new ArgumentOutOfRangeException("bufferIndex", Strings.ADP_InvalidDestinationBufferIndex(
+                    buffer.Length.ToString(CultureInfo.InvariantCulture), bufferIndex.ToString(CultureInfo.InvariantCulture)));
             }
 
             if (0 < charCount)
@@ -171,7 +180,7 @@ namespace System.Data.Entity.Core.Objects
             }
             else if (length < 0)
             {
-                throw EntityUtil.InvalidDataLength(length);
+                throw new IndexOutOfRangeException(Strings.ADP_InvalidDataLength(((long)length).ToString(CultureInfo.InvariantCulture)));
             }
             else
             {
@@ -192,7 +201,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns></returns>
         protected override DbDataReader GetDbDataReader(int i)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -318,7 +327,7 @@ namespace System.Data.Entity.Core.Objects
             var ordinal = _cacheEntry.GetOrdinalforCLayerName(name, _metadata);
             if (ordinal == -1)
             {
-                throw EntityUtil.ArgumentOutOfRange("name");
+                throw new ArgumentOutOfRangeException("name");
             }
             return ordinal;
         }
@@ -359,7 +368,7 @@ namespace System.Data.Entity.Core.Objects
         {
             if (values == null)
             {
-                throw EntityUtil.ArgumentNull("values");
+                throw new ArgumentNullException("values");
             }
             var minValue = Math.Min(values.Length, FieldCount);
             for (var i = 0; i < minValue; i++)

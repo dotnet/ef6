@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
@@ -344,7 +345,7 @@ namespace System.Data.Entity.Core.Objects
         {
             if (_state == EntityState.Detached)
             {
-                throw EntityUtil.ObjectStateEntryinInvalidState();
+                throw new InvalidOperationException(Strings.ObjectStateEntry_InvalidState);
             }
             Debug.Assert(null != _cache, "null ObjectStateManager");
             Debug.Assert(null != _entitySet, "null EntitySetBase");

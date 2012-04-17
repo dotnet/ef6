@@ -5,7 +5,10 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
 
     /// <summary>
     /// Instances of this class would be returned to user via Query&lt;T&gt;
@@ -105,6 +108,7 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         public override long GetBytes(int ordinal, long fieldOffset, byte[] buffer, int bufferOffset, int length)
         {
             var cbytes = 0;
@@ -119,7 +123,8 @@ namespace System.Data.Entity.Core.Objects
             // is invalid
             if (fieldOffset > Int32.MaxValue)
             {
-                throw EntityUtil.InvalidSourceBufferIndex(cbytes, fieldOffset, "fieldOffset");
+                throw new ArgumentOutOfRangeException("fieldOffset", Strings.ADP_InvalidSourceBufferIndex(
+                    cbytes.ToString(CultureInfo.InvariantCulture), fieldOffset.ToString(CultureInfo.InvariantCulture)));
             }
 
             ndataIndex = (int)fieldOffset;
@@ -156,28 +161,31 @@ namespace System.Data.Entity.Core.Objects
 
                     if (length < 0)
                     {
-                        throw EntityUtil.InvalidDataLength(length);
+                        throw new IndexOutOfRangeException(Strings.ADP_InvalidDataLength(((long)length).ToString(CultureInfo.InvariantCulture)));
                     }
 
                     // if bad buffer index, throw
                     if (bufferOffset < 0
                         || bufferOffset >= buffer.Length)
                     {
-                        throw EntityUtil.InvalidDestinationBufferIndex(length, bufferOffset, "bufferOffset");
+                        throw new ArgumentOutOfRangeException("bufferOffset", Strings.ADP_InvalidDestinationBufferIndex(
+                            length.ToString(CultureInfo.InvariantCulture), bufferOffset.ToString(CultureInfo.InvariantCulture)));
                     }
 
                     // if bad data index, throw
                     if (fieldOffset < 0
                         || fieldOffset >= cbytes)
                     {
-                        throw EntityUtil.InvalidSourceBufferIndex(length, fieldOffset, "fieldOffset");
+                        throw new ArgumentOutOfRangeException("fieldOffset", Strings.ADP_InvalidSourceBufferIndex(
+                            length.ToString(CultureInfo.InvariantCulture), fieldOffset.ToString(CultureInfo.InvariantCulture)));
                     }
 
                     // if there is not enough room in the buffer for data
                     if (cbytes + bufferOffset
                         > buffer.Length)
                     {
-                        throw EntityUtil.InvalidBufferSizeOrIndex(cbytes, bufferOffset);
+                        throw new IndexOutOfRangeException(Strings.ADP_InvalidBufferSizeOrIndex(
+                            cbytes.ToString(CultureInfo.InvariantCulture), bufferOffset.ToString(CultureInfo.InvariantCulture)));
                     }
                 }
 
@@ -198,6 +206,7 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         public override long GetChars(int ordinal, long fieldOffset, char[] buffer, int bufferOffset, int length)
         {
             var cchars = 0;
@@ -211,7 +220,8 @@ namespace System.Data.Entity.Core.Objects
             // is invalid
             if (fieldOffset > Int32.MaxValue)
             {
-                throw EntityUtil.InvalidSourceBufferIndex(cchars, fieldOffset, "fieldOffset");
+                throw new ArgumentOutOfRangeException("fieldOffset", Strings.ADP_InvalidSourceBufferIndex(
+                    cchars.ToString(CultureInfo.InvariantCulture), fieldOffset.ToString(CultureInfo.InvariantCulture)));
             }
 
             ndataIndex = (int)fieldOffset;
@@ -247,28 +257,31 @@ namespace System.Data.Entity.Core.Objects
 
                     if (length < 0)
                     {
-                        throw EntityUtil.InvalidDataLength(length);
+                        throw new IndexOutOfRangeException(Strings.ADP_InvalidDataLength(((long)length).ToString(CultureInfo.InvariantCulture)));
                     }
 
                     // if bad buffer index, throw
                     if (bufferOffset < 0
                         || bufferOffset >= buffer.Length)
                     {
-                        throw EntityUtil.InvalidDestinationBufferIndex(buffer.Length, bufferOffset, "bufferOffset");
+                        throw new ArgumentOutOfRangeException("bufferOffset", Strings.ADP_InvalidDestinationBufferIndex(
+                            buffer.Length.ToString(CultureInfo.InvariantCulture), bufferOffset.ToString(CultureInfo.InvariantCulture)));
                     }
 
                     // if bad data index, throw
                     if (fieldOffset < 0
                         || fieldOffset >= cchars)
                     {
-                        throw EntityUtil.InvalidSourceBufferIndex(cchars, fieldOffset, "fieldOffset");
+                        throw new ArgumentOutOfRangeException("fieldOffset", Strings.ADP_InvalidSourceBufferIndex(
+                            cchars.ToString(CultureInfo.InvariantCulture), fieldOffset.ToString(CultureInfo.InvariantCulture)));
                     }
 
                     // if there is not enough room in the buffer for data
                     if (cchars + bufferOffset
                         > buffer.Length)
                     {
-                        throw EntityUtil.InvalidBufferSizeOrIndex(cchars, bufferOffset);
+                        throw new IndexOutOfRangeException(Strings.ADP_InvalidBufferSizeOrIndex(
+                            cchars.ToString(CultureInfo.InvariantCulture), bufferOffset.ToString(CultureInfo.InvariantCulture)));
                     }
                 }
 
@@ -418,7 +431,7 @@ namespace System.Data.Entity.Core.Objects
         {
             if (null == values)
             {
-                throw EntityUtil.ArgumentNull("values");
+                throw new ArgumentNullException("values");
             }
 
             var copyLen = Math.Min(values.Length, FieldCount);

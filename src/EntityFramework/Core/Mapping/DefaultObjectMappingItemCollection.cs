@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
 
@@ -28,8 +29,8 @@ namespace System.Data.Entity.Core.Mapping
             ObjectItemCollection objectCollection)
             : base(DataSpace.OCSpace)
         {
-            EntityUtil.CheckArgumentNull(edmCollection, "edmCollection");
-            EntityUtil.CheckArgumentNull(objectCollection, "objectCollection");
+            Contract.Requires(edmCollection != null);
+            Contract.Requires(objectCollection != null);
             m_edmCollection = edmCollection;
             m_objectCollection = objectCollection;
             LoadPrimitiveMaps();
@@ -183,7 +184,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="item"></param>
         internal override Map GetMap(GlobalItem item)
         {
-            EntityUtil.CheckArgumentNull(item, "item");
+            Contract.Requires(item != null);
             Map map;
             if (!TryGetMap(item, out map))
             {

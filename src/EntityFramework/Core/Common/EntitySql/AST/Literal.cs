@@ -219,7 +219,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                         break;
 
                     default:
-                        throw EntityUtil.NotSupported(Strings.LiteralTypeNotSupported(_literalKind.ToString()));
+                        throw new NotSupportedException(Strings.LiteralTypeNotSupported(_literalKind.ToString()));
                 }
 
                 _type = IsNullLiteral ? null : _computedValue.GetType();
@@ -245,7 +245,8 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                             UInt32 value;
                             if (!UInt32.TryParse(numberPart, NumberStyles.Integer, CultureInfo.InvariantCulture, out value))
                             {
-                                throw EntityUtil.EntitySqlError(errCtx, Strings.CannotConvertNumericLiteral(numericString, "unsigned int"));
+                                string message = Strings.CannotConvertNumericLiteral(numericString, "unsigned int");
+                                throw EntitySqlException.Create(errCtx, message, null);
                             }
                             return value;
                         }
@@ -256,7 +257,8 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                             long value;
                             if (!Int64.TryParse(numberPart, NumberStyles.Integer, CultureInfo.InvariantCulture, out value))
                             {
-                                throw EntityUtil.EntitySqlError(errCtx, Strings.CannotConvertNumericLiteral(numericString, "long"));
+                                string message = Strings.CannotConvertNumericLiteral(numericString, "long");
+                                throw EntitySqlException.Create(errCtx, message, null);
                             }
                             return value;
                         }
@@ -268,7 +270,8 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                             UInt64 value;
                             if (!UInt64.TryParse(numberPart, NumberStyles.Integer, CultureInfo.InvariantCulture, out value))
                             {
-                                throw EntityUtil.EntitySqlError(errCtx, Strings.CannotConvertNumericLiteral(numericString, "unsigned long"));
+                                string message = Strings.CannotConvertNumericLiteral(numericString, "unsigned long");
+                                throw EntitySqlException.Create(errCtx, message, null);
                             }
                             return value;
                         }
@@ -279,7 +282,8 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                             Single value;
                             if (!Single.TryParse(numberPart, NumberStyles.Float, CultureInfo.InvariantCulture, out value))
                             {
-                                throw EntityUtil.EntitySqlError(errCtx, Strings.CannotConvertNumericLiteral(numericString, "float"));
+                                string message = Strings.CannotConvertNumericLiteral(numericString, "float");
+                                throw EntitySqlException.Create(errCtx, message, null);
                             }
                             return value;
                         }
@@ -293,7 +297,8 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                                     numberPart, NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture,
                                     out value))
                             {
-                                throw EntityUtil.EntitySqlError(errCtx, Strings.CannotConvertNumericLiteral(numericString, "decimal"));
+                                string message = Strings.CannotConvertNumericLiteral(numericString, "decimal");
+                                throw EntitySqlException.Create(errCtx, message, null);
                             }
                             return value;
                         }
@@ -304,7 +309,8 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                             Double value;
                             if (!Double.TryParse(numberPart, NumberStyles.Float, CultureInfo.InvariantCulture, out value))
                             {
-                                throw EntityUtil.EntitySqlError(errCtx, Strings.CannotConvertNumericLiteral(numericString, "double"));
+                                string message = Strings.CannotConvertNumericLiteral(numericString, "double");
+                                throw EntitySqlException.Create(errCtx, message, null);
                             }
                             return value;
                         }
@@ -329,7 +335,8 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                 Double value;
                 if (!Double.TryParse(numericString, NumberStyles.Float, CultureInfo.InvariantCulture, out value))
                 {
-                    throw EntityUtil.EntitySqlError(errCtx, Strings.CannotConvertNumericLiteral(numericString, "double"));
+                    string message = Strings.CannotConvertNumericLiteral(numericString, "double");
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 return value;
@@ -345,7 +352,8 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                 Int64 int64Value;
                 if (!Int64.TryParse(numericString, NumberStyles.Integer, CultureInfo.InvariantCulture, out int64Value))
                 {
-                    throw EntityUtil.EntitySqlError(errCtx, Strings.CannotConvertNumericLiteral(numericString, "long"));
+                    string message = Strings.CannotConvertNumericLiteral(numericString, "long");
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 return int64Value;
@@ -360,7 +368,8 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             var result = false;
             if (!Boolean.TryParse(booleanLiteralValue, out result))
             {
-                throw EntityUtil.EntitySqlError(errCtx, Strings.InvalidLiteralFormat("Boolean", booleanLiteralValue));
+                string message = Strings.InvalidLiteralFormat("Boolean", booleanLiteralValue);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
             return result;
         }
@@ -382,7 +391,8 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             if (delimiter != '\''
                 && delimiter != '\"')
             {
-                throw EntityUtil.EntitySqlError(Strings.MalformedStringLiteralPayload);
+                string message = Strings.MalformedStringLiteralPayload;
+                throw new EntitySqlException(message);
             }
 
             var result = "";
@@ -394,7 +404,8 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             Debug.Assert(before % 2 == 0, "must have an even number of delimiters in the string literal");
             if (0 != (before % 2))
             {
-                throw EntityUtil.EntitySqlError(Strings.MalformedStringLiteralPayload);
+                string message = Strings.MalformedStringLiteralPayload;
+                throw new EntitySqlException(message);
             }
 
             //
@@ -410,7 +421,8 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             Debug.Assert(after == (before - 2) / 2);
             if ((after != ((before - 2) / 2)))
             {
-                throw EntityUtil.EntitySqlError(Strings.MalformedStringLiteralPayload);
+                string message = Strings.MalformedStringLiteralPayload;
+                throw new EntitySqlException(message);
             }
 
             return result;
@@ -478,8 +490,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             {
                 return (hexChar - 'a') + 10;
             }
-            Debug.Assert(false, "Invalid Hexadecimal Digit");
-            throw EntityUtil.ArgumentOutOfRange("hexadecimal digit is not valid");
+            throw new ArgumentOutOfRangeException("hexChar");
         }
 
         private static readonly char[] _datetimeSeparators = new[] { ' ', ':', '-', '.' };
@@ -561,7 +572,8 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             }
             catch (ArgumentOutOfRangeException e)
             {
-                throw EntityUtil.EntitySqlError(errCtx, Strings.InvalidDateTimeOffsetLiteral(datetimeLiteralValue), e);
+                string message = Strings.InvalidDateTimeOffsetLiteral(datetimeLiteralValue);
+                throw EntitySqlException.Create(errCtx, message, e);
             }
         }
 
@@ -596,12 +608,14 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             hour = Int32.Parse(datetimeParts[timePartStartIndex], NumberStyles.Integer, CultureInfo.InvariantCulture);
             if (hour > 23)
             {
-                throw EntityUtil.EntitySqlError(Strings.InvalidHour(datetimeParts[timePartStartIndex], datetimeLiteralValue));
+                string message = Strings.InvalidHour(datetimeParts[timePartStartIndex], datetimeLiteralValue);
+                throw new EntitySqlException(message);
             }
             minute = Int32.Parse(datetimeParts[++timePartStartIndex], NumberStyles.Integer, CultureInfo.InvariantCulture);
             if (minute > 59)
             {
-                throw EntityUtil.EntitySqlError(Strings.InvalidMinute(datetimeParts[timePartStartIndex], datetimeLiteralValue));
+                string message = Strings.InvalidMinute(datetimeParts[timePartStartIndex], datetimeLiteralValue);
+                throw new EntitySqlException(message);
             }
             second = 0;
             ticks = 0;
@@ -611,7 +625,8 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                 second = Int32.Parse(datetimeParts[timePartStartIndex], NumberStyles.Integer, CultureInfo.InvariantCulture);
                 if (second > 59)
                 {
-                    throw EntityUtil.EntitySqlError(Strings.InvalidSecond(datetimeParts[timePartStartIndex], datetimeLiteralValue));
+                    string message = Strings.InvalidSecond(datetimeParts[timePartStartIndex], datetimeLiteralValue);
+                    throw new EntitySqlException(message);
                 }
                 timePartStartIndex++;
                 if (datetimeParts.Length > timePartStartIndex)
@@ -629,22 +644,26 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             if (year < 1
                 || year > 9999)
             {
-                throw EntityUtil.EntitySqlError(Strings.InvalidYear(datetimeParts[0], datetimeLiteralValue));
+                string message = Strings.InvalidYear(datetimeParts[0], datetimeLiteralValue);
+                throw new EntitySqlException(message);
             }
             month = Int32.Parse(datetimeParts[1], NumberStyles.Integer, CultureInfo.InvariantCulture);
             if (month < 1
                 || month > 12)
             {
-                throw EntityUtil.EntitySqlError(Strings.InvalidMonth(datetimeParts[1], datetimeLiteralValue));
+                string message = Strings.InvalidMonth(datetimeParts[1], datetimeLiteralValue);
+                throw new EntitySqlException(message);
             }
             day = Int32.Parse(datetimeParts[2], NumberStyles.Integer, CultureInfo.InvariantCulture);
             if (day < 1)
             {
-                throw EntityUtil.EntitySqlError(Strings.InvalidDay(datetimeParts[2], datetimeLiteralValue));
+                string message = Strings.InvalidDay(datetimeParts[2], datetimeLiteralValue);
+                throw new EntitySqlException(message);
             }
             if (day > DateTime.DaysInMonth(year, month))
             {
-                throw EntityUtil.EntitySqlError(Strings.InvalidDayInMonth(datetimeParts[2], datetimeParts[1], datetimeLiteralValue));
+                string message = Strings.InvalidDayInMonth(datetimeParts[2], datetimeParts[1], datetimeLiteralValue);
+                throw new EntitySqlException(message);
             }
         }
 

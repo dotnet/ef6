@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Common;
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Class representing a connection string builder for the entity client provider
@@ -170,7 +171,7 @@ namespace System.Data.Entity.Core.EntityClient
         {
             get
             {
-                EntityUtil.CheckArgumentNull(keyword, "keyword");
+                Contract.Requires(keyword != null);
 
                 // Just access the properties to get the value since the fields, which the properties will be accessing, will
                 // have already been set when the connection string is set
@@ -191,11 +192,11 @@ namespace System.Data.Entity.Core.EntityClient
                     return Provider;
                 }
 
-                throw EntityUtil.KeywordNotSupported(keyword);
+                throw new ArgumentException(Strings.EntityClient_KeywordNotSupported(keyword));
             }
             set
             {
-                EntityUtil.CheckArgumentNull(keyword, "keyword");
+                Contract.Requires(keyword != null);
 
                 // If a null value is set, just remove the parameter and return
                 if (value == null)
@@ -208,7 +209,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var stringValue = value as string;
                 if (stringValue == null)
                 {
-                    throw EntityUtil.Argument(Strings.EntityClient_ValueNotString, "value");
+                    throw new ArgumentException(Strings.EntityClient_ValueNotString, "value");
                 }
 
                 // Just access the properties to get the value since the fields, which the properties will be accessing, will
@@ -231,7 +232,7 @@ namespace System.Data.Entity.Core.EntityClient
                 }
                 else
                 {
-                    throw EntityUtil.KeywordNotSupported(keyword);
+                    throw new ArgumentException(Strings.EntityClient_KeywordNotSupported(keyword));
                 }
             }
         }
@@ -255,7 +256,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>True if this connections string builder contains the specific key</returns>
         public override bool ContainsKey(string keyword)
         {
-            EntityUtil.CheckArgumentNull(keyword, "keyword");
+            Contract.Requires(keyword != null);
 
             foreach (var validKeyword in s_validKeywords)
             {
@@ -276,7 +277,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>True if the value is retrieved</returns>
         public override bool TryGetValue(string keyword, out object value)
         {
-            EntityUtil.CheckArgumentNull(keyword, "keyword");
+            Contract.Requires(keyword != null);
 
             if (ContainsKey(keyword))
             {
@@ -295,7 +296,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>True if the parameter is removed</returns>
         public override bool Remove(string keyword)
         {
-            EntityUtil.CheckArgumentNull(keyword, "keyword");
+            Contract.Requires(keyword != null);
 
             // Convert the given object into a string
             if (string.Compare(keyword, MetadataParameterName, StringComparison.OrdinalIgnoreCase) == 0)

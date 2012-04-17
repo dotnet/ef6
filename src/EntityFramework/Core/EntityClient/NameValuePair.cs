@@ -1,5 +1,7 @@
 namespace System.Data.Entity.Core.EntityClient
 {
+    using System.Data.Entity.Resources;
+
     /// <summary>
     /// Copied from System.Data.dll
     /// </summary>
@@ -15,7 +17,7 @@ namespace System.Data.Entity.Core.EntityClient
                 if ((null != _next)
                     || (null == value))
                 {
-                    throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.NameValuePairNext);
+                    throw new InvalidOperationException(Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.NameValuePairNext));
                 }
                 _next = value;
             }

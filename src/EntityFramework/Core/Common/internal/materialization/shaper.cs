@@ -206,13 +206,16 @@
                     if (typeof(TEntity)
                         != existingEntry.WrappedEntity.IdentityType)
                     {
-                        throw EntityUtil.RecyclingEntity(existingEntry.EntityKey, typeof(TEntity), existingEntry.WrappedEntity.IdentityType);
+                        EntityKey key = existingEntry.EntityKey;
+                        throw new NotSupportedException(Strings.Materializer_RecyclingEntity(
+                            TypeHelpers.GetFullName(key.EntityContainerName, key.EntitySetName), typeof(TEntity).FullName,
+                            existingEntry.WrappedEntity.IdentityType.FullName, key.ConcatKeyValue()));
                     }
 
                     if (EntityState.Added
                         == existingEntry.State)
                     {
-                        throw EntityUtil.AddedEntityAlreadyExists(existingEntry.EntityKey);
+                        throw new InvalidOperationException(Strings.Materializer_AddedEntityAlreadyExists(existingEntry.EntityKey.ConcatKeyValue()));
                     }
                     result = existingEntry.WrappedEntity;
                 }
@@ -784,13 +787,16 @@
             var clrType = typeof(TEntity);
             if (clrType != existingEntry.WrappedEntity.IdentityType)
             {
-                throw EntityUtil.RecyclingEntity(existingEntry.EntityKey, clrType, existingEntry.WrappedEntity.IdentityType);
+                EntityKey key = existingEntry.EntityKey;
+                throw new NotSupportedException(Strings.Materializer_RecyclingEntity(
+                    TypeHelpers.GetFullName(key.EntityContainerName, key.EntitySetName), clrType.FullName,
+                    existingEntry.WrappedEntity.IdentityType.FullName, key.ConcatKeyValue()));
             }
 
             if (EntityState.Added
                 == existingEntry.State)
             {
-                throw EntityUtil.AddedEntityAlreadyExists(existingEntry.EntityKey);
+                throw new InvalidOperationException(Strings.Materializer_AddedEntityAlreadyExists(existingEntry.EntityKey.ConcatKeyValue()));
             }
 
             if (MergeOption.AppendOnly != MergeOption)
@@ -967,7 +973,7 @@
 
             protected override Exception CreateNullValueException()
             {
-                return EntityUtil.ValueNullReferenceCast(typeof(TColumn));
+                return new InvalidOperationException(Strings.Materializer_NullReferenceCast(typeof(TColumn).Name));
             }
 
             protected override Exception CreateWrongTypeException(Type resultType)
@@ -998,18 +1004,16 @@
 
             protected override Exception CreateNullValueException()
             {
-                return EntityUtil.Constraint(
-                    Strings.Materializer_SetInvalidValue(
-                        (Nullable.GetUnderlyingType(typeof(TProperty)) ?? typeof(TProperty)).Name,
-                        _typeName, _propertyName, "null"));
+                return new ConstraintException(Strings.Materializer_SetInvalidValue(
+                    (Nullable.GetUnderlyingType(typeof(TProperty)) ?? typeof(TProperty)).Name,
+                    _typeName, _propertyName, "null"));
             }
 
             protected override Exception CreateWrongTypeException(Type resultType)
             {
-                return EntityUtil.InvalidOperation(
-                    Strings.Materializer_SetInvalidValue(
-                        (Nullable.GetUnderlyingType(typeof(TProperty)) ?? typeof(TProperty)).Name,
-                        _typeName, _propertyName, resultType.Name));
+                return new InvalidOperationException(Strings.Materializer_SetInvalidValue(
+                    (Nullable.GetUnderlyingType(typeof(TProperty)) ?? typeof(TProperty)).Name,
+                    _typeName, _propertyName, resultType.Name));
             }
         }
 
@@ -1244,13 +1248,13 @@
                 if (Reader.IsClosed)
                 {
                     const string operation = "Read";
-                    throw EntityUtil.DataReaderClosed(operation);
+                    throw new InvalidOperationException(Strings.ADP_DataReaderClosed(operation));
                 }
 
                 // wrap exception if necessary
                 if (EntityUtil.IsCatchableEntityExceptionType(e))
                 {
-                    throw EntityUtil.CommandExecution(Strings.EntityClient_StoreReaderFailed, e);
+                    throw new EntityCommandExecutionException(Strings.EntityClient_StoreReaderFailed, e);
                 }
                 throw;
             }
@@ -1344,7 +1348,7 @@
 
             public void Reset()
             {
-                throw EntityUtil.NotSupported();
+                throw new NotSupportedException();
             }
         }
 
@@ -1463,7 +1467,7 @@
 
             public void Reset()
             {
-                throw EntityUtil.NotSupported();
+                throw new NotSupportedException();
             }
 
             internal Coordinator<T> RootCoordinator

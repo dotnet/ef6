@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
     using System.ComponentModel;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
@@ -143,7 +144,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 if (entry == null
                     || !entry.ObjectStateManager.IsDisposed)
                 {
-                    throw EntityUtil.EntityCantHaveMultipleChangeTrackers();
+                    throw new InvalidOperationException(Strings.Entity_EntityCantHaveMultipleChangeTrackers);
                 }
             }
 

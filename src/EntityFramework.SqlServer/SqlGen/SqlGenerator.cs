@@ -565,7 +565,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             if (isVarRefSingle)
             {
-                throw EntityUtil.NotSupported();
+                throw new NotSupportedException();
                 // A DbVariableReferenceExpression has to be a child of DbPropertyExpression or MethodExpression
             }
 
@@ -637,7 +637,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                 default:
                     Debug.Assert(false);
-                    throw EntityUtil.InvalidOperation(String.Empty);
+                    throw new InvalidOperationException(String.Empty);
             }
 
             // The join condition does not exist in this case, so we use null.
@@ -682,7 +682,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                 default:
                     Debug.Assert(false);
-                    throw EntityUtil.InvalidOperation(String.Empty);
+                    throw new InvalidOperationException(String.Empty);
             }
 
             return result;
@@ -785,7 +785,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                 default:
                     Debug.Assert(false); // The constructor should have prevented this
-                    throw EntityUtil.InvalidOperation(String.Empty);
+                    throw new InvalidOperationException(String.Empty);
             }
 
             // Reset the force non-unicode, global state variable if it was set by CheckIfForceNonUnicodeRequired().
@@ -804,7 +804,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             if (_forceNonUnicode)
             {
                 Debug.Assert(false);
-                throw EntityUtil.NotSupported();
+                throw new NotSupportedException();
             }
             return MatchPatternForForcingNonUnicode(e);
         }
@@ -1066,13 +1066,12 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                     default:
                         // all known scalar types should been handled already.
-                        throw EntityUtil.NotSupported(
-                            Strings.NoStoreTypeForEdmType(resultType.Identity, ((PrimitiveType)(resultType.EdmType)).PrimitiveTypeKind));
+                        throw new NotSupportedException(Strings.NoStoreTypeForEdmType(resultType.Identity, ((PrimitiveType)(resultType.EdmType)).PrimitiveTypeKind));
                 }
             }
             else
             {
-                throw EntityUtil.NotSupported();
+                throw new NotSupportedException();
                 //if/when Enum types are supported, then handle appropriately, for now is not a valid type for constants.
                 //result.Append(e.Value.ToString());
             }
@@ -1138,20 +1137,17 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             if (double.IsNaN(value))
             {
-                throw EntityUtil.NotSupported(
-                    Strings.SqlGen_TypedNaNNotSupported(Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Double)));
+                throw new NotSupportedException(Strings.SqlGen_TypedNaNNotSupported(Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Double)));
             }
             else if (double.IsPositiveInfinity(value))
             {
-                throw EntityUtil.NotSupported(
-                    Strings.SqlGen_TypedPositiveInfinityNotSupported(
-                        Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Double), typeof(Double).Name));
+                throw new NotSupportedException(Strings.SqlGen_TypedPositiveInfinityNotSupported(
+                    Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Double), typeof(Double).Name));
             }
             else if (double.IsNegativeInfinity(value))
             {
-                throw EntityUtil.NotSupported(
-                    Strings.SqlGen_TypedNegativeInfinityNotSupported(
-                        Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Double), typeof(Double).Name));
+                throw new NotSupportedException(Strings.SqlGen_TypedNegativeInfinityNotSupported(
+                    Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Double), typeof(Double).Name));
             }
         }
 
@@ -1164,20 +1160,17 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             if (float.IsNaN(value))
             {
-                throw EntityUtil.NotSupported(
-                    Strings.SqlGen_TypedNaNNotSupported(Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Single)));
+                throw new NotSupportedException(Strings.SqlGen_TypedNaNNotSupported(Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Single)));
             }
             else if (float.IsPositiveInfinity(value))
             {
-                throw EntityUtil.NotSupported(
-                    Strings.SqlGen_TypedPositiveInfinityNotSupported(
-                        Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Single), typeof(Single).Name));
+                throw new NotSupportedException(Strings.SqlGen_TypedPositiveInfinityNotSupported(
+                    Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Single), typeof(Single).Name));
             }
             else if (float.IsNegativeInfinity(value))
             {
-                throw EntityUtil.NotSupported(
-                    Strings.SqlGen_TypedNegativeInfinityNotSupported(
-                        Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Single), typeof(Single).Name));
+                throw new NotSupportedException(Strings.SqlGen_TypedNegativeInfinityNotSupported(
+                    Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Single), typeof(Single).Name));
             }
         }
 
@@ -1223,7 +1216,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns></returns>
         public override ISqlFragment Visit(DbDerefExpression e)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -1286,7 +1279,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns></returns>
         public override ISqlFragment Visit(DbExpression e)
         {
-            throw EntityUtil.InvalidOperation(String.Empty);
+            throw new InvalidOperationException(String.Empty);
         }
 
         /// <summary>
@@ -1404,7 +1397,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
         public override ISqlFragment Visit(DbLambdaExpression expression)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -1414,7 +1407,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns></returns>
         public override ISqlFragment Visit(DbEntityRefExpression e)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -1424,7 +1417,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns></returns>
         public override ISqlFragment Visit(DbRefKeyExpression e)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -1664,7 +1657,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns>A <see cref="SqlBuilder"/></returns>
         public override ISqlFragment Visit(DbIsOfExpression e)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -1830,7 +1823,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             {
                 return VisitCollectionConstructor(e);
             }
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -1935,7 +1928,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns>A <see cref="SqlBuilder"/></returns>
         public override ISqlFragment Visit(DbOfTypeExpression e)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -2507,7 +2500,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns></returns>
         public override ISqlFragment Visit(DbRefExpression e)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -2517,7 +2510,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns></returns>
         public override ISqlFragment Visit(DbRelationshipNavigationExpression e)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -2672,7 +2665,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns>A <see cref="SqlBuilder"/></returns>
         public override ISqlFragment Visit(DbTreatExpression e)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -2703,7 +2696,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             if (isVarRefSingle)
             {
-                throw EntityUtil.NotSupported();
+                throw new NotSupportedException();
                 // A DbVariableReferenceExpression has to be a child of DbPropertyExpression or MethodExpression
                 // This is also checked in GenerateSql(...) at the end of the visiting.
             }
@@ -2738,7 +2731,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             if (functionAggregate == null)
             {
-                throw EntityUtil.NotSupported();
+                throw new NotSupportedException();
             }
 
             //The only aggregate function with different name is Big_Count
@@ -3366,7 +3359,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     if (TypeSemantics.IsRowType(argument.ResultType))
                     {
                         // We do not support nested records or other complex objects.
-                        throw EntityUtil.NotSupported();
+                        throw new NotSupportedException();
                     }
 
                     var member = members[i];
@@ -3395,7 +3388,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 // CONSIDER revisiting other possible expressions such as NominalTypes. for the time being
                 // types other then RowType (such as UDTs for instance) are not supported.
                 //
-                throw EntityUtil.NotSupported();
+                throw new NotSupportedException();
             }
 
             return result;
@@ -4125,7 +4118,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                 default:
                     Debug.Assert(false);
-                    throw EntityUtil.InvalidOperation(String.Empty);
+                    throw new InvalidOperationException(String.Empty);
             }
         }
 
@@ -4478,7 +4471,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             if (SqlVersionUtils.IsPreKatmai(sqlVersion))
             {
-                throw EntityUtil.NotSupported(Strings.SqlGen_PrimitiveTypeNotSupportedPriorSql10(primitiveTypeKind));
+                throw new NotSupportedException(Strings.SqlGen_PrimitiveTypeNotSupportedPriorSql10(primitiveTypeKind));
             }
         }
 
@@ -4490,7 +4483,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             if (IsPreKatmai)
             {
-                throw EntityUtil.NotSupported(Strings.SqlGen_CanonicalFunctionNotSupportedPriorSql10(e.Function.Name));
+                throw new NotSupportedException(Strings.SqlGen_CanonicalFunctionNotSupportedPriorSql10(e.Function.Name));
             }
         }
 

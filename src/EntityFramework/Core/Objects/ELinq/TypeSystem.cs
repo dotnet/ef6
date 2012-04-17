@@ -3,6 +3,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -44,7 +45,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         internal static Type GetDelegateType(IEnumerable<Type> inputTypes, Type returnType)
         {
-            EntityUtil.CheckArgumentNull(returnType, "returnType");
+            Contract.Requires(returnType != null);
 
             // Determine Func<> type (generic args are the input parameter types plus the return type)
             inputTypes = inputTypes ?? Enumerable.Empty<Type>();
@@ -157,7 +158,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 if (0 != property.GetIndexParameters().Length)
                 {
                     // don't support indexed properties
-                    throw EntityUtil.NotSupported(Strings.ELinq_PropertyIndexNotSupported);
+                    throw new NotSupportedException(Strings.ELinq_PropertyIndexNotSupported);
                 }
                 name = property.Name;
                 type = property.PropertyType;
@@ -182,7 +183,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     }
                 }
             }
-            throw EntityUtil.NotSupported(Strings.ELinq_NotPropertyOrField(member.Name));
+            throw new NotSupportedException(Strings.ELinq_NotPropertyOrField(member.Name));
         }
 
         private static Type FindIEnumerable(Type seqType)

@@ -3,6 +3,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
 
@@ -32,7 +33,9 @@
 
         public CompensatingCollection(IEnumerable<TElement> source)
         {
-            _source = EntityUtil.CheckArgumentNull(source, "source");
+            Contract.Requires(source != null);
+
+            _source = source;
             _expression = Expression.Constant(source);
         }
 
@@ -61,7 +64,7 @@
         IOrderedEnumerable<TElement> IOrderedEnumerable<TElement>.CreateOrderedEnumerable<K>(
             Func<TElement, K> keySelector, IComparer<K> comparer, bool descending)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_CreateOrderedEnumerableNotSupported);
+            throw new NotSupportedException(Strings.ELinq_CreateOrderedEnumerableNotSupported);
         }
 
         #endregion
@@ -80,7 +83,7 @@
 
         IQueryProvider IQueryable.Provider
         {
-            get { throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedQueryableMethod); }
+            get { throw new NotSupportedException(Strings.ELinq_UnsupportedQueryableMethod); }
         }
 
         #endregion

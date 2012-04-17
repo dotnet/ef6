@@ -7,6 +7,7 @@
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Reflection;
     using System.Runtime.CompilerServices;
@@ -67,8 +68,8 @@
             TypeUsage elementEdmTypeUsage, IEnumerable<TElement> queryResults, ObjectContext objectContext, bool forceReadOnly,
             EntitySet singleEntitySet)
         {
-            EntityUtil.CheckArgumentNull(queryResults, "queryResults");
-            EntityUtil.CheckArgumentNull(objectContext, "objectContext");
+            Contract.Requires(queryResults != null);
+            Contract.Requires(objectContext != null);
 
             Type clrElementType = null;
             var ospaceElementTypeUsage = GetOSpaceTypeUsage(elementEdmTypeUsage, objectContext);

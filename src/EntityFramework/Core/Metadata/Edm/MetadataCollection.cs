@@ -3,7 +3,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
 
     /// <summary>
@@ -47,7 +49,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     if (item == null)
                     {
-                        throw EntityUtil.CollectionParameterElementIsNull("items");
+                        throw new ArgumentException(Strings.ADP_CollectionParameterElementIsNull("items"));
                     }
 
                     Debug.Assert(!String.IsNullOrEmpty(item.Identity), "Identity of the item must never be null or empty");
@@ -125,7 +127,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public virtual T this[int index]
         {
             get { return _collectionData.OrderedList[index]; }
-            set { throw EntityUtil.OperationOnReadOnlyCollection(); }
+            set { throw new InvalidOperationException(Strings.OperationOnReadOnlyCollection); }
         }
 
         /// <summary>
@@ -139,7 +141,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public virtual T this[string identity]
         {
             get { return GetValue(identity, false); }
-            set { throw EntityUtil.OperationOnReadOnlyCollection(); }
+            set { throw new InvalidOperationException(Strings.OperationOnReadOnlyCollection); }
         }
 
         #endregion
@@ -159,7 +161,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var item = InternalTryGetValue(identity, ignoreCase);
             if (null == item)
             {
-                throw EntityUtil.ItemInvalidIdentity(identity, "identity");
+                throw new ArgumentException(Strings.ItemInvalidIdentity(identity), "identity");
             }
             return item;
         }
@@ -186,6 +188,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Index of the added entity, possibly different from the index 
         /// parameter if updateIfFound is true.
         /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         private static int AddToDictionary(CollectionData collectionData, string identity, int index, bool updateIfFound)
         {
             Debug.Assert(collectionData != null && collectionData.IdentityDictionary != null, "the identity dictionary is null");
@@ -205,7 +208,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     {
                         return orderIndex.ExactIndex;
                     }
-                    throw EntityUtil.ItemDuplicateIdentity(identity, "item", null);
+                    throw new ArgumentException(Strings.ItemDuplicateIdentity(identity), "item", null);
                 }
                 else if (null != orderIndex.InexactIndexes)
                 {
@@ -220,7 +223,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                             {
                                 return orderIndex.InexactIndexes[i];
                             }
-                            throw EntityUtil.ItemDuplicateIdentity(identity, "item", null);
+                            throw new ArgumentException(Strings.ItemDuplicateIdentity(identity), "item", null);
                         }
                     }
                     // add another item for existing identity that already was tracking multiple items
@@ -304,7 +307,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     // we're updating, it's an error.
                     if (!updateIfFound)
                     {
-                        throw EntityUtil.ItemDuplicateIdentity(item.Identity, "item", null);
+                        throw new ArgumentException(Strings.ItemDuplicateIdentity(item.Identity), "item", null);
                     }
                 }
                 else
@@ -383,7 +386,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.InvalidOperationException">Thrown if the item passed in or the collection itself instance is in ReadOnly state</exception>
         void IList<T>.Insert(int index, T item)
         {
-            throw EntityUtil.OperationOnReadOnlyCollection();
+            throw new InvalidOperationException(Strings.OperationOnReadOnlyCollection);
         }
 
         /// <summary>
@@ -394,7 +397,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.InvalidOperationException">Always thrown</exception>
         bool ICollection<T>.Remove(T item)
         {
-            throw EntityUtil.OperationOnReadOnlyCollection();
+            throw new InvalidOperationException(Strings.OperationOnReadOnlyCollection);
         }
 
         /// <summary>
@@ -404,7 +407,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.InvalidOperationException">Always thrown</exception>
         void IList<T>.RemoveAt(int index)
         {
-            throw EntityUtil.OperationOnReadOnlyCollection();
+            throw new InvalidOperationException(Strings.OperationOnReadOnlyCollection);
         }
 
         /// <summary>
@@ -413,7 +416,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.InvalidOperationException">Always thrown</exception>
         void ICollection<T>.Clear()
         {
-            throw EntityUtil.OperationOnReadOnlyCollection();
+            throw new InvalidOperationException(Strings.OperationOnReadOnlyCollection);
         }
 
         /// <summary>
@@ -476,7 +479,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         if (ignoreCase)
                         {
                             // the ignoreCase will throw,
-                            throw EntityUtil.MoreThanOneItemMatchesIdentity(identity);
+                            throw new InvalidOperationException(Strings.MoreThanOneItemMatchesIdentity(identity));
                         }
                         // search for the exact match or throw if ignoreCase
                         for (var i = 0; i < orderIndex.InexactIndexes.Length; ++i)
@@ -499,7 +502,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     {
                         if (0 <= index)
                         {
-                            throw EntityUtil.MoreThanOneItemMatchesIdentity(identity);
+                            throw new InvalidOperationException(Strings.MoreThanOneItemMatchesIdentity(identity));
                         }
                         index = i;
                     }
@@ -554,13 +557,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (arrayIndex < 0)
             {
-                throw EntityUtil.ArgumentOutOfRange("arrayIndex");
+                throw new ArgumentOutOfRangeException("arrayIndex");
             }
 
             if (_collectionData.OrderedList.Count
                 > array.Length - arrayIndex)
             {
-                throw EntityUtil.ArrayTooSmall("arrayIndex");
+                throw new ArgumentException(Strings.ArrayTooSmall, "arrayIndex");
             }
 
             _collectionData.OrderedList.CopyTo(array, arrayIndex);
@@ -645,7 +648,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             if (IsReadOnly)
             {
-                throw EntityUtil.OperationOnReadOnlyCollection();
+                throw new InvalidOperationException(Strings.OperationOnReadOnlyCollection);
             }
         }
 

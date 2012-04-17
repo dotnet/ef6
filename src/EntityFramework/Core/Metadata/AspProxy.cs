@@ -93,7 +93,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             if (!TryInitializeWebAssembly())
             {
-                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext);
+                throw new InvalidOperationException(Strings.UnableToDetermineApplicationContext);
             }
         }
 
@@ -121,7 +121,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             if (path == null)
             {
                 var errMsg = Strings.InvalidUseOfWebPath(EdmConstants.WebHomeSymbol);
-                throw EntityUtil.InvalidOperation(errMsg);
+                throw new InvalidOperationException(errMsg);
             }
             return path;
         }
@@ -153,31 +153,31 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             catch (TargetException e)
             {
-                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext, e);
+                throw new InvalidOperationException(Strings.UnableToDetermineApplicationContext, e);
             }
             catch (ArgumentException e)
             {
-                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext, e);
+                throw new InvalidOperationException(Strings.UnableToDetermineApplicationContext, e);
             }
             catch (TargetInvocationException e)
             {
-                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext, e);
+                throw new InvalidOperationException(Strings.UnableToDetermineApplicationContext, e);
             }
             catch (TargetParameterCountException e)
             {
-                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext, e);
+                throw new InvalidOperationException(Strings.UnableToDetermineApplicationContext, e);
             }
             catch (MethodAccessException e)
             {
-                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext, e);
+                throw new InvalidOperationException(Strings.UnableToDetermineApplicationContext, e);
             }
             catch (MemberAccessException e)
             {
-                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext, e);
+                throw new InvalidOperationException(Strings.UnableToDetermineApplicationContext, e);
             }
             catch (TypeLoadException e)
             {
-                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext, e);
+                throw new InvalidOperationException(Strings.UnableToDetermineApplicationContext, e);
             }
         }
 
@@ -204,7 +204,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Type buildManager;
             if (!TryGetBuildManagerType(out buildManager))
             {
-                throw EntityUtil.InvalidOperation(Strings.UnableToFindReflectedType(BUILD_MANAGER_TYPE_NAME, AspNetAssemblyName));
+                throw new InvalidOperationException(Strings.UnableToFindReflectedType(BUILD_MANAGER_TYPE_NAME, AspNetAssemblyName));
             }
 
             var getRefAssembliesMethod = buildManager.GetMethod(
@@ -230,15 +230,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             catch (TargetException e)
             {
-                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext, e);
+                throw new InvalidOperationException(Strings.UnableToDetermineApplicationContext, e);
             }
             catch (TargetInvocationException e)
             {
-                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext, e);
+                throw new InvalidOperationException(Strings.UnableToDetermineApplicationContext, e);
             }
             catch (MethodAccessException e)
             {
-                throw EntityUtil.InvalidOperation(Strings.UnableToDetermineApplicationContext, e);
+                throw new InvalidOperationException(Strings.UnableToDetermineApplicationContext, e);
             }
         }
     }

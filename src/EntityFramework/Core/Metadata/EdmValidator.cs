@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// The validation severity level
@@ -70,8 +71,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void Validate<T>(IEnumerable<T> items, List<EdmItemError> ospaceErrors)
             where T : EdmType // O-Space only supports EdmType
         {
-            EntityUtil.CheckArgumentNull(items, "items");
-            EntityUtil.CheckArgumentNull(items, "ospaceErrors");
+            Contract.Requires(items != null);
+            Contract.Requires(items != null);
 
             var validatedItems = new HashSet<MetadataItem>();
 

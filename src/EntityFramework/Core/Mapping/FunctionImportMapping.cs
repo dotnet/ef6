@@ -8,6 +8,7 @@
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Xml;
@@ -21,8 +22,11 @@
     {
         internal FunctionImportMapping(EdmFunction functionImport, EdmFunction targetFunction)
         {
-            FunctionImport = EntityUtil.CheckArgumentNull(functionImport, "functionImport");
-            TargetFunction = EntityUtil.CheckArgumentNull(targetFunction, "targetFunction");
+            Contract.Requires(functionImport != null);
+            Contract.Requires(targetFunction != null);
+
+            FunctionImport = functionImport;
+            TargetFunction = targetFunction;
         }
 
         /// <summary>
@@ -43,8 +47,10 @@
             IEnumerable<FunctionImportStructuralTypeMapping> structuralTypeMappings,
             ItemCollection itemCollection)
         {
-            EntityUtil.CheckArgumentNull(structuralTypeMappings, "structuralTypeMappings");
-            m_itemCollection = EntityUtil.CheckArgumentNull(itemCollection, "itemCollection");
+            Contract.Requires(structuralTypeMappings != null);
+            Contract.Requires(itemCollection != null);
+
+            m_itemCollection = itemCollection;
 
             // If no specific type mapping.
             if (structuralTypeMappings.Count() == 0)
@@ -535,14 +541,15 @@
 
     internal sealed class FunctionImportNormalizedEntityTypeMapping
     {
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "parent")]
         internal FunctionImportNormalizedEntityTypeMapping(
             FunctionImportStructuralTypeMappingKB parent,
             List<FunctionImportEntityTypeMappingCondition> columnConditions, BitArray impliedEntityTypes)
         {
             // validate arguments
-            EntityUtil.CheckArgumentNull(parent, "parent");
-            EntityUtil.CheckArgumentNull(columnConditions, "discriminatorValues");
-            EntityUtil.CheckArgumentNull(impliedEntityTypes, "impliedEntityTypes");
+            Contract.Requires(parent != null);
+            Contract.Requires(columnConditions != null);
+            Contract.Requires(impliedEntityTypes != null);
 
             Debug.Assert(
                 columnConditions.Count == parent.DiscriminatorColumns.Count,
@@ -585,7 +592,9 @@
     {
         protected FunctionImportEntityTypeMappingCondition(string columnName, LineInfo lineInfo)
         {
-            ColumnName = EntityUtil.CheckArgumentNull(columnName, "columnName");
+            Contract.Requires(columnName != null);
+
+            ColumnName = columnName;
             LineInfo = lineInfo;
         }
 
@@ -607,7 +616,9 @@
         internal FunctionImportEntityTypeMappingConditionValue(string columnName, XPathNavigator columnValue, LineInfo lineInfo)
             : base(columnName, lineInfo)
         {
-            _xPathValue = EntityUtil.CheckArgumentNull(columnValue, "columnValue");
+            Contract.Requires(columnValue != null);
+
+            _xPathValue = columnValue;
             _convertedValues = new Memoizer<Type, object>(GetConditionValue, null);
         }
 
@@ -643,15 +654,13 @@
                 handleTypeNotComparable:
                     () =>
                         {
-                            throw EntityUtil.CommandExecution(
-                                Strings.Mapping_FunctionImport_UnsupportedType(ColumnName, columnValueType.FullName));
+                            throw new EntityCommandExecutionException(Strings.Mapping_FunctionImport_UnsupportedType(ColumnName, columnValueType.FullName));
                         },
                 handleInvalidConditionValue:
                     () =>
                         {
-                            throw EntityUtil.CommandExecution(
-                                Strings.Mapping_FunctionImport_ConditionValueTypeMismatch(
-                                    StorageMslConstructs.FunctionImportMappingElement, ColumnName, columnValueType.FullName));
+                            throw new EntityCommandExecutionException(Strings.Mapping_FunctionImport_ConditionValueTypeMismatch(
+                                StorageMslConstructs.FunctionImportMappingElement, ColumnName, columnValueType.FullName));
                         });
         }
 

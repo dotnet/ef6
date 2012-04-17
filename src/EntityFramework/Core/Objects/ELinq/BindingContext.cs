@@ -4,6 +4,7 @@ using LinqExpression = System.Linq.Expressions.Expression;
 namespace System.Data.Entity.Core.Objects.ELinq
 {
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -81,8 +82,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
     {
         internal Binding(LinqExpression linqExpression, CqtExpression cqtExpression)
         {
-            EntityUtil.CheckArgumentNull(linqExpression, "linqExpression");
-            EntityUtil.CheckArgumentNull(cqtExpression, "cqtExpression");
+            Contract.Requires(linqExpression != null);
+            Contract.Requires(cqtExpression != null);
             LinqExpression = linqExpression;
             CqtExpression = cqtExpression;
         }

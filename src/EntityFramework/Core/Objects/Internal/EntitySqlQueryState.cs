@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Linq.Expressions;
 
     /// <summary>
@@ -82,10 +83,10 @@ namespace System.Data.Entity.Core.Objects
             ObjectParameterCollection parameters, Span span)
             : base(elementType, context, parameters, span)
         {
-            EntityUtil.CheckArgumentNull(commandText, "commandText");
+            Contract.Requires(commandText != null);
             if (string.IsNullOrEmpty(commandText))
             {
-                throw EntityUtil.Argument(Strings.ObjectQuery_InvalidEmptyQuery, "commandText");
+                throw new ArgumentException(Strings.ObjectQuery_InvalidEmptyQuery, "commandText");
             }
 
             _queryText = commandText;

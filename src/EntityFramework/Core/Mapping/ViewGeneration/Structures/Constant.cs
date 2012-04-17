@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Text;
 
     /// <summary>
@@ -121,7 +122,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
             public int GetHashCode(Constant key)
             {
-                EntityUtil.CheckArgumentNull(key, "key");
+                Contract.Requires(key != null);
                 return key.GetHashCode();
             }
         }

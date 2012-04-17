@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [DbFunction("SqlServer", "POINTGEOGRAPHY")]
         public static DbGeography PointGeography(Double? latitude, Double? longitude, Int32? spatialReferenceId)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
+            throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [DbFunction("SqlServer", "ASTEXTZM")]
         public static String AsTextZM(DbGeography geographyValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
+            throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [DbFunction("SqlServer", "BUFFERWITHTOLERANCE")]
         public static DbGeography BufferWithTolerance(DbGeography geographyValue, Double? distance, Double? tolerance, Boolean? relative)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
+            throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [DbFunction("SqlServer", "ENVELOPEANGLE")]
         public static Double? EnvelopeAngle(DbGeography geographyValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
+            throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [DbFunction("SqlServer", "ENVELOPECENTER")]
         public static DbGeography EnvelopeCenter(DbGeography geographyValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
+            throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [DbFunction("SqlServer", "FILTER")]
         public static Boolean? Filter(DbGeography geographyValue, DbGeography geographyOther)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
+            throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [DbFunction("SqlServer", "INSTANCEOF")]
         public static Boolean? InstanceOf(DbGeography geographyValue, String geometryTypeName)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
+            throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
             Justification = "Naming convention prescribed by OGC specification")]
         public static Int32? NumRings(DbGeography geographyValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
+            throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [DbFunction("SqlServer", "REDUCE")]
         public static DbGeography Reduce(DbGeography geographyValue, Double? tolerance)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
+            throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [DbFunction("SqlServer", "RINGN")]
         public static DbGeography RingN(DbGeography geographyValue, Int32? index)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
+            throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
             Justification = "Naming convention prescribed by OGC specification")]
         public static DbGeometry PointGeometry(Double? xCoordinate, Double? yCoordinate, Int32? spatialReferenceId)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
+            throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [DbFunction("SqlServer", "ASTEXTZM")]
         public static String AsTextZM(DbGeometry geometryValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
+            throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [DbFunction("SqlServer", "BUFFERWITHTOLERANCE")]
         public static DbGeometry BufferWithTolerance(DbGeometry geometryValue, Double? distance, Double? tolerance, Boolean? relative)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
+            throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [DbFunction("SqlServer", "INSTANCEOF")]
         public static Boolean? InstanceOf(DbGeometry geometryValue, String geometryTypeName)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
+            throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [DbFunction("SqlServer", "FILTER")]
         public static Boolean? Filter(DbGeometry geometryValue, DbGeometry geometryOther)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
+            throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -188,7 +188,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [DbFunction("SqlServer", "MAKEVALID")]
         public static DbGeometry MakeValid(DbGeometry geometryValue)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
+            throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>
@@ -199,7 +199,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         [DbFunction("SqlServer", "REDUCE")]
         public static DbGeometry Reduce(DbGeometry geometryValue, Double? tolerance)
         {
-            throw EntityUtil.NotSupported(Strings.ELinq_DbFunctionDirectCall);
+            throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
     }
 }

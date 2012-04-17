@@ -9,6 +9,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.Linq;
     using System.Runtime.Serialization;
 
@@ -16,7 +18,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     /// Container for the lazily created relationship navigation
     /// property objects (collections and refs).
     /// </summary>
-    [Serializable]
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling"), Serializable]
     public class RelationshipManager
     {
         // ------------
@@ -129,7 +131,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>A new or existing RelationshipManager for the given entity</returns>
         public static RelationshipManager Create(IEntityWithRelationships owner)
         {
-            EntityUtil.CheckArgumentNull(owner, "owner");
+            Contract.Requires(owner != null);
             var rm = new RelationshipManager();
             rm._owner = owner;
             return rm;
@@ -162,7 +164,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             if (_owner != null
                 && !ReferenceEquals(expectedOwner, _owner))
             {
-                throw EntityUtil.InvalidRelationshipManagerOwner();
+                throw new InvalidOperationException(Strings.RelationshipManager_InvalidRelationshipManagerOwner);
             }
 
             if (null != _relationships)
@@ -321,7 +323,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             if (previousCollection != null
                 && relatedEntityCount != previousCollection.CountInternal)
             {
-                throw EntityUtil.CannotRemergeCollections();
+                throw new InvalidOperationException(Strings.Collections_UnableToMergeCollections);
             }
         }
 
@@ -416,8 +418,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // Internal version of GetRelatedEnd which returns the RelatedEnd as a RelatedEnd rather than an IRelatedEnd
         internal RelatedEnd GetRelatedEndInternal(string relationshipName, string targetRoleName)
         {
-            EntityUtil.CheckArgumentNull(relationshipName, "relationshipName");
-            EntityUtil.CheckArgumentNull(targetRoleName, "targetRoleName");
+            Contract.Requires(relationshipName != null);
+            Contract.Requires(targetRoleName != null);
 
             var wrappedOwner = WrappedOwner;
             if (wrappedOwner.Context == null
@@ -491,7 +493,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 {
                     if (throwOnError)
                     {
-                        throw EntityUtil.InvalidTargetRole(relationshipName, targetRoleName, "targetRoleName");
+                        throw new ArgumentException(Strings.RelationshipManager_InvalidTargetRole(relationshipName, targetRoleName), "targetRoleName");
                     }
                     else
                     {
@@ -515,8 +517,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             {
                 if (throwOnError)
                 {
-                    throw EntityUtil.OwnerIsNotSourceType(
-                        wrappedOwner.IdentityType.FullName, sourceType.FullName, sourceEnd.Name, relationshipName);
+                    throw new InvalidOperationException(Strings.RelationshipManager_OwnerIsNotSourceType(wrappedOwner.IdentityType.FullName, sourceType.FullName, sourceEnd.Name, relationshipName));
                 }
             }
             else if (VerifyRelationship(relationship, sourceEnd.Name, throwOnError))
@@ -542,20 +543,20 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             string relationshipName, string targetRoleName, EntityReference<TTargetEntity> entityReference)
             where TTargetEntity : class
         {
-            EntityUtil.CheckArgumentNull(relationshipName, "relationshipName");
-            EntityUtil.CheckArgumentNull(targetRoleName, "targetRoleName");
-            EntityUtil.CheckArgumentNull(entityReference, "entityReference");
+            Contract.Requires(relationshipName != null);
+            Contract.Requires(targetRoleName != null);
+            Contract.Requires(entityReference != null);
 
             if (entityReference.WrappedOwner.Entity != null)
             {
-                throw EntityUtil.ReferenceAlreadyInitialized();
+                throw new InvalidOperationException(Strings.RelationshipManager_ReferenceAlreadyInitialized(Strings.RelationshipManager_InitializeIsForDeserialization));
             }
 
             var wrappedOwner = WrappedOwner;
             if (wrappedOwner.Context != null
                 && wrappedOwner.MergeOption != MergeOption.NoTracking)
             {
-                throw EntityUtil.RelationshipManagerAttached();
+                throw new InvalidOperationException(Strings.RelationshipManager_RelationshipManagerAttached(Strings.RelationshipManager_InitializeIsForDeserialization));
             }
 
             // We need the CSpace-qualified name in order to determine if this relationship already exists, so look it up.
@@ -580,7 +581,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 GetRelatedEndInternal(relationshipName, targetRoleName, entityReference, relationship) as EntityReference<TTargetEntity>;
             if (reference == null)
             {
-                throw EntityUtil.ExpectedReferenceGotCollection(typeof(TTargetEntity).Name, targetRoleName, relationshipName);
+                throw new InvalidOperationException(Strings.EntityReference_ExpectedReferenceGotCollection(typeof(TTargetEntity).Name, targetRoleName, relationshipName));
             }
         }
 
@@ -599,20 +600,22 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             string relationshipName, string targetRoleName, EntityCollection<TTargetEntity> entityCollection)
             where TTargetEntity : class
         {
-            EntityUtil.CheckArgumentNull(relationshipName, "relationshipName");
-            EntityUtil.CheckArgumentNull(targetRoleName, "targetRoleName");
-            EntityUtil.CheckArgumentNull(entityCollection, "entityCollection");
+            Contract.Requires(relationshipName != null);
+            Contract.Requires(targetRoleName != null);
+            Contract.Requires(entityCollection != null);
 
             if (entityCollection.WrappedOwner.Entity != null)
             {
-                throw EntityUtil.CollectionAlreadyInitialized();
+                throw new InvalidOperationException(Strings.RelationshipManager_CollectionAlreadyInitialized(
+                    Strings.RelationshipManager_CollectionInitializeIsForDeserialization));
             }
 
             var wrappedOwner = WrappedOwner;
             if (wrappedOwner.Context != null
                 && wrappedOwner.MergeOption != MergeOption.NoTracking)
             {
-                throw EntityUtil.CollectionRelationshipManagerAttached();
+                throw new InvalidOperationException(Strings.RelationshipManager_CollectionRelationshipManagerAttached(
+                    Strings.RelationshipManager_CollectionInitializeIsForDeserialization));
             }
 
             // We need the CSpace-qualified name in order to determine if this relationship already exists, so look it up.
@@ -624,7 +627,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 GetRelatedEndInternal(relationshipName, targetRoleName, entityCollection, relationship) as EntityCollection<TTargetEntity>;
             if (collection == null)
             {
-                throw EntityUtil.ExpectedCollectionGotReference(typeof(TTargetEntity).Name, targetRoleName, relationshipName);
+                throw new InvalidOperationException(Strings.Collections_ExpectedCollectionGotReference(typeof(TTargetEntity).Name, targetRoleName, relationshipName));
             }
         }
 
@@ -639,7 +642,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         private string PrependNamespaceToRelationshipName(string relationshipName)
         {
-            EntityUtil.CheckArgumentNull(relationshipName, "relationshipName");
+            Contract.Requires(relationshipName != null);
 
             if (!relationshipName.Contains('.'))
             {
@@ -751,10 +754,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         internal static Exception UnableToGetMetadata(IEntityWrapper wrappedOwner, string relationshipName)
         {
-            var argException = EntityUtil.UnableToFindRelationshipTypeInMetadata(relationshipName, "relationshipName");
+            var argException = new ArgumentException(Strings.RelationshipManager_UnableToFindRelationshipTypeInMetadata(relationshipName), "relationshipName");
             if (EntityProxyFactory.IsProxyType(wrappedOwner.Entity.GetType()))
             {
-                return EntityUtil.ProxyMetadataIsUnavailable(wrappedOwner.IdentityType, argException);
+                return new InvalidOperationException(Strings.EntityProxyTypeInfo_ProxyMetadataIsUnavailable(wrappedOwner.IdentityType.FullName), argException);
             }
             else
             {
@@ -865,7 +868,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 {
                     if (throwOnError)
                     {
-                        throw EntityUtil.NoRelationshipSetMatched(relationship.FullName);
+                        string relationshipName = relationship.FullName;
+                        Debug.Assert(!String.IsNullOrEmpty(relationshipName), "empty relationshipName");
+                        throw new InvalidOperationException(Strings.Collections_NoRelationshipSetMatched(relationshipName));
                     }
                     else
                     {
@@ -898,7 +903,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 EntityCollection<TTargetEntity>;
             if (collection == null)
             {
-                throw EntityUtil.ExpectedCollectionGotReference(typeof(TTargetEntity).Name, targetRoleName, relationshipName);
+                throw new InvalidOperationException(Strings.Collections_ExpectedCollectionGotReference(typeof(TTargetEntity).Name, targetRoleName, relationshipName));
             }
             return collection;
         }
@@ -919,7 +924,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 EntityReference<TTargetEntity>;
             if (reference == null)
             {
-                throw EntityUtil.ExpectedReferenceGotCollection(typeof(TTargetEntity).Name, targetRoleName, relationshipName);
+                throw new InvalidOperationException(Strings.EntityReference_ExpectedReferenceGotCollection(typeof(TTargetEntity).Name, targetRoleName, relationshipName));
             }
             return reference;
         }
@@ -1004,7 +1009,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     }
                     break;
                 default:
-                    throw EntityUtil.InvalidEnumerationValue(typeof(RelationshipMultiplicity), (int)targetRoleMultiplicity);
+                    Type type = typeof(RelationshipMultiplicity);
+                    throw new ArgumentOutOfRangeException(type.Name, Strings.ADP_InvalidEnumerationValue(type.Name, ((int)targetRoleMultiplicity).ToString(CultureInfo.InvariantCulture)));
             }
 
             // Verify that we can attach the context successfully before adding to our list of relationships
@@ -1330,7 +1336,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         // Check again if all properties were retrieved.
                         if (!CheckIfAllPropertiesWereRetrieved(properties, propertiesToRetrieve))
                         {
-                            throw EntityUtil.UnableToRetrieveReferentialConstraintProperties();
+                            throw new InvalidOperationException(Strings.RelationshipManager_UnableToRetrieveReferentialConstraintProperties);
                         }
                     }
                 }
@@ -1432,7 +1438,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 {
                     if (!relatedEnd.CheckReferentialConstraintProperties(ownerEntry))
                     {
-                        throw EntityUtil.InconsistentReferentialConstraintProperties();
+                        throw new InvalidOperationException(Strings.RelationshipManager_InconsistentReferentialConstraintProperties);
                     }
                 }
             }
@@ -1495,12 +1501,18 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             var wrappedOwner = WrappedOwner;
             Debug.Assert(wrappedOwner.Entity != null);
             var ownerKey = wrappedOwner.EntityKey;
-            EntityUtil.CheckEntityKeyNull(ownerKey);
+            if ((object)ownerKey == null)
+            {
+                throw new InvalidOperationException(Strings.EntityKey_UnexpectedNull);
+            }
 
             propertiesToRetrieve = null;
             propertiesToPropagateExist = false;
 
-            EntityUtil.CheckContextNull(wrappedOwner.Context);
+            if (wrappedOwner.Context == null)
+            {
+                throw new InvalidOperationException(Strings.RelationshipManager_UnexpectedNullContext);
+            }
             var entitySet = ownerKey.GetEntitySet(wrappedOwner.Context.MetadataWorkspace);
             Debug.Assert(entitySet != null, "Unable to find entity set");
 

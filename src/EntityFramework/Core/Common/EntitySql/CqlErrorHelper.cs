@@ -43,12 +43,13 @@ namespace System.Data.Entity.Core.Common.EntitySql
                                    : (Func<object, object, object, string>)Strings.NoFunctionOverloadMatch;
             }
 
-            throw EntityUtil.EntitySqlError(
+            throw EntitySqlException.Create(
                 functionExpr.ErrCtx.CommandText,
                 formatString(functionType.NamespaceName, functionType.Name, sb.ToString()),
                 functionExpr.ErrCtx.InputPosition,
                 Strings.CtxFunction(functionType.Name),
-                false /* loadContextInfoFromResource */);
+                false,
+                null);
         }
 
         /// <summary>
@@ -62,8 +63,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 "System.Data.Entity.Core.EntityUtil.EntitySqlError(System.Data.Entity.Core.Common.EntitySql.ErrorContext,System.String)")]
         internal static void ReportAliasAlreadyUsedError(string aliasName, ErrorContext errCtx, string contextMessage)
         {
-            throw EntityUtil.EntitySqlError(
-                errCtx, String.Format(CultureInfo.InvariantCulture, "{0} {1}", Strings.AliasNameAlreadyUsed(aliasName), contextMessage));
+            throw EntitySqlException.Create(errCtx, String.Format(CultureInfo.InvariantCulture, "{0} {1}", Strings.AliasNameAlreadyUsed(aliasName), contextMessage), null);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             // if we hit this point, throw the generic incompatible type error message
             //
-            throw EntityUtil.EntitySqlError(errCtx, Strings.ArgumentTypesAreIncompatible(leftType.Identity, rightType.Identity));
+            throw EntitySqlException.Create(errCtx, Strings.ArgumentTypesAreIncompatible(leftType.Identity, rightType.Identity), null);
         }
 
         /// <summary>
@@ -103,13 +103,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (leftType.EdmType.BuiltInTypeKind
                 != rightType.EdmType.BuiltInTypeKind)
             {
-                throw EntityUtil.EntitySqlError(
-                    errCtx,
-                    Strings.TypeKindMismatch(
-                        GetReadableTypeKind(leftType),
-                        GetReadableTypeName(leftType),
-                        GetReadableTypeKind(rightType),
-                        GetReadableTypeName(rightType)));
+                throw EntitySqlException.Create(errCtx, Strings.TypeKindMismatch(
+                    GetReadableTypeKind(leftType),
+                    GetReadableTypeName(leftType),
+                    GetReadableTypeKind(rightType),
+                    GetReadableTypeName(rightType)), null);
             }
 
             switch (leftType.EdmType.BuiltInTypeKind)
@@ -136,7 +134,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                                 GetReadableTypeName(rootRightType));
                         }
 
-                        throw EntityUtil.EntitySqlError(errCtx, errorMessage);
+                        throw EntitySqlException.Create(errCtx, errorMessage, null);
                     }
 
                     for (var i = 0; i < leftRow.Members.Count; i++)
@@ -173,7 +171,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                                 GetReadableTypeName(rightType),
                                 GetReadableTypeName(rootRightType));
                         }
-                        throw EntityUtil.EntitySqlError(errCtx, errorMessage);
+                        throw EntitySqlException.Create(errCtx, errorMessage, null);
                     }
                     break;
 
@@ -197,7 +195,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                                 GetReadableTypeName(rightComplex),
                                 GetReadableTypeName(rootRightType));
                         }
-                        throw EntityUtil.EntitySqlError(errCtx, errorMessage);
+                        throw EntitySqlException.Create(errCtx, errorMessage, null);
                     }
 
                     for (var i = 0; i < leftComplex.Members.Count; i++)
@@ -232,7 +230,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                                 GetReadableTypeName(rightType),
                                 GetReadableTypeName(rootRightType));
                         }
-                        throw EntityUtil.EntitySqlError(errCtx, errorMessage);
+                        throw EntitySqlException.Create(errCtx, errorMessage, null);
                     }
                     break;
             }

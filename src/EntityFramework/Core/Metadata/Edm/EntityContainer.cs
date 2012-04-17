@@ -1,6 +1,8 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Class for representing an entity container
@@ -111,7 +113,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 return entitySet;
             }
-            throw EntityUtil.InvalidEntitySetName(name);
+            throw new ArgumentException(Strings.InvalidEntitySetName(name));
         }
 
         /// <summary>
@@ -124,7 +126,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">if name argument is null</exception>
         public bool TryGetEntitySetByName(string name, bool ignoreCase, out EntitySet entitySet)
         {
-            EntityUtil.CheckArgumentNull(name, "name");
+            Contract.Requires(name != null);
             EntitySetBase baseEntitySet = null;
             entitySet = null;
             if (BaseEntitySets.TryGetValue(name, ignoreCase, out baseEntitySet))
@@ -149,7 +151,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             RelationshipSet relationshipSet;
             if (!TryGetRelationshipSetByName(name, ignoreCase, out relationshipSet))
             {
-                throw EntityUtil.InvalidRelationshipSetName(name);
+                throw new ArgumentException(Strings.InvalidRelationshipSetName(name));
             }
             return relationshipSet;
         }
@@ -164,7 +166,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">if name argument is null</exception>
         public bool TryGetRelationshipSetByName(string name, bool ignoreCase, out RelationshipSet relationshipSet)
         {
-            EntityUtil.CheckArgumentNull(name, "name");
+            Contract.Requires(name != null);
             EntitySetBase baseEntitySet = null;
             relationshipSet = null;
             if (BaseEntitySets.TryGetValue(name, ignoreCase, out baseEntitySet))

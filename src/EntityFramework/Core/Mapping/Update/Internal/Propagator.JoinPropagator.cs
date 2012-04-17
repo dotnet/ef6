@@ -7,9 +7,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using JoinDictionary = System.Collections.Generic.Dictionary<CompositeKey, Tuple<CompositeKey, PropagatorResult>>;
 
@@ -44,10 +46,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <param name="parent">Handler of propagation for the entire update mapping view</param>
             internal JoinPropagator(ChangeNode left, ChangeNode right, DbJoinExpression node, Propagator parent)
             {
-                EntityUtil.CheckArgumentNull(left, "left");
-                EntityUtil.CheckArgumentNull(right, "right");
-                EntityUtil.CheckArgumentNull(node, "node");
-                EntityUtil.CheckArgumentNull(parent, "parent");
+                Contract.Requires(left != null);
+                Contract.Requires(right != null);
+                Contract.Requires(node != null);
+                Contract.Requires(parent != null);
 
                 m_left = left;
                 m_right = right;
@@ -75,8 +77,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 JoinConditionVisitor.GetKeySelectors(node.JoinCondition, out m_leftKeySelectors, out m_rightKeySelectors);
 
                 // Find the key selector expressions in the left and right placeholders
-                m_leftPlaceholderKey = ExtractKey(m_left.Placeholder, m_leftKeySelectors, m_parent);
-                m_rightPlaceholderKey = ExtractKey(m_right.Placeholder, m_rightKeySelectors, m_parent);
+                m_leftPlaceholderKey = ExtractKey(m_left.Placeholder, m_leftKeySelectors);
+                m_rightPlaceholderKey = ExtractKey(m_right.Placeholder, m_rightKeySelectors);
             }
 
             #endregion
@@ -366,7 +368,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     addStateEntries(rightInsert);
                     addStateEntries(rightDelete);
 
-                    throw EntityUtil.Update(Strings.Update_InvalidChanges, null, stateEntries);
+                    throw new UpdateException(Strings.Update_InvalidChanges, null, stateEntries.Cast<ObjectStateEntry>().Distinct());
                 }
 
                 // Where needed, substitute null/unknown placeholders. In some of the join propagation
@@ -481,7 +483,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// a component of the key.</returns>
             private PropagatorResult LeftPlaceholder(CompositeKey key, PopulateMode mode)
             {
-                return PlaceholderPopulator.Populate(m_left.Placeholder, key, m_leftPlaceholderKey, mode, m_parent.UpdateTranslator);
+                return PlaceholderPopulator.Populate(m_left.Placeholder, key, m_leftPlaceholderKey, mode);
             }
 
             /// <summary>
@@ -492,7 +494,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns></returns>
             private PropagatorResult RightPlaceholder(CompositeKey key, PopulateMode mode)
             {
-                return PlaceholderPopulator.Populate(m_right.Placeholder, key, m_rightPlaceholderKey, mode, m_parent.UpdateTranslator);
+                return PlaceholderPopulator.Populate(m_right.Placeholder, key, m_rightPlaceholderKey, mode);
             }
 
             /// <summary>
@@ -511,7 +513,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 foreach (var instance in instances)
                 {
-                    var key = ExtractKey(instance, keySelectors, m_parent);
+                    var key = ExtractKey(instance, keySelectors);
                     hash[key] = Tuple.Create(key, instance);
                 }
 
@@ -520,13 +522,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             // extracts key values from row expression
             private static CompositeKey ExtractKey(
-                PropagatorResult change, ReadOnlyCollection<DbExpression> keySelectors, Propagator parent)
+                PropagatorResult change, ReadOnlyCollection<DbExpression> keySelectors)
             {
-                Debug.Assert(null != change && null != keySelectors && null != parent);
+                Debug.Assert(null != change && null != keySelectors);
                 var keyValues = new PropagatorResult[keySelectors.Count];
                 for (var i = 0; i < keySelectors.Count; i++)
                 {
-                    var constant = Evaluator.Evaluate(keySelectors[i], change, parent);
+                    var constant = Evaluator.Evaluate(keySelectors[i], change);
                     keyValues[i] = constant;
                 }
                 return new CompositeKey(keyValues);

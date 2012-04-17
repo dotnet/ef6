@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// An abstract base type for types that implement the IExpressionVisitor interface to derive from.
@@ -12,21 +13,21 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         protected virtual void VisitSetClause(DbSetClause setClause)
         {
-            EntityUtil.CheckArgumentNull(setClause, "setClause");
+            Contract.Requires(setClause != null);
             VisitExpression(setClause.Property);
             VisitExpression(setClause.Value);
         }
 
         protected virtual void VisitModificationClause(DbModificationClause modificationClause)
         {
-            EntityUtil.CheckArgumentNull(modificationClause, "modificationClause");
+            Contract.Requires(modificationClause != null);
             // Set clause is the only current possibility
             VisitSetClause((DbSetClause)modificationClause);
         }
 
         protected virtual void VisitModificationClauses(IList<DbModificationClause> modificationClauses)
         {
-            EntityUtil.CheckArgumentNull(modificationClauses, "modificationClauses");
+            Contract.Requires(modificationClauses != null);
             for (var idx = 0; idx < modificationClauses.Count; idx++)
             {
                 VisitModificationClause(modificationClauses[idx]);
@@ -39,7 +40,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public virtual void VisitCommandTree(DbCommandTree commandTree)
         {
-            EntityUtil.CheckArgumentNull(commandTree, "commandTree");
+            Contract.Requires(commandTree != null);
             switch (commandTree.CommandTreeKind)
             {
                 case DbCommandTreeKind.Delete:
@@ -63,7 +64,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                     break;
 
                 default:
-                    throw EntityUtil.NotSupported();
+                    throw new NotSupportedException();
             }
         }
 
@@ -73,7 +74,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         protected virtual void VisitDeleteCommandTree(DbDeleteCommandTree deleteTree)
         {
-            EntityUtil.CheckArgumentNull(deleteTree, "deleteTree");
+            Contract.Requires(deleteTree != null);
             VisitExpressionBindingPre(deleteTree.Target);
             VisitExpression(deleteTree.Predicate);
             VisitExpressionBindingPost(deleteTree.Target);
@@ -81,12 +82,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         protected virtual void VisitFunctionCommandTree(DbFunctionCommandTree functionTree)
         {
-            EntityUtil.CheckArgumentNull(functionTree, "functionTree");
+            Contract.Requires(functionTree != null);
         }
 
         protected virtual void VisitInsertCommandTree(DbInsertCommandTree insertTree)
         {
-            EntityUtil.CheckArgumentNull(insertTree, "insertTree");
+            Contract.Requires(insertTree != null);
             VisitExpressionBindingPre(insertTree.Target);
             VisitModificationClauses(insertTree.SetClauses);
             if (insertTree.Returning != null)
@@ -98,13 +99,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         protected virtual void VisitQueryCommandTree(DbQueryCommandTree queryTree)
         {
-            EntityUtil.CheckArgumentNull(queryTree, "queryTree");
+            Contract.Requires(queryTree != null);
             VisitExpression(queryTree.Query);
         }
 
         protected virtual void VisitUpdateCommandTree(DbUpdateCommandTree updateTree)
         {
-            EntityUtil.CheckArgumentNull(updateTree, "updateTree");
+            Contract.Requires(updateTree != null);
             VisitExpressionBindingPre(updateTree.Target);
             VisitModificationClauses(updateTree.SetClauses);
             VisitExpression(updateTree.Predicate);

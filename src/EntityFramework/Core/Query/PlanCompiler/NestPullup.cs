@@ -19,6 +19,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Query.InternalTrees;
+    using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
@@ -149,7 +150,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 if (IsNestOpNode(chi))
                 {
-                    throw EntityUtil.NestingNotSupported(op, chi.Op);
+                    throw new NotSupportedException(Strings.ADP_NestingNotSupported(op.OpType.ToString(), chi.Op.OpType.ToString()));
                 }
             }
             return n;
@@ -186,14 +187,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 if (!toVarEnumerator.MoveNext())
                 {
-                    throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.ColumnCountMismatch, 2);
+                    throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.ColumnCountMismatch, 2, null);
                 }
                 m_varRemapper.AddMapping(v, toVarEnumerator.Current);
             }
 
             if (toVarEnumerator.MoveNext())
             {
-                throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.ColumnCountMismatch, 3);
+                throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.ColumnCountMismatch, 3, null);
             }
         }
 
@@ -335,7 +336,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 if (chi.Op.OpType
                     == OpType.Collect)
                 {
-                    throw EntityUtil.NestingNotSupported(op, chi.Op);
+                    throw new NotSupportedException(Strings.ADP_NestingNotSupported(op.OpType.ToString(), chi.Op.OpType.ToString()));
                 }
                 else if (chi.Op.OpType
                          == OpType.VarRef)
@@ -343,7 +344,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     var refVar = ((VarRefOp)chi.Op).Var;
                     if (m_definingNodeMap.ContainsKey(refVar))
                     {
-                        throw EntityUtil.NestingNotSupported(op, chi.Op);
+                        throw new NotSupportedException(Strings.ADP_NestingNotSupported(op.OpType.ToString(), chi.Op.OpType.ToString()));
                     }
                 }
             }
@@ -452,7 +453,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                         //
                         // isn’t good enough, because that will get converted to a MultiStreamNest, with
                         // the SingleStreamNest as the input to the MultiStreamNest.
-                        throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.JoinOverSingleStreamNest);
+                        throw new InvalidOperationException(Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.JoinOverSingleStreamNest));
                     }
                 }
             }
@@ -476,7 +477,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     if (null == keys
                         || keys.NoKeys)
                     {
-                        throw EntityUtil.KeysRequiredForJoinOverNest(op);
+                        throw new NotSupportedException(Strings.ADP_KeysRequiredForJoinOverNest(op.OpType.ToString()));
                     }
                 }
             }
@@ -1957,7 +1958,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 if (IsNestOpNode(chi))
                 {
-                    throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.NestOverNest);
+                    throw new InvalidOperationException(Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.NestOverNest));
                 }
             }
             return n;
@@ -2245,7 +2246,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 //    - TVF is not mapped to entities
                 //      Note that if TVF is mapped to entities via function import mapping, and the user query is actually the call of the 
                 //      function import, we infer keys for the TVF from the c-space entity keys and their mappings.
-                throw EntityUtil.KeysRequiredForNesting();
+                throw new NotSupportedException(Strings.ADP_KeysRequiredForNesting);
             }
 
             // Get a deterministic ordering of Vars from this node.
@@ -2684,7 +2685,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             IEnumerator<Var> outputVarsEnumerator = unionAllOutputs.GetEnumerator();
             if (!outputVarsEnumerator.MoveNext())
             {
-                throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.ColumnCountMismatch, 4);
+                throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.ColumnCountMismatch, 4, null);
                     // more columns from children than are on the unionAll?
             }
             // The discriminator var is always first
@@ -2699,7 +2700,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 {
                     if (!outputVarsEnumerator.MoveNext())
                     {
-                        throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.ColumnCountMismatch, 5);
+                        throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.ColumnCountMismatch, 5, null);
                             // more columns from children than are on the unionAll?
                     }
                     varMap[v] = outputVarsEnumerator.Current;
@@ -2708,7 +2709,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             if (outputVarsEnumerator.MoveNext())
             {
-                throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.ColumnCountMismatch, 6);
+                throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.ColumnCountMismatch, 6, null);
                     // at this point, we better be done with both lists...
             }
 

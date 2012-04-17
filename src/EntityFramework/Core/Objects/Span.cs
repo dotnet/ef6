@@ -257,7 +257,7 @@ namespace System.Data.Entity.Core.Objects
                 }
                 else if (navigations[i].Length == 0)
                 {
-                    throw EntityUtil.SpanPathSyntaxError();
+                    throw new ArgumentException(Strings.ObjectQuery_Span_SpanPathSyntaxError);
                 }
             }
 

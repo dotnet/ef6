@@ -108,7 +108,7 @@
                 if ((null != rootFolderObject)
                     && (null == rootFolderPath))
                 {
-                    throw EntityUtil.InvalidOperation(Strings.ADP_InvalidDataDirectory);
+                    throw new InvalidOperationException(Strings.ADP_InvalidDataDirectory);
                 }
                 else if (rootFolderPath == string.Empty)
                 {
@@ -145,7 +145,7 @@
                 // verify root folder path is a real path without unexpected "..\"
                 if (!EntityUtil.GetFullPath(fullPath).StartsWith(rootFolderPath, StringComparison.Ordinal))
                 {
-                    throw EntityUtil.InvalidConnectionOptionValue(keyword);
+                    throw new ArgumentException(Strings.ADP_InvalidConnectionOptionValue(keyword));
                 }
             }
             return fullPath;
@@ -232,7 +232,7 @@
                         } // MDAC 83540
                         if (Char.IsControl(currentChar))
                         {
-                            throw EntityUtil.ConnectionStringSyntax(startposition);
+                            throw new ArgumentException(Strings.ADP_ConnectionStringSyntax(startposition));
                         }
                         startposition = currentPosition;
                         if ('=' != currentChar)
@@ -259,7 +259,7 @@
                         }
                         if (Char.IsControl(currentChar))
                         {
-                            throw EntityUtil.ConnectionStringSyntax(startposition);
+                            throw new ArgumentException(Strings.ADP_ConnectionStringSyntax(startposition));
                         }
                         break;
 
@@ -272,7 +272,7 @@
                         keyname = GetKeyName(buffer);
                         if (string.IsNullOrEmpty(keyname))
                         {
-                            throw EntityUtil.ConnectionStringSyntax(startposition);
+                            throw new ArgumentException(Strings.ADP_ConnectionStringSyntax(startposition));
                         }
                         buffer.Length = 0;
                         parserState = ParserState.KeyEnd;
@@ -304,7 +304,7 @@
                         }
                         if (Char.IsControl(currentChar))
                         {
-                            throw EntityUtil.ConnectionStringSyntax(startposition);
+                            throw new ArgumentException(Strings.ADP_ConnectionStringSyntax(startposition));
                         }
                         parserState = ParserState.UnquotedValue;
                         break;
@@ -329,7 +329,7 @@
                         }
                         if ('\0' == currentChar)
                         {
-                            throw EntityUtil.ConnectionStringSyntax(startposition);
+                            throw new ArgumentException(Strings.ADP_ConnectionStringSyntax(startposition));
                         }
                         break;
 
@@ -351,7 +351,7 @@
                         }
                         if ('\0' == currentChar)
                         {
-                            throw EntityUtil.ConnectionStringSyntax(startposition);
+                            throw new ArgumentException(Strings.ADP_ConnectionStringSyntax(startposition));
                         }
                         break;
 
@@ -379,7 +379,7 @@
                             parserState = ParserState.NullTermination;
                             continue;
                         } // MDAC 83540
-                        throw EntityUtil.ConnectionStringSyntax(startposition); // unbalanced single quote
+                        throw new ArgumentException(Strings.ADP_ConnectionStringSyntax(startposition)); // unbalanced single quote
 
                     case ParserState.NullTermination: // [\\s;\u0000]*
                         if ('\0' == currentChar)
@@ -390,10 +390,10 @@
                         {
                             continue;
                         } // MDAC 83540
-                        throw EntityUtil.ConnectionStringSyntax(currentPosition);
+                        throw new ArgumentException(Strings.ADP_ConnectionStringSyntax(currentPosition));
 
                     default:
-                        throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.InvalidParserState1);
+                        throw new InvalidOperationException(Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.InvalidParserState1));
                 }
                 buffer.Append(currentChar);
             }
@@ -404,14 +404,14 @@
                 case ParserState.DoubleQuoteValue:
                 case ParserState.SingleQuoteValue:
                     // keyword not found/unbalanced double/single quote
-                    throw EntityUtil.ConnectionStringSyntax(startposition);
+                    throw new ArgumentException(Strings.ADP_ConnectionStringSyntax(startposition));
 
                 case ParserState.KeyEqual:
                     // equal sign at end of line
                     keyname = GetKeyName(buffer);
                     if (string.IsNullOrEmpty(keyname))
                     {
-                        throw EntityUtil.ConnectionStringSyntax(startposition);
+                        throw new ArgumentException(Strings.ADP_ConnectionStringSyntax(startposition));
                     }
                     break;
 
@@ -423,7 +423,7 @@
                     if (('\'' == tmpChar)
                         || ('"' == tmpChar))
                     {
-                        throw EntityUtil.ConnectionStringSyntax(startposition); // unquoted value must not end in quote
+                        throw new ArgumentException(Strings.ADP_ConnectionStringSyntax(startposition)); // unquoted value must not end in quote
                     }
                     break;
 
@@ -441,7 +441,7 @@
                     break;
 
                 default:
-                    throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.InvalidParserState2);
+                    throw new InvalidOperationException(Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.InvalidParserState2));
             }
             if ((';' == currentChar)
                 && (currentPosition < connectionString.Length))
@@ -496,7 +496,7 @@
                 if (!match.Success
                     || (match.Length != connectionString.Length))
                 {
-                    throw EntityUtil.ConnectionStringSyntax(match.Length);
+                    throw new ArgumentException(Strings.ADP_ConnectionStringSyntax(match.Length));
                 }
                 var indexValue = 0;
                 var keyvalues = match.Groups[ValueIndex].Captures;
@@ -526,7 +526,7 @@
                     var realkeyname = ((null != synonyms) ? (string)synonyms[keyname] : keyname);
                     if (!IsKeyNameValid(realkeyname))
                     {
-                        throw EntityUtil.ADP_KeywordNotSupported(keyname);
+                        throw new ArgumentException(Strings.ADP_KeywordNotSupported(keyname));
                     }
                     parsetable[realkeyname] = keyvalue; // last key-value pair wins (or first)
                 }
@@ -607,7 +607,7 @@
                     var realkeyname = ((null != synonyms) ? (string)synonyms[keyname] : keyname);
                     if (!IsKeyNameValid(realkeyname))
                     {
-                        throw EntityUtil.ADP_KeywordNotSupported(keyname);
+                        throw new ArgumentException(Strings.ADP_KeywordNotSupported(keyname));
                     }
                     parsetable[realkeyname] = keyvalue; // last key-value pair wins (or first)
 

@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Runtime.Serialization;
     using System.Text;
@@ -37,10 +38,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         internal RelatedEnd(IEntityWrapper wrappedOwner, RelationshipNavigation navigation, IRelationshipFixer relationshipFixer)
         {
-            EntityUtil.CheckArgumentNull(wrappedOwner, "wrappedOwner");
-            EntityUtil.CheckArgumentNull(wrappedOwner.Entity, "wrappedOwner.Entity");
-            EntityUtil.CheckArgumentNull(navigation, "navigation");
-            EntityUtil.CheckArgumentNull(relationshipFixer, "fixer");
+            Contract.Requires(wrappedOwner != null);
+            Contract.Requires(wrappedOwner.Entity != null);
+            Contract.Requires(navigation != null);
+            Contract.Requires(relationshipFixer != null);
 
             InitializeRelatedEnd(wrappedOwner, navigation, relationshipFixer);
         }
@@ -221,7 +222,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         internal virtual void BulkDeleteAll(List<object> list)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -321,7 +322,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 }
                 else
                 {
-                    throw EntityUtil.InvalidEntityStateSource();
+                    throw new InvalidOperationException(Strings.Collections_InvalidEntityStateSource);
                 }
             }
             else
@@ -336,7 +337,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 (!IsForeignKey ||
                  !IsDependentEndOfReferentialConstraint(checkIdentifying: false)))
             {
-                throw EntityUtil.InvalidEntityStateSource();
+                throw new InvalidOperationException(Strings.Collections_InvalidEntityStateSource);
             }
 
             Debug.Assert(
@@ -363,7 +364,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             // Retrieve the entity key of the owner.
             var key = _wrappedOwner.EntityKey;
-            EntityUtil.CheckEntityKeyNull(key); // Might be null because of faulty IPOCO implementation
+            if ((object)key == null)
+            {
+                throw new InvalidOperationException(Strings.EntityKey_UnexpectedNull);
+            }
 
             // If the source query text has not been initialized, then do so now.
             if (null == _sourceQuery)
@@ -654,7 +658,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             var sourceQuery = CreateSourceQuery<TEntity>(mergeOption, out hasResults);
             if (null == sourceQuery)
             {
-                throw EntityUtil.RelatedEndNotAttachedToContext(relatedEndName);
+                throw new InvalidOperationException(Strings.RelatedEnd_RelatedEndNotAttachedToContext(relatedEndName));
             }
 
             var entry = ObjectContext.ObjectStateManager.FindEntityEntry(_wrappedOwner.Entity);
@@ -662,7 +666,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             if (entry != null
                 && entry.State == EntityState.Deleted)
             {
-                throw EntityUtil.InvalidEntityStateLoad(relatedEndName);
+                throw new InvalidOperationException(Strings.Collections_InvalidEntityStateLoad(relatedEndName));
             }
 
             // MergeOption for Load must be NoTracking if and only if the source entity was NoTracking. If the source entity was 
@@ -670,19 +674,19 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // have been loaded with OverwriteChanges and the Load option can be AppendOnly.
             if (UsingNoTracking != (mergeOption == MergeOption.NoTracking))
             {
-                throw EntityUtil.MismatchedMergeOptionOnLoad(mergeOption);
+                throw new InvalidOperationException(Strings.RelatedEnd_MismatchedMergeOptionOnLoad(mergeOption));
             }
 
             if (UsingNoTracking)
             {
                 if (IsLoaded)
                 {
-                    throw EntityUtil.LoadCalledOnAlreadyLoadedNoTrackedRelatedEnd();
+                    throw new InvalidOperationException(Strings.RelatedEnd_LoadCalledOnAlreadyLoadedNoTrackedRelatedEnd);
                 }
 
                 if (!IsEmpty())
                 {
-                    throw EntityUtil.LoadCalledOnNonEmptyNoTrackedRelatedEnd();
+                    throw new InvalidOperationException(Strings.RelatedEnd_LoadCalledOnNonEmptyNoTrackedRelatedEnd);
                 }
             }
 
@@ -783,7 +787,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             //Dev note: do not add event firing in Merge API, if it need to be added, add it to the caller
             var sourceKey = _wrappedOwner.EntityKey;
-            EntityUtil.CheckEntityKeyNull(sourceKey);
+            if ((object)sourceKey == null)
+            {
+                throw new InvalidOperationException(Strings.EntityKey_UnexpectedNull);
+            }
 
             ObjectStateManager.UpdateRelationships(
                 ObjectContext, mergeOption, (AssociationSet)RelationshipSet, (AssociationEndMember)FromEndProperty, sourceKey, _wrappedOwner,
@@ -824,8 +831,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         void IRelatedEnd.Attach(object entity)
         {
+            Contract.Requires(entity != null);
+
             CheckOwnerNull();
-            EntityUtil.CheckArgumentNull(entity, "entity");
             Attach(new[] { EntityWrapperFactory.WrapEntityUsingContext(entity, ObjectContext) }, false);
         }
 
@@ -863,7 +871,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                             !VerifyRIConstraintsWithRelatedEntry(
                                 constraint, ownerEntry.GetCurrentEntityValue, collection[0].ObjectStateEntry.EntityKey))
                         {
-                            throw EntityUtil.InconsistentReferentialConstraintProperties();
+                            throw new InvalidOperationException(Strings.RelationshipManager_InconsistentReferentialConstraintProperties);
                         }
                     }
                     else
@@ -879,7 +887,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                                     !VerifyRIConstraintsWithRelatedEntry(
                                         constraint, targetEntry.GetCurrentEntityValue, ownerEntry.EntityKey))
                                 {
-                                    throw EntityUtil.InconsistentReferentialConstraintProperties();
+                                    throw new InvalidOperationException(Strings.RelationshipManager_InconsistentReferentialConstraintProperties);
                                 }
                             }
                         }
@@ -898,7 +906,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             if (null == ObjectContext || UsingNoTracking)
             {
-                throw EntityUtil.InvalidOwnerStateForAttach();
+                throw new InvalidOperationException(Strings.RelatedEnd_InvalidOwnerStateForAttach);
             }
 
             // find state entry
@@ -907,7 +915,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 &&
                 stateEntry.State != EntityState.Unchanged)
             {
-                throw EntityUtil.InvalidOwnerStateForAttach();
+                throw new InvalidOperationException(Strings.RelatedEnd_InvalidOwnerStateForAttach);
             }
         }
 
@@ -919,11 +927,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             {
                 if (allowCollection)
                 {
-                    throw EntityUtil.InvalidNthElementNullForAttach(index);
+                    throw new InvalidOperationException(Strings.RelatedEnd_InvalidNthElementNullForAttach(index));
                 }
                 else
                 {
-                    throw EntityUtil.ArgumentNull("wrappedEntity");
+                    throw new ArgumentNullException("wrappedEntity");
                 }
             }
 
@@ -941,11 +949,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             {
                 if (allowCollection)
                 {
-                    throw EntityUtil.InvalidNthElementContextForAttach(index);
+                    throw new InvalidOperationException(Strings.RelatedEnd_InvalidNthElementContextForAttach(index));
                 }
                 else
                 {
-                    throw EntityUtil.InvalidEntityContextForAttach();
+                    throw new InvalidOperationException(Strings.RelatedEnd_InvalidEntityContextForAttach);
                 }
             }
             Debug.Assert(
@@ -960,11 +968,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             {
                 if (allowCollection)
                 {
-                    throw EntityUtil.InvalidNthElementStateForAttach(index);
+                    throw new InvalidOperationException(Strings.RelatedEnd_InvalidNthElementStateForAttach(index));
                 }
                 else
                 {
-                    throw EntityUtil.InvalidEntityStateForAttach();
+                    throw new InvalidOperationException(Strings.RelatedEnd_InvalidEntityStateForAttach);
                 }
             }
         }
@@ -997,7 +1005,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         void IRelatedEnd.Add(object entity)
         {
-            EntityUtil.CheckArgumentNull(entity, "entity");
+            Contract.Requires(entity != null);
             Add(EntityWrapperFactory.WrapEntityUsingContext(entity, ObjectContext));
         }
 
@@ -1043,7 +1051,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IRelatedEnd.Remove(object entity)
         {
-            EntityUtil.CheckArgumentNull(entity, "entity");
+            Contract.Requires(entity != null);
             DeferredLoad();
             return Remove(EntityWrapperFactory.WrapEntityUsingContext(entity, ObjectContext), false);
         }
@@ -1114,8 +1122,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 &&
                 (((AssociationSet)_relationshipSet).AssociationSetEnds[_navigation.To].EntitySet != set))
             {
-                throw EntityUtil.EntitySetIsNotValidForRelationship(
-                    set.EntityContainer.Name, set.Name, _navigation.To, _relationshipSet.EntityContainer.Name, _relationshipSet.Name);
+                throw new InvalidOperationException(Strings.RelatedEnd_EntitySetIsNotValidForRelationship(
+                    set.EntityContainer.Name, set.Name, _navigation.To, _relationshipSet.EntityContainer.Name, _relationshipSet.Name));
             }
         }
 
@@ -1126,7 +1134,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             if (entry != null
                 && entry.State == EntityState.Deleted)
             {
-                throw EntityUtil.UnableToAddRelationshipWithDeletedEntity();
+                throw new InvalidOperationException(Strings.RelatedEnd_UnableToAddRelationshipWithDeletedEntity);
             }
         }
 
@@ -1165,10 +1173,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 // Make sure that they are either both tracked or both not tracked, or both don't have contexts
                 if (UsingNoTracking != targetRelatedEnd.UsingNoTracking)
                 {
-                    throw EntityUtil.CannotCreateRelationshipBetweenTrackedAndNoTrackedEntities(
-                        UsingNoTracking
-                            ? _navigation.From
-                            : _navigation.To);
+                    throw new InvalidOperationException(Strings.RelatedEnd_CannotCreateRelationshipBetweenTrackedAndNoTrackedEntities(UsingNoTracking
+                                                                                                                                          ? _navigation.From
+                                                                                                                                          : _navigation.To));
                 }
             }
             else if (ObjectContext != null
@@ -1185,7 +1192,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 else
                 {
                     // Both entities are already tracked by different non-null contexts
-                    throw EntityUtil.CannotCreateRelationshipEntitiesInDifferentContexts();
+                    throw new InvalidOperationException(Strings.RelatedEnd_CannotCreateRelationshipEntitiesInDifferentContexts);
                 }
             }
             else if ((_context == null || UsingNoTracking)
@@ -1627,7 +1634,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             if (null != cacheEntry
                 && cacheEntry.State == EntityState.Deleted)
             {
-                throw EntityUtil.UnableToAddRelationshipWithDeletedEntity();
+                throw new InvalidOperationException(Strings.RelatedEnd_UnableToAddRelationshipWithDeletedEntity);
             }
 
             if (wrappedEntity.RequiresRelationshipChangeTracking
@@ -1705,10 +1712,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         // but for consistency for now we throw the same exception as elsewhere.
                         if (targetKey.IsTemporary)
                         {
-                            throw EntityUtil.CannotCreateRelationshipBetweenTrackedAndNoTrackedEntities(_navigation.To);
+                            throw new InvalidOperationException(Strings.RelatedEnd_CannotCreateRelationshipBetweenTrackedAndNoTrackedEntities(_navigation.To));
                         }
 
-                        throw EntityUtil.EntityKeyValueMismatch();
+                        throw new InvalidOperationException(Strings.EntityReference_EntityKeyValueMismatch);
                     }
                     // else -- null just means the key isn't set, so the target entity key doesn't also have to be null
                 }
@@ -2210,7 +2217,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 var targetKey = wrappedEntity.EntityKey;
                 if (entityRef.DetachedEntityKey != targetKey)
                 {
-                    throw EntityUtil.EntityKeyValueMismatch();
+                    throw new InvalidOperationException(Strings.EntityReference_EntityKeyValueMismatch);
                 }
                 // else -- null just means the key isn't set, so the target entity key doesn't also have to be null
             }
@@ -2241,8 +2248,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             var ownerKey = _wrappedOwner.EntityKey;
             var entityKey = wrappedEntity.EntityKey;
-            EntityUtil.CheckEntityKeyNull(ownerKey);
-            EntityUtil.CheckEntityKeyNull(entityKey);
+            if ((object)ownerKey == null)
+            {
+                throw new InvalidOperationException(Strings.EntityKey_UnexpectedNull);
+            }
+            if ((object)entityKey == null)
+            {
+                throw new InvalidOperationException(Strings.EntityKey_UnexpectedNull);
+            }
 
             return ObjectContext.ObjectStateManager.AddRelation(
                 new RelationshipWrapper(
@@ -2403,7 +2416,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             if (!_wrappedOwner.InitializingProxyRelatedEnds)
             {
                 var ownerKey = _wrappedOwner.EntityKey;
-                EntityUtil.CheckEntityKeyNull(ownerKey);
+                if ((object)ownerKey == null)
+                {
+                    throw new InvalidOperationException(Strings.EntityKey_UnexpectedNull);
+                }
                 var entitySet = ownerKey.GetEntitySet(context.MetadataWorkspace);
 
                 AttachContext(context, entitySet, mergeOption);
@@ -2413,11 +2429,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         /// Set the context and load options so that Query can be constructed on demand.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         internal void AttachContext(ObjectContext context, EntitySet entitySet, MergeOption mergeOption)
         {
-            EntityUtil.CheckArgumentNull(context, "context");
+            Contract.Requires(context != null);
+            Contract.Requires(entitySet != null);
+
             EntityUtil.CheckArgumentMergeOption(mergeOption);
-            EntityUtil.CheckArgumentNull(entitySet, "entitySet");
 
             _wrappedOwner.RelationshipManager.NodeVisited = false;
             // If the context is the same as what we already have, and the mergeOption is consistent with our UsingNoTracking setting, nothing more to do
@@ -2457,12 +2475,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                                 &&
                                 associationset.AssociationSetEnds[_navigation.From].EntitySet.ElementType == entitySet.ElementType)
                             {
-                                throw EntityUtil.EntitySetIsNotValidForRelationship(
-                                    entitySet.EntityContainer.Name, entitySet.Name, _navigation.From, set.EntityContainer.Name, set.Name);
+                                throw new InvalidOperationException(Strings.RelatedEnd_EntitySetIsNotValidForRelationship(
+                                    entitySet.EntityContainer.Name, entitySet.Name, _navigation.From, set.EntityContainer.Name, set.Name));
                             }
                         }
                     }
-                    throw EntityUtil.NoRelationshipSetMatched(_navigation.RelationshipName);
+                    string relationshipName = _navigation.RelationshipName;
+                    Debug.Assert(!String.IsNullOrEmpty(relationshipName), "empty relationshipName");
+                    throw new InvalidOperationException(Strings.Collections_NoRelationshipSetMatched(relationshipName));
                 }
 
                 //find relation end property
@@ -2490,7 +2510,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 }
                 if (!(foundFromRelationEnd && foundToRelationEnd))
                 {
-                    throw EntityUtil.RelatedEndNotFound();
+                    throw new InvalidOperationException(Strings.RelatedEnd_RelatedEndNotFound);
                 }
 
                 // If this is a stub EntityReference and the DetachedEntityKey is set, make sure it is valid
@@ -2506,7 +2526,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         {
                             // devnote: We have to check this here instead of in the EntityKey property setter,
                             //          because the key could be set to an invalid type temporarily during deserialization
-                            throw EntityUtil.CannotSetSpecialKeys();
+                            throw new ArgumentException(Strings.EntityReference_CannotSetSpecialKeys, "value");
                         }
                         var targetEntitySet = detachedKey.GetEntitySet(context.MetadataWorkspace);
                         CheckRelationEntitySet(targetEntitySet);
@@ -2539,7 +2559,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             relationshipType = context.MetadataWorkspace.GetItem<EdmType>(_navigation.RelationshipName, DataSpace.CSpace);
             if (relationshipType == null)
             {
-                throw EntityUtil.NoRelationshipSetMatched(_navigation.RelationshipName);
+                string relationshipName = _navigation.RelationshipName;
+                Debug.Assert(!String.IsNullOrEmpty(relationshipName), "empty relationshipName");
+                throw new InvalidOperationException(Strings.Collections_NoRelationshipSetMatched(relationshipName));
             }
 
             // find the RelationshipSet
@@ -2612,7 +2634,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             if (_wrappedOwner.Entity == null)
             {
-                throw EntityUtil.OwnerIsNull();
+                throw new InvalidOperationException(Strings.RelatedEnd_OwnerIsNull);
             }
         }
 

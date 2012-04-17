@@ -21,7 +21,9 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
 
             if (String.IsNullOrEmpty(alias.Name))
             {
-                throw EntityUtil.EntitySqlError(alias.ErrCtx, Strings.InvalidEmptyIdentifier);
+                ErrorContext errCtx = alias.ErrCtx;
+                string message = Strings.InvalidEmptyIdentifier;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             _expr = expr;

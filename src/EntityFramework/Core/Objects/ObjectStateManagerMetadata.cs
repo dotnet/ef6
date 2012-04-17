@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
@@ -117,7 +118,7 @@ namespace System.Data.Entity.Core.Objects
             }
             if (IsComplex && value == null)
             {
-                throw EntityUtil.NullableComplexTypesNotSupported(CLayerName);
+                throw new InvalidOperationException(Strings.ComplexObject_NullableComplexTypesNotSupported(CLayerName));
             }
             LightweightCodeGenerator.SetValue(_clrProperty, userObject, value);
         }
@@ -203,7 +204,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 return _members[ordinal];
             }
-            throw EntityUtil.ArgumentOutOfRange("ordinal");
+            throw new ArgumentOutOfRangeException("ordinal");
         }
 
         internal IEnumerable<StateManagerMemberMetadata> Members

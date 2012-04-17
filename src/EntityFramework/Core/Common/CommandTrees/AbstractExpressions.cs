@@ -3,6 +3,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.ComponentModel;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -707,7 +708,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             if ((kind < DbExpressionKind.All)
                 || (DbExpressionKind.Lambda < kind))
             {
-                throw EntityUtil.InvalidEnumerationValue(typeof(DbExpressionKind), (int)kind);
+                var paramName = typeof(DbExpressionKind).Name;
+                throw new ArgumentOutOfRangeException(paramName, Strings.ADP_InvalidEnumerationValue(paramName, ((int)kind).ToString(CultureInfo.InvariantCulture)));
             }
         }
 

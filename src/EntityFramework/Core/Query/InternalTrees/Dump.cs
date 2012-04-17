@@ -657,7 +657,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                 if (null != op.Type)
                 {
                     WriteString("Type=");
-                    WriteString(TypeHelpers.GetFullName(op.Type));
+                    WriteString(op.Type.ToString());
                     WriteString(", ");
                 }
                 WriteString("Var=");
@@ -678,7 +678,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             if (null != cv)
             {
                 attrs.Add("Name", cv.ColumnMetadata.Name);
-                attrs.Add("Type", TypeHelpers.GetFullName(cv.ColumnMetadata.Type));
+                attrs.Add("Type", cv.ColumnMetadata.Type.ToString());
             }
             using (new AutoXml(this, v.GetType().Name, attrs))
             {
@@ -1212,7 +1212,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                 var attrs = new Dictionary<string, object>();
                 if (null != op.Type)
                 {
-                    attrs.Add("Type", TypeHelpers.GetFullName(op.Type));
+                    attrs.Add("Type", op.Type.ToString());
                 }
 
                 _dumper.Begin(_nodeName, attrs);
@@ -1226,7 +1226,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                 var attrs2 = new Dictionary<string, object>();
                 if (null != op.Type)
                 {
-                    attrs2.Add("Type", TypeHelpers.GetFullName(op.Type));
+                    attrs2.Add("Type", op.Type.ToString());
                 }
 
                 foreach (var kv in attrs)

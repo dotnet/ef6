@@ -26,7 +26,9 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             if (_name.StartsWith("_", StringComparison.OrdinalIgnoreCase)
                 || Char.IsDigit(_name, 0))
             {
-                throw EntityUtil.EntitySqlError(ErrCtx, Strings.InvalidParameterFormat(_name));
+                ErrorContext errCtx = ErrCtx;
+                string message = Strings.InvalidParameterFormat(_name);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
         }
 

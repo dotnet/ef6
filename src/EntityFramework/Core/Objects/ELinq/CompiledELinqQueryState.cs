@@ -6,6 +6,7 @@
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
 
@@ -30,7 +31,7 @@
             Type elementType, ObjectContext context, LambdaExpression lambda, Guid cacheToken, object[] parameterValues)
             : base(elementType, context, lambda)
         {
-            EntityUtil.CheckArgumentNull(parameterValues, "parameterValues");
+            Contract.Requires(parameterValues != null);
 
             _cacheToken = cacheToken;
             _parameterValues = parameterValues;

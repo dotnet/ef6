@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Represents a single row insert operation expressed as a canonical command tree.
@@ -24,7 +25,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             DbExpression returning)
             : base(metadata, dataSpace, target)
         {
-            EntityUtil.CheckArgumentNull(setClauses, "setClauses");
+            Contract.Requires(setClauses != null);
             // returning may be null
 
             _setClauses = setClauses;

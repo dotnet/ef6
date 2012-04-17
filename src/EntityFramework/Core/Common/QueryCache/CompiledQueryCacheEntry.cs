@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary> 
     /// Represents a compiled LINQ ObjectQuery cache entry
@@ -95,6 +96,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
             return this;
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         private static string GenerateLocalCacheKey(MergeOption mergeOption, bool useCSharpNullComparisonBehavior)
         {
             switch (mergeOption)
@@ -105,7 +107,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
                 case MergeOption.PreserveChanges:
                     return string.Join("", Enum.GetName(typeof(MergeOption), mergeOption), useCSharpNullComparisonBehavior);
                 default:
-                    throw EntityUtil.ArgumentOutOfRange("newPlan.MergeOption");
+                    throw new ArgumentOutOfRangeException("newPlan.MergeOption");
             }
         }
     }

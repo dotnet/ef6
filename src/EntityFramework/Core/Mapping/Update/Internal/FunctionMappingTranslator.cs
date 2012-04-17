@@ -3,6 +3,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Linq;
@@ -252,10 +253,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             {
                                 var entitySetName = stateEntry.Source.EntitySet.Name;
                                 var associationSetName = parameterBinding.MemberPath.AssociationSetEnd.ParentAssociationSet.Name;
-                                throw EntityUtil.Update(
-                                    Strings.Update_MissingRequiredRelationshipValue(entitySetName, associationSetName),
-                                    null,
-                                    command.GetStateEntries(translator));
+                                throw new UpdateException(Strings.Update_MissingRequiredRelationshipValue(entitySetName, associationSetName), null, command.GetStateEntries(translator).Cast<ObjectStateEntry>().Distinct());
                             }
                             else
                             {

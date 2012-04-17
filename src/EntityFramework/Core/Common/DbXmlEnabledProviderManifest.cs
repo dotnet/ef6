@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Common
         {
             if (reader == null)
             {
-                throw EntityUtil.ProviderIncompatible(Strings.IncorrectProviderManifest, new ArgumentNullException("reader"));
+                throw new ProviderIncompatibleException(Strings.IncorrectProviderManifest, new ArgumentNullException("reader"));
             }
 
             Load(reader);
@@ -89,7 +89,7 @@ namespace System.Data.Entity.Core.Common
 
             if (errors.Count != 0)
             {
-                throw EntityUtil.ProviderIncompatible(Strings.IncorrectProviderManifest + Helper.CombineErrorMessage(errors));
+                throw new ProviderIncompatibleException(Strings.IncorrectProviderManifest + Helper.CombineErrorMessage(errors));
             }
 
             _namespaceName = schema.Namespace;

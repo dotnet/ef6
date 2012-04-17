@@ -1,5 +1,6 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
 
     /// <summary>
@@ -19,7 +20,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Debug.Assert(item != null, "The given item is null");
             if (item.IsReadOnly)
             {
-                throw EntityUtil.OperationOnReadOnlyItem();
+                throw new InvalidOperationException(Strings.OperationOnReadOnlyItem);
             }
         }
 

@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Resources;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
@@ -184,7 +185,7 @@ namespace System.Data.Entity.Core.Objects
 
         private static string BuildScanEntitySetEsql(EntitySetBase entitySet)
         {
-            EntityUtil.CheckArgumentNull(entitySet, "entitySet");
+            Contract.Requires(entitySet != null);
             return String.Format(
                 CultureInfo.InvariantCulture,
                 "{0}.{1}",
@@ -208,11 +209,11 @@ namespace System.Data.Entity.Core.Objects
             get { return _name; }
             set
             {
-                EntityUtil.CheckArgumentNull(value, "value");
+                Contract.Requires(value != null);
 
                 if (!ObjectParameter.ValidateParameterName(value))
                 {
-                    throw EntityUtil.Argument(Strings.ObjectQuery_InvalidQueryName(value), "value");
+                    throw new ArgumentException(Strings.ObjectQuery_InvalidQueryName(value), "value");
                 }
 
                 _name = value;
@@ -259,7 +260,7 @@ namespace System.Data.Entity.Core.Objects
         /// </exception>
         public ObjectQuery<T> Except(ObjectQuery<T> query)
         {
-            EntityUtil.CheckArgumentNull(query, "query");
+            Contract.Requires(query != null);
 
             if (IsLinqQuery(this)
                 || IsLinqQuery(query))
@@ -287,18 +288,18 @@ namespace System.Data.Entity.Core.Objects
         /// </returns>
         public ObjectQuery<DbDataRecord> GroupBy(string keys, string projection, params ObjectParameter[] parameters)
         {
-            EntityUtil.CheckArgumentNull(keys, "keys");
-            EntityUtil.CheckArgumentNull(projection, "projection");
-            EntityUtil.CheckArgumentNull(parameters, "parameters");
+            Contract.Requires(keys != null);
+            Contract.Requires(projection != null);
+            Contract.Requires(parameters != null);
 
             if (StringUtil.IsNullOrEmptyOrWhiteSpace(keys))
             {
-                throw EntityUtil.Argument(Strings.ObjectQuery_QueryBuilder_InvalidGroupKeyList, "keys");
+                throw new ArgumentException(Strings.ObjectQuery_QueryBuilder_InvalidGroupKeyList, "keys");
             }
 
             if (StringUtil.IsNullOrEmptyOrWhiteSpace(projection))
             {
-                throw EntityUtil.Argument(Strings.ObjectQuery_QueryBuilder_InvalidProjectionList, "projection");
+                throw new ArgumentException(Strings.ObjectQuery_QueryBuilder_InvalidProjectionList, "projection");
             }
 
             return new ObjectQuery<DbDataRecord>(EntitySqlQueryBuilder.GroupBy(QueryState, Name, keys, projection, parameters));
@@ -319,7 +320,7 @@ namespace System.Data.Entity.Core.Objects
         /// </exception>
         public ObjectQuery<T> Intersect(ObjectQuery<T> query)
         {
-            EntityUtil.CheckArgumentNull(query, "query");
+            Contract.Requires(query != null);
 
             if (IsLinqQuery(this)
                 || IsLinqQuery(query))
@@ -362,7 +363,8 @@ namespace System.Data.Entity.Core.Objects
                 ||
                 !(Helper.IsEntityType(ofType) || Helper.IsComplexType(ofType)))
             {
-                throw EntityUtil.EntitySqlError(Strings.ObjectQuery_QueryBuilder_InvalidResultType(typeof(TResultType).FullName));
+                string message = Strings.ObjectQuery_QueryBuilder_InvalidResultType(typeof(TResultType).FullName);
+                throw new EntitySqlException(message);
             }
 
             return new ObjectQuery<TResultType>(EntitySqlQueryBuilder.OfType(QueryState, ofType, clrOfType));
@@ -392,12 +394,12 @@ namespace System.Data.Entity.Core.Objects
         /// </exception>
         public ObjectQuery<T> OrderBy(string keys, params ObjectParameter[] parameters)
         {
-            EntityUtil.CheckArgumentNull(keys, "keys");
-            EntityUtil.CheckArgumentNull(parameters, "parameters");
+            Contract.Requires(keys != null);
+            Contract.Requires(parameters != null);
 
             if (StringUtil.IsNullOrEmptyOrWhiteSpace(keys))
             {
-                throw EntityUtil.Argument(Strings.ObjectQuery_QueryBuilder_InvalidSortKeyList, "keys");
+                throw new ArgumentException(Strings.ObjectQuery_QueryBuilder_InvalidSortKeyList, "keys");
             }
 
             return new ObjectQuery<T>(EntitySqlQueryBuilder.OrderBy(QueryState, Name, keys, parameters));
@@ -424,12 +426,12 @@ namespace System.Data.Entity.Core.Objects
         /// </exception>
         public ObjectQuery<DbDataRecord> Select(string projection, params ObjectParameter[] parameters)
         {
-            EntityUtil.CheckArgumentNull(projection, "projection");
-            EntityUtil.CheckArgumentNull(parameters, "parameters");
+            Contract.Requires(projection != null);
+            Contract.Requires(parameters != null);
 
             if (StringUtil.IsNullOrEmptyOrWhiteSpace(projection))
             {
-                throw EntityUtil.Argument(Strings.ObjectQuery_QueryBuilder_InvalidProjectionList, "projection");
+                throw new ArgumentException(Strings.ObjectQuery_QueryBuilder_InvalidProjectionList, "projection");
             }
 
             return new ObjectQuery<DbDataRecord>(EntitySqlQueryBuilder.Select(QueryState, Name, projection, parameters));
@@ -456,12 +458,12 @@ namespace System.Data.Entity.Core.Objects
         /// </exception>
         public ObjectQuery<TResultType> SelectValue<TResultType>(string projection, params ObjectParameter[] parameters)
         {
-            EntityUtil.CheckArgumentNull(projection, "projection");
-            EntityUtil.CheckArgumentNull(parameters, "parameters");
+            Contract.Requires(projection != null);
+            Contract.Requires(parameters != null);
 
             if (StringUtil.IsNullOrEmptyOrWhiteSpace(projection))
             {
-                throw EntityUtil.Argument(Strings.ObjectQuery_QueryBuilder_InvalidProjectionList, "projection");
+                throw new ArgumentException(Strings.ObjectQuery_QueryBuilder_InvalidProjectionList, "projection");
             }
 
             // SQLPUDT 484974: Make sure TResultType is loaded.
@@ -498,18 +500,18 @@ namespace System.Data.Entity.Core.Objects
         /// </exception>
         public ObjectQuery<T> Skip(string keys, string count, params ObjectParameter[] parameters)
         {
-            EntityUtil.CheckArgumentNull(keys, "keys");
-            EntityUtil.CheckArgumentNull(count, "count");
-            EntityUtil.CheckArgumentNull(parameters, "parameters");
+            Contract.Requires(keys != null);
+            Contract.Requires(count != null);
+            Contract.Requires(parameters != null);
 
             if (StringUtil.IsNullOrEmptyOrWhiteSpace(keys))
             {
-                throw EntityUtil.Argument(Strings.ObjectQuery_QueryBuilder_InvalidSortKeyList, "keys");
+                throw new ArgumentException(Strings.ObjectQuery_QueryBuilder_InvalidSortKeyList, "keys");
             }
 
             if (StringUtil.IsNullOrEmptyOrWhiteSpace(count))
             {
-                throw EntityUtil.Argument(Strings.ObjectQuery_QueryBuilder_InvalidSkipCount, "count");
+                throw new ArgumentException(Strings.ObjectQuery_QueryBuilder_InvalidSkipCount, "count");
             }
 
             return new ObjectQuery<T>(EntitySqlQueryBuilder.Skip(QueryState, Name, keys, count, parameters));
@@ -537,11 +539,11 @@ namespace System.Data.Entity.Core.Objects
         /// </exception>
         public ObjectQuery<T> Top(string count, params ObjectParameter[] parameters)
         {
-            EntityUtil.CheckArgumentNull(count, "count");
+            Contract.Requires(count != null);
 
             if (StringUtil.IsNullOrEmptyOrWhiteSpace(count))
             {
-                throw EntityUtil.Argument(Strings.ObjectQuery_QueryBuilder_InvalidTopCount, "count");
+                throw new ArgumentException(Strings.ObjectQuery_QueryBuilder_InvalidTopCount, "count");
             }
 
             return new ObjectQuery<T>(EntitySqlQueryBuilder.Top(QueryState, Name, count, parameters));
@@ -563,7 +565,7 @@ namespace System.Data.Entity.Core.Objects
         /// </exception>
         public ObjectQuery<T> Union(ObjectQuery<T> query)
         {
-            EntityUtil.CheckArgumentNull(query, "query");
+            Contract.Requires(query != null);
 
             if (IsLinqQuery(this)
                 || IsLinqQuery(query))
@@ -589,7 +591,7 @@ namespace System.Data.Entity.Core.Objects
         /// </exception>
         public ObjectQuery<T> UnionAll(ObjectQuery<T> query)
         {
-            EntityUtil.CheckArgumentNull(query, "query");
+            Contract.Requires(query != null);
 
             return new ObjectQuery<T>(EntitySqlQueryBuilder.UnionAll(QueryState, query.QueryState));
         }
@@ -615,12 +617,12 @@ namespace System.Data.Entity.Core.Objects
         /// </exception>
         public ObjectQuery<T> Where(string predicate, params ObjectParameter[] parameters)
         {
-            EntityUtil.CheckArgumentNull(predicate, "predicate");
-            EntityUtil.CheckArgumentNull(parameters, "parameters");
+            Contract.Requires(predicate != null);
+            Contract.Requires(parameters != null);
 
             if (StringUtil.IsNullOrEmptyOrWhiteSpace(predicate))
             {
-                throw EntityUtil.Argument(Strings.ObjectQuery_QueryBuilder_InvalidFilterPredicate, "predicate");
+                throw new ArgumentException(Strings.ObjectQuery_QueryBuilder_InvalidFilterPredicate, "predicate");
             }
 
             return new ObjectQuery<T>(EntitySqlQueryBuilder.Where(QueryState, Name, predicate, parameters));

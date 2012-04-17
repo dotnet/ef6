@@ -1,6 +1,8 @@
 namespace System.Data.Entity.Core.Objects
 {
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
 
     // Internal version of writeable original values record is used by all internal operations that need to set original values, such as PreserveChanges queries
     // This version should never be returned to the user, because it doesn't enforce any necessary restrictions.
@@ -11,9 +13,9 @@ namespace System.Data.Entity.Core.Objects
             EntityEntry cacheEntry, StateManagerTypeMetadata metadata, object userObject)
             : base(cacheEntry, metadata, userObject)
         {
-            EntityUtil.CheckArgumentNull(cacheEntry, "cacheEntry");
-            EntityUtil.CheckArgumentNull(userObject, "userObject");
-            EntityUtil.CheckArgumentNull(metadata, "metadata");
+            Contract.Requires(cacheEntry != null);
+            Contract.Requires(userObject != null);
+            Contract.Requires(metadata != null);
             Debug.Assert(!cacheEntry.IsKeyEntry, "Cannot create an ObjectStateEntryOriginalDbUpdatableDataRecord_Internal for a key entry");
             switch (cacheEntry.State)
             {
@@ -73,7 +75,7 @@ namespace System.Data.Entity.Core.Objects
             // Instead individual scalar properties can be set on a data record that represents the complex type.
             if (member.IsComplex)
             {
-                throw EntityUtil.SetOriginalComplexProperties(member.CLayerName);
+                throw new InvalidOperationException(Strings.ObjectStateEntry_SetOriginalComplexProperties(member.CLayerName));
             }
 
             // Null values are represented in data records as DBNull.Value, so translate appropriately
@@ -90,7 +92,7 @@ namespace System.Data.Entity.Core.Objects
                 // Throw if trying to change the original value of the primary key
                 if (member.IsPartOfKey)
                 {
-                    throw EntityUtil.SetOriginalPrimaryKey(member.CLayerName);
+                    throw new InvalidOperationException(Strings.ObjectStateEntry_SetOriginalPrimaryKey(member.CLayerName));
                 }
 
                 // Verify non-nullable EDM members are not being set to null
@@ -102,8 +104,7 @@ namespace System.Data.Entity.Core.Objects
                     !member.CdmMetadata.Nullable)
                 {
                     // Throw if the underlying CLR type of this property is not nullable, and it is being set to null
-                    throw EntityUtil.NullOriginalValueForNonNullableProperty(
-                        member.CLayerName, member.ClrMetadata.Name, member.ClrMetadata.DeclaringType.FullName);
+                    throw new InvalidOperationException(Strings.ObjectStateEntry_NullOriginalValueForNonNullableProperty(member.CLayerName, member.ClrMetadata.Name, member.ClrMetadata.DeclaringType.FullName));
                 }
 
                 base.SetRecordValue(ordinal, value);

@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Reflection;
 
     /// <summary>
@@ -93,8 +94,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </exception>
         public static DbLambda Create(TypeUsage argument1Type, Func<DbExpression, DbExpression> lambdaFunction)
         {
-            EntityUtil.CheckArgumentNull(argument1Type, "argument1Type");
-            EntityUtil.CheckArgumentNull(lambdaFunction, "lambdaFunction");
+            Contract.Requires(argument1Type != null);
+            Contract.Requires(lambdaFunction != null);
 
             var variables = CreateVariables(lambdaFunction.Method, argument1Type);
             var body = lambdaFunction(variables[0]);
@@ -116,9 +117,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         public static DbLambda Create(
             TypeUsage argument1Type, TypeUsage argument2Type, Func<DbExpression, DbExpression, DbExpression> lambdaFunction)
         {
-            EntityUtil.CheckArgumentNull(argument1Type, "argument1Type");
-            EntityUtil.CheckArgumentNull(argument2Type, "argument2Type");
-            EntityUtil.CheckArgumentNull(lambdaFunction, "lambdaFunction");
+            Contract.Requires(argument1Type != null);
+            Contract.Requires(argument2Type != null);
+            Contract.Requires(lambdaFunction != null);
 
             var variables = CreateVariables(lambdaFunction.Method, argument1Type, argument2Type);
             var body = lambdaFunction(variables[0], variables[1]);
@@ -142,10 +143,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             TypeUsage argument1Type, TypeUsage argument2Type, TypeUsage argument3Type,
             Func<DbExpression, DbExpression, DbExpression, DbExpression> lambdaFunction)
         {
-            EntityUtil.CheckArgumentNull(argument1Type, "argument1Type");
-            EntityUtil.CheckArgumentNull(argument2Type, "argument2Type");
-            EntityUtil.CheckArgumentNull(argument3Type, "argument3Type");
-            EntityUtil.CheckArgumentNull(lambdaFunction, "lambdaFunction");
+            Contract.Requires(argument1Type != null);
+            Contract.Requires(argument2Type != null);
+            Contract.Requires(argument3Type != null);
+            Contract.Requires(lambdaFunction != null);
 
             var variables = CreateVariables(lambdaFunction.Method, argument1Type, argument2Type, argument3Type);
             var body = lambdaFunction(variables[0], variables[1], variables[2]);
@@ -170,11 +171,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             TypeUsage argument1Type, TypeUsage argument2Type, TypeUsage argument3Type, TypeUsage argument4Type,
             Func<DbExpression, DbExpression, DbExpression, DbExpression, DbExpression> lambdaFunction)
         {
-            EntityUtil.CheckArgumentNull(argument1Type, "argument1Type");
-            EntityUtil.CheckArgumentNull(argument2Type, "argument2Type");
-            EntityUtil.CheckArgumentNull(argument3Type, "argument3Type");
-            EntityUtil.CheckArgumentNull(argument4Type, "argument4Type");
-            EntityUtil.CheckArgumentNull(lambdaFunction, "lambdaFunction");
+            Contract.Requires(argument1Type != null);
+            Contract.Requires(argument2Type != null);
+            Contract.Requires(argument3Type != null);
+            Contract.Requires(argument4Type != null);
+            Contract.Requires(lambdaFunction != null);
 
             var variables = CreateVariables(lambdaFunction.Method, argument1Type, argument2Type, argument3Type, argument4Type);
             var body = lambdaFunction(variables[0], variables[1], variables[2], variables[3]);
@@ -200,12 +201,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             TypeUsage argument1Type, TypeUsage argument2Type, TypeUsage argument3Type, TypeUsage argument4Type, TypeUsage argument5Type,
             Func<DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression> lambdaFunction)
         {
-            EntityUtil.CheckArgumentNull(argument1Type, "argument1Type");
-            EntityUtil.CheckArgumentNull(argument2Type, "argument2Type");
-            EntityUtil.CheckArgumentNull(argument3Type, "argument3Type");
-            EntityUtil.CheckArgumentNull(argument4Type, "argument4Type");
-            EntityUtil.CheckArgumentNull(argument5Type, "argument5Type");
-            EntityUtil.CheckArgumentNull(lambdaFunction, "lambdaFunction");
+            Contract.Requires(argument1Type != null);
+            Contract.Requires(argument2Type != null);
+            Contract.Requires(argument3Type != null);
+            Contract.Requires(argument4Type != null);
+            Contract.Requires(argument5Type != null);
+            Contract.Requires(lambdaFunction != null);
 
             var variables = CreateVariables(
                 lambdaFunction.Method, argument1Type, argument2Type, argument3Type, argument4Type, argument5Type);
@@ -235,13 +236,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             TypeUsage argument6Type,
             Func<DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression> lambdaFunction)
         {
-            EntityUtil.CheckArgumentNull(argument1Type, "argument1Type");
-            EntityUtil.CheckArgumentNull(argument2Type, "argument2Type");
-            EntityUtil.CheckArgumentNull(argument3Type, "argument3Type");
-            EntityUtil.CheckArgumentNull(argument4Type, "argument4Type");
-            EntityUtil.CheckArgumentNull(argument5Type, "argument5Type");
-            EntityUtil.CheckArgumentNull(argument6Type, "argument6Type");
-            EntityUtil.CheckArgumentNull(lambdaFunction, "lambdaFunction");
+            Contract.Requires(argument1Type != null);
+            Contract.Requires(argument2Type != null);
+            Contract.Requires(argument3Type != null);
+            Contract.Requires(argument4Type != null);
+            Contract.Requires(argument5Type != null);
+            Contract.Requires(argument6Type != null);
+            Contract.Requires(lambdaFunction != null);
 
             var variables = CreateVariables(
                 lambdaFunction.Method, argument1Type, argument2Type, argument3Type, argument4Type, argument5Type, argument6Type);
@@ -273,14 +274,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             Func<DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression>
                 lambdaFunction)
         {
-            EntityUtil.CheckArgumentNull(argument1Type, "argument1Type");
-            EntityUtil.CheckArgumentNull(argument2Type, "argument2Type");
-            EntityUtil.CheckArgumentNull(argument3Type, "argument3Type");
-            EntityUtil.CheckArgumentNull(argument4Type, "argument4Type");
-            EntityUtil.CheckArgumentNull(argument5Type, "argument5Type");
-            EntityUtil.CheckArgumentNull(argument6Type, "argument6Type");
-            EntityUtil.CheckArgumentNull(argument7Type, "argument7Type");
-            EntityUtil.CheckArgumentNull(lambdaFunction, "lambdaFunction");
+            Contract.Requires(argument1Type != null);
+            Contract.Requires(argument2Type != null);
+            Contract.Requires(argument3Type != null);
+            Contract.Requires(argument4Type != null);
+            Contract.Requires(argument5Type != null);
+            Contract.Requires(argument6Type != null);
+            Contract.Requires(argument7Type != null);
+            Contract.Requires(lambdaFunction != null);
 
             var variables = CreateVariables(
                 lambdaFunction.Method, argument1Type, argument2Type, argument3Type, argument4Type, argument5Type, argument6Type,
@@ -315,15 +316,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                 <DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression,
                     DbExpression> lambdaFunction)
         {
-            EntityUtil.CheckArgumentNull(argument1Type, "argument1Type");
-            EntityUtil.CheckArgumentNull(argument2Type, "argument2Type");
-            EntityUtil.CheckArgumentNull(argument3Type, "argument3Type");
-            EntityUtil.CheckArgumentNull(argument4Type, "argument4Type");
-            EntityUtil.CheckArgumentNull(argument5Type, "argument5Type");
-            EntityUtil.CheckArgumentNull(argument6Type, "argument6Type");
-            EntityUtil.CheckArgumentNull(argument7Type, "argument7Type");
-            EntityUtil.CheckArgumentNull(argument8Type, "argument8Type");
-            EntityUtil.CheckArgumentNull(lambdaFunction, "lambdaFunction");
+            Contract.Requires(argument1Type != null);
+            Contract.Requires(argument2Type != null);
+            Contract.Requires(argument3Type != null);
+            Contract.Requires(argument4Type != null);
+            Contract.Requires(argument5Type != null);
+            Contract.Requires(argument6Type != null);
+            Contract.Requires(argument7Type != null);
+            Contract.Requires(argument8Type != null);
+            Contract.Requires(lambdaFunction != null);
 
             var variables = CreateVariables(
                 lambdaFunction.Method, argument1Type, argument2Type, argument3Type, argument4Type, argument5Type, argument6Type,
@@ -361,16 +362,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                 <DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression,
                     DbExpression, DbExpression> lambdaFunction)
         {
-            EntityUtil.CheckArgumentNull(argument1Type, "argument1Type");
-            EntityUtil.CheckArgumentNull(argument2Type, "argument2Type");
-            EntityUtil.CheckArgumentNull(argument3Type, "argument3Type");
-            EntityUtil.CheckArgumentNull(argument4Type, "argument4Type");
-            EntityUtil.CheckArgumentNull(argument5Type, "argument5Type");
-            EntityUtil.CheckArgumentNull(argument6Type, "argument6Type");
-            EntityUtil.CheckArgumentNull(argument7Type, "argument7Type");
-            EntityUtil.CheckArgumentNull(argument8Type, "argument8Type");
-            EntityUtil.CheckArgumentNull(argument9Type, "argument9Type");
-            EntityUtil.CheckArgumentNull(lambdaFunction, "lambdaFunction");
+            Contract.Requires(argument1Type != null);
+            Contract.Requires(argument2Type != null);
+            Contract.Requires(argument3Type != null);
+            Contract.Requires(argument4Type != null);
+            Contract.Requires(argument5Type != null);
+            Contract.Requires(argument6Type != null);
+            Contract.Requires(argument7Type != null);
+            Contract.Requires(argument8Type != null);
+            Contract.Requires(argument9Type != null);
+            Contract.Requires(lambdaFunction != null);
 
             var variables = CreateVariables(
                 lambdaFunction.Method, argument1Type, argument2Type, argument3Type, argument4Type, argument5Type, argument6Type,
@@ -409,17 +410,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                 <DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression,
                     DbExpression, DbExpression, DbExpression> lambdaFunction)
         {
-            EntityUtil.CheckArgumentNull(argument1Type, "argument1Type");
-            EntityUtil.CheckArgumentNull(argument2Type, "argument2Type");
-            EntityUtil.CheckArgumentNull(argument3Type, "argument3Type");
-            EntityUtil.CheckArgumentNull(argument4Type, "argument4Type");
-            EntityUtil.CheckArgumentNull(argument5Type, "argument5Type");
-            EntityUtil.CheckArgumentNull(argument6Type, "argument6Type");
-            EntityUtil.CheckArgumentNull(argument7Type, "argument7Type");
-            EntityUtil.CheckArgumentNull(argument8Type, "argument8Type");
-            EntityUtil.CheckArgumentNull(argument9Type, "argument9Type");
-            EntityUtil.CheckArgumentNull(argument10Type, "argument10Type");
-            EntityUtil.CheckArgumentNull(lambdaFunction, "lambdaFunction");
+            Contract.Requires(argument1Type != null);
+            Contract.Requires(argument2Type != null);
+            Contract.Requires(argument3Type != null);
+            Contract.Requires(argument4Type != null);
+            Contract.Requires(argument5Type != null);
+            Contract.Requires(argument6Type != null);
+            Contract.Requires(argument7Type != null);
+            Contract.Requires(argument8Type != null);
+            Contract.Requires(argument9Type != null);
+            Contract.Requires(argument10Type != null);
+            Contract.Requires(lambdaFunction != null);
 
             var variables = CreateVariables(
                 lambdaFunction.Method, argument1Type, argument2Type, argument3Type, argument4Type, argument5Type, argument6Type,
@@ -461,18 +462,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                 <DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression,
                     DbExpression, DbExpression, DbExpression, DbExpression> lambdaFunction)
         {
-            EntityUtil.CheckArgumentNull(argument1Type, "argument1Type");
-            EntityUtil.CheckArgumentNull(argument2Type, "argument2Type");
-            EntityUtil.CheckArgumentNull(argument3Type, "argument3Type");
-            EntityUtil.CheckArgumentNull(argument4Type, "argument4Type");
-            EntityUtil.CheckArgumentNull(argument5Type, "argument5Type");
-            EntityUtil.CheckArgumentNull(argument6Type, "argument6Type");
-            EntityUtil.CheckArgumentNull(argument7Type, "argument7Type");
-            EntityUtil.CheckArgumentNull(argument8Type, "argument8Type");
-            EntityUtil.CheckArgumentNull(argument9Type, "argument9Type");
-            EntityUtil.CheckArgumentNull(argument10Type, "argument10Type");
-            EntityUtil.CheckArgumentNull(argument11Type, "argument11Type");
-            EntityUtil.CheckArgumentNull(lambdaFunction, "lambdaFunction");
+            Contract.Requires(argument1Type != null);
+            Contract.Requires(argument2Type != null);
+            Contract.Requires(argument3Type != null);
+            Contract.Requires(argument4Type != null);
+            Contract.Requires(argument5Type != null);
+            Contract.Requires(argument6Type != null);
+            Contract.Requires(argument7Type != null);
+            Contract.Requires(argument8Type != null);
+            Contract.Requires(argument9Type != null);
+            Contract.Requires(argument10Type != null);
+            Contract.Requires(argument11Type != null);
+            Contract.Requires(lambdaFunction != null);
 
             var variables = CreateVariables(
                 lambdaFunction.Method, argument1Type, argument2Type, argument3Type, argument4Type, argument5Type, argument6Type,
@@ -516,19 +517,19 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                 <DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression,
                     DbExpression, DbExpression, DbExpression, DbExpression, DbExpression> lambdaFunction)
         {
-            EntityUtil.CheckArgumentNull(argument1Type, "argument1Type");
-            EntityUtil.CheckArgumentNull(argument2Type, "argument2Type");
-            EntityUtil.CheckArgumentNull(argument3Type, "argument3Type");
-            EntityUtil.CheckArgumentNull(argument4Type, "argument4Type");
-            EntityUtil.CheckArgumentNull(argument5Type, "argument5Type");
-            EntityUtil.CheckArgumentNull(argument6Type, "argument6Type");
-            EntityUtil.CheckArgumentNull(argument7Type, "argument7Type");
-            EntityUtil.CheckArgumentNull(argument8Type, "argument8Type");
-            EntityUtil.CheckArgumentNull(argument9Type, "argument9Type");
-            EntityUtil.CheckArgumentNull(argument10Type, "argument10Type");
-            EntityUtil.CheckArgumentNull(argument11Type, "argument11Type");
-            EntityUtil.CheckArgumentNull(argument12Type, "argument12Type");
-            EntityUtil.CheckArgumentNull(lambdaFunction, "lambdaFunction");
+            Contract.Requires(argument1Type != null);
+            Contract.Requires(argument2Type != null);
+            Contract.Requires(argument3Type != null);
+            Contract.Requires(argument4Type != null);
+            Contract.Requires(argument5Type != null);
+            Contract.Requires(argument6Type != null);
+            Contract.Requires(argument7Type != null);
+            Contract.Requires(argument8Type != null);
+            Contract.Requires(argument9Type != null);
+            Contract.Requires(argument10Type != null);
+            Contract.Requires(argument11Type != null);
+            Contract.Requires(argument12Type != null);
+            Contract.Requires(lambdaFunction != null);
 
             var variables = CreateVariables(
                 lambdaFunction.Method, argument1Type, argument2Type, argument3Type, argument4Type, argument5Type, argument6Type,
@@ -573,20 +574,20 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                 <DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression,
                     DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression> lambdaFunction)
         {
-            EntityUtil.CheckArgumentNull(argument1Type, "argument1Type");
-            EntityUtil.CheckArgumentNull(argument2Type, "argument2Type");
-            EntityUtil.CheckArgumentNull(argument3Type, "argument3Type");
-            EntityUtil.CheckArgumentNull(argument4Type, "argument4Type");
-            EntityUtil.CheckArgumentNull(argument5Type, "argument5Type");
-            EntityUtil.CheckArgumentNull(argument6Type, "argument6Type");
-            EntityUtil.CheckArgumentNull(argument7Type, "argument7Type");
-            EntityUtil.CheckArgumentNull(argument8Type, "argument8Type");
-            EntityUtil.CheckArgumentNull(argument9Type, "argument9Type");
-            EntityUtil.CheckArgumentNull(argument10Type, "argument10Type");
-            EntityUtil.CheckArgumentNull(argument11Type, "argument11Type");
-            EntityUtil.CheckArgumentNull(argument12Type, "argument12Type");
-            EntityUtil.CheckArgumentNull(argument13Type, "argument13Type");
-            EntityUtil.CheckArgumentNull(lambdaFunction, "lambdaFunction");
+            Contract.Requires(argument1Type != null);
+            Contract.Requires(argument2Type != null);
+            Contract.Requires(argument3Type != null);
+            Contract.Requires(argument4Type != null);
+            Contract.Requires(argument5Type != null);
+            Contract.Requires(argument6Type != null);
+            Contract.Requires(argument7Type != null);
+            Contract.Requires(argument8Type != null);
+            Contract.Requires(argument9Type != null);
+            Contract.Requires(argument10Type != null);
+            Contract.Requires(argument11Type != null);
+            Contract.Requires(argument12Type != null);
+            Contract.Requires(argument13Type != null);
+            Contract.Requires(lambdaFunction != null);
 
             var variables = CreateVariables(
                 lambdaFunction.Method, argument1Type, argument2Type, argument3Type, argument4Type, argument5Type, argument6Type,
@@ -632,21 +633,21 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                 <DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression,
                     DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression> lambdaFunction)
         {
-            EntityUtil.CheckArgumentNull(argument1Type, "argument1Type");
-            EntityUtil.CheckArgumentNull(argument2Type, "argument2Type");
-            EntityUtil.CheckArgumentNull(argument3Type, "argument3Type");
-            EntityUtil.CheckArgumentNull(argument4Type, "argument4Type");
-            EntityUtil.CheckArgumentNull(argument5Type, "argument5Type");
-            EntityUtil.CheckArgumentNull(argument6Type, "argument6Type");
-            EntityUtil.CheckArgumentNull(argument7Type, "argument7Type");
-            EntityUtil.CheckArgumentNull(argument8Type, "argument8Type");
-            EntityUtil.CheckArgumentNull(argument9Type, "argument9Type");
-            EntityUtil.CheckArgumentNull(argument10Type, "argument10Type");
-            EntityUtil.CheckArgumentNull(argument11Type, "argument11Type");
-            EntityUtil.CheckArgumentNull(argument12Type, "argument12Type");
-            EntityUtil.CheckArgumentNull(argument13Type, "argument13Type");
-            EntityUtil.CheckArgumentNull(argument14Type, "argument14Type");
-            EntityUtil.CheckArgumentNull(lambdaFunction, "lambdaFunction");
+            Contract.Requires(argument1Type != null);
+            Contract.Requires(argument2Type != null);
+            Contract.Requires(argument3Type != null);
+            Contract.Requires(argument4Type != null);
+            Contract.Requires(argument5Type != null);
+            Contract.Requires(argument6Type != null);
+            Contract.Requires(argument7Type != null);
+            Contract.Requires(argument8Type != null);
+            Contract.Requires(argument9Type != null);
+            Contract.Requires(argument10Type != null);
+            Contract.Requires(argument11Type != null);
+            Contract.Requires(argument12Type != null);
+            Contract.Requires(argument13Type != null);
+            Contract.Requires(argument14Type != null);
+            Contract.Requires(lambdaFunction != null);
 
             var variables = CreateVariables(
                 lambdaFunction.Method, argument1Type, argument2Type, argument3Type, argument4Type, argument5Type, argument6Type,
@@ -695,22 +696,22 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                     DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression>
                 lambdaFunction)
         {
-            EntityUtil.CheckArgumentNull(argument1Type, "argument1Type");
-            EntityUtil.CheckArgumentNull(argument2Type, "argument2Type");
-            EntityUtil.CheckArgumentNull(argument3Type, "argument3Type");
-            EntityUtil.CheckArgumentNull(argument4Type, "argument4Type");
-            EntityUtil.CheckArgumentNull(argument5Type, "argument5Type");
-            EntityUtil.CheckArgumentNull(argument6Type, "argument6Type");
-            EntityUtil.CheckArgumentNull(argument7Type, "argument7Type");
-            EntityUtil.CheckArgumentNull(argument8Type, "argument8Type");
-            EntityUtil.CheckArgumentNull(argument9Type, "argument9Type");
-            EntityUtil.CheckArgumentNull(argument10Type, "argument10Type");
-            EntityUtil.CheckArgumentNull(argument11Type, "argument11Type");
-            EntityUtil.CheckArgumentNull(argument12Type, "argument12Type");
-            EntityUtil.CheckArgumentNull(argument13Type, "argument13Type");
-            EntityUtil.CheckArgumentNull(argument14Type, "argument14Type");
-            EntityUtil.CheckArgumentNull(argument15Type, "argument15Type");
-            EntityUtil.CheckArgumentNull(lambdaFunction, "lambdaFunction");
+            Contract.Requires(argument1Type != null);
+            Contract.Requires(argument2Type != null);
+            Contract.Requires(argument3Type != null);
+            Contract.Requires(argument4Type != null);
+            Contract.Requires(argument5Type != null);
+            Contract.Requires(argument6Type != null);
+            Contract.Requires(argument7Type != null);
+            Contract.Requires(argument8Type != null);
+            Contract.Requires(argument9Type != null);
+            Contract.Requires(argument10Type != null);
+            Contract.Requires(argument11Type != null);
+            Contract.Requires(argument12Type != null);
+            Contract.Requires(argument13Type != null);
+            Contract.Requires(argument14Type != null);
+            Contract.Requires(argument15Type != null);
+            Contract.Requires(lambdaFunction != null);
 
             var variables = CreateVariables(
                 lambdaFunction.Method, argument1Type, argument2Type, argument3Type, argument4Type, argument5Type, argument6Type,
@@ -762,23 +763,23 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                     DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression,
                     DbExpression> lambdaFunction)
         {
-            EntityUtil.CheckArgumentNull(argument1Type, "argument1Type");
-            EntityUtil.CheckArgumentNull(argument2Type, "argument2Type");
-            EntityUtil.CheckArgumentNull(argument3Type, "argument3Type");
-            EntityUtil.CheckArgumentNull(argument4Type, "argument4Type");
-            EntityUtil.CheckArgumentNull(argument5Type, "argument5Type");
-            EntityUtil.CheckArgumentNull(argument6Type, "argument6Type");
-            EntityUtil.CheckArgumentNull(argument7Type, "argument7Type");
-            EntityUtil.CheckArgumentNull(argument8Type, "argument8Type");
-            EntityUtil.CheckArgumentNull(argument9Type, "argument9Type");
-            EntityUtil.CheckArgumentNull(argument10Type, "argument10Type");
-            EntityUtil.CheckArgumentNull(argument11Type, "argument11Type");
-            EntityUtil.CheckArgumentNull(argument12Type, "argument12Type");
-            EntityUtil.CheckArgumentNull(argument13Type, "argument13Type");
-            EntityUtil.CheckArgumentNull(argument14Type, "argument14Type");
-            EntityUtil.CheckArgumentNull(argument15Type, "argument15Type");
-            EntityUtil.CheckArgumentNull(argument16Type, "argument16Type");
-            EntityUtil.CheckArgumentNull(lambdaFunction, "lambdaFunction");
+            Contract.Requires(argument1Type != null);
+            Contract.Requires(argument2Type != null);
+            Contract.Requires(argument3Type != null);
+            Contract.Requires(argument4Type != null);
+            Contract.Requires(argument5Type != null);
+            Contract.Requires(argument6Type != null);
+            Contract.Requires(argument7Type != null);
+            Contract.Requires(argument8Type != null);
+            Contract.Requires(argument9Type != null);
+            Contract.Requires(argument10Type != null);
+            Contract.Requires(argument11Type != null);
+            Contract.Requires(argument12Type != null);
+            Contract.Requires(argument13Type != null);
+            Contract.Requires(argument14Type != null);
+            Contract.Requires(argument15Type != null);
+            Contract.Requires(argument16Type != null);
+            Contract.Requires(lambdaFunction != null);
 
             var variables = CreateVariables(
                 lambdaFunction.Method, argument1Type, argument2Type, argument3Type, argument4Type, argument5Type, argument6Type,

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
 
@@ -53,10 +54,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <returns>ObjectQuery implementing the expression logic.</returns>
         IQueryable<S> IQueryProvider.CreateQuery<S>(Expression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
             if (!typeof(IQueryable<S>).IsAssignableFrom(expression.Type))
             {
-                throw EntityUtil.Argument(Strings.ELinq_ExpressionMustBeIQueryable, "expression");
+                throw new ArgumentException(Strings.ELinq_ExpressionMustBeIQueryable, "expression");
             }
 
             var query = CreateQuery<S>(expression);
@@ -75,7 +76,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <returns>Single result from execution.</returns>
         S IQueryProvider.Execute<S>(Expression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
             var query = CreateQuery<S>(expression);
 
             return ExecuteSingle(query, expression);
@@ -90,10 +91,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <returns>ObjectQuery instance implementing the given expression.</returns>
         IQueryable IQueryProvider.CreateQuery(Expression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
             if (!typeof(IQueryable).IsAssignableFrom(expression.Type))
             {
-                throw EntityUtil.Argument(Strings.ELinq_ExpressionMustBeIQueryable, "expression");
+                throw new ArgumentException(Strings.ELinq_ExpressionMustBeIQueryable, "expression");
             }
 
             // Determine the type of the query instance by binding generic parameter in Query<>.Queryable
@@ -114,7 +115,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <returns>Single result from execution.</returns>
         object IQueryProvider.Execute(Expression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             var query = CreateQuery(expression, expression.Type);
             var objQuery = Enumerable.Cast<object>(query);

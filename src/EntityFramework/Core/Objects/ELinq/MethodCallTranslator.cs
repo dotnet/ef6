@@ -489,7 +489,7 @@
                         // a method call expression with a string constant argument taking 
                         // the value of the string argument passed to ObjectQuery.Include,
                         // and so this is the only supported pattern here.
-                        throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedInclude);
+                        throw new NotSupportedException(Strings.ELinq_UnsupportedInclude);
                     }
                     if (parent.CanIncludeSpanInfo())
                     {
@@ -521,7 +521,7 @@
                         // a method call expression with a MergeOption constant argument taking 
                         // the value of the merge option argument passed to ObjectQuery.MergeAs,
                         // and so this is the only supported pattern here.
-                        throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedMergeAs);
+                        throw new NotSupportedException(Strings.ELinq_UnsupportedMergeAs);
                     }
 
                     var mergeAsOption = (MergeOption)((ConstantExpression)call.Arguments[0]).Value;
@@ -573,10 +573,10 @@
                     MethodInfo suggestedMethodInfo;
                     if (TryGetAlternativeMethod(call.Method, out suggestedMethodInfo))
                     {
-                        throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedMethodSuggestedAlternative(call.Method, suggestedMethodInfo));
+                        throw new NotSupportedException(Strings.ELinq_UnsupportedMethodSuggestedAlternative(call.Method, suggestedMethodInfo));
                     }
                     //The default error message
-                    throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedMethod(call.Method));
+                    throw new NotSupportedException(Strings.ELinq_UnsupportedMethod(call.Method));
                 }
 
                 #region Static Members
@@ -667,7 +667,7 @@
 
                     if (!function.IsComposableAttribute)
                     {
-                        throw EntityUtil.NotSupported(Strings.CannotCallNoncomposableFunction(function.FullName));
+                        throw new NotSupportedException(Strings.CannotCallNoncomposableFunction(function.FullName));
                     }
 
                     DbExpression result = function.Invoke(arguments);
@@ -794,17 +794,15 @@
                                 //Verify if this is a collection type (if so, recursively resolve)
                                 if (!clrReturnType.IsGenericType)
                                 {
-                                    throw EntityUtil.NotSupported(
-                                        Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
-                                            call.Method, call.Method.DeclaringType));
+                                    throw new NotSupportedException(Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
+                                        call.Method, call.Method.DeclaringType));
                                 }
                                 var genericType = clrReturnType.GetGenericTypeDefinition();
                                 if ((genericType != typeof(IEnumerable<>))
                                     && (genericType != typeof(IQueryable<>)))
                                 {
-                                    throw EntityUtil.NotSupported(
-                                        Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
-                                            call.Method, call.Method.DeclaringType));
+                                    throw new NotSupportedException(Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
+                                        call.Method, call.Method.DeclaringType));
                                 }
                                 var elementType = clrReturnType.GetGenericArguments()[0];
                                 result = ValidateReturnType(
@@ -815,9 +813,8 @@
                             {
                                 if (clrReturnType != typeof(DbDataRecord))
                                 {
-                                    throw EntityUtil.NotSupported(
-                                        Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
-                                            call.Method, call.Method.DeclaringType));
+                                    throw new NotSupportedException(Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
+                                        call.Method, call.Method.DeclaringType));
                                 }
                                 break;
                             }
@@ -825,9 +822,8 @@
                             {
                                 if (clrReturnType != typeof(EntityKey))
                                 {
-                                    throw EntityUtil.NotSupported(
-                                        Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
-                                            call.Method, call.Method.DeclaringType));
+                                    throw new NotSupportedException(Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
+                                        call.Method, call.Method.DeclaringType));
                                 }
                                 break;
                             }
@@ -840,9 +836,8 @@
                                     var toType = parent.GetCastTargetType(actualReturnType, clrReturnType, null, false);
                                     if (toType != null)
                                     {
-                                        throw EntityUtil.NotSupported(
-                                            Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
-                                                call.Method, call.Method.DeclaringType));
+                                        throw new NotSupportedException(Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
+                                            call.Method, call.Method.DeclaringType));
                                     }
                                 }
 
@@ -851,9 +846,8 @@
                                 var expectedReturnType = parent.GetValueLayerType(clrReturnType);
                                 if (!TypeSemantics.IsPromotableTo(actualReturnType, expectedReturnType))
                                 {
-                                    throw EntityUtil.NotSupported(
-                                        Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
-                                            call.Method, call.Method.DeclaringType));
+                                    throw new NotSupportedException(Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
+                                        call.Method, call.Method.DeclaringType));
                                 }
 
                                 // For scalar return types, align the return types if needed.
@@ -878,8 +872,7 @@
                 {
                     if (String.IsNullOrEmpty(parameterValue))
                     {
-                        throw EntityUtil.NotSupported(
-                            Strings.ELinq_DbFunctionAttributeParameterNameNotValid(call.Method, call.Method.DeclaringType, parameterName));
+                        throw new NotSupportedException(Strings.ELinq_DbFunctionAttributeParameterNameNotValid(call.Method, call.Method.DeclaringType, parameterName));
                     }
                 }
             }
@@ -1007,7 +1000,7 @@
                             recreatedArgument = updatedType.Null();
                             break;
                         default:
-                            throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedAsUnicodeAndAsNonUnicode(call.Method));
+                            throw new NotSupportedException(Strings.ELinq_UnsupportedAsUnicodeAndAsNonUnicode(call.Method));
                     }
                     return recreatedArgument;
                 }
@@ -1317,8 +1310,7 @@
                         var arg2 = parent.TranslateExpression(call.Arguments[1]);
                         if (!IsNonNegativeIntegerConstant(arg2))
                         {
-                            throw EntityUtil.NotSupported(
-                                Strings.ELinq_UnsupportedStringRemoveCase(call.Method, call.Method.GetParameters()[1].Name));
+                            throw new NotSupportedException(Strings.ELinq_UnsupportedStringRemoveCase(call.Method, call.Method.GetParameters()[1].Name));
                         }
 
                         // Build the second substring
@@ -1514,7 +1506,7 @@
                 {
                     if (!IsEmptyArray(call.Arguments[0]))
                     {
-                        throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedTrimStartTrimEndCase(call.Method));
+                        throw new NotSupportedException(Strings.ELinq_UnsupportedTrimStartTrimEndCase(call.Method));
                     }
 
                     return parent.TranslateIntoCanonicalFunction(_canonicalFunctionName, call, call.Object);
@@ -1729,16 +1721,14 @@
                     var intervalLinqExpression = call.Arguments[0] as ConstantExpression;
                     if (intervalLinqExpression == null)
                     {
-                        throw EntityUtil.NotSupported(
-                            Strings.ELinq_UnsupportedVBDatePartNonConstantInterval(call.Method, call.Method.GetParameters()[0].Name));
+                        throw new NotSupportedException(Strings.ELinq_UnsupportedVBDatePartNonConstantInterval(call.Method, call.Method.GetParameters()[0].Name));
                     }
 
                     var intervalValue = intervalLinqExpression.Value.ToString();
                     if (!s_supportedIntervals.Contains(intervalValue))
                     {
-                        throw EntityUtil.NotSupported(
-                            Strings.ELinq_UnsupportedVBDatePartInvalidInterval(
-                                call.Method, call.Method.GetParameters()[0].Name, intervalValue));
+                        throw new NotSupportedException(Strings.ELinq_UnsupportedVBDatePartInvalidInterval(
+                            call.Method, call.Method.GetParameters()[0].Name, intervalValue));
                     }
 
                     CqtExpression result = parent.TranslateIntoCanonicalFunction(intervalValue, call, call.Arguments[1]);
@@ -1879,7 +1869,7 @@
                         ||
                         !TypeSemantics.IsEqualComparable(innerKeySelector.ResultType))
                     {
-                        throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedKeySelector(call.Method.Name));
+                        throw new NotSupportedException(Strings.ELinq_UnsupportedKeySelector(call.Method.Name));
                     }
 
                     var joinCondition = parent.CreateEqualsExpression(
@@ -2387,9 +2377,8 @@
                     }
                     else
                     {
-                        throw EntityUtil.NotSupported(
-                            Strings.ELinq_UnsupportedPassthrough(
-                                call.Method.Name, operand.ResultType.EdmType.Name));
+                        throw new NotSupportedException(Strings.ELinq_UnsupportedPassthrough(
+                            call.Method.Name, operand.ResultType.EdmType.Name));
                     }
                 }
             }
@@ -2415,7 +2404,7 @@
                         ||
                         !(TypeSemantics.IsEntityType(modelType) || TypeSemantics.IsComplexType(modelType)))
                     {
-                        throw EntityUtil.NotSupported(Strings.ELinq_InvalidOfTypeResult(DescribeClrType(clrType)));
+                        throw new NotSupportedException(Strings.ELinq_InvalidOfTypeResult(DescribeClrType(clrType)));
                     }
 
                     // Create an of type expression to filter the original query to include
@@ -2776,7 +2765,7 @@
                 {
                     if (!parent.IsQueryRoot(call))
                     {
-                        throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedNestedFirst);
+                        throw new NotSupportedException(Strings.ELinq_UnsupportedNestedFirst);
                     }
                     return base.TranslateUnary(parent, operand, call);
                 }
@@ -2802,7 +2791,7 @@
                 {
                     if (!parent.IsQueryRoot(call))
                     {
-                        throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedNestedSingle);
+                        throw new NotSupportedException(Strings.ELinq_UnsupportedNestedSingle);
                     }
                     return base.TranslateUnary(parent, operand, call);
                 }
@@ -2891,7 +2880,7 @@
                 {
                     if (!parent.IsQueryRoot(call))
                     {
-                        throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedNestedFirst);
+                        throw new NotSupportedException(Strings.ELinq_UnsupportedNestedFirst);
                     }
                     return base.Translate(parent, call);
                 }
@@ -2916,7 +2905,7 @@
                 {
                     if (!parent.IsQueryRoot(call))
                     {
-                        throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedNestedSingle);
+                        throw new NotSupportedException(Strings.ELinq_UnsupportedNestedSingle);
                     }
                     return base.Translate(parent, call);
                 }
@@ -3248,7 +3237,7 @@
                     {
                         // to avoid confusing error message about the "distinct" type, pre-emptively raise an exception
                         // about the group by key selector
-                        throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedKeySelector(call.Method.Name));
+                        throw new NotSupportedException(Strings.ELinq_UnsupportedKeySelector(call.Method.Name));
                     }
 
                     var keys = new List<KeyValuePair<string, DbExpression>>();
@@ -3375,7 +3364,7 @@
                         ||
                         !TypeSemantics.IsEqualComparable(innerSelector.ResultType))
                     {
-                        throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedKeySelector(call.Method.Name));
+                        throw new NotSupportedException(Strings.ELinq_UnsupportedKeySelector(call.Method.Name));
                     }
                     var nestedCollection = parent.Filter(
                         innerBinding,
@@ -3542,7 +3531,7 @@
                     if (DbExpressionKind.Sort
                         != source.ExpressionKind)
                     {
-                        throw EntityUtil.InvalidOperation(Strings.ELinq_ThenByDoesNotFollowOrderBy);
+                        throw new InvalidOperationException(Strings.ELinq_ThenByDoesNotFollowOrderBy);
                     }
                     var sortExpression = (DbSortExpression)source;
 

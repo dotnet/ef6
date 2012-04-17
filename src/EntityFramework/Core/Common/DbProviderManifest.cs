@@ -153,8 +153,7 @@ namespace System.Data.Entity.Core.Common
                     // we don't want folks to have to know all the various types of exceptions that can 
                     // occur, so we just rethrow a ProviderIncompatibleException and make whatever we caught  
                     // the inner exception of it.
-                    throw EntityUtil.ProviderIncompatible(
-                        Strings.EntityClient_FailedToGetInformation(informationType), e);
+                    throw new ProviderIncompatibleException(Strings.EntityClient_FailedToGetInformation(informationType), e);
                 }
                 throw;
             }
@@ -168,7 +167,7 @@ namespace System.Data.Entity.Core.Common
                     return DbProviderServices.GetConceptualSchemaDefinition(informationType);
                 }
 
-                throw EntityUtil.ProviderIncompatible(Strings.ProviderReturnedNullForGetDbInformation(informationType));
+                throw new ProviderIncompatibleException(Strings.ProviderReturnedNullForGetDbInformation(informationType));
             }
             return reader;
         }
@@ -197,7 +196,7 @@ namespace System.Data.Entity.Core.Common
         /// <returns>The argument with the wildcards and the escape character escaped</returns>
         public virtual string EscapeLikeArgument(string argument)
         {
-            throw EntityUtil.ProviderIncompatible(Strings.ProviderShouldOverrideEscapeLikeArgument);
+            throw new ProviderIncompatibleException(Strings.ProviderShouldOverrideEscapeLikeArgument);
         }
     }
 }

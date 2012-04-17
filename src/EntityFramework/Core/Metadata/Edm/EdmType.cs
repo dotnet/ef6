@@ -242,6 +242,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         public override string ToString()
         {
+            // Note that ToString is actually used to get the full name of the type, so changing the value returned here
+            // will break code.
             return FullName;
         }
 

@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
 
     /// <summary> 
     ///   This class represents a query parameter at the object layer, which consists
@@ -68,12 +69,12 @@ namespace System.Data.Entity.Core.Objects
         /// </exception>
         public ObjectParameter(string name, Type type)
         {
-            EntityUtil.CheckArgumentNull(name, "name");
-            EntityUtil.CheckArgumentNull(type, "type");
+            Contract.Requires(name != null);
+            Contract.Requires(type != null);
 
             if (!ValidateParameterName(name))
             {
-                throw EntityUtil.Argument(Strings.ObjectParameter_InvalidParameterName(name), "name");
+                throw new ArgumentException(Strings.ObjectParameter_InvalidParameterName(name), "name");
             }
 
             _name = name;
@@ -112,12 +113,12 @@ namespace System.Data.Entity.Core.Objects
         /// </exception>
         public ObjectParameter(string name, object value)
         {
-            EntityUtil.CheckArgumentNull(name, "name");
-            EntityUtil.CheckArgumentNull(value, "value");
+            Contract.Requires(name != null);
+            Contract.Requires(value != null);
 
             if (!ValidateParameterName(name))
             {
-                throw EntityUtil.Argument(Strings.ObjectParameter_InvalidParameterName(name), "name");
+                throw new ArgumentException(Strings.ObjectParameter_InvalidParameterName(name), "name");
             }
 
             _name = name;

@@ -624,7 +624,7 @@ namespace System.Data.Entity.Spatial
         {
             if (!distance.HasValue)
             {
-                throw EntityUtil.ArgumentNull("distance");
+                throw new ArgumentNullException("distance");
             }
             return spatialSvcs.Buffer(this, distance.Value);
         }

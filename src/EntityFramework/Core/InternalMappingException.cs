@@ -2,6 +2,7 @@ namespace System.Data.Entity.Core
 {
     using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Runtime.Serialization;
 
     /// <summary>
@@ -58,7 +59,7 @@ namespace System.Data.Entity.Core
         internal InternalMappingException(string message, ErrorLog errorLog)
             : base(message)
         {
-            EntityUtil.CheckArgumentNull(errorLog, "errorLog");
+            Contract.Requires(errorLog != null);
             m_errorLog = errorLog;
         }
 
@@ -66,7 +67,7 @@ namespace System.Data.Entity.Core
         internal InternalMappingException(string message, ErrorLog.Record record)
             : base(message)
         {
-            EntityUtil.CheckArgumentNull(record, "record");
+            Contract.Requires(record != null);
             m_errorLog = new ErrorLog();
             m_errorLog.AddEntry(record);
         }

@@ -90,7 +90,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 var foundVar = varEnumerator.MoveNext();
                 if (foundProp != foundVar)
                 {
-                    throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.ColumnCountMismatch, 1);
+                    throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.ColumnCountMismatch, 1, null);
                 }
                 if (!foundProp)
                 {

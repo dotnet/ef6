@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -225,7 +226,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         internal TypeResolver(Perspective perspective, ParserOptions parserOptions)
         {
-            EntityUtil.CheckArgumentNull(perspective, "perspective");
+            Contract.Requires(perspective != null);
 
             _perspective = perspective;
             _parserOptions = parserOptions;
@@ -284,7 +285,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         {
             if (_aliasedNamespaces.ContainsKey(alias))
             {
-                throw EntityUtil.EntitySqlError(errCtx, Strings.NamespaceAliasAlreadyUsed(alias));
+                string message = Strings.NamespaceAliasAlreadyUsed(alias);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             _aliasedNamespaces.Add(alias, @namespace);
@@ -297,7 +299,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         {
             if (_namespaces.Contains(@namespace))
             {
-                throw EntityUtil.EntitySqlError(errCtx, Strings.NamespaceAlreadyImported(@namespace.Name));
+                string message = Strings.NamespaceAlreadyImported(@namespace.Name);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             _namespaces.Add(@namespace);
@@ -328,7 +331,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 overload.Parameters.Select(p => p.ResultType).SequenceEqual(
                     functionInfo.Parameters.Select(p => p.ResultType), TypeUsageStructuralComparer.Instance)))
             {
-                throw EntityUtil.EntitySqlError(functionInfo.FunctionDefAst.ErrCtx, Strings.DuplicatedInlineFunctionOverload(name));
+                ErrorContext errCtx = functionInfo.FunctionDefAst.ErrCtx;
+                string message = Strings.DuplicatedInlineFunctionOverload(name);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             overloads.Add(functionInfo);
@@ -440,14 +445,15 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     }
                     else
                     {
-                        throw EntityUtil.EntitySqlError(errCtx, Strings.NotAMemberOfType(name, qualifier.Name));
+                        string message = Strings.NotAMemberOfType(name, qualifier.Name);
+                        throw EntitySqlException.Create(errCtx, message, null);
                     }
                 }
             }
 
-            throw EntityUtil.EntitySqlError(
-                errCtx, Strings.InvalidMetadataMemberClassResolution(
-                    qualifier.Name, qualifier.MetadataMemberClassName, MetadataNamespace.NamespaceClassName));
+            string message1 = Strings.InvalidMetadataMemberClassResolution(
+                qualifier.Name, qualifier.MetadataMemberClassName, MetadataNamespace.NamespaceClassName);
+            throw EntitySqlException.Create(errCtx, message1, null);
         }
 
         internal MetadataMember ResolveUnqualifiedName(string name, bool partOfQualifiedName, ErrorContext errCtx)
@@ -600,7 +606,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         private static Exception AmbiguousMetadataMemberName(ErrorContext errCtx, string name, MetadataNamespace ns1, MetadataNamespace ns2)
         {
-            throw EntityUtil.EntitySqlError(errCtx, Strings.AmbiguousMetadataMemberName(name, ns1.Name, ns2 != null ? ns2.Name : null));
+            string message = Strings.AmbiguousMetadataMemberName(name, ns1.Name, ns2 != null ? ns2.Name : null);
+            throw EntitySqlException.Create(errCtx, message, null);
         }
 
         /// <summary>

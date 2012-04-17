@@ -2,6 +2,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Objects.ELinq;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Text;
     using System.Threading;
@@ -168,7 +169,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     if (prop == null)
                     {
-                        throw EntityUtil.CollectionParameterElementIsNull("properties");
+                        throw new ArgumentException(Strings.ADP_CollectionParameterElementIsNull("properties"));
                     }
                     i++;
                 }

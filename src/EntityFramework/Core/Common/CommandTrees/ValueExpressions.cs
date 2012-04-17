@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Represents a constant value.
@@ -88,7 +89,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -107,7 +108,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -135,7 +136,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -154,7 +155,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -195,7 +196,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -214,7 +215,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -255,7 +256,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -274,7 +275,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -330,7 +331,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -349,7 +350,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -365,7 +366,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public static implicit operator KeyValuePair<string, DbExpression>(DbPropertyExpression value)
         {
-            EntityUtil.CheckArgumentNull(value, "value");
+            Contract.Requires(value != null);
             return value.ToKeyValuePair();
         }
     }
@@ -420,7 +421,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -439,7 +440,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -494,7 +495,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -513,7 +514,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -707,7 +708,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -726,7 +727,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -750,23 +751,23 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             // Validate that the specified relationship ends are:
             // 1. Non-null
             // 2. From the same metadata workspace as that used by the command tree
-            EntityUtil.CheckArgumentNull(sourceEnd, "sourceEnd");
-            EntityUtil.CheckArgumentNull(targetEnd, "targetEnd");
+            Contract.Requires(sourceEnd != null);
+            Contract.Requires(targetEnd != null);
 
             // Validate that the specified target entity ref is:
             // 1. Non-null
-            EntityUtil.CheckArgumentNull(targetEntityRef, "targetEntityRef");
+            Contract.Requires(targetEntityRef != null);
 
             // Validate that the specified source and target ends are:
             // 1. Declared by the same relationship type
             if (!ReferenceEquals(sourceEnd.DeclaringType, targetEnd.DeclaringType))
             {
-                throw EntityUtil.Argument(Strings.Cqt_RelatedEntityRef_TargetEndFromDifferentRelationship, "targetEnd");
+                throw new ArgumentException(Strings.Cqt_RelatedEntityRef_TargetEndFromDifferentRelationship, "targetEnd");
             }
             // 2. Not the same end
             if (ReferenceEquals(sourceEnd, targetEnd))
             {
-                throw EntityUtil.Argument(Strings.Cqt_RelatedEntityRef_TargetEndSameAsSourceEnd, "targetEnd");
+                throw new ArgumentException(Strings.Cqt_RelatedEntityRef_TargetEndSameAsSourceEnd, "targetEnd");
             }
 
             // Validate that the specified target end has multiplicity of at most one
@@ -774,13 +775,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                 &&
                 targetEnd.RelationshipMultiplicity != RelationshipMultiplicity.ZeroOrOne)
             {
-                throw EntityUtil.Argument(Strings.Cqt_RelatedEntityRef_TargetEndMustBeAtMostOne, "targetEnd");
+                throw new ArgumentException(Strings.Cqt_RelatedEntityRef_TargetEndMustBeAtMostOne, "targetEnd");
             }
 
             // Validate that the specified target entity ref actually has a ref result type
             if (!TypeSemantics.IsReferenceType(targetEntityRef.ResultType))
             {
-                throw EntityUtil.Argument(Strings.Cqt_RelatedEntityRef_TargetEntityNotRef, "targetEntityRef");
+                throw new ArgumentException(Strings.Cqt_RelatedEntityRef_TargetEntityNotRef, "targetEntityRef");
             }
 
             // Validate that the specified target entity is of a type that can be reached by navigating to the specified relationship end
@@ -790,7 +791,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             if (!endType.EdmEquals(targetType)
                 && !TypeSemantics.IsSubTypeOf(targetType, endType))
             {
-                throw EntityUtil.Argument(Strings.Cqt_RelatedEntityRef_TargetEntityNotCompatible, "targetEntityRef");
+                throw new ArgumentException(Strings.Cqt_RelatedEntityRef_TargetEntityNotCompatible, "targetEntityRef");
             }
 
             // Validation succeeded, initialize state
@@ -875,7 +876,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -894,7 +895,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -949,7 +950,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -968,7 +969,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -998,7 +999,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -1017,7 +1018,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -1058,7 +1059,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -1077,7 +1078,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }

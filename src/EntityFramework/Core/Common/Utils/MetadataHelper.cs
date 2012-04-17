@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Common.Utils
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -126,7 +127,9 @@ namespace System.Data.Entity.Core.Common.Utils
                 ||
                 !modelEdmType.EdmEquals(spatialNormalizedEdmType))
             {
-                throw EntityUtil.ExecuteFunctionTypeMismatch(typeof(TElement), expectedEdmType);
+                throw new InvalidOperationException(Strings.ObjectContext_ExecuteFunctionTypeMismatch(
+                    typeof(TElement).FullName,
+                    expectedEdmType.FullName));
             }
         }
 

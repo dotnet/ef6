@@ -237,7 +237,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         // Even though it is the job of metadata to ensure that the provider manifest is consistent.
                         // Ensure that if a function is marked as aggregate, then the argument type must be of collection{GivenType}.
                         //
-                        throw EntityUtil.EntitySqlError(Strings.InvalidArgumentTypeForAggregateFunction);
+                        string message = Strings.InvalidArgumentTypeForAggregateFunction;
+                        throw new EntitySqlException(message);
                     }
                     parameterType = TypeHelpers.GetElementTypeUsage(parameterType);
                 }
@@ -323,7 +324,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
                 if (promotionIndex < 0)
                 {
-                    throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.FailedToGeneratePromotionRank, 1);
+                    throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.FailedToGeneratePromotionRank, 1, null);
                 }
 
                 return -promotionIndex;
@@ -346,13 +347,13 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
                 if (t == null)
                 {
-                    throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.FailedToGeneratePromotionRank, 2);
+                    throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.FailedToGeneratePromotionRank, 2, null);
                 }
 
                 return -promotionIndex;
             }
 
-            throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.FailedToGeneratePromotionRank, 3);
+            throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.FailedToGeneratePromotionRank, 3, null);
         }
     }
 }

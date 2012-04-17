@@ -19,6 +19,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -142,8 +143,9 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         /// <param name="connection">connection to the store</param>
         public ObjectContext(EntityConnection connection)
-            : this(EntityUtil.CheckArgumentNull(connection, "connection"), true)
+            : this(connection, true)
         {
+            Contract.Requires(connection != null);
         }
 
         /// <summary>
@@ -203,6 +205,7 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         private ObjectContext(EntityConnection connection, bool isConnectionConstructor)
         {
             Debug.Assert(null != connection, "null connection");
@@ -215,7 +218,7 @@ namespace System.Data.Entity.Core.Objects
             if (connectionString == null
                 || connectionString.Trim().Length == 0)
             {
-                throw EntityUtil.InvalidConnection(isConnectionConstructor, null);
+                throw isConnectionConstructor ? new ArgumentException(Strings.ObjectContext_InvalidConnection, "connection", null) : new ArgumentException(Strings.ObjectContext_InvalidConnectionString, "connectionString", null);
             }
 
             try
@@ -226,7 +229,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 // Intercept exceptions retrieving workspace, and wrap exception in appropriate
                 // message based on which constructor pattern is being used.
-                throw EntityUtil.InvalidConnection(isConnectionConstructor, e);
+                throw isConnectionConstructor ? new ArgumentException(Strings.ObjectContext_InvalidConnection, "connection", e) : new ArgumentException(Strings.ObjectContext_InvalidConnectionString, "connectionString", e);
             }
 
             // Register the O and OC metadata
@@ -266,7 +269,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 if (_connection == null)
                 {
-                    throw EntityUtil.ObjectContextDisposed();
+                    throw new ObjectDisposedException(null, Strings.ObjectContext_ObjectDisposed);
                 }
 
                 return _connection;
@@ -291,7 +294,7 @@ namespace System.Data.Entity.Core.Objects
                 }
                 else
                 {
-                    throw EntityUtil.CannotSetDefaultContainerName();
+                    throw new InvalidOperationException(Strings.ObjectContext_CannotSetDefaultContainerName);
                 }
             }
         }
@@ -348,7 +351,7 @@ namespace System.Data.Entity.Core.Objects
                 if (value.HasValue
                     && value < 0)
                 {
-                    throw EntityUtil.InvalidCommandTimeout("value");
+                    throw new ArgumentException(Strings.ObjectContext_InvalidCommandTimeout, "value");
                 }
                 _queryTimeout = value;
             }
@@ -527,7 +530,7 @@ namespace System.Data.Entity.Core.Objects
             // Check if entity set was found
             if (entitySet == null)
             {
-                throw EntityUtil.EntitySetNameOrEntityKeyRequired();
+                throw new InvalidOperationException(Strings.ObjectContext_EntitySetNameOrEntityKeyRequired);
             }
 
             ValidateEntitySet(entitySet, wrappedEntity.IdentityType);
@@ -548,7 +551,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 if (!ReferenceEquals(existingEntry.Entity, wrappedEntity.Entity))
                 {
-                    throw EntityUtil.ObjectStateManagerContainsThisEntityKey();
+                    throw new InvalidOperationException(Strings.ObjectStateManager_ObjectStateManagerContainsThisEntityKey);
                 }
                 else
                 {
@@ -557,9 +560,8 @@ namespace System.Data.Entity.Core.Objects
                     if (existingEntry.State != exptectedState)
                     {
                         throw doAttach
-                                  ? EntityUtil.EntityAlreadyExistsInObjectStateManager()
-                                  : EntityUtil.ObjectStateManagerDoesnotAllowToReAddUnchangedOrModifiedOrDeletedEntity(
-                                      existingEntry.State);
+                                  ? new InvalidOperationException(Strings.ObjectContext_EntityAlreadyExistsInObjectStateManager)
+                                  : new InvalidOperationException(Strings.ObjectStateManager_DoesnotAllowToReAddUnchangedOrModifiedOrDeletedEntity(existingEntry.State));
                     }
                     else
                     {
@@ -587,10 +589,10 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="entity">Object to be added.</param>
         public void AddObject(string entitySetName, object entity)
         {
+            Contract.Requires(entity != null);
+
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
-            EntityUtil.CheckArgumentNull(entity, "entity");
-
             EntityEntry existingEntry;
             var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContextGettingEntry(entity, this, out existingEntry);
 
@@ -822,7 +824,7 @@ namespace System.Data.Entity.Core.Objects
         // RelationshipManager while loading the RelatedEnd.
         internal static string ParsePropertySelectorExpression<TEntity>(Expression<Func<TEntity, object>> selector, out bool removedConvert)
         {
-            EntityUtil.CheckArgumentNull(selector, "selector");
+            Contract.Requires(selector != null);
 
             // We used to throw an ArgumentException if the expression contained a Convert.  Now we remove the convert,
             // but if we still need to throw, then we should still throw an ArgumentException to avoid a breaking change.
@@ -858,8 +860,9 @@ namespace System.Data.Entity.Core.Objects
         [Obsolete("Use ApplyCurrentValues instead")]
         public void ApplyPropertyChanges(string entitySetName, object changed)
         {
+            Contract.Requires(changed != null);
+
             EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
-            EntityUtil.CheckArgumentNull(changed, "changed");
 
             ApplyCurrentValues(entitySetName, changed);
         }
@@ -871,8 +874,9 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="currentEntity">object with modified properties</param>
         public TEntity ApplyCurrentValues<TEntity>(string entitySetName, TEntity currentEntity) where TEntity : class
         {
+            Contract.Requires(currentEntity != null);
+
             EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
-            EntityUtil.CheckArgumentNull(currentEntity, "currentEntity");
             var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(currentEntity, this);
 
             // SQLBUDT 480919: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
@@ -899,7 +903,7 @@ namespace System.Data.Entity.Core.Objects
             if (ose == null
                 || ose.IsKeyEntry)
             {
-                throw EntityUtil.EntityNotTracked();
+                throw new InvalidOperationException(Strings.ObjectStateManager_EntityNotTracked);
             }
 
             ose.ApplyCurrentValuesInternal(wrappedEntity);
@@ -916,9 +920,9 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>updated entity</returns>
         public TEntity ApplyOriginalValues<TEntity>(string entitySetName, TEntity originalEntity) where TEntity : class
         {
-            EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
-            EntityUtil.CheckArgumentNull(originalEntity, "originalEntity");
+            Contract.Requires(originalEntity != null);
 
+            EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
             var wrappedOriginalEntity = EntityWrapperFactory.WrapEntityUsingContext(originalEntity, this);
 
             // SQLBUDT 480919: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
@@ -945,7 +949,7 @@ namespace System.Data.Entity.Core.Objects
             if (ose == null
                 || ose.IsKeyEntry)
             {
-                throw EntityUtil.EntityNotTrackedOrHasTempKey();
+                throw new InvalidOperationException(Strings.ObjectContext_EntityNotTrackedOrHasTempKey);
             }
 
             if (ose.State != EntityState.Modified &&
@@ -953,13 +957,13 @@ namespace System.Data.Entity.Core.Objects
                 &&
                 ose.State != EntityState.Deleted)
             {
-                throw EntityUtil.EntityMustBeUnchangedOrModifiedOrDeleted(ose.State);
+                throw new InvalidOperationException(Strings.ObjectContext_EntityMustBeUnchangedOrModifiedOrDeleted(ose.State.ToString()));
             }
 
             if (ose.WrappedEntity.IdentityType
                 != wrappedOriginalEntity.IdentityType)
             {
-                throw EntityUtil.EntitiesHaveDifferentType(ose.Entity.GetType().FullName, originalEntity.GetType().FullName);
+                throw new ArgumentException(Strings.ObjectContext_EntitiesHaveDifferentType(ose.Entity.GetType().FullName, originalEntity.GetType().FullName));
             }
 
             ose.CompareKeyProperties(originalEntity);
@@ -980,8 +984,9 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="entity"></param>
         public void AttachTo(string entitySetName, object entity)
         {
+            Contract.Requires(entity != null);
+
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
-            EntityUtil.CheckArgumentNull(entity, "entity");
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
 
             EntityEntry existingEntry;
@@ -1068,11 +1073,11 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="entity"></param>        
         public void Attach(IEntityWithKey entity)
         {
-            EntityUtil.CheckArgumentNull(entity, "entity");
+            Contract.Requires(entity != null);
 
             if (null == (object)entity.EntityKey)
             {
-                throw EntityUtil.CannotAttachEntityWithoutKey();
+                throw new InvalidOperationException(Strings.ObjectContext_CannotAttachEntityWithoutKey);
             }
 
             AttachTo(null, entity);
@@ -1110,7 +1115,7 @@ namespace System.Data.Entity.Core.Objects
             // Temporary keys are not allowed
             if (key.IsTemporary)
             {
-                throw EntityUtil.CannotAttachEntityWithTemporaryKey();
+                throw new InvalidOperationException(Strings.ObjectContext_CannotAttachEntityWithTemporaryKey);
             }
 
             if (wrappedEntity.EntityKey != key)
@@ -1159,7 +1164,7 @@ namespace System.Data.Entity.Core.Objects
                 else
                 {
                     Debug.Assert(!ReferenceEquals(entry.Entity, wrappedEntity.Entity));
-                    throw EntityUtil.ObjectStateManagerContainsThisEntityKey();
+                    throw new InvalidOperationException(Strings.ObjectStateManager_ObjectStateManagerContainsThisEntityKey);
                 }
             }
             else
@@ -1196,7 +1201,7 @@ namespace System.Data.Entity.Core.Objects
                 &&
                 wrappedEntity.MergeOption != MergeOption.NoTracking)
             {
-                throw EntityUtil.EntityCantHaveMultipleChangeTrackers();
+                throw new InvalidOperationException(Strings.Entity_EntityCantHaveMultipleChangeTrackers);
             }
         }
 
@@ -1208,10 +1213,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>new instance of entity key</returns>
         public EntityKey CreateEntityKey(string entitySetName, object entity)
         {
+            Contract.Requires(entity != null);
+
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
             EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
-            EntityUtil.CheckArgumentNull(entity, "entity");
-
             // SQLBUDT 480919: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // If the schema types are not loaded: metadata, cache & query would be unable to reason about the type.
             // We will auto-load the entity type's assembly into the ObjectItemCollection.
@@ -1240,7 +1245,7 @@ namespace System.Data.Entity.Core.Objects
             Debug.Assert(!(entityLike is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
             if (null == entityLike)
             {
-                throw EntityUtil.NthElementIsNull(entities.Count);
+                throw new InvalidOperationException(Strings.ObjectContext_NthElementIsNull(entities.Count));
             }
 
             var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(entityLike, this);
@@ -1301,7 +1306,7 @@ namespace System.Data.Entity.Core.Objects
                         if (entitySetForType != null)
                         {
                             // There is more than one EntitySet for this type across all containers in metadata, so we can't determine which one the user intended
-                            throw EntityUtil.MultipleEntitySetsFoundInAllContainers(entityCLRType.FullName, exceptionParameterName);
+                            throw new ArgumentException(Strings.ObjectContext_MultipleEntitySetsFoundInAllContainers(entityCLRType.FullName), exceptionParameterName);
                         }
 
                         entitySetForType = entitySetFromContainer;
@@ -1317,7 +1322,7 @@ namespace System.Data.Entity.Core.Objects
             // We still may not have found a matching EntitySet for this type
             if (entitySetForType == null)
             {
-                throw EntityUtil.NoEntitySetFoundForType(entityCLRType.FullName, exceptionParameterName);
+                throw new ArgumentException(Strings.ObjectContext_NoEntitySetFoundForType(entityCLRType.FullName), exceptionParameterName);
             }
 
             return entitySetForType;
@@ -1340,8 +1345,7 @@ namespace System.Data.Entity.Core.Objects
                     if (entitySet != null)
                     {
                         // There is more than one EntitySet for this type, so we can't determine which one the user intended
-                        throw EntityUtil.MultipleEntitySetsFoundInSingleContainer(
-                            entityCLRType.FullName, container.Name, exceptionParameterName);
+                        throw new ArgumentException(Strings.ObjectContext_MultipleEntitySetsFoundInSingleContainer(entityCLRType.FullName, container.Name), exceptionParameterName);
                     }
 
                     entitySet = (EntitySet)es;
@@ -1385,8 +1389,7 @@ namespace System.Data.Entity.Core.Objects
             var entityEdmType = GetTypeUsage(entityCLRType).EdmType;
             if (entitySet.ElementType != entityEdmType)
             {
-                throw EntityUtil.InvalidEntityTypeForObjectSet(
-                    entityCLRType.FullName, entitySet.ElementType.FullName, entitySetName, exceptionParameterName);
+                throw new ArgumentException(Strings.ObjectContext_InvalidObjectSetTypeForEntitySet(entityCLRType.FullName, entitySet.ElementType.FullName, entitySetName), exceptionParameterName);
             }
 
             return entitySet;
@@ -1403,7 +1406,7 @@ namespace System.Data.Entity.Core.Objects
         {
             if (_connection == null)
             {
-                throw EntityUtil.ObjectContextDisposed();
+                throw new ObjectDisposedException(null, Strings.ObjectContext_ObjectDisposed);
             }
 
             if (ConnectionState.Closed
@@ -1426,7 +1429,7 @@ namespace System.Data.Entity.Core.Objects
                     _connection.State == ConnectionState.Closed
                         ? Strings.EntityClient_ConnectionStateClosed
                         : Strings.EntityClient_ConnectionStateBroken);
-                throw EntityUtil.InvalidOperation(message);
+                throw new InvalidOperationException(message);
             }
 
             try
@@ -1568,7 +1571,7 @@ namespace System.Data.Entity.Core.Objects
         {
             if (_connection == null)
             {
-                throw EntityUtil.ObjectContextDisposed();
+                throw new ObjectDisposedException(null, Strings.ObjectContext_ObjectDisposed);
             }
 
             if (_openedConnection)
@@ -1599,7 +1602,7 @@ namespace System.Data.Entity.Core.Objects
                 // Only throw an ObjectDisposedException if an attempt is made to access the underlying connection object.
                 if (_connection == null)
                 {
-                    throw EntityUtil.ObjectContextDisposed();
+                    throw new ObjectDisposedException(null, Strings.ObjectContext_ObjectDisposed);
                 }
 
                 var connectionWorkspace = _connection.GetMetadataWorkspace();
@@ -1617,7 +1620,7 @@ namespace System.Data.Entity.Core.Objects
                 var contextCSpaceCollection = MetadataWorkspace.GetItemCollection(DataSpace.CSpace);
                 if (!ReferenceEquals(connectionCSpaceCollection, contextCSpaceCollection))
                 {
-                    throw EntityUtil.ContextMetadataHasChanged();
+                    throw new InvalidOperationException(Strings.ObjectContext_MetadataHasChanged);
                 }
                 MetadataWorkspace.RegisterItemCollection(connectionWorkspace.GetItemCollection(DataSpace.SSpace));
                 MetadataWorkspace.RegisterItemCollection(connectionWorkspace.GetItemCollection(DataSpace.CSSpace));
@@ -1635,8 +1638,8 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>an ObjectQuery instance, ready to be executed</returns>
         public ObjectQuery<T> CreateQuery<T>(string queryString, params ObjectParameter[] parameters)
         {
-            EntityUtil.CheckArgumentNull(queryString, "queryString");
-            EntityUtil.CheckArgumentNull(parameters, "parameters");
+            Contract.Requires(queryString != null);
+            Contract.Requires(parameters != null);
 
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // If the schema types are not loaded: metadata, cache & query would be unable to reason about the type.
@@ -1683,7 +1686,7 @@ namespace System.Data.Entity.Core.Objects
         {
             if (_connection == null)
             {
-                throw EntityUtil.ObjectContextDisposed();
+                throw new ObjectDisposedException(null, Strings.ObjectContext_ObjectDisposed);
             }
 
             var connectionWorkspace = _connection.GetMetadataWorkspace(false /* initializeAllConnections */);
@@ -1719,14 +1722,14 @@ namespace System.Data.Entity.Core.Objects
         /// </param>
         internal void DeleteObject(object entity, EntitySet expectedEntitySet)
         {
-            Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
-            EntityUtil.CheckArgumentNull(entity, "entity");
+            Contract.Requires(entity != null);
 
+            Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
             var cacheEntry = ObjectStateManager.FindEntityEntry(entity);
             if (cacheEntry == null
                 || !ReferenceEquals(cacheEntry.Entity, entity))
             {
-                throw EntityUtil.CannotDeleteEntityNotInObjectStateManager();
+                throw new InvalidOperationException(Strings.ObjectContext_CannotDeleteEntityNotInObjectStateManager);
             }
 
             if (expectedEntitySet != null)
@@ -1734,9 +1737,8 @@ namespace System.Data.Entity.Core.Objects
                 var actualEntitySet = cacheEntry.EntitySet;
                 if (actualEntitySet != expectedEntitySet)
                 {
-                    throw EntityUtil.EntityNotInObjectSet_Delete(
-                        actualEntitySet.EntityContainer.Name, actualEntitySet.Name, expectedEntitySet.EntityContainer.Name,
-                        expectedEntitySet.Name);
+                    throw new InvalidOperationException(Strings.ObjectContext_EntityNotInObjectSet_Delete(
+                        actualEntitySet.EntityContainer.Name, actualEntitySet.Name, expectedEntitySet.EntityContainer.Name, expectedEntitySet.Name));
                 }
             }
 
@@ -1770,16 +1772,16 @@ namespace System.Data.Entity.Core.Objects
         /// </param>        
         internal void Detach(object entity, EntitySet expectedEntitySet)
         {
-            Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
-            EntityUtil.CheckArgumentNull(entity, "entity");
+            Contract.Requires(entity != null);
 
+            Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
             var cacheEntry = ObjectStateManager.FindEntityEntry(entity);
             if (cacheEntry == null ||
                 !ReferenceEquals(cacheEntry.Entity, entity)
                 ||
                 cacheEntry.Entity == null) // this condition includes key entries and relationship entries
             {
-                throw EntityUtil.CannotDetachEntityNotInObjectStateManager();
+                throw new InvalidOperationException(Strings.ObjectContext_CannotDetachEntityNotInObjectStateManager);
             }
 
             if (expectedEntitySet != null)
@@ -1787,9 +1789,8 @@ namespace System.Data.Entity.Core.Objects
                 var actualEntitySet = cacheEntry.EntitySet;
                 if (actualEntitySet != expectedEntitySet)
                 {
-                    throw EntityUtil.EntityNotInObjectSet_Detach(
-                        actualEntitySet.EntityContainer.Name, actualEntitySet.Name, expectedEntitySet.EntityContainer.Name,
-                        expectedEntitySet.Name);
+                    throw new InvalidOperationException(Strings.ObjectContext_EntityNotInObjectSet_Detach(
+                        actualEntitySet.EntityContainer.Name, actualEntitySet.Name, expectedEntitySet.EntityContainer.Name, expectedEntitySet.Name));
                 }
             }
 
@@ -1864,7 +1865,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 if (!MetadataWorkspace.TryGetEntityContainer(entityContainerName, DataSpace.CSpace, out container))
                 {
-                    throw EntityUtil.EntityContainterNotFoundForName(entityContainerName);
+                    throw new InvalidOperationException(Strings.ObjectContext_EntityContainerNotFoundForName(entityContainerName));
                 }
             }
 
@@ -1872,7 +1873,7 @@ namespace System.Data.Entity.Core.Objects
 
             if (!container.TryGetEntitySetByName(entitySetName, false, out entitySet))
             {
-                throw EntityUtil.EntitySetNotFoundForName(TypeHelpers.GetFullName(container.Name, entitySetName));
+                throw new InvalidOperationException(Strings.ObjectContext_EntitySetNotFoundForName(TypeHelpers.GetFullName(container.Name, entitySetName)));
             }
 
             return entitySet;
@@ -1888,7 +1889,7 @@ namespace System.Data.Entity.Core.Objects
             var result = qualifiedName.Split('.');
             if (result.Length > 2)
             {
-                throw EntityUtil.QualfiedEntitySetName(parameterName);
+                throw new ArgumentException(Strings.ObjectContext_QualfiedEntitySetName, parameterName);
             }
             if (result.Length == 1) // if not '.' at all
             {
@@ -1901,19 +1902,19 @@ namespace System.Data.Entity.Core.Objects
                 if (container == null
                     || container.Length == 0) // if it starts with '.'
                 {
-                    throw EntityUtil.QualfiedEntitySetName(parameterName);
+                    throw new ArgumentException(Strings.ObjectContext_QualfiedEntitySetName, parameterName);
                 }
             }
             if (entityset == null
                 || entityset.Length == 0) // if it's not in the form "ES name . containername"
             {
-                throw EntityUtil.QualfiedEntitySetName(parameterName);
+                throw new ArgumentException(Strings.ObjectContext_QualfiedEntitySetName, parameterName);
             }
 
             if (context != null && String.IsNullOrEmpty(container)
                 && (context.Perspective.GetDefaultContainer() == null))
             {
-                throw EntityUtil.ContainerQualifiedEntitySetNameRequired(parameterName);
+                throw new ArgumentException(Strings.ObjectContext_ContainerQualifiedEntitySetNameRequired, parameterName);
             }
         }
 
@@ -1922,12 +1923,13 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         /// <param name="entitySet">an EntitySet</param>
         /// <param name="entityType">The CLR type of an entity instance</param>
+        [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         private void ValidateEntitySet(EntitySet entitySet, Type entityType)
         {
             var entityTypeUsage = GetTypeUsage(entityType);
             if (!entitySet.ElementType.IsAssignableFrom(entityTypeUsage.EdmType))
             {
-                throw EntityUtil.InvalidEntitySetOnEntity(entitySet.Name, entityType, "entity");
+                throw new ArgumentException(Strings.ObjectContext_InvalidEntitySetOnEntity(entitySet.Name, entityType), "entity");
             }
         }
 
@@ -1941,7 +1943,8 @@ namespace System.Data.Entity.Core.Objects
                 ||
                 !TypeSemantics.IsEntityType(entityTypeUsage))
             {
-                throw EntityUtil.InvalidEntityType(entityCLRType);
+                Debug.Assert(entityCLRType != null, "The type cannot be null.");
+                throw new InvalidOperationException(Strings.ObjectContext_NoMappingForEntityType(entityCLRType.FullName));
             }
             Debug.Assert(entityTypeUsage != null, "entityTypeUsage is null");
             return entityTypeUsage;
@@ -1957,7 +1960,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>Entity object.</returns>
         public object GetObjectByKey(EntityKey key)
         {
-            EntityUtil.CheckArgumentNull(key, "key");
+            Contract.Requires(key != null);
 
             var entitySet = key.GetEntitySet(MetadataWorkspace);
             Debug.Assert(entitySet != null, "Key's EntitySet should not be null in the MetadataWorkspace");
@@ -1971,7 +1974,7 @@ namespace System.Data.Entity.Core.Objects
             object entity;
             if (!TryGetObjectByKey(key, out entity))
             {
-                throw EntityUtil.ObjectNotFound();
+                throw new ObjectNotFoundException(Strings.ObjectContext_ObjectNotFound);
             }
             return entity;
         }
@@ -1989,12 +1992,12 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentException">collection contains null or non entities or entities not attached to this context</exception>
         public void Refresh(RefreshMode refreshMode, IEnumerable collection)
         {
+            Contract.Requires(collection != null);
+
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
             try
             {
                 EntityUtil.CheckArgumentRefreshMode(refreshMode);
-                EntityUtil.CheckArgumentNull(collection, "collection");
-
                 // collection may not contain any entities -- this is valid for this overload
                 RefreshEntities(refreshMode, collection);
             }
@@ -2014,13 +2017,13 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentException">entity is not attached to this context</exception>
         public void Refresh(RefreshMode refreshMode, object entity)
         {
+            Contract.Requires(entity != null);
+
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
             try
             {
                 EntityUtil.CheckArgumentRefreshMode(refreshMode);
-                EntityUtil.CheckArgumentNull(entity, "entity");
-
                 RefreshEntities(refreshMode, new[] { entity });
             }
             finally
@@ -2043,12 +2046,12 @@ namespace System.Data.Entity.Core.Objects
             var entry = ObjectStateManager.FindEntityEntry(key);
             if (null == entry)
             {
-                throw EntityUtil.NthElementNotInObjectStateManager(entities.Count);
+                throw new InvalidOperationException(Strings.ObjectContext_NthElementNotInObjectStateManager(entities.Count));
             }
             if (EntityState.Added
                 == entry.State)
             {
-                throw EntityUtil.NthElementInAddedState(entities.Count);
+                throw new InvalidOperationException(Strings.ObjectContext_NthElementInAddedState(entities.Count));
             }
             Debug.Assert(EntityState.Added != entry.State, "not expecting added");
             Debug.Assert(EntityState.Detached != entry.State, "not expecting detached");
@@ -2059,7 +2062,7 @@ namespace System.Data.Entity.Core.Objects
             }
             catch (ArgumentException)
             {
-                throw EntityUtil.NthElementIsDuplicate(entities.Count);
+                throw new InvalidOperationException(Strings.ObjectContext_NthElementIsDuplicate(entities.Count));
             }
 
             Debug.Assert(null != (object)key, "null entity.Key");
@@ -2174,7 +2177,7 @@ namespace System.Data.Entity.Core.Objects
                     // If there were items that could not be found, throw an exception
                     if (builder.Length > 0)
                     {
-                        throw EntityUtil.ClientEntityRemovedFromStore(builder.ToString());
+                        throw new InvalidOperationException(Strings.ObjectContext_ClientEntityRemovedFromStore(builder.ToString()));
                     }
                 }
 
@@ -2287,12 +2290,15 @@ namespace System.Data.Entity.Core.Objects
 
                     var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(entity, this);
                     var key = wrappedEntity.EntityKey;
-                    EntityUtil.CheckEntityKeyNull(key);
+                    if ((object)key == null)
+                    {
+                        throw new InvalidOperationException(Strings.EntityKey_UnexpectedNull);
+                    }
 
                     // Dev10#673631 - An incorrectly returned entity should result in an exception to avoid further corruption to the OSM.
                     if (!trackedEntities.Remove(key))
                     {
-                        throw EntityUtil.StoreEntityNotPresentInClient();
+                        throw new InvalidOperationException(Strings.ObjectContext_StoreEntityNotPresentInClient);
                     }
                 }
             }
@@ -2397,7 +2403,7 @@ namespace System.Data.Entity.Core.Objects
                     }
                     if (_adapter == null)
                     {
-                        throw EntityUtil.InvalidDataAdapter();
+                        throw new InvalidOperationException(Strings.ObjectContext_InvalidDataAdapter);
                     }
                 }
                 // only accept changes after the local transaction commits
@@ -2476,7 +2482,7 @@ namespace System.Data.Entity.Core.Objects
                         // We should not be wrapping all exceptions
                         if (EntityUtil.IsCatchableExceptionType(e))
                         {
-                            throw EntityUtil.AcceptAllChangesFailure(e);
+                            throw new InvalidOperationException(Strings.ObjectContext_AcceptAllChangesFailure(e.Message));
                         }
                         throw;
                     }
@@ -2619,8 +2625,8 @@ namespace System.Data.Entity.Core.Objects
         public ObjectResult<TElement> ExecuteFunction<TElement>(
             string functionName, MergeOption mergeOption, params ObjectParameter[] parameters)
         {
+            Contract.Requires(parameters != null);
             EntityUtil.CheckStringArgument(functionName, "function");
-            EntityUtil.CheckArgumentNull(parameters, "parameters");
 
             EdmFunction functionImport;
             var entityCommand = CreateEntityCommandForFunctionImport(functionName, out functionImport, parameters);
@@ -2650,8 +2656,8 @@ namespace System.Data.Entity.Core.Objects
         /// does not exist, refers to a function with return type incompatible with T)</exception>
         public int ExecuteFunction(string functionName, params ObjectParameter[] parameters)
         {
+            Contract.Requires(parameters != null);
             EntityUtil.CheckStringArgument(functionName, "function");
-            EntityUtil.CheckArgumentNull(parameters, "parameters");
 
             EdmFunction functionImport;
             var entityCommand = CreateEntityCommandForFunctionImport(functionName, out functionImport, parameters);
@@ -2669,7 +2675,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 if (EntityUtil.IsCatchableEntityExceptionType(e))
                 {
-                    throw EntityUtil.CommandExecution(Strings.EntityClient_CommandExecutionFailed, e);
+                    throw new EntityCommandExecutionException(Strings.EntityClient_CommandExecutionFailed, e);
                 }
                 throw;
             }
@@ -2689,7 +2695,7 @@ namespace System.Data.Entity.Core.Objects
                 var parameter = parameters[i];
                 if (null == parameter)
                 {
-                    throw EntityUtil.InvalidOperation(Strings.ObjectContext_ExecuteFunctionCalledWithNullParameter(i));
+                    throw new InvalidOperationException(Strings.ObjectContext_ExecuteFunctionCalledWithNullParameter(i));
                 }
             }
 
@@ -2737,7 +2743,7 @@ namespace System.Data.Entity.Core.Objects
                 ReleaseConnection();
                 if (EntityUtil.IsCatchableEntityExceptionType(e))
                 {
-                    throw EntityUtil.CommandExecution(Strings.EntityClient_CommandExecutionFailed, e);
+                    throw new EntityCommandExecutionException(Strings.EntityClient_CommandExecutionFailed, e);
                 }
                 throw;
             }
@@ -2988,7 +2994,7 @@ namespace System.Data.Entity.Core.Objects
         /// </exception
         public static Type GetObjectType(Type type)
         {
-            EntityUtil.CheckArgumentNull(type, "type");
+            Contract.Requires(type != null);
 
             return EntityProxyFactory.IsProxyType(type) ? type.BaseType : type;
         }
@@ -3217,7 +3223,7 @@ namespace System.Data.Entity.Core.Objects
         private ObjectResult<TElement> InternalTranslate<TElement>(
             DbDataReader reader, string entitySetName, MergeOption mergeOption, bool readerOwned)
         {
-            EntityUtil.CheckArgumentNull(reader, "reader");
+            Contract.Requires(reader != null);
             EntityUtil.CheckArgumentMergeOption(mergeOption);
             EntitySet entitySet = null;
             if (!string.IsNullOrEmpty(entitySetName))
@@ -3243,10 +3249,9 @@ namespace System.Data.Entity.Core.Objects
                 if (entitySet != null
                     && !entitySet.ElementType.IsAssignableFrom(modelEdmType))
                 {
-                    throw EntityUtil.InvalidOperation(
-                        Strings.ObjectContext_InvalidEntitySetForStoreQuery(
-                            entitySet.EntityContainer.Name,
-                            entitySet.Name, typeof(TElement)));
+                    throw new InvalidOperationException(Strings.ObjectContext_InvalidEntitySetForStoreQuery(
+                        entitySet.EntityContainer.Name,
+                        entitySet.Name, typeof(TElement)));
                 }
 
                 columnMap = ColumnMapFactory.CreateColumnMapFromReaderAndType(reader, modelEdmType, entitySet, null);
@@ -3320,7 +3325,7 @@ namespace System.Data.Entity.Core.Objects
                 }
                 else
                 {
-                    throw EntityUtil.InvalidOperation(Strings.ObjectContext_ExecuteCommandWithMixOfDbParameterAndValues);
+                    throw new InvalidOperationException(Strings.ObjectContext_ExecuteCommandWithMixOfDbParameterAndValues);
                 }
 
                 command.Parameters.AddRange(dbParameters);

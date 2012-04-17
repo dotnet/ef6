@@ -197,7 +197,7 @@
             if (ordinal < 0
                 || ordinal >= RecordStateFactory.ColumnCount)
             {
-                throw EntityUtil.ArgumentOutOfRange("ordinal");
+                throw new ArgumentOutOfRangeException("ordinal");
             }
             return RecordStateFactory.ColumnNames[ordinal];
         }

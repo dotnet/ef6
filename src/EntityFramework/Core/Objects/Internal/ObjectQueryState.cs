@@ -2,6 +2,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Runtime.CompilerServices;
@@ -63,10 +64,10 @@ namespace System.Data.Entity.Core.Objects.Internal
         protected ObjectQueryState(Type elementType, ObjectContext context, ObjectParameterCollection parameters, Span span)
         {
             // Validate the element type
-            EntityUtil.CheckArgumentNull(elementType, "elementType");
+            Contract.Requires(elementType != null);
 
             // Validate the context
-            EntityUtil.CheckArgumentNull(context, "context");
+            Contract.Requires(context != null);
 
             // Parameters and Span are specifically allowed to be null
 

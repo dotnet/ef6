@@ -4,8 +4,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
+    using System.Linq;
 
     /// <summary>
     /// Manages interactions between keys in the update pipeline (e.g. via referential constraints)
@@ -28,15 +31,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private const NodeColor White = 0;
         private const NodeColor Black = 1;
         private const NodeColor Gray = 2;
-
-        #endregion
-
-        #region Constructors
-
-        internal KeyManager(UpdateTranslator translator)
-        {
-            EntityUtil.CheckArgumentNull(translator, "translator");
-        }
 
         #endregion
 
@@ -187,7 +181,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         // subsequent results are validated for consistency with the first
                         if (!ByValueEqualityComparer.Default.Equals(value, ownerResult.GetSimpleValue()))
                         {
-                            throw EntityUtil.Constraint(Strings.Update_ReferentialConstraintIntegrityViolation);
+                            throw new ConstraintException(Strings.Update_ReferentialConstraintIntegrityViolation);
                         }
                     }
                 }
@@ -393,7 +387,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                                 }
                             }
 
-                            throw EntityUtil.Update(Strings.Update_CircularRelationships, null, stateEntriesInCycle);
+                            throw new UpdateException(Strings.Update_CircularRelationships, null, stateEntriesInCycle.Cast<ObjectStateEntry>().Distinct());
                         }
                     default:
                         // done

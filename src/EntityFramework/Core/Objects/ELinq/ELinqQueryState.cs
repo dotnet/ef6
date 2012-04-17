@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Linq.Expressions;
     using System.Reflection;
 
@@ -42,7 +43,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // public APIs on ObjectQuery and must be checked here
             // (the base class performs similar checks on the ObjectContext and MergeOption arguments).
             //
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
             // closure bindings and initializers are explicitly allowed to be null
 
             _expression = expression;
@@ -59,7 +60,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         internal ELinqQueryState(Type elementType, ObjectQuery query, Expression expression)
             : base(elementType, query)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
             _expression = expression;
         }
 

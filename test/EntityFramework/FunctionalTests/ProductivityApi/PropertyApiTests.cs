@@ -7,6 +7,7 @@ namespace ProductivityApiTests
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Resources;
     using System.Linq;
     using System.Transactions;
     using AdvancedPatternsModel;
@@ -1229,9 +1230,8 @@ namespace ProductivityApiTests
                 var hamilton = context.Drivers.Where(d => d.Name == "Lewis Hamilton").Single();
                 var stateEntry = GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(hamilton);
 
-                Assert.Equal("propertyName",
-                             Assert.Throws<ArgumentNullException>(() => stateEntry.RejectPropertyChanges(null)).
-                                 ParamName);
+                Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), 
+                             Assert.Throws<ArgumentException>(() => stateEntry.RejectPropertyChanges(null)).Message);
             }
         }
 
@@ -1621,8 +1621,8 @@ namespace ProductivityApiTests
                 var hamilton = context.Drivers.Where(d => d.Name == "Lewis Hamilton").Single();
                 var stateEntry = GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(hamilton);
 
-                Assert.Equal("propertyName",
-                             Assert.Throws<ArgumentNullException>(() => stateEntry.IsPropertyChanged(null)).ParamName);
+                Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), 
+                             Assert.Throws<ArgumentException>(() => stateEntry.IsPropertyChanged(null)).Message);
             }
         }
 
@@ -1751,8 +1751,8 @@ namespace ProductivityApiTests
                 var hamilton = context.Drivers.Where(d => d.Name == "Lewis Hamilton").Single();
                 var stateEntry = GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(hamilton);
 
-                Assert.Equal("propertyName",
-                             Assert.Throws<ArgumentNullException>(() => stateEntry.SetModifiedProperty(null)).ParamName);
+                Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), 
+                             Assert.Throws<ArgumentException>(() => stateEntry.SetModifiedProperty(null)).Message);
 
                 Assert.Equal(EntityState.Unchanged, stateEntry.State);
             }

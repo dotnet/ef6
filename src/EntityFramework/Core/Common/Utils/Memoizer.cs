@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Threading;
 
     /// <summary>
@@ -26,7 +27,7 @@
         /// are the same.</param>
         internal Memoizer(Func<TArg, TResult> function, IEqualityComparer<TArg> argComparer)
         {
-            EntityUtil.CheckArgumentNull(function, "function");
+            Contract.Requires(function != null);
 
             _function = function;
             _resultCache = new Dictionary<TArg, Result>(argComparer);

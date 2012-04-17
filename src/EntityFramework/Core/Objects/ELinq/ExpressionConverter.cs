@@ -11,6 +11,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -121,8 +122,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         internal ExpressionConverter(Funcletizer funcletizer, Expression expression)
         {
-            EntityUtil.CheckArgumentNull(funcletizer, "funcletizer");
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(funcletizer != null);
+            Contract.Requires(expression != null);
 
             // Funcletize the expression (identify subexpressions that should be evaluated
             // locally)
@@ -328,9 +329,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 // Verify the initializers are compatible.
                 if (!metadata.Equals(existingMetadata))
                 {
-                    throw EntityUtil.NotSupported(
-                        Strings.ELinq_UnsupportedHeterogeneousInitializers(
-                            DescribeClrType(metadata.ClrType)));
+                    throw new NotSupportedException(Strings.ELinq_UnsupportedHeterogeneousInitializers(
+                        DescribeClrType(metadata.ClrType)));
                 }
             }
             else
@@ -601,7 +601,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             if (toType == null || !TypeSemantics.IsScalarType(toType)
                 || !TypeSemantics.IsScalarType(fromType))
             {
-                throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedCast(DescribeClrType(fromClrType), DescribeClrType(toClrType)));
+                throw new NotSupportedException(Strings.ELinq_UnsupportedCast(DescribeClrType(fromClrType), DescribeClrType(toClrType)));
             }
 
             var fromTypeKind = Helper.AsPrimitive(fromType.EdmType).PrimitiveTypeKind;
@@ -621,7 +621,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         toType = TypeUsage.CreateDecimalTypeUsage((PrimitiveType)toType.EdmType, 19, 0);
                         break;
                     default:
-                        throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedCastToDecimal);
+                        throw new NotSupportedException(Strings.ELinq_UnsupportedCastToDecimal);
                 }
             }
 
@@ -680,10 +680,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 (!TypeSemantics.IsEntityType(toType) &&
                  !TypeSemantics.IsComplexType(toType)))
             {
-                throw EntityUtil.NotSupported(
-                    Strings.ELinq_UnsupportedIsOrAs(
-                        operationType,
-                        DescribeClrType(fromClrType), DescribeClrType(toClrType)));
+                throw new NotSupportedException(Strings.ELinq_UnsupportedIsOrAs(
+                    operationType,
+                    DescribeClrType(fromClrType), DescribeClrType(toClrType)));
             }
 
             return toType;
@@ -699,7 +698,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         {
             if (!ReferenceEquals(_funcletizer.RootContext, inlineQuery.QueryState.ObjectContext))
             {
-                throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedDifferentContexts);
+                throw new NotSupportedException(Strings.ELinq_UnsupportedDifferentContexts);
             }
 
             // Check if the inline query has been encountered so far. If so, we don't need to
@@ -948,7 +947,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 return GetLambdaExpression(((UnaryExpression)argument).Operand);
             }
 
-            throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.UnexpectedLinqLambdaExpressionFormat);
+            throw new InvalidOperationException(Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.UnexpectedLinqLambdaExpressionFormat));
         }
 
         // Translate a LINQ expression acting as a set input to a CQT expression
@@ -1008,18 +1007,16 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     ||
                     BuiltInTypeKind.ComplexType == typeKind)
                 {
-                    throw EntityUtil.NotSupported(
-                        Strings.ELinq_UnsupportedNominalType(
-                            typeUsage.EdmType.FullName));
+                    throw new NotSupportedException(Strings.ELinq_UnsupportedNominalType(
+                        typeUsage.EdmType.FullName));
                 }
             }
 
             // types implementing IEnumerable are not supported
             if (TypeSystem.IsSequenceType(type))
             {
-                throw EntityUtil.NotSupported(
-                    Strings.ELinq_UnsupportedEnumerableType(
-                        DescribeClrType(type)));
+                throw new NotSupportedException(Strings.ELinq_UnsupportedEnumerableType(
+                    DescribeClrType(type)));
             }
         }
 
@@ -1069,7 +1066,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             TypeUsage type;
             if (!TryGetValueLayerType(linqType, out type))
             {
-                throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedType(linqType));
+                throw new NotSupportedException(Strings.ELinq_UnsupportedType(linqType));
             }
             return type;
         }
@@ -1154,7 +1151,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
             if (null == memberPath)
             {
-                throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedComparison(DescribeClrType(clrType)));
+                throw new NotSupportedException(Strings.ELinq_UnsupportedComparison(DescribeClrType(clrType)));
             }
             else
             {
@@ -1165,7 +1162,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     memberPathDescription.Append(Strings.ELinq_UnsupportedRowMemberComparison(member.Name));
                 }
                 memberPathDescription.Append(Strings.ELinq_UnsupportedRowTypeComparison(DescribeClrType(clrType)));
-                throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedRowComparison(memberPathDescription.ToString()));
+                throw new NotSupportedException(Strings.ELinq_UnsupportedRowComparison(memberPathDescription.ToString()));
             }
         }
 
@@ -1253,8 +1250,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 {
                     var leftRefType = left.ResultType.EdmType as RefType;
                     var rightRefType = right.ResultType.EdmType as RefType;
-                    throw EntityUtil.NotSupported(
-                        Strings.ELinq_UnsupportedRefComparison(leftRefType.ElementType.FullName, rightRefType.ElementType.FullName));
+                    throw new NotSupportedException(Strings.ELinq_UnsupportedRefComparison(leftRefType.ElementType.FullName, rightRefType.ElementType.FullName));
                 }
             }
 
@@ -1505,7 +1501,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             if (escapedPatternValue == null)
             {
-                throw EntityUtil.ProviderIncompatible(Strings.ProviderEscapeLikeArgumentReturnedNull);
+                throw new ProviderIncompatibleException(Strings.ProviderEscapeLikeArgumentReturnedNull);
             }
 
             specifyEscape = patternValue != escapedPatternValue;
@@ -1617,7 +1613,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 == ExpressionType.Call)
             {
                 var methodInfo = ((MethodCallExpression)Expression).Method;
-                throw EntityUtil.NotSupported(Strings.ELinq_UnresolvableFunctionForMethod(methodInfo, methodInfo.DeclaringType));
+                throw new NotSupportedException(Strings.ELinq_UnresolvableFunctionForMethod(methodInfo, methodInfo.DeclaringType));
             }
             else if (Expression.NodeType
                      == ExpressionType.MemberAccess)
@@ -1625,9 +1621,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 string memberName;
                 Type memberType;
                 var memberInfo = TypeSystem.PropertyOrField(((MemberExpression)Expression).Member, out memberName, out memberType);
-                throw EntityUtil.NotSupported(Strings.ELinq_UnresolvableFunctionForMember(memberInfo, memberInfo.DeclaringType));
+                throw new NotSupportedException(Strings.ELinq_UnresolvableFunctionForMember(memberInfo, memberInfo.DeclaringType));
             }
-            throw EntityUtil.NotSupported(Strings.ELinq_UnresolvableFunctionForExpression(Expression.NodeType));
+            throw new NotSupportedException(Strings.ELinq_UnresolvableFunctionForExpression(Expression.NodeType));
         }
 
         /// <summary>
@@ -1642,12 +1638,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 var methodInfo = ((MethodCallExpression)Expression).Method;
                 if (isAmbiguous)
                 {
-                    throw EntityUtil.NotSupported(
-                        Strings.ELinq_UnresolvableFunctionForMethodAmbiguousMatch(methodInfo, methodInfo.DeclaringType));
+                    throw new NotSupportedException(Strings.ELinq_UnresolvableFunctionForMethodAmbiguousMatch(methodInfo, methodInfo.DeclaringType));
                 }
                 else
                 {
-                    throw EntityUtil.NotSupported(Strings.ELinq_UnresolvableFunctionForMethodNotFound(methodInfo, methodInfo.DeclaringType));
+                    throw new NotSupportedException(Strings.ELinq_UnresolvableFunctionForMethodNotFound(methodInfo, methodInfo.DeclaringType));
                 }
             }
             else if (Expression.NodeType
@@ -1656,9 +1651,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 string memberName;
                 Type memberType;
                 var memberInfo = TypeSystem.PropertyOrField(((MemberExpression)Expression).Member, out memberName, out memberType);
-                throw EntityUtil.NotSupported(Strings.ELinq_UnresolvableStoreFunctionForMember(memberInfo, memberInfo.DeclaringType));
+                throw new NotSupportedException(Strings.ELinq_UnresolvableStoreFunctionForMember(memberInfo, memberInfo.DeclaringType));
             }
-            throw EntityUtil.NotSupported(Strings.ELinq_UnresolvableStoreFunctionForExpression(Expression.NodeType));
+            throw new NotSupportedException(Strings.ELinq_UnresolvableStoreFunctionForExpression(Expression.NodeType));
         }
 
         private static DbNewInstanceExpression CreateNewRowExpression(

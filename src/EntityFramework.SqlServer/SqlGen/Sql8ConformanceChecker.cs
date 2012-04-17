@@ -206,7 +206,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <exception cref="NotSupportedException">Always thrown if this method is called, since it indicates that <paramref name="expression"/> is of an unsupported type</exception>
         public override bool Visit(DbExpression expression)
         {
-            throw EntityUtil.NotSupported(Strings.Cqt_General_UnsupportedExpression(expression.GetType().FullName));
+            throw new NotSupportedException(Strings.Cqt_General_UnsupportedExpression(expression.GetType().FullName));
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <exception cref="NotSupportedException">Always</exception>
         public override bool Visit(DbApplyExpression expression)
         {
-            throw EntityUtil.NotSupported(Strings.SqlGen_ApplyNotSupportedOnSql8);
+            throw new NotSupportedException(Strings.SqlGen_ApplyNotSupportedOnSql8);
         }
 
         /// <summary>
@@ -473,7 +473,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             if (expression.Limit is DbParameterReferenceExpression)
             {
-                throw EntityUtil.NotSupported(Strings.SqlGen_ParameterForLimitNotSupportedOnSql8);
+                throw new NotSupportedException(Strings.SqlGen_ParameterForLimitNotSupportedOnSql8);
             }
 
             return VisitExpression(expression.Argument);
@@ -642,7 +642,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             if (expression.Count is DbParameterReferenceExpression)
             {
-                throw EntityUtil.NotSupported(Strings.SqlGen_ParameterForSkipNotSupportedOnSql8);
+                throw new NotSupportedException(Strings.SqlGen_ParameterForSkipNotSupportedOnSql8);
             }
 
             //Walk the structure in case a non-supported construct is encountered 

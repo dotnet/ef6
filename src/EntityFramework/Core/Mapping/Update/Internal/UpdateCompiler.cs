@@ -259,7 +259,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     {
                         if (m_translator.KeyManager.HasPrincipals(identifier))
                         {
-                            throw EntityUtil.InvalidOperation(Strings.Update_GeneratedDependent(property.Name));
+                            throw new InvalidOperationException(Strings.Update_GeneratedDependent(property.Name));
                         }
                         outputIdentifiers.Add(identifier, property.Name);
 
@@ -270,13 +270,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             &&
                             processor.IsKeyProperty(propertyOrdinal))
                         {
-                            throw EntityUtil.NotSupported(
-                                Strings.Update_NotSupportedComputedKeyColumn(
-                                    EdmProviderManifest.StoreGeneratedPatternFacetName,
-                                    XmlConstants.Computed,
-                                    XmlConstants.Identity,
-                                    property.Name,
-                                    property.DeclaringType.FullName));
+                            throw new NotSupportedException(Strings.Update_NotSupportedComputedKeyColumn(
+                                EdmProviderManifest.StoreGeneratedPatternFacetName,
+                                XmlConstants.Computed,
+                                XmlConstants.Identity,
+                                property.Name,
+                                property.DeclaringType.FullName));
                         }
                     }
                 }
@@ -310,11 +309,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                     if (!ByValueEqualityComparer.Default.Equals(originalPropertyResult.GetSimpleValue(), propertyResult.GetSimpleValue()))
                     {
-                        throw EntityUtil.InvalidOperation(
-                            Strings.Update_ModifyingIdentityColumn(
-                                XmlConstants.Identity,
-                                property.Name,
-                                property.DeclaringType.FullName));
+                        throw new InvalidOperationException(Strings.Update_ModifyingIdentityColumn(
+                            XmlConstants.Identity,
+                            property.Name,
+                            property.DeclaringType.FullName));
                     }
                     else
                     {

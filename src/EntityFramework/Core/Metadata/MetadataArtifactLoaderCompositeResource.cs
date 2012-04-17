@@ -174,7 +174,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 && loaders.Count == 0)
             {
                 // they were asking for a specific resource name, and we didn't find it
-                throw EntityUtil.Metadata(Strings.UnableToLoadResource);
+                throw new MetadataException(Strings.UnableToLoadResource);
             }
 
             return loaders;
@@ -213,7 +213,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             else
             {
-                throw EntityUtil.Metadata(Strings.UnableToLoadResource);
+                throw new MetadataException(Strings.UnableToLoadResource);
             }
         }
 
@@ -331,7 +331,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 case ExtensionCheck.All:
                     if (!IsValidArtifact(resourceName))
                     {
-                        throw EntityUtil.Metadata(Strings.InvalidMetadataPath);
+                        throw new MetadataException(Strings.InvalidMetadataPath);
                     }
                     break;
             }
@@ -361,7 +361,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             if (result.Length == 0
                 || result.Length > 2)
             {
-                throw EntityUtil.Metadata(Strings.InvalidMetadataPath);
+                throw new MetadataException(Strings.InvalidMetadataPath);
             }
 
             if (result.Length >= 1)

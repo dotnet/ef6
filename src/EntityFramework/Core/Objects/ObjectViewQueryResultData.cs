@@ -6,6 +6,7 @@
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
 
     /// <summary>
@@ -92,7 +93,7 @@
         {
             if (_entitySet == null)
             {
-                throw EntityUtil.CannotResolveTheEntitySetforGivenEntity(typeof(TElement));
+                throw new InvalidOperationException(Strings.ObjectView_CannotResolveTheEntitySet(typeof(TElement).FullName));
             }
         }
 
@@ -147,7 +148,7 @@
             // If called for AddNew operation, add item to binding list, pending addition to ObjectContext.
             if (!isAddNew)
             {
-                _objectContext.AddObject(TypeHelpers.GetFullName(_entitySet), item);
+                _objectContext.AddObject(TypeHelpers.GetFullName(_entitySet.EntityContainer.Name, _entitySet.Name), item);
             }
 
             _bindingList.Add(item);
@@ -162,7 +163,7 @@
             Debug.Assert(_objectContext != null, "ObjectContext is null.");
 
             var item = _bindingList[index];
-            _objectContext.AddObject(TypeHelpers.GetFullName(_entitySet), item);
+            _objectContext.AddObject(TypeHelpers.GetFullName(_entitySet.EntityContainer.Name, _entitySet.Name), item);
         }
 
         public void Clear()

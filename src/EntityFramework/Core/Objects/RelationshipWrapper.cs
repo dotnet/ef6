@@ -99,7 +99,7 @@ namespace System.Data.Entity.Core.Objects
                 case 1:
                     return Key1;
                 default:
-                    throw EntityUtil.ArgumentOutOfRange("ordinal");
+                    throw new ArgumentOutOfRangeException("ordinal");
             }
         }
 

@@ -73,7 +73,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 case PrimitiveTypeKind.SByte:
                     return TryParseSByte(text, out value);
                 default:
-                    throw EntityUtil.NotSupported(_primitiveType.FullName);
+                    throw new NotSupportedException(_primitiveType.FullName);
             }
         }
 

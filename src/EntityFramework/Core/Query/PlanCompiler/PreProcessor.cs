@@ -463,7 +463,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             if (!Helper.IsAssociationType(navigateOp.Relationship))
             {
-                throw EntityUtil.NotSupported(Strings.Cqt_RelNav_NoCompositions);
+                throw new NotSupportedException(Strings.Cqt_RelNav_NoCompositions);
             }
 
             //
@@ -1172,7 +1172,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 FunctionImportMapping functionImportMapping = null;
                 if (!m_command.MetadataWorkspace.TryGetFunctionImportMapping(op.Function, out functionImportMapping))
                 {
-                    throw EntityUtil.Metadata(Strings.EntityClient_UnmappedFunctionImport(op.Function.FullName));
+                    throw new MetadataException(Strings.EntityClient_UnmappedFunctionImport(op.Function.FullName));
                 }
                 PlanCompiler.Assert(
                     functionImportMapping is FunctionImportMappingComposable, "Composable function import must have corresponding mapping.");
@@ -1310,12 +1310,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             if (!TypeSemantics.IsStructurallyEqualOrPromotableTo(resultType, op.Type))
             {
-                throw EntityUtil.Metadata(
+                throw new MetadataException(
                     Strings.EntityClient_IncompatibleNavigationPropertyResult(
                         navProperty.DeclaringType.FullName,
-                        navProperty.Name
-                        )
-                    );
+                        navProperty.Name));
             }
         }
 

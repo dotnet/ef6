@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Diagnostics.Contracts;
     using System.Text;
 
     /// <summary>
@@ -29,7 +30,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         internal ObjectParameterCollection(ClrPerspective perspective)
         {
-            EntityUtil.CheckArgumentNull(perspective, "perspective");
+            Contract.Requires(perspective != null);
 
             // The perspective is required to do type-checking on parameters as they
             // are added to the collection.
@@ -127,7 +128,7 @@ namespace System.Data.Entity.Core.Objects
 
                 if (index == -1)
                 {
-                    throw EntityUtil.ArgumentOutOfRange(Strings.ObjectParameterCollection_ParameterNameNotFound(name), "name");
+                    throw new ArgumentOutOfRangeException("name", Strings.ObjectParameterCollection_ParameterNameNotFound(name));
                 }
 
                 return _parameters[index];
@@ -172,22 +173,22 @@ namespace System.Data.Entity.Core.Objects
         /// </exception>
         public void Add(ObjectParameter item)
         {
-            EntityUtil.CheckArgumentNull(item, "parameter");
+            Contract.Requires(item != null);
             CheckUnlocked();
 
             if (Contains(item))
             {
-                throw EntityUtil.Argument(Strings.ObjectParameterCollection_ParameterAlreadyExists(item.Name), "parameter");
+                throw new ArgumentException(Strings.ObjectParameterCollection_ParameterAlreadyExists(item.Name), "item");
             }
 
             if (Contains(item.Name))
             {
-                throw EntityUtil.Argument(Strings.ObjectParameterCollection_DuplicateParameterName(item.Name), "parameter");
+                throw new ArgumentException(Strings.ObjectParameterCollection_DuplicateParameterName(item.Name), "item");
             }
 
             if (!item.ValidateParameterType(_perspective))
             {
-                throw EntityUtil.ArgumentOutOfRange(Strings.ObjectParameter_InvalidParameterType(item.ParameterType.FullName), "parameter");
+                throw new ArgumentOutOfRangeException("item", Strings.ObjectParameter_InvalidParameterType(item.ParameterType.FullName));
             }
 
             _parameters.Add(item);
@@ -231,7 +232,7 @@ namespace System.Data.Entity.Core.Objects
         /// </exception>
         public bool Contains(ObjectParameter item)
         {
-            EntityUtil.CheckArgumentNull(item, "item");
+            Contract.Requires(item != null);
 
             return _parameters.Contains(item);
         }
@@ -256,7 +257,7 @@ namespace System.Data.Entity.Core.Objects
         /// </exception>
         public bool Contains(string name)
         {
-            EntityUtil.CheckArgumentNull(name, "name");
+            Contract.Requires(name != null);
 
             if (IndexOf(name)
                 != -1)
@@ -311,7 +312,7 @@ namespace System.Data.Entity.Core.Objects
         /// </exception>
         public bool Remove(ObjectParameter item)
         {
-            EntityUtil.CheckArgumentNull(item, "item");
+            Contract.Requires(item != null);
             CheckUnlocked();
 
             var removed = _parameters.Remove(item);
@@ -475,7 +476,7 @@ namespace System.Data.Entity.Core.Objects
         {
             if (_locked)
             {
-                throw EntityUtil.InvalidOperation(Strings.ObjectParameterCollection_ParametersLocked);
+                throw new InvalidOperationException(Strings.ObjectParameterCollection_ParametersLocked);
             }
         }
 

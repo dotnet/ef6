@@ -199,7 +199,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 else
                 {
                     Debug.Fail("unexpected extent type " + entitySetBase.BuiltInTypeKind);
-                    throw EntityUtil.NotSupported();
+                    throw new NotSupportedException();
                 }
 
                 // gather interesting tables, columns and properties from mapping fragments

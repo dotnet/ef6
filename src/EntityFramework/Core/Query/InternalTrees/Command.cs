@@ -58,15 +58,15 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             m_metadataWorkspace = metadataWorkspace;
             if (!TryGetPrimitiveType(PrimitiveTypeKind.Boolean, out m_boolType))
             {
-                throw EntityUtil.ProviderIncompatible(Strings.Cqt_General_NoProviderBooleanType);
+                throw new ProviderIncompatibleException(Strings.Cqt_General_NoProviderBooleanType);
             }
             if (!TryGetPrimitiveType(PrimitiveTypeKind.Int32, out m_intType))
             {
-                throw EntityUtil.ProviderIncompatible(Strings.Cqt_General_NoProviderIntegerType);
+                throw new ProviderIncompatibleException(Strings.Cqt_General_NoProviderIntegerType);
             }
             if (!TryGetPrimitiveType(PrimitiveTypeKind.String, out m_stringType))
             {
-                throw EntityUtil.ProviderIncompatible(Strings.Cqt_General_NoProviderStringType);
+                throw new ProviderIncompatibleException(Strings.Cqt_General_NoProviderStringType);
             }
             m_trueOp = new ConstantPredicateOp(m_boolType, true);
             m_falseOp = new ConstantPredicateOp(m_boolType, false);

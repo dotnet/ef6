@@ -173,7 +173,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <returns>An instance of TResultType.</returns>
         public virtual TResultType Visit(DbLambdaExpression expression)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>

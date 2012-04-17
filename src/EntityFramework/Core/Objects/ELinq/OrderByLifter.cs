@@ -270,7 +270,7 @@
                         }
                     }
                     Debug.Fail("only valid for integer constants");
-                    throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.UnexpectedLinqLambdaExpressionFormat);
+                    throw new InvalidOperationException(Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.UnexpectedLinqLambdaExpressionFormat));
                 }
 
                 #endregion
@@ -825,7 +825,7 @@
                 {
                     // since the source has no intrinsic order, we need to throw (skip
                     // requires order)
-                    throw EntityUtil.NotSupported(Strings.ELinq_SkipWithoutOrder);
+                    throw new NotSupportedException(Strings.ELinq_SkipWithoutOrder);
                 }
             }
         }

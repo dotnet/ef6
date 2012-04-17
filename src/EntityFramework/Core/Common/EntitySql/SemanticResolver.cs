@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
 
@@ -127,8 +128,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             IEnumerable<DbParameterReferenceExpression> parameters,
             IEnumerable<DbVariableReferenceExpression> variables)
         {
-            EntityUtil.CheckArgumentNull(perspective, "perspective");
-            EntityUtil.CheckArgumentNull(parserOptions, "parserOptions");
+            Contract.Requires(perspective != null);
+            Contract.Requires(parserOptions != null);
 
             return new SemanticResolver(
                 parserOptions,
@@ -195,7 +196,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 {
                     if (retParams.ContainsKey(paramDef.ParameterName))
                     {
-                        throw EntityUtil.EntitySqlError(Strings.MultipleDefinitionsOfParameter(paramDef.ParameterName));
+                        string message = Strings.MultipleDefinitionsOfParameter(paramDef.ParameterName);
+                        throw new EntitySqlException(message);
                     }
 
                     Debug.Assert(paramDef.ResultType.IsReadOnly, "paramDef.ResultType.IsReadOnly must be set");
@@ -223,7 +225,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 {
                     if (retVars.ContainsKey(varDef.VariableName))
                     {
-                        throw EntityUtil.EntitySqlError(Strings.MultipleDefinitionsOfVariable(varDef.VariableName));
+                        string message = Strings.MultipleDefinitionsOfVariable(varDef.VariableName);
+                        throw new EntitySqlException(message);
                     }
 
                     Debug.Assert(varDef.ResultType.IsReadOnly, "varDef.ResultType.IsReadOnly must be set");
@@ -515,7 +518,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 if (scopeEntry.EntryKind == ScopeEntryKind.SourceVar
                     && ((SourceScopeEntry)scopeEntry).IsJoinClauseLeftExpr)
                 {
-                    throw EntityUtil.EntitySqlError(errCtx, Strings.InvalidJoinLeftCorrelation);
+                    string message = Strings.InvalidJoinLeftCorrelation;
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 //
@@ -633,11 +637,13 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             if (TypeSemantics.IsCollectionType(valueExpr.ResultType))
             {
-                throw EntityUtil.EntitySqlError(errCtx, Strings.NotAMemberOfCollection(name, valueExpr.ResultType.EdmType.FullName));
+                string message = Strings.NotAMemberOfCollection(name, valueExpr.ResultType.EdmType.FullName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
             else
             {
-                throw EntityUtil.EntitySqlError(errCtx, Strings.NotAMemberOfType(name, valueExpr.ResultType.EdmType.FullName));
+                string message = Strings.NotAMemberOfType(name, valueExpr.ResultType.EdmType.FullName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
         }
 
@@ -687,8 +693,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 }
                 else
                 {
-                    throw EntityUtil.EntitySqlError(
-                        errCtx, Strings.InvalidDeRefProperty(name, derefExprType.EdmType.FullName, valueExpr.ResultType.EdmType.FullName));
+                    string message = Strings.InvalidDeRefProperty(name, derefExprType.EdmType.FullName, valueExpr.ResultType.EdmType.FullName);
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
             }
 
@@ -711,7 +717,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
             else
             {
-                throw EntityUtil.EntitySqlError(errCtx, Strings.MemberDoesNotBelongToEntityContainer(name, entityContainer.Name));
+                string message = Strings.MemberDoesNotBelongToEntityContainer(name, entityContainer.Name);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
         }
 
@@ -1301,7 +1308,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 }
                 if (_evaluatingScopeRegion == null)
                 {
-                    throw EntityUtil.EntitySqlError(Strings.GroupVarNotFoundInScope);
+                    string message = Strings.GroupVarNotFoundInScope;
+                    throw new EntitySqlException(message);
                 }
             }
 
@@ -1367,8 +1375,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                             containedAggregate.ErrCtx.UseContextInfoAsResourceIdentifier,
                             out line, out column);
 
-                        throw EntityUtil.EntitySqlError(
-                            Strings.NestedAggregateCannotBeUsedInAggregate(nestedAggregateInfo, currentAggregateInfo));
+                        string message = Strings.NestedAggregateCannotBeUsedInAggregate(nestedAggregateInfo, currentAggregateInfo);
+                        throw new EntitySqlException(message);
                     }
 
                     //

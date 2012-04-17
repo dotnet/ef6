@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
@@ -194,7 +195,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 
         private static DbFunctionAggregate CreateFunctionAggregate(EdmFunction function, DbExpression argument, bool isDistinct)
         {
-            EntityUtil.CheckArgumentNull(argument, "argument");
+            Contract.Requires(argument != null);
             var funcArgs = ArgumentValidation.ValidateFunctionAggregate(function, new[] { argument });
             var resultType = function.ReturnParameter.TypeUsage;
             return new DbFunctionAggregate(resultType, funcArgs, function, isDistinct);
@@ -256,7 +257,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 
         private static DbLambda CreateLambda(DbExpression body, IEnumerable<DbVariableReferenceExpression> variables)
         {
-            var validVars = ArgumentValidation.ValidateLambda(variables, body);
+            Contract.Requires(body != null);
+
+            var validVars = ArgumentValidation.ValidateLambda(variables);
             return new DbLambda(validVars, body);
         }
 
@@ -332,7 +335,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbQuantifierExpression All(this DbExpressionBinding input, DbExpression predicate)
         {
-            var booleanResultType = ArgumentValidation.ValidateQuantifier(input, predicate);
+            Contract.Requires(predicate != null);
+            Contract.Requires(input != null);
+
+            var booleanResultType = ArgumentValidation.ValidateQuantifier(predicate);
             return new DbQuantifierExpression(DbExpressionKind.All, booleanResultType, input, predicate);
         }
 
@@ -348,7 +354,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbQuantifierExpression Any(this DbExpressionBinding input, DbExpression predicate)
         {
-            var booleanResultType = ArgumentValidation.ValidateQuantifier(input, predicate);
+            Contract.Requires(predicate != null);
+            Contract.Requires(input != null);
+
+            var booleanResultType = ArgumentValidation.ValidateQuantifier(predicate);
             return new DbQuantifierExpression(DbExpressionKind.Any, booleanResultType, input, predicate);
         }
 
@@ -505,9 +514,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             this DbGroupExpressionBinding input, IEnumerable<KeyValuePair<string, DbExpression>> keys,
             IEnumerable<KeyValuePair<string, DbAggregate>> aggregates)
         {
+            Contract.Requires(input != null);
+
             DbExpressionList validKeys;
             ReadOnlyCollection<DbAggregate> validAggregates;
-            var resultType = ArgumentValidation.ValidateGroupBy(input, keys, aggregates, out validKeys, out validAggregates);
+            var resultType = ArgumentValidation.ValidateGroupBy(keys, aggregates, out validKeys, out validAggregates);
             return new DbGroupByExpression(resultType, input, validKeys, validAggregates);
         }
 
@@ -520,7 +531,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <exception cref="ArgumentNullException"><paramref name="input"/> or <paramref name="projection"/> is null</exception>
         public static DbProjectExpression Project(this DbExpressionBinding input, DbExpression projection)
         {
-            var resultType = ArgumentValidation.ValidateProject(input, projection);
+            Contract.Requires(projection != null);
+            Contract.Requires(input != null);
+
+            var resultType = ArgumentValidation.ValidateProject(projection);
             return new DbProjectExpression(resultType, input, projection);
         }
 
@@ -542,7 +556,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbSkipExpression Skip(this DbExpressionBinding input, IEnumerable<DbSortClause> sortOrder, DbExpression count)
         {
-            var validSortOrder = ArgumentValidation.ValidateSkip(input, sortOrder, count);
+            Contract.Requires(count != null);
+            Contract.Requires(input != null);
+
+            var validSortOrder = ArgumentValidation.ValidateSkip(sortOrder, count);
             return new DbSkipExpression(input.Expression.ResultType, input, validSortOrder, count);
         }
 
@@ -561,7 +578,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbSortExpression Sort(this DbExpressionBinding input, IEnumerable<DbSortClause> sortOrder)
         {
-            var validSortOrder = ArgumentValidation.ValidateSort(input, sortOrder);
+            Contract.Requires(input != null);
+
+            var validSortOrder = ArgumentValidation.ValidateSort(sortOrder);
             return new DbSortExpression(input.Expression.ResultType, input, validSortOrder);
         }
 
@@ -1814,16 +1833,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         private static DbExpressionBinding ConvertToBinding<TResult>(
-            DbExpression source, Func<DbExpression, TResult> argument, string argumentName, out TResult argumentResult)
+            DbExpression source, Func<DbExpression, TResult> argument, out TResult argumentResult)
         {
-            return ConvertToBinding(source, "source", argument, argumentName, out argumentResult);
-        }
+            Contract.Requires(source != null);
+            Contract.Requires(argument != null);
 
-        private static DbExpressionBinding ConvertToBinding<TResult>(
-            DbExpression source, string sourceName, Func<DbExpression, TResult> argument, string argumentName, out TResult argumentResult)
-        {
-            EntityUtil.CheckArgumentNull(source, sourceName);
-            EntityUtil.CheckArgumentNull(argument, argumentName);
             var alias = ExtractAlias(argument.Method);
             var binding = source.BindAs(alias);
             argumentResult = argument(binding.Variable);
@@ -1831,13 +1845,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         private static DbExpressionBinding[] ConvertToBinding(
-            DbExpression left, string leftArgumentName, DbExpression right, string rightArgumentName,
-            Func<DbExpression, DbExpression, DbExpression> argument, string argumentName, out DbExpression argumentExp)
+            DbExpression left, DbExpression right,
+            Func<DbExpression, DbExpression, DbExpression> argument, out DbExpression argumentExp)
         {
-            EntityUtil.CheckArgumentNull(left, leftArgumentName);
-            EntityUtil.CheckArgumentNull(right, rightArgumentName);
+            Contract.Requires(left != null);
+            Contract.Requires(right != null);
+            Contract.Requires(argument != null);
 
-            EntityUtil.CheckArgumentNull(argument, argumentName);
             var aliases = ExtractAliases(argument.Method);
             var leftBinding = left.BindAs(aliases[0]);
             var rightBinding = right.BindAs(aliases[1]);
@@ -1949,7 +1963,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             }
 
             // The specified instance cannot be resolved to a DbExpression
-            throw EntityUtil.NotSupported(Strings.Cqt_Factory_MethodResultTypeNotSupported(typeof(TArgument).FullName));
+            throw new NotSupportedException(Strings.Cqt_Factory_MethodResultTypeNotSupported(typeof(TArgument).FullName));
         }
 
         private static DbApplyExpression CreateApply(
@@ -1957,7 +1971,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             Func<DbExpressionBinding, DbExpressionBinding, DbApplyExpression> resultBuilder)
         {
             KeyValuePair<string, DbExpression> applyTemplate;
-            var sourceBinding = ConvertToBinding(source, apply, "apply", out applyTemplate);
+            var sourceBinding = ConvertToBinding(source, apply, out applyTemplate);
             var applyBinding = applyTemplate.Value.BindAs(applyTemplate.Key);
             return resultBuilder(sourceBinding, applyBinding);
         }
@@ -1983,7 +1997,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         public static DbQuantifierExpression All(this DbExpression source, Func<DbExpression, DbExpression> predicate)
         {
             DbExpression predicateExp;
-            var input = ConvertToBinding(source, predicate, "predicate", out predicateExp);
+            var input = ConvertToBinding(source, predicate, out predicateExp);
             return input.All(predicateExp);
         }
 
@@ -2032,7 +2046,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         public static DbQuantifierExpression Any(this DbExpression source, Func<DbExpression, DbExpression> predicate)
         {
             DbExpression predicateExp;
-            var input = ConvertToBinding(source, predicate, "predicate", out predicateExp);
+            var input = ConvertToBinding(source, predicate, out predicateExp);
             return input.Any(predicateExp);
         }
 
@@ -2117,7 +2131,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             this DbExpression left, DbExpression right, Func<DbExpression, DbExpression, DbExpression> joinCondition)
         {
             DbExpression condExp;
-            var inputs = ConvertToBinding(left, "left", right, "right", joinCondition, "joinCondition", out condExp);
+            var inputs = ConvertToBinding(left, right, joinCondition, out condExp);
             return inputs[0].FullOuterJoin(inputs[1], condExp);
         }
 
@@ -2152,7 +2166,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             this DbExpression left, DbExpression right, Func<DbExpression, DbExpression, DbExpression> joinCondition)
         {
             DbExpression condExp;
-            var inputs = ConvertToBinding(left, "left", right, "right", joinCondition, "joinCondition", out condExp);
+            var inputs = ConvertToBinding(left, right, joinCondition, out condExp);
             return inputs[0].InnerJoin(inputs[1], condExp);
         }
 
@@ -2187,7 +2201,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             this DbExpression left, DbExpression right, Func<DbExpression, DbExpression, DbExpression> joinCondition)
         {
             DbExpression condExp;
-            var inputs = ConvertToBinding(left, "left", right, "right", joinCondition, "joinCondition", out condExp);
+            var inputs = ConvertToBinding(left, right, joinCondition, out condExp);
             return inputs[0].LeftOuterJoin(inputs[1], condExp);
         }
 
@@ -2220,10 +2234,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             Func<DbExpression, DbExpression> innerKey)
         {
             DbExpression leftOperand;
-            var leftBinding = ConvertToBinding(outer, "outer", outerKey, "outerKey", out leftOperand);
+            var leftBinding = ConvertToBinding(outer, outerKey, out leftOperand);
 
             DbExpression rightOperand;
-            var rightBinding = ConvertToBinding(inner, "inner", innerKey, "innerKey", out rightOperand);
+            var rightBinding = ConvertToBinding(inner, innerKey, out rightOperand);
 
             DbExpression joinCondition = leftOperand.Equal(rightOperand);
 
@@ -2280,11 +2294,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             this DbExpression outer, DbExpression inner, Func<DbExpression, DbExpression> outerKey,
             Func<DbExpression, DbExpression> innerKey, Func<DbExpression, DbExpression, TSelector> selector)
         {
+            Contract.Requires(selector != null);
+
             // Defer argument validation for all but the selector to the selector-less overload of Join
             DbJoinExpression joinExpression = outer.Join(inner, outerKey, innerKey);
-
-            // Ensure that the selector is non-null;
-            EntityUtil.CheckArgumentNull(selector, "selector");
 
             // Bind the join expression and produce the selector based on the left and right inputs
             var joinBinding = joinExpression.Bind();
@@ -2317,7 +2330,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         public static DbSortExpression OrderBy(this DbExpression source, Func<DbExpression, DbExpression> sortKey)
         {
             DbExpression keyExpression;
-            var input = ConvertToBinding(source, sortKey, "sortKey", out keyExpression);
+            var input = ConvertToBinding(source, sortKey, out keyExpression);
             DbSortClause sortClause = keyExpression.ToSortClause();
             return input.Sort(new[] { sortClause });
         }
@@ -2344,7 +2357,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         public static DbSortExpression OrderBy(this DbExpression source, Func<DbExpression, DbExpression> sortKey, string collation)
         {
             DbExpression keyExpression;
-            var input = ConvertToBinding(source, sortKey, "sortKey", out keyExpression);
+            var input = ConvertToBinding(source, sortKey, out keyExpression);
             DbSortClause sortClause = keyExpression.ToSortClause(collation);
             return input.Sort(new[] { sortClause });
         }
@@ -2369,7 +2382,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         public static DbSortExpression OrderByDescending(this DbExpression source, Func<DbExpression, DbExpression> sortKey)
         {
             DbExpression keyExpression;
-            var input = ConvertToBinding(source, sortKey, "sortKey", out keyExpression);
+            var input = ConvertToBinding(source, sortKey, out keyExpression);
             DbSortClause sortClause = keyExpression.ToSortClauseDescending();
             return input.Sort(new[] { sortClause });
         }
@@ -2397,7 +2410,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             this DbExpression source, Func<DbExpression, DbExpression> sortKey, string collation)
         {
             DbExpression keyExpression;
-            var input = ConvertToBinding(source, sortKey, "sortKey", out keyExpression);
+            var input = ConvertToBinding(source, sortKey, out keyExpression);
             DbSortClause sortClause = keyExpression.ToSortClauseDescending(collation);
             return input.Sort(new[] { sortClause });
         }
@@ -2427,9 +2440,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </remarks>
         public static DbProjectExpression Select<TProjection>(this DbExpression source, Func<DbExpression, TProjection> projection)
         {
-            EntityUtil.CheckArgumentNull(projection, "projection");
+            Contract.Requires(projection != null);
             TProjection intermediateProjection;
-            var input = ConvertToBinding(source, projection, "projection", out intermediateProjection);
+            var input = ConvertToBinding(source, projection, out intermediateProjection);
             var projectionExp = ResolveToExpression(intermediateProjection);
             return input.Project(projectionExp);
         }
@@ -2453,7 +2466,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         public static DbProjectExpression SelectMany(this DbExpression source, Func<DbExpression, DbExpression> apply)
         {
             DbExpression functorResult;
-            var inputBinding = ConvertToBinding(source, apply, "apply", out functorResult);
+            var inputBinding = ConvertToBinding(source, apply, out functorResult);
 
             var functorBinding = functorResult.Bind();
             DbApplyExpression intermediateApply = inputBinding.CrossApply(functorBinding);
@@ -2497,9 +2510,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         public static DbProjectExpression SelectMany<TSelector>(
             this DbExpression source, Func<DbExpression, DbExpression> apply, Func<DbExpression, DbExpression, TSelector> selector)
         {
+            Contract.Requires(selector != null);
+
             DbExpression functorResult;
-            var inputBinding = ConvertToBinding(source, apply, "apply", out functorResult);
-            EntityUtil.CheckArgumentNull(selector, "selector");
+            var inputBinding = ConvertToBinding(source, apply, out functorResult);
 
             var functorBinding = functorResult.Bind();
             DbApplyExpression intermediateApply = inputBinding.CrossApply(functorBinding);
@@ -2527,7 +2541,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbSkipExpression Skip(this DbSortExpression argument, DbExpression count)
         {
-            EntityUtil.CheckArgumentNull(argument, "argument");
+            Contract.Requires(argument != null);
             return argument.Input.Skip(argument.SortOrder, count);
         }
 
@@ -2551,8 +2565,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         private static DbSortExpression CreateThenBy(
             DbSortExpression source, Func<DbExpression, DbExpression> sortKey, bool ascending, string collation, bool useCollation)
         {
-            EntityUtil.CheckArgumentNull(source, "source");
-            EntityUtil.CheckArgumentNull(sortKey, "sortKey");
+            Contract.Requires(source != null);
+            Contract.Requires(sortKey != null);
             var sortKeyResult = sortKey(source.Input.Variable);
             DbSortClause sortClause;
             if (useCollation)
@@ -2692,7 +2706,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         public static DbFilterExpression Where(this DbExpression source, Func<DbExpression, DbExpression> predicate)
         {
             DbExpression predicateExp;
-            var input = ConvertToBinding(source, predicate, "predicate", out predicateExp);
+            var input = ConvertToBinding(source, predicate, out predicateExp);
             return input.Filter(predicateExp);
         }
 
@@ -2758,7 +2772,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
                     return _timeNull;
 
                 default:
-                    throw EntityUtil.InvalidEnumerationValue(typeof(PrimitiveTypeKind), (int)primitiveType);
+                    var paramName = typeof(PrimitiveTypeKind).Name;
+                    throw new ArgumentOutOfRangeException(paramName, Strings.ADP_InvalidEnumerationValue(paramName, ((int)primitiveType).ToString(CultureInfo.InvariantCulture)));
             }
         }
 
@@ -2776,7 +2791,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
                     return OuterApply(input, apply);
 
                 default:
-                    throw EntityUtil.InvalidEnumerationValue(typeof(DbExpressionKind), (int)applyKind);
+                    var paramName = typeof(DbExpressionKind).Name;
+                    throw new ArgumentOutOfRangeException(paramName, Strings.ADP_InvalidEnumerationValue(paramName, ((int)applyKind).ToString(CultureInfo.InvariantCulture)));
             }
         }
 
@@ -2811,7 +2827,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
                         return FullOuterJoin(input1, input2, joinCondition);
 
                     default:
-                        throw EntityUtil.InvalidEnumerationValue(typeof(DbExpressionKind), (int)joinKind);
+                        var paramName = typeof(DbExpressionKind).Name;
+                        throw new ArgumentOutOfRangeException(paramName, Strings.ADP_InvalidEnumerationValue(paramName, ((int)joinKind).ToString(CultureInfo.InvariantCulture)));
                 }
             }
         }
@@ -2851,7 +2868,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             if (properties == null
                 || properties.Count != 1)
             {
-                throw EntityUtil.Argument(Strings.Cqt_Element_InvalidArgumentForUnwrapSingleProperty, "arg");
+                throw new ArgumentException(Strings.Cqt_Element_InvalidArgumentForUnwrapSingleProperty, "argument");
             }
             resultType = properties[0].TypeUsage;
             return new DbElementExpression(resultType, argument, true);

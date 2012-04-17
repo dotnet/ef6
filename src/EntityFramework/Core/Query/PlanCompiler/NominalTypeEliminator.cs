@@ -20,6 +20,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Query.InternalTrees;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -1429,7 +1430,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
                 else
                 {
-                    throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.WrongVarType);
+                    throw new InvalidOperationException(Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.WrongVarType));
                 }
             }
 

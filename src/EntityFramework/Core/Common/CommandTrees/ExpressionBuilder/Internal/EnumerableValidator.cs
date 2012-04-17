@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Validates an input enumerable argument with a specific element type,
@@ -97,10 +98,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             Func<List<TElementOut>, TResult> collect,
             Func<TElementIn, int, string> deriveName)
         {
+            Contract.Requires(argument != null);
+
             Debug.Assert(map != null, "Set EnumerableValidator.ConvertElement before calling validate");
             Debug.Assert(collect != null, "Set EnumerableValidator.CreateResult before calling validate");
 
-            EntityUtil.CheckArgumentNull(argument, argumentName);
 
             var checkNull = (default(TElementIn) == null);
             var checkCount = (expectedElementCount != -1);
@@ -117,13 +119,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                 // More elements in 'arguments' than expected?
                 if (checkCount && pos == expectedElementCount)
                 {
-                    throw EntityUtil.Argument(Strings.Cqt_ExpressionList_IncorrectElementCount, argumentName);
+                    throw new ArgumentException(Strings.Cqt_ExpressionList_IncorrectElementCount, argumentName);
                 }
 
                 if (checkNull && elementIn == null)
                 {
                     // Don't call FormatIndex unless an exception is actually being thrown
-                    throw EntityUtil.ArgumentNull(StringUtil.FormatIndex(argumentName, pos));
+                    throw new ArgumentNullException(StringUtil.FormatIndex(argumentName, pos));
                 }
 
                 var elementOut = map(elementIn, pos);
@@ -136,10 +138,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                     var foundIndex = -1;
                     if (nameIndex.TryGetValue(name, out foundIndex))
                     {
-                        throw EntityUtil.Argument(
-                            Strings.Cqt_Util_CheckListDuplicateName(foundIndex, pos, name),
-                            StringUtil.FormatIndex(argumentName, pos)
-                            );
+                        throw new ArgumentException(Strings.Cqt_Util_CheckListDuplicateName(foundIndex, pos, name), StringUtil.FormatIndex(argumentName, pos));
                     }
                     nameIndex[name] = pos;
                 }
@@ -152,7 +151,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             {
                 if (pos != expectedElementCount)
                 {
-                    throw EntityUtil.Argument(Strings.Cqt_ExpressionList_IncorrectElementCount, argumentName);
+                    throw new ArgumentException(Strings.Cqt_ExpressionList_IncorrectElementCount, argumentName);
                 }
             }
             else
@@ -161,7 +160,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                 if (0 == pos
                     && !allowEmpty)
                 {
-                    throw EntityUtil.Argument(Strings.Cqt_Util_CheckListEmptyInvalid, argumentName);
+                    throw new ArgumentException(Strings.Cqt_Util_CheckListEmptyInvalid, argumentName);
                 }
             }
 

@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using CqtBuilder = System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.DbExpressionBuilder;
 
@@ -179,7 +180,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         protected virtual DbLambda VisitLambda(DbLambda lambda)
         {
-            EntityUtil.CheckArgumentNull(lambda, "lambda");
+            Contract.Requires(lambda != null);
 
             var result = lambda;
             var newFormals = VisitList(
@@ -401,14 +402,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
-            throw EntityUtil.NotSupported(Strings.Cqt_General_UnsupportedExpression(expression.GetType().FullName));
+            throw new NotSupportedException(Strings.Cqt_General_UnsupportedExpression(expression.GetType().FullName));
         }
 
         public override DbExpression Visit(DbConstantExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             // Note that it is only safe to call DbConstantExpression.GetValue because the call to
             // DbExpressionBuilder.Constant must clone immutable values (byte[]).
@@ -417,14 +418,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbNullExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             return VisitTerminal(expression, CqtBuilder.Null);
         }
 
         public override DbExpression Visit(DbVariableReferenceExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
             DbVariableReferenceExpression newRef;
@@ -438,14 +439,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbParameterReferenceExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             return VisitTerminal(expression, newType => CqtBuilder.Parameter(newType, expression.ParameterName));
         }
 
         public override DbExpression Visit(DbFunctionExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
             var newArguments = VisitExpressionList(expression.Arguments);
@@ -463,7 +464,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbLambdaExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
             var newArguments = VisitExpressionList(expression.Arguments);
@@ -481,7 +482,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbPropertyExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
             var newInstance = VisitExpression(expression.Instance);
@@ -495,7 +496,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbComparisonExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             switch (expression.ExpressionKind)
             {
@@ -518,13 +519,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                     return VisitBinary(expression, CqtBuilder.LessThanOrEqual);
 
                 default:
-                    throw EntityUtil.NotSupported();
+                    throw new NotSupportedException();
             }
         }
 
         public override DbExpression Visit(DbLikeExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
 
@@ -545,7 +546,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbLimitExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
 
@@ -565,7 +566,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbIsNullExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             return VisitUnary(
                 expression, exp =>
@@ -585,7 +586,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbArithmeticExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
             var newArguments = VisitExpressionList(expression.Arguments);
@@ -618,7 +619,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                         break;
 
                     default:
-                        throw EntityUtil.NotSupported();
+                        throw new NotSupportedException();
                 }
             }
             NotifyIfChanged(expression, result);
@@ -627,35 +628,35 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbAndExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             return VisitBinary(expression, CqtBuilder.And);
         }
 
         public override DbExpression Visit(DbOrExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             return VisitBinary(expression, CqtBuilder.Or);
         }
 
         public override DbExpression Visit(DbNotExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             return VisitUnary(expression, CqtBuilder.Not);
         }
 
         public override DbExpression Visit(DbDistinctExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             return VisitUnary(expression, CqtBuilder.Distinct);
         }
 
         public override DbExpression Visit(DbElementExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             Func<DbExpression, DbExpression> resultConstructor;
             if (expression.IsSinglePropertyUnwrapped)
@@ -673,42 +674,42 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbIsEmptyExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             return VisitUnary(expression, CqtBuilder.IsEmpty);
         }
 
         public override DbExpression Visit(DbUnionAllExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             return VisitBinary(expression, CqtBuilder.UnionAll);
         }
 
         public override DbExpression Visit(DbIntersectExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             return VisitBinary(expression, CqtBuilder.Intersect);
         }
 
         public override DbExpression Visit(DbExceptExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             return VisitBinary(expression, CqtBuilder.Except);
         }
 
         public override DbExpression Visit(DbTreatExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             return VisitTypeUnary(expression, expression.ResultType, CqtBuilder.TreatAs);
         }
 
         public override DbExpression Visit(DbIsOfExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             if (expression.ExpressionKind
                 == DbExpressionKind.IsOfOnly)
@@ -723,14 +724,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbCastExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             return VisitTypeUnary(expression, expression.ResultType, CqtBuilder.CastTo);
         }
 
         public override DbExpression Visit(DbCaseExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
 
@@ -751,7 +752,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbOfTypeExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             if (expression.ExpressionKind
                 == DbExpressionKind.OfTypeOnly)
@@ -766,7 +767,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbNewInstanceExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
             var newType = VisitTypeUsage(expression.ResultType);
@@ -795,7 +796,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbRefExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
 
@@ -817,7 +818,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbRelationshipNavigationExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
 
@@ -839,28 +840,28 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbDerefExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             return VisitUnary(expression, CqtBuilder.Deref);
         }
 
         public override DbExpression Visit(DbRefKeyExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             return VisitUnary(expression, CqtBuilder.GetRefKey);
         }
 
         public override DbExpression Visit(DbEntityRefExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             return VisitUnary(expression, CqtBuilder.GetEntityRef);
         }
 
         public override DbExpression Visit(DbScanExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
 
@@ -875,7 +876,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbFilterExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
 
@@ -894,7 +895,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbProjectExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
 
@@ -913,7 +914,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbCrossJoinExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
 
@@ -928,7 +929,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbJoinExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
 
@@ -968,7 +969,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbApplyExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
 
@@ -999,7 +1000,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbGroupByExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
 
@@ -1030,7 +1031,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbSkipExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
 
@@ -1052,7 +1053,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbSortExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
 
@@ -1072,7 +1073,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbQuantifierExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
 

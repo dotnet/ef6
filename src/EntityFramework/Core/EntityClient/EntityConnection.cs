@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Runtime.Versioning;
@@ -94,34 +95,34 @@ namespace System.Data.Entity.Core.EntityClient
         /// <param name="workspace">Workspace containing metadata information.</param>
         public EntityConnection(MetadataWorkspace workspace, DbConnection connection)
         {
-            GC.SuppressFinalize(this);
+            Contract.Requires(workspace != null);
+            Contract.Requires(connection != null);
 
-            EntityUtil.CheckArgumentNull(workspace, "workspace");
-            EntityUtil.CheckArgumentNull(connection, "connection");
+            GC.SuppressFinalize(this);
 
             if (!workspace.IsItemCollectionAlreadyRegistered(DataSpace.CSpace))
             {
-                throw EntityUtil.Argument(Strings.EntityClient_ItemCollectionsNotRegisteredInWorkspace("EdmItemCollection"));
+                throw new ArgumentException(Strings.EntityClient_ItemCollectionsNotRegisteredInWorkspace("EdmItemCollection"));
             }
             if (!workspace.IsItemCollectionAlreadyRegistered(DataSpace.SSpace))
             {
-                throw EntityUtil.Argument(Strings.EntityClient_ItemCollectionsNotRegisteredInWorkspace("StoreItemCollection"));
+                throw new ArgumentException(Strings.EntityClient_ItemCollectionsNotRegisteredInWorkspace("StoreItemCollection"));
             }
             if (!workspace.IsItemCollectionAlreadyRegistered(DataSpace.CSSpace))
             {
-                throw EntityUtil.Argument(Strings.EntityClient_ItemCollectionsNotRegisteredInWorkspace("StorageMappingItemCollection"));
+                throw new ArgumentException(Strings.EntityClient_ItemCollectionsNotRegisteredInWorkspace("StorageMappingItemCollection"));
             }
 
             if (connection.State
                 != ConnectionState.Closed)
             {
-                throw EntityUtil.Argument(Strings.EntityClient_ConnectionMustBeClosed);
+                throw new ArgumentException(Strings.EntityClient_ConnectionMustBeClosed);
             }
 
             // Verify that a factory can be retrieved
             if (DbProviderFactories.GetFactory(connection) == null)
             {
-                throw EntityUtil.ProviderIncompatible(Strings.EntityClient_DbConnectionHasNoProvider(connection));
+                throw new ProviderIncompatibleException(Strings.EntityClient_DbConnectionHasNoProvider(connection));
             }
 
             var collection = (StoreItemCollection)workspace.GetItemCollection(DataSpace.SSpace);
@@ -136,6 +137,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         /// Get or set the entity connection string associated with this connection object
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         public override string ConnectionString
         {
             get
@@ -188,7 +190,7 @@ namespace System.Data.Entity.Core.EntityClient
                     {
                         if (EntityUtil.IsCatchableExceptionType(e))
                         {
-                            throw EntityUtil.Provider(@"ConnectionString", e);
+                            throw new EntityException(Strings.EntityClient_ProviderSpecificError(@"ConnectionString"), e);
                         }
                         throw;
                     }
@@ -233,6 +235,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         /// Get the time to wait when attempting to establish a connection before ending the try and generating an error
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         public override int ConnectionTimeout
         {
             get
@@ -250,7 +253,7 @@ namespace System.Data.Entity.Core.EntityClient
                 {
                     if (EntityUtil.IsCatchableExceptionType(e))
                     {
-                        throw EntityUtil.Provider(@"ConnectionTimeout", e);
+                        throw new EntityException(Strings.EntityClient_ProviderSpecificError(@"ConnectionTimeout"), e);
                     }
                     throw;
                 }
@@ -268,6 +271,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         /// Gets the ConnectionState property of the EntityConnection
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         public override ConnectionState State
         {
             get
@@ -289,7 +293,7 @@ namespace System.Data.Entity.Core.EntityClient
                 {
                     if (EntityUtil.IsCatchableExceptionType(e))
                     {
-                        throw EntityUtil.Provider(@"State", e);
+                        throw new EntityException(Strings.EntityClient_ProviderSpecificError(@"State"), e);
                     }
                     throw;
                 }
@@ -299,6 +303,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         /// Gets the name or network address of the data source to connect to
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         public override string DataSource
         {
             get
@@ -316,7 +321,7 @@ namespace System.Data.Entity.Core.EntityClient
                 {
                     if (EntityUtil.IsCatchableExceptionType(e))
                     {
-                        throw EntityUtil.Provider(@"DataSource", e);
+                        throw new EntityException(Strings.EntityClient_ProviderSpecificError(@"DataSource"), e);
                     }
                     throw;
                 }
@@ -326,18 +331,19 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         /// Gets a string that contains the version of the data store to which the client is connected
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         public override string ServerVersion
         {
             get
             {
                 if (_storeConnection == null)
                 {
-                    throw EntityUtil.InvalidOperation(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
+                    throw new InvalidOperationException(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
                 }
 
                 if (State != ConnectionState.Open)
                 {
-                    throw EntityUtil.InvalidOperation(Strings.EntityClient_ConnectionNotOpen);
+                    throw new InvalidOperationException(Strings.EntityClient_ConnectionNotOpen);
                 }
 
                 try
@@ -348,7 +354,7 @@ namespace System.Data.Entity.Core.EntityClient
                 {
                     if (EntityUtil.IsCatchableExceptionType(e))
                     {
-                        throw EntityUtil.Provider(@"ServerVersion", e);
+                        throw new EntityException(Strings.EntityClient_ProviderSpecificError(@"ServerVersion"), e);
                     }
                     throw;
                 }
@@ -511,12 +517,12 @@ namespace System.Data.Entity.Core.EntityClient
         {
             if (_storeConnection == null)
             {
-                throw EntityUtil.InvalidOperation(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
+                throw new InvalidOperationException(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
             }
 
             if (State != ConnectionState.Closed)
             {
-                throw EntityUtil.InvalidOperation(Strings.EntityClient_CannotReopenConnection);
+                throw new InvalidOperationException(Strings.EntityClient_CannotReopenConnection);
             }
 
             var closeStoreConnectionOnFailure = false;
@@ -533,7 +539,7 @@ namespace System.Data.Entity.Core.EntityClient
             if (_storeConnection == null
                 || _storeConnection.State != ConnectionState.Open)
             {
-                throw EntityUtil.InvalidOperation(Strings.EntityClient_ConnectionNotOpen);
+                throw new InvalidOperationException(Strings.EntityClient_ConnectionNotOpen);
             }
 
             InitializeMetadata(_storeConnection, _storeConnection, closeStoreConnectionOnFailure);
@@ -577,7 +583,7 @@ namespace System.Data.Entity.Core.EntityClient
                                                ? EntityRes.GetString(exceptionCode)
                                                : EntityRes.GetString(exceptionCode, attemptedOperation);
 
-                    throw EntityUtil.ProviderExceptionWithMessage(exceptionMessage, e);
+                    throw new EntityException(exceptionMessage, e);
                 }
                 throw;
             }
@@ -673,7 +679,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <param name="databaseName">The name of the database to change to</param>
         public override void ChangeDatabase(string databaseName)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -704,17 +710,17 @@ namespace System.Data.Entity.Core.EntityClient
         {
             if (CurrentTransaction != null)
             {
-                throw EntityUtil.InvalidOperation(Strings.EntityClient_TransactionAlreadyStarted);
+                throw new InvalidOperationException(Strings.EntityClient_TransactionAlreadyStarted);
             }
 
             if (_storeConnection == null)
             {
-                throw EntityUtil.InvalidOperation(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
+                throw new InvalidOperationException(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
             }
 
             if (State != ConnectionState.Open)
             {
-                throw EntityUtil.InvalidOperation(Strings.EntityClient_ConnectionNotOpen);
+                throw new InvalidOperationException(Strings.EntityClient_ConnectionNotOpen);
             }
 
             DbTransaction storeTransaction = null;
@@ -726,10 +732,7 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 if (EntityUtil.IsCatchableExceptionType(e))
                 {
-                    throw EntityUtil.ProviderExceptionWithMessage(
-                        Strings.EntityClient_ErrorInBeginningTransaction,
-                        e
-                        );
+                    throw new EntityException(Strings.EntityClient_ErrorInBeginningTransaction, e);
                 }
                 throw;
             }
@@ -738,8 +741,7 @@ namespace System.Data.Entity.Core.EntityClient
             // for the transaction object
             if (storeTransaction == null)
             {
-                throw EntityUtil.ProviderIncompatible(
-                    Strings.EntityClient_ReturnedNullOnProviderMethod("BeginTransaction", _storeConnection.GetType().Name));
+                throw new ProviderIncompatibleException(Strings.EntityClient_ReturnedNullOnProviderMethod("BeginTransaction", _storeConnection.GetType().Name));
             }
 
             _currentTransaction = new EntityTransaction(this, storeTransaction);
@@ -754,12 +756,12 @@ namespace System.Data.Entity.Core.EntityClient
         {
             if (_storeConnection == null)
             {
-                throw EntityUtil.InvalidOperation(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
+                throw new InvalidOperationException(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
             }
 
             if (State != ConnectionState.Open)
             {
-                throw EntityUtil.InvalidOperation(Strings.EntityClient_ConnectionNotOpen);
+                throw new InvalidOperationException(Strings.EntityClient_ConnectionNotOpen);
             }
 
             try
@@ -791,7 +793,7 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 if (EntityUtil.IsCatchableExceptionType(e))
                 {
-                    throw EntityUtil.Provider(@"EnlistTransaction", e);
+                    throw new EntityException(Strings.EntityClient_ProviderSpecificError(@"EnlistTransaction"), e);
                 }
                 throw;
             }
@@ -874,7 +876,7 @@ namespace System.Data.Entity.Core.EntityClient
                     // There cannot be other parameters when the named connection is specified
                     if (1 < userConnectionOptions.Parsetable.Count)
                     {
-                        throw EntityUtil.Argument(Strings.EntityClient_ExtraParametersWithNamedConnection);
+                        throw new ArgumentException(Strings.EntityClient_ExtraParametersWithNamedConnection);
                     }
 
                     // Find the named connection from the configuration, then extract the settings
@@ -882,7 +884,7 @@ namespace System.Data.Entity.Core.EntityClient
                     if (setting == null
                         || setting.ProviderName != s_entityClientProviderName)
                     {
-                        throw EntityUtil.Argument(Strings.EntityClient_InvalidNamedConnection);
+                        throw new ArgumentException(Strings.EntityClient_InvalidNamedConnection);
                     }
 
                     effectiveConnectionOptions = new DbConnectionOptions(setting.ConnectionString, EntityConnectionStringBuilder.Synonyms);
@@ -891,7 +893,7 @@ namespace System.Data.Entity.Core.EntityClient
                     var nestedNamedConnection = effectiveConnectionOptions[EntityConnectionStringBuilder.NameParameterName];
                     if (!string.IsNullOrEmpty(nestedNamedConnection))
                     {
-                        throw EntityUtil.Argument(Strings.EntityClient_NestedNamedConnection(namedConnection));
+                        throw new ArgumentException(Strings.EntityClient_NestedNamedConnection(namedConnection));
                     }
                 }
 
@@ -923,7 +925,7 @@ namespace System.Data.Entity.Core.EntityClient
                 {
                     if (EntityUtil.IsCatchableExceptionType(e))
                     {
-                        throw EntityUtil.Provider(@"ConnectionString", e);
+                        throw new EntityException(Strings.EntityClient_ProviderSpecificError(@"ConnectionString"), e);
                     }
                     throw;
                 }
@@ -961,7 +963,7 @@ namespace System.Data.Entity.Core.EntityClient
             // Check that we have a non-null and non-empty value for the keyword
             if (string.IsNullOrEmpty(keywordValue))
             {
-                throw EntityUtil.Argument(Strings.EntityClient_ConnectionStringMissingInfo(keywordName));
+                throw new ArgumentException(Strings.EntityClient_ConnectionStringMissingInfo(keywordName));
             }
             return keywordValue;
         }
@@ -1029,7 +1031,7 @@ namespace System.Data.Entity.Core.EntityClient
 
         private static string GetErrorMessageWorthyProviderName(DbProviderFactory factory)
         {
-            EntityUtil.CheckArgumentNull(factory, "factory");
+            Contract.Requires(factory != null);
 
             string providerName;
             if (!EntityUtil.TryGetProviderInvariantName(factory, out providerName))
@@ -1237,10 +1239,7 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 if (EntityUtil.IsCatchableExceptionType(e))
                 {
-                    throw EntityUtil.ProviderExceptionWithMessage(
-                        Strings.EntityClient_ErrorInClosingConnection,
-                        e
-                        );
+                    throw new EntityException(Strings.EntityClient_ErrorInClosingConnection, e);
                 }
                 throw;
             }
@@ -1280,7 +1279,7 @@ namespace System.Data.Entity.Core.EntityClient
         {
             if (_initialized)
             {
-                throw EntityUtil.InvalidOperation(Strings.EntityClient_SettingsCannotBeChangedOnOpenConnection);
+                throw new InvalidOperationException(Strings.EntityClient_SettingsCannotBeChangedOnOpenConnection);
             }
         }
 
@@ -1295,7 +1294,7 @@ namespace System.Data.Entity.Core.EntityClient
             }
             catch (ArgumentException e)
             {
-                throw EntityUtil.Argument(Strings.EntityClient_InvalidStoreProvider, e);
+                throw new ArgumentException(Strings.EntityClient_InvalidStoreProvider, e);
             }
         }
 
@@ -1307,8 +1306,7 @@ namespace System.Data.Entity.Core.EntityClient
             var storeConnection = factory.CreateConnection();
             if (storeConnection == null)
             {
-                throw EntityUtil.ProviderIncompatible(
-                    Strings.EntityClient_ReturnedNullOnProviderMethod("CreateConnection", factory.GetType().Name));
+                throw new ProviderIncompatibleException(Strings.EntityClient_ReturnedNullOnProviderMethod("CreateConnection", factory.GetType().Name));
             }
             return storeConnection;
         }

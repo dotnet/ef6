@@ -7,6 +7,7 @@
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using OM = System.Collections.ObjectModel;
 
@@ -22,8 +23,8 @@
             ItemCollection itemCollection)
             : base(functionImport, targetFunction)
         {
-            EntityUtil.CheckArgumentNull(structuralTypeMappingsList, "structuralTypeMappingsList");
-            EntityUtil.CheckArgumentNull(itemCollection, "itemCollection");
+            Contract.Requires(structuralTypeMappingsList != null);
+            Contract.Requires(itemCollection != null);
             Debug.Assert(!functionImport.IsComposableAttribute, "!functionImport.IsComposableAttribute");
             Debug.Assert(!targetFunction.IsComposableAttribute, "!targetFunction.IsComposableAttribute");
 
@@ -40,10 +41,10 @@
             {
                 Debug.Assert(functionImport.ReturnParameters.Count == structuralTypeMappingsList.Count);
                 ResultMappings = new OM.ReadOnlyCollection<FunctionImportStructuralTypeMappingKB>(
-                    EntityUtil.CheckArgumentNull(structuralTypeMappingsList, "structuralTypeMappingsList")
+                    structuralTypeMappingsList
                         .Select(
                             (structuralTypeMappings) => new FunctionImportStructuralTypeMappingKB(
-                                                            EntityUtil.CheckArgumentNull(structuralTypeMappings, "structuralTypeMappings"),
+                                                            structuralTypeMappings,
                                                             itemCollection))
                         .ToArray());
                 noExplicitResultMappings = false;
@@ -73,7 +74,7 @@
             {
                 if (ResultMappings.Count <= resultSetIndex)
                 {
-                    EntityUtil.ThrowArgumentOutOfRangeException("resultSetIndex");
+                    throw new ArgumentOutOfRangeException("resultSetIndex");
                 }
                 return ResultMappings[resultSetIndex];
             }
@@ -138,7 +139,7 @@
                 {
                     if (null != entityType)
                     {
-                        throw EntityUtil.CommandExecution(Strings.ADP_InvalidDataReaderUnableToDetermineType);
+                        throw new EntityCommandExecutionException(Strings.ADP_InvalidDataReaderUnableToDetermineType);
                     }
                     entityType = resultMapping.MappedEntityTypes[i];
                 }
@@ -147,7 +148,7 @@
             // if there is no match, raise an exception
             if (null == entityType)
             {
-                throw EntityUtil.CommandExecution(Strings.ADP_InvalidDataReaderUnableToDetermineType);
+                throw new EntityCommandExecutionException(Strings.ADP_InvalidDataReaderUnableToDetermineType);
             }
 
             return entityType;

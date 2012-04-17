@@ -2,6 +2,7 @@
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
 
     /// <summary>
@@ -164,7 +165,7 @@
         {
             if (relationshipManager == null)
             {
-                throw EntityUtil.UnexpectedNullRelationshipManager();
+                throw new InvalidOperationException(Strings.RelationshipManager_UnexpectedNull);
             }
             _entity = entity;
             _propertyStrategy = propertyStrategy(entity);
@@ -200,7 +201,7 @@
         {
             if (relationshipManager == null)
             {
-                throw EntityUtil.UnexpectedNullRelationshipManager();
+                throw new InvalidOperationException(Strings.RelationshipManager_UnexpectedNull);
             }
             _entity = entity;
             _propertyStrategy = propertyStrategy(entity);

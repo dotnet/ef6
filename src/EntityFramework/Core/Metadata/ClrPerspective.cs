@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
 
     /// <summary>
@@ -129,7 +130,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 if (!MetadataWorkspace.TryGetEntityContainer(defaultContainerName, DataSpace.CSpace, out container))
                 {
-                    throw EntityUtil.InvalidDefaultContainerName("defaultContainerName", defaultContainerName);
+                    throw new ArgumentException(Strings.ObjectContext_InvalidDefaultContainerName(defaultContainerName), "defaultContainerName");
                 }
             }
             _defaultContainer = container;

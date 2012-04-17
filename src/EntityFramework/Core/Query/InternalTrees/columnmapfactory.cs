@@ -109,7 +109,7 @@
             {
                 if (storeDataReader.FieldCount != 1)
                 {
-                    throw EntityUtil.CommandExecutionDataReaderFieldCountForScalarType();
+                    throw new EntityCommandExecutionException(Strings.ADP_InvalidDataReaderFieldCountForScalarType);
                 }
                 elementColumnMap = new ScalarColumnMap(TypeUsage.Create(edmType), edmType.Name, 0, 0);
             }
@@ -148,8 +148,7 @@
             if (type.IsAbstract
                 || (null == constructor && !type.IsValueType))
             {
-                throw EntityUtil.InvalidOperation(
-                    Strings.ObjectContext_InvalidTypeForStoreQuery(type));
+                throw new InvalidOperationException(Strings.ObjectContext_InvalidTypeForStoreQuery(type));
             }
 
             // build a LINQ expression used by result assembly to create results
@@ -186,10 +185,9 @@
                 // make sure that a single column isn't contributing to multiple properties
                 if (memberGroup.Count() != 1)
                 {
-                    throw EntityUtil.InvalidOperation(
-                        Strings.ObjectContext_TwoPropertiesMappedToSameColumn(
-                            reader.GetName(memberGroup.Key),
-                            String.Join(", ", memberGroup.Select(tuple => tuple.Item3.Name).ToArray())));
+                    throw new InvalidOperationException(Strings.ObjectContext_TwoPropertiesMappedToSameColumn(
+                        reader.GetName(memberGroup.Key),
+                        String.Join(", ", memberGroup.Select(tuple => tuple.Item3.Name).ToArray())));
                 }
 
                 var member = memberGroup.Single();
@@ -296,8 +294,7 @@
             {
                 if (!Helper.IsScalarType(member.TypeUsage.EdmType))
                 {
-                    throw EntityUtil.InvalidOperation(
-                        Strings.ADP_InvalidDataReaderUnableToMaterializeNonScalarType(member.Name, member.TypeUsage.EdmType.FullName));
+                    throw new InvalidOperationException(Strings.ADP_InvalidDataReaderUnableToMaterializeNonScalarType(member.Name, member.TypeUsage.EdmType.FullName));
                 }
 
                 var ordinal = GetMemberOrdinalFromReader(storeDataReader, member, edmType, renameList);
@@ -347,7 +344,8 @@
 
             if (!TryGetColumnOrdinalFromReader(storeDataReader, memberName, out result))
             {
-                throw EntityUtil.CommandExecutionDataReaderMissingColumnForType(member, currentType);
+                throw new EntityCommandExecutionException(Strings.ADP_InvalidDataReaderMissingColumnForType(
+                    currentType.FullName, member.Name));
             }
             return result;
         }
@@ -381,7 +379,7 @@
             int result;
             if (!TryGetColumnOrdinalFromReader(storeDataReader, columnName, out result))
             {
-                throw EntityUtil.CommandExecutionDataReaderMissinDiscriminatorColumn(columnName, functionImport);
+                throw new EntityCommandExecutionException(Strings.ADP_InvalidDataReaderMissingDiscriminatorColumn(columnName, functionImport.FullName));
             }
             return result;
         }

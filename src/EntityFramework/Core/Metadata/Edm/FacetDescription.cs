@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Threading;
 
@@ -289,7 +290,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 if (_isConstant)
                 {
-                    throw EntityUtil.MissingDefaultValueForConstantFacet(_facetName, declaringTypeName);
+                    throw new ArgumentException(Strings.MissingDefaultValueForConstantFacet(_facetName, declaringTypeName));
                 }
             }
             else if (IsNumericType(_facetType))
@@ -301,7 +302,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         ||
                         (_minValue.HasValue && _minValue.Value != _maxValue.Value))
                     {
-                        throw EntityUtil.MinAndMaxValueMustBeSameForConstantFacet(_facetName, declaringTypeName);
+                        throw new ArgumentException(Strings.MinAndMaxValueMustBeSameForConstantFacet(_facetName, declaringTypeName));
                     }
                 }
 
@@ -309,20 +310,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 else if (!_minValue.HasValue
                          || !_maxValue.HasValue)
                 {
-                    throw EntityUtil.BothMinAndMaxValueMustBeSpecifiedForNonConstantFacet(_facetName, declaringTypeName);
+                    throw new ArgumentException(Strings.BothMinAndMaxValueMustBeSpecifiedForNonConstantFacet(_facetName, declaringTypeName));
                 }
                 else if (_minValue.Value == _maxValue)
                 {
-                    throw EntityUtil.MinAndMaxValueMustBeDifferentForNonConstantFacet(_facetName, declaringTypeName);
+                    throw new ArgumentException(Strings.MinAndMaxValueMustBeDifferentForNonConstantFacet(_facetName, declaringTypeName));
                 }
                 else if (_minValue < 0
                          || _maxValue < 0)
                 {
-                    throw EntityUtil.MinAndMaxMustBePositive(_facetName, declaringTypeName);
+                    throw new ArgumentException(Strings.MinAndMaxMustBePositive(_facetName, declaringTypeName));
                 }
                 else if (_minValue > _maxValue)
                 {
-                    throw EntityUtil.MinMustBeLessThanMax(_minValue.ToString(), _facetName, declaringTypeName);
+                    throw new ArgumentException(Strings.MinMustBeLessThanMax(_minValue.ToString(), _facetName, declaringTypeName));
                 }
             }
         }

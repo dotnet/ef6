@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.CommandTrees.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -25,7 +26,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             : base(metadata, dataSpace)
         {
             // Ensure the query expression is non-null
-            EntityUtil.CheckArgumentNull(query, "query");
+            Contract.Requires(query != null);
 
             if (validate)
             {

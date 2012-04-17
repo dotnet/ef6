@@ -2,6 +2,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections;
     using System.Collections.Generic;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
@@ -72,7 +73,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     return (TDerived)item;
                 }
-                throw EntityUtil.ItemInvalidIdentity(identity, "identity");
+                throw new ArgumentException(Strings.ItemInvalidIdentity(identity), "identity");
             }
         }
 
@@ -96,7 +97,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 return (TDerived)item;
             }
-            throw EntityUtil.ItemInvalidIdentity(identity, "identity");
+            throw new ArgumentException(Strings.ItemInvalidIdentity(identity), "identity");
         }
 
         /// <summary>

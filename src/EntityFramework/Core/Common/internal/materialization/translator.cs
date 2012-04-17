@@ -14,6 +14,7 @@
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -716,7 +717,7 @@
         internal static Expression Emit_NullConstant(Type type)
         {
             Expression nullConstant;
-            EntityUtil.CheckArgumentNull(type, "type");
+            Contract.Requires(type != null);
 
             // check if null can be assigned to the type
             if (type.IsClass
@@ -895,7 +896,7 @@
                 }
                 catch (NullReferenceException)
                 {
-                    throw EntityUtil.ValueNullReferenceCast(typeof(TTarget));
+                    throw new InvalidOperationException(Strings.Materializer_NullReferenceCast(typeof(TTarget).Name));
                 }
             }
         }
@@ -2004,7 +2005,7 @@
 
                     if (typeToInstantiate == null)
                     {
-                        throw EntityUtil.InvalidOperation(Strings.ObjectQuery_UnableToMaterializeArbitaryProjectionType(arg.RequestedType));
+                        throw new InvalidOperationException(Strings.ObjectQuery_UnableToMaterializeArbitaryProjectionType(arg.RequestedType));
                     }
 
                     var listOfElementType = typeof(List<>).MakeGenericType(innerElementType);
@@ -2355,7 +2356,7 @@
         internal override TranslatorResult Visit(VarRefColumnMap columnMap, TranslatorArg arg)
         {
             Debug.Fail("VarRefColumnMap should be substituted at this point");
-            throw EntityUtil.InvalidOperation(String.Empty);
+            throw new InvalidOperationException(String.Empty);
         }
 
         #endregion

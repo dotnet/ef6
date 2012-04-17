@@ -2,6 +2,8 @@ namespace System.Data.Entity.Core.Common
 {
     using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// A prepared command definition, can be cached and reused to avoid 
@@ -20,11 +22,11 @@ namespace System.Data.Entity.Core.Common
         /// <returns>the DbCommandDefinition</returns>
         internal static DbCommandDefinition CreateCommandDefinition(DbCommand prototype)
         {
-            EntityUtil.CheckArgumentNull(prototype, "prototype");
+            Contract.Requires(prototype != null);
             var cloneablePrototype = prototype as ICloneable;
             if (null == cloneablePrototype)
             {
-                throw EntityUtil.CannotCloneStoreProvider();
+                throw new ProviderIncompatibleException(Strings.EntityClient_CannotCloneStoreProvider);
             }
             var clonedPrototype = (DbCommand)(cloneablePrototype.Clone());
             return new DbCommandDefinition(clonedPrototype);
@@ -36,11 +38,11 @@ namespace System.Data.Entity.Core.Common
         /// </summary>
         protected DbCommandDefinition(DbCommand prototype)
         {
-            EntityUtil.CheckArgumentNull(prototype, "prototype");
+            Contract.Requires(prototype != null);
             _prototype = prototype as ICloneable;
             if (null == _prototype)
             {
-                throw EntityUtil.CannotCloneStoreProvider();
+                throw new ProviderIncompatibleException(Strings.EntityClient_CannotCloneStoreProvider);
             }
         }
 
@@ -62,8 +64,8 @@ namespace System.Data.Entity.Core.Common
 
         internal static void PopulateParameterFromTypeUsage(DbParameter parameter, TypeUsage type, bool isOutParam)
         {
-            EntityUtil.CheckArgumentNull(parameter, "parameter");
-            EntityUtil.CheckArgumentNull(type, "type");
+            Contract.Requires(parameter != null);
+            Contract.Requires(type != null);
 
             // parameter.IsNullable - from the NullableConstraintAttribute value
             parameter.IsNullable = TypeSemantics.IsNullable(type);

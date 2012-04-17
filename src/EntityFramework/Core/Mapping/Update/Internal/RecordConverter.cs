@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Data.Entity.Resources;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Converts records to new instance expressions. Assumes that all inputs come from a single data reader (because
@@ -74,13 +75,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private PropagatorResult ConvertStateEntryToPropagatorResult(
             IEntityStateEntry stateEntry, bool useCurrentValues, ModifiedPropertiesBehavior modifiedPropertiesBehavior)
         {
+            Contract.Requires(stateEntry != null);
+
             try
             {
-                EntityUtil.CheckArgumentNull(stateEntry, "stateEntry");
                 var record = useCurrentValues
-                                 ? EntityUtil.CheckArgumentNull(stateEntry.CurrentValues as IExtendedDataRecord, "stateEntry.CurrentValues")
-                                 : EntityUtil.CheckArgumentNull(
-                                     stateEntry.OriginalValues as IExtendedDataRecord, "stateEntry.OriginalValues");
+                    ? stateEntry.CurrentValues
+                    : (IExtendedDataRecord)stateEntry.OriginalValues;
 
                 var isModified = false; // the root of the state entry is unchanged because the type is static
                 return ExtractorMetadata.ExtractResultFromRecord(

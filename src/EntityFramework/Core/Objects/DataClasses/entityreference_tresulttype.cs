@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Runtime.Serialization;
     using System.Xml.Serialization;
 
@@ -181,7 +182,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         && ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One)
                     {
                         //query returned zero related end; one related end was expected.
-                        throw EntityUtil.LessThanExpectedRelatedEntitiesFound();
+                        throw new InvalidOperationException(Strings.EntityReference_LessThanExpectedRelatedEntitiesFound);
                     }
                     else if (mergeOption == MergeOption.OverwriteChanges
                              || mergeOption == MergeOption.PreserveChanges)
@@ -189,7 +190,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         // This entity is not related to anything in this AssociationSet and Role on the server.
                         // If there is an existing _cachedValue, we may need to clear it out, based on the MergeOption
                         var sourceKey = WrappedOwner.EntityKey;
-                        EntityUtil.CheckEntityKeyNull(sourceKey);
+                        if ((object)sourceKey == null)
+                        {
+                            throw new InvalidOperationException(Strings.EntityKey_UnexpectedNull);
+                        }
                         ObjectStateManager.RemoveRelationships(
                             ObjectContext, mergeOption, (AssociationSet)RelationshipSet, sourceKey, (AssociationEndMember)FromEndProperty);
                     }
@@ -205,7 +209,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 else
                 {
                     // More than 1 result, which is non-recoverable data inconsistency
-                    throw EntityUtil.MoreThanExpectedRelatedEntitiesFound();
+                    throw new InvalidOperationException(Strings.EntityReference_MoreThanExpectedRelatedEntitiesFound);
                 }
             }
             finally
@@ -247,8 +251,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <exception cref="InvalidOperationException">Thrown when the entity cannot be related via the current relationship end.</exception>
         public void Attach(TEntity entity)
         {
+            Contract.Requires(entity != null);
+
             CheckOwnerNull();
-            EntityUtil.CheckArgumentNull(entity, "entity");
             Attach(new[] { EntityWrapperFactory.WrapEntityUsingContext(entity, ObjectContext) }, false);
         }
 
@@ -308,7 +313,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                                 &&
                                 relationshipEntry.State != EntityState.Deleted)
                             {
-                                throw EntityUtil.EntityConflictsWithKeyEntry();
+                                throw new InvalidOperationException(Strings.ObjectStateManager_EntityConflictsWithKeyEntry);
                             }
                         }
                     }
@@ -323,7 +328,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     if (existingEntry.State
                         == EntityState.Deleted)
                     {
-                        throw EntityUtil.UnableToAddRelationshipWithDeletedEntity();
+                        throw new InvalidOperationException(Strings.RelatedEnd_UnableToAddRelationshipWithDeletedEntity);
                     }
 
                     // We know the target end of this relationship is 1..1 or 0..1 since it is a reference, so if the source end is also not Many, we have a 1-to-1
@@ -334,7 +339,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         // Make sure the target entity is not already related to something else.
                         // devnote: The call to Add below does *not* do this check for the fixup case, so if it's not done here, no failure will occur
                         //          and existing relationships may be deleted unexpectedly. RelatedEnd.Include should not remove existing relationships, only add new ones.
-                        throw EntityUtil.EntityConflictsWithKeyEntry();
+                        throw new InvalidOperationException(Strings.ObjectStateManager_EntityConflictsWithKeyEntry);
                     }
 
                     // We have an existing entity with the same key, just hook up the related ends
@@ -364,7 +369,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 }
 
                 var ownerKey = WrappedOwner.EntityKey;
-                EntityUtil.CheckEntityKeyNull(ownerKey);
+                if ((object)ownerKey == null)
+                {
+                    throw new InvalidOperationException(Strings.EntityKey_UnexpectedNull);
+                }
                 var wrapper = new RelationshipWrapper(
                     (AssociationSet)RelationshipSet,
                     RelationshipNavigation.From, ownerKey, RelationshipNavigation.To, DetachedEntityKey);
@@ -542,7 +550,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             if (!CanSetEntityType(wrappedEntity))
             {
-                throw EntityUtil.InvalidContainedTypeReference(wrappedEntity.Entity.GetType().FullName, typeof(TEntity).FullName);
+                throw new InvalidOperationException(Strings.RelatedEnd_InvalidContainedType_Reference(wrappedEntity.Entity.GetType().FullName, typeof(TEntity).FullName));
             }
         }
 
@@ -633,7 +641,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         // Detect circular references
                         if (visited.Contains(_wrappedCachedValue))
                         {
-                            throw EntityUtil.CircularRelationshipsWithReferentialConstraints();
+                            throw new InvalidOperationException(Strings.RelationshipManager_CircularRelationshipsWithReferentialConstraints);
                         }
                         visited.Add(_wrappedCachedValue);
 
@@ -674,8 +682,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             if (applyConstraints && !IsEmpty())
             {
-                throw EntityUtil.CannotAddMoreThanOneEntityToEntityReference(
-                    RelationshipNavigation.To, RelationshipNavigation.RelationshipName);
+                throw new InvalidOperationException(Strings.EntityReference_CannotAddMoreThanOneEntityToEntityReference(RelationshipNavigation.To, RelationshipNavigation.RelationshipName));
             }
         }
 
@@ -752,8 +759,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 if (!ReferenceEquals(null, value)
                     && !Equals(value, wrapper.Entity))
                 {
-                    throw EntityUtil.CannotAddMoreThanOneEntityToEntityReference(
-                        RelationshipNavigation.To, RelationshipNavigation.RelationshipName);
+                    throw new InvalidOperationException(Strings.EntityReference_CannotAddMoreThanOneEntityToEntityReference(RelationshipNavigation.To, RelationshipNavigation.RelationshipName));
                 }
             }
         }
@@ -804,8 +810,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     if (tm == null || tm.ProcessedEntities == null
                         || tm.ProcessedEntities.Contains(_wrappedCachedValue))
                     {
-                        throw EntityUtil.CannotAddMoreThanOneEntityToEntityReference(
-                            RelationshipNavigation.To, RelationshipNavigation.RelationshipName);
+                        throw new InvalidOperationException(Strings.EntityReference_CannotAddMoreThanOneEntityToEntityReference(RelationshipNavigation.To, RelationshipNavigation.RelationshipName));
                     }
                 }
                 if (tm != null

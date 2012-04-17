@@ -304,11 +304,11 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             {
                 if (DataRecord.IsImplicitlyClosed)
                 {
-                    throw EntityUtil.ImplicitlyClosedDataReaderError();
+                    throw new InvalidOperationException(Strings.ADP_ImplicitlyClosedDataReaderError);
                 }
                 if (DataRecord.IsExplicitlyClosed)
                 {
-                    throw EntityUtil.DataReaderClosed(methodName);
+                    throw new InvalidOperationException(Strings.ADP_DataReaderClosed(methodName));
                 }
             }
         }
@@ -368,7 +368,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         /// <exception cref="NotSupportedException">GetSchemaTable is not supported at this time</exception>
         public override DataTable GetSchemaTable()
         {
-            throw EntityUtil.NotSupported(Strings.ADP_GetSchemaTableIsNotSupported);
+            throw new NotSupportedException(Strings.ADP_GetSchemaTableIsNotSupported);
         }
 
         /// <summary>
@@ -547,7 +547,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
             else
             {
-                result = TypeHelpers.GetFullName(DefaultRecordState.GetTypeUsage(ordinal));
+                result = DefaultRecordState.GetTypeUsage(ordinal).ToString();
             }
             return result;
         }
@@ -621,7 +621,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override Type GetProviderSpecificFieldType(int ordinal)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         #endregion
@@ -669,7 +669,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override object GetProviderSpecificValue(int ordinal)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -681,7 +681,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetProviderSpecificValues(object[] values)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>

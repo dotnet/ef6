@@ -7,10 +7,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
 
@@ -34,9 +36,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             ExtractedStateEntry stateEntry)
             : base(stateEntry.Original, stateEntry.Current)
         {
-            EntityUtil.CheckArgumentNull(functionMapping, "functionMapping");
-            EntityUtil.CheckArgumentNull(translator, "translator");
-            EntityUtil.CheckArgumentNull(stateEntries, "stateEntries");
+            Contract.Requires(functionMapping != null);
+            Contract.Requires(translator != null);
+            Contract.Requires(stateEntries != null);
 
             // populate the main state entry for error reporting
             m_stateEntries = stateEntries;
@@ -187,7 +189,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 if (translator.KeyManager.HasPrincipals(identifier))
                 {
-                    throw EntityUtil.InvalidOperation(Strings.Update_GeneratedDependent(columnName));
+                    throw new InvalidOperationException(Strings.Update_GeneratedDependent(columnName));
                 }
 
                 // register output identifier to enable fix-up and dependency tracking
@@ -315,9 +317,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         if (UpdateTranslator.RequiresContext(e))
                         {
                             // wrap the exception
-                            throw EntityUtil.Update(
-                                Strings.Update_UnableToConvertRowsAffectedParameterToInt32(
-                                    m_rowsAffectedParameter.ParameterName, typeof(int).FullName), e, GetStateEntries(translator));
+                            throw new UpdateException(Strings.Update_UnableToConvertRowsAffectedParameterToInt32(
+                                m_rowsAffectedParameter.ParameterName, typeof(int).FullName), e, GetStateEntries(translator).Cast<ObjectStateEntry>().Distinct());
                         }
                         throw;
                     }
@@ -336,9 +337,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
             catch (IndexOutOfRangeException)
             {
-                throw EntityUtil.Update(
-                    Strings.Update_MissingResultColumn(columnName), null,
-                    GetStateEntries(translator));
+                throw new UpdateException(Strings.Update_MissingResultColumn(columnName), null, GetStateEntries(translator).Cast<ObjectStateEntry>().Distinct());
             }
             return columnOrdinal;
         }

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Common;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -70,7 +71,7 @@ namespace System.Data.Entity.Core.EntityClient
             OnChange();
             if (null == values)
             {
-                throw EntityUtil.ArgumentNull("values");
+                throw new ArgumentNullException("values");
             }
             foreach (var value in values)
             {
@@ -83,12 +84,13 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         private int CheckName(string parameterName)
         {
             var index = IndexOf(parameterName);
             if (index < 0)
             {
-                throw EntityUtil.EntityParameterCollectionInvalidParameterName(parameterName);
+                throw new IndexOutOfRangeException(Strings.EntityParameterCollectionInvalidParameterName(parameterName));
             }
             return index;
         }
@@ -129,12 +131,13 @@ namespace System.Data.Entity.Core.EntityClient
             return InnerList[index];
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         protected override DbParameter GetParameter(string parameterName)
         {
             var index = IndexOf(parameterName);
             if (index < 0)
             {
-                throw EntityUtil.EntityParameterCollectionInvalidParameterName(parameterName);
+                throw new IndexOutOfRangeException(Strings.EntityParameterCollectionInvalidParameterName(parameterName));
             }
             return InnerList[index];
         }
@@ -204,12 +207,15 @@ namespace System.Data.Entity.Core.EntityClient
             InnerList.Insert(index, (EntityParameter)value);
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         private void RangeCheck(int index)
         {
             if ((index < 0)
                 || (Count <= index))
             {
-                throw EntityUtil.EntityParameterCollectionInvalidIndex(index, Count);
+                throw new IndexOutOfRangeException(
+                    Strings.EntityParameterCollectionInvalidIndex(
+                        index.ToString(CultureInfo.InvariantCulture), Count.ToString(CultureInfo.InvariantCulture)));
             }
         }
 
@@ -225,7 +231,7 @@ namespace System.Data.Entity.Core.EntityClient
             else if (this
                      != ((EntityParameter)value).CompareExchangeParent(null, this))
             {
-                throw EntityUtil.EntityParameterCollectionRemoveInvalidObject();
+                throw new ArgumentException(Strings.EntityParameterCollectionRemoveInvalidObject);
             }
         }
 
@@ -270,13 +276,14 @@ namespace System.Data.Entity.Core.EntityClient
             Replace(index, value);
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         protected override void SetParameter(string parameterName, DbParameter value)
         {
             OnChange();
             var index = IndexOf(parameterName);
             if (index < 0)
             {
-                throw EntityUtil.EntityParameterCollectionInvalidParameterName(parameterName);
+                throw new IndexOutOfRangeException(Strings.EntityParameterCollectionInvalidParameterName(parameterName));
             }
             Replace(index, value);
         }
@@ -285,7 +292,7 @@ namespace System.Data.Entity.Core.EntityClient
         {
             if (null == value)
             {
-                throw EntityUtil.EntityParameterNull("value");
+                throw new ArgumentNullException("value", Strings.EntityParameterNull);
             }
 
             var entityParameter = (EntityParameter)value;
@@ -294,11 +301,11 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 if (this != parent)
                 {
-                    throw EntityUtil.EntityParameterContainedByAnotherCollection();
+                    throw new ArgumentException(Strings.EntityParameterContainedByAnotherCollection);
                 }
                 if (index != IndexOf(value))
                 {
-                    throw EntityUtil.EntityParameterContainedByAnotherCollection();
+                    throw new ArgumentException(Strings.EntityParameterContainedByAnotherCollection);
                 }
             }
 
@@ -321,11 +328,11 @@ namespace System.Data.Entity.Core.EntityClient
         {
             if (null == value)
             {
-                throw EntityUtil.EntityParameterNull("value");
+                throw new ArgumentNullException("value", Strings.EntityParameterNull);
             }
             else if (!ItemType.IsInstanceOfType(value))
             {
-                throw EntityUtil.InvalidEntityParameterType(value);
+                throw new InvalidCastException(Strings.InvalidEntityParameterType(value.GetType().Name));
             }
         }
     };

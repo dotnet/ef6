@@ -38,7 +38,7 @@
             {
                 if (EntityUtil.IsCatchableExceptionType(e))
                 {
-                    throw EntityUtil.CommandExecution(Strings.EntityClient_StoreReaderFailed, e);
+                    throw new EntityCommandExecutionException(Strings.EntityClient_StoreReaderFailed, e);
                 }
                 throw;
             }

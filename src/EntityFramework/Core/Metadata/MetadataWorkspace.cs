@@ -12,6 +12,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
@@ -42,16 +43,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException">Throw when assembliesToConsider is empty or contains null, or cannot find the corresponding assembly in it</exception>
         /// <exception cref="Core.MetadataException"></exception>
+        [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file path names which are a Machine resource
         [ResourceConsumption(ResourceScope.Machine)]
         //For MetadataWorkspace.CreateMetadataWorkspaceWithResolver method call but we do not create the file paths in this method 
         public MetadataWorkspace(IEnumerable<string> paths, IEnumerable<Assembly> assembliesToConsider)
         {
             // we are intentionally not checking to see if the paths enumerable is empty
-            EntityUtil.CheckArgumentNull(paths, "paths");
-            EntityUtil.CheckArgumentContainsNull(ref paths, "paths");
+            Contract.Requires(paths != null);
+            Contract.Requires(assembliesToConsider != null);
 
-            EntityUtil.CheckArgumentNull(assembliesToConsider, "assembliesToConsider");
+            EntityUtil.CheckArgumentContainsNull(ref paths, "paths");
             EntityUtil.CheckArgumentContainsNull(ref assembliesToConsider, "assembliesToConsider");
 
             Func<AssemblyName, Assembly> resolveReference = (AssemblyName referenceName) =>
@@ -64,9 +66,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                                                             return assembly;
                                                                         }
                                                                     }
-                                                                    throw EntityUtil.Argument(
-                                                                        Strings.AssemblyMissingFromAssembliesToConsider(
-                                                                            referenceName.FullName), "assembliesToConsider");
+                                                                    throw new ArgumentException(Strings.AssemblyMissingFromAssembliesToConsider(
+                                                                        referenceName.FullName), "assembliesToConsider");
                                                                 };
 
             CreateMetadataWorkspaceWithResolver(paths, () => assembliesToConsider, resolveReference);
@@ -199,7 +200,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [CLSCompliant(false)]
         public void RegisterItemCollection(ItemCollection collection)
         {
-            EntityUtil.CheckArgumentNull(collection, "collection");
+            Contract.Requires(collection != null);
 
             ItemCollection existing;
 
@@ -213,13 +214,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
                             var edmCollection = (EdmItemCollection)collection;
                             if (!SupportedEdmVersions.Contains(edmCollection.EdmVersion))
                             {
-                                throw EntityUtil.InvalidOperation(
-                                    Strings.EdmVersionNotSupportedByRuntime(
-                                        edmCollection.EdmVersion,
-                                        Helper.GetCommaDelimitedString(
-                                            SupportedEdmVersions
-                                                .Where(e => e != XmlConstants.UndefinedVersion)
-                                                .Select(e => e.ToString(CultureInfo.InvariantCulture)))));
+                                throw new InvalidOperationException(Strings.EdmVersionNotSupportedByRuntime(
+                                    edmCollection.EdmVersion,
+                                    Helper.GetCommaDelimitedString(
+                                        SupportedEdmVersions
+                                            .Where(e => e != XmlConstants.UndefinedVersion)
+                                            .Select(e => e.ToString(CultureInfo.InvariantCulture)))));
                             }
 
                             CheckAndSetItemCollectionVersionInWorkSpace(collection);
@@ -259,11 +259,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             catch (InvalidCastException)
             {
-                throw EntityUtil.InvalidCollectionForMapping(collection.DataSpace);
+                throw new MetadataException(Strings.InvalidCollectionForMapping(collection.DataSpace.ToString()));
             }
             if (null != existing)
             {
-                throw EntityUtil.ItemCollectionAlreadyRegistered(collection.DataSpace);
+                throw new InvalidOperationException(Strings.ItemCollectionAlreadyRegistered(collection.DataSpace.ToString()));
             }
             // Need to make sure that if the storage mapping Item collection was created with the 
             // same instances of item collection that are registered for CSpace and SSpace
@@ -273,7 +273,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 if (_itemsCSSpace != null
                     && !ReferenceEquals(_itemsCSSpace.EdmItemCollection, collection))
                 {
-                    throw EntityUtil.InvalidCollectionSpecified(collection.DataSpace);
+                    throw new InvalidOperationException(Strings.InvalidCollectionSpecified(collection.DataSpace));
                 }
             }
 
@@ -283,7 +283,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 if (_itemsCSSpace != null
                     && !ReferenceEquals(_itemsCSSpace.StoreItemCollection, collection))
                 {
-                    throw EntityUtil.InvalidCollectionSpecified(collection.DataSpace);
+                    throw new InvalidOperationException(Strings.InvalidCollectionSpecified(collection.DataSpace));
                 }
             }
 
@@ -293,13 +293,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 if (_itemsCSpace != null
                     && !ReferenceEquals(_itemsCSSpace.EdmItemCollection, _itemsCSpace))
                 {
-                    throw EntityUtil.InvalidCollectionSpecified(collection.DataSpace);
+                    throw new InvalidOperationException(Strings.InvalidCollectionSpecified(collection.DataSpace));
                 }
 
                 if (_itemsSSpace != null
                     && !ReferenceEquals(_itemsCSSpace.StoreItemCollection, _itemsSSpace))
                 {
-                    throw EntityUtil.InvalidCollectionSpecified(collection.DataSpace);
+                    throw new InvalidOperationException(Strings.InvalidCollectionSpecified(collection.DataSpace));
                 }
             }
         }
@@ -337,7 +337,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 _schemaVersion != XmlConstants.UndefinedVersion)
             {
                 Debug.Assert(itemCollectionType != null);
-                throw EntityUtil.DifferentSchemaVersionInCollection(itemCollectionType, versionToRegister, _schemaVersion);
+                throw new MetadataException(Strings.DifferentSchemaVersionInCollection(itemCollectionType, versionToRegister, _schemaVersion));
             }
             else
             {
@@ -378,7 +378,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">thrown if assembly argument is null</exception>
         public void LoadFromAssembly(Assembly assembly, Action<string> logLoadMessage)
         {
-            EntityUtil.CheckArgumentNull(assembly, "assembly");
+            Contract.Requires(assembly != null);
             var collection = (ObjectItemCollection)GetItemCollection(DataSpace.OSpace);
             ExplicitLoadFromAssembly(assembly, collection, logLoadMessage);
         }
@@ -956,7 +956,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             if (required && (null == collection))
             {
-                throw EntityUtil.NoCollectionForSpace(dataSpace);
+                throw new InvalidOperationException(Strings.NoCollectionForSpace(dataSpace.ToString()));
             }
             return collection;
         }
@@ -1033,7 +1033,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             T objectSpaceType;
             if (!TryGetObjectSpaceType(edmSpaceType, out objectSpaceType))
             {
-                throw EntityUtil.Argument(Strings.FailedToFindOSpaceTypeMapping(edmSpaceType.Identity));
+                throw new ArgumentException(Strings.FailedToFindOSpaceTypeMapping(edmSpaceType.Identity));
             }
 
             return objectSpaceType;
@@ -1052,16 +1052,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private bool TryGetObjectSpaceType<T>(T edmSpaceType, out T objectSpaceType)
             where T : EdmType
         {
+            Contract.Requires(edmSpaceType != null);
+
             Debug.Assert(
                 edmSpaceType == null || edmSpaceType is StructuralType || edmSpaceType is EnumType,
                 "Only structural or enum type expected");
 
-            EntityUtil.CheckArgumentNull(edmSpaceType, "edmSpaceType");
-
             if (edmSpaceType.DataSpace
                 != DataSpace.CSpace)
             {
-                throw EntityUtil.Argument(Strings.ArgumentMustBeCSpaceType, "edmSpaceType");
+                throw new ArgumentException(Strings.ArgumentMustBeCSpaceType, "edmSpaceType");
             }
 
             objectSpaceType = null;
@@ -1147,7 +1147,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             T edmSpaceType;
             if (!TryGetEdmSpaceType(objectSpaceType, out edmSpaceType))
             {
-                throw EntityUtil.Argument(Strings.FailedToFindCSpaceTypeMapping(objectSpaceType.Identity));
+                throw new ArgumentException(Strings.FailedToFindCSpaceTypeMapping(objectSpaceType.Identity));
             }
 
             return edmSpaceType;
@@ -1165,16 +1165,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private bool TryGetEdmSpaceType<T>(T objectSpaceType, out T edmSpaceType)
             where T : EdmType
         {
+            Contract.Requires(objectSpaceType != null);
+
             Debug.Assert(
                 objectSpaceType == null || objectSpaceType is StructuralType || objectSpaceType is EnumType,
                 "Only structural or enum type expected");
 
-            EntityUtil.CheckArgumentNull(objectSpaceType, "objectSpaceType");
-
             if (objectSpaceType.DataSpace
                 != DataSpace.OSpace)
             {
-                throw EntityUtil.Argument(Strings.ArgumentMustBeOSpaceType, "objectSpaceType");
+                throw new ArgumentException(Strings.ArgumentMustBeOSpaceType, "objectSpaceType");
             }
 
             edmSpaceType = null;
@@ -1283,7 +1283,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns></returns>
         internal TypeUsage GetOSpaceTypeUsage(TypeUsage edmSpaceTypeUsage)
         {
-            EntityUtil.CheckArgumentNull(edmSpaceTypeUsage, "edmSpaceTypeUsage");
+            Contract.Requires(edmSpaceTypeUsage != null);
             Debug.Assert(edmSpaceTypeUsage.EdmType != null, "The TypeUsage object does not have an EDMType.");
 
             EdmType clrType = null;
@@ -1462,8 +1462,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private ReadOnlyCollection<EdmMember> GetInterestingMembers(
             EntitySetBase entitySet, EntityTypeBase entityType, StorageMappingItemCollection.InterestingMembersKind interestingMembersKind)
         {
-            EntityUtil.CheckArgumentNull(entitySet, "entitySet");
-            EntityUtil.CheckArgumentNull(entityType, "entityType");
+            Contract.Requires(entitySet != null);
+            Contract.Requires(entityType != null);
 
             Debug.Assert(entitySet.EntityContainer != null);
 
@@ -1475,11 +1475,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 if (associationSet != null)
                 {
-                    throw EntityUtil.AssociationSetNotInCSpace(entitySet.Name);
+                    throw new ArgumentException(Strings.EntitySetNotInCSPace(entitySet.Name));
                 }
                 else
                 {
-                    throw EntityUtil.EntitySetNotInCSpace(entitySet.Name);
+                    throw new ArgumentException(Strings.EntitySetNotInCSPace(entitySet.Name));
                 }
             }
 
@@ -1488,11 +1488,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 if (associationSet != null)
                 {
-                    throw EntityUtil.TypeNotInAssociationSet(entitySet.Name, entitySet.ElementType.FullName, entityType.FullName);
+                    throw new ArgumentException(Strings.TypeNotInAssociationSet(entityType.FullName, entitySet.ElementType.FullName, entitySet.Name));
                 }
                 else
                 {
-                    throw EntityUtil.TypeNotInEntitySet(entitySet.Name, entitySet.ElementType.FullName, entityType.FullName);
+                    throw new ArgumentException(Strings.TypeNotInEntitySet(entityType.FullName, entitySet.ElementType.FullName, entitySet.Name));
                 }
             }
 

@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
 {
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Provides an API to construct <see cref="DbExpression"/>s that invoke spatial realted canonical EDM functions, and, where appropriate, allows that API to be accessed as extension methods on the expression type itself.
@@ -23,7 +24,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'GeometryFromText' function accept an argument with the result type of <paramref name="wellKnownText"/>.</exception>
         public static DbFunctionExpression GeometryFromText(DbExpression wellKnownText)
         {
-            EntityUtil.CheckArgumentNull(wellKnownText, "wellKnownText");
+            Contract.Requires(wellKnownText != null);
             return EdmFunctions.InvokeCanonicalFunction("GeometryFromText", wellKnownText);
         }
 
@@ -39,8 +40,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'GeometryFromText' function accepts arguments with the result types of <paramref name="wellKnownText"/> and <paramref name="coordinateSystemId"/>.</exception>
         public static DbFunctionExpression GeometryFromText(DbExpression wellKnownText, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(wellKnownText, "wellKnownText");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(wellKnownText != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeometryFromText", wellKnownText, coordinateSystemId);
         }
 
@@ -56,8 +57,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'GeometryPointFromText' function accepts arguments with the result types of <paramref name="pointWellKnownText"/> and <paramref name="coordinateSystemId"/>.</exception>
         public static DbFunctionExpression GeometryPointFromText(DbExpression pointWellKnownText, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(pointWellKnownText, "pointWellKnownText");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(pointWellKnownText != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeometryPointFromText", pointWellKnownText, coordinateSystemId);
         }
 
@@ -73,8 +74,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'GeometryLineFromText' function accepts arguments with the result types of <paramref name="lineWellKnownText"/> and <paramref name="coordinateSystemId"/>.</exception>
         public static DbFunctionExpression GeometryLineFromText(DbExpression lineWellKnownText, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(lineWellKnownText, "lineWellKnownText");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(lineWellKnownText != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeometryLineFromText", lineWellKnownText, coordinateSystemId);
         }
 
@@ -90,8 +91,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'GeometryPolygonFromText' function accepts arguments with the result types of <paramref name="polygonWellKnownText"/> and <paramref name="coordinateSystemId"/>.</exception>
         public static DbFunctionExpression GeometryPolygonFromText(DbExpression polygonWellKnownText, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(polygonWellKnownText, "polygonWellKnownText");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(polygonWellKnownText != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeometryPolygonFromText", polygonWellKnownText, coordinateSystemId);
         }
 
@@ -115,8 +116,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
             Justification = "Match OGC, EDM")]
         public static DbFunctionExpression GeometryMultiPointFromText(DbExpression multiPointWellKnownText, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(multiPointWellKnownText, "multiPointWellKnownText");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(multiPointWellKnownText != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeometryMultiPointFromText", multiPointWellKnownText, coordinateSystemId);
         }
 
@@ -140,8 +141,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
             Justification = "Match OGC, EDM")]
         public static DbFunctionExpression GeometryMultiLineFromText(DbExpression multiLineWellKnownText, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(multiLineWellKnownText, "multiLineWellKnownText");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(multiLineWellKnownText != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeometryMultiLineFromText", multiLineWellKnownText, coordinateSystemId);
         }
 
@@ -162,8 +163,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         public static DbFunctionExpression GeometryMultiPolygonFromText(
             DbExpression multiPolygonWellKnownText, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(multiPolygonWellKnownText, "multiPolygonWellKnownText");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(multiPolygonWellKnownText != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeometryMultiPolygonFromText", multiPolygonWellKnownText, coordinateSystemId);
         }
 
@@ -180,8 +181,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         public static DbFunctionExpression GeometryCollectionFromText(
             DbExpression geometryCollectionWellKnownText, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(geometryCollectionWellKnownText, "geometryCollectionWellKnownText");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(geometryCollectionWellKnownText != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeometryCollectionFromText", geometryCollectionWellKnownText, coordinateSystemId);
         }
 
@@ -201,7 +202,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'GeometryFromBinary' function accepts an argument with the result type of <paramref name="wellKnownBinaryValue"/>.</exception>
         public static DbFunctionExpression GeometryFromBinary(DbExpression wellKnownBinaryValue)
         {
-            EntityUtil.CheckArgumentNull(wellKnownBinaryValue, "wellKnownBinaryValue");
+            Contract.Requires(wellKnownBinaryValue != null);
             return EdmFunctions.InvokeCanonicalFunction("GeometryFromBinary", wellKnownBinaryValue);
         }
 
@@ -217,8 +218,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'GeometryFromBinary' function accepts arguments with the result types of <paramref name="wellKnownBinaryValue"/> and <paramref name="coordinateSystemId"/>.</exception>
         public static DbFunctionExpression GeometryFromBinary(DbExpression wellKnownBinaryValue, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(wellKnownBinaryValue, "wellKnownBinaryValue");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(wellKnownBinaryValue != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeometryFromBinary", wellKnownBinaryValue, coordinateSystemId);
         }
 
@@ -234,8 +235,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'GeometryPointFromBinary' function accepts arguments with the result types of <paramref name="pointWellKnownBinaryValue"/> and <paramref name="coordinateSystemId"/>.</exception>
         public static DbFunctionExpression GeometryPointFromBinary(DbExpression pointWellKnownBinaryValue, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(pointWellKnownBinaryValue, "pointWellKnownBinaryValue");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(pointWellKnownBinaryValue != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeometryPointFromBinary", pointWellKnownBinaryValue, coordinateSystemId);
         }
 
@@ -251,8 +252,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'GeometryLineFromBinary' function accepts arguments with the result types of <paramref name="lineWellKnownBinaryValue"/> and <paramref name="coordinateSystemId"/>.</exception>
         public static DbFunctionExpression GeometryLineFromBinary(DbExpression lineWellKnownBinaryValue, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(lineWellKnownBinaryValue, "lineWellKnownBinaryValue");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(lineWellKnownBinaryValue != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeometryLineFromBinary", lineWellKnownBinaryValue, coordinateSystemId);
         }
 
@@ -269,8 +270,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         public static DbFunctionExpression GeometryPolygonFromBinary(
             DbExpression polygonWellKnownBinaryValue, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(polygonWellKnownBinaryValue, "polygonWellKnownBinaryValue");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(polygonWellKnownBinaryValue != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeometryPolygonFromBinary", polygonWellKnownBinaryValue, coordinateSystemId);
         }
 
@@ -295,8 +296,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         public static DbFunctionExpression GeometryMultiPointFromBinary(
             DbExpression multiPointWellKnownBinaryValue, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(multiPointWellKnownBinaryValue, "multiPointWellKnownBinaryValue");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(multiPointWellKnownBinaryValue != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeometryMultiPointFromBinary", multiPointWellKnownBinaryValue, coordinateSystemId);
         }
 
@@ -321,8 +322,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         public static DbFunctionExpression GeometryMultiLineFromBinary(
             DbExpression multiLineWellKnownBinaryValue, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(multiLineWellKnownBinaryValue, "multiLineWellKnownBinaryValue");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(multiLineWellKnownBinaryValue != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeometryMultiLineFromBinary", multiLineWellKnownBinaryValue, coordinateSystemId);
         }
 
@@ -343,8 +344,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         public static DbFunctionExpression GeometryMultiPolygonFromBinary(
             DbExpression multiPolygonWellKnownBinaryValue, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(multiPolygonWellKnownBinaryValue, "multiPolygonWellKnownBinaryValue");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(multiPolygonWellKnownBinaryValue != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction(
                 "GeometryMultiPolygonFromBinary", multiPolygonWellKnownBinaryValue, coordinateSystemId);
         }
@@ -362,8 +363,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         public static DbFunctionExpression GeometryCollectionFromBinary(
             DbExpression geometryCollectionWellKnownBinaryValue, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(geometryCollectionWellKnownBinaryValue, "geometryCollectionWellKnownBinaryValue");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(geometryCollectionWellKnownBinaryValue != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction(
                 "GeometryCollectionFromBinary", geometryCollectionWellKnownBinaryValue, coordinateSystemId);
         }
@@ -384,7 +385,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
             Justification = "Abbreviation more meaningful than what it stands for")]
         public static DbFunctionExpression GeometryFromGml(DbExpression geometryMarkup)
         {
-            EntityUtil.CheckArgumentNull(geometryMarkup, "geometryMarkup");
+            Contract.Requires(geometryMarkup != null);
             return EdmFunctions.InvokeCanonicalFunction("GeometryFromGml", geometryMarkup);
         }
 
@@ -402,8 +403,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
             Justification = "Abbreviation more meaningful than what it stands for")]
         public static DbFunctionExpression GeometryFromGml(DbExpression geometryMarkup, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(geometryMarkup, "geometryMarkup");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(geometryMarkup != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeometryFromGml", geometryMarkup, coordinateSystemId);
         }
 
@@ -422,7 +423,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'GeographyFromText' function accepts an argument with the result type of <paramref name="wellKnownText"/>.</exception>
         public static DbFunctionExpression GeographyFromText(DbExpression wellKnownText)
         {
-            EntityUtil.CheckArgumentNull(wellKnownText, "wellKnownText");
+            Contract.Requires(wellKnownText != null);
             return EdmFunctions.InvokeCanonicalFunction("GeographyFromText", wellKnownText);
         }
 
@@ -438,8 +439,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'GeographyFromText' function accepts arguments with the result types of <paramref name="wellKnownText"/> and <paramref name="coordinateSystemId"/>.</exception>
         public static DbFunctionExpression GeographyFromText(DbExpression wellKnownText, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(wellKnownText, "wellKnownText");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(wellKnownText != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeographyFromText", wellKnownText, coordinateSystemId);
         }
 
@@ -455,8 +456,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'GeographyPointFromText' function accepts arguments with the result types of <paramref name="pointWellKnownText"/> and <paramref name="coordinateSystemId"/>.</exception>
         public static DbFunctionExpression GeographyPointFromText(DbExpression pointWellKnownText, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(pointWellKnownText, "pointWellKnownText");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(pointWellKnownText != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeographyPointFromText", pointWellKnownText, coordinateSystemId);
         }
 
@@ -472,8 +473,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'GeographyLineFromText' function accepts arguments with the result types of <paramref name="lineWellKnownText"/> and <paramref name="coordinateSystemId"/>.</exception>
         public static DbFunctionExpression GeographyLineFromText(DbExpression lineWellKnownText, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(lineWellKnownText, "lineWellKnownText");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(lineWellKnownText != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeographyLineFromText", lineWellKnownText, coordinateSystemId);
         }
 
@@ -489,8 +490,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'GeographyPolygonFromText' function accepts arguments with the result types of <paramref name="polygonWellKnownText"/> and <paramref name="coordinateSystemId"/>.</exception>
         public static DbFunctionExpression GeographyPolygonFromText(DbExpression polygonWellKnownText, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(polygonWellKnownText, "polygonWellKnownText");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(polygonWellKnownText != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeographyPolygonFromText", polygonWellKnownText, coordinateSystemId);
         }
 
@@ -515,8 +516,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         public static DbFunctionExpression GeographyMultiPointFromText(
             DbExpression multiPointWellKnownText, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(multiPointWellKnownText, "multiPointWellKnownText");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(multiPointWellKnownText != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeographyMultiPointFromText", multiPointWellKnownText, coordinateSystemId);
         }
 
@@ -540,8 +541,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
             Justification = "Match OGC, EDM")]
         public static DbFunctionExpression GeographyMultiLineFromText(DbExpression multiLineWellKnownText, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(multiLineWellKnownText, "multiLineWellKnownText");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(multiLineWellKnownText != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeographyMultiLineFromText", multiLineWellKnownText, coordinateSystemId);
         }
 
@@ -562,8 +563,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         public static DbFunctionExpression GeographyMultiPolygonFromText(
             DbExpression multiPolygonWellKnownText, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(multiPolygonWellKnownText, "multiPolygonWellKnownText");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(multiPolygonWellKnownText != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeographyMultiPolygonFromText", multiPolygonWellKnownText, coordinateSystemId);
         }
 
@@ -580,8 +581,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         public static DbFunctionExpression GeographyCollectionFromText(
             DbExpression geographyCollectionWellKnownText, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(geographyCollectionWellKnownText, "geographyCollectionWellKnownText");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(geographyCollectionWellKnownText != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeographyCollectionFromText", geographyCollectionWellKnownText, coordinateSystemId);
         }
 
@@ -601,7 +602,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'GeographyFromBinary' function accepts an argument with the result type of <paramref name="wellKnownBinaryValue"/>.</exception>
         public static DbFunctionExpression GeographyFromBinary(DbExpression wellKnownBinaryValue)
         {
-            EntityUtil.CheckArgumentNull(wellKnownBinaryValue, "wellKnownBinaryValue");
+            Contract.Requires(wellKnownBinaryValue != null);
             return EdmFunctions.InvokeCanonicalFunction("GeographyFromBinary", wellKnownBinaryValue);
         }
 
@@ -617,8 +618,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'GeographyFromBinary' function accepts arguments with the result types of <paramref name="wellKnownBinaryValue"/> and <paramref name="coordinateSystemId"/>.</exception>
         public static DbFunctionExpression GeographyFromBinary(DbExpression wellKnownBinaryValue, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(wellKnownBinaryValue, "wellKnownBinaryValue");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(wellKnownBinaryValue != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeographyFromBinary", wellKnownBinaryValue, coordinateSystemId);
         }
 
@@ -634,8 +635,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'GeographyPointFromBinary' function accepts arguments with the result types of <paramref name="pointWellKnownBinaryValue"/> and <paramref name="coordinateSystemId"/>.</exception>
         public static DbFunctionExpression GeographyPointFromBinary(DbExpression pointWellKnownBinaryValue, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(pointWellKnownBinaryValue, "pointWellKnownBinaryValue");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(pointWellKnownBinaryValue != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeographyPointFromBinary", pointWellKnownBinaryValue, coordinateSystemId);
         }
 
@@ -651,8 +652,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'GeographyLineFromBinary' function accepts arguments with the result types of <paramref name="lineWellKnownBinaryValue"/> and <paramref name="coordinateSystemId"/>.</exception>
         public static DbFunctionExpression GeographyLineFromBinary(DbExpression lineWellKnownBinaryValue, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(lineWellKnownBinaryValue, "lineWellKnownBinaryValue");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(lineWellKnownBinaryValue != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeographyLineFromBinary", lineWellKnownBinaryValue, coordinateSystemId);
         }
 
@@ -669,8 +670,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         public static DbFunctionExpression GeographyPolygonFromBinary(
             DbExpression polygonWellKnownBinaryValue, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(polygonWellKnownBinaryValue, "polygonWellKnownBinaryValue");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(polygonWellKnownBinaryValue != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeographyPolygonFromBinary", polygonWellKnownBinaryValue, coordinateSystemId);
         }
 
@@ -695,8 +696,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         public static DbFunctionExpression GeographyMultiPointFromBinary(
             DbExpression multiPointWellKnownBinaryValue, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(multiPointWellKnownBinaryValue, "multiPointWellKnownBinaryValue");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(multiPointWellKnownBinaryValue != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeographyMultiPointFromBinary", multiPointWellKnownBinaryValue, coordinateSystemId);
         }
 
@@ -721,8 +722,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         public static DbFunctionExpression GeographyMultiLineFromBinary(
             DbExpression multiLineWellKnownBinaryValue, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(multiLineWellKnownBinaryValue, "multiLineWellKnownBinaryValue");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(multiLineWellKnownBinaryValue != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeographyMultiLineFromBinary", multiLineWellKnownBinaryValue, coordinateSystemId);
         }
 
@@ -743,8 +744,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         public static DbFunctionExpression GeographyMultiPolygonFromBinary(
             DbExpression multiPolygonWellKnownBinaryValue, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(multiPolygonWellKnownBinaryValue, "multiPolygonWellKnownBinaryValue");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(multiPolygonWellKnownBinaryValue != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction(
                 "GeographyMultiPolygonFromBinary", multiPolygonWellKnownBinaryValue, coordinateSystemId);
         }
@@ -762,8 +763,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         public static DbFunctionExpression GeographyCollectionFromBinary(
             DbExpression geographyCollectionWellKnownBinaryValue, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(geographyCollectionWellKnownBinaryValue, "geographyCollectionWellKnownBinaryValue");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(geographyCollectionWellKnownBinaryValue != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction(
                 "GeographyCollectionFromBinary", geographyCollectionWellKnownBinaryValue, coordinateSystemId);
         }
@@ -783,7 +784,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Gml")]
         public static DbFunctionExpression GeographyFromGml(DbExpression geographyMarkup)
         {
-            EntityUtil.CheckArgumentNull(geographyMarkup, "geographyMarkup");
+            Contract.Requires(geographyMarkup != null);
             return EdmFunctions.InvokeCanonicalFunction("GeographyFromGml", geographyMarkup);
         }
 
@@ -800,8 +801,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Gml")]
         public static DbFunctionExpression GeographyFromGml(DbExpression geographyMarkup, DbExpression coordinateSystemId)
         {
-            EntityUtil.CheckArgumentNull(geographyMarkup, "geographyMarkup");
-            EntityUtil.CheckArgumentNull(coordinateSystemId, "coordinateSystemId");
+            Contract.Requires(geographyMarkup != null);
+            Contract.Requires(coordinateSystemId != null);
             return EdmFunctions.InvokeCanonicalFunction("GeographyFromGml", geographyMarkup, coordinateSystemId);
         }
 
@@ -823,7 +824,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'CoordinateSystemId' function accepts an argument with the result type of <paramref name="spatialValue"/>.</exception>
         public static DbFunctionExpression CoordinateSystemId(this DbExpression spatialValue)
         {
-            EntityUtil.CheckArgumentNull(spatialValue, "spatialValue");
+            Contract.Requires(spatialValue != null);
             return EdmFunctions.InvokeCanonicalFunction("CoordinateSystemId", spatialValue);
         }
 
@@ -838,7 +839,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'SpatialTypeName' function accepts an argument with the result type of <paramref name="spatialValue"/>.</exception>
         public static DbFunctionExpression SpatialTypeName(this DbExpression spatialValue)
         {
-            EntityUtil.CheckArgumentNull(spatialValue, "spatialValue");
+            Contract.Requires(spatialValue != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialTypeName", spatialValue);
         }
 
@@ -853,7 +854,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'SpatialDimension' function accepts an argument with the result type of <paramref name="spatialValue"/>.</exception>
         public static DbFunctionExpression SpatialDimension(this DbExpression spatialValue)
         {
-            EntityUtil.CheckArgumentNull(spatialValue, "spatialValue");
+            Contract.Requires(spatialValue != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialDimension", spatialValue);
         }
 
@@ -868,7 +869,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'SpatialEnvelope' function accepts an argument with the result type of <paramref name="geometryValue"/>.</exception>
         public static DbFunctionExpression SpatialEnvelope(this DbExpression geometryValue)
         {
-            EntityUtil.CheckArgumentNull(geometryValue, "geometryValue");
+            Contract.Requires(geometryValue != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialEnvelope", geometryValue);
         }
 
@@ -883,7 +884,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'AsBinary' function accepts an argument with the result type of <paramref name="spatialValue"/>.</exception>
         public static DbFunctionExpression AsBinary(this DbExpression spatialValue)
         {
-            EntityUtil.CheckArgumentNull(spatialValue, "spatialValue");
+            Contract.Requires(spatialValue != null);
             return EdmFunctions.InvokeCanonicalFunction("AsBinary", spatialValue);
         }
 
@@ -899,7 +900,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Gml")]
         public static DbFunctionExpression AsGml(this DbExpression spatialValue)
         {
-            EntityUtil.CheckArgumentNull(spatialValue, "spatialValue");
+            Contract.Requires(spatialValue != null);
             return EdmFunctions.InvokeCanonicalFunction("AsGml", spatialValue);
         }
 
@@ -914,7 +915,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'AsText' function accepts an argument with the result type of <paramref name="spatialValue"/>.</exception>
         public static DbFunctionExpression AsText(this DbExpression spatialValue)
         {
-            EntityUtil.CheckArgumentNull(spatialValue, "spatialValue");
+            Contract.Requires(spatialValue != null);
             return EdmFunctions.InvokeCanonicalFunction("AsText", spatialValue);
         }
 
@@ -929,7 +930,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'IsEmptySpatial' function accepts an argument with the result type of <paramref name="spatialValue"/>.</exception>
         public static DbFunctionExpression IsEmptySpatial(this DbExpression spatialValue)
         {
-            EntityUtil.CheckArgumentNull(spatialValue, "spatialValue");
+            Contract.Requires(spatialValue != null);
             return EdmFunctions.InvokeCanonicalFunction("IsEmptySpatial", spatialValue);
         }
 
@@ -944,7 +945,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'IsSimpleGeometry' function accepts an argument with the result type of <paramref name="geometryValue"/>.</exception>
         public static DbFunctionExpression IsSimpleGeometry(this DbExpression geometryValue)
         {
-            EntityUtil.CheckArgumentNull(geometryValue, "geometryValue");
+            Contract.Requires(geometryValue != null);
             return EdmFunctions.InvokeCanonicalFunction("IsSimpleGeometry", geometryValue);
         }
 
@@ -958,7 +959,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'SpatialBoundary' function accepts an argument with the result type of <paramref name="geometryValue"/>.</exception>
         public static DbFunctionExpression SpatialBoundary(this DbExpression geometryValue)
         {
-            EntityUtil.CheckArgumentNull(geometryValue, "geometryValue");
+            Contract.Requires(geometryValue != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialBoundary", geometryValue);
         }
 
@@ -973,7 +974,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'IsValidGeometry' function accepts an argument with the result type of <paramref name="geometryValue"/>.</exception>
         public static DbFunctionExpression IsValidGeometry(this DbExpression geometryValue)
         {
-            EntityUtil.CheckArgumentNull(geometryValue, "geometryValue");
+            Contract.Requires(geometryValue != null);
             return EdmFunctions.InvokeCanonicalFunction("IsValidGeometry", geometryValue);
         }
 
@@ -994,8 +995,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'SpatialEquals' function accepts arguments with the result types of <paramref name="spatialValue1"/> and <paramref name="spatialValue2"/>.</exception>
         public static DbFunctionExpression SpatialEquals(this DbExpression spatialValue1, DbExpression spatialValue2)
         {
-            EntityUtil.CheckArgumentNull(spatialValue1, "spatialValue1");
-            EntityUtil.CheckArgumentNull(spatialValue2, "spatialValue2");
+            Contract.Requires(spatialValue1 != null);
+            Contract.Requires(spatialValue2 != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialEquals", spatialValue1, spatialValue2);
         }
 
@@ -1012,8 +1013,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'SpatialDisjoint' function accepts arguments with the result types of <paramref name="spatialValue1"/> and <paramref name="spatialValue2"/>.</exception>
         public static DbFunctionExpression SpatialDisjoint(this DbExpression spatialValue1, DbExpression spatialValue2)
         {
-            EntityUtil.CheckArgumentNull(spatialValue1, "spatialValue1");
-            EntityUtil.CheckArgumentNull(spatialValue2, "spatialValue2");
+            Contract.Requires(spatialValue1 != null);
+            Contract.Requires(spatialValue2 != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialDisjoint", spatialValue1, spatialValue2);
         }
 
@@ -1030,8 +1031,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'SpatialIntersects' function accepts arguments with the result types of <paramref name="spatialValue1"/> and <paramref name="spatialValue2"/>.</exception>
         public static DbFunctionExpression SpatialIntersects(this DbExpression spatialValue1, DbExpression spatialValue2)
         {
-            EntityUtil.CheckArgumentNull(spatialValue1, "spatialValue1");
-            EntityUtil.CheckArgumentNull(spatialValue2, "spatialValue2");
+            Contract.Requires(spatialValue1 != null);
+            Contract.Requires(spatialValue2 != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialIntersects", spatialValue1, spatialValue2);
         }
 
@@ -1046,8 +1047,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'SpatialTouches' function accepts arguments with the result types of <paramref name="geometryValue1"/> and <paramref name="geometryValue2"/>.</exception>
         public static DbFunctionExpression SpatialTouches(this DbExpression geometryValue1, DbExpression geometryValue2)
         {
-            EntityUtil.CheckArgumentNull(geometryValue1, "geometryValue1");
-            EntityUtil.CheckArgumentNull(geometryValue2, "geometryValue2");
+            Contract.Requires(geometryValue1 != null);
+            Contract.Requires(geometryValue2 != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialTouches", geometryValue1, geometryValue2);
         }
 
@@ -1062,8 +1063,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'SpatialCrosses' function accepts arguments with the result types of <paramref name="geometryValue1"/> and <paramref name="geometryValue2"/>.</exception>
         public static DbFunctionExpression SpatialCrosses(this DbExpression geometryValue1, DbExpression geometryValue2)
         {
-            EntityUtil.CheckArgumentNull(geometryValue1, "geometryValue1");
-            EntityUtil.CheckArgumentNull(geometryValue2, "geometryValue2");
+            Contract.Requires(geometryValue1 != null);
+            Contract.Requires(geometryValue2 != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialCrosses", geometryValue1, geometryValue2);
         }
 
@@ -1078,8 +1079,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'SpatialWithin' function accepts arguments with the result types of <paramref name="geometryValue1"/> and <paramref name="geometryValue2"/>.</exception>
         public static DbFunctionExpression SpatialWithin(this DbExpression geometryValue1, DbExpression geometryValue2)
         {
-            EntityUtil.CheckArgumentNull(geometryValue1, "geometryValue1");
-            EntityUtil.CheckArgumentNull(geometryValue2, "geometryValue2");
+            Contract.Requires(geometryValue1 != null);
+            Contract.Requires(geometryValue2 != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialWithin", geometryValue1, geometryValue2);
         }
 
@@ -1094,8 +1095,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'SpatialContains' function accepts arguments with the result types of <paramref name="geometryValue1"/> and <paramref name="geometryValue2"/>.</exception>
         public static DbFunctionExpression SpatialContains(this DbExpression geometryValue1, DbExpression geometryValue2)
         {
-            EntityUtil.CheckArgumentNull(geometryValue1, "geometryValue1");
-            EntityUtil.CheckArgumentNull(geometryValue2, "geometryValue2");
+            Contract.Requires(geometryValue1 != null);
+            Contract.Requires(geometryValue2 != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialContains", geometryValue1, geometryValue2);
         }
 
@@ -1110,8 +1111,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'SpatialOverlaps' function accepts arguments with the result types of <paramref name="geometryValue1"/> and <paramref name="geometryValue2"/>.</exception>
         public static DbFunctionExpression SpatialOverlaps(this DbExpression geometryValue1, DbExpression geometryValue2)
         {
-            EntityUtil.CheckArgumentNull(geometryValue1, "geometryValue1");
-            EntityUtil.CheckArgumentNull(geometryValue2, "geometryValue2");
+            Contract.Requires(geometryValue1 != null);
+            Contract.Requires(geometryValue2 != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialOverlaps", geometryValue1, geometryValue2);
         }
 
@@ -1128,9 +1129,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         public static DbFunctionExpression SpatialRelate(
             this DbExpression geometryValue1, DbExpression geometryValue2, DbExpression intersectionPatternMatrix)
         {
-            EntityUtil.CheckArgumentNull(geometryValue1, "geometryValue1");
-            EntityUtil.CheckArgumentNull(geometryValue2, "geometryValue2");
-            EntityUtil.CheckArgumentNull(intersectionPatternMatrix, "intersectionPatternMatrix");
+            Contract.Requires(geometryValue1 != null);
+            Contract.Requires(geometryValue2 != null);
+            Contract.Requires(intersectionPatternMatrix != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialRelate", geometryValue1, geometryValue2, intersectionPatternMatrix);
         }
 
@@ -1149,8 +1150,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'SpatialBuffer' function accepts arguments with the result types of <paramref name="spatialValue"/> and <paramref name="distance"/>.</exception>
         public static DbFunctionExpression SpatialBuffer(this DbExpression spatialValue, DbExpression distance)
         {
-            EntityUtil.CheckArgumentNull(spatialValue, "spatialValue");
-            EntityUtil.CheckArgumentNull(distance, "distance");
+            Contract.Requires(spatialValue != null);
+            Contract.Requires(distance != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialBuffer", spatialValue, distance);
         }
 
@@ -1167,8 +1168,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'Distance' function accepts arguments with the result types of <paramref name="spatialValue1"/> and <paramref name="spatialValue2"/>.</exception>
         public static DbFunctionExpression Distance(this DbExpression spatialValue1, DbExpression spatialValue2)
         {
-            EntityUtil.CheckArgumentNull(spatialValue1, "spatialValue1");
-            EntityUtil.CheckArgumentNull(spatialValue2, "spatialValue2");
+            Contract.Requires(spatialValue1 != null);
+            Contract.Requires(spatialValue2 != null);
             return EdmFunctions.InvokeCanonicalFunction("Distance", spatialValue1, spatialValue2);
         }
 
@@ -1182,7 +1183,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'SpatialConvexHull' function accepts an argument with the result type of <paramref name="geometryValue"/>.</exception>
         public static DbFunctionExpression SpatialConvexHull(this DbExpression geometryValue)
         {
-            EntityUtil.CheckArgumentNull(geometryValue, "geometryValue");
+            Contract.Requires(geometryValue != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialConvexHull", geometryValue);
         }
 
@@ -1199,8 +1200,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'SpatialIntersection' function accepts arguments with the result types of <paramref name="spatialValue1"/> and <paramref name="spatialValue2"/>.</exception>
         public static DbFunctionExpression SpatialIntersection(this DbExpression spatialValue1, DbExpression spatialValue2)
         {
-            EntityUtil.CheckArgumentNull(spatialValue1, "spatialValue1");
-            EntityUtil.CheckArgumentNull(spatialValue2, "spatialValue2");
+            Contract.Requires(spatialValue1 != null);
+            Contract.Requires(spatialValue2 != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialIntersection", spatialValue1, spatialValue2);
         }
 
@@ -1217,8 +1218,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'SpatialUnion' function accepts arguments with the result types of <paramref name="spatialValue1"/> and <paramref name="spatialValue2"/>.</exception>
         public static DbFunctionExpression SpatialUnion(this DbExpression spatialValue1, DbExpression spatialValue2)
         {
-            EntityUtil.CheckArgumentNull(spatialValue1, "spatialValue1");
-            EntityUtil.CheckArgumentNull(spatialValue2, "spatialValue2");
+            Contract.Requires(spatialValue1 != null);
+            Contract.Requires(spatialValue2 != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialUnion", spatialValue1, spatialValue2);
         }
 
@@ -1235,8 +1236,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'SpatialDifference' function accepts arguments with the result types of <paramref name="spatialValue1"/> and <paramref name="spatialValue2"/>.</exception>
         public static DbFunctionExpression SpatialDifference(this DbExpression spatialValue1, DbExpression spatialValue2)
         {
-            EntityUtil.CheckArgumentNull(spatialValue1, "spatialValue1");
-            EntityUtil.CheckArgumentNull(spatialValue2, "spatialValue2");
+            Contract.Requires(spatialValue1 != null);
+            Contract.Requires(spatialValue2 != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialDifference", spatialValue1, spatialValue2);
         }
 
@@ -1253,8 +1254,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'SpatialSymmetricDifference' function accepts arguments with the result types of <paramref name="spatialValue1"/> and <paramref name="spatialValue2"/>.</exception>
         public static DbFunctionExpression SpatialSymmetricDifference(this DbExpression spatialValue1, DbExpression spatialValue2)
         {
-            EntityUtil.CheckArgumentNull(spatialValue1, "spatialValue1");
-            EntityUtil.CheckArgumentNull(spatialValue2, "spatialValue2");
+            Contract.Requires(spatialValue1 != null);
+            Contract.Requires(spatialValue2 != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialSymmetricDifference", spatialValue1, spatialValue2);
         }
 
@@ -1272,7 +1273,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'SpatialElementCount' function accepts an argument with the result type of <paramref name="spatialValue"/>.</exception>
         public static DbFunctionExpression SpatialElementCount(this DbExpression spatialValue)
         {
-            EntityUtil.CheckArgumentNull(spatialValue, "spatialValue");
+            Contract.Requires(spatialValue != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialElementCount", spatialValue);
         }
 
@@ -1289,8 +1290,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'SpatialElementAt' function accepts arguments with the result types of <paramref name="spatialValue"/> and <paramref name="indexValue"/>.</exception>
         public static DbFunctionExpression SpatialElementAt(this DbExpression spatialValue, DbExpression indexValue)
         {
-            EntityUtil.CheckArgumentNull(spatialValue, "spatialValue");
-            EntityUtil.CheckArgumentNull(indexValue, "indexValue");
+            Contract.Requires(spatialValue != null);
+            Contract.Requires(indexValue != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialElementAt", spatialValue, indexValue);
         }
 
@@ -1308,7 +1309,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'XCoordinate' function accepts an argument with the result type of <paramref name="geometryValue"/>.</exception>
         public static DbFunctionExpression XCoordinate(this DbExpression geometryValue)
         {
-            EntityUtil.CheckArgumentNull(geometryValue, "geometryValue");
+            Contract.Requires(geometryValue != null);
             return EdmFunctions.InvokeCanonicalFunction("XCoordinate", geometryValue);
         }
 
@@ -1322,7 +1323,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'YCoordinate' function accepts an argument with the result type of <paramref name="geometryValue"/>.</exception>
         public static DbFunctionExpression YCoordinate(this DbExpression geometryValue)
         {
-            EntityUtil.CheckArgumentNull(geometryValue, "geometryValue");
+            Contract.Requires(geometryValue != null);
             return EdmFunctions.InvokeCanonicalFunction("YCoordinate", geometryValue);
         }
 
@@ -1336,7 +1337,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'Elevation' function accepts an argument with the result type of <paramref name="spatialValue"/>.</exception>
         public static DbFunctionExpression Elevation(this DbExpression spatialValue)
         {
-            EntityUtil.CheckArgumentNull(spatialValue, "spatialValue");
+            Contract.Requires(spatialValue != null);
             return EdmFunctions.InvokeCanonicalFunction("Elevation", spatialValue);
         }
 
@@ -1350,7 +1351,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'Measure' function accepts an argument with the result type of <paramref name="spatialValue"/>.</exception>
         public static DbFunctionExpression Measure(this DbExpression spatialValue)
         {
-            EntityUtil.CheckArgumentNull(spatialValue, "spatialValue");
+            Contract.Requires(spatialValue != null);
             return EdmFunctions.InvokeCanonicalFunction("Measure", spatialValue);
         }
 
@@ -1364,7 +1365,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'Latitude' function accepts an argument with the result type of <paramref name="geographyValue"/>.</exception>
         public static DbFunctionExpression Latitude(this DbExpression geographyValue)
         {
-            EntityUtil.CheckArgumentNull(geographyValue, "geographyValue");
+            Contract.Requires(geographyValue != null);
             return EdmFunctions.InvokeCanonicalFunction("Latitude", geographyValue);
         }
 
@@ -1378,7 +1379,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'Longitude' function accepts an argument with the result type of <paramref name="geographyValue"/>.</exception>
         public static DbFunctionExpression Longitude(this DbExpression geographyValue)
         {
-            EntityUtil.CheckArgumentNull(geographyValue, "geographyValue");
+            Contract.Requires(geographyValue != null);
             return EdmFunctions.InvokeCanonicalFunction("Longitude", geographyValue);
         }
 
@@ -1396,7 +1397,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'SpatialLength' function accepts an argument with the result type of <paramref name="spatialValue"/>.</exception>
         public static DbFunctionExpression SpatialLength(this DbExpression spatialValue)
         {
-            EntityUtil.CheckArgumentNull(spatialValue, "spatialValue");
+            Contract.Requires(spatialValue != null);
             return EdmFunctions.InvokeCanonicalFunction("SpatialLength", spatialValue);
         }
 
@@ -1410,7 +1411,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'StartPoint' function accepts an argument with the result type of <paramref name="spatialValue"/>.</exception>
         public static DbFunctionExpression StartPoint(this DbExpression spatialValue)
         {
-            EntityUtil.CheckArgumentNull(spatialValue, "spatialValue");
+            Contract.Requires(spatialValue != null);
             return EdmFunctions.InvokeCanonicalFunction("StartPoint", spatialValue);
         }
 
@@ -1424,7 +1425,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'EndPoint' function accepts an argument with the result type of <paramref name="spatialValue"/>.</exception>
         public static DbFunctionExpression EndPoint(this DbExpression spatialValue)
         {
-            EntityUtil.CheckArgumentNull(spatialValue, "spatialValue");
+            Contract.Requires(spatialValue != null);
             return EdmFunctions.InvokeCanonicalFunction("EndPoint", spatialValue);
         }
 
@@ -1438,7 +1439,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'IsClosedSpatial' function accepts an argument with the result type of <paramref name="spatialValue"/>.</exception>
         public static DbFunctionExpression IsClosedSpatial(this DbExpression spatialValue)
         {
-            EntityUtil.CheckArgumentNull(spatialValue, "spatialValue");
+            Contract.Requires(spatialValue != null);
             return EdmFunctions.InvokeCanonicalFunction("IsClosedSpatial", spatialValue);
         }
 
@@ -1452,7 +1453,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'IsRing' function accepts an argument with the result type of <paramref name="geometryValue"/>.</exception>
         public static DbFunctionExpression IsRing(this DbExpression geometryValue)
         {
-            EntityUtil.CheckArgumentNull(geometryValue, "geometryValue");
+            Contract.Requires(geometryValue != null);
             return EdmFunctions.InvokeCanonicalFunction("IsRing", geometryValue);
         }
 
@@ -1470,7 +1471,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'PointCount' function accepts an argument with the result type of <paramref name="spatialValue"/>.</exception>
         public static DbFunctionExpression PointCount(this DbExpression spatialValue)
         {
-            EntityUtil.CheckArgumentNull(spatialValue, "spatialValue");
+            Contract.Requires(spatialValue != null);
             return EdmFunctions.InvokeCanonicalFunction("PointCount", spatialValue);
         }
 
@@ -1487,8 +1488,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'PointAt' function accepts arguments with the result types of <paramref name="spatialValue"/> and <paramref name="indexValue"/>.</exception>
         public static DbFunctionExpression PointAt(this DbExpression spatialValue, DbExpression indexValue)
         {
-            EntityUtil.CheckArgumentNull(spatialValue, "spatialValue");
-            EntityUtil.CheckArgumentNull(indexValue, "indexValue");
+            Contract.Requires(spatialValue != null);
+            Contract.Requires(indexValue != null);
             return EdmFunctions.InvokeCanonicalFunction("PointAt", spatialValue, indexValue);
         }
 
@@ -1506,7 +1507,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'Area' function accepts an argument with the result type of <paramref name="spatialValue"/>.</exception>
         public static DbFunctionExpression Area(this DbExpression spatialValue)
         {
-            EntityUtil.CheckArgumentNull(spatialValue, "spatialValue");
+            Contract.Requires(spatialValue != null);
             return EdmFunctions.InvokeCanonicalFunction("Area", spatialValue);
         }
 
@@ -1522,7 +1523,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
             Justification = "Standard bame")]
         public static DbFunctionExpression Centroid(this DbExpression geometryValue)
         {
-            EntityUtil.CheckArgumentNull(geometryValue, "geometryValue");
+            Contract.Requires(geometryValue != null);
             return EdmFunctions.InvokeCanonicalFunction("Centroid", geometryValue);
         }
 
@@ -1536,7 +1537,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'PointOnSurface' function accepts an argument with the result type of <paramref name="geometryValue"/>.</exception>
         public static DbFunctionExpression PointOnSurface(this DbExpression geometryValue)
         {
-            EntityUtil.CheckArgumentNull(geometryValue, "geometryValue");
+            Contract.Requires(geometryValue != null);
             return EdmFunctions.InvokeCanonicalFunction("PointOnSurface", geometryValue);
         }
 
@@ -1554,7 +1555,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'ExteriorRing' function accepts an argument with the result type of <paramref name="geometryValue"/>.</exception>
         public static DbFunctionExpression ExteriorRing(this DbExpression geometryValue)
         {
-            EntityUtil.CheckArgumentNull(geometryValue, "geometryValue");
+            Contract.Requires(geometryValue != null);
             return EdmFunctions.InvokeCanonicalFunction("ExteriorRing", geometryValue);
         }
 
@@ -1568,7 +1569,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'InteriorRingCount' function accepts an argument with the result type of <paramref name="geometryValue"/>.</exception>
         public static DbFunctionExpression InteriorRingCount(this DbExpression geometryValue)
         {
-            EntityUtil.CheckArgumentNull(geometryValue, "geometryValue");
+            Contract.Requires(geometryValue != null);
             return EdmFunctions.InvokeCanonicalFunction("InteriorRingCount", geometryValue);
         }
 
@@ -1585,8 +1586,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <exception cref="ArgumentException">No overload of the canonical 'InteriorRingAt' function accepts arguments with the result types of <paramref name="geometryValue"/> and <paramref name="indexValue"/>.</exception>
         public static DbFunctionExpression InteriorRingAt(this DbExpression geometryValue, DbExpression indexValue)
         {
-            EntityUtil.CheckArgumentNull(geometryValue, "geometryValue");
-            EntityUtil.CheckArgumentNull(indexValue, "indexValue");
+            Contract.Requires(geometryValue != null);
+            Contract.Requires(indexValue != null);
             return EdmFunctions.InvokeCanonicalFunction("InteriorRingAt", geometryValue, indexValue);
         }
 

@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Provides eSQL text Parsing and Compilation services.
@@ -57,7 +58,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             IEnumerable<DbParameterReferenceExpression> parameters)
         {
             var result = CompileCommon(
-                commandText, perspective, parserOptions,
+                commandText, parserOptions,
                 (astCommand, validatedParserOptions) =>
                     {
                         var parseResultInternal = AnalyzeCommandSemantics(astCommand, perspective, validatedParserOptions, parameters);
@@ -99,7 +100,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             IEnumerable<DbVariableReferenceExpression> variables)
         {
             return CompileCommon(
-                queryCommandText, perspective, parserOptions, (astCommand, validatedParserOptions) =>
+                queryCommandText, parserOptions, (astCommand, validatedParserOptions) =>
                                                                   {
                                                                       var lambda = AnalyzeQueryExpressionSemantics(
                                                                           astCommand,
@@ -149,7 +150,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             if (null == astExpr)
             {
-                throw EntityUtil.EntitySqlError(commandText, Strings.InvalidEmptyQuery, 0);
+                string errorMessage = Strings.InvalidEmptyQuery;
+                throw EntitySqlException.Create(commandText, errorMessage, 0, null, false, null);
             }
 
             return astExpr;
@@ -157,18 +159,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         private static TResult CompileCommon<TResult>(
             string commandText,
-            Perspective perspective,
             ParserOptions parserOptions,
             Func<Node, ParserOptions, TResult> compilationFunction)
             where TResult : class
         {
-            TResult result = null;
-
-            //
-            // Validate arguments
-            //
-            EntityUtil.CheckArgumentNull(perspective, "commandText");
-            EntityUtil.CheckArgumentNull(perspective, "perspective");
+            Contract.Requires(commandText != null);
 
             //
             // Validate parser options - if null, give default options
@@ -176,16 +171,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             parserOptions = parserOptions ?? new ParserOptions();
 
             //
-            // Invoke Parser
-            //
-            var astCommand = Parse(commandText, parserOptions);
-
-            //
             // Perform Semantic Analysis/Conversion
             //
-            result = compilationFunction(astCommand, parserOptions);
-
-            return result;
+            return compilationFunction(Parse(commandText, parserOptions), parserOptions);
         }
 
         /// <summary>
@@ -274,16 +262,13 @@ namespace System.Data.Entity.Core.Common.EntitySql
             Func<SemanticAnalyzer, Node, TResult> analysisFunction)
             where TResult : class
         {
+            Contract.Requires(astExpr != null);
+            Contract.Requires(perspective != null);
+
             TResult result = null;
 
             try
             {
-                //
-                // Validate arguments
-                //
-                EntityUtil.CheckArgumentNull(astExpr, "astExpr");
-                EntityUtil.CheckArgumentNull(perspective, "perspective");
-
                 //
                 // Invoke semantic analysis
                 //
@@ -295,14 +280,16 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
             catch (MetadataException metadataException)
             {
-                throw EntityUtil.EntitySqlError(Strings.GeneralExceptionAsQueryInnerException("Metadata"), metadataException);
+                string message = Strings.GeneralExceptionAsQueryInnerException("Metadata");
+                throw new EntitySqlException(message, metadataException);
             }
                 //
                 // Wrap MappingException as EntityException inner exception
                 //
             catch (MappingException mappingException)
             {
-                throw EntityUtil.EntitySqlError(Strings.GeneralExceptionAsQueryInnerException("Mapping"), mappingException);
+                string message = Strings.GeneralExceptionAsQueryInnerException("Mapping");
+                throw new EntitySqlException(message, mappingException);
             }
 
             return result;

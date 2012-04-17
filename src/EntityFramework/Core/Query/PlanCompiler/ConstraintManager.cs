@@ -157,7 +157,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             if (null == assocSet || null == fromEnd
                 || null == toEnd)
             {
-                throw EntityUtil.NotSupported();
+                throw new NotSupportedException();
             }
 
             m_constraint = constraint;

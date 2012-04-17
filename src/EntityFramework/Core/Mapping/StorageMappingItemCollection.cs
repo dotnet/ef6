@@ -12,6 +12,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Runtime.Versioning;
@@ -82,9 +83,9 @@ namespace System.Data.Entity.Core.Mapping
             params string[] filePaths)
             : base(DataSpace.CSSpace)
         {
-            EntityUtil.CheckArgumentNull(edmCollection, "edmCollection");
-            EntityUtil.CheckArgumentNull(storeCollection, "storeCollection");
-            EntityUtil.CheckArgumentNull(filePaths, "filePaths");
+            Contract.Requires(edmCollection != null);
+            Contract.Requires(storeCollection != null);
+            Contract.Requires(filePaths != null);
 
             m_edmCollection = edmCollection;
             m_storeItemCollection = storeCollection;
@@ -126,7 +127,7 @@ namespace System.Data.Entity.Core.Mapping
             IEnumerable<XmlReader> xmlReaders)
             : base(DataSpace.CSSpace)
         {
-            EntityUtil.CheckArgumentNull(xmlReaders, "xmlReaders");
+            Contract.Requires(xmlReaders != null);
 
             var composite = MetadataArtifactLoader.CreateCompositeFromXmlReaders(xmlReaders);
 
@@ -161,7 +162,7 @@ namespace System.Data.Entity.Core.Mapping
             // we will check the parameters for this internal ctor becuase
             // it is pretty much publicly exposed through the MetadataItemCollectionFactory
             // in System.Data.Entity.Design
-            EntityUtil.CheckArgumentNull(xmlReaders, "xmlReaders");
+            Contract.Requires(xmlReaders != null);
             EntityUtil.CheckArgumentContainsNull(ref xmlReaders, "xmlReaders");
             // filePaths is allowed to be null
 
@@ -203,9 +204,9 @@ namespace System.Data.Entity.Core.Mapping
             List<string> filePaths,
             bool throwOnError)
         {
-            EntityUtil.CheckArgumentNull(xmlReaders, "xmlReaders");
-            EntityUtil.CheckArgumentNull(edmCollection, "edmCollection");
-            EntityUtil.CheckArgumentNull(storeCollection, "storeCollection");
+            Contract.Requires(xmlReaders != null);
+            Contract.Requires(edmCollection != null);
+            Contract.Requires(storeCollection != null);
 
             m_edmCollection = edmCollection;
             m_storeItemCollection = storeCollection;
@@ -304,10 +305,10 @@ namespace System.Data.Entity.Core.Mapping
         /// <exception cref="ArgumentException"> Thrown if mapping space is not valid</exception>
         internal override Map GetMap(string identity, DataSpace typeSpace, bool ignoreCase)
         {
-            EntityUtil.CheckArgumentNull(identity, "identity");
+            Contract.Requires(identity != null);
             if (typeSpace != DataSpace.CSpace)
             {
-                throw EntityUtil.InvalidOperation(Strings.Mapping_Storage_InvalidSpace(typeSpace));
+                throw new InvalidOperationException(Strings.Mapping_Storage_InvalidSpace(typeSpace));
             }
             return GetItem<Map>(identity, ignoreCase);
         }
@@ -324,7 +325,7 @@ namespace System.Data.Entity.Core.Mapping
         {
             if (typeSpace != DataSpace.CSpace)
             {
-                throw EntityUtil.InvalidOperation(Strings.Mapping_Storage_InvalidSpace(typeSpace));
+                throw new InvalidOperationException(Strings.Mapping_Storage_InvalidSpace(typeSpace));
             }
             return TryGetItem(identity, ignoreCase, out map);
         }
@@ -358,11 +359,11 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="item"></param>
         internal override Map GetMap(GlobalItem item)
         {
-            EntityUtil.CheckArgumentNull(item, "item");
+            Contract.Requires(item != null);
             var typeSpace = item.DataSpace;
             if (typeSpace != DataSpace.CSpace)
             {
-                throw EntityUtil.InvalidOperation(Strings.Mapping_Storage_InvalidSpace(typeSpace));
+                throw new InvalidOperationException(Strings.Mapping_Storage_InvalidSpace(typeSpace));
             }
             return GetMap(item.Identity, typeSpace);
         }

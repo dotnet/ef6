@@ -149,7 +149,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression">The DbLambdaExpression that is being visited.</param>
         public virtual void Visit(DbLambdaExpression expression)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>

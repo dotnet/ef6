@@ -2,6 +2,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -558,7 +559,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <returns>Canonical description of method (suitable for lookup)</returns>
         internal static string GetCanonicalMethodDescription(MethodInfo method)
         {
-            EntityUtil.CheckArgumentNull(method, "method");
+            Contract.Requires(method != null);
 
             // retrieve all generic type arguments and assign them numbers based on order
             Dictionary<Type, int> genericArgumentOrdinals = null;

@@ -4,6 +4,7 @@
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Public Entity SQL Parser class.
@@ -29,7 +30,7 @@
         /// <returns><see cref="ParseResult"/> containing <see cref="DbCommandTree"/> and information describing inline function definitions if any.</returns>
         public ParseResult Parse(string query, params DbParameterReferenceExpression[] parameters)
         {
-            EntityUtil.CheckArgumentNull(query, "query");
+            Contract.Requires(query != null);
             if (parameters != null)
             {
                 IEnumerable<DbParameterReferenceExpression> paramsEnum = parameters;
@@ -45,7 +46,7 @@
         /// </summary>
         public DbLambda ParseLambda(string query, params DbVariableReferenceExpression[] variables)
         {
-            EntityUtil.CheckArgumentNull(query, "query");
+            Contract.Requires(query != null);
             if (variables != null)
             {
                 IEnumerable<DbVariableReferenceExpression> varsEnum = variables;

@@ -21,11 +21,11 @@ namespace System.Data.Entity.Core.Common
         {
             if (ordinal < 0)
             {
-                throw EntityUtil.ArgumentOutOfRange("ordinal");
+                throw new ArgumentOutOfRangeException("ordinal");
             }
             if (null == fieldType)
             {
-                throw EntityUtil.ArgumentNull("fieldType");
+                throw new ArgumentNullException("fieldType");
             }
 
             _fieldType = fieldType;

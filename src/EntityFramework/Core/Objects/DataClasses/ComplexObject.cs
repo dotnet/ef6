@@ -1,5 +1,6 @@
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Runtime.Serialization;
 
@@ -33,7 +34,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             if (_parent != null)
             {
-                throw EntityUtil.ComplexObjectAlreadyAttachedToParent();
+                throw new InvalidOperationException(Strings.ComplexObject_ComplexObjectAlreadyAttachedToParent);
             }
 
             Debug.Assert(_parentPropertyName == null);

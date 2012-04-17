@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Core.Common.Internal
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
@@ -50,7 +51,7 @@ namespace System.Data.Entity.Core.Common.Internal
         /// <param name="rightQuote">set of characters which are valid to stop a quote, array index's correspond to the the leftquote array.</param>
         /// <param name="separator">separator to use</param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly"), SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal static List<string> ParseMultipartIdentifier(string name, string leftQuote, string rightQuote, char separator)
         {
             Debug.Assert(
@@ -99,7 +100,7 @@ namespace System.Data.Entity.Core.Common.Internal
                                      != rightQuote.IndexOf(testchar))
                             {
                                 // If we shouldn't see a right quote
-                                throw EntityUtil.ADP_InvalidMultipartNameDelimiterUsage();
+                                throw new ArgumentException(Strings.ADP_InvalidMultipartNameDelimiterUsage, "path");
                             }
                             else
                             {
@@ -122,12 +123,12 @@ namespace System.Data.Entity.Core.Common.Internal
                                 if (-1
                                     != rightQuote.IndexOf(testchar))
                                 {
-                                    throw EntityUtil.ADP_InvalidMultipartNameDelimiterUsage();
+                                    throw new ArgumentException(Strings.ADP_InvalidMultipartNameDelimiterUsage, "path");
                                 }
                                 else if (-1
                                          != leftQuote.IndexOf(testchar))
                                 {
-                                    throw EntityUtil.ADP_InvalidMultipartNameDelimiterUsage();
+                                    throw new ArgumentException(Strings.ADP_InvalidMultipartNameDelimiterUsage, "path");
                                 }
                                 else if (IsWhitespace(testchar))
                                 {
@@ -207,7 +208,7 @@ namespace System.Data.Entity.Core.Common.Internal
                             else if (!IsWhitespace(testchar))
                             {
                                 // If it is not white space we got problems
-                                throw EntityUtil.ADP_InvalidMultipartNameDelimiterUsage();
+                                throw new ArgumentException(Strings.ADP_InvalidMultipartNameDelimiterUsage, "path");
                             }
                             else
                             {
@@ -232,7 +233,7 @@ namespace System.Data.Entity.Core.Common.Internal
                                 else
                                 {
                                     // Othewise not a separator
-                                    throw EntityUtil.ADP_InvalidMultipartNameDelimiterUsage();
+                                    throw new ArgumentException(Strings.ADP_InvalidMultipartNameDelimiterUsage, "path");
                                 }
                             }
                             break;
@@ -255,7 +256,7 @@ namespace System.Data.Entity.Core.Common.Internal
 
                 case MPIState.MPI_ParseQuote: // Invalid Ending States
                 default:
-                    throw EntityUtil.ADP_InvalidMultipartNameDelimiterUsage();
+                    throw new ArgumentException(Strings.ADP_InvalidMultipartNameDelimiterUsage, "path");
             }
             return parsedNames;
         }

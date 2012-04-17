@@ -374,7 +374,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override void Visit(ElementOp op, Node n)
         {
             // Cannot occur at this stage of processing
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -838,7 +838,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override void Visit(MultiStreamNestOp op, Node n)
         {
             // Cannot occur at this stage of processing
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -849,7 +849,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override void Visit(SingleStreamNestOp op, Node n)
         {
             // Cannot occur at this stage of processing
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         #endregion

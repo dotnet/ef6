@@ -10,6 +10,7 @@
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Spatial;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
     internal sealed class DynamicUpdateCommand : UpdateCommand
@@ -26,9 +27,12 @@
             Dictionary<int, string> outputIdentifiers)
             : base(originalValues, currentValues)
         {
-            m_processor = EntityUtil.CheckArgumentNull(processor, "processor");
+            Contract.Requires(processor != null); 
+            Contract.Requires(tree != null);
+
+            m_processor = processor;
             m_operator = op;
-            m_modificationCommandTree = EntityUtil.CheckArgumentNull(tree, "commandTree");
+            m_modificationCommandTree = tree;
             m_outputIdentifiers = outputIdentifiers; // may be null (not all commands have output identifiers)
 
             // initialize identifier information (supports lateral propagation of server gen values)

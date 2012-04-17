@@ -30,7 +30,7 @@
             var wildcardAssemblies = _wildcardAssemblyEnumerator();
             if (wildcardAssemblies == null)
             {
-                throw EntityUtil.InvalidOperation(Strings.WildcardEnumeratorReturnedNull);
+                throw new InvalidOperationException(Strings.WildcardEnumeratorReturnedNull);
             }
             return wildcardAssemblies;
         }

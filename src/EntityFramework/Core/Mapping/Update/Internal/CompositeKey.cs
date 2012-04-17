@@ -3,6 +3,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Represents a key composed of multiple parts.
@@ -70,7 +71,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             internal CompositeKeyComparer(KeyManager manager)
             {
-                _manager = EntityUtil.CheckArgumentNull(manager, "manager");
+                Contract.Requires(manager != null);
+
+                _manager = manager;
             }
 
             // determines equality by comparing each key component
@@ -135,7 +138,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             // creates a hash code by XORing hash codes for all key components.
             public int GetHashCode(CompositeKey key)
             {
-                EntityUtil.CheckArgumentNull(key, "key");
+                Contract.Requires(key != null);
 
                 var result = 0;
                 foreach (var keyComponent in key.KeyComponents)

@@ -780,13 +780,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override DbExpression Visit(PropertyOp op, Node n)
         {
             // We should never see this Op - should have been eliminated in NTE
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         public override DbExpression Visit(RelPropertyOp op, Node n)
         {
             // should have been eliminated in NTE
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ArithmeticOp")]
@@ -1068,49 +1068,49 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // As such, aggregates are handled directly during processing of GroupByOp.
             // If this method is called an AggregateOp was encountered at some other (invalid) point in the IQT.
             PlanCompiler.Assert(false, "AggregateOp encountered outside of GroupByOp");
-            throw EntityUtil.NotSupported(Strings.Iqt_CTGen_UnexpectedAggregate);
+            throw new NotSupportedException(Strings.Iqt_CTGen_UnexpectedAggregate);
         }
 
         public override DbExpression Visit(NavigateOp op, Node n)
         {
             // we should never see this Op
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         public override DbExpression Visit(NewEntityOp op, Node n)
         {
             // We should never see this Op - should have been eliminated in NTE
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         public override DbExpression Visit(NewInstanceOp op, Node n)
         {
             // We should never see this Op - should have been eliminated in NTE
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         public override DbExpression Visit(DiscriminatedNewEntityOp op, Node n)
         {
             // We should never see this Op -  should have been eliminated in NTE
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         public override DbExpression Visit(NewMultisetOp op, Node n)
         {
             // We should never see this Op
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         public override DbExpression Visit(NewRecordOp op, Node n)
         {
             // We should never see this Op
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         public override DbExpression Visit(RefOp op, Node n)
         {
             // We should never see this Op
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         public override DbExpression Visit(VarRefOp op, Node n)
@@ -1121,7 +1121,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override DbExpression Visit(TreatOp op, Node n)
         {
             // We should never see this Op
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         public override DbExpression Visit(CastOp op, Node n)
@@ -1194,19 +1194,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override DbExpression Visit(GetRefKeyOp op, Node n)
         {
             // We should never see this Op
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         public override DbExpression Visit(GetEntityRefOp op, Node n)
         {
             // We should never see this Op
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         public override DbExpression Visit(CollectOp op, Node n)
         {
             // We should never get here
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         #endregion
@@ -1417,7 +1417,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override DbExpression Visit(ScanViewOp op, Node n)
         {
             // We should never see this Op
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -1951,7 +1951,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override DbExpression Visit(GroupByIntoOp op, Node n)
         {
             // We should never see this Op
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         #region JoinOp Conversions - CrossJoinOp, InnerJoinOp, FullOuterJoinOp, LeftOuterJoinOp
@@ -2356,7 +2356,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override DbExpression Visit(DerefOp op, Node n)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         public override DbExpression Visit(DistinctOp op, Node n)
@@ -2459,7 +2459,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // If this method is called a VarDefOp exists in an invalid location in the IQT
             //
             PlanCompiler.Assert(false, "Unexpected VarDefOp");
-            throw EntityUtil.NotSupported(Strings.Iqt_CTGen_UnexpectedVarDef);
+            throw new NotSupportedException(Strings.Iqt_CTGen_UnexpectedVarDef);
         }
 
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarDefListOp")]
@@ -2472,7 +2472,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // If this method is called a VarDefListOp exists in an invalid location in the IQT
             //
             PlanCompiler.Assert(false, "Unexpected VarDefListOp");
-            throw EntityUtil.NotSupported(Strings.Iqt_CTGen_UnexpectedVarDefList);
+            throw new NotSupportedException(Strings.Iqt_CTGen_UnexpectedVarDefList);
         }
 
         #endregion
@@ -2523,12 +2523,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override DbExpression Visit(SingleStreamNestOp op, Node n)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         public override DbExpression Visit(MultiStreamNestOp op, Node n)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         #endregion

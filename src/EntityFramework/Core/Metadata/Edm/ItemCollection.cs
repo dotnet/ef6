@@ -179,7 +179,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 return item;
             }
-            throw EntityUtil.ItemInvalidIdentity(identity, "identity");
+            throw new ArgumentException(Strings.ItemInvalidIdentity(identity), "identity");
         }
 
         /// <summary>
@@ -438,7 +438,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 return container;
             }
-            throw EntityUtil.ItemInvalidIdentity(name, "name");
+            throw new ArgumentException(Strings.ItemInvalidIdentity(name), "name");
         }
 
         /// <summary>

@@ -7,8 +7,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
 
@@ -36,9 +38,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private UpdateTranslator(
             IEntityStateManager stateManager, MetadataWorkspace metadataWorkspace, EntityConnection connection, int? commandTimeout)
         {
-            EntityUtil.CheckArgumentNull(stateManager, "stateManager");
-            EntityUtil.CheckArgumentNull(metadataWorkspace, "metadataWorkspace");
-            EntityUtil.CheckArgumentNull(connection, "connection");
+            Contract.Requires(stateManager != null);
+            Contract.Requires(metadataWorkspace != null);
+            Contract.Requires(connection != null);
 
             // propagation state
             m_changes = new Dictionary<EntitySetBase, ChangeNode>();
@@ -67,7 +69,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             ;
 
             // key management
-            KeyManager = new KeyManager(this);
+            KeyManager = new KeyManager();
             KeyComparer = CompositeKey.CreateComparer(KeyManager);
         }
 
@@ -416,7 +418,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 // we should not be wrapping all exceptions
                 if (RequiresContext(e))
                 {
-                    throw EntityUtil.Update(Strings.Update_GeneralExecutionException, e, translator.DetermineStateEntriesFromSource(source));
+                    throw new UpdateException(Strings.Update_GeneralExecutionException, e, translator.DetermineStateEntriesFromSource(source).Cast<ObjectStateEntry>().Distinct());
                 }
                 throw;
             }
@@ -464,7 +466,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             if (0 == rowsAffected)
             {
                 var stateEntries = DetermineStateEntriesFromSource(source);
-                throw EntityUtil.UpdateConcurrency(rowsAffected, null, stateEntries);
+                var message = Strings.Update_ConcurrencyError(rowsAffected);
+                throw new OptimisticConcurrencyException(message, null, stateEntries.Cast<ObjectStateEntry>().Distinct());
             }
         }
 
@@ -792,7 +795,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             // throw exception containing all related state entries
-            throw EntityUtil.Update(Strings.Update_ConstraintCycle, null, stateEntries);
+            throw new UpdateException(Strings.Update_ConstraintCycle, null, stateEntries.Cast<ObjectStateEntry>().Distinct());
         }
 
         /// <summary>
@@ -819,7 +822,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     // we don't wan't folks to have to know all the various types of exceptions that can 
                     // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
                     // the inner exception of it.
-                    throw EntityUtil.CommandCompilation(Strings.EntityClient_CommandDefinitionPreparationFailed, e);
+                    throw new EntityCommandCompilationException(Strings.EntityClient_CommandDefinitionPreparationFailed, e);
                 }
                 throw;
             }
@@ -913,8 +916,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     else
                     {
                         // throw an exception
-                        throw EntityUtil.UpdateMissingEntity(
-                            required.Value.Name, TypeHelpers.GetFullName(key.EntityContainerName, key.EntitySetName));
+                        throw EntityUtil.Update(Strings.Update_MissingEntity(required.Value.Name, TypeHelpers.GetFullName(key.EntityContainerName, key.EntitySetName)), null);
                     }
                 }
             }
@@ -956,12 +958,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="stateEntry"></param>
         private void ValidateAndRegisterStateEntry(IEntityStateEntry stateEntry)
         {
-            EntityUtil.CheckArgumentNull(stateEntry, "stateEntry");
+            Contract.Requires(stateEntry != null);
 
             var extent = stateEntry.EntitySet;
             if (null == extent)
             {
-                throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.InvalidStateEntry, 1);
+                throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.InvalidStateEntry, 1, null);
             }
 
             // Determine the key. May be null if the state entry does not represent an entity.
@@ -1066,7 +1068,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 ||
                 (null == recordInfo.RecordType))
             {
-                throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.InvalidStateEntry, 2);
+                throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.InvalidStateEntry, 2, null);
             }
 
             VerifyExtent(MetadataWorkspace, extent);
@@ -1147,7 +1149,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns>Change node for requested extent.</returns>
         internal ChangeNode GetExtentModifications(EntitySetBase extent)
         {
-            EntityUtil.CheckArgumentNull(extent, "extent");
+            Contract.Requires(extent != null);
             Debug.Assert(null != m_changes, "(UpdateTranslator/GetChangeNodeForExtent) method called before translator initialized");
 
             ChangeNode changeNode;
@@ -1168,7 +1170,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns>List storing the entries.</returns>
         internal List<ExtractedStateEntry> GetExtentFunctionModifications(EntitySetBase extent)
         {
-            EntityUtil.CheckArgumentNull(extent, "extent");
+            Contract.Requires(extent != null);
             Debug.Assert(null != m_functionChanges, "method called before translator initialized");
 
             List<ExtractedStateEntry> entries;

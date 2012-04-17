@@ -25,7 +25,7 @@
             var result = connection as SqlConnection;
             if (null == result)
             {
-                throw EntityUtil.Argument(Strings.Mapping_Provider_WrongConnectionType(typeof(SqlConnection)));
+                throw new ArgumentException(Strings.Mapping_Provider_WrongConnectionType(typeof(SqlConnection)));
             }
             return result;
         }

@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// The class for provider services of the entity client
@@ -26,8 +27,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// <exception cref="ArgumentNullException">connection and commandTree arguments must not be null</exception>
         protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
-            EntityUtil.CheckArgumentNull(providerManifest, "providerManifest");
-            EntityUtil.CheckArgumentNull(commandTree, "commandTree");
+            Contract.Requires(providerManifest != null);
+            Contract.Requires(commandTree != null);
 
             var storeMetadata = (StoreItemCollection)commandTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
             return CreateCommandDefinition(storeMetadata.StoreProviderFactory, commandTree);
@@ -35,7 +36,7 @@ namespace System.Data.Entity.Core.EntityClient
 
         internal static EntityCommandDefinition CreateCommandDefinition(DbProviderFactory storeProviderFactory, DbCommandTree commandTree)
         {
-            EntityUtil.CheckArgumentNull(storeProviderFactory, "storeProviderFactory");
+            Contract.Requires(storeProviderFactory != null);
             Debug.Assert(commandTree != null, "Command Tree cannot be null");
 
             return new EntityCommandDefinition(storeProviderFactory, commandTree);
@@ -52,7 +53,7 @@ namespace System.Data.Entity.Core.EntityClient
             if (commandTree.DataSpace
                 != DataSpace.CSpace)
             {
-                throw EntityUtil.ProviderIncompatible(Strings.EntityClient_RequiresNonStoreCommandTree);
+                throw new ProviderIncompatibleException(Strings.EntityClient_RequiresNonStoreCommandTree);
             }
         }
 
@@ -67,17 +68,17 @@ namespace System.Data.Entity.Core.EntityClient
         /// <exception cref="InvalidCastException">prototype argument must be a EntityCommand</exception>
         public override DbCommandDefinition CreateCommandDefinition(DbCommand prototype)
         {
-            EntityUtil.CheckArgumentNull(prototype, "prototype");
+            Contract.Requires(prototype != null);
             return ((EntityCommand)prototype).GetCommandDefinition();
         }
 
         protected override string GetDbProviderManifestToken(DbConnection connection)
         {
-            EntityUtil.CheckArgumentNull(connection, "connection");
+            Contract.Requires(connection != null);
             if (connection.GetType()
                 != typeof(EntityConnection))
             {
-                throw EntityUtil.Argument(Strings.Mapping_Provider_WrongConnectionType(typeof(EntityConnection)));
+                throw new ArgumentException(Strings.Mapping_Provider_WrongConnectionType(typeof(EntityConnection)));
             }
 
             return MetadataItem.EdmProviderManifest.Token;
@@ -85,7 +86,7 @@ namespace System.Data.Entity.Core.EntityClient
 
         protected override DbProviderManifest GetDbProviderManifest(string versionHint)
         {
-            EntityUtil.CheckArgumentNull(versionHint, "versionHint");
+            Contract.Requires(versionHint != null);
             return MetadataItem.EdmProviderManifest;
         }
     }

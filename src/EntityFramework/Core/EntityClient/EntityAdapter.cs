@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Class representing a data adapter for the conceptual layer
@@ -54,7 +55,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>Number of cache entries affected by the udpate.</returns>
         public Int32 Update(IEntityStateManager entityCache)
         {
-            EntityUtil.CheckArgumentNull(entityCache, "entityCache");
+            Contract.Requires(entityCache != null);
             if (!IsStateManagerDirty(entityCache))
             {
                 return 0;
@@ -63,21 +64,21 @@ namespace System.Data.Entity.Core.EntityClient
             // Check that we have a connection before we proceed
             if (_connection == null)
             {
-                throw EntityUtil.InvalidOperation(Strings.EntityClient_NoConnectionForAdapter);
+                throw new InvalidOperationException(Strings.EntityClient_NoConnectionForAdapter);
             }
 
             // Check that the store connection is available
             if (_connection.StoreProviderFactory == null
                 || _connection.StoreConnection == null)
             {
-                throw EntityUtil.InvalidOperation(Strings.EntityClient_NoStoreConnectionForUpdate);
+                throw new InvalidOperationException(Strings.EntityClient_NoStoreConnectionForUpdate);
             }
 
             // Check that the connection is open before we proceed
             if (ConnectionState.Open
                 != _connection.State)
             {
-                throw EntityUtil.InvalidOperation(Strings.EntityClient_ClosedConnectionForUpdate);
+                throw new InvalidOperationException(Strings.EntityClient_ClosedConnectionForUpdate);
             }
 
             return UpdateTranslator.Update(entityCache, this);

@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Common;
     using System.Data.Entity.Core.Common.Internal.Materialization;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -52,7 +53,7 @@ namespace System.Data.Entity.Core.Objects
             if (null == _shaper)
             {
                 // Enumerating more than once is not allowed.
-                throw EntityUtil.CannotReEnumerateQueryResults();
+                throw new InvalidOperationException(Strings.Materializer_CannotReEnumerateQueryResults);
             }
         }
 

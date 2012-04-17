@@ -111,12 +111,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
             var astCommandExpr = astExpr as Command;
             if (null == astCommandExpr)
             {
-                throw EntityUtil.Argument(Strings.UnknownAstCommandExpression);
+                throw new ArgumentException(Strings.UnknownAstCommandExpression);
             }
 
             if (!(astCommandExpr.Statement is QueryStatement))
             {
-                throw EntityUtil.Argument(Strings.UnknownAstExpressionType);
+                throw new ArgumentException(Strings.UnknownAstExpressionType);
             }
 
             return astCommandExpr;
@@ -156,7 +156,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
                     if (name == null)
                     {
-                        throw EntityUtil.EntitySqlError(namespaceImport.NamespaceName.ErrCtx, Strings.InvalidMetadataMemberName);
+                        ErrorContext errCtx = namespaceImport.NamespaceName.ErrCtx;
+                        string message = Strings.InvalidMetadataMemberName;
+                        throw EntitySqlException.Create(errCtx, message, null);
                     }
 
                     var alias = namespaceImport.Alias != null ? namespaceImport.Alias.Name : null;
@@ -179,9 +181,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     }
                     else
                     {
-                        throw EntityUtil.EntitySqlError(
-                            namespaceImport.NamespaceName.ErrCtx, Strings.InvalidMetadataMemberClassResolution(
-                                metadataMember.Name, metadataMember.MetadataMemberClassName, MetadataNamespace.NamespaceClassName));
+                        ErrorContext errCtx = namespaceImport.NamespaceName.ErrCtx;
+                        string message = Strings.InvalidMetadataMemberClassResolution(
+                            metadataMember.Name, metadataMember.MetadataMemberClassName, MetadataNamespace.NamespaceClassName);
+                        throw EntitySqlException.Create(errCtx, message, null);
                     }
                 }
             }
@@ -220,7 +223,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
             else
             {
-                throw EntityUtil.Argument(Strings.UnknownAstExpressionType);
+                throw new ArgumentException(Strings.UnknownAstExpressionType);
             }
 
             var converted = statementConverter(astStatement, sr);
@@ -273,7 +276,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             if (queryStatement == null)
             {
-                throw EntityUtil.Argument(Strings.UnknownAstExpressionType);
+                throw new ArgumentException(Strings.UnknownAstExpressionType);
             }
 
             //
@@ -292,7 +295,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 // Ensure converted expression is not untyped null.
                 // Use error context of the top-level expression.
                 //
-                throw EntityUtil.EntitySqlError(queryStatement.Expr.ErrCtx, Strings.ResultingExpressionTypeCannotBeNull);
+                ErrorContext errCtx = queryStatement.Expr.ErrCtx;
+                string message = Strings.ResultingExpressionTypeCannotBeNull;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -340,7 +345,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
             else if (Helper.IsAssociationType(resultType.EdmType))
             {
-                throw EntityUtil.EntitySqlError(errCtx, Strings.InvalidQueryResultType(resultType.EdmType.FullName));
+                string message = Strings.InvalidQueryResultType(resultType.EdmType.FullName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
         }
 
@@ -415,9 +421,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         (DbVariableReferenceExpression arg) =>
                         sr.NameComparer.Compare(arg.VariableName, name) == 0))
                     {
-                        throw EntityUtil.EntitySqlError(
-                            paramDef.ErrCtx,
-                            Strings.MultipleDefinitionsOfParameter(name));
+                        ErrorContext errCtx = paramDef.ErrCtx;
+                        string message = Strings.MultipleDefinitionsOfParameter(name);
+                        throw EntitySqlException.Create(errCtx, message, null);
                     }
 
                     //
@@ -455,8 +461,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     //
                     if (_convertingDefinition)
                     {
-                        throw EntityUtil.EntitySqlError(
-                            FunctionDefAst.ErrCtx, Strings.Cqt_UDF_FunctionDefinitionWithCircularReference(FunctionDefAst.Name));
+                        ErrorContext errCtx = FunctionDefAst.ErrCtx;
+                        string message = Strings.Cqt_UDF_FunctionDefinitionWithCircularReference(FunctionDefAst.Name);
+                        throw EntitySqlException.Create(errCtx, message, null);
                     }
 
                     //
@@ -510,7 +517,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             var converter = _astExprConverters[astExpr.GetType()];
             if (converter == null)
             {
-                throw EntityUtil.EntitySqlError(Strings.UnknownAstExpressionType);
+                string message = Strings.UnknownAstExpressionType;
+                throw new EntitySqlException(message);
             }
             return converter(astExpr, sr);
         }
@@ -526,7 +534,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             var expr = ConvertValueExpressionAllowUntypedNulls(astExpr, sr);
             if (expr == null)
             {
-                throw EntityUtil.EntitySqlError(astExpr.ErrCtx, Strings.ExpressionCannotBeNull);
+                ErrorContext errCtx = astExpr.ErrCtx;
+                string message = Strings.ExpressionCannotBeNull;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
             return expr;
         }
@@ -577,7 +587,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 errorMessage = Strings.CouldNotResolveIdentifier(TypeResolver.GetFullName(names));
             }
 
-            throw EntityUtil.EntitySqlError(astExpr.ErrCtx, errorMessage);
+            ErrorContext errCtx = astExpr.ErrCtx;
+            throw EntitySqlException.Create(errCtx, errorMessage, null);
         }
 
         /// <summary>
@@ -598,7 +609,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             {
                 if (rightExpr == null)
                 {
-                    throw EntityUtil.EntitySqlError(errCtx, formatMessage());
+                    string message = formatMessage();
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
                 else
                 {
@@ -639,7 +651,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             if (!ClrProviderManifest.Instance.TryGetPrimitiveType(literal.Type, out primitiveType))
             {
-                throw EntityUtil.EntitySqlError(literal.ErrCtx, Strings.LiteralTypeNotFoundInMetadata(literal.OriginalValue));
+                ErrorContext errCtx = literal.ErrCtx;
+                string message = Strings.LiteralTypeNotFoundInMetadata(literal.OriginalValue);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
             var literalTypeUsage = TypeHelpers.GetLiteralTypeUsage(primitiveType.PrimitiveTypeKind, literal.IsUnicodeString);
 
@@ -703,8 +717,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         (MetadataMember)leftResolution, dotExpr.Identifier.Name, dotExpr.Identifier.ErrCtx);
 
                 default:
-                    throw EntityUtil.EntitySqlError(
-                        dotExpr.Left.ErrCtx, Strings.UnknownExpressionResolutionClass(leftResolution.ExpressionClass));
+                    ErrorContext errCtx = dotExpr.Left.ErrCtx;
+                    string message = Strings.UnknownExpressionResolutionClass(leftResolution.ExpressionClass);
+                    throw EntitySqlException.Create(errCtx, message, null);
             }
         }
 
@@ -743,7 +758,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
                 if (!sr.IsInAnyGroupScope())
                 {
-                    throw EntityUtil.EntitySqlError(astExpr.ErrCtx, Strings.GroupPartitionOutOfContext);
+                    ErrorContext errCtx = astExpr.ErrCtx;
+                    string message = Strings.GroupPartitionOutOfContext;
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 //
@@ -764,7 +781,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
                 if (arg == null)
                 {
-                    throw EntityUtil.EntitySqlError(groupAggregateExpr.ArgExpr.ErrCtx, Strings.ResultingExpressionTypeCannotBeNull);
+                    ErrorContext errCtx = groupAggregateExpr.ArgExpr.ErrCtx;
+                    string message = Strings.ResultingExpressionTypeCannotBeNull;
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 //
@@ -875,13 +894,16 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         return ConvertModelFunctionCall((MetadataFunctionGroup)metadataMember, methodExpr, sr);
 
                     default:
-                        throw EntityUtil.EntitySqlError(
-                            methodExpr.Expr.ErrCtx, Strings.CannotResolveNameToTypeOrFunction(metadataMember.Name));
+                        ErrorContext errCtx = methodExpr.Expr.ErrCtx;
+                        string message = Strings.CannotResolveNameToTypeOrFunction(metadataMember.Name);
+                        throw EntitySqlException.Create(errCtx, message, null);
                 }
             }
             else
             {
-                throw EntityUtil.EntitySqlError(methodExpr.ErrCtx, Strings.MethodInvocationNotSupported);
+                ErrorContext errCtx = methodExpr.ErrCtx;
+                string message = Strings.MethodInvocationNotSupported;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
         }
 
@@ -973,7 +995,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             if (isAmbiguous)
             {
-                throw EntityUtil.EntitySqlError(methodExpr.ErrCtx, Strings.AmbiguousFunctionArguments);
+                ErrorContext errCtx = methodExpr.ErrCtx;
+                string message = Strings.AmbiguousFunctionArguments;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -1003,7 +1027,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 &&
                 !TypeSemantics.IsRelationshipType(metadataType.TypeUsage))
             {
-                throw EntityUtil.EntitySqlError(methodExpr.ErrCtx, Strings.InvalidCtorUseOnType(metadataType.TypeUsage.EdmType.FullName));
+                ErrorContext errCtx = methodExpr.ErrCtx;
+                string message = Strings.InvalidCtorUseOnType(metadataType.TypeUsage.EdmType.FullName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -1011,8 +1037,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             if (metadataType.TypeUsage.EdmType.Abstract)
             {
-                throw EntityUtil.EntitySqlError(
-                    methodExpr.ErrCtx, Strings.CannotInstantiateAbstractType(metadataType.TypeUsage.EdmType.FullName));
+                ErrorContext errCtx = methodExpr.ErrCtx;
+                string message = Strings.CannotInstantiateAbstractType(metadataType.TypeUsage.EdmType.FullName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -1021,7 +1048,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (methodExpr.DistinctKind
                 != DistinctKind.None)
             {
-                throw EntityUtil.EntitySqlError(methodExpr.ErrCtx, Strings.InvalidDistinctArgumentInCtor);
+                ErrorContext errCtx = methodExpr.ErrCtx;
+                string message = Strings.InvalidDistinctArgumentInCtor;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -1033,13 +1062,17 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 if (!(sr.ParserOptions.ParserCompilationMode == ParserOptions.CompilationMode.RestrictedViewGenerationMode ||
                       sr.ParserOptions.ParserCompilationMode == ParserOptions.CompilationMode.UserViewGenerationMode))
                 {
-                    throw EntityUtil.EntitySqlError(methodExpr.Relationships.ErrCtx, Strings.InvalidModeForWithRelationshipClause);
+                    ErrorContext errCtx = methodExpr.Relationships.ErrCtx;
+                    string message = Strings.InvalidModeForWithRelationshipClause;
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 var driverEntityType = metadataType.TypeUsage.EdmType as EntityType;
                 if (driverEntityType == null)
                 {
-                    throw EntityUtil.EntitySqlError(methodExpr.Relationships.ErrCtx, Strings.InvalidTypeForWithRelationshipClause);
+                    ErrorContext errCtx = methodExpr.Relationships.ErrCtx;
+                    string message = Strings.InvalidTypeForWithRelationshipClause;
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 var targetEnds = new HashSet<string>();
@@ -1054,7 +1087,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         ":", new[] { relshipTarget.TargetEnd.DeclaringType.Identity, relshipTarget.TargetEnd.Identity });
                     if (targetEnds.Contains(targetEndId))
                     {
-                        throw EntityUtil.EntitySqlError(relshipExpr.ErrCtx, Strings.RelationshipTargetMustBeUnique(targetEndId));
+                        ErrorContext errCtx = relshipExpr.ErrCtx;
+                        string message = Strings.RelationshipTargetMustBeUnique(targetEndId);
+                        throw EntitySqlException.Create(errCtx, message, null);
                     }
 
                     targetEnds.Add(targetEndId);
@@ -1078,7 +1113,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         {
             if (metadataFunctionGroup.FunctionMetadata.Any(f => !f.IsComposableAttribute))
             {
-                throw EntityUtil.EntitySqlError(methodExpr.ErrCtx, Strings.CannotCallNoncomposableFunction(metadataFunctionGroup.Name));
+                ErrorContext errCtx = methodExpr.ErrCtx;
+                string message = Strings.CannotCallNoncomposableFunction(metadataFunctionGroup.Name);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -1174,7 +1211,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             // If we reach this point, means the resolution failed.
             //
-            throw EntityUtil.EntitySqlError(methodExpr.ErrCtx, Strings.FailedToResolveAggregateFunction(metadataFunctionGroup.Name));
+            ErrorContext errCtx = methodExpr.ErrCtx;
+            string message = Strings.FailedToResolveAggregateFunction(metadataFunctionGroup.Name);
+            throw EntitySqlException.Create(errCtx, message, null);
         }
 
         /// <summary>
@@ -1249,7 +1288,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             if (isAmbiguous)
             {
-                throw EntityUtil.EntitySqlError(methodExpr.ErrCtx, Strings.AmbiguousFunctionArguments);
+                ErrorContext errCtx = methodExpr.ErrCtx;
+                string message = Strings.AmbiguousFunctionArguments;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -1297,7 +1338,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             if (isAmbiguous)
             {
-                throw EntityUtil.EntitySqlError(methodExpr.ErrCtx, Strings.AmbiguousFunctionArguments);
+                ErrorContext errCtx = methodExpr.ErrCtx;
+                string message = Strings.AmbiguousFunctionArguments;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -1405,7 +1448,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
                 if (argCount <= idx)
                 {
-                    throw EntityUtil.EntitySqlError(methodExpr.ErrCtx, Strings.NumberOfTypeCtorIsLessThenFormalSpec(member.Name));
+                    ErrorContext errCtx = methodExpr.ErrCtx;
+                    string message = Strings.NumberOfTypeCtorIsLessThenFormalSpec(member.Name);
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 //
@@ -1417,9 +1462,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     if (edmProperty != null
                         && !edmProperty.Nullable)
                     {
-                        throw EntityUtil.EntitySqlError(
-                            methodExpr.Args[idx].ErrCtx,
-                            Strings.InvalidNullLiteralForNonNullableMember(member.Name, stype.FullName));
+                        ErrorContext errCtx = methodExpr.Args[idx].ErrCtx;
+                        string message = Strings.InvalidNullLiteralForNonNullableMember(member.Name, stype.FullName);
+                        throw EntitySqlException.Create(errCtx, message, null);
                     }
                     args[idx] = memberModelTypeUsage.Null();
                 }
@@ -1435,12 +1480,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     if (!isPromotable
                         && !TypeSemantics.IsPromotableTo(memberModelTypeUsage, args[idx].ResultType))
                     {
-                        throw EntityUtil.EntitySqlError(
-                            methodExpr.Args[idx].ErrCtx,
-                            Strings.InvalidCtorArgumentType(
-                                args[idx].ResultType.EdmType.FullName,
-                                member.Name,
-                                memberModelTypeUsage.EdmType.FullName));
+                        ErrorContext errCtx = methodExpr.Args[idx].ErrCtx;
+                        string message = Strings.InvalidCtorArgumentType(
+                            args[idx].ResultType.EdmType.FullName,
+                            member.Name,
+                            memberModelTypeUsage.EdmType.FullName);
+                        throw EntitySqlException.Create(errCtx, message, null);
                     }
 
                     if (Helper.IsPrimitiveType(memberModelTypeUsage.EdmType)
@@ -1454,12 +1499,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 {
                     if (!isPromotable)
                     {
-                        throw EntityUtil.EntitySqlError(
-                            methodExpr.Args[idx].ErrCtx,
-                            Strings.InvalidCtorArgumentType(
-                                args[idx].ResultType.EdmType.FullName,
-                                member.Name,
-                                memberModelTypeUsage.EdmType.FullName));
+                        ErrorContext errCtx = methodExpr.Args[idx].ErrCtx;
+                        string message = Strings.InvalidCtorArgumentType(
+                            args[idx].ResultType.EdmType.FullName,
+                            member.Name,
+                            memberModelTypeUsage.EdmType.FullName);
+                        throw EntitySqlException.Create(errCtx, message, null);
                     }
                 }
 
@@ -1471,7 +1516,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             if (idx != argCount)
             {
-                throw EntityUtil.EntitySqlError(methodExpr.ErrCtx, Strings.NumberOfTypeCtorIsMoreThenFormalSpec(stype.FullName));
+                ErrorContext errCtx = methodExpr.ErrCtx;
+                string message = Strings.NumberOfTypeCtorIsMoreThenFormalSpec(stype.FullName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -1510,7 +1557,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (methodExpr.DistinctKind
                 != DistinctKind.None)
             {
-                throw EntityUtil.EntitySqlError(methodExpr.ErrCtx, Strings.InvalidDistinctArgumentInNonAggFunction);
+                ErrorContext errCtx = methodExpr.ErrCtx;
+                string message = Strings.InvalidDistinctArgumentInNonAggFunction;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -1533,7 +1582,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             if (isAmbiguous)
             {
-                throw EntityUtil.EntitySqlError(methodExpr.ErrCtx, Strings.AmbiguousFunctionArguments);
+                ErrorContext errCtx = methodExpr.ErrCtx;
+                string message = Strings.AmbiguousFunctionArguments;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -1607,7 +1658,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (null == sr.Parameters
                 || !sr.Parameters.TryGetValue(parameter.Name, out paramRef))
             {
-                throw EntityUtil.EntitySqlError(parameter.ErrCtx, Strings.ParameterWasNotDefined(parameter.Name));
+                ErrorContext errCtx = parameter.ErrCtx;
+                string message = Strings.ParameterWasNotDefined(parameter.Name);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             return new ValueExpression(paramRef);
@@ -1631,7 +1684,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             var relationshipType = edmType as RelationshipType;
             if (relationshipType == null)
             {
-                throw EntityUtil.EntitySqlError(relshipExpr.TypeName.ErrCtx, Strings.RelationshipTypeExpected(edmType.FullName));
+                ErrorContext errCtx = relshipExpr.TypeName.ErrCtx;
+                string message = Strings.RelationshipTypeExpected(edmType.FullName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -1645,7 +1700,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             var refType = targetEntityRef.ResultType.EdmType as RefType;
             if (refType == null)
             {
-                throw EntityUtil.EntitySqlError(relshipExpr.RefExpr.ErrCtx, Strings.RelatedEndExprTypeMustBeReference);
+                ErrorContext errCtx = relshipExpr.RefExpr.ErrCtx;
+                string message = Strings.RelatedEndExprTypeMustBeReference;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -1660,9 +1717,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         m => m.Name.Equals(relshipExpr.ToEndIdentifier.Name, StringComparison.OrdinalIgnoreCase));
                 if (toEnd == null)
                 {
-                    throw EntityUtil.EntitySqlError(
-                        relshipExpr.ToEndIdentifier.ErrCtx,
-                        Strings.InvalidRelationshipMember(relshipExpr.ToEndIdentifier.Name, relationshipType.FullName));
+                    ErrorContext errCtx = relshipExpr.ToEndIdentifier.ErrCtx;
+                    string message = Strings.InvalidRelationshipMember(relshipExpr.ToEndIdentifier.Name, relationshipType.FullName);
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
                 //
                 // ensure is *..{0|1}
@@ -1670,15 +1727,15 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 if (toEnd.RelationshipMultiplicity != RelationshipMultiplicity.One
                     && toEnd.RelationshipMultiplicity != RelationshipMultiplicity.ZeroOrOne)
                 {
-                    throw EntityUtil.EntitySqlError(
-                        relshipExpr.ToEndIdentifier.ErrCtx,
-                        Strings.InvalidWithRelationshipTargetEndMultiplicity(toEnd.Name, toEnd.RelationshipMultiplicity.ToString()));
+                    ErrorContext errCtx = relshipExpr.ToEndIdentifier.ErrCtx;
+                    string message = Strings.InvalidWithRelationshipTargetEndMultiplicity(toEnd.Name, toEnd.RelationshipMultiplicity.ToString());
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
                 if (!TypeSemantics.IsStructurallyEqualOrPromotableTo(refType, toEnd.TypeUsage.EdmType))
                 {
-                    throw EntityUtil.EntitySqlError(
-                        relshipExpr.RefExpr.ErrCtx,
-                        Strings.RelatedEndExprTypeMustBePromotoableToToEnd(refType.FullName, toEnd.TypeUsage.EdmType.FullName));
+                    ErrorContext errCtx = relshipExpr.RefExpr.ErrCtx;
+                    string message = Strings.RelatedEndExprTypeMustBePromotoableToToEnd(refType.FullName, toEnd.TypeUsage.EdmType.FullName);
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
             }
             else
@@ -1694,10 +1751,13 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         toEnd = toEndCandidates[0];
                         break;
                     case 0:
-                        throw EntityUtil.EntitySqlError(
-                            relshipExpr.ErrCtx, Strings.InvalidImplicitRelationshipToEnd(relationshipType.FullName));
+                        ErrorContext errCtx = relshipExpr.ErrCtx;
+                        string message = Strings.InvalidImplicitRelationshipToEnd(relationshipType.FullName);
+                        throw EntitySqlException.Create(errCtx, message, null);
                     default:
-                        throw EntityUtil.EntitySqlError(relshipExpr.ErrCtx, Strings.RelationshipToEndIsAmbiguos);
+                        ErrorContext errCtx1 = relshipExpr.ErrCtx;
+                        string message1 = Strings.RelationshipToEndIsAmbiguos;
+                        throw EntitySqlException.Create(errCtx1, message1, null);
                 }
             }
             Debug.Assert(toEnd != null, "toEnd must be resolved.");
@@ -1714,20 +1774,22 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         m => m.Name.Equals(relshipExpr.FromEndIdentifier.Name, StringComparison.OrdinalIgnoreCase));
                 if (fromEnd == null)
                 {
-                    throw EntityUtil.EntitySqlError(
-                        relshipExpr.FromEndIdentifier.ErrCtx,
-                        Strings.InvalidRelationshipMember(relshipExpr.FromEndIdentifier.Name, relationshipType.FullName));
+                    ErrorContext errCtx = relshipExpr.FromEndIdentifier.ErrCtx;
+                    string message = Strings.InvalidRelationshipMember(relshipExpr.FromEndIdentifier.Name, relationshipType.FullName);
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
                 if (!TypeSemantics.IsStructurallyEqualOrPromotableTo(driverEntityType.GetReferenceType(), fromEnd.TypeUsage.EdmType))
                 {
-                    throw EntityUtil.EntitySqlError(
-                        relshipExpr.FromEndIdentifier.ErrCtx,
-                        Strings.SourceTypeMustBePromotoableToFromEndRelationType(
-                            driverEntityType.FullName, fromEnd.TypeUsage.EdmType.FullName));
+                    ErrorContext errCtx = relshipExpr.FromEndIdentifier.ErrCtx;
+                    string message = Strings.SourceTypeMustBePromotoableToFromEndRelationType(
+                        driverEntityType.FullName, fromEnd.TypeUsage.EdmType.FullName);
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
                 if (fromEnd.EdmEquals(toEnd))
                 {
-                    throw EntityUtil.EntitySqlError(relshipExpr.ErrCtx, Strings.RelationshipFromEndIsAmbiguos);
+                    ErrorContext errCtx = relshipExpr.ErrCtx;
+                    string message = Strings.RelationshipFromEndIsAmbiguos;
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
             }
             else
@@ -1742,11 +1804,14 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         fromEnd = fromEndCandidates[0];
                         break;
                     case 0:
-                        throw EntityUtil.EntitySqlError(
-                            relshipExpr.ErrCtx, Strings.InvalidImplicitRelationshipFromEnd(relationshipType.FullName));
+                        ErrorContext errCtx = relshipExpr.ErrCtx;
+                        string message = Strings.InvalidImplicitRelationshipFromEnd(relationshipType.FullName);
+                        throw EntitySqlException.Create(errCtx, message, null);
                     default:
                         Debug.Fail("N-ary relationship? N > 2");
-                        throw EntityUtil.EntitySqlError(relshipExpr.ErrCtx, Strings.RelationshipFromEndIsAmbiguos);
+                        ErrorContext errCtx1 = relshipExpr.ErrCtx;
+                        string message1 = Strings.RelationshipFromEndIsAmbiguos;
+                        throw EntitySqlException.Create(errCtx1, message1, null);
                 }
             }
             Debug.Assert(fromEnd != null, "fromEnd must be resolved.");
@@ -1769,7 +1834,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             var relationshipType = edmType as RelationshipType;
             if (relationshipType == null)
             {
-                throw EntityUtil.EntitySqlError(relshipExpr.TypeName.ErrCtx, Strings.RelationshipTypeExpected(edmType.FullName));
+                ErrorContext errCtx = relshipExpr.TypeName.ErrCtx;
+                string message = Strings.RelationshipTypeExpected(edmType.FullName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -1791,7 +1858,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 }
                 else
                 {
-                    throw EntityUtil.EntitySqlError(relshipExpr.RefExpr.ErrCtx, Strings.RelatedEndExprTypeMustBeReference);
+                    ErrorContext errCtx = relshipExpr.RefExpr.ErrCtx;
+                    string message = Strings.RelatedEndExprTypeMustBeReference;
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
             }
 
@@ -1807,9 +1876,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         m => m.Name.Equals(relshipExpr.ToEndIdentifier.Name, StringComparison.OrdinalIgnoreCase));
                 if (toEnd == null)
                 {
-                    throw EntityUtil.EntitySqlError(
-                        relshipExpr.ToEndIdentifier.ErrCtx,
-                        Strings.InvalidRelationshipMember(relshipExpr.ToEndIdentifier.Name, relationshipType.FullName));
+                    ErrorContext errCtx = relshipExpr.ToEndIdentifier.ErrCtx;
+                    string message = Strings.InvalidRelationshipMember(relshipExpr.ToEndIdentifier.Name, relationshipType.FullName);
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
             }
             else
@@ -1829,20 +1898,22 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         m => m.Name.Equals(relshipExpr.FromEndIdentifier.Name, StringComparison.OrdinalIgnoreCase));
                 if (fromEnd == null)
                 {
-                    throw EntityUtil.EntitySqlError(
-                        relshipExpr.FromEndIdentifier.ErrCtx,
-                        Strings.InvalidRelationshipMember(relshipExpr.FromEndIdentifier.Name, relationshipType.FullName));
+                    ErrorContext errCtx = relshipExpr.FromEndIdentifier.ErrCtx;
+                    string message = Strings.InvalidRelationshipMember(relshipExpr.FromEndIdentifier.Name, relationshipType.FullName);
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
                 if (!TypeSemantics.IsStructurallyEqualOrPromotableTo(sourceRefType, fromEnd.TypeUsage.EdmType))
                 {
-                    throw EntityUtil.EntitySqlError(
-                        relshipExpr.FromEndIdentifier.ErrCtx,
-                        Strings.SourceTypeMustBePromotoableToFromEndRelationType(sourceRefType.FullName, fromEnd.TypeUsage.EdmType.FullName));
+                    ErrorContext errCtx = relshipExpr.FromEndIdentifier.ErrCtx;
+                    string message = Strings.SourceTypeMustBePromotoableToFromEndRelationType(sourceRefType.FullName, fromEnd.TypeUsage.EdmType.FullName);
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
                 if (toEnd != null
                     && fromEnd.EdmEquals(toEnd))
                 {
-                    throw EntityUtil.EntitySqlError(relshipExpr.ErrCtx, Strings.RelationshipFromEndIsAmbiguos);
+                    ErrorContext errCtx = relshipExpr.ErrCtx;
+                    string message = Strings.RelationshipFromEndIsAmbiguos;
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
             }
             else
@@ -1857,11 +1928,14 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         fromEnd = fromEndCandidates[0];
                         break;
                     case 0:
-                        throw EntityUtil.EntitySqlError(
-                            relshipExpr.ErrCtx, Strings.InvalidImplicitRelationshipFromEnd(relationshipType.FullName));
+                        ErrorContext errCtx = relshipExpr.ErrCtx;
+                        string message = Strings.InvalidImplicitRelationshipFromEnd(relationshipType.FullName);
+                        throw EntitySqlException.Create(errCtx, message, null);
                     default:
                         Debug.Assert(toEnd == null, "N-ary relationship? N > 2");
-                        throw EntityUtil.EntitySqlError(relshipExpr.ErrCtx, Strings.RelationshipFromEndIsAmbiguos);
+                        ErrorContext errCtx1 = relshipExpr.ErrCtx;
+                        string message1 = Strings.RelationshipFromEndIsAmbiguos;
+                        throw EntitySqlException.Create(errCtx1, message1, null);
                 }
             }
             Debug.Assert(fromEnd != null, "fromEnd must be resolved.");
@@ -1879,11 +1953,14 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         toEnd = toEndCandidates[0];
                         break;
                     case 0:
-                        throw EntityUtil.EntitySqlError(
-                            relshipExpr.ErrCtx, Strings.InvalidImplicitRelationshipToEnd(relationshipType.FullName));
+                        ErrorContext errCtx = relshipExpr.ErrCtx;
+                        string message = Strings.InvalidImplicitRelationshipToEnd(relationshipType.FullName);
+                        throw EntitySqlException.Create(errCtx, message, null);
                     default:
                         Debug.Fail("N-ary relationship? N > 2");
-                        throw EntityUtil.EntitySqlError(relshipExpr.ErrCtx, Strings.RelationshipToEndIsAmbiguos);
+                        ErrorContext errCtx1 = relshipExpr.ErrCtx;
+                        string message1 = Strings.RelationshipToEndIsAmbiguos;
+                        throw EntitySqlException.Create(errCtx1, message1, null);
                 }
             }
             Debug.Assert(toEnd != null, "toEnd must be resolved.");
@@ -1911,8 +1988,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             if (!TypeSemantics.IsEntityType(converted.ResultType))
             {
-                throw EntityUtil.EntitySqlError(
-                    refExpr.ArgExpr.ErrCtx, Strings.RefArgIsNotOfEntityType(converted.ResultType.EdmType.FullName));
+                ErrorContext errCtx = refExpr.ArgExpr.ErrCtx;
+                string message = Strings.RefArgIsNotOfEntityType(converted.ResultType.EdmType.FullName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -1940,8 +2018,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             if (!TypeSemantics.IsReferenceType(converted.ResultType))
             {
-                throw EntityUtil.EntitySqlError(
-                    deRefExpr.ArgExpr.ErrCtx, Strings.DeRefArgIsNotOfRefType(converted.ResultType.EdmType.FullName));
+                ErrorContext errCtx = deRefExpr.ArgExpr.ErrCtx;
+                string message = Strings.DeRefArgIsNotOfRefType(converted.ResultType.EdmType.FullName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -1968,7 +2047,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             var entitySetExpr = ConvertValueExpression(createRefExpr.EntitySet, sr) as DbScanExpression;
             if (entitySetExpr == null)
             {
-                throw EntityUtil.EntitySqlError(createRefExpr.EntitySet.ErrCtx, Strings.ExprIsNotValidEntitySetForCreateRef);
+                ErrorContext errCtx = createRefExpr.EntitySet.ErrCtx;
+                string message = Strings.ExprIsNotValidEntitySetForCreateRef;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -1977,7 +2058,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             var entitySet = entitySetExpr.Target as EntitySet;
             if (entitySet == null)
             {
-                throw EntityUtil.EntitySqlError(createRefExpr.EntitySet.ErrCtx, Strings.ExprIsNotValidEntitySetForCreateRef);
+                ErrorContext errCtx = createRefExpr.EntitySet.ErrCtx;
+                string message = Strings.ExprIsNotValidEntitySetForCreateRef;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             var keyRowExpression = ConvertValueExpression(createRefExpr.Keys, sr);
@@ -1985,7 +2068,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             var inputKeyRowType = keyRowExpression.ResultType.EdmType as RowType;
             if (null == inputKeyRowType)
             {
-                throw EntityUtil.EntitySqlError(createRefExpr.Keys.ErrCtx, Strings.InvalidCreateRefKeyType);
+                ErrorContext errCtx = createRefExpr.Keys.ErrCtx;
+                string message = Strings.InvalidCreateRefKeyType;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             var entityKeyRowType = TypeHelpers.CreateKeyRowType(entitySet.ElementType);
@@ -1993,12 +2078,16 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (entityKeyRowType.Members.Count
                 != inputKeyRowType.Members.Count)
             {
-                throw EntityUtil.EntitySqlError(createRefExpr.Keys.ErrCtx, Strings.ImcompatibleCreateRefKeyType);
+                ErrorContext errCtx = createRefExpr.Keys.ErrCtx;
+                string message = Strings.ImcompatibleCreateRefKeyType;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             if (!TypeSemantics.IsStructurallyEqualOrPromotableTo(keyRowExpression.ResultType, TypeUsage.Create(entityKeyRowType)))
             {
-                throw EntityUtil.EntitySqlError(createRefExpr.Keys.ErrCtx, Strings.ImcompatibleCreateRefKeyElementType);
+                ErrorContext errCtx = createRefExpr.Keys.ErrCtx;
+                string message = Strings.ImcompatibleCreateRefKeyElementType;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -2013,20 +2102,20 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
                 if (!TypeSemantics.IsEntityType(targetTypeUsage))
                 {
-                    throw EntityUtil.EntitySqlError(
-                        createRefExpr.TypeIdentifier.ErrCtx,
-                        Strings.CreateRefTypeIdentifierMustSpecifyAnEntityType(
-                            targetTypeUsage.EdmType.FullName,
-                            targetTypeUsage.EdmType.BuiltInTypeKind.ToString()));
+                    ErrorContext errCtx = createRefExpr.TypeIdentifier.ErrCtx;
+                    string message = Strings.CreateRefTypeIdentifierMustSpecifyAnEntityType(
+                        targetTypeUsage.EdmType.FullName,
+                        targetTypeUsage.EdmType.BuiltInTypeKind.ToString());
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 if (!TypeSemantics.IsValidPolymorphicCast(entitySet.ElementType, targetTypeUsage.EdmType))
                 {
-                    throw EntityUtil.EntitySqlError(
-                        createRefExpr.TypeIdentifier.ErrCtx,
-                        Strings.CreateRefTypeIdentifierMustBeASubOrSuperType(
-                            entitySet.ElementType.FullName,
-                            targetTypeUsage.EdmType.FullName));
+                    ErrorContext errCtx = createRefExpr.TypeIdentifier.ErrCtx;
+                    string message = Strings.CreateRefTypeIdentifierMustBeASubOrSuperType(
+                        entitySet.ElementType.FullName,
+                        targetTypeUsage.EdmType.FullName);
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 converted = entitySet.RefFromKey(keyRowExpression, (EntityType)targetTypeUsage.EdmType);
@@ -2059,7 +2148,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
             else if (!TypeSemantics.IsReferenceType(converted.ResultType))
             {
-                throw EntityUtil.EntitySqlError(keyExpr.ArgExpr.ErrCtx, Strings.InvalidKeyArgument(converted.ResultType.EdmType.FullName));
+                ErrorContext errCtx = keyExpr.ArgExpr.ErrCtx;
+                string message = Strings.InvalidKeyArgument(converted.ResultType.EdmType.FullName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             converted = converted.GetRefKey();
@@ -2078,7 +2169,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             var builtInConverter = _builtInExprConverter[bltInExpr.Kind];
             if (builtInConverter == null)
             {
-                throw EntityUtil.EntitySqlError(Strings.UnknownBuiltInAstExpressionType);
+                string message = Strings.UnknownBuiltInAstExpressionType;
+                throw new EntitySqlException(message);
             }
 
             return new ValueExpression(builtInConverter(bltInExpr, sr));
@@ -2101,21 +2193,26 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             if (!TypeSemantics.IsNumericType(operands.Left.ResultType))
             {
-                throw EntityUtil.EntitySqlError(astBuiltInExpr.Arg1.ErrCtx, Strings.ExpressionMustBeNumericType);
+                ErrorContext errCtx = astBuiltInExpr.Arg1.ErrCtx;
+                string message = Strings.ExpressionMustBeNumericType;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             if (operands.Right != null)
             {
                 if (!TypeSemantics.IsNumericType(operands.Right.ResultType))
                 {
-                    throw EntityUtil.EntitySqlError(astBuiltInExpr.Arg2.ErrCtx, Strings.ExpressionMustBeNumericType);
+                    ErrorContext errCtx = astBuiltInExpr.Arg2.ErrCtx;
+                    string message = Strings.ExpressionMustBeNumericType;
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 if (null == TypeHelpers.GetCommonTypeUsage(operands.Left.ResultType, operands.Right.ResultType))
                 {
-                    throw EntityUtil.EntitySqlError(
-                        astBuiltInExpr.ErrCtx, Strings.ArgumentTypesAreIncompatible(
-                            operands.Left.ResultType.EdmType.FullName, operands.Right.ResultType.EdmType.FullName));
+                    ErrorContext errCtx = astBuiltInExpr.ErrCtx;
+                    string message = Strings.ArgumentTypesAreIncompatible(
+                        operands.Left.ResultType.EdmType.FullName, operands.Right.ResultType.EdmType.FullName);
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
             }
 
@@ -2140,20 +2237,25 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (!TypeSemantics.IsNumericType(operands.Left.ResultType)
                 && !TypeSemantics.IsPrimitiveType(operands.Left.ResultType, PrimitiveTypeKind.String))
             {
-                throw EntityUtil.EntitySqlError(astBuiltInExpr.Arg1.ErrCtx, Strings.PlusLeftExpressionInvalidType);
+                ErrorContext errCtx = astBuiltInExpr.Arg1.ErrCtx;
+                string message = Strings.PlusLeftExpressionInvalidType;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             if (!TypeSemantics.IsNumericType(operands.Right.ResultType)
                 && !TypeSemantics.IsPrimitiveType(operands.Right.ResultType, PrimitiveTypeKind.String))
             {
-                throw EntityUtil.EntitySqlError(astBuiltInExpr.Arg2.ErrCtx, Strings.PlusRightExpressionInvalidType);
+                ErrorContext errCtx = astBuiltInExpr.Arg2.ErrCtx;
+                string message = Strings.PlusRightExpressionInvalidType;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             if (TypeHelpers.GetCommonTypeUsage(operands.Left.ResultType, operands.Right.ResultType) == null)
             {
-                throw EntityUtil.EntitySqlError(
-                    astBuiltInExpr.ErrCtx, Strings.ArgumentTypesAreIncompatible(
-                        operands.Left.ResultType.EdmType.FullName, operands.Right.ResultType.EdmType.FullName));
+                ErrorContext errCtx = astBuiltInExpr.ErrCtx;
+                string message = Strings.ArgumentTypesAreIncompatible(
+                    operands.Left.ResultType.EdmType.FullName, operands.Right.ResultType.EdmType.FullName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             return operands;
@@ -2188,7 +2290,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             if (!IsBooleanType(leftExpr.ResultType))
             {
-                throw EntityUtil.EntitySqlError(astBuiltInExpr.Arg1.ErrCtx, Strings.ExpressionTypeMustBeBoolean);
+                ErrorContext errCtx = astBuiltInExpr.Arg1.ErrCtx;
+                string message = Strings.ExpressionTypeMustBeBoolean;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -2197,7 +2301,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (null != rightExpr
                 && !IsBooleanType(rightExpr.ResultType))
             {
-                throw EntityUtil.EntitySqlError(astBuiltInExpr.Arg2.ErrCtx, Strings.ExpressionTypeMustBeBoolean);
+                ErrorContext errCtx = astBuiltInExpr.Arg2.ErrCtx;
+                string message = Strings.ExpressionTypeMustBeBoolean;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             return new Pair<DbExpression, DbExpression>(leftExpr, rightExpr);
@@ -2226,9 +2332,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             if (!TypeSemantics.IsEqualComparableTo(compArgs.Left.ResultType, compArgs.Right.ResultType))
             {
-                throw EntityUtil.EntitySqlError(
-                    astBuiltInExpr.ErrCtx, Strings.ArgumentTypesAreIncompatible(
-                        compArgs.Left.ResultType.EdmType.FullName, compArgs.Right.ResultType.EdmType.FullName));
+                ErrorContext errCtx = astBuiltInExpr.ErrCtx;
+                string message = Strings.ArgumentTypesAreIncompatible(
+                    compArgs.Left.ResultType.EdmType.FullName, compArgs.Right.ResultType.EdmType.FullName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             return compArgs;
@@ -2254,9 +2361,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             if (!TypeSemantics.IsOrderComparableTo(compArgs.Left.ResultType, compArgs.Right.ResultType))
             {
-                throw EntityUtil.EntitySqlError(
-                    astBuiltInExpr.ErrCtx, Strings.ArgumentTypesAreIncompatible(
-                        compArgs.Left.ResultType.EdmType.FullName, compArgs.Right.ResultType.EdmType.FullName));
+                ErrorContext errCtx = astBuiltInExpr.ErrCtx;
+                string message = Strings.ArgumentTypesAreIncompatible(
+                    compArgs.Left.ResultType.EdmType.FullName, compArgs.Right.ResultType.EdmType.FullName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             return compArgs;
@@ -2290,7 +2398,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
                 if (!TypeSemantics.IsCollectionType(leftExpr.ResultType))
                 {
-                    throw EntityUtil.EntitySqlError(astBuiltInExpr.Arg1.ErrCtx, Strings.LeftSetExpressionArgsMustBeCollection);
+                    ErrorContext errCtx = astBuiltInExpr.Arg1.ErrCtx;
+                    string message = Strings.LeftSetExpressionArgsMustBeCollection;
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 //
@@ -2303,7 +2413,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
                 if (!TypeSemantics.IsCollectionType(rightExpr.ResultType))
                 {
-                    throw EntityUtil.EntitySqlError(astBuiltInExpr.Arg2.ErrCtx, Strings.RightSetExpressionArgsMustBeCollection);
+                    ErrorContext errCtx = astBuiltInExpr.Arg2.ErrCtx;
+                    string message = Strings.RightSetExpressionArgsMustBeCollection;
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 TypeUsage commonType;
@@ -2322,12 +2434,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     //
                     if (!TypeHelpers.IsSetComparableOpType(TypeHelpers.GetElementTypeUsage(leftExpr.ResultType)))
                     {
-                        throw EntityUtil.EntitySqlError(
-                            astBuiltInExpr.Arg1.ErrCtx,
-                            Strings.PlaceholderSetArgTypeIsNotEqualComparable(
-                                Strings.LocalizedLeft,
-                                astBuiltInExpr.Kind.ToString().ToUpperInvariant(),
-                                TypeHelpers.GetElementTypeUsage(leftExpr.ResultType).EdmType.FullName));
+                        ErrorContext errCtx = astBuiltInExpr.Arg1.ErrCtx;
+                        string message = Strings.PlaceholderSetArgTypeIsNotEqualComparable(
+                            Strings.LocalizedLeft,
+                            astBuiltInExpr.Kind.ToString().ToUpperInvariant(),
+                            TypeHelpers.GetElementTypeUsage(leftExpr.ResultType).EdmType.FullName);
+                        throw EntitySqlException.Create(errCtx, message, null);
                     }
 
                     //
@@ -2335,26 +2447,28 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     //
                     if (!TypeHelpers.IsSetComparableOpType(TypeHelpers.GetElementTypeUsage(rightExpr.ResultType)))
                     {
-                        throw EntityUtil.EntitySqlError(
-                            astBuiltInExpr.Arg2.ErrCtx,
-                            Strings.PlaceholderSetArgTypeIsNotEqualComparable(
-                                Strings.LocalizedRight,
-                                astBuiltInExpr.Kind.ToString().ToUpperInvariant(),
-                                TypeHelpers.GetElementTypeUsage(rightExpr.ResultType).EdmType.FullName));
+                        ErrorContext errCtx = astBuiltInExpr.Arg2.ErrCtx;
+                        string message = Strings.PlaceholderSetArgTypeIsNotEqualComparable(
+                            Strings.LocalizedRight,
+                            astBuiltInExpr.Kind.ToString().ToUpperInvariant(),
+                            TypeHelpers.GetElementTypeUsage(rightExpr.ResultType).EdmType.FullName);
+                        throw EntitySqlException.Create(errCtx, message, null);
                     }
                 }
                 else
                 {
                     if (Helper.IsAssociationType(leftElemType.EdmType))
                     {
-                        throw EntityUtil.EntitySqlError(
-                            astBuiltInExpr.Arg1.ErrCtx, Strings.InvalidAssociationTypeForUnion(leftElemType.EdmType.FullName));
+                        ErrorContext errCtx = astBuiltInExpr.Arg1.ErrCtx;
+                        string message = Strings.InvalidAssociationTypeForUnion(leftElemType.EdmType.FullName);
+                        throw EntitySqlException.Create(errCtx, message, null);
                     }
 
                     if (Helper.IsAssociationType(rightElemType.EdmType))
                     {
-                        throw EntityUtil.EntitySqlError(
-                            astBuiltInExpr.Arg2.ErrCtx, Strings.InvalidAssociationTypeForUnion(rightElemType.EdmType.FullName));
+                        ErrorContext errCtx = astBuiltInExpr.Arg2.ErrCtx;
+                        string message = Strings.InvalidAssociationTypeForUnion(rightElemType.EdmType.FullName);
+                        throw EntitySqlException.Create(errCtx, message, null);
                     }
                 }
             }
@@ -2369,7 +2483,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
                 if (!TypeSemantics.IsCollectionType(leftExpr.ResultType))
                 {
-                    throw EntityUtil.EntitySqlError(astBuiltInExpr.Arg1.ErrCtx, Strings.InvalidUnarySetOpArgument(astBuiltInExpr.Name));
+                    ErrorContext errCtx = astBuiltInExpr.Arg1.ErrCtx;
+                    string message = Strings.InvalidUnarySetOpArgument(astBuiltInExpr.Name);
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 //
@@ -2378,7 +2494,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 if (astBuiltInExpr.Kind == BuiltInKind.Distinct
                     && !TypeHelpers.IsValidDistinctOpType(TypeHelpers.GetElementTypeUsage(leftExpr.ResultType)))
                 {
-                    throw EntityUtil.EntitySqlError(astBuiltInExpr.Arg1.ErrCtx, Strings.ExpressionTypeMustBeEqualComparable);
+                    ErrorContext errCtx = astBuiltInExpr.Arg1.ErrCtx;
+                    string message = Strings.ExpressionTypeMustBeEqualComparable;
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
             }
 
@@ -2396,7 +2514,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             var rightExpr = ConvertValueExpression(astBuiltInExpr.Arg2, sr);
             if (!TypeSemantics.IsCollectionType(rightExpr.ResultType))
             {
-                throw EntityUtil.EntitySqlError(astBuiltInExpr.Arg2.ErrCtx, Strings.RightSetExpressionArgsMustBeCollection);
+                ErrorContext errCtx = astBuiltInExpr.Arg2.ErrCtx;
+                string message = Strings.RightSetExpressionArgsMustBeCollection;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             var leftExpr = ConvertValueExpressionAllowUntypedNulls(astBuiltInExpr.Arg1, sr);
@@ -2412,7 +2532,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             if (TypeSemantics.IsCollectionType(leftExpr.ResultType))
             {
-                throw EntityUtil.EntitySqlError(astBuiltInExpr.Arg1.ErrCtx, Strings.ExpressionTypeMustNotBeCollection);
+                ErrorContext errCtx = astBuiltInExpr.Arg1.ErrCtx;
+                string message = Strings.ExpressionTypeMustNotBeCollection;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -2422,9 +2544,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (null == commonElemType
                 || !TypeHelpers.IsValidInOpType(commonElemType))
             {
-                throw EntityUtil.EntitySqlError(
-                    astBuiltInExpr.ErrCtx,
-                    Strings.InvalidInExprArgs(leftExpr.ResultType.EdmType.FullName, rightExpr.ResultType.EdmType.FullName));
+                ErrorContext errCtx = astBuiltInExpr.ErrCtx;
+                string message = Strings.InvalidInExprArgs(leftExpr.ResultType.EdmType.FullName, rightExpr.ResultType.EdmType.FullName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             return new Pair<DbExpression, DbExpression>(leftExpr, rightExpr);
@@ -2434,7 +2556,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         {
             if (TypeSemantics.IsCollectionType(type))
             {
-                throw EntityUtil.EntitySqlError(errCtx, Strings.NullLiteralCannotBePromotedToCollectionOfNulls);
+                string message = Strings.NullLiteralCannotBePromotedToCollectionOfNulls;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
         }
 
@@ -2487,7 +2610,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (name == null)
             {
                 Debug.Fail("Unexpected AST.Node in the edmType name");
-                throw EntityUtil.EntitySqlError(typeName.ErrCtx, Strings.InvalidMetadataMemberName);
+                ErrorContext errCtx = typeName.ErrCtx;
+                string message = Strings.InvalidMetadataMemberName;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             var metadataMember = sr.ResolveMetadataMemberName(name, typeName.ErrCtx);
@@ -2508,12 +2633,15 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     }
 
                 case MetadataMemberClass.Namespace:
-                    throw EntityUtil.EntitySqlError(typeName.ErrCtx, Strings.TypeNameNotFound(metadataMember.Name));
+                    ErrorContext errCtx = typeName.ErrCtx;
+                    string message = Strings.TypeNameNotFound(metadataMember.Name);
+                    throw EntitySqlException.Create(errCtx, message, null);
 
                 default:
-                    throw EntityUtil.EntitySqlError(
-                        typeName.ErrCtx, Strings.InvalidMetadataMemberClassResolution(
-                            metadataMember.Name, metadataMember.MetadataMemberClassName, MetadataType.TypeClassName));
+                    ErrorContext errCtx1 = typeName.ErrCtx;
+                    string message1 = Strings.InvalidMetadataMemberClassResolution(
+                        metadataMember.Name, metadataMember.MetadataMemberClassName, MetadataType.TypeClassName);
+                    throw EntitySqlException.Create(errCtx1, message1, null);
             }
         }
 
@@ -2528,7 +2656,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             {
                 if (!(arg is Literal))
                 {
-                    throw EntityUtil.EntitySqlError(arg.ErrCtx, Strings.TypeArgumentMustBeLiteral);
+                    ErrorContext errCtx1 = arg.ErrCtx;
+                    string message = Strings.TypeArgumentMustBeLiteral;
+                    throw EntitySqlException.Create(errCtx1, message, null);
                 }
             }
 
@@ -2539,7 +2669,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (primitiveType == null
                 || primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.Decimal)
             {
-                throw EntityUtil.EntitySqlError(errCtx, Strings.TypeDoesNotSupportSpec(primitiveType.FullName));
+                string message = Strings.TypeDoesNotSupportSpec(primitiveType.FullName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -2547,7 +2678,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             if (typeSpecArgs.Count > 2)
             {
-                throw EntityUtil.EntitySqlError(errCtx, Strings.TypeArgumentCountMismatch(primitiveType.FullName, 2));
+                string message = Strings.TypeArgumentCountMismatch(primitiveType.FullName, 2);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -2570,7 +2702,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             if (precision < scale)
             {
-                throw EntityUtil.EntitySqlError(typeSpecArgs[0].ErrCtx, Strings.PrecisionMustBeGreaterThanScale(precision, scale));
+                ErrorContext errCtx1 = typeSpecArgs[0].ErrCtx;
+                string message = Strings.PrecisionMustBeGreaterThanScale(precision, scale);
+                throw EntitySqlException.Create(errCtx1, message, null);
             }
 
             return TypeUsage.CreateDecimalTypeUsage(primitiveType, precision, scale);
@@ -2581,7 +2715,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             var facetDescription = Helper.GetFacet(type.ProviderManifest.GetFacetDescriptions(type), facetName);
             if (facetDescription == null)
             {
-                throw EntityUtil.EntitySqlError(value.ErrCtx, Strings.TypeDoesNotSupportFacet(type.FullName, facetName));
+                ErrorContext errCtx = value.ErrCtx;
+                string message = Strings.TypeDoesNotSupportFacet(type.FullName, facetName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             if (value.IsNumber
@@ -2590,18 +2726,24 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 if (facetDescription.MaxValue.HasValue
                     && byteValue > facetDescription.MaxValue.Value)
                 {
-                    throw EntityUtil.EntitySqlError(value.ErrCtx, Strings.TypeArgumentExceedsMax(facetName));
+                    ErrorContext errCtx = value.ErrCtx;
+                    string message = Strings.TypeArgumentExceedsMax(facetName);
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 if (facetDescription.MinValue.HasValue
                     && byteValue < facetDescription.MinValue.Value)
                 {
-                    throw EntityUtil.EntitySqlError(value.ErrCtx, Strings.TypeArgumentBelowMin(facetName));
+                    ErrorContext errCtx = value.ErrCtx;
+                    string message = Strings.TypeArgumentBelowMin(facetName);
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
             }
             else
             {
-                throw EntityUtil.EntitySqlError(value.ErrCtx, Strings.TypeArgumentIsNotValid);
+                ErrorContext errCtx = value.ErrCtx;
+                string message = Strings.TypeArgumentIsNotValid;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
         }
 
@@ -2629,11 +2771,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
                 if (!TypeSemantics.IsEntityType(targetTypeUsage))
                 {
-                    throw EntityUtil.EntitySqlError(
-                        refTypeDefExpr.RefTypeIdentifier.ErrCtx,
-                        Strings.RefTypeIdentifierMustSpecifyAnEntityType(
-                            targetTypeUsage.EdmType.FullName,
-                            targetTypeUsage.EdmType.BuiltInTypeKind.ToString()));
+                    ErrorContext errCtx = refTypeDefExpr.RefTypeIdentifier.ErrCtx;
+                    string message = Strings.RefTypeIdentifierMustSpecifyAnEntityType(
+                        targetTypeUsage.EdmType.FullName,
+                        targetTypeUsage.EdmType.BuiltInTypeKind.ToString());
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 converted = TypeHelpers.CreateReferenceTypeUsage((EntityType)targetTypeUsage.EdmType);
@@ -2675,7 +2817,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 var colExpr = ConvertValueExpressionAllowUntypedNulls(aliasExpr.Expr, sr);
                 if (colExpr == null)
                 {
-                    throw EntityUtil.EntitySqlError(aliasExpr.Expr.ErrCtx, Strings.RowCtorElementCannotBeNull);
+                    ErrorContext errCtx = aliasExpr.Expr.ErrCtx;
+                    string message = Strings.RowCtorElementCannotBeNull;
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 var aliasName = sr.InferAliasName(aliasExpr, colExpr);
@@ -2709,7 +2853,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             if (null == msetCtor.ExprList)
             {
-                throw EntityUtil.EntitySqlError(expr.ErrCtx, Strings.CannotCreateEmptyMultiset);
+                ErrorContext errCtx = expr.ErrCtx;
+                string message = Strings.CannotCreateEmptyMultiset;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             var mSetExprs = msetCtor.ExprList.Select(e => ConvertValueExpressionAllowUntypedNulls(e, sr)).ToArray();
@@ -2721,7 +2867,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             if (multisetTypes.Length == 0)
             {
-                throw EntityUtil.EntitySqlError(expr.ErrCtx, Strings.CannotCreateMultisetofNulls);
+                ErrorContext errCtx = expr.ErrCtx;
+                string message = Strings.CannotCreateMultisetofNulls;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             var commonType = TypeHelpers.GetCommonTypeUsage(multisetTypes);
@@ -2731,7 +2879,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             if (commonType == null)
             {
-                throw EntityUtil.EntitySqlError(expr.ErrCtx, Strings.MultisetElemsAreNotTypeCompatible);
+                ErrorContext errCtx = expr.ErrCtx;
+                string message = Strings.MultisetElemsAreNotTypeCompatible;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             commonType = TypeHelpers.GetReadOnlyType(commonType);
@@ -2772,7 +2922,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
                 if (!IsBooleanType(whenExpression.ResultType))
                 {
-                    throw EntityUtil.EntitySqlError(whenThenExpr.WhenExpr.ErrCtx, Strings.ExpressionTypeMustBeBoolean);
+                    ErrorContext errCtx = whenThenExpr.WhenExpr.ErrCtx;
+                    string message = Strings.ExpressionTypeMustBeBoolean;
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 whenExprList.Add(whenExpression);
@@ -2797,7 +2949,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
             if (resultTypes.Count == 0)
             {
-                throw EntityUtil.EntitySqlError(caseExpr.ElseExpr.ErrCtx, Strings.InvalidCaseWhenThenNullType);
+                ErrorContext errCtx = caseExpr.ElseExpr.ErrCtx;
+                string message = Strings.InvalidCaseWhenThenNullType;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -2806,7 +2960,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             var resultType = TypeHelpers.GetCommonTypeUsage(resultTypes);
             if (resultType == null)
             {
-                throw EntityUtil.EntitySqlError(caseExpr.WhenThenExprList[0].ThenExpr.ErrCtx, Strings.InvalidCaseResultTypes);
+                ErrorContext errCtx = caseExpr.WhenThenExprList[0].ThenExpr.ErrCtx;
+                string message = Strings.InvalidCaseResultTypes;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -2859,20 +3015,26 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (null != queryExpr.HavingClause
                 && null == queryExpr.GroupByClause)
             {
-                throw EntityUtil.EntitySqlError(queryExpr.ErrCtx, Strings.HavingRequiresGroupClause);
+                ErrorContext errCtx = queryExpr.ErrCtx;
+                string message = Strings.HavingRequiresGroupClause;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
             if (queryExpr.SelectClause.TopExpr != null)
             {
                 if (queryExpr.OrderByClause != null
                     && queryExpr.OrderByClause.LimitSubClause != null)
                 {
-                    throw EntityUtil.EntitySqlError(queryExpr.SelectClause.TopExpr.ErrCtx, Strings.TopAndLimitCannotCoexist);
+                    ErrorContext errCtx = queryExpr.SelectClause.TopExpr.ErrCtx;
+                    string message = Strings.TopAndLimitCannotCoexist;
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 if (queryExpr.OrderByClause != null
                     && queryExpr.OrderByClause.SkipSubClause != null)
                 {
-                    throw EntityUtil.EntitySqlError(queryExpr.SelectClause.TopExpr.ErrCtx, Strings.TopAndSkipCannotCoexist);
+                    ErrorContext errCtx = queryExpr.SelectClause.TopExpr.ErrCtx;
+                    string message = Strings.TopAndSkipCannotCoexist;
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
             }
 
@@ -3009,7 +3171,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             {
                 if (selectClause.Items.Count != 1)
                 {
-                    throw EntityUtil.EntitySqlError(selectClause.ErrCtx, Strings.InvalidSelectValueList);
+                    ErrorContext errCtx = selectClause.ErrCtx;
+                    string message = Strings.InvalidSelectValueList;
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 //
@@ -3018,7 +3182,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 if (selectClause.Items[0].Alias != null
                     && queryExpr.OrderByClause == null)
                 {
-                    throw EntityUtil.EntitySqlError(selectClause.Items[0].ErrCtx, Strings.InvalidSelectValueAliasedExpression);
+                    ErrorContext errCtx = selectClause.Items[0].ErrCtx;
+                    string message = Strings.InvalidSelectValueAliasedExpression;
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
             }
 
@@ -3130,7 +3296,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         }
                     }
                 }
-                throw EntityUtil.EntitySqlError(errCtx, Strings.SelectDistinctMustBeEqualComparable);
+                string message = Strings.SelectDistinctMustBeEqualComparable;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
         }
 
@@ -3141,20 +3308,22 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 &&
                 expr.ExpressionKind != DbExpressionKind.ParameterReference)
             {
-                throw EntityUtil.EntitySqlError(errCtx, Strings.PlaceholderExpressionMustBeConstant(exprName));
+                string message = Strings.PlaceholderExpressionMustBeConstant(exprName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             if (!TypeSemantics.IsPromotableTo(expr.ResultType, TypeResolver.Int64Type))
             {
-                throw EntityUtil.EntitySqlError(
-                    errCtx, Strings.PlaceholderExpressionMustBeCompatibleWithEdm64(exprName, expr.ResultType.EdmType.FullName));
+                string message = Strings.PlaceholderExpressionMustBeCompatibleWithEdm64(exprName, expr.ResultType.EdmType.FullName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             var constExpr = expr as DbConstantExpression;
             if (constExpr != null
                 && System.Convert.ToInt64(constExpr.Value, CultureInfo.InvariantCulture) < 0)
             {
-                throw EntityUtil.EntitySqlError(errCtx, Strings.PlaceholderExpressionMustBeGreaterThanOrEqualToZero(exprName));
+                string message = Strings.PlaceholderExpressionMustBeGreaterThanOrEqualToZero(exprName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
         }
 
@@ -3250,7 +3419,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             if (!TypeSemantics.IsCollectionType(converted.ResultType))
             {
-                throw EntityUtil.EntitySqlError(aliasedExpr.Expr.ErrCtx, Strings.ExpressionMustBeCollection);
+                ErrorContext errCtx = aliasedExpr.Expr.ErrCtx;
+                string message = Strings.ExpressionMustBeCollection;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -3308,7 +3479,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 if (JoinKind.Inner
                     == joinClause.JoinKind)
                 {
-                    throw EntityUtil.EntitySqlError(joinClause.ErrCtx, Strings.InnerJoinMustHaveOnPredicate);
+                    ErrorContext errCtx = joinClause.ErrCtx;
+                    string message = Strings.InnerJoinMustHaveOnPredicate;
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
             }
             else
@@ -3316,7 +3489,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 if (JoinKind.Cross
                     == joinClause.JoinKind)
                 {
-                    throw EntityUtil.EntitySqlError(joinClause.OnExpr.ErrCtx, Strings.InvalidPredicateForCrossJoin);
+                    ErrorContext errCtx = joinClause.OnExpr.ErrCtx;
+                    string message = Strings.InvalidPredicateForCrossJoin;
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
             }
 
@@ -3510,7 +3685,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             if (!IsBooleanType(filterConditionExpr.ResultType))
             {
-                throw EntityUtil.EntitySqlError(errCtx, Strings.ExpressionTypeMustBeBoolean);
+                string message = Strings.ExpressionTypeMustBeBoolean;
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -3633,7 +3809,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     //
                     if (!sr.CurrentScopeRegion.WasResolutionCorrelated)
                     {
-                        throw EntityUtil.EntitySqlError(aliasedExpr.Expr.ErrCtx, Strings.KeyMustBeCorrelated("GROUP BY"));
+                        ErrorContext errCtx = aliasedExpr.Expr.ErrCtx;
+                        string message = Strings.KeyMustBeCorrelated("GROUP BY");
+                        throw EntitySqlException.Create(errCtx, message, null);
                     }
                     Debug.Assert(
                         groupKeyAggregateInfo.EvaluatingScopeRegion == groupKeyAggregateInfo.DefiningScopeRegion,
@@ -3644,7 +3822,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     //
                     if (!TypeHelpers.IsValidGroupKeyType(keyExpr.ResultType))
                     {
-                        throw EntityUtil.EntitySqlError(aliasedExpr.Expr.ErrCtx, Strings.GroupingKeysMustBeEqualComparable);
+                        ErrorContext errCtx = aliasedExpr.Expr.ErrCtx;
+                        string message = Strings.GroupingKeysMustBeEqualComparable;
+                        throw EntitySqlException.Create(errCtx, message, null);
                     }
 
                     //
@@ -3871,7 +4051,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     //
                     if (!sr.CurrentScopeRegion.WasResolutionCorrelated)
                     {
-                        throw EntityUtil.EntitySqlError(orderItem.ErrCtx, Strings.KeyMustBeCorrelated("ORDER BY"));
+                        ErrorContext errCtx = orderItem.ErrCtx;
+                        string message = Strings.KeyMustBeCorrelated("ORDER BY");
+                        throw EntitySqlException.Create(errCtx, message, null);
                     }
                 }
 
@@ -4415,7 +4597,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
                 if (!sr.CurrentScopeRegion.WasResolutionCorrelated)
                 {
-                    throw EntityUtil.EntitySqlError(orderClauseItem.ErrCtx, Strings.KeyMustBeCorrelated("ORDER BY"));
+                    ErrorContext errCtx = orderClauseItem.ErrCtx;
+                    string message = Strings.KeyMustBeCorrelated("ORDER BY");
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 //
@@ -4423,7 +4607,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
                 if (!TypeHelpers.IsValidSortOpKeyType(keyExpr.ResultType))
                 {
-                    throw EntityUtil.EntitySqlError(orderClauseItem.OrderExpr.ErrCtx, Strings.OrderByKeyIsNotOrderComparable);
+                    ErrorContext errCtx = orderClauseItem.OrderExpr.ErrCtx;
+                    string message = Strings.OrderByKeyIsNotOrderComparable;
+                    throw EntitySqlException.Create(errCtx, message, null);
                 }
 
                 //
@@ -4439,8 +4625,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 {
                     if (!IsStringType(keyExpr.ResultType))
                     {
-                        throw EntityUtil.EntitySqlError(
-                            orderClauseItem.OrderExpr.ErrCtx, Strings.InvalidKeyTypeForCollation(keyExpr.ResultType.EdmType.FullName));
+                        ErrorContext errCtx = orderClauseItem.OrderExpr.ErrCtx;
+                        string message = Strings.InvalidKeyTypeForCollation(keyExpr.ResultType.EdmType.FullName);
+                        throw EntitySqlException.Create(errCtx, message, null);
                     }
 
                     collation = orderClauseItem.Collation.Name;
@@ -4651,7 +4838,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                                               MetadataFunctionGroup function;
                                               if (!sr.TypeResolver.TryGetFunctionFromMetadata("Edm", "Concat", out function))
                                               {
-                                                  throw EntityUtil.EntitySqlError(bltInExpr.ErrCtx, Strings.ConcatBuiltinNotSupported);
+                                                  ErrorContext errCtx = bltInExpr.ErrCtx;
+                                                  string message = Strings.ConcatBuiltinNotSupported;
+                                                  throw EntitySqlException.Create(errCtx, message, null);
                                               }
 
                                               var argTypes = new List<TypeUsage>(2);
@@ -4667,7 +4856,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
                                               if (null == concatFunction || isAmbiguous)
                                               {
-                                                  throw EntityUtil.EntitySqlError(bltInExpr.ErrCtx, Strings.ConcatBuiltinNotSupported);
+                                                  ErrorContext errCtx = bltInExpr.ErrCtx;
+                                                  string message = Strings.ConcatBuiltinNotSupported;
+                                                  throw EntitySqlException.Create(errCtx, message, null);
                                               }
 
                                               return concatFunction.Invoke(new[] { args.Left, args.Right });
@@ -4757,9 +4948,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                                                         !TypeHelpers.TryGetClosestPromotableType(
                                                             argument.ResultType, out closestPromotableType))
                                                     {
-                                                        throw EntityUtil.EntitySqlError(
-                                                            Strings.InvalidUnsignedTypeForUnaryMinusOperation(
-                                                                argument.ResultType.EdmType.FullName));
+                                                        string message = Strings.InvalidUnsignedTypeForUnaryMinusOperation(
+                                                            argument.ResultType.EdmType.FullName);
+                                                        throw new EntitySqlException(message);
                                                     }
                                                 }
 
@@ -5021,7 +5212,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             #region ELEMENT( e ) - NOT SUPPORTED IN ORCAS TIMEFRAME
 
             builtInExprConverter.Add(
-                BuiltInKind.Element, delegate { throw EntityUtil.NotSupported(Strings.ElementOperatorIsNotSupported); });
+                BuiltInKind.Element, delegate { throw new NotSupportedException(Strings.ElementOperatorIsNotSupported); });
 
             #endregion
 
@@ -5066,12 +5257,16 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
                                              if (!TypeSemantics.IsCollectionType(elemExpr.ResultType))
                                              {
-                                                 throw EntityUtil.EntitySqlError(bltInExpr.Arg1.ErrCtx, Strings.InvalidFlattenArgument);
+                                                 ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
+                                                 string message = Strings.InvalidFlattenArgument;
+                                                 throw EntitySqlException.Create(errCtx, message, null);
                                              }
 
                                              if (!TypeSemantics.IsCollectionType(TypeHelpers.GetElementTypeUsage(elemExpr.ResultType)))
                                              {
-                                                 throw EntityUtil.EntitySqlError(bltInExpr.Arg1.ErrCtx, Strings.InvalidFlattenArgument);
+                                                 ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
+                                                 string message = Strings.InvalidFlattenArgument;
+                                                 throw EntitySqlException.Create(errCtx, message, null);
                                              }
 
                                              var leftExpr = elemExpr.BindAs(sr.GenerateInternalName("l_flatten"));
@@ -5205,7 +5400,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                                             if (isNullExpr != null
                                                 && !TypeHelpers.IsValidIsNullOpType(isNullExpr.ResultType))
                                             {
-                                                throw EntityUtil.EntitySqlError(bltInExpr.Arg1.ErrCtx, Strings.IsNullInvalidType);
+                                                ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
+                                                string message = Strings.IsNullInvalidType;
+                                                throw EntitySqlException.Create(errCtx, message, null);
                                             }
 
                                             return isNullExpr != null ? (DbExpression)isNullExpr.IsNull() : DbExpressionBuilder.True;
@@ -5230,7 +5427,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                                                if (isNullExpr != null
                                                    && !TypeHelpers.IsValidIsNullOpType(isNullExpr.ResultType))
                                                {
-                                                   throw EntityUtil.EntitySqlError(bltInExpr.Arg1.ErrCtx, Strings.IsNullInvalidType);
+                                                   ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
+                                                   string message = Strings.IsNullInvalidType;
+                                                   throw EntitySqlException.Create(errCtx, message, null);
                                                }
 
                                                return isNullExpr != null
@@ -5264,57 +5463,64 @@ namespace System.Data.Entity.Core.Common.EntitySql
                                           if (!isNominalTypeAllowed
                                               && !TypeSemantics.IsEntityType(exprToFilter.ResultType))
                                           {
-                                              throw EntityUtil.EntitySqlError(
-                                                  bltInExpr.Arg1.ErrCtx,
-                                                  Strings.ExpressionTypeMustBeEntityType(
-                                                      Strings.CtxIsOf,
-                                                      exprToFilter.ResultType.EdmType.BuiltInTypeKind.ToString(),
-                                                      exprToFilter.ResultType.EdmType.FullName));
+                                              ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
+                                              string message = Strings.ExpressionTypeMustBeEntityType(
+                                                  Strings.CtxIsOf,
+                                                  exprToFilter.ResultType.EdmType.BuiltInTypeKind.ToString(),
+                                                  exprToFilter.ResultType.EdmType.FullName);
+                                              throw EntitySqlException.Create(errCtx, message, null);
                                           }
                                           else if (isNominalTypeAllowed && !TypeSemantics.IsNominalType(exprToFilter.ResultType))
                                           {
-                                              throw EntityUtil.EntitySqlError(
-                                                  bltInExpr.Arg1.ErrCtx,
-                                                  Strings.ExpressionTypeMustBeNominalType(
-                                                      Strings.CtxIsOf,
-                                                      exprToFilter.ResultType.EdmType.BuiltInTypeKind.ToString(),
-                                                      exprToFilter.ResultType.EdmType.FullName));
+                                              ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
+                                              string message = Strings.ExpressionTypeMustBeNominalType(
+                                                  Strings.CtxIsOf,
+                                                  exprToFilter.ResultType.EdmType.BuiltInTypeKind.ToString(),
+                                                  exprToFilter.ResultType.EdmType.FullName);
+                                              throw EntitySqlException.Create(errCtx, message, null);
                                           }
 
                                           if (!isNominalTypeAllowed
                                               && !TypeSemantics.IsEntityType(typeToFilterTo))
                                           {
-                                              throw EntityUtil.EntitySqlError(
-                                                  bltInExpr.Arg2.ErrCtx, Strings.TypeMustBeEntityType(
-                                                      Strings.CtxIsOf,
-                                                      typeToFilterTo.EdmType.BuiltInTypeKind.ToString(),
-                                                      typeToFilterTo.EdmType.FullName));
+                                              ErrorContext errCtx = bltInExpr.Arg2.ErrCtx;
+                                              string message = Strings.TypeMustBeEntityType(
+                                                  Strings.CtxIsOf,
+                                                  typeToFilterTo.EdmType.BuiltInTypeKind.ToString(),
+                                                  typeToFilterTo.EdmType.FullName);
+                                              throw EntitySqlException.Create(errCtx, message, null);
                                           }
                                           else if (isNominalTypeAllowed && !TypeSemantics.IsNominalType(typeToFilterTo))
                                           {
-                                              throw EntityUtil.EntitySqlError(
-                                                  bltInExpr.Arg2.ErrCtx, Strings.TypeMustBeNominalType(
-                                                      Strings.CtxIsOf,
-                                                      typeToFilterTo.EdmType.BuiltInTypeKind.ToString(),
-                                                      typeToFilterTo.EdmType.FullName));
+                                              ErrorContext errCtx = bltInExpr.Arg2.ErrCtx;
+                                              string message = Strings.TypeMustBeNominalType(
+                                                  Strings.CtxIsOf,
+                                                  typeToFilterTo.EdmType.BuiltInTypeKind.ToString(),
+                                                  typeToFilterTo.EdmType.FullName);
+                                              throw EntitySqlException.Create(errCtx, message, null);
                                           }
 
                                           if (!TypeSemantics.IsPolymorphicType(exprToFilter.ResultType))
                                           {
-                                              throw EntityUtil.EntitySqlError(bltInExpr.Arg1.ErrCtx, Strings.TypeMustBeInheritableType);
+                                              ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
+                                              string message = Strings.TypeMustBeInheritableType;
+                                              throw EntitySqlException.Create(errCtx, message, null);
                                           }
 
                                           if (!TypeSemantics.IsPolymorphicType(typeToFilterTo))
                                           {
-                                              throw EntityUtil.EntitySqlError(bltInExpr.Arg2.ErrCtx, Strings.TypeMustBeInheritableType);
+                                              ErrorContext errCtx = bltInExpr.Arg2.ErrCtx;
+                                              string message = Strings.TypeMustBeInheritableType;
+                                              throw EntitySqlException.Create(errCtx, message, null);
                                           }
 
                                           if (!IsSubOrSuperType(exprToFilter.ResultType, typeToFilterTo))
                                           {
-                                              throw EntityUtil.EntitySqlError(
-                                                  bltInExpr.ErrCtx, Strings.NotASuperOrSubType(
-                                                      exprToFilter.ResultType.EdmType.FullName,
-                                                      typeToFilterTo.EdmType.FullName));
+                                              ErrorContext errCtx = bltInExpr.ErrCtx;
+                                              string message = Strings.NotASuperOrSubType(
+                                                  exprToFilter.ResultType.EdmType.FullName,
+                                                  typeToFilterTo.EdmType.FullName);
+                                              throw EntitySqlException.Create(errCtx, message, null);
                                           }
 
                                           typeToFilterTo = TypeHelpers.GetReadOnlyType(typeToFilterTo);
@@ -5357,21 +5563,21 @@ namespace System.Data.Entity.Core.Common.EntitySql
                                            if (!isNominalTypeAllowed
                                                && !TypeSemantics.IsEntityType(typeToTreatTo))
                                            {
-                                               throw EntityUtil.EntitySqlError(
-                                                   bltInExpr.Arg2.ErrCtx,
-                                                   Strings.TypeMustBeEntityType(
-                                                       Strings.CtxTreat,
-                                                       typeToTreatTo.EdmType.BuiltInTypeKind.ToString(),
-                                                       typeToTreatTo.EdmType.FullName));
+                                               ErrorContext errCtx = bltInExpr.Arg2.ErrCtx;
+                                               string message = Strings.TypeMustBeEntityType(
+                                                   Strings.CtxTreat,
+                                                   typeToTreatTo.EdmType.BuiltInTypeKind.ToString(),
+                                                   typeToTreatTo.EdmType.FullName);
+                                               throw EntitySqlException.Create(errCtx, message, null);
                                            }
                                            else if (isNominalTypeAllowed && !TypeSemantics.IsNominalType(typeToTreatTo))
                                            {
-                                               throw EntityUtil.EntitySqlError(
-                                                   bltInExpr.Arg2.ErrCtx,
-                                                   Strings.TypeMustBeNominalType(
-                                                       Strings.CtxTreat,
-                                                       typeToTreatTo.EdmType.BuiltInTypeKind.ToString(),
-                                                       typeToTreatTo.EdmType.FullName));
+                                               ErrorContext errCtx = bltInExpr.Arg2.ErrCtx;
+                                               string message = Strings.TypeMustBeNominalType(
+                                                   Strings.CtxTreat,
+                                                   typeToTreatTo.EdmType.BuiltInTypeKind.ToString(),
+                                                   typeToTreatTo.EdmType.FullName);
+                                               throw EntitySqlException.Create(errCtx, message, null);
                                            }
 
                                            if (exprToTreat == null)
@@ -5381,40 +5587,44 @@ namespace System.Data.Entity.Core.Common.EntitySql
                                            else if (!isNominalTypeAllowed
                                                     && !TypeSemantics.IsEntityType(exprToTreat.ResultType))
                                            {
-                                               throw EntityUtil.EntitySqlError(
-                                                   bltInExpr.Arg1.ErrCtx,
-                                                   Strings.ExpressionTypeMustBeEntityType(
-                                                       Strings.CtxTreat,
-                                                       exprToTreat.ResultType.EdmType.BuiltInTypeKind.ToString(),
-                                                       exprToTreat.ResultType.EdmType.FullName));
+                                               ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
+                                               string message = Strings.ExpressionTypeMustBeEntityType(
+                                                   Strings.CtxTreat,
+                                                   exprToTreat.ResultType.EdmType.BuiltInTypeKind.ToString(),
+                                                   exprToTreat.ResultType.EdmType.FullName);
+                                               throw EntitySqlException.Create(errCtx, message, null);
                                            }
                                            else if (isNominalTypeAllowed && !TypeSemantics.IsNominalType(exprToTreat.ResultType))
                                            {
-                                               throw EntityUtil.EntitySqlError(
-                                                   bltInExpr.Arg1.ErrCtx,
-                                                   Strings.ExpressionTypeMustBeNominalType(
-                                                       Strings.CtxTreat,
-                                                       exprToTreat.ResultType.EdmType.BuiltInTypeKind.ToString(),
-                                                       exprToTreat.ResultType.EdmType.FullName));
+                                               ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
+                                               string message = Strings.ExpressionTypeMustBeNominalType(
+                                                   Strings.CtxTreat,
+                                                   exprToTreat.ResultType.EdmType.BuiltInTypeKind.ToString(),
+                                                   exprToTreat.ResultType.EdmType.FullName);
+                                               throw EntitySqlException.Create(errCtx, message, null);
                                            }
 
                                            if (!TypeSemantics.IsPolymorphicType(exprToTreat.ResultType))
                                            {
-                                               throw EntityUtil.EntitySqlError(bltInExpr.Arg1.ErrCtx, Strings.TypeMustBeInheritableType);
+                                               ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
+                                               string message = Strings.TypeMustBeInheritableType;
+                                               throw EntitySqlException.Create(errCtx, message, null);
                                            }
 
                                            if (!TypeSemantics.IsPolymorphicType(typeToTreatTo))
                                            {
-                                               throw EntityUtil.EntitySqlError(bltInExpr.Arg2.ErrCtx, Strings.TypeMustBeInheritableType);
+                                               ErrorContext errCtx = bltInExpr.Arg2.ErrCtx;
+                                               string message = Strings.TypeMustBeInheritableType;
+                                               throw EntitySqlException.Create(errCtx, message, null);
                                            }
 
                                            if (!IsSubOrSuperType(exprToTreat.ResultType, typeToTreatTo))
                                            {
-                                               throw EntityUtil.EntitySqlError(
-                                                   bltInExpr.Arg1.ErrCtx,
-                                                   Strings.NotASuperOrSubType(
-                                                       exprToTreat.ResultType.EdmType.FullName,
-                                                       typeToTreatTo.EdmType.FullName));
+                                               ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
+                                               string message = Strings.NotASuperOrSubType(
+                                                   exprToTreat.ResultType.EdmType.FullName,
+                                                   typeToTreatTo.EdmType.FullName);
+                                               throw EntitySqlException.Create(errCtx, message, null);
                                            }
 
                                            return exprToTreat.TreatAs(TypeHelpers.GetReadOnlyType(typeToTreatTo));
@@ -5439,7 +5649,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                                           //
                                           if (!TypeSemantics.IsScalarType(typeToCastTo))
                                           {
-                                              throw EntityUtil.EntitySqlError(bltInExpr.Arg2.ErrCtx, Strings.InvalidCastType);
+                                              ErrorContext errCtx = bltInExpr.Arg2.ErrCtx;
+                                              string message = Strings.InvalidCastType;
+                                              throw EntitySqlException.Create(errCtx, message, null);
                                           }
 
                                           if (exprToCast == null)
@@ -5452,14 +5664,16 @@ namespace System.Data.Entity.Core.Common.EntitySql
                                           //
                                           if (!TypeSemantics.IsScalarType(exprToCast.ResultType))
                                           {
-                                              throw EntityUtil.EntitySqlError(bltInExpr.Arg1.ErrCtx, Strings.InvalidCastExpressionType);
+                                              ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
+                                              string message = Strings.InvalidCastExpressionType;
+                                              throw EntitySqlException.Create(errCtx, message, null);
                                           }
 
                                           if (!TypeSemantics.IsCastAllowed(exprToCast.ResultType, typeToCastTo))
                                           {
-                                              throw EntityUtil.EntitySqlError(
-                                                  bltInExpr.Arg1.ErrCtx,
-                                                  Strings.InvalidCast(exprToCast.ResultType.EdmType.FullName, typeToCastTo.EdmType.FullName));
+                                              ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
+                                              string message = Strings.InvalidCast(exprToCast.ResultType.EdmType.FullName, typeToCastTo.EdmType.FullName);
+                                              throw EntitySqlException.Create(errCtx, message, null);
                                           }
 
                                           return exprToCast.CastTo(TypeHelpers.GetReadOnlyType(typeToCastTo));
@@ -5486,57 +5700,59 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
                                             if (!TypeSemantics.IsCollectionType(exprToFilter.ResultType))
                                             {
-                                                throw EntityUtil.EntitySqlError(bltInExpr.Arg1.ErrCtx, Strings.ExpressionMustBeCollection);
+                                                ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
+                                                string message = Strings.ExpressionMustBeCollection;
+                                                throw EntitySqlException.Create(errCtx, message, null);
                                             }
 
                                             var elementType = TypeHelpers.GetElementTypeUsage(exprToFilter.ResultType);
                                             if (!isNominalTypeAllowed
                                                 && !TypeSemantics.IsEntityType(elementType))
                                             {
-                                                throw EntityUtil.EntitySqlError(
-                                                    bltInExpr.Arg1.ErrCtx,
-                                                    Strings.OfTypeExpressionElementTypeMustBeEntityType(
-                                                        elementType.EdmType.BuiltInTypeKind.ToString(), elementType));
+                                                ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
+                                                string message = Strings.OfTypeExpressionElementTypeMustBeEntityType(
+                                                    elementType.EdmType.BuiltInTypeKind.ToString(), elementType);
+                                                throw EntitySqlException.Create(errCtx, message, null);
                                             }
                                             else if (isNominalTypeAllowed && !TypeSemantics.IsNominalType(elementType))
                                             {
-                                                throw EntityUtil.EntitySqlError(
-                                                    bltInExpr.Arg1.ErrCtx,
-                                                    Strings.OfTypeExpressionElementTypeMustBeNominalType(
-                                                        elementType.EdmType.BuiltInTypeKind.ToString(), elementType));
+                                                ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
+                                                string message = Strings.OfTypeExpressionElementTypeMustBeNominalType(
+                                                    elementType.EdmType.BuiltInTypeKind.ToString(), elementType);
+                                                throw EntitySqlException.Create(errCtx, message, null);
                                             }
 
                                             if (!isNominalTypeAllowed
                                                 && !TypeSemantics.IsEntityType(typeToFilterTo))
                                             {
-                                                throw EntityUtil.EntitySqlError(
-                                                    bltInExpr.Arg2.ErrCtx,
-                                                    Strings.TypeMustBeEntityType(
-                                                        Strings.CtxOfType, typeToFilterTo.EdmType.BuiltInTypeKind.ToString(),
-                                                        typeToFilterTo.EdmType.FullName));
+                                                ErrorContext errCtx = bltInExpr.Arg2.ErrCtx;
+                                                string message = Strings.TypeMustBeEntityType(
+                                                    Strings.CtxOfType, typeToFilterTo.EdmType.BuiltInTypeKind.ToString(),
+                                                    typeToFilterTo.EdmType.FullName);
+                                                throw EntitySqlException.Create(errCtx, message, null);
                                             }
                                             else if (isNominalTypeAllowed && !TypeSemantics.IsNominalType(typeToFilterTo))
                                             {
-                                                throw EntityUtil.EntitySqlError(
-                                                    bltInExpr.Arg2.ErrCtx,
-                                                    Strings.TypeMustBeNominalType(
-                                                        Strings.CtxOfType, typeToFilterTo.EdmType.BuiltInTypeKind.ToString(),
-                                                        typeToFilterTo.EdmType.FullName));
+                                                ErrorContext errCtx = bltInExpr.Arg2.ErrCtx;
+                                                string message = Strings.TypeMustBeNominalType(
+                                                    Strings.CtxOfType, typeToFilterTo.EdmType.BuiltInTypeKind.ToString(),
+                                                    typeToFilterTo.EdmType.FullName);
+                                                throw EntitySqlException.Create(errCtx, message, null);
                                             }
 
                                             if (isOnly && typeToFilterTo.EdmType.Abstract)
                                             {
-                                                throw EntityUtil.EntitySqlError(
-                                                    bltInExpr.Arg2.ErrCtx,
-                                                    Strings.OfTypeOnlyTypeArgumentCannotBeAbstract(typeToFilterTo.EdmType.FullName));
+                                                ErrorContext errCtx = bltInExpr.Arg2.ErrCtx;
+                                                string message = Strings.OfTypeOnlyTypeArgumentCannotBeAbstract(typeToFilterTo.EdmType.FullName);
+                                                throw EntitySqlException.Create(errCtx, message, null);
                                             }
 
                                             if (!IsSubOrSuperType(elementType, typeToFilterTo))
                                             {
-                                                throw EntityUtil.EntitySqlError(
-                                                    bltInExpr.Arg1.ErrCtx,
-                                                    Strings.NotASuperOrSubType(
-                                                        elementType.EdmType.FullName, typeToFilterTo.EdmType.FullName));
+                                                ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
+                                                string message = Strings.NotASuperOrSubType(
+                                                    elementType.EdmType.FullName, typeToFilterTo.EdmType.FullName);
+                                                throw EntitySqlException.Create(errCtx, message, null);
                                             }
 
                                             DbExpression ofTypeExpression = null;
@@ -5572,7 +5788,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                                           }
                                           else if (!IsStringType(matchExpr.ResultType))
                                           {
-                                              throw EntityUtil.EntitySqlError(bltInExpr.Arg1.ErrCtx, Strings.LikeArgMustBeStringType);
+                                              ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
+                                              string message = Strings.LikeArgMustBeStringType;
+                                              throw EntitySqlException.Create(errCtx, message, null);
                                           }
 
                                           var patternExpr = ConvertValueExpressionAllowUntypedNulls(bltInExpr.Arg2, sr);
@@ -5582,7 +5800,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                                           }
                                           else if (!IsStringType(patternExpr.ResultType))
                                           {
-                                              throw EntityUtil.EntitySqlError(bltInExpr.Arg2.ErrCtx, Strings.LikeArgMustBeStringType);
+                                              ErrorContext errCtx = bltInExpr.Arg2.ErrCtx;
+                                              string message = Strings.LikeArgMustBeStringType;
+                                              throw EntitySqlException.Create(errCtx, message, null);
                                           }
 
                                           if (3 == bltInExpr.ArgCount)
@@ -5594,7 +5814,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                                               }
                                               else if (!IsStringType(escapeExpr.ResultType))
                                               {
-                                                  throw EntityUtil.EntitySqlError(bltInExpr.Arg3.ErrCtx, Strings.LikeArgMustBeStringType);
+                                                  ErrorContext errCtx = bltInExpr.Arg3.ErrCtx;
+                                                  string message = Strings.LikeArgMustBeStringType;
+                                                  throw EntitySqlException.Create(errCtx, message, null);
                                               }
 
                                               likeExpr = matchExpr.Like(patternExpr, escapeExpr);
@@ -5657,10 +5879,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
             var rangeCommonType = TypeHelpers.GetCommonTypeUsage(limitsExpr.Left.ResultType, limitsExpr.Right.ResultType);
             if (null == rangeCommonType)
             {
-                throw EntityUtil.EntitySqlError(
-                    bltInExpr.Arg1.ErrCtx,
-                    Strings.BetweenLimitsTypesAreNotCompatible(
-                        limitsExpr.Left.ResultType.EdmType.FullName, limitsExpr.Right.ResultType.EdmType.FullName));
+                ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
+                string message = Strings.BetweenLimitsTypesAreNotCompatible(
+                    limitsExpr.Left.ResultType.EdmType.FullName, limitsExpr.Right.ResultType.EdmType.FullName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -5668,10 +5890,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             if (!TypeSemantics.IsOrderComparableTo(limitsExpr.Left.ResultType, limitsExpr.Right.ResultType))
             {
-                throw EntityUtil.EntitySqlError(
-                    bltInExpr.Arg1.ErrCtx,
-                    Strings.BetweenLimitsTypesAreNotOrderComparable(
-                        limitsExpr.Left.ResultType.EdmType.FullName, limitsExpr.Right.ResultType.EdmType.FullName));
+                ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
+                string message = Strings.BetweenLimitsTypesAreNotOrderComparable(
+                    limitsExpr.Left.ResultType.EdmType.FullName, limitsExpr.Right.ResultType.EdmType.FullName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             //
@@ -5688,9 +5910,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             if (!TypeSemantics.IsOrderComparableTo(valueExpr.ResultType, rangeCommonType))
             {
-                throw EntityUtil.EntitySqlError(
-                    bltInExpr.Arg1.ErrCtx,
-                    Strings.BetweenValueIsNotOrderComparable(valueExpr.ResultType.EdmType.FullName, rangeCommonType.EdmType.FullName));
+                ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
+                string message = Strings.BetweenValueIsNotOrderComparable(valueExpr.ResultType.EdmType.FullName, rangeCommonType.EdmType.FullName);
+                throw EntitySqlException.Create(errCtx, message, null);
             }
 
             return valueExpr.GreaterThanOrEqual(limitsExpr.Left).And(valueExpr.LessThanOrEqual(limitsExpr.Right));

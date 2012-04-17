@@ -531,7 +531,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             // Anything else is not supported (this currently includes relationship types)
-            throw EntityUtil.NotSupported(type.Identity);
+            throw new NotSupportedException(type.Identity);
         }
 
         /// <summary>

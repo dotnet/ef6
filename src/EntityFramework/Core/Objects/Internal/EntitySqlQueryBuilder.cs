@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
     /// <summary>
@@ -29,7 +30,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             string commandText = null;
             if (!query.TryGetCommandText(out commandText))
             {
-                throw EntityUtil.NotSupported(Strings.ObjectQuery_QueryBuilder_NotSupportedLinqSource);
+                throw new NotSupportedException(Strings.ObjectQuery_QueryBuilder_NotSupportedLinqSource);
             }
 
             return commandText;
@@ -153,6 +154,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         // SetOp helper - note that this doesn't merge Spans, since Except uses the original query's Span
         // while Intersect/Union/UnionAll use the merged Span.
+        [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         private static ObjectQueryState BuildSetOp(ObjectQueryState leftQuery, ObjectQueryState rightQuery, Span newSpan, string setOp)
         {
             // Assert that the arguments aren't null (should have been verified by ObjectQuery)
@@ -170,7 +172,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             // ObjectQuery arguments must be associated with the same ObjectContext instance as the implemented query
             if (!ReferenceEquals(leftQuery.ObjectContext, rightQuery.ObjectContext))
             {
-                throw EntityUtil.Argument(Strings.ObjectQuery_QueryBuilder_InvalidQueryArgument, "query");
+                throw new ArgumentException(Strings.ObjectQuery_QueryBuilder_InvalidQueryArgument, "query");
             }
 
             // Create a string builder only large enough to contain the new query text

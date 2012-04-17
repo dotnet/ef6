@@ -268,7 +268,7 @@ namespace System.Data.Entity.Core.Objects
                 tResultType = _state.ObjectContext.Perspective.MetadataWorkspace.GetOSpaceTypeUsage(tResultType);
                 if (null == tResultType)
                 {
-                    throw EntityUtil.InvalidOperation(Strings.ObjectQuery_UnableToMapResultType);
+                    throw new InvalidOperationException(Strings.ObjectQuery_UnableToMapResultType);
                 }
 
                 _resultType = tResultType;

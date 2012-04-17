@@ -2,6 +2,7 @@
 {
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
 
     internal static class Util
     {
@@ -53,7 +54,7 @@
                 if (!Helper.IsPrimitiveType(ospaceType) && !Helper.IsEntityType(ospaceType)
                     && !Helper.IsComplexType(ospaceType))
                 {
-                    throw EntityUtil.MaterializerUnsupportedType();
+                    throw new NotSupportedException(Strings.Materializer_UnsupportedType);
                 }
 
                 ObjectTypeMapping typeMapping;

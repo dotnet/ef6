@@ -5346,4 +5346,8 @@
   <data name="EntityProxyTypeInfo_DuplicateOSpaceType" xml:space="preserve">
     <value>There is already a generated proxy type for the object layer type '{0}'. This occurs when the same object layer type is mapped by two or more different models in an AppDomain.</value>
   </data>
+  <data name="InvalidEdmMemberInstance" xml:space="preserve">
+    <value>All 'EdmMember' instances must be a valid member of the EdmType.</value>
+    <comment>## ExceptionType=ArgumentException</comment>
+  </data>
 </root>

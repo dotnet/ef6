@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
     internal enum ModifiedPropertiesBehavior
@@ -36,9 +37,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     {
         internal ExtractorMetadata(EntitySetBase entitySetBase, StructuralType type, UpdateTranslator translator)
         {
-            EntityUtil.CheckArgumentNull(entitySetBase, "entitySetBase");
-            m_type = EntityUtil.CheckArgumentNull(type, "type");
-            m_translator = EntityUtil.CheckArgumentNull(translator, "translator");
+            Contract.Requires(entitySetBase != null);
+            Contract.Requires(type != null);
+            Contract.Requires(translator != null);
+
+            m_type = type;
+            m_translator = translator; 
 
             EntityType entityType = null;
             Set<EdmMember> keyMembers;

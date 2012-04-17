@@ -4,6 +4,7 @@
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -56,8 +57,8 @@
         internal static PatternMatchRule Create(
             Func<DbExpression, bool> matchFunc, Func<DbExpression, DbExpression> processor, ProcessedAction onProcessed)
         {
-            EntityUtil.CheckArgumentNull(matchFunc, "matchFunc");
-            EntityUtil.CheckArgumentNull(processor, "processor");
+            Contract.Requires(matchFunc != null);
+            Contract.Requires(processor != null);
 
             return new PatternMatchRule(matchFunc, processor, onProcessed);
         }
@@ -82,7 +83,7 @@
 
         private DbExpression Process(DbExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
             expression = VisitExpression(expression);
             return expression;
         }
@@ -94,7 +95,7 @@
 
         internal static Func<DbExpression, DbExpression> Create(params PatternMatchRule[] rules)
         {
-            EntityUtil.CheckArgumentNull(rules, "rules");
+            Contract.Requires(rules != null);
 
             return new PatternMatchRuleProcessor(new ReadOnlyCollection<PatternMatchRule>(rules)).Process;
         }

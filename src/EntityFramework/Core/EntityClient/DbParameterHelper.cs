@@ -3,6 +3,8 @@ namespace System.Data.Entity.Core.EntityClient
     using System.ComponentModel;
     using System.Data.Common;
     using System.Data.Entity.Resources;
+    using System.Diagnostics.Contracts;
+    using System.Globalization;
 
     public sealed partial class EntityParameter : DbParameter
     {
@@ -22,7 +24,7 @@ namespace System.Data.Entity.Core.EntityClient
         private EntityParameter(EntityParameter source)
             : this()
         {
-            EntityUtil.CheckArgumentNull(source, "source");
+            Contract.Requires(source != null);
 
             source.CloneHelper(this);
 
@@ -61,7 +63,7 @@ namespace System.Data.Entity.Core.EntityClient
                             _direction = value;
                             break;
                         default:
-                            throw EntityUtil.InvalidParameterDirection(value);
+                            throw new ArgumentOutOfRangeException(typeof(ParameterDirection).Name, Strings.ADP_InvalidEnumerationValue(typeof(ParameterDirection).Name, ((int)value).ToString(CultureInfo.InvariantCulture)));
                     }
                 }
             }
@@ -99,7 +101,7 @@ namespace System.Data.Entity.Core.EntityClient
                 {
                     if (value < -1)
                     {
-                        throw EntityUtil.InvalidSizeValue(value);
+                        throw new ArgumentException(Strings.ADP_InvalidSizeValue(value.ToString(CultureInfo.InvariantCulture)));
                     }
                     PropertyChanging();
                     if (0 == value)
@@ -170,7 +172,7 @@ namespace System.Data.Entity.Core.EntityClient
                         _sourceVersion = value;
                         break;
                     default:
-                        throw EntityUtil.InvalidDataRowVersion(value);
+                        throw new ArgumentOutOfRangeException(typeof(DataRowVersion).Name, Strings.ADP_InvalidEnumerationValue(typeof(DataRowVersion).Name, ((int)value).ToString(CultureInfo.InvariantCulture)));
                 }
             }
         }
@@ -190,7 +192,7 @@ namespace System.Data.Entity.Core.EntityClient
 
         internal void CopyTo(DbParameter destination)
         {
-            EntityUtil.CheckArgumentNull(destination, "destination");
+            Contract.Requires(destination != null);
             CloneHelper((EntityParameter)destination);
         }
 

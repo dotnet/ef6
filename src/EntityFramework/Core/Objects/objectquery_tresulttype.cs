@@ -145,7 +145,7 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "mergeOption")]
         internal ObjectQuery<T> MergeAs(MergeOption mergeOption)
         {
-            throw EntityUtil.InvalidOperation(Strings.ELinq_MethodNotDirectlyCallable);
+            throw new InvalidOperationException(Strings.ELinq_MethodNotDirectlyCallable);
         }
 
         // Intended for use only in the MethodCallExpression produced for inline queries.
@@ -153,7 +153,7 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "span")]
         internal ObjectQuery<T> IncludeSpan(Span span)
         {
-            throw EntityUtil.InvalidOperation(Strings.ELinq_MethodNotDirectlyCallable);
+            throw new InvalidOperationException(Strings.ELinq_MethodNotDirectlyCallable);
         }
 
         #endregion

@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Core.EntityClient
 {
     using System.Data.Common;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
 
     /// <summary>
@@ -77,7 +78,7 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 if (EntityUtil.IsCatchableExceptionType(e))
                 {
-                    throw EntityUtil.Provider(@"Commit", e);
+                    throw new EntityException(Strings.EntityClient_ProviderSpecificError(@"Commit"), e);
                 }
                 throw;
             }
@@ -98,7 +99,7 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 if (EntityUtil.IsCatchableExceptionType(e))
                 {
-                    throw EntityUtil.Provider(@"Rollback", e);
+                    throw new EntityException(Strings.EntityClient_ProviderSpecificError(@"Rollback"), e);
                 }
                 throw;
             }

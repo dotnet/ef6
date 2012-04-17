@@ -3,6 +3,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.Utils;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// The Row class is intended to provide a constructor-like means of calling <see cref="DbExpressionBuilder.NewRow"/>.
@@ -41,7 +42,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <seealso cref="ToExpression"/>
         public static implicit operator DbExpression(Row row)
         {
-            EntityUtil.CheckArgumentNull(row, "row");
+            Contract.Requires(row != null);
             return row.ToExpression();
         }
     }

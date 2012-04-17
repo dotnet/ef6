@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Runtime.Serialization;
 
@@ -223,7 +224,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// collection cannot be related via the current relationship end.</exception>
         public void Attach(IEnumerable<TEntity> entities)
         {
-            EntityUtil.CheckArgumentNull(entities, "entities");
+            Contract.Requires(entities != null);
             CheckOwnerNull();
             // TODO: Make this more efficient
             IList<IEntityWrapper> wrappedEntities = new List<IEntityWrapper>();
@@ -248,7 +249,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <exception cref="InvalidOperationException">Thrown when the entity cannot be related via the current relationship end.</exception>
         public void Attach(TEntity entity)
         {
-            EntityUtil.CheckArgumentNull(entity, "entity");
+            Contract.Requires(entity != null);
             Attach(new[] { EntityWrapperFactory.WrapEntityUsingContext(entity, ObjectContext) }, false);
         }
 
@@ -294,7 +295,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         public void Add(TEntity item)
         {
-            EntityUtil.CheckArgumentNull(item, "item");
+            Contract.Requires(item != null);
             Add(EntityWrapperFactory.WrapEntityUsingContext(item, ObjectContext));
         }
 
@@ -309,7 +310,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             if (null != wrappedEntity.Context
                 && wrappedEntity.MergeOption != MergeOption.NoTracking)
             {
-                throw EntityUtil.UnableToAddToDisconnectedRelatedEnd();
+                throw new InvalidOperationException(Strings.RelatedEnd_UnableToAddEntity);
             }
 
             VerifyType(wrappedEntity);
@@ -331,7 +332,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             if (null != wrappedEntity.Context
                 && wrappedEntity.MergeOption != MergeOption.NoTracking)
             {
-                throw EntityUtil.UnableToRemoveFromDisconnectedRelatedEnd();
+                throw new InvalidOperationException(Strings.RelatedEnd_UnableToRemoveEntity);
             }
 
             // Remove the entity to local collection without doing any fixup
@@ -351,7 +352,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>Returns true if the entity was successfully removed, false if the entity was not part of the RelatedEnd.</returns>
         public bool Remove(TEntity item)
         {
-            EntityUtil.CheckArgumentNull(item, "item");
+            Contract.Requires(item != null);
             DeferredLoad();
             return RemoveInternal(item);
         }
@@ -506,7 +507,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             if (!CanSetEntityType(wrappedEntity))
             {
-                throw EntityUtil.InvalidContainedTypeCollection(wrappedEntity.Entity.GetType().FullName, typeof(TEntity).FullName);
+                throw new InvalidOperationException(Strings.RelatedEnd_InvalidContainedType_Collection(wrappedEntity.Entity.GetType().FullName, typeof(TEntity).FullName));
             }
         }
 

@@ -3393,7 +3393,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         if (identifier.IsEscaped
                             || escapedIdentifier.Name.Length > 0)
                         {
-                            throw EntityUtil.EntitySqlError(identifier.ErrCtx, Strings.InvalidMetadataMemberName);
+                            ErrorContext errCtx = identifier.ErrCtx;
+                            string message = Strings.InvalidMetadataMemberName;
+                            throw EntitySqlException.Create(errCtx, message, null);
                         }
                         yyval = new Identifier(identifier.Name + "[]", /*isEscaped*/false, _query, AstNodePos(val_peek(1)));
                         SetErrCtx(AstNode(yyval), AstNodePos(val_peek(1)), EntityRes.CtxTypeName);
@@ -3408,7 +3410,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         if (identifier.IsEscaped
                             || escapedIdentifier.Name.Length > 0)
                         {
-                            throw EntityUtil.EntitySqlError(identifier.ErrCtx, Strings.InvalidMetadataMemberName);
+                            ErrorContext errCtx = identifier.ErrCtx;
+                            string message = Strings.InvalidMetadataMemberName;
+                            throw EntitySqlException.Create(errCtx, message, null);
                         }
                         yyval = new DotExpr(
                             dotExpr.Left, new Identifier(identifier.Name + "[]", /*isEscaped*/false, _query, AstNodePos(val_peek(1))));

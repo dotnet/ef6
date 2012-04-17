@@ -14,6 +14,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Text;
 
@@ -57,8 +58,8 @@ namespace System.Data.Entity.Core.EntityClient
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         internal EntityCommandDefinition(DbProviderFactory storeProviderFactory, DbCommandTree commandTree)
         {
-            EntityUtil.CheckArgumentNull(storeProviderFactory, "storeProviderFactory");
-            EntityUtil.CheckArgumentNull(commandTree, "commandTree");
+            Contract.Requires(storeProviderFactory != null);
+            Contract.Requires(commandTree != null);
 
             var storeProviderServices = DbProviderServices.GetProviderServices(storeProviderFactory);
 
@@ -86,7 +87,7 @@ namespace System.Data.Entity.Core.EntityClient
 
                         if (null == providerCommandDefinition)
                         {
-                            throw EntityUtil.ProviderIncompatible(Strings.ProviderReturnedNullForCreateCommandDefinition);
+                            throw new ProviderIncompatibleException(Strings.ProviderReturnedNullForCreateCommandDefinition);
                         }
                         _mappedCommandDefinitions.Add(providerCommandDefinition);
                     }
@@ -159,7 +160,7 @@ namespace System.Data.Entity.Core.EntityClient
                     // we don't wan't folks to have to know all the various types of exceptions that can 
                     // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
                     // the inner exception of it.
-                    throw EntityUtil.CommandCompilation(Strings.EntityClient_CommandDefinitionPreparationFailed, e);
+                    throw new EntityCommandCompilationException(Strings.EntityClient_CommandDefinitionPreparationFailed, e);
                 }
                 throw;
             }
@@ -274,7 +275,7 @@ namespace System.Data.Entity.Core.EntityClient
                 !functionCommandTree.MetadataWorkspace.TryGetFunctionImportMapping(
                     functionCommandTree.EdmFunction, out targetFunctionMapping))
             {
-                throw EntityUtil.InvalidOperation(Strings.EntityClient_UnmappedFunctionImport(functionCommandTree.EdmFunction.FullName));
+                throw new InvalidOperationException(Strings.EntityClient_UnmappedFunctionImport(functionCommandTree.EdmFunction.FullName));
             }
             return (FunctionImportMappingNonComposable)targetFunctionMapping;
         }
@@ -382,7 +383,7 @@ namespace System.Data.Entity.Core.EntityClient
             if (CommandBehavior.SequentialAccess
                 != (behavior & CommandBehavior.SequentialAccess))
             {
-                throw EntityUtil.MustUseSequentialAccess();
+                throw new InvalidOperationException(Strings.ADP_MustUseSequentialAccess);
             }
 
             var storeDataReader = ExecuteStoreCommands(entityCommand, behavior);
@@ -439,7 +440,7 @@ namespace System.Data.Entity.Core.EntityClient
             //                  have it yet, neither do we...
             if (1 != _mappedCommandDefinitions.Count)
             {
-                throw EntityUtil.NotSupported("MARS");
+                throw new NotSupportedException("MARS");
             }
 
             var entityTransaction = CommandHelper.GetEntityTransaction(entityCommand);
@@ -511,7 +512,7 @@ namespace System.Data.Entity.Core.EntityClient
                     // we don't wan't folks to have to know all the various types of exceptions that can 
                     // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
                     // the inner exception of it.
-                    throw EntityUtil.CommandExecution(Strings.EntityClient_CommandDefinitionExecutionFailed, e);
+                    throw new EntityCommandExecutionException(Strings.EntityClient_CommandDefinitionExecutionFailed, e);
                 }
                 throw;
             }
@@ -629,7 +630,7 @@ namespace System.Data.Entity.Core.EntityClient
                 if (null != reader
                     && reader.FieldCount < _fieldsRequired)
                 {
-                    throw EntityUtil.CommandExecution(Strings.EntityClient_TooFewColumns);
+                    throw new EntityCommandExecutionException(Strings.EntityClient_TooFewColumns);
                 }
                 return _columnMap;
             }

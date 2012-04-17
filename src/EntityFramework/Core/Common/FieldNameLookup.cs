@@ -3,6 +3,7 @@ namespace System.Data.Entity.Core
     using System.Collections;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
     internal sealed class FieldNameLookup
@@ -49,17 +50,18 @@ namespace System.Data.Entity.Core
             _defaultLocaleID = defaultLocaleID;
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         public int GetOrdinal(string fieldName)
         {
             // V1.2.3300
             if (null == fieldName)
             {
-                throw EntityUtil.ArgumentNull("fieldName");
+                throw new ArgumentNullException("fieldName");
             }
             var index = IndexOf(fieldName);
             if (-1 == index)
             {
-                throw EntityUtil.IndexOutOfRange(fieldName);
+                throw new IndexOutOfRangeException(fieldName);
             }
             return index;
         }

@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     internal partial class Propagator
@@ -50,11 +51,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// Constructs an evaluator for evaluating expressions for the given row.
             /// </summary>
             /// <param name="row">Row to match</param>
-            /// <param name="parent">Propagator context</param>
-            private Evaluator(PropagatorResult row, Propagator parent)
+            private Evaluator(PropagatorResult row)
             {
-                EntityUtil.CheckArgumentNull(row, "row");
-                EntityUtil.CheckArgumentNull(parent, "parent");
+                Contract.Requires(row != null);
 
                 m_row = row;
             }
@@ -84,14 +83,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// </summary>
             /// <param name="predicate">Match criteria.</param>
             /// <param name="rows">Input rows.</param>
-            /// <param name="parent">Propagator context</param>
             /// <returns>Input rows matching criteria.</returns>
             internal static IEnumerable<PropagatorResult> Filter(
-                DbExpression predicate, IEnumerable<PropagatorResult> rows, Propagator parent)
+                DbExpression predicate, IEnumerable<PropagatorResult> rows)
             {
                 foreach (var row in rows)
                 {
-                    if (EvaluatePredicate(predicate, row, parent))
+                    if (EvaluatePredicate(predicate, row))
                     {
                         yield return row;
                     }
@@ -106,11 +104,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// </remarks>
             /// <param name="predicate">Match criteria.</param>
             /// <param name="row">Input row.</param>
-            /// <param name="parent">Propagator context</param>
             /// <returns><c>true</c> if the row matches the criteria; <c>false</c> otherwise</returns>
-            internal static bool EvaluatePredicate(DbExpression predicate, PropagatorResult row, Propagator parent)
+            internal static bool EvaluatePredicate(DbExpression predicate, PropagatorResult row)
             {
-                var evaluator = new Evaluator(row, parent);
+                var evaluator = new Evaluator(row);
                 var expressionResult = predicate.Accept(evaluator);
 
                 var result = ConvertResultToBool(expressionResult);
@@ -124,11 +121,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// </summary>
             /// <param name="node">Sub-query returning a scalar value.</param>
             /// <param name="row">Row to evaluate.</param>
-            /// <param name="parent">Propagator context.</param>
             /// <returns>Scalar result.</returns>
-            internal static PropagatorResult Evaluate(DbExpression node, PropagatorResult row, Propagator parent)
+            internal static PropagatorResult Evaluate(DbExpression node, PropagatorResult row)
             {
-                DbExpressionVisitor<PropagatorResult> evaluator = new Evaluator(row, parent);
+                DbExpressionVisitor<PropagatorResult> evaluator = new Evaluator(row);
                 return node.Accept(evaluator);
             }
 
@@ -184,7 +180,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns>True if the row being evaluated is of the requested type; false otherwise.</returns>
             public override PropagatorResult Visit(DbIsOfExpression predicate)
             {
-                EntityUtil.CheckArgumentNull(predicate, "predicate");
+                Contract.Requires(predicate != null);
 
                 if (DbExpressionKind.IsOfOnly
                     != predicate.ExpressionKind)
@@ -214,7 +210,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns>True if the values being compared are equivalent; false otherwise.</returns>
             public override PropagatorResult Visit(DbComparisonExpression predicate)
             {
-                EntityUtil.CheckArgumentNull(predicate, "predicate");
+                Contract.Requires(predicate != null);
 
                 if (DbExpressionKind.Equals
                     == predicate.ExpressionKind)
@@ -255,7 +251,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns>True if both child predicates are satisfied; false otherwise.</returns>
             public override PropagatorResult Visit(DbAndExpression predicate)
             {
-                EntityUtil.CheckArgumentNull(predicate, "predicate");
+                Contract.Requires(predicate != null);
 
                 var left = Visit(predicate.Left);
                 var right = Visit(predicate.Right);
@@ -284,7 +280,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns>True if either child predicate is satisfied; false otherwise.</returns>
             public override PropagatorResult Visit(DbOrExpression predicate)
             {
-                EntityUtil.CheckArgumentNull(predicate, "predicate");
+                Contract.Requires(predicate != null);
 
                 var left = Visit(predicate.Left);
                 var right = Visit(predicate.Right);
@@ -325,7 +321,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns>True of the argument to the 'not' predicate evaluator to false; false otherwise</returns>
             public override PropagatorResult Visit(DbNotExpression predicate)
             {
-                EntityUtil.CheckArgumentNull(predicate, "predicate");
+                Contract.Requires(predicate != null);
 
                 var child = Visit(predicate.Argument);
                 var childResult = ConvertResultToBool(child);
@@ -513,7 +509,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 if (!childResult.IsSimple
                     || BuiltInTypeKind.PrimitiveType != nodeType.EdmType.BuiltInTypeKind)
                 {
-                    throw EntityUtil.NotSupported(Strings.Update_UnsupportedCastArgument(nodeType.EdmType.Name));
+                    throw new NotSupportedException(Strings.Update_UnsupportedCastArgument(nodeType.EdmType.Name));
                 }
 
                 object resultValue;

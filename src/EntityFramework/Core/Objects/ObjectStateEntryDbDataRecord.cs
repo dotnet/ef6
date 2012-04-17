@@ -2,7 +2,11 @@ namespace System.Data.Entity.Core.Objects
 {
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
+    using System.Globalization;
 
     internal sealed class ObjectStateEntryDbDataRecord : DbDataRecord, IExtendedDataRecord
     {
@@ -13,9 +17,9 @@ namespace System.Data.Entity.Core.Objects
 
         internal ObjectStateEntryDbDataRecord(EntityEntry cacheEntry, StateManagerTypeMetadata metadata, object userObject)
         {
-            EntityUtil.CheckArgumentNull(cacheEntry, "cacheEntry");
-            EntityUtil.CheckArgumentNull(userObject, "userObject");
-            EntityUtil.CheckArgumentNull(metadata, "metadata");
+            Contract.Requires(cacheEntry != null);
+            Contract.Requires(userObject != null);
+            Contract.Requires(metadata != null);
             Debug.Assert(!cacheEntry.IsKeyEntry, "Cannot create an ObjectStateEntryDbDataRecord for a key entry");
             switch (cacheEntry.State)
             {
@@ -34,7 +38,7 @@ namespace System.Data.Entity.Core.Objects
 
         internal ObjectStateEntryDbDataRecord(RelationshipEntry cacheEntry)
         {
-            EntityUtil.CheckArgumentNull(cacheEntry, "cacheEntry");
+            Contract.Requires(cacheEntry != null);
             Debug.Assert(!cacheEntry.IsKeyEntry, "Cannot create an ObjectStateEntryDbDataRecord for a key entry");
             switch (cacheEntry.State)
             {
@@ -78,6 +82,7 @@ namespace System.Data.Entity.Core.Objects
             return (byte)GetValue(ordinal);
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         public override long GetBytes(int ordinal, long dataIndex, byte[] buffer, int bufferIndex, int length)
         {
             byte[] tempBuffer;
@@ -91,12 +96,14 @@ namespace System.Data.Entity.Core.Objects
             var byteCount = Math.Min(tempBuffer.Length - srcIndex, length);
             if (srcIndex < 0)
             {
-                throw EntityUtil.InvalidSourceBufferIndex(tempBuffer.Length, srcIndex, "dataIndex");
+                throw new ArgumentOutOfRangeException("dataIndex", Strings.ADP_InvalidSourceBufferIndex(
+                    tempBuffer.Length.ToString(CultureInfo.InvariantCulture), ((long)srcIndex).ToString(CultureInfo.InvariantCulture)));
             }
             else if ((bufferIndex < 0)
                      || (bufferIndex > 0 && bufferIndex >= buffer.Length))
             {
-                throw EntityUtil.InvalidDestinationBufferIndex(buffer.Length, bufferIndex, "bufferIndex");
+                throw new ArgumentOutOfRangeException("bufferIndex", Strings.ADP_InvalidDestinationBufferIndex(
+                    buffer.Length.ToString(CultureInfo.InvariantCulture), bufferIndex.ToString(CultureInfo.InvariantCulture)));
             }
 
             if (0 < byteCount)
@@ -105,7 +112,7 @@ namespace System.Data.Entity.Core.Objects
             }
             else if (length < 0)
             {
-                throw EntityUtil.InvalidDataLength(length);
+                throw new IndexOutOfRangeException(Strings.ADP_InvalidDataLength(((long)length).ToString(CultureInfo.InvariantCulture)));
             }
             else
             {
@@ -119,6 +126,7 @@ namespace System.Data.Entity.Core.Objects
             return (char)GetValue(ordinal);
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         public override long GetChars(int ordinal, long dataIndex, char[] buffer, int bufferIndex, int length)
         {
             char[] tempBuffer;
@@ -133,12 +141,14 @@ namespace System.Data.Entity.Core.Objects
             var charCount = Math.Min(tempBuffer.Length - srcIndex, length);
             if (srcIndex < 0)
             {
-                throw EntityUtil.InvalidSourceBufferIndex(buffer.Length, bufferIndex, "bufferIndex");
+                throw new ArgumentOutOfRangeException("bufferIndex", Strings.ADP_InvalidSourceBufferIndex(
+                    buffer.Length.ToString(CultureInfo.InvariantCulture), ((long)bufferIndex).ToString(CultureInfo.InvariantCulture)));
             }
             else if ((bufferIndex < 0)
                      || (bufferIndex > 0 && bufferIndex >= buffer.Length))
             {
-                throw EntityUtil.InvalidDestinationBufferIndex(buffer.Length, bufferIndex, "bufferIndex");
+                throw new ArgumentOutOfRangeException("bufferIndex", Strings.ADP_InvalidDestinationBufferIndex(
+                    buffer.Length.ToString(CultureInfo.InvariantCulture), bufferIndex.ToString(CultureInfo.InvariantCulture)));
             }
 
             if (0 < charCount)
@@ -147,7 +157,7 @@ namespace System.Data.Entity.Core.Objects
             }
             else if (length < 0)
             {
-                throw EntityUtil.InvalidDataLength(length);
+                throw new IndexOutOfRangeException(Strings.ADP_InvalidDataLength(((long)length).ToString(CultureInfo.InvariantCulture)));
             }
             else
             {
@@ -158,7 +168,7 @@ namespace System.Data.Entity.Core.Objects
 
         protected override DbDataReader GetDbDataReader(int ordinal)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         public override string GetDataTypeName(int ordinal)
@@ -221,7 +231,7 @@ namespace System.Data.Entity.Core.Objects
             var ordinal = _cacheEntry.GetOrdinalforCLayerName(name, _metadata);
             if (ordinal == -1)
             {
-                throw EntityUtil.ArgumentOutOfRange("name");
+                throw new ArgumentOutOfRangeException("name");
             }
             return ordinal;
         }
@@ -248,7 +258,7 @@ namespace System.Data.Entity.Core.Objects
         {
             if (values == null)
             {
-                throw EntityUtil.ArgumentNull("values");
+                throw new ArgumentNullException("values");
             }
             var minValue = Math.Min(values.Length, FieldCount);
             for (var i = 0; i < minValue; i++)

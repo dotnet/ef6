@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Text;
     using System.Threading;
 
@@ -95,7 +96,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A TypeUsage instance with default facet values for the specified EdmType</returns>
         public static TypeUsage CreateDefaultTypeUsage(EdmType edmType)
         {
-            EntityUtil.CheckArgumentNull(edmType, "edmType");
+            Contract.Requires(edmType != null);
 
             var type = Create(edmType);
             return type;
@@ -115,12 +116,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             bool isFixedLength,
             int maxLength)
         {
-            EntityUtil.CheckArgumentNull(primitiveType, "primitiveType");
+            Contract.Requires(primitiveType != null);
 
             if (primitiveType.PrimitiveTypeKind
                 != PrimitiveTypeKind.String)
             {
-                throw EntityUtil.NotStringTypeForTypeUsage();
+                throw new ArgumentException(Strings.NotStringTypeForTypeUsage);
             }
 
             ValidateMaxLength(maxLength);
@@ -151,12 +152,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             bool isUnicode,
             bool isFixedLength)
         {
-            EntityUtil.CheckArgumentNull(primitiveType, "primitiveType");
+            Contract.Requires(primitiveType != null);
 
             if (primitiveType.PrimitiveTypeKind
                 != PrimitiveTypeKind.String)
             {
-                throw EntityUtil.NotStringTypeForTypeUsage();
+                throw new ArgumentException(Strings.NotStringTypeForTypeUsage);
             }
             var typeUsage = Create(
                 primitiveType,
@@ -182,12 +183,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             bool isFixedLength,
             int maxLength)
         {
-            EntityUtil.CheckArgumentNull(primitiveType, "primitiveType");
+            Contract.Requires(primitiveType != null);
 
             if (primitiveType.PrimitiveTypeKind
                 != PrimitiveTypeKind.Binary)
             {
-                throw EntityUtil.NotBinaryTypeForTypeUsage();
+                throw new ArgumentException(Strings.NotBinaryTypeForTypeUsage);
             }
 
             ValidateMaxLength(maxLength);
@@ -212,12 +213,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A TypeUsage object describing a binary type with the given facet values</returns>
         public static TypeUsage CreateBinaryTypeUsage(PrimitiveType primitiveType, bool isFixedLength)
         {
-            EntityUtil.CheckArgumentNull(primitiveType, "primitiveType");
+            Contract.Requires(primitiveType != null);
 
             if (primitiveType.PrimitiveTypeKind
                 != PrimitiveTypeKind.Binary)
             {
-                throw EntityUtil.NotBinaryTypeForTypeUsage();
+                throw new ArgumentException(Strings.NotBinaryTypeForTypeUsage);
             }
             var typeUsage = Create(
                 primitiveType,
@@ -240,12 +241,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             PrimitiveType primitiveType,
             byte? precision)
         {
-            EntityUtil.CheckArgumentNull(primitiveType, "primitiveType");
+            Contract.Requires(primitiveType != null);
 
             if (primitiveType.PrimitiveTypeKind
                 != PrimitiveTypeKind.DateTime)
             {
-                throw EntityUtil.NotDateTimeTypeForTypeUsage();
+                throw new ArgumentException(Strings.NotDateTimeTypeForTypeUsage);
             }
             var typeUsage = Create(
                 primitiveType,
@@ -267,12 +268,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             PrimitiveType primitiveType,
             byte? precision)
         {
-            EntityUtil.CheckArgumentNull(primitiveType, "primitiveType");
+            Contract.Requires(primitiveType != null);
 
             if (primitiveType.PrimitiveTypeKind
                 != PrimitiveTypeKind.DateTimeOffset)
             {
-                throw EntityUtil.NotDateTimeOffsetTypeForTypeUsage();
+                throw new ArgumentException(Strings.NotDateTimeOffsetTypeForTypeUsage);
             }
 
             var typeUsage = Create(
@@ -295,12 +296,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             PrimitiveType primitiveType,
             byte? precision)
         {
-            EntityUtil.CheckArgumentNull(primitiveType, "primitiveType");
+            Contract.Requires(primitiveType != null);
 
             if (primitiveType.PrimitiveTypeKind
                 != PrimitiveTypeKind.Time)
             {
-                throw EntityUtil.NotTimeTypeForTypeUsage();
+                throw new ArgumentException(Strings.NotTimeTypeForTypeUsage);
             }
             var typeUsage = Create(
                 primitiveType,
@@ -324,12 +325,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             byte precision,
             byte scale)
         {
-            EntityUtil.CheckArgumentNull(primitiveType, "primitiveType");
+            Contract.Requires(primitiveType != null);
 
             if (primitiveType.PrimitiveTypeKind
                 != PrimitiveTypeKind.Decimal)
             {
-                throw EntityUtil.NotDecimalTypeForTypeUsage();
+                throw new ArgumentException(Strings.NotDecimalTypeForTypeUsage);
             }
 
             var typeUsage = Create(
@@ -350,12 +351,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>A TypeUsage object describing a decimal type with unbounded precision and scale</returns>
         public static TypeUsage CreateDecimalTypeUsage(PrimitiveType primitiveType)
         {
-            EntityUtil.CheckArgumentNull(primitiveType, "primitiveType");
+            Contract.Requires(primitiveType != null);
 
             if (primitiveType.PrimitiveTypeKind
                 != PrimitiveTypeKind.Decimal)
             {
-                throw EntityUtil.NotDecimalTypeForTypeUsage();
+                throw new ArgumentException(Strings.NotDecimalTypeForTypeUsage);
             }
             var typeUsage = Create(
                 primitiveType,
@@ -492,7 +493,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                     if (result == null)
                     {
-                        throw EntityUtil.ProviderIncompatible(Strings.Mapping_ProviderReturnsNullType(ToString()));
+                        throw new ProviderIncompatibleException(Strings.Mapping_ProviderReturnsNullType(ToString()));
                     }
 
                     if (!TypeSemantics.IsNullable(this))
@@ -658,6 +659,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         public override string ToString()
         {
+            // Note that ToString is actually used to get the full name of the type, so changing the value returned here
+            // will break code.
             return EdmType.ToString();
         }
 
@@ -726,7 +729,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             if (maxLength <= 0)
             {
-                throw EntityUtil.ArgumentOutOfRange(Strings.InvalidMaxLengthSize, "maxLength");
+                throw new ArgumentOutOfRangeException("maxLength", Strings.InvalidMaxLengthSize);
             }
         }
 

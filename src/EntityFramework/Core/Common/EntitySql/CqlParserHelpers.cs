@@ -3,6 +3,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.EntitySql.AST;
     using System.Data.Entity.Resources;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     /// <summary>
@@ -28,7 +29,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             // The common practice is to make the null check at the public surface, 
             // however this method is a convergence zone from multiple public entry points and it makes sense to
             // check for null once, here.
-            EntityUtil.CheckArgumentNull(parserOptions, "parserOptions");
+            Contract.Requires(parserOptions != null);
 
             _parserOptions = parserOptions;
             yydebug = debug;
@@ -45,11 +46,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
             // The common practice is to make the null check at the public surface, 
             // however this method is a convergence zone from multiple public entry points and it makes sense to
             // check for null once, here.
-            EntityUtil.CheckArgumentNull(query, "query");
+            Contract.Requires(query != null);
             if (String.IsNullOrEmpty(query)
                 || query.Trim().Length == 0)
             {
-                throw EntityUtil.Argument(Strings.InvalidEmptyQueryTextArgument);
+                throw new ArgumentException(Strings.InvalidEmptyQueryTextArgument);
             }
 
             _query = query;
@@ -185,14 +186,17 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     syntaxContextInfo = String.Format(CultureInfo.CurrentCulture, "{0} '{1}'", syntaxContextInfo, term);
                 }
 
-                throw EntityUtil.EntitySqlError(
+                string errorMessage = Strings.GenericSyntaxError;
+                throw EntitySqlException.Create(
                     _query,
-                    Strings.GenericSyntaxError,
+                    errorMessage,
                     errorPosition,
                     syntaxContextInfo,
-                    false /* loadErrorContextInfoFromResource */);
+                    false,
+                    null);
             }
-            throw EntityUtil.EntitySqlError(_query, s, _lexer.IPos);
+            int errorPosition1 = _lexer.IPos;
+            throw EntitySqlException.Create(_query, s, errorPosition1, null, false, null);
         }
 
         //

@@ -13516,6 +13516,14 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.EntityProxyTypeInfo_DuplicateOSpaceType, p0);
         }
+
+        /// <summary>
+        /// A string like "All 'EdmMember' instances must be a valid member of the EdmType."
+        /// </summary>
+        internal static string InvalidEdmMemberInstance
+        {
+            get { return EntityRes.GetString(EntityRes.InvalidEdmMemberInstance); }
+        }
     } 
 
     /// <summary>
@@ -14842,6 +14850,14 @@ namespace System.Data.Entity.Resources
         internal static Exception Mapping_Default_OCMapping_Member_Type_Mismatch(object p0, object p1, object p2, object p3, object p4, object p5, object p6, object p7)
         {
             return new MappingException(Strings.Mapping_Default_OCMapping_Member_Type_Mismatch(p0, p1, p2, p3, p4, p5, p6, p7));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "All 'EdmMember' instances must be a valid member of the EdmType."
+        /// </summary>
+        internal static Exception InvalidEdmMemberInstance()
+        {
+            return new ArgumentException(Strings.InvalidEdmMemberInstance);
         }
         /// <summary>
         /// The exception that is thrown when a null reference (Nothing in Visual Basic) is passed to a method that does not accept it as a valid argument.
@@ -16572,6 +16588,7 @@ namespace System.Data.Entity.Resources
         internal const string EntityProxyTypeInfo_CannotSetEntityCollectionProperty = "EntityProxyTypeInfo_CannotSetEntityCollectionProperty";
         internal const string EntityProxyTypeInfo_ProxyMetadataIsUnavailable = "EntityProxyTypeInfo_ProxyMetadataIsUnavailable";
         internal const string EntityProxyTypeInfo_DuplicateOSpaceType = "EntityProxyTypeInfo_DuplicateOSpaceType";
+        internal const string InvalidEdmMemberInstance = "InvalidEdmMemberInstance";
         
         static EntityRes loader = null;
         ResourceManager resources;

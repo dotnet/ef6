@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -57,9 +58,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
             ParameterExpression rootContextParameter,
             ReadOnlyCollection<ParameterExpression> compiledQueryParameters)
         {
-            EntityUtil.CheckArgumentNull(rootContext, "rootContext");
-            EntityUtil.CheckArgumentNull(rootContextParameter, "rootContextParameter");
-            EntityUtil.CheckArgumentNull(compiledQueryParameters, "compiledQueryParameters");
+            Contract.Requires(rootContext != null);
+            Contract.Requires(rootContextParameter != null);
+            Contract.Requires(compiledQueryParameters != null);
 
             return new Funcletizer(Mode.CompiledQueryEvaluation, rootContext, rootContextParameter, compiledQueryParameters);
         }
@@ -71,7 +72,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         internal static Funcletizer CreateQueryFuncletizer(ObjectContext rootContext)
         {
-            EntityUtil.CheckArgumentNull(rootContext, "rootContext");
+            Contract.Requires(rootContext != null);
 
             return new Funcletizer(Mode.ConventionalQuery, rootContext, null, null);
         }
@@ -102,7 +103,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// </summary>
         internal Expression Funcletize(Expression expression, out Func<bool> recompileRequired)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             // Find all candidates for funcletization. Some sub-expressions are reduced to constants,
             // others are reduced to variables. The rules vary based on the _mode.
@@ -167,7 +168,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// </summary>
         private static Func<Expression, bool> Nominate(Expression expression, Func<Expression, bool> localCriterion)
         {
-            EntityUtil.CheckArgumentNull(localCriterion, "localCriterion");
+            Contract.Requires(localCriterion != null);
             var candidates = new HashSet<Expression>();
             var cannotBeNominated = false;
             Func<Expression, Func<Expression, Expression>, Expression> visit = (exp, baseVisit) =>
@@ -298,7 +299,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// </summary>
         private bool TryGetTypeUsageForTerminal(Type type, out TypeUsage typeUsage)
         {
-            EntityUtil.CheckArgumentNull(type, "type");
+            Contract.Requires(type != null);
 
             if (_rootContext.Perspective.TryGetTypeByName(
                 TypeSystem.GetNonNullableType(type).FullName,
@@ -344,9 +345,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 Func<Expression, bool> isClientConstant,
                 Func<Expression, bool> isClientVariable)
             {
-                EntityUtil.CheckArgumentNull(funcletizer, "funcletizer");
-                EntityUtil.CheckArgumentNull(isClientConstant, "isClientConstant");
-                EntityUtil.CheckArgumentNull(isClientVariable, "isClientVariable");
+                Contract.Requires(funcletizer != null);
+                Contract.Requires(isClientConstant != null);
+                Contract.Requires(isClientVariable != null);
 
                 _funcletizer = funcletizer;
                 _isClientConstant = isClientConstant;
@@ -372,7 +373,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     if (!_funcletizer._linqExpressionStack.Add(exp))
                     {
                         // This expression is already in the stack.
-                        throw EntityUtil.InvalidOperation(Strings.ELinq_CycleDetected);
+                        throw new InvalidOperationException(Strings.ELinq_CycleDetected);
                     }
 
                     try
@@ -434,7 +435,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                     if (parameters.Count != 1)
                     {
-                        return EntityUtil.NotSupported(Strings.CompiledELinq_UnsupportedParameterTypes(expression.Type.FullName));
+                        return new NotSupportedException(Strings.CompiledELinq_UnsupportedParameterTypes(expression.Type.FullName));
                     }
 
                     parameterExp = parameters.Single();
@@ -444,15 +445,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 {
                     // If the expression type is the same as the parameter type, indicate that the parameter type is not valid.
                     return
-                        EntityUtil.NotSupported(
-                            Strings.CompiledELinq_UnsupportedNamedParameterType(parameterExp.Name, parameterExp.Type.FullName));
+                        new NotSupportedException(Strings.CompiledELinq_UnsupportedNamedParameterType(parameterExp.Name, parameterExp.Type.FullName));
                 }
                 else
                 {
                     // Otherwise, indicate that using the specified parameter to produce a value of the expression's type is not supported in compiled query
                     return
-                        EntityUtil.NotSupported(
-                            Strings.CompiledELinq_UnsupportedNamedParameterUseAsType(parameterExp.Name, expression.Type.FullName));
+                        new NotSupportedException(Strings.CompiledELinq_UnsupportedNamedParameterUseAsType(parameterExp.Name, expression.Type.FullName));
                 }
             }
 
@@ -572,7 +571,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             /// </summary>
             private Expression InlineObjectQuery(ObjectQuery inlineQuery, Type expressionType)
             {
-                EntityUtil.CheckArgumentNull(inlineQuery, "inlineQuery");
+                Contract.Requires(inlineQuery != null);
 
                 Expression queryExpression;
                 if (_funcletizer._mode
@@ -586,7 +585,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 {
                     if (!ReferenceEquals(_funcletizer._rootContext, inlineQuery.QueryState.ObjectContext))
                     {
-                        throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedDifferentContexts);
+                        throw new NotSupportedException(Strings.ELinq_UnsupportedDifferentContexts);
                     }
 
                     queryExpression = inlineQuery.GetExpression();
@@ -632,8 +631,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
             Expression funcletizedExpression,
             IEnumerable<ParameterExpression> compiledQueryParameters)
         {
-            EntityUtil.CheckArgumentNull(parameterReference, "parameterReference");
-            EntityUtil.CheckArgumentNull(funcletizedExpression, "funcletizedExpression");
+            Contract.Requires(parameterReference != null);
+            Contract.Requires(funcletizedExpression != null);
             _compiledQueryParameters = compiledQueryParameters ?? Enumerable.Empty<ParameterExpression>();
             _parameterReference = parameterReference;
             _type = funcletizedExpression.Type;

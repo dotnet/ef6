@@ -29,9 +29,10 @@
             MessageId = "System.Data.Entity.Core.EntityUtil.BoolExprAssert(System.Boolean,System.String)")]
         internal Vertex(int variable, Vertex[] children)
         {
-            EntityUtil.BoolExprAssert(
-                variable < int.MaxValue,
-                "exceeded number of supported variables");
+            if (!(variable < int.MaxValue))
+            {
+                throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.BoolExprAssert, 0, "exceeded number of supported variables");
+            }
 
             AssertConstructorArgumentsValid(variable, children);
 

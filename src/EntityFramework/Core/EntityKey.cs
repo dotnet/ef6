@@ -9,8 +9,10 @@ namespace System.Data.Entity.Core
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.EntityModel.SchemaObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Reflection;
     using System.Runtime.Serialization;
@@ -112,8 +114,9 @@ namespace System.Data.Entity.Core
         /// <param name="entityKeyValues">The key-value pairs that identify the entity</param>
         public EntityKey(string qualifiedEntitySetName, IEnumerable<EntityKeyMember> entityKeyValues)
         {
+            Contract.Requires(entityKeyValues != null);
+
             GetEntitySetName(qualifiedEntitySetName, out _entitySetName, out _entityContainerName);
-            EntityUtil.CheckArgumentNull(entityKeyValues, "entityKeyValues");
             CheckKeyValues(new KeyValueReader(entityKeyValues), out _keyNames, out _singletonKeyValue, out _compositeKeyValues);
             AssertCorrectState(null, false);
             _isLocked = true;
@@ -127,9 +130,10 @@ namespace System.Data.Entity.Core
         /// <param name="keyValue">The key value that identifies the entity</param>
         public EntityKey(string qualifiedEntitySetName, string keyName, object keyValue)
         {
+            Contract.Requires(keyValue != null);
+
             GetEntitySetName(qualifiedEntitySetName, out _entitySetName, out _entityContainerName);
             EntityUtil.CheckStringArgument(keyName, "keyName");
-            EntityUtil.CheckArgumentNull(keyValue, "keyValue");
 
             _keyNames = new string[1];
             ValidateName(keyName);
@@ -183,7 +187,7 @@ namespace System.Data.Entity.Core
         /// <param name="entitySet">EntitySet of the entity</param>
         internal EntityKey(EntitySetBase entitySet)
         {
-            EntityUtil.CheckArgumentNull(entitySet, "entitySet");
+            Contract.Requires(entitySet != null);
             Debug.Assert(entitySet.EntityContainer != null, "EntitySet.EntityContainer cannot be null.");
 
             _entitySetName = entitySet.Name;
@@ -361,11 +365,11 @@ namespace System.Data.Entity.Core
         /// <exception cref="ArgumentException">the entity set could not be located in the workspace</exception>
         public EntitySet GetEntitySet(MetadataWorkspace metadataWorkspace)
         {
-            EntityUtil.CheckArgumentNull(metadataWorkspace, "metadataWorkspace");
+            Contract.Requires(metadataWorkspace != null);
             if (String.IsNullOrEmpty(_entityContainerName)
                 || String.IsNullOrEmpty(_entitySetName))
             {
-                throw EntityUtil.MissingQualifiedEntitySetName();
+                throw new InvalidOperationException(Strings.EntityKey_MissingEntitySetName);
             }
 
             // GetEntityContainer will throw if it cannot find the container
@@ -478,16 +482,6 @@ namespace System.Data.Entity.Core
         /// <returns>true if the two keys are equal, false otherwise</returns>
         public static bool operator ==(EntityKey key1, EntityKey key2)
         {
-#if DEBUG
-            if (ReferenceEquals(NoEntitySetKey, key1) || ReferenceEquals(EntityNotValidKey, key1) ||
-                ReferenceEquals(NoEntitySetKey, key2) || ReferenceEquals(EntityNotValidKey, key1)
-                )
-            {
-                Debug.Assert(
-                    typeof(EntityKey).Assembly != Assembly.GetCallingAssembly(),
-                    "When comparing an EntityKey to one of the predefined types (EntityKey.NoEntitySetKey or EntityKey.EntityNotValidKey), use Object.ReferenceEquals()");
-            }
-#endif
             return InternalEquals(key1, key2, compareEntitySets: true);
         }
 
@@ -499,15 +493,6 @@ namespace System.Data.Entity.Core
         /// <returns>true if the two keys are not equal, false otherwise</returns>
         public static bool operator !=(EntityKey key1, EntityKey key2)
         {
-#if DEBUG
-            if (ReferenceEquals(NoEntitySetKey, key1) || ReferenceEquals(EntityNotValidKey, key1) ||
-                ReferenceEquals(NoEntitySetKey, key2) || ReferenceEquals(EntityNotValidKey, key1))
-            {
-                Debug.Assert(
-                    typeof(EntityKey).Assembly != Assembly.GetCallingAssembly(),
-                    "When comparing an EntityKey to one of the predefined types (EntityKey.NoEntitySetKey or EntityKey.EntityNotValidKey), use Object.ReferenceEquals()");
-            }
-#endif
             return !InternalEquals(key1, key2, compareEntitySets: true);
         }
 
@@ -518,6 +503,7 @@ namespace System.Data.Entity.Core
         /// <param name="key2">a key to compare</param>
         /// <param name="compareEntitySets">Entity sets are not significant for conceptual null keys</param>
         /// <returns>true if the two keys are equal, false otherwise</returns>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal static bool InternalEquals(EntityKey key1, EntityKey key2, bool compareEntitySets)
         {
             // If both are null or refer to the same object, they're equal.
@@ -529,6 +515,15 @@ namespace System.Data.Entity.Core
             // If exactly one is null (avoid calling EntityKey == operator overload), they're not equal.
             if (ReferenceEquals(key1, null)
                 || ReferenceEquals(key2, null))
+            {
+                return false;
+            }
+
+            // We know they are not both special keys, so if either key is special then the keys are not equal.
+            if (ReferenceEquals(NoEntitySetKey, key1)
+                || ReferenceEquals(EntityNotValidKey, key1)
+                || ReferenceEquals(NoEntitySetKey, key2)
+                || ReferenceEquals(EntityNotValidKey, key2))
             {
                 return false;
             }
@@ -726,7 +721,7 @@ namespace System.Data.Entity.Core
                 // FUTURE_FEATURE SQLPT 300003053:  When there exists a method to do
                 // structural equivalent of metadata types, this error check should be changed to an 
                 // assert.
-                throw EntityUtil.EntitySetDoesNotMatch("metadataWorkspace", TypeHelpers.GetFullName(entitySet));
+                throw new ArgumentException(Strings.EntityKey_EntitySetDoesNotMatch(TypeHelpers.GetFullName(entitySet.EntityContainer.Name, entitySet.Name)), "entitySet");
             }
 
             // Iterate over the internal collection of string->object
@@ -801,7 +796,7 @@ namespace System.Data.Entity.Core
                         return compositeKeyValues[i];
                     }
                 }
-                throw EntityUtil.ArgumentOutOfRange("keyName");
+                throw new ArgumentOutOfRangeException("keyName");
             }
         }
 
@@ -814,7 +809,7 @@ namespace System.Data.Entity.Core
             var result = qualifiedEntitySetName.Split('.');
             if (result.Length != 2)
             {
-                throw EntityUtil.InvalidQualifiedEntitySetName();
+                throw new ArgumentException(Strings.EntityKey_InvalidQualifiedEntitySetName, "qualifiedEntitySetName");
             }
 
             container = result[0];
@@ -825,7 +820,7 @@ namespace System.Data.Entity.Core
                 entitySet == null
                 || entitySet.Length == 0)
             {
-                throw EntityUtil.InvalidQualifiedEntitySetName();
+                throw new ArgumentException(Strings.EntityKey_InvalidQualifiedEntitySetName, "qualifiedEntitySetName");
             }
 
             ValidateName(container);
@@ -836,7 +831,7 @@ namespace System.Data.Entity.Core
         {
             if (!Utils.ValidUndottedName(name))
             {
-                throw EntityUtil.EntityKeyInvalidName(name);
+                throw new ArgumentException(Strings.EntityKey_InvalidName(name));
             }
         }
 
@@ -853,7 +848,7 @@ namespace System.Data.Entity.Core
             IEnumerable<KeyValuePair<string, object>> entityKeyValues, bool allowNullKeys, bool tokenizeStrings,
             out string[] keyNames, out object singletonKeyValue, out object[] compositeKeyValues)
         {
-            EntityUtil.CheckArgumentNull(entityKeyValues, "entityKeyValues");
+            Contract.Requires(entityKeyValues != null);
 
             int numExpectedKeyValues;
             var numActualKeyValues = 0;
@@ -873,7 +868,7 @@ namespace System.Data.Entity.Core
             {
                 if (!allowNullKeys)
                 {
-                    throw EntityUtil.EntityKeyMustHaveValues("entityKeyValues");
+                    throw new ArgumentException(Strings.EntityKey_EntityKeyMustHaveValues, "entityKeyValues");
                 }
             }
             else
@@ -889,7 +884,7 @@ namespace System.Data.Entity.Core
                             if (EntityUtil.IsNull(keyValuePair.Value)
                                 || String.IsNullOrEmpty(keyValuePair.Key))
                             {
-                                throw EntityUtil.NoNullsAllowedInKeyValuePairs("entityKeyValues");
+                                throw new ArgumentException(Strings.EntityKey_NoNullsAllowedInKeyValuePairs, "entityKeyValues");
                             }
                             ValidateName(keyValuePair.Key);
                             keyNames[0] = tokenizeStrings ? LookupSingletonName(keyValuePair.Key) : keyValuePair.Key;
@@ -909,7 +904,7 @@ namespace System.Data.Entity.Core
                             if (EntityUtil.IsNull(keyValuePair.Value)
                                 || String.IsNullOrEmpty(keyValuePair.Key))
                             {
-                                throw EntityUtil.NoNullsAllowedInKeyValuePairs("entityKeyValues");
+                                throw new ArgumentException(Strings.EntityKey_NoNullsAllowedInKeyValuePairs, "entityKeyValues");
                             }
                             Debug.Assert(null == keyNames[i], "shouldn't have a name yet");
                             ValidateName(keyValuePair.Key);
@@ -959,7 +954,7 @@ namespace System.Data.Entity.Core
                 singletonKeyValue = record[member.Name];
                 if (EntityUtil.IsNull(singletonKeyValue))
                 {
-                    throw EntityUtil.NoNullsAllowedInKeyValuePairs("record");
+                    throw new ArgumentException(Strings.EntityKey_NoNullsAllowedInKeyValuePairs, "record");
                 }
             }
             else
@@ -972,7 +967,7 @@ namespace System.Data.Entity.Core
                     compositeKeyValues[i] = record[member.Name];
                     if (EntityUtil.IsNull(compositeKeyValues[i]))
                     {
-                        throw EntityUtil.NoNullsAllowedInKeyValuePairs("record");
+                        throw new ArgumentException(Strings.EntityKey_NoNullsAllowedInKeyValuePairs, "record");
                     }
                 }
             }
@@ -1013,13 +1008,11 @@ namespace System.Data.Entity.Core
                     {
                         if (isArgumentException)
                         {
-                            throw EntityUtil.IncorrectNumberOfKeyValuePairs(
-                                argumentName, entitySet.ElementType.FullName, keyMembers.Count, 1);
+                            throw new ArgumentException(Strings.EntityKey_IncorrectNumberOfKeyValuePairs(entitySet.ElementType.FullName, keyMembers.Count, 1), argumentName);
                         }
                         else
                         {
-                            throw EntityUtil.IncorrectNumberOfKeyValuePairsInvalidOperation(
-                                entitySet.ElementType.FullName, keyMembers.Count, 1);
+                            throw new InvalidOperationException(Strings.EntityKey_IncorrectNumberOfKeyValuePairs(entitySet.ElementType.FullName, keyMembers.Count, 1));
                         }
                     }
 
@@ -1032,11 +1025,11 @@ namespace System.Data.Entity.Core
                     {
                         if (isArgumentException)
                         {
-                            throw EntityUtil.MissingKeyValue(argumentName, keyMembers[0].Name, entitySet.ElementType.FullName);
+                            throw new ArgumentException(Strings.EntityKey_MissingKeyValue(keyMembers[0].Name, entitySet.ElementType.FullName), argumentName);
                         }
                         else
                         {
-                            throw EntityUtil.MissingKeyValueInvalidOperation(keyMembers[0].Name, entitySet.ElementType.FullName);
+                            throw new InvalidOperationException(Strings.EntityKey_MissingKeyValue(keyMembers[0].Name, entitySet.ElementType.FullName));
                         }
                     }
                 }
@@ -1048,13 +1041,11 @@ namespace System.Data.Entity.Core
                     {
                         if (isArgumentException)
                         {
-                            throw EntityUtil.IncorrectNumberOfKeyValuePairs(
-                                argumentName, entitySet.ElementType.FullName, keyMembers.Count, _compositeKeyValues.Length);
+                            throw new ArgumentException(Strings.EntityKey_IncorrectNumberOfKeyValuePairs(entitySet.ElementType.FullName, keyMembers.Count, _compositeKeyValues.Length), argumentName);
                         }
                         else
                         {
-                            throw EntityUtil.IncorrectNumberOfKeyValuePairsInvalidOperation(
-                                entitySet.ElementType.FullName, keyMembers.Count, _compositeKeyValues.Length);
+                            throw new InvalidOperationException(Strings.EntityKey_IncorrectNumberOfKeyValuePairs(entitySet.ElementType.FullName, keyMembers.Count, _compositeKeyValues.Length));
                         }
                     }
 
@@ -1079,11 +1070,11 @@ namespace System.Data.Entity.Core
                         {
                             if (isArgumentException)
                             {
-                                throw EntityUtil.MissingKeyValue(argumentName, keyField.Name, entitySet.ElementType.FullName);
+                                throw new ArgumentException(Strings.EntityKey_MissingKeyValue(keyField.Name, entitySet.ElementType.FullName), argumentName);
                             }
                             else
                             {
-                                throw EntityUtil.MissingKeyValueInvalidOperation(keyField.Name, entitySet.ElementType.FullName);
+                                throw new InvalidOperationException(Strings.EntityKey_MissingKeyValue(keyField.Name, entitySet.ElementType.FullName));
                             }
                         }
                     }
@@ -1116,13 +1107,11 @@ namespace System.Data.Entity.Core
                 {
                     if (isArgumentException)
                     {
-                        throw EntityUtil.IncorrectValueType(
-                            argumentName, keyMember.Name, entitySetKeyType.FullName, keyValue.GetType().FullName);
+                        throw new ArgumentException(Strings.EntityKey_IncorrectValueType(keyMember.Name, entitySetKeyType.FullName, keyValue.GetType().FullName), argumentName);
                     }
                     else
                     {
-                        throw EntityUtil.IncorrectValueTypeInvalidOperation(
-                            keyMember.Name, entitySetKeyType.FullName, keyValue.GetType().FullName);
+                        throw new InvalidOperationException(Strings.EntityKey_IncorrectValueType(keyMember.Name, entitySetKeyType.FullName, keyValue.GetType().FullName));
                     }
                 }
             }
@@ -1138,13 +1127,11 @@ namespace System.Data.Entity.Core
                     {
                         if (isArgumentException)
                         {
-                            throw EntityUtil.IncorrectValueType(
-                                argumentName, keyMember.Name, expectedClrEnumType.FullName, keyValue.GetType().FullName);
+                            throw new ArgumentException(Strings.EntityKey_IncorrectValueType(keyMember.Name, expectedClrEnumType.FullName, keyValue.GetType().FullName), argumentName);
                         }
                         else
                         {
-                            throw EntityUtil.IncorrectValueTypeInvalidOperation(
-                                keyMember.Name, expectedClrEnumType.FullName, keyValue.GetType().FullName);
+                            throw new InvalidOperationException(Strings.EntityKey_IncorrectValueType(keyMember.Name, expectedClrEnumType.FullName, keyValue.GetType().FullName));
                         }
                     }
                 }
@@ -1152,11 +1139,11 @@ namespace System.Data.Entity.Core
                 {
                     if (isArgumentException)
                     {
-                        throw EntityUtil.NoCorrespondingOSpaceTypeForEnumKeyField(argumentName, keyMember.Name, keyMemberEdmType.FullName);
+                        throw new ArgumentException(Strings.EntityKey_NoCorrespondingOSpaceTypeForEnumKeyMember(keyMember.Name, keyMemberEdmType.FullName), argumentName);
                     }
                     else
                     {
-                        throw EntityUtil.NoCorrespondingOSpaceTypeForEnumKeyFieldInvalidOperation(keyMember.Name, keyMemberEdmType.FullName);
+                        throw new InvalidOperationException(Strings.EntityKey_NoCorrespondingOSpaceTypeForEnumKeyMember(keyMember.Name, keyMemberEdmType.FullName));
                     }
                 }
             }
@@ -1284,7 +1271,7 @@ namespace System.Data.Entity.Core
         {
             if (_isLocked || instance != null)
             {
-                throw EntityUtil.CannotChangeEntityKey();
+                throw new InvalidOperationException(Strings.EntityKey_CannotChangeKey);
             }
         }
 
@@ -1365,8 +1352,8 @@ namespace System.Data.Entity.Core
         /// <param name="keyValue">The key value</param>
         public EntityKeyMember(string keyName, object keyValue)
         {
-            EntityUtil.CheckArgumentNull(keyName, "keyName");
-            EntityUtil.CheckArgumentNull(keyValue, "keyValue");
+            Contract.Requires(keyName != null);
+            Contract.Requires(keyValue != null);
             _keyName = keyName;
             _keyValue = keyValue;
         }
@@ -1380,8 +1367,9 @@ namespace System.Data.Entity.Core
             get { return _keyName; }
             set
             {
+                Contract.Requires(value != null);
+
                 ValidateWritable(_keyName);
-                EntityUtil.CheckArgumentNull(value, "value");
                 _keyName = value;
             }
         }
@@ -1395,8 +1383,9 @@ namespace System.Data.Entity.Core
             get { return _keyValue; }
             set
             {
+                Contract.Requires(value != null);
+
                 ValidateWritable(_keyValue);
-                EntityUtil.CheckArgumentNull(value, "value");
                 _keyValue = value;
             }
         }
@@ -1417,7 +1406,7 @@ namespace System.Data.Entity.Core
         {
             if (instance != null)
             {
-                throw EntityUtil.CannotChangeEntityKey();
+                throw new InvalidOperationException(Strings.EntityKey_CannotChangeKey);
             }
         }
     }

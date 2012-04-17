@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Reflection;
     using System.Reflection.Emit;
     using System.Runtime.CompilerServices;
@@ -549,7 +550,8 @@ namespace System.Data.Entity.Core.Objects
                         break;
                     }
                 default:
-                    throw EntityUtil.InvalidEnumerationValue(typeof(RelationshipMultiplicity), (int)targetMember.RelationshipMultiplicity);
+                    Type type = typeof(RelationshipMultiplicity);
+                    throw new ArgumentOutOfRangeException(type.Name, Strings.ADP_InvalidEnumerationValue(type.Name, ((int)targetMember.RelationshipMultiplicity).ToString(CultureInfo.InvariantCulture)));
             }
 
             return getRelatedEnd;
@@ -557,47 +559,47 @@ namespace System.Data.Entity.Core.Objects
 
         private static void ThrowConstructorNoParameterless(Type type)
         {
-            throw EntityUtil.InvalidOperation(Strings.CodeGen_ConstructorNoParameterless(type.FullName));
+            throw new InvalidOperationException(Strings.CodeGen_ConstructorNoParameterless(type.FullName));
         }
 
         private static void ThrowPropertyDeclaringTypeIsValueType()
         {
-            throw EntityUtil.InvalidOperation(Strings.CodeGen_PropertyDeclaringTypeIsValueType);
+            throw new InvalidOperationException(Strings.CodeGen_PropertyDeclaringTypeIsValueType);
         }
 
         private static void ThrowPropertyUnsupportedForm()
         {
-            throw EntityUtil.InvalidOperation(Strings.CodeGen_PropertyUnsupportedForm);
+            throw new InvalidOperationException(Strings.CodeGen_PropertyUnsupportedForm);
         }
 
         private static void ThrowPropertyUnsupportedType()
         {
-            throw EntityUtil.InvalidOperation(Strings.CodeGen_PropertyUnsupportedType);
+            throw new InvalidOperationException(Strings.CodeGen_PropertyUnsupportedType);
         }
 
         private static void ThrowPropertyStrongNameIdentity()
         {
-            throw EntityUtil.InvalidOperation(Strings.CodeGen_PropertyStrongNameIdentity);
+            throw new InvalidOperationException(Strings.CodeGen_PropertyStrongNameIdentity);
         }
 
         private static void ThrowPropertyIsIndexed()
         {
-            throw EntityUtil.InvalidOperation(Strings.CodeGen_PropertyIsIndexed);
+            throw new InvalidOperationException(Strings.CodeGen_PropertyIsIndexed);
         }
 
         private static void ThrowPropertyIsStatic()
         {
-            throw EntityUtil.InvalidOperation(Strings.CodeGen_PropertyIsStatic);
+            throw new InvalidOperationException(Strings.CodeGen_PropertyIsStatic);
         }
 
         private static void ThrowPropertyNoGetter()
         {
-            throw EntityUtil.InvalidOperation(Strings.CodeGen_PropertyNoGetter);
+            throw new InvalidOperationException(Strings.CodeGen_PropertyNoGetter);
         }
 
         private static void ThrowPropertyNoSetter()
         {
-            throw EntityUtil.InvalidOperation(Strings.CodeGen_PropertyNoSetter);
+            throw new InvalidOperationException(Strings.CodeGen_PropertyNoSetter);
         }
 
         #endregion

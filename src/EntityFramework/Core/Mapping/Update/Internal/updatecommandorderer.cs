@@ -3,8 +3,10 @@
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
     internal class UpdateCommandOrderer : Graph<UpdateCommand>
@@ -159,8 +161,7 @@
                     {
                         // throw an exception indicating that a key value is generated in two locations
                         // in the store
-                        throw EntityUtil.Update(
-                            Strings.Update_AmbiguousServerGenIdentifier, duplicateKey, command.GetStateEntries(_translator));
+                        throw new UpdateException(Strings.Update_AmbiguousServerGenIdentifier, duplicateKey, command.GetStateEntries(_translator).Cast<ObjectStateEntry>().Distinct());
                     }
                 }
             }
@@ -501,7 +502,8 @@
 
             internal ForeignKeyValueComparer(IEqualityComparer<CompositeKey> baseComparer)
             {
-                _baseComparer = EntityUtil.CheckArgumentNull(baseComparer, "baseComparer");
+                Contract.Requires(baseComparer != null);
+                _baseComparer = baseComparer;
             }
 
             public bool Equals(ForeignKeyValue x, ForeignKeyValue y)

@@ -3,6 +3,7 @@
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Reflection;
     using System.Runtime.CompilerServices;
@@ -258,14 +259,14 @@
                 var relManager = entityWithRelationships.RelationshipManager;
                 if (relManager == null)
                 {
-                    throw EntityUtil.UnexpectedNullRelationshipManager();
+                    throw new InvalidOperationException(Strings.RelationshipManager_UnexpectedNull);
                 }
                 var wrappedEntity = relManager.WrappedOwner;
                 if (!ReferenceEquals(wrappedEntity.Entity, entity))
                 {
                     // This means that the owner of the RelationshipManager must have been set
                     // incorrectly in the call to RelationshipManager.Create().
-                    throw EntityUtil.InvalidRelationshipManagerOwner();
+                    throw new InvalidOperationException(Strings.RelationshipManager_InvalidRelationshipManagerOwner);
                 }
                 return wrappedEntity;
             }

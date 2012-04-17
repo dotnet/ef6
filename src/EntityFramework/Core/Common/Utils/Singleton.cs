@@ -1,5 +1,6 @@
 ﻿namespace System.Data.Entity.Core.Common.Utils
 {
+    using System.Diagnostics.Contracts;
     using System.Threading;
 
     /// <summary>
@@ -25,7 +26,7 @@
         /// <param name="function">Required. Function to evaluate to produce the singleton instance.</param>
         internal Singleton(Func<TValue> function)
         {
-            EntityUtil.CheckArgumentNull(function, "function");
+            Contract.Requires(function != null);
             valueProvider = function;
         }
 

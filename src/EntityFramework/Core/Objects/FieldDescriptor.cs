@@ -5,7 +5,9 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     internal sealed class FieldDescriptor : PropertyDescriptor
@@ -126,11 +128,11 @@ namespace System.Data.Entity.Core.Objects
 
         public override object GetValue(object item)
         {
-            EntityUtil.CheckArgumentNull(item, "item");
+            Contract.Requires(item != null);
 
             if (!_itemType.IsAssignableFrom(item.GetType()))
             {
-                throw EntityUtil.IncompatibleArgument();
+                throw new ArgumentException(Strings.ObjectView_IncompatibleArgument);
             }
 
             object propertyValue;
@@ -150,15 +152,15 @@ namespace System.Data.Entity.Core.Objects
 
         public override void ResetValue(object item)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         public override void SetValue(object item, object value)
         {
-            EntityUtil.CheckArgumentNull(item, "item");
+            Contract.Requires(item != null);
             if (!_itemType.IsAssignableFrom(item.GetType()))
             {
-                throw EntityUtil.IncompatibleArgument();
+                throw new ArgumentException(Strings.ObjectView_IncompatibleArgument);
             }
             if (!_isReadOnly)
             {
@@ -166,7 +168,7 @@ namespace System.Data.Entity.Core.Objects
             } // if not entity it must be readonly
             else
             {
-                throw EntityUtil.WriteOperationNotAllowedOnReadOnlyBindingList();
+                throw new InvalidOperationException(Strings.ObjectView_WriteOperationNotAllowedOnReadOnlyBindingList);
             }
         }
 

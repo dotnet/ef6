@@ -414,7 +414,7 @@ namespace System.Data.Entity.Core.Common
             IEnumerable<EdmMember> entityKeys = entityType.KeyMembers;
             if (null == entityKeys)
             {
-                throw EntityUtil.Argument(Strings.Cqt_Metadata_EntityTypeNullKeyMembersInvalid, "entityType");
+                throw new ArgumentException(Strings.Cqt_Metadata_EntityTypeNullKeyMembersInvalid, "entityType");
             }
 
             var resultCols = new List<KeyValuePair<string, TypeUsage>>();
@@ -427,7 +427,7 @@ namespace System.Data.Entity.Core.Common
 
             if (resultCols.Count < 1)
             {
-                throw EntityUtil.Argument(Strings.Cqt_Metadata_EntityTypeEmptyKeyMembersInvalid, "entityType");
+                throw new ArgumentException(Strings.Cqt_Metadata_EntityTypeEmptyKeyMembersInvalid, "entityType");
             }
 
             return CreateRowType(resultCols);
@@ -676,32 +676,9 @@ namespace System.Data.Entity.Core.Common
         // Type Description
         //
 
-        internal static string GetFullName(TypeUsage type)
-        {
-            return type.ToString();
-        }
-
-        internal static string GetFullName(EdmType type)
-        {
-            return GetFullName(type.NamespaceName, type.Name);
-        }
-
-        internal static string GetFullName(EntitySetBase entitySet)
-        {
-            Debug.Assert(entitySet.EntityContainer != null, "entitySet.EntityContainer is null");
-            return GetFullName(entitySet.EntityContainer.Name, entitySet.Name);
-        }
-
         internal static string GetFullName(string qualifier, string name)
         {
-            if (string.IsNullOrEmpty(qualifier))
-            {
-                return string.Format(CultureInfo.InvariantCulture, "{0}", name);
-            }
-            else
-            {
-                return string.Format(CultureInfo.InvariantCulture, "{0}.{1}", qualifier, name);
-            }
+            return string.IsNullOrEmpty(qualifier) ? string.Format(CultureInfo.InvariantCulture, "{0}", name) : string.Format(CultureInfo.InvariantCulture, "{0}.{1}", qualifier, name);
         }
 
         /// <summary>
@@ -714,7 +691,7 @@ namespace System.Data.Entity.Core.Common
             switch (Type.GetTypeCode(clrType))
             {
                 case TypeCode.Empty:
-                    throw EntityUtil.InvalidDataType(TypeCode.Empty);
+                    throw new ArgumentException(Strings.ADP_InvalidDataType(TypeCode.Empty.ToString()));
 
                 case TypeCode.Object:
                     if (clrType == typeof(Byte[]))
@@ -775,7 +752,7 @@ namespace System.Data.Entity.Core.Common
                 case TypeCode.String:
                     return DbType.String;
                 default:
-                    throw EntityUtil.UnknownDataTypeCode(clrType, Type.GetTypeCode(clrType));
+                    throw new ArgumentException(Strings.ADP_UnknownDataTypeCode(((int)Type.GetTypeCode(clrType)).ToString(CultureInfo.InvariantCulture), clrType.FullName));
             }
         }
 

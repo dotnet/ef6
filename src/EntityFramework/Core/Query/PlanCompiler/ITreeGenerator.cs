@@ -295,7 +295,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 if (!ValidateParameterType(paramInfo.Value))
                 {
-                    throw EntityUtil.NotSupported(Strings.ParameterTypeNotSupported(paramInfo.Key, paramInfo.Value.ToString()));
+                    throw new NotSupportedException(Strings.ParameterTypeNotSupported(paramInfo.Key, paramInfo.Value.ToString()));
                 }
                 _iqtCommand.CreateParameterVar(paramInfo.Key, paramInfo.Value);
             }
@@ -943,8 +943,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 //
                 if (_functionExpansions.Contains(expandingEdmFunction))
                 {
-                    throw EntityUtil.CommandCompilation(
-                        Strings.Cqt_UDF_FunctionDefinitionWithCircularReference(expandingEdmFunction.FullName), null);
+                    throw new EntityCommandCompilationException(Strings.Cqt_UDF_FunctionDefinitionWithCircularReference(expandingEdmFunction.FullName), null);
                 }
                 //
                 // Push the function before processing its body
@@ -1029,7 +1028,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbExpression e)
         {
-            throw EntityUtil.NotSupported(Strings.Cqt_General_UnsupportedExpression(e.GetType().FullName));
+            throw new NotSupportedException(Strings.Cqt_General_UnsupportedExpression(e.GetType().FullName));
         }
 
         public override Node Visit(DbConstantExpression e)
@@ -1109,8 +1108,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 {
                     if (EntityUtil.IsCatchableExceptionType(exception))
                     {
-                        throw EntityUtil.CommandCompilation(
-                            Strings.Cqt_UDF_FunctionDefinitionGenerationFailed(e.Function.FullName), exception);
+                        throw new EntityCommandCompilationException(Strings.Cqt_UDF_FunctionDefinitionGenerationFailed(e.Function.FullName), exception);
                     }
                     throw;
                 }
@@ -1311,7 +1309,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 &&
                 BuiltInTypeKind.NavigationProperty != e.Property.BuiltInTypeKind)
             {
-                throw EntityUtil.NotSupported();
+                throw new NotSupportedException();
             }
 
             PlanCompiler.Assert(e.Instance != null, "Static properties are not supported");

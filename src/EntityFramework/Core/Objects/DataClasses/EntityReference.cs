@@ -177,7 +177,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 if (value != null
                     && !IsValidEntityKeyType(value))
                 {
-                    throw EntityUtil.CannotSetSpecialKeys();
+                    throw new ArgumentException(Strings.EntityReference_CannotSetSpecialKeys, "value");
                 }
 
                 if (value == null)
@@ -312,7 +312,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     &&
                     IsDependentEndOfReferentialConstraint(checkIdentifying: true))
                 {
-                    throw EntityUtil.CannotChangeReferentialConstraintProperty();
+                    throw new InvalidOperationException(Strings.EntityReference_CannotChangeReferentialConstraintProperty);
                 }
 
                 // For unloaded FK relationships in the context we attempt to null FK values here, which will
@@ -423,7 +423,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                    (CachedForeignKey == null && targetEntity.ObjectStateEntry.State == EntityState.Added)))))
                 // setting to an added principle
             {
-                throw EntityUtil.CannotChangeReferentialConstraintProperty();
+                throw new InvalidOperationException(Strings.EntityReference_CannotChangeReferentialConstraintProperty);
             }
         }
 

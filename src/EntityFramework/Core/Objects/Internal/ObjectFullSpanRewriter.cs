@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             {
                 // If the result type of the query is neither an Entity type nor a collection
                 // type with an Entity element type, then full Span is currently not allowed.
-                throw EntityUtil.InvalidOperation(Strings.ObjectQuery_Span_IncludeRequiresEntityOrEntityCollection);
+                throw new InvalidOperationException(Strings.ObjectQuery_Span_IncludeRequiresEntityOrEntityCollection);
             }
 
             // Construct the SpanPathInfo navigation property tree using the
@@ -97,7 +97,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             if (!parentInfo.DeclaringType.NavigationProperties.TryGetValue(navPropNames[pos], true, out nextNavProp))
             {
                 // The navigation property name is not valid for this Entity type
-                throw EntityUtil.InvalidOperation(Strings.ObjectQuery_Span_NoNavProp(parentInfo.DeclaringType.FullName, navPropNames[pos]));
+                throw new InvalidOperationException(Strings.ObjectQuery_Span_NoNavProp(parentInfo.DeclaringType.FullName, navPropNames[pos]));
             }
 
             // The navigation property was retrieved, an entry for it must be ensured in the Children

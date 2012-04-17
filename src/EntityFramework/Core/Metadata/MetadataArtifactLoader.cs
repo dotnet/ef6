@@ -109,7 +109,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     case ExtensionCheck.All:
                         if (!IsValidArtifact(normalizedPath))
                         {
-                            throw EntityUtil.Metadata(Strings.InvalidMetadataPath);
+                            throw new MetadataException(Strings.InvalidMetadataPath);
                         }
                         break;
                 }
@@ -117,7 +117,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return new MetadataArtifactLoaderFile(normalizedPath, uriRegistry);
             }
 
-            throw EntityUtil.Metadata(Strings.InvalidMetadataPath);
+            throw new MetadataException(Strings.InvalidMetadataPath);
         }
 
         /// <summary>
@@ -171,9 +171,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 if (string.IsNullOrEmpty(path))
                 {
-                    throw EntityUtil.Metadata(
-                        Strings.NotValidInputPath,
-                        EntityUtil.CollectionParameterElementIsNullOrEmpty("filePaths"));
+                    throw new MetadataException(Strings.NotValidInputPath, new ArgumentException(Strings.ADP_CollectionParameterElementIsNullOrEmpty("filePaths")));
                 }
 
                 var trimedPath = path.Trim();
@@ -207,7 +205,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 if (reader == null)
                 {
-                    throw EntityUtil.CollectionParameterElementIsNull("xmlReaders");
+                    throw new ArgumentException(Strings.ADP_CollectionParameterElementIsNull("xmlReaders"));
                 }
 
                 loaders.Add(new MetadataArtifactLoaderXmlReaderWrapper(reader));
@@ -229,7 +227,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var extension = GetExtension(path);
             if (!extension.Equals(validExtension, StringComparison.OrdinalIgnoreCase))
             {
-                throw EntityUtil.Metadata(Strings.InvalidFileExtension(path, extension, validExtension));
+                throw new MetadataException(Strings.InvalidFileExtension(path, extension, validExtension));
             }
         }
 
@@ -491,15 +489,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             catch (ArgumentException e)
             {
-                throw EntityUtil.Metadata(Strings.NotValidInputPath, e);
+                throw new MetadataException(Strings.NotValidInputPath, e);
             }
             catch (NotSupportedException e)
             {
-                throw EntityUtil.Metadata(Strings.NotValidInputPath, e);
+                throw new MetadataException(Strings.NotValidInputPath, e);
             }
             catch (PathTooLongException)
             {
-                throw EntityUtil.Metadata(Strings.NotValidInputPath);
+                throw new MetadataException(Strings.NotValidInputPath);
             }
 
             return path;

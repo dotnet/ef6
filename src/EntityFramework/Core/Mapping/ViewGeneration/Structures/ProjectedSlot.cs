@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Text;
 
     /// <summary>
@@ -183,7 +184,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
             public int GetHashCode(ProjectedSlot key)
             {
-                EntityUtil.CheckArgumentNull(key, "key");
+                Contract.Requires(key != null);
                 return key.GetHash();
             }
         }

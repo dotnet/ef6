@@ -363,7 +363,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 }
                 else
                 {
-                    throw EntityUtil.EntitySqlError(_query, Strings.InvalidEscapedIdentifier(symbol), _iPos);
+                    string errorMessage = Strings.InvalidEscapedIdentifier(symbol);
+                    throw EntitySqlException.Create(_query, errorMessage, _iPos, null, false, null);
                 }
             }
             else
@@ -436,7 +437,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             if (invalidIdentifier)
             {
-                throw EntityUtil.EntitySqlError(_query, Strings.InvalidAliasName(symbol), _iPos);
+                string errorMessage = Strings.InvalidAliasName(symbol);
+                throw EntitySqlException.Create(_query, errorMessage, _iPos, null, false, null);
             }
             else
             {
@@ -501,7 +503,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
             else
             {
-                throw EntityUtil.EntitySqlError(_query, Strings.InvalidOperatorSymbol, _iPos);
+                string errorMessage = Strings.InvalidOperatorSymbol;
+                throw EntitySqlException.Create(_query, errorMessage, _iPos, null, false, null);
             }
         }
 
@@ -525,7 +528,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
             else
             {
-                throw EntityUtil.EntitySqlError(_query, Strings.InvalidPunctuatorSymbol, _iPos);
+                string errorMessage = Strings.InvalidPunctuatorSymbol;
+                throw EntitySqlException.Create(_query, errorMessage, _iPos, null, false, null);
             }
         }
 
@@ -562,7 +566,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     literalValue = GetLiteralSingleQuotePayload(literal);
                     if (!IsValidBinaryValue(literalValue))
                     {
-                        throw EntityUtil.EntitySqlError(_query, Strings.InvalidLiteralFormat("binary", literalValue), _iPos);
+                        string errorMessage = Strings.InvalidLiteralFormat("binary", literalValue);
+                        throw EntitySqlException.Create(_query, errorMessage, _iPos, null, false, null);
                     }
                     break;
 
@@ -577,7 +582,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     literalValue = GetLiteralSingleQuotePayload(literal);
                     if (!IsValidDateTimeValue(literalValue))
                     {
-                        throw EntityUtil.EntitySqlError(_query, Strings.InvalidLiteralFormat("datetime", literalValue), _iPos);
+                        string errorMessage = Strings.InvalidLiteralFormat("datetime", literalValue);
+                        throw EntitySqlException.Create(_query, errorMessage, _iPos, null, false, null);
                     }
                     break;
 
@@ -585,14 +591,16 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     literalValue = GetLiteralSingleQuotePayload(literal);
                     if (!IsValidTimeValue(literalValue))
                     {
-                        throw EntityUtil.EntitySqlError(_query, Strings.InvalidLiteralFormat("time", literalValue), _iPos);
+                        string errorMessage = Strings.InvalidLiteralFormat("time", literalValue);
+                        throw EntitySqlException.Create(_query, errorMessage, _iPos, null, false, null);
                     }
                     break;
                 case LiteralKind.DateTimeOffset:
                     literalValue = GetLiteralSingleQuotePayload(literal);
                     if (!IsValidDateTimeOffsetValue(literalValue))
                     {
-                        throw EntityUtil.EntitySqlError(_query, Strings.InvalidLiteralFormat("datetimeoffset", literalValue), _iPos);
+                        string errorMessage = Strings.InvalidLiteralFormat("datetimeoffset", literalValue);
+                        throw EntitySqlException.Create(_query, errorMessage, _iPos, null, false, null);
                     }
                     break;
 
@@ -600,7 +608,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     literalValue = GetLiteralSingleQuotePayload(literal);
                     if (!IsValidGuidValue(literalValue))
                     {
-                        throw EntityUtil.EntitySqlError(_query, Strings.InvalidLiteralFormat("guid", literalValue), _iPos);
+                        string errorMessage = Strings.InvalidLiteralFormat("guid", literalValue);
+                        throw EntitySqlException.Create(_query, errorMessage, _iPos, null, false, null);
                     }
                     break;
             }
@@ -641,7 +650,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 ch = yy_advance();
             }
             Debug.Assert(ch == YY_EOF, "ch == YY_EOF");
-            throw EntityUtil.EntitySqlError(_query, Strings.InvalidEscapedIdentifierUnbalanced(YYText), _iPos);
+            string errorMessage = Strings.InvalidEscapedIdentifierUnbalanced(YYText);
+            throw EntitySqlException.Create(_query, errorMessage, _iPos, null, false, null);
         }
 
         internal static bool IsLetterOrDigitOrUnderscore(string symbol, out bool isIdentifierASCII)
@@ -712,7 +722,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if ((literal.Split(new[] { '\'' }).Length != 3) || (-1 == literal.IndexOf('\''))
                 || (-1 == literal.LastIndexOf('\'')))
             {
-                throw EntityUtil.EntitySqlError(Strings.MalformedSingleQuotePayload);
+                string message = Strings.MalformedSingleQuotePayload;
+                throw new EntitySqlException(message);
             }
 
             var startIndex = literal.IndexOf('\'');
@@ -727,7 +738,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             // conditions.
             if (literalPayload.Split(new[] { '\'' }).Length != 1)
             {
-                throw EntityUtil.EntitySqlError(Strings.MalformedSingleQuotePayload);
+                string message = Strings.MalformedSingleQuotePayload;
+                throw new EntitySqlException(message);
             }
 
             return literalPayload;

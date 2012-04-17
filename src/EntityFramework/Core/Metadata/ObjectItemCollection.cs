@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Reflection;
 
     /// <summary>
@@ -123,17 +124,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">thrown if assembly argument is null</exception>
         public void LoadFromAssembly(Assembly assembly, EdmItemCollection edmItemCollection, Action<String> logLoadMessage)
         {
-            EntityUtil.CheckArgumentNull(assembly, "assembly");
-            EntityUtil.CheckArgumentNull(edmItemCollection, "edmItemCollection");
-            EntityUtil.CheckArgumentNull(logLoadMessage, "logLoadMessage");
+            Contract.Requires(assembly != null);
+            Contract.Requires(edmItemCollection != null);
+            Contract.Requires(logLoadMessage != null);
 
             ExplicitLoadFromAssembly(assembly, edmItemCollection, logLoadMessage);
         }
 
         public void LoadFromAssembly(Assembly assembly, EdmItemCollection edmItemCollection)
         {
-            EntityUtil.CheckArgumentNull(assembly, "assembly");
-            EntityUtil.CheckArgumentNull(edmItemCollection, "edmItemCollection");
+            Contract.Requires(assembly != null);
+            Contract.Requires(edmItemCollection != null);
 
             ExplicitLoadFromAssembly(assembly, edmItemCollection, null);
         }
@@ -503,7 +504,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Type clrType;
             if (!TryGetClrType(objectSpaceType, out clrType))
             {
-                throw EntityUtil.Argument(Strings.FailedToFindClrTypeMapping(objectSpaceType.Identity));
+                throw new ArgumentException(Strings.FailedToFindClrTypeMapping(objectSpaceType.Identity));
             }
 
             return clrType;
@@ -519,16 +520,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>true on success, false on failure</returns>
         private static bool TryGetClrType(EdmType objectSpaceType, out Type clrType)
         {
+            Contract.Requires(objectSpaceType != null);
+
             Debug.Assert(
                 objectSpaceType == null || objectSpaceType is StructuralType || objectSpaceType is EnumType,
                 "Only enum or structural type expected");
 
-            EntityUtil.CheckArgumentNull(objectSpaceType, "objectSpaceType");
-
             if (objectSpaceType.DataSpace
                 != DataSpace.OSpace)
             {
-                throw EntityUtil.Argument(Strings.ArgumentMustBeOSpaceType, "objectSpaceType");
+                throw new ArgumentException(Strings.ArgumentMustBeOSpaceType, "objectSpaceType");
             }
 
             clrType = null;

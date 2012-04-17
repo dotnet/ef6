@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -38,10 +39,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
                     return extent;
                 }
 
-                throw EntityUtil.Argument(Strings.Cqt_Copier_EntitySetNotFound(entitySet.EntityContainer.Name, entitySet.Name));
+                throw new ArgumentException(Strings.Cqt_Copier_EntitySetNotFound(entitySet.EntityContainer.Name, entitySet.Name));
             }
 
-            throw EntityUtil.Argument(Strings.Cqt_Copier_EntityContainerNotFound(entitySet.EntityContainer.Name));
+            throw new ArgumentException(Strings.Cqt_Copier_EntityContainerNotFound(entitySet.EntityContainer.Name));
         }
 
         protected override EdmFunction VisitFunction(EdmFunction function)
@@ -92,7 +93,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
                 }
             }
 
-            throw EntityUtil.Argument(Strings.Cqt_Copier_FunctionNotFound(TypeHelpers.GetFullName(function)));
+            throw new ArgumentException(Strings.Cqt_Copier_FunctionNotFound(TypeHelpers.GetFullName(function.NamespaceName, function.Name)));
         }
 
         protected override EdmType VisitType(EdmType type)
@@ -152,7 +153,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
                     ||
                     null == retType)
                 {
-                    throw EntityUtil.Argument(Strings.Cqt_Copier_TypeNotFound(TypeHelpers.GetFullName(type)));
+                    throw new ArgumentException(Strings.Cqt_Copier_TypeNotFound(TypeHelpers.GetFullName(type.NamespaceName, type.Name)));
                 }
             }
 
@@ -206,7 +207,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override DbExpression Visit(DbPropertyExpression expression)
         {
-            EntityUtil.CheckArgumentNull(expression, "expression");
+            Contract.Requires(expression != null);
 
             DbExpression result = expression;
             var newInstance = VisitExpression(expression.Instance);
@@ -217,9 +218,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
                     RelationshipEndMember endMember;
                     if (!TryGetMember(newInstance, expression.Property.Name, out endMember))
                     {
-                        throw EntityUtil.Argument(
-                            Strings.Cqt_Copier_EndNotFound(
-                                expression.Property.Name, TypeHelpers.GetFullName(newInstance.ResultType.EdmType)));
+                        var type = newInstance.ResultType.EdmType;
+                        throw new ArgumentException(Strings.Cqt_Copier_EndNotFound(
+                            expression.Property.Name, TypeHelpers.GetFullName(type.NamespaceName, type.Name)));
                     }
                     result = newInstance.Property(endMember);
                 }
@@ -228,9 +229,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
                     NavigationProperty navProp;
                     if (!TryGetMember(newInstance, expression.Property.Name, out navProp))
                     {
-                        throw EntityUtil.Argument(
-                            Strings.Cqt_Copier_NavPropertyNotFound(
-                                expression.Property.Name, TypeHelpers.GetFullName(newInstance.ResultType.EdmType)));
+                        var type = newInstance.ResultType.EdmType;
+                        throw new ArgumentException(Strings.Cqt_Copier_NavPropertyNotFound(
+                            expression.Property.Name, TypeHelpers.GetFullName(type.NamespaceName, type.Name)));
                     }
                     result = newInstance.Property(navProp);
                 }
@@ -239,9 +240,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
                     EdmProperty prop;
                     if (!TryGetMember(newInstance, expression.Property.Name, out prop))
                     {
-                        throw EntityUtil.Argument(
-                            Strings.Cqt_Copier_PropertyNotFound(
-                                expression.Property.Name, TypeHelpers.GetFullName(newInstance.ResultType.EdmType)));
+                        var type = newInstance.ResultType.EdmType;
+                        throw new ArgumentException(Strings.Cqt_Copier_PropertyNotFound(
+                            expression.Property.Name, TypeHelpers.GetFullName(type.NamespaceName, type.Name)));
                     }
                     result = newInstance.Property(prop);
                 }

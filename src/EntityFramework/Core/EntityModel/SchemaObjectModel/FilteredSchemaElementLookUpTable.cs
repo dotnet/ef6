@@ -96,7 +96,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 {
                     return elementAsT;
                 }
-                throw EntityUtil.InvalidOperation(Strings.UnexpectedTypeInCollection(element.GetType(), key));
+                throw new InvalidOperationException(Strings.UnexpectedTypeInCollection(element.GetType(), key));
             }
         }
 

@@ -9,10 +9,13 @@
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Linq;
+    using IEntityStateEntry = System.Data.Entity.Core.IEntityStateEntry;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal sealed class EntityEntry : ObjectStateEntry
@@ -204,6 +207,11 @@
         ///
         public override void SetModifiedProperty(string propertyName)
         {
+            // We need this because the Code Contract gets compiled out in the release build even though
+            // this method is effectively on the public surface because it overrides the abstract method on ObjectStateEntry.
+            // Using a CodeContractsFor class doesn't work in this case.
+            DbHelpers.ThrowIfNullOrWhitespace(propertyName, "propertyName");
+
             var ordinal = ValidateAndGetOrdinalForProperty(propertyName, "SetModifiedProperty");
 
             Debug.Assert(
@@ -230,27 +238,29 @@
 
         private int ValidateAndGetOrdinalForProperty(string propertyName, string methodName)
         {
-            EntityUtil.CheckArgumentNull(propertyName, "propertyName");
+            Contract.Requires(propertyName != null);
 
             // Throw for detached entities
             ValidateState();
 
             if (IsKeyEntry)
             {
-                throw EntityUtil.CannotModifyKeyEntryState();
+                throw new InvalidOperationException(Strings.ObjectStateEntry_CannotModifyKeyEntryState);
             }
 
             var ordinal = _cacheTypeMetadata.GetOrdinalforOLayerMemberName(propertyName);
             if (ordinal == -1)
             {
-                throw EntityUtil.InvalidModifiedPropertyName(propertyName);
+                throw new ArgumentException(Strings.ObjectStateEntry_SetModifiedOnInvalidProperty(propertyName));
             }
 
             if (State == EntityState.Added
                 || State == EntityState.Deleted)
             {
                 // Threw for detached above; this throws for Added or Deleted entities
-                throw EntityUtil.SetModifiedStates(methodName);
+                InvalidOperationException ret;
+                throw new InvalidOperationException(Strings.ObjectStateEntry_SetModifiedStates(methodName));
+                throw ret;
             }
 
             return ordinal;
@@ -273,6 +283,11 @@
         /// <param name="propertyName">The name of the property to change.</param>
         public override void RejectPropertyChanges(string propertyName)
         {
+            // We need this because the Code Contract gets compiled out in the release build even though
+            // this method is effectively on the public surface because it overrides the abstract method on ObjectStateEntry.
+            // Using a CodeContractsFor class doesn't work in this case.
+            DbHelpers.ThrowIfNullOrWhitespace(propertyName, "propertyName");
+
             var ordinal = ValidateAndGetOrdinalForProperty(propertyName, "RejectPropertyChanges");
 
             if (State == EntityState.Unchanged)
@@ -331,12 +346,12 @@
             ValidateState();
             if (State == EntityState.Added)
             {
-                throw EntityUtil.OriginalValuesDoesNotExist();
+                throw new InvalidOperationException(Strings.ObjectStateEntry_OriginalValuesDoesNotExist);
             }
 
             if (IsKeyEntry)
             {
-                throw EntityUtil.CannotAccessKeyEntryValues();
+                throw new InvalidOperationException(Strings.ObjectStateEntry_CannotAccessKeyEntryValues);
             }
             else
             {
@@ -388,12 +403,12 @@
                 ValidateState();
                 if (State == EntityState.Deleted)
                 {
-                    throw EntityUtil.CurrentValuesDoesNotExist();
+                    throw new InvalidOperationException(Strings.ObjectStateEntry_CurrentValuesDoesNotExist);
                 }
 
                 if (IsKeyEntry)
                 {
-                    throw EntityUtil.CannotAccessKeyEntryValues();
+                    throw new InvalidOperationException(Strings.ObjectStateEntry_CannotAccessKeyEntryValues);
                 }
                 else
                 {
@@ -492,7 +507,7 @@
 
             if (IsKeyEntry)
             {
-                throw EntityUtil.CannotModifyKeyEntryState();
+                throw new InvalidOperationException(Strings.ObjectStateEntry_CannotModifyKeyEntryState);
             }
             else
             {
@@ -503,7 +518,9 @@
                 }
                 else if (EntityState.Modified != State)
                 {
-                    throw EntityUtil.SetModifiedStates("SetModified");
+                    InvalidOperationException ret;
+                    throw new InvalidOperationException(Strings.ObjectStateEntry_SetModifiedStates("SetModified"));
+                    throw ret;
                 }
             }
         }
@@ -565,13 +582,13 @@
         /// <param name="currentEntity">object with modified properties</param>
         public override void ApplyCurrentValues(object currentEntity)
         {
-            EntityUtil.CheckArgumentNull(currentEntity, "currentEntity");
+            Contract.Requires(currentEntity != null);
 
             ValidateState();
 
             if (IsKeyEntry)
             {
-                throw EntityUtil.CannotAccessKeyEntryValues();
+                throw new InvalidOperationException(Strings.ObjectStateEntry_CannotAccessKeyEntryValues);
             }
 
             var wrappedEntity = EntityWrapperFactory.WrapEntityUsingStateManager(currentEntity, ObjectStateManager);
@@ -585,13 +602,13 @@
         /// <param name="originalEntity">The object with original values</param>
         public override void ApplyOriginalValues(object originalEntity)
         {
-            EntityUtil.CheckArgumentNull(originalEntity, "originalEntity");
+            Contract.Requires(originalEntity != null);
 
             ValidateState();
 
             if (IsKeyEntry)
             {
-                throw EntityUtil.CannotAccessKeyEntryValues();
+                throw new InvalidOperationException(Strings.ObjectStateEntry_CannotAccessKeyEntryValues);
             }
 
             var wrappedEntity = EntityWrapperFactory.WrapEntityUsingStateManager(originalEntity, ObjectStateManager);
@@ -1003,7 +1020,7 @@
         {
             if (IsKeyEntry)
             {
-                throw EntityUtil.CannotAccessKeyEntryValues();
+                throw new InvalidOperationException(Strings.ObjectStateEntry_CannotAccessKeyEntryValues);
             }
             EntityMemberChanging(entityMemberName, null, null);
         }
@@ -1018,7 +1035,7 @@
         {
             if (IsKeyEntry)
             {
-                throw EntityUtil.CannotAccessKeyEntryValues();
+                throw new InvalidOperationException(Strings.ObjectStateEntry_CannotAccessKeyEntryValues);
             }
             EntityMemberChanged(entityMemberName, null, null);
         }
@@ -1034,10 +1051,10 @@
         {
             if (IsKeyEntry)
             {
-                throw EntityUtil.CannotAccessKeyEntryValues();
+                throw new InvalidOperationException(Strings.ObjectStateEntry_CannotAccessKeyEntryValues);
             }
-            EntityUtil.CheckArgumentNull(complexObjectMemberName, "complexObjectMemberName");
-            EntityUtil.CheckArgumentNull(complexObject, "complexObject");
+            Contract.Requires(complexObjectMemberName != null);
+            Contract.Requires(complexObject != null);
             EntityMemberChanging(entityMemberName, complexObject, complexObjectMemberName);
         }
 
@@ -1052,10 +1069,10 @@
         {
             if (IsKeyEntry)
             {
-                throw EntityUtil.CannotAccessKeyEntryValues();
+                throw new InvalidOperationException(Strings.ObjectStateEntry_CannotAccessKeyEntryValues);
             }
-            EntityUtil.CheckArgumentNull(complexObjectMemberName, "complexObjectMemberName");
-            EntityUtil.CheckArgumentNull(complexObject, "complexObject");
+            Contract.Requires(complexObjectMemberName != null);
+            Contract.Requires(complexObject != null);
             EntityMemberChanged(entityMemberName, complexObject, complexObjectMemberName);
         }
 
@@ -1104,7 +1121,7 @@
                     ||
                     (entityMemberName != _cache.ChangingEntityMember))
                 {
-                    throw EntityUtil.EntityValueChangedWithoutEntityValueChanging();
+                    throw new InvalidOperationException(Strings.ObjectStateEntry_EntityMemberChangedWithoutEntityMemberChanging);
                 }
 
                 // check the state after the other values because if the other cached values have not been set and are null, it is more
@@ -1112,7 +1129,7 @@
                 // also not be matched, so if we checked this first, it would cause a confusing error to be thrown.
                 if (State != _cache.ChangingState)
                 {
-                    throw EntityUtil.ChangedInDifferentStateFromChanging(State, _cache.ChangingState);
+                    throw new InvalidOperationException(Strings.ObjectStateEntry_ChangedInDifferentStateFromChanging(_cache.ChangingState, State));
                 }
 
                 var oldValue = _cache.ChangingOldValue;
@@ -1221,7 +1238,7 @@
             ValidateState();
             if (State == EntityState.Added)
             {
-                throw EntityUtil.OriginalValuesDoesNotExist();
+                throw new InvalidOperationException(Strings.ObjectStateEntry_OriginalValuesDoesNotExist);
             }
 
             var initialState = State;
@@ -1241,7 +1258,7 @@
                 oldOriginalValue = memberMetadata.GetValue(userObject);
                 if (oldOriginalValue == null)
                 {
-                    throw EntityUtil.NullableComplexTypesNotSupported(memberMetadata.CLayerName);
+                    throw new InvalidOperationException(Strings.ComplexObject_NullableComplexTypesNotSupported(memberMetadata.CLayerName));
                 }
 
                 var newValueRecord = newValue as IExtendedDataRecord;
@@ -1486,7 +1503,7 @@
             Debug.Assert(memberMetadata.IsComplex, "Cannot expand non-complex objects");
             if (newComplexObject == null)
             {
-                throw EntityUtil.NullableComplexTypesNotSupported(memberMetadata.CLayerName);
+                throw new InvalidOperationException(Strings.ComplexObject_NullableComplexTypesNotSupported(memberMetadata.CLayerName));
             }
             Debug.Assert(
                 oldComplexObject == null || (oldComplexObject.GetType() == newComplexObject.GetType()),
@@ -1580,11 +1597,12 @@
             string entityMemberName, object complexObject, string complexObjectMemberName,
             out StateManagerTypeMetadata typeMetadata, out string changingMemberName, out object changingObject)
         {
+            Contract.Requires(entityMemberName != null);
+
             typeMetadata = null;
             changingMemberName = null;
             changingObject = null;
 
-            EntityUtil.CheckArgumentNull(entityMemberName, "entityMemberName");
             // complexObject and complexObjectMemberName are allowed to be null here for change tracking on top-level entity properties
 
             ValidateState();
@@ -1597,7 +1615,7 @@
                     // Setting EntityKey property is only allowed from here when we are in the middle of relationship fixup.
                     if (!_cache.InRelationshipFixup)
                     {
-                        throw EntityUtil.CantSetEntityKey();
+                        throw new InvalidOperationException(Strings.ObjectStateEntry_CantSetEntityKey);
                     }
                     else
                     {
@@ -1616,7 +1634,7 @@
                 }
                 else
                 {
-                    throw EntityUtil.ChangeOnUnmappedProperty(entityMemberName);
+                    throw new ArgumentException(Strings.ObjectStateEntry_ChangeOnUnmappedProperty(entityMemberName));
                 }
             }
             else
@@ -1631,14 +1649,14 @@
                     // a complex object was provided, but the top-level Entity property is not complex
                     if (!_cacheTypeMetadata.Member(changingOrdinal).IsComplex)
                     {
-                        throw EntityUtil.ComplexChangeRequestedOnScalarProperty(entityMemberName);
+                        throw new ArgumentException(Strings.ComplexObject_ComplexChangeRequestedOnScalarProperty(entityMemberName));
                     }
 
                     tmpTypeMetadata = _cache.GetOrAddStateManagerTypeMetadata(complexObject.GetType(), (EntitySet)EntitySet);
                     changingOrdinal = tmpTypeMetadata.GetOrdinalforOLayerMemberName(complexObjectMemberName);
                     if (changingOrdinal == -1)
                     {
-                        throw EntityUtil.ChangeOnUnmappedComplexProperty(complexObjectMemberName);
+                        throw new ArgumentException(Strings.ObjectStateEntry_ChangeOnUnmappedComplexProperty(complexObjectMemberName));
                     }
 
                     tmpChangingMemberName = complexObjectMemberName;
@@ -1871,6 +1889,11 @@
         /// <returns>True if the property has changed; false otherwise.</returns>
         public override bool IsPropertyChanged(string propertyName)
         {
+            // We need this because the Code Contract gets compiled out in the release build even though
+            // this method is effectively on the public surface because it overrides the abstract method on ObjectStateEntry.
+            // Using a CodeContractsFor class doesn't work in this case.
+            DbHelpers.ThrowIfNullOrWhitespace(propertyName, "propertyName");
+
             return DetectChangesInProperty(
                 ValidateAndGetOrdinalForProperty(propertyName, "IsPropertyChanged"),
                 detectOnlyComplexProperties: false, detectOnly: true);
@@ -1945,7 +1968,7 @@
                     {
                         if (!ByValueEqualityComparer.Default.Equals(currentValue, originalValue))
                         {
-                            throw EntityUtil.CannotModifyKeyProperty(member.CLayerName);
+                            throw new InvalidOperationException(Strings.ObjectStateEntry_CannotModifyKeyProperty(member.CLayerName));
                         }
                     }
                     else
@@ -1996,7 +2019,7 @@
                 {
                     return false;
                 }
-                throw EntityUtil.NullableComplexTypesNotSupported(complexMember.CLayerName);
+                throw new InvalidOperationException(Strings.ComplexObject_NullableComplexTypesNotSupported(complexMember.CLayerName));
             }
 
             if (!ReferenceEquals(oldComplexValue, complexValue))
@@ -2275,7 +2298,7 @@
                     if (relatedWrapper.ObjectStateEntry.State
                         == EntityState.Deleted)
                     {
-                        throw EntityUtil.UnableToAddRelationshipWithDeletedEntity();
+                        throw new InvalidOperationException(Strings.RelatedEnd_UnableToAddRelationshipWithDeletedEntity);
                     }
                     if (ObjectStateManager.TransactionManager.IsAttachTracking &&
                         (State & (EntityState.Modified | EntityState.Unchanged)) != 0
@@ -2301,7 +2324,7 @@
                                 !RelatedEnd.VerifyRIConstraintsWithRelatedEntry(
                                     constraint, dependentEntry.GetCurrentEntityValue, principalEntry.EntityKey))
                             {
-                                throw EntityUtil.InconsistentReferentialConstraintProperties();
+                                throw new InvalidOperationException(Strings.RelationshipManager_InconsistentReferentialConstraintProperties);
                             }
                         }
                     }
@@ -2484,9 +2507,7 @@
                     var existingRelatedObject = objectsInRelatedEnd.First();
                     if (!Equals(existingRelatedObject, relatedObject))
                     {
-                        throw EntityUtil.CannotAddMoreThanOneEntityToEntityReference(
-                            relatedEnd.RelationshipNavigation.To,
-                            relatedEnd.RelationshipNavigation.RelationshipName);
+                        throw new InvalidOperationException(Strings.EntityReference_CannotAddMoreThanOneEntityToEntityReference(relatedEnd.RelationshipNavigation.To, relatedEnd.RelationshipNavigation.RelationshipName));
                     }
                 }
             }
@@ -2571,7 +2592,7 @@
 
             if (IsKeyEntry)
             {
-                throw EntityUtil.CannotCallDeleteOnKeyEntry();
+                throw new InvalidOperationException(Strings.ObjectStateEntry_CannotDeleteOnKeyEntry);
             }
 
             if (doFixup && State != EntityState.Deleted)
@@ -2876,7 +2897,7 @@
 
                 if (!ByValueEqualityComparer.Default.Equals(valueCounterPair.Key, propertyValue))
                 {
-                    throw EntityUtil.InconsistentReferentialConstraintProperties();
+                    throw new InvalidOperationException(Strings.RelationshipManager_InconsistentReferentialConstraintProperties);
                 }
                 else
                 {
@@ -2933,7 +2954,7 @@
                                             !ByValueEqualityComparer.Default.Equals(
                                                 GetCurrentEntityValue(constraint.FromProperties[i].Name), pair.Value))
                                         {
-                                            throw EntityUtil.InconsistentReferentialConstraintProperties();
+                                            throw new InvalidOperationException(Strings.RelationshipManager_InconsistentReferentialConstraintProperties);
                                         }
                                     }
                                 }
@@ -3065,7 +3086,7 @@
 
                     if (!ByValueEqualityComparer.Default.Equals(currentValueNew, currentValueOld))
                     {
-                        throw EntityUtil.CannotModifyKeyProperty(member.CLayerName);
+                        throw new InvalidOperationException(Strings.ObjectStateEntry_CannotModifyKeyProperty(member.CLayerName));
                     }
                 }
             }
@@ -3086,7 +3107,9 @@
         {
             if (State == EntityState.Deleted)
             {
-                throw EntityUtil.CantModifyDetachedDeletedEntries();
+                InvalidOperationException ret;
+                throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyDetachedDeletedEntries);
+                throw ret;
             }
 
             Debug.Assert(typeMetadata != null, "Cannot verify entity or complex object is editable if typeMetadata is null.");
@@ -3098,7 +3121,7 @@
             if (member.IsPartOfKey
                 && State != EntityState.Added)
             {
-                throw EntityUtil.CannotModifyKeyProperty(memberName);
+                throw new InvalidOperationException(Strings.ObjectStateEntry_CannotModifyKeyProperty(memberName));
             }
         }
 
@@ -3121,13 +3144,13 @@
                 if (newValue == null
                     || newValue == DBNull.Value)
                 {
-                    throw EntityUtil.NullableComplexTypesNotSupported(member.CLayerName);
+                    throw new InvalidOperationException(Strings.ComplexObject_NullableComplexTypesNotSupported(member.CLayerName));
                 }
 
                 var newValueRecord = newValue as IExtendedDataRecord;
                 if (newValueRecord == null)
                 {
-                    throw EntityUtil.InvalidTypeForComplexTypeProperty("value");
+                    throw new ArgumentException(Strings.ObjectStateEntry_InvalidTypeForComplexTypeProperty, "newValue");
                 }
 
                 newValue = _cache.ComplexTypeMaterializer.CreateComplex(newValueRecord, newValueRecord.DataRecordInfo, null);
@@ -3177,7 +3200,7 @@
                 {
                     return; // No-op
                 }
-                throw EntityUtil.CannotModifyKeyEntryState();
+                throw new InvalidOperationException(Strings.ObjectStateEntry_CannotModifyKeyEntryState);
             }
 
             switch (State)
@@ -3213,7 +3236,7 @@
                             Detach();
                             break;
                         default:
-                            throw EntityUtil.InvalidEntityStateArgument("state");
+                            throw new ArgumentException(Strings.ObjectContext_InvalidEntityState, "requestedState");
                     }
                     break;
                 case EntityState.Unchanged:
@@ -3246,7 +3269,7 @@
                             Detach();
                             break;
                         default:
-                            throw EntityUtil.InvalidEntityStateArgument("state");
+                            throw new ArgumentException(Strings.ObjectContext_InvalidEntityState, "requestedState");
                     }
                     break;
                 case EntityState.Modified:
@@ -3280,7 +3303,7 @@
                             Detach();
                             break;
                         default:
-                            throw EntityUtil.InvalidEntityStateArgument("state");
+                            throw new ArgumentException(Strings.ObjectContext_InvalidEntityState, "requestedState");
                     }
                     break;
                 case EntityState.Deleted:
@@ -3335,7 +3358,7 @@
                             Detach();
                             break;
                         default:
-                            throw EntityUtil.InvalidEntityStateArgument("state");
+                            throw new ArgumentException(Strings.ObjectContext_InvalidEntityState, "requestedState");
                     }
                     break;
                 case EntityState.Detached:
@@ -3404,7 +3427,7 @@
                     // Ensure that the existing ComplexType value is not null. This is not supported.
                     if (existing == DBNull.Value)
                     {
-                        throw EntityUtil.NullableComplexTypesNotSupported(field.FieldType.Name);
+                        throw new InvalidOperationException(Strings.ComplexObject_NullableComplexTypesNotSupported(field.FieldType.Name));
                     }
                     else if (fieldValue != DBNull.Value)
                     {
@@ -3459,13 +3482,13 @@
                 &&
                 State != EntityState.Unchanged)
             {
-                throw EntityUtil.EntityMustBeUnchangedOrModified(State);
+                throw new InvalidOperationException(Strings.ObjectContext_EntityMustBeUnchangedOrModified(State.ToString()));
             }
 
             if (WrappedEntity.IdentityType
                 != wrappedCurrentEntity.IdentityType)
             {
-                throw EntityUtil.EntitiesHaveDifferentType(Entity.GetType().FullName, wrappedCurrentEntity.Entity.GetType().FullName);
+                throw new ArgumentException(Strings.ObjectContext_EntitiesHaveDifferentType(Entity.GetType().FullName, wrappedCurrentEntity.Entity.GetType().FullName));
             }
 
             CompareKeyProperties(wrappedCurrentEntity.Entity);
@@ -3489,13 +3512,13 @@
                 &&
                 State != EntityState.Deleted)
             {
-                throw EntityUtil.EntityMustBeUnchangedOrModifiedOrDeleted(State);
+                throw new InvalidOperationException(Strings.ObjectContext_EntityMustBeUnchangedOrModifiedOrDeleted(State.ToString()));
             }
 
             if (WrappedEntity.IdentityType
                 != wrappedOriginalEntity.IdentityType)
             {
-                throw EntityUtil.EntitiesHaveDifferentType(Entity.GetType().FullName, wrappedOriginalEntity.Entity.GetType().FullName);
+                throw new ArgumentException(Strings.ObjectContext_EntitiesHaveDifferentType(Entity.GetType().FullName, wrappedOriginalEntity.Entity.GetType().FullName));
             }
 
             CompareKeyProperties(wrappedOriginalEntity.Entity);
@@ -3761,9 +3784,7 @@
             else
             {
                 // Else it is 1:1 and one side or the other is non-null => reference steal!
-                throw EntityUtil.CannotAddMoreThanOneEntityToEntityReference(
-                    refToDependent.RelationshipNavigation.To,
-                    refToDependent.RelationshipNavigation.RelationshipName);
+                throw new InvalidOperationException(Strings.EntityReference_CannotAddMoreThanOneEntityToEntityReference(refToDependent.RelationshipNavigation.To, refToDependent.RelationshipNavigation.RelationshipName));
             }
         }
 
@@ -3853,7 +3874,7 @@
                             if (isOneToMany.Value)
                             {
                                 // Cycles in constraints are dissallowed except for 1:* self references
-                                throw EntityUtil.CircularRelationshipsWithReferentialConstraints();
+                                throw new InvalidOperationException(Strings.RelationshipManager_CircularRelationshipsWithReferentialConstraints);
                             }
                         }
                         else

@@ -121,7 +121,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             //
             if (m_destCmd != m_srcCmd)
             {
-                throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.UnknownVar, 6);
+                throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.UnknownVar, 6, null);
             }
 
             //

@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// DataRecordInfo class providing a simple way to access both the type information and the column information.
@@ -22,7 +23,7 @@ namespace System.Data.Entity.Core.Common
         /// <param name="memberInfo"></param>
         public DataRecordInfo(TypeUsage metadata, IEnumerable<EdmMember> memberInfo)
         {
-            EntityUtil.CheckArgumentNull(metadata, "metadata");
+            Contract.Requires(metadata != null);
             var members = TypeHelpers.GetAllStructuralMembers(metadata.EdmType);
 
             var fieldList = new List<FieldMetadata>(members.Count);
@@ -44,14 +45,14 @@ namespace System.Data.Entity.Core.Common
                             &&
                             !member.DeclaringType.IsBaseTypeOf(metadata.EdmType))
                         {
-                            throw EntityUtil.Argument(Strings.EdmMembersDefiningTypeDoNotAgreeWithMetadataType);
+                            throw new ArgumentException(Strings.EdmMembersDefiningTypeDoNotAgreeWithMetadataType);
                         }
                         fieldList.Add(new FieldMetadata(fieldList.Count, member));
                     }
                     else
                     {
                         // expecting empty memberInfo for non-structural && non-null member part of members if structural
-                        throw EntityUtil.Argument("memberInfo");
+                        throw Error.InvalidEdmMemberInstance();
                     }
                 }
             }
@@ -66,7 +67,7 @@ namespace System.Data.Entity.Core.Common
             }
             else
             {
-                throw EntityUtil.Argument("memberInfo");
+                throw Error.InvalidEdmMemberInstance();
             }
         }
 

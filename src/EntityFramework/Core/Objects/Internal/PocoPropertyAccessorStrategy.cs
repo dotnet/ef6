@@ -203,7 +203,7 @@
                            if (array != null
                                && array.IsFixedSize)
                            {
-                               throw EntityUtil.CannotAddToFixedSizeArray(array);
+                               throw new InvalidOperationException(Strings.RelatedEnd_CannotAddToFixedSizeArray(array.GetType()));
                            }
                            collection.Add((T)item);
                        };
@@ -266,7 +266,7 @@
                            if (array != null
                                && array.IsFixedSize)
                            {
-                               throw EntityUtil.CannotRemoveFromFixedSizeArray(array);
+                               throw new InvalidOperationException(Strings.RelatedEnd_CannotRemoveFromFixedSizeArray(array.GetType()));
                            }
                            return collection.Remove((T)item);
                        };

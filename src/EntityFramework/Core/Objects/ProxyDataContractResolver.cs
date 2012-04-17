@@ -1,5 +1,6 @@
 ﻿namespace System.Data.Entity.Core.Objects
 {
+    using System.Diagnostics.Contracts;
     using System.Runtime.Serialization;
     using System.Xml;
 
@@ -13,10 +14,10 @@
 
         public override Type ResolveName(string typeName, string typeNamespace, Type declaredType, DataContractResolver knownTypeResolver)
         {
+            Contract.Requires(declaredType != null);
+            Contract.Requires(knownTypeResolver != null);
             EntityUtil.CheckStringArgument(typeName, "typeName");
             EntityUtil.CheckStringArgument(typeNamespace, "typeNamespace");
-            EntityUtil.CheckArgumentNull(declaredType, "declaredType");
-            EntityUtil.CheckArgumentNull(knownTypeResolver, "knownTypeResolver");
 
             return knownTypeResolver.ResolveName(typeName, typeNamespace, declaredType, null);
         }
@@ -25,9 +26,9 @@
             Type type, Type declaredType, DataContractResolver knownTypeResolver, out XmlDictionaryString typeName,
             out XmlDictionaryString typeNamespace)
         {
-            EntityUtil.CheckArgumentNull(type, "type");
-            EntityUtil.CheckArgumentNull(declaredType, "declaredType");
-            EntityUtil.CheckArgumentNull(knownTypeResolver, "knownTypeResolver");
+            Contract.Requires(type != null);
+            Contract.Requires(declaredType != null);
+            Contract.Requires(knownTypeResolver != null);
 
             var nonProxyType = ObjectContext.GetObjectType(type);
             if (nonProxyType != type)

@@ -58,7 +58,7 @@ namespace System.Data.Entity.Core.Common.Utils
             if (string.IsNullOrEmpty(containerName)
                 || string.IsNullOrEmpty(functionImportName))
             {
-                throw EntityUtil.InvalidOperation(Strings.EntityClient_InvalidStoredProcedureCommandText);
+                throw new InvalidOperationException(Strings.EntityClient_InvalidStoredProcedureCommandText);
             }
         }
 
@@ -78,7 +78,7 @@ namespace System.Data.Entity.Core.Common.Utils
             if (entityTransaction != null
                 && entityTransaction != entityCommand.Connection.CurrentTransaction)
             {
-                throw EntityUtil.InvalidOperation(Strings.EntityClient_InvalidTransactionForCommand);
+                throw new InvalidOperationException(Strings.EntityClient_InvalidTransactionForCommand);
             }
             // Now we have asserted that EntityCommand either has no transaction or has one that matches the
             // one used in the connection, we can simply use the connection's transaction object
@@ -169,9 +169,8 @@ namespace System.Data.Entity.Core.Common.Utils
             EntityContainer entityContainer;
             if (!workspace.TryGetEntityContainer(containerName, DataSpace.CSpace, out entityContainer))
             {
-                throw EntityUtil.InvalidOperation(
-                    Strings.EntityClient_UnableToFindFunctionImportContainer(
-                        containerName));
+                throw new InvalidOperationException(Strings.EntityClient_UnableToFindFunctionImportContainer(
+                    containerName));
             }
 
             // find function import
@@ -186,14 +185,12 @@ namespace System.Data.Entity.Core.Common.Utils
             }
             if (null == functionImport)
             {
-                throw EntityUtil.InvalidOperation(
-                    Strings.EntityClient_UnableToFindFunctionImport(
-                        containerName, functionImportName));
+                throw new InvalidOperationException(Strings.EntityClient_UnableToFindFunctionImport(
+                    containerName, functionImportName));
             }
             if (functionImport.IsComposableAttribute)
             {
-                throw EntityUtil.InvalidOperation(
-                    Strings.EntityClient_FunctionImportMustBeNonComposable(containerName + "." + functionImportName));
+                throw new InvalidOperationException(Strings.EntityClient_FunctionImportMustBeNonComposable(containerName + "." + functionImportName));
             }
             return functionImport;
         }

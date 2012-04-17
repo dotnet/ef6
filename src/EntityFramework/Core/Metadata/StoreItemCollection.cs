@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Runtime.Versioning;
     using System.Xml;
@@ -72,7 +73,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             IEnumerable<string> filePaths)
             : base(DataSpace.SSpace)
         {
-            EntityUtil.CheckArgumentNull(filePaths, "filePaths");
+            Contract.Requires(filePaths != null);
             EntityUtil.CheckArgumentEmpty(ref xmlReaders, Strings.StoreItemCollectionMustHaveOneArtifact, "xmlReader");
 
             Init(
@@ -91,7 +92,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public StoreItemCollection(IEnumerable<XmlReader> xmlReaders)
             : base(DataSpace.SSpace)
         {
-            EntityUtil.CheckArgumentNull(xmlReaders, "xmlReaders");
+            Contract.Requires(xmlReaders != null);
             EntityUtil.CheckArgumentEmpty(ref xmlReaders, Strings.StoreItemCollectionMustHaveOneArtifact, "xmlReader");
 
             var composite = MetadataArtifactLoader.CreateCompositeFromXmlReaders(xmlReaders);
@@ -118,7 +119,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public StoreItemCollection(params string[] filePaths)
             : base(DataSpace.SSpace)
         {
-            EntityUtil.CheckArgumentNull(filePaths, "filePaths");
+            Contract.Requires(filePaths != null);
             IEnumerable<string> enumerableFilePaths = filePaths;
             EntityUtil.CheckArgumentEmpty(ref enumerableFilePaths, Strings.StoreItemCollectionMustHaveOneArtifact, "filePaths");
 
@@ -159,7 +160,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             out string providerManifestToken,
             out Memoizer<EdmFunction, EdmFunction> cachedCTypeFunction)
         {
-            EntityUtil.CheckArgumentNull(xmlReaders, "xmlReaders");
+            Contract.Requires(xmlReaders != null);
             // 'filePaths' can be null
 
             cachedCTypeFunction = new Memoizer<EdmFunction, EdmFunction>(ConvertFunctionSignatureToCType, null);

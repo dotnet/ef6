@@ -1,5 +1,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.Contracts;
+
     /// <summary>
     /// Class representing a metadata attribute for an item
     /// </summary>
@@ -33,7 +35,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="value">The value of the attribute</param>
         internal MetadataProperty(string name, EdmType edmType, bool isCollectionType, object value)
         {
-            EntityUtil.CheckArgumentNull(edmType, "edmType");
+            Contract.Requires(edmType != null);
 
             _name = name;
             _value = value;

@@ -8,6 +8,7 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Text;
     using System.Xml;
@@ -161,7 +162,7 @@ namespace System.Data.Entity.SqlServer
                 return null;
             }
 
-            throw EntityUtil.ProviderIncompatible(Strings.ProviderReturnedNullForGetDbInformation(informationType));
+            throw new ProviderIncompatibleException(Strings.ProviderReturnedNullForGetDbInformation(informationType));
         }
 
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
@@ -340,12 +341,12 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         public override TypeUsage GetEdmType(TypeUsage storeType)
         {
-            EntityUtil.CheckArgumentNull(storeType, "storeType");
+            Contract.Requires(storeType != null);
 
             var storeTypeName = storeType.EdmType.Name.ToLowerInvariant();
             if (!base.StoreTypeNameToEdmPrimitiveType.ContainsKey(storeTypeName))
             {
-                throw EntityUtil.Argument(Strings.ProviderDoesNotSupportType(storeTypeName));
+                throw new ArgumentException(Strings.ProviderDoesNotSupportType(storeTypeName));
             }
 
             var edmPrimitiveType = base.StoreTypeNameToEdmPrimitiveType[storeTypeName];
@@ -476,7 +477,7 @@ namespace System.Data.Entity.SqlServer
                     return TypeUsage.CreateDateTimeOffsetTypeUsage(edmPrimitiveType, null);
 
                 default:
-                    throw EntityUtil.NotSupported(Strings.ProviderDoesNotSupportType(storeTypeName));
+                    throw new NotSupportedException(Strings.ProviderDoesNotSupportType(storeTypeName));
             }
 
             Debug.Assert(
@@ -504,7 +505,7 @@ namespace System.Data.Entity.SqlServer
                         return TypeUsage.CreateBinaryTypeUsage(edmPrimitiveType, isFixedLen);
                     }
                 default:
-                    throw EntityUtil.NotSupported(Strings.ProviderDoesNotSupportType(storeTypeName));
+                    throw new NotSupportedException(Strings.ProviderDoesNotSupportType(storeTypeName));
             }
         }
 
@@ -517,13 +518,13 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public override TypeUsage GetStoreType(TypeUsage edmType)
         {
-            EntityUtil.CheckArgumentNull(edmType, "edmType");
+            Contract.Requires(edmType != null);
             Debug.Assert(edmType.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType);
 
             var primitiveType = edmType.EdmType as PrimitiveType;
             if (primitiveType == null)
             {
-                throw EntityUtil.Argument(Strings.ProviderDoesNotSupportType(edmType.Identity));
+                throw new ArgumentException(Strings.ProviderDoesNotSupportType(edmType.Identity));
             }
 
             var facets = edmType.Facets;
@@ -717,7 +718,7 @@ namespace System.Data.Entity.SqlServer
                     return GetStorePrimitiveTypeIfPostSql9("time", edmType.Identity, primitiveType.PrimitiveTypeKind);
 
                 default:
-                    throw EntityUtil.NotSupported(Strings.NoStoreTypeForEdmType(edmType.Identity, primitiveType.PrimitiveTypeKind));
+                    throw new NotSupportedException(Strings.NoStoreTypeForEdmType(edmType.Identity, primitiveType.PrimitiveTypeKind));
             }
         }
 
@@ -730,7 +731,7 @@ namespace System.Data.Entity.SqlServer
             }
             else
             {
-                throw EntityUtil.NotSupported(Strings.NoStoreTypeForEdmType(edmTypeIdentity, primitiveTypeKind));
+                throw new NotSupportedException(Strings.NoStoreTypeForEdmType(edmTypeIdentity, primitiveTypeKind));
             }
         }
 
@@ -753,7 +754,7 @@ namespace System.Data.Entity.SqlServer
         /// <returns>Equivalent to the argument, with the wildcard characters and the escape character escaped</returns>
         public override string EscapeLikeArgument(string argument)
         {
-            EntityUtil.CheckArgumentNull(argument, "argument");
+            Contract.Requires(argument != null);
 
             bool usedEscapeCharacter;
             return EscapeLikeText(argument, true, out usedEscapeCharacter);

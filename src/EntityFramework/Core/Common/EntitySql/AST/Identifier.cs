@@ -29,11 +29,15 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                 {
                     if (isIdentifierASCII)
                     {
-                        throw EntityUtil.EntitySqlError(ErrCtx, Strings.InvalidSimpleIdentifier(name));
+                        ErrorContext errCtx = ErrCtx;
+                        string message = Strings.InvalidSimpleIdentifier(name);
+                        throw EntitySqlException.Create(errCtx, message, null);
                     }
                     else
                     {
-                        throw EntityUtil.EntitySqlError(ErrCtx, Strings.InvalidSimpleIdentifierNonASCII(name));
+                        ErrorContext errCtx = ErrCtx;
+                        string message = Strings.InvalidSimpleIdentifierNonASCII(name);
+                        throw EntitySqlException.Create(errCtx, message, null);
                     }
                 }
             }

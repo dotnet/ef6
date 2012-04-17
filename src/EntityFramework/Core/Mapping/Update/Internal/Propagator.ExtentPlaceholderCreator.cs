@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
 
     internal partial class Propagator
     {
@@ -103,7 +104,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns>A default record for the </returns>
             internal static PropagatorResult CreatePlaceholder(EntitySetBase extent)
             {
-                EntityUtil.CheckArgumentNull(extent, "extent");
+                Contract.Requires(extent != null);
 
                 var creator = new ExtentPlaceholderCreator();
 
@@ -119,9 +120,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     return creator.CreateEntitySetPlaceholder(entitySet);
                 }
 
-                throw EntityUtil.NotSupported(
-                    Strings.Update_UnsupportedExtentType(
-                        extent.Name, extent.GetType().Name));
+                throw new NotSupportedException(Strings.Update_UnsupportedExtentType(
+                    extent.Name, extent.GetType().Name));
             }
 
             /// <summary>
@@ -131,7 +131,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns></returns>
             private PropagatorResult CreateEntitySetPlaceholder(EntitySet entitySet)
             {
-                EntityUtil.CheckArgumentNull(entitySet, "entitySet");
+                Contract.Requires(entitySet != null);
                 var members = entitySet.ElementType.Properties;
                 var memberValues = new PropagatorResult[members.Count];
 
@@ -190,7 +190,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns>Placeholder element for the given member.</returns>
             private PropagatorResult CreateMemberPlaceholder(EdmMember member)
             {
-                EntityUtil.CheckArgumentNull(member, "member");
+                Contract.Requires(member != null);
 
                 return Visit(member);
             }

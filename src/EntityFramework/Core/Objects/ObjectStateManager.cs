@@ -12,6 +12,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -79,7 +80,7 @@ namespace System.Data.Entity.Core.Objects
         [CLSCompliant(false)]
         public ObjectStateManager(MetadataWorkspace metadataWorkspace)
         {
-            EntityUtil.CheckArgumentNull(metadataWorkspace, "metadataWorkspace");
+            Contract.Requires(metadataWorkspace != null);
             _metadataWorkspace = metadataWorkspace;
 
             _metadataStore = new Dictionary<EdmType, StateManagerTypeMetadata>();
@@ -188,7 +189,7 @@ namespace System.Data.Entity.Core.Objects
             var entry = FindEntityEntry(entityKey);
             if (entry != null)
             {
-                throw EntityUtil.ObjectStateManagerContainsThisEntityKey();
+                throw new InvalidOperationException(Strings.ObjectStateManager_ObjectStateManagerContainsThisEntityKey);
             }
 
             // Get a StateManagerTypeMetadata for the entity type.
@@ -220,7 +221,7 @@ namespace System.Data.Entity.Core.Objects
                 if (proxyTypeInfo == null
                     || proxyTypeInfo.ProxyType != actualType)
                 {
-                    throw EntityUtil.DuplicateTypeForProxyType(identityType);
+                    throw new InvalidOperationException(Strings.EntityProxyTypeInfo_DuplicateOSpaceType(identityType.FullName));
                 }
             }
         }
@@ -256,8 +257,7 @@ namespace System.Data.Entity.Core.Objects
             if ((isAdded)
                 && !entitySet.ElementType.IsAssignableFrom(entityEdmType))
             {
-                throw EntityUtil.EntityTypeDoesNotMatchEntitySet(
-                    wrappedObject.Entity.GetType().Name, TypeHelpers.GetFullName(entitySet), argumentName);
+                throw new ArgumentException(Strings.ObjectStateManager_EntityTypeDoesnotMatchtoEntitySetType(wrappedObject.Entity.GetType().Name, TypeHelpers.GetFullName(entitySet.EntityContainer.Name, entitySet.Name)), argumentName);
             }
 
             EntityKey dataObjectEntityKey = null;
@@ -280,8 +280,14 @@ namespace System.Data.Entity.Core.Objects
             {
                 entityKey = dataObjectEntityKey;
                 // These two checks verify that entityWithKey.EntityKey implemented by the user on a (I)POCO entity returns what it was given.
-                EntityUtil.CheckEntityKeyNull(entityKey);
-                EntityUtil.CheckEntityKeysMatch(wrappedObject, entityKey);
+                if ((object)entityKey == null)
+                {
+                    throw new InvalidOperationException(Strings.EntityKey_UnexpectedNull);
+                }
+                if (wrappedObject.EntityKey != entityKey)
+                {
+                    throw new InvalidOperationException(Strings.EntityKey_DoesntMatchKeyOnEntity(wrappedObject.Entity.GetType().FullName));
+                }
             }
 
             if ((object)entityKey != null && !entityKey.IsTemporary
@@ -304,7 +310,7 @@ namespace System.Data.Entity.Core.Objects
                 if (existingEntry.Entity
                     != wrappedObject.Entity)
                 {
-                    throw EntityUtil.ObjectStateManagerContainsThisEntityKey();
+                    throw new InvalidOperationException(Strings.ObjectStateManager_ObjectStateManagerContainsThisEntityKey);
                 }
                 // key does exist but entity is the same, it is being re-added ;
                 // no-op when Add(entity)
@@ -312,7 +318,7 @@ namespace System.Data.Entity.Core.Objects
                 if (existingEntry.State
                     != EntityState.Added) // (state == DataRowState.Unchanged && state == DataRowState.Modified)
                 {
-                    throw EntityUtil.ObjectStateManagerDoesnotAllowToReAddUnchangedOrModifiedOrDeletedEntity(existingEntry.State);
+                    throw new InvalidOperationException(Strings.ObjectStateManager_DoesnotAllowToReAddUnchangedOrModifiedOrDeletedEntity(existingEntry.State));
                 }
 
                 // no-op
@@ -768,7 +774,7 @@ namespace System.Data.Entity.Core.Objects
                             &&
                             !ReferenceEquals(relatedReference.ReferenceValue.Entity, wrappedTarget.Entity))
                         {
-                            throw EntityUtil.EntityConflictsWithKeyEntry();
+                            throw new InvalidOperationException(Strings.ObjectStateManager_EntityConflictsWithKeyEntry);
                         }
                         break;
 
@@ -818,7 +824,7 @@ namespace System.Data.Entity.Core.Objects
                 {
                     // The EntityCollection has already been loaded as part of the query and adding additional
                     // entities would cause duplicate entries
-                    throw EntityUtil.CannotFillTryDifferentMergeOption(targetRelatedEnd.SourceRoleName, targetRelatedEnd.RelationshipName);
+                    throw new InvalidOperationException(Strings.Collections_CannotFillTryDifferentMergeOption(targetRelatedEnd.SourceRoleName, targetRelatedEnd.RelationshipName));
                 }
             }
 
@@ -879,7 +885,10 @@ namespace System.Data.Entity.Core.Objects
                 if (mergeOption == MergeOption.NoTracking)
                 {
                     var targetKey = wrappedRelatedEntity.EntityKey;
-                    EntityUtil.CheckEntityKeyNull(targetKey);
+                    if ((object)targetKey == null)
+                    {
+                        throw new InvalidOperationException(Strings.EntityKey_UnexpectedNull);
+                    }
 
                     // since endMember is not Many, relatedEnd must be an EntityReference
                     ((EntityReference)relatedEnd).DetachedEntityKey = targetKey;
@@ -924,7 +933,7 @@ namespace System.Data.Entity.Core.Objects
                         {
                             // The RelatedEnd has already been filled as part of the query and adding additional
                             // entities would cause duplicate entries
-                            throw EntityUtil.CannotFillTryDifferentMergeOption(relatedEnd.SourceRoleName, relatedEnd.RelationshipName);
+                            throw new InvalidOperationException(Strings.Collections_CannotFillTryDifferentMergeOption(relatedEnd.SourceRoleName, relatedEnd.RelationshipName));
                         }
                     }
 
@@ -1434,7 +1443,7 @@ namespace System.Data.Entity.Core.Objects
             var entitySetForKey = entityKey.GetEntitySet(MetadataWorkspace);
             if (entitySetForKey == null)
             {
-                throw EntityUtil.InvalidKey();
+                throw new InvalidOperationException(Strings.ObjectStateManager_InvalidKey);
             }
 
             // Checks that the entity's key matches its type.
@@ -1455,7 +1464,7 @@ namespace System.Data.Entity.Core.Objects
                 var ordinal = typeMetadata.GetOrdinalforCLayerMemberName(keyField.Name);
                 if (ordinal < 0)
                 {
-                    throw EntityUtil.InvalidKey();
+                    throw new InvalidOperationException(Strings.ObjectStateManager_InvalidKey);
                 }
 
                 var entityValue = typeMetadata.Member(ordinal).GetValue(wrappedEntity.Entity);
@@ -1464,7 +1473,7 @@ namespace System.Data.Entity.Core.Objects
                 // Use EntityKey.ValueComparer to perform the correct equality comparison for entity key values.
                 if (!ByValueEqualityComparer.Default.Equals(entityValue, keyValue))
                 {
-                    throw EntityUtil.KeyPropertyDoesntMatchValueInKey(forAttach);
+                    throw new InvalidOperationException(forAttach ? Strings.ObjectStateManager_KeyPropertyDoesntMatchValueInKeyForAttach : Strings.ObjectStateManager_KeyPropertyDoesntMatchValueInKey);
                 }
             }
         }
@@ -1754,7 +1763,7 @@ namespace System.Data.Entity.Core.Objects
         {
             if ((EntityState.Detached & state) != 0)
             {
-                throw EntityUtil.DetachedObjectStateEntriesDoesNotExistInObjectStateManager();
+                throw new ArgumentException(Strings.ObjectStateManager_DetachedObjectStateEntriesDoesNotExistInObjectStateManager);
             }
             return GetObjectStateEntriesInternal(state);
         }
@@ -1986,7 +1995,7 @@ namespace System.Data.Entity.Core.Objects
                 if (!existingEntry.IsKeyEntry)
                 {
                     // If the fixed-up key conflicts with an existing entry, we throw.
-                    throw EntityUtil.CannotFixUpKeyToExistingValues();
+                    throw new InvalidOperationException(Strings.ObjectStateManager_CannotFixUpKeyToExistingValues);
                 }
                 newKey = existingEntry.EntityKey; // reuse existing reference
             }
@@ -2111,13 +2120,17 @@ namespace System.Data.Entity.Core.Objects
             if (entityKey == null
                 || value.Equals(entityKey))
             {
-                throw EntityUtil.AcceptChangesEntityKeyIsNotValid();
+                throw new InvalidOperationException(Strings.ObjectStateManager_AcceptChangesEntityKeyIsNotValid);
             }
             try
             {
                 _inRelationshipFixup = true;
                 entry.WrappedEntity.EntityKey = value; // user will have control
-                EntityUtil.CheckEntityKeysMatch(entry.WrappedEntity, value);
+                IEntityWrapper wrappedEntity = entry.WrappedEntity;
+                if (wrappedEntity.EntityKey != value)
+                {
+                    throw new InvalidOperationException(Strings.EntityKey_DoesntMatchKeyOnEntity(wrappedEntity.Entity.GetType().FullName));
+                }
             }
             finally
             {
@@ -2143,7 +2156,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>entry associated with entity</returns>
         public ObjectStateEntry ChangeObjectState(object entity, EntityState entityState)
         {
-            EntityUtil.CheckArgumentNull(entity, "entity");
+            Contract.Requires(entity != null);
             EntityUtil.CheckValidStateForChangeEntityState(entityState);
 
             EntityEntry entry = null;
@@ -2162,7 +2175,7 @@ namespace System.Data.Entity.Core.Objects
                     {
                         return null; // No-op
                     }
-                    throw EntityUtil.NoEntryExistsForObject(entity);
+                    throw new InvalidOperationException(Strings.ObjectStateManager_NoEntryExistsForObject(entity.GetType().FullName));
                 }
 
                 entry.ChangeObjectState(entityState);
@@ -2313,8 +2326,8 @@ namespace System.Data.Entity.Core.Objects
         private void VerifyParametersForChangeRelationshipState(
             object sourceEntity, object targetEntity, out EntityEntry sourceEntry, out EntityEntry targetEntry)
         {
-            EntityUtil.CheckArgumentNull(sourceEntity, "sourceEntity");
-            EntityUtil.CheckArgumentNull(targetEntity, "targetEntity");
+            Contract.Requires(sourceEntity != null);
+            Contract.Requires(targetEntity != null);
 
             sourceEntry = GetEntityEntryByObjectOrEntityKey(sourceEntity);
             targetEntry = GetEntityEntryByObjectOrEntityKey(targetEntity);
@@ -2401,7 +2414,7 @@ namespace System.Data.Entity.Core.Objects
 
             if (entry == null)
             {
-                throw EntityUtil.NoEntryExistsForObject(o);
+                throw new InvalidOperationException(Strings.ObjectStateManager_NoEntryExistsForObject(o.GetType().FullName));
             }
 
             if (entry.IsKeyEntry)
@@ -2432,7 +2445,7 @@ namespace System.Data.Entity.Core.Objects
             ObjectStateEntry entry;
             if (!TryGetObjectStateEntry(key, out entry))
             {
-                throw EntityUtil.NoEntryExistForEntityKey();
+                throw new InvalidOperationException(Strings.ObjectStateManager_NoEntryExistForEntityKey);
             }
             return entry;
         }
@@ -2442,7 +2455,7 @@ namespace System.Data.Entity.Core.Objects
             EntityEntry entry;
             if (!TryGetEntityEntry(key, out entry))
             {
-                throw EntityUtil.NoEntryExistForEntityKey();
+                throw new InvalidOperationException(Strings.ObjectStateManager_NoEntryExistForEntityKey);
             }
             return entry;
         }
@@ -2458,7 +2471,7 @@ namespace System.Data.Entity.Core.Objects
             ObjectStateEntry entry;
             if (!TryGetObjectStateEntry(entity, out entry))
             {
-                throw EntityUtil.NoEntryExistsForObject(entity);
+                throw new InvalidOperationException(Strings.ObjectStateManager_NoEntryExistsForObject(entity.GetType().FullName));
             }
             return entry;
         }
@@ -2471,7 +2484,7 @@ namespace System.Data.Entity.Core.Objects
             var entry = FindEntityEntry(entity);
             if (entry == null)
             {
-                throw EntityUtil.NoEntryExistsForObject(entity);
+                throw new InvalidOperationException(Strings.ObjectStateManager_NoEntryExistsForObject(entity.GetType().FullName));
             }
             return entry;
         }
@@ -2484,9 +2497,9 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>true if the corresponding ObjectStateEntry was found</returns>
         public bool TryGetObjectStateEntry(object entity, out ObjectStateEntry entry)
         {
+            Contract.Requires(entity != null);
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
             entry = null;
-            EntityUtil.CheckArgumentNull(entity, "entity");
 
             var entityKey = entity as EntityKey;
             if (entityKey != null)
@@ -2556,8 +2569,9 @@ namespace System.Data.Entity.Core.Objects
 
         internal bool TryGetEntityEntry(EntityKey key, out EntityEntry entry)
         {
+            Contract.Requires(key != null);
+
             entry = null; // must set before checking for null key
-            EntityUtil.CheckArgumentNull(key, "key");
             bool result;
             if (key.IsTemporary)
             {
@@ -2655,18 +2669,18 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>True if a RelationshipManager was found; false if The entity does not implement IEntityWithRelationships and is not tracked by this ObjectStateManager</returns>
         public bool TryGetRelationshipManager(object entity, out RelationshipManager relationshipManager)
         {
-            EntityUtil.CheckArgumentNull(entity, "entity");
+            Contract.Requires(entity != null);
             var withRelationships = entity as IEntityWithRelationships;
             if (withRelationships != null)
             {
                 relationshipManager = withRelationships.RelationshipManager;
                 if (relationshipManager == null)
                 {
-                    throw EntityUtil.UnexpectedNullRelationshipManager();
+                    throw new InvalidOperationException(Strings.RelationshipManager_UnexpectedNull);
                 }
                 if (relationshipManager.WrappedOwner.Entity != entity)
                 {
-                    throw EntityUtil.InvalidRelationshipManagerOwner();
+                    throw new InvalidOperationException(Strings.RelationshipManager_InvalidRelationshipManagerOwner);
                 }
             }
             else
@@ -3045,7 +3059,7 @@ namespace System.Data.Entity.Core.Objects
             }
             else
             {
-                throw EntityUtil.InvalidOperation(Strings.Mapping_CannotMapCLRTypeMultipleTimes(typeMetadata.CdmMetadata.EdmType.FullName));
+                throw new InvalidOperationException(Strings.Mapping_CannotMapCLRTypeMultipleTimes(typeMetadata.CdmMetadata.EdmType.FullName));
             }
             return typeMetadata;
         }
@@ -3143,7 +3157,7 @@ namespace System.Data.Entity.Core.Objects
                     if (entry.State
                         == EntityState.Deleted)
                     {
-                        throw EntityUtil.UnableToAddRelationshipWithDeletedEntity();
+                        throw new InvalidOperationException(Strings.RelatedEnd_UnableToAddRelationshipWithDeletedEntity);
                     }
                 }
 
@@ -3159,7 +3173,7 @@ namespace System.Data.Entity.Core.Objects
                             if (pair.Key.IsDependentEndOfReferentialConstraint(true)
                                 && pair.Value.Count > 0)
                             {
-                                throw EntityUtil.CannotChangeReferentialConstraintProperty();
+                                throw new InvalidOperationException(Strings.EntityReference_CannotChangeReferentialConstraintProperty);
                             }
                         }
 
@@ -3197,7 +3211,7 @@ namespace System.Data.Entity.Core.Objects
                             if (pair.Key.IsDependentEndOfReferentialConstraint(true)
                                 && pair.Value.Count > 0)
                             {
-                                throw EntityUtil.CannotChangeReferentialConstraintProperty();
+                                throw new InvalidOperationException(Strings.EntityReference_CannotChangeReferentialConstraintProperty);
                             }
                         }
 
@@ -3787,13 +3801,13 @@ namespace System.Data.Entity.Core.Objects
                 var ordinal = typeMetadata.GetOrdinalforCLayerMemberName(keyName);
                 if (ordinal < 0)
                 {
-                    throw EntityUtil.EntityTypeDoesNotMatchEntitySet(entity.GetType().FullName, entitySet.Name, "entity");
+                    throw new ArgumentException(Strings.ObjectStateManager_EntityTypeDoesnotMatchtoEntitySetType(entity.GetType().FullName, entitySet.Name), "entity");
                 }
 
                 keyValues[i] = typeMetadata.Member(ordinal).GetValue(entity);
                 if (keyValues[i] == null)
                 {
-                    throw EntityUtil.NullKeyValue(keyName, entitySet.ElementType.Name);
+                    throw new InvalidOperationException(Strings.EntityKey_NullKeyValue(keyName, entitySet.ElementType.Name));
                 }
             }
 

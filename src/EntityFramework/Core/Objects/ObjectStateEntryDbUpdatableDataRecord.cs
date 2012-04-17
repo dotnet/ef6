@@ -1,15 +1,17 @@
 namespace System.Data.Entity.Core.Objects
 {
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
 
     internal sealed class ObjectStateEntryDbUpdatableDataRecord : CurrentValueRecord
     {
         internal ObjectStateEntryDbUpdatableDataRecord(EntityEntry cacheEntry, StateManagerTypeMetadata metadata, object userObject)
             : base(cacheEntry, metadata, userObject)
         {
-            EntityUtil.CheckArgumentNull(cacheEntry, "cacheEntry");
-            EntityUtil.CheckArgumentNull(userObject, "userObject");
-            EntityUtil.CheckArgumentNull(metadata, "metadata");
+            Contract.Requires(cacheEntry != null);
+            Contract.Requires(userObject != null);
+            Contract.Requires(metadata != null);
             Debug.Assert(!cacheEntry.IsKeyEntry, "Cannot create an ObjectStateEntryDbUpdatableDataRecord for a key entry");
             switch (cacheEntry.State)
             {
@@ -27,7 +29,7 @@ namespace System.Data.Entity.Core.Objects
         internal ObjectStateEntryDbUpdatableDataRecord(RelationshipEntry cacheEntry)
             : base(cacheEntry)
         {
-            EntityUtil.CheckArgumentNull(cacheEntry, "cacheEntry");
+            Contract.Requires(cacheEntry != null);
             switch (cacheEntry.State)
             {
                 case EntityState.Unchanged:
@@ -59,7 +61,7 @@ namespace System.Data.Entity.Core.Objects
             if (_cacheEntry.IsRelationship)
             {
                 // Cannot modify relation values from the public API
-                throw EntityUtil.CantModifyRelationValues();
+                throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationValues);
             }
             else
             {

@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Text;
@@ -52,7 +53,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         internal void AddEntry(Record record)
         {
-            EntityUtil.CheckArgumentNull(record, "record");
+            Contract.Requires(record != null);
             m_log.Add(record);
         }
 

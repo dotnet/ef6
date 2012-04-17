@@ -8,6 +8,7 @@ namespace System.Data.Entity.SqlServer
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
+    using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Xml;
@@ -132,12 +133,52 @@ namespace System.Data.Entity.SqlServer
         {
             foreach (var knownAssemblyFullName in preferredSqlTypesAssemblies)
             {
-                if (EntityUtil.AssemblyNamesMatch(assembly.FullName, new AssemblyName(knownAssemblyFullName)))
+                if (AssemblyNamesMatch(assembly.FullName, new AssemblyName(knownAssemblyFullName)))
                 {
                     return true;
                 }
             }
             return false;
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
+        private static bool AssemblyNamesMatch(string infoRowProviderAssemblyName, AssemblyName targetAssemblyName)
+        {
+            if (string.IsNullOrWhiteSpace(infoRowProviderAssemblyName))
+            {
+                return false;
+            }
+
+            AssemblyName assemblyName;
+            try
+            {
+                assemblyName = new AssemblyName(infoRowProviderAssemblyName);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            // Match the provider assembly details
+            if (!string.Equals(targetAssemblyName.Name, assemblyName.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            if (targetAssemblyName.Version == null
+                || assemblyName.Version == null)
+            {
+                return false;
+            }
+
+            if (targetAssemblyName.Version.Major != assemblyName.Version.Major
+                || targetAssemblyName.Version.Minor != assemblyName.Version.Minor)
+            {
+                return false;
+            }
+
+            var targetPublicKeyToken = targetAssemblyName.GetPublicKeyToken();
+            return targetPublicKeyToken != null && targetPublicKeyToken.SequenceEqual(assemblyName.GetPublicKeyToken());
         }
 
         private static readonly Singleton<SqlTypesAssembly> latestVersion = new Singleton<SqlTypesAssembly>(BindToLatest);

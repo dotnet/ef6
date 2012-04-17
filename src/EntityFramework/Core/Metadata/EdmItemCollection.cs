@@ -10,6 +10,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.Linq;
     using System.Runtime.Versioning;
     using System.Text;
@@ -42,7 +44,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public EdmItemCollection(IEnumerable<XmlReader> xmlReaders)
             : base(DataSpace.CSpace)
         {
-            EntityUtil.CheckArgumentNull(xmlReaders, "xmlReaders");
+            Contract.Requires(xmlReaders != null);
             EntityUtil.CheckArgumentContainsNull(ref xmlReaders, "xmlReaders");
 
             var composite = MetadataArtifactLoader.CreateCompositeFromXmlReaders(xmlReaders);
@@ -67,7 +69,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public EdmItemCollection(params string[] filePaths)
             : base(DataSpace.CSpace)
         {
-            EntityUtil.CheckArgumentNull(filePaths, "filePaths");
+            Contract.Requires(filePaths != null);
 
             // Wrap the file paths in instances of the MetadataArtifactLoader class, which provides
             // an abstraction and a uniform interface over a diverse set of metadata artifacts.
@@ -111,7 +113,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             IEnumerable<string> filePaths,
             bool throwOnError)
         {
-            EntityUtil.CheckArgumentNull(xmlReaders, "xmlReaders");
+            Contract.Requires(xmlReaders != null);
 
             // do the basic initialization
             Init();
@@ -354,7 +356,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             else
             {
-                throw EntityUtil.InvalidEDMVersion(edmVersion);
+                throw new ArgumentException(Strings.InvalidEDMVersion(edmVersion.ToString(CultureInfo.CurrentCulture)));
             }
         }
 
@@ -418,7 +420,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Debug.Assert(function.IsModelDefinedFunction, "Function definition can be requested only for user-defined model functions.");
             if (!function.HasUserDefinedBody)
             {
-                throw EntityUtil.FunctionHasNoDefinition(function);
+                throw new InvalidOperationException(Strings.Cqt_UDF_FunctionHasNoDefinition(function.Identity));
             }
 
             DbLambda generatedDefinition;
@@ -432,7 +434,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // Ensure the result type of the generated definition matches the result type of the edm function (the declaration)
             if (!TypeSemantics.IsStructurallyEqual(function.ReturnParameter.TypeUsage, generatedDefinition.Body.ResultType))
             {
-                throw EntityUtil.FunctionDefinitionResultTypeMismatch(function, generatedDefinition.Body.ResultType);
+                throw new InvalidOperationException(Strings.Cqt_UDF_FunctionDefinitionResultTypeMismatch(
+                    function.ReturnParameter.TypeUsage.ToString(),
+                    function.FullName,
+                    generatedDefinition.Body.ResultType.ToString()));
             }
 
             Debug.Assert(generatedDefinition != null, "generatedDefinition != null");

@@ -5,9 +5,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
 
@@ -62,7 +64,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <param name="stateEntry">State entry for the entity being tracked.</param>
             internal void RegisterEntity(IEntityStateEntry stateEntry)
             {
-                EntityUtil.CheckArgumentNull(stateEntry, "stateEntry");
+                Contract.Requires(stateEntry != null);
 
                 if (EntityState.Added == stateEntry.State
                     || EntityState.Deleted == stateEntry.State)
@@ -71,7 +73,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     // cardinality constraints. Relationships are based on end keys, and it is not
                     // possible to modify key values.
                     Debug.Assert(null != (object)stateEntry.EntityKey, "entity state entry must have an entity key");
-                    var entityKey = EntityUtil.CheckArgumentNull(stateEntry.EntityKey, "stateEntry.EntityKey");
+                    var entityKey = stateEntry.EntityKey;
                     var entitySet = (EntitySet)stateEntry.EntitySet;
                     var entityType = EntityState.Added == stateEntry.State
                                          ? GetEntityType(stateEntry.CurrentValues)
@@ -144,9 +146,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <param name="stateEntry">State entry for the relationship being tracked</param>
             internal void RegisterAssociation(AssociationSet associationSet, IExtendedDataRecord record, IEntityStateEntry stateEntry)
             {
-                EntityUtil.CheckArgumentNull(associationSet, "relationshipSet");
-                EntityUtil.CheckArgumentNull(record, "record");
-                EntityUtil.CheckArgumentNull(stateEntry, "stateEntry");
+                Contract.Requires(associationSet != null);
+                Contract.Requires(record != null);
+                Contract.Requires(stateEntry != null);
 
                 Debug.Assert(associationSet.ElementType.Equals(record.DataRecordInfo.RecordType.EdmType));
 
@@ -252,12 +254,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         }
                         if (violationType.HasValue)
                         {
-                            throw EntityUtil.Update(
-                                Strings.Update_RelationshipCardinalityViolation(
-                                    maximumCount.Value,
-                                    violationType.Value, actualRelationship.AssociationSet.ElementType.FullName,
-                                    actualRelationship.FromEnd.Name, actualRelationship.ToEnd.Name, violationCount.Value),
-                                null, actualRelationship.GetEquivalenceSet().Select(reln => reln.StateEntry));
+                            throw new UpdateException(Strings.Update_RelationshipCardinalityViolation(
+                                maximumCount.Value,
+                                violationType.Value, actualRelationship.AssociationSet.ElementType.FullName,
+                                actualRelationship.FromEnd.Name, actualRelationship.ToEnd.Name, violationCount.Value), null, actualRelationship.GetEquivalenceSet().Select(reln => reln.StateEntry).Cast<ObjectStateEntry>().Distinct());
                         }
                     }
 
@@ -281,9 +281,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             ||
                             (!isAdd && EntityState.Deleted != entityEntry.State))
                         {
-                            throw EntityUtil.UpdateEntityMissingConstraintViolation(
-                                actualRelationship.AssociationSet.Name,
-                                actualRelationship.ToEnd.Name, actualRelationship.StateEntry);
+                            var message = Strings.Update_MissingRequiredEntity(actualRelationship.AssociationSet.Name, actualRelationship.StateEntry.State, actualRelationship.ToEnd.Name);
+                            throw EntityUtil.Update(message, null, actualRelationship.StateEntry);
                         }
                     }
                 }
@@ -411,11 +410,17 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     EntityKey toEntityKey, AssociationEndMember fromEnd, AssociationEndMember toEnd, AssociationSet associationSet,
                     IEntityStateEntry stateEntry)
                 {
-                    ToEntityKey = EntityUtil.CheckArgumentNull(toEntityKey, "toEntityKey");
-                    FromEnd = EntityUtil.CheckArgumentNull(fromEnd, "fromEnd");
-                    ToEnd = EntityUtil.CheckArgumentNull(toEnd, "toEnd");
-                    AssociationSet = EntityUtil.CheckArgumentNull(associationSet, "associationSet");
-                    StateEntry = EntityUtil.CheckArgumentNull(stateEntry, "stateEntry");
+                    Contract.Requires(toEntityKey != null);
+                    Contract.Requires(fromEnd != null);
+                    Contract.Requires(toEnd != null);
+                    Contract.Requires(associationSet != null);
+                    Contract.Requires(stateEntry != null);
+
+                    ToEntityKey = toEntityKey;
+                    FromEnd = fromEnd;
+                    ToEnd = toEnd;
+                    AssociationSet = associationSet;
+                    StateEntry = stateEntry;
                     _equivalenceSetLinkedListNext = this;
 
                     _hashCode = toEntityKey.GetHashCode() ^

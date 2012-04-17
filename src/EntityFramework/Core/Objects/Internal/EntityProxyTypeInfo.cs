@@ -181,7 +181,7 @@
                 && ospaceEntityType.HashedDescription != _entityType.HashedDescription)
             {
                 Debug.Assert(ospaceEntityType.ClrType == _entityType.ClrType);
-                throw EntityUtil.DuplicateTypeForProxyType(ospaceEntityType.ClrType);
+                throw new InvalidOperationException(Strings.EntityProxyTypeInfo_DuplicateOSpaceType(ospaceEntityType.ClrType.FullName));
             }
         }
 

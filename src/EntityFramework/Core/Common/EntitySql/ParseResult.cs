@@ -4,6 +4,7 @@
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Entity SQL Parser result information.
@@ -15,8 +16,8 @@
 
         internal ParseResult(DbCommandTree commandTree, List<FunctionDefinition> functionDefs)
         {
-            EntityUtil.CheckArgumentNull(commandTree, "commandTree");
-            EntityUtil.CheckArgumentNull(functionDefs, "functionDefs");
+            Contract.Requires(commandTree != null);
+            Contract.Requires(functionDefs != null);
 
             _commandTree = commandTree;
             _functionDefs = functionDefs.AsReadOnly();

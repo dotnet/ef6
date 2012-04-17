@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -106,7 +107,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     if (parameter == null)
                     {
-                        throw EntityUtil.CollectionParameterElementIsNull("parameters");
+                        throw new ArgumentException(Strings.ADP_CollectionParameterElementIsNull("parameters"));
                     }
                     Debug.Assert(
                         parameter.Mode != ParameterMode.ReturnValue, "No function parameter can have ParameterMode equal to ReturnValue.");

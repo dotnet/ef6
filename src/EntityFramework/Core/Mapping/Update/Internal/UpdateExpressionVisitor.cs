@@ -32,8 +32,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                                ? null
                                : node.ExpressionKind.ToString();
 
-            return EntityUtil.NotSupported(
-                Strings.Update_UnsupportedExpressionKind(nodeKind, VisitorName));
+            return new NotSupportedException(Strings.Update_UnsupportedExpressionKind(nodeKind, VisitorName));
         }
 
         #region IExpressionVisitor<TReturn> Members

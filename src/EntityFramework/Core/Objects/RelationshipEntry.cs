@@ -110,7 +110,7 @@
         public override void SetModified()
         {
             ValidateState();
-            throw EntityUtil.CantModifyRelationState();
+            throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationState);
         }
 
         public override object Entity
@@ -146,7 +146,7 @@
         {
             ValidateState();
 
-            throw EntityUtil.CantModifyRelationState();
+            throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationState);
         }
 
         /// <summary>
@@ -156,7 +156,7 @@
         {
             ValidateState();
 
-            throw EntityUtil.CantModifyRelationState();
+            throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationState);
         }
 
         /// <summary>
@@ -166,7 +166,7 @@
         {
             ValidateState();
 
-            throw EntityUtil.CantModifyRelationState();
+            throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationState);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@
                 ValidateState();
                 if (State == EntityState.Added)
                 {
-                    throw EntityUtil.OriginalValuesDoesNotExist();
+                    throw new InvalidOperationException(Strings.ObjectStateEntry_OriginalValuesDoesNotExist);
                 }
 
                 return new ObjectStateEntryDbDataRecord(this);
@@ -191,7 +191,7 @@
 
         public override OriginalValueRecord GetUpdatableOriginalValues()
         {
-            throw EntityUtil.CantModifyRelationValues();
+            throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationValues);
         }
 
         /// <summary>
@@ -207,7 +207,7 @@
                 ValidateState();
                 if (State == EntityState.Deleted)
                 {
-                    throw EntityUtil.CurrentValuesDoesNotExist();
+                    throw new InvalidOperationException(Strings.ObjectStateEntry_CurrentValuesDoesNotExist);
                 }
 
                 return new ObjectStateEntryDbUpdatableDataRecord(this);
@@ -252,12 +252,12 @@
 
         public override void ApplyCurrentValues(object currentEntity)
         {
-            throw EntityUtil.CantModifyRelationValues();
+            throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationValues);
         }
 
         public override void ApplyOriginalValues(object originalEntity)
         {
-            throw EntityUtil.CantModifyRelationValues();
+            throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationValues);
         }
 
         #endregion
@@ -286,7 +286,7 @@
         internal override void SetModifiedAll()
         {
             ValidateState();
-            throw EntityUtil.CantModifyRelationState();
+            throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationState);
         }
 
         internal override Type GetFieldType(int ordinal, StateManagerTypeMetadata metadata)
@@ -326,7 +326,7 @@
         /// <param name="entityMemberName">The name of the entity property that is changing</param>
         internal override void EntityMemberChanging(string entityMemberName)
         {
-            throw EntityUtil.CantModifyRelationValues();
+            throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationValues);
         }
 
         /// <summary>
@@ -337,7 +337,7 @@
         /// <param name="entityMemberName">The name of the entity property that has changing</param>
         internal override void EntityMemberChanged(string entityMemberName)
         {
-            throw EntityUtil.CantModifyRelationValues();
+            throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationValues);
         }
 
         /// <summary>
@@ -349,7 +349,7 @@
         /// <param name="complexObjectMemberName">The name of the property that is changing on complexObject</param>
         internal override void EntityComplexMemberChanging(string entityMemberName, object complexObject, string complexObjectMemberName)
         {
-            throw EntityUtil.CantModifyRelationValues();
+            throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationValues);
         }
 
         /// <summary>
@@ -361,7 +361,7 @@
         /// <param name="complexObjectMemberName">The name of the property that changed on complexObject</param>
         internal override void EntityComplexMemberChanged(string entityMemberName, object complexObject, string complexObjectMemberName)
         {
-            throw EntityUtil.CantModifyRelationValues();
+            throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationValues);
         }
 
         #endregion
@@ -398,7 +398,7 @@
             ValidateState();
             if (State == EntityState.Deleted && throwException)
             {
-                throw EntityUtil.CurrentValuesDoesNotExist();
+                throw new InvalidOperationException(Strings.ObjectStateEntry_CurrentValuesDoesNotExist);
             }
             return _relationshipWrapper.GetEntityKey(ordinal);
         }
@@ -407,7 +407,7 @@
         {
             if (unchecked(1u < (uint)ordinal))
             {
-                throw EntityUtil.ArgumentOutOfRange("ordinal");
+                throw new ArgumentOutOfRangeException("ordinal");
             }
         }
 

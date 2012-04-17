@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// A data reader class for the entity client provider
@@ -97,7 +98,7 @@ namespace System.Data.Entity.Core.EntityClient
         {
             get
             {
-                EntityUtil.CheckArgumentNull(name, "name");
+                Contract.Requires(name != null);
                 return _storeDataReader[name];
             }
         }
@@ -346,7 +347,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The ordinal of the column</returns>
         public override int GetOrdinal(string name)
         {
-            EntityUtil.CheckArgumentNull(name, "name");
+            Contract.Requires(name != null);
             return _storeDataReader.GetOrdinal(name);
         }
 
@@ -446,7 +447,7 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 if (EntityUtil.IsCatchableExceptionType(e))
                 {
-                    throw EntityUtil.CommandExecution(Strings.EntityClient_StoreReaderFailed, e);
+                    throw new EntityCommandExecutionException(Strings.EntityClient_StoreReaderFailed, e);
                 }
                 throw;
             }
@@ -479,7 +480,7 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 Debug.Assert(FieldCount == 0, "we have fields but no metadata?");
                 // for a query with no results, any request is out of range...
-                EntityUtil.ThrowArgumentOutOfRangeException("i");
+                throw new ArgumentOutOfRangeException("i");
             }
             return _storeExtendedDataRecord.GetDataRecord(i);
         }

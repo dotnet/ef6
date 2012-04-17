@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -20,7 +21,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             MetadataWorkspace metadataWorkspace,
             DataSpace targetDataspace)
         {
-            EntityUtil.CheckArgumentNull(metadataWorkspace, "metadataWorkspace");
+            Contract.Requires(metadataWorkspace != null);
 
             m_metadataWorkspace = metadataWorkspace;
             m_targetDataspace = targetDataspace;
@@ -50,7 +51,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="outMember">returns the member in target space, if a match is found</param>
         internal virtual bool TryGetMember(StructuralType type, String memberName, bool ignoreCase, out EdmMember outMember)
         {
-            EntityUtil.CheckArgumentNull(type, "type");
+            Contract.Requires(type != null);
             EntityUtil.CheckStringArgument(memberName, "memberName");
             outMember = null;
             return type.Members.TryGetValue(memberName, ignoreCase, out outMember);
@@ -58,7 +59,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal virtual bool TryGetEnumMember(EnumType type, String memberName, bool ignoreCase, out EnumMember outMember)
         {
-            EntityUtil.CheckArgumentNull(type, "type");
+            Contract.Requires(type != null);
             EntityUtil.CheckStringArgument(memberName, "memberName");
             outMember = null;
             return type.Members.TryGetValue(memberName, ignoreCase, out outMember);

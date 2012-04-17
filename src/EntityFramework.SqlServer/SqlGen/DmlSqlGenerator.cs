@@ -414,14 +414,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
                         if (identity)
                         {
                             // there can be only one server generated key
-                            throw EntityUtil.NotSupported(Strings.Update_NotSupportedServerGenKey(table.Name));
+                            throw new NotSupportedException(Strings.Update_NotSupportedServerGenKey(table.Name));
                         }
 
                         if (!IsValidScopeIdentityColumnType(keyMember.TypeUsage))
                         {
-                            throw EntityUtil.InvalidOperation(
-                                Strings.Update_NotSupportedIdentityType(
-                                    keyMember.Name, keyMember.TypeUsage.ToString()));
+                            throw new InvalidOperationException(Strings.Update_NotSupportedIdentityType(
+                                keyMember.Name, keyMember.TypeUsage.ToString()));
                         }
 
                         commandText.Append("scope_identity()");
@@ -625,9 +624,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
                         Debug.Assert(_commandTree.CommandTreeKind == DbCommandTreeKind.Update, "did you add a new option?");
                         missingCudElement = StorageMslConstructs.UpdateFunctionElement;
                     }
-                    throw EntityUtil.Update(
+                    throw new UpdateException(
                         Strings.Update_SqlEntitySetWithoutDmlFunctions(
-                            expression.Target.Name, missingCudElement, StorageMslConstructs.ModificationFunctionMappingElement), null);
+                            expression.Target.Name, missingCudElement, StorageMslConstructs.ModificationFunctionMappingElement));
                 }
 
                 _commandText.Append(SqlGenerator.GetTargetTSql(expression.Target));

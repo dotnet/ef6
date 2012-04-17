@@ -14,6 +14,7 @@ namespace System.Data.Entity.SqlServer
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
 
@@ -68,7 +69,7 @@ namespace System.Data.Entity.SqlServer
         /// <returns>a command object</returns>
         internal override DbCommand CreateCommand(DbCommandTree commandTree)
         {
-            EntityUtil.CheckArgumentNull(commandTree, "commandTree");
+            Contract.Requires(commandTree != null);
             var storeMetadata = (StoreItemCollection)commandTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
             Debug.Assert(storeMetadata.StoreProviderManifest != null, "StoreItemCollection has null StoreProviderManifest?");
 
@@ -86,13 +87,13 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         private static DbCommand CreateCommand(DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
-            EntityUtil.CheckArgumentNull(providerManifest, "providerManifest");
-            EntityUtil.CheckArgumentNull(commandTree, "commandTree");
+            Contract.Requires(providerManifest != null);
+            Contract.Requires(commandTree != null);
 
             var sqlManifest = (providerManifest as SqlProviderManifest);
             if (sqlManifest == null)
             {
-                throw EntityUtil.Argument(Strings.Mapping_Provider_WrongManifestType(typeof(SqlProviderManifest)));
+                throw new ArgumentException(Strings.Mapping_Provider_WrongManifestType(typeof(SqlProviderManifest)));
             }
 
             var sqlVersion = sqlManifest.SqlVersion;
@@ -162,7 +163,7 @@ namespace System.Data.Entity.SqlServer
                     &&
                     commandTree.CommandTreeKind != DbCommandTreeKind.Update)
                 {
-                    throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.SqlGenParametersNotPermitted);
+                    throw new InvalidOperationException(Strings.ADP_InternalProviderError(1017 /*InternalErrorCode.SqlGenParametersNotPermitted*/));
                 }
                 foreach (var parameter in parameters)
                 {
@@ -240,13 +241,13 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         protected override string GetDbProviderManifestToken(DbConnection connection)
         {
-            EntityUtil.CheckArgumentNull(connection, "connection");
+            Contract.Requires(connection != null);
 
             var sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
 
             if (string.IsNullOrEmpty(sqlConnection.ConnectionString))
             {
-                throw EntityUtil.Argument(Strings.UnableToDetermineStoreVersion);
+                throw new ArgumentException(Strings.UnableToDetermineStoreVersion);
             }
 
             string providerManifestToken = null;
@@ -269,7 +270,7 @@ namespace System.Data.Entity.SqlServer
         {
             if (string.IsNullOrEmpty(versionHint))
             {
-                throw EntityUtil.Argument(Strings.UnableToDetermineStoreVersion);
+                throw new ArgumentException(Strings.UnableToDetermineStoreVersion);
             }
 
             return new SqlProviderManifest(versionHint);
@@ -277,14 +278,14 @@ namespace System.Data.Entity.SqlServer
 
         protected override DbSpatialDataReader GetDbSpatialDataReader(DbDataReader fromReader, string versionHint)
         {
-            EntityUtil.CheckArgumentNull(fromReader, "fromReader");
+            Contract.Requires(fromReader != null);
 
             ValidateVersionHint(versionHint);
 
             var underlyingReader = fromReader as SqlDataReader;
             if (underlyingReader == null)
             {
-                throw EntityUtil.ProviderIncompatible(Strings.SqlProvider_NeedSqlDataReader(fromReader.GetType()));
+                throw new ProviderIncompatibleException(Strings.SqlProvider_NeedSqlDataReader(fromReader.GetType()));
             }
 
             return new SqlSpatialDataReader(underlyingReader);
@@ -300,7 +301,7 @@ namespace System.Data.Entity.SqlServer
         {
             if (string.IsNullOrEmpty(versionHint))
             {
-                throw EntityUtil.Argument(Strings.UnableToDetermineStoreVersion);
+                throw new ArgumentException(Strings.UnableToDetermineStoreVersion);
             }
 
             // GetSqlVersion will throw ArgumentException if manifestToken is null, empty, or not recognized.
@@ -309,7 +310,7 @@ namespace System.Data.Entity.SqlServer
             // SQL spatial support is only available for SQL Server 2008 and later
             if (tokenVersion < SqlVersion.Sql10)
             {
-                throw EntityUtil.ProviderIncompatible(Strings.SqlProvider_Sql2008RequiredForSpatial);
+                throw new ProviderIncompatibleException(Strings.SqlProvider_Sql2008RequiredForSpatial);
             }
         }
 
@@ -318,7 +319,7 @@ namespace System.Data.Entity.SqlServer
             SqlTypesAssembly sqlTypes;
             if (!TryGetSqlTypesAssembly(out sqlTypes))
             {
-                throw EntityUtil.SqlTypesAssemblyNotFound();
+                throw new InvalidOperationException(Strings.SqlProvider_SqlTypesAssemblyNotFound);
             }
             Debug.Assert(sqlTypes != null);
             return sqlTypes;
@@ -767,8 +768,8 @@ namespace System.Data.Entity.SqlServer
 
         protected override string DbCreateDatabaseScript(string providerManifestToken, StoreItemCollection storeItemCollection)
         {
-            EntityUtil.CheckArgumentNull(providerManifestToken, "providerManifestToken");
-            EntityUtil.CheckArgumentNull(storeItemCollection, "storeItemCollection");
+            Contract.Requires(providerManifestToken != null);
+            Contract.Requires(storeItemCollection != null);
             var version = SqlVersionUtils.GetSqlVersion(providerManifestToken);
             return CreateObjectsScript(version, storeItemCollection);
         }
@@ -786,8 +787,8 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override void DbCreateDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
-            EntityUtil.CheckArgumentNull(connection, "connection");
-            EntityUtil.CheckArgumentNull(storeItemCollection, "storeItemCollection");
+            Contract.Requires(connection != null);
+            Contract.Requires(storeItemCollection != null);
 
             var sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
             string databaseName, dataFileName, logFileName;
@@ -820,27 +821,19 @@ namespace System.Data.Entity.SqlServer
             }
             catch (Exception e)
             {
-                if (EntityUtil.IsCatchableExceptionType(e))
+                // Try to drop the database
+                try
                 {
-                    // Try to drop the database
-                    try
-                    {
-                        DropDatabase(sqlConnection, commandTimeout, databaseName);
-                    }
-                    catch (Exception ie)
-                    {
-                        // The creation of the database succeeded, the creation of the database objects failed, and the dropping of the database failed.
-                        if (EntityUtil.IsCatchableExceptionType(ie))
-                        {
-                            throw new InvalidOperationException(
-                                Strings.SqlProvider_IncompleteCreateDatabase,
-                                new AggregateException(Strings.SqlProvider_IncompleteCreateDatabaseAggregate, e, ie));
-                        }
-                        throw;
-                    }
-                    // The creation of the database succeeded, the creation of the database objects failed, the database was dropped, no reason to wrap the exception
-                    throw;
+                    DropDatabase(sqlConnection, commandTimeout, databaseName);
                 }
+                catch (Exception ie)
+                {
+                    // The creation of the database succeeded, the creation of the database objects failed, and the dropping of the database failed.
+                    throw new InvalidOperationException(
+                        Strings.SqlProvider_IncompleteCreateDatabase,
+                        new AggregateException(Strings.SqlProvider_IncompleteCreateDatabaseAggregate, e, ie));
+                }
+                // The creation of the database succeeded, the creation of the database objects failed, the database was dropped, no reason to wrap the exception
                 throw;
             }
         }
@@ -850,7 +843,7 @@ namespace System.Data.Entity.SqlServer
             var sqlManifest = (storeItemCollection.StoreProviderManifest as SqlProviderManifest);
             if (sqlManifest == null)
             {
-                throw EntityUtil.Argument(Strings.Mapping_Provider_WrongManifestType(typeof(SqlProviderManifest)));
+                throw new ArgumentException(Strings.Mapping_Provider_WrongManifestType(typeof(SqlProviderManifest)));
             }
             var sqlVersion = sqlManifest.SqlVersion;
             return sqlVersion;
@@ -889,7 +882,7 @@ namespace System.Data.Entity.SqlServer
             }
             else
             {
-                throw EntityUtil.InvalidOperation(Strings.SqlProvider_DdlGeneration_MissingInitialCatalog);
+                throw new InvalidOperationException(Strings.SqlProvider_DdlGeneration_MissingInitialCatalog);
             }
         }
 
@@ -964,8 +957,8 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override bool DbDatabaseExists(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
-            EntityUtil.CheckArgumentNull(connection, "connection");
-            EntityUtil.CheckArgumentNull(storeItemCollection, "storeItemCollection");
+            Contract.Requires(connection != null);
+            Contract.Requires(storeItemCollection != null);
 
             var sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
             var connectionBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString);
@@ -973,7 +966,7 @@ namespace System.Data.Entity.SqlServer
             if (string.IsNullOrEmpty(connectionBuilder.InitialCatalog)
                 && string.IsNullOrEmpty(connectionBuilder.AttachDBFilename))
             {
-                throw EntityUtil.InvalidOperation(Strings.SqlProvider_DdlGeneration_MissingInitialCatalog);
+                throw new InvalidOperationException(Strings.SqlProvider_DdlGeneration_MissingInitialCatalog);
             }
 
             if (!string.IsNullOrEmpty(connectionBuilder.InitialCatalog))
@@ -1014,7 +1007,7 @@ namespace System.Data.Entity.SqlServer
                     {
                         return false;
                     }
-                    throw EntityUtil.InvalidOperation(Strings.SqlProvider_DdlGeneration_CannotTellIfDatabaseExists, e);
+                    throw new InvalidOperationException(Strings.SqlProvider_DdlGeneration_CannotTellIfDatabaseExists, e);
                 }
             }
 
@@ -1055,8 +1048,8 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override void DbDeleteDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
-            EntityUtil.CheckArgumentNull(connection, "connection");
-            EntityUtil.CheckArgumentNull(storeItemCollection, "storeItemCollection");
+            Contract.Requires(connection != null);
+            Contract.Requires(storeItemCollection != null);
             var sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
 
             var connectionBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString);
@@ -1099,13 +1092,13 @@ namespace System.Data.Entity.SqlServer
                 }
                 else
                 {
-                    throw EntityUtil.InvalidOperation(Strings.SqlProvider_DdlGeneration_CannotDeleteDatabaseNoInitialCatalog);
+                    throw new InvalidOperationException(Strings.SqlProvider_DdlGeneration_CannotDeleteDatabaseNoInitialCatalog);
                 }
             }
                 // neither initial catalog nor attachDB file name are specified
             else
             {
-                throw EntityUtil.InvalidOperation(Strings.SqlProvider_DdlGeneration_MissingInitialCatalog);
+                throw new InvalidOperationException(Strings.SqlProvider_DdlGeneration_MissingInitialCatalog);
             }
         }
 

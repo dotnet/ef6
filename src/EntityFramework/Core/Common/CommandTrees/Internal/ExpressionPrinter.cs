@@ -493,7 +493,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
             public override TreeNode Visit(DbExpression e)
             {
-                throw EntityUtil.NotSupported(Strings.Cqt_General_UnsupportedExpression(e.GetType().FullName));
+                throw new NotSupportedException(Strings.Cqt_General_UnsupportedExpression(e.GetType().FullName));
             }
 
             public override TreeNode Visit(DbConstantExpression e)

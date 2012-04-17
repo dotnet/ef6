@@ -167,7 +167,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         private void ThrowInvalid(string message)
         {
-            throw EntityUtil.Argument(message, expressionArgumentName);
+            throw new ArgumentException(message, expressionArgumentName);
         }
     }
 }

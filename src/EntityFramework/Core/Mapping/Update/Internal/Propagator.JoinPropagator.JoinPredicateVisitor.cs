@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
 
     internal partial class Propagator
     {
@@ -78,7 +79,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     DbExpression joinCondition, out ReadOnlyCollection<DbExpression> leftKeySelectors,
                     out ReadOnlyCollection<DbExpression> rightKeySelectors)
                 {
-                    EntityUtil.CheckArgumentNull(joinCondition, "joinCondition");
+                    Contract.Requires(joinCondition != null);
 
                     // Constructs a new predicate visitor, which implements a visitor for expression nodes
                     // and returns no values. This visitor instead builds up a list of properties as leaves
@@ -109,7 +110,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 /// <returns>Results ignored by this visitor implementation.</returns>
                 public override object Visit(DbAndExpression node)
                 {
-                    EntityUtil.CheckArgumentNull(node, "node");
+                    Contract.Requires(node != null);
 
                     Visit(node.Left);
                     Visit(node.Right);
@@ -124,7 +125,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 /// <returns>Results ignored by this visitor implementation.</returns>
                 public override object Visit(DbComparisonExpression node)
                 {
-                    EntityUtil.CheckArgumentNull(node, "node");
+                    Contract.Requires(node != null);
 
                     if (DbExpressionKind.Equals
                         == node.ExpressionKind)

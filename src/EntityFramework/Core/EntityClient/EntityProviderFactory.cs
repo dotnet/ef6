@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <exception cref="NotSupportedException"></exception>
         public override DbCommandBuilder CreateCommandBuilder()
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <exception cref="NotSupportedException"></exception>
         public override DbDataAdapter CreateDataAdapter()
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>A CodeAccessPermission object</returns>
         public override CodeAccessPermission CreatePermission(PermissionState state)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>

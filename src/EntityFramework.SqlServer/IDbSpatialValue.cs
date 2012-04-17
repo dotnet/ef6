@@ -2,6 +2,7 @@ namespace System.Data.Entity.SqlServer
 {
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
 
     /// <summary>
@@ -134,7 +135,7 @@ namespace System.Data.Entity.SqlServer
 
         public Exception NotSqlCompatible()
         {
-            return EntityUtil.GeographyValueNotSqlCompatible();
+            return new ProviderIncompatibleException(Strings.SqlProvider_GeographyValueNotSqlCompatible);
         }
     }
 
@@ -214,7 +215,7 @@ namespace System.Data.Entity.SqlServer
 
         public Exception NotSqlCompatible()
         {
-            return EntityUtil.GeometryValueNotSqlCompatible();
+            return new ProviderIncompatibleException(Strings.SqlProvider_GeometryValueNotSqlCompatible);
         }
     }
 }

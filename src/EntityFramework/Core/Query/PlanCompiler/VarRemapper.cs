@@ -256,7 +256,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         protected override void VisitNestOp(NestBaseOp op, Node n)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         public override void Visit(PhysicalProjectOp op, Node n)

@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Resources;
 
     /// <summary>
     /// Class representing a collection of entity set objects
@@ -55,7 +56,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public override EntitySetBase this[int index]
         {
             get { return base[index]; }
-            set { throw EntityUtil.OperationOnReadOnlyCollection(); }
+            set { throw new InvalidOperationException(Strings.OperationOnReadOnlyCollection); }
         }
 
         /// <summary>
@@ -69,7 +70,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public override EntitySetBase this[string identity]
         {
             get { return base[identity]; }
-            set { throw EntityUtil.OperationOnReadOnlyCollection(); }
+            set { throw new InvalidOperationException(Strings.OperationOnReadOnlyCollection); }
         }
 
         #endregion
@@ -105,7 +106,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             EntityUtil.GenericCheckArgumentNull(entitySet, argumentName);
             if (entitySet.EntityContainer != null)
             {
-                throw EntityUtil.EntitySetInAnotherContainer(argumentName);
+                throw new ArgumentException(Strings.EntitySetInAnotherContainer, argumentName);
             }
         }
 

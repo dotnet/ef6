@@ -3,6 +3,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Core.Common.CommandTrees.Internal;
     using System.Data.Entity.Core.Common.Utils;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Specifies a clause in a modification operation setting the value of a property.
@@ -14,8 +15,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         internal DbSetClause(DbExpression targetProperty, DbExpression sourceValue)
         {
-            EntityUtil.CheckArgumentNull(targetProperty, "targetProperty");
-            EntityUtil.CheckArgumentNull(sourceValue, "sourceValue");
+            Contract.Requires(targetProperty != null);
+            Contract.Requires(sourceValue != null);
             _prop = targetProperty;
             _val = sourceValue;
         }

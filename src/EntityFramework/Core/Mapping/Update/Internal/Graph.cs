@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Text;
@@ -28,7 +29,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// equivalent</param>
         internal Graph(IEqualityComparer<TVertex> comparer)
         {
-            EntityUtil.CheckArgumentNull(comparer, "comparer");
+            Contract.Requires(comparer != null);
 
             m_comparer = comparer;
             m_successorMap = new Dictionary<TVertex, HashSet<TVertex>>(comparer);

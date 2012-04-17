@@ -2,6 +2,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 {
     using System.ComponentModel;
     using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
@@ -1582,7 +1583,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // Nullable complex types are not supported in v1, but we allow setting null here if the parent entity is detached
             if (newValue == null && IsChangeTracked)
             {
-                throw EntityUtil.NullableComplexTypesNotSupported(property);
+                throw new InvalidOperationException(Strings.ComplexObject_NullableComplexTypesNotSupported(property));
             }
 
             if (oldValue != null)

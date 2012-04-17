@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// <para>
@@ -45,8 +46,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private Propagator(UpdateTranslator parent, EntitySet table)
         {
             // Initialize propagator state.
-            EntityUtil.CheckArgumentNull(parent, "parent");
-            EntityUtil.CheckArgumentNull(table, "table");
+            Contract.Requires(parent != null);
+            Contract.Requires(table != null);
 
             m_updateTranslator = parent;
             m_table = table;
@@ -121,7 +122,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         public override ChangeNode Visit(DbCrossJoinExpression node)
         {
-            throw EntityUtil.NotSupported(Strings.Update_UnsupportedJoinType(node.ExpressionKind));
+            throw new NotSupportedException(Strings.Update_UnsupportedJoinType(node.ExpressionKind));
         }
 
         /// <summary>
@@ -133,12 +134,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns>Results propagated to the given join expression node.</returns>
         public override ChangeNode Visit(DbJoinExpression node)
         {
-            EntityUtil.CheckArgumentNull(node, "node");
+            Contract.Requires(node != null);
 
             if (DbExpressionKind.InnerJoin != node.ExpressionKind
                 && DbExpressionKind.LeftOuterJoin != node.ExpressionKind)
             {
-                throw EntityUtil.NotSupported(Strings.Update_UnsupportedJoinType(node.ExpressionKind));
+                throw new NotSupportedException(Strings.Update_UnsupportedJoinType(node.ExpressionKind));
             }
 
             // There are precisely two inputs to the join which we treat as the left and right children.
@@ -174,7 +175,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns>Result of propagating changes to this union all node.</returns>
         public override ChangeNode Visit(DbUnionAllExpression node)
         {
-            EntityUtil.CheckArgumentNull(node, "node");
+            Contract.Requires(node != null);
 
             // Initialize an empty change node result for the union all node
             var result = BuildChangeNode(node);
@@ -212,7 +213,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns>Result of propagating changes to the projection expression node.</returns>
         public override ChangeNode Visit(DbProjectExpression node)
         {
-            EntityUtil.CheckArgumentNull(node, "node");
+            Contract.Requires(node != null);
 
             // Initialize an empty change node result for the projection node.
             var result = BuildChangeNode(node);
@@ -247,9 +248,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="row">Row to project.</param>
         /// <param name="resultType">Type of the projected row.</param>
         /// <returns>Projected row.</returns>
-        private PropagatorResult Project(DbProjectExpression node, PropagatorResult row, TypeUsage resultType)
+        private static PropagatorResult Project(DbProjectExpression node, PropagatorResult row, TypeUsage resultType)
         {
-            EntityUtil.CheckArgumentNull(node, "node");
+            Contract.Requires(node != null);
 
             Debug.Assert(null != node.Projection, "CQT validates DbProjectExpression.Projection property");
 
@@ -257,7 +258,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             if (null == projection)
             {
-                throw EntityUtil.NotSupported(Strings.Update_UnsupportedProjection(node.Projection.ExpressionKind));
+                throw new NotSupportedException(Strings.Update_UnsupportedProjection(node.Projection.ExpressionKind));
             }
 
             // Initialize empty structure containing space for every element of the projection.
@@ -266,7 +267,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             // Extract value from the input row for every projection argument requested.
             for (var ordinal = 0; ordinal < projectedValues.Length; ordinal++)
             {
-                projectedValues[ordinal] = Evaluator.Evaluate(projection.Arguments[ordinal], row, this);
+                projectedValues[ordinal] = Evaluator.Evaluate(projection.Arguments[ordinal], row);
             }
 
             // Return a new row containing projected values.
@@ -287,7 +288,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns></returns>
         public override ChangeNode Visit(DbFilterExpression node)
         {
-            EntityUtil.CheckArgumentNull(node, "node");
+            Contract.Requires(node != null);
 
             // Initialize an empty change node for this filter node.
             var result = BuildChangeNode(node);
@@ -296,10 +297,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             var input = Visit(node.Input.Expression);
 
             // Implement insert propagation rule I(F) = Sigma_p I(S)
-            result.Inserted.AddRange(Evaluator.Filter(node.Predicate, input.Inserted, this));
+            result.Inserted.AddRange(Evaluator.Filter(node.Predicate, input.Inserted));
 
             // Implement delete propagation rule D(F) = Sigma_p D(S
-            result.Deleted.AddRange(Evaluator.Filter(node.Predicate, input.Deleted, this));
+            result.Deleted.AddRange(Evaluator.Filter(node.Predicate, input.Deleted));
 
             // The placeholder for a filter node is identical to that of the input, which has an 
             // identical shape (type).
@@ -316,7 +317,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns></returns>
         public override ChangeNode Visit(DbScanExpression node)
         {
-            EntityUtil.CheckArgumentNull(node, "node");
+            Contract.Requires(node != null);
 
             // Gets modifications requested for this extent from the grouper.
             var extent = node.Target;

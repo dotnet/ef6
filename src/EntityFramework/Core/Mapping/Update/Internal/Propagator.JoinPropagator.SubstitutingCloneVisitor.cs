@@ -1,5 +1,7 @@
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
+    using System.Diagnostics.Contracts;
+
     internal partial class Propagator
     {
         private partial class JoinPropagator
@@ -52,16 +54,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 /// <param name="key">Key to substitute</param>
                 /// <param name="placeholderKey">Key elements in the placeholder (ordinally aligned with 'key')</param>
                 /// <param name="mode">Mode of operation.</param>
-                /// <param name="translator">Translator context.</param>
                 /// <returns>Cloned placeholder with key values</returns>
                 internal static PropagatorResult Populate(
                     PropagatorResult placeholder, CompositeKey key,
-                    CompositeKey placeholderKey, PopulateMode mode, UpdateTranslator translator)
+                    CompositeKey placeholderKey, PopulateMode mode)
                 {
-                    EntityUtil.CheckArgumentNull(placeholder, "placeholder");
-                    EntityUtil.CheckArgumentNull(key, "key");
-                    EntityUtil.CheckArgumentNull(placeholderKey, "placeholderKey");
-                    EntityUtil.CheckArgumentNull(translator, "translator");
+                    Contract.Requires(placeholder != null);
+                    Contract.Requires(key != null);
+                    Contract.Requires(placeholderKey != null);
 
                     // Figure out which flags to apply to generated elements.
                     var isNull = mode == PopulateMode.NullModified || mode == PopulateMode.NullPreserve;

@@ -4,7 +4,10 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.Internal.Materialization;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
+    using System.Globalization;
 
     /// <summary>
     /// DbDataRecord functionality for the bridge.
@@ -171,11 +174,11 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         {
             if (IsExplicitlyClosed)
             {
-                throw EntityUtil.ClosedDataReaderError();
+                throw new InvalidOperationException(Strings.ADP_ClosedDataReaderError);
             }
             if (IsImplicitlyClosed)
             {
-                throw EntityUtil.ImplicitlyClosedDataReaderError();
+                throw new InvalidOperationException(Strings.ADP_ImplicitlyClosedDataReaderError);
             }
         }
 
@@ -188,7 +191,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
             if (!HasData)
             {
-                throw EntityUtil.NoData();
+                throw new InvalidOperationException(Strings.ADP_NoData);
             }
         }
 
@@ -205,11 +208,12 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             if (ordinal < 0
                 || ordinal >= _source.ColumnCount)
             {
-                throw EntityUtil.ArgumentOutOfRange("ordinal");
+                throw new ArgumentOutOfRangeException("ordinal");
             }
             if (_lastColumnRead >= ordinal)
             {
-                throw EntityUtil.NonSequentialColumnAccess(ordinal, _lastColumnRead + 1);
+                throw new InvalidOperationException(Strings.ADP_NonSequentialColumnAccess(
+                    ordinal.ToString(CultureInfo.InvariantCulture), (_lastColumnRead + 1).ToString(CultureInfo.InvariantCulture)));
             }
             _lastColumnRead = ordinal;
             // SQLBUDT #442001 -- we need to mark things that are not using GetBytes/GetChars
@@ -234,18 +238,20 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             if (ordinal < 0
                 || ordinal >= _source.ColumnCount)
             {
-                throw EntityUtil.ArgumentOutOfRange("ordinal");
+                throw new ArgumentOutOfRangeException("ordinal");
             }
             if (_lastColumnRead > ordinal
                 || (_lastColumnRead == ordinal && _lastDataOffsetRead == long.MaxValue))
             {
-                throw EntityUtil.NonSequentialColumnAccess(ordinal, _lastColumnRead + 1);
+                throw new InvalidOperationException(Strings.ADP_NonSequentialColumnAccess(
+                    ordinal.ToString(CultureInfo.InvariantCulture), (_lastColumnRead + 1).ToString(CultureInfo.InvariantCulture)));
             }
             if (_lastColumnRead == ordinal)
             {
                 if (_lastDataOffsetRead >= dataOffset)
                 {
-                    throw EntityUtil.NonSequentialArrayOffsetAccess(dataOffset, _lastDataOffsetRead + 1, methodName);
+                    throw new InvalidOperationException(Strings.ADP_NonSequentialChunkAccess(
+                        dataOffset.ToString(CultureInfo.InvariantCulture), (_lastDataOffsetRead + 1).ToString(CultureInfo.InvariantCulture), methodName));
                 }
                 // _lastDataOffsetRead will be set by GetBytes/GetChars, since we need to set it
                 // to the last offset that was actually read, which isn't necessarily what was 
@@ -344,7 +350,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             if (ordinal < 0
                 || ordinal >= _source.ColumnCount)
             {
-                throw EntityUtil.ArgumentOutOfRange("ordinal");
+                throw new ArgumentOutOfRangeException("ordinal");
             }
             TypeUsage result;
 
@@ -369,7 +375,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         public override string GetDataTypeName(int ordinal)
         {
             AssertReaderIsOpenWithData();
-            return TypeHelpers.GetFullName(GetTypeUsage(ordinal));
+            return GetTypeUsage(ordinal).ToString();
         }
 
         /// <summary>
@@ -525,7 +531,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         /// <returns></returns>
         public override int GetValues(object[] values)
         {
-            EntityUtil.CheckArgumentNull(values, "values");
+            Contract.Requires(values != null);
 
             var copy = Math.Min(values.Length, FieldCount);
             for (var i = 0; i < copy; ++i)

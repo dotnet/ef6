@@ -2,8 +2,10 @@ namespace System.Data.Entity.Core.Objects
 {
     using System.Collections;
     using System.ComponentModel;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Manages a list suitable for data binding.
@@ -73,7 +75,7 @@ namespace System.Data.Entity.Core.Objects
         {
             if (((IList)this).IsReadOnly)
             {
-                throw EntityUtil.WriteOperationNotAllowedOnReadOnlyBindingList();
+                throw new InvalidOperationException(Strings.ObjectView_WriteOperationNotAllowedOnReadOnlyBindingList);
             }
         }
 
@@ -157,7 +159,7 @@ namespace System.Data.Entity.Core.Objects
 
             if (IsElementTypeAbstract)
             {
-                throw EntityUtil.AddNewOperationNotAllowedOnAbstractBindingList();
+                throw new InvalidOperationException(Strings.ObjectView_AddNewOperationNotAllowedOnAbstractBindingList);
             }
 
             _viewData.EnsureCanAddNew();
@@ -201,12 +203,12 @@ namespace System.Data.Entity.Core.Objects
 
         PropertyDescriptor IBindingList.SortProperty
         {
-            get { throw EntityUtil.NotSupported(); }
+            get { throw new NotSupportedException(); }
         }
 
         ListSortDirection IBindingList.SortDirection
         {
-            get { throw EntityUtil.NotSupported(); }
+            get { throw new NotSupportedException(); }
         }
 
         public event ListChangedEventHandler ListChanged
@@ -217,27 +219,27 @@ namespace System.Data.Entity.Core.Objects
 
         void IBindingList.AddIndex(PropertyDescriptor property)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         void IBindingList.ApplySort(PropertyDescriptor property, ListSortDirection direction)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         int IBindingList.Find(PropertyDescriptor property, object key)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         void IBindingList.RemoveIndex(PropertyDescriptor property)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         void IBindingList.RemoveSort()
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         #endregion
@@ -261,7 +263,7 @@ namespace System.Data.Entity.Core.Objects
             set
             {
                 // this represents a ROW basically whole entity, we should not allow any setting
-                throw EntityUtil.CannotReplacetheEntityorRow();
+                throw new InvalidOperationException(Strings.ObjectView_CannotReplacetheEntityorRow);
             }
         }
 
@@ -273,7 +275,7 @@ namespace System.Data.Entity.Core.Objects
             set
             {
                 // this represents a ROW basically whole entity, we should not allow any setting
-                throw EntityUtil.CannotReplacetheEntityorRow();
+                throw new InvalidOperationException(Strings.ObjectView_CannotReplacetheEntityorRow);
             }
         }
 
@@ -289,13 +291,13 @@ namespace System.Data.Entity.Core.Objects
 
         int IList.Add(object value)
         {
-            EnsureWritableList();
+            Contract.Requires(value != null);
 
-            EntityUtil.CheckArgumentNull(value, "value");
+            EnsureWritableList();
 
             if (!(value is TElement))
             {
-                throw EntityUtil.IncompatibleArgument();
+                throw new ArgumentException(Strings.ObjectView_IncompatibleArgument);
             }
 
             ((ICancelAddNew)this).EndNew(_addNewIndex);
@@ -382,18 +384,18 @@ namespace System.Data.Entity.Core.Objects
 
         void IList.Insert(int index, object value)
         {
-            throw EntityUtil.IndexBasedInsertIsNotSupported();
+            throw new NotSupportedException(Strings.ObjectView_IndexBasedInsertIsNotSupported);
         }
 
         void IList.Remove(object value)
         {
-            EnsureWritableList();
+            Contract.Requires(value != null);
 
-            EntityUtil.CheckArgumentNull(value, "value");
+            EnsureWritableList();
 
             if (!(value is TElement))
             {
-                throw EntityUtil.IncompatibleArgument();
+                throw new ArgumentException(Strings.ObjectView_IncompatibleArgument);
             }
 
             Debug.Assert(((IList)this).Contains(value), "Value does not exist in view.");

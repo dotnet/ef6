@@ -4,9 +4,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -30,7 +32,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="table">Table for which changes are being processed.</param>
         internal TableChangeProcessor(EntitySet table)
         {
-            EntityUtil.CheckArgumentNull(table, "table");
+            Contract.Requires(table != null);
 
             m_table = table;
 
@@ -173,9 +175,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                                     insertResult, compiler.m_translator, m_table));
                         }
 
-                        throw EntityUtil.Update(
-                            Strings.Update_GeneralExecutionException,
-                            e, stateEntries);
+                        throw new UpdateException(Strings.Update_GeneralExecutionException, e, stateEntries.Cast<ObjectStateEntry>().Distinct());
                     }
                     throw;
                 }
@@ -238,7 +238,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 // if the duplication is due to shared principals, there is a duplicate key exception
                 var stateEntries = SourceInterpreter.GetAllStateEntries(change, compiler.m_translator, m_table)
                     .Concat(SourceInterpreter.GetAllStateEntries(other, compiler.m_translator, m_table));
-                throw EntityUtil.Update(Strings.Update_DuplicateKeys, null, stateEntries);
+                throw new UpdateException(Strings.Update_DuplicateKeys, null, stateEntries.Cast<ObjectStateEntry>().Distinct());
             }
             else
             {
@@ -270,9 +270,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 // to ensure the exception shape is consistent with constraint violations discovered while processing
                 // commands (a more conventional scenario in which different tables are contributing principal values)
                 // wrap a DataConstraintException in an UpdateException
-                throw EntityUtil.Update(
-                    Strings.Update_GeneralExecutionException,
-                    EntityUtil.Constraint(Strings.Update_ReferentialConstraintIntegrityViolation), commonDependents);
+                throw new UpdateException(Strings.Update_GeneralExecutionException, new ConstraintException(Strings.Update_ReferentialConstraintIntegrityViolation), commonDependents.Cast<ObjectStateEntry>().Distinct());
             }
         }
 

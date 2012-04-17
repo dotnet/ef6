@@ -2,6 +2,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Globalization;
 
@@ -95,7 +96,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 return base[relativeIndex];
             }
-            set { throw EntityUtil.OperationOnReadOnlyCollection(); }
+            set { throw new InvalidOperationException(Strings.OperationOnReadOnlyCollection); }
         }
 
         /// <summary>
@@ -109,7 +110,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public override EdmMember this[string identity]
         {
             get { return GetValue(identity, false); }
-            set { throw EntityUtil.OperationOnReadOnlyCollection(); }
+            set { throw new InvalidOperationException(Strings.OperationOnReadOnlyCollection); }
         }
 
         /// <summary>
@@ -192,7 +193,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // Check on the array index
             if (arrayIndex < 0)
             {
-                throw EntityUtil.ArgumentOutOfRange("arrayIndex");
+                throw new ArgumentOutOfRangeException("arrayIndex");
             }
 
             // Check if the array together with the array index has enough room to copy
@@ -200,7 +201,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             if (base.Count + baseTypeMemberCount
                 > array.Length - arrayIndex)
             {
-                throw EntityUtil.Argument("arrayIndex");
+                throw new ArgumentOutOfRangeException("arrayIndex");
             }
 
             // If the base type has any members, copy those first
@@ -248,7 +249,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (!TryGetValue(identity, ignoreCase, out item))
             {
-                throw EntityUtil.ItemInvalidIdentity(identity, "identity");
+                throw new ArgumentException(Strings.ItemInvalidIdentity(identity), "identity");
             }
 
             return item;
@@ -304,7 +305,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             if (index < 0
                 || index >= baseTypeMemberCount + thisTypeMemberCount)
             {
-                throw EntityUtil.ArgumentOutOfRange("index");
+                throw new ArgumentOutOfRangeException("index");
             }
 
             return index - baseTypeMemberCount;

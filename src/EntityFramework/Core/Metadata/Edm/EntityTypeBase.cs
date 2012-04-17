@@ -136,7 +136,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 // Check for each property to be non-null
                 if (null == member)
                 {
-                    throw EntityUtil.CollectionParameterElementIsNull("members");
+                    throw new ArgumentException(Strings.ADP_CollectionParameterElementIsNull("members"));
                 }
 
                 // Add the property to the member collection
@@ -162,13 +162,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 // Check for each keymember to be non-null
                 if (null == keyMember)
                 {
-                    throw EntityUtil.CollectionParameterElementIsNull("keyMembers");
+                    throw new ArgumentException(Strings.ADP_CollectionParameterElementIsNull("keyMembers"));
                 }
                 // Check for whether the key exists in the members collection
                 EdmMember member;
                 if (!Members.TryGetValue(keyMember, false, out member))
                 {
-                    throw EntityUtil.Argument(Strings.InvalidKeyMember(keyMember)); //--- to do, identify the right exception to throw here
+                    throw new ArgumentException(Strings.InvalidKeyMember(keyMember)); //--- to do, identify the right exception to throw here
                 }
                 // Add the key member to the key member collection 
                 AddKeyMember(member);

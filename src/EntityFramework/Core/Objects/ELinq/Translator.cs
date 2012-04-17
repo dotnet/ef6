@@ -75,9 +75,8 @@
                 // gets turned into a constant during funcletization and has special error handling).
                 if (linq == parent._funcletizer.RootContextExpression)
                 {
-                    throw EntityUtil.InvalidOperation(
-                        Strings.ELinq_UnsupportedUseOfContextParameter(
-                            parent._funcletizer.RootContextParameter.Name));
+                    throw new InvalidOperationException(Strings.ELinq_UnsupportedUseOfContextParameter(
+                        parent._funcletizer.RootContextParameter.Name));
                 }
 
                 var queryOfT = linq.Value as ObjectQuery;
@@ -131,11 +130,11 @@
                 {
                     if (isNullValue)
                     {
-                        throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedNullConstant(DescribeClrType(linq.Type)));
+                        throw new NotSupportedException(Strings.ELinq_UnsupportedNullConstant(DescribeClrType(linq.Type)));
                     }
                     else
                     {
-                        throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedConstant(DescribeClrType(linq.Type)));
+                        throw new NotSupportedException(Strings.ELinq_UnsupportedConstant(DescribeClrType(linq.Type)));
                     }
                 }
 
@@ -208,7 +207,7 @@
                 }
 
                 // no other property types are supported by LINQ over entities
-                throw EntityUtil.NotSupported(Strings.ELinq_UnrecognizedMember(linq.Member.Name));
+                throw new NotSupportedException(Strings.ELinq_UnrecognizedMember(linq.Member.Name));
             }
 
             #region Static members and initializers
@@ -770,7 +769,7 @@
             protected override DbExpression TypedTranslate(ExpressionConverter parent, ParameterExpression linq)
             {
                 // Bindings should be intercepted before we get to this point (in ExpressionConverter.TranslateExpression)
-                throw EntityUtil.InvalidOperation(Strings.ELinq_UnboundParameterExpression(linq.Name));
+                throw new InvalidOperationException(Strings.ELinq_UnboundParameterExpression(linq.Name));
             }
         }
 
@@ -790,7 +789,7 @@
                     ||
                     linq.Arguments.Count != memberCount)
                 {
-                    throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedConstructor);
+                    throw new NotSupportedException(Strings.ELinq_UnsupportedConstructor);
                 }
 
                 parent.CheckInitializerType(linq.Type);
@@ -864,7 +863,7 @@
                     }
                 }
 
-                throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedType(DescribeClrType(linq.Type)));
+                throw new NotSupportedException(Strings.ELinq_UnsupportedType(DescribeClrType(linq.Type)));
             }
         }
 
@@ -882,12 +881,12 @@
                 if ((linq.NewExpression.Constructor != null)
                     && (linq.NewExpression.Constructor.GetParameters().Length != 0))
                 {
-                    throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedConstructor);
+                    throw new NotSupportedException(Strings.ELinq_UnsupportedConstructor);
                 }
 
                 if (linq.Initializers.Any(i => i.Arguments.Count != 1))
                 {
-                    throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedInitializers);
+                    throw new NotSupportedException(Strings.ELinq_UnsupportedInitializers);
                 }
 
                 return DbExpressionBuilder.NewCollection(linq.Initializers.Select(i => parent.TranslateExpression(i.Arguments[0])));
@@ -908,7 +907,7 @@
                     ||
                     0 != linq.NewExpression.Constructor.GetParameters().Length)
                 {
-                    throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedConstructor);
+                    throw new NotSupportedException(Strings.ELinq_UnsupportedConstructor);
                 }
 
                 parent.CheckInitializerType(linq.Type);
@@ -923,7 +922,7 @@
                     var binding = linq.Bindings[i] as MemberAssignment;
                     if (null == binding)
                     {
-                        throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedBinding);
+                        throw new NotSupportedException(Strings.ELinq_UnsupportedBinding);
                     }
                     string memberName;
                     Type memberType;
@@ -984,7 +983,7 @@
 
             internal override DbExpression Translate(ExpressionConverter parent, Expression linq)
             {
-                throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedExpressionType(linq.NodeType));
+                throw new NotSupportedException(Strings.ELinq_UnsupportedExpressionType(linq.NodeType));
             }
         }
 
@@ -1000,7 +999,7 @@
                 var queryParameter = linq as QueryParameterExpression;
                 if (null == queryParameter)
                 {
-                    throw EntityUtil.NotSupported(Strings.ELinq_UnsupportedExpressionType(linq.NodeType));
+                    throw new NotSupportedException(Strings.ELinq_UnsupportedExpressionType(linq.NodeType));
                 }
                 // otherwise add a new query parameter...
                 parent.AddParameter(queryParameter);

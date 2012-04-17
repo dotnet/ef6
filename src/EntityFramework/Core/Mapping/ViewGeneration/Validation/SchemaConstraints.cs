@@ -2,6 +2,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
+    using System.Diagnostics.Contracts;
     using System.Text;
 
     /// <summary>
@@ -42,7 +43,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         // effects: Adds a key constraint to this
         internal void Add(TKeyConstraint constraint)
         {
-            EntityUtil.CheckArgumentNull(constraint, "constraint");
+            Contract.Requires(constraint != null);
             m_keyConstraints.Add(constraint);
         }
 

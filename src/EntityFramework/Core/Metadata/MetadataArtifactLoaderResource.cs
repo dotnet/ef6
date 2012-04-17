@@ -188,7 +188,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 return resourceStream;
             }
-            throw EntityUtil.Metadata(Strings.UnableToLoadResource);
+            throw new MetadataException(Strings.UnableToLoadResource);
         }
 
         private bool TryCreateResourceStream(out Stream resourceStream)

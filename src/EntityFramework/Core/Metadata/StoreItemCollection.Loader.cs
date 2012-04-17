@@ -141,7 +141,7 @@
                         {
                             if (_throwOnError)
                             {
-                                throw EntityUtil.NotSupported(Strings.OnlyStoreConnectionsSupported);
+                                throw new NotSupportedException(Strings.OnlyStoreConnectionsSupported);
                             }
                             else
                             {

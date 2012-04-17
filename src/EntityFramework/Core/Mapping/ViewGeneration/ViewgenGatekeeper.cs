@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Text;
     using CellGroup = System.Data.Entity.Core.Common.Utils.Set<Structures.Cell>;
@@ -23,8 +24,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         /// <returns>Generated Views for EntitySets</returns>
         internal static ViewGenResults GenerateViewsFromMapping(StorageEntityContainerMapping containerMapping, ConfigViewGenerator config)
         {
-            EntityUtil.CheckArgumentNull(containerMapping, "containerMapping");
-            EntityUtil.CheckArgumentNull(config, "config");
+            Contract.Requires(containerMapping != null);
+            Contract.Requires(config != null);
             Debug.Assert(containerMapping.HasViews, "Precondition Violated: No mapping exists to generate views for!");
 
 #if DEBUG
@@ -53,10 +54,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             bool includeSubtypes,
             out bool success)
         {
-            EntityUtil.CheckArgumentNull(containerMapping, "containerMapping");
-            EntityUtil.CheckArgumentNull(config, "config");
-            EntityUtil.CheckArgumentNull(entity, "entity");
-            EntityUtil.CheckArgumentNull(type, "type");
+            Contract.Requires(containerMapping != null);
+            Contract.Requires(config != null);
+            Contract.Requires(entity != null);
+            Contract.Requires(type != null);
             Debug.Assert(!type.Abstract, "Can not generate OfType/OfTypeOnly query view for and abstract type");
 
             if (config.IsNormalTracing)
@@ -152,8 +153,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             CqlIdentifiers identifiers,
             StorageEntityContainerMapping containerMapping)
         {
-            EntityUtil.CheckArgumentNull(cells, "cells");
-            EntityUtil.CheckArgumentNull(config, "config");
+            Contract.Requires(cells != null);
+            Contract.Requires(config != null);
             Debug.Assert(cells.Count > 0, "There must be at least one cell in the container mapping");
 
             // Go through each table and determine their foreign key constraints

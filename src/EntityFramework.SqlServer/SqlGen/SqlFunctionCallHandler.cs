@@ -807,7 +807,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 "function attributed as NiladicFunction='true' in the provider manifest cannot have arguments");
             if (isNiladicFunction && e.Arguments.Count > 0)
             {
-                EntityUtil.Metadata(Strings.SqlGen_NiladicFunctionsCannotHaveParameters);
+                throw new MetadataException(Strings.SqlGen_NiladicFunctionsCannotHaveParameters);
             }
 
             if (!isNiladicFunction)
@@ -1069,15 +1069,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
             var constExpr = e.Arguments[0] as DbConstantExpression;
             if (null == constExpr)
             {
-                throw EntityUtil.InvalidOperation(
-                    Strings.SqlGen_InvalidDatePartArgumentExpression(e.Function.NamespaceName, e.Function.Name));
+                throw new InvalidOperationException(Strings.SqlGen_InvalidDatePartArgumentExpression(e.Function.NamespaceName, e.Function.Name));
             }
 
             var datepart = constExpr.Value as string;
             if (null == datepart)
             {
-                throw EntityUtil.InvalidOperation(
-                    Strings.SqlGen_InvalidDatePartArgumentExpression(e.Function.NamespaceName, e.Function.Name));
+                throw new InvalidOperationException(Strings.SqlGen_InvalidDatePartArgumentExpression(e.Function.NamespaceName, e.Function.Name));
             }
 
             var result = new SqlBuilder();
@@ -1087,8 +1085,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             //
             if (!_datepartKeywords.Contains(datepart))
             {
-                throw EntityUtil.InvalidOperation(
-                    Strings.SqlGen_InvalidDatePartArgumentValue(datepart, e.Function.NamespaceName, e.Function.Name));
+                throw new InvalidOperationException(Strings.SqlGen_InvalidDatePartArgumentValue(datepart, e.Function.NamespaceName, e.Function.Name));
             }
 
             //

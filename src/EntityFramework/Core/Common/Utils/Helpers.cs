@@ -2,6 +2,7 @@ namespace System.Data.Entity.Core.Common.Utils
 {
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     // Miscellaneous helper routines
@@ -86,8 +87,8 @@ namespace System.Data.Entity.Core.Common.Utils
         /// <returns>The single node that is the root of the balanced binary tree</returns>
         internal static TNode BuildBalancedTreeInPlace<TNode>(IList<TNode> nodes, Func<TNode, TNode, TNode> combinator)
         {
-            EntityUtil.CheckArgumentNull(nodes, "nodes");
-            EntityUtil.CheckArgumentNull(combinator, "combinator");
+            Contract.Requires(nodes != null);
+            Contract.Requires(combinator != null);
 
             Debug.Assert(nodes.Count > 0, "At least one node is required");
 
@@ -154,8 +155,8 @@ namespace System.Data.Entity.Core.Common.Utils
         internal static IEnumerable<TNode> GetLeafNodes<TNode>(
             TNode root, Func<TNode, bool> isLeaf, Func<TNode, IEnumerable<TNode>> getImmediateSubNodes)
         {
-            EntityUtil.CheckArgumentNull(isLeaf, "isLeaf");
-            EntityUtil.CheckArgumentNull(getImmediateSubNodes, "getImmediateSubNodes");
+            Contract.Requires(isLeaf != null);
+            Contract.Requires(getImmediateSubNodes != null);
 
             var nodes = new Stack<TNode>();
             nodes.Push(root);

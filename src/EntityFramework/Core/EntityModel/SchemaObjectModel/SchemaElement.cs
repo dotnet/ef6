@@ -336,7 +336,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
                 if (Schema == null)
                 {
-                    throw EntityUtil.InvalidOperation(Strings.AllElementsMustBeInSchema);
+                    throw new InvalidOperationException(Strings.AllElementsMustBeInSchema);
                 }
             }
         }

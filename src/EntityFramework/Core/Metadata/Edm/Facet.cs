@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     /// <summary>
@@ -50,7 +51,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">Thrown if facetDescription argument is null</exception>
         internal static Facet Create(FacetDescription facetDescription, object value, bool bypassKnownValues)
         {
-            EntityUtil.CheckArgumentNull(facetDescription, "facetDescription");
+            Contract.Requires(facetDescription != null);
 
             if (!bypassKnownValues)
             {

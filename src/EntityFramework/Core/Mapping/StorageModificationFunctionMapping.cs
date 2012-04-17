@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Text;
@@ -19,7 +20,9 @@ namespace System.Data.Entity.Core.Mapping
             StorageModificationFunctionMapping deleteFunctionMapping,
             StorageModificationFunctionMapping insertFunctionMapping)
         {
-            AssociationSet = EntityUtil.CheckArgumentNull(associationSet, "associationSet");
+            Contract.Requires(associationSet != null);
+
+            AssociationSet = associationSet;
             DeleteFunctionMapping = deleteFunctionMapping;
             InsertFunctionMapping = insertFunctionMapping;
         }
@@ -71,7 +74,9 @@ namespace System.Data.Entity.Core.Mapping
             StorageModificationFunctionMapping insertFunctionMapping,
             StorageModificationFunctionMapping updateFunctionMapping)
         {
-            EntityType = EntityUtil.CheckArgumentNull(entityType, "entityType");
+            Contract.Requires(entityType != null);
+
+            EntityType = entityType;
             DeleteFunctionMapping = deleteFunctionMapping;
             InsertFunctionMapping = insertFunctionMapping;
             UpdateFunctionMapping = updateFunctionMapping;
@@ -131,11 +136,13 @@ namespace System.Data.Entity.Core.Mapping
             FunctionParameter rowsAffectedParameter,
             IEnumerable<StorageModificationFunctionResultBinding> resultBindings)
         {
-            EntityUtil.CheckArgumentNull(entitySet, "entitySet");
-            Function = EntityUtil.CheckArgumentNull(function, "function");
+            Contract.Requires(entitySet != null);
+            Contract.Requires(function != null);
+            Contract.Requires(parameterBindings != null);
+
+            Function = function;
             RowsAffectedParameter = rowsAffectedParameter;
-            ParameterBindings = EntityUtil.CheckArgumentNull(parameterBindings, "parameterBindings")
-                .ToList().AsReadOnly();
+            ParameterBindings = parameterBindings.ToList().AsReadOnly();
             if (null != resultBindings)
             {
                 var bindings = resultBindings.ToList();
@@ -232,8 +239,11 @@ namespace System.Data.Entity.Core.Mapping
     {
         internal StorageModificationFunctionResultBinding(string columnName, EdmProperty property)
         {
-            ColumnName = EntityUtil.CheckArgumentNull(columnName, "columnName");
-            Property = EntityUtil.CheckArgumentNull(property, "property");
+            Contract.Requires(columnName != null);
+            Contract.Requires(property != null);
+
+            ColumnName = columnName;
+            Property = property;
         }
 
         /// <summary>
@@ -263,8 +273,11 @@ namespace System.Data.Entity.Core.Mapping
         internal StorageModificationFunctionParameterBinding(
             FunctionParameter parameter, StorageModificationFunctionMemberPath memberPath, bool isCurrent)
         {
-            Parameter = EntityUtil.CheckArgumentNull(parameter, "parameter");
-            MemberPath = EntityUtil.CheckArgumentNull(memberPath, "memberPath");
+            Contract.Requires(parameter != null);
+            Contract.Requires(memberPath != null);
+
+            Parameter = parameter;
+            MemberPath = memberPath;
             IsCurrent = isCurrent;
         }
 
@@ -299,9 +312,10 @@ namespace System.Data.Entity.Core.Mapping
     {
         internal StorageModificationFunctionMemberPath(IEnumerable<EdmMember> members, AssociationSet associationSetNavigation)
         {
-            Members = new ReadOnlyCollection<EdmMember>(
-                new List<EdmMember>(
-                    EntityUtil.CheckArgumentNull(members, "members")));
+            Contract.Requires(members != null);
+
+            Members = new ReadOnlyCollection<EdmMember>(new List<EdmMember>(members));
+
             if (null != associationSetNavigation)
             {
                 Debug.Assert(2 == Members.Count, "Association bindings must always consist of the end and the key");

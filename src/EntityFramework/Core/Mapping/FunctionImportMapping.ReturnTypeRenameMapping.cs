@@ -5,6 +5,7 @@
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Xml;
 
@@ -30,12 +31,13 @@
             LineInfo lineInfo)
             : base(columnsRenameList, lineInfo)
         {
-            IsOfTypeEntityTypes = new ReadOnlyCollection<EntityType>(
-                EntityUtil.CheckArgumentNull(isOfTypeEntityTypes, "isOfTypeEntityTypes").ToList());
-            EntityTypes = new ReadOnlyCollection<EntityType>(
-                EntityUtil.CheckArgumentNull(entityTypes, "entityTypes").ToList());
-            Conditions = new ReadOnlyCollection<FunctionImportEntityTypeMappingCondition>(
-                EntityUtil.CheckArgumentNull(conditions, "conditions").ToList());
+            Contract.Requires(isOfTypeEntityTypes != null);
+            Contract.Requires(entityTypes != null);
+            Contract.Requires(conditions != null);
+
+            IsOfTypeEntityTypes = new ReadOnlyCollection<EntityType>(isOfTypeEntityTypes.ToList());
+            EntityTypes = new ReadOnlyCollection<EntityType>(entityTypes.ToList());
+            Conditions = new ReadOnlyCollection<FunctionImportEntityTypeMappingCondition>(conditions.ToList());
         }
 
         internal readonly ReadOnlyCollection<FunctionImportEntityTypeMappingCondition> Conditions;
@@ -109,8 +111,8 @@
             Dictionary<EntityType, Collection<FunctionImportReturnTypePropertyMapping>> isOfTypeEntityTypeColumnsRenameMapping,
             Dictionary<EntityType, Collection<FunctionImportReturnTypePropertyMapping>> entityTypeColumnsRenameMapping)
         {
-            EntityUtil.CheckArgumentNull(isOfTypeEntityTypeColumnsRenameMapping, "isOfTypeEntityTypeColumnsRenameMapping");
-            EntityUtil.CheckArgumentNull(entityTypeColumnsRenameMapping, "entityTypeColumnsRenameMapping");
+            Contract.Requires(isOfTypeEntityTypeColumnsRenameMapping != null);
+            Contract.Requires(entityTypeColumnsRenameMapping != null);
 
             ColumnRenameMapping = new Dictionary<string, FunctionImportReturnTypeStructuralTypeColumnRenameMapping>();
 
@@ -136,8 +138,8 @@
             Collection<FunctionImportReturnTypePropertyMapping> columnsRenameMapping,
             bool isTypeOf)
         {
-            EntityUtil.CheckArgumentNull(entityType, "entityType");
-            EntityUtil.CheckArgumentNull(columnsRenameMapping, "columnsRenameMapping");
+            Contract.Requires(entityType != null);
+            Contract.Requires(columnsRenameMapping != null);
 
             foreach (var mapping in columnsRenameMapping)
             {
@@ -207,8 +209,9 @@
         /// <param name="lineInfo">Empty for default rename mapping.</param>
         internal string GetRename(EdmType type, out IXmlLineInfo lineInfo)
         {
+            Contract.Requires(type != null);
+
             Debug.Assert(type is StructuralType, "we can only rename structural type");
-            EntityUtil.CheckArgumentNull(type, "type");
 
             var rename = _renameCache.Evaluate(type as StructuralType);
             lineInfo = rename.LineInfo;
@@ -271,7 +274,7 @@
 
         internal void AddRename(FunctionImportReturnTypeStructuralTypeColumn renamedColumn)
         {
-            EntityUtil.CheckArgumentNull(renamedColumn, "renamedColumn");
+            Contract.Requires(renamedColumn != null);
 
             if (!renamedColumn.IsTypeOf)
             {

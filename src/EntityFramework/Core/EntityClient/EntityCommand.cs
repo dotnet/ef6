@@ -174,7 +174,7 @@ namespace System.Data.Entity.Core.EntityClient
                 // If the user set the command tree previously, then we cannot retrieve the command text
                 if (_commandTreeSetByUser != null)
                 {
-                    throw EntityUtil.InvalidOperation(Strings.EntityClient_CannotGetCommandText);
+                    throw new InvalidOperationException(Strings.EntityClient_CannotGetCommandText);
                 }
 
                 return _esqlCommandText ?? "";
@@ -186,7 +186,7 @@ namespace System.Data.Entity.Core.EntityClient
                 // If the user set the command tree previously, then we cannot set the command text
                 if (_commandTreeSetByUser != null)
                 {
-                    throw EntityUtil.InvalidOperation(Strings.EntityClient_CannotSetCommandText);
+                    throw new InvalidOperationException(Strings.EntityClient_CannotSetCommandText);
                 }
 
                 if (_esqlCommandText != value)
@@ -213,7 +213,7 @@ namespace System.Data.Entity.Core.EntityClient
                 // If the user set the command text previously, then we cannot retrieve the command tree
                 if (!string.IsNullOrEmpty(_esqlCommandText))
                 {
-                    throw EntityUtil.InvalidOperation(Strings.EntityClient_CannotGetCommandTree);
+                    throw new InvalidOperationException(Strings.EntityClient_CannotGetCommandTree);
                 }
 
                 return _commandTreeSetByUser;
@@ -225,13 +225,13 @@ namespace System.Data.Entity.Core.EntityClient
                 // If the user set the command text previously, then we cannot set the command tree
                 if (!string.IsNullOrEmpty(_esqlCommandText))
                 {
-                    throw EntityUtil.InvalidOperation(Strings.EntityClient_CannotSetCommandTree);
+                    throw new InvalidOperationException(Strings.EntityClient_CannotSetCommandTree);
                 }
 
                 // If the command type is not Text, CommandTree cannot be set
                 if (CommandType.Text != CommandType)
                 {
-                    throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.CommandTreeOnStoredProcedureEntityCommand);
+                    throw new InvalidOperationException(Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.CommandTreeOnStoredProcedureEntityCommand));
                 }
 
                 if (_commandTreeSetByUser != value)
@@ -295,7 +295,7 @@ namespace System.Data.Entity.Core.EntityClient
                 if (value != CommandType.Text
                     && value != CommandType.StoredProcedure)
                 {
-                    throw EntityUtil.NotSupported(Strings.EntityClient_UnsupportedCommandType);
+                    throw new NotSupportedException(Strings.EntityClient_UnsupportedCommandType);
                 }
 
                 _commandType = value;
@@ -566,11 +566,11 @@ namespace System.Data.Entity.Core.EntityClient
                             // This command was based on a prepared command definition and has no command text,
                             // so reprepare is not possible. To create a new command with different parameters
                             // requires creating a new entity command definition and calling it's CreateCommand method.
-                            throw EntityUtil.InvalidOperation(Strings.EntityClient_CannotReprepareCommandDefinitionBasedCommand);
+                            throw new InvalidOperationException(Strings.EntityClient_CannotReprepareCommandDefinitionBasedCommand);
                         }
                         else
                         {
-                            throw EntityUtil.InvalidOperation(Strings.EntityClient_NoCommandText);
+                            throw new InvalidOperationException(Strings.EntityClient_NoCommandText);
                         }
                     }
                 }
@@ -597,7 +597,7 @@ namespace System.Data.Entity.Core.EntityClient
                 ||
                 string.IsNullOrEmpty(CommandText.Trim()))
             {
-                throw EntityUtil.InvalidOperation(Strings.EntityClient_FunctionImportEmptyCommandText);
+                throw new InvalidOperationException(Strings.EntityClient_FunctionImportEmptyCommandText);
             }
 
             var workspace = _connection.GetMetadataWorkspace();
@@ -723,7 +723,7 @@ namespace System.Data.Entity.Core.EntityClient
             // validates metadata consistency)
             if (!_preparedCommandTree.MetadataWorkspace.IsMetadataWorkspaceCSCompatible(Connection.GetMetadataWorkspace()))
             {
-                throw EntityUtil.InvalidOperation(Strings.EntityClient_CommandTreeMetadataIncompatible);
+                throw new InvalidOperationException(Strings.EntityClient_CommandTreeMetadataIncompatible);
             }
             var result = EntityProviderServices.CreateCommandDefinition(_connection.StoreProviderFactory, _preparedCommandTree);
             return result;
@@ -733,7 +733,7 @@ namespace System.Data.Entity.Core.EntityClient
         {
             if (_connection == null)
             {
-                throw EntityUtil.InvalidOperation(Strings.EntityClient_NoConnectionForCommand);
+                throw new InvalidOperationException(Strings.EntityClient_NoConnectionForCommand);
             }
         }
 
@@ -748,7 +748,7 @@ namespace System.Data.Entity.Core.EntityClient
             if (_connection.StoreProviderFactory == null
                 || _connection.StoreConnection == null)
             {
-                throw EntityUtil.InvalidOperation(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
+                throw new InvalidOperationException(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
             }
 
             // Make sure the connection is not closed or broken
@@ -759,7 +759,7 @@ namespace System.Data.Entity.Core.EntityClient
                     _connection.State == ConnectionState.Closed
                         ? Strings.EntityClient_ConnectionStateClosed
                         : Strings.EntityClient_ConnectionStateBroken);
-                throw EntityUtil.InvalidOperation(message);
+                throw new InvalidOperationException(message);
             }
         }
 
@@ -770,7 +770,7 @@ namespace System.Data.Entity.Core.EntityClient
         {
             if (_dataReader != null)
             {
-                throw EntityUtil.InvalidOperation(Strings.EntityClient_DataReaderIsStillOpen);
+                throw new InvalidOperationException(Strings.EntityClient_DataReaderIsStillOpen);
             }
         }
 
@@ -791,7 +791,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var parameterName = parameter.ParameterName;
                 if (string.IsNullOrEmpty(parameterName))
                 {
-                    throw EntityUtil.InvalidOperation(Strings.EntityClient_EmptyParameterName);
+                    throw new InvalidOperationException(Strings.EntityClient_EmptyParameterName);
                 }
 
                 // Check each parameter to make sure it's an input parameter, currently EntityCommand doesn't support
@@ -799,14 +799,14 @@ namespace System.Data.Entity.Core.EntityClient
                 if (CommandType == CommandType.Text
                     && parameter.Direction != ParameterDirection.Input)
                 {
-                    throw EntityUtil.InvalidOperation(Strings.EntityClient_InvalidParameterDirection(parameter.ParameterName));
+                    throw new InvalidOperationException(Strings.EntityClient_InvalidParameterDirection(parameter.ParameterName));
                 }
 
                 // Checking that we can deduce the type from the parameter if the type is not set
                 if (parameter.EdmType == null && parameter.DbType == DbType.Object
                     && (parameter.Value == null || parameter.Value is DBNull))
                 {
-                    throw EntityUtil.InvalidOperation(Strings.EntityClient_UnknownParameterType(parameterName));
+                    throw new InvalidOperationException(Strings.EntityClient_UnknownParameterType(parameterName));
                 }
 
                 // Validate that the parameter has an appropriate type and value
@@ -821,7 +821,7 @@ namespace System.Data.Entity.Core.EntityClient
                 }
                 catch (ArgumentException e)
                 {
-                    throw EntityUtil.InvalidOperation(Strings.EntityClient_DuplicateParameterNames(parameter.ParameterName), e);
+                    throw new InvalidOperationException(Strings.EntityClient_DuplicateParameterNames(parameter.ParameterName), e);
                 }
             }
 

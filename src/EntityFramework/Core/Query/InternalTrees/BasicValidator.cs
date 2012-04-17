@@ -90,13 +90,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             Assert(
                 TypeSemantics.IsPrimitiveType(type, PrimitiveTypeKind.Boolean), "Type Mismatch: Expected Boolean; found {0} instead",
-                TypeHelpers.GetFullName(type));
+                type.ToString());
         }
 
         protected static void AssertCollectionType(TypeUsage type)
         {
             Assert(
-                TypeSemantics.IsCollectionType(type), "Type Mismatch: Expected Collection type: Found {0}", TypeHelpers.GetFullName(type));
+                TypeSemantics.IsCollectionType(type), "Type Mismatch: Expected Collection type: Found {0}", type.ToString());
         }
 
         protected static void AssertEqualTypes(TypeUsage type1, TypeUsage type2)

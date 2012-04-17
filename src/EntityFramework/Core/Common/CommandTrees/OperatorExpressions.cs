@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -54,7 +54,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -85,7 +85,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -104,7 +104,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -136,7 +136,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -155,7 +155,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -222,7 +222,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -241,7 +241,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -305,7 +305,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -324,7 +324,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -353,7 +353,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -372,7 +372,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -418,7 +418,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -437,7 +437,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -466,7 +466,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -485,7 +485,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -514,7 +514,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -533,7 +533,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -579,7 +579,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -598,7 +598,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -645,7 +645,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -664,7 +664,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -693,7 +693,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -712,7 +712,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -785,7 +785,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -804,7 +804,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -833,7 +833,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -852,7 +852,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }
@@ -881,7 +881,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
 
@@ -900,7 +900,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
             else
             {
-                throw EntityUtil.ArgumentNull("visitor");
+                throw new ArgumentNullException("visitor");
             }
         }
     }

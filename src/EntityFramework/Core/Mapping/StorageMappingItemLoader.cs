@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Text;
@@ -4042,9 +4043,12 @@ namespace System.Data.Entity.Core.Mapping
                 StorageMappingItemLoader parentLoader,
                 EntitySetBase extent)
             {
-                m_parentLoader = EntityUtil.CheckArgumentNull(parentLoader, "parentLoader");
+                Contract.Requires(parentLoader != null);
+                Contract.Requires(extent != null);
+
+                m_parentLoader = parentLoader;
                 // initialize member fields
-                m_modelContainer = EntityUtil.CheckArgumentNull(extent, "extent").EntityContainer;
+                m_modelContainer = extent.EntityContainer;
                 m_edmItemCollection = parentLoader.EdmItemCollection;
                 m_storeItemCollection = parentLoader.StoreItemCollection;
                 m_entitySet = extent as EntitySet;

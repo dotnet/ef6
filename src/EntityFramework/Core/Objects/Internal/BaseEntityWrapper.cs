@@ -2,6 +2,7 @@
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
@@ -40,7 +41,7 @@
             Debug.Assert(entity != null, "Factory should ensure wrapped entity here is never null.");
             if (relationshipManager == null)
             {
-                throw EntityUtil.UnexpectedNullRelationshipManager();
+                throw new InvalidOperationException(Strings.RelationshipManager_UnexpectedNull);
             }
             _relationshipManager = relationshipManager;
         }
@@ -66,7 +67,7 @@
             Debug.Assert(entity != null, "Factory should ensure wrapped entity here is never null.");
             if (relationshipManager == null)
             {
-                throw EntityUtil.UnexpectedNullRelationshipManager();
+                throw new InvalidOperationException(Strings.RelationshipManager_UnexpectedNull);
             }
             _identityType = identityType;
             _relationshipManager = relationshipManager;

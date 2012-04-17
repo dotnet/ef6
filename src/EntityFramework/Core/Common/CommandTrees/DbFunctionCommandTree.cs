@@ -4,6 +4,7 @@
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.CommandTrees.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Represents a function invocation expressed as a canonical command tree
@@ -32,7 +33,7 @@
             IEnumerable<KeyValuePair<string, TypeUsage>> parameters)
             : base(metadata, dataSpace)
         {
-            EntityUtil.CheckArgumentNull(edmFunction, "edmFunction");
+            Contract.Requires(edmFunction != null);
 
             _edmFunction = edmFunction;
             _resultType = resultType;

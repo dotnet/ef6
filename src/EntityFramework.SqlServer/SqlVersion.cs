@@ -74,7 +74,7 @@ namespace System.Data.Entity.SqlServer
                     return SqlProviderManifest.TokenSql10;
 
                 default:
-                    throw EntityUtil.Argument(Strings.UnableToDetermineStoreVersion);
+                    throw new ArgumentException(Strings.UnableToDetermineStoreVersion);
             }
         }
 
@@ -95,7 +95,7 @@ namespace System.Data.Entity.SqlServer
                 }
             }
 
-            throw EntityUtil.Argument(Strings.UnableToDetermineStoreVersion);
+            throw new ArgumentException(Strings.UnableToDetermineStoreVersion);
         }
 
         internal static bool IsPreKatmai(SqlVersion sqlVersion)

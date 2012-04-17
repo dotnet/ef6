@@ -70,7 +70,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             // The connection is required to get to the CommandDefinition builder.
             if (connection == null)
             {
-                throw EntityUtil.InvalidOperation(Strings.ObjectQuery_InvalidConnection);
+                throw new InvalidOperationException(Strings.ObjectQuery_InvalidConnection);
             }
 
             var services = DbProviderServices.GetProviderServices(connection);
@@ -94,14 +94,14 @@ namespace System.Data.Entity.Core.Objects.Internal
                     // we don't wan't folks to have to know all the various types of exceptions that can 
                     // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
                     // the inner exception of it.
-                    throw EntityUtil.CommandCompilation(Strings.EntityClient_CommandDefinitionPreparationFailed, e);
+                    throw new EntityCommandCompilationException(Strings.EntityClient_CommandDefinitionPreparationFailed, e);
                 }
                 throw;
             }
 
             if (definition == null)
             {
-                throw EntityUtil.ProviderDoesNotSupportCommandTrees();
+                throw new NotSupportedException(Strings.ADP_ProviderDoesNotSupportCommandTrees);
             }
 
             var entityDefinition = (EntityCommandDefinition)definition;

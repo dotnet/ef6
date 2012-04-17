@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// EntityRecordInfo class providing a simple way to access both the type information and the column information.
@@ -22,8 +23,8 @@ namespace System.Data.Entity.Core.Common
         public EntityRecordInfo(EntityType metadata, IEnumerable<EdmMember> memberInfo, EntityKey entityKey, EntitySet entitySet)
             : base(TypeUsage.Create(metadata), memberInfo)
         {
-            EntityUtil.CheckArgumentNull(entityKey, "entityKey");
-            EntityUtil.CheckArgumentNull(entitySet, "entitySet");
+            Contract.Requires(entityKey != null);
+            Contract.Requires(entitySet != null);
 
             _entityKey = entityKey;
             ValidateEntityType(entitySet);
@@ -38,7 +39,7 @@ namespace System.Data.Entity.Core.Common
         internal EntityRecordInfo(EntityType metadata, EntityKey entityKey, EntitySet entitySet)
             : base(TypeUsage.Create(metadata))
         {
-            EntityUtil.CheckArgumentNull(entityKey, "entityKey");
+            Contract.Requires(entityKey != null);
 
             _entityKey = entityKey;
 #if DEBUG
@@ -94,7 +95,7 @@ namespace System.Data.Entity.Core.Common
                 &&
                 !entitySet.ElementType.IsBaseTypeOf(RecordType.EdmType))
             {
-                throw EntityUtil.Argument(Strings.EntityTypesDoNotAgree);
+                throw new ArgumentException(Strings.EntityTypesDoNotAgree);
             }
         }
     }

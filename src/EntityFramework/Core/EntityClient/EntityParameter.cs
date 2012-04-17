@@ -128,7 +128,7 @@ namespace System.Data.Entity.Core.EntityClient
             if (!string.IsNullOrEmpty(parameterName)
                 && !DbCommandTree.IsValidParameterName(parameterName))
             {
-                throw EntityUtil.Argument(Strings.EntityClient_InvalidParameterName(parameterName), argumentName);
+                throw new ArgumentException(Strings.EntityClient_InvalidParameterName(parameterName), argumentName);
             }
             PropertyChanging();
             _parameterName = parameterName;
@@ -165,7 +165,7 @@ namespace System.Data.Entity.Core.EntityClient
                         }
                         catch (ArgumentException e)
                         {
-                            throw EntityUtil.InvalidOperation(Strings.EntityClient_CannotDeduceDbType, e);
+                            throw new InvalidOperationException(Strings.EntityClient_CannotDeduceDbType, e);
                         }
                     }
                 }
@@ -193,7 +193,7 @@ namespace System.Data.Entity.Core.EntityClient
                 if (value != null
                     && !Helper.IsScalarType(value))
                 {
-                    throw EntityUtil.InvalidOperation(Strings.EntityClient_EntityParameterEdmTypeNotScalar(value.FullName));
+                    throw new InvalidOperationException(Strings.EntityClient_EntityParameterEdmTypeNotScalar(value.FullName));
                 }
                 PropertyChanging();
                 _edmType = value;
@@ -396,9 +396,8 @@ namespace System.Data.Entity.Core.EntityClient
             TypeUsage typeUsage;
             if (!IsTypeConsistent)
             {
-                throw EntityUtil.InvalidOperation(
-                    Strings.EntityClient_EntityParameterInconsistentEdmType(
-                        _edmType.FullName, _parameterName));
+                throw new InvalidOperationException(Strings.EntityClient_EntityParameterInconsistentEdmType(
+                    _edmType.FullName, _parameterName));
             }
 
             if (_edmType != null)
@@ -419,7 +418,7 @@ namespace System.Data.Entity.Core.EntityClient
                 }
                 else
                 {
-                    throw EntityUtil.InvalidOperation(Strings.EntityClient_UnsupportedDbType(DbType.ToString(), ParameterName));
+                    throw new InvalidOperationException(Strings.EntityClient_UnsupportedDbType(DbType.ToString(), ParameterName));
                 }
             }
 

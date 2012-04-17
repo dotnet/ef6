@@ -122,7 +122,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         public IRelationshipEnd this[int index]
         {
             get { return EndLookup[KeysInDefOrder[index]]; }
-            set { throw EntityUtil.NotSupported(); }
+            set { throw new NotSupportedException(); }
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns>nothing</returns>
         int IList<IRelationshipEnd>.IndexOf(IRelationshipEnd end)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="end">the end</param>
         void IList<IRelationshipEnd>.Insert(int index, IRelationshipEnd end)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="index">the index</param>
         void IList<IRelationshipEnd>.RemoveAt(int index)
         {
-            throw EntityUtil.NotSupported();
+            throw new NotSupportedException();
         }
 
         /// <summary>

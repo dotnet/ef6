@@ -1,5 +1,7 @@
 namespace System.Data.Entity.Core.Mapping
 {
+    using System.Diagnostics.Contracts;
+
     /// <summary>
     /// Attribute to mark the assemblies that contain the generated views type.
     /// </summary>
@@ -13,7 +15,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         public EntityViewGenerationAttribute(Type viewGenerationType)
         {
-            EntityUtil.CheckArgumentNull(viewGenerationType, "viewGenType");
+            Contract.Requires(viewGenerationType != null);
             m_viewGenType = viewGenerationType;
         }
 

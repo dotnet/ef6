@@ -13,12 +13,12 @@
     {
         internal static Exception UnhandledExpressionType(ExpressionType expressionType)
         {
-            return EntityUtil.NotSupported(Strings.ELinq_UnhandledExpressionType(expressionType));
+            return new NotSupportedException(Strings.ELinq_UnhandledExpressionType(expressionType));
         }
 
         internal static Exception UnhandledBindingType(MemberBindingType memberBindingType)
         {
-            return EntityUtil.NotSupported(Strings.ELinq_UnhandledBindingType(memberBindingType));
+            return new NotSupportedException(Strings.ELinq_UnhandledBindingType(memberBindingType));
         }
     }
 

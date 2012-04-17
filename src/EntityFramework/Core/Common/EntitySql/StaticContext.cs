@@ -328,7 +328,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         internal override DbExpression GetExpression(string refName, ErrorContext errCtx)
         {
-            throw EntityUtil.EntitySqlError(errCtx, Strings.InvalidGroupIdentifierReference(refName));
+            string message = Strings.InvalidGroupIdentifierReference(refName);
+            throw EntitySqlException.Create(errCtx, message, null);
         }
     }
 
@@ -476,7 +477,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (0 > scopeIndex
                 || scopeIndex > CurrentScopeIndex)
             {
-                throw EntityUtil.EntitySqlError(Strings.InvalidScopeIndex);
+                string message = Strings.InvalidScopeIndex;
+                throw new EntitySqlException(message);
             }
             return _scopes[scopeIndex];
         }
@@ -496,7 +498,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (scopeIndex > CurrentScopeIndex || scopeIndex < 0
                 || CurrentScopeIndex < 0)
             {
-                throw EntityUtil.EntitySqlError(Strings.InvalidSavePoint);
+                string message = Strings.InvalidSavePoint;
+                throw new EntitySqlException(message);
             }
 
             var delta = CurrentScopeIndex - scopeIndex;

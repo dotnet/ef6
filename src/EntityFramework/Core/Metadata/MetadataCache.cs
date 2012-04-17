@@ -852,7 +852,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 if ((loader.GetPaths(DataSpace.SSpace) == null)
                     || (loader.GetPaths(DataSpace.SSpace).Count == 0))
                 {
-                    throw EntityUtil.Metadata(Strings.AtleastOneSSDLNeeded);
+                    throw new MetadataException(Strings.AtleastOneSSDLNeeded);
                 }
 
                 _edmItemCollection = edmItemCollection;
