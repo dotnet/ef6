@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
 using NorthwindEFModel;
+using SampleEntityFrameworkProvider;
 using Xunit;
 
 namespace ProviderTests
@@ -27,7 +28,9 @@ namespace ProviderTests
                     1, 
                     ExecuteScalar(
                         string.Format(
-                            "SELECT COUNT(*) FROM Customers WHERE CustomerID = '{0}' AND CompanyName = '{1}'",
+                            "SELECT COUNT(*) " +
+                            "FROM Customers " +
+                            "WHERE CustomerID = '{0}' AND CompanyName = '{1}' AND Location.STAsText() = 'POINT (17.038333 51.107778)'",
                             customerId, 
                             companyName)));
 
@@ -52,6 +55,7 @@ namespace ProviderTests
                         .Single(c => c.CustomerID == customerId);
 
                     customer.CompanyName = newCompanyName;
+                    customer.Location = SpatialServices.Instance.GeographyFromText("POINT (-122.191667 47.685833)");
 
                     northwindContext.SaveChanges();
                 }
@@ -61,7 +65,9 @@ namespace ProviderTests
                     1,
                     ExecuteScalar(
                         string.Format(
-                            "SELECT COUNT(*) FROM Customers WHERE CustomerID = '{0}' AND CompanyName = '{1}'",
+                            "SELECT COUNT(*) " +
+                            "FROM Customers " +
+                            "WHERE CustomerID = '{0}' AND CompanyName = '{1}' AND Location.STAsText() = 'POINT (-122.191667 47.685833)'",
                             customerId,
                             newCompanyName)));
             }
@@ -96,6 +102,35 @@ namespace ProviderTests
             }
         }
 
+        [Fact]
+        public void Verify_Update_DbGeography()
+        {
+            using (var transaction = new TransactionScope())
+            {
+                int orderID;
+                using (var northwindContext = new NorthwindEntities())
+                {
+                    var order = northwindContext
+                        .Orders
+                        .OrderBy(o => o.OrderID)
+                        .First();
+
+                    orderID = order.OrderID;
+
+                    order.ContainerSize = SpatialServices.Instance.GeometryFromText("LINESTRING (100 100, 20 180, 180 180)");
+                    northwindContext.SaveChanges();
+                }
+
+                // Verify the customer was updated
+                Assert.Equal(
+                    1,
+                    ExecuteScalar(
+                        string.Format(
+                            "SELECT COUNT(*) FROM Orders WHERE OrderID = '{0}' AND ContainerSize.STAsText() = 'LINESTRING (100 100, 20 180, 180 180)'",
+                            orderID)));
+            }
+        }
+
         private static void InsertCustomer()
         {
             using (var northwindContext = new NorthwindEntities())
@@ -104,7 +139,8 @@ namespace ProviderTests
                     new Customer()
                         {
                             CustomerID = customerId,
-                            CompanyName = companyName
+                            CompanyName = companyName,
+                            Location = SpatialServices.Instance.GeographyFromText("POINT (17.038333 51.107778)")
                         });
 
                 northwindContext.SaveChanges();

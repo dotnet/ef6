@@ -279,6 +279,9 @@ namespace SampleEntityFrameworkProvider
                 //case PrimitiveTypeKind.UInt32: return DbType.UInt32;
                 //case PrimitiveTypeKind.UInt64: return DbType.UInt64;
                 //case PrimitiveTypeKind.Xml: return DbType.Xml;
+                case PrimitiveTypeKind.Geography: 
+                case PrimitiveTypeKind.Geometry:
+                    return DbType.Object;
                 default:
                     Debug.Fail("unknown PrimitiveTypeKind" + primitiveType.ToString());
                     throw new InvalidOperationException(string.Format("Unknown PrimitiveTypeKind {0}", primitiveType));

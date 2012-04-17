@@ -62,7 +62,11 @@ namespace SampleEntityFrameworkProvider
                 //  update Foo
                 //  set @i = 0
                 //  where ...
-                DbParameter parameter = translator.CreateParameter(default(Int32), DbType.Int32);
+                DbParameter parameter = 
+                    translator.CreateParameter(
+                    default(Int32), 
+                    TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)));
+
                 commandText.Append(parameter.ParameterName);
                 commandText.Append(" = 0");
             }
@@ -424,19 +428,15 @@ namespace SampleEntityFrameworkProvider
             // generate parameter (name based on parameter ordinal)
             internal SqlParameter CreateParameter(object value, TypeUsage type)
             {
-                PrimitiveTypeKind primitiveType = MetadataHelpers.GetPrimitiveTypeKind(type);
-                DbType dbType = MetadataHelpers.GetDbType(primitiveType);
-                return CreateParameter(value, dbType);
-            }
+                var parameter = SampleProviderServices.CreateSqlParameter(
+                    string.Concat("@p", parameterNameCount.ToString(CultureInfo.InvariantCulture)),
+                    type,
+                    ParameterMode.In,
+                    value);
 
-            // Creates a new parameter for a value in this expression translator
-            internal SqlParameter CreateParameter(object value, DbType dbType)
-            {
-                string parameterName = string.Concat("@p", parameterNameCount.ToString(CultureInfo.InvariantCulture));
                 parameterNameCount++;
-                SqlParameter parameter = new SqlParameter(parameterName, value);
-                parameter.DbType = dbType;
                 _parameters.Add(parameter);
+
                 return parameter;
             }
 
