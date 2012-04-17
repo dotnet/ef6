@@ -294,6 +294,26 @@ namespace SampleEntityFrameworkProvider
             functionHandlers.Add("datediff", HandleDatepartDateFunction);
             functionHandlers.Add("datename", HandleDatepartDateFunction);
             functionHandlers.Add("datepart", HandleDatepartDateFunction);
+
+            // Spatial functions are mapped to static or instance members of geography/geometry
+            // Geography Static functions
+            functionHandlers.Add("POINTGEOGRAPHY", (sqlgen, functionExpression) => sqlgen.HandleFunctionDefaultGivenName(functionExpression, "geography::Point"));
+
+            // Geometry Static functions
+            functionHandlers.Add("POINTGEOMETRY", (sqlgen, functionExpression) => sqlgen.HandleFunctionDefaultGivenName(functionExpression, "geometry::Point"));
+
+            // Spatial Instance functions (shared)
+            functionHandlers.Add("ASTEXTZM", (sqlgen, functionExpression) => sqlgen.WriteInstanceFunctionCall("AsTextZM", functionExpression, isPropertyAccess: false, castReturnTypeTo: null));
+            functionHandlers.Add("BUFFERWITHTOLERANCE", (sqlgen, functionExpression) => sqlgen.WriteInstanceFunctionCall("BufferWithTolerance", functionExpression, isPropertyAccess: false, castReturnTypeTo: null));
+            functionHandlers.Add("ENVELOPEANGLE", (sqlgen, functionExpression) => sqlgen.WriteInstanceFunctionCall("EnvelopeAngle", functionExpression, isPropertyAccess: false, castReturnTypeTo: null));
+            functionHandlers.Add("ENVELOPECENTER", (sqlgen, functionExpression) => sqlgen.WriteInstanceFunctionCall("EnvelopeCenter", functionExpression, isPropertyAccess: false, castReturnTypeTo: null));
+            functionHandlers.Add("INSTANCEOF", (sqlgen, functionExpression) => sqlgen.WriteInstanceFunctionCall("InstanceOf", functionExpression, isPropertyAccess: false, castReturnTypeTo: null));
+            functionHandlers.Add("FILTER", (sqlgen, functionExpression) => sqlgen.WriteInstanceFunctionCall("Filter", functionExpression, isPropertyAccess: false, castReturnTypeTo: null));
+            functionHandlers.Add("MAKEVALID", (sqlgen, functionExpression) => sqlgen.WriteInstanceFunctionCall("MakeValid", functionExpression, isPropertyAccess: false, castReturnTypeTo: null));
+            functionHandlers.Add("REDUCE", (sqlgen, functionExpression) => sqlgen.WriteInstanceFunctionCall("Reduce", functionExpression, isPropertyAccess: false, castReturnTypeTo: null));
+            functionHandlers.Add("NUMRINGS", (sqlgen, functionExpression) => sqlgen.WriteInstanceFunctionCall("NumRings", functionExpression, isPropertyAccess: false, castReturnTypeTo: null));
+            functionHandlers.Add("RINGN", (sqlgen, functionExpression) => sqlgen.WriteInstanceFunctionCall("RingN", functionExpression, isPropertyAccess: false, castReturnTypeTo: null));
+
             return functionHandlers;
         }
 

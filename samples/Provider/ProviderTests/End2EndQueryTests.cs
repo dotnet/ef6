@@ -263,6 +263,21 @@ namespace ProviderTests
         [Fact]
         public void Verify_DbGeography_instance_property_translated_correctly()
         {
+            using (var context = new NorthwindEntities())
+            {
+                var query = from c in context.Customers
+                            where c.Location.Latitude < 0
+                            select c;
+
+                Assert.Equal(9, query.Count());
+            }
+        }
+
+        [Fact]
+        public void Verify_static_store_DbGeography_method_translated_correctly()
+        {
+            var seattleLocation = SpatialServices.Instance.GeographyFromText("POINT(-122.333056 47.609722)");
+
             var expectedResults = new string[]
                                       {
                                           "BOTTM",
@@ -276,13 +291,16 @@ namespace ProviderTests
             using (var context = new NorthwindEntities())
             {
                 var query = from c in context.Customers
-                            where c.Location.Latitude < 0
+                            where c.Location.Distance(SampleSqlFunctions.Pointgeography(47.609722, -122.333056, 4326)) < 250000 // 250 km
                             select c;
 
-                Assert.Equal(9, query.Count());
+                var caseIdx = 0;
+                foreach (var customer in query)
+                {
+                    Assert.Equal(expectedResults[caseIdx++], customer.CustomerID);
+                }
             }
         }
-
 
         [Fact]
         public void Verify_DbGeometry_instance_method_translated_correctly()
@@ -307,6 +325,20 @@ namespace ProviderTests
             {
                 var query = from o in context.Orders
                             where o.ContainerSize.SpatialEquals(DbGeometry.FromText("POLYGON ((0 0, 9 0, 9 9, 0 9, 0 0))", 0))
+                            select o;
+
+                Assert.Equal(73, query.Count());
+            }
+        }
+
+
+        [Fact]
+        public void Verify_store_DbGeometry_method_works()
+        {
+            using(var context = new NorthwindEntities())
+            {
+                var query = from o in context.Orders
+                            where SampleSqlFunctions.Astextzm(o.ContainerSize) == "POLYGON ((0 0, 9 0, 9 9, 0 9, 0 0))"
                             select o;
 
                 Assert.Equal(73, query.Count());

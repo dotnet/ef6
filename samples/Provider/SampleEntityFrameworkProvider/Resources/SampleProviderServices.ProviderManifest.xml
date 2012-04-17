@@ -1682,6 +1682,101 @@ PROCESS
       <ReturnType Type="Int32" />
       <Parameter Name="arg" Type="String" Mode="In" />
     </Function>
+    
+    <!-- Spatial Functions -->
+    <!-- Geography ‘Static’ Functions -->
+    <Function Name="POINTGEOGRAPHY" BuiltIn="true">
+      <ReturnType Type="Geography" />
+      <Parameter Name="latitude" Type="Double" Mode="In" />
+      <Parameter Name="longitude" Type="Double" Mode="In" />
+      <Parameter Name="spatialReferenceId" Type="Int32" Mode="In" />
+    </Function>
+    
+    <!-- Geography ‘Instance’ Functions -->
+    <Function Name="ASTEXTZM" BuiltIn="true">
+      <ReturnType Type="String" />
+      <Parameter Name="geographyValue" Type="Geography" Mode="In" />
+    </Function>
+    <Function Name="BUFFERWITHTOLERANCE" BuiltIn="true">
+      <ReturnType Type="Geography" />
+      <Parameter Name="geographyValue" Type="Geography" Mode="In" />
+      <Parameter Name="distance" Type="Double" Mode="In" />
+      <Parameter Name="tolerance" Type="Double" Mode="In" />
+      <Parameter Name="relative" Type="Boolean" Mode="In" />
+    </Function>
+    <Function Name="ENVELOPEANGLE" BuiltIn="true">
+      <ReturnType Type="Double" />
+      <Parameter Name="geographyValue" Type="Geography" Mode="In" />
+    </Function>
+    <Function Name="ENVELOPECENTER" BuiltIn="true">
+      <ReturnType Type="Geography" />
+      <Parameter Name="geographyValue" Type="Geography" Mode="In" />
+    </Function>
+    <Function Name="FILTER" BuiltIn="true">
+      <ReturnType Type="Boolean" />
+      <Parameter Name="geographyValue" Type="Geography" Mode="In" />
+      <Parameter Name="geographyOther" Type="Geography" Mode="In" />
+    </Function>
+    <Function Name="INSTANCEOF" BuiltIn="true">
+      <ReturnType Type="Boolean" />
+      <Parameter Name="geographyValue" Type="Geography" Mode="In" />
+      <Parameter Name="geometryTypeName" Type="String" Mode="In" />
+    </Function>
+    <Function Name="NUMRINGS" BuiltIn="true">
+      <ReturnType Type="Int32" />
+      <Parameter Name="geographyValue" Type="Geography" Mode="In" />
+    </Function>    
+    <Function Name="REDUCE" BuiltIn="true">
+      <ReturnType Type="Geography" />
+      <Parameter Name="geographyValue" Type="Geography" Mode="In" />
+      <Parameter Name="tolerance" Type="Double" Mode="In" />
+    </Function>
+    <Function Name="RINGN" BuiltIn="true">
+      <ReturnType Type="Geography" />
+      <Parameter Name="geographyValue" Type="Geography" Mode="In" />
+      <Parameter Name="index" Type="Int32" Mode="In" />
+    </Function>
+    
+    <!-- Geometry ‘Static’ Functions -->
+    <Function Name="POINTGEOMETRY" BuiltIn="true">
+      <ReturnType Type="Geometry" />
+      <Parameter Name="xCoordinate" Type="Double" Mode="In" />
+      <Parameter Name="yCoordinate" Type="Double" Mode="In" />
+      <Parameter Name="spatialReferenceId" Type="Int32" Mode="In" />
+    </Function>
+
+    <!-- Geometry ‘Instance’ Functions -->
+    <Function Name="ASTEXTZM" BuiltIn="true">
+      <ReturnType Type="String" />
+      <Parameter Name="geometryValue" Type="Geometry" Mode="In" />
+    </Function>
+    <Function Name="BUFFERWITHTOLERANCE" BuiltIn="true">
+      <ReturnType Type="Geometry" />
+      <Parameter Name="geometryValue" Type="Geometry" Mode="In" />
+      <Parameter Name="distance" Type="Double" Mode="In" />
+      <Parameter Name="tolerance" Type="Double" Mode="In" />
+      <Parameter Name="relative" Type="Boolean" Mode="In" />
+    </Function>
+    <Function Name="INSTANCEOF" BuiltIn="true">
+      <ReturnType Type="Boolean" />
+      <Parameter Name="geometryValue" Type="Geometry" Mode="In" />
+      <Parameter Name="geometryTypeName" Type="String" Mode="In" />
+    </Function>
+    <Function Name="FILTER" BuiltIn="true">
+      <ReturnType Type="Boolean" />
+      <Parameter Name="geometryValue" Type="Geometry" Mode="In" />
+      <Parameter Name="geometryOther" Type="Geometry" Mode="In" />
+    </Function>
+    <Function Name="MAKEVALID" BuiltIn="true">
+      <ReturnType Type="Geometry" />
+      <Parameter Name="geometryValue" Type="Geometry" Mode="In" />
+    </Function>
+    <Function Name="REDUCE" BuiltIn="true">
+      <ReturnType Type="Geometry" />
+      <Parameter Name="geometryValue" Type="Geometry" Mode="In" />
+      <Parameter Name="tolerance" Type="Double" Mode="In" />
+    </Function>
+    
     <!-- END SYSTEM FUNCTIONS ####################################### -->
   </Functions>
 </ProviderManifest>
