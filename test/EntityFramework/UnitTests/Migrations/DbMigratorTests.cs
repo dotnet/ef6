@@ -30,21 +30,6 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        private class SeedInvocationDetector : MigratorBase
-        {
-            public SeedInvocationDetector(MigratorBase innerMigrator)
-                : base(innerMigrator)
-            {
-            }
-
-            internal override void SeedDatabase()
-            {
-                SeedCalled = true;
-            }
-
-            public bool SeedCalled { get; private set; }
-        }
-
         [MigrationsTheory]
         public void TargetDatabase_should_return_correct_info_for_logging()
         {
@@ -61,18 +46,6 @@ namespace System.Data.Entity.Migrations
                     Assert.Equal(
                         @"'MigrationsTest.sdf' (DataSource: MigrationsTest.sdf, Provider: System.Data.SqlServerCe.4.0, Origin: Explicit)",
                         migrator.TargetDatabase));
-        }
-
-        [MigrationsTheory]
-        public void Update_should_not_run_seed_method_when_no_method_body()
-        {
-            ResetDatabase();
-
-            var migrator = new SeedInvocationDetector(CreateMigrator<ShopContext_v1>());
-
-            migrator.Update();
-
-            Assert.False(migrator.SeedCalled);
         }
 
         [MigrationsTheory]

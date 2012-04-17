@@ -47,7 +47,6 @@ namespace System.Data.Entity.Migrations
         private readonly bool _calledByCreateDatabase;
         private readonly ModelDiffer _modelDiffer;
         private readonly string _providerManifestToken;
-        private readonly bool _hasSeedLogic;
         private readonly string _targetDatabase;
 
         private MigrationSqlGenerator _sqlGenerator;
@@ -142,17 +141,6 @@ namespace System.Data.Entity.Migrations
                     new DbProviderInfo(
                         _usersContextInfo.ConnectionProviderName,
                         _providerManifestToken)).GetModel();
-
-            var seedMethod
-                = _configuration.GetType()
-                    .GetMethod(
-                        "Seed",
-                        BindingFlags.DeclaredOnly | BindingFlags.NonPublic | BindingFlags.Instance);
-
-            if (seedMethod != null)
-            {
-                _hasSeedLogic = seedMethod.GetMethodBody().GetILAsByteArray().Length > 2;
-            }
         }
 
         /// <summary>
@@ -465,8 +453,7 @@ namespace System.Data.Entity.Migrations
                     false);
             }
 
-            if (_hasSeedLogic
-                && !IsModelOutOfDate(_currentModel, lastMigration))
+            if (!IsModelOutOfDate(_currentModel, lastMigration))
             {
                 base.SeedDatabase();
             }
