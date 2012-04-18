@@ -360,7 +360,7 @@
         [Fact]
         public void AddOrUpdateConfigSection_does_nothing_if_EF_assembly_name_is_up_to_date()
         {
-            var config = CreateConfigSectionDoc(Net45EntityFrameworkSectionName);
+            var config = CreateConfigSectionDoc(Net45EntityFrameworkSectionName, addRequirePermission: true);
 
             var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, Net45EntityFrameworkVersion);
 
@@ -428,7 +428,7 @@
         [Fact]
         public void AddOrUpdateConfigSection_when_using_NET4_EF_assembly_does_nothing_if_EF_assembly_name_is_up_to_date()
         {
-            var config = CreateConfigSectionDoc(Net40EntityFrameworkSectionName);
+            var config = CreateConfigSectionDoc(Net40EntityFrameworkSectionName, addRequirePermission: true);
 
             var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, Net40EntityFrameworkVersion);
 
@@ -447,22 +447,78 @@
             Assert.Equal(Net40EntityFrameworkSectionName, GetEfSectionName(config));
         }
 
-        private XDocument CreateConfigSectionDoc(string assemblyName)
+        [Fact]
+        public void AddOrUpdateConfigSection_on_add_yields_result_that_can_load_in_partial_trust()
+        {
+            AddOrUpdateConfigSection_result_can_load_in_partial_trust(
+                new XDocument(new XElement(ConfigFileManipulator.ConfigurationElementName)));
+        }
+
+        [Fact]
+        public void AddOrUpdateConfigSection_on_update_yields_result_that_can_load_in_partial_trust()
+        {
+            AddOrUpdateConfigSection_result_can_load_in_partial_trust(
+                CreateConfigSectionDoc(Net40EntityFrameworkSectionName));
+        }
+
+        private void AddOrUpdateConfigSection_result_can_load_in_partial_trust(XDocument config)
+        {
+            new ConfigFileManipulator().AddOrUpdateConfigSection(config, Net45EntityFrameworkVersion);
+
+            var configurationFile = Path.Combine(Environment.CurrentDirectory, "Temp.config");
+            config.Save(configurationFile);
+
+            try
+            {
+                var sandbox = PartialTrustHelpers.CreatePartialTrustSandbox(configurationFile: configurationFile);
+
+                try
+                {
+                    var codeInstance = (PartialTrustCode)sandbox.CreateInstanceAndUnwrap(typeof(PartialTrustCode).Assembly.FullName, typeof(PartialTrustCode).FullName);
+
+                    codeInstance.AddOrUpdateConfigSection_result_can_load_in_partial_trust();
+                }
+                finally
+                {
+                    AppDomain.Unload(sandbox);
+                }
+            }
+            finally
+            {
+                File.Delete(configurationFile);
+            }
+        }
+
+        private XDocument CreateConfigSectionDoc(string assemblyName, bool addRequirePermission = false)
         {
             var dummyElement = new XElement(ConfigFileManipulator.SectionElementName,
                                             new XAttribute("name", "SamVimes"),
                                             new XAttribute("type", "Treacle Mine Road"));
+            XElement sectionElement;
+
+            if (assemblyName == null)
+            {
+                sectionElement = dummyElement;
+            }
+            else
+            {
+                sectionElement = new XElement(ConfigFileManipulator.SectionElementName,
+                                              new XAttribute("name", ConfigFileManipulator.EntityFrameworkElementName),
+                                              new XAttribute("type", assemblyName));
+
+                if (addRequirePermission)
+                {
+                    sectionElement.Add(new XAttribute("requirePermission", false));
+                }
+            }
+
             return new XDocument(
                 new XElement(
                     ConfigFileManipulator.ConfigurationElementName,
                     new XElement(
                         ConfigFileManipulator.ConfigSectionsElementName,
                         dummyElement,
-                        assemblyName != null
-                            ? new XElement(ConfigFileManipulator.SectionElementName,
-                                           new XAttribute("name", ConfigFileManipulator.EntityFrameworkElementName),
-                                           new XAttribute("type", assemblyName))
-                            : dummyElement)));
+                        sectionElement)));
         }
 
         private string GetEfSectionName(XDocument config)
@@ -1000,6 +1056,22 @@
 
         [PreserveSig]
         int MessagePending(IntPtr hTaskCallee, int dwTickCount, int dwPendingType);
+    }
+
+    #endregion
+
+    #region Partial trust helpers
+
+    public partial class PartialTrustCode : MarshalByRefObject
+    {
+        public void AddOrUpdateConfigSection_result_can_load_in_partial_trust()
+        {
+            new PartialTrustContext();
+        }
+
+        private class PartialTrustContext : DbContext
+        {
+        }
     }
 
     #endregion

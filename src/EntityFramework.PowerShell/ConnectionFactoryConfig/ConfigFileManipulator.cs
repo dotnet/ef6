@@ -127,19 +127,28 @@
 
             if (typeAttribute != null)
             {
-                if (efSectionTypeName.Equals(typeAttribute.Value, StringComparison.InvariantCultureIgnoreCase))
+                var sectionElement = typeAttribute.Parent;
+                var requirePermissionAttribute = sectionElement.Attribute("requirePermission");
+
+                if (efSectionTypeName.Equals(typeAttribute.Value, StringComparison.InvariantCultureIgnoreCase)
+                    && requirePermissionAttribute != null)
                 {
                     return false;
                 }
 
                 typeAttribute.Value = efSectionTypeName;
+
+                if (requirePermissionAttribute == null)
+                {
+                    sectionElement.Add(new XAttribute("requirePermission", false));
+                }
             }
             else
             {
                 configSections.Add(
                     new XElement(
                         SectionElementName, new XAttribute("name", EntityFrameworkElementName),
-                        new XAttribute("type", efSectionTypeName)));
+                        new XAttribute("type", efSectionTypeName), new XAttribute("requirePermission", false)));
             }
 
             return true;
