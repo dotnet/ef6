@@ -355,7 +355,8 @@ function New-MigrationsRunner($ProjectName, $StartUpProjectName, $ConfigurationT
     $info = New-Object System.AppDomainSetup -Property @{
             ShadowCopyFiles = 'true';
             ApplicationBase = $installPath;
-            PrivateBinPath = 'tools'
+            PrivateBinPath = 'tools';
+            ConfigurationFile = ([AppDomain]::CurrentDomain.SetupInformation.ConfigurationFile)
         }
     
     $targetFrameworkVersion = (New-Object System.Runtime.Versioning.FrameworkName ($project.Properties.Item('TargetFrameworkMoniker').Value)).Version
@@ -363,7 +364,6 @@ function New-MigrationsRunner($ProjectName, $StartUpProjectName, $ConfigurationT
     if ($targetFrameworkVersion -lt (New-Object Version @( 4, 5 )))
     {
         $info.PrivateBinPath += ';lib\net40'
-        $info.ConfigurationFile = Join-Path $toolsPath 'Redirect.config'
     }
     else
     {

@@ -27,7 +27,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{004FD563
 		src\NuGet\EntityFramework\tools\EF5.0on.NET4.0Readme.txt = src\NuGet\EntityFramework\tools\EF5.0on.NET4.0Readme.txt
 		src\NuGet\EntityFramework\tools\EntityFramework.psd1 = src\NuGet\EntityFramework\tools\EntityFramework.psd1
 		src\NuGet\EntityFramework\tools\EntityFramework.psm1 = src\NuGet\EntityFramework\tools\EntityFramework.psm1
-		src\NuGet\EntityFramework\tools\Redirect.config = src\NuGet\EntityFramework\tools\Redirect.config
 		src\NuGet\EntityFramework\tools\about_EntityFramework.help.txt = src\NuGet\EntityFramework\tools\about_EntityFramework.help.txt
 		src\NuGet\EntityFramework\tools\init.ps1 = src\NuGet\EntityFramework\tools\init.ps1
 		src\NuGet\EntityFramework\tools\install.ps1 = src\NuGet\EntityFramework\tools\install.ps1
