@@ -331,7 +331,6 @@ namespace ProviderTests
             }
         }
 
-
         [Fact]
         public void Verify_store_DbGeometry_method_works()
         {
@@ -342,6 +341,25 @@ namespace ProviderTests
                             select o;
 
                 Assert.Equal(73, query.Count());
+            }
+        }
+
+        [Fact]
+        public void Verify_stored_procedures_with_multiple_resultsets_work()
+        {
+            using (var context = new NorthwindEntities())
+            {
+                var query = context.CustomerWithRecentOrders("ALFKI");
+                Assert.Equal("ALFKI", query.Single().CustomerID);
+
+                var orders = query
+                    .GetNextResult<CustomerWithRecentOrders_OrderInfo>()
+                    .ToList();
+
+                var expectedOrderIds = new int[] { 11011, 10952, 10835, 10702, 10692, 10643 };
+                var actualResult = expectedOrderIds.Zip(orders, (oid, order) => oid == order.OrderID).ToList();
+
+                Assert.True(expectedOrderIds.Length == actualResult.Count && actualResult.All(r => r));
             }
         }
     }
