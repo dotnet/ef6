@@ -5,6 +5,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public abstract class EdmMember : MetadataItem
     {
+        internal EdmMember()
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of EdmMember class
         /// </summary>
@@ -34,7 +38,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Returns the name of the member
         /// </summary>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
-        public String Name
+        public virtual String Name
         {
             get { return _name; }
         }

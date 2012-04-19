@@ -20,6 +20,7 @@ namespace System.Data.Entity.Core.Common
         /// <param name="metadata"></param>
         /// <param name="memberInfo"></param>
         /// <param name="entityKey"></param>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EntityRecordInfo(EntityType metadata, IEnumerable<EdmMember> memberInfo, EntityKey entityKey, EntitySet entitySet)
             : base(TypeUsage.Create(metadata), memberInfo)
         {

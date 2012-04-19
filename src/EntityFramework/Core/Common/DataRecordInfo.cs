@@ -15,6 +15,10 @@ namespace System.Data.Entity.Core.Common
         private readonly ReadOnlyCollection<FieldMetadata> _fieldMetadata;
         private readonly TypeUsage _metadata;
 
+        internal DataRecordInfo()
+        {
+        }
+
         /// <summary>
         /// Construct DataRecordInfo with list of EdmMembers.
         /// Each memberInfo must be a member of metadata.
@@ -114,7 +118,7 @@ namespace System.Data.Entity.Core.Common
         /// <summary>
         /// Type information.
         /// </summary>
-        public TypeUsage RecordType
+        public virtual TypeUsage RecordType
         {
             get { return _metadata; }
         }

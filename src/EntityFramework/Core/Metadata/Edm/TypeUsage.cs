@@ -12,9 +12,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// Class representing a type information for an item
     /// </summary>
     [DebuggerDisplay("EdmType={EdmType}, Facets.Count={Facets.Count}")]
-    public sealed class TypeUsage : MetadataItem
+    public class TypeUsage : MetadataItem
     {
         #region Constructors
+
+        internal TypeUsage()
+        {
+        }
 
         /// <summary>
         /// The constructor for TypeUsage taking in a type
@@ -417,7 +421,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Gets the type that this TypeUsage describes
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.EdmType, false)]
-        public EdmType EdmType
+        public virtual EdmType EdmType
         {
             get { return _edmType; }
         }

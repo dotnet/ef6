@@ -13,6 +13,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     {
         #region Constructors
 
+        internal EntitySet()
+        {
+        }
+
         /// <summary>
         /// The constructor for constructing the EntitySet with a given name and an entity type
         /// </summary>
@@ -51,7 +55,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Gets/Sets the entity type of this entity set
         /// </summary>
-        public new EntityType ElementType
+        public new virtual EntityType ElementType
         {
             get { return (EntityType)base.ElementType; }
         }

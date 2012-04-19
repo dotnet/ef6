@@ -7,9 +7,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// <summary>
     /// Class for representing an entity container
     /// </summary>
-    public sealed class EntityContainer : GlobalItem
+    public class EntityContainer : GlobalItem
     {
         #region Constructors
+
+        internal EntityContainer()
+        {
+        }
 
         /// <summary>
         /// The constructor for constructing the EntityContainer object with the name, namespaceName, and version.
@@ -60,7 +64,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Get the name of this EntityContainer object
         /// </summary>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
-        public String Name
+        public virtual String Name
         {
             get { return _name; }
         }

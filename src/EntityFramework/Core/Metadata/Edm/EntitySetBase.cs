@@ -21,6 +21,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         #region Constructors
 
+        internal EntitySetBase()
+        {
+        }
+
         /// <summary>
         /// The constructor for constructing the EntitySet with a given name and an entity type
         /// </summary>
@@ -100,7 +104,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">Thrown if value passed into setter is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when EntitySetBase instance is in ReadOnly state</exception>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
-        public String Name
+        public virtual String Name
         {
             get { return _name; }
         }
@@ -110,7 +114,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <exception cref="System.ArgumentNullException">Thrown if value passed into setter is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when the EntitySetBase instance or the EntityContainer passed into the setter is in ReadOnly state</exception>
-        public EntityContainer EntityContainer
+        public virtual EntityContainer EntityContainer
         {
             get { return _entityContainer; }
         }

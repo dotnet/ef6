@@ -16,6 +16,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     {
         #region Constructors
 
+        internal EntityType()
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of Entity Type
         /// </summary>

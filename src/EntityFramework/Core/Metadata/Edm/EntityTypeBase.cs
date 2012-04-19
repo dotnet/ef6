@@ -11,6 +11,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     {
         #region Constructors
 
+        internal EntityTypeBase()
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of Entity Type
         /// </summary>
@@ -40,7 +44,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Returns the list of all the key members for this entity type
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.EdmMember, true)]
-        public ReadOnlyMetadataCollection<EdmMember> KeyMembers
+        public virtual ReadOnlyMetadataCollection<EdmMember> KeyMembers
         {
             get
             {
@@ -64,7 +68,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Returns the list of the member names that form the key for this entity type
         /// Perf Bug #529294: To cache the list of member names that form the key for the entity type
         /// </summary>
-        internal string[] KeyMemberNames
+        internal virtual string[] KeyMemberNames
         {
             get
             {
