@@ -285,6 +285,9 @@
     <Compile Include="Core\EntityClient\EntityProviderFactory.cs" />
     <Compile Include="Core\EntityClient\EntityProviderServices.cs" />
     <Compile Include="Core\EntityClient\EntityTransaction.cs" />
+    <Compile Include="Core\EntityClient\Internal\InternalEntityCommand.cs" />
+    <Compile Include="Core\EntityClient\Internal\InternalEntityConnection.cs" />
+    <Compile Include="Core\EntityClient\Internal\InternalEntityTransaction.cs" />
     <Compile Include="Core\EntityClient\NameValuePair.cs" />
     <Compile Include="Core\EntityCommandCompilationException.cs" />
     <Compile Include="Core\EntityCommandExecutionException.cs" />

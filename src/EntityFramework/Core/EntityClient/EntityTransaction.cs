@@ -1,28 +1,34 @@
 namespace System.Data.Entity.Core.EntityClient
 {
     using System.Data.Common;
-    using System.Data.Entity.Resources;
+    using System.Data.Entity.Core.EntityClient.Internal;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Class representing a transaction for the conceptual layer
     /// </summary>
     public sealed class EntityTransaction : DbTransaction
     {
-        private readonly EntityConnection _connection;
-        private readonly DbTransaction _storeTransaction;
+        bool _disposed = false;
+        private InternalEntityTransaction _internalEntityTransaction;
 
         /// <summary>
         /// Constructs the EntityTransaction object with an associated connection and the underlying store transaction
         /// </summary>
         /// <param name="connection">The EntityConnetion object owning this transaction</param>
         /// <param name="storeTransaction">The underlying transaction object</param>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope",
+            Justification = "Object is in fact passed to property of the class and gets Disposed properly in the Dispose() method.")]
         internal EntityTransaction(EntityConnection connection, DbTransaction storeTransaction)
+            : this(new InternalEntityTransaction(connection, storeTransaction))
         {
-            Debug.Assert(connection != null && storeTransaction != null);
+        }
 
-            _connection = connection;
-            _storeTransaction = storeTransaction;
+        internal EntityTransaction(InternalEntityTransaction internalEntityTransaction)
+        {
+            _internalEntityTransaction = internalEntityTransaction;
+            _internalEntityTransaction.EntityTransactionWrapper = this;
         }
 
         /// <summary>
@@ -30,11 +36,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public new EntityConnection Connection
         {
-            get
-            {
-                // follow the store transaction behavior
-                return ((null != _storeTransaction.Connection) ? _connection : null);
-            }
+            get { return _internalEntityTransaction.Connection; }
         }
 
         /// <summary>
@@ -42,11 +44,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         protected override DbConnection DbConnection
         {
-            get
-            {
-                // follow the store transaction behavior
-                return ((null != _storeTransaction.Connection) ? _connection : null);
-            }
+            get { return Connection; }
         }
 
         /// <summary>
@@ -54,7 +52,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override IsolationLevel IsolationLevel
         {
-            get { return _storeTransaction.IsolationLevel; }
+            get { return _internalEntityTransaction.IsolationLevel; }
         }
 
         /// <summary>
@@ -62,7 +60,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         internal DbTransaction StoreTransaction
         {
-            get { return _storeTransaction; }
+            get { return _internalEntityTransaction.StoreTransaction; }
         }
 
         /// <summary>
@@ -70,20 +68,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override void Commit()
         {
-            try
-            {
-                _storeTransaction.Commit();
-            }
-            catch (Exception e)
-            {
-                if (EntityUtil.IsCatchableExceptionType(e))
-                {
-                    throw new EntityException(Strings.EntityClient_ProviderSpecificError(@"Commit"), e);
-                }
-                throw;
-            }
-
-            ClearCurrentTransaction();
+            _internalEntityTransaction.Commit();
         }
 
         /// <summary>
@@ -91,20 +76,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override void Rollback()
         {
-            try
-            {
-                _storeTransaction.Rollback();
-            }
-            catch (Exception e)
-            {
-                if (EntityUtil.IsCatchableExceptionType(e))
-                {
-                    throw new EntityException(Strings.EntityClient_ProviderSpecificError(@"Rollback"), e);
-                }
-                throw;
-            }
-
-            ClearCurrentTransaction();
+            _internalEntityTransaction.Rollback();
         }
 
         /// <summary>
@@ -113,24 +85,15 @@ namespace System.Data.Entity.Core.EntityClient
         /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
+            if (!_disposed)
             {
-                ClearCurrentTransaction();
-                _storeTransaction.Dispose();
+                if (disposing)
+                {
+                    _internalEntityTransaction.Dispose();
+                }
             }
-            base.Dispose(disposing);
-        }
 
-        /// <summary>
-        /// Helper method to wrap EntityConnection.ClearCurrentTransaction()
-        /// </summary>
-        private void ClearCurrentTransaction()
-        {
-            if (_connection.CurrentTransaction
-                == this)
-            {
-                _connection.ClearCurrentTransaction();
-            }
+            base.Dispose(disposing);
         }
     }
 }
