@@ -11,6 +11,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Data.Entity.Spatial;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Text;
 
@@ -27,36 +28,36 @@ namespace System.Data.Entity.SqlServer.SqlGen
     {
         #region Static fields, include dictionaries used to dispatch function handling
 
-        private static readonly Dictionary<string, FunctionHandler> _storeFunctionHandlers = InitializeStoreFunctionHandlers();
-        private static readonly Dictionary<string, FunctionHandler> _canonicalFunctionHandlers = InitializeCanonicalFunctionHandlers();
-        private static readonly Dictionary<string, string> _functionNameToOperatorDictionary = InitializeFunctionNameToOperatorDictionary();
+        private static readonly Dictionary<string, FunctionHandler> StoreFunctionHandlers = InitializeStoreFunctionHandlers();
+        private static readonly Dictionary<string, FunctionHandler> CanonicalFunctionHandlers = InitializeCanonicalFunctionHandlers();
+        private static readonly Dictionary<string, string> FunctionNameToOperatorDictionary = InitializeFunctionNameToOperatorDictionary();
 
-        private static readonly Dictionary<string, string> _dateAddFunctionNameToDatepartDictionary =
+        private static readonly Dictionary<string, string> DateAddFunctionNameToDatepartDictionary =
             InitializeDateAddFunctionNameToDatepartDictionary();
 
-        private static readonly Dictionary<string, string> _dateDiffFunctionNameToDatepartDictionary =
+        private static readonly Dictionary<string, string> DateDiffFunctionNameToDatepartDictionary =
             InitializeDateDiffFunctionNameToDatepartDictionary();
 
-        private static readonly Dictionary<string, FunctionHandler> _geographyFunctionNameToStaticMethodHandlerDictionary =
+        private static readonly Dictionary<string, FunctionHandler> GeographyFunctionNameToStaticMethodHandlerDictionary =
             InitializeGeographyStaticMethodFunctionsDictionary();
 
-        private static readonly Dictionary<string, string> _geographyFunctionNameToInstancePropertyNameDictionary =
+        private static readonly Dictionary<string, string> GeographyFunctionNameToInstancePropertyNameDictionary =
             InitializeGeographyInstancePropertyFunctionsDictionary();
 
-        private static readonly Dictionary<string, string> _geographyRenamedInstanceMethodFunctionDictionary =
+        private static readonly Dictionary<string, string> GeographyRenamedInstanceMethodFunctionDictionary =
             InitializeRenamedGeographyInstanceMethodFunctions();
 
-        private static readonly Dictionary<string, FunctionHandler> _geometryFunctionNameToStaticMethodHandlerDictionary =
+        private static readonly Dictionary<string, FunctionHandler> GeometryFunctionNameToStaticMethodHandlerDictionary =
             InitializeGeometryStaticMethodFunctionsDictionary();
 
-        private static readonly Dictionary<string, string> _geometryFunctionNameToInstancePropertyNameDictionary =
+        private static readonly Dictionary<string, string> GeometryFunctionNameToInstancePropertyNameDictionary =
             InitializeGeometryInstancePropertyFunctionsDictionary();
 
-        private static readonly Dictionary<string, string> _geometryRenamedInstanceMethodFunctionDictionary =
+        private static readonly Dictionary<string, string> GeometryRenamedInstanceMethodFunctionDictionary =
             InitializeRenamedGeometryInstanceMethodFunctions();
 
-        private static readonly Set<string> _datepartKeywords = new Set<string>(
-            new[]
+        private static readonly ISet<string> DatepartKeywords = 
+            new HashSet<string>(StringComparer.OrdinalIgnoreCase)
                 {
                     "year", "yy", "yyyy",
                     "quarter", "qq", "q",
@@ -73,51 +74,51 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     "nanosecond", "ns",
                     "tzoffset", "tz",
                     "iso_week", "isoww", "isowk"
-                },
-            StringComparer.OrdinalIgnoreCase).MakeReadOnly();
+                };
 
-        private static readonly Set<string> _functionRequiresReturnTypeCastToInt64 = new Set<string>(
-            new[] { "SqlServer.CHARINDEX" },
-            StringComparer.Ordinal).MakeReadOnly();
+        private static readonly ISet<string> FunctionRequiresReturnTypeCastToInt64
+            = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                  {
+                      "SqlServer.CHARINDEX"
+                  };
 
-        private static readonly Set<string> _functionRequiresReturnTypeCastToInt32 = new Set<string>(
-            new[]
-                {
-                    "SqlServer.LEN",
-                    "SqlServer.PATINDEX",
-                    "SqlServer.DATALENGTH",
-                    "SqlServer.CHARINDEX",
-                    "Edm.IndexOf",
-                    "Edm.Length"
-                },
-            StringComparer.Ordinal).MakeReadOnly();
+        private static readonly ISet<string> FunctionRequiresReturnTypeCastToInt32
+            = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                  {
+                      "SqlServer.LEN",
+                      "SqlServer.PATINDEX",
+                      "SqlServer.DATALENGTH",
+                      "SqlServer.CHARINDEX",
+                      "Edm.IndexOf",
+                      "Edm.Length"
+                  };
 
-        private static readonly Set<string> _functionRequiresReturnTypeCastToInt16 = new Set<string>(
-            new[] { "Edm.Abs" },
-            StringComparer.Ordinal).MakeReadOnly();
+        private static readonly ISet<string> FunctionRequiresReturnTypeCastToInt16
+            = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                  {
+                      "Edm.Abs"
+                  };
 
-        private static readonly Set<string> _functionRequiresReturnTypeCastToSingle = new Set<string>(
-            new[]
+        private static readonly ISet<string> FunctionRequiresReturnTypeCastToSingle =
+            new HashSet<string>(StringComparer.OrdinalIgnoreCase)
                 {
                     "Edm.Abs",
                     "Edm.Round",
                     "Edm.Floor",
                     "Edm.Ceiling"
-                },
-            StringComparer.Ordinal).MakeReadOnly();
+                };
 
-        private static readonly Set<string> _maxTypeNames = new Set<string>(
-            new[]
-                {
-                    "varchar(max)",
-                    "nvarchar(max)",
-                    "text",
-                    "ntext",
-                    "varbinary(max)",
-                    "image",
-                    "xml"
-                },
-            StringComparer.Ordinal).MakeReadOnly();
+        private static readonly ISet<string> MaxTypeNames
+            = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                  {
+                      "varchar(max)",
+                      "nvarchar(max)",
+                      "text",
+                      "ntext",
+                      "varbinary(max)",
+                      "image",
+                      "xml"
+                  };
 
         #endregion
 
@@ -659,7 +660,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         private static bool IsSpecialStoreFunction(DbFunctionExpression e)
         {
             return IsStoreFunction(e.Function)
-                   && _storeFunctionHandlers.ContainsKey(e.Function.Name);
+                   && StoreFunctionHandlers.ContainsKey(e.Function.Name);
         }
 
         /// <summary>
@@ -671,7 +672,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         private static bool IsSpecialCanonicalFunction(DbFunctionExpression e)
         {
             return TypeHelpers.IsCanonicalFunction(e.Function)
-                   && _canonicalFunctionHandlers.ContainsKey(e.Function.Name);
+                   && CanonicalFunctionHandlers.ContainsKey(e.Function.Name);
         }
 
         /// <summary>
@@ -853,7 +854,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns></returns>
         private static ISqlFragment HandleSpecialStoreFunction(SqlGenerator sqlgen, DbFunctionExpression e)
         {
-            return HandleSpecialFunction(_storeFunctionHandlers, sqlgen, e);
+            return HandleSpecialFunction(StoreFunctionHandlers, sqlgen, e);
         }
 
         /// <summary>
@@ -863,7 +864,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns></returns>
         private static ISqlFragment HandleSpecialCanonicalFunction(SqlGenerator sqlgen, DbFunctionExpression e)
         {
-            return HandleSpecialFunction(_canonicalFunctionHandlers, sqlgen, e);
+            return HandleSpecialFunction(CanonicalFunctionHandlers, sqlgen, e);
         }
 
         /// <summary>
@@ -890,14 +891,14 @@ namespace System.Data.Entity.SqlServer.SqlGen
             if (spatialTypeKind == PrimitiveTypeKind.Geography)
             {
                 return HandleSpatialCanonicalFunction(
-                    sqlgen, functionExpression, _geographyFunctionNameToStaticMethodHandlerDictionary,
-                    _geographyFunctionNameToInstancePropertyNameDictionary, _geographyRenamedInstanceMethodFunctionDictionary);
+                    sqlgen, functionExpression, GeographyFunctionNameToStaticMethodHandlerDictionary,
+                    GeographyFunctionNameToInstancePropertyNameDictionary, GeographyRenamedInstanceMethodFunctionDictionary);
             }
             else
             {
                 return HandleSpatialCanonicalFunction(
-                    sqlgen, functionExpression, _geometryFunctionNameToStaticMethodHandlerDictionary,
-                    _geometryFunctionNameToInstancePropertyNameDictionary, _geometryRenamedInstanceMethodFunctionDictionary);
+                    sqlgen, functionExpression, GeometryFunctionNameToStaticMethodHandlerDictionary,
+                    GeometryFunctionNameToInstancePropertyNameDictionary, GeometryRenamedInstanceMethodFunctionDictionary);
             }
         }
 
@@ -1016,8 +1017,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 }
             }
             result.Append(" ");
-            Debug.Assert(_functionNameToOperatorDictionary.ContainsKey(e.Function.Name), "The function can not be mapped to an operator");
-            result.Append(_functionNameToOperatorDictionary[e.Function.Name]);
+            Debug.Assert(FunctionNameToOperatorDictionary.ContainsKey(e.Function.Name), "The function can not be mapped to an operator");
+            result.Append(FunctionNameToOperatorDictionary[e.Function.Name]);
             result.Append(" ");
 
             if (parenthesiseArguments)
@@ -1062,9 +1063,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <param name="sqlgen"></param>
         /// <param name="e"></param>
         /// <returns></returns>
-        private static ISqlFragment HandleDatepartDateFunction(SqlGenerator sqlgen, DbFunctionExpression e)
+        internal static ISqlFragment HandleDatepartDateFunction(SqlGenerator sqlgen, DbFunctionExpression e)
         {
-            Debug.Assert(e.Arguments.Count > 0, "e.Arguments.Count > 0");
+            Contract.Assert(e.Arguments.Count > 0, "e.Arguments.Count > 0");
 
             var constExpr = e.Arguments[0] as DbConstantExpression;
             if (null == constExpr)
@@ -1078,15 +1079,15 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 throw new InvalidOperationException(Strings.SqlGen_InvalidDatePartArgumentExpression(e.Function.NamespaceName, e.Function.Name));
             }
 
-            var result = new SqlBuilder();
-
             //
             // check if datepart value is valid
             //
-            if (!_datepartKeywords.Contains(datepart))
+            if (!DatepartKeywords.Contains(datepart))
             {
                 throw new InvalidOperationException(Strings.SqlGen_InvalidDatePartArgumentValue(datepart, e.Function.NamespaceName, e.Function.Name));
             }
+
+            var result = new SqlBuilder();
 
             //
             // finaly, expand the function name
@@ -1096,12 +1097,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             // expand the datepart literal as tsql kword
             result.Append(datepart);
-            var separator = ", ";
 
             // expand remaining arguments
             for (var i = 1; i < e.Arguments.Count; i++)
             {
-                result.Append(separator);
+                result.Append(", ");
                 result.Append(e.Arguments[i].Accept(sqlgen));
             }
 
@@ -1445,7 +1445,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             var result = new SqlBuilder();
 
             result.Append("DATEADD (");
-            result.Append(_dateAddFunctionNameToDatepartDictionary[e.Function.Name]);
+            result.Append(DateAddFunctionNameToDatepartDictionary[e.Function.Name]);
             result.Append(", ");
             result.Append(e.Arguments[1].Accept(sqlgen));
             result.Append(", ");
@@ -1480,7 +1480,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             var result = new SqlBuilder();
 
             result.Append("DATEDIFF (");
-            result.Append(_dateDiffFunctionNameToDatepartDictionary[e.Function.Name]);
+            result.Append(DateDiffFunctionNameToDatepartDictionary[e.Function.Name]);
             result.Append(", ");
             result.Append(e.Arguments[0].Accept(sqlgen));
             result.Append(", ");
@@ -1928,9 +1928,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        private static bool CastReturnTypeToInt64(DbFunctionExpression e)
+        internal static bool CastReturnTypeToInt64(DbFunctionExpression e)
         {
-            return CastReturnTypeToGivenType(e, _functionRequiresReturnTypeCastToInt64, PrimitiveTypeKind.Int64);
+            return CastReturnTypeToGivenType(e, FunctionRequiresReturnTypeCastToInt64, PrimitiveTypeKind.Int64);
         }
 
         /// <summary>
@@ -1938,22 +1938,15 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        private static bool CastReturnTypeToInt32(SqlGenerator sqlgen, DbFunctionExpression e)
+        internal static bool CastReturnTypeToInt32(SqlGenerator sqlgen, DbFunctionExpression e)
         {
-            if (!_functionRequiresReturnTypeCastToInt32.Contains(e.Function.FullName))
+            if (!FunctionRequiresReturnTypeCastToInt32.Contains(e.Function.FullName))
             {
                 return false;
             }
 
-            for (var i = 0; i < e.Arguments.Count; i++)
-            {
-                var storeType = sqlgen.StoreItemCollection.StoreProviderManifest.GetStoreType(e.Arguments[i].ResultType);
-                if (_maxTypeNames.Contains(storeType.EdmType.Name))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return e.Arguments.Select(t => sqlgen.StoreItemCollection.StoreProviderManifest.GetStoreType(t.ResultType))
+                .Any(storeType => MaxTypeNames.Contains(storeType.EdmType.Name));
         }
 
         /// <summary>
@@ -1961,9 +1954,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        private static bool CastReturnTypeToInt16(DbFunctionExpression e)
+        internal static bool CastReturnTypeToInt16(DbFunctionExpression e)
         {
-            return CastReturnTypeToGivenType(e, _functionRequiresReturnTypeCastToInt16, PrimitiveTypeKind.Int16);
+            return CastReturnTypeToGivenType(e, FunctionRequiresReturnTypeCastToInt16, PrimitiveTypeKind.Int16);
         }
 
         /// <summary>
@@ -1971,12 +1964,12 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        private static bool CastReturnTypeToSingle(DbFunctionExpression e)
+        internal static bool CastReturnTypeToSingle(DbFunctionExpression e)
         {
             //Do not add the cast for the Round() overload having 2 arguments. 
             //Round(Single,Int32) maps to Round(Double,Int32)due to implicit casting. 
             //We don't need to cast in that case, since we expect a Double as return type there anyways.
-            return CastReturnTypeToGivenType(e, _functionRequiresReturnTypeCastToSingle, PrimitiveTypeKind.Single);
+            return CastReturnTypeToGivenType(e, FunctionRequiresReturnTypeCastToSingle, PrimitiveTypeKind.Single);
         }
 
         /// <summary>
@@ -1987,21 +1980,14 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <param name="type"></param>
         /// <returns></returns>
         private static bool CastReturnTypeToGivenType(
-            DbFunctionExpression e, Set<string> functionsRequiringReturnTypeCast, PrimitiveTypeKind type)
+            DbFunctionExpression e, ISet<string> functionsRequiringReturnTypeCast, PrimitiveTypeKind type)
         {
             if (!functionsRequiringReturnTypeCast.Contains(e.Function.FullName))
             {
                 return false;
             }
 
-            for (var i = 0; i < e.Arguments.Count; i++)
-            {
-                if (TypeSemantics.IsPrimitiveType(e.Arguments[i].ResultType, type))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return e.Arguments.Any(t => TypeSemantics.IsPrimitiveType(t.ResultType, type));
         }
     }
 }

@@ -10,7 +10,7 @@
     using System.Text;
     using System.Xml;
 
-    public sealed partial class StoreItemCollection
+    public partial class StoreItemCollection
     {
         private class Loader
         {

@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// Class for representing a collection of items in Store space.
     /// </summary>
     [CLSCompliant(false)]
-    public sealed partial class StoreItemCollection : ItemCollection
+    public partial class StoreItemCollection : ItemCollection
     {
         #region Fields
 
@@ -44,6 +44,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #endregion
 
         #region Constructors
+        
+        internal StoreItemCollection()
+        {
+        }
 
         // used by EntityStoreSchemaGenerator to start with an empty (primitive types only) StoreItemCollection and 
         // add types discovered from the database
@@ -206,7 +210,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _providerFactory; }
         }
 
-        internal DbProviderManifest StoreProviderManifest
+        internal virtual DbProviderManifest StoreProviderManifest
         {
             get { return _providerManifest; }
         }

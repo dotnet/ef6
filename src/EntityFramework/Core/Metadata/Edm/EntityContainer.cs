@@ -2,6 +2,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -22,6 +23,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="dataSpace">dataSpace in which this entity container belongs to</param>
         /// <exception cref="System.ArgumentNullException">Thrown if the name argument is null</exception>
         /// <exception cref="System.ArgumentException">Thrown if the name argument is empty string</exception>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal EntityContainer(string name, DataSpace dataSpace)
         {
             EntityUtil.CheckStringArgument(name, "name");

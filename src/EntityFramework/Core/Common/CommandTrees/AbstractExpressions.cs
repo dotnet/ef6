@@ -314,6 +314,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         private readonly TypeUsage _type;
         private readonly DbExpressionKind _kind;
 
+        internal DbExpression()
+        {
+        }
+
         internal DbExpression(DbExpressionKind kind, TypeUsage type)
         {
             CheckExpressionKind(kind);
@@ -336,7 +340,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets the type metadata for the result type of the expression.
         /// </summary>
-        public TypeUsage ResultType
+        public virtual TypeUsage ResultType
         {
             get { return _type; }
         }
@@ -344,7 +348,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets the kind of the expression, which indicates the operation of this expression.
         /// </summary>
-        public DbExpressionKind ExpressionKind
+        public virtual DbExpressionKind ExpressionKind
         {
             get { return _kind; }
         }

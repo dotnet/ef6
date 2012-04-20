@@ -430,7 +430,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Gets the list of facets for the type in this TypeUsage
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.Facet, true)]
-        public ReadOnlyMetadataCollection<Facet> Facets
+        public virtual ReadOnlyMetadataCollection<Facet> Facets
         {
             get
             {

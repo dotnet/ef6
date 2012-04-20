@@ -10,10 +10,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// <summary>
     /// Class for representing a function
     /// </summary>
-    public sealed class EdmFunction : EdmType
+    public class EdmFunction : EdmType
     {
         #region Constructors
 
+        internal EdmFunction()
+        {
+        }
+
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal EdmFunction(string name, string namespaceName, DataSpace dataSpace, EdmFunctionPayload payload)
             : base(name, namespaceName, dataSpace)
         {
@@ -232,7 +237,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [MetadataProperty(PrimitiveTypeKind.Boolean, false)]
-        internal bool BuiltInAttribute
+        internal virtual bool BuiltInAttribute
         {
             get { return GetFunctionAttribute(FunctionAttributes.BuiltIn); }
         }

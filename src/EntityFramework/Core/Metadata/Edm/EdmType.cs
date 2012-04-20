@@ -89,7 +89,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Returns the name of the EdmType
         /// </summary>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
-        public String Name
+        public virtual String Name
         {
             get { return _name; }
             internal set
@@ -103,7 +103,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Returns the namespace of the EdmType
         /// </summary>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
-        public String NamespaceName
+        public virtual String NamespaceName
         {
             get { return _namespace; }
             internal set

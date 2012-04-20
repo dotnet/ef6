@@ -10,9 +10,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// some parts of the system are depending on that behavior
     /// </summary>
     [DebuggerDisplay("{Name,nq}={Value}")]
-    public sealed class Facet : MetadataItem
+    public class Facet : MetadataItem
     {
         #region Constructors
+
+        internal Facet()
+        {
+        }
 
         /// <summary>
         /// The constructor for constructing a Facet object with the facet description and a value
@@ -147,7 +151,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <exception cref="System.InvalidOperationException">Thrown if the Facet instance is in ReadOnly state</exception>
         [MetadataProperty(typeof(Object), false)]
-        public Object Value
+        public virtual Object Value
         {
             get { return _value; }
         }

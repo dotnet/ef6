@@ -13,12 +13,6 @@ namespace System.Data.Entity.Core.Common.Utils
         #region Fields
 
         /// <summary>
-        /// Instance of set value comparer.
-        /// </summary>
-        internal static readonly IEqualityComparer<Set<TElement>> ValueComparer =
-            new SetValueComparer();
-
-        /// <summary>
         /// Instance of empty set with default comparer.
         /// </summary>
         internal static readonly Set<TElement> Empty = new Set<TElement>().MakeReadOnly();
@@ -370,25 +364,6 @@ namespace System.Data.Entity.Core.Common.Utils
         internal override void ToCompactString(StringBuilder builder)
         {
             StringUtil.ToCommaSeparatedStringSorted(builder, this);
-        }
-
-        #endregion
-
-        #region Nested types
-
-        private class SetValueComparer : IEqualityComparer<Set<TElement>>
-        {
-            bool IEqualityComparer<Set<TElement>>.Equals(Set<TElement> x, Set<TElement> y)
-            {
-                Debug.Assert(null != x && null != y, "comparer must be used only in context of Dictionary/HashSet");
-                return x.SetEquals(y);
-            }
-
-            int IEqualityComparer<Set<TElement>>.GetHashCode(Set<TElement> obj)
-            {
-                Debug.Assert(null != obj, "comparer must be used only in context of Dictionary/HashSet");
-                return obj.GetElementsHashCode();
-            }
         }
 
         #endregion

@@ -198,7 +198,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
     /// </para>
     /// </remarks>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-    internal sealed class SqlGenerator : DbExpressionVisitor<ISqlFragment>
+    internal class SqlGenerator : DbExpressionVisitor<ISqlFragment>
     {
         #region Visitor parameter stacks
 
@@ -292,12 +292,12 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
         #region Statics
 
-        private const byte defaultDecimalPrecision = 18;
-        private static readonly char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+        private const byte DefaultDecimalPrecision = 18;
+        private static readonly char[] HexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
         // Define lists of functions that take string arugments and return strings.
-        private static readonly Set<string> _canonicalStringFunctionsOneArg = new Set<string>(
-            new[]
+        private static readonly ISet<string> CanonicalAndStoreStringFunctionsOneArg =
+            new HashSet<string>(StringComparer.Ordinal)
                 {
                     "Edm.Trim",
                     "Edm.RTrim",
@@ -307,21 +307,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     "Edm.Substring",
                     "Edm.ToLower",
                     "Edm.ToUpper",
-                    "Edm.Reverse"
-                },
-            StringComparer.Ordinal).MakeReadOnly();
-
-        private static readonly Set<string> _canonicalStringFunctionsTwoArgs = new Set<string>(
-            new[] { "Edm.Concat" },
-            StringComparer.Ordinal).MakeReadOnly();
-
-        private static readonly Set<string> _canonicalStringFunctionsThreeArgs = new Set<string>(
-            new[] { "Edm.Replace" },
-            StringComparer.Ordinal).MakeReadOnly();
-
-        private static readonly Set<string> _storeStringFunctionsOneArg = new Set<string>(
-            new[]
-                {
+                    "Edm.Reverse",
                     "SqlServer.RTRIM",
                     "SqlServer.LTRIM",
                     "SqlServer.LEFT",
@@ -330,12 +316,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     "SqlServer.LOWER",
                     "SqlServer.UPPER",
                     "SqlServer.REVERSE"
-                },
-            StringComparer.Ordinal).MakeReadOnly();
-
-        private static readonly Set<string> _storeStringFunctionsThreeArgs = new Set<string>(
-            new[] { "SqlServer.REPLACE" },
-            StringComparer.Ordinal).MakeReadOnly();
+                };
 
         #endregion
 
@@ -396,7 +377,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
         private StoreItemCollection _storeItemCollection;
 
-        internal StoreItemCollection StoreItemCollection
+        internal virtual StoreItemCollection StoreItemCollection
         {
             get { return _storeItemCollection; }
         }
@@ -404,6 +385,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
         #endregion
 
         #region Constructor
+
+        internal SqlGenerator()
+        {
+        }
 
         /// <summary>
         /// Basic constructor. 
@@ -845,15 +830,14 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// </summary>
         /// <param name="expr"></param>
         /// <returns></returns>
-        private bool MatchTargetPatternForForcingNonUnicode(DbExpression expr)
+        internal bool MatchTargetPatternForForcingNonUnicode(DbExpression expr)
         {
             if (IsConstParamOrNullExpressionUnicodeNotSpecified(expr))
             {
                 return true;
             }
 
-            if (expr.ExpressionKind
-                == DbExpressionKind.Function)
+            if (expr.ExpressionKind == DbExpressionKind.Function)
             {
                 var functionExpr = (DbFunctionExpression)expr;
                 var function = functionExpr.Function;
@@ -866,28 +850,25 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                 // All string arguments to the function must be candidates to match target pattern.
                 var functionFullName = function.FullName;
-                var ifQualifies = false;
 
-                if (_canonicalStringFunctionsOneArg.Contains(functionFullName)
-                    ||
-                    _storeStringFunctionsOneArg.Contains(functionFullName))
+                if (CanonicalAndStoreStringFunctionsOneArg.Contains(functionFullName))
                 {
-                    ifQualifies = MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[0]);
+                    return MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[0]);
                 }
-                else if (_canonicalStringFunctionsTwoArgs.Contains(functionFullName))
+
+                if ("Edm.Concat".Equals(functionFullName, StringComparison.Ordinal))
                 {
-                    ifQualifies = (MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[0]) &&
-                                   MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[1]));
+                    return (MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[0]) &&
+                            MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[1]));
                 }
-                else if (_canonicalStringFunctionsThreeArgs.Contains(functionFullName)
-                         ||
-                         _storeStringFunctionsThreeArgs.Contains(functionFullName))
+
+                if ("Edm.Replace".Equals(functionFullName, StringComparison.Ordinal)
+                    || "SqlServer.REPLACE".Equals(functionFullName, StringComparison.Ordinal))
                 {
-                    ifQualifies = (MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[0]) &&
-                                   MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[1]) &&
-                                   MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[2]));
+                    return (MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[0]) &&
+                            MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[1]) &&
+                            MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[2]));
                 }
-                return ifQualifies;
             }
 
             return false;
@@ -911,7 +892,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// </summary>
         /// <param name="argument"></param>
         /// <returns></returns>
-        private static bool IsConstParamOrNullExpressionUnicodeNotSpecified(DbExpression argument)
+        internal static bool IsConstParamOrNullExpressionUnicodeNotSpecified(DbExpression argument)
         {
             bool isUnicode;
             var expressionKind = argument.ExpressionKind;
@@ -1009,7 +990,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                         // and does not need cast. if precision is lest then 20, then cast using Max(literal precision, sql default precision)
                         var needsCast = -1 == strDecimal.IndexOf('.') && (strDecimal.TrimStart(new[] { '-' }).Length < 20);
 
-                        var precision = Math.Max((Byte)strDecimal.Length, defaultDecimalPrecision);
+                        var precision = Math.Max((Byte)strDecimal.Length, DefaultDecimalPrecision);
                         Debug.Assert(precision > 0, "Precision must be greater than zero");
 
                         var decimalType = "decimal(" + precision.ToString(CultureInfo.InvariantCulture) + ")";
@@ -4274,7 +4255,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             var sb = new StringBuilder(binaryArray.Length * 2);
             for (var i = 0; i < binaryArray.Length; i++)
             {
-                sb.Append(hexDigits[(binaryArray[i] & 0xF0) >> 4]).Append(hexDigits[binaryArray[i] & 0x0F]);
+                sb.Append(HexDigits[(binaryArray[i] & 0xF0) >> 4]).Append(HexDigits[binaryArray[i] & 0x0F]);
             }
             return sb.ToString();
         }

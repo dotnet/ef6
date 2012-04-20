@@ -14,6 +14,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
     {
         #region Constructors
 
+        internal ReadOnlyMetadataCollection()
+            : base(new List<T>())
+        {
+        }
+
         /// <summary>
         /// The constructor for constructing a read-only metadata collection to wrap another MetadataCollection.
         /// </summary>

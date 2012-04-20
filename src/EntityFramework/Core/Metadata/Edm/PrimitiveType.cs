@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// <summary>
     /// Class representing a primitive type
     /// </summary>
-    public sealed class PrimitiveType : SimpleType
+    public class PrimitiveType : SimpleType
     {
         #region constructors
 
@@ -97,7 +97,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <returns>A PrimitiveTypeKind value</returns>
         [MetadataProperty(BuiltInTypeKind.PrimitiveTypeKind, false)]
-        public PrimitiveTypeKind PrimitiveTypeKind
+        public virtual PrimitiveTypeKind PrimitiveTypeKind
         {
             get { return _primitiveTypeKind; }
             internal set { _primitiveTypeKind = value; }

@@ -12,10 +12,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents a constant value.
     /// </summary>
-    public sealed class DbConstantExpression : DbExpression
+    public class DbConstantExpression : DbExpression
     {
         private readonly bool _shouldCloneValue;
         private readonly object _value;
+
+        internal DbConstantExpression()
+        {
+        }
 
         internal DbConstantExpression(TypeUsage resultType, object value)
             : base(DbExpressionKind.Constant, resultType)
@@ -59,7 +63,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets the constant value.
         /// </summary>
-        public object Value
+        public virtual object Value
         {
             get
             {
@@ -374,10 +378,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents the invocation of a function.
     /// </summary>
-    public sealed class DbFunctionExpression : DbExpression
+    public class DbFunctionExpression : DbExpression
     {
         private readonly EdmFunction _functionInfo;
         private readonly DbExpressionList _arguments;
+
+        internal DbFunctionExpression()
+        {
+        }
 
         internal DbFunctionExpression(TypeUsage resultType, EdmFunction function, DbExpressionList arguments)
             : base(DbExpressionKind.Function, resultType)
@@ -395,7 +403,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets the metadata for the function to invoke.
         /// </summary>
-        public EdmFunction Function
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Function")]
+        public virtual EdmFunction Function
         {
             get { return _functionInfo; }
         }
@@ -403,7 +412,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets an <see cref="DbExpression"/> list that provides the arguments to the function.
         /// </summary>
-        public IList<DbExpression> Arguments
+        public virtual IList<DbExpression> Arguments
         {
             get { return _arguments; }
         }

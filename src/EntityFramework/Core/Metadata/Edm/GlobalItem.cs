@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Returns the DataSpace in which this type belongs to
         /// </summary>
         [MetadataProperty(typeof(DataSpace), false)]
-        internal DataSpace DataSpace
+        internal virtual DataSpace DataSpace
         {
             get
             {

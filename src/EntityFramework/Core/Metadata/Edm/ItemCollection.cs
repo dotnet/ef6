@@ -21,6 +21,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     {
         #region Constructors
 
+        internal ItemCollection()
+        {
+        }
+
         /// <summary>
         /// The default constructor for ItemCollection
         /// </summary>
