@@ -2,12 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity.Core;
-    using System.Data;
     using System.Data.Entity;
-    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core;
     using System.Data.Entity.Core.Objects;
-    using System.Data.SqlClient;
+    using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Reflection;
     using AdvancedPatternsModel;
@@ -17,147 +15,10 @@
     /// <summary>
     /// Tests that run various things in a partial trust sandbox.
     /// </summary>
+    [PartialTrustFixture]
     public class PartialTrustTests : FunctionalTestBase
     {
-        #region Infrastructure/setup
-
-        private static readonly PartialTrustCode PartialTrustCodeInstance =
-            (PartialTrustCode)
-            PartialTrustHelpers.CreatePartialTrustSandbox().CreateInstanceAndUnwrap(
-                typeof(PartialTrustCode).Assembly.FullName, typeof(PartialTrustCode).FullName);
-
-        #endregion
-
-        #region Partial trust tests
-
         [Fact(Skip = "SDE Merge - No partial trust yet")]
-        public void DbPropertyValues_ToObject_for_an_entity_works_under_partial_trust()
-        {
-            PartialTrustCodeInstance.DbPropertyValues_ToObject_for_an_entity_works_under_partial_trust();
-        }
-
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
-        public void DbContextInfo_works_under_partial_trust()
-        {
-            PartialTrustCodeInstance.DbContextInfo_works_under_partial_trust();
-        }
-
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
-        public void DbPropertyValues_ToObject_for_a_complex_type_works_under_partial_trust()
-        {
-            PartialTrustCodeInstance.DbPropertyValues_ToObject_for_a_complex_type_works_under_partial_trust();
-        }
-
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
-        public void Non_generic_DbSet_creation_works_under_partial_trust()
-        {
-            PartialTrustCodeInstance.Non_generic_DbSet_creation_works_under_partial_trust();
-        }
-
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
-        public void DbEntityEntry_Member_works_for_collections_under_partial_trust()
-        {
-            PartialTrustCodeInstance.DbEntityEntry_Member_works_for_collections_under_partial_trust();
-        }
-
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
-        public void Non_generic_DbSet_Create_works_under_partial_trust()
-        {
-            PartialTrustCodeInstance.Non_generic_DbSet_Create_works_under_partial_trust();
-        }
-
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
-        public void DbPropertyValues_SetValues_for_an_entity_wih_complex_objects_works_under_partial_trust()
-        {
-            PartialTrustCodeInstance.
-                DbPropertyValues_SetValues_for_an_entity_wih_complex_objects_works_under_partial_trust();
-        }
-
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
-        public void DbContext_set_initialization_works_under_partial_trust()
-        {
-            PartialTrustCodeInstance.DbContext_set_initialization_works_under_partial_trust();
-        }
-
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
-        public void Non_generic_store_query_works_under_partial_trust()
-        {
-            PartialTrustCodeInstance.Non_generic_store_query_works_under_partial_trust();
-        }
-
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
-        public void SelectMany_works_under_partial_trust()
-        {
-            PartialTrustCodeInstance.SelectMany_works_under_partial_trust();
-        }
-
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
-        public void Setting_current_value_of_reference_nav_prop_works_under_partial_trust()
-        {
-            PartialTrustCodeInstance.Setting_current_value_of_reference_nav_prop_works_under_partial_trust();
-        }
-
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
-        public void Query_with_top_level_nested_query_obtained_from_context_field_in_select_works_under_partial_trust()
-        {
-            PartialTrustCodeInstance.
-                Query_with_top_level_nested_query_obtained_from_context_field_in_select_works_under_partial_trust();
-        }
-
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
-        public void PropertyConstraintException_can_be_serialized_and_deserialized_under_partial_trust()
-        {
-            try
-            {
-                // Exception is thrown in partial trust and must be serialized across the app-domain boundry
-                // to get back here.
-                PartialTrustCodeInstance.
-                    PropertyConstraintException_can_be_serialized_and_deserialized_under_partial_trust();
-                Assert.True(false);
-            }
-            catch (PropertyConstraintException ex)
-            {
-                Assert.Equal("Message", ex.Message);
-                Assert.Equal("Property", ex.PropertyName);
-                Assert.Equal("Inner", ex.InnerException.Message);
-            }
-        }
-
-        // Dev11 216491
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
-        public void IsAspNetEnvironment_swallows_security_exception_when_System_Web_is_considered_non_APTCA()
-        {
-            var withReflectionPermission = (PartialTrustCode)PartialTrustHelpers
-                                                                 .CreatePartialTrustSandbox(
-                                                                     grantReflectionPermission: true)
-                                                                 .CreateInstanceAndUnwrap(
-                                                                     typeof(PartialTrustCode).Assembly.FullName,
-                                                                     typeof(PartialTrustCode).FullName);
-
-            withReflectionPermission.
-                IsAspNetEnvironment_swallows_security_exception_when_System_Web_is_considered_non_APTCA();
-        }
-
-        #endregion
-    }
-
-    /// <summary>
-    /// This class contains the actual test code that runs under partial trust.
-    /// </summary>
-    public class PartialTrustCode : MarshalByRefObject
-    {
-        #region Partial trust tests
-
-        static PartialTrustCode()
-        {
-            SqlConnection.ClearAllPools();
-
-            // This is normally done using entries in app.config, but when running in this
-            // app domain we need to make sure it is set anyway since the app.config is not used.
-            Database.SetInitializer(new AdvancedPatternsInitializer());
-            Database.SetInitializer(new SimpleModelInitializer());
-        }
-
         public void DbContextInfo_works_under_partial_trust()
         {
             var contextInfo = new DbContextInfo(typeof(AdvancedPatternsMasterContext),
@@ -168,6 +29,7 @@
             Assert.NotNull(context);
         }
 
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void DbPropertyValues_ToObject_for_an_entity_works_under_partial_trust()
         {
             using (var context = new AdvancedPatternsMasterContext())
@@ -180,6 +42,7 @@
             }
         }
 
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void DbPropertyValues_ToObject_for_a_complex_type_works_under_partial_trust()
         {
             using (var context = new AdvancedPatternsMasterContext())
@@ -193,6 +56,7 @@
             }
         }
 
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void Non_generic_DbSet_creation_works_under_partial_trust()
         {
             using (var context = new EmptyContext())
@@ -203,6 +67,7 @@
             }
         }
 
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void DbEntityEntry_Member_works_for_collections_under_partial_trust()
         {
             using (var context = new SimpleModelContext())
@@ -216,6 +81,7 @@
             }
         }
 
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void Non_generic_DbSet_Create_works_under_partial_trust()
         {
             using (var context = new AdvancedPatternsMasterContext())
@@ -228,6 +94,7 @@
             }
         }
 
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void DbPropertyValues_SetValues_for_an_entity_wih_complex_objects_works_under_partial_trust()
         {
             using (var context = new AdvancedPatternsMasterContext())
@@ -262,6 +129,7 @@
             public DbSet<Product> Products { get; set; }
         }
 
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void DbContext_set_initialization_works_under_partial_trust()
         {
             Database.SetInitializer<PartialTrustSetsContext>(null);
@@ -272,6 +140,7 @@
             }
         }
 
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void Non_generic_store_query_works_under_partial_trust()
         {
             using (var context = new SimpleModelContext())
@@ -282,6 +151,7 @@
             }
         }
 
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void SelectMany_works_under_partial_trust()
         {
             using (var context = new SimpleModelForLinq())
@@ -291,13 +161,13 @@
                             from p in context.Products
                             where n.Value > p.UnitsInStock && n.Value == parameter
                             select
-                                new LinqTests.NumberProductProjectionClass
-                                { Value = n.Value, UnitsInStock = p.UnitsInStock };
+                                new LinqTests.NumberProductProjectionClass { Value = n.Value, UnitsInStock = p.UnitsInStock };
                 Assert.IsType<DbQuery<LinqTests.NumberProductProjectionClass>>(query);
                 query.Load();
             }
         }
 
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void Setting_current_value_of_reference_nav_prop_works_under_partial_trust()
         {
             using (var context = new SimpleModelContext())
@@ -326,6 +196,7 @@
             }
         }
 
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void Query_with_top_level_nested_query_obtained_from_context_field_in_select_works_under_partial_trust()
         {
             var results = new ClassWithContextField().Test();
@@ -333,18 +204,48 @@
             Assert.Equal(7, results.Count);
         }
 
-
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void PropertyConstraintException_can_be_serialized_and_deserialized_under_partial_trust()
+        {
+            try
+            {
+                // Exception is thrown in partial trust and must be serialized across the app-domain boundry
+                // to get back here.
+                PartialTrustSandbox.Default
+                    .CreateInstance<PartialTrustTests>()
+                    .ThrowPropertyConstraintException();
+                Assert.True(false);
+            }
+            catch (PropertyConstraintException ex)
+            {
+                Assert.Equal("Message", ex.Message);
+                Assert.Equal("Property", ex.PropertyName);
+                Assert.Equal("Inner", ex.InnerException.Message);
+            }
+        }
+
+        private void ThrowPropertyConstraintException()
         {
             // Serialization is tested by throwing across the app-domain boundry.
             throw new PropertyConstraintException("Message", "Property", new InvalidOperationException("Inner"));
         }
 
+        // Dev11 216491
+        [Fact(Skip = "SDE Merge - No partial trust yet")]
+        public void IsAspNetEnvironment_swallows_security_exception_when_System_Web_is_considered_non_APTCA()
+        {
+            using (var sandbox = new PartialTrustSandbox(grantReflectionPermission: true))
+            {
+                var withReflectionPermission = sandbox.CreateInstance<PartialTrustTests>();
+
+                withReflectionPermission.InvokeIsAspNetEnvironment();
+            }
+        }
+
         private static readonly Type AspProxy =
             typeof(ObjectContext).Assembly.GetType("System.Data.Entity.Core.Metadata.Edm.AspProxy");
 
-        // Dev11 216491
-        public void IsAspNetEnvironment_swallows_security_exception_when_System_Web_is_considered_non_APTCA()
+        public void InvokeIsAspNetEnvironment()
         {
             var aspProxy = Activator.CreateInstance(AspProxy, nonPublic: true);
             var isAspNetEnvironment = AspProxy.GetMethod("IsAspNetEnvironment",
@@ -353,7 +254,5 @@
             // Before fixing Dev11 216491 this would throw a SecurityException
             Assert.False((bool)isAspNetEnvironment.Invoke(aspProxy, new object[0]));
         }
-
-        #endregion
     }
 }
