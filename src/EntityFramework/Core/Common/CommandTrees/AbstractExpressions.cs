@@ -180,13 +180,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </summary>
         Limit = 31,
 
-#if METHOD_EXPRESSION
-    /// <summary>
-    /// Invocation of a static or instance method.
-    /// </summary>
-        Method,
-#endif
-
         /// <summary>
         /// Subtraction.
         /// </summary>

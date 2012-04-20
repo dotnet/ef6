@@ -565,25 +565,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
                 return lambdaInfo;
             }
 
-#if METHOD_EXPRESSION
-            public override TreeNode Visit(MethodExpression e)
-            {
-                TreeNode retInfo = null;
-                retInfo = new TreeNode(".");
-                AppendType(retInfo, e.Method.DefiningType);
-                retInfo.Text.Append(".");
-                retInfo.Text.Append(e.Method.Name);
-                AppendParameters(retInfo, e.Method.Parameters);
-                if (e.Instance != null)
-                {
-                    retInfo.Children.Add(this.Visit("Instance", e.Instance));
-                }
-                AppendArguments(retInfo, e.Method.Parameters, e.Arguments);
-
-                return retInfo;
-            }
-#endif
-
             [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
                 MessageId =
                     "System.Data.Entity.Core.Common.Utils.TreeNode.#ctor(System.String,System.Data.Entity.Core.Common.Utils.TreeNode[])")]

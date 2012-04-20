@@ -190,15 +190,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <returns>An instance of TResultType.</returns>
         public abstract TResultType Visit(DbLimitExpression expression);
 
-#if METHOD_EXPRESSION
-    /// <summary>
-    /// Typed visitor pattern method for MethodExpression.
-    /// </summary>
-    /// <param name="expression">The Expression that is being visited.</param>
-    /// <returns>An instance of TResultType.</returns>
-        public abstract TResultType Visit(MethodExpression expression);
-#endif
-
         /// <summary>
         /// Typed visitor pattern method for DbNewInstanceExpression.
         /// </summary>

@@ -312,21 +312,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             End(name);
         }
 
-#if METHOD_EXPRESSION
-    /// <summary>
-    /// Dumps the specified Method metadata instance
-    /// </summary>
-    /// <param name="meth">The Method metadata to dump</param>
-        internal void Dump(MethodMetadata meth)
-        {
-            Begin("MethodMetadata", "Name", meth.Name, "IsStatic", meth.IsStatic);
-            Dump(meth.DefiningType, "DeclaringType");
-            Dump(meth.Parameters);
-            Dump(meth.Type, "ReturnType");
-            End("MethodMetadata");
-        }
-#endif
-
         /// <summary>
         /// Dumps the specified DbLambda instance
         /// </summary>
@@ -477,20 +462,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             Dump(expression.Arguments, "Arguments", "Argument");
             End(expression);
         }
-
-#if METHOD_EXPRESSION
-        public override void Visit(MethodExpression e)
-        {
-            Begin(e);
-            Dump(e.Method);
-            Dump(e.Arguments, "Arguments", "Argument");
-            if (e.Instance != null)
-            {
-                Dump(e.Instance, "Instance");
-            }
-            End(e);
-        }
-#endif
 
         public override void Visit(DbPropertyExpression e)
         {

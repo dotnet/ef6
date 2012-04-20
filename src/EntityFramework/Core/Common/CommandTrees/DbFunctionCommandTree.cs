@@ -4,6 +4,7 @@
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.CommandTrees.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -27,8 +28,8 @@
         /// <exception cref="ArgumentNullException"><paramref name="metadata"/>, <paramref name="dataSpace"/> or <paramref name="edmFunction"/> is null</exception>
         /// <exception cref="ArgumentException"><paramref name="dataSpace"/> does not represent a valid data space or
         /// <paramref name="edmFunction">is a composable function</paramref></exception>
-        /*CQT_PUBLIC_API(*/
-        internal /*)*/ DbFunctionCommandTree(
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public DbFunctionCommandTree(
             MetadataWorkspace metadata, DataSpace dataSpace, EdmFunction edmFunction, TypeUsage resultType,
             IEnumerable<KeyValuePair<string, TypeUsage>> parameters)
             : base(metadata, dataSpace)

@@ -47,8 +47,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="query">A <see cref="DbExpression"/> that defines the logic of the query.</param>
         /// <exception cref="ArgumentNullException"><paramref name="metadata"/> or <paramref name="query"/> is null</exception>
         /// <exception cref="ArgumentException"><paramref name="dataSpace"/> does not represent a valid data space</exception>
-        /*CQT_PUBLIC_API(*/
-        internal /*)*/ DbQueryCommandTree(MetadataWorkspace metadata, DataSpace dataSpace, DbExpression query)
+        public DbQueryCommandTree(MetadataWorkspace metadata, DataSpace dataSpace, DbExpression query)
             : this(metadata, dataSpace, query, true)
         {
         }

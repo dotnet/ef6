@@ -6,8 +6,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// An abstract base type for types that implement the IExpressionVisitor interface to derive from.
     /// </summary>
-    /*CQT_PUBLIC_API(*/
-    internal /*)*/ abstract class BasicCommandTreeVisitor : BasicExpressionVisitor
+    public abstract class BasicCommandTreeVisitor : BasicExpressionVisitor
     {
         #region protected API, may be overridden to add functionality at specific points in the traversal
 

@@ -479,25 +479,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
             return VisitExpression(expression.Argument);
         }
 
-#if METHOD_EXPRESSION
-    /// <summary>
-    /// Visitor pattern method for <see cref="MethodExpression"/>.
-    /// </summary>
-    /// <param name="expression">The MethodExpression that is being visited.</param>
-    /// <exception cref="ArgumentNullException"><paramref name="expression"/> is null</exception>
-        public override bool Visit(MethodExpression expression)
-        {
-            bool result = VisitExpressionList(expression.Arguments);
-            
-            if (expression.Instance != null)
-            {
-               bool instanceNeedsRewrite =  VisitExpression(expression.Instance);
-                result = result || instanceNeedsRewrite;
-            }
-            return result;
-        }
-#endif
-
         /// <summary>
         /// Walks the arguments
         /// </summary>

@@ -164,14 +164,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression">The DbLimitExpression that is being visited.</param>
         public abstract void Visit(DbLimitExpression expression);
 
-#if METHOD_EXPRESSION
-    /// <summary>
-    /// Visitor pattern method for MethodExpression.
-    /// </summary>
-    /// <param name="expression">The MethodExpression that is being visited.</param>
-        public abstract void Visit(MethodExpression expression);
-#endif
-
         /// <summary>
         /// Visitor pattern method for DbNewInstanceExpression.
         /// </summary>

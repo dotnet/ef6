@@ -174,13 +174,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             throw ConstructNotSupportedException(expression);
         }
 
-#if METHOD_EXPRESSION
-        public override TReturn Visit(MethodExpression expression)
-        {
-            throw ConstructNotSupportedException(expression);
-        }
-#endif
-
         public override TReturn Visit(DbNewInstanceExpression expression)
         {
             throw ConstructNotSupportedException(expression);

@@ -1161,13 +1161,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return retNode;
         }
 
-#if METHOD_EXPRESSION
-        public override Node Visit(MethodExpression e)
-        {
-            throw EntityUtil.NotSupported();
-        }
-#endif
-
         #region SoftCast Helpers
 
         /// <summary>

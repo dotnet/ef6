@@ -8,8 +8,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// An abstract base type for types that implement the IExpressionVisitor interface to derive from.
     /// </summary>
-    /*CQT_PUBLIC_API(*/
-    internal /*)*/ abstract class BasicExpressionVisitor : DbExpressionVisitor
+    public abstract class BasicExpressionVisitor : DbExpressionVisitor
     {
         #region protected API, may be overridden to add functionality at specific points in the traversal
 
@@ -262,25 +261,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             VisitExpression(expression.Lambda.Body);
             VisitLambdaPost(expression.Lambda);
         }
-
-#if METHOD_EXPRESSION
-    /// <summary>
-    /// Visitor pattern method for <see cref="MethodExpression"/>.
-    /// </summary>
-    /// <param name="expression">The MethodExpression that is being visited.</param>
-    /// <exception cref="ArgumentNullException"><paramref name="expression"/> is null</exception>
-        public override void Visit(MethodExpression expression)
-        {
-            // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            EntityUtil.CheckArgumentNull(expression, "expression");
-
-            if (expression.Instance != null)
-            {
-                VisitExpression(expression.Instance);
-            }
-            VisitExpressionList(expression.Arguments);
-        }
-#endif
 
         /// <summary>
         /// Visitor pattern method for <see cref="DbPropertyExpression"/>.

@@ -1770,42 +1770,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
             return result;
         }
 
-#if METHOD_EXPRESSION
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="e"></param>
-    /// <returns>A <see cref="SqlBuilder"/></returns>
-        public override ISqlFragment Visit(MethodExpression e)
-        {
-            SqlBuilder result = new SqlBuilder();
-
-            result.Append(e.Instance.Accept(this));
-            result.Append(".");
-            result.Append(QuoteIdentifier(e.Method.Name));
-            result.Append("(");
-
-            // Since the VariableReferenceExpression is a proper child of ours, we can reset
-            // isVarSingle.
-            VariableReferenceExpression VariableReferenceExpression = e.Instance as VariableReferenceExpression;
-            if (VariableReferenceExpression != null)
-            {
-                isVarRefSingle = false;
-            }
-
-            string separator = "";
-            foreach (Expression argument in e.Arguments)
-            {
-                result.Append(separator);
-                result.Append(argument.Accept(this));
-                separator = ", ";
-            }
-            result.Append(")");
-
-            return result;
-        }
-#endif
-
         /// <summary>
         /// DbNewInstanceExpression is allowed as a child of DbProjectExpression only.
         /// If anyone else is the parent, we throw.
