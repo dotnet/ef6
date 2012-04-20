@@ -1,4 +1,4 @@
-namespace System.Data.Entity.Core.Metadata.Edm
+﻿namespace System.Data.Entity.Core.Metadata.Internal
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Mapping.Update.Internal;
     using System.Data.Entity.Core.Mapping.ViewGeneration;
-    using System.Data.Entity.Core.Metadata.Internal;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
@@ -21,18 +21,29 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Xml;
     using eSQL = System.Data.Entity.Core.Common.EntitySql;
 
-    /// <summary>
-    /// Runtime Metadata Workspace
-    /// </summary>
-    public sealed class MetadataWorkspace
+    internal class InternalMetadataWorkspace
     {
-        private InternalMetadataWorkspace _internalMetadataWorkspace;
+        #region Fields
+
+        private EdmItemCollection _itemsCSpace;
+        private StoreItemCollection _itemsSSpace;
+        private ObjectItemCollection _itemsOSpace;
+        private StorageMappingItemCollection _itemsCSSpace;
+        private DefaultObjectMappingItemCollection _itemsOCSpace;
+
+        private List<object> _cacheTokens;
+        private bool _foundAssemblyWithAttribute;
+        private double _schemaVersion = XmlConstants.UndefinedVersion;
+        private Guid _metadataWorkspaceId = Guid.Empty;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Constructs the new instance of runtime metadata workspace
         /// </summary>
-        public MetadataWorkspace()
-            : this(new InternalMetadataWorkspace())
+        public InternalMetadataWorkspace()
         {
         }
 
@@ -48,21 +59,99 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file path names which are a Machine resource
         [ResourceConsumption(ResourceScope.Machine)]
-        public MetadataWorkspace(IEnumerable<string> paths, IEnumerable<Assembly> assembliesToConsider)
-            : this(new InternalMetadataWorkspace(paths, assembliesToConsider))
+        //For MetadataWorkspace.CreateMetadataWorkspaceWithResolver method call but we do not create the file paths in this method 
+        public InternalMetadataWorkspace(IEnumerable<string> paths, IEnumerable<Assembly> assembliesToConsider)
         {
+            // we are intentionally not checking to see if the paths enumerable is empty
+            Contract.Requires(paths != null);
+            Contract.Requires(assembliesToConsider != null);
+
+            EntityUtil.CheckArgumentContainsNull(ref paths, "paths");
+            EntityUtil.CheckArgumentContainsNull(ref assembliesToConsider, "assembliesToConsider");
+
+            Func<AssemblyName, Assembly> resolveReference = (AssemblyName referenceName) =>
+                                                                {
+                                                                    foreach (var assembly in assembliesToConsider)
+                                                                    {
+                                                                        if (AssemblyName.ReferenceMatchesDefinition(
+                                                                            referenceName, new AssemblyName(assembly.FullName)))
+                                                                        {
+                                                                            return assembly;
+                                                                        }
+                                                                    }
+                                                                    throw new ArgumentException(Strings.AssemblyMissingFromAssembliesToConsider(
+                                                                        referenceName.FullName), "assembliesToConsider");
+                                                                };
+
+            CreateMetadataWorkspaceWithResolver(paths, () => assembliesToConsider, resolveReference);
         }
 
-        internal MetadataWorkspace(InternalMetadataWorkspace internalMetadataWorkspace)
+        [ResourceExposure(ResourceScope.Machine)] //Exposes the file path names which are a Machine resource
+        [ResourceConsumption(ResourceScope.Machine)]
+        //For MetadataArtifactLoader.CreateCompositeFromFilePaths method call but We do not create the file paths in this method 
+        private void CreateMetadataWorkspaceWithResolver(
+            IEnumerable<string> paths, Func<IEnumerable<Assembly>> wildcardAssemblies, Func<AssemblyName, Assembly> resolveReference)
         {
-            _internalMetadataWorkspace = internalMetadataWorkspace;
-            _internalMetadataWorkspace.MetadataWorkspaceWrapper = this;
+            var composite = MetadataArtifactLoader.CreateCompositeFromFilePaths(
+                paths.ToArray(), "", new CustomAssemblyResolver(wildcardAssemblies, resolveReference));
+
+            // only create the ItemCollection that has corresponding artifacts
+            var dataSpace = DataSpace.CSpace;
+            using (var cSpaceReaders = new DisposableCollectionWrapper<XmlReader>(composite.CreateReaders(dataSpace)))
+            {
+                if (cSpaceReaders.Any())
+                {
+                    _itemsCSpace = new EdmItemCollection(cSpaceReaders, composite.GetPaths(dataSpace));
+                }
+            }
+
+            dataSpace = DataSpace.SSpace;
+            using (var sSpaceReaders = new DisposableCollectionWrapper<XmlReader>(composite.CreateReaders(dataSpace)))
+            {
+                if (sSpaceReaders.Any())
+                {
+                    _itemsSSpace = new StoreItemCollection(sSpaceReaders, composite.GetPaths(dataSpace));
+                }
+            }
+
+            dataSpace = DataSpace.CSSpace;
+            using (var csSpaceReaders = new DisposableCollectionWrapper<XmlReader>(composite.CreateReaders(dataSpace)))
+            {
+                if (csSpaceReaders.Any() && null != _itemsCSpace
+                    && null != _itemsSSpace)
+                {
+                    _itemsCSSpace = new StorageMappingItemCollection(
+                        _itemsCSpace, _itemsSSpace, csSpaceReaders, composite.GetPaths(dataSpace));
+                }
+            }
         }
 
-        internal Guid MetadataWorkspaceId
+        #endregion
+
+        #region public static Fields
+
+        private static IEnumerable<double> SupportedEdmVersions
         {
-            get { return _internalMetadataWorkspace.MetadataWorkspaceId; }
+            get
+            {
+                yield return XmlConstants.UndefinedVersion;
+                yield return XmlConstants.EdmVersionForV1;
+                yield return XmlConstants.EdmVersionForV2;
+                Debug.Assert(XmlConstants.SchemaVersionLatest == XmlConstants.EdmVersionForV3, "Did you add a new version?");
+                yield return XmlConstants.EdmVersionForV3;
+            }
         }
+
+        //The Max EDM version thats going to be supported by the runtime.
+        public static readonly double MaximumEdmVersionSupported = SupportedEdmVersions.Last();
+
+        #endregion
+
+        /// <summary>
+        /// Wrapper on the parent class, for accessing its protected members (via proxy method) 
+        /// or when the parent class is a parameter to another method/constructor
+        /// </summary>
+        internal MetadataWorkspace MetadataWorkspaceWrapper { get; set; }
 
         #region Methods
 
@@ -71,7 +160,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         public eSQL.EntitySqlParser CreateEntitySqlParser()
         {
-            return _internalMetadataWorkspace.CreateEntitySqlParser();
+            return new eSQL.EntitySqlParser(new ModelPerspective(this.MetadataWorkspaceWrapper));
         }
 
         /// <summary>
@@ -84,7 +173,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="ArgumentException">If <paramref name="query"/> is not structurally valid because it contains unresolvable variable references</exception>
         public DbQueryCommandTree CreateQueryCommandTree(DbExpression query)
         {
-            return _internalMetadataWorkspace.CreateQueryCommandTree(query);
+            return new DbQueryCommandTree(this.MetadataWorkspaceWrapper, DataSpace.CSpace, query);
         }
 
         /// <summary>
@@ -95,10 +184,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>The item collection for the given space</returns>
         /// <exception cref="System.ArgumentNullException">if space argument is null</exception>
         /// <exception cref="System.InvalidOperationException">If ItemCollection has not been registered for the space passed in</exception>
-        [CLSCompliant(false)]
         public ItemCollection GetItemCollection(DataSpace dataSpace)
         {
-            return _internalMetadataWorkspace.GetItemCollection(dataSpace);
+            var collection = GetItemCollection(dataSpace, true);
+            return collection;
         }
 
         /// <summary>
@@ -111,10 +200,143 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">if collection argument is null</exception>
         /// <exception cref="System.InvalidOperationException">If there is an ItemCollection that has already been registered for collection's space passed in</exception>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        [CLSCompliant(false)]
         public void RegisterItemCollection(ItemCollection collection)
         {
-            _internalMetadataWorkspace.RegisterItemCollection(collection);
+            Contract.Requires(collection != null);
+
+            ItemCollection existing;
+
+            try
+            {
+                switch (collection.DataSpace)
+                {
+                    case DataSpace.CSpace:
+                        if (null == (existing = _itemsCSpace))
+                        {
+                            var edmCollection = (EdmItemCollection)collection;
+                            if (!SupportedEdmVersions.Contains(edmCollection.EdmVersion))
+                            {
+                                throw new InvalidOperationException(Strings.EdmVersionNotSupportedByRuntime(
+                                    edmCollection.EdmVersion,
+                                    Helper.GetCommaDelimitedString(
+                                        SupportedEdmVersions
+                                            .Where(e => e != XmlConstants.UndefinedVersion)
+                                            .Select(e => e.ToString(CultureInfo.InvariantCulture)))));
+                            }
+
+                            CheckAndSetItemCollectionVersionInWorkSpace(collection);
+
+                            _itemsCSpace = edmCollection;
+                        }
+                        break;
+                    case DataSpace.SSpace:
+                        if (null == (existing = _itemsSSpace))
+                        {
+                            CheckAndSetItemCollectionVersionInWorkSpace(collection);
+                            _itemsSSpace = (StoreItemCollection)collection;
+                        }
+                        break;
+                    case DataSpace.OSpace:
+                        if (null == (existing = _itemsOSpace))
+                        {
+                            _itemsOSpace = (ObjectItemCollection)collection;
+                        }
+                        break;
+                    case DataSpace.CSSpace:
+                        if (null == (existing = _itemsCSSpace))
+                        {
+                            CheckAndSetItemCollectionVersionInWorkSpace(collection);
+                            _itemsCSSpace = (StorageMappingItemCollection)collection;
+                        }
+                        break;
+                    default:
+                        Debug.Assert(collection.DataSpace == DataSpace.OCSpace, "Invalid DataSpace Enum value: " + collection.DataSpace);
+
+                        if (null == (existing = _itemsOCSpace))
+                        {
+                            _itemsOCSpace = (DefaultObjectMappingItemCollection)collection;
+                        }
+                        break;
+                }
+            }
+            catch (InvalidCastException)
+            {
+                throw new MetadataException(Strings.InvalidCollectionForMapping(collection.DataSpace.ToString()));
+            }
+            if (null != existing)
+            {
+                throw new InvalidOperationException(Strings.ItemCollectionAlreadyRegistered(collection.DataSpace.ToString()));
+            }
+            // Need to make sure that if the storage mapping Item collection was created with the 
+            // same instances of item collection that are registered for CSpace and SSpace
+            if (collection.DataSpace == DataSpace.CSpace)
+            {
+                if (_itemsCSSpace != null && !ReferenceEquals(_itemsCSSpace.EdmItemCollection, collection))
+                {
+                    throw new InvalidOperationException(Strings.InvalidCollectionSpecified(collection.DataSpace));
+                }
+            }
+
+            if (collection.DataSpace == DataSpace.SSpace)
+            {
+                if (_itemsCSSpace != null && !ReferenceEquals(_itemsCSSpace.StoreItemCollection, collection))
+                {
+                    throw new InvalidOperationException(Strings.InvalidCollectionSpecified(collection.DataSpace));
+                }
+            }
+
+            if (collection.DataSpace == DataSpace.CSSpace)
+            {
+                if (_itemsCSpace != null && !ReferenceEquals(_itemsCSSpace.EdmItemCollection, _itemsCSpace))
+                {
+                    throw new InvalidOperationException(Strings.InvalidCollectionSpecified(collection.DataSpace));
+                }
+
+                if (_itemsSSpace != null && !ReferenceEquals(_itemsCSSpace.StoreItemCollection, _itemsSSpace))
+                {
+                    throw new InvalidOperationException(Strings.InvalidCollectionSpecified(collection.DataSpace));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="itemCollectionToRegister"></param>
+        private void CheckAndSetItemCollectionVersionInWorkSpace(ItemCollection itemCollectionToRegister)
+        {
+            var versionToRegister = XmlConstants.UndefinedVersion;
+            string itemCollectionType = null;
+            switch (itemCollectionToRegister.DataSpace)
+            {
+                case DataSpace.CSpace:
+                    versionToRegister = ((EdmItemCollection)itemCollectionToRegister).EdmVersion;
+                    itemCollectionType = "EdmItemCollection";
+                    break;
+                case DataSpace.SSpace:
+                    versionToRegister = ((StoreItemCollection)itemCollectionToRegister).StoreSchemaVersion;
+                    itemCollectionType = "StoreItemCollection";
+                    break;
+                case DataSpace.CSSpace:
+                    versionToRegister = ((StorageMappingItemCollection)itemCollectionToRegister).MappingVersion;
+                    itemCollectionType = "StorageMappingItemCollection";
+                    break;
+                default:
+                    // we don't care about other spaces so keep the _versionToRegister to Undefined
+                    break;
+            }
+
+            if (versionToRegister != _schemaVersion &&
+                versionToRegister != XmlConstants.UndefinedVersion &&
+                _schemaVersion != XmlConstants.UndefinedVersion)
+            {
+                Debug.Assert(itemCollectionType != null);
+                throw new MetadataException(Strings.DifferentSchemaVersionInCollection(itemCollectionType, versionToRegister, _schemaVersion));
+            }
+            else
+            {
+                _schemaVersion = versionToRegister;
+            }
         }
 
         /// <summary>
@@ -124,7 +346,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="token"></param>
         internal void AddMetadataEntryToken(object token)
         {
-            _internalMetadataWorkspace.AddMetadataEntryToken(token);
+            if (_cacheTokens == null)
+            {
+                _cacheTokens = new List<object>();
+            }
+
+            _cacheTokens.Add(token);
         }
 
         /// <summary>
@@ -134,7 +361,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">thrown if assembly argument is null</exception>
         public void LoadFromAssembly(Assembly assembly)
         {
-            _internalMetadataWorkspace.LoadFromAssembly(assembly);
+            LoadFromAssembly(assembly, null);
         }
 
         /// <summary>
@@ -145,7 +372,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">thrown if assembly argument is null</exception>
         public void LoadFromAssembly(Assembly assembly, Action<string> logLoadMessage)
         {
-            _internalMetadataWorkspace.LoadFromAssembly(assembly, logLoadMessage);
+            Contract.Requires(assembly != null);
+            var collection = (ObjectItemCollection)GetItemCollection(DataSpace.OSpace);
+            ExplicitLoadFromAssembly(assembly, collection, logLoadMessage);
+        }
+
+        private void ExplicitLoadFromAssembly(Assembly assembly, ObjectItemCollection collection, Action<string> logLoadMessage)
+        {
+            ItemCollection itemCollection;
+            if (!TryGetItemCollection(DataSpace.CSpace, out itemCollection))
+            {
+                itemCollection = null;
+            }
+
+            collection.ExplicitLoadFromAssembly(assembly, (EdmItemCollection)itemCollection, logLoadMessage);
+        }
+
+        private void ImplicitLoadFromAssembly(Assembly assembly, ObjectItemCollection collection)
+        {
+            if (!MetadataAssemblyHelper.ShouldFilterAssembly(assembly))
+            {
+                ExplicitLoadFromAssembly(assembly, collection, null);
+            }
         }
 
         /// <summary>
@@ -161,7 +409,46 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="callingAssembly">The assembly and its referenced assemblies to load when type is insuffiecent</param>
         internal void ImplicitLoadAssemblyForType(Type type, Assembly callingAssembly)
         {
-            _internalMetadataWorkspace.ImplicitLoadAssemblyForType(type, callingAssembly);
+            // this exists separately from LoadFromAssembly so that we can handle generics, like IEnumerable<Product>
+            Debug.Assert(null != type, "null type");
+            ItemCollection collection;
+            if (TryGetItemCollection(DataSpace.OSpace, out collection))
+            {
+                // if OSpace is not loaded - don't register
+                var objItemCollection = (ObjectItemCollection)collection;
+                ItemCollection itemCollection;
+                TryGetItemCollection(DataSpace.CSpace, out itemCollection);
+                var edmItemCollection = (EdmItemCollection)itemCollection;
+                if (!objItemCollection.ImplicitLoadAssemblyForType(type, edmItemCollection) && null != callingAssembly)
+                {
+                    // only load from callingAssembly if all types were filtered
+                    // then loaded referenced assemblies of calling assembly
+
+                    // attempt automatic discovery of user types
+                    // interesting code paths are ObjectQuery<object>, ObjectQuery<DbDataRecord>, ObjectQuery<IExtendedDataRecord>
+                    // other interesting code paths are ObjectQuery<Nullable<Int32>>, ObjectQuery<IEnumerable<object>>
+                    // when assemblies is mscorlib, System.Data or System.Data.Entity
+
+                    // If the schema attribute is presented on the assembly or any referenced assemblies, then it is a V1 scenario that we should
+                    // strictly follow the Get all referenced assemblies rules.
+                    // If the attribute is not presented on the assembly, then we won't load the referenced asssembly 
+                    // for this callingAssembly
+                    if (ObjectItemAttributeAssemblyLoader.IsSchemaAttributePresent(callingAssembly) ||
+                        (_foundAssemblyWithAttribute ||
+                         MetadataAssemblyHelper.GetNonSystemReferencedAssemblies(callingAssembly).Any(
+                             a => ObjectItemAttributeAssemblyLoader.IsSchemaAttributePresent(a))))
+                    {
+                        // cache the knowledge that we found an attribute
+                        // because it can be expesive to figure out
+                        _foundAssemblyWithAttribute = true;
+                        objItemCollection.ImplicitLoadAllReferencedAssemblies(callingAssembly, edmItemCollection);
+                    }
+                    else
+                    {
+                        ImplicitLoadFromAssembly(callingAssembly, objItemCollection);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -172,7 +459,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="callingAssembly">The assembly and its referenced assemblies to load when type is insuffiecent</param>
         internal void ImplicitLoadFromEntityType(EntityType type, Assembly callingAssembly)
         {
-            _internalMetadataWorkspace.ImplicitLoadFromEntityType(type, callingAssembly);
+            // used by ObjectContext.*GetObjectByKey when the clr type is not available
+            // so we check the OCMap to find the clr type else attempt to autoload the OSpace from callingAssembly
+            Debug.Assert(null != type, "null type");
+            Map map;
+            if (!TryGetMap(type, DataSpace.OCSpace, out map))
+            {
+                // an OCMap is not exist, attempt to load OSpace to retry
+                ImplicitLoadAssemblyForType(typeof(IEntityWithKey), callingAssembly);
+
+                // We do a check here to see if the type was actually found in the attempted load.
+                var ospaceCollection = GetItemCollection(DataSpace.OSpace) as ObjectItemCollection;
+                EdmType ospaceType;
+                if (ospaceCollection == null || !ospaceCollection.TryGetOSpaceType(type, out ospaceType))
+                {
+                    throw new InvalidOperationException(Strings.Mapping_Object_InvalidType(type.Identity));
+                }
+            }
         }
 
         /// <summary>
@@ -190,7 +493,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
         public T GetItem<T>(string identity, DataSpace dataSpace) where T : GlobalItem
         {
-            return _internalMetadataWorkspace.GetItem<T>(identity, dataSpace);
+            var collection = GetItemCollection(dataSpace, true);
+            return collection.GetItem<T>(identity, ignoreCase: false);
         }
 
         /// <summary>
@@ -204,7 +508,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">if identity or space argument is null</exception>
         public bool TryGetItem<T>(string identity, DataSpace space, out T item) where T : GlobalItem
         {
-            return _internalMetadataWorkspace.TryGetItem<T>(identity, space, out item);
+            item = null;
+            var collection = GetItemCollection(space, false);
+            return (null != collection) && collection.TryGetItem(identity, false /*ignoreCase*/, out item);
         }
 
         /// <summary>
@@ -223,7 +529,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
         public T GetItem<T>(string identity, bool ignoreCase, DataSpace dataSpace) where T : GlobalItem
         {
-            return _internalMetadataWorkspace.GetItem<T>(identity, ignoreCase, dataSpace);
+            var collection = GetItemCollection(dataSpace, true);
+            return collection.GetItem<T>(identity, ignoreCase);
         }
 
         /// <summary>
@@ -238,7 +545,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">if identity or space argument is null</exception>
         public bool TryGetItem<T>(string identity, bool ignoreCase, DataSpace dataSpace, out T item) where T : GlobalItem
         {
-            return _internalMetadataWorkspace.TryGetItem<T>(identity, ignoreCase, dataSpace, out item);
+            item = null;
+            var collection = GetItemCollection(dataSpace, false);
+            return (null != collection) && collection.TryGetItem(identity, ignoreCase, out item);
         }
 
         /// <summary>
@@ -253,7 +562,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
         public ReadOnlyCollection<T> GetItems<T>(DataSpace dataSpace) where T : GlobalItem
         {
-            return _internalMetadataWorkspace.GetItems<T>(dataSpace);
+            var collection = GetItemCollection(dataSpace, true);
+            return collection.GetItems<T>();
         }
 
         /// <summary>
@@ -270,7 +580,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
         public EdmType GetType(string name, string namespaceName, DataSpace dataSpace)
         {
-            return _internalMetadataWorkspace.GetType(name, namespaceName, dataSpace);
+            var collection = GetItemCollection(dataSpace, true);
+            return collection.GetType(name, namespaceName, ignoreCase: false);
         }
 
         /// <summary>
@@ -284,7 +595,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">if name, namespaceName or space argument is null</exception>
         public bool TryGetType(string name, string namespaceName, DataSpace dataSpace, out EdmType type)
         {
-            return _internalMetadataWorkspace.TryGetType(name, namespaceName, dataSpace, out type);
+            type = null;
+            var collection = GetItemCollection(dataSpace, false);
+            return (null != collection) && collection.TryGetType(name, namespaceName, false /*ignoreCase*/, out type);
         }
 
         /// <summary>
@@ -302,7 +615,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
         public EdmType GetType(string name, string namespaceName, bool ignoreCase, DataSpace dataSpace)
         {
-            return _internalMetadataWorkspace.GetType(name, namespaceName, ignoreCase, dataSpace);
+            var collection = GetItemCollection(dataSpace, true);
+            return collection.GetType(name, namespaceName, ignoreCase);
         }
 
         /// <summary>
@@ -315,9 +629,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="type">The type that needs to be filled with the return value</param>
         /// <returns>Returns null if no match found.</returns>
         /// <exception cref="System.ArgumentNullException">if name, namespaceName or space argument is null</exception>
-        public bool TryGetType(string name, string namespaceName, bool ignoreCase, DataSpace dataSpace, out EdmType type)
+        public bool TryGetType(
+            string name, string namespaceName, bool ignoreCase,
+            DataSpace dataSpace, out EdmType type)
         {
-            return _internalMetadataWorkspace.TryGetType(name, namespaceName, ignoreCase, dataSpace, out type);
+            type = null;
+            var collection = GetItemCollection(dataSpace, false);
+            return (null != collection) && collection.TryGetType(name, namespaceName, ignoreCase, out type);
         }
 
         /// <summary>
@@ -333,7 +651,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
         public EntityContainer GetEntityContainer(string name, DataSpace dataSpace)
         {
-            return _internalMetadataWorkspace.GetEntityContainer(name, dataSpace);
+            var collection = GetItemCollection(dataSpace, true);
+            return collection.GetEntityContainer(name);
         }
 
         /// <summary>
@@ -345,7 +664,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">if either space or name arguments is null</exception>
         public bool TryGetEntityContainer(string name, DataSpace dataSpace, out EntityContainer entityContainer)
         {
-            return _internalMetadataWorkspace.TryGetEntityContainer(name, dataSpace, out entityContainer);
+            entityContainer = null;
+            // null check exists in call stack, but throws for "identity" not "name"
+            EntityUtil.GenericCheckArgumentNull(name, "name");
+            var collection = GetItemCollection(dataSpace, false);
+            return (null != collection) && collection.TryGetEntityContainer(name, out entityContainer);
         }
 
         /// <summary>
@@ -362,7 +685,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
         public EntityContainer GetEntityContainer(string name, bool ignoreCase, DataSpace dataSpace)
         {
-            return _internalMetadataWorkspace.GetEntityContainer(name, ignoreCase, dataSpace);
+            var collection = GetItemCollection(dataSpace, true);
+            return collection.GetEntityContainer(name, ignoreCase);
         }
 
         /// <summary>
@@ -373,9 +697,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="dataSpace"></param>
         /// <param name="entityContainer"></param>
         /// <exception cref="System.ArgumentNullException">if name or space argument is null</exception>
-        public bool TryGetEntityContainer(string name, bool ignoreCase, DataSpace dataSpace, out EntityContainer entityContainer)
+        public bool TryGetEntityContainer(
+            string name, bool ignoreCase,
+            DataSpace dataSpace, out EntityContainer entityContainer)
         {
-            return _internalMetadataWorkspace.TryGetEntityContainer(name, ignoreCase, dataSpace, out entityContainer);
+            entityContainer = null;
+            // null check exists in call stack, but throws for "identity" not "name"
+            EntityUtil.GenericCheckArgumentNull(name, "name");
+            var collection = GetItemCollection(dataSpace, false);
+            return (null != collection) && collection.TryGetEntityContainer(name, ignoreCase, out entityContainer);
         }
 
         /// <summary>
@@ -394,7 +724,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
         public ReadOnlyCollection<EdmFunction> GetFunctions(string name, string namespaceName, DataSpace dataSpace)
         {
-            return _internalMetadataWorkspace.GetFunctions(name, namespaceName, dataSpace);
+            return GetFunctions(name, namespaceName, dataSpace, false /*ignoreCase*/);
         }
 
         /// <summary>
@@ -412,9 +742,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">If the ItemCollection for this space does not have a EdmFunction with the given functionName</exception>
         /// <exception cref="System.ArgumentException">If the name or namespaceName is empty</exception>
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
-        public ReadOnlyCollection<EdmFunction> GetFunctions(string name, string namespaceName, DataSpace dataSpace, bool ignoreCase)
+        public ReadOnlyCollection<EdmFunction> GetFunctions(
+            string name,
+            string namespaceName,
+            DataSpace dataSpace,
+            bool ignoreCase)
         {
-            return _internalMetadataWorkspace.GetFunctions(name, namespaceName, dataSpace, ignoreCase);
+            EntityUtil.CheckStringArgument(name, "name");
+            EntityUtil.CheckStringArgument(namespaceName, "namespaceName");
+            var collection = GetItemCollection(dataSpace, true);
+
+            // Get the function with this full name, which is namespace name plus name
+            return collection.GetFunctions(namespaceName + "." + name, ignoreCase);
         }
 
         /// <summary>
@@ -437,7 +776,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             DataSpace dataSpace,
             out EdmFunction function)
         {
-            return _internalMetadataWorkspace.TryGetFunction(name, namespaceName, parameterTypes, ignoreCase, dataSpace, out function);
+            function = null;
+            EntityUtil.GenericCheckArgumentNull(name, "name");
+            EntityUtil.GenericCheckArgumentNull(namespaceName, "namespaceName");
+            var collection = GetItemCollection(dataSpace, false);
+
+            // Get the function with this full name, which is namespace name plus name
+            return (null != collection) && collection.TryGetFunction(namespaceName + "." + name, parameterTypes, ignoreCase, out function);
         }
 
         /// <summary>
@@ -450,7 +795,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
         public ReadOnlyCollection<PrimitiveType> GetPrimitiveTypes(DataSpace dataSpace)
         {
-            return _internalMetadataWorkspace.GetPrimitiveTypes(dataSpace);
+            var collection = GetItemCollection(dataSpace, true);
+            return collection.GetItems<PrimitiveType>();
         }
 
         /// <summary>
@@ -463,7 +809,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
         public ReadOnlyCollection<GlobalItem> GetItems(DataSpace dataSpace)
         {
-            return _internalMetadataWorkspace.GetItems(dataSpace);
+            var collection = GetItemCollection(dataSpace, true);
+            return collection.GetItems<GlobalItem>();
         }
 
         /// <summary>
@@ -477,7 +824,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
         internal PrimitiveType GetMappedPrimitiveType(PrimitiveTypeKind primitiveTypeKind, DataSpace dataSpace)
         {
-            return _internalMetadataWorkspace.GetMappedPrimitiveType(primitiveTypeKind, dataSpace);
+            var collection = GetItemCollection(dataSpace, true);
+            return collection.GetMappedPrimitiveType(primitiveTypeKind);
         }
 
         /// <summary>
@@ -491,7 +839,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>Returns false if no match found.</returns>
         internal bool TryGetMap(string typeIdentity, DataSpace typeSpace, bool ignoreCase, DataSpace mappingSpace, out Map map)
         {
-            return _internalMetadataWorkspace.TryGetMap(typeIdentity, typeSpace, ignoreCase, mappingSpace, out map);
+            map = null;
+            var collection = GetItemCollection(mappingSpace, false);
+            return (null != collection) && ((MappingItemCollection)collection).TryGetMap(typeIdentity, typeSpace, ignoreCase, out map);
         }
 
         /// <summary>
@@ -503,7 +853,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="ArgumentException"> Thrown if mapping space is not valid</exception>
         internal Map GetMap(string identity, DataSpace typeSpace, DataSpace dataSpace)
         {
-            return _internalMetadataWorkspace.GetMap(identity, typeSpace, dataSpace);
+            var collection = GetItemCollection(dataSpace, true);
+            return ((MappingItemCollection)collection).GetMap(identity, typeSpace);
         }
 
         /// <summary>
@@ -514,7 +865,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="ArgumentException"> Thrown if mapping space is not valid</exception>
         internal Map GetMap(GlobalItem item, DataSpace dataSpace)
         {
-            return _internalMetadataWorkspace.GetMap(item, dataSpace);
+            var collection = GetItemCollection(dataSpace, true);
+            return ((MappingItemCollection)collection).GetMap(item);
         }
 
         /// <summary>
@@ -526,7 +878,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>Returns false if no match found.</returns>
         internal bool TryGetMap(GlobalItem item, DataSpace dataSpace, out Map map)
         {
-            return _internalMetadataWorkspace.TryGetMap(item, dataSpace, out map);
+            map = null;
+            var collection = GetItemCollection(dataSpace, false);
+            return (null != collection) && ((MappingItemCollection)collection).TryGetMap(item, out map);
+        }
+
+        private ItemCollection RegisterDefaultObjectMappingItemCollection()
+        {
+            var edm = _itemsCSpace;
+            var obj = _itemsOSpace;
+            if ((null != edm) && (null != obj))
+            {
+                RegisterItemCollection(new DefaultObjectMappingItemCollection(edm, obj));
+            }
+
+            return _itemsOCSpace;
         }
 
         /// <summary>
@@ -537,10 +903,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="collection">The collection registered for the specified dataspace, if any</param>
         /// <returns><c>true</c> if an item collection is currently registered for the specified space; otherwise <c>false</c>.</returns>
         /// <exception cref="System.ArgumentNullException">if space argument is null</exception>
-        [CLSCompliant(false)]
         public bool TryGetItemCollection(DataSpace dataSpace, out ItemCollection collection)
         {
-            return _internalMetadataWorkspace.TryGetItemCollection(dataSpace, out collection);
+            collection = GetItemCollection(dataSpace, false);
+            return (null != collection);
         }
 
         /// <summary>
@@ -552,7 +918,38 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="ArgumentException">Thrown if required and mapping space is not valid or registered</exception>
         internal ItemCollection GetItemCollection(DataSpace dataSpace, bool required)
         {
-            return _internalMetadataWorkspace.GetItemCollection(dataSpace, required);
+            ItemCollection collection;
+            switch (dataSpace)
+            {
+                case DataSpace.CSpace:
+                    collection = _itemsCSpace;
+                    break;
+                case DataSpace.OSpace:
+                    collection = _itemsOSpace;
+                    break;
+                case DataSpace.OCSpace:
+                    collection = _itemsOCSpace ?? RegisterDefaultObjectMappingItemCollection();
+                    break;
+                case DataSpace.CSSpace:
+                    collection = _itemsCSSpace;
+                    break;
+                case DataSpace.SSpace:
+                    collection = _itemsSSpace;
+                    break;
+                default:
+                    if (required)
+                    {
+                        Debug.Fail("Invalid DataSpace Enum value: " + dataSpace);
+                    }
+                    collection = null;
+                    break;
+            }
+            if (required && (null == collection))
+            {
+                throw new InvalidOperationException(Strings.NoCollectionForSpace(dataSpace.ToString()));
+            }
+
+            return collection;
         }
 
         /// <summary>
@@ -564,7 +961,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>The OSpace type mapped to the supplied argument</returns>
         public StructuralType GetObjectSpaceType(StructuralType edmSpaceType)
         {
-            return _internalMetadataWorkspace.GetObjectSpaceType(edmSpaceType);
+            return GetObjectSpaceType<StructuralType>(edmSpaceType);
         }
 
         /// <summary>
@@ -579,7 +976,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public bool TryGetObjectSpaceType(StructuralType edmSpaceType, out StructuralType objectSpaceType)
         {
-            return _internalMetadataWorkspace.TryGetObjectSpaceType(edmSpaceType, out objectSpaceType);
+            return TryGetObjectSpaceType<StructuralType>(edmSpaceType, out objectSpaceType);
         }
 
         /// <summary>
@@ -591,7 +988,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>The OSpace type mapped to the supplied argument</returns>
         public EnumType GetObjectSpaceType(EnumType edmSpaceType)
         {
-            return _internalMetadataWorkspace.GetObjectSpaceType(edmSpaceType);
+            return GetObjectSpaceType<EnumType>(edmSpaceType);
         }
 
         /// <summary>
@@ -606,7 +1003,71 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public bool TryGetObjectSpaceType(EnumType edmSpaceType, out EnumType objectSpaceType)
         {
-            return _internalMetadataWorkspace.TryGetObjectSpaceType(edmSpaceType, out objectSpaceType);
+            return TryGetObjectSpaceType<EnumType>(edmSpaceType, out objectSpaceType);
+        }
+
+        /// <summary>
+        /// Helper method returning the OSpace enum type mapped to the specified Edm Space Type.
+        /// If the DataSpace of the argument is not CSpace, or the mapped OSpace type 
+        /// cannot be determined, an ArgumentException is thrown.
+        /// </summary>
+        /// <param name="edmSpaceType">The CSpace type to look up</param>
+        /// <returns>The OSpace type mapped to the supplied argument</returns>
+        /// <typeparam name="T">Must be StructuralType or EnumType.</typeparam>
+        private T GetObjectSpaceType<T>(T edmSpaceType)
+            where T : EdmType
+        {
+            Debug.Assert(
+                edmSpaceType == null || edmSpaceType is StructuralType || edmSpaceType is EnumType,
+                "Only structural or enum type expected");
+
+            T objectSpaceType;
+            if (!TryGetObjectSpaceType(edmSpaceType, out objectSpaceType))
+            {
+                throw new ArgumentException(Strings.FailedToFindOSpaceTypeMapping(edmSpaceType.Identity));
+            }
+
+            return objectSpaceType;
+        }
+
+        /// <summary>
+        /// Helper method returning the OSpace structural or enum type mapped to the specified Edm Space Type.
+        /// If the DataSpace of the argument is not CSpace, or if the mapped OSpace type 
+        /// cannot be determined, the method returns false and sets the out parameter
+        /// to null.
+        /// </summary>
+        /// <param name="edmSpaceType">The CSpace type to look up</param>
+        /// <param name="objectSpaceType">The OSpace type mapped to the supplied argument</param>
+        /// <returns>true on success, false on failure</returns>
+        /// <typeparam name="T">Must be StructuralType or EnumType.</typeparam>
+        private bool TryGetObjectSpaceType<T>(T edmSpaceType, out T objectSpaceType)
+            where T : EdmType
+        {
+            Contract.Requires(edmSpaceType != null);
+
+            Debug.Assert(
+                edmSpaceType == null || edmSpaceType is StructuralType || edmSpaceType is EnumType,
+                "Only structural or enum type expected");
+
+            if (edmSpaceType.DataSpace
+                != DataSpace.CSpace)
+            {
+                throw new ArgumentException(Strings.ArgumentMustBeCSpaceType, "edmSpaceType");
+            }
+
+            objectSpaceType = null;
+
+            Map map;
+            if (TryGetMap(edmSpaceType, DataSpace.OCSpace, out map))
+            {
+                var ocMap = map as ObjectTypeMapping;
+                if (ocMap != null)
+                {
+                    objectSpaceType = (T)ocMap.ClrType;
+                }
+            }
+
+            return objectSpaceType != null;
         }
 
         /// <summary>
@@ -618,7 +1079,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>The CSpace type mapped to the OSpace parameter</returns>
         public StructuralType GetEdmSpaceType(StructuralType objectSpaceType)
         {
-            return _internalMetadataWorkspace.GetEdmSpaceType(objectSpaceType);
+            return GetEdmSpaceType<StructuralType>(objectSpaceType);
         }
 
         /// <summary>
@@ -631,7 +1092,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>true on success, false on failure</returns>
         public bool TryGetEdmSpaceType(StructuralType objectSpaceType, out StructuralType edmSpaceType)
         {
-            return _internalMetadataWorkspace.TryGetEdmSpaceType(objectSpaceType, out edmSpaceType);
+            return TryGetEdmSpaceType<StructuralType>(objectSpaceType, out edmSpaceType);
         }
 
         /// <summary>
@@ -643,7 +1104,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>The CSpace type mapped to the OSpace parameter</returns>
         public EnumType GetEdmSpaceType(EnumType objectSpaceType)
         {
-            return _internalMetadataWorkspace.GetEdmSpaceType(objectSpaceType);
+            return GetEdmSpaceType<EnumType>(objectSpaceType);
         }
 
         /// <summary>
@@ -656,7 +1117,70 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>true on success, false on failure</returns>
         public bool TryGetEdmSpaceType(EnumType objectSpaceType, out EnumType edmSpaceType)
         {
-            return _internalMetadataWorkspace.TryGetEdmSpaceType(objectSpaceType, out edmSpaceType);
+            return TryGetEdmSpaceType<EnumType>(objectSpaceType, out edmSpaceType);
+        }
+
+        /// <summary>
+        /// Helper method returning the Edm Space structural or enum type mapped to the OSpace Type parameter. If the
+        /// DataSpace of the supplied type is not OSpace, or the mapped Edm Space type cannot
+        /// be determined, an ArgumentException is thrown.
+        /// </summary>
+        /// <param name="objectSpaceType">The OSpace type to look up</param>
+        /// <returns>The CSpace type mapped to the OSpace parameter</returns>
+        /// <typeparam name="T">Must be StructuralType or EnumType</typeparam>
+        private T GetEdmSpaceType<T>(T objectSpaceType)
+            where T : EdmType
+        {
+            Debug.Assert(
+                objectSpaceType == null || objectSpaceType is StructuralType || objectSpaceType is EnumType,
+                "Only structural or enum type expected");
+
+            T edmSpaceType;
+            if (!TryGetEdmSpaceType(objectSpaceType, out edmSpaceType))
+            {
+                throw new ArgumentException(Strings.FailedToFindCSpaceTypeMapping(objectSpaceType.Identity));
+            }
+
+            return edmSpaceType;
+        }
+
+        /// <summary>
+        /// Helper method returning the Edm Space structural or enum type mapped to the OSpace Type parameter. If the
+        /// DataSpace of the supplied type is not OSpace, or the mapped Edm Space type cannot
+        /// be determined, the method returns false and sets the out parameter to null.
+        /// </summary>
+        /// <param name="objectSpaceType">The OSpace type to look up</param>
+        /// <param name="edmSpaceType">The mapped CSpace type</param>
+        /// <returns>true on success, false on failure</returns>
+        /// <typeparam name="T">Must be StructuralType or EnumType</typeparam>
+        private bool TryGetEdmSpaceType<T>(T objectSpaceType, out T edmSpaceType)
+            where T : EdmType
+        {
+            Contract.Requires(objectSpaceType != null);
+
+            Debug.Assert(
+                objectSpaceType == null || objectSpaceType is StructuralType || objectSpaceType is EnumType,
+                "Only structural or enum type expected");
+
+            if (objectSpaceType.DataSpace
+                != DataSpace.OSpace)
+            {
+                throw new ArgumentException(Strings.ArgumentMustBeOSpaceType, "objectSpaceType");
+            }
+
+            edmSpaceType = null;
+
+            Map map;
+            if (TryGetMap(objectSpaceType, DataSpace.OCSpace, out map))
+            {
+                var ocMap = map as ObjectTypeMapping;
+                if (ocMap != null)
+                {
+                    edmSpaceType = (T)ocMap.EdmType;
+                }
+            }
+
+            return edmSpaceType != null;
         }
 
         ///// <summary>
@@ -668,7 +1192,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///// <returns></returns>
         internal DbQueryCommandTree GetCqtView(EntitySetBase extent)
         {
-            return _internalMetadataWorkspace.GetCqtView(extent);
+            return GetGeneratedView(extent).GetCommandTree();
         }
 
         /// <summary>
@@ -676,7 +1200,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal GeneratedView GetGeneratedView(EntitySetBase extent)
         {
-            return _internalMetadataWorkspace.GetGeneratedView(extent);
+            var collection = GetItemCollection(DataSpace.CSSpace, true);
+            return ((StorageMappingItemCollection)collection).GetGeneratedView(extent, this.MetadataWorkspaceWrapper);
         }
 
         /// <summary>
@@ -687,7 +1212,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal bool TryGetGeneratedViewOfType(
             EntitySetBase extent, EntityTypeBase type, bool includeSubtypes, out GeneratedView generatedView)
         {
-            return _internalMetadataWorkspace.TryGetGeneratedViewOfType(extent, type, includeSubtypes, out generatedView);
+            var collection = GetItemCollection(DataSpace.CSSpace, true);
+            return ((StorageMappingItemCollection)collection).TryGetGeneratedViewOfType(extent, type, includeSubtypes, out generatedView);
         }
 
         /// <summary>
@@ -699,7 +1225,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal DbLambda GetGeneratedFunctionDefinition(EdmFunction function)
         {
-            return _internalMetadataWorkspace.GetGeneratedFunctionDefinition(function);
+            var collection = GetItemCollection(DataSpace.CSpace, true);
+            return ((EdmItemCollection)collection).GetGeneratedFunctionDefinition(function);
         }
 
         /// <summary>
@@ -710,7 +1237,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>true if a mapped target function exists; false otherwise</returns>
         internal bool TryGetFunctionImportMapping(EdmFunction functionImport, out FunctionImportMapping targetFunctionMapping)
         {
-            return _internalMetadataWorkspace.TryGetFunctionImportMapping(functionImport, out targetFunctionMapping);
+            Debug.Assert(null != functionImport);
+            var entityContainerMaps = GetItems<StorageEntityContainerMapping>(DataSpace.CSSpace);
+            foreach (var containerMapping in entityContainerMaps)
+            {
+                if (containerMapping.TryGetFunctionImportMapping(functionImport, out targetFunctionMapping))
+                {
+                    return true;
+                }
+            }
+            targetFunctionMapping = null;
+            return false;
         }
 
         /// <summary>
@@ -722,7 +1259,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns></returns>
         internal ViewLoader GetUpdateViewLoader()
         {
-            return _internalMetadataWorkspace.GetUpdateViewLoader();
+            if (_itemsCSSpace != null)
+            {
+                return _itemsCSSpace.GetUpdateViewLoader();
+            }
+            return null;
         }
 
         /// <summary>
@@ -733,7 +1274,36 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns></returns>
         internal TypeUsage GetOSpaceTypeUsage(TypeUsage edmSpaceTypeUsage)
         {
-            return _internalMetadataWorkspace.GetOSpaceTypeUsage(edmSpaceTypeUsage);
+            Contract.Requires(edmSpaceTypeUsage != null);
+            Debug.Assert(edmSpaceTypeUsage.EdmType != null, "The TypeUsage object does not have an EDMType.");
+
+            EdmType clrType = null;
+            if (Helper.IsPrimitiveType(edmSpaceTypeUsage.EdmType))
+            {
+                var collection = GetItemCollection(DataSpace.OSpace, true);
+                clrType = collection.GetMappedPrimitiveType(((PrimitiveType)edmSpaceTypeUsage.EdmType).PrimitiveTypeKind);
+            }
+            else
+            {
+                // Check and throw if the OC space doesn't exist
+                var collection = GetItemCollection(DataSpace.OCSpace, true);
+
+                // Get the OC map
+                var map = ((DefaultObjectMappingItemCollection)collection).GetMap(edmSpaceTypeUsage.EdmType);
+                clrType = ((ObjectTypeMapping)map).ClrType;
+            }
+
+            Debug.Assert(
+                !Helper.IsPrimitiveType(clrType) ||
+                ReferenceEquals(
+                    ClrProviderManifest.Instance.GetFacetDescriptions(clrType),
+                    EdmProviderManifest.Instance.GetFacetDescriptions(clrType.BaseType)),
+                "these are no longer equal so we can't just use the same set of facets for the new type usage");
+
+            // Transfer the facet values
+            var result = TypeUsage.Create(clrType, edmSpaceTypeUsage.Facets);
+
+            return result;
         }
 
         /// <summary>
@@ -743,7 +1313,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns></returns>
         internal bool IsItemCollectionAlreadyRegistered(DataSpace dataSpace)
         {
-            return _internalMetadataWorkspace.IsItemCollectionAlreadyRegistered(dataSpace);
+            ItemCollection itemCollection;
+            return TryGetItemCollection(dataSpace, out itemCollection);
         }
 
         /// <summary>
@@ -753,9 +1324,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="other">Other workspace.</param>
         /// <returns>true is C, S and CS collections are equivalent</returns>
-        internal bool IsMetadataWorkspaceCSCompatible(MetadataWorkspace other)
+        internal bool IsInternalMetadataWorkspaceCSCompatible(InternalMetadataWorkspace other)
         {
-            return _internalMetadataWorkspace.IsInternalMetadataWorkspaceCSCompatible(other._internalMetadataWorkspace);
+            Debug.Assert(
+                IsItemCollectionAlreadyRegistered(DataSpace.CSSpace) &&
+                other.IsItemCollectionAlreadyRegistered(DataSpace.CSSpace),
+                "requires: C, S and CS are registered in this and other");
+
+            var result = _itemsCSSpace.MetadataEquals(other._itemsCSSpace);
+
+            Debug.Assert(
+                !result ||
+                (_itemsCSpace.MetadataEquals(other._itemsCSpace) && _itemsSSpace.MetadataEquals(other._itemsSSpace)),
+                "constraint: this.CS == other.CS --> this.S == other.S && this.C == other.C");
+
+            return result;
         }
 
         /// <summary>
@@ -776,11 +1359,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// and tokens for caching purposes.
         /// </summary>
         /// <returns></returns>
-        internal MetadataWorkspace ShallowCopy()
+        internal InternalMetadataWorkspace ShallowCopy()
         {
-            var copy = (MetadataWorkspace)MemberwiseClone();
-            copy._internalMetadataWorkspace = _internalMetadataWorkspace.ShallowCopy();
-            copy._internalMetadataWorkspace.MetadataWorkspaceWrapper = copy;
+            var copy = (InternalMetadataWorkspace)MemberwiseClone();
+            if (null != copy._cacheTokens)
+            {
+                copy._cacheTokens = new List<Object>(copy._cacheTokens);
+            }
 
             return copy;
         }
@@ -831,7 +1416,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Obsolete("Use MetadataWorkspace.GetRelevantMembersForUpdate(EntitySetBase, EntityTypeBase, bool) instead")]
         public IEnumerable<EdmMember> GetRequiredOriginalValueMembers(EntitySetBase entitySet, EntityTypeBase entityType)
         {
-            return _internalMetadataWorkspace.GetRequiredOriginalValueMembers(entitySet, entityType);
+            return GetInterestingMembers(
+                entitySet, entityType, StorageMappingItemCollection.InterestingMembersKind.RequiredOriginalValueMembers);
         }
 
         /// <summary>
@@ -850,15 +1436,85 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public ReadOnlyCollection<EdmMember> GetRelevantMembersForUpdate(
             EntitySetBase entitySet, EntityTypeBase entityType, bool partialUpdateSupported)
         {
-            return _internalMetadataWorkspace.GetRelevantMembersForUpdate(entitySet, entityType, partialUpdateSupported);
+            return GetInterestingMembers(
+                entitySet,
+                entityType,
+                partialUpdateSupported
+                    ? StorageMappingItemCollection.InterestingMembersKind.PartialUpdate
+                    : StorageMappingItemCollection.InterestingMembersKind.FullUpdate);
         }
+
+        /// <summary>
+        /// Return members for <see cref="GetRequiredOriginalValueMembers"/> and <see cref="GetRelevantMembersForUpdate"/> methods.
+        /// </summary>
+        /// <param name="entitySet">An EntitySet belonging to the C-Space</param>
+        /// <param name="entityType">An EntityType that participates in the given EntitySet</param>
+        /// <param name="interestingMembersKind">Scenario the members should be returned for.</param>
+        /// <returns>ReadOnlyCollection of interesting members for the requested scenario (<paramref name="interestingMembersKind"/>).</returns>
+        private ReadOnlyCollection<EdmMember> GetInterestingMembers(
+            EntitySetBase entitySet, EntityTypeBase entityType, StorageMappingItemCollection.InterestingMembersKind interestingMembersKind)
+        {
+            Contract.Requires(entitySet != null);
+            Contract.Requires(entityType != null);
+
+            Debug.Assert(entitySet.EntityContainer != null);
+
+            var associationSet = entitySet as AssociationSet;
+
+            //Check that EntitySet is from CSpace
+            if (entitySet.EntityContainer.DataSpace
+                != DataSpace.CSpace)
+            {
+                if (associationSet != null)
+                {
+                    throw new ArgumentException(Strings.EntitySetNotInCSPace(entitySet.Name));
+                }
+                else
+                {
+                    throw new ArgumentException(Strings.EntitySetNotInCSPace(entitySet.Name));
+                }
+            }
+
+            //Check that entityType belongs to entitySet
+            if (!entitySet.ElementType.IsAssignableFrom(entityType))
+            {
+                if (associationSet != null)
+                {
+                    throw new ArgumentException(Strings.TypeNotInAssociationSet(entityType.FullName, entitySet.ElementType.FullName, entitySet.Name));
+                }
+                else
+                {
+                    throw new ArgumentException(Strings.TypeNotInEntitySet(entityType.FullName, entitySet.ElementType.FullName, entitySet.Name));
+                }
+            }
+
+            var mappingCollection = (StorageMappingItemCollection)GetItemCollection(DataSpace.CSSpace, true);
+            return mappingCollection.GetInterestingMembers(entitySet, entityType, interestingMembersKind);
+        }
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Returns the QueryCacheManager hosted by this metadata workspace instance
         /// </summary>
         internal QueryCacheManager GetQueryCacheManager()
         {
-            return _internalMetadataWorkspace.GetQueryCacheManager();
+            Debug.Assert(null != _itemsSSpace, "_itemsSSpace must not be null");
+            return _itemsSSpace.QueryCacheManager;
+        }
+
+        internal Guid MetadataWorkspaceId
+        {
+            get
+            {
+                if (Equals(Guid.Empty, _metadataWorkspaceId))
+                {
+                    _metadataWorkspaceId = Guid.NewGuid();
+                }
+                return _metadataWorkspaceId;
+            }
         }
 
         #endregion

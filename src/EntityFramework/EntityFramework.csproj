@@ -269,7 +269,6 @@
     <Compile Include="Core\Common\Utils\TreePrinter.cs" />
     <Compile Include="Core\EntityClient\DbConnectionOptions.cs" />
     <Compile Include="Core\EntityClient\DbParameterCollectionHelper.cs" />
-    <Compile Include="Core\EntityClient\DbParameterHelper.cs" />
     <Compile Include="Core\EntityClient\EntityAdapter.cs" />
     <Compile Include="Core\EntityClient\EntityCommand.cs">
       <SubType>Component</SubType>
@@ -285,8 +284,10 @@
     <Compile Include="Core\EntityClient\EntityProviderFactory.cs" />
     <Compile Include="Core\EntityClient\EntityProviderServices.cs" />
     <Compile Include="Core\EntityClient\EntityTransaction.cs" />
+    <Compile Include="Core\EntityClient\Internal\InternalEntityAdapter.cs" />
     <Compile Include="Core\EntityClient\Internal\InternalEntityCommand.cs" />
     <Compile Include="Core\EntityClient\Internal\InternalEntityConnection.cs" />
+    <Compile Include="Core\EntityClient\Internal\InternalEntityParameter.cs" />
     <Compile Include="Core\EntityClient\Internal\InternalEntityTransaction.cs" />
     <Compile Include="Core\EntityClient\NameValuePair.cs" />
     <Compile Include="Core\EntityCommandCompilationException.cs" />
@@ -604,6 +605,7 @@
     <Compile Include="Core\Metadata\Edm\TypeUsage.cs" />
     <Compile Include="Core\Metadata\Edm\util.cs" />
     <Compile Include="Core\Metadata\Helper.cs" />
+    <Compile Include="Core\Metadata\Internal\InternalMetadataWorkspace.cs" />
     <Compile Include="Core\Metadata\MappingMetadataHelper.cs" />
     <Compile Include="Core\Metadata\MetadataArtifactAssemblyResolver.cs" />
     <Compile Include="Core\Metadata\MetadataArtifactLoader.cs" />
