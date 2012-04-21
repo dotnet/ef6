@@ -362,5 +362,54 @@ namespace ProviderTests
                 Assert.True(expectedOrderIds.Length == actualResult.Count && actualResult.All(r => r));
             }
         }
+
+        [Fact]
+        public void Verify_TVFs_returning_scalar_values_work()
+        {
+            using(var context = new NorthwindEntities())
+            {
+                var customerLocations = context.fx_CustomerLocationForCountry("Portugal").ToList();
+
+                Assert.Equal(2, customerLocations.Count);
+                Assert.Contains("POINT (-9.19968872070313 38.7638671875)", customerLocations.Select(s => s.AsText()));
+                Assert.Contains( "POINT (-9.13509541581515 38.7153290459515)", customerLocations.Select(s => s.AsText()));
+            }
+        }
+
+        [Fact]
+        public void Verify_TVFs_returning_entities_work()
+        {
+            using(var context = new NorthwindEntities())
+            {
+                var inTransitOrders = context.fx_OrdersForShippingStatus(ShippingStatus.InTransit);
+
+                // because TVFs are composable, we can query over the TVF results on the server instead of in memory.
+                var orders = inTransitOrders.Where(o => o.ShipCountry == "Poland").ToList();
+
+                Assert.Equal(3, orders.Count);
+                Assert.Contains(10611, orders.Select(o => o.OrderID));
+                Assert.Contains(10870, orders.Select(o => o.OrderID));
+                Assert.Contains(10998, orders.Select(o => o.OrderID));
+            }
+        }
+
+        [Fact]
+        public void Verify_TVFs_returning_complex_values_work()
+        {
+            DbGeography londonLocation = DbGeography.FromText("POINT(-0.5 51.50)");
+            using(var context = new NorthwindEntities())
+            {
+                var suppliersNearLondon = context.fx_SuppliersWithinRange(500, londonLocation).ToList();
+
+                Assert.Equal(7, suppliersNearLondon.Count);
+                Assert.Contains(1, suppliersNearLondon.Select(s => s.SupplierID));
+                Assert.Contains(12, suppliersNearLondon.Select(s => s.SupplierID));
+                Assert.Contains(13, suppliersNearLondon.Select(s => s.SupplierID));
+                Assert.Contains(18, suppliersNearLondon.Select(s => s.SupplierID));
+                Assert.Contains(22, suppliersNearLondon.Select(s => s.SupplierID));
+                Assert.Contains(27, suppliersNearLondon.Select(s => s.SupplierID));
+                Assert.Contains(28, suppliersNearLondon.Select(s => s.SupplierID));                
+            }
+        }
     }
 }
