@@ -27,7 +27,7 @@ namespace System.Data.Entity.SqlServer
         {
             EnsureGeographyColumn(ordinal);
             var geogBytes = reader.GetSqlBytes(ordinal);
-            var providerValue = sqlGeographyFromBinaryReader.Value(new BinaryReader(geogBytes.Stream));
+            var providerValue = SqlGeographyFromBinaryReader.Value(new BinaryReader(geogBytes.Stream));
             return SqlSpatialServices.Instance.GeographyFromProviderValue(providerValue);
         }
 
@@ -35,17 +35,17 @@ namespace System.Data.Entity.SqlServer
         {
             EnsureGeometryColumn(ordinal);
             var geomBytes = reader.GetSqlBytes(ordinal);
-            var providerValue = sqlGeometryFromBinaryReader.Value(new BinaryReader(geomBytes.Stream));
+            var providerValue = SqlGeometryFromBinaryReader.Value(new BinaryReader(geomBytes.Stream));
             return SqlSpatialServices.Instance.GeometryFromProviderValue(providerValue);
         }
 
-        private static readonly Singleton<Func<BinaryReader, object>> sqlGeographyFromBinaryReader =
-            new Singleton<Func<BinaryReader, object>>(
-                () => CreateBinaryReadDelegate(SqlProviderServices.GetSqlTypesAssembly().SqlGeographyType));
+        private static readonly Lazy<Func<BinaryReader, object>> SqlGeographyFromBinaryReader =
+            new Lazy<Func<BinaryReader, object>>(
+                () => CreateBinaryReadDelegate(SqlProviderServices.GetSqlTypesAssembly().SqlGeographyType), isThreadSafe: true);
 
-        private static readonly Singleton<Func<BinaryReader, object>> sqlGeometryFromBinaryReader =
-            new Singleton<Func<BinaryReader, object>>(
-                () => CreateBinaryReadDelegate(SqlProviderServices.GetSqlTypesAssembly().SqlGeometryType));
+        private static readonly Lazy<Func<BinaryReader, object>> SqlGeometryFromBinaryReader =
+            new Lazy<Func<BinaryReader, object>>(
+                () => CreateBinaryReadDelegate(SqlProviderServices.GetSqlTypesAssembly().SqlGeometryType), isThreadSafe: true);
 
         // test to ensure that the SQL column has the expected SQL type.   Don't use the CLR type to avoid having to worry about differences in 
         // type versions between the client and the database.  

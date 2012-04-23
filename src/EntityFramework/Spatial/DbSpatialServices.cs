@@ -10,11 +10,11 @@ namespace System.Data.Entity.Spatial
     [Serializable]
     public abstract class DbSpatialServices
     {
-        private static readonly Singleton<DbSpatialServices> defaultServices = new Singleton<DbSpatialServices>(LoadDefaultServices);
+        private static readonly Lazy<DbSpatialServices> DefaultServices = new Lazy<DbSpatialServices>(LoadDefaultServices, isThreadSafe: true);
 
         public static DbSpatialServices Default
         {
-            get { return defaultServices.Value; }
+            get { return DefaultServices.Value; }
         }
 
         private static DbSpatialServices LoadDefaultServices()

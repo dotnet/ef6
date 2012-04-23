@@ -921,341 +921,341 @@ namespace System.Data.Entity.SqlServer
         }
 
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeography_Parse;
+        private Lazy<MethodInfo> smi_SqlGeography_Parse;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeography_STGeomFromText;
+        private Lazy<MethodInfo> smi_SqlGeography_STGeomFromText;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeography_STPointFromText;
+        private Lazy<MethodInfo> smi_SqlGeography_STPointFromText;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeography_STLineFromText;
+        private Lazy<MethodInfo> smi_SqlGeography_STLineFromText;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeography_STPolyFromText;
+        private Lazy<MethodInfo> smi_SqlGeography_STPolyFromText;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeography_STMPointFromText;
+        private Lazy<MethodInfo> smi_SqlGeography_STMPointFromText;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeography_STMLineFromText;
+        private Lazy<MethodInfo> smi_SqlGeography_STMLineFromText;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeography_STMPolyFromText;
+        private Lazy<MethodInfo> smi_SqlGeography_STMPolyFromText;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeography_STGeomCollFromText;
+        private Lazy<MethodInfo> smi_SqlGeography_STGeomCollFromText;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeography_STGeomFromWKB;
+        private Lazy<MethodInfo> smi_SqlGeography_STGeomFromWKB;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeography_STPointFromWKB;
+        private Lazy<MethodInfo> smi_SqlGeography_STPointFromWKB;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeography_STLineFromWKB;
+        private Lazy<MethodInfo> smi_SqlGeography_STLineFromWKB;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeography_STPolyFromWKB;
+        private Lazy<MethodInfo> smi_SqlGeography_STPolyFromWKB;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeography_STMPointFromWKB;
+        private Lazy<MethodInfo> smi_SqlGeography_STMPointFromWKB;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeography_STMLineFromWKB;
+        private Lazy<MethodInfo> smi_SqlGeography_STMLineFromWKB;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeography_STMPolyFromWKB;
+        private Lazy<MethodInfo> smi_SqlGeography_STMPolyFromWKB;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeography_STGeomCollFromWKB;
+        private Lazy<MethodInfo> smi_SqlGeography_STGeomCollFromWKB;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeography_GeomFromGml;
+        private Lazy<MethodInfo> smi_SqlGeography_GeomFromGml;
         [NonSerialized]
-        private Singleton<PropertyInfo> ipi_SqlGeography_STSrid;
+        private Lazy<PropertyInfo> ipi_SqlGeography_STSrid;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STGeometryType;
+        private Lazy<MethodInfo> imi_SqlGeography_STGeometryType;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STDimension;
+        private Lazy<MethodInfo> imi_SqlGeography_STDimension;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STAsBinary;
+        private Lazy<MethodInfo> imi_SqlGeography_STAsBinary;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_AsGml;
+        private Lazy<MethodInfo> imi_SqlGeography_AsGml;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STAsText;
+        private Lazy<MethodInfo> imi_SqlGeography_STAsText;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STIsEmpty;
+        private Lazy<MethodInfo> imi_SqlGeography_STIsEmpty;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STEquals;
+        private Lazy<MethodInfo> imi_SqlGeography_STEquals;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STDisjoint;
+        private Lazy<MethodInfo> imi_SqlGeography_STDisjoint;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STIntersects;
+        private Lazy<MethodInfo> imi_SqlGeography_STIntersects;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STBuffer;
+        private Lazy<MethodInfo> imi_SqlGeography_STBuffer;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STDistance;
+        private Lazy<MethodInfo> imi_SqlGeography_STDistance;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STIntersection;
+        private Lazy<MethodInfo> imi_SqlGeography_STIntersection;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STUnion;
+        private Lazy<MethodInfo> imi_SqlGeography_STUnion;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STDifference;
+        private Lazy<MethodInfo> imi_SqlGeography_STDifference;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STSymDifference;
+        private Lazy<MethodInfo> imi_SqlGeography_STSymDifference;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STNumGeometries;
+        private Lazy<MethodInfo> imi_SqlGeography_STNumGeometries;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STGeometryN;
+        private Lazy<MethodInfo> imi_SqlGeography_STGeometryN;
         [NonSerialized]
-        private Singleton<PropertyInfo> ipi_SqlGeography_Lat;
+        private Lazy<PropertyInfo> ipi_SqlGeography_Lat;
         [NonSerialized]
-        private Singleton<PropertyInfo> ipi_SqlGeography_Long;
+        private Lazy<PropertyInfo> ipi_SqlGeography_Long;
         [NonSerialized]
-        private Singleton<PropertyInfo> ipi_SqlGeography_Z;
+        private Lazy<PropertyInfo> ipi_SqlGeography_Z;
         [NonSerialized]
-        private Singleton<PropertyInfo> ipi_SqlGeography_M;
+        private Lazy<PropertyInfo> ipi_SqlGeography_M;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STLength;
+        private Lazy<MethodInfo> imi_SqlGeography_STLength;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STStartPoint;
+        private Lazy<MethodInfo> imi_SqlGeography_STStartPoint;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STEndPoint;
+        private Lazy<MethodInfo> imi_SqlGeography_STEndPoint;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STIsClosed;
+        private Lazy<MethodInfo> imi_SqlGeography_STIsClosed;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STNumPoints;
+        private Lazy<MethodInfo> imi_SqlGeography_STNumPoints;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STPointN;
+        private Lazy<MethodInfo> imi_SqlGeography_STPointN;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeography_STArea;
+        private Lazy<MethodInfo> imi_SqlGeography_STArea;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeometry_Parse;
+        private Lazy<MethodInfo> smi_SqlGeometry_Parse;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeometry_STGeomFromText;
+        private Lazy<MethodInfo> smi_SqlGeometry_STGeomFromText;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeometry_STPointFromText;
+        private Lazy<MethodInfo> smi_SqlGeometry_STPointFromText;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeometry_STLineFromText;
+        private Lazy<MethodInfo> smi_SqlGeometry_STLineFromText;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeometry_STPolyFromText;
+        private Lazy<MethodInfo> smi_SqlGeometry_STPolyFromText;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeometry_STMPointFromText;
+        private Lazy<MethodInfo> smi_SqlGeometry_STMPointFromText;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeometry_STMLineFromText;
+        private Lazy<MethodInfo> smi_SqlGeometry_STMLineFromText;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeometry_STMPolyFromText;
+        private Lazy<MethodInfo> smi_SqlGeometry_STMPolyFromText;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeometry_STGeomCollFromText;
+        private Lazy<MethodInfo> smi_SqlGeometry_STGeomCollFromText;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeometry_STGeomFromWKB;
+        private Lazy<MethodInfo> smi_SqlGeometry_STGeomFromWKB;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeometry_STPointFromWKB;
+        private Lazy<MethodInfo> smi_SqlGeometry_STPointFromWKB;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeometry_STLineFromWKB;
+        private Lazy<MethodInfo> smi_SqlGeometry_STLineFromWKB;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeometry_STPolyFromWKB;
+        private Lazy<MethodInfo> smi_SqlGeometry_STPolyFromWKB;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeometry_STMPointFromWKB;
+        private Lazy<MethodInfo> smi_SqlGeometry_STMPointFromWKB;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeometry_STMLineFromWKB;
+        private Lazy<MethodInfo> smi_SqlGeometry_STMLineFromWKB;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeometry_STMPolyFromWKB;
+        private Lazy<MethodInfo> smi_SqlGeometry_STMPolyFromWKB;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeometry_STGeomCollFromWKB;
+        private Lazy<MethodInfo> smi_SqlGeometry_STGeomCollFromWKB;
         [NonSerialized]
-        private Singleton<MethodInfo> smi_SqlGeometry_GeomFromGml;
+        private Lazy<MethodInfo> smi_SqlGeometry_GeomFromGml;
         [NonSerialized]
-        private Singleton<PropertyInfo> ipi_SqlGeometry_STSrid;
+        private Lazy<PropertyInfo> ipi_SqlGeometry_STSrid;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STGeometryType;
+        private Lazy<MethodInfo> imi_SqlGeometry_STGeometryType;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STDimension;
+        private Lazy<MethodInfo> imi_SqlGeometry_STDimension;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STEnvelope;
+        private Lazy<MethodInfo> imi_SqlGeometry_STEnvelope;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STAsBinary;
+        private Lazy<MethodInfo> imi_SqlGeometry_STAsBinary;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_AsGml;
+        private Lazy<MethodInfo> imi_SqlGeometry_AsGml;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STAsText;
+        private Lazy<MethodInfo> imi_SqlGeometry_STAsText;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STIsEmpty;
+        private Lazy<MethodInfo> imi_SqlGeometry_STIsEmpty;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STIsSimple;
+        private Lazy<MethodInfo> imi_SqlGeometry_STIsSimple;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STBoundary;
+        private Lazy<MethodInfo> imi_SqlGeometry_STBoundary;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STIsValid;
+        private Lazy<MethodInfo> imi_SqlGeometry_STIsValid;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STEquals;
+        private Lazy<MethodInfo> imi_SqlGeometry_STEquals;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STDisjoint;
+        private Lazy<MethodInfo> imi_SqlGeometry_STDisjoint;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STIntersects;
+        private Lazy<MethodInfo> imi_SqlGeometry_STIntersects;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STTouches;
+        private Lazy<MethodInfo> imi_SqlGeometry_STTouches;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STCrosses;
+        private Lazy<MethodInfo> imi_SqlGeometry_STCrosses;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STWithin;
+        private Lazy<MethodInfo> imi_SqlGeometry_STWithin;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STContains;
+        private Lazy<MethodInfo> imi_SqlGeometry_STContains;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STOverlaps;
+        private Lazy<MethodInfo> imi_SqlGeometry_STOverlaps;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STRelate;
+        private Lazy<MethodInfo> imi_SqlGeometry_STRelate;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STBuffer;
+        private Lazy<MethodInfo> imi_SqlGeometry_STBuffer;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STDistance;
+        private Lazy<MethodInfo> imi_SqlGeometry_STDistance;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STConvexHull;
+        private Lazy<MethodInfo> imi_SqlGeometry_STConvexHull;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STIntersection;
+        private Lazy<MethodInfo> imi_SqlGeometry_STIntersection;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STUnion;
+        private Lazy<MethodInfo> imi_SqlGeometry_STUnion;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STDifference;
+        private Lazy<MethodInfo> imi_SqlGeometry_STDifference;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STSymDifference;
+        private Lazy<MethodInfo> imi_SqlGeometry_STSymDifference;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STNumGeometries;
+        private Lazy<MethodInfo> imi_SqlGeometry_STNumGeometries;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STGeometryN;
+        private Lazy<MethodInfo> imi_SqlGeometry_STGeometryN;
         [NonSerialized]
-        private Singleton<PropertyInfo> ipi_SqlGeometry_STX;
+        private Lazy<PropertyInfo> ipi_SqlGeometry_STX;
         [NonSerialized]
-        private Singleton<PropertyInfo> ipi_SqlGeometry_STY;
+        private Lazy<PropertyInfo> ipi_SqlGeometry_STY;
         [NonSerialized]
-        private Singleton<PropertyInfo> ipi_SqlGeometry_Z;
+        private Lazy<PropertyInfo> ipi_SqlGeometry_Z;
         [NonSerialized]
-        private Singleton<PropertyInfo> ipi_SqlGeometry_M;
+        private Lazy<PropertyInfo> ipi_SqlGeometry_M;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STLength;
+        private Lazy<MethodInfo> imi_SqlGeometry_STLength;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STStartPoint;
+        private Lazy<MethodInfo> imi_SqlGeometry_STStartPoint;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STEndPoint;
+        private Lazy<MethodInfo> imi_SqlGeometry_STEndPoint;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STIsClosed;
+        private Lazy<MethodInfo> imi_SqlGeometry_STIsClosed;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STIsRing;
+        private Lazy<MethodInfo> imi_SqlGeometry_STIsRing;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STNumPoints;
+        private Lazy<MethodInfo> imi_SqlGeometry_STNumPoints;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STPointN;
+        private Lazy<MethodInfo> imi_SqlGeometry_STPointN;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STArea;
+        private Lazy<MethodInfo> imi_SqlGeometry_STArea;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STCentroid;
+        private Lazy<MethodInfo> imi_SqlGeometry_STCentroid;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STPointOnSurface;
+        private Lazy<MethodInfo> imi_SqlGeometry_STPointOnSurface;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STExteriorRing;
+        private Lazy<MethodInfo> imi_SqlGeometry_STExteriorRing;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STNumInteriorRing;
+        private Lazy<MethodInfo> imi_SqlGeometry_STNumInteriorRing;
         [NonSerialized]
-        private Singleton<MethodInfo> imi_SqlGeometry_STInteriorRingN;
+        private Lazy<MethodInfo> imi_SqlGeometry_STInteriorRingN;
 
         private void InitializeMemberInfo()
         {
-            this.smi_SqlGeography_Parse              = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("Parse", SqlTypes.SqlStringType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member Parse"); return result; });
-            this.smi_SqlGeography_STGeomFromText     = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STGeomFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeomFromText"); return result; });
-            this.smi_SqlGeography_STPointFromText    = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STPointFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STPointFromText"); return result; });
-            this.smi_SqlGeography_STLineFromText     = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STLineFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STLineFromText"); return result; });
-            this.smi_SqlGeography_STPolyFromText     = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STPolyFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STPolyFromText"); return result; });
-            this.smi_SqlGeography_STMPointFromText   = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMPointFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMPointFromText"); return result; });
-            this.smi_SqlGeography_STMLineFromText    = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMLineFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMLineFromText"); return result; });
-            this.smi_SqlGeography_STMPolyFromText    = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMPolyFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMPolyFromText"); return result; });
-            this.smi_SqlGeography_STGeomCollFromText = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STGeomCollFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeomCollFromText"); return result; });
-            this.smi_SqlGeography_STGeomFromWKB      = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STGeomFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeomFromWKB"); return result; });
-            this.smi_SqlGeography_STPointFromWKB     = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STPointFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STPointFromWKB"); return result; });
-            this.smi_SqlGeography_STLineFromWKB      = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STLineFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STLineFromWKB"); return result; });
-            this.smi_SqlGeography_STPolyFromWKB      = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STPolyFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STPolyFromWKB"); return result; });
-            this.smi_SqlGeography_STMPointFromWKB    = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMPointFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMPointFromWKB"); return result; });
-            this.smi_SqlGeography_STMLineFromWKB     = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMLineFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMLineFromWKB"); return result; });
-            this.smi_SqlGeography_STMPolyFromWKB     = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMPolyFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMPolyFromWKB"); return result; });
-            this.smi_SqlGeography_STGeomCollFromWKB  = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STGeomCollFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeomCollFromWKB"); return result; });
-            this.smi_SqlGeography_GeomFromGml        = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("GeomFromGml", SqlTypes.SqlXmlType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member GeomFromGml"); return result; });
-            this.ipi_SqlGeography_STSrid             = new Singleton<PropertyInfo>(() => { PropertyInfo result = FindSqlGeographyProperty("STSrid"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeography member STSrid"); return result; });
-            this.imi_SqlGeography_STGeometryType     = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STGeometryType"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeometryType"); return result; });
-            this.imi_SqlGeography_STDimension        = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STDimension"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STDimension"); return result; });
-            this.imi_SqlGeography_STAsBinary         = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STAsBinary"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STAsBinary"); return result; });
-            this.imi_SqlGeography_AsGml              = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("AsGml"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member AsGml"); return result; });
-            this.imi_SqlGeography_STAsText           = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STAsText"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STAsText"); return result; });
-            this.imi_SqlGeography_STIsEmpty          = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STIsEmpty"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STIsEmpty"); return result; });
-            this.imi_SqlGeography_STEquals           = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STEquals", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STEquals"); return result; });
-            this.imi_SqlGeography_STDisjoint         = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STDisjoint", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STDisjoint"); return result; });
-            this.imi_SqlGeography_STIntersects       = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STIntersects", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STIntersects"); return result; });
-            this.imi_SqlGeography_STBuffer           = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STBuffer", typeof(double)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STBuffer"); return result; });
-            this.imi_SqlGeography_STDistance         = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STDistance", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STDistance"); return result; });
-            this.imi_SqlGeography_STIntersection     = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STIntersection", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STIntersection"); return result; });
-            this.imi_SqlGeography_STUnion            = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STUnion", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STUnion"); return result; });
-            this.imi_SqlGeography_STDifference       = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STDifference", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STDifference"); return result; });
-            this.imi_SqlGeography_STSymDifference    = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STSymDifference", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STSymDifference"); return result; });
-            this.imi_SqlGeography_STNumGeometries    = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STNumGeometries"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STNumGeometries"); return result; });
-            this.imi_SqlGeography_STGeometryN        = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STGeometryN", typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeometryN"); return result; });
-            this.ipi_SqlGeography_Lat                = new Singleton<PropertyInfo>(() => { PropertyInfo result = FindSqlGeographyProperty("Lat"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeography member Lat"); return result; });
-            this.ipi_SqlGeography_Long               = new Singleton<PropertyInfo>(() => { PropertyInfo result = FindSqlGeographyProperty("Long"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeography member Long"); return result; });
-            this.ipi_SqlGeography_Z                  = new Singleton<PropertyInfo>(() => { PropertyInfo result = FindSqlGeographyProperty("Z"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeography member Z"); return result; });
-            this.ipi_SqlGeography_M                  = new Singleton<PropertyInfo>(() => { PropertyInfo result = FindSqlGeographyProperty("M"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeography member M"); return result; });
-            this.imi_SqlGeography_STLength           = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STLength"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STLength"); return result; });
-            this.imi_SqlGeography_STStartPoint       = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STStartPoint"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STStartPoint"); return result; });
-            this.imi_SqlGeography_STEndPoint         = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STEndPoint"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STEndPoint"); return result; });
-            this.imi_SqlGeography_STIsClosed         = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STIsClosed"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STIsClosed"); return result; });
-            this.imi_SqlGeography_STNumPoints        = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STNumPoints"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STNumPoints"); return result; });
-            this.imi_SqlGeography_STPointN           = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STPointN", typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STPointN"); return result; });
-            this.imi_SqlGeography_STArea             = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STArea"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STArea"); return result; });
-            this.smi_SqlGeometry_Parse              = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("Parse", SqlTypes.SqlStringType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member Parse"); return result; });
-            this.smi_SqlGeometry_STGeomFromText     = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STGeomFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeomFromText"); return result; });
-            this.smi_SqlGeometry_STPointFromText    = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STPointFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPointFromText"); return result; });
-            this.smi_SqlGeometry_STLineFromText     = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STLineFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STLineFromText"); return result; });
-            this.smi_SqlGeometry_STPolyFromText     = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STPolyFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPolyFromText"); return result; });
-            this.smi_SqlGeometry_STMPointFromText   = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMPointFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMPointFromText"); return result; });
-            this.smi_SqlGeometry_STMLineFromText    = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMLineFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMLineFromText"); return result; });
-            this.smi_SqlGeometry_STMPolyFromText    = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMPolyFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMPolyFromText"); return result; });
-            this.smi_SqlGeometry_STGeomCollFromText = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STGeomCollFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeomCollFromText"); return result; });
-            this.smi_SqlGeometry_STGeomFromWKB      = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STGeomFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeomFromWKB"); return result; });
-            this.smi_SqlGeometry_STPointFromWKB     = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STPointFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPointFromWKB"); return result; });
-            this.smi_SqlGeometry_STLineFromWKB      = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STLineFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STLineFromWKB"); return result; });
-            this.smi_SqlGeometry_STPolyFromWKB      = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STPolyFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPolyFromWKB"); return result; });
-            this.smi_SqlGeometry_STMPointFromWKB    = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMPointFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMPointFromWKB"); return result; });
-            this.smi_SqlGeometry_STMLineFromWKB     = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMLineFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMLineFromWKB"); return result; });
-            this.smi_SqlGeometry_STMPolyFromWKB     = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMPolyFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMPolyFromWKB"); return result; });
-            this.smi_SqlGeometry_STGeomCollFromWKB  = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STGeomCollFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeomCollFromWKB"); return result; });
-            this.smi_SqlGeometry_GeomFromGml        = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("GeomFromGml", SqlTypes.SqlXmlType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member GeomFromGml"); return result; });
-            this.ipi_SqlGeometry_STSrid             = new Singleton<PropertyInfo>(() => { PropertyInfo result = FindSqlGeometryProperty("STSrid"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeometry member STSrid"); return result; });
-            this.imi_SqlGeometry_STGeometryType     = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STGeometryType"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeometryType"); return result; });
-            this.imi_SqlGeometry_STDimension        = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STDimension"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STDimension"); return result; });
-            this.imi_SqlGeometry_STEnvelope         = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STEnvelope"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STEnvelope"); return result; });
-            this.imi_SqlGeometry_STAsBinary         = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STAsBinary"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STAsBinary"); return result; });
-            this.imi_SqlGeometry_AsGml              = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("AsGml"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member AsGml"); return result; });
-            this.imi_SqlGeometry_STAsText           = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STAsText"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STAsText"); return result; });
-            this.imi_SqlGeometry_STIsEmpty          = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIsEmpty"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIsEmpty"); return result; });
-            this.imi_SqlGeometry_STIsSimple         = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIsSimple"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIsSimple"); return result; });
-            this.imi_SqlGeometry_STBoundary         = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STBoundary"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STBoundary"); return result; });
-            this.imi_SqlGeometry_STIsValid          = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIsValid"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIsValid"); return result; });
-            this.imi_SqlGeometry_STEquals           = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STEquals", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STEquals"); return result; });
-            this.imi_SqlGeometry_STDisjoint         = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STDisjoint", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STDisjoint"); return result; });
-            this.imi_SqlGeometry_STIntersects       = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIntersects", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIntersects"); return result; });
-            this.imi_SqlGeometry_STTouches          = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STTouches", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STTouches"); return result; });
-            this.imi_SqlGeometry_STCrosses          = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STCrosses", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STCrosses"); return result; });
-            this.imi_SqlGeometry_STWithin           = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STWithin", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STWithin"); return result; });
-            this.imi_SqlGeometry_STContains         = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STContains", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STContains"); return result; });
-            this.imi_SqlGeometry_STOverlaps         = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STOverlaps", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STOverlaps"); return result; });
-            this.imi_SqlGeometry_STRelate           = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STRelate", SqlTypes.SqlGeometryType, typeof(string)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STRelate"); return result; });
-            this.imi_SqlGeometry_STBuffer           = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STBuffer", typeof(double)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STBuffer"); return result; });
-            this.imi_SqlGeometry_STDistance         = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STDistance", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STDistance"); return result; });
-            this.imi_SqlGeometry_STConvexHull       = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STConvexHull"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STConvexHull"); return result; });
-            this.imi_SqlGeometry_STIntersection     = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIntersection", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIntersection"); return result; });
-            this.imi_SqlGeometry_STUnion            = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STUnion", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STUnion"); return result; });
-            this.imi_SqlGeometry_STDifference       = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STDifference", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STDifference"); return result; });
-            this.imi_SqlGeometry_STSymDifference    = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STSymDifference", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STSymDifference"); return result; });
-            this.imi_SqlGeometry_STNumGeometries    = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STNumGeometries"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STNumGeometries"); return result; });
-            this.imi_SqlGeometry_STGeometryN        = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STGeometryN", typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeometryN"); return result; });
-            this.ipi_SqlGeometry_STX                = new Singleton<PropertyInfo>(() => { PropertyInfo result = FindSqlGeometryProperty("STX"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeometry member STX"); return result; });
-            this.ipi_SqlGeometry_STY                = new Singleton<PropertyInfo>(() => { PropertyInfo result = FindSqlGeometryProperty("STY"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeometry member STY"); return result; });
-            this.ipi_SqlGeometry_Z                  = new Singleton<PropertyInfo>(() => { PropertyInfo result = FindSqlGeometryProperty("Z"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeometry member Z"); return result; });
-            this.ipi_SqlGeometry_M                  = new Singleton<PropertyInfo>(() => { PropertyInfo result = FindSqlGeometryProperty("M"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeometry member M"); return result; });
-            this.imi_SqlGeometry_STLength           = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STLength"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STLength"); return result; });
-            this.imi_SqlGeometry_STStartPoint       = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STStartPoint"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STStartPoint"); return result; });
-            this.imi_SqlGeometry_STEndPoint         = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STEndPoint"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STEndPoint"); return result; });
-            this.imi_SqlGeometry_STIsClosed         = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIsClosed"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIsClosed"); return result; });
-            this.imi_SqlGeometry_STIsRing           = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIsRing"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIsRing"); return result; });
-            this.imi_SqlGeometry_STNumPoints        = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STNumPoints"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STNumPoints"); return result; });
-            this.imi_SqlGeometry_STPointN           = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STPointN", typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPointN"); return result; });
-            this.imi_SqlGeometry_STArea             = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STArea"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STArea"); return result; });
-            this.imi_SqlGeometry_STCentroid         = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STCentroid"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STCentroid"); return result; });
-            this.imi_SqlGeometry_STPointOnSurface   = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STPointOnSurface"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPointOnSurface"); return result; });
-            this.imi_SqlGeometry_STExteriorRing     = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STExteriorRing"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STExteriorRing"); return result; });
-            this.imi_SqlGeometry_STNumInteriorRing  = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STNumInteriorRing"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STNumInteriorRing"); return result; });
-            this.imi_SqlGeometry_STInteriorRingN    = new Singleton<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STInteriorRingN", typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STInteriorRingN"); return result; });
+            this.smi_SqlGeography_Parse              = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("Parse", SqlTypes.SqlStringType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member Parse"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STGeomFromText     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STGeomFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeomFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STPointFromText    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STPointFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STPointFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STLineFromText     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STLineFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STLineFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STPolyFromText     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STPolyFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STPolyFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STMPointFromText   = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMPointFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMPointFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STMLineFromText    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMLineFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMLineFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STMPolyFromText    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMPolyFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMPolyFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STGeomCollFromText = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STGeomCollFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeomCollFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STGeomFromWKB      = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STGeomFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeomFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STPointFromWKB     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STPointFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STPointFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STLineFromWKB      = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STLineFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STLineFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STPolyFromWKB      = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STPolyFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STPolyFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STMPointFromWKB    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMPointFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMPointFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STMLineFromWKB     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMLineFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMLineFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STMPolyFromWKB     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMPolyFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMPolyFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STGeomCollFromWKB  = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STGeomCollFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeomCollFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_GeomFromGml        = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("GeomFromGml", SqlTypes.SqlXmlType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member GeomFromGml"); return result; }, isThreadSafe: true);
+            this.ipi_SqlGeography_STSrid             = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeographyProperty("STSrid"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeography member STSrid"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STGeometryType     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STGeometryType"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeometryType"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STDimension        = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STDimension"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STDimension"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STAsBinary         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STAsBinary"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STAsBinary"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_AsGml              = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("AsGml"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member AsGml"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STAsText           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STAsText"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STAsText"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STIsEmpty          = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STIsEmpty"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STIsEmpty"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STEquals           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STEquals", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STEquals"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STDisjoint         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STDisjoint", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STDisjoint"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STIntersects       = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STIntersects", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STIntersects"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STBuffer           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STBuffer", typeof(double)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STBuffer"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STDistance         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STDistance", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STDistance"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STIntersection     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STIntersection", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STIntersection"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STUnion            = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STUnion", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STUnion"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STDifference       = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STDifference", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STDifference"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STSymDifference    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STSymDifference", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STSymDifference"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STNumGeometries    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STNumGeometries"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STNumGeometries"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STGeometryN        = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STGeometryN", typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeometryN"); return result; }, isThreadSafe: true);
+            this.ipi_SqlGeography_Lat                = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeographyProperty("Lat"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeography member Lat"); return result; }, isThreadSafe: true);
+            this.ipi_SqlGeography_Long               = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeographyProperty("Long"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeography member Long"); return result; }, isThreadSafe: true);
+            this.ipi_SqlGeography_Z                  = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeographyProperty("Z"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeography member Z"); return result; }, isThreadSafe: true);
+            this.ipi_SqlGeography_M                  = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeographyProperty("M"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeography member M"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STLength           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STLength"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STLength"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STStartPoint       = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STStartPoint"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STStartPoint"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STEndPoint         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STEndPoint"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STEndPoint"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STIsClosed         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STIsClosed"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STIsClosed"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STNumPoints        = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STNumPoints"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STNumPoints"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STPointN           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STPointN", typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STPointN"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STArea             = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STArea"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STArea"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_Parse              = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("Parse", SqlTypes.SqlStringType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member Parse"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STGeomFromText     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STGeomFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeomFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STPointFromText    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STPointFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPointFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STLineFromText     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STLineFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STLineFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STPolyFromText     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STPolyFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPolyFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STMPointFromText   = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMPointFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMPointFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STMLineFromText    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMLineFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMLineFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STMPolyFromText    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMPolyFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMPolyFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STGeomCollFromText = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STGeomCollFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeomCollFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STGeomFromWKB      = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STGeomFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeomFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STPointFromWKB     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STPointFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPointFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STLineFromWKB      = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STLineFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STLineFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STPolyFromWKB      = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STPolyFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPolyFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STMPointFromWKB    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMPointFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMPointFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STMLineFromWKB     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMLineFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMLineFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STMPolyFromWKB     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMPolyFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMPolyFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STGeomCollFromWKB  = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STGeomCollFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeomCollFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_GeomFromGml        = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("GeomFromGml", SqlTypes.SqlXmlType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member GeomFromGml"); return result; }, isThreadSafe: true);
+            this.ipi_SqlGeometry_STSrid             = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeometryProperty("STSrid"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeometry member STSrid"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STGeometryType     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STGeometryType"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeometryType"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STDimension        = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STDimension"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STDimension"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STEnvelope         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STEnvelope"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STEnvelope"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STAsBinary         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STAsBinary"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STAsBinary"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_AsGml              = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("AsGml"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member AsGml"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STAsText           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STAsText"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STAsText"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STIsEmpty          = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIsEmpty"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIsEmpty"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STIsSimple         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIsSimple"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIsSimple"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STBoundary         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STBoundary"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STBoundary"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STIsValid          = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIsValid"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIsValid"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STEquals           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STEquals", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STEquals"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STDisjoint         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STDisjoint", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STDisjoint"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STIntersects       = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIntersects", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIntersects"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STTouches          = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STTouches", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STTouches"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STCrosses          = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STCrosses", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STCrosses"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STWithin           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STWithin", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STWithin"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STContains         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STContains", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STContains"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STOverlaps         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STOverlaps", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STOverlaps"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STRelate           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STRelate", SqlTypes.SqlGeometryType, typeof(string)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STRelate"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STBuffer           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STBuffer", typeof(double)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STBuffer"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STDistance         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STDistance", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STDistance"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STConvexHull       = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STConvexHull"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STConvexHull"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STIntersection     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIntersection", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIntersection"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STUnion            = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STUnion", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STUnion"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STDifference       = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STDifference", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STDifference"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STSymDifference    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STSymDifference", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STSymDifference"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STNumGeometries    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STNumGeometries"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STNumGeometries"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STGeometryN        = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STGeometryN", typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeometryN"); return result; }, isThreadSafe: true);
+            this.ipi_SqlGeometry_STX                = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeometryProperty("STX"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeometry member STX"); return result; }, isThreadSafe: true);
+            this.ipi_SqlGeometry_STY                = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeometryProperty("STY"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeometry member STY"); return result; }, isThreadSafe: true);
+            this.ipi_SqlGeometry_Z                  = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeometryProperty("Z"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeometry member Z"); return result; }, isThreadSafe: true);
+            this.ipi_SqlGeometry_M                  = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeometryProperty("M"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeometry member M"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STLength           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STLength"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STLength"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STStartPoint       = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STStartPoint"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STStartPoint"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STEndPoint         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STEndPoint"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STEndPoint"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STIsClosed         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIsClosed"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIsClosed"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STIsRing           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIsRing"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIsRing"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STNumPoints        = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STNumPoints"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STNumPoints"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STPointN           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STPointN", typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPointN"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STArea             = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STArea"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STArea"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STCentroid         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STCentroid"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STCentroid"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STPointOnSurface   = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STPointOnSurface"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPointOnSurface"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STExteriorRing     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STExteriorRing"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STExteriorRing"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STNumInteriorRing  = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STNumInteriorRing"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STNumInteriorRing"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STInteriorRingN    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STInteriorRingN", typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STInteriorRingN"); return result; }, isThreadSafe: true);
         }
 
         private void InitializeMemberInfo(SqlSpatialServices from)

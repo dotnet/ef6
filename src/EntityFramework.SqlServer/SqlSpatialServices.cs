@@ -23,12 +23,12 @@ namespace System.Data.Entity.SqlServer
         private static Dictionary<string, SqlSpatialServices> otherSpatialServices;
 
         [NonSerialized]
-        private readonly Singleton<SqlTypesAssembly> _sqlTypesAssemblySingleton;
+        private readonly Lazy<SqlTypesAssembly> _sqlTypesAssemblySingleton;
 
         private SqlSpatialServices(Func<SqlTypesAssembly> getSqlTypes)
         {
             Debug.Assert(getSqlTypes != null, "Validate SqlTypes assembly delegate before constructing SqlSpatialServiceS");
-            _sqlTypesAssemblySingleton = new Singleton<SqlTypesAssembly>(getSqlTypes);
+            _sqlTypesAssemblySingleton = new Lazy<SqlTypesAssembly>(getSqlTypes, isThreadSafe: true);
 
             // Create Singletons that will delay-initialize the MethodInfo and PropertyInfo instances used to invoke SqlGeography/SqlGeometry methods via reflection.
             InitializeMemberInfo();

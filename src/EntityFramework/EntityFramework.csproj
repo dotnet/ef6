@@ -262,7 +262,6 @@
     <Compile Include="Core\Common\Utils\ModifiableIteratorCollection.cs" />
     <Compile Include="Core\Common\Utils\Pair.cs" />
     <Compile Include="Core\Common\Utils\Set.cs" />
-    <Compile Include="Core\Common\Utils\Singleton.cs" />
     <Compile Include="Core\Common\Utils\StringUtil.cs" />
     <Compile Include="Core\Common\Utils\ThreadSafeList.cs" />
     <Compile Include="Core\Common\Utils\TrailingSpaceComparer.cs" />

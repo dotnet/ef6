@@ -181,14 +181,14 @@ namespace System.Data.Entity.SqlServer
             return targetPublicKeyToken != null && targetPublicKeyToken.SequenceEqual(assemblyName.GetPublicKeyToken());
         }
 
-        private static readonly Singleton<SqlTypesAssembly> latestVersion = new Singleton<SqlTypesAssembly>(BindToLatest);
+        private static readonly Lazy<SqlTypesAssembly> LatestVersion = new Lazy<SqlTypesAssembly>(BindToLatest, isThreadSafe: true);
 
         /// <summary>
         /// Returns the highest available version of the Microsoft.SqlServer.Types assembly that could be located using Assembly.Load; may return <c>null</c> if no version of the assembly could be found.
         /// </summary>
         internal static SqlTypesAssembly Latest
         {
-            get { return latestVersion.Value; }
+            get { return LatestVersion.Value; }
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]

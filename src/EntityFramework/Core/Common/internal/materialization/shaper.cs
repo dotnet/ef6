@@ -32,7 +32,7 @@
             Context = context;
             Workspace = workspace;
             AssociationSpaceMap = new Dictionary<AssociationType, AssociationType>();
-            spatialReader = new Singleton<DbSpatialDataReader>(CreateSpatialDataReader);
+            _spatialReader = new Lazy<DbSpatialDataReader>(CreateSpatialDataReader);
         }
 
         #endregion
@@ -629,16 +629,16 @@
             return SpatialHelpers.CreateSpatialDataReader(Workspace, Reader);
         }
 
-        private readonly Singleton<DbSpatialDataReader> spatialReader;
+        private readonly Lazy<DbSpatialDataReader> _spatialReader;
 
         public DbGeography GetGeographyColumnValue(int ordinal)
         {
-            return spatialReader.Value.GetGeography(ordinal);
+            return _spatialReader.Value.GetGeography(ordinal);
         }
 
         public DbGeometry GetGeometryColumnValue(int ordinal)
         {
-            return spatialReader.Value.GetGeometry(ordinal);
+            return _spatialReader.Value.GetGeometry(ordinal);
         }
 
         public TColumn GetSpatialColumnValueWithErrorHandling<TColumn>(int ordinal, PrimitiveTypeKind spatialTypeKind)
@@ -651,15 +651,15 @@
             if (spatialTypeKind == PrimitiveTypeKind.Geography)
             {
                 result = new ColumnErrorHandlingValueReader<TColumn>(
-                    (reader, column) => (TColumn)(object)spatialReader.Value.GetGeography(column),
-                    (reader, column) => spatialReader.Value.GetGeography(column)
+                    (reader, column) => (TColumn)(object)_spatialReader.Value.GetGeography(column),
+                    (reader, column) => _spatialReader.Value.GetGeography(column)
                     ).GetValue(Reader, ordinal);
             }
             else
             {
                 result = new ColumnErrorHandlingValueReader<TColumn>(
-                    (reader, column) => (TColumn)(object)spatialReader.Value.GetGeometry(column),
-                    (reader, column) => spatialReader.Value.GetGeometry(column)
+                    (reader, column) => (TColumn)(object)_spatialReader.Value.GetGeometry(column),
+                    (reader, column) => _spatialReader.Value.GetGeometry(column)
                     ).GetValue(Reader, ordinal);
             }
             return result;
@@ -673,8 +673,8 @@
             {
                 result = new PropertyErrorHandlingValueReader<TProperty>(
                     propertyName, typeName,
-                    (reader, column) => (TProperty)(object)spatialReader.Value.GetGeography(column),
-                    (reader, column) => spatialReader.Value.GetGeography(column)
+                    (reader, column) => (TProperty)(object)_spatialReader.Value.GetGeography(column),
+                    (reader, column) => _spatialReader.Value.GetGeography(column)
                     ).GetValue(Reader, ordinal);
             }
             else
@@ -682,8 +682,8 @@
                 Debug.Assert(Helper.IsGeometricTypeKind(spatialTypeKind));
                 result = new PropertyErrorHandlingValueReader<TProperty>(
                     propertyName, typeName,
-                    (reader, column) => (TProperty)(object)spatialReader.Value.GetGeometry(column),
-                    (reader, column) => spatialReader.Value.GetGeometry(column)
+                    (reader, column) => (TProperty)(object)_spatialReader.Value.GetGeometry(column),
+                    (reader, column) => _spatialReader.Value.GetGeometry(column)
                     ).GetValue(Reader, ordinal);
             }
 
