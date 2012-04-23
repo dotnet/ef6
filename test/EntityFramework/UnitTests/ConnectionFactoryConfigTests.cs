@@ -3,9 +3,7 @@
     // An alias is required because Error, Strings, IEnumerableExtensions etc. are defined in EntityFramework.dll and EntityFramework.PowerShell.dll
     extern alias powershell;
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
@@ -470,23 +468,25 @@
 
             try
             {
-                var sandbox = PartialTrustHelpers.CreatePartialTrustSandbox(configurationFile: configurationFile);
-
-                try
+                using (var sandbox = new PartialTrustSandbox(configurationFile: configurationFile))
                 {
-                    var codeInstance = (PartialTrustCode)sandbox.CreateInstanceAndUnwrap(typeof(PartialTrustCode).Assembly.FullName, typeof(PartialTrustCode).FullName);
-
-                    codeInstance.AddOrUpdateConfigSection_result_can_load_in_partial_trust();
-                }
-                finally
-                {
-                    AppDomain.Unload(sandbox);
+                    sandbox.CreateInstance<ConnectionFactoryConfigTests>()
+                        .LoadConfiguration();
                 }
             }
             finally
             {
                 File.Delete(configurationFile);
             }
+        }
+
+        private void LoadConfiguration()
+        {
+            new PartialTrustContext();
+        }
+
+        private class PartialTrustContext : DbContext
+        {
         }
 
         private XDocument CreateConfigSectionDoc(string assemblyName, bool addRequirePermission = false)
@@ -1056,22 +1056,6 @@
 
         [PreserveSig]
         int MessagePending(IntPtr hTaskCallee, int dwTickCount, int dwPendingType);
-    }
-
-    #endregion
-
-    #region Partial trust helpers
-
-    public partial class PartialTrustCode : MarshalByRefObject
-    {
-        public void AddOrUpdateConfigSection_result_can_load_in_partial_trust()
-        {
-            new PartialTrustContext();
-        }
-
-        private class PartialTrustContext : DbContext
-        {
-        }
     }
 
     #endregion

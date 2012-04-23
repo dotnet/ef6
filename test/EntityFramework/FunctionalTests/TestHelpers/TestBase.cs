@@ -15,7 +15,7 @@
     using System.Threading.Tasks;
     using System.Transactions;
 
-    public class TestBase
+    public class TestBase : MarshalByRefObject
     {
         internal DbDatabaseMapping BuildMapping(DbModelBuilder modelBuilder)
         {

@@ -177,8 +177,13 @@
     <Compile Include="ProductivityApi\SimpleScenariosForLocalDb.cs" />
     <Compile Include="TestHelpers\DynamicAssembly.cs" />
     <Compile Include="CodeFirst\EnumsScenarioTests.cs" />
+    <Compile Include="TestHelpers\FullTrustAttribute.cs" />
     <Compile Include="TestHelpers\FunctionalTestBase.cs" />
     <Compile Include="CodeFirst\InheritanceScenarioTests.cs" />
+    <Compile Include="TestHelpers\PartialTrustFactAttribute.cs" />
+    <Compile Include="TestHelpers\PartialTrustClassCommand.cs" />
+    <Compile Include="TestHelpers\PartialTrustCommand.cs" />
+    <Compile Include="TestHelpers\PartialTrustFixtureAttribute.cs" />
     <Compile Include="TestModels\SimpleModel\LocalDbLoginsContext.cs" />
     <Compile Include="TestModels\SimpleModel\SimpleLocalDbModelContext.cs" />
     <Compile Include="TestModels\SimpleModel\SimpleLocalDbModelContextWithNoData.cs" />
@@ -603,7 +608,7 @@
     <Compile Include="TestHelpers\ObservableListSource`.cs" />
     <Compile Include="TestHelpers\ProviderRegistry.cs" />
     <Compile Include="TestHelpers\ModelAssertions.cs" />
-    <Compile Include="TestHelpers\PartialTrustHelpers.cs" />
+    <Compile Include="TestHelpers\PartialTrustSandbox.cs" />
     <Compile Include="TestHelpers\ResourceUtilities.cs" />
     <Compile Include="TestHelpers\StringResourceVerifier.cs" />
     <Compile Include="TestHelpers\TestBase.cs" />
