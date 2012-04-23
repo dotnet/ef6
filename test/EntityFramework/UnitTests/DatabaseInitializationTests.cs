@@ -533,16 +533,8 @@
             internalContext.DisposeTempObjectContext();
             internalContext.DisposeTempObjectContext();
 
-            try
-            {
-                fakeContext.SaveChanges();
-                Assert.True(false);
-            }
-            catch (InvalidOperationException)
-            {
-                // No good way to validate the exception message here, but we can be quite confident
-                // that it's because the context was disposed.
-            }
+            Assert.Throws<ObjectDisposedException>(() => fakeContext.SaveChanges()).ValidateMessage(
+                "ObjectContext_ObjectDisposed");
         }
 
         #endregion
