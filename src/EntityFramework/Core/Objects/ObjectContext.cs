@@ -3,92 +3,19 @@ namespace System.Data.Entity.Core.Objects
     using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Configuration;
     using System.Data.Common;
-    using System.Data.Entity.Core.Common;
-    using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-    using System.Data.Entity.Core.Common.Internal.Materialization;
-    using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
-    using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Reflection;
     using System.Runtime.Versioning;
-    using System.Text;
-    using System.Transactions;
-
-    /// <summary>
-    /// Defines options that affect the behavior of the ObjectContext.
-    /// </summary>
-    public sealed class ObjectContextOptions
-    {
-        private bool _proxyCreationEnabled = true;
-
-        internal ObjectContextOptions()
-        {
-        }
-
-        /// <summary>
-        /// Get or set boolean that determines if related ends can be loaded on demand 
-        /// when they are accessed through a navigation property.
-        /// </summary>
-        /// <value>
-        /// True if related ends can be loaded on demand; otherwise false.
-        /// </value>
-        public bool LazyLoadingEnabled { get; set; }
-
-        /// <summary>
-        /// Get or set boolean that determines whether proxy instances will be create
-        /// for CLR types with a corresponding proxy type.
-        /// </summary>
-        /// <value>
-        /// True if proxy instances should be created; otherwise false to create "normal" instances of the type.
-        /// </value>
-        public bool ProxyCreationEnabled
-        {
-            get { return _proxyCreationEnabled; }
-            set { _proxyCreationEnabled = value; }
-        }
-
-        /// <summary>
-        /// Get or set a boolean that determines whether to use the legacy MergeOption.PreserveChanges behavior
-        /// when querying for entities using MergeOption.PreserveChanges
-        /// </summary>
-        /// <value>
-        /// True if the legacy MergeOption.PreserveChanges behavior should be used; otherwise false.
-        /// </value>
-        public bool UseLegacyPreserveChangesBehavior { get; set; }
-
-        /// <summary>
-        /// If this flag is set to false then setting the Value property of the <see cref="EntityReference{TEntity}"/> for an
-        /// FK relationship to null when it is already null will have no effect. When this flag is set to true, then
-        /// setting the value to null will always cause the FK to be nulled and the relationship to be deleted
-        /// even if the value is currently null. The default value is false when using ObjectContext and true
-        /// when using DbContext.
-        /// </summary>
-        public bool UseConsistentNullReferenceBehavior { get; set; }
-
-        /// <summary>
-        /// This flag determines whether C# behavior should be exhibited when comparing null values in LinqToEntities. 
-        /// If this flag is set, then any equality comparison between two operands, both of which are potentially 
-        /// nullable, will be rewritten to show C# null comparison semantics. As an example: 
-        /// (operand1 = operand2) will be rewritten as 
-        /// (((operand1 = operand2) AND NOT (operand1 IS NULL OR operand2 IS NULL)) || (operand1 IS NULL && operand2 IS NULL))
-        /// The default value is false when using <see cref="ObjectContext"/>.
-        /// </summary>
-        public bool UseCSharpNullComparisonBehavior { get; set; }
-    }
 
     /// <summary>
     /// ObjectContext is the top-level object that encapsulates a connection between the CLR and the database,

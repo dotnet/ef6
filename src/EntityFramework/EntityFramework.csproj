@@ -725,6 +725,7 @@
     <Compile Include="Core\Objects\MergeOption.cs" />
     <Compile Include="Core\Objects\NextResultGenerator.cs" />
     <Compile Include="Core\Objects\ObjectContext.cs" />
+    <Compile Include="Core\Objects\ObjectContextOptions.cs" />
     <Compile Include="Core\Objects\ObjectMaterializedEventArgs.cs" />
     <Compile Include="Core\Objects\ObjectParameter.cs" />
     <Compile Include="Core\Objects\ObjectParameterCollection.cs" />

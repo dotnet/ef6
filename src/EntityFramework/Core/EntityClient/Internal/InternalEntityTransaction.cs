@@ -3,6 +3,7 @@
     using System.Data.Common;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
 
     internal class InternalEntityTransaction : IDisposable
     {
@@ -17,7 +18,8 @@
         /// <param name="storeTransaction">The underlying transaction object</param>
         internal InternalEntityTransaction(EntityConnection connection, DbTransaction storeTransaction)
         {
-            Debug.Assert(connection != null && storeTransaction != null);
+            Contract.Requires(connection != null);
+            Contract.Requires(storeTransaction != null);
 
             _connection = connection;
             _storeTransaction = storeTransaction;
@@ -32,7 +34,7 @@
         /// <summary>
         /// The connection object owning this transaction object
         /// </summary>
-        internal EntityConnection Connection
+        public EntityConnection Connection
         {
             get
             {
@@ -56,7 +58,7 @@
         /// <summary>
         /// The isolation level of this transaction
         /// </summary>
-        internal IsolationLevel IsolationLevel
+        public IsolationLevel IsolationLevel
         {
             get { return _storeTransaction.IsolationLevel; }
         }
@@ -72,7 +74,7 @@
         /// <summary>
         /// Commits the transaction
         /// </summary>
-        internal void Commit()
+        public void Commit()
         {
             try
             {
@@ -94,7 +96,7 @@
         /// <summary>
         /// Rolls back the transaction
         /// </summary>
-        internal void Rollback()
+        public void Rollback()
         {
             try
             {
@@ -131,14 +133,6 @@
                 {
                     ClearCurrentTransaction();
                     _storeTransaction.Dispose();
-
-                    // to prevent infinite loop while disposing
-                    if (this.EntityTransactionWrapper != null)
-                    {
-                        var wrapper = this.EntityTransactionWrapper;
-                        this.EntityTransactionWrapper = null;
-                        wrapper.Dispose();
-                    }
                 }
 
                 _disposed = true;

@@ -2,6 +2,7 @@ namespace System.Data.Entity.Core.EntityClient
 {
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient.Internal;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Class representing a data adapter for the conceptual layer
@@ -61,6 +62,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>Number of cache entries affected by the udpate.</returns>
         public Int32 Update(IEntityStateManager entityCache)
         {
+            Contract.Requires(entityCache != null);
+
             return _internalEntityAdapter.Update(entityCache);
         }
     }

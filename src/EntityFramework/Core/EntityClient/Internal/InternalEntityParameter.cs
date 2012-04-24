@@ -626,7 +626,6 @@
 
         internal void CopyTo(InternalEntityParameter destination)
         {
-            Contract.Requires(destination != null);
             CloneHelper(destination);
         }
 

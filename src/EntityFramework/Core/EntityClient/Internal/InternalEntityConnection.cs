@@ -66,7 +66,7 @@
         [ResourceConsumption(ResourceScope.Machine, ResourceScope.Machine)]
         // For EntityConnection constructor. But since the connection string we pass in is an Empty String,
         // we consume the resource and do not expose it any further.        
-        internal InternalEntityConnection()
+        public InternalEntityConnection()
             : this(String.Empty)
         {
         }
@@ -78,7 +78,7 @@
         /// just the name of the connection to use</param>
         [ResourceExposure(ResourceScope.Machine)] // Exposes the file names as part of ConnectionString which are a Machine resource
         [ResourceConsumption(ResourceScope.Machine)] // For ChangeConnectionString method call. But the paths are not created in this method.
-        internal InternalEntityConnection(string connectionString)
+        public InternalEntityConnection(string connectionString)
         {
             ChangeConnectionString(connectionString);
         }
@@ -87,7 +87,7 @@
         /// Constructs the EntityConnection from Metadata loaded in memory
         /// </summary>
         /// <param name="workspace">Workspace containing metadata information.</param>
-        internal InternalEntityConnection(MetadataWorkspace workspace, DbConnection connection)
+        public InternalEntityConnection(MetadataWorkspace workspace, DbConnection connection)
         {
             Contract.Requires(workspace != null);
             Contract.Requires(connection != null);
@@ -105,8 +105,7 @@
                 throw new ArgumentException(Strings.EntityClient_ItemCollectionsNotRegisteredInWorkspace("StorageMappingItemCollection"));
             }
 
-            if (connection.State
-                != ConnectionState.Closed)
+            if (connection.State != ConnectionState.Closed)
             {
                 throw new ArgumentException(Strings.EntityClient_ConnectionMustBeClosed);
             }
@@ -136,7 +135,7 @@
         /// Get or set the entity connection string associated with this connection object
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-        internal string ConnectionString
+        public string ConnectionString
         {
             get
             {
@@ -233,7 +232,7 @@
         /// Get the time to wait when attempting to establish a connection before ending the try and generating an error
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-        internal int ConnectionTimeout
+        public int ConnectionTimeout
         {
             get
             {
@@ -262,7 +261,7 @@
         /// Gets the ConnectionState property of the EntityConnection
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-        internal ConnectionState State
+        public ConnectionState State
         {
             get
             {
@@ -295,7 +294,7 @@
         /// Gets the name or network address of the data source to connect to
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-        internal string DataSource
+        public string DataSource
         {
             get
             {
@@ -324,7 +323,7 @@
         /// Gets a string that contains the version of the data store to which the client is connected
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-        internal string ServerVersion
+        public string ServerVersion
         {
             get
             {
@@ -365,7 +364,7 @@
         /// <summary>
         /// Gets the DbConnection for the underlying provider connection
         /// </summary>
-        internal DbConnection StoreConnection
+        public DbConnection StoreConnection
         {
             get { return _storeConnection; }
         }
@@ -375,7 +374,7 @@
         /// </summary>
         internal MetadataWorkspace GetMetadataWorkspace()
         {
-            return GetMetadataWorkspace(true /* initializeAllCollections */);
+            return GetMetadataWorkspace(initializeAllCollections: true);
         }
 
         private static bool ShouldRecalculateMetadataArtifactLoader(List<MetadataArtifactLoader> loaders)
@@ -385,6 +384,7 @@
                 // the loaders had folders in it
                 return true;
             }
+
             // in the case that loaders only contains resources or file name, we trust the cache
             return false;
         }
@@ -396,8 +396,7 @@
             Debug.Assert(
                 _metadataWorkspace != null || _effectiveConnectionOptions != null,
                 "The effective connection options is null, which should never be");
-            if (_metadataWorkspace == null
-                ||
+            if (_metadataWorkspace == null ||
                 (initializeAllCollections && !_metadataWorkspace.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)))
             {
                 // This lock is to ensure that the connection string and the metadata workspace are in a consistent state, that is, you
@@ -497,7 +496,7 @@
         /// <summary>
         /// Establish a connection to the data store by calling the Open method on the underlying data provider
         /// </summary>
-        internal void Open()
+        public void Open()
         {
             if (_storeConnection == null)
             {
@@ -631,7 +630,7 @@
         /// <summary>
         /// Close the connection to the data store
         /// </summary>
-        internal void Close()
+        public void Close()
         {
             // It's a no-op if there isn't an underlying connection
             if (_storeConnection == null)
@@ -693,7 +692,7 @@
         /// Enlist in the given transaction
         /// </summary>
         /// <param name="transaction">The transaction object to enlist into</param>
-        internal void EnlistTransaction(Transaction transaction)
+        public void EnlistTransaction(Transaction transaction)
         {
             if (_storeConnection == null)
             {
@@ -778,7 +777,8 @@
 
                     if (_storeConnection != null)
                     {
-                        StoreCloseHelper(); // closes store connection
+                        // closes store connection
+                        StoreCloseHelper(); 
                         if (_storeConnection != null)
                         {
                             if (!_userOwnsStoreConnection) // only dispose it if we didn't get it from the user...
@@ -797,14 +797,6 @@
                     if (raiseStateChangeEvent) // we need to raise the event explicitly
                     {
                         this.EntityConnectionWrapper.InternalOnStageChange(StateChangeClosed);
-                    }
-
-                    // to prevent infinite loop while disposing: wrapper->impl->wrapper->impl->...
-                    if (this.EntityConnectionWrapper != null)
-                    {
-                        var wrapper = this.EntityConnectionWrapper;
-                        this.EntityConnectionWrapper = null;
-                        wrapper.Dispose();
                     }
                 }
 

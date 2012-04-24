@@ -5,7 +5,6 @@
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     
     internal class InternalEntityAdapter
     {
@@ -21,7 +20,7 @@
         /// <summary>
         /// Gets or sets the map connection used by this adapter.
         /// </summary>
-        internal EntityConnection Connection
+        public EntityConnection Connection
         {
             get { return _connection; }
             set { _connection = value; }
@@ -30,7 +29,7 @@
         /// <summary>
         /// Gets or sets whether the IEntityCache.AcceptChanges should be called during a call to IEntityAdapter.Update.
         /// </summary>
-        internal bool AcceptChangesDuringUpdate
+        public bool AcceptChangesDuringUpdate
         {
             get { return _acceptChangesDuringUpdate; }
             set { _acceptChangesDuringUpdate = value; }
@@ -41,9 +40,8 @@
         /// </summary>
         /// <param name="entityCache">Entity cache containing changes to persist to the store.</param>
         /// <returns>Number of cache entries affected by the udpate.</returns>
-        internal Int32 Update(IEntityStateManager entityCache)
+        public Int32 Update(IEntityStateManager entityCache)
         {
-            Contract.Requires(entityCache != null);
             if (!IsStateManagerDirty(entityCache))
             {
                 return 0;
