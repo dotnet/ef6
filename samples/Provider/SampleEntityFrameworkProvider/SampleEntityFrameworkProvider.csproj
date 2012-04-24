@@ -85,12 +85,6 @@
     <Compile Include="StoreVersion.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Common.ConceptualSchemaDefinition.csdl" />
-    <None Include="Resources\Common.ProviderManifest.xsd" />
-    <None Include="Resources\System.Data.Resources.CSDLSchema.xsd" />
-    <None Include="Resources\System.Data.Resources.CSMSL.xsd" />
-    <None Include="Resources\System.Data.Resources.EntityStoreSchemaGenerator.xsd" />
-    <None Include="Resources\System.Data.Resources.SSDLSchema.xsd" />
     <None Include="SampleEntityFrameworkProvider.snk" />
     <EmbeddedResource Include="Resources\SampleProviderServices.StoreSchemaDefinition.ssdl" />
     <EmbeddedResource Include="Resources\SampleProviderServices.StoreSchemaMapping.msl" />
