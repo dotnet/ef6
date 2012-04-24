@@ -1311,7 +1311,7 @@
         /// </summary>
         /// <param name="dataSpace"></param>
         /// <returns></returns>
-        internal bool IsItemCollectionAlreadyRegistered(DataSpace dataSpace)
+        internal virtual bool IsItemCollectionAlreadyRegistered(DataSpace dataSpace)
         {
             ItemCollection itemCollection;
             return TryGetItemCollection(dataSpace, out itemCollection);
@@ -1413,7 +1413,6 @@
         /// This method is marked as obsolete since it does not support partial update scenarios as it does not return 
         /// members from group 5 and changing it to return these members would be a breaking change.
         /// </remarks>
-        [Obsolete("Use MetadataWorkspace.GetRelevantMembersForUpdate(EntitySetBase, EntityTypeBase, bool) instead")]
         public IEnumerable<EdmMember> GetRequiredOriginalValueMembers(EntitySetBase entitySet, EntityTypeBase entityType)
         {
             return GetInterestingMembers(

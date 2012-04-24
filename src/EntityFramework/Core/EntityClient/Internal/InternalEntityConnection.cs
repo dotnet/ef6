@@ -126,6 +126,15 @@
         }
 
         /// <summary>
+        /// This constructor is for test purposes only
+        /// </summary>
+        internal InternalEntityConnection(MetadataWorkspace workspace, DbConnection connection, bool dummyArgument)
+        {
+            _metadataWorkspace = workspace;
+            _storeConnection = connection;
+        }
+
+        /// <summary>
         /// Wrapper on the parent class, for accessing its protected members (via proxy method) 
         /// or when the parent class is a parameter to another method/constructor
         /// </summary>
@@ -135,7 +144,7 @@
         /// Get or set the entity connection string associated with this connection object
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-        public string ConnectionString
+        public virtual string ConnectionString
         {
             get
             {
@@ -232,7 +241,7 @@
         /// Get the time to wait when attempting to establish a connection before ending the try and generating an error
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-        public int ConnectionTimeout
+        public virtual int ConnectionTimeout
         {
             get
             {
@@ -261,7 +270,7 @@
         /// Gets the ConnectionState property of the EntityConnection
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-        public ConnectionState State
+        public virtual ConnectionState State
         {
             get
             {
@@ -294,7 +303,7 @@
         /// Gets the name or network address of the data source to connect to
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-        public string DataSource
+        public virtual string DataSource
         {
             get
             {
@@ -323,7 +332,7 @@
         /// Gets a string that contains the version of the data store to which the client is connected
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-        public string ServerVersion
+        public virtual string ServerVersion
         {
             get
             {
@@ -364,7 +373,7 @@
         /// <summary>
         /// Gets the DbConnection for the underlying provider connection
         /// </summary>
-        public DbConnection StoreConnection
+        public virtual DbConnection StoreConnection
         {
             get { return _storeConnection; }
         }
@@ -372,7 +381,7 @@
         /// <summary>
         /// Gets the metadata workspace used by this connection
         /// </summary>
-        internal MetadataWorkspace GetMetadataWorkspace()
+        internal virtual MetadataWorkspace GetMetadataWorkspace()
         {
             return GetMetadataWorkspace(initializeAllCollections: true);
         }
@@ -391,7 +400,7 @@
 
         [ResourceExposure(ResourceScope.None)] // The resource( path name) is not exposed to the callers of this method
         [ResourceConsumption(ResourceScope.Machine, ResourceScope.Machine)] // For SplitPaths call and we pick the file names from class variable.
-        internal MetadataWorkspace GetMetadataWorkspace(bool initializeAllCollections)
+        internal virtual MetadataWorkspace GetMetadataWorkspace(bool initializeAllCollections)
         {
             Debug.Assert(
                 _metadataWorkspace != null || _effectiveConnectionOptions != null,
@@ -496,7 +505,7 @@
         /// <summary>
         /// Establish a connection to the data store by calling the Open method on the underlying data provider
         /// </summary>
-        public void Open()
+        public virtual void Open()
         {
             if (_storeConnection == null)
             {
@@ -509,10 +518,8 @@
             }
 
             var closeStoreConnectionOnFailure = false;
-            OpenStoreConnectionIf(
-                _storeConnection.State != ConnectionState.Open,
+            OpenStoreConnectionIfStoreConnectionNotOpened(
                 _storeConnection,
-                null,
                 EntityRes.EntityClient_ProviderSpecificError,
                 @"Open",
                 ref closeStoreConnectionOnFailure);
@@ -529,30 +536,26 @@
         }
 
         /// <summary>
-        /// Helper method that conditionally opens a specified store connection
+        /// Helper method that opens a specified store connection if it's not opened yet.
         /// </summary>
-        /// <param name="openCondition">The condition to evaluate</param>
         /// <param name="storeConnectionToOpen">The store connection to open</param>
-        /// <param name="originalConnection">The original store connection associated with the entity client</param>
         /// <param name="closeStoreConnectionOnFailure">A flag that is set on if the connection is opened
         /// successfully</param>
-        private void OpenStoreConnectionIf(
-            bool openCondition,
+        private void OpenStoreConnectionIfStoreConnectionNotOpened(
             DbConnection storeConnectionToOpen,
-            DbConnection originalConnection,
             string exceptionCode,
             string attemptedOperation,
             ref bool closeStoreConnectionOnFailure)
         {
             try
             {
-                if (openCondition)
+                if (storeConnectionToOpen.State != ConnectionState.Open)
                 {
                     storeConnectionToOpen.Open();
                     closeStoreConnectionOnFailure = true;
                 }
 
-                ResetStoreConnection(storeConnectionToOpen, originalConnection, false);
+                ResetStoreConnection(storeConnectionToOpen, originalConnection: null, closeOriginalConnection: false);
 
                 // With every successful open of the store connection, always null out the current db transaction and enlistedTransaction
                 ClearTransactions();
@@ -621,7 +624,7 @@
         {
             _storeConnection = newConnection;
 
-            if (closeOriginalConnection && (originalConnection != null))
+            if (closeOriginalConnection && originalConnection != null)
             {
                 originalConnection.Close();
             }
@@ -630,7 +633,7 @@
         /// <summary>
         /// Close the connection to the data store
         /// </summary>
-        public void Close()
+        public virtual void Close()
         {
             // It's a no-op if there isn't an underlying connection
             if (_storeConnection == null)
@@ -692,7 +695,7 @@
         /// Enlist in the given transaction
         /// </summary>
         /// <param name="transaction">The transaction object to enlist into</param>
-        public void EnlistTransaction(Transaction transaction)
+        public virtual void EnlistTransaction(Transaction transaction)
         {
             if (_storeConnection == null)
             {
@@ -835,8 +838,7 @@
 
                     // Find the named connection from the configuration, then extract the settings
                     var setting = ConfigurationManager.ConnectionStrings[namedConnection];
-                    if (setting == null
-                        || setting.ProviderName != s_entityClientProviderName)
+                    if (setting == null || setting.ProviderName != s_entityClientProviderName)
                     {
                         throw new ArgumentException(Strings.EntityClient_InvalidNamedConnection);
                     }
@@ -881,6 +883,7 @@
                     {
                         throw new EntityException(Strings.EntityClient_ProviderSpecificError(@"ConnectionString"), e);
                     }
+
                     throw;
                 }
             }
@@ -1120,7 +1123,7 @@
         /// <summary>
         /// Clears the current DbTransaction for this connection
         /// </summary>
-        internal void ClearCurrentTransaction()
+        internal virtual void ClearCurrentTransaction()
         {
             _currentTransaction = null;
         }
