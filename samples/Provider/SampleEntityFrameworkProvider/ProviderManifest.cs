@@ -135,12 +135,12 @@ namespace SampleEntityFrameworkProvider
         /// <returns>An XmlReader at the begining of the information requested.</returns>
         protected override XmlReader GetDbInformation(string informationType)
         {
-            if (informationType == DbProviderManifest.StoreSchemaDefinition)
+            if (informationType == DbProviderManifest.StoreSchemaDefinitionVersion3)
             {
                 return GetStoreSchemaDescription();
             }
 
-            if (informationType == DbProviderManifest.StoreSchemaMapping)
+            if (informationType == DbProviderManifest.StoreSchemaMappingVersion3)
             {
                 return GetStoreSchemaMapping();
             }

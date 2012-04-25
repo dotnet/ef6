@@ -407,5 +407,43 @@
         <ScalarProperty Name="TerritoryID" ColumnName="TerritoryID" />
       </EndProperty>
     </AssociationSetMapping>
+    <FunctionImportMapping FunctionName="NorthwindEF.Store.fx_CustomerLocationForCountry" FunctionImportName="fx_CustomerLocationForCountry">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="NorthwindEF.fx_CustomerLocationForCountry_Result">
+          <ScalarProperty Name="Location" ColumnName="Location" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionName="NorthwindEF.Store.fx_OrdersForShippingStatus" FunctionImportName="fx_OrdersForShippingStatus">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="NorthwindEF.fx_OrdersForShippingStatus_Result">
+          <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+          <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+          <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+          <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
+          <ScalarProperty Name="RequiredDate" ColumnName="RequiredDate" />
+          <ScalarProperty Name="ShippedDate" ColumnName="ShippedDate" />
+          <ScalarProperty Name="Freight" ColumnName="Freight" />
+          <ScalarProperty Name="ShipName" ColumnName="ShipName" />
+          <ScalarProperty Name="ShipAddress" ColumnName="ShipAddress" />
+          <ScalarProperty Name="ShipCity" ColumnName="ShipCity" />
+          <ScalarProperty Name="ShipRegion" ColumnName="ShipRegion" />
+          <ScalarProperty Name="ShipPostalCode" ColumnName="ShipPostalCode" />
+          <ScalarProperty Name="ShipCountry" ColumnName="ShipCountry" />
+          <ScalarProperty Name="ShipLocation" ColumnName="ShipLocation" />
+          <ScalarProperty Name="ContainerSize" ColumnName="ContainerSize" />
+          <ScalarProperty Name="ShippingStatus" ColumnName="ShippingStatus" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionName="NorthwindEF.Store.fx_SuppliersWithinRange" FunctionImportName="fx_SuppliersWithinRange">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="NorthwindEF.fx_SuppliersWithinRange_Result">
+          <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+          <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+          <ScalarProperty Name="Location" ColumnName="Location" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
   </EntityContainerMapping>
 </Mapping>

@@ -783,6 +783,81 @@ namespace NorthwindEF
 
         #endregion
 
+        #region Function Imports
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        /// <param name="country">No Metadata Documentation available.</param>
+        [EdmFunction("NorthwindEFContext", "fx_CustomerLocationForCountry")]
+        public IQueryable<fx_CustomerLocationForCountry_Result> fx_CustomerLocationForCountry(global::System.String country)
+        {
+            ObjectParameter countryParameter;
+            if (country != null)
+            {
+                countryParameter = new ObjectParameter("country", country);
+            }
+            else
+            {
+                countryParameter = new ObjectParameter("country", typeof(global::System.String));
+            }
+    
+            return base.CreateQuery<fx_CustomerLocationForCountry_Result>("[NorthwindEFContext].[fx_CustomerLocationForCountry](@country)", countryParameter);
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        /// <param name="shippingStatus">No Metadata Documentation available.</param>
+        [EdmFunction("NorthwindEFContext", "fx_OrdersForShippingStatus")]
+        public IQueryable<fx_OrdersForShippingStatus_Result> fx_OrdersForShippingStatus(Nullable<global::System.Int32> shippingStatus)
+        {
+            ObjectParameter shippingStatusParameter;
+            if (shippingStatus.HasValue)
+            {
+                shippingStatusParameter = new ObjectParameter("shippingStatus", shippingStatus);
+            }
+            else
+            {
+                shippingStatusParameter = new ObjectParameter("shippingStatus", typeof(global::System.Int32));
+            }
+    
+            return base.CreateQuery<fx_OrdersForShippingStatus_Result>("[NorthwindEFContext].[fx_OrdersForShippingStatus](@shippingStatus)", shippingStatusParameter);
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        /// <param name="miles">No Metadata Documentation available.</param>
+        /// <param name="location">No Metadata Documentation available.</param>
+        [EdmFunction("NorthwindEFContext", "fx_SuppliersWithinRange")]
+        public IQueryable<fx_SuppliersWithinRange_Result> fx_SuppliersWithinRange(Nullable<global::System.Int32> miles, global::System.Data.Spatial.DbGeography location)
+        {
+            ObjectParameter milesParameter;
+            if (miles.HasValue)
+            {
+                milesParameter = new ObjectParameter("miles", miles);
+            }
+            else
+            {
+                milesParameter = new ObjectParameter("miles", typeof(global::System.Int32));
+            }
+    
+            ObjectParameter locationParameter;
+            if (location != null)
+            {
+                locationParameter = new ObjectParameter("location", location);
+            }
+            else
+            {
+                locationParameter = new ObjectParameter("location", typeof(global::System.Data.Spatial.DbGeography));
+            }
+    
+            return base.CreateQuery<fx_SuppliersWithinRange_Result>("[NorthwindEFContext].[fx_SuppliersWithinRange](@miles, @location)", milesParameter, locationParameter);
+        }
+
+        #endregion
+
     }
 
     #endregion
@@ -7745,6 +7820,549 @@ namespace NorthwindEF
                 }
             }
         }
+
+        #endregion
+
+    }
+
+    #endregion
+
+    #region ComplexTypes
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmComplexTypeAttribute(NamespaceName="NorthwindEF", Name="fx_CustomerLocationForCountry_Result")]
+    [DataContractAttribute(IsReference=true)]
+    [Serializable()]
+    public partial class fx_CustomerLocationForCountry_Result : ComplexObject
+    {
+        #region Simple Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.Data.Spatial.DbGeography Location
+        {
+            get
+            {
+                return _Location;
+            }
+            set
+            {
+                OnLocationChanging(value);
+                ReportPropertyChanging("Location");
+                _Location = StructuralObject.SetValidValue(value, true, "Location");
+                ReportPropertyChanged("Location");
+                OnLocationChanged();
+            }
+        }
+        private global::System.Data.Spatial.DbGeography _Location;
+        partial void OnLocationChanging(global::System.Data.Spatial.DbGeography value);
+        partial void OnLocationChanged();
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmComplexTypeAttribute(NamespaceName="NorthwindEF", Name="fx_OrdersForShippingStatus_Result")]
+    [DataContractAttribute(IsReference=true)]
+    [Serializable()]
+    public partial class fx_OrdersForShippingStatus_Result : ComplexObject
+    {
+        #region Simple Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> OrderID
+        {
+            get
+            {
+                return _OrderID;
+            }
+            set
+            {
+                OnOrderIDChanging(value);
+                ReportPropertyChanging("OrderID");
+                _OrderID = StructuralObject.SetValidValue(value, "OrderID");
+                ReportPropertyChanged("OrderID");
+                OnOrderIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _OrderID;
+        partial void OnOrderIDChanging(Nullable<global::System.Int32> value);
+        partial void OnOrderIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String CustomerID
+        {
+            get
+            {
+                return _CustomerID;
+            }
+            set
+            {
+                OnCustomerIDChanging(value);
+                ReportPropertyChanging("CustomerID");
+                _CustomerID = StructuralObject.SetValidValue(value, true, "CustomerID");
+                ReportPropertyChanged("CustomerID");
+                OnCustomerIDChanged();
+            }
+        }
+        private global::System.String _CustomerID;
+        partial void OnCustomerIDChanging(global::System.String value);
+        partial void OnCustomerIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> EmployeeID
+        {
+            get
+            {
+                return _EmployeeID;
+            }
+            set
+            {
+                OnEmployeeIDChanging(value);
+                ReportPropertyChanging("EmployeeID");
+                _EmployeeID = StructuralObject.SetValidValue(value, "EmployeeID");
+                ReportPropertyChanged("EmployeeID");
+                OnEmployeeIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _EmployeeID;
+        partial void OnEmployeeIDChanging(Nullable<global::System.Int32> value);
+        partial void OnEmployeeIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.DateTime> OrderDate
+        {
+            get
+            {
+                return _OrderDate;
+            }
+            set
+            {
+                OnOrderDateChanging(value);
+                ReportPropertyChanging("OrderDate");
+                _OrderDate = StructuralObject.SetValidValue(value, "OrderDate");
+                ReportPropertyChanged("OrderDate");
+                OnOrderDateChanged();
+            }
+        }
+        private Nullable<global::System.DateTime> _OrderDate;
+        partial void OnOrderDateChanging(Nullable<global::System.DateTime> value);
+        partial void OnOrderDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.DateTime> RequiredDate
+        {
+            get
+            {
+                return _RequiredDate;
+            }
+            set
+            {
+                OnRequiredDateChanging(value);
+                ReportPropertyChanging("RequiredDate");
+                _RequiredDate = StructuralObject.SetValidValue(value, "RequiredDate");
+                ReportPropertyChanged("RequiredDate");
+                OnRequiredDateChanged();
+            }
+        }
+        private Nullable<global::System.DateTime> _RequiredDate;
+        partial void OnRequiredDateChanging(Nullable<global::System.DateTime> value);
+        partial void OnRequiredDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.DateTime> ShippedDate
+        {
+            get
+            {
+                return _ShippedDate;
+            }
+            set
+            {
+                OnShippedDateChanging(value);
+                ReportPropertyChanging("ShippedDate");
+                _ShippedDate = StructuralObject.SetValidValue(value, "ShippedDate");
+                ReportPropertyChanged("ShippedDate");
+                OnShippedDateChanged();
+            }
+        }
+        private Nullable<global::System.DateTime> _ShippedDate;
+        partial void OnShippedDateChanging(Nullable<global::System.DateTime> value);
+        partial void OnShippedDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> Freight
+        {
+            get
+            {
+                return _Freight;
+            }
+            set
+            {
+                OnFreightChanging(value);
+                ReportPropertyChanging("Freight");
+                _Freight = StructuralObject.SetValidValue(value, "Freight");
+                ReportPropertyChanged("Freight");
+                OnFreightChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _Freight;
+        partial void OnFreightChanging(Nullable<global::System.Decimal> value);
+        partial void OnFreightChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String ShipName
+        {
+            get
+            {
+                return _ShipName;
+            }
+            set
+            {
+                OnShipNameChanging(value);
+                ReportPropertyChanging("ShipName");
+                _ShipName = StructuralObject.SetValidValue(value, true, "ShipName");
+                ReportPropertyChanged("ShipName");
+                OnShipNameChanged();
+            }
+        }
+        private global::System.String _ShipName;
+        partial void OnShipNameChanging(global::System.String value);
+        partial void OnShipNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String ShipAddress
+        {
+            get
+            {
+                return _ShipAddress;
+            }
+            set
+            {
+                OnShipAddressChanging(value);
+                ReportPropertyChanging("ShipAddress");
+                _ShipAddress = StructuralObject.SetValidValue(value, true, "ShipAddress");
+                ReportPropertyChanged("ShipAddress");
+                OnShipAddressChanged();
+            }
+        }
+        private global::System.String _ShipAddress;
+        partial void OnShipAddressChanging(global::System.String value);
+        partial void OnShipAddressChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String ShipCity
+        {
+            get
+            {
+                return _ShipCity;
+            }
+            set
+            {
+                OnShipCityChanging(value);
+                ReportPropertyChanging("ShipCity");
+                _ShipCity = StructuralObject.SetValidValue(value, true, "ShipCity");
+                ReportPropertyChanged("ShipCity");
+                OnShipCityChanged();
+            }
+        }
+        private global::System.String _ShipCity;
+        partial void OnShipCityChanging(global::System.String value);
+        partial void OnShipCityChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String ShipRegion
+        {
+            get
+            {
+                return _ShipRegion;
+            }
+            set
+            {
+                OnShipRegionChanging(value);
+                ReportPropertyChanging("ShipRegion");
+                _ShipRegion = StructuralObject.SetValidValue(value, true, "ShipRegion");
+                ReportPropertyChanged("ShipRegion");
+                OnShipRegionChanged();
+            }
+        }
+        private global::System.String _ShipRegion;
+        partial void OnShipRegionChanging(global::System.String value);
+        partial void OnShipRegionChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String ShipPostalCode
+        {
+            get
+            {
+                return _ShipPostalCode;
+            }
+            set
+            {
+                OnShipPostalCodeChanging(value);
+                ReportPropertyChanging("ShipPostalCode");
+                _ShipPostalCode = StructuralObject.SetValidValue(value, true, "ShipPostalCode");
+                ReportPropertyChanged("ShipPostalCode");
+                OnShipPostalCodeChanged();
+            }
+        }
+        private global::System.String _ShipPostalCode;
+        partial void OnShipPostalCodeChanging(global::System.String value);
+        partial void OnShipPostalCodeChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String ShipCountry
+        {
+            get
+            {
+                return _ShipCountry;
+            }
+            set
+            {
+                OnShipCountryChanging(value);
+                ReportPropertyChanging("ShipCountry");
+                _ShipCountry = StructuralObject.SetValidValue(value, true, "ShipCountry");
+                ReportPropertyChanged("ShipCountry");
+                OnShipCountryChanged();
+            }
+        }
+        private global::System.String _ShipCountry;
+        partial void OnShipCountryChanging(global::System.String value);
+        partial void OnShipCountryChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.Data.Spatial.DbGeography ShipLocation
+        {
+            get
+            {
+                return _ShipLocation;
+            }
+            set
+            {
+                OnShipLocationChanging(value);
+                ReportPropertyChanging("ShipLocation");
+                _ShipLocation = StructuralObject.SetValidValue(value, true, "ShipLocation");
+                ReportPropertyChanged("ShipLocation");
+                OnShipLocationChanged();
+            }
+        }
+        private global::System.Data.Spatial.DbGeography _ShipLocation;
+        partial void OnShipLocationChanging(global::System.Data.Spatial.DbGeography value);
+        partial void OnShipLocationChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.Data.Spatial.DbGeometry ContainerSize
+        {
+            get
+            {
+                return _ContainerSize;
+            }
+            set
+            {
+                OnContainerSizeChanging(value);
+                ReportPropertyChanging("ContainerSize");
+                _ContainerSize = StructuralObject.SetValidValue(value, true, "ContainerSize");
+                ReportPropertyChanged("ContainerSize");
+                OnContainerSizeChanged();
+            }
+        }
+        private global::System.Data.Spatial.DbGeometry _ContainerSize;
+        partial void OnContainerSizeChanging(global::System.Data.Spatial.DbGeometry value);
+        partial void OnContainerSizeChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> ShippingStatus
+        {
+            get
+            {
+                return _ShippingStatus;
+            }
+            set
+            {
+                OnShippingStatusChanging(value);
+                ReportPropertyChanging("ShippingStatus");
+                _ShippingStatus = StructuralObject.SetValidValue(value, "ShippingStatus");
+                ReportPropertyChanged("ShippingStatus");
+                OnShippingStatusChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _ShippingStatus;
+        partial void OnShippingStatusChanging(Nullable<global::System.Int32> value);
+        partial void OnShippingStatusChanged();
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmComplexTypeAttribute(NamespaceName="NorthwindEF", Name="fx_SuppliersWithinRange_Result")]
+    [DataContractAttribute(IsReference=true)]
+    [Serializable()]
+    public partial class fx_SuppliersWithinRange_Result : ComplexObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new fx_SuppliersWithinRange_Result object.
+        /// </summary>
+        /// <param name="supplierID">Initial value of the SupplierID property.</param>
+        /// <param name="companyName">Initial value of the CompanyName property.</param>
+        public static fx_SuppliersWithinRange_Result Createfx_SuppliersWithinRange_Result(global::System.Int32 supplierID, global::System.String companyName)
+        {
+            fx_SuppliersWithinRange_Result fx_SuppliersWithinRange_Result = new fx_SuppliersWithinRange_Result();
+            fx_SuppliersWithinRange_Result.SupplierID = supplierID;
+            fx_SuppliersWithinRange_Result.CompanyName = companyName;
+            return fx_SuppliersWithinRange_Result;
+        }
+
+        #endregion
+
+        #region Simple Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 SupplierID
+        {
+            get
+            {
+                return _SupplierID;
+            }
+            set
+            {
+                OnSupplierIDChanging(value);
+                ReportPropertyChanging("SupplierID");
+                _SupplierID = StructuralObject.SetValidValue(value, "SupplierID");
+                ReportPropertyChanged("SupplierID");
+                OnSupplierIDChanged();
+            }
+        }
+        private global::System.Int32 _SupplierID;
+        partial void OnSupplierIDChanging(global::System.Int32 value);
+        partial void OnSupplierIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String CompanyName
+        {
+            get
+            {
+                return _CompanyName;
+            }
+            set
+            {
+                OnCompanyNameChanging(value);
+                ReportPropertyChanging("CompanyName");
+                _CompanyName = StructuralObject.SetValidValue(value, false, "CompanyName");
+                ReportPropertyChanged("CompanyName");
+                OnCompanyNameChanged();
+            }
+        }
+        private global::System.String _CompanyName;
+        partial void OnCompanyNameChanging(global::System.String value);
+        partial void OnCompanyNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.Data.Spatial.DbGeography Location
+        {
+            get
+            {
+                return _Location;
+            }
+            set
+            {
+                OnLocationChanging(value);
+                ReportPropertyChanging("Location");
+                _Location = StructuralObject.SetValidValue(value, true, "Location");
+                ReportPropertyChanged("Location");
+                OnLocationChanged();
+            }
+        }
+        private global::System.Data.Spatial.DbGeography _Location;
+        partial void OnLocationChanging(global::System.Data.Spatial.DbGeography value);
+        partial void OnLocationChanged();
 
         #endregion
 

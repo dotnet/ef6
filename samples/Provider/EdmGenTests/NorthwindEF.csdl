@@ -74,7 +74,43 @@
       <End Role="Employees" EntitySet="Employees" />
       <End Role="Territories" EntitySet="Territories" />
     </AssociationSet>
+    <FunctionImport Name="fx_CustomerLocationForCountry" ReturnType="Collection(NorthwindEF.fx_CustomerLocationForCountry_Result)" IsComposable="true">
+      <Parameter Name="country" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="fx_OrdersForShippingStatus" ReturnType="Collection(NorthwindEF.fx_OrdersForShippingStatus_Result)" IsComposable="true">
+      <Parameter Name="shippingStatus" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="fx_SuppliersWithinRange" ReturnType="Collection(NorthwindEF.fx_SuppliersWithinRange_Result)" IsComposable="true">
+      <Parameter Name="miles" Type="Int32" />
+      <Parameter Name="location" Type="Geography" />
+    </FunctionImport>
   </EntityContainer>
+  <ComplexType Name="fx_CustomerLocationForCountry_Result">
+    <Property Name="Location" Type="Geography" />
+  </ComplexType>
+  <ComplexType Name="fx_OrdersForShippingStatus_Result">
+    <Property Name="OrderID" Type="Int32" />
+    <Property Name="CustomerID" Type="String" MaxLength="5" Unicode="true" FixedLength="true" />
+    <Property Name="EmployeeID" Type="Int32" />
+    <Property Name="OrderDate" Type="DateTime" />
+    <Property Name="RequiredDate" Type="DateTime" />
+    <Property Name="ShippedDate" Type="DateTime" />
+    <Property Name="Freight" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="ShipName" Type="String" MaxLength="40" Unicode="true" FixedLength="false" />
+    <Property Name="ShipAddress" Type="String" MaxLength="60" Unicode="true" FixedLength="false" />
+    <Property Name="ShipCity" Type="String" MaxLength="15" Unicode="true" FixedLength="false" />
+    <Property Name="ShipRegion" Type="String" MaxLength="15" Unicode="true" FixedLength="false" />
+    <Property Name="ShipPostalCode" Type="String" MaxLength="10" Unicode="true" FixedLength="false" />
+    <Property Name="ShipCountry" Type="String" MaxLength="15" Unicode="true" FixedLength="false" />
+    <Property Name="ShipLocation" Type="Geography" />
+    <Property Name="ContainerSize" Type="Geometry" />
+    <Property Name="ShippingStatus" Type="Int32" />
+  </ComplexType>
+  <ComplexType Name="fx_SuppliersWithinRange_Result">
+    <Property Name="SupplierID" Type="Int32" Nullable="false" />
+    <Property Name="CompanyName" Type="String" Nullable="false" MaxLength="40" Unicode="true" FixedLength="false" />
+    <Property Name="Location" Type="Geography" />
+  </ComplexType>
   <EntityType Name="Categories">
     <Key>
       <PropertyRef Name="CategoryID" />

@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Schema Namespace="SampleProvider" Provider="SampleEntityFrameworkProvider" ProviderManifestToken="2005" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl">
+<Schema Namespace="SqlClient" Provider="SampleEntityFrameworkProvider" ProviderManifestToken="2005" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl">
   <EntityContainer Name="Schema">
     <EntitySet Name="STables" EntityType="Self.Table">
       <DefiningQuery>
         SELECT
-        '[' + TABLE_SCHEMA + ']' + '[' + TABLE_NAME + ']' [Id]
+        quotename(TABLE_SCHEMA) + quotename(TABLE_NAME) [Id]
         ,   TABLE_CATALOG [CatalogName]
         ,   TABLE_SCHEMA [SchemaName]
         ,   TABLE_NAME    [Name]
@@ -17,49 +17,49 @@
 
     <EntitySet Name="STableColumns" EntityType="Self.TableColumn">
       <DefiningQuery>
-        SELECT
-        '[' + c.TABLE_SCHEMA + ']' + '[' + c.TABLE_NAME + ']' + '[' + c.COLUMN_NAME + ']' [Id]
-        ,   '[' + c.TABLE_SCHEMA + ']' + '[' + c.TABLE_NAME + ']'                             [ParentId]
-        ,   c.COLUMN_NAME   [Name]
-        ,   c.ORDINAL_POSITION [Ordinal]
-        ,   CAST( CASE c.IS_NULLABLE WHEN 'YES' THEN 1 WHEN 'NO' THEN 0 ELSE 0 END as bit) [IsNullable]
-        ,   CASE
-        WHEN c.DATA_TYPE in ('varchar', 'nvarchar', 'varbinary') and
-        c.CHARACTER_MAXIMUM_LENGTH = -1 THEN
-        c.DATA_TYPE + '(max)'
-        ELSE
-        c.DATA_TYPE
-        END
-        as [TypeName]
-        ,   c.CHARACTER_MAXIMUM_LENGTH [MaxLength]
-        ,   CAST(c.NUMERIC_PRECISION as integer) as [Precision]
-        ,   CAST(c.DATETIME_PRECISION as integer) as [DateTimePrecision]
-        ,   c.NUMERIC_SCALE [Scale]
-        ,   c.COLLATION_CATALOG [CollationCatalog]
-        ,   c.COLLATION_SCHEMA [CollationSchema]
-        ,   c.COLLATION_NAME [CollationName]
-        ,   c.CHARACTER_SET_CATALOG [CharacterSetCatalog]
-        ,   c.CHARACTER_SET_SCHEMA [CharacterSetSchema]
-        ,   c.CHARACTER_SET_NAME [CharacterSetName]
-        ,   CAST(0 as bit) as [IsMultiSet]
-        ,   CAST(columnproperty( object_id('[' + c.TABLE_SCHEMA + ']' + '.' + '[' + c.TABLE_NAME + ']'), c.COLUMN_NAME, 'IsIdentity' ) as bit) as [IsIdentity]
-        ,   CAST(columnproperty( object_id('[' + c.TABLE_SCHEMA + ']' + '.' + '[' + c.TABLE_NAME + ']'), c.COLUMN_NAME, 'IsComputed' ) | CASE WHEN c.DATA_TYPE = 'timestamp' THEN 1 ELSE 0 END as bit) as [IsStoreGenerated]
-        , c.COLUMN_DEFAULT as [Default]
-        FROM
-        INFORMATION_SCHEMA.COLUMNS c
-        INNER JOIN
-        INFORMATION_SCHEMA.TABLES t ON
-        c.TABLE_CATALOG = t.TABLE_CATALOG AND
-        c.TABLE_SCHEMA = t.TABLE_SCHEMA   AND
-        c.TABLE_NAME = t.TABLE_NAME       AND
-        t.TABLE_TYPE = 'BASE TABLE'
-      </DefiningQuery>
+		  SELECT
+		  quotename(c.TABLE_SCHEMA) + quotename(c.TABLE_NAME) + quotename(c.COLUMN_NAME) [Id]
+		  ,   quotename(c.TABLE_SCHEMA) + quotename(c.TABLE_NAME)                             [ParentId]
+		  ,   c.COLUMN_NAME   [Name]
+		  ,   c.ORDINAL_POSITION [Ordinal]
+		  ,   CAST( CASE c.IS_NULLABLE WHEN 'YES' THEN 1 WHEN 'NO' THEN 0 ELSE 0 END as bit) [IsNullable]
+		  ,   CASE
+		  WHEN c.DATA_TYPE in ('varchar', 'nvarchar', 'varbinary') and
+		  c.CHARACTER_MAXIMUM_LENGTH = -1 THEN
+		  c.DATA_TYPE + '(max)'
+		  ELSE
+		  c.DATA_TYPE
+		  END
+		  as [TypeName]
+		  ,   c.CHARACTER_MAXIMUM_LENGTH [MaxLength]
+		  ,   CAST(c.NUMERIC_PRECISION as integer) [Precision]
+		  ,   CAST(c.DATETIME_PRECISION as integer)[DateTimePrecision]
+		  ,   CAST(c.NUMERIC_SCALE as integer) [Scale]
+		  ,   c.COLLATION_CATALOG [CollationCatalog]
+		  ,   c.COLLATION_SCHEMA [CollationSchema]
+		  ,   c.COLLATION_NAME [CollationName]
+		  ,   c.CHARACTER_SET_CATALOG [CharacterSetCatalog]
+		  ,   c.CHARACTER_SET_SCHEMA [CharacterSetSchema]
+		  ,   c.CHARACTER_SET_NAME [CharacterSetName]
+		  ,   CAST(0 as bit) as [IsMultiSet]
+		  ,   CAST(columnproperty( object_id(quotename(c.TABLE_SCHEMA) + '.' + quotename(c.TABLE_NAME)), c.COLUMN_NAME, 'IsIdentity' ) as bit) as [IsIdentity]
+		  ,   CAST(columnproperty( object_id(quotename(c.TABLE_SCHEMA) + '.' + quotename(c.TABLE_NAME)), c.COLUMN_NAME, 'IsComputed' ) | CASE WHEN c.DATA_TYPE = 'timestamp' THEN 1 ELSE 0 END as bit) as [IsStoreGenerated]
+		  , c.COLUMN_DEFAULT as [Default]
+		  FROM
+		  INFORMATION_SCHEMA.COLUMNS c
+		  INNER JOIN
+		  INFORMATION_SCHEMA.TABLES t ON
+		  c.TABLE_CATALOG = t.TABLE_CATALOG AND
+		  c.TABLE_SCHEMA = t.TABLE_SCHEMA   AND
+		  c.TABLE_NAME = t.TABLE_NAME       AND
+		  t.TABLE_TYPE = 'BASE TABLE'
+  	  </DefiningQuery>
     </EntitySet>
 
     <EntitySet Name="SViews" EntityType="Self.View">
       <DefiningQuery>
         SELECT
-        '[' + TABLE_SCHEMA + ']' + '[' + TABLE_NAME + ']' [Id]
+        quotename(TABLE_SCHEMA) + quotename(TABLE_NAME) [Id]
         ,   TABLE_CATALOG             [CatalogName]
         ,   TABLE_SCHEMA              [SchemaName]
         ,   TABLE_NAME                [Name]
@@ -76,52 +76,52 @@
 
     <EntitySet Name="SViewColumns" EntityType="Self.ViewColumn">
       <DefiningQuery>
-        SELECT
-        '[' + c.TABLE_SCHEMA + ']' + '[' + c.TABLE_NAME + ']' + '[' + c.COLUMN_NAME + ']' [Id]
-        ,   '[' + c.TABLE_SCHEMA + ']' + '[' + c.TABLE_NAME + ']'                             [ParentId]
-        ,   c.COLUMN_NAME   [Name]
-        ,   c.ORDINAL_POSITION [Ordinal]
-        ,   CAST( CASE c.IS_NULLABLE WHEN 'YES' THEN 1 WHEN 'NO' THEN 0 ELSE 0 END as bit) [IsNullable]
-        ,   CASE
-        WHEN c.DATA_TYPE in ('varchar', 'nvarchar', 'varbinary') and
-        c.CHARACTER_MAXIMUM_LENGTH = -1 THEN
-        c.DATA_TYPE + '(max)'
-        ELSE
-        c.DATA_TYPE
-        END
-        as [TypeName]
-        ,   c.CHARACTER_MAXIMUM_LENGTH [MaxLength]
-        ,   CAST(c.NUMERIC_PRECISION as integer) as [Precision]
-        ,   CAST(c.DATETIME_PRECISION as integer) as [DateTimePrecision]
-        ,   c.NUMERIC_SCALE [Scale]
-        ,   c.COLLATION_CATALOG [CollationCatalog]
-        ,   c.COLLATION_SCHEMA [CollationSchema]
-        ,   c.COLLATION_NAME [CollationName]
-        ,   c.CHARACTER_SET_CATALOG [CharacterSetCatalog]
-        ,   c.CHARACTER_SET_SCHEMA [CharacterSetSchema]
-        ,   c.CHARACTER_SET_NAME [CharacterSetName]
-        ,   CAST(0 as bit) as [IsMultiSet]
-        ,   CAST(columnproperty( object_id('[' + c.TABLE_SCHEMA + ']' + '.' + '[' + c.TABLE_NAME + ']'), c.COLUMN_NAME, 'IsIdentity' ) as bit) as [IsIdentity]
-        ,   CAST(columnproperty( object_id('[' + c.TABLE_SCHEMA + ']' + '.' + '[' + c.TABLE_NAME + ']'), c.COLUMN_NAME, 'IsComputed' ) | CASE WHEN c.DATA_TYPE = 'timestamp' THEN 1 ELSE 0 END as bit) as [IsStoreGenerated]
-        ,   c.COLUMN_DEFAULT [Default]
-        FROM
-        INFORMATION_SCHEMA.COLUMNS c
-        INNER JOIN
-        INFORMATION_SCHEMA.VIEWS v ON
-        c.TABLE_CATALOG = v.TABLE_CATALOG AND
-        c.TABLE_SCHEMA = v.TABLE_SCHEMA AND
-        c.TABLE_NAME = v.TABLE_NAME
-        WHERE
-        NOT (v.TABLE_SCHEMA = 'dbo'
-        AND v.TABLE_NAME in('syssegments', 'sysconstraints')
-        AND SUBSTRING(CAST(SERVERPROPERTY('productversion') as varchar(20)),1,1) = 8)
-      </DefiningQuery>
+		  SELECT
+		  quotename(c.TABLE_SCHEMA) + quotename(c.TABLE_NAME) + quotename(c.COLUMN_NAME) [Id]
+		  ,   quotename(c.TABLE_SCHEMA) + quotename(c.TABLE_NAME)                             [ParentId]
+		  ,   c.COLUMN_NAME   [Name]
+		  ,   c.ORDINAL_POSITION [Ordinal]
+		  ,   CAST( CASE c.IS_NULLABLE WHEN 'YES' THEN 1 WHEN 'NO' THEN 0 ELSE 0 END as bit) [IsNullable]
+		  ,   CASE
+		  WHEN c.DATA_TYPE in ('varchar', 'nvarchar', 'varbinary') and
+		  c.CHARACTER_MAXIMUM_LENGTH = -1 THEN
+		  c.DATA_TYPE + '(max)'
+		  ELSE
+		  c.DATA_TYPE
+		  END
+		  as [TypeName]
+		  ,   c.CHARACTER_MAXIMUM_LENGTH [MaxLength]
+		  ,   CAST(c.NUMERIC_PRECISION as integer) [Precision]
+		  ,   CAST(c.DATETIME_PRECISION as integer) as [DateTimePrecision]
+		  ,   CAST(c.NUMERIC_SCALE as integer) [Scale]
+		  ,   c.COLLATION_CATALOG [CollationCatalog]
+		  ,   c.COLLATION_SCHEMA [CollationSchema]
+		  ,   c.COLLATION_NAME [CollationName]
+		  ,   c.CHARACTER_SET_CATALOG [CharacterSetCatalog]
+		  ,   c.CHARACTER_SET_SCHEMA [CharacterSetSchema]
+		  ,   c.CHARACTER_SET_NAME [CharacterSetName]
+		  ,   CAST(0 as bit) as [IsMultiSet]
+		  ,   CAST(columnproperty( object_id(quotename(c.TABLE_SCHEMA) + '.' + quotename(c.TABLE_NAME)), c.COLUMN_NAME, 'IsIdentity' ) as bit) as [IsIdentity]
+		  ,   CAST(columnproperty( object_id(quotename(c.TABLE_SCHEMA) + '.' + quotename(c.TABLE_NAME)), c.COLUMN_NAME, 'IsComputed' ) | CASE WHEN c.DATA_TYPE = 'timestamp' THEN 1 ELSE 0 END as bit) as [IsStoreGenerated]
+		  ,   c.COLUMN_DEFAULT [Default]
+		  FROM
+		  INFORMATION_SCHEMA.COLUMNS c
+		  INNER JOIN
+		  INFORMATION_SCHEMA.VIEWS v ON
+		  c.TABLE_CATALOG = v.TABLE_CATALOG AND
+		  c.TABLE_SCHEMA = v.TABLE_SCHEMA AND
+		  c.TABLE_NAME = v.TABLE_NAME
+		  WHERE
+		  NOT (v.TABLE_SCHEMA = 'dbo'
+		  AND v.TABLE_NAME in('syssegments', 'sysconstraints')
+		  AND SUBSTRING(CAST(SERVERPROPERTY('productversion') as varchar(20)),1,1) = 8)
+	  </DefiningQuery>
     </EntitySet>
 
     <EntitySet Name="SFunctions" EntityType="Self.Function">
       <DefiningQuery>
         SELECT
-        '[' + SPECIFIC_SCHEMA + ']' + '[' + SPECIFIC_NAME + ']' [Id]
+        quotename(SPECIFIC_SCHEMA) + quotename(SPECIFIC_NAME) [Id]
         , SPECIFIC_CATALOG         [CatalogName]
         , SPECIFIC_SCHEMA          [SchemaName]
         , SPECIFIC_NAME            [Name]
@@ -132,10 +132,10 @@
         ELSE
         DATA_TYPE
         END [ReturnTypeName]
-        , CHARACTER_MAXIMUM_LENGTH [ReturnMaxLength]
-        , CAST(NUMERIC_PRECISION as integer) as [ReturnPrecision]
-        , CAST(DATETIME_PRECISION as integer) as [ReturnDateTimePrecision]
-        , NUMERIC_SCALE            [ReturnScale]
+        , CHARACTER_MAXIMUM_LENGTH            [ReturnMaxLength]
+        , CAST(NUMERIC_PRECISION as integer)  [ReturnPrecision]
+        , CAST(DATETIME_PRECISION as integer) [ReturnDateTimePrecision]
+        , CAST(NUMERIC_SCALE as integer)      [ReturnScale]
         , COLLATION_CATALOG        [ReturnCollationCatalog]
         , COLLATION_SCHEMA         [ReturnCollationSchema]
         , COLLATION_NAME           [ReturnCollationName]
@@ -146,22 +146,24 @@
         , CAST(0 as bit) as [IsAggregate]
         , CAST(0 as bit) as [IsBuiltIn]
         , CAST(0 as bit) as [IsNiladic]
+        , CAST( (CASE WHEN DATA_TYPE = 'TABLE' THEN 1 ELSE 0 END) as bit ) as [IsTvf]
         FROM
         INFORMATION_SCHEMA.ROUTINES
         WHERE
-        NOT (ROUTINE_SCHEMA = 'dbo'
-        AND ROUTINE_NAME LIKE 'dt[_]%'
-        AND SUBSTRING(CAST(SERVERPROPERTY('productversion') as varchar(20)),1,1) = 8)
-        AND (DATA_TYPE != 'TABLE' OR DATA_TYPE is null)
-        AND ROUTINE_TYPE = 'FUNCTION'
+        ROUTINE_TYPE = 'FUNCTION'
+        AND NOT (
+                   ROUTINE_SCHEMA = 'dbo'
+                   AND ROUTINE_NAME LIKE 'dt[_]%'
+                   AND SUBSTRING(CAST(SERVERPROPERTY('productversion') as varchar(20)),1,1) = 8
+                )
       </DefiningQuery>
     </EntitySet>
 
     <EntitySet Name="SFunctionParameters" EntityType="Self.Parameter">
       <DefiningQuery>
         SELECT
-        '[' + f.SPECIFIC_SCHEMA + ']' + '[' + f.SPECIFIC_NAME + ']' + '[' + f.PARAMETER_NAME + ']' [Id]
-        , '[' + f.SPECIFIC_SCHEMA + ']' + '[' + f.SPECIFIC_NAME + ']'                              [ParentId]
+        quotename(f.SPECIFIC_SCHEMA) + quotename(f.SPECIFIC_NAME) + quotename(f.PARAMETER_NAME) [Id]
+        , quotename(f.SPECIFIC_SCHEMA) + quotename(f.SPECIFIC_NAME)                              [ParentId]
         , CASE -- trim off the @ symbol
         WHEN f.PARAMETER_NAME is null THEN NULL
         ELSE SUBSTRING(f.PARAMETER_NAME, 2, LEN(f.PARAMETER_NAME) )
@@ -175,9 +177,9 @@
         f.DATA_TYPE
         END [TypeName]
         , f.CHARACTER_MAXIMUM_LENGTH [MaxLength]
-        , CAST(f.NUMERIC_PRECISION as integer) as [Precision]
+        , CAST(f.NUMERIC_PRECISION as integer) [Precision]
         , CAST(f.DATETIME_PRECISION as integer) as [DateTimePrecision]
-        , f.NUMERIC_SCALE    [Scale]
+        , CAST(f.NUMERIC_SCALE as integer) [Scale]
         , f.COLLATION_CATALOG [CollationCatalog]
         , f.COLLATION_SCHEMA [CollationSchema]
         , f.COLLATION_NAME [CollationName]
@@ -186,7 +188,7 @@
         , f.CHARACTER_SET_NAME [CharacterSetName]
         , CAST(0 as bit) as [IsMultiSet]
         , f.PARAMETER_MODE   [Mode]
-        , NULL [Default]
+        , CAST(NULL as nvarchar(max))  [Default]
         FROM
         INFORMATION_SCHEMA.PARAMETERS f
         INNER JOIN INFORMATION_SCHEMA.ROUTINES r ON
@@ -198,10 +200,46 @@
       </DefiningQuery>
     </EntitySet>
 
+    <EntitySet Name="SFunctionReturnTableColumns" EntityType="Self.FunctionReturnTableColumn">
+      <DefiningQuery>
+        SELECT
+            quotename(c.TABLE_SCHEMA) + quotename(c.TABLE_NAME) + quotename(c.COLUMN_NAME) [Id]
+        ,   quotename(c.TABLE_SCHEMA) + quotename(c.TABLE_NAME) [ParentId]
+        ,   c.COLUMN_NAME  [Name]
+        ,   c.ORDINAL_POSITION [Ordinal]
+        ,   CAST( CASE c.IS_NULLABLE WHEN 'YES' THEN 1 WHEN 'NO' THEN 0 ELSE 0 END as bit) [IsNullable]
+        ,   CASE
+                 WHEN c.DATA_TYPE in ('varchar', 'nvarchar', 'varbinary') and c.CHARACTER_MAXIMUM_LENGTH = -1 THEN c.DATA_TYPE + '(max)'
+                 ELSE c.DATA_TYPE
+            END as [TypeName]
+        ,   c.CHARACTER_MAXIMUM_LENGTH [MaxLength]
+        ,   CAST(c.NUMERIC_PRECISION as integer) [Precision]
+        ,   CAST(c.DATETIME_PRECISION as integer)[DateTimePrecision]
+        ,   CAST(c.NUMERIC_SCALE as integer) [Scale]
+        ,   c.COLLATION_CATALOG [CollationCatalog]
+        ,   c.COLLATION_SCHEMA [CollationSchema]
+        ,   c.COLLATION_NAME [CollationName]
+        ,   c.CHARACTER_SET_CATALOG [CharacterSetCatalog]
+        ,   c.CHARACTER_SET_SCHEMA [CharacterSetSchema]
+        ,   c.CHARACTER_SET_NAME [CharacterSetName]
+        ,   CAST(0 as bit) as [IsMultiSet]
+        ,   CAST(columnproperty( object_id(quotename(c.TABLE_SCHEMA) + '.' + quotename(c.TABLE_NAME)), c.COLUMN_NAME, 'IsIdentity' ) as bit) as [IsIdentity]
+        ,   CAST(columnproperty( object_id(quotename(c.TABLE_SCHEMA) + '.' + quotename(c.TABLE_NAME)), c.COLUMN_NAME, 'IsComputed' ) | CASE WHEN c.DATA_TYPE = 'timestamp' THEN 1 ELSE 0 END as bit) as [IsStoreGenerated]
+        , c.COLUMN_DEFAULT as [Default]
+        FROM
+        INFORMATION_SCHEMA.ROUTINE_COLUMNS c
+        INNER JOIN
+        INFORMATION_SCHEMA.ROUTINES f ON
+        c.TABLE_CATALOG = f.SPECIFIC_CATALOG AND
+        c.TABLE_SCHEMA = f.SPECIFIC_SCHEMA   AND
+        c.TABLE_NAME = f.SPECIFIC_NAME
+      </DefiningQuery>
+    </EntitySet>
+
     <EntitySet Name="SProcedures" EntityType="Self.Procedure">
       <DefiningQuery>
         SELECT
-        '[' + SPECIFIC_SCHEMA + ']' + '[' + SPECIFIC_NAME + ']' [Id]
+        quotename(SPECIFIC_SCHEMA) + quotename(SPECIFIC_NAME) [Id]
         , SPECIFIC_CATALOG         [CatalogName]
         , SPECIFIC_SCHEMA          [SchemaName]
         , SPECIFIC_NAME            [Name]
@@ -219,8 +257,8 @@
     <EntitySet Name="SProcedureParameters" EntityType="Self.Parameter">
       <DefiningQuery>
         SELECT
-        '[' + p.SPECIFIC_SCHEMA + ']' + '[' + p.SPECIFIC_NAME + ']' + '[' + p.PARAMETER_NAME + ']' [Id]
-        , '[' + p.SPECIFIC_SCHEMA + ']' + '[' + p.SPECIFIC_NAME + ']'                              [ParentId]
+        quotename(p.SPECIFIC_SCHEMA) + quotename(p.SPECIFIC_NAME) + quotename(p.PARAMETER_NAME) [Id]
+        , quotename(p.SPECIFIC_SCHEMA) + quotename(p.SPECIFIC_NAME)                              [ParentId]
         , CASE -- trim off the @ symbol
         WHEN p.PARAMETER_NAME is null THEN NULL
         ELSE SUBSTRING(p.PARAMETER_NAME, 2, LEN(p.PARAMETER_NAME) )
@@ -234,9 +272,9 @@
         p.DATA_TYPE
         END [TypeName]
         , p.CHARACTER_MAXIMUM_LENGTH [MaxLength]
-        , CAST(p.NUMERIC_PRECISION as integer) as [Precision]
+        , CAST(p.NUMERIC_PRECISION as integer) [Precision]
         , CAST(p.DATETIME_PRECISION as integer) as [DateTimePrecision]
-        , p.NUMERIC_SCALE    [Scale]
+        , CAST(p.NUMERIC_SCALE as integer) [Scale]
         , p.COLLATION_CATALOG [CollationCatalog]
         , p.COLLATION_SCHEMA [CollationSchema]
         , p.COLLATION_NAME [CollationName]
@@ -245,7 +283,7 @@
         , p.CHARACTER_SET_NAME [CharacterSetName]
         , CAST(0 as bit) as [IsMultiSet]
         , p.PARAMETER_MODE   [Mode]
-        , NULL [Default]
+        , CAST(NULL as nvarchar(max)) [Default]
         FROM
         INFORMATION_SCHEMA.PARAMETERS p
         INNER JOIN INFORMATION_SCHEMA.ROUTINES r ON
@@ -260,23 +298,22 @@
     <EntitySet Name="SConstraints" EntityType="Self.Constraint">
       <DefiningQuery>
         SELECT
-        '[' + tc.CONSTRAINT_SCHEMA + ']' + '[' + tc.CONSTRAINT_NAME + ']' [Id]
-        , '[' + tc.TABLE_SCHEMA + ']' + '[' + tc.TABLE_NAME + ']' [ParentId]
+        quotename(tc.CONSTRAINT_SCHEMA) + quotename(tc.CONSTRAINT_NAME) [Id]
+        , quotename(tc.TABLE_SCHEMA) + quotename(tc.TABLE_NAME) [ParentId]
         ,   tc.CONSTRAINT_NAME [Name]
         ,   tc.CONSTRAINT_TYPE [ConstraintType]
         ,   CAST(CASE tc.IS_DEFERRABLE WHEN 'NO' THEN 0 ELSE 1 END as bit) [IsDeferrable]
         ,   CAST(CASE tc.INITIALLY_DEFERRED WHEN 'NO' THEN 0 ELSE 1 END as bit) [IsInitiallyDeferred]
         FROM
         INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
-        WHERE tc.CONSTRAINT_TYPE != 'CHECK'
-        AND tc.TABLE_NAME IS NOT NULL
+        WHERE tc.TABLE_NAME IS NOT NULL
       </DefiningQuery>
     </EntitySet>
 
     <EntitySet Name="SCheckConstraints" EntityType="Self.CheckConstraint">
       <DefiningQuery>
         SELECT
-        '[' + cc.CONSTRAINT_SCHEMA + ']' + '[' + cc.CONSTRAINT_NAME + ']' [Id]
+        quotename(cc.CONSTRAINT_SCHEMA) + quotename(cc.CONSTRAINT_NAME) [Id]
         , cc.CHECK_CLAUSE [Expression]
         FROM
         INFORMATION_SCHEMA.CHECK_CONSTRAINTS cc
@@ -286,8 +323,8 @@
     <EntitySet Name="SConstraintColumns" EntityType="Self.ConstraintColumn">
       <DefiningQuery>
         SELECT
-        '[' + CONSTRAINT_SCHEMA + ']' + '[' + CONSTRAINT_NAME                              + ']' [ConstraintId]
-        ,   '[' + TABLE_SCHEMA      + ']' + '[' + TABLE_NAME      + ']' + '[' + COLUMN_NAME    + ']' [ColumnId]
+        quotename(CONSTRAINT_SCHEMA) + quotename(CONSTRAINT_NAME) [ConstraintId]
+        ,   quotename(TABLE_SCHEMA) + quotename(TABLE_NAME) + quotename(COLUMN_NAME) [ColumnId]
         FROM
         INFORMATION_SCHEMA.KEY_COLUMN_USAGE
       </DefiningQuery>
@@ -296,9 +333,9 @@
     <EntitySet Name="SForeignKeyConstraints" EntityType="Self.ForeignKeyConstraint">
       <DefiningQuery>
         SELECT
-        '[' + rc.CONSTRAINT_SCHEMA + ']' + '[' + rc.CONSTRAINT_NAME + ']' [Id]
-        , rc.UPDATE_RULE [UpdateRule]
-        , rc.DELETE_RULE [DeleteRule]
+        quotename(rc.CONSTRAINT_SCHEMA) + quotename(rc.CONSTRAINT_NAME) [Id]
+        , CAST(rc.UPDATE_RULE as nvarchar(11)) [UpdateRule]
+        , CAST(rc.DELETE_RULE as nvarchar(11)) [DeleteRule]
         FROM
         INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS rc
       </DefiningQuery>
@@ -307,10 +344,10 @@
     <EntitySet Name="SForeignKeys" EntityType="Self.ForeignKey">
       <DefiningQuery>
         SELECT
-        '[' + FC.CONSTRAINT_SCHEMA + ']' + '[' + FC.CONSTRAINT_NAME + ']' + '[' + cast(FC.ORDINAL_POSITION as nvarchar(30)) + ']' [Id]
-        ,   '[' + PC.TABLE_SCHEMA      + ']' + '[' + PC.TABLE_NAME      + ']' + '[' + PC.COLUMN_NAME + ']' [ToColumnId]
-        ,   '[' + FC.TABLE_SCHEMA      + ']' + '[' + FC.TABLE_NAME      + ']' + '[' + FC.COLUMN_NAME + ']' [FromColumnId]
-        ,   '[' + FC.CONSTRAINT_SCHEMA + ']' + '[' + FC.CONSTRAINT_NAME                              + ']' [ConstraintId]
+        quotename(FC.CONSTRAINT_SCHEMA) + quotename(FC.CONSTRAINT_NAME) + quotename(cast(FC.ORDINAL_POSITION as nvarchar(30))) [Id]
+        ,   quotename(PC.TABLE_SCHEMA) + quotename(PC.TABLE_NAME) + quotename(PC.COLUMN_NAME) [ToColumnId]
+        ,   quotename(FC.TABLE_SCHEMA) + quotename(FC.TABLE_NAME) + quotename(FC.COLUMN_NAME) [FromColumnId]
+        ,   quotename(FC.CONSTRAINT_SCHEMA) + quotename(FC.CONSTRAINT_NAME) [ConstraintId]
         ,   FC.ORDINAL_POSITION [Ordinal]
         FROM
         INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC
@@ -325,7 +362,6 @@
         AND      PC.ORDINAL_POSITION = FC.ORDINAL_POSITION
       </DefiningQuery>
     </EntitySet>
-
 
     <EntitySet Name="SViewConstraints" EntityType="Self.ViewConstraint">
       <DefiningQuery>
@@ -417,6 +453,10 @@
     <AssociationSet Name="FunctionFunctionParameters" Association="Self.FunctionFunctionParameter">
       <End Role="Function" EntitySet="SFunctions"/>
       <End Role="Parameter" EntitySet="SFunctionParameters"/>
+    </AssociationSet>
+    <AssociationSet Name="FunctionFunctionReturnTableColumns" Association="Self.FunctionFunctionReturnTableColumn" >
+      <End Role="Function" EntitySet="SFunctions"/>
+      <End Role="Column" EntitySet="SFunctionReturnTableColumns"/>
     </AssociationSet>
     <AssociationSet Name="ProcedureProcedureParameters" Association="Self.ProcedureProcedureParameter" >
       <End Role="Procedure" EntitySet="SProcedures"/>
@@ -518,10 +558,11 @@
     <Property Name="ReturnCharacterSetCatalog" Type="nvarchar" MaxLength="128" />
     <Property Name="ReturnCharacterSetSchema" Type="nvarchar" MaxLength="128" />
     <Property Name="ReturnCharacterSetName" Type="nvarchar" MaxLength="128" />
-    <Property Name="ReturnIsMultiSet" Nullable="false" Type="bit" />
+    <Property Name="ReturnIsMultiSet" Type="bit" />
     <Property Name="IsAggregate" Type="bit" />
     <Property Name="IsBuiltIn" Type="bit" />
     <Property Name="IsNiladic" Type="bit" />
+    <Property Name="IsTvf" Nullable="false" Type="bit" />
   </EntityType>
 
   <EntityType Name="Procedure">
@@ -556,6 +597,32 @@
     <Property Name="IsMultiSet" Nullable="false" Type="bit" />
     <Property Name="Mode" Type="nvarchar" MaxLength="16" />
     <Property Name="Default" Type="nvarchar(max)" />
+  </EntityType>
+
+  <EntityType Name="FunctionReturnTableColumn" >
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="nvarchar(max)"/>
+    <Property Name="ParentId" Nullable="false" Type="nvarchar(max)"/>
+    <Property Name="Name" Nullable="false" Type="nvarchar" MaxLength="256"/>
+    <Property Name="Ordinal" Nullable="false" Type="int" />
+    <Property Name="IsNullable" Nullable="false" Type="bit" />
+    <Property Name="TypeName" Nullable="false" Type="nvarchar" MaxLength="256" />
+    <Property Name="MaxLength" Type="int" />
+    <Property Name="Precision" Type="int" />
+    <Property Name="DateTimePrecision" Type="int" />
+    <Property Name="Scale" Type="int" />
+    <Property Name="CollationCatalog" Type="nvarchar" MaxLength="128" />
+    <Property Name="CollationSchema" Type="nvarchar" MaxLength="128" />
+    <Property Name="CollationName" Type="nvarchar" MaxLength="128" />
+    <Property Name="CharacterSetCatalog" Type="nvarchar" MaxLength="128" />
+    <Property Name="CharacterSetSchema" Type="nvarchar" MaxLength="128" />
+    <Property Name="CharacterSetName" Type="nvarchar" MaxLength="128" />
+    <Property Name="IsMultiSet" Nullable="false" Type="bit" />
+    <Property Name="IsIdentity" Nullable="false" Type="bit" />
+    <Property Name="IsStoreGenerated" Nullable="false" Type="bit" />
+    <Property Name="Default" Nullable="true" Type="nvarchar(max)"/>
   </EntityType>
 
   <EntityType Name="Constraint">
@@ -721,6 +788,19 @@
         <PropertyRef Name="Id" />
       </Principal>
       <Dependent Role="Parameter">
+        <PropertyRef Name="ParentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+
+  <Association Name="FunctionFunctionReturnTableColumn">
+    <End Type="Self.Function" Role="Function" Multiplicity="1" />
+    <End Type="Self.FunctionReturnTableColumn" Role="Column" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Function">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Column">
         <PropertyRef Name="ParentId" />
       </Dependent>
     </ReferentialConstraint>
