@@ -78,6 +78,7 @@
         /// just the name of the connection to use</param>
         [ResourceExposure(ResourceScope.Machine)] // Exposes the file names as part of ConnectionString which are a Machine resource
         [ResourceConsumption(ResourceScope.Machine)] // For ChangeConnectionString method call. But the paths are not created in this method.
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overrided by user.")]
         public InternalEntityConnection(string connectionString)
         {
             ChangeConnectionString(connectionString);
@@ -88,48 +89,50 @@
         /// </summary>
         /// <param name="workspace">Workspace containing metadata information.</param>
         public InternalEntityConnection(MetadataWorkspace workspace, DbConnection connection)
+            : this(workspace, connection, false)
         {
             Contract.Requires(workspace != null);
             Contract.Requires(connection != null);
-
-            if (!workspace.IsItemCollectionAlreadyRegistered(DataSpace.CSpace))
-            {
-                throw new ArgumentException(Strings.EntityClient_ItemCollectionsNotRegisteredInWorkspace("EdmItemCollection"));
-            }
-            if (!workspace.IsItemCollectionAlreadyRegistered(DataSpace.SSpace))
-            {
-                throw new ArgumentException(Strings.EntityClient_ItemCollectionsNotRegisteredInWorkspace("StoreItemCollection"));
-            }
-            if (!workspace.IsItemCollectionAlreadyRegistered(DataSpace.CSSpace))
-            {
-                throw new ArgumentException(Strings.EntityClient_ItemCollectionsNotRegisteredInWorkspace("StorageMappingItemCollection"));
-            }
-
-            if (connection.State != ConnectionState.Closed)
-            {
-                throw new ArgumentException(Strings.EntityClient_ConnectionMustBeClosed);
-            }
-
-            // Verify that a factory can be retrieved
-            if (DbProviderFactories.GetFactory(connection) == null)
-            {
-                throw new ProviderIncompatibleException(Strings.EntityClient_DbConnectionHasNoProvider(connection));
-            }
-
-            var collection = (StoreItemCollection)workspace.GetItemCollection(DataSpace.SSpace);
-
-            _providerFactory = collection.StoreProviderFactory;
-            _storeConnection = connection;
-            _userOwnsStoreConnection = true;
-            _metadataWorkspace = workspace;
-            _initialized = true;
         }
 
         /// <summary>
-        /// This constructor is for test purposes only
+        /// This constructor allows to skip the initialization code for testing purposes.
         /// </summary>
-        internal InternalEntityConnection(MetadataWorkspace workspace, DbConnection connection, bool dummyArgument)
+        internal InternalEntityConnection(MetadataWorkspace workspace, DbConnection connection, bool skipInitialization)
         {
+            if (!skipInitialization)
+            {
+                if (!workspace.IsItemCollectionAlreadyRegistered(DataSpace.CSpace))
+                {
+                    throw new ArgumentException(Strings.EntityClient_ItemCollectionsNotRegisteredInWorkspace("EdmItemCollection"));
+                }
+                if (!workspace.IsItemCollectionAlreadyRegistered(DataSpace.SSpace))
+                {
+                    throw new ArgumentException(Strings.EntityClient_ItemCollectionsNotRegisteredInWorkspace("StoreItemCollection"));
+                }
+                if (!workspace.IsItemCollectionAlreadyRegistered(DataSpace.CSSpace))
+                {
+                    throw new ArgumentException(Strings.EntityClient_ItemCollectionsNotRegisteredInWorkspace("StorageMappingItemCollection"));
+                }
+
+                if (connection.State != ConnectionState.Closed)
+                {
+                    throw new ArgumentException(Strings.EntityClient_ConnectionMustBeClosed);
+                }
+
+                // Verify that a factory can be retrieved
+                if (DbProviderFactories.GetFactory(connection) == null)
+                {
+                    throw new ProviderIncompatibleException(Strings.EntityClient_DbConnectionHasNoProvider(connection));
+                }
+
+                var collection = (StoreItemCollection)workspace.GetItemCollection(DataSpace.SSpace);
+
+                _providerFactory = collection.StoreProviderFactory;
+                _userOwnsStoreConnection = true;
+                _initialized = true;
+            }
+            
             _metadataWorkspace = workspace;
             _storeConnection = connection;
         }
