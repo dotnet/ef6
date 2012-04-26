@@ -167,9 +167,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents a reference to a variable that is currently in scope.
     /// </summary>
-    public sealed class DbVariableReferenceExpression : DbExpression
+    public class DbVariableReferenceExpression : DbExpression
     {
         private readonly string _name;
+
+        internal DbVariableReferenceExpression()
+        {
+        }
 
         internal DbVariableReferenceExpression(TypeUsage type, string name)
             : base(DbExpressionKind.VariableReference, type)
@@ -182,7 +186,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets the name of the referenced variable.
         /// </summary>
-        public string VariableName
+        public virtual string VariableName
         {
             get { return _name; }
         }
@@ -227,9 +231,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents a reference to a parameter declared on the command tree that contains this expression.
     /// </summary>
-    public sealed class DbParameterReferenceExpression : DbExpression
+    public class DbParameterReferenceExpression : DbExpression
     {
         private readonly string _name;
+
+        internal DbParameterReferenceExpression()
+        {
+        }
 
         internal DbParameterReferenceExpression(TypeUsage type, string name)
             : base(DbExpressionKind.ParameterReference, type)
@@ -242,7 +250,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets the name of the referenced parameter.
         /// </summary>
-        public string ParameterName
+        public virtual string ParameterName
         {
             get { return _name; }
         }
@@ -287,10 +295,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents the retrieval of a static or instance property.
     /// </summary>
-    public sealed class DbPropertyExpression : DbExpression
+    public class DbPropertyExpression : DbExpression
     {
         private readonly EdmMember _property;
         private readonly DbExpression _instance;
+
+        internal DbPropertyExpression()
+        {
+        }
 
         internal DbPropertyExpression(TypeUsage resultType, EdmMember property, DbExpression instance)
             : base(DbExpressionKind.Property, resultType)
@@ -309,7 +321,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets the property metadata for the property to retrieve.
         /// </summary>
-        public EdmMember Property
+        public virtual EdmMember Property
         {
             get { return _property; }
         }
@@ -317,7 +329,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets the <see cref="DbExpression"/> that defines the instance from which the property should be retrieved.
         /// </summary>
-        public DbExpression Instance
+        public virtual DbExpression Instance
         {
             get { return _instance; }
         }

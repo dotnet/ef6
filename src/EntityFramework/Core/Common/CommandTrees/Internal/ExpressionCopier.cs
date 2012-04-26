@@ -1,4 +1,4 @@
-namespace System.Data.Entity.Core.Common.CommandTrees.Internal
+namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     /// Ensures that all metadata in a given expression tree is from the specified metadata workspace,
     /// potentially rebinding and rebuilding the expressions to appropriate replacement metadata where necessary.
     /// </summary>
-    internal class DbExpressionRebinder : DefaultExpressionVisitor
+    public class DbExpressionRebinder : DefaultExpressionVisitor
     {
         private readonly MetadataWorkspace _metadata;
         private readonly Perspective _perspective;

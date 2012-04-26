@@ -721,6 +721,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         private readonly DbExpression _left;
         private readonly DbExpression _right;
 
+        internal DbBinaryExpression()
+        {
+        }
+
         internal DbBinaryExpression(DbExpressionKind kind, TypeUsage type, DbExpression left, DbExpression right)
             : base(kind, type)
         {
@@ -734,7 +738,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets the <see cref="DbExpression"/> that defines the left argument.
         /// </summary>
-        public DbExpression Left
+        public virtual DbExpression Left
         {
             get { return _left; }
         }
@@ -742,7 +746,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets the <see cref="DbExpression"/> that defines the right argument.
         /// </summary>
-        public DbExpression Right
+        public virtual DbExpression Right
         {
             get { return _right; }
         }
@@ -755,6 +759,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     {
         private readonly DbExpression _argument;
 
+        internal DbUnaryExpression()
+        {
+        }
+
         internal DbUnaryExpression(DbExpressionKind kind, TypeUsage resultType, DbExpression argument)
             : base(kind, resultType)
         {
@@ -766,7 +774,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets the <see cref="DbExpression"/> that defines the argument.
         /// </summary>
-        public DbExpression Argument
+        public virtual DbExpression Argument
         {
             get { return _argument; }
         }

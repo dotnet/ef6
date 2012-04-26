@@ -1,6 +1,7 @@
 namespace System.Data.Entity.SqlServer.SqlGen
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
@@ -1894,6 +1895,17 @@ namespace System.Data.Entity.SqlServer.SqlGen
             return VisitBinaryExpression(" OR ", e.ExpressionKind, e.Left, e.Right);
         }
 
+        internal static KeyToListMap<DbExpression, DbExpression> HasBuiltMapForIn(DbOrExpression expression)
+        {
+            var map = new KeyToListMap<DbExpression, DbExpression>(KeyFieldExpressionComparer.Singleton);
+            return HasBuiltMapForIn(expression, map) && map.Keys.Count() > 0 ? map : null;
+        }
+
+        internal static ReadOnlyCollection<DbExpression> ListForKey(KeyToListMap<DbExpression, DbExpression> map, DbExpression key)
+        {
+            return map.ListForKey(key);
+        }
+
         /// <summary>
         /// Determine if a DbOrExpression can be optimized into one or more IN clauses
         /// and generate an ISqlFragment if it is possible.
@@ -1903,10 +1915,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns>True if an IN clause is possible and sqlFragment has been generated, false otherwise</returns>
         private bool TryTranslateIntoIn(DbOrExpression e, out ISqlFragment sqlFragment)
         {
-            var map = new KeyToListMap<DbExpression, DbExpression>(KeyFieldExpressionComparer.Singleton);
-            var useInClause = HasBuiltMapForIn(e, map) && map.Keys.Count() > 0;
-
-            if (!useInClause)
+            var map = HasBuiltMapForIn(e);
+            if (map == null)
             {
                 sqlFragment = null;
                 return false;
@@ -1916,7 +1926,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             var firstKey = true;
             foreach (var key in map.Keys)
             {
-                var values = map.ListForKey(key);
+                var values = ListForKey(map, key);
                 if (!firstKey)
                 {
                     sqlBuilder.Append(" OR ");
@@ -2044,13 +2054,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// which is not normally possible given their lack of Equals and GetHashCode implementations
         /// for testing object value equality.
         /// </summary>
-        private class KeyFieldExpressionComparer : IEqualityComparer<DbExpression>
+        internal class KeyFieldExpressionComparer : IEqualityComparer<DbExpression>
         {
             internal static readonly KeyFieldExpressionComparer Singleton = new KeyFieldExpressionComparer();
-
-            private KeyFieldExpressionComparer()
-            {
-            }
 
             /// <summary>
             /// Compare two DbExpressions to see if they are equal for the purposes of
@@ -2135,7 +2141,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// </summary>
         /// <param name="e">DbExpression to consider</param>
         /// <returns>True if the expression can be used as a key, false otherwise</returns>
-        private static bool IsKeyForIn(DbExpression e)
+        internal static bool IsKeyForIn(DbExpression e)
         {
             return (e.ExpressionKind == DbExpressionKind.Property
                     || e.ExpressionKind == DbExpressionKind.VariableReference
@@ -2149,7 +2155,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <param name="e">DbBinaryExpression to consider</param>
         /// <param name="values">KeyToListMap to add the sides of the binary expression to</param>
         /// <returns>True if the expression was added, false otherwise</returns>
-        private static bool TryAddExpressionForIn(DbBinaryExpression e, KeyToListMap<DbExpression, DbExpression> values)
+        internal static bool TryAddExpressionForIn(DbBinaryExpression e, KeyToListMap<DbExpression, DbExpression> values)
         {
             if (IsKeyForIn(e.Left))
             {
@@ -2173,7 +2179,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <param name="values">KeyToListMap to which to add references and value equality tests encountered</param>
         /// <returns>True if this branch contained just equality tests or further OR branches, false otherwise</returns>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
-        private bool HasBuiltMapForIn(DbExpression e, KeyToListMap<DbExpression, DbExpression> values)
+        internal static bool HasBuiltMapForIn(DbExpression e, KeyToListMap<DbExpression, DbExpression> values)
         {
             switch (e.ExpressionKind)
             {

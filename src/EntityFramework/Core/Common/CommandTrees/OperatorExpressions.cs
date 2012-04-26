@@ -63,8 +63,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// Represents the logical Or of two Boolean arguments.
     /// </summary>
     /// <remarks>DbOrExpression requires that both of its arguments have a Boolean result type</remarks>
-    public sealed class DbOrExpression : DbBinaryExpression
+    public class DbOrExpression : DbBinaryExpression
     {
+        internal DbOrExpression()
+        {
+        }
+
         internal DbOrExpression(TypeUsage booleanResultType, DbExpression left, DbExpression right)
             : base(DbExpressionKind.Or, booleanResultType, left, right)
         {
@@ -332,8 +336,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents a cast operation applied to a polymorphic argument.
     /// </summary>
-    public sealed class DbCastExpression : DbUnaryExpression
+    public class DbCastExpression : DbUnaryExpression
     {
+        internal DbCastExpression()
+        {
+        }
+
         internal DbCastExpression(TypeUsage type, DbExpression argument)
             : base(DbExpressionKind.Cast, type, argument)
         {
@@ -493,8 +501,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents null determination applied to a single argument.
     /// </summary>
-    public sealed class DbIsNullExpression : DbUnaryExpression
+    public class DbIsNullExpression : DbUnaryExpression
     {
+        internal DbIsNullExpression()
+        {
+        }
+
         internal DbIsNullExpression(TypeUsage booleanResultType, DbExpression arg)
             : base(DbExpressionKind.IsNull, booleanResultType, arg)
         {

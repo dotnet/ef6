@@ -143,6 +143,7 @@
     <Compile Include="Migrations\Sql\SqlServerMigrationSqlGeneratorTests.cs" />
     <Compile Include="Migrations\Utilities\ConfigurationFileUpdaterTests.cs" />
     <Compile Include="Migrations\Utilities\DatabaseCreatorTests.cs" />
+    <Compile Include="SqlServer\SqlGen\DmlSqlGeneratorTests.cs" />
     <Compile Include="SqlServer\SqlGen\SqlFunctionCallHandlerTests.cs" />
     <Compile Include="SqlServer\SqlGen\SqlGeneratorTests.cs" />
     <Compile Include="Utilities\DynamicEqualityComparerLinqIntegrationTests.cs" />

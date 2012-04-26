@@ -2,12 +2,586 @@ namespace System.Data.Entity.SqlServer.SqlGen
 {
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.ModelConfiguration.Utilities;
+    using System.Linq;
     using Moq;
     using Xunit;
 
     public class SqlGeneratorTests
     {
+        public class KeyFieldExpressionComparer
+        {
+            [Fact]
+            public void Equals_returns_false_for_different_expression_types()
+            {
+                var mockLeft = new Mock<DbExpression>();
+                mockLeft.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Null);
+
+                var mockRight = new Mock<DbExpression>();
+                mockRight.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Not);
+
+                Assert.False(new SqlGenerator.KeyFieldExpressionComparer().Equals(mockLeft.Object, mockRight.Object));
+            }
+
+            [Fact]
+            public void Equals_returns_true_for_VariableReference_expressions_if_references_are_same()
+            {
+                var mock = new Mock<DbExpression>();
+                mock.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.VariableReference);
+
+                Assert.True(new SqlGenerator.KeyFieldExpressionComparer().Equals(mock.Object, mock.Object));
+            }
+
+            [Fact]
+            public void Equals_returns_true_for_VariableReference_expressions_if_references_are_different()
+            {
+                var mockLeft = new Mock<DbExpression>();
+                mockLeft.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.VariableReference);
+
+                var mockRight = new Mock<DbExpression>();
+                mockRight.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.VariableReference);
+
+                Assert.False(new SqlGenerator.KeyFieldExpressionComparer().Equals(mockLeft.Object, mockRight.Object));
+            }
+
+            [Fact]
+            public void Equals_returns_true_for_Property_expressions_if_property_and_instance_are_same()
+            {
+                var mockProperty = new Mock<EdmMember>();
+
+                var mockInstance = new Mock<DbExpression>();
+                mockInstance.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.VariableReference);
+
+                var mockLeft = new Mock<DbPropertyExpression>();
+                mockLeft.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Property);
+                mockLeft.Setup(m => m.Property).Returns(mockProperty.Object);
+                mockLeft.Setup(m => m.Instance).Returns(mockInstance.Object);
+
+                var mockRight = new Mock<DbPropertyExpression>();
+                mockRight.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Property);
+                mockRight.Setup(m => m.Property).Returns(mockProperty.Object);
+                mockRight.Setup(m => m.Instance).Returns(mockInstance.Object);
+
+                Assert.True(new SqlGenerator.KeyFieldExpressionComparer().Equals(mockLeft.Object, mockRight.Object));
+            }
+
+            [Fact]
+            public void Equals_returns_false_for_Property_expressions_if_properties_are_not_same()
+            {
+                var mockInstance = new Mock<DbExpression>();
+                mockInstance.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.VariableReference);
+
+                var mockLeft = new Mock<DbPropertyExpression>();
+                mockLeft.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Property);
+                mockLeft.Setup(m => m.Property).Returns(new Mock<EdmMember>().Object);
+                mockLeft.Setup(m => m.Instance).Returns(mockInstance.Object);
+
+                var mockRight = new Mock<DbPropertyExpression>();
+                mockRight.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Property);
+                mockRight.Setup(m => m.Property).Returns(new Mock<EdmMember>().Object);
+                mockRight.Setup(m => m.Instance).Returns(mockInstance.Object);
+
+                Assert.False(new SqlGenerator.KeyFieldExpressionComparer().Equals(mockLeft.Object, mockRight.Object));
+            }
+
+            [Fact]
+            public void Equals_returns_false_for_Property_expressions_if_instances_are_not_equal()
+            {
+                var mockProperty = new Mock<EdmMember>();
+
+                var mockLeftInstance = new Mock<DbExpression>();
+                mockLeftInstance.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.VariableReference);
+                
+                var mockRightInstance = new Mock<DbExpression>();
+                mockRightInstance.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.VariableReference);
+
+                var mockLeft = new Mock<DbPropertyExpression>();
+                mockLeft.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Property);
+                mockLeft.Setup(m => m.Property).Returns(mockProperty.Object);
+                mockLeft.Setup(m => m.Instance).Returns(mockLeftInstance.Object);
+
+                var mockRight = new Mock<DbPropertyExpression>();
+                mockRight.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Property);
+                mockRight.Setup(m => m.Property).Returns(mockProperty.Object);
+                mockRight.Setup(m => m.Instance).Returns(mockRightInstance.Object);
+
+                Assert.False(new SqlGenerator.KeyFieldExpressionComparer().Equals(mockLeft.Object, mockRight.Object));
+            }
+
+            [Fact]
+            public void Equals_returns_true_for_Cast_expressions_if_result_type_and_argument_are_same()
+            {
+                var mockResultType = new Mock<TypeUsage>();
+
+                var mockArgument = new Mock<DbExpression>();
+                mockArgument.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.VariableReference);
+
+                var mockLeft = new Mock<DbCastExpression>();
+                mockLeft.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Cast);
+                mockLeft.Setup(m => m.ResultType).Returns(mockResultType.Object);
+                mockLeft.Setup(m => m.Argument).Returns(mockArgument.Object);
+
+                var mockRight = new Mock<DbCastExpression>();
+                mockRight.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Cast);
+                mockRight.Setup(m => m.ResultType).Returns(mockResultType.Object);
+                mockRight.Setup(m => m.Argument).Returns(mockArgument.Object);
+
+                Assert.True(new SqlGenerator.KeyFieldExpressionComparer().Equals(mockLeft.Object, mockRight.Object));
+            }
+
+            [Fact]
+            public void Equals_returns_false_for_Cast_expressions_if_result_types_are_not_same()
+            {
+                var mockArgument = new Mock<DbExpression>();
+                mockArgument.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.VariableReference);
+
+                var mockLeft = new Mock<DbCastExpression>();
+                mockLeft.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Cast);
+                mockLeft.Setup(m => m.ResultType).Returns(new Mock<TypeUsage>().Object);
+                mockLeft.Setup(m => m.Argument).Returns(mockArgument.Object);
+
+                var mockRight = new Mock<DbCastExpression>();
+                mockRight.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Cast);
+                mockRight.Setup(m => m.ResultType).Returns(new Mock<TypeUsage>().Object);
+                mockRight.Setup(m => m.Argument).Returns(mockArgument.Object);
+
+                Assert.False(new SqlGenerator.KeyFieldExpressionComparer().Equals(mockLeft.Object, mockRight.Object));
+            }
+
+            [Fact]
+            public void Equals_returns_false_for_Cast_expressions_if_arguments_are_not_equal()
+            {
+                var mockResultType = new Mock<TypeUsage>();
+
+                var mockLeftArgument = new Mock<DbExpression>();
+                mockLeftArgument.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.VariableReference);
+
+                var mockRightArgument = new Mock<DbExpression>();
+                mockRightArgument.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.VariableReference);
+
+                var mockLeft = new Mock<DbCastExpression>();
+                mockLeft.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Cast);
+                mockLeft.Setup(m => m.ResultType).Returns(mockResultType.Object);
+                mockLeft.Setup(m => m.Argument).Returns(mockLeftArgument.Object);
+
+                var mockRight = new Mock<DbCastExpression>();
+                mockRight.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Cast);
+                mockRight.Setup(m => m.ResultType).Returns(mockResultType.Object);
+                mockRight.Setup(m => m.Argument).Returns(mockRightArgument.Object);
+
+                Assert.False(new SqlGenerator.KeyFieldExpressionComparer().Equals(mockLeft.Object, mockRight.Object));
+            }
+
+            [Fact]
+            public void Equals_always_returns_false_for_unknown_expression_types()
+            {
+                var mock = new Mock<DbCastExpression>();
+                mock.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Not);
+
+                Assert.False(new SqlGenerator.KeyFieldExpressionComparer().Equals(mock.Object, mock.Object));
+            }
+
+            [Fact]
+            public void GetHashCode_for_Property_expression_returns_hash_code_of_property()
+            {
+                var mockProperty = new Mock<EdmMember>();
+                
+                var mockExpression = new Mock<DbPropertyExpression>();
+                mockExpression.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Property);
+                mockExpression.Setup(m => m.Property).Returns(mockProperty.Object);
+
+                Assert.Equal(
+                    mockProperty.Object.GetHashCode(), 
+                    new SqlGenerator.KeyFieldExpressionComparer().GetHashCode(mockExpression.Object));
+            }
+
+            [Fact]
+            public void GetHashCode_for_ParameterReference_expression_returns_modified_hash_code_of_parameter_name()
+            {
+                var mockExpression = new Mock<DbParameterReferenceExpression>();
+                mockExpression.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.ParameterReference);
+                mockExpression.Setup(m => m.ParameterName).Returns("Bing!");
+
+                Assert.Equal(
+                    "Bing!".GetHashCode() ^ Int32.MaxValue,
+                    new SqlGenerator.KeyFieldExpressionComparer().GetHashCode(mockExpression.Object));
+            }
+
+            [Fact]
+            public void GetHashCode_for_VariableReference_expression_returns_hash_code_of_variable_name()
+            {
+                var mockExpression = new Mock<DbVariableReferenceExpression>();
+                mockExpression.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.VariableReference);
+                mockExpression.Setup(m => m.VariableName).Returns("Bing!");
+
+                Assert.Equal("Bing!".GetHashCode(), new SqlGenerator.KeyFieldExpressionComparer().GetHashCode(mockExpression.Object));
+            }
+
+            [Fact]
+            public void GetHashCode_for_Cast_expression_returns_hash_code_of_argument()
+            {
+                var mockArgumenExpression = new Mock<DbVariableReferenceExpression>();
+                mockArgumenExpression.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.VariableReference);
+                mockArgumenExpression.Setup(m => m.VariableName).Returns("Bing!");
+
+                var mockExpression = new Mock<DbCastExpression>();
+                mockExpression.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Cast);
+                mockExpression.Setup(m => m.Argument).Returns(mockArgumenExpression.Object);
+
+                Assert.Equal("Bing!".GetHashCode(), new SqlGenerator.KeyFieldExpressionComparer().GetHashCode(mockExpression.Object));
+            }
+
+            [Fact]
+            public void GetHashCode_for_unknown_expression_returns_hash_code_of_expression_object()
+            {
+                var mockExpression = new Mock<DbPropertyExpression>();
+
+                Assert.Equal(
+                    mockExpression.Object.GetHashCode(),
+                    new SqlGenerator.KeyFieldExpressionComparer().GetHashCode(mockExpression.Object));
+            }
+        }
+
+        public class IsKeyForIn
+        {
+            [Fact]
+            public void IsKeyForIn_returns_true_for_properties_and_references_only()
+            {
+                var expressionKinds =
+                    new[]
+                        {
+                            DbExpressionKind.Property,
+                            DbExpressionKind.VariableReference,
+                            DbExpressionKind.ParameterReference,
+                        };
+
+                Enum.GetValues(typeof(DbExpressionKind))
+                    .OfType<DbExpressionKind>()
+                    .Each(
+                        e =>
+                            {
+                                var mockDbExpression = new Mock<DbExpression>();
+                                mockDbExpression.Setup(m => m.ExpressionKind).Returns(e);
+                                Assert.Equal(expressionKinds.Contains(e), SqlGenerator.IsKeyForIn(mockDbExpression.Object));
+                            });
+            }
+        }
+
+        public class TryAddExpressionForIn
+        {
+            [Fact]
+            public void TryAddExpressionForIn_adds_left_and_right_values_and_returns_true_if_only_left_expression_matches()
+            {
+                var mockLeftExpression = CreateMockArgumentExpression(DbExpressionKind.Property);
+                var mockRightExpression = CreateMockArgumentExpression(DbExpressionKind.Not);
+                var mockBinaryExpression = CreateMockBinaryExpression(mockLeftExpression, mockRightExpression, DbExpressionKind.Or);
+
+                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+                
+                Assert.True(SqlGenerator.TryAddExpressionForIn(mockBinaryExpression.Object, map ));
+
+                Assert.Equal(1, map.Keys.Count());
+                var values = map.ListForKey(mockLeftExpression.Object);
+                Assert.Same(mockRightExpression.Object, values.Single());
+            }
+
+            [Fact]
+            public void TryAddExpressionForIn_adds_left_and_right_values_and_returns_true_if_both_expressions_match()
+            {
+                var mockLeftExpression = CreateMockArgumentExpression(DbExpressionKind.Property);
+                var mockRightExpression = CreateMockArgumentExpression(DbExpressionKind.Property);
+                var mockBinaryExpression = CreateMockBinaryExpression(mockLeftExpression, mockRightExpression, DbExpressionKind.Or);
+
+                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+
+                Assert.True(SqlGenerator.TryAddExpressionForIn(mockBinaryExpression.Object, map));
+
+                Assert.Equal(1, map.Keys.Count());
+                var values = map.ListForKey(mockLeftExpression.Object);
+                Assert.Same(mockRightExpression.Object, values.Single());
+            }
+
+            [Fact]
+            public void TryAddExpressionForIn_adds_right_and_left_values_and_returns_true_if_only_right_expression_matches()
+            {
+                var mockLeftExpression = CreateMockArgumentExpression(DbExpressionKind.Not);
+                var mockRightExpression = CreateMockArgumentExpression(DbExpressionKind.Property);
+                var mockBinaryExpression = CreateMockBinaryExpression(mockLeftExpression, mockRightExpression, DbExpressionKind.Or);
+
+                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+
+                Assert.True(SqlGenerator.TryAddExpressionForIn(mockBinaryExpression.Object, map));
+
+                Assert.Equal(1, map.Keys.Count());
+                var values = map.ListForKey(mockRightExpression.Object);
+                Assert.Same(mockLeftExpression.Object, values.Single());
+            }
+
+            [Fact]
+            public void TryAddExpressionForIn_adds_nothing_and_returns_false_if_neither_left_or_right_match()
+            {
+                var mockBinaryExpression = CreateMockBinaryExpression(
+                    CreateMockArgumentExpression(DbExpressionKind.Not), 
+                    CreateMockArgumentExpression(DbExpressionKind.Not), DbExpressionKind.Or);
+
+                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+
+                Assert.False(SqlGenerator.TryAddExpressionForIn(mockBinaryExpression.Object, map));
+
+                Assert.Equal(0, map.Keys.Count());
+            }
+        }
+
+        public class HasBuiltMapForIn
+        {
+            [Fact]
+            public void HasBuiltMapForIn_for_equals_returns_true_and_gets_values_from_TryAddExpressionForIn_when_arguments_match()
+            {
+                var mockLeftExpression = CreateMockArgumentExpression(DbExpressionKind.Not);
+                var mockRightExpression = CreateMockArgumentExpression(DbExpressionKind.Property);
+                var mockBinaryExpression = CreateMockBinaryExpression(mockLeftExpression, mockRightExpression, DbExpressionKind.Equals);
+
+                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+
+                Assert.True(SqlGenerator.HasBuiltMapForIn(mockBinaryExpression.Object, map));
+
+                Assert.Equal(1, map.Keys.Count());
+                var values = map.ListForKey(mockRightExpression.Object);
+                Assert.Same(mockLeftExpression.Object, values.Single());
+            }
+
+            [Fact]
+            public void HasBuiltMapForIn_for_equals_returns_false_when_arguments_dont_match()
+            {
+                var mockBinaryExpression = CreateMockBinaryExpression(
+                    CreateMockArgumentExpression(DbExpressionKind.Not), 
+                    CreateMockArgumentExpression(DbExpressionKind.Not), DbExpressionKind.Or);
+
+                Assert.False(
+                    SqlGenerator.HasBuiltMapForIn(mockBinaryExpression.Object, 
+                    new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton)));
+            }
+
+            [Fact]
+            public void HasBuiltMapForIn_for_null_returns_true_and_gets_value_when_argument_matches()
+            {
+                var mockArgumentExpression = CreateMockArgumentExpression(DbExpressionKind.Property);
+                SetupMockArguments(mockArgumentExpression);
+
+                var mockNullExppression = new Mock<DbIsNullExpression>();
+                mockNullExppression.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.IsNull);
+                mockNullExppression.Setup(m => m.Argument).Returns(mockArgumentExpression.Object);
+
+                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+
+                Assert.True(SqlGenerator.HasBuiltMapForIn(mockNullExppression.Object, map));
+
+                Assert.Equal(1, map.Keys.Count());
+                var values = map.ListForKey(mockArgumentExpression.Object);
+                Assert.Same(mockNullExppression.Object, values.Single());
+            }
+
+            [Fact]
+            public void HasBuiltMapForIn_for_is_null_returns_false_when_argument_does_not_match()
+            {
+                var mockNullExppression = new Mock<DbIsNullExpression>();
+                mockNullExppression.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.IsNull);
+                mockNullExppression.Setup(m => m.Argument).Returns(CreateMockArgumentExpression(DbExpressionKind.Not).Object);
+
+                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+
+                Assert.False(SqlGenerator.HasBuiltMapForIn(mockNullExppression.Object, map));
+            }
+
+            [Fact]
+            public void HasBuiltMapForIn_for_Or_returns_true_and_gets_both_values_when_left_and_right_both_match()
+            {
+                var mockLeftArgumentExpression = CreateArgumentForNullExpression();
+                var mockLeftExpression = CreatNullExpression(mockLeftArgumentExpression, DbExpressionKind.IsNull);
+
+                var mockRightArgumentExpression = CreateArgumentForNullExpression();
+                var mockRightExpression = CreatNullExpression(mockRightArgumentExpression, DbExpressionKind.IsNull);
+
+                var mockBinaryExpression = new Mock<DbBinaryExpression>();
+                mockBinaryExpression.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Or);
+                mockBinaryExpression.Setup(m => m.Left).Returns(mockLeftExpression.Object);
+                mockBinaryExpression.Setup(m => m.Right).Returns(mockRightExpression.Object);
+
+                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+
+                Assert.True(SqlGenerator.HasBuiltMapForIn(mockBinaryExpression.Object, map));
+
+                Assert.Equal(2, map.Keys.Count());
+
+                var leftValues = map.ListForKey(mockLeftArgumentExpression.Object);
+                Assert.Same(mockLeftExpression.Object, leftValues.Single());
+
+                var rightValues = map.ListForKey(mockRightArgumentExpression.Object);
+                Assert.Same(mockRightExpression.Object, rightValues.Single());
+            }
+
+            [Fact]
+            public void HasBuiltMapForIn_for_Or_returns_false_if_left_does_not_match()
+            {
+                var mockBinaryExpression = new Mock<DbBinaryExpression>();
+                mockBinaryExpression.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Or);
+                
+                mockBinaryExpression.Setup(m => m.Left).Returns(
+                    CreatNullExpression(CreateArgumentForNullExpression(), 
+                    DbExpressionKind.Not).Object);
+                
+                mockBinaryExpression.Setup(m => m.Right).Returns(
+                    CreatNullExpression(CreateArgumentForNullExpression(), 
+                    DbExpressionKind.IsNull).Object);
+
+                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+
+                Assert.False(SqlGenerator.HasBuiltMapForIn(mockBinaryExpression.Object, map));
+            }
+
+            [Fact]
+            public void HasBuiltMapForIn_for_Or_returns_false_if_right_does_not_match()
+            {
+                var mockBinaryExpression = new Mock<DbBinaryExpression>();
+                mockBinaryExpression.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Or);
+
+                mockBinaryExpression.Setup(m => m.Left).Returns(
+                    CreatNullExpression(CreateArgumentForNullExpression(), DbExpressionKind.IsNull).Object);
+
+                mockBinaryExpression.Setup(m => m.Right).Returns(
+                    CreatNullExpression(CreateArgumentForNullExpression(), DbExpressionKind.Not).Object);
+
+                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+
+                Assert.False(SqlGenerator.HasBuiltMapForIn(mockBinaryExpression.Object, map));
+            }
+
+            [Fact]
+            public void Top_level_HasBuiltMapForIn_returns_non_null_map_if_recursive_HasBuiltMapForIn_returns_true()
+            {
+                var mockLeftArgumentExpression = CreateArgumentForNullExpression();
+                var mockLeftExpression = CreatNullExpression(mockLeftArgumentExpression, DbExpressionKind.IsNull);
+
+                var mockRightArgumentExpression = CreateArgumentForNullExpression();
+                var mockRightExpression = CreatNullExpression(mockRightArgumentExpression, DbExpressionKind.IsNull);
+
+                var mockBinaryExpression = new Mock<DbOrExpression>();
+                mockBinaryExpression.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Or);
+                mockBinaryExpression.Setup(m => m.Left).Returns(mockLeftExpression.Object);
+                mockBinaryExpression.Setup(m => m.Right).Returns(mockRightExpression.Object);
+
+                var map = SqlGenerator.HasBuiltMapForIn(mockBinaryExpression.Object);
+
+                Assert.Equal(2, map.Keys.Count());
+
+                var leftValues = map.ListForKey(mockLeftArgumentExpression.Object);
+                Assert.Same(mockLeftExpression.Object, leftValues.Single());
+
+                var rightValues = map.ListForKey(mockRightArgumentExpression.Object);
+                Assert.Same(mockRightExpression.Object, rightValues.Single());
+            }
+
+            [Fact]
+            public void Top_level_HasBuiltMapForIn_returns_null_map_if_recursive_HasBuiltMapForIn_returns_false()
+            {
+                var mockBinaryExpression = new Mock<DbOrExpression>();
+                mockBinaryExpression.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Or);
+                
+                mockBinaryExpression.Setup(m => m.Left).Returns(
+                    CreatNullExpression(CreateArgumentForNullExpression(), DbExpressionKind.Not).Object);
+                
+                mockBinaryExpression.Setup(m => m.Right).Returns(
+                    CreatNullExpression(CreateArgumentForNullExpression(), DbExpressionKind.IsNull).Object);
+
+                Assert.Null(SqlGenerator.HasBuiltMapForIn(mockBinaryExpression.Object));
+            }
+
+            private static Mock<DbPropertyExpression> CreateArgumentForNullExpression()
+            {
+                var mockLeftArgumentExpression = CreateMockArgumentExpression(DbExpressionKind.Property);
+                SetupMockArguments(mockLeftArgumentExpression);
+                return mockLeftArgumentExpression;
+            }
+
+            private static Mock<DbIsNullExpression> CreatNullExpression(
+                Mock<DbPropertyExpression> mockLeftArgumentExpression, 
+                DbExpressionKind kind)
+            {
+                var mockLeftExpression = new Mock<DbIsNullExpression>();
+                mockLeftExpression.Setup(m => m.ExpressionKind).Returns(kind);
+                mockLeftExpression.Setup(m => m.Argument).Returns(mockLeftArgumentExpression.Object);
+
+                return mockLeftExpression;
+            }
+        }
+
+        public class ListForKey
+        {
+            [Fact]
+            public void ListForKey_returns_values_for_a_given_key()
+            {
+                var mockKey1 = CreateMockArgumentExpression(DbExpressionKind.Property);
+                SetupMockArguments(mockKey1);
+                var mockKey2 = CreateMockArgumentExpression(DbExpressionKind.Property);
+                SetupMockArguments(mockKey2);
+
+                var values1 = new[] { new Mock<DbExpression>().Object, new Mock<DbExpression>().Object };
+                var values2 = new[] { new Mock<DbExpression>().Object, new Mock<DbExpression>().Object };
+
+                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+                map.Add(mockKey1.Object, values1[0]);
+                map.Add(mockKey1.Object, values1[1]);
+                map.Add(mockKey2.Object, values2[0]);
+                map.Add(mockKey2.Object, values2[1]);
+
+                Assert.Equal(values1, SqlGenerator.ListForKey(map, mockKey1.Object));
+                Assert.Equal(values2, SqlGenerator.ListForKey(map, mockKey2.Object));
+            }
+        }
+
+        private static Mock<DbPropertyExpression> CreateMockArgumentExpression(DbExpressionKind kind)
+        {
+            var mockLeftExpression = new Mock<DbPropertyExpression>();
+            mockLeftExpression.Setup(m => m.ExpressionKind).Returns(kind);
+
+            return mockLeftExpression;
+        }
+
+        private static Mock<DbBinaryExpression> CreateMockBinaryExpression(
+            Mock<DbPropertyExpression> mockLeftExpression,
+            Mock<DbPropertyExpression> mockRightExpression,
+            DbExpressionKind kind)
+        {
+            SetupMockArguments(mockLeftExpression, mockRightExpression);
+
+            var mockBinaryExpression = new Mock<DbBinaryExpression>();
+            mockBinaryExpression.Setup(m => m.ExpressionKind).Returns(kind);
+            mockBinaryExpression.Setup(m => m.Left).Returns(mockLeftExpression.Object);
+            mockBinaryExpression.Setup(m => m.Right).Returns(mockRightExpression.Object);
+
+            return mockBinaryExpression;
+        }
+
+        private static void SetupMockArguments(Mock<DbPropertyExpression> mockLeftExpression, Mock<DbPropertyExpression> mockRightExpression = null)
+        {
+            var mockInstanceExpression = new Mock<DbExpression>();
+            mockInstanceExpression.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.VariableReference);
+
+            var mockEdmMember = new Mock<EdmMember>();
+            mockEdmMember.Setup(m => m.GetHashCode()).Returns(1);
+
+            mockLeftExpression.Setup(m => m.Property).Returns(mockEdmMember.Object);
+            mockLeftExpression.Setup(m => m.Instance).Returns(mockInstanceExpression.Object);
+
+            if (mockRightExpression != null)
+            {
+                mockRightExpression.Setup(m => m.Property).Returns(mockEdmMember.Object);
+                mockRightExpression.Setup(m => m.Instance).Returns(mockInstanceExpression.Object);
+            }
+        }
+
         public class IsConstParamOrNullExpressionUnicodeNotSpecified
         {
             [Fact]

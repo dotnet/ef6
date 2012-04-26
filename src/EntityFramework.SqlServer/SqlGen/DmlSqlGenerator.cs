@@ -471,7 +471,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// Lightweight expression translator for DML expression trees, which have constrained
         /// scope and support.
         /// </summary>
-        private class ExpressionTranslator : BasicExpressionVisitor
+        internal class ExpressionTranslator : BasicExpressionVisitor
         {
             /// <summary>
             /// Initialize a new expression translator populating the given string builder
@@ -500,7 +500,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
             private readonly DbModificationCommandTree _commandTree;
             private readonly List<SqlParameter> _parameters;
             private readonly Dictionary<EdmMember, SqlParameter> _memberValues;
-            private static readonly AliasGenerator s_parameterNames = new AliasGenerator("@", 1000);
             private readonly SqlVersion _version;
 
             internal List<SqlParameter> Parameters
@@ -522,11 +521,16 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 // SqlClient will silently truncate data when SqlParameter.Size < |SqlParameter.Value|.
                 const bool preventTruncation = true;
                 var parameter = SqlProviderServices.CreateSqlParameter(
-                    s_parameterNames.GetName(_parameters.Count), type, ParameterMode.In, value, preventTruncation, _version);
+                    GetParameterName(_parameters.Count), type, ParameterMode.In, value, preventTruncation, _version);
 
                 _parameters.Add(parameter);
 
                 return parameter;
+            }
+
+            internal static string GetParameterName(int index)
+            {
+                return string.Concat("@", index.ToString(CultureInfo.InvariantCulture));
             }
 
             public override void Visit(DbAndExpression expression)
