@@ -35,13 +35,14 @@
         private DbDataReader _dataReader;
         private bool _enableQueryPlanCaching;
         private DbCommand _storeProviderCommand;
+        private EntityDataReaderFactory _entityDataReaderFactory;
 
         #endregion
 
         /// <summary>
         /// Constructs the EntityCommand object not yet associated to a connection object
         /// </summary>
-        internal InternalEntityCommand()
+        public InternalEntityCommand(EntityDataReaderFactory factory = null)
         {
             // Initalize the member field with proper default values
             _designTimeVisible = true;
@@ -53,14 +54,16 @@
             // really nice to read defaults from a global configuration, but we're not 
             // doing that today.  
             _enableQueryPlanCaching = true;
+
+            _entityDataReaderFactory = factory ?? new EntityDataReaderFactory();
         }
 
         /// <summary>
         /// Constructs the EntityCommand object with the given eSQL statement, but not yet associated to a connection object
         /// </summary>
         /// <param name="statement">The eSQL command text to execute</param>
-        internal InternalEntityCommand(string statement)
-            : this()
+        public InternalEntityCommand(string statement, EntityDataReaderFactory factory = null)
+            : this(factory)
         {
             // Assign other member fields from the parameters
             _esqlCommandText = statement;
@@ -71,8 +74,8 @@
         /// </summary>
         /// <param name="statement">The eSQL command text to execute</param>
         /// <param name="connection">The connection object</param>
-        internal InternalEntityCommand(string statement, EntityConnection connection)
-            : this(statement)
+        public InternalEntityCommand(string statement, EntityConnection connection, EntityDataReaderFactory factory = null)
+            : this(statement, factory)
         {
             // Assign other member fields from the parameters
             _connection = connection;
@@ -84,8 +87,8 @@
         /// <param name="statement">The eSQL command text to execute</param>
         /// <param name="connection">The connection object</param>
         /// <param name="transaction">The transaction object this command executes in</param>
-        internal InternalEntityCommand(string statement, EntityConnection connection, EntityTransaction transaction)
-            : this(statement, connection)
+        public InternalEntityCommand(string statement, EntityConnection connection, EntityTransaction transaction, EntityDataReaderFactory factory = null)
+            : this(statement, connection, factory)
         {
             // Assign other member fields from the parameters
             _transaction = transaction;
@@ -95,8 +98,8 @@
         /// Internal constructor used by EntityCommandDefinition
         /// </summary>
         /// <param name="commandDefinition">The prepared command definition that can be executed using this EntityCommand</param>
-        internal InternalEntityCommand(EntityCommandDefinition commandDefinition)
-            : this()
+        internal InternalEntityCommand(EntityCommandDefinition commandDefinition, EntityDataReaderFactory factory = null)
+            : this(factory)
         {
             // Assign other member fields from the parameters
             _commandDefinition = commandDefinition;
@@ -122,8 +125,8 @@
         /// </summary>
         /// <param name="connection">The connection against which this EntityCommand should execute</param>
         /// <param name="commandDefinition">The prepared command definition that can be executed using this EntityCommand</param>
-        internal InternalEntityCommand(EntityConnection connection, EntityCommandDefinition entityCommandDefinition)
-            : this(entityCommandDefinition)
+        internal InternalEntityCommand(EntityConnection connection, EntityCommandDefinition entityCommandDefinition, EntityDataReaderFactory factory = null)
+            : this(entityCommandDefinition, factory)
         {
             _connection = connection;
         }
@@ -137,7 +140,7 @@
         /// <summary>
         /// The connection object used for executing the command
         /// </summary>
-        internal EntityConnection Connection
+        public virtual EntityConnection Connection
         {
             get { return _connection; }
             set
@@ -159,7 +162,7 @@
         /// <summary>
         /// The eSQL statement to execute, only one of the command tree or the command text can be set, not both
         /// </summary>
-        internal string CommandText
+        public virtual string CommandText
         {
             get
             {
@@ -198,7 +201,7 @@
         /// <summary>
         /// The command tree to execute, only one of the command tree or the command text can be set, not both.
         /// </summary>
-        internal DbCommandTree CommandTree
+        public virtual DbCommandTree CommandTree
         {
             get
             {
@@ -243,7 +246,7 @@
         /// <summary>
         /// Get or set the time in seconds to wait for the command to execute
         /// </summary>
-        internal int CommandTimeout
+        public virtual int CommandTimeout
         {
             get
             {
@@ -276,7 +279,7 @@
         /// <summary>
         /// The type of command being executed, only applicable when the command is using an eSQL statement and not the tree
         /// </summary>
-        internal CommandType CommandType
+        public virtual CommandType CommandType
         {
             get { return _commandType; }
             set
@@ -297,7 +300,7 @@
         /// <summary>
         /// The collection of parameters for this command
         /// </summary>
-        internal EntityParameterCollection Parameters
+        public virtual EntityParameterCollection Parameters
         {
             get { return _parameters; }
         }
@@ -305,7 +308,7 @@
         /// <summary>
         /// The transaction object used for executing the command
         /// </summary>
-        internal EntityTransaction Transaction
+        public virtual EntityTransaction Transaction
         {
             get 
             {
@@ -322,7 +325,7 @@
         /// <summary>
         /// Gets or sets how command results are applied to the DataRow when used by the Update method of a DbDataAdapter
         /// </summary>
-        internal UpdateRowSource UpdatedRowSource
+        public virtual UpdateRowSource UpdatedRowSource
         {
             get { return _updatedRowSource; }
             set
@@ -335,7 +338,7 @@
         /// <summary>
         /// Hidden property used by the designers
         /// </summary>
-        internal bool DesignTimeVisible
+        public virtual bool DesignTimeVisible
         {
             get { return _designTimeVisible; }
             set
@@ -349,7 +352,7 @@
         /// <summary>
         /// Enables/Disables query plan caching for this EntityCommand
         /// </summary>
-        internal bool EnablePlanCaching
+        public virtual bool EnablePlanCaching
         {
             get { return _enableQueryPlanCaching; }
             set
@@ -360,15 +363,6 @@
         }
 
         /// <summary>
-        /// Executes the command and returns a data reader for reading the results
-        /// </summary>
-        /// <returns>A data readerobject</returns>
-        internal EntityDataReader ExecuteReader()
-        {
-            return ExecuteReader(CommandBehavior.Default);
-        }
-
-        /// <summary>
         /// Executes the command and returns a data reader for reading the results. May only
         /// be called on CommandType.CommandText (otherwise, use the standard Execute* methods)
         /// </summary>
@@ -376,11 +370,14 @@
         /// <returns>A data readerobject</returns>
         /// <exception cref="InvalidOperationException">For stored procedure commands, if called
         /// for anything but an entity collection result</exception>
-        internal EntityDataReader ExecuteReader(CommandBehavior behavior)
+        public virtual EntityDataReader ExecuteReader(CommandBehavior behavior)
         {
             Prepare(); // prepare the query first
+            var reader = _entityDataReaderFactory.CreateEntityDataReader(
+                this.EntityCommandWrapper, 
+                _commandDefinition.Execute(this.EntityCommandWrapper, behavior),
+                behavior);
 
-            var reader = new EntityDataReader(this.EntityCommandWrapper, _commandDefinition.Execute(this.EntityCommandWrapper, behavior), behavior);
             _dataReader = reader;
             return reader;
         }
@@ -389,7 +386,7 @@
         /// Executes the command and discard any results returned from the command
         /// </summary>
         /// <returns>Number of rows affected</returns>
-        internal int ExecuteNonQuery()
+        public virtual int ExecuteNonQuery()
         {
             return ExecuteScalar(
                 reader =>
@@ -404,7 +401,7 @@
         /// Executes the command and return the first column in the first row of the result, extra results are ignored
         /// </summary>
         /// <returns>The result in the first column in the first row</returns>
-        internal object ExecuteScalar()
+        public virtual object ExecuteScalar()
         {
             return ExecuteScalar(
                 reader =>
@@ -433,7 +430,7 @@
         /// <summary>
         /// Clear out any "compile" state
         /// </summary>
-        internal void Unprepare()
+        internal virtual void Unprepare()
         {
             _commandDefinition = null;
             _preparedCommandTree = null;
@@ -445,7 +442,7 @@
         /// <summary>
         /// Creates a prepared version of this command
         /// </summary>
-        internal void Prepare()
+        public virtual void Prepare()
         {
             ThrowIfDataReaderIsOpen();
             CheckIfReadyToPrepare();
@@ -557,7 +554,7 @@
         /// one constructed, which means it will prepare the command on the client.
         /// </summary>
         /// <returns>the command definition</returns>
-        internal EntityCommandDefinition GetCommandDefinition()
+        internal virtual EntityCommandDefinition GetCommandDefinition()
         {
             var entityCommandDefinition = _commandDefinition;
 
@@ -582,7 +579,7 @@
         /// </summary>
         /// <returns></returns>
         [Browsable(false)]
-        internal string ToTraceString()
+        public virtual string ToTraceString()
         {
             CheckConnectionPresent();
 
@@ -646,12 +643,14 @@
         private EntityCommandDefinition CreateCommandDefinition()
         {
             MakeCommandTree();
+
             // Always check the CQT metadata against the connection metadata (internally, CQT already
             // validates metadata consistency)
             if (!_preparedCommandTree.MetadataWorkspace.IsMetadataWorkspaceCSCompatible(Connection.GetMetadataWorkspace()))
             {
                 throw new InvalidOperationException(Strings.EntityClient_CommandTreeMetadataIncompatible);
             }
+
             var result = EntityProviderServices.CreateCommandDefinition(_connection.StoreProviderFactory, _preparedCommandTree);
             return result;
         }
@@ -678,8 +677,7 @@
             }
 
             // Make sure the connection is not closed or broken
-            if ((_connection.State == ConnectionState.Closed)
-                || (_connection.State == ConnectionState.Broken))
+            if (_connection.State == ConnectionState.Closed || _connection.State == ConnectionState.Broken)
             {
                 var message = Strings.EntityClient_ExecutingOnClosedConnection(
                     _connection.State == ConnectionState.Closed
@@ -705,7 +703,7 @@
         /// collection given by the user.
         /// </summary>
         /// <returns></returns>
-        internal Dictionary<string, TypeUsage> GetParameterTypeUsage()
+        internal virtual Dictionary<string, TypeUsage> GetParameterTypeUsage()
         {
             Debug.Assert(null != _parameters, "_parameters must not be null");
             
@@ -723,8 +721,7 @@
 
                 // Check each parameter to make sure it's an input parameter, currently EntityCommand doesn't support
                 // anything else
-                if (CommandType == CommandType.Text
-                    && parameter.Direction != ParameterDirection.Input)
+                if (CommandType == CommandType.Text && parameter.Direction != ParameterDirection.Input)
                 {
                     throw new InvalidOperationException(Strings.EntityClient_InvalidParameterDirection(parameter.ParameterName));
                 }
@@ -758,7 +755,7 @@
         /// <summary>
         /// Call only when the reader associated with this command is closing. Copies parameter values where necessary.
         /// </summary>
-        internal void NotifyDataReaderClosing()
+        internal virtual void NotifyDataReaderClosing()
         {
             // Disassociating the data reader with this command
             _dataReader = null;
@@ -778,9 +775,20 @@
         /// Tells the EntityCommand about the underlying store provider command in case it needs to pull parameter values
         /// when the reader is closing.
         /// </summary>
-        internal void SetStoreProviderCommand(DbCommand storeProviderCommand)
+        internal virtual void SetStoreProviderCommand(DbCommand storeProviderCommand)
         {
             _storeProviderCommand = storeProviderCommand;
+        }
+
+        /// <summary>
+        /// Class for test purposes only, used to abstract the creation of <see cref="EntityDataReader"/> object.
+        /// </summary>
+        internal class EntityDataReaderFactory
+        {
+            internal virtual EntityDataReader CreateEntityDataReader(EntityCommand entityCommand, DbDataReader storeDataReader, CommandBehavior behavior)
+            {
+                return new EntityDataReader(entityCommand, storeDataReader, behavior);
+            }
         }
     }
 }

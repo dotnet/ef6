@@ -92,6 +92,7 @@
     <Compile Include="CommandLine\_TestHelpers\TwoPropsWithSameSwitch.cs" />
     <Compile Include="CommandLine\_TestHelpers\XCopyCommandArgs.cs" />
     <Compile Include="ConnectionFactoryConfigTests.cs" />
+    <Compile Include="Core\EntityClient\EntityCommandTests.cs" />
     <Compile Include="Core\EntityClient\EntityConnectionTests.cs" />
     <Compile Include="Core\EntityClient\EntityDataReaderTests.cs" />
     <Compile Include="Core\EntityCommandCompilationExceptionTests.cs" />

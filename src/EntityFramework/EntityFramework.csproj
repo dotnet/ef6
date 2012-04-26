@@ -285,6 +285,7 @@
     <Compile Include="Core\EntityClient\EntityTransaction.cs" />
     <Compile Include="Core\EntityClient\Internal\InternalEntityAdapter.cs" />
     <Compile Include="Core\EntityClient\Internal\InternalEntityCommand.cs" />
+    <Compile Include="Core\EntityClient\Internal\InternalEntityCommandDefinition.cs" />
     <Compile Include="Core\EntityClient\Internal\InternalEntityConnection.cs" />
     <Compile Include="Core\EntityClient\Internal\InternalEntityParameter.cs" />
     <Compile Include="Core\EntityClient\Internal\InternalEntityTransaction.cs" />

@@ -368,7 +368,7 @@
         /// <summary>
         /// Gets the DbProviderFactory for the underlying provider
         /// </summary>
-        internal DbProviderFactory StoreProviderFactory
+        internal virtual DbProviderFactory StoreProviderFactory
         {
             get { return _providerFactory; }
         }

@@ -19,8 +19,7 @@ namespace System.Data.Entity.Core.Common.Utils
         /// <param name="reader">reader to consume</param>
         internal static void ConsumeReader(DbDataReader reader)
         {
-            if (null != reader
-                && !reader.IsClosed)
+            if (null != reader && !reader.IsClosed)
             {
                 while (reader.NextResult())
                 {

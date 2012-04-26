@@ -15,7 +15,7 @@
         public class DelegationToInternalClass
         {
             [Fact]
-            public void EntityConnection_properties_delegate_to_internal_class_correctly()
+            public void Properties_delegate_to_internal_class_correctly()
             {
                 VerifyGetter(c => c.ConnectionString, m => m.ConnectionString);
                 VerifySetter(c => c.ConnectionString = default(string), m => m.ConnectionString = It.IsAny<string>());
@@ -27,7 +27,7 @@
             }
 
             [Fact]
-            public void EntityConnection_methods_delegate_to_internal_class_correctly()
+            public void Methods_delegate_to_internal_class_correctly()
             {
                 VerifyMethod(c => c.GetMetadataWorkspace(), m => m.GetMetadataWorkspace());
                 VerifyMethod(c => c.GetMetadataWorkspace(default(bool)), m => m.GetMetadataWorkspace(It.IsAny<bool>()));
