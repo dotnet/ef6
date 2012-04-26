@@ -93,6 +93,7 @@
     <Compile Include="CommandLine\_TestHelpers\XCopyCommandArgs.cs" />
     <Compile Include="ConnectionFactoryConfigTests.cs" />
     <Compile Include="Core\EntityClient\EntityConnectionTests.cs" />
+    <Compile Include="Core\EntityClient\EntityDataReaderTests.cs" />
     <Compile Include="Core\EntityCommandCompilationExceptionTests.cs" />
     <Compile Include="Core\EntityCommandExecutionExceptionTests.cs" />
     <Compile Include="Core\EntityExceptionTests.cs" />

@@ -42,6 +42,13 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
+        /// For test purposes only.
+        /// </summary>
+        internal EntityDataReader()
+        {
+        }
+
+        /// <summary>
         /// Get the depth of nesting for the current row
         /// </summary>
         public override int Depth
@@ -124,6 +131,7 @@ namespace System.Data.Entity.Core.EntityClient
                     // there is nothing to report.
                     return null;
                 }
+
                 return _storeExtendedDataRecord.DataRecordInfo;
             }
         }
@@ -139,12 +147,12 @@ namespace System.Data.Entity.Core.EntityClient
 
                 // Notify the command object that we are closing, so clean up operations such as copying output parameters can be done
                 _command.NotifyDataReaderClosing();
-                if ((_behavior & CommandBehavior.CloseConnection)
-                    == CommandBehavior.CloseConnection)
+                if ((_behavior & CommandBehavior.CloseConnection) == CommandBehavior.CloseConnection)
                 {
                     Debug.Assert(_command.Connection != null);
                     _command.Connection.Close();
                 }
+
                 _command = null;
             }
         }
@@ -445,11 +453,7 @@ namespace System.Data.Entity.Core.EntityClient
             }
             catch (Exception e)
             {
-                if (EntityUtil.IsCatchableExceptionType(e))
-                {
-                    throw new EntityCommandExecutionException(Strings.EntityClient_StoreReaderFailed, e);
-                }
-                throw;
+                throw new EntityCommandExecutionException(Strings.EntityClient_StoreReaderFailed, e);
             }
         }
 
@@ -479,9 +483,11 @@ namespace System.Data.Entity.Core.EntityClient
             if (null == _storeExtendedDataRecord)
             {
                 Debug.Assert(FieldCount == 0, "we have fields but no metadata?");
+            
                 // for a query with no results, any request is out of range...
                 throw new ArgumentOutOfRangeException("i");
             }
+
             return _storeExtendedDataRecord.GetDataRecord(i);
         }
 
