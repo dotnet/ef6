@@ -13,6 +13,9 @@ namespace System.Data.Entity.Migrations.Console
 
     internal class Program
     {
+        private const int ExitCodeSuccess = 0;
+        private const int ExitCodeError = 1;
+
         private readonly Arguments _arguments;
 
         public Program(Arguments arguments)
@@ -20,7 +23,7 @@ namespace System.Data.Entity.Migrations.Console
             _arguments = arguments;
         }
 
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
             Arguments arguments = null;
 
@@ -37,6 +40,8 @@ namespace System.Data.Entity.Migrations.Console
             catch (CommandLineHelpException ex)
             {
                 WriteLine(ex.ArgumentHelp.GetHelpText(Console.BufferWidth));
+
+                return ExitCodeSuccess;
             }
             catch (CommandLineException ex)
             {
@@ -49,6 +54,8 @@ namespace System.Data.Entity.Migrations.Console
                 {
                     WriteError(ex.Message);
                 }
+
+                return ExitCodeError;
             }
             catch (Exception ex)
             {
@@ -59,7 +66,11 @@ namespace System.Data.Entity.Migrations.Console
                 }
 
                 WriteError(ex.Message);
+
+                return ExitCodeError;
             }
+
+            return ExitCodeSuccess;
         }
 
         public void Run()
