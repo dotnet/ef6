@@ -1,10 +1,11 @@
 namespace System.Data.Entity.SqlServer.SqlGen
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Utilities;
+    using System.Data.Entity.SqlServer.Utilities;
     using System.Linq;
     using Moq;
     using Xunit;
@@ -278,12 +279,12 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 var mockRightExpression = CreateMockArgumentExpression(DbExpressionKind.Not);
                 var mockBinaryExpression = CreateMockBinaryExpression(mockLeftExpression, mockRightExpression, DbExpressionKind.Or);
 
-                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+                var map = new Dictionary<DbExpression, IList<DbExpression>>(new SqlGenerator.KeyFieldExpressionComparer());
                 
                 Assert.True(SqlGenerator.TryAddExpressionForIn(mockBinaryExpression.Object, map ));
 
                 Assert.Equal(1, map.Keys.Count());
-                var values = map.ListForKey(mockLeftExpression.Object);
+                var values = map[mockLeftExpression.Object];
                 Assert.Same(mockRightExpression.Object, values.Single());
             }
 
@@ -294,12 +295,12 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 var mockRightExpression = CreateMockArgumentExpression(DbExpressionKind.Property);
                 var mockBinaryExpression = CreateMockBinaryExpression(mockLeftExpression, mockRightExpression, DbExpressionKind.Or);
 
-                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+                var map = new Dictionary<DbExpression, IList<DbExpression>>(new SqlGenerator.KeyFieldExpressionComparer());
 
                 Assert.True(SqlGenerator.TryAddExpressionForIn(mockBinaryExpression.Object, map));
 
                 Assert.Equal(1, map.Keys.Count());
-                var values = map.ListForKey(mockLeftExpression.Object);
+                var values = map[mockLeftExpression.Object];
                 Assert.Same(mockRightExpression.Object, values.Single());
             }
 
@@ -310,12 +311,12 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 var mockRightExpression = CreateMockArgumentExpression(DbExpressionKind.Property);
                 var mockBinaryExpression = CreateMockBinaryExpression(mockLeftExpression, mockRightExpression, DbExpressionKind.Or);
 
-                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+                var map = new Dictionary<DbExpression, IList<DbExpression>>(new SqlGenerator.KeyFieldExpressionComparer());
 
                 Assert.True(SqlGenerator.TryAddExpressionForIn(mockBinaryExpression.Object, map));
 
                 Assert.Equal(1, map.Keys.Count());
-                var values = map.ListForKey(mockRightExpression.Object);
+                var values = map[mockRightExpression.Object];
                 Assert.Same(mockLeftExpression.Object, values.Single());
             }
 
@@ -326,7 +327,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     CreateMockArgumentExpression(DbExpressionKind.Not), 
                     CreateMockArgumentExpression(DbExpressionKind.Not), DbExpressionKind.Or);
 
-                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+                var map = new Dictionary<DbExpression, IList<DbExpression>>(new SqlGenerator.KeyFieldExpressionComparer());
 
                 Assert.False(SqlGenerator.TryAddExpressionForIn(mockBinaryExpression.Object, map));
 
@@ -343,12 +344,12 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 var mockRightExpression = CreateMockArgumentExpression(DbExpressionKind.Property);
                 var mockBinaryExpression = CreateMockBinaryExpression(mockLeftExpression, mockRightExpression, DbExpressionKind.Equals);
 
-                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+                var map = new Dictionary<DbExpression, IList<DbExpression>>(new SqlGenerator.KeyFieldExpressionComparer());
 
                 Assert.True(SqlGenerator.HasBuiltMapForIn(mockBinaryExpression.Object, map));
 
                 Assert.Equal(1, map.Keys.Count());
-                var values = map.ListForKey(mockRightExpression.Object);
+                var values = map[mockRightExpression.Object];
                 Assert.Same(mockLeftExpression.Object, values.Single());
             }
 
@@ -356,12 +357,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
             public void HasBuiltMapForIn_for_equals_returns_false_when_arguments_dont_match()
             {
                 var mockBinaryExpression = CreateMockBinaryExpression(
-                    CreateMockArgumentExpression(DbExpressionKind.Not), 
+                    CreateMockArgumentExpression(DbExpressionKind.Not),
                     CreateMockArgumentExpression(DbExpressionKind.Not), DbExpressionKind.Or);
 
                 Assert.False(
-                    SqlGenerator.HasBuiltMapForIn(mockBinaryExpression.Object, 
-                    new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton)));
+                    SqlGenerator.HasBuiltMapForIn(
+                        mockBinaryExpression.Object,
+                        new Dictionary<DbExpression, IList<DbExpression>>(new SqlGenerator.KeyFieldExpressionComparer())));
             }
 
             [Fact]
@@ -374,12 +376,12 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 mockNullExppression.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.IsNull);
                 mockNullExppression.Setup(m => m.Argument).Returns(mockArgumentExpression.Object);
 
-                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+                var map = new Dictionary<DbExpression, IList<DbExpression>>(new SqlGenerator.KeyFieldExpressionComparer());
 
                 Assert.True(SqlGenerator.HasBuiltMapForIn(mockNullExppression.Object, map));
 
                 Assert.Equal(1, map.Keys.Count());
-                var values = map.ListForKey(mockArgumentExpression.Object);
+                var values = map[mockArgumentExpression.Object];
                 Assert.Same(mockNullExppression.Object, values.Single());
             }
 
@@ -390,7 +392,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 mockNullExppression.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.IsNull);
                 mockNullExppression.Setup(m => m.Argument).Returns(CreateMockArgumentExpression(DbExpressionKind.Not).Object);
 
-                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+                var map = new Dictionary<DbExpression, IList<DbExpression>>(new SqlGenerator.KeyFieldExpressionComparer());
 
                 Assert.False(SqlGenerator.HasBuiltMapForIn(mockNullExppression.Object, map));
             }
@@ -409,16 +411,16 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 mockBinaryExpression.Setup(m => m.Left).Returns(mockLeftExpression.Object);
                 mockBinaryExpression.Setup(m => m.Right).Returns(mockRightExpression.Object);
 
-                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+                var map = new Dictionary<DbExpression, IList<DbExpression>>(new SqlGenerator.KeyFieldExpressionComparer());
 
                 Assert.True(SqlGenerator.HasBuiltMapForIn(mockBinaryExpression.Object, map));
 
                 Assert.Equal(2, map.Keys.Count());
 
-                var leftValues = map.ListForKey(mockLeftArgumentExpression.Object);
+                var leftValues = map[mockLeftArgumentExpression.Object];
                 Assert.Same(mockLeftExpression.Object, leftValues.Single());
 
-                var rightValues = map.ListForKey(mockRightArgumentExpression.Object);
+                var rightValues = map[mockRightArgumentExpression.Object];
                 Assert.Same(mockRightExpression.Object, rightValues.Single());
             }
 
@@ -436,7 +438,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     CreatNullExpression(CreateArgumentForNullExpression(), 
                     DbExpressionKind.IsNull).Object);
 
-                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+                var map = new Dictionary<DbExpression, IList<DbExpression>>(new SqlGenerator.KeyFieldExpressionComparer());
 
                 Assert.False(SqlGenerator.HasBuiltMapForIn(mockBinaryExpression.Object, map));
             }
@@ -453,7 +455,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 mockBinaryExpression.Setup(m => m.Right).Returns(
                     CreatNullExpression(CreateArgumentForNullExpression(), DbExpressionKind.Not).Object);
 
-                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+                var map = new Dictionary<DbExpression, IList<DbExpression>>(new SqlGenerator.KeyFieldExpressionComparer());
 
                 Assert.False(SqlGenerator.HasBuiltMapForIn(mockBinaryExpression.Object, map));
             }
@@ -476,10 +478,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                 Assert.Equal(2, map.Keys.Count());
 
-                var leftValues = map.ListForKey(mockLeftArgumentExpression.Object);
+                var leftValues = map[mockLeftArgumentExpression.Object];
                 Assert.Same(mockLeftExpression.Object, leftValues.Single());
 
-                var rightValues = map.ListForKey(mockRightArgumentExpression.Object);
+                var rightValues = map[mockRightArgumentExpression.Object];
                 Assert.Same(mockRightExpression.Object, rightValues.Single());
             }
 
@@ -530,14 +532,14 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 var values1 = new[] { new Mock<DbExpression>().Object, new Mock<DbExpression>().Object };
                 var values2 = new[] { new Mock<DbExpression>().Object, new Mock<DbExpression>().Object };
 
-                var map = new KeyToListMap<DbExpression, DbExpression>(SqlGenerator.KeyFieldExpressionComparer.Singleton);
+                var map = new Dictionary<DbExpression, IList<DbExpression>>(new SqlGenerator.KeyFieldExpressionComparer());
                 map.Add(mockKey1.Object, values1[0]);
                 map.Add(mockKey1.Object, values1[1]);
                 map.Add(mockKey2.Object, values2[0]);
                 map.Add(mockKey2.Object, values2[1]);
 
-                Assert.Equal(values1, SqlGenerator.ListForKey(map, mockKey1.Object));
-                Assert.Equal(values2, SqlGenerator.ListForKey(map, mockKey2.Object));
+                Assert.Equal(values1, map[mockKey1.Object].ToArray());
+                Assert.Equal(values2, map[mockKey2.Object].ToArray());
             }
         }
 
@@ -570,7 +572,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             mockInstanceExpression.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.VariableReference);
 
             var mockEdmMember = new Mock<EdmMember>();
-            mockEdmMember.Setup(m => m.GetHashCode()).Returns(1);
+            //mockEdmMember.Setup(m => m.GetHashCode()).Returns(1);
 
             mockLeftExpression.Setup(m => m.Property).Returns(mockEdmMember.Object);
             mockLeftExpression.Setup(m => m.Instance).Returns(mockInstanceExpression.Object);

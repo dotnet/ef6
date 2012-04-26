@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
 
@@ -13,6 +14,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// Ensures that all metadata in a given expression tree is from the specified metadata workspace,
     /// potentially rebinding and rebuilding the expressions to appropriate replacement metadata where necessary.
     /// </summary>
+    [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Rebinder")]
     public class DbExpressionRebinder : DefaultExpressionVisitor
     {
         private readonly MetadataWorkspace _metadata;
@@ -45,25 +47,25 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             throw new ArgumentException(Strings.Cqt_Copier_EntityContainerNotFound(entitySet.EntityContainer.Name));
         }
 
-        protected override EdmFunction VisitFunction(EdmFunction function)
+        protected override EdmFunction VisitFunction(EdmFunction functionMetadata)
         {
-            var paramTypes = new List<TypeUsage>(function.Parameters.Count);
-            foreach (var funcParam in function.Parameters)
+            var paramTypes = new List<TypeUsage>(functionMetadata.Parameters.Count);
+            foreach (var funcParam in functionMetadata.Parameters)
             {
                 var mappedParamType = VisitTypeUsage(funcParam.TypeUsage);
                 paramTypes.Add(mappedParamType);
             }
 
             if (DataSpace.SSpace
-                == function.DataSpace)
+                == functionMetadata.DataSpace)
             {
                 EdmFunction foundFunc = null;
                 if (_metadata.TryGetFunction(
-                    function.Name,
-                    function.NamespaceName,
+                    functionMetadata.Name,
+                    functionMetadata.NamespaceName,
                     paramTypes.ToArray(),
                     false /* ignoreCase */,
-                    function.DataSpace,
+                    functionMetadata.DataSpace,
                     out foundFunc)
                     &&
                     foundFunc != null)
@@ -75,7 +77,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             {
                 // Find the function or function import.
                 IList<EdmFunction> candidateFunctions;
-                if (_perspective.TryGetFunctionByName(function.NamespaceName, function.Name, /*ignoreCase:*/ false, out candidateFunctions))
+                if (_perspective.TryGetFunctionByName(functionMetadata.NamespaceName, functionMetadata.Name, /*ignoreCase:*/ false, out candidateFunctions))
                 {
                     Debug.Assert(
                         null != candidateFunctions && candidateFunctions.Count > 0,
@@ -93,7 +95,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                 }
             }
 
-            throw new ArgumentException(Strings.Cqt_Copier_FunctionNotFound(TypeHelpers.GetFullName(function.NamespaceName, function.Name)));
+            throw new ArgumentException(Strings.Cqt_Copier_FunctionNotFound(TypeHelpers.GetFullName(functionMetadata.NamespaceName, functionMetadata.Name)));
         }
 
         protected override EdmType VisitType(EdmType type)

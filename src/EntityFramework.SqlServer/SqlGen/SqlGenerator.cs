@@ -1,8 +1,6 @@
 namespace System.Data.Entity.SqlServer.SqlGen
 {
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial;
@@ -10,6 +8,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.SqlServer.Utilities;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -1895,15 +1894,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
             return VisitBinaryExpression(" OR ", e.ExpressionKind, e.Left, e.Right);
         }
 
-        internal static KeyToListMap<DbExpression, DbExpression> HasBuiltMapForIn(DbOrExpression expression)
+        internal static IDictionary<DbExpression, IList<DbExpression>> HasBuiltMapForIn(DbOrExpression expression)
         {
-            var map = new KeyToListMap<DbExpression, DbExpression>(KeyFieldExpressionComparer.Singleton);
-            return HasBuiltMapForIn(expression, map) && map.Keys.Count() > 0 ? map : null;
-        }
-
-        internal static ReadOnlyCollection<DbExpression> ListForKey(KeyToListMap<DbExpression, DbExpression> map, DbExpression key)
-        {
-            return map.ListForKey(key);
+            var map = new Dictionary<DbExpression, IList<DbExpression>>(new KeyFieldExpressionComparer());
+            
+            // Note that map may not be empty even if HasBuiltMapForIn below returns false, but if
+            // it does return true then map is known to be not empty.
+            return HasBuiltMapForIn(expression, map) ? map : null;
         }
 
         /// <summary>
@@ -1926,7 +1923,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             var firstKey = true;
             foreach (var key in map.Keys)
             {
-                var values = ListForKey(map, key);
+                var values = map[key];
                 if (!firstKey)
                 {
                     sqlBuilder.Append(" OR ");
@@ -2056,8 +2053,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// </summary>
         internal class KeyFieldExpressionComparer : IEqualityComparer<DbExpression>
         {
-            internal static readonly KeyFieldExpressionComparer Singleton = new KeyFieldExpressionComparer();
-
             /// <summary>
             /// Compare two DbExpressions to see if they are equal for the purposes of
             /// our key management. We only support DbPropertyExpression, DbParameterReferenceExpression, 
@@ -2069,11 +2064,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
             /// <returns>True if the types are allowed and equal, false otherwise</returns>
             public bool Equals(DbExpression x, DbExpression y)
             {
-                if (x.ExpressionKind
-                    != y.ExpressionKind)
+                if (x.ExpressionKind != y.ExpressionKind)
                 {
                     return false;
                 }
+
                 switch (x.ExpressionKind)
                 {
                     case DbExpressionKind.Property:
@@ -2083,15 +2078,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
                             return first.Property == second.Property && Equals(first.Instance, second.Instance);
                         }
                     case DbExpressionKind.ParameterReference:
-                        {
-                            var first = (DbParameterReferenceExpression)x;
-                            var second = (DbParameterReferenceExpression)y;
-                            return first.ParameterName == second.ParameterName;
-                        }
+                        return ((DbParameterReferenceExpression)x).ParameterName == ((DbParameterReferenceExpression)y).ParameterName;
+
                     case DbExpressionKind.VariableReference:
-                        {
-                            return x == y;
-                        }
+                        return ReferenceEquals(x, y);
+
                     case DbExpressionKind.Cast:
                         {
                             var first = (DbCastExpression)x;
@@ -2099,6 +2090,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                             return first.ResultType == second.ResultType && Equals(first.Argument, second.Argument);
                         }
                 }
+
                 return false;
             }
 
@@ -2113,25 +2105,19 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 switch (obj.ExpressionKind)
                 {
                     case DbExpressionKind.Property:
-                        {
-                            return ((DbPropertyExpression)obj).Property.GetHashCode();
-                        }
+                        return ((DbPropertyExpression)obj).Property.GetHashCode();
+
                     case DbExpressionKind.ParameterReference:
-                        {
-                            return ((DbParameterReferenceExpression)obj).ParameterName.GetHashCode() ^ Int32.MaxValue;
-                        }
+                        return ((DbParameterReferenceExpression)obj).ParameterName.GetHashCode() ^ Int32.MaxValue;
+
                     case DbExpressionKind.VariableReference:
-                        {
-                            return ((DbVariableReferenceExpression)obj).VariableName.GetHashCode();
-                        }
+                        return ((DbVariableReferenceExpression)obj).VariableName.GetHashCode();
+
                     case DbExpressionKind.Cast:
-                        {
-                            return GetHashCode(((DbCastExpression)obj).Argument);
-                        }
+                        return GetHashCode(((DbCastExpression)obj).Argument);
+
                     default:
-                        {
-                            return obj.GetHashCode();
-                        }
+                        return obj.GetHashCode();
                 }
             }
         }
@@ -2155,18 +2141,20 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <param name="e">DbBinaryExpression to consider</param>
         /// <param name="values">KeyToListMap to add the sides of the binary expression to</param>
         /// <returns>True if the expression was added, false otherwise</returns>
-        internal static bool TryAddExpressionForIn(DbBinaryExpression e, KeyToListMap<DbExpression, DbExpression> values)
+        internal static bool TryAddExpressionForIn(DbBinaryExpression e, IDictionary<DbExpression, IList<DbExpression>> values)
         {
             if (IsKeyForIn(e.Left))
             {
                 values.Add(e.Left, e.Right);
                 return true;
             }
-            else if (IsKeyForIn(e.Right))
+
+            if (IsKeyForIn(e.Right))
             {
                 values.Add(e.Right, e.Left);
                 return true;
             }
+
             return false;
         }
 
@@ -2179,14 +2167,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <param name="values">KeyToListMap to which to add references and value equality tests encountered</param>
         /// <returns>True if this branch contained just equality tests or further OR branches, false otherwise</returns>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
-        internal static bool HasBuiltMapForIn(DbExpression e, KeyToListMap<DbExpression, DbExpression> values)
+        internal static bool HasBuiltMapForIn(DbExpression e, IDictionary<DbExpression, IList<DbExpression>> values)
         {
             switch (e.ExpressionKind)
             {
                 case DbExpressionKind.Equals:
-                    {
-                        return TryAddExpressionForIn((DbBinaryExpression)e, values);
-                    }
+                    return TryAddExpressionForIn((DbBinaryExpression)e, values);
+
                 case DbExpressionKind.IsNull:
                     {
                         var potentialKey = ((DbIsNullExpression)e).Argument;
@@ -2203,9 +2190,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                         return HasBuiltMapForIn(comparisonExpression.Left, values) && HasBuiltMapForIn(comparisonExpression.Right, values);
                     }
                 default:
-                    {
-                        return false;
-                    }
+                    return false;
             }
         }
 

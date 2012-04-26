@@ -133,6 +133,7 @@
       <DependentUpon>Resources.SqlServer.tt</DependentUpon>
     </Compile>
     <Compile Include="SqlGen\DmlSqlGenerator.cs" />
+    <Compile Include="Utilities\IDictionaryExtensions.cs" />
     <Compile Include="SqlGen\ISqlFragment.cs" />
     <Compile Include="SqlGen\JoinSymbol.cs" />
     <Compile Include="SqlGen\OptionalColumn.cs" />

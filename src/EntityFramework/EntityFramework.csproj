@@ -153,8 +153,8 @@
     <Compile Include="Core\Common\CommandTrees\ExpressionBuilder\Internal\EnumerableValidator.cs" />
     <Compile Include="Core\Common\CommandTrees\ExpressionBuilder\Row.cs" />
     <Compile Include="Core\Common\CommandTrees\ExpressionBuilder\Spatial\SpatialEdmFunctions.cs" />
+    <Compile Include="Core\Common\CommandTrees\ExpressionRebinder.cs" />
     <Compile Include="Core\Common\CommandTrees\Internal\DbExpressionRules.cs" />
-    <Compile Include="Core\Common\CommandTrees\Internal\ExpressionCopier.cs" />
     <Compile Include="Core\Common\CommandTrees\Internal\ExpressionDumper.cs" />
     <Compile Include="Core\Common\CommandTrees\Internal\ExpressionKeyGen.cs" />
     <Compile Include="Core\Common\CommandTrees\Internal\ExpressionList.cs" />

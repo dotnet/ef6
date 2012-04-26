@@ -146,6 +146,7 @@
     <Compile Include="SqlServer\SqlGen\DmlSqlGeneratorTests.cs" />
     <Compile Include="SqlServer\SqlGen\SqlFunctionCallHandlerTests.cs" />
     <Compile Include="SqlServer\SqlGen\SqlGeneratorTests.cs" />
+    <Compile Include="SqlServer\Utilities\IDictionaryExtensionsTests.cs" />
     <Compile Include="Utilities\DynamicEqualityComparerLinqIntegrationTests.cs" />
     <Compile Include="Utilities\DynamicEqualityComparerTests.cs" />
     <Compile Include="Migrations\Utilities\EmptyContextTests.cs" />
