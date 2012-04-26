@@ -180,8 +180,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns>True if the row being evaluated is of the requested type; false otherwise.</returns>
             public override PropagatorResult Visit(DbIsOfExpression predicate)
             {
-                Contract.Requires(predicate != null);
-
                 if (DbExpressionKind.IsOfOnly
                     != predicate.ExpressionKind)
                 {
@@ -210,8 +208,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns>True if the values being compared are equivalent; false otherwise.</returns>
             public override PropagatorResult Visit(DbComparisonExpression predicate)
             {
-                Contract.Requires(predicate != null);
-
                 if (DbExpressionKind.Equals
                     == predicate.ExpressionKind)
                 {
@@ -251,8 +247,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns>True if both child predicates are satisfied; false otherwise.</returns>
             public override PropagatorResult Visit(DbAndExpression predicate)
             {
-                Contract.Requires(predicate != null);
-
                 var left = Visit(predicate.Left);
                 var right = Visit(predicate.Right);
                 var leftResult = ConvertResultToBool(left);
@@ -280,8 +274,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns>True if either child predicate is satisfied; false otherwise.</returns>
             public override PropagatorResult Visit(DbOrExpression predicate)
             {
-                Contract.Requires(predicate != null);
-
                 var left = Visit(predicate.Left);
                 var right = Visit(predicate.Right);
                 var leftResult = ConvertResultToBool(left);
@@ -321,8 +313,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns>True of the argument to the 'not' predicate evaluator to false; false otherwise</returns>
             public override PropagatorResult Visit(DbNotExpression predicate)
             {
-                Contract.Requires(predicate != null);
-
                 var child = Visit(predicate.Argument);
                 var childResult = ConvertResultToBool(child);
 

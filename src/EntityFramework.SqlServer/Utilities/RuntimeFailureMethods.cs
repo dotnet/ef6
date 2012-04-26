@@ -1,6 +1,6 @@
 namespace System.Data.Entity.SqlServer.Utilities
 {
-    using System.Data.Entity.Resources;
+    using System.Data.Entity.SqlServer.Resources;
     using System.Diagnostics;
     using System.Text.RegularExpressions;
 

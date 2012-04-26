@@ -5,7 +5,7 @@
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Resources;
+    using System.Data.Entity.SqlServer.Resources;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;

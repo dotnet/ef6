@@ -93,6 +93,10 @@
     <Compile Include="CommandLine\_TestHelpers\XCopyCommandArgs.cs" />
     <Compile Include="ConnectionFactoryConfigTests.cs" />
     <Compile Include="Core\EntityClient\EntityCommandTests.cs" />
+
+    <Compile Include="Core\Common\CommandTrees\BasicExpressionVisitorTests.cs" />
+    <Compile Include="Core\Common\CommandTrees\DbExpressionRebinderTests.cs" />
+    <Compile Include="Core\Common\CommandTrees\DefaultExpressionVisitorTests.cs" />
     <Compile Include="Core\EntityClient\EntityConnectionTests.cs" />
     <Compile Include="Core\EntityClient\EntityDataReaderTests.cs" />
     <Compile Include="Core\EntityCommandCompilationExceptionTests.cs" />
