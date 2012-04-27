@@ -1,5 +1,6 @@
 ﻿namespace System.Data.Entity
 {
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Transactions;
 
@@ -26,7 +27,7 @@
                 databaseExists = context.Database.Exists();
             }
 
-            if (databaseExists)
+            if (databaseExists && new DatabaseTableChecker().AnyModelTableExists(context))
             {
                 // If there is no metadata either in the model or in the databaase, then
                 // we assume that the database matches the model because the common cases for
@@ -38,7 +39,7 @@
             }
             else
             {
-                context.Database.Create();
+                context.Database.Create(skipExistsCheck: true);
                 Seed(context);
                 context.SaveChanges();
             }

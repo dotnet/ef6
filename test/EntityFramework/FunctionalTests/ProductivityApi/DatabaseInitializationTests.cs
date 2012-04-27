@@ -1,13 +1,12 @@
 ﻿namespace ProductivityApiTests
 {
     using System;
-    using System.Data.Entity.Core;
     using System.Data;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity;
-    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Transactions;
     using BadMappingModel;
@@ -63,6 +62,26 @@
             CreateDatabaseIfNotExists<SimpleContextForCreateDatabaseIfNotExists>
         {
             protected override void Seed(SimpleContextForCreateDatabaseIfNotExists context)
+            {
+                context.Categories.Add(new Category("Watchers"));
+            }
+        }
+
+        private class SchemaContextCreateDatabaseIfNotExists : SimpleContextForCreateDatabaseIfNotExists
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                base.OnModelCreating(modelBuilder);
+
+                modelBuilder.Entity<Product>().ToTable("Products", "new");
+                modelBuilder.Entity<Category>().ToTable("Categories", "new");
+            }
+        }
+
+        private class SchemaCreateDatabaseIfNotExists :
+            CreateDatabaseIfNotExists<SchemaContextCreateDatabaseIfNotExists>
+        {
+            protected override void Seed(SchemaContextCreateDatabaseIfNotExists context)
             {
                 context.Categories.Add(new Category("Watchers"));
             }
@@ -501,6 +520,104 @@
                     Assert.NotNull(historyRow.Model);
                     Assert.True(historyRow.MigrationId.EndsWith("InitialCreate"));
                 }
+            }
+        }
+
+        [Fact]
+        public void CreateDatabaseIfNotExists_creates_and_seeds_database_if_empty_database_exists()
+        {
+            Database.Delete(SimpleConnection<SimpleContextForCreateDatabaseIfNotExists>());
+            Database.SetInitializer(new SimpleCreateDatabaseIfNotExists());
+
+            using (var context = new SimpleContextForCreateDatabaseIfNotExists())
+            {
+                // Create empty database
+                using (var emptyContext = new EmptyContext(context.Database.Connection))
+                {
+                    Database.SetInitializer<EmptyContext>(null);
+                    ((IObjectContextAdapter)emptyContext).ObjectContext.CreateDatabase();
+                }
+
+                context.Database.Initialize(force: true);
+
+                // Check that the database is created and seeded
+                Assert.Equal("Watchers", context.Categories.Single().Id);
+            }
+        }
+
+        [Fact]
+        public void CreateDatabaseIfNotExists_does_nothing_if_database_exists_without_metadata_but_with_model_table()
+        {
+            Database.Delete(SimpleConnection<SimpleContextForCreateDatabaseIfNotExists>());
+
+            using (var context = new SimpleContextForCreateDatabaseIfNotExists())
+            {
+                // Create database without metadata
+                Database.SetInitializer<SimpleContextForCreateDatabaseIfNotExists>(null);
+                ((IObjectContextAdapter)context).ObjectContext.CreateDatabase();
+
+                // Add some data
+                context.Categories.Add(new Category("Slayers"));
+                context.SaveChanges();
+
+                Database.SetInitializer(new SimpleCreateDatabaseIfNotExists());
+                context.Database.Initialize(force: true);
+
+                Assert.Equal("Slayers", context.Categories.Single().Id);
+            }
+        }
+
+        [Fact]
+        public void CreateDatabaseIfNotExists_does_nothing_if_database_exists_without_metadata_but_with_model_table_in_nondefault_schema_sql()
+        {
+            Database.Delete(SimpleConnection<SchemaContextCreateDatabaseIfNotExists>());
+
+            using (var context = new SchemaContextCreateDatabaseIfNotExists())
+            {
+                // Create database without metadata
+                Database.SetInitializer<SchemaContextCreateDatabaseIfNotExists>(null);
+                ((IObjectContextAdapter)context).ObjectContext.CreateDatabase();
+
+                // Add some data
+                context.Categories.Add(new Category("Slayers"));
+                context.SaveChanges();
+
+                Database.SetInitializer(new SchemaCreateDatabaseIfNotExists());
+                context.Database.Initialize(force: true);
+
+                Assert.Equal("Slayers", context.Categories.Single().Id);
+            }
+        }
+
+        [Fact(Skip = "No CE Provider")]
+        public void CreateDatabaseIfNotExists_does_nothing_if_database_exists_without_metadata_but_with_model_table_in_nondefault_schema_ce()
+        {
+            var previousConnectionFactory = Database.DefaultConnectionFactory;
+            Database.DefaultConnectionFactory = new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0", AppDomain.CurrentDomain.BaseDirectory, "");
+
+            try
+            {
+                Database.Delete(SimpleCeConnection<SchemaContextCreateDatabaseIfNotExists>());
+
+                using (var context = new SchemaContextCreateDatabaseIfNotExists())
+                {
+                    // Create database without metadata
+                    Database.SetInitializer<SchemaContextCreateDatabaseIfNotExists>(null);
+                    ((IObjectContextAdapter)context).ObjectContext.CreateDatabase();
+
+                    // Add some data
+                    context.Categories.Add(new Category("Slayers"));
+                    context.SaveChanges();
+
+                    Database.SetInitializer(new SchemaCreateDatabaseIfNotExists());
+                    context.Database.Initialize(force: true);
+
+                    Assert.Equal("Slayers", context.Categories.Single().Id);
+                }
+            }
+            finally
+            {
+                Database.DefaultConnectionFactory = previousConnectionFactory;
             }
         }
 

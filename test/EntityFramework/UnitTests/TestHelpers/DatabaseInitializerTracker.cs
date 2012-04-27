@@ -1,8 +1,8 @@
 ﻿namespace System.Data.Entity
 {
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.Core.Objects;
     using System.Text;
     using Moq;
     using Moq.Protected;
@@ -12,7 +12,9 @@
     /// that different database initialization strategies can be tested and the operations that these
     /// strategies perform can be recorded and validated.
     /// </summary>
-    public class DatabaseInitializerTracker<TContext, TInitializer> where TInitializer : class, IDatabaseInitializer<TContext> where TContext : DbContext, new()
+    public class DatabaseInitializerTracker<TContext, TInitializer>
+        where TInitializer : class, IDatabaseInitializer<TContext>
+        where TContext : DbContext, new()
     {
         private readonly StringBuilder _operations = new StringBuilder();
 
@@ -60,6 +62,7 @@
             }).Returns(modelCompatible);
 
             _mockInternalContext.Setup(c => c.CreateObjectContextForDdlOps()).Returns(new Mock<ClonedObjectContext>().Object);
+            _mockInternalContext.SetupGet(c => c.ProviderName).Returns("Dummy.Data.Provider");
 
             _mockStrategy = new Mock<TInitializer> { CallBase = true };
             _mockStrategy.Protected().Setup("Seed", ItExpr.IsAny<TContext>()).Callback(() => _operations.Append("Seed "));

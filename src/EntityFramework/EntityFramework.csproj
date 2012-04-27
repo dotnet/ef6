@@ -837,6 +837,7 @@
     <Compile Include="Internal\ConfigFile\DefaultConnectionFactoryElement.cs" />
     <Compile Include="Internal\ConfigFile\EntityFrameworkSection.cs" />
     <Compile Include="Internal\DatabaseCreator.cs" />
+    <Compile Include="Internal\DatabaseTableChecker.cs" />
     <Compile Include="Internal\EdmMetadataContext.cs" />
     <Compile Include="Internal\EdmMetadataRepository.cs" />
     <Compile Include="Internal\AppConfig.cs" />

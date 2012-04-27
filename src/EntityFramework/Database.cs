@@ -187,9 +187,14 @@
         /// </summary>
         public void Create()
         {
+            Create(skipExistsCheck: false);
+        }
+
+        internal void Create(bool skipExistsCheck)
+        {
             using (var clonedObjectContext = _internalContext.CreateObjectContextForDdlOps())
             {
-                if (_internalContext.DatabaseOperations.Exists(clonedObjectContext.ObjectContext))
+                if (!skipExistsCheck && _internalContext.DatabaseOperations.Exists(clonedObjectContext.ObjectContext))
                 {
                     throw Error.Database_DatabaseAlreadyExists(_internalContext.Connection.Database);
                 }

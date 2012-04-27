@@ -7,6 +7,8 @@
 
     internal class EdmMetadataContext : DbContext
     {
+        public const string TableName = "EdmMetadata";
+
         static EdmMetadataContext()
         {
             Database.SetInitializer<EdmMetadataContext>(null);
@@ -31,7 +33,7 @@
             Contract.Requires(modelConfiguration != null);
 
 #pragma warning disable 612,618
-            modelConfiguration.Entity(typeof(EdmMetadata)).ToTable("EdmMetadata");
+            modelConfiguration.Entity(typeof(EdmMetadata)).ToTable(TableName);
 #pragma warning restore 612,618
         }
     }

@@ -102,7 +102,7 @@
 
             tracker.ExecuteStrategy();
 
-            Assert.Equal("Exists Exists CreateDatabase Seed", tracker.Result);
+            Assert.Equal("Exists CreateDatabase Seed", tracker.Result);
         }
 
         [Fact]
@@ -311,7 +311,7 @@
 
             tracker.Context.Database.Initialize(force: true);
 
-            Assert.Equal("UseTempObjectContext Exists Exists CreateDatabase DisposeTempObjectContext", tracker.Result);
+            Assert.Equal("UseTempObjectContext Exists CreateDatabase DisposeTempObjectContext", tracker.Result);
         }
 
         public class FakeForDisirbcsiwn : DbContext
@@ -703,7 +703,7 @@
         }
 
         #endregion
-        
+
         #region DatabaseCreator tests
 
         [Fact]
@@ -772,7 +772,7 @@
         {
             var mockOperations = new Mock<DatabaseOperations>();
             var mockContext = CreateMockContextForMigrator(mockOperations, codeFirst: false);
-            
+
             new DatabaseCreator().CreateDatabase(
                 mockContext.Object,
                 (config, context) => { Assert.True(false); return null; },
@@ -789,7 +789,7 @@
             var mockOperations = new Mock<DatabaseOperations>();
             var mockContext = CreateMockContextForMigrator(mockOperations);
             mockContext.Setup(m => m.ProviderName).Returns("Some.Other.Provider");
-            
+
             new DatabaseCreator().CreateDatabase(
                 mockContext.Object,
                 (config, context) => { Assert.True(false); return null; },
