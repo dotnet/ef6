@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     [DataContract]
     [Serializable]
-    public sealed class EntityReference<TEntity> : EntityReference
+    public class EntityReference<TEntity> : EntityReference
         where TEntity : class
     {
         // ------
@@ -178,7 +178,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 if (null == refreshedValue
                     || refreshedValue.Count == 0)
                 {
-                    if (!((AssociationType)base.RelationMetadata).IsForeignKey
+                    if (!((AssociationType)RelationMetadata).IsForeignKey
                         && ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One)
                     {
                         //query returned zero related end; one related end was expected.
@@ -194,8 +194,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         {
                             throw new InvalidOperationException(Strings.EntityKey_UnexpectedNull);
                         }
-                        ObjectStateManager.RemoveRelationships(
-                            ObjectContext, mergeOption, (AssociationSet)RelationshipSet, sourceKey, (AssociationEndMember)FromEndProperty);
+                        ObjectContext.ObjectStateManager.RemoveRelationships(mergeOption, (AssociationSet)RelationshipSet, sourceKey, (AssociationEndMember)FromEndMember);
                     }
                     // else this is NoTracking or AppendOnly, and no entity was retrieved by the Load, so there's nothing extra to do
 
@@ -300,7 +299,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     // We have an existing key entry, so just need to add a relationship with it
 
                     // We know the target end of this relationship is 1..1 or 0..1 since it is a reference, so if the source end is also not Many, we have a 1-to-1
-                    if (FromEndProperty.RelationshipMultiplicity
+                    if (FromEndMember.RelationshipMultiplicity
                         != RelationshipMultiplicity.Many)
                     {
                         // before we add a new relationship to this key entry, make sure it's not already related to something else
@@ -333,7 +332,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
                     // We know the target end of this relationship is 1..1 or 0..1 since it is a reference, so if the source end is also not Many, we have a 1-to-1
                     var relatedEnd = wrappedTarget.RelationshipManager.GetRelatedEndInternal(RelationshipName, RelationshipNavigation.From);
-                    if (FromEndProperty.RelationshipMultiplicity != RelationshipMultiplicity.Many
+                    if (FromEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many
                         && !relatedEnd.IsEmpty())
                     {
                         // Make sure the target entity is not already related to something else.
@@ -636,7 +635,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 // PERFORMANCE: ReferentialConstraints collection in typical scenario is very small (1-3 elements)
                 foreach (var constraint in ((AssociationType)RelationMetadata).ReferentialConstraints)
                 {
-                    if (constraint.ToRole == FromEndProperty)
+                    if (constraint.ToRole == FromEndMember)
                     {
                         // Detect circular references
                         if (visited.Contains(_wrappedCachedValue))

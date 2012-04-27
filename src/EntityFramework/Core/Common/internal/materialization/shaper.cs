@@ -743,7 +743,7 @@
             if (associationSet != null)
             {
                 Debug.Assert(associationSet.AssociationSetEnds[sourceMember.Name].EntitySet == sourceEntitySet);
-                ObjectStateManager.RemoveRelationships(Context, MergeOption, associationSet, sourceKey, sourceMember);
+                Context.ObjectStateManager.RemoveRelationships(MergeOption, associationSet, sourceKey, sourceMember);
             }
         }
 

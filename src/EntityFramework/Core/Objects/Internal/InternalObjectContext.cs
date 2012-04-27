@@ -69,6 +69,13 @@
         #region Constructors
 
         /// <summary>
+        /// For test purposes only.
+        /// </summary>
+        internal InternalObjectContext()
+        {
+        }
+
+        /// <summary>
         /// Creates an ObjectContext with the given connection and metadata workspace.
         /// </summary>
         /// <param name="connection">connection to the store</param>
@@ -248,7 +255,7 @@
         /// <summary>
         /// Gets the ObjectStateManager used by this ObjectContext.
         /// </summary>
-        public ObjectStateManager ObjectStateManager
+        public virtual ObjectStateManager ObjectStateManager
         {
             get
             {
@@ -1222,7 +1229,7 @@
         /// Calls to EnsureConnection MUST be matched with a single call to ReleaseConnection.
         /// </summary>
         /// <exception cref="ObjectDisposedException">If the <see cref="ObjectContext"/> instance has been disposed.</exception>
-        internal void EnsureConnection()
+        internal virtual void EnsureConnection()
         {
             if (_connection == null)
             {
