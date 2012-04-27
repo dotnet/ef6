@@ -49,7 +49,6 @@ string outputNamespace = Host.ResolveParameterValue("directiveId", "namespaceDir
 namespace <#= outputNamespace #>.Resources
 {
     using System.CodeDom.Compiler;
-    using System.Data.Entity.Core;
     using System.Globalization;
     using System.Resources;
     using System.Threading;
@@ -158,7 +157,7 @@ namespace <#= outputNamespace #>.Resources
 
         private EntityRes()
         {
-            resources = new ResourceManager("System.Data.Entity.Properties.<#= Path.GetFileNameWithoutExtension(Host.TemplateFile) #>", typeof(System.Data.Entity.DbContext).Assembly);
+            resources = new ResourceManager("System.Data.Entity.SqlServer.Properties.<#= Path.GetFileNameWithoutExtension(Host.TemplateFile) #>", typeof(System.Data.Entity.SqlServer.SqlProviderServices).Assembly);
         }
         
         private static EntityRes GetLoader()

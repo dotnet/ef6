@@ -1,9 +1,8 @@
 namespace System.Data.Entity.SqlServer.SqlGen
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Data.Entity.Resources;
+    using System.Data.Entity.SqlServer.Resources;
 
     /// <summary>
     /// The Sql8ConformanceChecker walks a DbExpression tree and determines whether 

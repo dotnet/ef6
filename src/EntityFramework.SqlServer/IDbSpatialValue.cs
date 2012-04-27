@@ -2,8 +2,8 @@ namespace System.Data.Entity.SqlServer
 {
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.SqlServer.Resources;
 
     /// <summary>
     /// Adapter interface to make working with instances of <see cref="DbGeometry"/> or <see cref="DbGeography"/> easier.  

@@ -1,7 +1,6 @@
 namespace System.Data.Entity.SqlServer
 {
-    using System.Data.Entity.Core;
-    using System.Data.Entity.Resources;
+    using System.Data.Entity.SqlServer.Resources;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Globalization;

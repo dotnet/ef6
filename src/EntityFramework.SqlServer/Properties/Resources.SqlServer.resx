@@ -117,4 +117,117 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ArgumentIsNullOrWhitespace" xml:space="preserve">
+    <value>The argument '{0}' cannot be null, empty or contain only white space.</value>
+    <comment>## ExceptionType=ArgumentException</comment>
+  </data>
+  <data name="PreconditionFailed" xml:space="preserve">
+    <value>The precondition '{0}' failed. {1}</value>
+    <comment>## ExceptionType=ArgumentException</comment>
+  </data>
+  <data name="SqlProvider_GeographyValueNotSqlCompatible" xml:space="preserve">
+    <value>The specified DbGeography value could not be converted to a SQL Server compatible value.</value>
+  </data>
+  <data name="SqlProvider_GeometryValueNotSqlCompatible" xml:space="preserve">
+    <value>The specified DbGeometry value could not be converted to a SQL Server compatible value.</value>
+  </data>
+  <data name="ProviderReturnedNullForGetDbInformation" xml:space="preserve">
+    <value>The provider returned null for the informationType '{0}'.</value>
+  </data>
+  <data name="ProviderDoesNotSupportType" xml:space="preserve">
+    <value>The underlying provider does not support the type '{0}'.</value>
+  </data>
+  <data name="NoStoreTypeForEdmType" xml:space="preserve">
+    <value>There is no store type corresponding to the conceptual side type '{0}' of primitive type '{1}'.</value>
+  </data>
+  <data name="Mapping_Provider_WrongManifestType" xml:space="preserve">
+    <value>The provider manifest given is not of type '{0}'.</value>
+  </data>
+  <data name="ADP_InternalProviderError" xml:space="preserve">
+    <value>Internal .NET Framework Data Provider error {0}.</value>
+  </data>
+  <data name="UnableToDetermineStoreVersion" xml:space="preserve">
+    <value>Could not determine storage version; a valid storage connection or a version hint is required.</value>
+  </data>
+  <data name="SqlProvider_NeedSqlDataReader" xml:space="preserve">
+    <value>Spatial readers can only be produced from readers of type SqlDataReader.   A reader of type {0} was provided.</value>
+  </data>
+  <data name="SqlProvider_Sql2008RequiredForSpatial" xml:space="preserve">
+    <value>Spatial types and functions are only supported by SQL Server 2008 or later.</value>
+  </data>
+  <data name="SqlProvider_SqlTypesAssemblyNotFound" xml:space="preserve">
+    <value>Spatial types and functions are not available for this provider because the assembly 'Microsoft.SqlServer.Types' version 10 or higher could not be found. </value>
+  </data>
+  <data name="SqlProvider_IncompleteCreateDatabase" xml:space="preserve">
+    <value>The database creation succeeded, but the creation of the database objects failed. The consequent attempt to drop the database also failed. See InnerException for details.</value>
+  </data>
+  <data name="SqlProvider_IncompleteCreateDatabaseAggregate" xml:space="preserve">
+    <value>See InnerExceptions for details.</value>
+  </data>
+  <data name="SqlProvider_DdlGeneration_MissingInitialCatalog" xml:space="preserve">
+    <value>Unable to complete operation. The supplied SqlConnection does not specify an initial catalog or AttachDBFileName.</value>
+  </data>
+  <data name="SqlProvider_DdlGeneration_CannotDeleteDatabaseNoInitialCatalog" xml:space="preserve">
+    <value>Unable to delete the database. There is no database that corresponds to the given AttachDBFileName.</value>
+  </data>
+  <data name="SqlProvider_DdlGeneration_CannotTellIfDatabaseExists" xml:space="preserve">
+    <value>A connection to the specified database could not be opened. See InnerException for details. However, there is a database registered with the server that corresponds to the given AttachDbFileName.</value>
+  </data>
+  <data name="SqlProvider_CredentialsMissingForMasterConnection" xml:space="preserve">
+    <value>This operation requires a connection to the 'master' database. Unable to create a connection to the 'master' database because the original database connection has been opened and credentials have been removed from the connection string. Supply an unopened connection.</value>
+  </data>
+  <data name="SqlProvider_InvalidGeographyColumn" xml:space="preserve">
+    <value>Expected a geography value, found a value of type {0}.</value>
+  </data>
+  <data name="SqlProvider_InvalidGeometryColumn" xml:space="preserve">
+    <value>Expected a geometry value, found a value of type {0}.</value>
+  </data>
+  <data name="Mapping_Provider_WrongConnectionType" xml:space="preserve">
+    <value>The connection is not of type '{0}'.</value>
+  </data>
+  <data name="Update_NotSupportedServerGenKey" xml:space="preserve">
+    <value>Store-generated keys are only supported for identity columns. More than one key column is marked as server generated in table '{0}'.</value>
+  </data>
+  <data name="Update_NotSupportedIdentityType" xml:space="preserve">
+    <value>Store-generated keys are only supported for identity columns. Key column '{0}' has type '{1}', which is not a valid type for an identity column.</value>
+  </data>
+  <data name="Update_SqlEntitySetWithoutDmlFunctions" xml:space="preserve">
+    <value>Unable to update the EntitySet '{0}' because it has a DefiningQuery and no &lt;{1}&gt; element exists in the &lt;{2}&gt; element to support the current operation.</value>
+  </data>
+  <data name="Cqt_General_UnsupportedExpression" xml:space="preserve">
+    <value>The expression '{0}' is of an unsupported type. </value>
+  </data>
+  <data name="SqlGen_ApplyNotSupportedOnSql8" xml:space="preserve">
+    <value>The execution of this query requires the APPLY operator, which is not supported in versions of SQL Server earlier than SQL Server 2005.</value>
+  </data>
+  <data name="SqlGen_NiladicFunctionsCannotHaveParameters" xml:space="preserve">
+    <value>Functions listed in the provider manifest that are attributed as NiladicFunction='true' cannot have parameter declarations.</value>
+  </data>
+  <data name="SqlGen_InvalidDatePartArgumentExpression" xml:space="preserve">
+    <value>The DATEPART argument to the '{0}.{1}' function must be a literal string.</value>
+  </data>
+  <data name="SqlGen_InvalidDatePartArgumentValue" xml:space="preserve">
+    <value>'{0}' is not a valid value for the DATEPART argument in the '{1}.{2}' function.</value>
+  </data>
+  <data name="SqlGen_TypedNaNNotSupported" xml:space="preserve">
+    <value>Constant expressions of type {0} with a value of NaN are not supported by SQL Server.</value>
+  </data>
+  <data name="SqlGen_TypedPositiveInfinityNotSupported" xml:space="preserve">
+    <value>Constant expressions of type {0} with a value of {1}.PositiveInfinity are not supported by SQL Server.</value>
+  </data>
+  <data name="SqlGen_TypedNegativeInfinityNotSupported" xml:space="preserve">
+    <value>Constant expressions of type {0} with a value of {1}.NegativeInfinity are not supported by SQL Server.</value>
+  </data>
+  <data name="SqlGen_PrimitiveTypeNotSupportedPriorSql10" xml:space="preserve">
+    <value>There is no store type that maps to the EDM type '{0}' on versions of SQL Server earlier than SQL Server 2008.</value>
+  </data>
+  <data name="SqlGen_CanonicalFunctionNotSupportedPriorSql10" xml:space="preserve">
+    <value>The EDM function '{0}' is not supported on versions of SQL Server earlier than SQL Server 2008.</value>
+  </data>
+  <data name="SqlGen_ParameterForLimitNotSupportedOnSql8" xml:space="preserve">
+    <value>Parameters as arguments to a TOP sub-clause and a LIMIT sub-clause in a query, or a LimitExpression in a command tree, are not supported in versions of SQL Server earlier than SQL Server 2005.</value>
+  </data>
+  <data name="SqlGen_ParameterForSkipNotSupportedOnSql8" xml:space="preserve">
+    <value>Parameters as arguments to a SKIP sub-clause in a query, or a SkipExpression in a command tree, are not supported in versions of SQL Server earlier than SQL Server 2005.</value>
+  </data>
 </root>

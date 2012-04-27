@@ -3294,22 +3294,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "Store-generated keys are only supported for identity columns. More than one key column is marked as server generated in table '{0}'."
-        /// </summary>
-        internal static string Update_NotSupportedServerGenKey(object p0)
-        {
-            return EntityRes.GetString(EntityRes.Update_NotSupportedServerGenKey, p0);
-        }
-
-        /// <summary>
-        /// A string like "Store-generated keys are only supported for identity columns. Key column '{0}' has type '{1}', which is not a valid type for an identity column."
-        /// </summary>
-        internal static string Update_NotSupportedIdentityType(object p0, object p1)
-        {
-            return EntityRes.GetString(EntityRes.Update_NotSupportedIdentityType, p0, p1);
-        }
-
-        /// <summary>
         /// A string like "Modifications to tables where a primary key column has property '{0}' set to '{1}' are not supported. Use '{2}' pattern instead. Key column: '{3}'. Table: '{4}'."
         /// </summary>
         internal static string Update_NotSupportedComputedKeyColumn(object p0, object p1, object p2, object p3, object p4)
@@ -3363,14 +3347,6 @@ namespace System.Data.Entity.Resources
         internal static string Update_ReturnValueHasUnexpectedType(object p0, object p1, object p2, object p3)
         {
             return EntityRes.GetString(EntityRes.Update_ReturnValueHasUnexpectedType, p0, p1, p2, p3);
-        }
-
-        /// <summary>
-        /// A string like "Unable to update the EntitySet '{0}' because it has a DefiningQuery and no <{1}> element exists in the <{2}> element to support the current operation."
-        /// </summary>
-        internal static string Update_SqlEntitySetWithoutDmlFunctions(object p0, object p1, object p2)
-        {
-            return EntityRes.GetString(EntityRes.Update_SqlEntitySetWithoutDmlFunctions, p0, p1, p2);
         }
 
         /// <summary>
@@ -4662,14 +4638,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "Could not determine storage version; a valid storage connection or a version hint is required."
-        /// </summary>
-        internal static string UnableToDetermineStoreVersion
-        {
-            get { return EntityRes.GetString(EntityRes.UnableToDetermineStoreVersion); }
-        }
-
-        /// <summary>
         /// A string like "The parameters of Function '{0}' are converted to conceptual side type '{1}', and the function with the same conceptual side type parameters already exists. Please make sure that function overloads are not ambiguous."
         /// </summary>
         internal static string DuplicatedFunctionoverloads(object p0, object p1)
@@ -5550,14 +5518,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The provider manifest given is not of type '{0}'."
-        /// </summary>
-        internal static string Mapping_Provider_WrongManifestType(object p0)
-        {
-            return EntityRes.GetString(EntityRes.Mapping_Provider_WrongManifestType, p0);
-        }
-
-        /// <summary>
         /// A string like "No views were found in assemblies or could be generated for {0} '{1}'."
         /// </summary>
         internal static string Mapping_Views_For_Extent_Not_Generated(object p0, object p1)
@@ -6331,110 +6291,6 @@ namespace System.Data.Entity.Resources
         internal static string Mapping_FunctionImport_CannotInferTargetFunctionKeys(object p0)
         {
             return EntityRes.GetString(EntityRes.Mapping_FunctionImport_CannotInferTargetFunctionKeys, p0);
-        }
-
-        /// <summary>
-        /// A string like "Unable to complete operation. The supplied SqlConnection does not specify an initial catalog or AttachDBFileName."
-        /// </summary>
-        internal static string SqlProvider_DdlGeneration_MissingInitialCatalog
-        {
-            get { return EntityRes.GetString(EntityRes.SqlProvider_DdlGeneration_MissingInitialCatalog); }
-        }
-
-        /// <summary>
-        /// A string like "Unable to delete the database. There is no database that corresponds to the given AttachDBFileName."
-        /// </summary>
-        internal static string SqlProvider_DdlGeneration_CannotDeleteDatabaseNoInitialCatalog
-        {
-            get { return EntityRes.GetString(EntityRes.SqlProvider_DdlGeneration_CannotDeleteDatabaseNoInitialCatalog); }
-        }
-
-        /// <summary>
-        /// A string like "A connection to the specified database could not be opened. See InnerException for details. However, there is a database registered with the server that corresponds to the given AttachDbFileName."
-        /// </summary>
-        internal static string SqlProvider_DdlGeneration_CannotTellIfDatabaseExists
-        {
-            get { return EntityRes.GetString(EntityRes.SqlProvider_DdlGeneration_CannotTellIfDatabaseExists); }
-        }
-
-        /// <summary>
-        /// A string like "This operation requires a connection to the 'master' database. Unable to create a connection to the 'master' database because the original database connection has been opened and credentials have been removed from the connection string. Supply an unopened connection."
-        /// </summary>
-        internal static string SqlProvider_CredentialsMissingForMasterConnection
-        {
-            get { return EntityRes.GetString(EntityRes.SqlProvider_CredentialsMissingForMasterConnection); }
-        }
-
-        /// <summary>
-        /// A string like "The database creation succeeded, but the creation of the database objects failed. The consequent attempt to drop the database also failed. See InnerException for details."
-        /// </summary>
-        internal static string SqlProvider_IncompleteCreateDatabase
-        {
-            get { return EntityRes.GetString(EntityRes.SqlProvider_IncompleteCreateDatabase); }
-        }
-
-        /// <summary>
-        /// A string like "See InnerExceptions for details."
-        /// </summary>
-        internal static string SqlProvider_IncompleteCreateDatabaseAggregate
-        {
-            get { return EntityRes.GetString(EntityRes.SqlProvider_IncompleteCreateDatabaseAggregate); }
-        }
-
-        /// <summary>
-        /// A string like "Spatial types and functions are not available for this provider because the assembly 'Microsoft.SqlServer.Types' version 10 or higher could not be found. "
-        /// </summary>
-        internal static string SqlProvider_SqlTypesAssemblyNotFound
-        {
-            get { return EntityRes.GetString(EntityRes.SqlProvider_SqlTypesAssemblyNotFound); }
-        }
-
-        /// <summary>
-        /// A string like "Spatial types and functions are only supported by SQL Server 2008 or later."
-        /// </summary>
-        internal static string SqlProvider_Sql2008RequiredForSpatial
-        {
-            get { return EntityRes.GetString(EntityRes.SqlProvider_Sql2008RequiredForSpatial); }
-        }
-
-        /// <summary>
-        /// A string like "The specified DbGeography value could not be converted to a SQL Server compatible value."
-        /// </summary>
-        internal static string SqlProvider_GeographyValueNotSqlCompatible
-        {
-            get { return EntityRes.GetString(EntityRes.SqlProvider_GeographyValueNotSqlCompatible); }
-        }
-
-        /// <summary>
-        /// A string like "The specified DbGeometry value could not be converted to a SQL Server compatible value."
-        /// </summary>
-        internal static string SqlProvider_GeometryValueNotSqlCompatible
-        {
-            get { return EntityRes.GetString(EntityRes.SqlProvider_GeometryValueNotSqlCompatible); }
-        }
-
-        /// <summary>
-        /// A string like "Spatial readers can only be produced from readers of type SqlDataReader.   A reader of type {0} was provided."
-        /// </summary>
-        internal static string SqlProvider_NeedSqlDataReader(object p0)
-        {
-            return EntityRes.GetString(EntityRes.SqlProvider_NeedSqlDataReader, p0);
-        }
-
-        /// <summary>
-        /// A string like "Expected a geography value, found a value of type {0}."
-        /// </summary>
-        internal static string SqlProvider_InvalidGeographyColumn(object p0)
-        {
-            return EntityRes.GetString(EntityRes.SqlProvider_InvalidGeographyColumn, p0);
-        }
-
-        /// <summary>
-        /// A string like "Expected a geometry value, found a value of type {0}."
-        /// </summary>
-        internal static string SqlProvider_InvalidGeometryColumn(object p0)
-        {
-            return EntityRes.GetString(EntityRes.SqlProvider_InvalidGeometryColumn, p0);
         }
 
         /// <summary>
@@ -10350,91 +10206,11 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The execution of this query requires the APPLY operator, which is not supported in versions of SQL Server earlier than SQL Server 2005."
+        /// A string like "The expression '{0}' is of an unsupported type. "
         /// </summary>
-        internal static string SqlGen_ApplyNotSupportedOnSql8
+        internal static string Cqt_General_UnsupportedExpression(object p0)
         {
-            get { return EntityRes.GetString(EntityRes.SqlGen_ApplyNotSupportedOnSql8); }
-        }
-
-        /// <summary>
-        /// A string like "The DATEPART argument to the '{0}.{1}' function must be a literal string."
-        /// </summary>
-        internal static string SqlGen_InvalidDatePartArgumentExpression(object p0, object p1)
-        {
-            return EntityRes.GetString(EntityRes.SqlGen_InvalidDatePartArgumentExpression, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "'{0}' is not a valid value for the DATEPART argument in the '{1}.{2}' function."
-        /// </summary>
-        internal static string SqlGen_InvalidDatePartArgumentValue(object p0, object p1, object p2)
-        {
-            return EntityRes.GetString(EntityRes.SqlGen_InvalidDatePartArgumentValue, p0, p1, p2);
-        }
-
-        /// <summary>
-        /// A string like "Functions listed in the provider manifest that are attributed as NiladicFunction='true' cannot have parameter declarations."
-        /// </summary>
-        internal static string SqlGen_NiladicFunctionsCannotHaveParameters
-        {
-            get { return EntityRes.GetString(EntityRes.SqlGen_NiladicFunctionsCannotHaveParameters); }
-        }
-
-        /// <summary>
-        /// A string like "Parameters as arguments to a TOP sub-clause and a LIMIT sub-clause in a query, or a LimitExpression in a command tree, are not supported in versions of SQL Server earlier than SQL Server 2005."
-        /// </summary>
-        internal static string SqlGen_ParameterForLimitNotSupportedOnSql8
-        {
-            get { return EntityRes.GetString(EntityRes.SqlGen_ParameterForLimitNotSupportedOnSql8); }
-        }
-
-        /// <summary>
-        /// A string like "Parameters as arguments to a SKIP sub-clause in a query, or a SkipExpression in a command tree, are not supported in versions of SQL Server earlier than SQL Server 2005."
-        /// </summary>
-        internal static string SqlGen_ParameterForSkipNotSupportedOnSql8
-        {
-            get { return EntityRes.GetString(EntityRes.SqlGen_ParameterForSkipNotSupportedOnSql8); }
-        }
-
-        /// <summary>
-        /// A string like "There is no store type that maps to the EDM type '{0}' on versions of SQL Server earlier than SQL Server 2008."
-        /// </summary>
-        internal static string SqlGen_PrimitiveTypeNotSupportedPriorSql10(object p0)
-        {
-            return EntityRes.GetString(EntityRes.SqlGen_PrimitiveTypeNotSupportedPriorSql10, p0);
-        }
-
-        /// <summary>
-        /// A string like "The EDM function '{0}' is not supported on versions of SQL Server earlier than SQL Server 2008."
-        /// </summary>
-        internal static string SqlGen_CanonicalFunctionNotSupportedPriorSql10(object p0)
-        {
-            return EntityRes.GetString(EntityRes.SqlGen_CanonicalFunctionNotSupportedPriorSql10, p0);
-        }
-
-        /// <summary>
-        /// A string like "Constant expressions of type {0} with a value of {1}.PositiveInfinity are not supported by SQL Server."
-        /// </summary>
-        internal static string SqlGen_TypedPositiveInfinityNotSupported(object p0, object p1)
-        {
-            return EntityRes.GetString(EntityRes.SqlGen_TypedPositiveInfinityNotSupported, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "Constant expressions of type {0} with a value of {1}.NegativeInfinity are not supported by SQL Server."
-        /// </summary>
-        internal static string SqlGen_TypedNegativeInfinityNotSupported(object p0, object p1)
-        {
-            return EntityRes.GetString(EntityRes.SqlGen_TypedNegativeInfinityNotSupported, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "Constant expressions of type {0} with a value of NaN are not supported by SQL Server."
-        /// </summary>
-        internal static string SqlGen_TypedNaNNotSupported(object p0)
-        {
-            return EntityRes.GetString(EntityRes.SqlGen_TypedNaNNotSupported, p0);
+            return EntityRes.GetString(EntityRes.Cqt_General_UnsupportedExpression, p0);
         }
 
         /// <summary>
@@ -10451,14 +10227,6 @@ namespace System.Data.Entity.Resources
         internal static string Cqt_General_PolymorphicArgRequired(object p0)
         {
             return EntityRes.GetString(EntityRes.Cqt_General_PolymorphicArgRequired, p0);
-        }
-
-        /// <summary>
-        /// A string like "The expression '{0}' is of an unsupported type. "
-        /// </summary>
-        internal static string Cqt_General_UnsupportedExpression(object p0)
-        {
-            return EntityRes.GetString(EntityRes.Cqt_General_UnsupportedExpression, p0);
         }
 
         /// <summary>
@@ -13230,22 +12998,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The underlying provider does not support the type '{0}'."
-        /// </summary>
-        internal static string ProviderDoesNotSupportType(object p0)
-        {
-            return EntityRes.GetString(EntityRes.ProviderDoesNotSupportType, p0);
-        }
-
-        /// <summary>
-        /// A string like "There is no store type corresponding to the conceptual side type '{0}' of primitive type '{1}'."
-        /// </summary>
-        internal static string NoStoreTypeForEdmType(object p0, object p1)
-        {
-            return EntityRes.GetString(EntityRes.NoStoreTypeForEdmType, p0, p1);
-        }
-
-        /// <summary>
         /// A string like "This provider does not support the specified command tree. EntityClient should be used to create a command definition from this command tree."
         /// </summary>
         internal static string ProviderRequiresStoreCommandTree
@@ -15310,8 +15062,6 @@ namespace System.Data.Entity.Resources
         internal const string Update_GeneralExecutionException = "Update_GeneralExecutionException";
         internal const string Update_MissingRequiredEntity = "Update_MissingRequiredEntity";
         internal const string Update_RelationshipCardinalityViolation = "Update_RelationshipCardinalityViolation";
-        internal const string Update_NotSupportedServerGenKey = "Update_NotSupportedServerGenKey";
-        internal const string Update_NotSupportedIdentityType = "Update_NotSupportedIdentityType";
         internal const string Update_NotSupportedComputedKeyColumn = "Update_NotSupportedComputedKeyColumn";
         internal const string Update_AmbiguousServerGenIdentifier = "Update_AmbiguousServerGenIdentifier";
         internal const string Update_WorkspaceMismatch = "Update_WorkspaceMismatch";
@@ -15319,7 +15069,6 @@ namespace System.Data.Entity.Resources
         internal const string Update_MissingResultColumn = "Update_MissingResultColumn";
         internal const string Update_NullReturnValueForNonNullableMember = "Update_NullReturnValueForNonNullableMember";
         internal const string Update_ReturnValueHasUnexpectedType = "Update_ReturnValueHasUnexpectedType";
-        internal const string Update_SqlEntitySetWithoutDmlFunctions = "Update_SqlEntitySetWithoutDmlFunctions";
         internal const string Update_UnableToConvertRowsAffectedParameterToInt32 = "Update_UnableToConvertRowsAffectedParameterToInt32";
         internal const string Update_MappingNotFound = "Update_MappingNotFound";
         internal const string Update_ModifyingIdentityColumn = "Update_ModifyingIdentityColumn";
@@ -15481,7 +15230,6 @@ namespace System.Data.Entity.Resources
         internal const string AtleastOneSSDLNeeded = "AtleastOneSSDLNeeded";
         internal const string InvalidMetadataPath = "InvalidMetadataPath";
         internal const string UnableToResolveAssembly = "UnableToResolveAssembly";
-        internal const string UnableToDetermineStoreVersion = "UnableToDetermineStoreVersion";
         internal const string DuplicatedFunctionoverloads = "DuplicatedFunctionoverloads";
         internal const string EntitySetNotInCSPace = "EntitySetNotInCSPace";
         internal const string TypeNotInEntitySet = "TypeNotInEntitySet";
@@ -15592,7 +15340,6 @@ namespace System.Data.Entity.Resources
         internal const string Mapping_InvalidMappingSchema_validation = "Mapping_InvalidMappingSchema_validation";
         internal const string Mapping_Object_InvalidType = "Mapping_Object_InvalidType";
         internal const string Mapping_Provider_WrongConnectionType = "Mapping_Provider_WrongConnectionType";
-        internal const string Mapping_Provider_WrongManifestType = "Mapping_Provider_WrongManifestType";
         internal const string Mapping_Views_For_Extent_Not_Generated = "Mapping_Views_For_Extent_Not_Generated";
         internal const string Mapping_TableName_QueryView = "Mapping_TableName_QueryView";
         internal const string Mapping_Empty_QueryView = "Mapping_Empty_QueryView";
@@ -15690,19 +15437,6 @@ namespace System.Data.Entity.Resources
         internal const string Mapping_FunctionImport_UnreachableIsTypeOf = "Mapping_FunctionImport_UnreachableIsTypeOf";
         internal const string Mapping_FunctionImport_FunctionAmbiguous = "Mapping_FunctionImport_FunctionAmbiguous";
         internal const string Mapping_FunctionImport_CannotInferTargetFunctionKeys = "Mapping_FunctionImport_CannotInferTargetFunctionKeys";
-        internal const string SqlProvider_DdlGeneration_MissingInitialCatalog = "SqlProvider_DdlGeneration_MissingInitialCatalog";
-        internal const string SqlProvider_DdlGeneration_CannotDeleteDatabaseNoInitialCatalog = "SqlProvider_DdlGeneration_CannotDeleteDatabaseNoInitialCatalog";
-        internal const string SqlProvider_DdlGeneration_CannotTellIfDatabaseExists = "SqlProvider_DdlGeneration_CannotTellIfDatabaseExists";
-        internal const string SqlProvider_CredentialsMissingForMasterConnection = "SqlProvider_CredentialsMissingForMasterConnection";
-        internal const string SqlProvider_IncompleteCreateDatabase = "SqlProvider_IncompleteCreateDatabase";
-        internal const string SqlProvider_IncompleteCreateDatabaseAggregate = "SqlProvider_IncompleteCreateDatabaseAggregate";
-        internal const string SqlProvider_SqlTypesAssemblyNotFound = "SqlProvider_SqlTypesAssemblyNotFound";
-        internal const string SqlProvider_Sql2008RequiredForSpatial = "SqlProvider_Sql2008RequiredForSpatial";
-        internal const string SqlProvider_GeographyValueNotSqlCompatible = "SqlProvider_GeographyValueNotSqlCompatible";
-        internal const string SqlProvider_GeometryValueNotSqlCompatible = "SqlProvider_GeometryValueNotSqlCompatible";
-        internal const string SqlProvider_NeedSqlDataReader = "SqlProvider_NeedSqlDataReader";
-        internal const string SqlProvider_InvalidGeographyColumn = "SqlProvider_InvalidGeographyColumn";
-        internal const string SqlProvider_InvalidGeometryColumn = "SqlProvider_InvalidGeometryColumn";
         internal const string Entity_EntityCantHaveMultipleChangeTrackers = "Entity_EntityCantHaveMultipleChangeTrackers";
         internal const string ComplexObject_NullableComplexTypesNotSupported = "ComplexObject_NullableComplexTypesNotSupported";
         internal const string ComplexObject_ComplexObjectAlreadyAttachedToParent = "ComplexObject_ComplexObjectAlreadyAttachedToParent";
@@ -16192,20 +15926,9 @@ namespace System.Data.Entity.Resources
         internal const string UnknownAstExpressionType = "UnknownAstExpressionType";
         internal const string UnknownBuiltInAstExpressionType = "UnknownBuiltInAstExpressionType";
         internal const string UnknownExpressionResolutionClass = "UnknownExpressionResolutionClass";
-        internal const string SqlGen_ApplyNotSupportedOnSql8 = "SqlGen_ApplyNotSupportedOnSql8";
-        internal const string SqlGen_InvalidDatePartArgumentExpression = "SqlGen_InvalidDatePartArgumentExpression";
-        internal const string SqlGen_InvalidDatePartArgumentValue = "SqlGen_InvalidDatePartArgumentValue";
-        internal const string SqlGen_NiladicFunctionsCannotHaveParameters = "SqlGen_NiladicFunctionsCannotHaveParameters";
-        internal const string SqlGen_ParameterForLimitNotSupportedOnSql8 = "SqlGen_ParameterForLimitNotSupportedOnSql8";
-        internal const string SqlGen_ParameterForSkipNotSupportedOnSql8 = "SqlGen_ParameterForSkipNotSupportedOnSql8";
-        internal const string SqlGen_PrimitiveTypeNotSupportedPriorSql10 = "SqlGen_PrimitiveTypeNotSupportedPriorSql10";
-        internal const string SqlGen_CanonicalFunctionNotSupportedPriorSql10 = "SqlGen_CanonicalFunctionNotSupportedPriorSql10";
-        internal const string SqlGen_TypedPositiveInfinityNotSupported = "SqlGen_TypedPositiveInfinityNotSupported";
-        internal const string SqlGen_TypedNegativeInfinityNotSupported = "SqlGen_TypedNegativeInfinityNotSupported";
-        internal const string SqlGen_TypedNaNNotSupported = "SqlGen_TypedNaNNotSupported";
+        internal const string Cqt_General_UnsupportedExpression = "Cqt_General_UnsupportedExpression";
         internal const string Cqt_General_PolymorphicTypeRequired = "Cqt_General_PolymorphicTypeRequired";
         internal const string Cqt_General_PolymorphicArgRequired = "Cqt_General_PolymorphicArgRequired";
-        internal const string Cqt_General_UnsupportedExpression = "Cqt_General_UnsupportedExpression";
         internal const string Cqt_General_MetadataNotReadOnly = "Cqt_General_MetadataNotReadOnly";
         internal const string Cqt_General_NoProviderBooleanType = "Cqt_General_NoProviderBooleanType";
         internal const string Cqt_General_NoProviderIntegerType = "Cqt_General_NoProviderIntegerType";
@@ -16552,8 +16275,6 @@ namespace System.Data.Entity.Resources
         internal const string ProviderDidNotReturnAProviderManifest = "ProviderDidNotReturnAProviderManifest";
         internal const string ProviderDidNotReturnAProviderManifestToken = "ProviderDidNotReturnAProviderManifestToken";
         internal const string ProviderDidNotReturnSpatialServices = "ProviderDidNotReturnSpatialServices";
-        internal const string ProviderDoesNotSupportType = "ProviderDoesNotSupportType";
-        internal const string NoStoreTypeForEdmType = "NoStoreTypeForEdmType";
         internal const string ProviderRequiresStoreCommandTree = "ProviderRequiresStoreCommandTree";
         internal const string ProviderShouldOverrideEscapeLikeArgument = "ProviderShouldOverrideEscapeLikeArgument";
         internal const string ProviderEscapeLikeArgumentReturnedNull = "ProviderEscapeLikeArgumentReturnedNull";

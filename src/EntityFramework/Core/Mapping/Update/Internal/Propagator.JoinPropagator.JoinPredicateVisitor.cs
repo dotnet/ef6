@@ -110,8 +110,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 /// <returns>Results ignored by this visitor implementation.</returns>
                 public override object Visit(DbAndExpression node)
                 {
-                    Contract.Requires(node != null);
-
                     Visit(node.Left);
                     Visit(node.Right);
 
@@ -125,8 +123,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 /// <returns>Results ignored by this visitor implementation.</returns>
                 public override object Visit(DbComparisonExpression node)
                 {
-                    Contract.Requires(node != null);
-
                     if (DbExpressionKind.Equals
                         == node.ExpressionKind)
                     {

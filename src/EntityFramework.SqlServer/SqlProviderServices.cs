@@ -8,7 +8,7 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Resources;
+    using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.SqlGen;
     using System.Data.SqlClient;
@@ -60,20 +60,6 @@ namespace System.Data.Entity.SqlServer
             var prototype = CreateCommand(providerManifest, commandTree);
             var result = CreateCommandDefinition(prototype);
             return result;
-        }
-
-        /// <summary>
-        /// Create a SqlCommand object given a command tree
-        /// </summary>
-        /// <param name="commandTree">command tree for the statement</param>
-        /// <returns>a command object</returns>
-        internal override DbCommand CreateCommand(DbCommandTree commandTree)
-        {
-            Contract.Requires(commandTree != null);
-            var storeMetadata = (StoreItemCollection)commandTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
-            Debug.Assert(storeMetadata.StoreProviderManifest != null, "StoreItemCollection has null StoreProviderManifest?");
-
-            return CreateCommand(storeMetadata.StoreProviderManifest, commandTree);
         }
 
         /// <summary>

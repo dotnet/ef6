@@ -134,8 +134,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns>Results propagated to the given join expression node.</returns>
         public override ChangeNode Visit(DbJoinExpression node)
         {
-            Contract.Requires(node != null);
-
             if (DbExpressionKind.InnerJoin != node.ExpressionKind
                 && DbExpressionKind.LeftOuterJoin != node.ExpressionKind)
             {
@@ -175,8 +173,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns>Result of propagating changes to this union all node.</returns>
         public override ChangeNode Visit(DbUnionAllExpression node)
         {
-            Contract.Requires(node != null);
-
             // Initialize an empty change node result for the union all node
             var result = BuildChangeNode(node);
 
@@ -213,8 +209,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns>Result of propagating changes to the projection expression node.</returns>
         public override ChangeNode Visit(DbProjectExpression node)
         {
-            Contract.Requires(node != null);
-
             // Initialize an empty change node result for the projection node.
             var result = BuildChangeNode(node);
 
@@ -288,8 +282,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns></returns>
         public override ChangeNode Visit(DbFilterExpression node)
         {
-            Contract.Requires(node != null);
-
             // Initialize an empty change node for this filter node.
             var result = BuildChangeNode(node);
 
@@ -317,8 +309,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns></returns>
         public override ChangeNode Visit(DbScanExpression node)
         {
-            Contract.Requires(node != null);
-
             // Gets modifications requested for this extent from the grouper.
             var extent = node.Target;
             var extentModifications = UpdateTranslator.GetExtentModifications(extent);

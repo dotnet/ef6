@@ -20,6 +20,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         private readonly MetadataWorkspace _metadata;
         private readonly Perspective _perspective;
 
+        internal DbExpressionRebinder()
+        {
+        }
+
         protected DbExpressionRebinder(MetadataWorkspace targetWorkspace)
         {
             Debug.Assert(targetWorkspace != null, "Metadata workspace is null");
@@ -209,8 +213,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbPropertyExpression expression)
         {
-            Contract.Requires(expression != null);
-
             DbExpression result = expression;
             var newInstance = VisitExpression(expression.Instance);
             if (!ReferenceEquals(expression.Instance, newInstance))
