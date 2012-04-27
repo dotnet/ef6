@@ -127,7 +127,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                                 if (relationshipEntry.State != EntityState.Deleted
                                     &&
                                     relationshipEntry.IsSameAssociationSetAndRole(
-                                        (AssociationSet)RelationshipSet, (AssociationEndMember)FromEndProperty, ownerKey))
+                                        (AssociationSet)RelationshipSet, (AssociationEndMember)FromEndMember, ownerKey))
                                 {
                                     Debug.Assert(
                                         attachedKey == null,
@@ -466,7 +466,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 var principalEntitySet = ((AssociationSet)RelationshipSet).AssociationSetEnds[ToEndMember.Name].EntitySet;
                 var principalTypeMetadata = stateManager.GetOrAddStateManagerTypeMetadata(principalEntity.IdentityType, principalEntitySet);
 
-                var dependentEntitySet = ((AssociationSet)RelationshipSet).AssociationSetEnds[FromEndProperty.Name].EntitySet;
+                var dependentEntitySet = ((AssociationSet)RelationshipSet).AssociationSetEnds[FromEndMember.Name].EntitySet;
                 var dependentTypeMetadata = stateManager.GetOrAddStateManagerTypeMetadata(dependentEntity.IdentityType, dependentEntitySet);
 
                 var principalProps = constraint.FromProperties;
@@ -567,7 +567,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             stateManager.TransactionManager.BeginForeignKeyUpdate(this);
             try
             {
-                var dependentEntitySet = ((AssociationSet)RelationshipSet).AssociationSetEnds[FromEndProperty.Name].EntitySet;
+                var dependentEntitySet = ((AssociationSet)RelationshipSet).AssociationSetEnds[FromEndMember.Name].EntitySet;
                 var dependentTypeMetadata = stateManager.GetOrAddStateManagerTypeMetadata(dependentEntity.IdentityType, dependentEntitySet);
 
                 for (var i = 0; i < constraint.FromProperties.Count; i++)
@@ -652,7 +652,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                             var unableToNull = true;
                             var canSetModifiedProps = entry != null
                                                       && (entry.State == EntityState.Modified || entry.State == EntityState.Unchanged);
-                            var dependentEntitySet = ((AssociationSet)RelationshipSet).AssociationSetEnds[FromEndProperty.Name].EntitySet;
+                            var dependentEntitySet = ((AssociationSet)RelationshipSet).AssociationSetEnds[FromEndMember.Name].EntitySet;
                             var dependentTypeMetadata = stateManager.GetOrAddStateManagerTypeMetadata(
                                 WrappedOwner.IdentityType, dependentEntitySet);
 

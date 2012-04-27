@@ -99,6 +99,8 @@
     <Compile Include="Core\EntityCommandExecutionExceptionTests.cs" />
     <Compile Include="Core\EntityExceptionTests.cs" />
     <Compile Include="Core\EntityKeyTests.cs" />
+    <Compile Include="Core\Objects\DataClasses\EntityCollectionTests.cs" />
+    <Compile Include="Core\Objects\DataClasses\EntityReferenceTests.cs" />
     <Compile Include="Migrations\Builders\ColumnBuilderTests.cs" />
     <Compile Include="Migrations\Builders\TableBuilderTests.cs" />
     <Compile Include="Migrations\DbMigrationsConfigurationTests.cs" />

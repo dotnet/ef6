@@ -84,10 +84,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         private RelationshipType _relationMetadata;
 
         [NonSerialized]
-        private RelationshipEndMember _fromEndProperty; //owner end property
+        private RelationshipEndMember _fromEndMember; //owner end property
 
         [NonSerialized]
-        private RelationshipEndMember _toEndProperty;
+        private RelationshipEndMember _toEndMember;
 
         [NonSerialized]
         private string _sourceQuery;
@@ -215,7 +215,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             get { return _wrappedOwner; }
         }
 
-        internal ObjectContext ObjectContext
+        internal virtual ObjectContext ObjectContext
         {
             get { return _context; }
         }
@@ -232,7 +232,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         [SoapIgnore]
         [XmlIgnore]
-        public RelationshipSet RelationshipSet
+        public virtual RelationshipSet RelationshipSet
         {
             get
             {
@@ -241,14 +241,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        internal RelationshipType RelationMetadata
+        internal virtual RelationshipType RelationMetadata
         {
             get { return _relationMetadata; }
         }
 
-        internal RelationshipEndMember ToEndMember
+        internal virtual RelationshipEndMember ToEndMember
         {
-            get { return _toEndProperty; }
+            get { return _toEndMember; }
         }
 
         internal bool UsingNoTracking
@@ -261,9 +261,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             get { return UsingNoTracking ? MergeOption.NoTracking : MergeOption.AppendOnly; }
         }
 
-        internal RelationshipEndMember FromEndProperty
+        internal virtual RelationshipEndMember FromEndMember
         {
-            get { return _fromEndProperty; }
+            get { return _fromEndMember; }
         }
 
         /// <summary>
@@ -375,10 +375,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 Debug.Assert(_relationshipSet.BuiltInTypeKind == BuiltInTypeKind.AssociationSet, "Non-AssociationSet Relationship Set?");
                 var associationMetadata = (AssociationType)_relationMetadata;
 
-                var ownerEntitySet = ((AssociationSet)_relationshipSet).AssociationSetEnds[_fromEndProperty.Name].EntitySet;
-                var targetEntitySet = ((AssociationSet)_relationshipSet).AssociationSetEnds[_toEndProperty.Name].EntitySet;
+                var ownerEntitySet = ((AssociationSet)_relationshipSet).AssociationSetEnds[_fromEndMember.Name].EntitySet;
+                var targetEntitySet = ((AssociationSet)_relationshipSet).AssociationSetEnds[_toEndMember.Name].EntitySet;
 
-                var targetEntityType = MetadataHelper.GetEntityTypeForEnd((AssociationEndMember)_toEndProperty);
+                var targetEntityType = MetadataHelper.GetEntityTypeForEnd((AssociationEndMember)_toEndMember);
                 var ofTypeRequired = false;
                 if (!targetEntitySet.ElementType.EdmEquals(targetEntityType)
                     &&
@@ -405,7 +405,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     var dependentProps = fkConstraint.ToProperties;
                     Debug.Assert(principalProps.Count == dependentProps.Count, "Mismatched foreign key properties?");
 
-                    if (fkConstraint.ToRole.EdmEquals(_toEndProperty))
+                    if (fkConstraint.ToRole.EdmEquals(_toEndMember))
                     {
                         // This related end goes from 'principal' to 'dependent', and has the key of the principal.
                         // In this case it is sufficient to filter the target (dependent) set where the foreign key
@@ -457,7 +457,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         //   P.PrincipalProperty1 = @DependentProperty1 AND ...
                         //
                         Debug.Assert(
-                            fkConstraint.FromRole.EdmEquals(_toEndProperty),
+                            fkConstraint.FromRole.EdmEquals(_toEndMember),
                             "Source query for foreign key association related end is not based on principal or dependent?");
 
                         sourceBuilder = new StringBuilder("SELECT VALUE P FROM ");
@@ -502,7 +502,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     sourceBuilder.Append("].[");
                     sourceBuilder.Append(_relationshipSet.Name);
                     sourceBuilder.Append("] AS x WHERE Key(x.[");
-                    sourceBuilder.Append(_fromEndProperty.Name);
+                    sourceBuilder.Append(_fromEndMember.Name);
                     sourceBuilder.Append("]) = ");
 
                     AppendKeyParameterRow(sourceBuilder, key.GetEntitySet(ObjectContext.MetadataWorkspace).ElementType.KeyMembers);
@@ -512,7 +512,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     AppendEntitySet(sourceBuilder, targetEntitySet, targetEntityType, ofTypeRequired);
 
                     sourceBuilder.Append(" AS [TargetEntity] ON Key([AssociationEntry].[");
-                    sourceBuilder.Append(_toEndProperty.Name);
+                    sourceBuilder.Append(_toEndMember.Name);
                     sourceBuilder.Append("]) = Key(Ref([TargetEntity]))");
                 }
 
@@ -653,7 +653,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// This helps to reduce the complexity of the Load call (SQLBU 524128)
         /// </summary>
         /// <returns>See RelatedEnd.CreateSourceQuery method. This is returned here so we can create it and validate the state before returning it to the caller</returns>
-        internal ObjectQuery<TEntity> ValidateLoad<TEntity>(MergeOption mergeOption, string relatedEndName, out bool hasResults)
+        internal virtual ObjectQuery<TEntity> ValidateLoad<TEntity>(MergeOption mergeOption, string relatedEndName, out bool hasResults)
         {
             var sourceQuery = CreateSourceQuery<TEntity>(mergeOption, out hasResults);
             if (null == sourceQuery)
@@ -760,7 +760,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="setIsLoaded">Indicates whether IsLoaded should be set to true after the Load is complete.
         /// Should be false in cases where we cannot guarantee that the set of entities is complete
         /// and matches the server, such as Attach.</param>
-        internal void Merge<TEntity>(IEnumerable<TEntity> collection, MergeOption mergeOption, bool setIsLoaded)
+        internal virtual void Merge<TEntity>(IEnumerable<TEntity> collection, MergeOption mergeOption, bool setIsLoaded)
         {
             var refreshedCollection = collection as List<IEntityWrapper>;
             if (refreshedCollection == null)
@@ -783,7 +783,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         // Internal version of Merge that works on wrapped entities.
-        internal void Merge<TEntity>(List<IEntityWrapper> collection, MergeOption mergeOption, bool setIsLoaded)
+        internal virtual void Merge<TEntity>(List<IEntityWrapper> collection, MergeOption mergeOption, bool setIsLoaded)
         {
             //Dev note: do not add event firing in Merge API, if it need to be added, add it to the caller
             var sourceKey = _wrappedOwner.EntityKey;
@@ -793,7 +793,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
 
             ObjectStateManager.UpdateRelationships(
-                ObjectContext, mergeOption, (AssociationSet)RelationshipSet, (AssociationEndMember)FromEndProperty, sourceKey, _wrappedOwner,
+                ObjectContext, mergeOption, (AssociationSet)RelationshipSet, (AssociationEndMember)FromEndMember, sourceKey, _wrappedOwner,
                 (AssociationEndMember)ToEndMember, collection, setIsLoaded);
 
             if (setIsLoaded)
@@ -1502,7 +1502,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     // We skip this delete/detach if the entity is being reparented (TransactionManager.EntityBeingReparented)
                     // or if the reference is being nulled as part of fixup in a POCO proxy while setting the FK (InFKSetter).
                     if (null != _context && (deleteEntity ||
-                                             (deleteOwner && CheckCascadeDeleteFlag(_fromEndProperty)) ||
+                                             (deleteOwner && CheckCascadeDeleteFlag(_fromEndMember)) ||
                                              (applyReferentialConstraints && IsPrincipalEndOfReferentialConstraint())) &&
                         !ReferenceEquals(wrappedEntity.Entity, _context.ObjectStateManager.TransactionManager.EntityBeingReparented)
                         &&
@@ -1537,7 +1537,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 // so performance shouldn't be an issue here
                 foreach (var constraint in ((AssociationType)RelationMetadata).ReferentialConstraints)
                 {
-                    if (constraint.ToRole == FromEndProperty)
+                    if (constraint.ToRole == FromEndMember)
                     {
                         if (checkIdentifying)
                         {
@@ -1573,7 +1573,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 // so performance shouldn't be an issue here
                 foreach (var constraint in ((AssociationType)_relationMetadata).ReferentialConstraints)
                 {
-                    if (constraint.FromRole == _fromEndProperty)
+                    if (constraint.FromRole == _fromEndMember)
                     {
                         var entityType = constraint.ToRole.GetEntityType();
                         var allPropertiesAreKeyProperties = CheckIfAllPropertiesAreKeyProperties(
@@ -1694,8 +1694,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
 
                 // There is a possibility that related entity is added to cache but relationship is not added.
-                // Example: Suppose A and B are related. When walking the graph it is possible that 
-                // node B was visited through some relationship other than A-B. 
+            // Example: Suppose A and B are related. When walking the graph it is possible that 
+            // node B was visited through some relationship other than A-B. 
             else if (null == FindRelationshipEntryInObjectStateManager(wrappedEntity))
             {
                 // If we have a reference with a detached key, make sure the key matches the relationship we are about to add
@@ -1837,9 +1837,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     }
                     RemoveEntityFromObjectStateManager(wrappedEntity);
                 }
-                    // There is a possibility that related entity is removed from cache but relationship is not removed.
-                    // Example: Suppose A and B are related. When walking the graph it is possible that 
-                    // node B was visited through some relationship other than A-B. 
+                // There is a possibility that related entity is removed from cache but relationship is not removed.
+                // Example: Suppose A and B are related. When walking the graph it is possible that 
+                // node B was visited through some relationship other than A-B. 
                 else if (!IsForeignKey
                          && null != FindRelationshipEntryInObjectStateManager(wrappedEntity))
                 {
@@ -1880,7 +1880,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 foreach (var constraint in ((AssociationType)RelationMetadata).ReferentialConstraints)
                 {
                     // Check properties in principals
-                    if (constraint.ToRole == FromEndProperty)
+                    if (constraint.ToRole == FromEndMember)
                     {
                         Debug.Assert(this is EntityReference, "Expected reference to principal");
                         EntityKey principalKey;
@@ -1916,7 +1916,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                             return false;
                         }
                     }
-                    else if (constraint.FromRole == FromEndProperty)
+                    else if (constraint.FromRole == FromEndMember)
                     {
                         if (IsEmpty())
                         {
@@ -2083,7 +2083,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             var detachRelationship =
                 ownerEntityState == EntityState.Added ||
-                _fromEndProperty.RelationshipMultiplicity == RelationshipMultiplicity.Many;
+                _fromEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many;
 
             var entityReference = this as EntityReference;
 
@@ -2396,7 +2396,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             {
                 var doCascadeDelete = false;
                 //check for cascade delete flag
-                doCascadeDelete = CheckCascadeDeleteFlag(relatedEnd.FromEndProperty) || relatedEnd.IsPrincipalEndOfReferentialConstraint();
+                doCascadeDelete = CheckCascadeDeleteFlag(relatedEnd.FromEndMember) || relatedEnd.IsPrincipalEndOfReferentialConstraint();
                 //Remove the owner from the related end
                 relatedEnd.Clear(wrappedEntity2, navigation, doCascadeDelete);
             }
@@ -2489,7 +2489,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 var foundFromRelationEnd = false;
                 var foundToRelationEnd = false;
                 foreach (var relationEnd in ((AssociationType)_relationMetadata).AssociationEndMembers)
-                    //Only Association relationship is supported
+                //Only Association relationship is supported
                 {
                     if (relationEnd.Name
                         == _navigation.From)
@@ -2497,7 +2497,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         Debug.Assert(!foundFromRelationEnd, "More than one related end was found with the same role name.");
 
                         foundFromRelationEnd = true;
-                        _fromEndProperty = relationEnd;
+                        _fromEndMember = relationEnd;
                     }
                     if (relationEnd.Name
                         == _navigation.To)
@@ -2505,7 +2505,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         Debug.Assert(!foundToRelationEnd, "More than one related end was found with the same role name.");
 
                         foundToRelationEnd = true;
-                        _toEndProperty = relationEnd;
+                        _toEndMember = relationEnd;
                     }
                 }
                 if (!(foundFromRelationEnd && foundToRelationEnd))
@@ -2596,8 +2596,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             _sourceQuery = null;
             _context = null;
             _relationshipSet = null;
-            _fromEndProperty = null;
-            _toEndProperty = null;
+            _fromEndMember = null;
+            _toEndMember = null;
             _relationMetadata = null;
 
             // Detached entity should have IsLoaded property set to false
@@ -2611,7 +2611,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         /// <param name="query">query of U</param>
         /// <returns></returns>
-        internal static IEnumerable<U> GetResults<U>(ObjectQuery<U> query)
+        internal virtual IEnumerable<U> GetResults<U>(ObjectQuery<U> query)
         {
             return query.Execute(query.MergeOption);
         }
@@ -2630,7 +2630,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // It is not possible to get an EntityReference with a null Owner into the RelationshipManager, and there 
         // is no way to access EntityReference without creating one using the default constructor or going through
         // the RelationshipManager, so we don't need to check this in internal or private methods.
-        internal void CheckOwnerNull()
+        internal virtual void CheckOwnerNull()
         {
             if (_wrappedOwner.Entity == null)
             {

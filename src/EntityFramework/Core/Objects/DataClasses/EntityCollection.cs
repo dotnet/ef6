@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     /// entities participating in a particular relationship.
     /// </summary>
     [Serializable]
-    public sealed class EntityCollection<TEntity> : RelatedEnd, ICollection<TEntity>, IListSource
+    public class EntityCollection<TEntity> : RelatedEnd, ICollection<TEntity>, IListSource
         where TEntity : class
     {
         // ------
@@ -260,7 +260,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="collection">If null, retrieves entities from the server through a query;
         /// otherwise, loads the given collection
         /// </param>
-        internal void Load(List<IEntityWrapper> collection, MergeOption mergeOption)
+        internal virtual void Load(List<IEntityWrapper> collection, MergeOption mergeOption)
         {
             // Validate that the Load is possible
             bool hasResults;

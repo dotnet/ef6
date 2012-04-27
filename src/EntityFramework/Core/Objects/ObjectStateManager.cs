@@ -1063,8 +1063,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="associationSet">AssociationSet for the incoming relationship</param>
         /// <param name="sourceKey">EntityKey of the source entity in the relationship</param>
         /// <param name="sourceMember">Role of the source entity in the relationship</param>
-        internal static void RemoveRelationships(
-            ObjectContext context, MergeOption mergeOption, AssociationSet associationSet,
+        internal virtual void RemoveRelationships(MergeOption mergeOption, AssociationSet associationSet,
             EntityKey sourceKey, AssociationEndMember sourceMember)
         {
             Debug.Assert(
@@ -1076,7 +1075,7 @@ namespace System.Data.Entity.Core.Objects
             // entities on the client, we may need to update those relationships, depending on the MergeOption
             if (mergeOption == MergeOption.OverwriteChanges)
             {
-                foreach (var relationshipEntry in context.ObjectStateManager.FindRelationshipsByKey(sourceKey))
+                foreach (var relationshipEntry in FindRelationshipsByKey(sourceKey))
                 {
                     // We only care about the relationships that match the incoming associationset and role for the source entity
                     if (relationshipEntry.IsSameAssociationSetAndRole(associationSet, sourceMember, sourceKey))
@@ -1088,7 +1087,7 @@ namespace System.Data.Entity.Core.Objects
             else if (mergeOption == MergeOption.PreserveChanges)
             {
                 // Leave any Added relationships for this entity, but remove Unchanged and Deleted ones
-                foreach (var relationshipEntry in context.ObjectStateManager.FindRelationshipsByKey(sourceKey))
+                foreach (var relationshipEntry in FindRelationshipsByKey(sourceKey))
                 {
                     // We only care about the relationships that match the incoming associationset and role for the source entity
                     if (relationshipEntry.IsSameAssociationSetAndRole(associationSet, sourceMember, sourceKey)
@@ -3302,7 +3301,7 @@ namespace System.Data.Entity.Core.Objects
                                     foreach (var constraint in ((AssociationType)reference.RelationMetadata).ReferentialConstraints)
                                     {
                                         if (constraint.ToRole
-                                            == reference.FromEndProperty)
+                                            == reference.FromEndMember)
                                         {
                                             for (var i = 0; i < constraint.FromProperties.Count; ++i)
                                             {
