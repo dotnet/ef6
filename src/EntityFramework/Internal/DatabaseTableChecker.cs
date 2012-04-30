@@ -2,11 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Migrations.History;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Transactions;
 
     internal class DatabaseTableChecker
     {
@@ -40,14 +42,21 @@
                         return true;
                 }
 
-                var modelTables = GetModelTables(context).ToList();
+                var modelTables = GetModelTables(internalContext.ObjectContext.MetadataWorkspace).ToList();
 
                 if (!modelTables.Any())
                 {
                     return true;
                 }
 
-                var databaseTables = GetDatabaseTables(context, provider).ToList();
+                IEnumerable<Tuple<string, string>> databaseTables;
+                using (new TransactionScope(TransactionScopeOption.Suppress))
+                {
+                    using (var clonedObjectContext = internalContext.CreateObjectContextForDdlOps())
+                    {
+                        databaseTables = GetDatabaseTables(clonedObjectContext.Connection, provider).ToList();
+                    }
+                }
 
                 if (databaseTables.Any(t => t.Item2 == HistoryContext.TableName
                     || t.Item2 == EdmMetadataContext.TableName))
@@ -78,9 +87,9 @@
             }
         }
 
-        private static IEnumerable<Tuple<string, string>> GetModelTables(DbContext context)
+        private static IEnumerable<Tuple<string, string>> GetModelTables(MetadataWorkspace workspace)
         {
-            var tables = context.InternalContext.ObjectContext.MetadataWorkspace
+            var tables = workspace
                 .GetItemCollection(DataSpace.SSpace)
                 .GetItems<EntityContainer>()
                 .Single()
@@ -102,10 +111,8 @@
         }
 
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
-        private static IEnumerable<Tuple<string, string>> GetDatabaseTables(DbContext context, IPseudoProvider provider)
+        private static IEnumerable<Tuple<string, string>> GetDatabaseTables(DbConnection connection, IPseudoProvider provider)
         {
-            var connection = context.Database.Connection;
-
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = provider.StoreSchemaTablesQuery;
