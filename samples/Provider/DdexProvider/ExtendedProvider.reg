@@ -16,7 +16,7 @@ Windows Registry Editor Version 5.00
 "Description"="Provider_Description, Microsoft.Samples.VisualStudio.Data.ExtendedProvider.Properties.Resources"
 "DisplayName"="Provider_DisplayName, Microsoft.Samples.VisualStudio.Data.ExtendedProvider.Properties.Resources"
 "InvariantName"="SampleEntityFrameworkProvider"
-"PlatformVersion"="4.0"
+"PlatformVersion"="2.0"
 "ShortDisplayName"="Provider_ShortDisplayName, Microsoft.Samples.VisualStudio.Data.ExtendedProvider.Properties.Resources"
 "Technology"="{77AB9A9D-78B9-4ba7-91AC-873F5338F1D2}"
 
@@ -40,7 +40,7 @@ Windows Registry Editor Version 5.00
 ;
 [%REGROOT%\DataProviders\%PROVIDERGUID%\SupportedObjects\IDSRefBuilder]
 @="Microsoft.VisualStudio.Data.Framework.DSRefBuilder"
-"Assembly"="Microsoft.VisualStudio.Data.Framework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+"Assembly"="Microsoft.VisualStudio.Data.Framework, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
 
 ;
 ; This registry key indicates the existence of an IVsDataAsyncCommand
@@ -62,15 +62,15 @@ Windows Registry Editor Version 5.00
 ;
 [%REGROOT%\DataProviders\%PROVIDERGUID%\SupportedObjects\IVsDataConnectionProperties]
 @="Microsoft.VisualStudio.Data.Framework.AdoDotNet.AdoDotNetConnectionProperties"
-"Assembly"="Microsoft.VisualStudio.Data.Framework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+"Assembly"="Microsoft.VisualStudio.Data.Framework, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
 
 [%REGROOT%\DataProviders\%PROVIDERGUID%\SupportedObjects\IVsDataConnectionSupport]
 @="Microsoft.VisualStudio.Data.Framework.AdoDotNet.AdoDotNetConnectionSupport"
-"Assembly"="Microsoft.VisualStudio.Data.Framework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+"Assembly"="Microsoft.VisualStudio.Data.Framework, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
 
 [%REGROOT%\DataProviders\%PROVIDERGUID%\SupportedObjects\IVsDataConnectionUIProperties]
 @="Microsoft.VisualStudio.Data.Framework.AdoDotNet.AdoDotNetConnectionProperties"
-"Assembly"="Microsoft.VisualStudio.Data.Framework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+"Assembly"="Microsoft.VisualStudio.Data.Framework, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
 
 [%REGROOT%\DataProviders\%PROVIDERGUID%\SupportedObjects\IVsDataMappedObjectConverter]
 
@@ -100,7 +100,7 @@ Windows Registry Editor Version 5.00
 ;
 [%REGROOT%\DataProviders\%PROVIDERGUID%\SupportedObjects\IVsDataObjectSupport]
 @="Microsoft.VisualStudio.Data.Framework.DataObjectSupport"
-"Assembly"="Microsoft.VisualStudio.Data.Framework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+"Assembly"="Microsoft.VisualStudio.Data.Framework, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
 "XmlResource"="Microsoft.Samples.VisualStudio.Data.ExtendedProvider.SqlObjectSupport"
 
 ;
@@ -128,7 +128,7 @@ Windows Registry Editor Version 5.00
 
 [%REGROOT%\DataProviders\%PROVIDERGUID%\SupportedObjects\IVsDataViewSupport]
 @="Microsoft.VisualStudio.Data.Framework.DataViewSupport"
-"Assembly"="Microsoft.VisualStudio.Data.Framework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+"Assembly"="Microsoft.VisualStudio.Data.Framework, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
 "XmlResource"="Microsoft.Samples.VisualStudio.Data.ExtendedProvider.SqlViewSupport"
 
 ;

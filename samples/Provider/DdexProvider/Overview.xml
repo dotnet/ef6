@@ -107,14 +107,14 @@
       Open the <bold>ExtendedProvider.sln</bold> solution.
     </Step>
     <Step>
-      Press F5 to build the sample and register it in the experimental hive,
-      then launch Visual Studio from the experimental hive.
+      Press F5 to build the sample and register it in the experimental instance,
+      then launch Visual Studio from the experimental instance.
     </Step>
     <Step>
       Alternatively, run the <bold>Install.cmd /ranu</bold> script from a
       command line, passing in a Visual Studio registry root (optional) and
       location of the built assembly binary (required). The Visual Studio
-      registry root defaults to the SDK experimental hive.  Exclude the
+      registry root defaults to the SDK experimental instance.  Exclude the
       <bold>/ranu</bold> argument when installing to a non-experimental Visual
       Studio registry hive.
     </Step>

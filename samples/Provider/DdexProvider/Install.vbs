@@ -22,7 +22,7 @@ Sub Main()
    If (ranu = "No") Then
       regRoot = "HKEY_LOCAL_MACHINE\" & regRoot
    Else
-      regRoot = "HKEY_CURRENT_USER\" & regRoot & "\Configuration"
+      regRoot = "HKEY_CURRENT_USER\" & regRoot
    End If
 
    Dim codebase

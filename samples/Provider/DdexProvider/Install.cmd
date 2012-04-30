@@ -6,7 +6,7 @@ ECHO SampleEntityDDEXProvider Installation
 
 SET MYDIR=%~dp0
 SET RANU=No
-SET REGROOT=SOFTWARE\Microsoft\VisualStudio\10.0Exp
+SET REGROOT=SOFTWARE\Microsoft\VisualStudio\11.0Exp_Config
 SET CODEBASE=
 
 :ParseCmdLine
