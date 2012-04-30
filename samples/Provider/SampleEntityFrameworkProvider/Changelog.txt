@@ -68,3 +68,17 @@ Changes in .NET Framework 4 Beta2
 		- Added DDL generation support for DatabaseExists/DeleteDatabase/CreateDatabase
 	Minor code refactoring.
     
+Changes in Entity Framework 5 (.NET Framework 4.5 required)
+    
+	Updated the provider to support features introduced in Entity Framework 5:
+	    - CSDL/MSL/SSDL artifacts moved to version 3.0
+		- Added support for spatial types and functions
+		- Added tests to verify that stored procedures with multiple resultset work with the provider
+		- Added tests to verify that Table Valued Functions work with the provider
+		- Updated schema views to use version 3.0 of MSL and SSDL to enable generating code for TVFs
+
+	Updated DDEX Provider to work with Visual Studio 11
+	
+	ConsoleTests converted to xUnit
+
+	
