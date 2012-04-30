@@ -758,7 +758,6 @@
 
             if (wrappedSource.Entity != null)
             {
-                var sourceKey = wrappedSource.EntityKey;
                 var sourceMember = MetadataHelper.GetOtherAssociationEnd(targetMember);
 
                 RelatedEnd relatedEnd;
@@ -766,8 +765,8 @@
                     wrappedSource, (AssociationType)targetMember.DeclaringType, sourceMember.Name, targetMember.Name, out relatedEnd))
                 {
                     // Add members of the list to the source entity (item in column 0)
-                    var count = ObjectStateManager.UpdateRelationships(
-                        Context, MergeOption, (AssociationSet)relatedEnd.RelationshipSet, sourceMember, sourceKey, wrappedSource,
+                    var count = Context.ObjectStateManager.UpdateRelationships(
+                        Context, MergeOption, (AssociationSet)relatedEnd.RelationshipSet, sourceMember, wrappedSource,
                         targetMember, (List<T_TargetEntity>)spannedEntities, true);
 
                     SetIsLoadedForSpan(relatedEnd, count > 0);

@@ -60,6 +60,8 @@
 
         private ObjectQueryProvider _queryProvider;
 
+        private EntityWrapperFactory _entityWrapperFactory;
+
         private readonly ObjectContextOptions _options = new ObjectContextOptions();
 
         private const string UseLegacyPreserveChangesBehavior = "EntityFramework_UseLegacyPreserveChangesBehavior";
@@ -69,7 +71,7 @@
         #region Constructors
 
         /// <summary>
-        /// For test purposes only.
+        /// Use directly for testing purposes only.
         /// </summary>
         internal InternalObjectContext()
         {
@@ -148,6 +150,8 @@
             {
                 throw new ArgumentNullException("connection");
             }
+
+            _entityWrapperFactory = new EntityWrapperFactory();
 
             _connection = connection;
 
@@ -336,6 +340,11 @@
         }
 
         internal CollectionColumnMap ColumnMapBuilder { get; set; }
+
+        internal virtual EntityWrapperFactory EntityWrapperFactory
+        {
+            get { return _entityWrapperFactory; }
+        }
 
         #endregion
 
@@ -1284,7 +1293,7 @@
 
                 var currentTransaction = Transaction.Current;
 
-                var transactionHasChanged = (null != currentTransaction && !currentTransaction.Equals(_lastTransaction)) || 
+                var transactionHasChanged = (null != currentTransaction && !currentTransaction.Equals(_lastTransaction)) ||
                                             (null != _lastTransaction && !_lastTransaction.Equals(currentTransaction));
 
                 if (transactionHasChanged)
@@ -2691,14 +2700,14 @@
             EntityProxyFactory.TryCreateProxyTypes(
                 types.Select(
                     type =>
-                        {
-                            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
-                            MetadataWorkspace.ImplicitLoadAssemblyForType(type, null);
+                    {
+                        // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+                        MetadataWorkspace.ImplicitLoadAssemblyForType(type, null);
 
-                            EntityType entityType;
-                            ospaceItems.TryGetItem(type.FullName, out entityType);
-                            return entityType;
-                        }).Where(entityType => entityType != null)
+                        EntityType entityType;
+                        ospaceItems.TryGetItem(type.FullName, out entityType);
+                        return entityType;
+                    }).Where(entityType => entityType != null)
                 );
         }
 

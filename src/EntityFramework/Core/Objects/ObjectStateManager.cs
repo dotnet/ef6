@@ -59,13 +59,15 @@ namespace System.Data.Entity.Core.Objects
 
         private bool _isDisposed;
 
+        // materializer instance that can be used to create complex types with just a metadata workspace
         private ComplexTypeMaterializer _complexTypeMaterializer;
-                                        // materializer instance that can be used to create complex types with just a metadata workspace
 
         private readonly Dictionary<EntityKey, HashSet<EntityEntry>> _danglingForeignKeys =
             new Dictionary<EntityKey, HashSet<EntityEntry>>();
 
         private HashSet<EntityEntry> _entriesWithConceptualNulls;
+
+        private EntityWrapperFactory _entityWrapperFactory;
 
         #region Private Fields for ObjectStateEntry change tracking
 
@@ -86,6 +88,7 @@ namespace System.Data.Entity.Core.Objects
             _metadataStore = new Dictionary<EdmType, StateManagerTypeMetadata>();
             _metadataMapping = new Dictionary<EntitySetQualifiedType, StateManagerTypeMetadata>(EntitySetQualifiedType.EqualityComparer);
             _isDisposed = false;
+            _entityWrapperFactory = new EntityWrapperFactory();
             TransactionManager = new TransactionManager();
         }
 
@@ -125,6 +128,11 @@ namespace System.Data.Entity.Core.Objects
         #endregion
 
         internal TransactionManager TransactionManager { get; private set; }
+
+        internal virtual EntityWrapperFactory EntityWrapperFactory
+        {
+            get { return _entityWrapperFactory; }
+        }
 
         /// <summary>
         /// MetadataWorkspace property
@@ -914,11 +922,12 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="targetMember">Role of each targetEntity in associationSet</param>
         /// <param name="targetEntities">List of target entities to use to create relationships with sourceEntity</param>
         /// <param name="setIsLoaded">Tells whether we should allow the IsLoaded flag to be set to true for RelatedEnds</param>
-        internal static int UpdateRelationships(
+        internal virtual int UpdateRelationships(
             ObjectContext context, MergeOption mergeOption, AssociationSet associationSet, AssociationEndMember sourceMember,
-            EntityKey sourceKey, IEntityWrapper wrappedSource, AssociationEndMember targetMember, IList targets, bool setIsLoaded)
+            IEntityWrapper wrappedSource, AssociationEndMember targetMember, IList targets, bool setIsLoaded)
         {
             var count = 0;
+            EntityKey sourceKey = wrappedSource.EntityKey;
 
             context.ObjectStateManager.TransactionManager.BeginGraphUpdate();
             try

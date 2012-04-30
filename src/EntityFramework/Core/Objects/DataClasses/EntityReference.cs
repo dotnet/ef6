@@ -188,7 +188,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     }
                     else
                     {
-                        ReferenceValue = EntityWrapperFactory.NullWrapper;
+                        ReferenceValue = NullEntityWrapper.NullWrapper;
                     }
                 }
                 else
@@ -317,7 +317,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
                 // For unloaded FK relationships in the context we attempt to null FK values here, which will
                 // delete the relationship.
-                RemoveFromLocalCache(EntityWrapperFactory.NullWrapper, resetIsLoaded: true, preserveForeignKey: false);
+                RemoveFromLocalCache(NullEntityWrapper.NullWrapper, resetIsLoaded: true, preserveForeignKey: false);
 
                 return true;
             }

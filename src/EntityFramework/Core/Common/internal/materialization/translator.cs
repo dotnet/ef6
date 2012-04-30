@@ -618,7 +618,7 @@
         private static readonly MethodInfo Translator_TypedCreateInlineDelegate = typeof(Translator).GetMethod(
             "TypedCreateInlineDelegate", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        private static readonly PropertyInfo EntityWrapperFactory_NullWrapper = typeof(EntityWrapperFactory).GetProperty(
+        private static readonly PropertyInfo EntityWrapperFactory_NullWrapper = typeof(NullEntityWrapper).GetProperty(
             "NullWrapper", BindingFlags.Static | BindingFlags.NonPublic);
 
         private static readonly PropertyInfo IEntityWrapper_Entity = typeof(IEntityWrapper).GetProperty("Entity");

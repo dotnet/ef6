@@ -1,13 +1,9 @@
 ﻿namespace System.Data.Entity.Core.Objects.DataClasses
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Core.EntityClient;
-    using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Metadata.Internal;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Resources;
-    using System.Linq;
     using Moq;
     using Xunit;
 
@@ -55,7 +51,7 @@
                 Assert.True(entityReference.IsLoaded);
 
                 var objectContext = entityReference.ObjectContext;
-                var objectStateManagerMock = Mock<ObjectStateManager>.Get(objectContext.ObjectStateManager);
+                var objectStateManagerMock = Mock.Get(objectContext.ObjectStateManager);
 
                 objectStateManagerMock.Verify(m =>
                     m.RemoveRelationships(MergeOption.OverwriteChanges,
@@ -74,7 +70,7 @@
                 Assert.True(entityReference.IsLoaded);
 
                 var objectContext = entityReference.ObjectContext;
-                var objectStateManagerMock = Mock<ObjectStateManager>.Get(objectContext.ObjectStateManager);
+                var objectStateManagerMock = Mock.Get(objectContext.ObjectStateManager);
 
                 objectStateManagerMock.Verify(m =>
                     m.RemoveRelationships(MergeOption.PreserveChanges,
@@ -121,20 +117,6 @@
                 return mockEntityWrapper;
             }
 
-            private static Mock<InternalObjectContext> CreateMockInternalObjectContext()
-            {
-                var internalObjectContextMock = new Mock<InternalObjectContext>(MockBehavior.Strict);
-
-                var internalMetadataWorkspaceMock = new Mock<InternalMetadataWorkspace>(MockBehavior.Strict);
-                var metadataWorkspace = new MetadataWorkspace(internalMetadataWorkspaceMock.Object);
-
-                var objectStateManagerMock = new Mock<ObjectStateManager>(metadataWorkspace);
-
-                internalObjectContextMock.Setup(m => m.ObjectStateManager).Returns(objectStateManagerMock.Object);
-
-                return internalObjectContextMock;
-            }
-
             // Creates an EntityReference mock that passes Load calls to base
             private static Mock<EntityReference<TEntity>> CreateMockEntityReference<TEntity>(TEntity refreshedValue)
                 where TEntity : class
@@ -161,8 +143,7 @@
                 var associationSet = new AssociationSet(name: "associationSetName", associationType: associationType);
                 entityReferenceMock.Setup(m => m.RelationshipSet).Returns(associationSet);
 
-                var objectContext = new ObjectContext(CreateMockInternalObjectContext().Object);
-                entityReferenceMock.Setup(m => m.ObjectContext).Returns(objectContext);
+                entityReferenceMock.Setup(m => m.ObjectContext).Returns(ObjectContextForMock.Create());
 
                 bool hasResults = refreshedValue != null;
                 entityReferenceMock.Setup(m => m.ValidateLoad<TEntity>(It.IsAny<MergeOption>(), It.IsAny<string>(), out hasResults))

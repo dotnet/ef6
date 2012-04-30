@@ -47,13 +47,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         public EntityReference()
         {
-            _wrappedCachedValue = EntityWrapperFactory.NullWrapper;
+            _wrappedCachedValue = NullEntityWrapper.NullWrapper;
         }
 
         internal EntityReference(IEntityWrapper wrappedOwner, RelationshipNavigation navigation, IRelationshipFixer relationshipFixer)
             : base(wrappedOwner, navigation, relationshipFixer)
         {
-            _wrappedCachedValue = EntityWrapperFactory.NullWrapper;
+            _wrappedCachedValue = NullEntityWrapper.NullWrapper;
         }
 
         // ----------
@@ -103,7 +103,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     // Note that this is only done for the case where we are not setting the ref to null because
                     // clearing a ref is okay--it will cause the dependent to become deleted/detached.
                     ValidateOwnerWithRIConstraints(
-                        value, value == EntityWrapperFactory.NullWrapper ? null : value.EntityKey, checkBothEnds: true);
+                        value, value == NullEntityWrapper.NullWrapper ? null : value.EntityKey, checkBothEnds: true);
                     var context = ObjectContext ?? value.Context;
                     if (context != null)
                     {
@@ -472,7 +472,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             if (wrappedEntity == null)
             {
-                wrappedEntity = EntityWrapperFactory.NullWrapper;
+                wrappedEntity = NullEntityWrapper.NullWrapper;
             }
             if (null != _wrappedCachedValue.Entity)
             {
@@ -585,7 +585,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 null == _wrappedCachedValue.Entity || wrappedEntity.Entity == _wrappedCachedValue.Entity,
                 "The specified object is not a part of this relationship.");
 
-            _wrappedCachedValue = EntityWrapperFactory.NullWrapper;
+            _wrappedCachedValue = NullEntityWrapper.NullWrapper;
             _cachedValue = null;
 
             if (resetIsLoaded)

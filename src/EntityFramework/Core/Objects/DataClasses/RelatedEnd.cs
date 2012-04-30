@@ -19,7 +19,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     /// Base class for EntityCollection and EntityReference
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     [DataContract]
     [Serializable]
     public abstract class RelatedEnd : IRelatedEnd
@@ -33,7 +32,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         internal RelatedEnd()
         {
-            _wrappedOwner = EntityWrapperFactory.NullWrapper;
+            _wrappedOwner = NullEntityWrapper.NullWrapper;
         }
 
         internal RelatedEnd(IEntityWrapper wrappedOwner, RelationshipNavigation navigation, IRelationshipFixer relationshipFixer)
@@ -103,6 +102,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         [NonSerialized]
         private IEntityWrapper _wrappedOwner;
+
+        [NonSerialized]
+        private EntityWrapperFactory _entityWrapperFactory;
 
         // ------
         // Events
@@ -180,7 +182,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         [SoapIgnore]
         [XmlIgnore]
-        public string SourceRoleName
+        public virtual string SourceRoleName
         {
             get
             {
@@ -194,7 +196,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         [SoapIgnore]
         [XmlIgnore]
-        public string TargetRoleName
+        public virtual string TargetRoleName
         {
             get
             {
@@ -210,7 +212,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return CreateSourceQueryInternal();
         }
 
-        internal IEntityWrapper WrappedOwner
+        internal virtual IEntityWrapper WrappedOwner
         {
             get { return _wrappedOwner; }
         }
@@ -220,9 +222,16 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             get { return _context; }
         }
 
-        internal virtual void BulkDeleteAll(List<object> list)
+        internal virtual EntityWrapperFactory EntityWrapperFactory
         {
-            throw new NotSupportedException();
+            get
+            {
+                if (_entityWrapperFactory == null)
+                {
+                    _entityWrapperFactory = new EntityWrapperFactory();
+                }
+                return _entityWrapperFactory;
+            }
         }
 
         /// <summary>
@@ -716,7 +725,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         internal void DeferredLoad()
         {
-            if (_wrappedOwner != null && _wrappedOwner != EntityWrapperFactory.NullWrapper &&
+            if (_wrappedOwner != null && _wrappedOwner != NullEntityWrapper.NullWrapper &&
                 !IsLoaded &&
                 _context != null &&
                 _context.ContextOptions.LazyLoadingEnabled &&
@@ -762,6 +771,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// and matches the server, such as Attach.</param>
         internal virtual void Merge<TEntity>(IEnumerable<TEntity> collection, MergeOption mergeOption, bool setIsLoaded)
         {
+            Contract.Requires(collection != null);
+
             var refreshedCollection = collection as List<IEntityWrapper>;
             if (refreshedCollection == null)
             {
@@ -786,14 +797,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         internal virtual void Merge<TEntity>(List<IEntityWrapper> collection, MergeOption mergeOption, bool setIsLoaded)
         {
             //Dev note: do not add event firing in Merge API, if it need to be added, add it to the caller
-            var sourceKey = _wrappedOwner.EntityKey;
-            if ((object)sourceKey == null)
+            if (WrappedOwner.EntityKey == null)
             {
                 throw new InvalidOperationException(Strings.EntityKey_UnexpectedNull);
             }
 
-            ObjectStateManager.UpdateRelationships(
-                ObjectContext, mergeOption, (AssociationSet)RelationshipSet, (AssociationEndMember)FromEndMember, sourceKey, _wrappedOwner,
+            ObjectContext.ObjectStateManager.UpdateRelationships(
+                ObjectContext, mergeOption, (AssociationSet)RelationshipSet, (AssociationEndMember)FromEndMember, WrappedOwner,
                 (AssociationEndMember)ToEndMember, collection, setIsLoaded);
 
             if (setIsLoaded)
@@ -1081,7 +1091,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 return DisconnectedRemove(wrappedEntity);
             }
         }
-
+        
         internal abstract void DisconnectedAdd(IEntityWrapper wrappedEntity);
         internal abstract bool DisconnectedRemove(IEntityWrapper wrappedEntity);
 
@@ -2452,6 +2462,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 // if the source isn't null, clear it
                 _sourceQuery = null;
                 _context = context;
+                _entityWrapperFactory = context.EntityWrapperFactory;
                 _usingNoTracking = (mergeOption == MergeOption.NoTracking);
 
                 EdmType relationshipType;
@@ -2651,7 +2662,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         internal void SetWrappedOwner(IEntityWrapper wrappedOwner)
         {
-            _wrappedOwner = wrappedOwner != null ? wrappedOwner : EntityWrapperFactory.NullWrapper;
+            _wrappedOwner = wrappedOwner != null ? wrappedOwner : NullEntityWrapper.NullWrapper;
 #pragma warning disable 612 // Disable "obsolete" warning for the _owner field. Used for backwards compatibility.
             _owner = wrappedOwner.Entity as IEntityWithRelationships;
 #pragma warning restore 612

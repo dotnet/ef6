@@ -30,6 +30,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // See comments on that method for more details.
         private RelationshipManager()
         {
+            _entityWrapperFactory = new EntityWrapperFactory();
         }
 
         // ------
@@ -53,6 +54,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         [NonSerialized]
         private IEntityWrapper _wrappedOwner;
 
+        [NonSerialized]
+        private EntityWrapperFactory _entityWrapperFactory;
+        
         // ----------
         // Properties
         // ----------
@@ -105,6 +109,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 }
                 return _wrappedOwner;
             }
+        }
+
+        internal virtual EntityWrapperFactory EntityWrapperFactory
+        {
+            get { return _entityWrapperFactory; }
         }
 
         // -------

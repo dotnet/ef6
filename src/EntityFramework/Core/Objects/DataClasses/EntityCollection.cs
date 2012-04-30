@@ -126,15 +126,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // IListSource  Properties
         // ----------------------
         /// <summary>
-        ///   IListSource.ContainsListCollection implementation. Always returns true
+        ///   IListSource.ContainsListCollection implementation. Always returns false.
+        ///   This means that the IList we return is the one which contains our actual data,
+        ///   it is not a list of collections.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IListSource.ContainsListCollection
         {
-            get
-            {
-                return false; // this means that the IList we return is the one which contains our actual data, it is not a collection
-            }
+            get { return false;  }
         }
 
         // -------
@@ -700,7 +699,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             WrappedRelatedEntities.Keys.CopyTo(array, arrayIndex);
         }
 
-        internal override void BulkDeleteAll(List<object> list)
+        internal virtual void BulkDeleteAll(List<object> list)
         {
             if (list.Count > 0)
             {

@@ -166,7 +166,7 @@ namespace System.Data.Entity.Core.Objects
         /// Whether or not we are in the middle of materialization
         /// Used to suppress operations such as lazy loading that are not allowed during materialization
         /// </summary>
-        internal bool InMaterialization 
+        internal bool InMaterialization
         {
             get { return _internalObjectContext.InMaterialization; }
             set { _internalObjectContext.InMaterialization = value; }
@@ -189,6 +189,11 @@ namespace System.Data.Entity.Core.Objects
         {
             get { return _internalObjectContext.ColumnMapBuilder; }
             set { _internalObjectContext.ColumnMapBuilder = value; }
+        }
+
+        internal EntityWrapperFactory EntityWrapperFactory
+        {
+            get { return _internalObjectContext.EntityWrapperFactory; }
         }
 
         #endregion
@@ -860,11 +865,11 @@ namespace System.Data.Entity.Core.Objects
         ///  Get the materializer for the resultSetIndexth result set of storeReader.
         /// </summary>
         internal ObjectResult<TElement> MaterializedDataRecord<TElement>(
-            EntityCommand entityCommand, 
-            DbDataReader storeReader, 
-            int resultSetIndex, 
+            EntityCommand entityCommand,
+            DbDataReader storeReader,
+            int resultSetIndex,
             ReadOnlyMetadataCollection<EntitySet> entitySets,
-            EdmType[] edmTypes, 
+            EdmType[] edmTypes,
             MergeOption mergeOption)
         {
             return _internalObjectContext.MaterializedDataRecord<TElement>(entityCommand, storeReader, resultSetIndex, entitySets, edmTypes, mergeOption);

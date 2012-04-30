@@ -5,25 +5,18 @@
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
     using System.Runtime.CompilerServices;
 
     /// <summary>
     /// Factory class for creating IEntityWrapper instances.
     /// </summary>
-    internal static class EntityWrapperFactory
+    internal class EntityWrapperFactory
     {
         // A cache of functions used to create IEntityWrapper instances for a given type
         private static readonly Memoizer<Type, Func<object, IEntityWrapper>> _delegateCache =
             new Memoizer<Type, Func<object, IEntityWrapper>>(CreateWrapperDelegate, null);
-
-        /// <summary>
-        /// The single instance of the NullEntityWrapper.
-        /// </summary>
-        internal static IEntityWrapper NullWrapper
-        {
-            get { return NullEntityWrapper.NullWrapper; }
-        }
 
         /// <summary>
         /// Called to create a new wrapper outside of the normal materialization process.
@@ -99,7 +92,11 @@
             return (Func<object, IEntityWrapper>)createDelegate.Invoke(null, new object[0]);
         }
 
-        // Returns a delegate that creates the fast LightweightEntityWrapper
+        /// <summary>
+        /// Returns a delegate that creates the fast LightweightEntityWrapper
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns></returns>
         private static Func<object, IEntityWrapper> CreateWrapperDelegateTypedLightweight<TEntity>()
             where TEntity : IEntityWithRelationships, IEntityWithKey, IEntityWithChangeTracker
         {
@@ -181,7 +178,7 @@
         /// <param name="entity">the entity to wrap</param>
         /// <param name="context">the context in which the entity may exist, or null</param>
         /// <returns>a new or existing wrapper</returns>
-        internal static IEntityWrapper WrapEntityUsingContext(object entity, ObjectContext context)
+        internal IEntityWrapper WrapEntityUsingContext(object entity, ObjectContext context)
         {
             EntityEntry existingEntry;
             return WrapEntityUsingStateManagerGettingEntry(entity, context == null ? null : context.ObjectStateManager, out existingEntry);
@@ -195,7 +192,7 @@
         /// <param name="context">The context in which the entity may exist, or null</param>
         /// <param name="existingEntry">Set to the existing state entry if one is found, else null</param>
         /// <returns>a new or existing wrapper</returns>
-        internal static IEntityWrapper WrapEntityUsingContextGettingEntry(
+        internal IEntityWrapper WrapEntityUsingContextGettingEntry(
             object entity, ObjectContext context, out EntityEntry existingEntry)
         {
             return WrapEntityUsingStateManagerGettingEntry(entity, context == null ? null : context.ObjectStateManager, out existingEntry);
@@ -209,7 +206,7 @@
         /// <param name="entity">the entity to wrap</param>
         /// <param name="context">the state manager  in which the entity may exist, or null</param>
         /// <returns>a new or existing wrapper</returns>
-        internal static IEntityWrapper WrapEntityUsingStateManager(object entity, ObjectStateManager stateManager)
+        internal IEntityWrapper WrapEntityUsingStateManager(object entity, ObjectStateManager stateManager)
         {
             EntityEntry existingEntry;
             return WrapEntityUsingStateManagerGettingEntry(entity, stateManager, out existingEntry);
@@ -224,7 +221,7 @@
         /// <param name="context">The state manager  in which the entity may exist, or null</param>
         /// <param name="existingEntry">The existing state entry for the given entity if one exists, otherwise null</param>
         /// <returns>A new or existing wrapper</returns>
-        internal static IEntityWrapper WrapEntityUsingStateManagerGettingEntry(
+        internal virtual IEntityWrapper WrapEntityUsingStateManagerGettingEntry(
             object entity, ObjectStateManager stateManager, out EntityEntry existingEntry)
         {
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
@@ -297,7 +294,7 @@
         /// <param name="wrapper">The wrapped entity</param>
         /// <param name="context">The context that will be using this wrapper</param>
         /// <param name="entitySet">The entity set this wrapped entity belongs to</param>
-        internal static void UpdateNoTrackingWrapper(IEntityWrapper wrapper, ObjectContext context, EntitySet entitySet)
+        internal virtual void UpdateNoTrackingWrapper(IEntityWrapper wrapper, ObjectContext context, EntitySet entitySet)
         {
             if (wrapper.EntityKey == null)
             {

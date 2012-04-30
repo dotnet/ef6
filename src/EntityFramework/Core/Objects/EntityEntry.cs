@@ -106,7 +106,7 @@
             Debug.Assert(typeMetadata != null, "typeMetadata cannot be null.");
             Debug.Assert(entityKey.EntitySetName == entitySet.Name, "different entitySet");
 
-            _wrappedEntity = EntityWrapperFactory.NullWrapper;
+            _wrappedEntity = NullEntityWrapper.NullWrapper;
             _entityKey = entityKey;
             _cacheTypeMetadata = typeMetadata;
 
@@ -591,7 +591,7 @@
                 throw new InvalidOperationException(Strings.ObjectStateEntry_CannotAccessKeyEntryValues);
             }
 
-            var wrappedEntity = EntityWrapperFactory.WrapEntityUsingStateManager(currentEntity, ObjectStateManager);
+            var wrappedEntity = ObjectStateManager.EntityWrapperFactory.WrapEntityUsingStateManager(currentEntity, ObjectStateManager);
 
             ApplyCurrentValuesInternal(wrappedEntity);
         }
@@ -611,7 +611,7 @@
                 throw new InvalidOperationException(Strings.ObjectStateEntry_CannotAccessKeyEntryValues);
             }
 
-            var wrappedEntity = EntityWrapperFactory.WrapEntityUsingStateManager(originalEntity, ObjectStateManager);
+            var wrappedEntity = ObjectStateManager.EntityWrapperFactory.WrapEntityUsingStateManager(originalEntity, ObjectStateManager);
 
             ApplyOriginalValuesInternal(wrappedEntity);
         }
@@ -946,7 +946,7 @@
 
             DetachObjectStateManagerFromEntity();
 
-            _wrappedEntity = EntityWrapperFactory.NullWrapper;
+            _wrappedEntity = NullEntityWrapper.NullWrapper;
             _entityKey = null;
             _modifiedFields = null;
             _originalValues = null;
@@ -2344,7 +2344,7 @@
             {
                 if (!ObjectStateManager.TransactionManager.WrappedEntities.TryGetValue(o, out relatedWrapper))
                 {
-                    relatedWrapper = EntityWrapperFactory.WrapEntityUsingStateManager(o, ObjectStateManager);
+                    relatedWrapper = ObjectStateManager.EntityWrapperFactory.WrapEntityUsingStateManager(o, ObjectStateManager);
                 }
             }
 
@@ -2430,7 +2430,7 @@
             RelatedEnd relatedEndFrom,
             bool verifyForAdd)
         {
-            var relatedWrapper = EntityWrapperFactory.WrapEntityUsingStateManager(relatedObject, ObjectStateManager);
+            var relatedWrapper = ObjectStateManager.EntityWrapperFactory.WrapEntityUsingStateManager(relatedObject, ObjectStateManager);
 
             AddDetectedRelationship(relationships, relatedWrapper, relatedEndFrom);
 
@@ -3017,7 +3017,7 @@
             _wrappedEntity.ObjectStateEntry = null;
 
             var degradedEntity = _wrappedEntity.Entity;
-            _wrappedEntity = EntityWrapperFactory.NullWrapper;
+            _wrappedEntity = NullEntityWrapper.NullWrapper;
 
             SetChangeTrackingFlags();
 
@@ -3727,7 +3727,7 @@
                     if (canModifyReference && replaceExistingRef
                         && relatedEnd.ReferenceValue.Entity != null)
                     {
-                        relatedEnd.ReferenceValue = EntityWrapperFactory.NullWrapper;
+                        relatedEnd.ReferenceValue = NullEntityWrapper.NullWrapper;
                     }
                 }
             }
@@ -3735,7 +3735,7 @@
             {
                 if (replaceExistingRef && (relatedEnd.ReferenceValue.Entity != null || relatedEnd.EntityKey != null))
                 {
-                    relatedEnd.ReferenceValue = EntityWrapperFactory.NullWrapper;
+                    relatedEnd.ReferenceValue = NullEntityWrapper.NullWrapper;
                 }
                 if (setIsLoaded)
                 {
