@@ -128,9 +128,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///   IListSource.ContainsListCollection implementation. Always returns true
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IListSource.ContainsListCollection
         {
-            get { return false; // this means that the IList we return is the one which contains our actual data, it is not a collection
+            get
+            {
+                return false; // this means that the IList we return is the one which contains our actual data, it is not a collection
             }
         }
 
@@ -163,6 +166,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         ///   IList interface over the data to bind
         /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IList IListSource.GetList()
         {
             EntityType rootEntityType = null;
