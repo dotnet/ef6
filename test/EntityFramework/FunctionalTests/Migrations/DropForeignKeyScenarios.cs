@@ -13,7 +13,7 @@ namespace System.Data.Entity.Migrations
         {
             public override void Up()
             {
-                DropForeignKey("OrderLines", "OrderId", "ordering.Orders");
+                DropForeignKey("dbo.OrderLines", "OrderId", "ordering.Orders");
             }
         }
 
@@ -26,13 +26,13 @@ namespace System.Data.Entity.Migrations
 
             migrator.Update();
 
-            Assert.True(Info.TableConstraints.Any(tc => tc.Name == "FK_OrderLines_ordering.Orders_OrderId"));
+            Assert.True(Info.TableConstraints.Any(tc => tc.Name == "FK_dbo.OrderLines_ordering.Orders_OrderId"));
 
             migrator = CreateMigrator<ShopContext_v1>(new DropSimpleForeignKeyMigration());
 
             migrator.Update();
 
-            Assert.False(Info.TableConstraints.Any(tc => tc.Name == "FK_OrderLines_ordering.Orders_OrderId"));
+            Assert.False(Info.TableConstraints.Any(tc => tc.Name == "FK_dbo.OrderLines_ordering.Orders_OrderId"));
         }
 
         private class DropCompositeForeignKeyMigration : DbMigration

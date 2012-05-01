@@ -2,11 +2,10 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.ModelConfiguration.Conventions;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
-    using FunctionalTests.Model;
     using Xunit;
 
     #region AutoAndGenerateScenarios
@@ -134,7 +133,7 @@
         {
             Assert.Equal(1, migrationOperations.Count());
 
-            var dropTableOperation = migrationOperations.OfType<DropTableOperation>().SingleOrDefault(o => o.Name == "MigrationsStores");
+            var dropTableOperation = migrationOperations.OfType<DropTableOperation>().SingleOrDefault(o => o.Name == "dbo.MigrationsStores");
             Assert.NotNull(dropTableOperation);
         }
 
@@ -143,7 +142,7 @@
             Assert.Equal(1, migrationOperations.Count());
 
             var createTableOperation =
-                migrationOperations.OfType<CreateTableOperation>().SingleOrDefault(o => o.Name == "MigrationsStores");
+                migrationOperations.OfType<CreateTableOperation>().SingleOrDefault(o => o.Name == "dbo.MigrationsStores");
             Assert.NotNull(createTableOperation);
 
             Assert.Equal(7, createTableOperation.Columns.Count);
@@ -176,7 +175,7 @@
         {
             Assert.Equal(1, migrationOperations.Count());
 
-            var moveTableOperation = migrationOperations.OfType<MoveTableOperation>().SingleOrDefault(o => o.Name == "MigrationsStores");
+            var moveTableOperation = migrationOperations.OfType<MoveTableOperation>().SingleOrDefault(o => o.Name == "dbo.MigrationsStores");
             Assert.NotNull(moveTableOperation);
 
             Assert.Equal("new", moveTableOperation.NewSchema);
@@ -190,7 +189,7 @@
                 migrationOperations.OfType<MoveTableOperation>().SingleOrDefault(o => o.Name == "new.MigrationsStores");
             Assert.NotNull(moveTableOperation);
 
-            Assert.Null(moveTableOperation.NewSchema);
+            Assert.Equal("dbo", moveTableOperation.NewSchema);
         }
     }
 
@@ -221,7 +220,7 @@
             Assert.Equal(1, migrationOperations.Count());
 
             var renameTableOperation =
-                migrationOperations.OfType<RenameTableOperation>().SingleOrDefault(o => o.Name == "MigrationsStores");
+                migrationOperations.OfType<RenameTableOperation>().SingleOrDefault(o => o.Name == "dbo.MigrationsStores");
             Assert.NotNull(renameTableOperation);
 
             Assert.Equal("Renamed", renameTableOperation.NewName);
@@ -232,7 +231,7 @@
             Assert.Equal(1, migrationOperations.Count());
 
             var renameTableOperation =
-                migrationOperations.OfType<RenameTableOperation>().SingleOrDefault(o => o.Name == "Renamed");
+                migrationOperations.OfType<RenameTableOperation>().SingleOrDefault(o => o.Name == "dbo.Renamed");
             Assert.NotNull(renameTableOperation);
 
             Assert.Equal("MigrationsStores", renameTableOperation.NewName);
@@ -314,13 +313,13 @@
 
             var createIndexOperation =
                 migrationOperations.OfType<CreateIndexOperation>().SingleOrDefault(
-                    o => o.Table == "OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
+                    o => o.Table == "dbo.OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
             Assert.NotNull(createIndexOperation);
 
             var addForeignKeyOperation =
                 migrationOperations.OfType<AddForeignKeyOperation>().SingleOrDefault(
                     o =>
-                    o.PrincipalTable == "Orders" && o.DependentTable == "OrderLines" && o.DependentColumns.Count == 1
+                    o.PrincipalTable == "dbo.Orders" && o.DependentTable == "dbo.OrderLines" && o.DependentColumns.Count == 1
                     && o.DependentColumns.Single() == "OrderId");
             Assert.NotNull(addForeignKeyOperation);
         }
@@ -331,13 +330,13 @@
 
             var dropIndexOperation =
                 migrationOperations.OfType<DropIndexOperation>().SingleOrDefault(
-                    o => o.Table == "OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
+                    o => o.Table == "dbo.OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
             Assert.NotNull(dropIndexOperation);
 
             var dropForeignKeyOperation =
                 migrationOperations.OfType<DropForeignKeyOperation>().SingleOrDefault(
                     o =>
-                    o.PrincipalTable == "Orders" && o.DependentTable == "OrderLines" && o.DependentColumns.Count == 1
+                    o.PrincipalTable == "dbo.Orders" && o.DependentTable == "dbo.OrderLines" && o.DependentColumns.Count == 1
                     && o.DependentColumns.Single() == "OrderId");
             Assert.NotNull(dropForeignKeyOperation);
         }
@@ -374,18 +373,18 @@
             Assert.Equal(3, migrationOperations.Count());
 
             var createTableOperation =
-                migrationOperations.OfType<CreateTableOperation>().SingleOrDefault(o => o.Name == "Orders");
+                migrationOperations.OfType<CreateTableOperation>().SingleOrDefault(o => o.Name == "dbo.Orders");
             Assert.NotNull(createTableOperation);
 
             var createIndexOperation =
                 migrationOperations.OfType<CreateIndexOperation>().SingleOrDefault(
-                    o => o.Table == "OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
+                    o => o.Table == "dbo.OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
             Assert.NotNull(createIndexOperation);
 
             var addForeignKeyOperation =
                 migrationOperations.OfType<AddForeignKeyOperation>().SingleOrDefault(
                     o =>
-                    o.PrincipalTable == "Orders" && o.DependentTable == "OrderLines" && o.DependentColumns.Count == 1
+                    o.PrincipalTable == "dbo.Orders" && o.DependentTable == "dbo.OrderLines" && o.DependentColumns.Count == 1
                     && o.DependentColumns.Single() == "OrderId");
             Assert.NotNull(addForeignKeyOperation);
 
@@ -396,18 +395,18 @@
         {
             Assert.Equal(3, migrationOperations.Count());
 
-            var dropTableOperation = migrationOperations.OfType<DropTableOperation>().SingleOrDefault(o => o.Name == "Orders");
+            var dropTableOperation = migrationOperations.OfType<DropTableOperation>().SingleOrDefault(o => o.Name == "dbo.Orders");
             Assert.NotNull(dropTableOperation);
 
             var dropIndexOperation =
                 migrationOperations.OfType<DropIndexOperation>().SingleOrDefault(
-                    o => o.Table == "OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
+                    o => o.Table == "dbo.OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
             Assert.NotNull(dropIndexOperation);
 
             var dropForeignKeyOperation =
                 migrationOperations.OfType<DropForeignKeyOperation>().SingleOrDefault(
                     o =>
-                    o.PrincipalTable == "Orders" && o.DependentTable == "OrderLines" && o.DependentColumns.Count == 1
+                    o.PrincipalTable == "dbo.Orders" && o.DependentTable == "dbo.OrderLines" && o.DependentColumns.Count == 1
                     && o.DependentColumns.Single() == "OrderId");
             Assert.NotNull(dropForeignKeyOperation);
         }
@@ -441,13 +440,13 @@
 
             var dropIndexOperation =
                 migrationOperations.OfType<DropIndexOperation>().SingleOrDefault(
-                    o => o.Table == "OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
+                    o => o.Table == "dbo.OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
             Assert.NotNull(dropIndexOperation);
 
             var dropForeignKeyOperation =
                 migrationOperations.OfType<DropForeignKeyOperation>().SingleOrDefault(
                     o =>
-                    o.PrincipalTable == "Orders" && o.DependentTable == "OrderLines" && o.DependentColumns.Count == 1
+                    o.PrincipalTable == "dbo.Orders" && o.DependentTable == "dbo.OrderLines" && o.DependentColumns.Count == 1
                     && o.DependentColumns.Single() == "OrderId");
             Assert.NotNull(dropForeignKeyOperation);
         }
@@ -458,13 +457,13 @@
 
             var createIndexOperation =
                 migrationOperations.OfType<CreateIndexOperation>().SingleOrDefault(
-                    o => o.Table == "OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
+                    o => o.Table == "dbo.OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
             Assert.NotNull(createIndexOperation);
 
             var addForeignKeyOperation =
                 migrationOperations.OfType<AddForeignKeyOperation>().SingleOrDefault(
                     o =>
-                    o.PrincipalTable == "Orders" && o.DependentTable == "OrderLines" && o.DependentColumns.Count == 1
+                    o.PrincipalTable == "dbo.Orders" && o.DependentTable == "dbo.OrderLines" && o.DependentColumns.Count == 1
                     && o.DependentColumns.Single() == "OrderId");
             Assert.NotNull(addForeignKeyOperation);
         }
@@ -499,25 +498,25 @@
 
             var dropIndexOperation =
                 migrationOperations.OfType<DropIndexOperation>().SingleOrDefault(
-                    o => o.Table == "OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
+                    o => o.Table == "dbo.OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
             Assert.NotNull(dropIndexOperation);
 
             var dropForeignKeyOperation =
                 migrationOperations.OfType<DropForeignKeyOperation>().SingleOrDefault(
                     o =>
-                    o.PrincipalTable == "Orders" && o.DependentTable == "OrderLines" && o.DependentColumns.Count == 1
+                    o.PrincipalTable == "dbo.Orders" && o.DependentTable == "dbo.OrderLines" && o.DependentColumns.Count == 1
                     && o.DependentColumns.Single() == "OrderId");
             Assert.NotNull(dropForeignKeyOperation);
 
             var createIndexOperation =
                 migrationOperations.OfType<CreateIndexOperation>().SingleOrDefault(
-                    o => o.Table == "OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
+                    o => o.Table == "dbo.OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
             Assert.NotNull(createIndexOperation);
 
             var addForeignKeyOperation =
                 migrationOperations.OfType<AddForeignKeyOperation>().SingleOrDefault(
                     o =>
-                    o.PrincipalTable == "Orders" && o.DependentTable == "OrderLines" && o.DependentColumns.Count == 1
+                    o.PrincipalTable == "dbo.Orders" && o.DependentTable == "dbo.OrderLines" && o.DependentColumns.Count == 1
                     && o.DependentColumns.Single() == "OrderId");
             Assert.NotNull(addForeignKeyOperation);
 
@@ -530,25 +529,25 @@
 
             var dropIndexOperation =
                 migrationOperations.OfType<DropIndexOperation>().SingleOrDefault(
-                    o => o.Table == "OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
+                    o => o.Table == "dbo.OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
             Assert.NotNull(dropIndexOperation);
 
             var dropForeignKeyOperation =
                 migrationOperations.OfType<DropForeignKeyOperation>().SingleOrDefault(
                     o =>
-                    o.PrincipalTable == "Orders" && o.DependentTable == "OrderLines" && o.DependentColumns.Count == 1
+                    o.PrincipalTable == "dbo.Orders" && o.DependentTable == "dbo.OrderLines" && o.DependentColumns.Count == 1
                     && o.DependentColumns.Single() == "OrderId");
             Assert.NotNull(dropForeignKeyOperation);
 
             var createIndexOperation =
                 migrationOperations.OfType<CreateIndexOperation>().SingleOrDefault(
-                    o => o.Table == "OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
+                    o => o.Table == "dbo.OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
             Assert.NotNull(createIndexOperation);
 
             var addForeignKeyOperation =
                 migrationOperations.OfType<AddForeignKeyOperation>().SingleOrDefault(
                     o =>
-                    o.PrincipalTable == "Orders" && o.DependentTable == "OrderLines" && o.DependentColumns.Count == 1
+                    o.PrincipalTable == "dbo.Orders" && o.DependentTable == "dbo.OrderLines" && o.DependentColumns.Count == 1
                     && o.DependentColumns.Single() == "OrderId");
             Assert.NotNull(addForeignKeyOperation);
 
@@ -591,7 +590,7 @@
 
             var addColumnOperation =
                 migrationOperations.OfType<AddColumnOperation>().SingleOrDefault(
-                    o => o.Table == "MigrationsStores" && o.Column.Name == "Name");
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Name");
             Assert.NotNull(addColumnOperation);
 
             Assert.Null(addColumnOperation.Column.IsFixedLength);
@@ -605,7 +604,7 @@
             Assert.Equal(1, migrationOperations.Count());
 
             var dropColumnOperation =
-                migrationOperations.OfType<DropColumnOperation>().SingleOrDefault(o => o.Table == "MigrationsStores" && o.Name == "Name");
+                migrationOperations.OfType<DropColumnOperation>().SingleOrDefault(o => o.Table == "dbo.MigrationsStores" && o.Name == "Name");
             Assert.NotNull(dropColumnOperation);
         }
     }
@@ -642,7 +641,7 @@
             Assert.Equal(1, migrationOperations.Count());
 
             var dropColumnOperation =
-                migrationOperations.OfType<DropColumnOperation>().SingleOrDefault(o => o.Table == "MigrationsStores" && o.Name == "Name");
+                migrationOperations.OfType<DropColumnOperation>().SingleOrDefault(o => o.Table == "dbo.MigrationsStores" && o.Name == "Name");
             Assert.NotNull(dropColumnOperation);
         }
 
@@ -652,7 +651,7 @@
 
             var addColumnOperation =
                 migrationOperations.OfType<AddColumnOperation>().SingleOrDefault(
-                    o => o.Table == "MigrationsStores" && o.Column.Name == "Name");
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Name");
             Assert.NotNull(addColumnOperation);
         }
     }
@@ -685,7 +684,7 @@
 
             var renameColumnOperation =
                 migrationOperations.OfType<RenameColumnOperation>().SingleOrDefault(
-                    o => o.Table == "MigrationsStores" && o.Name == "Name");
+                    o => o.Table == "dbo.MigrationsStores" && o.Name == "Name");
             Assert.NotNull(renameColumnOperation);
 
             Assert.Equal("Renamed", renameColumnOperation.NewName);
@@ -697,7 +696,7 @@
 
             var renameColumnOperation =
                 migrationOperations.OfType<RenameColumnOperation>().SingleOrDefault(
-                    o => o.Table == "MigrationsStores" && o.Name == "Renamed");
+                    o => o.Table == "dbo.MigrationsStores" && o.Name == "Renamed");
             Assert.NotNull(renameColumnOperation);
 
             Assert.Equal("Name", renameColumnOperation.NewName);
@@ -789,7 +788,7 @@
 
             var alterColumnOperation =
                 migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
-                    o => o.Table == "TypeCasts" && o.Column.Name == _columnName);
+                    o => o.Table == "dbo.TypeCasts" && o.Column.Name == _columnName);
             Assert.NotNull(alterColumnOperation);
 
             PrimitiveTypeKind toType;
@@ -814,7 +813,7 @@
 
             var alterColumnOperation =
                 migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
-                    o => o.Table == "TypeCasts" && o.Column.Name == _columnName);
+                    o => o.Table == "dbo.TypeCasts" && o.Column.Name == _columnName);
             Assert.NotNull(alterColumnOperation);
             PrimitiveTypeKind fromType;
             var fromTypeName = _columnName.Substring(0, _columnName.IndexOf("To"));
@@ -1178,7 +1177,7 @@
 
             var alterColumnOperation =
                 migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
-                    o => o.Table == "MigrationsStores" && o.Column.Name == "Name");
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Name");
             Assert.NotNull(alterColumnOperation);
 
             Assert.True(alterColumnOperation.Column.IsFixedLength.Value);
@@ -1190,7 +1189,7 @@
 
             var alterColumnOperation =
                 migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
-                    o => o.Table == "MigrationsStores" && o.Column.Name == "Name");
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Name");
             Assert.NotNull(alterColumnOperation);
 
             Assert.Null(alterColumnOperation.Column.IsFixedLength);
@@ -1217,7 +1216,7 @@
 
             var alterColumnOperation =
                 migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
-                    o => o.Table == "MigrationsStores" && o.Column.Name == "Name");
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Name");
             Assert.NotNull(alterColumnOperation);
 
             Assert.Equal(_newMaxLength, alterColumnOperation.Column.MaxLength);
@@ -1229,7 +1228,7 @@
 
             var alterColumnOperation =
                 migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
-                    o => o.Table == "MigrationsStores" && o.Column.Name == "Name");
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Name");
             Assert.NotNull(alterColumnOperation);
 
             Assert.Equal(256, alterColumnOperation.Column.MaxLength);
@@ -1339,7 +1338,7 @@
 
             var alterColumnOperation =
                 migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
-                    o => o.Table == "MigrationsStores" && o.Column.Name == "Name");
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Name");
             Assert.NotNull(alterColumnOperation);
 
             Assert.False(alterColumnOperation.Column.IsNullable.Value);
@@ -1351,7 +1350,7 @@
 
             var alterColumnOperation =
                 migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
-                    o => o.Table == "MigrationsStores" && o.Column.Name == "Name");
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Name");
             Assert.NotNull(alterColumnOperation);
 
             Assert.Null(alterColumnOperation.Column.IsNullable);
@@ -1387,7 +1386,7 @@
 
             var alterColumnOperation =
                 migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
-                    o => o.Table == "OrderLines" && o.Column.Name == "Price");
+                    o => o.Table == "dbo.OrderLines" && o.Column.Name == "Price");
             Assert.NotNull(alterColumnOperation);
 
             Assert.Equal((byte?)18, alterColumnOperation.Column.Precision);
@@ -1399,7 +1398,7 @@
 
             var alterColumnOperation =
                 migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
-                    o => o.Table == "OrderLines" && o.Column.Name == "Price");
+                    o => o.Table == "dbo.OrderLines" && o.Column.Name == "Price");
             Assert.NotNull(alterColumnOperation);
 
             Assert.Equal((byte?)9, alterColumnOperation.Column.Precision);
@@ -1435,7 +1434,7 @@
 
             var alterColumnOperation =
                 migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
-                    o => o.Table == "OrderLines" && o.Column.Name == "Price");
+                    o => o.Table == "dbo.OrderLines" && o.Column.Name == "Price");
             Assert.NotNull(alterColumnOperation);
 
             Assert.Equal((byte?)2, alterColumnOperation.Column.Scale);
@@ -1447,7 +1446,7 @@
 
             var alterColumnOperation =
                 migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
-                    o => o.Table == "OrderLines" && o.Column.Name == "Price");
+                    o => o.Table == "dbo.OrderLines" && o.Column.Name == "Price");
             Assert.NotNull(alterColumnOperation);
 
             Assert.Equal((byte?)0, alterColumnOperation.Column.Scale);
@@ -1488,7 +1487,7 @@
 
             var alterColumnOperation =
                 migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
-                    o => o.Table == "MigrationsStores" && o.Column.Name == "Name");
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Name");
             Assert.NotNull(alterColumnOperation);
 
             Assert.False(alterColumnOperation.Column.IsUnicode.Value);
@@ -1500,7 +1499,7 @@
 
             var alterColumnOperation =
                 migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
-                    o => o.Table == "MigrationsStores" && o.Column.Name == "Name");
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Name");
             Assert.NotNull(alterColumnOperation);
 
             Assert.Null(alterColumnOperation.Column.IsUnicode);

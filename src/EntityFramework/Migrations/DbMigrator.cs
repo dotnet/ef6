@@ -709,10 +709,11 @@ namespace System.Data.Entity.Migrations
                 in operations.OfType<AddForeignKeyOperation>()
                     .Where(fk => fk.PrincipalTable != null && !fk.PrincipalColumns.Any()))
             {
+                var principalTable = GetStandardizedTableName(foreignKeyOperation.PrincipalTable);
                 var entitySetName
                     = (from es in targetModel.Descendants(EdmXNames.Ssdl.EntitySetNames)
                        where ModelDiffer.GetQualifiedTableName(es.TableAttribute(), es.SchemaAttribute())
-                           .EqualsIgnoreCase(foreignKeyOperation.PrincipalTable)
+                           .EqualsIgnoreCase(principalTable)
                        select es.NameAttribute()).SingleOrDefault();
 
                 if (entitySetName != null)
@@ -732,7 +733,7 @@ namespace System.Data.Entity.Migrations
                     var table
                         = operations
                             .OfType<CreateTableOperation>()
-                            .SingleOrDefault(ct => ct.Name.EqualsIgnoreCase(foreignKeyOperation.PrincipalTable));
+                            .SingleOrDefault(ct => GetStandardizedTableName(ct.Name).EqualsIgnoreCase(principalTable));
 
                     if ((table != null)
                         && (table.PrimaryKey != null))
@@ -747,6 +748,16 @@ namespace System.Data.Entity.Migrations
                     }
                 }
             }
+        }
+
+        private static string GetStandardizedTableName(string tableName)
+        {
+            if (tableName.Contains('.'))
+            {
+                return tableName;
+            }
+
+            return "dbo." + tableName;
         }
 
         internal override void EnsureDatabaseExists()

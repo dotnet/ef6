@@ -2,6 +2,7 @@ namespace System.Data.Entity.Migrations.Model
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Linq;
 
     /// <summary>
     ///     Represents renaming an existing table.
@@ -52,7 +53,16 @@ namespace System.Data.Entity.Migrations.Model
         /// </summary>
         public override MigrationOperation Inverse
         {
-            get { return new RenameTableOperation(NewName, Name); }
+            get
+            {
+                var parts = _name.Split(new[] { '.' }, 2);
+
+                return new RenameTableOperation(
+                    parts.Length > 1
+                        ? parts[0] + '.' + _newName
+                        : _newName,
+                    parts.Last());
+            }
         }
 
         /// <inheritdoc />

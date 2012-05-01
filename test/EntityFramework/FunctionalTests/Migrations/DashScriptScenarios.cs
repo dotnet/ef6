@@ -11,6 +11,32 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class DashScriptScenarios : DbTestCase
     {
+        private string CreateMetadataStatement
+        {
+            get
+            {
+                if (DatabaseProvider == DatabaseProvider.SqlServerCe)
+                {
+                    return "CREATE TABLE [__MigrationHistory]";
+                }
+
+                return "CREATE TABLE [dbo].[__MigrationHistory]";
+            }
+        }
+
+        private string DropMetadataStatement
+        {
+            get
+            {
+                if (DatabaseProvider == DatabaseProvider.SqlServerCe)
+                {
+                    return "DROP TABLE [__MigrationHistory]";
+                }
+
+                return "DROP TABLE [dbo].[__MigrationHistory]";
+            }
+        }
+
         [MigrationsTheory]
         public void Can_script_pending_migrations()
         {
@@ -67,7 +93,7 @@ namespace System.Data.Entity.Migrations
             // All
             var script = scriptingDecorator.ScriptUpdate(DbMigrator.InitialDatabase, null);
 
-            Assert.True(script.Contains("CREATE TABLE [__MigrationHistory]"));
+            Assert.True(script.Contains(CreateMetadataStatement));
             Assert.True(script.Contains("Version1"));
             Assert.True(script.Contains("Version2"));
             Assert.True(script.Contains("Version3"));
@@ -76,7 +102,7 @@ namespace System.Data.Entity.Migrations
             // 1
             script = scriptingDecorator.ScriptUpdate(DbMigrator.InitialDatabase, version1.MigrationId);
 
-            Assert.True(script.Contains("CREATE TABLE [__MigrationHistory]"));
+            Assert.True(script.Contains(CreateMetadataStatement));
             Assert.True(script.Contains("Version1"));
             Assert.False(script.Contains("Version2"));
             Assert.False(script.Contains("Version3"));
@@ -85,7 +111,7 @@ namespace System.Data.Entity.Migrations
             // 1 & 2
             script = scriptingDecorator.ScriptUpdate(DbMigrator.InitialDatabase, version2.MigrationId);
 
-            Assert.True(script.Contains("CREATE TABLE [__MigrationHistory]"));
+            Assert.True(script.Contains(CreateMetadataStatement));
             Assert.True(script.Contains("Version1"));
             Assert.True(script.Contains("Version2"));
             Assert.False(script.Contains("Version3"));
@@ -117,7 +143,7 @@ namespace System.Data.Entity.Migrations
             var script = scriptingDecorator.ScriptUpdate(DbMigrator.InitialDatabase, version2.MigrationId);
 
             // Assert
-            Assert.True(script.Contains("CREATE TABLE [__MigrationHistory]"));
+            Assert.True(script.Contains(CreateMetadataStatement));
             Assert.True(script.Contains("AutomaticMigration"));
             Assert.True(script.Contains("Version2"));
         }
@@ -155,7 +181,7 @@ namespace System.Data.Entity.Migrations
             var script = scriptingDecorator.ScriptUpdate(version1.MigrationId, version3.MigrationId);
 
             // Assert
-            Assert.False(script.Contains("CREATE TABLE [__MigrationHistory]"));
+            Assert.False(script.Contains(CreateMetadataStatement));
             Assert.False(script.Contains("Version1"));
             Assert.True(script.Contains("AutomaticMigration"));
             Assert.True(script.Contains("Version3"));
@@ -184,7 +210,7 @@ namespace System.Data.Entity.Migrations
             var script = scriptingDecorator.ScriptUpdate(DbMigrator.InitialDatabase, version1.MigrationId);
 
             // Assert
-            Assert.True(script.Contains("CREATE TABLE [__MigrationHistory]"));
+            Assert.True(script.Contains(CreateMetadataStatement));
             Assert.True(script.Contains("Version1"));
             Assert.False(script.Contains("AutomaticMigration"));
         }
@@ -214,7 +240,7 @@ namespace System.Data.Entity.Migrations
             var script = scriptingDecorator.ScriptUpdate(version1.MigrationId, null);
 
             // Assert
-            Assert.False(script.Contains("CREATE TABLE [__MigrationHistory]"));
+            Assert.False(script.Contains(CreateMetadataStatement));
             Assert.False(script.Contains("Version1"));
             Assert.True(script.Contains("AutomaticMigration"));
         }
@@ -235,7 +261,7 @@ namespace System.Data.Entity.Migrations
             var script = scriptingDecorator.ScriptUpdate(null, DbMigrator.InitialDatabase);
 
             // Assert
-            Assert.True(script.Contains("DROP TABLE [__MigrationHistory]"));
+            Assert.True(script.Contains(DropMetadataStatement));
             Assert.True(script.Contains("Version1"));
         }
 
@@ -266,7 +292,7 @@ namespace System.Data.Entity.Migrations
 
             var script = scriptingDecorator.ScriptUpdate("Banana", "Apple");
 
-            Assert.False(script.Contains("CREATE TABLE [__MigrationHistory]"));
+            Assert.False(script.Contains(CreateMetadataStatement));
             Assert.False(script.Contains("Banana"));
             Assert.True(script.Contains("Apple"));
             Assert.False(script.Contains("AutomaticMigration"));

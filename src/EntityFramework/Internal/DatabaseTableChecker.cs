@@ -106,7 +106,7 @@
                     ? (string)table.MetadataProperties["Table"].Value
                     : table.Name;
 
-                yield return CreateTableName(schemaName, tableName);
+                yield return Tuple.Create(schemaName, tableName);
             }
         }
 
@@ -122,23 +122,12 @@
                 {
                     while (reader.Read())
                     {
-                        yield return CreateTableName(
+                        yield return Tuple.Create(
                             reader["SchemaName"] as string,
                             reader["Name"] as string);
                     }
                 }
             }
-        }
-
-        private static Tuple<string, string> CreateTableName(string schemaName, string tableName)
-        {
-            if (string.IsNullOrWhiteSpace(schemaName)
-                || schemaName == "dbo")
-            {
-                schemaName = null;
-            }
-
-            return Tuple.Create(schemaName, tableName);
         }
 
         // TODO: EF6 providers should expose this functionality

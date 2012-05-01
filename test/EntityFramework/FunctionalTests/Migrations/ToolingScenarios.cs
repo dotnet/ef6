@@ -38,7 +38,7 @@
 
             var log = logBuilder.ToString();
             Assert.True(log.Contains("INFO: Applying automatic migration"));
-            Assert.True(log.Contains("SQL: CREATE TABLE [Entities]"));
+            Assert.True(log.Contains("SQL: CREATE TABLE [dbo].[Entities]"));
 
             Assert.True(DatabaseExists());
             Assert.True(TableExists("Entities"));
@@ -65,7 +65,7 @@
                 sql = facade.ScriptUpdate(null, null, false);
             }
 
-            Assert.True(sql.Contains("CREATE TABLE [Entities]"));
+            Assert.True(sql.Contains("CREATE TABLE [dbo].[Entities]"));
 
             var log = logBuilder.ToString();
             Assert.True(log.Contains("INFO: Applying automatic migration"));
@@ -291,7 +291,7 @@
 </configuration>");
 
             ProjectDir = targetDir;
-                }
+        }
 
         public void Dispose()
         {

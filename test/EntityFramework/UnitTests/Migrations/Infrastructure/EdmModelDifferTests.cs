@@ -1,13 +1,13 @@
 namespace System.Data.Entity.Migrations
 {
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.UserRoles_v1;
     using System.Data.Entity.ModelConfiguration.Conventions;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
     using Xunit;
 
@@ -101,13 +101,13 @@ namespace System.Data.Entity.Migrations
 
             var addPrimaryKeyOperation = operations.OfType<AddPrimaryKeyOperation>().Single();
 
-            Assert.Equal("OrderLines", addPrimaryKeyOperation.Table);
+            Assert.Equal("dbo.OrderLines", addPrimaryKeyOperation.Table);
             Assert.Equal("Id", addPrimaryKeyOperation.Columns.First());
             Assert.Equal("OrderId", addPrimaryKeyOperation.Columns.Last());
 
             var dropPrimaryKeyOperation = operations.OfType<DropPrimaryKeyOperation>().Single();
 
-            Assert.Equal("OrderLines", dropPrimaryKeyOperation.Table);
+            Assert.Equal("dbo.OrderLines", dropPrimaryKeyOperation.Table);
             Assert.Equal("Id", dropPrimaryKeyOperation.Columns.Single());
         }
 
@@ -156,13 +156,13 @@ namespace System.Data.Entity.Migrations
 
             var addPrimaryKeyOperation = operations.OfType<AddPrimaryKeyOperation>().Single();
 
-            Assert.Equal("OrderLines", addPrimaryKeyOperation.Table);
+            Assert.Equal("dbo.OrderLines", addPrimaryKeyOperation.Table);
             Assert.Equal("pk_ID", addPrimaryKeyOperation.Columns.First());
             Assert.Equal("OrderId", addPrimaryKeyOperation.Columns.Last());
 
             var dropPrimaryKeyOperation = operations.OfType<DropPrimaryKeyOperation>().Single();
 
-            Assert.Equal("OrderLines", dropPrimaryKeyOperation.Table);
+            Assert.Equal("dbo.OrderLines", dropPrimaryKeyOperation.Table);
             Assert.Equal("Id", dropPrimaryKeyOperation.Columns.Single());
         }
 
@@ -190,13 +190,13 @@ namespace System.Data.Entity.Migrations
 
             var addPrimaryKeyOperation = operations.OfType<AddPrimaryKeyOperation>().Single();
 
-            Assert.Equal("tbl_OrderLines", addPrimaryKeyOperation.Table);
+            Assert.Equal("dbo.tbl_OrderLines", addPrimaryKeyOperation.Table);
             Assert.Equal("Id", addPrimaryKeyOperation.Columns.First());
             Assert.Equal("OrderId", addPrimaryKeyOperation.Columns.Last());
 
             var dropPrimaryKeyOperation = operations.OfType<DropPrimaryKeyOperation>().Single();
 
-            Assert.Equal("OrderLines", dropPrimaryKeyOperation.Table);
+            Assert.Equal("dbo.OrderLines", dropPrimaryKeyOperation.Table);
             Assert.Equal("Id", dropPrimaryKeyOperation.Columns.Single());
         }
 
@@ -443,7 +443,7 @@ namespace System.Data.Entity.Migrations
             Assert.Equal(1, operations.Count());
             var addColumnOperation = operations.OfType<AddColumnOperation>().Single();
 
-            Assert.Equal("OrderLines", addColumnOperation.Table);
+            Assert.Equal("dbo.OrderLines", addColumnOperation.Table);
             Assert.Equal("OrderId", addColumnOperation.Column.Name);
             Assert.Equal(PrimitiveTypeKind.Int32, addColumnOperation.Column.Type);
             Assert.False(addColumnOperation.Column.IsNullable.Value);
@@ -470,7 +470,7 @@ namespace System.Data.Entity.Migrations
 
             Assert.Equal("ordering.Orders", addForeignKeyOperation.PrincipalTable);
             Assert.Equal("OrderId", addForeignKeyOperation.PrincipalColumns.Single());
-            Assert.Equal("OrderLines", addForeignKeyOperation.DependentTable);
+            Assert.Equal("dbo.OrderLines", addForeignKeyOperation.DependentTable);
             Assert.Equal("OrderId", addForeignKeyOperation.DependentColumns.Single());
             Assert.True(addForeignKeyOperation.CascadeDelete);
         }
@@ -499,7 +499,7 @@ namespace System.Data.Entity.Migrations
 
             Assert.Equal("ordering.Orders", addForeignKeyOperation.PrincipalTable);
             Assert.Equal("OrderId", addForeignKeyOperation.PrincipalColumns.Single());
-            Assert.Equal("OrderLines", addForeignKeyOperation.DependentTable);
+            Assert.Equal("dbo.OrderLines", addForeignKeyOperation.DependentTable);
             Assert.Equal("OrderId", addForeignKeyOperation.DependentColumns.Single());
             Assert.False(addForeignKeyOperation.CascadeDelete);
         }
@@ -543,14 +543,14 @@ namespace System.Data.Entity.Migrations
             var dropForeignKeyOperation = operations.OfType<DropForeignKeyOperation>().Single();
 
             Assert.Equal("ordering.Orders", dropForeignKeyOperation.PrincipalTable);
-            Assert.Equal("OrderLines", dropForeignKeyOperation.DependentTable);
+            Assert.Equal("dbo.OrderLines", dropForeignKeyOperation.DependentTable);
             Assert.Equal("OrderId", dropForeignKeyOperation.DependentColumns.Single());
 
             var inverse = (AddForeignKeyOperation)dropForeignKeyOperation.Inverse;
 
             Assert.Equal("ordering.Orders", inverse.PrincipalTable);
             Assert.Equal("OrderId", inverse.PrincipalColumns.Single());
-            Assert.Equal("OrderLines", inverse.DependentTable);
+            Assert.Equal("dbo.OrderLines", inverse.DependentTable);
             Assert.Equal("OrderId", inverse.DependentColumns.Single());
         }
 
@@ -574,7 +574,7 @@ namespace System.Data.Entity.Migrations
             var inverse = (CreateTableOperation)operations.OfType<DropTableOperation>().Single().Inverse;
 
             Assert.NotNull(inverse);
-            Assert.Equal("OrderLines", inverse.Name);
+            Assert.Equal("dbo.OrderLines", inverse.Name);
             Assert.Equal(8, inverse.Columns.Count());
         }
 
@@ -597,7 +597,7 @@ namespace System.Data.Entity.Migrations
             Assert.Equal(1, operations.Count());
             var moveTableOperation = operations.OfType<MoveTableOperation>().Single();
 
-            Assert.Equal("MigrationsCustomers", moveTableOperation.Name);
+            Assert.Equal("dbo.MigrationsCustomers", moveTableOperation.Name);
             Assert.Equal("foo", moveTableOperation.NewSchema);
         }
 
@@ -620,7 +620,7 @@ namespace System.Data.Entity.Migrations
             Assert.Equal(1, operations.Count());
             var tableRename = operations.OfType<RenameTableOperation>().Single();
 
-            Assert.Equal("MigrationsCustomers", tableRename.Name);
+            Assert.Equal("dbo.MigrationsCustomers", tableRename.Name);
             Assert.Equal("Customer", tableRename.NewName);
         }
 
@@ -644,7 +644,7 @@ namespace System.Data.Entity.Migrations
 
             var columnRename = operations.OfType<RenameColumnOperation>().Single();
 
-            Assert.Equal("MigrationsCustomers", columnRename.Table);
+            Assert.Equal("dbo.MigrationsCustomers", columnRename.Table);
             Assert.Equal("Name", columnRename.Name);
             Assert.Equal("col_Name", columnRename.NewName);
         }
@@ -681,7 +681,7 @@ namespace System.Data.Entity.Migrations
 
             var columnRename = operations.OfType<RenameColumnOperation>().Single();
 
-            Assert.Equal("Customers_Split", columnRename.Table);
+            Assert.Equal("dbo.Customers_Split", columnRename.Table);
             Assert.Equal("Name", columnRename.Name);
             Assert.Equal("col_Name", columnRename.NewName);
         }
@@ -707,13 +707,13 @@ namespace System.Data.Entity.Migrations
 
             var columnRename = operations.OfType<RenameColumnOperation>().ElementAt(0);
 
-            Assert.Equal("MigrationsCustomers", columnRename.Table);
+            Assert.Equal("dbo.MigrationsCustomers", columnRename.Table);
             Assert.Equal("HomeAddress_City", columnRename.Name);
             Assert.Equal("HomeCity", columnRename.NewName);
 
             columnRename = operations.OfType<RenameColumnOperation>().ElementAt(1);
 
-            Assert.Equal("MigrationsCustomers", columnRename.Table);
+            Assert.Equal("dbo.MigrationsCustomers", columnRename.Table);
             Assert.Equal("WorkAddress_City", columnRename.Name);
             Assert.Equal("WorkCity", columnRename.NewName);
         }
@@ -773,7 +773,7 @@ namespace System.Data.Entity.Migrations
 
             var columnRename = operations.OfType<RenameColumnOperation>().ElementAt(0);
 
-            Assert.Equal("OrderLines", columnRename.Table);
+            Assert.Equal("dbo.OrderLines", columnRename.Table);
             Assert.Equal("OrderId", columnRename.Name);
             Assert.Equal("Order_Id", columnRename.NewName);
         }
@@ -800,7 +800,7 @@ namespace System.Data.Entity.Migrations
 
             var columnRename = operations.OfType<RenameColumnOperation>().ElementAt(0);
 
-            Assert.Equal("Comments", columnRename.Table);
+            Assert.Equal("dbo.Comments", columnRename.Table);
             Assert.Equal("Blog_MigrationsBlogId", columnRename.Name);
             Assert.Equal("MigrationsBlogId", columnRename.NewName);
         }
@@ -827,22 +827,22 @@ namespace System.Data.Entity.Migrations
 
             var dropForeignKeyOperation = operations.OfType<DropForeignKeyOperation>().Single();
 
-            Assert.Equal("Comments", dropForeignKeyOperation.DependentTable);
+            Assert.Equal("dbo.Comments", dropForeignKeyOperation.DependentTable);
             Assert.Equal("Blog_MigrationsBlogId", dropForeignKeyOperation.DependentColumns.Single());
 
             var dropForeignKeyOperationInverse = (AddForeignKeyOperation)dropForeignKeyOperation.Inverse;
 
-            Assert.Equal("Comments", dropForeignKeyOperationInverse.DependentTable);
+            Assert.Equal("dbo.Comments", dropForeignKeyOperationInverse.DependentTable);
             Assert.Equal("Blog_MigrationsBlogId", dropForeignKeyOperationInverse.DependentColumns.Single());
 
             var dropIndexOperation = operations.OfType<DropIndexOperation>().Single();
 
-            Assert.Equal("Comments", dropIndexOperation.Table);
+            Assert.Equal("dbo.Comments", dropIndexOperation.Table);
             Assert.Equal("Blog_MigrationsBlogId", dropIndexOperation.Columns.Single());
 
             var dropIndexOperationInverse = (CreateIndexOperation)dropIndexOperation.Inverse;
 
-            Assert.Equal("Comments", dropIndexOperationInverse.Table);
+            Assert.Equal("dbo.Comments", dropIndexOperationInverse.Table);
             Assert.Equal("Blog_MigrationsBlogId", dropIndexOperationInverse.Columns.Single());
         }
 
@@ -882,13 +882,13 @@ namespace System.Data.Entity.Migrations
 
             var columnRename = operations.OfType<RenameColumnOperation>().ElementAt(0);
 
-            Assert.Equal("MigrationsCustomers", columnRename.Table);
+            Assert.Equal("dbo.MigrationsCustomers", columnRename.Table);
             Assert.Equal("disc0", columnRename.Name);
             Assert.Equal("new_disc0", columnRename.NewName);
 
             columnRename = operations.OfType<RenameColumnOperation>().ElementAt(1);
 
-            Assert.Equal("MigrationsCustomers", columnRename.Table);
+            Assert.Equal("dbo.MigrationsCustomers", columnRename.Table);
             Assert.Equal("disc1", columnRename.Name);
             Assert.Equal("new_disc1", columnRename.NewName);
         }
