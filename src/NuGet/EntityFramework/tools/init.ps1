@@ -1,7 +1,17 @@
 ﻿param($installPath, $toolsPath, $package, $project)
 
 $importedModule = Get-Module | ?{ $_.Name -eq 'EntityFramework' }
-$thisModule = Test-ModuleManifest (Join-Path $toolsPath EntityFramework.psd1)
+
+if ($PSVersionTable.PSVersion -ge (New-Object Version @( 3, 0 )))
+{
+	$thisModuleManifest = 'EntityFramework.PS3.psd1'
+}
+else
+{
+	$thisModuleManifest = 'EntityFramework.psd1'
+}
+
+$thisModule = Test-ModuleManifest (Join-Path $toolsPath $thisModuleManifest)
 $shouldImport = $true
 
 if ($importedModule)
