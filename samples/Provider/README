@@ -1,0 +1,21 @@
+Entity Framework Sample Provider
+
+Projects:
+ - DdexProvider - Sample Data Designer Extensibility (DDEX)
+ - EdmGenTests - Reverse-engineer the database using the Entity Framework Sample Provider
+ - FunctionStubGenerator - Used to generate SampleEntityFrameworkProvider\SampleProviderFunctions.cs file
+ - NorthwindEFModel - Entity Framework model shared by projects. Based on Northwind database. 
+ - ProviderTests - tests for the Sample Entity Framework Provider
+ - SampleEntityFrameworkProvider - Entity Framework Sample Provider
+ 
+ Setting up the environment:
+ - Tests require the NorthindEF5 database. To create the database use the CreateNorthwindEFDB.sql script 
+   from the NorthwindEFModel\Database folder (e.g. sqlcmd -S .\sqlexpress -E -i CreateNorthwindEFDB.sql)
+   
+ - Tests are using xUnit testing framework. To be able to run tests inside the Visual Studio 11 you need 
+   to install a test runner. You can get one here: 
+   http://visualstudiogallery.msdn.microsoft.com/463c5987-f82b-46c8-a97e-b1cde42b9099
+   
+ - By default all connection strings point to .\SqlExpress instance. If you are using a different 
+   SQL Server instance you need to update the connection strings in app.config files to reflect
+   the SQL Server instance and security parameters you are using.

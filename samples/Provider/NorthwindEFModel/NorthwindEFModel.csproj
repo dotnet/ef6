@@ -60,8 +60,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Attach_NorthwindEF.cmd" />
-    <None Include="Detach_NorthwindEF.cmd" />
     <None Include="NorthwindEFModel.csdl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Generator>EntityModelCodeGenerator</Generator>
@@ -76,12 +74,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Database\NorthwindEF5.MDF">
-    </Content>
-    <Content Include="Database\NorthwindEF5_LOG.LDF">
-      <DependentUpon>NorthwindEF.MDF</DependentUpon>
-    </Content>
-    <Content Include="Model Readme.txt" />
+    <None Include="Database\CreateNorthwindEFDB.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
