@@ -250,7 +250,7 @@
                 // These two checks verify that entityWithKey.EntityKey implemented by the user on a (I)POCO entity returns what it was given.
                 if ((object)entityKey == null)
                 {
-                    throw new InvalidOperationException(Strings.EntityKey_UnexpectedNull);
+                    throw Error.EntityKey_UnexpectedNull();
                 }
                 if (wrappedObject.EntityKey != entityKey)
                 {
@@ -2546,7 +2546,7 @@
                     if (entry.State
                         == EntityState.Deleted)
                     {
-                        throw new InvalidOperationException(Strings.RelatedEnd_UnableToAddRelationshipWithDeletedEntity);
+                        throw Error.RelatedEnd_UnableToAddRelationshipWithDeletedEntity();
                     }
                 }
 
@@ -2574,10 +2574,9 @@
                         {
                             if (pair.Value.Count > 1)
                             {
-                                throw new InvalidOperationException(
-                                    Strings.ObjectStateManager_ConflictingChangesOfRelationshipDetected(
+                                throw Error.ObjectStateManager_ConflictingChangesOfRelationshipDetected(
                                         pair.Key.RelationshipNavigation.To,
-                                        pair.Key.RelationshipNavigation.RelationshipName));
+                                        pair.Key.RelationshipNavigation.RelationshipName);
                             }
                         }
                     }
@@ -2611,10 +2610,9 @@
                         {
                             if (pair.Value.Count > 1)
                             {
-                                throw new InvalidOperationException(
-                                    Strings.ObjectStateManager_ConflictingChangesOfRelationshipDetected(
+                                throw Error.ObjectStateManager_ConflictingChangesOfRelationshipDetected(
                                         pair.Key.RelationshipNavigation.To,
-                                        pair.Key.RelationshipNavigation.RelationshipName));
+                                        pair.Key.RelationshipNavigation.RelationshipName);
                             }
                             else if (pair.Value.Count == 1)
                             {
@@ -2647,10 +2645,9 @@
 
                                     if (addedKey != newFks.First())
                                     {
-                                        throw new InvalidOperationException(
-                                            Strings.ObjectStateManager_ConflictingChangesOfRelationshipDetected(
+                                        throw Error.ObjectStateManager_ConflictingChangesOfRelationshipDetected(
                                                 reference.RelationshipNavigation.To,
-                                                reference.RelationshipNavigation.RelationshipName));
+                                                reference.RelationshipNavigation.RelationshipName);
                                     }
                                 }
                                 else

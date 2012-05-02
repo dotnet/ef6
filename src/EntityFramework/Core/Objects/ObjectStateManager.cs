@@ -528,7 +528,7 @@ namespace System.Data.Entity.Core.Objects
                     var targetKey = wrappedRelatedEntity.EntityKey;
                     if ((object)targetKey == null)
                     {
-                        throw new InvalidOperationException(Strings.EntityKey_UnexpectedNull);
+                        throw Error.EntityKey_UnexpectedNull();
                     }
 
                     // since endMember is not Many, relatedEnd must be an EntityReference

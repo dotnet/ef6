@@ -2113,7 +2113,7 @@
                     var key = wrappedEntity.EntityKey;
                     if ((object)key == null)
                     {
-                        throw new InvalidOperationException(Strings.EntityKey_UnexpectedNull);
+                        throw Error.EntityKey_UnexpectedNull();
                     }
 
                     // Dev10#673631 - An incorrectly returned entity should result in an exception to avoid further corruption to the OSM.

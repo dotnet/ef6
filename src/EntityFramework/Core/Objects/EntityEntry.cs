@@ -2298,7 +2298,7 @@
                     if (relatedWrapper.ObjectStateEntry.State
                         == EntityState.Deleted)
                     {
-                        throw new InvalidOperationException(Strings.RelatedEnd_UnableToAddRelationshipWithDeletedEntity);
+                        throw Error.RelatedEnd_UnableToAddRelationshipWithDeletedEntity();
                     }
                     if (ObjectStateManager.TransactionManager.IsAttachTracking &&
                         (State & (EntityState.Modified | EntityState.Unchanged)) != 0
@@ -2324,7 +2324,7 @@
                                 !RelatedEnd.VerifyRIConstraintsWithRelatedEntry(
                                     constraint, dependentEntry.GetCurrentEntityValue, principalEntry.EntityKey))
                             {
-                                throw new InvalidOperationException(Strings.RelationshipManager_InconsistentReferentialConstraintProperties);
+                                throw Error.RelationshipManager_InconsistentReferentialConstraintProperties();
                             }
                         }
                     }
@@ -2897,7 +2897,7 @@
 
                 if (!ByValueEqualityComparer.Default.Equals(valueCounterPair.Key, propertyValue))
                 {
-                    throw new InvalidOperationException(Strings.RelationshipManager_InconsistentReferentialConstraintProperties);
+                    throw Error.RelationshipManager_InconsistentReferentialConstraintProperties();
                 }
                 else
                 {
@@ -2954,7 +2954,7 @@
                                             !ByValueEqualityComparer.Default.Equals(
                                                 GetCurrentEntityValue(constraint.FromProperties[i].Name), pair.Value))
                                         {
-                                            throw new InvalidOperationException(Strings.RelationshipManager_InconsistentReferentialConstraintProperties);
+                                            throw Error.RelationshipManager_InconsistentReferentialConstraintProperties();
                                         }
                                     }
                                 }

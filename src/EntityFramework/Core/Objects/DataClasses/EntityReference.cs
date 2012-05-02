@@ -421,7 +421,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                  (targetEntity.ObjectStateEntry == null || // setting to a detached principle
                   (EntityKey == null && targetEntity.ObjectStateEntry.State == EntityState.Deleted || // setting to a deleted principle
                    (CachedForeignKey == null && targetEntity.ObjectStateEntry.State == EntityState.Added)))))
-                // setting to an added principle
+            // setting to an added principle
             {
                 throw new InvalidOperationException(Strings.EntityReference_CannotChangeReferentialConstraintProperty);
             }
@@ -610,6 +610,224 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             Debug.Assert(RelationshipNavigation != null, "null RelationshipNavigation");
 
             return !TargetAccessor.HasProperty || WrappedOwner.GetNavigationPropertyValue(this) == null;
+        }
+
+        internal override void AddEntityToObjectStateManager(IEntityWrapper wrappedEntity, bool doAttach)
+        {
+            base.AddEntityToObjectStateManager(wrappedEntity, doAttach);
+
+            // Now that we know we have a valid EntityKey for the target entity, verify that it matches the detached EntityKey, if there is one
+            if (DetachedEntityKey != null)
+            {
+                var targetKey = wrappedEntity.EntityKey;
+                if (DetachedEntityKey != targetKey)
+                {
+                    throw new InvalidOperationException(Strings.EntityReference_EntityKeyValueMismatch);
+                }
+            }
+            // else -- null just means the key isn't set, so the target entity key doesn't also have to be null
+        }
+
+        protected override void AddToNavigationPropertyIfCompatible(RelatedEnd otherRelatedEnd)
+        {
+            // If this end is non-null, then don't overwrite it.
+            // If it's non-null and doesn't match what we think it should be, then throw.
+            if (NavigationPropertyIsNullOrMissing())
+            {
+                AddToNavigationProperty(otherRelatedEnd.WrappedOwner);
+                // If the other end is a dependent that is already tracked, then we need to make sure
+                // its FK props are marked as modified even though we are not fixing them up.
+                Debug.Assert(otherRelatedEnd.ObjectContext != null, "Expected attached context at this point.");
+
+                var cacheEntry = otherRelatedEnd.ObjectContext.ObjectStateManager.FindEntityEntry(otherRelatedEnd.WrappedOwner.Entity);
+
+                if (cacheEntry != null &&
+                    otherRelatedEnd.ObjectContext.ObjectStateManager.TransactionManager.IsAddTracking &&
+                    otherRelatedEnd.IsForeignKey &&
+                    IsDependentEndOfReferentialConstraint(checkIdentifying: false))
+                {
+                    MarkForeignKeyPropertiesModified();
+                }
+            }
+            else if (!CheckIfNavigationPropertyContainsEntity(otherRelatedEnd.WrappedOwner))
+            {
+                throw Error.ObjectStateManager_ConflictingChangesOfRelationshipDetected(
+                        RelationshipNavigation.To,
+                        RelationshipNavigation.RelationshipName);
+            }
+        }
+
+        protected override bool CachedForeignKeyIsConceptualNull()
+        {
+            return ForeignKeyFactory.IsConceptualNullKey(CachedForeignKey);
+        }
+
+        protected override bool UpdateDependentEndForeignKey(RelatedEnd targetRelatedEnd, bool forceForeignKeyChanges)
+        {
+            if (IsDependentEndOfReferentialConstraint(false))
+            {
+                UpdateForeignKeyValues(WrappedOwner, targetRelatedEnd.WrappedOwner, changedFKs: null, forceChange: forceForeignKeyChanges);
+
+                return true;
+            }
+            return false;
+        }
+
+        protected override void ValidateDetachedEntityKey()
+        {
+            // If this is a stub EntityReference and the DetachedEntityKey is set, make sure it is valid
+            if (IsEmpty() && DetachedEntityKey != null)
+            {
+                var detachedKey = DetachedEntityKey;
+                if (!IsValidEntityKeyType(detachedKey))
+                {
+                    // devnote: We have to check this here instead of in the EntityKey property setter,
+                    //          because the key could be set to an invalid type temporarily during deserialization
+                    throw Error.EntityReference_CannotSetSpecialKeys();
+                }
+                var targetEntitySet = detachedKey.GetEntitySet(ObjectContext.MetadataWorkspace);
+                CheckRelationEntitySet(targetEntitySet);
+                detachedKey.ValidateEntityKey(ObjectContext.MetadataWorkspace, targetEntitySet);
+            }
+            // else even for a reference we don't need to validate the key
+            // because it will be checked later once we have the key for the contained entity
+        }
+
+        protected override void VerifyDetachedKeyMatches(EntityKey entityKey)
+        {
+            // If we have a reference with a detached key, make sure the key matches the relationship we are about to add
+            if (DetachedEntityKey != null)
+            {
+                var targetKey = entityKey;
+                if (DetachedEntityKey != targetKey)
+                {
+                    // Check for the case where a NoTracking (with detached entity key) is being Added and throw the same
+                    // exception we do elsewhere for this case.
+                    // We might consider changing this behavior in the future to just put the entity in the Added state,
+                    // but for consistency for now we throw the same exception as elsewhere.
+                    if (targetKey.IsTemporary)
+                    {
+                        throw Error.RelatedEnd_CannotCreateRelationshipBetweenTrackedAndNoTrackedEntities(RelationshipNavigation.To);
+                    }
+
+                    throw new InvalidOperationException(Strings.EntityReference_EntityKeyValueMismatch);
+                }
+                // else -- null just means the key isn't set, so the target entity key doesn't also have to be null
+            }
+        }
+
+        internal override void DetachAll(EntityState ownerEntityState)
+        {
+            // set the EntityKey property before removing the relationship and entity
+            DetachedEntityKey = AttachedEntityKey;
+
+            base.DetachAll(ownerEntityState);
+
+            // Clear the DetachedEntityKey if this is a foreign key
+            if (IsForeignKey)
+            {
+                DetachedEntityKey = null;
+            }
+        }
+
+        // Check if related entities contain proper property values 
+        internal override bool CheckReferentialConstraintPrincipalProperty(EntityEntry ownerEntry, ReferentialConstraint constraint)
+        {
+            EntityKey principalKey;
+            if (!IsEmpty())
+            {
+                var wrappedRelatedEntity = ReferenceValue;
+                // For Added entities, it doesn't matter what the key value is since it can't be trusted anyway.
+                if (wrappedRelatedEntity.ObjectStateEntry != null
+                    && wrappedRelatedEntity.ObjectStateEntry.State == EntityState.Added)
+                {
+                    return true;
+                }
+                principalKey = ExtractPrincipalKey(wrappedRelatedEntity);
+            }
+            else if ((ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.ZeroOrOne ||
+                 ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One) &&
+                 DetachedEntityKey != null)
+            {
+                // Generally for foreign keys we want to use the EntityKey to do RI constraint validation
+                // However, if we are doing an Add/Attach, we should use the DetachedEntityKey because this is the value
+                // set by the user while the entity was detached, and should be used until the entity is fully added/attached
+                if (IsForeignKey &&
+                    !(ObjectContext.ObjectStateManager.TransactionManager.IsAddTracking ||
+                      ObjectContext.ObjectStateManager.TransactionManager.IsAttachTracking))
+                {
+                    principalKey = EntityKey;
+                }
+                else
+                {
+                    principalKey = DetachedEntityKey;
+                }
+            }
+            else
+            {
+                // We only need to check for RI constraints if the related end contains a real entity or is a reference with a detached entitykey
+                return true;
+            }
+
+            return VerifyRIConstraintsWithRelatedEntry(constraint, ownerEntry.GetCurrentEntityValue, principalKey);
+        }
+
+        internal override bool CheckReferentialConstraintDependentProperty(EntityEntry ownerEntry, ReferentialConstraint constraint)
+        {
+            // if the related end contains a real entity or is a reference with a detached entitykey, we need to check for RI constraints
+            if (!IsEmpty())
+            {
+                return base.CheckReferentialConstraintDependentProperty(ownerEntry, constraint);
+            }
+            else if ((ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.ZeroOrOne ||
+                      ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One) &&
+                      DetachedEntityKey != null)
+            {
+                // related end is empty, so we must have a reference with a detached key
+                var detachedKey = DetachedEntityKey;
+#if DEBUG
+                // If the constraint is not PK<->PK then we can't validate it here.
+                // This debug code checks that we don't try to validate it.
+                var keyNames = new List<string>(
+                    from v in detachedKey.EntityKeyValues
+                    select v.Key);
+                foreach (var prop in constraint.ToProperties)
+                {
+                    Debug.Assert(
+                        keyNames.Contains(prop.Name),
+                        "Attempt to validate constraint where some FK values are not in the dependent PK");
+                }
+#endif
+                // don't need to validate the principal/detached key here because that has already been done during AttachContext
+                if (!VerifyRIConstraintsWithRelatedEntry(constraint, detachedKey.FindValueByName, ownerEntry.EntityKey))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private EntityKey ExtractPrincipalKey(IEntityWrapper wrappedRelatedEntity)
+        {
+            var principalEntitySet = GetTargetEntitySetFromRelationshipSet();
+            // get or create a key to use to compare the values -- the target entity might not have been attached
+            // yet so it may not have a key, but we can create one here to use for checking the values
+            var principalKey = wrappedRelatedEntity.EntityKey;
+            if (null != (object)principalKey
+                && !principalKey.IsTemporary)
+            {
+                // Validate the key here because we need to get values from it for verification
+                // and that will fail if the key is malformed.
+                // Verify only if the key already exists.
+                EntityUtil.ValidateEntitySetInKey(principalKey, principalEntitySet);
+                principalKey.ValidateEntityKey(ObjectContext.MetadataWorkspace, principalEntitySet);
+            }
+            else
+            {
+                principalKey = ObjectContext.ObjectStateManager.CreateEntityKey(principalEntitySet, wrappedRelatedEntity.Entity);
+            }
+            return principalKey;
         }
 
         /// <summary>

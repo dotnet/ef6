@@ -879,7 +879,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     {
                         string relationshipName = relationship.FullName;
                         Debug.Assert(!String.IsNullOrEmpty(relationshipName), "empty relationshipName");
-                        throw new InvalidOperationException(Strings.Collections_NoRelationshipSetMatched(relationshipName));
+                        throw Error.Collections_NoRelationshipSetMatched(relationshipName);
                     }
                     else
                     {
@@ -1447,7 +1447,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 {
                     if (!relatedEnd.CheckReferentialConstraintProperties(ownerEntry))
                     {
-                        throw new InvalidOperationException(Strings.RelationshipManager_InconsistentReferentialConstraintProperties);
+                        throw Error.RelationshipManager_InconsistentReferentialConstraintProperties();
                     }
                 }
             }
@@ -1512,7 +1512,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             var ownerKey = wrappedOwner.EntityKey;
             if ((object)ownerKey == null)
             {
-                throw new InvalidOperationException(Strings.EntityKey_UnexpectedNull);
+                throw Error.EntityKey_UnexpectedNull();
             }
 
             propertiesToRetrieve = null;

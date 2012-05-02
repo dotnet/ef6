@@ -1066,6 +1066,7 @@
   </data>
   <data name="EntityKey_UnexpectedNull" xml:space="preserve">
     <value>The requested operation could not be completed, because a null EntityKey property value was returned by the object.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="EntityKey_DoesntMatchKeyOnEntity" xml:space="preserve">
     <value>The requested operation could not be completed, because a mismatched EntityKey was returned from the EntityKey property on an object of type '{0}'.</value>
@@ -2777,6 +2778,7 @@
   </data>
   <data name="ObjectStateManager_ConflictingChangesOfRelationshipDetected" xml:space="preserve">
     <value>Conflicting changes to the role '{0}' of the relationship '{1}' have been detected.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="ObjectStateManager_ChangeRelationshipStateNotSupportedForForeignKeyAssociations" xml:space="preserve">
     <value>The ChangeRelationshipState method is not supported for relationships that are defined by using foreign-key values.</value>
@@ -2951,21 +2953,27 @@
   </data>
   <data name="RelatedEnd_InvalidOwnerStateForAttach" xml:space="preserve">
     <value>Attach is not a valid operation when the source object associated with this related end is in an added, deleted, or detached state. Objects loaded using the NoTracking merge option are always detached.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="RelatedEnd_InvalidNthElementNullForAttach" xml:space="preserve">
     <value>The object at index {0} in the specified collection of objects is null.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="RelatedEnd_InvalidNthElementContextForAttach" xml:space="preserve">
     <value>The object at index {0} in the specified collection of objects is not attached to the same ObjectContext as source object of this EntityCollection.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="RelatedEnd_InvalidNthElementStateForAttach" xml:space="preserve">
     <value>The object at index {0} in the specified collection of objects is in an added or deleted state. Relationships cannot be created for objects in this state.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="RelatedEnd_InvalidEntityContextForAttach" xml:space="preserve">
     <value>The object being attached to the source object is not attached to the same ObjectContext as the source object.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="RelatedEnd_InvalidEntityStateForAttach" xml:space="preserve">
     <value>The object being attached is in an added or deleted state. Relationships cannot be created for objects in this state.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="RelatedEnd_UnableToAddEntity" xml:space="preserve">
     <value>The object could not be added to the EntityCollection or EntityReference. An object that is attached to an ObjectContext cannot be added to an EntityCollection or EntityReference that is not associated with a source object. </value>
@@ -2975,6 +2983,7 @@
   </data>
   <data name="RelatedEnd_UnableToAddRelationshipWithDeletedEntity" xml:space="preserve">
     <value>Adding a relationship with an entity which is in the Deleted state is not allowed.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="RelatedEnd_ConflictingChangeOfRelationshipDetected" xml:space="preserve">
     <value>The relationship being added conflicts with an existing relationship. Consider deleting the previous relationship and calling ObjectContext.DetectChanges.</value>
@@ -3023,15 +3032,18 @@
   </data>
   <data name="Collections_NoRelationshipSetMatched" xml:space="preserve">
     <value>The relationship '{0}' does not match any relationship defined in the conceptual model.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="Collections_ExpectedCollectionGotReference" xml:space="preserve">
     <value>An EntityCollection of {0} objects could not be returned for role name '{1}' in relationship '{2}'. Make sure that the EdmRelationshipAttribute that defines this relationship has the correct RelationshipMultiplicity for this role name. For more information, see the Entity Framework documentation.</value>
   </data>
   <data name="Collections_InvalidEntityStateSource" xml:space="preserve">
     <value>The source query for this EntityCollection or EntityReference cannot be returned when the related object is in either an added state or a detached state and was not originally retrieved using the NoTracking merge option.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="Collections_InvalidEntityStateLoad" xml:space="preserve">
     <value>The Load method cannot return the {0} when the related object is in a deleted state.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="Collections_CannotFillTryDifferentMergeOption" xml:space="preserve">
     <value>The RelatedEnd with role name '{0}' from relationship '{1}' has already been loaded. This can occur when using a NoTracking merge option. Try using a different merge option when querying for the related object.</value>
@@ -3056,21 +3068,26 @@
   </data>
   <data name="EntityReference_CannotSetSpecialKeys" xml:space="preserve">
     <value>The EntityKey property cannot be set to EntityNotValidKey, NoEntitySetKey, or a temporary key.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="EntityReference_EntityKeyValueMismatch" xml:space="preserve">
     <value>The object could not be added or attached because its EntityReference has an EntityKey property value that does not match the EntityKey for this object.</value>
   </data>
   <data name="RelatedEnd_RelatedEndNotFound" xml:space="preserve">
     <value>At least one related end in the relationship could not be found.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="RelatedEnd_RelatedEndNotAttachedToContext" xml:space="preserve">
     <value>The {0} could not be loaded because it is not attached to an ObjectContext.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="RelatedEnd_LoadCalledOnNonEmptyNoTrackedRelatedEnd" xml:space="preserve">
     <value>When an object is returned with a NoTracking merge option, Load can only be called when the EntityCollection or EntityReference does not contain objects.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="RelatedEnd_LoadCalledOnAlreadyLoadedNoTrackedRelatedEnd" xml:space="preserve">
     <value>When an object is returned with a NoTracking merge option, Load cannot be called when the IsLoaded property is true.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="RelatedEnd_InvalidContainedType_Collection" xml:space="preserve">
     <value>An object of type '{0}' cannot be added, attached, or removed from an EntityCollection that contains objects of type '{1}'.</value>
@@ -3080,24 +3097,30 @@
   </data>
   <data name="RelatedEnd_CannotCreateRelationshipBetweenTrackedAndNoTrackedEntities" xml:space="preserve">
     <value>The object in the '{0}' role cannot be automatically added to the context because it was retrieved using the NoTracking merge option. Explicitly attach the entity to the ObjectContext before defining the relationship.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="RelatedEnd_CannotCreateRelationshipEntitiesInDifferentContexts" xml:space="preserve">
     <value>The relationship between the two objects cannot be defined because they are attached to different ObjectContext objects.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="RelatedEnd_MismatchedMergeOptionOnLoad" xml:space="preserve">
     <value>Related objects cannot be loaded using the {0} merge option. Relationships cannot be created when one object was retrieved using a NoTracking merge option and the other object was retrieved using a different merge option.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="RelatedEnd_EntitySetIsNotValidForRelationship" xml:space="preserve">
     <value>The relationship cannot be defined because the EntitySet name '{0}.{1}' is not valid for the role '{2}' in association set name '{3}.{4}'.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="RelatedEnd_OwnerIsNull" xml:space="preserve">
     <value>Requested operation is not allowed when the owner of this RelatedEnd is null. RelatedEnd objects that were created with the default constructor should only be used as a container during serialization.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="RelationshipManager_UnableToRetrieveReferentialConstraintProperties" xml:space="preserve">
     <value>A referential integrity constraints violation occurred: Not all of the property values that define referential integrity constraints could be retrieved from related entities.</value>
   </data>
   <data name="RelationshipManager_InconsistentReferentialConstraintProperties" xml:space="preserve">
     <value>A referential integrity constraint violation occurred: The property values that define the referential constraints are not consistent between principal and dependent objects in the relationship.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="RelationshipManager_CircularRelationshipsWithReferentialConstraints" xml:space="preserve">
     <value>A circular relationship path has been detected while enforcing a referential integrity constraints. Referential integrity cannot be enforced on circular relationships.</value>
@@ -3140,6 +3163,7 @@
   </data>
   <data name="RelationshipManager_NavigationPropertyNotFound" xml:space="preserve">
     <value>The specified navigation property {0} could not be found.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="RelationshipManager_CannotGetRelatEndForDetachedPocoEntity" xml:space="preserve">
     <value>The RelatedEnd cannot be returned by this RelationshipManager. A RelatedEnd can only be returned by a RelationshipManager for objects that are either tracked by the ObjectStateManager or that implement IEntityWithRelationships.</value>

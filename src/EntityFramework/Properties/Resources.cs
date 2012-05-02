@@ -14541,11 +14541,203 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        /// InvalidOperationException with message like "The requested operation could not be completed, because a null EntityKey property value was returned by the object."
+        /// </summary>
+        internal static Exception EntityKey_UnexpectedNull()
+        {
+            return new InvalidOperationException(Strings.EntityKey_UnexpectedNull);
+        }
+
+        /// <summary>
         /// MappingException with message like "The type '{0}'('{1}') of the member '{2}' in the conceptual  type '{3}' doesn't match with the type '{4}'('{5}') of the member '{6}' on the object side type '{7}'."
         /// </summary>
         internal static Exception Mapping_Default_OCMapping_Member_Type_Mismatch(object p0, object p1, object p2, object p3, object p4, object p5, object p6, object p7)
         {
             return new MappingException(Strings.Mapping_Default_OCMapping_Member_Type_Mismatch(p0, p1, p2, p3, p4, p5, p6, p7));
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "Conflicting changes to the role '{0}' of the relationship '{1}' have been detected."
+        /// </summary>
+        internal static Exception ObjectStateManager_ConflictingChangesOfRelationshipDetected(object p0, object p1)
+        {
+            return new InvalidOperationException(Strings.ObjectStateManager_ConflictingChangesOfRelationshipDetected(p0, p1));
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "Attach is not a valid operation when the source object associated with this related end is in an added, deleted, or detached state. Objects loaded using the NoTracking merge option are always detached."
+        /// </summary>
+        internal static Exception RelatedEnd_InvalidOwnerStateForAttach()
+        {
+            return new InvalidOperationException(Strings.RelatedEnd_InvalidOwnerStateForAttach);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The object at index {0} in the specified collection of objects is null."
+        /// </summary>
+        internal static Exception RelatedEnd_InvalidNthElementNullForAttach(object p0)
+        {
+            return new InvalidOperationException(Strings.RelatedEnd_InvalidNthElementNullForAttach(p0));
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The object at index {0} in the specified collection of objects is not attached to the same ObjectContext as source object of this EntityCollection."
+        /// </summary>
+        internal static Exception RelatedEnd_InvalidNthElementContextForAttach(object p0)
+        {
+            return new InvalidOperationException(Strings.RelatedEnd_InvalidNthElementContextForAttach(p0));
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The object at index {0} in the specified collection of objects is in an added or deleted state. Relationships cannot be created for objects in this state."
+        /// </summary>
+        internal static Exception RelatedEnd_InvalidNthElementStateForAttach(object p0)
+        {
+            return new InvalidOperationException(Strings.RelatedEnd_InvalidNthElementStateForAttach(p0));
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The object being attached to the source object is not attached to the same ObjectContext as the source object."
+        /// </summary>
+        internal static Exception RelatedEnd_InvalidEntityContextForAttach()
+        {
+            return new InvalidOperationException(Strings.RelatedEnd_InvalidEntityContextForAttach);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The object being attached is in an added or deleted state. Relationships cannot be created for objects in this state."
+        /// </summary>
+        internal static Exception RelatedEnd_InvalidEntityStateForAttach()
+        {
+            return new InvalidOperationException(Strings.RelatedEnd_InvalidEntityStateForAttach);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "Adding a relationship with an entity which is in the Deleted state is not allowed."
+        /// </summary>
+        internal static Exception RelatedEnd_UnableToAddRelationshipWithDeletedEntity()
+        {
+            return new InvalidOperationException(Strings.RelatedEnd_UnableToAddRelationshipWithDeletedEntity);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The relationship '{0}' does not match any relationship defined in the conceptual model."
+        /// </summary>
+        internal static Exception Collections_NoRelationshipSetMatched(object p0)
+        {
+            return new InvalidOperationException(Strings.Collections_NoRelationshipSetMatched(p0));
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The source query for this EntityCollection or EntityReference cannot be returned when the related object is in either an added state or a detached state and was not originally retrieved using the NoTracking merge option."
+        /// </summary>
+        internal static Exception Collections_InvalidEntityStateSource()
+        {
+            return new InvalidOperationException(Strings.Collections_InvalidEntityStateSource);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The Load method cannot return the {0} when the related object is in a deleted state."
+        /// </summary>
+        internal static Exception Collections_InvalidEntityStateLoad(object p0)
+        {
+            return new InvalidOperationException(Strings.Collections_InvalidEntityStateLoad(p0));
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The EntityKey property cannot be set to EntityNotValidKey, NoEntitySetKey, or a temporary key."
+        /// </summary>
+        internal static Exception EntityReference_CannotSetSpecialKeys()
+        {
+            return new InvalidOperationException(Strings.EntityReference_CannotSetSpecialKeys);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "At least one related end in the relationship could not be found."
+        /// </summary>
+        internal static Exception RelatedEnd_RelatedEndNotFound()
+        {
+            return new InvalidOperationException(Strings.RelatedEnd_RelatedEndNotFound);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The {0} could not be loaded because it is not attached to an ObjectContext."
+        /// </summary>
+        internal static Exception RelatedEnd_RelatedEndNotAttachedToContext(object p0)
+        {
+            return new InvalidOperationException(Strings.RelatedEnd_RelatedEndNotAttachedToContext(p0));
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "When an object is returned with a NoTracking merge option, Load can only be called when the EntityCollection or EntityReference does not contain objects."
+        /// </summary>
+        internal static Exception RelatedEnd_LoadCalledOnNonEmptyNoTrackedRelatedEnd()
+        {
+            return new InvalidOperationException(Strings.RelatedEnd_LoadCalledOnNonEmptyNoTrackedRelatedEnd);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "When an object is returned with a NoTracking merge option, Load cannot be called when the IsLoaded property is true."
+        /// </summary>
+        internal static Exception RelatedEnd_LoadCalledOnAlreadyLoadedNoTrackedRelatedEnd()
+        {
+            return new InvalidOperationException(Strings.RelatedEnd_LoadCalledOnAlreadyLoadedNoTrackedRelatedEnd);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The object in the '{0}' role cannot be automatically added to the context because it was retrieved using the NoTracking merge option. Explicitly attach the entity to the ObjectContext before defining the relationship."
+        /// </summary>
+        internal static Exception RelatedEnd_CannotCreateRelationshipBetweenTrackedAndNoTrackedEntities(object p0)
+        {
+            return new InvalidOperationException(Strings.RelatedEnd_CannotCreateRelationshipBetweenTrackedAndNoTrackedEntities(p0));
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The relationship between the two objects cannot be defined because they are attached to different ObjectContext objects."
+        /// </summary>
+        internal static Exception RelatedEnd_CannotCreateRelationshipEntitiesInDifferentContexts()
+        {
+            return new InvalidOperationException(Strings.RelatedEnd_CannotCreateRelationshipEntitiesInDifferentContexts);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "Related objects cannot be loaded using the {0} merge option. Relationships cannot be created when one object was retrieved using a NoTracking merge option and the other object was retrieved using a different merge option."
+        /// </summary>
+        internal static Exception RelatedEnd_MismatchedMergeOptionOnLoad(object p0)
+        {
+            return new InvalidOperationException(Strings.RelatedEnd_MismatchedMergeOptionOnLoad(p0));
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The relationship cannot be defined because the EntitySet name '{0}.{1}' is not valid for the role '{2}' in association set name '{3}.{4}'."
+        /// </summary>
+        internal static Exception RelatedEnd_EntitySetIsNotValidForRelationship(object p0, object p1, object p2, object p3, object p4)
+        {
+            return new InvalidOperationException(Strings.RelatedEnd_EntitySetIsNotValidForRelationship(p0, p1, p2, p3, p4));
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "Requested operation is not allowed when the owner of this RelatedEnd is null. RelatedEnd objects that were created with the default constructor should only be used as a container during serialization."
+        /// </summary>
+        internal static Exception RelatedEnd_OwnerIsNull()
+        {
+            return new InvalidOperationException(Strings.RelatedEnd_OwnerIsNull);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "A referential integrity constraint violation occurred: The property values that define the referential constraints are not consistent between principal and dependent objects in the relationship."
+        /// </summary>
+        internal static Exception RelationshipManager_InconsistentReferentialConstraintProperties()
+        {
+            return new InvalidOperationException(Strings.RelationshipManager_InconsistentReferentialConstraintProperties);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The specified navigation property {0} could not be found."
+        /// </summary>
+        internal static Exception RelationshipManager_NavigationPropertyNotFound(object p0)
+        {
+            return new InvalidOperationException(Strings.RelationshipManager_NavigationPropertyNotFound(p0));
         }
 
         /// <summary>

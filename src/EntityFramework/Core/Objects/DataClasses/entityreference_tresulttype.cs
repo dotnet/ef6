@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Linq;
     using System.Runtime.Serialization;
     using System.Xml.Serialization;
 
@@ -192,7 +193,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         var sourceKey = WrappedOwner.EntityKey;
                         if ((object)sourceKey == null)
                         {
-                            throw new InvalidOperationException(Strings.EntityKey_UnexpectedNull);
+                            throw Error.EntityKey_UnexpectedNull();
                         }
                         ObjectContext.ObjectStateManager.RemoveRelationships(mergeOption, (AssociationSet)RelationshipSet, sourceKey, (AssociationEndMember)FromEndMember);
                     }
@@ -225,9 +226,17 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns></returns>
         internal override IEnumerable GetInternalEnumerable()
         {
+            // This shouldn't be converted to an iterator method because then the check for a null owner
+            // will not throw until the enumerator is advanced
+            CheckOwnerNull();
+
             if (ReferenceValue.Entity != null)
             {
-                yield return ReferenceValue.Entity;
+                return new[] { ReferenceValue.Entity };
+            }
+            else
+            {
+                return Enumerable.Empty<object>();
             }
         }
 
@@ -370,7 +379,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 var ownerKey = WrappedOwner.EntityKey;
                 if ((object)ownerKey == null)
                 {
-                    throw new InvalidOperationException(Strings.EntityKey_UnexpectedNull);
+                    throw Error.EntityKey_UnexpectedNull();
                 }
                 var wrapper = new RelationshipWrapper(
                     (AssociationSet)RelationshipSet,
@@ -511,7 +520,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 // Clear the detachedEntityKey as well. In cases where we have to fix up the detachedEntityKey, we will not always be able to detect
                 // if we have *only* a Deleted relationship for a given entity/relationship/role, so clearing this here will ensure that
                 // even if no other relationships are added, the key value will still be correct.
-                (this).DetachedEntityKey = null;
+                DetachedEntityKey = null;
             }
         }
 

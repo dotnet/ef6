@@ -9,6 +9,19 @@
 
     public class EntityReferenceTests
     {
+        public class GetEnumerator
+        {
+            [Fact]
+            public void Throws_when_not_initialized()
+            {
+                var entityReference = new EntityReference<object>();
+
+                Assert.Equal(
+                    Strings.RelatedEnd_OwnerIsNull,
+                    Assert.Throws(typeof(InvalidOperationException), () => entityReference.GetEnumerator()).Message);
+            }
+        }
+
         public class Load
         {
             [Fact]

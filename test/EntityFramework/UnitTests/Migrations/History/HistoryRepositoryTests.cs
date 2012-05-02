@@ -449,6 +449,8 @@ namespace System.Data.Entity.Migrations
 
                 using (var historyContext = new LegacyHistoryContext(clonedConnection))
                 {
+                    context.InternalContext.MarkDatabaseInitialized();
+
                     context.Database.ExecuteSqlCommand(
                         ((IObjectContextAdapter)historyContext).ObjectContext.CreateDatabaseScript());
 
